@@ -86,12 +86,14 @@ describe('Create API Token Drawer', () => {
     );
   });
 
-  it('Should default to None for all scopes', () => {
+  it('Should default to No Access for all scopes', () => {
     const { getByLabelText } = renderWithTheme(
       <CreateAPITokenDrawer {...props} />
     );
-    const selectAllNonePermRadioButton = getByLabelText('Select none for all');
-    expect(selectAllNonePermRadioButton).toBeChecked();
+    const selectAllNoAccessPermRadioButton = getByLabelText(
+      'Select no access for all'
+    );
+    expect(selectAllNoAccessPermRadioButton).toBeChecked();
   });
 
   it('Should default to 6 months for expiration', () => {
@@ -157,7 +159,7 @@ describe('Create API Token Drawer', () => {
       <CreateAPITokenDrawer {...props} />
     );
     const vpcPermRadioButtons = getAllByTestId('perm-vpc-radio');
-    const vpcNonePermRadioButton = vpcPermRadioButtons[0].firstChild;
+    const vpcNoAccessPermRadioButton = vpcPermRadioButtons[0].firstChild;
     const vpcReadOnlyPermRadioButton = vpcPermRadioButtons[1].firstChild;
 
     const selectAllReadOnlyPermRadioButton = getByLabelText(
@@ -166,7 +168,7 @@ describe('Create API Token Drawer', () => {
     await userEvent.click(selectAllReadOnlyPermRadioButton);
     expect(selectAllReadOnlyPermRadioButton).toBeChecked();
 
-    expect(vpcNonePermRadioButton).toBeChecked();
+    expect(vpcNoAccessPermRadioButton).toBeChecked();
     expect(vpcReadOnlyPermRadioButton).not.toBeChecked();
     expect(vpcReadOnlyPermRadioButton).toBeDisabled();
   });

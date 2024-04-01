@@ -27,6 +27,7 @@ import {
   StyledAccessCell,
   StyledPermissionsCell,
   StyledPermsTable,
+  StyledSelectAllPermissionsCell,
   StyledSelectCell,
 } from './APITokenDrawer.styles';
 import {
@@ -234,8 +235,8 @@ export const CreateAPITokenDrawer = (props: Props) => {
         <TableHead>
           <TableRow>
             <TableCell data-qa-perm-access>Access</TableCell>
-            <TableCell data-qa-perm-none style={{ textAlign: 'center' }}>
-              None
+            <TableCell data-qa-perm-no-access style={{ textAlign: 'center' }}>
+              No Access
             </TableCell>
             <TableCell data-qa-perm-read noWrap style={{ textAlign: 'center' }}>
               Read Only
@@ -250,20 +251,26 @@ export const CreateAPITokenDrawer = (props: Props) => {
             <StyledSelectCell padding="checkbox" parentColumn="Access">
               Select All
             </StyledSelectCell>
-            <StyledPermissionsCell padding="checkbox" parentColumn="None">
+            <StyledSelectAllPermissionsCell
+              padding="checkbox"
+              parentColumn="No Access"
+            >
               <Radio
                 inputProps={{
-                  'aria-label': 'Select none for all',
+                  'aria-label': 'Select no access for all',
                 }}
                 checked={indexOfColumnWhereAllAreSelected === 0}
-                data-qa-perm-none-radio
-                data-testid="set-all-none"
+                data-qa-perm-no-access-radio
+                data-testid="set-all-no-access"
                 name="Select All"
                 onChange={handleSelectAllScopes}
                 value="0"
               />
-            </StyledPermissionsCell>
-            <StyledPermissionsCell padding="checkbox" parentColumn="Read Only">
+            </StyledSelectAllPermissionsCell>
+            <StyledSelectAllPermissionsCell
+              padding="checkbox"
+              parentColumn="Read Only"
+            >
               <Radio
                 inputProps={{
                   'aria-label': 'Select read-only for all',
@@ -275,8 +282,11 @@ export const CreateAPITokenDrawer = (props: Props) => {
                 onChange={handleSelectAllScopes}
                 value="1"
               />
-            </StyledPermissionsCell>
-            <StyledPermissionsCell padding="checkbox" parentColumn="Read/Write">
+            </StyledSelectAllPermissionsCell>
+            <StyledSelectAllPermissionsCell
+              padding="checkbox"
+              parentColumn="Read/Write"
+            >
               <Radio
                 inputProps={{
                   'aria-label': 'Select read/write for all',
@@ -288,7 +298,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
                 onChange={handleSelectAllScopes}
                 value="2"
               />
-            </StyledPermissionsCell>
+            </StyledSelectAllPermissionsCell>
           </TableRow>
           {allPermissions.map((scopeTup) => {
             if (
