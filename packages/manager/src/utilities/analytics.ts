@@ -8,19 +8,13 @@ declare global {
 }
 
 type DTMSatellite = {
-  track: (
-    eventName: string,
-    eventPayload: AnalyticsEvent | PageViewEvent
-  ) => void;
+  track: (eventName: string, eventPayload: Record<string, unknown>) => void;
 };
-
-interface PageViewEvent {
-  url: string;
-}
 
 interface AnalyticsEvent {
   action: string;
   category: string;
+  details?: Record<string, unknown>;
   label?: string;
   value?: number;
 }
@@ -36,6 +30,7 @@ export const sendEvent = (eventPayload: AnalyticsEvent): void => {
     window._satellite.track('custom event', {
       action: eventPayload.action.replace(/\|/g, ''),
       category: eventPayload.category.replace(/\|/g, ''),
+      details: JSON.stringify(eventPayload.details),
       label: eventPayload.label?.replace(/\|/g, ''),
       value: eventPayload.value,
     });
@@ -150,11 +145,13 @@ export const sendCreateNodeBalancerEvent = (eventLabel: string): void => {
 // LinodeCreateContainer.tsx
 export const sendCreateLinodeEvent = (
   eventAction: string,
-  eventLabel: string
+  eventLabel: string,
+  details?: Record<string, unknown>
 ): void => {
   sendEvent({
     action: eventAction,
     category: 'Create Linode',
+    details,
     label: eventLabel,
   });
 };

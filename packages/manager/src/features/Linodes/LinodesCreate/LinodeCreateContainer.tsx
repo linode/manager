@@ -889,11 +889,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         }
 
         /** Analytics creation event */
-        handleAnalytics(
-          createType,
+        handleAnalytics({
+          fromLinode: linodeID
+            ? this.props.linodesData?.find((linode) => linode.id == linodeID)
+            : undefined,
+          label: this.state.selectedStackScriptLabel,
           payload,
-          this.state.selectedStackScriptLabel
-        );
+          type: createType,
+        });
 
         /** show toast */
         this.props.enqueueSnackbar(
@@ -995,11 +998,13 @@ const actionsAndLabels = {
   fromStackScript: { action: 'stackscript', labelPayloadKey: 'stackscript_id' },
 };
 
-const handleAnalytics = (
-  type: CreateTypes,
-  payload: CreateLinodeRequest,
-  label?: string
-) => {
+const handleAnalytics = (details: {
+  fromLinode?: Linode;
+  label?: string;
+  payload: CreateLinodeRequest;
+  type: CreateTypes;
+}) => {
+  const { fromLinode, label, payload, type } = details;
   const eventInfo = actionsAndLabels[type];
   let eventAction = 'unknown';
   let eventLabel = '';
@@ -1018,5 +1023,11 @@ const handleAnalytics = (
     eventLabel = label;
   }
 
-  sendCreateLinodeEvent(eventAction, eventLabel);
+  sendCreateLinodeEvent(
+    eventAction,
+    eventLabel,
+    fromLinode
+      ? { linodeWasPoweredOff: fromLinode.status === 'offline' }
+      : undefined
+  );
 };
