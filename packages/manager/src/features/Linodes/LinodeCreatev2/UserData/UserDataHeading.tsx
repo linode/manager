@@ -47,7 +47,7 @@ export const UserDataHeading = () => {
         />
       </Stack>
       {warningMessage && (
-        <Notice spacingBottom={16} spacingTop={16} variant="warning">
+        <Notice spacingBottom={0} spacingTop={16} variant="warning">
           {warningMessage}
         </Notice>
       )}
