@@ -72,6 +72,7 @@ export type AccountCapability =
   | 'Object Storage Access Key Regions'
   | 'Object Storage'
   | 'Placement Group'
+  | 'Support Ticket Severity'
   | 'Vlans'
   | 'VPCs';
 
