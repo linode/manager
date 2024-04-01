@@ -4,6 +4,7 @@ import { ExcludedScope } from './CreateAPITokenDrawer';
 import {
   Permission,
   allScopesAreTheSame,
+  arePermissionsEqual,
   isWayInTheFuture,
   scopeStringToPermTuples,
 } from './utils';
@@ -358,5 +359,52 @@ describe('APIToken utils', () => {
       ];
       expect(allScopesAreTheSame(scopes, excludedScopeNames)).toBe(1);
     });
+  });
+});
+
+describe('arePermissionsEqual', () => {
+  const scopes: Permission[] = [
+    ['account', 0],
+    ['child_account', 0],
+    ['databases', 0],
+    ['domains', 0],
+    ['events', 0],
+    ['firewall', 0],
+    ['images', 0],
+    ['ips', 0],
+    ['linodes', 0],
+    ['lke', 0],
+    ['longview', 0],
+    ['nodebalancers', 0],
+    ['object_storage', 0],
+    ['stackscripts', 0],
+    ['volumes', 0],
+    ['vpc', 0],
+  ];
+
+  const differentScopes: Permission[] = [
+    ['account', 1],
+    ['child_account', 0],
+    ['databases', 0],
+    ['domains', 0],
+    ['events', 0],
+    ['firewall', 0],
+    ['images', 0],
+    ['ips', 0],
+    ['linodes', 0],
+    ['lke', 0],
+    ['longview', 0],
+    ['nodebalancers', 0],
+    ['object_storage', 0],
+    ['stackscripts', 0],
+    ['volumes', 0],
+    ['vpc', 0],
+  ];
+
+  it('should return true if two sets of permissions are equal', () => {
+    expect(arePermissionsEqual(scopes, scopes)).toBe(true);
+  });
+  it('should return false if two sets of permissions are different', () => {
+    expect(arePermissionsEqual(scopes, differentScopes)).toBe(false);
   });
 });

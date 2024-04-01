@@ -255,7 +255,7 @@ Omit<typeof basePermNameMap, T[number]['name']> => {
 
 /**
  * Compares two sets of permissions to determine if any scopes have changed.
- * For example, to check whether the user has made scope selections via form.
+ * For example, to check whether the user has made scope form selections.
  * @returns true if the new perms are the same as the initial perms
  */
 export const arePermissionsEqual = (
