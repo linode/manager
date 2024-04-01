@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 
+import { areArraysEqual } from 'src/utilities/areArraysEqual';
 import { isPast } from 'src/utilities/isPast';
 
 import { ExcludedScope } from './CreateAPITokenDrawer';
@@ -59,6 +60,10 @@ export const levelMap = {
 const defaultScopeMap = (perms: typeof basePerms): Record<string, 0> =>
   perms.reduce((obj, key) => ({ ...obj, [key]: 0 }), {});
 
+const defaultScopeMapForCreation = (
+  perms: typeof basePerms
+): Record<string, 0> => perms.reduce((obj, key) => ({ ...obj, [key]: -1 }), {});
+
 /**
  * This function accepts scopes strings as given by the API, which have the following format:
  * Either:
@@ -85,18 +90,26 @@ const defaultScopeMap = (perms: typeof basePerms): Record<string, 0> =>
  * Each permission level gives a user access to all lower permission levels.
  */
 const permRegex = new RegExp(/[, ]/);
-export const scopeStringToPermTuples = (scopes: string): Permission[] => {
+export const scopeStringToPermTuples = (
+  scopes: string,
+  isCreateFlow?: boolean
+): Permission[] => {
   if (scopes === '*') {
     return basePerms.map((perm) => [perm, 2] as Permission);
   }
 
-  const scopeMap = scopes.split(permRegex).reduce((map, scopeStr) => {
-    const [perm, level] = scopeStr.split(':');
-    return {
-      ...map,
-      [perm]: levelMap[level],
-    };
-  }, defaultScopeMap(basePerms));
+  const scopeMap = scopes.split(permRegex).reduce(
+    (map, scopeStr) => {
+      const [perm, level] = scopeStr.split(':');
+      return {
+        ...map,
+        [perm]: levelMap[level],
+      };
+    },
+    isCreateFlow
+      ? defaultScopeMapForCreation(basePerms)
+      : defaultScopeMap(basePerms)
+  );
 
   /**
    * So there are deprecated permission types that have been folded into a parent permission. So
@@ -238,4 +251,18 @@ Omit<typeof basePermNameMap, T[number]['name']> => {
   }
 
   return filteredPermNameMap;
+};
+
+/**
+ * Compares two sets of permissions to determine if any scopes have changed.
+ * For example, to check whether the user has made scope selections via form.
+ * @returns true if the new perms are the same as the initial perms
+ */
+export const arePermissionsEqual = (
+  initialScopes: Permission[],
+  newScopes: Permission[]
+): boolean => {
+  return initialScopes.every((scope: Permission, i: number) =>
+    areArraysEqual(scope, newScopes[i])
+  );
 };

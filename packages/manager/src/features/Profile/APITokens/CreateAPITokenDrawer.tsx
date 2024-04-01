@@ -33,6 +33,7 @@ import {
 import {
   Permission,
   allScopesAreTheSame,
+  arePermissionsEqual,
   basePermNameMap,
   permTuplesToScopeString,
   scopeStringToPermTuples,
@@ -98,7 +99,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
   const initialValues = {
     expiry: expiryTups[0][1],
     label: '',
-    scopes: scopeStringToPermTuples(''),
+    scopes: scopeStringToPermTuples('', true),
   };
 
   const { data: profile } = useProfile();
@@ -369,6 +370,10 @@ export const CreateAPITokenDrawer = (props: Props) => {
       <ActionsPanel
         primaryButtonProps={{
           'data-testid': 'create-button',
+          disabled: arePermissionsEqual(
+            initialValues.scopes,
+            form.values.scopes
+          ),
           label: 'Create Token',
           loading: isLoading,
           onClick: () => form.handleSubmit(),
