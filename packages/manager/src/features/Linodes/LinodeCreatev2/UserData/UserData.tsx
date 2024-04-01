@@ -10,7 +10,6 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
-import { atou, utoa } from '../../LinodesCreate/utilities';
 import { UserDataHeading } from './UserDataHeading';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
@@ -38,7 +37,9 @@ export const UserData = () => {
     const isUserDataValid = validPrefixes.some((prefix) =>
       userDataLower.startsWith(prefix)
     );
-    setFormatWarning(userData.length > 0 && !isUserDataValid && !hasInputValueChanged);
+    setFormatWarning(
+      userData.length > 0 && !isUserDataValid && !hasInputValueChanged
+    );
   };
 
   const region = useMemo(() => regions?.find((r) => r.id === regionId), [
@@ -90,7 +91,7 @@ export const UserData = () => {
                 hasInputValueChanged: true,
                 userData: e.target.value,
               });
-              field.onChange(utoa(e.target.value));
+              field.onChange(e);
             }}
             disabled={isLinodeCreateRestricted}
             errorText={fieldState.error?.message}
@@ -99,7 +100,7 @@ export const UserData = () => {
             labelTooltipText="Compatible formats include cloud-config data and executable scripts."
             multiline
             rows={1}
-            value={atou(field.value ?? '')}
+            value={field.value ?? ''}
           />
         )}
         control={control}
