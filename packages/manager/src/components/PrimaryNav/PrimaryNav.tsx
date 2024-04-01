@@ -23,6 +23,7 @@ import TooltipIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
+import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
@@ -140,12 +141,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     ) ||
     (checkRestrictedUser && !enginesLoading && !enginesError);
 
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
-
   const { isACLBEnabled } = useIsACLBEnabled();
 
   const prefetchObjectStorage = () => {
@@ -205,10 +200,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         },
         {
           display: 'VPC',
-          hide: !showVPCs,
           href: '/vpcs',
           icon: <VPC />,
-          isBeta: flags.vpc, // @TODO VPC: after VPC enters GA, remove this property entirely
         },
         {
           display: 'Firewalls',
@@ -302,7 +295,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       flags.databaseBeta,
       isACLBEnabled,
       flags.placementGroups,
-      showVPCs,
     ]
   );
 
@@ -320,7 +312,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       wrap="nowrap"
     >
       <Grid>
-        <div
+        <Box
           className={cx(classes.logoItemAkamai, {
             [classes.logoItemAkamaiCollapsed]: isCollapsed,
           })}
@@ -328,6 +320,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           <Link
             className={cx({
               [classes.logoContainer]: isCollapsed,
+              [classes.navLinkItem]: !isCollapsed,
             })}
             aria-label="Akamai - Dashboard"
             onClick={closeMenu}
@@ -341,10 +334,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 },
                 classes.logo
               )}
-              width={128}
+              width={83}
             />
           </Link>
-        </div>
+        </Box>
       </Grid>
       <div
         className={cx({
@@ -360,9 +353,11 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           return (
             <div key={idx}>
               <Divider
+                spacingTop={
+                  _isManagedAccount ? (idx === 0 ? 0 : 11) : idx === 1 ? 0 : 11
+                }
                 className={classes.divider}
-                spacingBottom={12}
-                spacingTop={12}
+                spacingBottom={11}
               />
               {filteredLinks.map((thisLink) => {
                 const props = {
@@ -458,12 +453,16 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
           {icon}
         </div>
       )}
-      <p
+      <Box
         className={cx({
           [classes.linkItem]: true,
           hiddenWhenCollapsed: isCollapsed,
           primaryNavLink: true,
         })}
+        sx={{
+          justifyContent: 'space-between',
+          width: '100%',
+        }}
       >
         {display}
         {isBeta ? (
@@ -475,19 +474,19 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
             component="span"
           />
         ) : null}
-      </p>
+      </Box>
     </Link>
   );
 });
 
-interface PrefetchPrimaryLinkProps {
+interface PrefetchPrimaryLinkProps extends PrimaryLinkProps {
   prefetchRequestCondition: boolean;
   prefetchRequestFn: () => void;
 }
 
 // Wrapper around PrimaryLink that includes the usePrefetchHook.
 export const PrefetchPrimaryLink = React.memo(
-  (props: PrimaryLinkProps & PrefetchPrimaryLinkProps) => {
+  (props: PrefetchPrimaryLinkProps) => {
     const { cancelRequest, makeRequest } = usePrefetch(
       props.prefetchRequestFn,
       props.prefetchRequestCondition

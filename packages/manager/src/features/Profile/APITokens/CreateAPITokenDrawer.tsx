@@ -19,10 +19,8 @@ import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCe
 import { VPC_READ_ONLY_TOOLTIP } from 'src/features/VPCs/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccount } from 'src/queries/account';
 import { useProfile } from 'src/queries/profile';
 import { useCreatePersonalAccessTokenMutation } from 'src/queries/tokens';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import {
@@ -104,7 +102,6 @@ export const CreateAPITokenDrawer = (props: Props) => {
   };
 
   const { data: profile } = useProfile();
-  const { data: account } = useAccount();
 
   const isParentUser = profile?.user_type === 'parent';
 
@@ -118,21 +115,11 @@ export const CreateAPITokenDrawer = (props: Props) => {
     globalGrantType: 'child_account_access',
   });
 
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
-
   const hasParentChildAccountAccess = Boolean(flags.parentChildAccountAccess);
 
-  // @TODO: VPC & Parent/Child - once these are in GA, remove _basePermNameMap logic and references.
+  // @TODO: Parent/Child - once in GA, remove _basePermNameMap logic and references.
   // Just use the basePermNameMap import directly w/o any manipulation.
   const basePermNameMap = filterPermsNameMap(_basePermNameMap, [
-    {
-      name: 'vpc',
-      shouldBeIncluded: showVPCs,
-    },
     {
       name: 'child_account',
       shouldBeIncluded: hasParentChildAccountAccess,

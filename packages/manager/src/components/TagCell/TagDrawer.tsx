@@ -6,7 +6,7 @@ import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 export type OpenTagDrawer = (id: number, label: string, tags: string[]) => void;
 
 export interface TagDrawerProps {
-  entityID: number;
+  disabled?: boolean;
   entityLabel: string;
   onClose: () => void;
   open: boolean;
@@ -15,11 +15,11 @@ export interface TagDrawerProps {
 }
 
 const TagDrawer = (props: TagDrawerProps) => {
-  const { entityID, entityLabel, onClose, open, tags, updateTags } = props;
+  const { disabled, entityLabel, onClose, open, tags, updateTags } = props;
 
   return (
     <Drawer onClose={onClose} open={open} title={`Tags (${entityLabel})`}>
-      <TagsPanel entityId={entityID} tags={tags} updateTags={updateTags} />
+      <TagsPanel disabled={disabled} tags={tags} updateTags={updateTags} />
     </Drawer>
   );
 };

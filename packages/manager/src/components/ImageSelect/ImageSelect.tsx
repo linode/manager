@@ -6,8 +6,8 @@ import { equals, groupBy } from 'ramda';
 import * as React from 'react';
 
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
-import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
+import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 import { ImageOption } from 'src/components/ImageSelect/ImageOption';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
@@ -17,7 +17,7 @@ import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
-import { distroIcons } from './icons';
+import { distroIcons } from '../DistributionIcon';
 
 export type Variant = 'all' | 'private' | 'public';
 
@@ -137,6 +137,9 @@ const isMemo = (prevProps: ImageSelectProps, nextProps: ImageSelectProps) => {
   );
 };
 
+/**
+ * @deprecated Start using ImageSelectv2 when possible
+ */
 export const ImageSelect = React.memo((props: ImageSelectProps) => {
   const {
     classNames,

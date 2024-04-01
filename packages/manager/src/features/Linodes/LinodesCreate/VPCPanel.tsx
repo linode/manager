@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Checkbox } from 'src/components/Checkbox';
-import Select, { Item } from 'src/components/EnhancedSelect';
+import Select from 'src/components/EnhancedSelect';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
@@ -14,20 +14,19 @@ import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { AssignIPRanges } from 'src/features/VPCs/VPCDetail/AssignIPRanges';
 import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsQuery } from 'src/queries/regions';
+import { AssignIPRanges } from 'src/features/VPCs/VPCDetail/AssignIPRanges';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useVPCsQuery } from 'src/queries/vpcs';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { ExtendedIP } from 'src/utilities/ipUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { VPCCreateDrawer } from './VPCCreateDrawer';
 import { REGION_CAVEAT_HELPER_TEXT } from './constants';
+import { VPCCreateDrawer } from './VPCCreateDrawer';
+
+import type { Item } from 'src/components/EnhancedSelect';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export interface VPCPanelProps {
   additionalIPv4RangesForVPC: ExtendedIP[];
@@ -79,9 +78,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
   const theme = useTheme();
   const isSmallBp = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const flags = useFlags();
-  const { account } = useAccountManagement();
-
   const regions = useRegionsQuery().data ?? [];
   const selectedRegion = region || '';
 
@@ -95,28 +91,13 @@ export const VPCPanel = (props: VPCPanelProps) => {
     false
   );
 
-  const displayVPCPanel = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
-
-  // To prevent unnecessary API calls, pass the displayVPCPanel boolean to determine whether the query is enabled
-  const { data: vpcData, error, isLoading } = useVPCsQuery(
-    {},
-    {},
-    displayVPCPanel
-  );
+  const { data: vpcData, error, isLoading } = useVPCsQuery({}, {});
 
   React.useEffect(() => {
     if (subnetError || vpcIPv4Error) {
       scrollErrorIntoView(ERROR_GROUP_STRING);
     }
   }, [subnetError, vpcIPv4Error]);
-
-  if (!displayVPCPanel) {
-    return null;
-  }
 
   const vpcs = vpcData?.data ?? [];
 

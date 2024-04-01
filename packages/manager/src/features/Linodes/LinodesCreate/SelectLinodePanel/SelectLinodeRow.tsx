@@ -123,16 +123,16 @@ export const SelectLinodeRow = (props: Props) => {
 // Keep up to date with number of columns
 export const numCols = 7;
 
+interface CustomSortCellProps extends TableCellProps {
+  label: string;
+}
+
 export const SelectLinodeTableRowHead = (props: {
   orderBy: Omit<OrderByProps<{}>, 'data'>;
   showPowerActions: boolean;
 }) => {
   const { orderBy, showPowerActions } = props;
-  const CustomSortCell = (
-    props: TableCellProps & {
-      label: string;
-    }
-  ) => (
+  const CustomSortCell = (props: CustomSortCellProps) => (
     <TableSortCell
       active={props.label == orderBy.orderBy}
       direction={orderBy.order}

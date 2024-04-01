@@ -8,7 +8,6 @@ import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 
 import { useIsACLBEnabled } from './features/LoadBalancers/utils';
 import { useAccountManagement } from './hooks/useAccountManagement';
-import { useFlags } from './hooks/useFlags';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -59,7 +58,6 @@ export const GoTo = React.memo(() => {
   const { classes } = useStyles();
   const routerHistory = useHistory();
   const { _hasAccountAccess, _isManagedAccount } = useAccountManagement();
-  const flags = useFlags();
 
   const { isACLBEnabled } = useIsACLBEnabled();
   const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
@@ -96,7 +94,6 @@ export const GoTo = React.memo(() => {
       },
       {
         display: 'VPC',
-        hide: !flags.vpc,
         href: '/vpcs',
       },
       {

@@ -218,10 +218,10 @@ describe('update firewall', () => {
       addFirewallRules(inboundRule, 'inbound');
 
       // Confirm that the inbound rules are listed on edit page with expected configuration
-      cy.get('[data-rbd-droppable-context-id="0"]')
+      cy.findByText(inboundRule.label!)
         .should('be.visible')
+        .closest('li')
         .within(() => {
-          cy.findByText(inboundRule.label!).should('be.visible');
           cy.findByText(inboundRule.protocol).should('be.visible');
           cy.findByText(inboundRule.ports!).should('be.visible');
           cy.findByText(getRuleActionLabel(inboundRule.action)).should(
@@ -233,10 +233,10 @@ describe('update firewall', () => {
       addFirewallRules(outboundRule, 'outbound');
 
       // Confirm that the outbound rules are listed on edit page with expected configuration
-      cy.get('[data-rbd-droppable-context-id="1"]')
+      cy.findByText(outboundRule.label!)
         .should('be.visible')
+        .closest('li')
         .within(() => {
-          cy.findByText(outboundRule.label!).should('be.visible');
           cy.findByText(outboundRule.protocol).should('be.visible');
           cy.findByText(outboundRule.ports!).should('be.visible');
           cy.findByText(getRuleActionLabel(outboundRule.action)).should(
