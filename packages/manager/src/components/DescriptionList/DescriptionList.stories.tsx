@@ -16,15 +16,13 @@ const defaultItems = [
   },
   {
     description: 'Another description',
-    title: 'Another',
+    title: 'Another Title',
   },
 ];
 
 const meta: Meta<DescriptionListProps> = {
-  argTypes: {},
   args: {
     items: defaultItems,
-    layout: 'stacked',
   },
   component: DescriptionList,
   title: 'Components/DescriptionList',
@@ -34,6 +32,19 @@ export default meta;
 
 type Story = StoryObj<DescriptionListProps>;
 
-export const Default: Story = {
-  render: (args) => <DescriptionList {...args} />,
+export const Column: Story = {
+  name: 'Column (default)',
+  render: (args) => <DescriptionList {...args} items={args.items} />,
+};
+
+export const Row: Story = {
+  name: 'Row',
+  render: (args) => (
+    <DescriptionList
+      {...args}
+      direction="row"
+      items={args.items}
+      stackAt="md"
+    />
+  ),
 };
