@@ -33,9 +33,21 @@ export const subnetQueryKey = 'subnets';
 
 // VPC queries
 export const vpcQueries = createQueryKeys('vpcs', {
-  vpc: (id: number) => ({
-    queryFn: () => getVPC(id),
-    queryKey: [id],
+  vpc: (vpcId: number) => ({
+    contextQueries: {
+      subnet: (subnetId: number) => ({
+        queryFn: () => getSubnet(vpcId, subnetId),
+        queryKey: null,
+      }),
+      subnets: {
+        paginated: (params: Params = {}, filter: Filter = {}) => ({
+          queryFn: () => getSubnets(vpcId, params, filter),
+          queryKey: [params, filter],
+        }),
+      },
+    },
+    queryFn: () => getVPC(vpcId),
+    queryKey: [vpcId],
   }),
   vpcs: {
     contextQueries: {
@@ -86,7 +98,7 @@ export const useCreateVPCMutation = () => {
 export const useUpdateVPCMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<VPC, APIError[], UpdateVPCPayload>({
-    mutationFn: (data) => updateVPC(id, data), // (data) => updateVPC(id, data),
+    mutationFn: (data) => updateVPC(id, data),
     onSuccess: (VPC) => {
       queryClient.invalidateQueries(vpcQueries.vpcs._ctx.paginated._def);
       queryClient.setQueryData<VPC>(vpcQueries.vpc(VPC.id).queryKey, VPC);
@@ -107,25 +119,6 @@ export const useDeleteVPCMutation = (id: number) => {
 };
 
 // Subnet queries
-// export const subnetQueries = createQueryKeys('subnets', {
-//   subnet: (vpcId: number, subnetId: number) => ({
-//     queryFn: () => getSubnet(vpcId, subnetId),
-//     queryKey: [vpcQueries.vpc(vpcId).queryKey],
-//   }),
-//   subnets: {
-//     contextQueries: {
-//       all: {
-//         queryFn: getAllVPCsRequest,
-//         queryKey: null,
-//       },
-//       paginated: (params: Params = {}, filter: Filter = {}) => ({
-//         queryFn: () => getVPCs(params, filter),
-//         queryKey: [params, filter],
-//       }),
-//     },
-//     queryKey: null,
-//   },
-// });
 
 export const useSubnetsQuery = (
   vpcID: number,
