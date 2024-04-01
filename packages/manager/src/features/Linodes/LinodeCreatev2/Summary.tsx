@@ -81,7 +81,7 @@ export const Summary = () => {
         details: `$${backupsPrice}/month`,
         title: 'Backups',
       },
-      show: backupsEnabled,
+      show: backupsEnabled && Boolean(type),
     },
     {
       item: {

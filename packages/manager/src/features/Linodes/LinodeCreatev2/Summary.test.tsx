@@ -21,22 +21,32 @@ describe('Linode Create v2 Summary', () => {
     expect(heading.tagName).toBe('H2');
   });
 
-  it('should render "Backups" if backups are enabled', async () => {
-    const { findByText } = renderWithThemeAndHookFormContext({
-      component: <Summary />,
-      useFormOptions: { defaultValues: { backups_enabled: true } },
-    });
-
-    await findByText('Backups');
-  });
-
   it('should render "Private IP" if private ip is enabled', async () => {
-    const { findByText } = renderWithThemeAndHookFormContext({
+    const { getByText } = renderWithThemeAndHookFormContext({
       component: <Summary />,
       useFormOptions: { defaultValues: { private_ip: true } },
     });
 
-    await findByText('Private IP');
+    expect(getByText('Private IP')).toBeVisible();
+  });
+
+  it('should render "Backups" if backups are enabled and a type is selected', async () => {
+    const type = typeFactory.build();
+
+    server.use(
+      http.get('*/v4/linode/types/*', () => {
+        return HttpResponse.json(type);
+      })
+    );
+
+    const { findByText } = renderWithThemeAndHookFormContext({
+      component: <Summary />,
+      useFormOptions: {
+        defaultValues: { backups_enabled: true, type: type.id },
+      },
+    });
+
+    await findByText('Backups');
   });
 
   it('should render an image label if an image is selected', async () => {
