@@ -11,19 +11,19 @@ export const CloudViewIntervalSelect = React.memo(
     const intervalOptions: any[] = [
       {
         label: '1 min',
-        value: '1m',
+        value: '1minute',
       },
       {
         label: '5 min',
-        value: '5m',
+        value: '5minute',
       },
       {
         label: '2 hrs',
-        value: '2h',
+        value: '2hour',
       },
       {
         label: '1 day',
-        value: '1d',
+        value: '1day',
       },
     ];
 

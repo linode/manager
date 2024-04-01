@@ -1,3 +1,5 @@
+import { Filter } from "src/types";
+
 export interface Namespace {
   id: number;
   label: string;
@@ -15,15 +17,23 @@ export interface Namespace {
 export interface Dashboard {
 
   id: number;
-  label:string;
-  service_type:string;
-  instance_id:number;
-  namespace_id:number;
+  label:string;      
   widgets:Widgets[];
   created:string;
-  updated:string;
-  filters:Filters[];
+  updated:string;  
+  time_granularity:TimeGranularity;
+  time_duration:TimeDuration;
 
+}
+
+export interface TimeGranularity {
+  unit:string;
+  value:number;
+}
+
+export interface TimeDuration {
+  unit:string;
+  value:number;
 }
 
 export interface Widgets {
@@ -31,6 +41,11 @@ export interface Widgets {
   metric:string;
   aggregate_function:string;
   group_by:string;
+  region_id:number;
+  namespace_id:number;
+  color:string;
+  size:number;
+  chart_type:string;
   y_label:string;
   filters:Filters[];
 }
@@ -38,6 +53,53 @@ export interface Widgets {
 export interface Filters {
   key:string;
   operator:string;
+  value:string;
+}
+
+export interface CloudViewMetricsRequest {
+  metric:string; //done
+  instance_id:string[]; //this comes from widget itself
+  filters:Filter[];  //widget level
+  aggregate_function:string; // come from widget
+  group_by:string; // come from widget
+  duration:TimeDuration; // come from dashboard
+  step:TimeGranularity; //comes from dashboard
+  counter:number;
+}
+
+export interface CloudViewMetricsResponse {
+
+  data:CloudViewMetricsResponseData;
+  isPartial:boolean;
+  stats:{
+    series_fetched:number;
+  },
+  status:string;
+}
+
+export interface CloudViewMetricsResponseData {
+
+  result:CloudViewMetricsList[];
+  result_type:string;  
+
+}
+
+export interface CloudViewMetricsList {
+
+  metric:Array<CloudViewMetrics>;
+  values:Array<CloudViewMetricValues>;
+
+}
+
+export interface CloudViewMetrics {
+  
+  label:string;
+  metric:string;
+
+}
+
+export interface CloudViewMetricValues {
+  timestamp:number;
   value:string;
 }
 

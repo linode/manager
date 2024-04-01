@@ -556,6 +556,11 @@ const cloudView = [
     // );
   }),
 
+  rest.post('*/aclp/service/*/metrics', async (req, res, ctx) => {
+    await sleep(1000)
+    return res(ctx.json({}));
+  }),
+
   //dashboards
   rest.get('*/cloudview/dashboards',
     async (req, res, ctx) => {
@@ -564,39 +569,61 @@ const cloudView = [
       // return res(ctx.json(makeResourcePage(dashboardFactory.buildList(10))))
       return res(ctx.json(makeResourcePage([{
         id: 1,
-        label: "Akamai Global Dashboard",
-        service_type: "ACLB",
-        instance_id: 2,
-        namespace_id: 2,
+        label: "Akamai Global Dashboard",        
+        instance_id: 2,        
         created: "2023-07-12T16:08:53",
         updated: "2023-07-12T16:08:53",
         widgets: [{
           label: "HTTP_200",
+          service_type: "ACLB",
+          region_id:2,
+          namespace_id: 2,
           metric: "200",
           aggregate_function: "sum",
           group_by: "",
           y_label: "count",
+          color:"red",
+          size:"6",
+          chart_type:"line",          
           filters: []
         }, {
           label: "HTTP_400",
+          service_type: "ACLB",
           metric: "400",
           aggregate_function: "sum",
           group_by: "",
           y_label: "count",
+          color:"red",
+          size:"6",
+          chart_type:"line",
+          region_id:1,
+          namespace_id:1,
           filters: []
         }, {
           label: "HTTP_500",
+          service_type: "ACLB",
           metric: "500",
           aggregate_function: "sum",
           group_by: "",
           y_label: "count",
+          color:"skyblue",
+          size:"6",
+          chart_type:"line",
+          region_id:1,
+          namespace_id:1,
           filters: []
         }, {
           label: "HTTP_401",
+          service_type: "ACLB",
           metric: "401",
           aggregate_function: "sum",
           group_by: "",
           y_label: "count",
+          color:"green",
+          size:"6",
+          chart_type:"line",
+          region_id:1,
+          namespace_id:1,
           filters: []
         }], 
         filters:[ {
@@ -614,7 +641,15 @@ const cloudView = [
             operator:"eq",
             value:"1m"
           }
-        ]
+        ],
+        time_granularity: {
+          unit:"sec",
+          value:1
+        }, 
+        time_duration: {
+          unit:"hr",
+          value:1
+        }
       }])))
     }),
 
@@ -627,56 +662,70 @@ const cloudView = [
         return res(ctx.json({
           id: req.params.id,
           label: "Akamai Global Dashboard",
-          service_type: "ACLB",
-          instance_id: 2,
-          namespace_id: 2,
+          service_type: "ACLB",          
           created: "2023-07-12T16:08:53",
-          updated: "2023-07-12T16:08:53",
+          updated: "2023-07-12T16:08:53",          
           widgets: [{
             label: "HTTP_200",
+            service_type: "ACLB",
             metric: "200",
             aggregate_function: "sum",
             group_by: "",
             y_label: "count",
+            color:"lightred",
+            size:"12",
+            chart_type:"line",
+            region_id:1,
+            namespace_id:1,            
             filters: []
           }, {
             label: "HTTP_400",
+            service_type: "ACLB",
             metric: "400",
             aggregate_function: "sum",
             group_by: "",
             y_label: "count",
+            color:"skyblue",
+            size:"6",
+            chart_type:"line",
+            region_id:1,
+            namespace_id:1,
             filters: []
           }, {
             label: "HTTP_500",
+            service_type: "ACLB",
             metric: "500",
             aggregate_function: "sum",
             group_by: "",
             y_label: "count",
+            color:"skyblue",
+            size:"6",
+            chart_type:"line",
+            region_id:1,
+            namespace_id:1,
             filters: []
           }, {
             label: "HTTP_401",
+            service_type: "ACLB",
             metric: "401",
             aggregate_function: "sum",
             group_by: "",
             y_label: "count",
+            color:"lightgreen",
+            size:"6",
+            chart_type:"line",
+            region_id:1,
+            namespace_id:1,
             filters: []
           }],
-          filters:[ {
-            key:"service_type",
-            operator:"eq",
-            value:"ACLB"
-            },
-            {
-              key:"region",
-              operator:"eq",
-              value:"us-east"
-            },
-            {
-              key:"interval",
-              operator:"eq",
-              value:"1m"
-            }
-          ]
+          time_granularity: {
+            unit:"sec",
+            value:1
+          }, 
+          time_duration: {
+            unit:"hr",
+            value:1
+          }
         }, 
         ))
         

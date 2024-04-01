@@ -5,3 +5,4 @@ export const BETA_API_ROOT = API_ROOT + 'beta';
 export const MINIMUM_PASSWORD_STRENGTH = 4;
 
 export const MAX_VOLUME_SIZE = 10240;
+export const CLOUDVIEW_METRICS_ROOT = "https://metrics-query.aclp.linode.com";

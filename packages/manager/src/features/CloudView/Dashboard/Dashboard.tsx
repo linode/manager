@@ -11,6 +11,7 @@ import { CloudViewGraphProperties } from '../Models/CloudViewGraphProperties';
 import Grid from '@mui/material/Unstable_Grid2';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Divider } from 'src/components/Divider';
+import { styled, useTheme } from '@mui/material/styles';
 
 export const Dashboard = (props: any) => { //todo define a proper properties class
 
@@ -40,18 +41,31 @@ export const Dashboard = (props: any) => { //todo define a proper properties cla
 
     const handleGlobalFilterChange = (globalFilter:GlobalFiltersObject) => {        
         setCloudViewGraphProperties({...cloudViewGraphProperties, dashboardFilters:globalFilter})
-    }
+    }    
 
-    const renderWidgets = () => {
+    const RenderWidgets = () => {
 
-        if(dashboard!=undefined) {            
-            return dashboard.widgets.map((element, index) => {                
-                return <Grid xs={6} key={index}><CloudViewGraph key={index} {...cloudViewGraphProperties} title={element.label}
-                /></Grid>
-            });             
+        if(dashboard!=undefined) { 
+            
+            if(cloudViewGraphProperties.dashboardFilters?.serviceType && 
+                cloudViewGraphProperties.dashboardFilters?.region && 
+                cloudViewGraphProperties.dashboardFilters?.resource) {
+                    return dashboard.widgets.map((element, index) => {                
+                        return <CloudViewGraph key={index} {...cloudViewGraphProperties} title={element.label}
+                        aggregate_function={element.aggregate_function} metric={element.metric} color={element.color} gridSize={element.size}
+                         //todo, grid size will come from widget list
+                        />
+                    });
+            } else {
+                return (<StyledPlaceholder
+                    subtitle="Select Service Type, Region and Resource to visualize metrics"
+                    icon={CloudViewIcon}                    
+                    title=""                                        
+                />);
+            }  
 
         } else {
-            return (<Placeholder
+            return (<StyledPlaceholder
                 subtitle="No visualizations are available at this moment.
         Create Dashboards to list here."
                 icon={CloudViewIcon}
@@ -60,6 +74,13 @@ export const Dashboard = (props: any) => { //todo define a proper properties cla
         }        
     }
 
+
+    const StyledPlaceholder = styled(Placeholder, {
+        label:"StyledPlaceholder"
+    })({
+        flex:"auto"
+    })
+
     //if nothing above matches return a dummy component
     return (
         <>
@@ -67,7 +88,9 @@ export const Dashboard = (props: any) => { //todo define a proper properties cla
             <Divider orientation="horizontal"></Divider>
             <GlobalFilters handleAnyFilterChange={(filters:GlobalFiltersObject) => 
                 handleGlobalFilterChange(filters)}></GlobalFilters>            
-           <Grid container spacing={2}>{renderWidgets()}</Grid>
+           <Grid container spacing={2}>
+            <RenderWidgets/>
+            </Grid>
         </>
     )
 
