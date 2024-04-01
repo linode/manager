@@ -10,7 +10,7 @@ import type { RegionSelectOption } from 'src/components/RegionSelect/RegionSelec
 
 interface Props {
   disabled?: boolean;
-  error?: React.ReactNode | string;
+  error?: JSX.Element | string;
   name: string;
   onBlur: (e: any) => void;
   onChange: (value: string[]) => void;

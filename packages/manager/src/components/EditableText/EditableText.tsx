@@ -104,7 +104,7 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
 interface Props {
   className?: string;
   disabledBreadcrumbEditButton?: boolean;
-  errorText?: React.ReactNode | string;
+  errorText?: JSX.Element | string;
   /**
    * Send event analytics
    */
