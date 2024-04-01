@@ -55,7 +55,6 @@ describe('PlacementGroupsDeleteModal', () => {
             region: 'us-east',
           })}
           disableUnassignButton={false}
-          isFetching={false}
         />
       );
     });
@@ -99,7 +98,6 @@ describe('PlacementGroupsDeleteModal', () => {
             members: [],
           })}
           disableUnassignButton={false}
-          isFetching={false}
         />
       );
     });

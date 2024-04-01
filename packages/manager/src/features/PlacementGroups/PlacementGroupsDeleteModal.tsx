@@ -27,7 +27,6 @@ import type { ButtonProps } from 'src/components/Button/Button';
 
 interface Props {
   disableUnassignButton: boolean;
-  isFetching: boolean;
   linodes: Linode[] | undefined;
   onClose: () => void;
   onExited?: () => void;
@@ -38,7 +37,6 @@ interface Props {
 export const PlacementGroupsDeleteModal = (props: Props) => {
   const {
     disableUnassignButton,
-    isFetching,
     linodes,
     onClose,
     onExited,
@@ -53,7 +51,6 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
   } = useDeletePlacementGroup(selectedPlacementGroup?.id ?? -1);
   const {
     error: unassignLinodeError,
-    // isLoading: unassignLinodeLoading,
     mutateAsync: unassignLinodes,
   } = useUnassignLinodesFromPlacementGroup(selectedPlacementGroup?.id ?? -1);
   const [assignedLinodes, setAssignedLinodes] = React.useState<
@@ -94,7 +91,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
   const linodeCount = assignedLinodes?.length ?? 0;
   const isDisabled = !selectedPlacementGroup || linodeCount > 0;
 
-  if (!selectedPlacementGroup || isFetching) {
+  if (!selectedPlacementGroup || !assignedLinodes) {
     return (
       <ConfirmationDialog
         sx={{
@@ -112,7 +109,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
         open={open}
         title="Delete Placement Group"
       >
-        isFetching ? <CircleProgress /> : <NotFound />
+        {!assignedLinodes ? <CircleProgress /> : <NotFound />}
       </ConfirmationDialog>
     );
   }

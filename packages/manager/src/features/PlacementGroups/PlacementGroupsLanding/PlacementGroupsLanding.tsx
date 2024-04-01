@@ -70,7 +70,7 @@ export const PlacementGroupsLanding = React.memo(() => {
     data: placementGroups,
     error,
     isFetching,
-    isLoading,
+    isLoading: placementGroupsLoading,
   } = usePlacementGroupsQuery(
     {
       page: pagination.page,
@@ -88,10 +88,7 @@ export const PlacementGroupsLanding = React.memo(() => {
     [] as number[]
   );
 
-  const {
-    data: linodes,
-    // isLoading
-  } = useAllLinodesQuery(
+  const { data: linodes } = useAllLinodesQuery(
     {},
     {
       '+or': allLinodeIDsAssigned?.map((linodeId) => ({ id: linodeId })),
@@ -146,7 +143,7 @@ export const PlacementGroupsLanding = React.memo(() => {
   const isPlacementGroupDeleteModalOpen = location.pathname.includes('delete');
   const isPlacementGroupEditDrawerOpen = location.pathname.includes('edit');
 
-  if (isLoading) {
+  if (placementGroupsLoading) {
     return <CircleProgress />;
   }
 
@@ -313,7 +310,6 @@ export const PlacementGroupsLanding = React.memo(() => {
       />
       <PlacementGroupsDeleteModal
         disableUnassignButton={isLinodeReadOnly}
-        isFetching={isFetching}
         linodes={linodes}
         onClose={onClosePlacementGroupDrawer}
         onExited={onExited}
