@@ -73,5 +73,7 @@
   "volta": {
     "node": "18.14.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "rainbowvis.js": "^1.1.1"
+  }
 }

@@ -12,6 +12,7 @@ import {
 } from 'src/components/LineGraph/LineGraph';
 import { Typography } from 'src/components/Typography';
 import { ZoomIcon } from './Components/Zoomer';
+import { styled, useTheme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
     message: {
@@ -39,9 +40,11 @@ export interface CloudViewLineGraphProps extends LineGraphProps {
     gridSize: number;
 }
 
-const zoomIconStyles = {
-    'float':'right'
-}
+const StyledZoomIcon = styled(ZoomIcon, {
+    label:"StyledZoomIcon"
+})({
+    float:"right"
+})
 
 export const CloudViewLineGraph = React.memo((props: CloudViewLineGraphProps) => {
     const { classes } = useStyles();
@@ -67,7 +70,7 @@ export const CloudViewLineGraph = React.memo((props: CloudViewLineGraphProps) =>
 
     return (
         <Grid xs={zoomIn?12:6}>
-            <ZoomIcon zoomIn={zoomIn} handleZoomToggle={handleZoomToggle} componentStyle={zoomIconStyles}/>
+            <StyledZoomIcon zoomIn={zoomIn} handleZoomToggle={handleZoomToggle}/>
             <React.Fragment>
                 <Typography className={classes.title} variant="body1">
                     {title}

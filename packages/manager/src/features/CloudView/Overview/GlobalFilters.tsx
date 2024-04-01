@@ -15,7 +15,7 @@ import { CloudViewServiceSelect } from '../shared/ServicetypeSelect';
 import { CloudViewTimeRangeSelect } from '../shared/TimeRangeSelect';
 import { GlobalFilterProperties, GlobalFiltersObject } from '../Models/GlobalFilterProperties';
 
-export const GlobalFilters = React.memo((props:GlobalFilterProperties) => {
+export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const theme = useTheme();
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
@@ -37,32 +37,32 @@ export const GlobalFilters = React.memo((props:GlobalFilterProperties) => {
   React.useEffect(() => {
 
     emitGlobalFilterChange();
-    
-  }, [time, selectedInterval, selectedRegion, selectedResourceId, selectedService])
+
+  }, [time, selectedInterval, selectedRegion, selectedResourceId, selectedService]) //if anything changes, emit an event to parent component
 
   const handleTimeRangeChange = (start: number, end: number) => {
     console.log('TimeRange: ', start, end);
-    setTimeBox({ end, start });    
+    setTimeBox({ end, start });
   };
 
   const handleIntervalChange = (interval: string | undefined) => {
     console.log('Interval: ', interval);
-    setInterval(interval);    
+    setInterval(interval);
   };
 
   const handleRegionChange = (region: string | undefined) => {
     console.log('Region: ', region);
-    setRegion(region);    
+    setRegion(region);
   };
 
   const handleResourceChange = (resourceId: any) => {
     console.log('Resource ID: ', resourceId);
-    setResourceId(resourceId);    
+    setResourceId(resourceId);
   };
 
   const handleServiceChange = (service: CloudViewResourceTypes) => {
     console.log('Service Type: ', service);
-    setService(service);    
+    setService(service);
   };
 
   const emitGlobalFilterChange = () => {
@@ -124,7 +124,7 @@ export const GlobalFilters = React.memo((props:GlobalFilterProperties) => {
           </Grid>
         </StyledGrid>
       </Grid>
-    ); 
+  );
 });
 
 const StyledCloudViewRegionSelect = styled(CloudViewRegionSelect, {

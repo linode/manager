@@ -16,16 +16,20 @@ export const ZoomIcon = (props:any) => {
     React.useEffect(() => {
         props.handleZoomToggle(zoomIn);
     }, [zoomIn])
-    
 
-    if(zoomIn) {
-        return (
-            <ZoomInMap onClick={handleClick} className='zoomInMap' style={props.componentStyle}/>
-        )
+
+    const ToggleZoomer = () => {
+        if(zoomIn) {
+            return (<ZoomInMap onClick={handleClick} />);
+        }
+
+        return (<ZoomOutMap onClick={handleClick} />);
     }
 
-    return (            
-        <ZoomOutMap onClick={handleClick} className='zoomOutMap' style={props.componentStyle}/>
+    return (      
+        <div className={props.className}>
+            <ToggleZoomer/>
+        </div>        
     )
 }
 

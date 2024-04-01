@@ -65,6 +65,8 @@ export interface CloudViewMetricsRequest {
   duration:TimeDuration; // come from dashboard
   step:TimeGranularity; //comes from dashboard
   counter:number;
+  startTime:number;
+  endTime:number;
 }
 
 export interface CloudViewMetricsResponse {
@@ -86,7 +88,7 @@ export interface CloudViewMetricsResponseData {
 
 export interface CloudViewMetricsList {
 
-  metric:Array<CloudViewMetrics>;
+  metric:any;
   values:Array<CloudViewMetricValues>;
 
 }

@@ -10,13 +10,13 @@ import { CloudViewGraph } from '../Widget/CloudViewGraph';
 import { CloudViewGraphProperties } from '../Models/CloudViewGraphProperties';
 import Grid from '@mui/material/Unstable_Grid2';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Divider } from 'src/components/Divider';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import { Widgets } from '@linode/api-v4';
 
 export const Dashboard = (props: any) => { //todo define a proper properties class
 
 
-    const [cloudViewGraphProperties , setCloudViewGraphProperties] = React.useState<CloudViewGraphProperties>({} as CloudViewGraphProperties);
+    const [cloudViewGraphProperties, setCloudViewGraphProperties] = React.useState<CloudViewGraphProperties>({} as CloudViewGraphProperties);
 
 
 
@@ -26,9 +26,8 @@ export const Dashboard = (props: any) => { //todo define a proper properties cla
         dashboardId = 1
     }
 
-
     const { data: dashboard, isError: dashboardLoadError,
-        isLoading: dashboardLoadLoding} = useCloudViewDashboardByIdQuery(dashboardId);
+        isLoading: dashboardLoadLoding } = useCloudViewDashboardByIdQuery(dashboardId);
 
     if (dashboardLoadLoding) {
         return <CircleProgress />
@@ -39,30 +38,43 @@ export const Dashboard = (props: any) => { //todo define a proper properties cla
     }
 
 
-    const handleGlobalFilterChange = (globalFilter:GlobalFiltersObject) => {        
-        setCloudViewGraphProperties({...cloudViewGraphProperties, dashboardFilters:globalFilter})
-    }    
+    const handleGlobalFilterChange = (globalFilter: GlobalFiltersObject) => {
+        //set as dashboard filter
+        setCloudViewGraphProperties({ ...cloudViewGraphProperties, dashboardFilters: globalFilter })
+    }
+
+    const getCloudViewGraphProperties = (widget:Widgets) => {
+
+        let graphProp:CloudViewGraphProperties = {} as CloudViewGraphProperties;
+
+        graphProp = {...cloudViewGraphProperties};
+        graphProp.title = widget.label;
+        graphProp.aggregate_function = widget.aggregate_function;
+        graphProp.metric = widget.metric;
+        graphProp.color = widget.color;
+        graphProp.gridSize = widget.size;
+
+        return graphProp;
+
+    }
 
     const RenderWidgets = () => {
 
-        if(dashboard!=undefined) { 
-            
-            if(cloudViewGraphProperties.dashboardFilters?.serviceType && 
-                cloudViewGraphProperties.dashboardFilters?.region && 
+        if (dashboard != undefined) {
+
+            if (cloudViewGraphProperties.dashboardFilters?.serviceType &&
+                cloudViewGraphProperties.dashboardFilters?.region &&
                 cloudViewGraphProperties.dashboardFilters?.resource) {
-                    return dashboard.widgets.map((element, index) => {                
-                        return <CloudViewGraph key={index} {...cloudViewGraphProperties} title={element.label}
-                        aggregate_function={element.aggregate_function} metric={element.metric} color={element.color} gridSize={element.size}
-                         //todo, grid size will come from widget list
-                        />
-                    });
+                return dashboard.widgets.map((element, index) => {
+                    return <CloudViewGraph key={index} {...getCloudViewGraphProperties(element)} />
+                });
             } else {
                 return (<StyledPlaceholder
                     subtitle="Select Service Type, Region and Resource to visualize metrics"
-                    icon={CloudViewIcon}                    
-                    title=""                                        
+                    icon={CloudViewIcon}
+                    title=""
                 />);
-            }  
+            }
 
         } else {
             return (<StyledPlaceholder
@@ -71,25 +83,30 @@ export const Dashboard = (props: any) => { //todo define a proper properties cla
                 icon={CloudViewIcon}
                 title=""
             />);
-        }        
+        }
     }
 
 
     const StyledPlaceholder = styled(Placeholder, {
-        label:"StyledPlaceholder"
+        label: "StyledPlaceholder"
     })({
-        flex:"auto"
+        flex: "auto"
+    })
+
+    const StyledGlobalFilters = styled(GlobalFilters, {
+        label: "StyledGlobalFilters"
+    })({
+        width:"1%"
     })
 
     //if nothing above matches return a dummy component
     return (
         <>
-            <LandingHeader title={dashboard.label}/>
-            <Divider orientation="horizontal"></Divider>
+            <LandingHeader title={dashboard.label}/>            
             <GlobalFilters handleAnyFilterChange={(filters:GlobalFiltersObject) => 
                 handleGlobalFilterChange(filters)}></GlobalFilters>            
            <Grid container spacing={2}>
-            <RenderWidgets/>
+                <RenderWidgets />
             </Grid>
         </>
     )

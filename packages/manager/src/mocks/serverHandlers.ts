@@ -108,6 +108,7 @@ import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
 import { getStorage } from 'src/utilities/storage';
+import { getMetricsResponse } from './metricsMocker';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -557,8 +558,8 @@ const cloudView = [
   }),
 
   rest.post('*/aclp/service/*/metrics', async (req, res, ctx) => {
-    await sleep(1000)
-    return res(ctx.json({}));
+    await sleep(1000)        
+    return res(ctx.json(getMetricsResponse(req.body)));
   }),
 
   //dashboards
