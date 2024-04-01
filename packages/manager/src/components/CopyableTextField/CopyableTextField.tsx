@@ -4,10 +4,10 @@ import * as React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TextField, TextFieldProps } from 'src/components/TextField';
 
-type CopyableTextFieldProps = TextFieldProps & {
+interface CopyableTextFieldProps extends TextFieldProps {
   className?: string;
   hideIcon?: boolean;
-};
+}
 
 export const CopyableTextField = (props: CopyableTextFieldProps) => {
   const { className, hideIcon, value, ...restProps } = props;

@@ -12,7 +12,7 @@ import React from 'react';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import {
   domainToSearchableItem,

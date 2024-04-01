@@ -10,7 +10,7 @@ import type {
 /**
  * Helper to get the affinity enforcement readable string.
  */
-export const getAffinityEnforcement = (
+export const getAffinityTypeEnforcement = (
   is_strict: boolean
 ): AffinityEnforcement => {
   return is_strict ? 'Strict' : 'Flexible';
@@ -22,7 +22,7 @@ export const getAffinityEnforcement = (
 export const getPlacementGroupLinodeCount = (
   placementGroup: PlacementGroup
 ): number => {
-  return placementGroup.linodes.length;
+  return placementGroup.members.length;
 };
 
 interface HasPlacementGroupReachedCapacityOptions {
@@ -100,7 +100,10 @@ export const getLinodesFromAllPlacementGroups = (
   }
 
   const linodeIds = allPlacementGroups.reduce((acc, placementGroup) => {
-    return [...acc, ...placementGroup.linodes.map((linode) => linode.linode)];
+    return [
+      ...acc,
+      ...placementGroup.members.map((member) => member.linode_id),
+    ];
   }, []);
 
   return Array.from(new Set(linodeIds));

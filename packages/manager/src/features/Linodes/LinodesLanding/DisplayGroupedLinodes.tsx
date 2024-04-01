@@ -34,7 +34,8 @@ import {
 } from './DisplayLinodes.styles';
 import TableWrapper from './TableWrapper';
 
-interface Props {
+interface DisplayGroupedLinodesProps
+  extends OrderByProps<LinodeWithMaintenance> {
   component: React.ComponentType<RenderLinodesProps>;
   data: LinodeWithMaintenance[];
   display: 'grid' | 'list';
@@ -53,9 +54,7 @@ interface Props {
   toggleLinodeView: () => 'grid' | 'list';
 }
 
-type CombinedProps = Props & OrderByProps<LinodeWithMaintenance>;
-
-export const DisplayGroupedLinodes = (props: CombinedProps) => {
+export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
   const {
     component: Component,
     data,

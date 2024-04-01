@@ -1,6 +1,7 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
+import { regionFactory } from 'src/factories';
 import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -16,6 +17,18 @@ const defaultProps: VLANAccordionProps = {
   ipamAddress: '',
   vlanLabel: '',
 };
+
+const queryMocks = vi.hoisted(() => ({
+  useRegionsQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/queries/regions/regions', async () => {
+  const actual = await vi.importActual('src/queries/regions/regions');
+  return {
+    ...actual,
+    useRegionsQuery: queryMocks.useRegionsQuery,
+  };
+});
 
 describe('VLANAccordion Component', () => {
   it('renders collapsed VLANAccordion component', () => {
@@ -59,6 +72,15 @@ describe('VLANAccordion Component', () => {
   });
 
   it('enables the input fields when a region is selected', () => {
+    queryMocks.useRegionsQuery.mockReturnValue({
+      data: [
+        regionFactory.build({
+          capabilities: ['Vlans'],
+          id: 'us-east',
+        }),
+      ],
+    });
+
     const { container, getByRole } = renderWithTheme(
       <VLANAccordion {...defaultProps} region="us-east" />,
       {

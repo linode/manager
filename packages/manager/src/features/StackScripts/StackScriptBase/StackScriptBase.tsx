@@ -86,7 +86,7 @@ interface HelperFunctions {
   getNext: () => void;
 }
 
-export type StateProps = HelperFunctions & State;
+export interface StateProps extends HelperFunctions, State {}
 
 export interface WithStackScriptBaseOptions {
   isSelecting: boolean;

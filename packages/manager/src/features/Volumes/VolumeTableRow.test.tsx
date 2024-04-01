@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { notificationFactory, volumeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { ActionHandlers } from './VolumesActionMenu';
@@ -73,8 +73,8 @@ describe('Volume table row', () => {
     });
 
     server.use(
-      rest.get('*/account/notifications', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([notification])));
+      http.get('*/account/notifications', () => {
+        return HttpResponse.json(makeResourcePage([notification]));
       })
     );
 
@@ -93,8 +93,8 @@ describe('Volume table row', () => {
     });
 
     server.use(
-      rest.get('*/account/notifications', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([notification])));
+      http.get('*/account/notifications', () => {
+        return HttpResponse.json(makeResourcePage([notification]));
       })
     );
 

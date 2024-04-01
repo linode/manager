@@ -3,6 +3,7 @@ import {
   GrantLevel,
   GrantType,
   Grants,
+  User,
   getGrants,
   getUser,
   updateGrants,
@@ -42,6 +43,7 @@ import {
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
 import { PARENT_USER, grantTypeMap } from 'src/features/Account/constants';
+import { accountQueries } from 'src/queries/account/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -295,13 +297,17 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.setState({
             restricted: user.restricted,
           });
-          this.props.queryClient.invalidateQueries(['account', 'users']);
-        })
-        .then(() => {
+          // refresh the data on /account/users so it is accurate
+          this.props.queryClient.invalidateQueries(
+            accountQueries.users._ctx.paginated._def
+          );
+          // Update the user directly in the cache
+          this.props.queryClient.setQueryData<User>(
+            accountQueries.users._ctx.user(user.username).queryKey,
+            user
+          );
           // unconditionally sets this.state.loadingGrants to false
           this.getUserGrants();
-          // refresh the data on /account/users so it is accurate
-          this.props.queryClient.invalidateQueries(['account', 'users']);
           this.props.enqueueSnackbar('User permissions successfully saved.', {
             variant: 'success',
           });
@@ -721,13 +727,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             }
           );
 
-          // Refresh the data on /account/users/:currentUser:/grants/ so it is accurate.
-          this.props.queryClient.invalidateQueries([
-            'account',
-            'users',
-            'grants',
-            currentUsername,
-          ]);
+          // Update the user's grants directly in the cache
+          this.props.queryClient.setQueriesData<Grants>(
+            accountQueries.users._ctx.user(currentUsername)._ctx.grants
+              .queryKey,
+            grantsResponse
+          );
         })
         .catch((errResponse) => {
           this.setState({

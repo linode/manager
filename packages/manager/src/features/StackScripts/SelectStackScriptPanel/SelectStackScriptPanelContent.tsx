@@ -26,14 +26,14 @@ interface Props {
   resetStackScriptSelection: () => void;
 }
 
-type CombinedProps = StateProps & Props;
+interface SelectStackScriptPanelContentProps extends StateProps, Props {}
 
 interface State {
   selected?: number;
 }
 
 class SelectStackScriptPanelContent extends React.Component<
-  CombinedProps,
+  SelectStackScriptPanelContentProps,
   State
 > {
   render() {
@@ -72,6 +72,6 @@ class SelectStackScriptPanelContent extends React.Component<
   };
 }
 
-export default compose<CombinedProps, Props>(
+export default compose<SelectStackScriptPanelContentProps, Props>(
   StackScriptBase({ isSelecting: true })
 )(SelectStackScriptPanelContent);

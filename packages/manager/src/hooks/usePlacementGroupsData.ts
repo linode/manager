@@ -3,7 +3,7 @@ import {
   hasPlacementGroupReachedCapacity,
 } from 'src/features/PlacementGroups/utils';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import type { APIError, Linode, PlacementGroup, Region } from '@linode/api-v4';
 
@@ -31,8 +31,8 @@ export const usePlacementGroupData = ({
   const { data: linodes, error, isLoading } = useAllLinodesQuery(
     {},
     {
-      '+or': placementGroup?.linodes.map((linodeItem) => ({
-        id: linodeItem.linode,
+      '+or': placementGroup?.members.map((member) => ({
+        id: member.linode_id,
       })),
     }
   );
@@ -55,7 +55,7 @@ export const usePlacementGroupData = ({
 
   const linodesCount = getPlacementGroupLinodeCount(placementGroup);
   const assignedLinodes = linodes?.filter((linode) =>
-    placementGroup.linodes.some((pgLinode) => pgLinode.linode === linode.id)
+    placementGroup.members.some((pgLinode) => pgLinode.linode_id === linode.id)
   );
   const hasReachedCapacity = hasPlacementGroupReachedCapacity({
     placementGroup,

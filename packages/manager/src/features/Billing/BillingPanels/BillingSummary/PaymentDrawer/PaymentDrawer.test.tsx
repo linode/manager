@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { paymentFactory } from 'src/factories/billing';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import PaymentDrawer, { getMinimumPayment } from './PaymentDrawer';
@@ -52,8 +52,8 @@ describe('Make a Payment Panel', () => {
 
     it.skip('should not display a warning for a normal successful payment', async () => {
       server.use(
-        rest.post('*/account/payments', (req, res, ctx) => {
-          return res(ctx.json(paymentFactory.build()));
+        http.post('*/account/payments', () => {
+          return HttpResponse.json(paymentFactory.build());
         })
       );
       render(wrapWithTheme(<PaymentDrawer {...props} />));

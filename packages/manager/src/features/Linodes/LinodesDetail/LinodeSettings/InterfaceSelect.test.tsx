@@ -1,11 +1,11 @@
+import { InterfacePurpose } from '@linode/api-v4';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { InterfacePurpose } from '@linode/api-v4';
-import { InterfaceSelect } from './InterfaceSelect';
-
 import { queryClientFactory } from 'src/queries/base';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+
+import { InterfaceSelect } from './InterfaceSelect';
 
 const queryClient = queryClientFactory();
 
@@ -18,15 +18,15 @@ const unavailableInRegionTextTestId = 'unavailable-in-region-text';
 
 describe('InterfaceSelect', () => {
   const props = {
+    errors: {},
     fromAddonsPanel: false,
     handleChange: vi.fn(),
     ipamAddress: null,
     label: null,
     readOnly: false,
     region: 'us-east',
-    slotNumber: 0,
     regionHasVLANs: true,
-    errors: {},
+    slotNumber: 0,
   };
 
   it('should display helper text regarding VPCs not being available in the region in the Linode Add/Edit Config dialog if applicable', async () => {
@@ -36,9 +36,7 @@ describe('InterfaceSelect', () => {
       regionHasVPCs: false,
     };
 
-    const { queryByTestId } = renderWithTheme(<InterfaceSelect {..._props} />, {
-      flags: { vpc: true },
-    });
+    const { queryByTestId } = renderWithTheme(<InterfaceSelect {..._props} />);
 
     await waitFor(() => {
       expect(queryByTestId(unavailableInRegionTextTestId)).toBeInTheDocument();
@@ -52,9 +50,7 @@ describe('InterfaceSelect', () => {
       regionHasVLANs: false,
     };
 
-    const { queryByTestId } = renderWithTheme(<InterfaceSelect {..._props} />, {
-      flags: { vpc: false },
-    });
+    const { queryByTestId } = renderWithTheme(<InterfaceSelect {..._props} />);
 
     await waitFor(() => {
       expect(queryByTestId(unavailableInRegionTextTestId)).toBeInTheDocument();

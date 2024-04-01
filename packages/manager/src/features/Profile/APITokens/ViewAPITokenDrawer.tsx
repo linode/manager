@@ -9,9 +9,7 @@ import { TableRow } from 'src/components/TableRow';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccount } from 'src/queries/account';
 import { useProfile } from 'src/queries/profile';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import {
   StyledAccessCell,
@@ -36,27 +34,16 @@ export const ViewAPITokenDrawer = (props: Props) => {
   const flags = useFlags();
 
   const { data: profile } = useProfile();
-  const { data: account } = useAccount();
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',
   });
 
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
-
   const hasParentChildAccountAccess = Boolean(flags.parentChildAccountAccess);
 
-  // @TODO: VPC & Parent/Child - once these are in GA, remove _basePermNameMap logic and references.
+  // @TODO: Parent/Child - once in GA, remove _basePermNameMap logic and references.
   // Just use the basePermNameMap import directly w/o any manipulation.
   const basePermNameMap = filterPermsNameMap(_basePermNameMap, [
-    {
-      name: 'vpc',
-      shouldBeIncluded: showVPCs,
-    },
     {
       name: 'child_account',
       shouldBeIncluded: hasParentChildAccountAccess,

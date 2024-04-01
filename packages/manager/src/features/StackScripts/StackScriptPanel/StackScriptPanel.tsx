@@ -30,9 +30,9 @@ interface Props {
   queryString: string;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
+interface SelectStackScriptPanelProps extends Props, RouteComponentProps<{}> {}
 
-const SelectStackScriptPanel = (props: CombinedProps) => {
+const SelectStackScriptPanel = (props: SelectStackScriptPanelProps) => {
   const { publicImages } = props;
   const { data: profile } = useProfile();
   const username = profile?.username || '';
@@ -69,6 +69,6 @@ const SelectStackScriptPanel = (props: CombinedProps) => {
   return <NavTabs tabs={tabs} />;
 };
 
-export default compose<CombinedProps, Props>(RenderGuard)(
+export default compose<SelectStackScriptPanelProps, Props>(RenderGuard)(
   SelectStackScriptPanel
 );

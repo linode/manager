@@ -175,9 +175,14 @@ export interface LongviewProcesses<WithDummy extends '' | 'yAsNull' = ''> {
   Processes?: Record<string, Process<WithDummy>>;
 }
 
-export type Process<WithDummy extends '' | 'yAsNull' = ''> = {
+export interface Process<WithDummy extends '' | 'yAsNull' = ''> {
+  count?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  cpu?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  ioreadkbytes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  iowritekbytes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
   longname: string;
-} & Record<string, ProcessStats<WithDummy>>;
+  mem?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+}
 
 export interface ProcessStats<WithDummy extends '' | 'yAsNull' = ''> {
   count?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];

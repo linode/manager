@@ -70,7 +70,7 @@ The styles for Cloud Manager are located in three places:
   - The breakpoints can be modified at `/foundations/breakpoints/index.ts`.
 - Component-specific styles may be defined either at the end of the component file or in a dedicated file, named `ComponentName.styles.tsx`. Refer to the guidelines outlined in the "Styles" section of [Component Structure](02-component-structure.md#styles).
 
-## Typesript Unions, Const Enums and Objects
+## Typescript Unions, Const Enums, Objects and Intersections
 In our development process, we often encounter scenarios where we need to handle various messages or descriptions in our application. These messages can range from short, pithy statements to longer, more descriptive texts. To ensure a consistent and maintainable approach, we can use union types for lists of pithy data and const enums or plain old JavaScript objects (POJOs) for longer descriptions.
 
 ### Union Types for Pithy Data
@@ -131,6 +131,33 @@ function myFunction(type: LinodeCreateFrom) {
 myFunction(CreateTypes.Backup); // Works
 myFunction('fromBackup'); // Works
 ```
+
+### Preferring Interfaces Over Intersections
+
+Much of the time, a simple type alias to an object type acts very similarly to an interface.
+
+```Typescript
+interface Foo { prop: string }
+
+type Bar = { prop: string };
+```
+
+However, and as soon as you need to compose two or more types, you have the option of extending those types with an interface, or intersecting them in a type alias, and that's when the differences start to matter.
+
+Interfaces create a single flat object type that detects property conflicts, which are usually important to resolve! Intersections on the other hand just recursively merge properties, and in some cases produce never. Interfaces also display consistently better, whereas type aliases to intersections can't be displayed in part of other intersections. Type relationships between interfaces are also cached, as opposed to intersection types as a whole. A final noteworthy difference is that when checking against a target intersection type, every constituent is checked before checking against the "effective"/"flattened" type.
+
+For this reason, extending types with interfaces/extends is suggested over creating intersection types.
+
+```Typescript
+- type Foo = Bar & Baz & {
+-     someProp: string;
+- }
++ interface Foo extends Bar, Baz {
++     someProp: string;
++ }
+```
+
+Source: [TypeScript Wiki](https://github.com/microsoft/TypeScript/wiki/Performance#preferring-interfaces-over-intersections)
 
 ## Adobe Analytics
 

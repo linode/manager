@@ -5,7 +5,7 @@ import * as React from 'react';
 import { appTokenFactory } from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
 import { profileFactory } from 'src/factories/profile';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
@@ -65,8 +65,10 @@ describe('Create API Token Drawer', () => {
 
   it('Should see secret modal with secret when you type a label and submit the form successfully', async () => {
     server.use(
-      rest.post('*/profile/tokens', (req, res, ctx) => {
-        return res(ctx.json(appTokenFactory.build({ token: 'secret-value' })));
+      http.post('*/profile/tokens', () => {
+        return HttpResponse.json(
+          appTokenFactory.build({ token: 'secret-value' })
+        );
       })
     );
 
@@ -143,26 +145,6 @@ describe('Create API Token Drawer', () => {
     expect(childScope).not.toBeInTheDocument();
   });
 
-  it('Should show the VPC scope with the VPC feature flag on', () => {
-    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />, {
-      flags: { vpc: true },
-    });
-    const vpcScope = getByText('VPCs');
-    expect(vpcScope).toBeInTheDocument();
-  });
-
-  it('Should not show the VPC scope with the VPC feature flag off', () => {
-    const { queryByText } = renderWithTheme(
-      <CreateAPITokenDrawer {...props} />,
-      {
-        flags: { vpc: false },
-      }
-    );
-
-    const vpcScope = queryByText('VPCs');
-    expect(vpcScope).not.toBeInTheDocument();
-  });
-
   it('Should close when Cancel is pressed', async () => {
     const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />);
     const cancelButton = getByText(/Cancel/);
@@ -172,10 +154,7 @@ describe('Create API Token Drawer', () => {
 
   it('Should not select Read Only for VPC scope when Select All > Read Only is clicked', async () => {
     const { getAllByTestId, getByLabelText } = renderWithTheme(
-      <CreateAPITokenDrawer {...props} />,
-      {
-        flags: { vpc: true },
-      }
+      <CreateAPITokenDrawer {...props} />
     );
     const vpcPermRadioButtons = getAllByTestId('perm-vpc-radio');
     const vpcNonePermRadioButton = vpcPermRadioButtons[0].firstChild;

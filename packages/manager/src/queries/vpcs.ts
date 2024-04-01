@@ -28,16 +28,11 @@ export const vpcQueryKey = 'vpcs';
 export const subnetQueryKey = 'subnets';
 
 // VPC queries
-export const useVPCsQuery = (
-  params: Params,
-  filter: Filter,
-  enabled: boolean = true
-) => {
+export const useVPCsQuery = (params: Params, filter: Filter) => {
   return useQuery<ResourcePage<VPC>, APIError[]>(
     [vpcQueryKey, 'paginated', params, filter],
     () => getVPCs(params, filter),
     {
-      enabled,
       keepPreviousData: true,
     }
   );

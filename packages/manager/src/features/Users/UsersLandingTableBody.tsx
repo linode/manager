@@ -18,10 +18,6 @@ interface Props {
 export const UsersLandingTableBody = (props: Props) => {
   const { error, isLoading, numCols, onDelete, users } = props;
 
-  if ((isLoading && !users) || (isLoading && users?.length === 0)) {
-    return <TableRowEmpty colSpan={numCols} />;
-  }
-
   if (isLoading) {
     return <TableRowLoading columns={numCols} rows={1} />;
   }
@@ -30,10 +26,13 @@ export const UsersLandingTableBody = (props: Props) => {
     return <TableRowError colSpan={numCols} message={error[0].reason} />;
   }
 
+  if (!users || users.length === 0) {
+    return <TableRowEmpty colSpan={numCols} />;
+  }
+
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
-      {users?.map((user) => (
+      {users.map((user) => (
         <UserRow key={user.username} onDelete={onDelete} user={user} />
       ))}
     </>

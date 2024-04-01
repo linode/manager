@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { Drawer } from 'src/components/Drawer';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import { CopyAllHostnames } from './CopyAllHostnames';

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
@@ -20,8 +20,8 @@ const queryString = 'menu-item-Managed';
 describe('PrimaryNav', () => {
   it('only contains a "Managed" menu link if the user has Managed services.', async () => {
     server.use(
-      rest.get('*/account/maintenance', (req, res, ctx) => {
-        return res(ctx.json({ managed: false }));
+      http.get('*/account/maintenance', () => {
+        return HttpResponse.json({ managed: false });
       })
     );
 
@@ -34,8 +34,8 @@ describe('PrimaryNav', () => {
     expect(queryByTestId(queryString)).not.toBeInTheDocument();
 
     server.use(
-      rest.get('*/account/maintenance', (req, res, ctx) => {
-        return res(ctx.json({ managed: true }));
+      http.get('*/account/maintenance', () => {
+        return HttpResponse.json({ managed: true });
       })
     );
 
@@ -78,8 +78,8 @@ describe('PrimaryNav', () => {
     });
 
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(account));
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
       })
     );
 
@@ -98,8 +98,8 @@ describe('PrimaryNav', () => {
     });
 
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(account));
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
       })
     );
 
@@ -118,8 +118,8 @@ describe('PrimaryNav', () => {
     });
 
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(account));
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
       })
     );
 

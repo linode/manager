@@ -2,7 +2,7 @@ import React from 'react';
 
 import { notificationFactory, volumeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VolumesUpgradeBanner } from './VolumesUpgradeBanner';
@@ -16,11 +16,11 @@ describe('VolumesUpgradeBanner', () => {
     });
 
     server.use(
-      rest.get('*/linode/instances/:id/volumes', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([volume])));
+      http.get('*/linode/instances/:id/volumes', () => {
+        return HttpResponse.json(makeResourcePage([volume]));
       }),
-      rest.get('*/account/notifications', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([notification])));
+      http.get('*/account/notifications', () => {
+        return HttpResponse.json(makeResourcePage([notification]));
       })
     );
 
@@ -48,11 +48,11 @@ describe('VolumesUpgradeBanner', () => {
     ];
 
     server.use(
-      rest.get('*/linode/instances/:id/volumes', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage(volumes)));
+      http.get('*/linode/instances/:id/volumes', () => {
+        return HttpResponse.json(makeResourcePage(volumes));
       }),
-      rest.get('*/account/notifications', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage(notifications)));
+      http.get('*/account/notifications', () => {
+        return HttpResponse.json(makeResourcePage(notifications));
       })
     );
 

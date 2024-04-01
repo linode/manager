@@ -21,11 +21,13 @@ const LoadBalancerSummary = React.lazy(() =>
   }))
 );
 
+interface ConfigurationPayloadWithServiceTargets extends ConfigurationPayload {
+  service_targets: ServiceTargetPayload[];
+}
+
 export interface LoadBalancerCreateFormData
   extends Omit<CreateLoadbalancerPayload, 'configurations'> {
-  configurations: (ConfigurationPayload & {
-    service_targets: ServiceTargetPayload[];
-  })[];
+  configurations: ConfigurationPayloadWithServiceTargets[];
 }
 
 export const initialValues: LoadBalancerCreateFormData = {

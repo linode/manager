@@ -5,7 +5,7 @@ import {
   configurationsEndpointHealthFactory,
   endpointHealthFactory,
 } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ConfigurationAccordionHeader } from './ConfigurationAccordionHeader';
@@ -53,9 +53,8 @@ describe('ConfigurationAccordionHeader', () => {
     );
 
     server.use(
-      rest.get(
-        '*/v4beta/aclb/5/configurations/endpoints-health',
-        (req, res, ctx) => res(ctx.json(allConfigurationsEndpointHealth))
+      http.get('*/v4beta/aclb/5/configurations/endpoints-health', () =>
+        HttpResponse.json(allConfigurationsEndpointHealth)
       )
     );
 

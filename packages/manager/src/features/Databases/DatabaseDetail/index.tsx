@@ -85,7 +85,7 @@ export const DatabaseDetail = () => {
   ];
 
   if (flags.databaseResize) {
-    tabs.push({
+    tabs.splice(2, 0, {
       routeName: `/databases/${engine}/${id}/resize`,
       title: 'Resize',
     });
@@ -161,14 +161,14 @@ export const DatabaseDetail = () => {
           <SafeTabPanel index={1}>
             <DatabaseBackups />
           </SafeTabPanel>
-          <SafeTabPanel index={2}>
-            <DatabaseSettings database={database} />
-          </SafeTabPanel>
           {flags.databaseResize ? (
-            <SafeTabPanel index={3}>
+            <SafeTabPanel index={2}>
               <DatabaseResize database={database} />
             </SafeTabPanel>
           ) : null}
+          <SafeTabPanel index={flags.databaseResize ? 3 : 2}>
+            <DatabaseSettings database={database} />
+          </SafeTabPanel>
         </TabPanels>
       </Tabs>
     </>

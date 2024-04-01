@@ -6,7 +6,7 @@ import { Box } from 'src/components/Box';
 import { Stack } from 'src/components/Stack';
 import { linodeFactory } from 'src/factories';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import type { Filter } from '@linode/api-v4';
 import type { TextFieldProps } from 'src/components/TextField';

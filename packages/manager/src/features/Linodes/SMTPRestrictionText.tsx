@@ -4,7 +4,7 @@ import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
 import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 
 export interface SMTPRestrictionTextProps {

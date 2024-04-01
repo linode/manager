@@ -25,7 +25,7 @@ export const linode1: Linode = {
   ipv6: '2600:3c03::f03c:91ff:fe0a:109a/64',
   label: 'test',
   placement_group: {
-    affinity_type: 'anti_affinity',
+    affinity_type: 'anti_affinity:local',
     id: 1,
     is_strict: true,
     label: 'pg-1',
@@ -70,7 +70,7 @@ export const linode2: Linode = {
   ipv6: '2600:3c03::f03c:91ff:fe0a:0d7a/64',
   label: 'another-test',
   placement_group: {
-    affinity_type: 'anti_affinity',
+    affinity_type: 'anti_affinity:local',
     id: 1,
     is_strict: true,
     label: 'pg-1',
@@ -115,7 +115,7 @@ export const linode3: Linode = {
   ipv6: '2600:3c03::f03c:91ff:fe0a:0d7a/64',
   label: 'another-test',
   placement_group: {
-    affinity_type: 'anti_affinity',
+    affinity_type: 'anti_affinity:local',
     id: 1,
     is_strict: true,
     label: 'pg-1',
@@ -160,7 +160,7 @@ export const linode4: Linode = {
   ipv6: '2600:3c03::f03c:91ff:fe0a:0d7a/64',
   label: 'another-test-eu',
   placement_group: {
-    affinity_type: 'anti_affinity',
+    affinity_type: 'anti_affinity:local',
     id: 1,
     is_strict: true,
     label: 'pg-1',

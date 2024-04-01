@@ -1,17 +1,9 @@
 import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
@@ -20,57 +12,14 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
-import { transitionText } from 'src/features/Linodes/transitions';
-import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
-import NodeActionMenu from './NodeActionMenu';
+import { NodeRow as _NodeRow } from './NodeRow';
+import { StyledTable } from './NodeTable.styles';
 
-const useStyles = makeStyles<void, 'copy'>()(
-  (theme: Theme, _params, classes) => ({
-    copy: {
-      '& svg': {
-        height: `12px`,
-        opacity: 0,
-        width: `12px`,
-      },
-      marginLeft: 4,
-      top: 1,
-    },
-    error: {
-      color: theme.color.red,
-    },
-    ipCell: {
-      ...theme.applyTableHeaderStyles,
-      width: '35%',
-    },
-    labelCell: {
-      ...theme.applyTableHeaderStyles,
-      width: '35%',
-    },
-    row: {
-      '&:hover': {
-        backgroundColor: theme.bg.lightBlue1,
-      },
-      [`&:hover .${classes.copy} > svg, & .${classes.copy}:focus > svg`]: {
-        opacity: 1,
-      },
-    },
-    statusCell: {
-      ...theme.applyTableHeaderStyles,
-      width: '15%',
-    },
-    table: {
-      borderLeft: `1px solid ${theme.borderColors.borderTable}`,
-      borderRight: `1px solid ${theme.borderColors.borderTable}`,
-    },
-  })
-);
+import type { NodeRow } from './NodeRow';
 
-// =============================================================================
-// NodeTable
-// =============================================================================
 export interface Props {
   nodes: PoolNodeResponse[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
@@ -78,10 +27,8 @@ export interface Props {
   typeLabel: string;
 }
 
-export const NodeTable: React.FC<Props> = (props) => {
+export const NodeTable = React.memo((props: Props) => {
   const { nodes, openRecycleNodeDialog, poolId, typeLabel } = props;
-
-  const { classes } = useStyles();
 
   const { data: linodes, error, isLoading } = useAllLinodesQuery();
 
@@ -100,15 +47,15 @@ export const NodeTable: React.FC<Props> = (props) => {
             pageSize,
           }) => (
             <>
-              <Table
-                aria-label="List of Your Cluster Nodes"
-                className={classes.table}
-              >
+              <StyledTable aria-label="List of Your Cluster Nodes">
                 <TableHead>
                   <TableRow>
                     <TableSortCell
+                      sx={(theme) => ({
+                        ...theme.applyTableHeaderStyles,
+                        width: '35%',
+                      })}
                       active={orderBy === 'label'}
-                      className={classes.labelCell}
                       direction={order}
                       handleClick={handleOrderChange}
                       label={'label'}
@@ -116,8 +63,11 @@ export const NodeTable: React.FC<Props> = (props) => {
                       Linode
                     </TableSortCell>
                     <TableSortCell
+                      sx={(theme) => ({
+                        ...theme.applyTableHeaderStyles,
+                        width: '35%',
+                      })}
                       active={orderBy === 'instanceStatus'}
-                      className={classes.statusCell}
                       direction={order}
                       handleClick={handleOrderChange}
                       label={'instanceStatus'}
@@ -125,8 +75,11 @@ export const NodeTable: React.FC<Props> = (props) => {
                       Status
                     </TableSortCell>
                     <TableSortCell
+                      sx={(theme) => ({
+                        ...theme.applyTableHeaderStyles,
+                        width: '15%',
+                      })}
                       active={orderBy === 'ip'}
-                      className={classes.ipCell}
                       direction={order}
                       handleClick={handleOrderChange}
                       label={'ip'}
@@ -144,7 +97,7 @@ export const NodeTable: React.FC<Props> = (props) => {
                   >
                     {paginatedAndOrderedData.map((eachRow) => {
                       return (
-                        <NodeRow
+                        <_NodeRow
                           instanceId={eachRow.instanceId}
                           instanceStatus={eachRow.instanceStatus}
                           ip={eachRow.ip}
@@ -167,7 +120,7 @@ export const NodeTable: React.FC<Props> = (props) => {
                     </TableCell>
                   </TableRow>
                 </TableFooter>
-              </Table>
+              </StyledTable>
               <PaginationFooter
                 count={count}
                 eventCategory="Node Table"
@@ -182,119 +135,7 @@ export const NodeTable: React.FC<Props> = (props) => {
       )}
     </OrderBy>
   );
-};
-
-export default React.memo(NodeTable);
-
-// =============================================================================
-// NodeRow
-// =============================================================================
-interface NodeRow {
-  instanceId?: number;
-  instanceStatus?: string;
-  ip?: string;
-  label?: string;
-  nodeId: string;
-  nodeStatus: string;
-}
-
-interface NodeRowProps extends NodeRow {
-  linodeError?: APIError[];
-  openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
-  typeLabel: string;
-}
-
-export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
-  const {
-    instanceId,
-    instanceStatus,
-    ip,
-    label,
-    linodeError,
-    nodeId,
-    nodeStatus,
-    openRecycleNodeDialog,
-    typeLabel,
-  } = props;
-
-  const { classes } = useStyles();
-
-  const { data: events } = useInProgressEvents();
-
-  const recentEvent = events?.find(
-    (event) =>
-      event.entity?.id === instanceId && event.entity?.type === 'linode'
-  );
-
-  const linodeLink = instanceId ? `/linodes/${instanceId}` : undefined;
-
-  const nodeReadyAndInstanceRunning =
-    nodeStatus === 'ready' && instanceStatus === 'running';
-  const iconStatus = nodeReadyAndInstanceRunning ? 'active' : 'inactive';
-
-  const displayLabel = label ?? typeLabel;
-  const displayStatus =
-    nodeStatus === 'not_ready'
-      ? 'Provisioning'
-      : transitionText(instanceStatus ?? '', instanceId ?? -1, recentEvent);
-
-  const displayIP = ip ?? '';
-
-  return (
-    <TableRow
-      ariaLabel={label}
-      className={classes.row}
-      data-qa-node-row={nodeId}
-    >
-      <TableCell>
-        <Grid alignItems="center" container wrap="nowrap">
-          <Grid>
-            <Typography>
-              {linodeLink ? (
-                <Link to={linodeLink}>{displayLabel}</Link>
-              ) : (
-                displayLabel
-              )}
-            </Typography>
-          </Grid>
-        </Grid>
-      </TableCell>
-      <TableCell statusCell={!linodeError}>
-        {linodeError ? (
-          <Typography className={classes.error}>
-            Error retrieving status
-          </Typography>
-        ) : (
-          <>
-            <StatusIcon status={iconStatus} />
-            {displayStatus}
-          </>
-        )}
-      </TableCell>
-      <TableCell>
-        {linodeError ? (
-          <Typography className={classes.error}>Error retrieving IP</Typography>
-        ) : displayIP.length > 0 ? (
-          <>
-            <CopyTooltip copyableText text={displayIP} />
-            <CopyTooltip className={classes.copy} text={displayIP} />
-          </>
-        ) : null}
-      </TableCell>
-      <TableCell>
-        <NodeActionMenu
-          instanceLabel={label}
-          nodeId={nodeId}
-          openRecycleNodeDialog={openRecycleNodeDialog}
-        />
-      </TableCell>
-    </TableRow>
-  );
 });
-
-// =============================================================================
-// Utilities
-// =============================================================================
 
 /**
  * Transforms an LKE Pool Node to a NodeRow.

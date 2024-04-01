@@ -27,7 +27,7 @@ import {
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
 
-import { queryKey as notificationsQueryKey } from './accountNotifications';
+import { accountQueries } from './account/queries';
 import { updateInPaginatedStore } from './base';
 import { profileQueries } from './profile';
 
@@ -79,35 +79,41 @@ export const useLinodeVolumesQuery = (
     { enabled, keepPreviousData: true }
   );
 
+interface ResizeVolumePayloadWithId extends ResizeVolumePayload {
+  volumeId: number;
+}
+
 export const useResizeVolumeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<
-    Volume,
-    APIError[],
-    { volumeId: number } & ResizeVolumePayload
-  >(({ volumeId, ...data }) => resizeVolume(volumeId, data), {
-    onSuccess(volume) {
-      updateInPaginatedStore<Volume>(
-        [queryKey, 'paginated'],
-        volume.id,
-        volume,
-        queryClient
-      );
-    },
-  });
+  return useMutation<Volume, APIError[], ResizeVolumePayloadWithId>(
+    ({ volumeId, ...data }) => resizeVolume(volumeId, data),
+    {
+      onSuccess(volume) {
+        updateInPaginatedStore<Volume>(
+          [queryKey, 'paginated'],
+          volume.id,
+          volume,
+          queryClient
+        );
+      },
+    }
+  );
 };
+
+interface CloneVolumePayloadWithId extends CloneVolumePayload {
+  volumeId: number;
+}
 
 export const useCloneVolumeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<
-    Volume,
-    APIError[],
-    { volumeId: number } & CloneVolumePayload
-  >(({ volumeId, ...data }) => cloneVolume(volumeId, data), {
-    onSuccess() {
-      queryClient.invalidateQueries([queryKey]);
-    },
-  });
+  return useMutation<Volume, APIError[], CloneVolumePayloadWithId>(
+    ({ volumeId, ...data }) => cloneVolume(volumeId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey]);
+      },
+    }
+  );
 };
 
 export const useDeleteVolumeMutation = () => {
@@ -133,46 +139,52 @@ export const useCreateVolumeMutation = () => {
   });
 };
 
+interface UpdateVolumePayloadWithId extends UpdateVolumeRequest {
+  volumeId: number;
+}
+
 export const useUpdateVolumeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<
-    Volume,
-    APIError[],
-    { volumeId: number } & UpdateVolumeRequest
-  >(({ volumeId, ...data }) => updateVolume(volumeId, data), {
-    onSuccess(volume) {
-      updateInPaginatedStore<Volume>(
-        [queryKey, 'paginated'],
-        volume.id,
-        volume,
-        queryClient
-      );
-      if (volume.linode_id) {
-        queryClient.invalidateQueries([queryKey, 'linode', volume.linode_id]);
-      }
-    },
-  });
+  return useMutation<Volume, APIError[], UpdateVolumePayloadWithId>(
+    ({ volumeId, ...data }) => updateVolume(volumeId, data),
+    {
+      onSuccess(volume) {
+        updateInPaginatedStore<Volume>(
+          [queryKey, 'paginated'],
+          volume.id,
+          volume,
+          queryClient
+        );
+        if (volume.linode_id) {
+          queryClient.invalidateQueries([queryKey, 'linode', volume.linode_id]);
+        }
+      },
+    }
+  );
 };
+
+interface AttachVolumePayloadWithId extends AttachVolumePayload {
+  volumeId: number;
+}
 
 export const useAttachVolumeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<
-    Volume,
-    APIError[],
-    { volumeId: number } & AttachVolumePayload
-  >(({ volumeId, ...data }) => attachVolume(volumeId, data), {
-    onSuccess(volume) {
-      updateInPaginatedStore<Volume>(
-        [queryKey, 'paginated'],
-        volume.id,
-        volume,
-        queryClient
-      );
-      if (volume.linode_id) {
-        queryClient.invalidateQueries([queryKey, 'linode', volume.linode_id]);
-      }
-    },
-  });
+  return useMutation<Volume, APIError[], AttachVolumePayloadWithId>(
+    ({ volumeId, ...data }) => attachVolume(volumeId, data),
+    {
+      onSuccess(volume) {
+        updateInPaginatedStore<Volume>(
+          [queryKey, 'paginated'],
+          volume.id,
+          volume,
+          queryClient
+        );
+        if (volume.linode_id) {
+          queryClient.invalidateQueries([queryKey, 'linode', volume.linode_id]);
+        }
+      },
+    }
+  );
 };
 
 export const useDetachVolumeMutation = () =>
@@ -192,7 +204,7 @@ export const volumeEventsHandler = ({
   ) {
     // if a migration finishes, we want to re-request notifications so that the `volume_migration_imminent`
     // notification goes away.
-    queryClient.invalidateQueries(notificationsQueryKey);
+    queryClient.invalidateQueries(accountQueries.notifications.queryKey);
   }
 
   if (event.action === 'volume_clone') {

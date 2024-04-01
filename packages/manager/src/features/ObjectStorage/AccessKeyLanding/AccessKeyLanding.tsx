@@ -16,7 +16,7 @@ import { useErrors } from 'src/hooks/useErrors';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountSettings } from 'src/queries/accountSettings';
+import { useAccountSettings } from 'src/queries/account/settings';
 import { useObjectStorageAccessKeys } from 'src/queries/objectStorage';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import {

@@ -1,6 +1,6 @@
 import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
-import { Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
+import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
@@ -24,6 +24,7 @@ import {
 import { capitalize } from 'src/utilities/capitalize';
 
 import { FirewallRuleActionMenu } from './FirewallRuleActionMenu';
+import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import {
   MoreStyledLinkButton,
   StyledButtonDiv,
@@ -39,7 +40,6 @@ import {
   sxBox,
   sxItemSpacing,
 } from './FirewallRuleTable.styles';
-import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import { Category, FirewallRuleError, sortPortString } from './shared';
 
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
@@ -241,10 +241,18 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
 // =============================================================================
 // <FirewallRuleTableRow />
 // =============================================================================
-export type FirewallRuleTableRowProps = RuleRow &
-  Omit<RowActionHandlers, 'triggerReorder'> & {
-    disabled: boolean;
-  };
+interface RowActionHandlersWithDisabled
+  extends Omit<RowActionHandlers, 'triggerReorder'> {
+  disabled: boolean;
+}
+
+export interface FirewallRuleTableRowProps extends RuleRow {
+  disabled: RowActionHandlersWithDisabled['disabled'];
+  triggerCloneFirewallRule: RowActionHandlersWithDisabled['triggerCloneFirewallRule'];
+  triggerDeleteFirewallRule: RowActionHandlersWithDisabled['triggerDeleteFirewallRule'];
+  triggerOpenRuleDrawerForEditing: RowActionHandlersWithDisabled['triggerOpenRuleDrawerForEditing'];
+  triggerUndo: RowActionHandlersWithDisabled['triggerUndo'];
+}
 
 const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
   const theme: Theme = useTheme();
