@@ -1,8 +1,8 @@
 import type { Region } from '../regions/types';
 
 export const AFFINITY_TYPES = {
-  affinity: 'Affinity',
-  anti_affinity: 'Anti-affinity',
+  'affinity:local': 'Affinity',
+  'anti_affinity:local': 'Anti-affinity',
 } as const;
 
 export type AffinityType = keyof typeof AFFINITY_TYPES;
@@ -14,8 +14,8 @@ export interface PlacementGroup {
   region: Region['id'];
   affinity_type: AffinityType;
   is_compliant: boolean;
-  linodes: {
-    linode: number;
+  members: {
+    linode_id: number;
     is_compliant: boolean;
   }[];
   is_strict: boolean;
@@ -26,9 +26,10 @@ export type PlacementGroupPayload = Pick<
   'id' | 'label' | 'affinity_type' | 'is_strict'
 >;
 
-export type CreatePlacementGroupPayload = Omit<PlacementGroupPayload, 'id'> & {
+export interface CreatePlacementGroupPayload
+  extends Omit<PlacementGroupPayload, 'id'> {
   region: Region['id'];
-};
+}
 
 export type UpdatePlacementGroupPayload = Pick<PlacementGroup, 'label'>;
 

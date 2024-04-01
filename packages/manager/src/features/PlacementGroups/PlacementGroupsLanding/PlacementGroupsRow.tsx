@@ -12,12 +12,14 @@ import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 
+import { getAffinityTypeEnforcement } from '../utils';
 import { StyledWarningIcon } from './PlacementGroupsRow.styles';
 
 import type { PlacementGroup } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface PlacementGroupsRowProps {
+  disabled: boolean;
   handleDeletePlacementGroup: () => void;
   handleEditPlacementGroup: () => void;
   placementGroup: PlacementGroup;
@@ -25,11 +27,18 @@ interface PlacementGroupsRowProps {
 
 export const PlacementGroupsRow = React.memo(
   ({
+    disabled,
     handleDeletePlacementGroup,
     handleEditPlacementGroup,
     placementGroup,
   }: PlacementGroupsRowProps) => {
-    const { affinity_type, id, is_compliant, label } = placementGroup;
+    const {
+      affinity_type,
+      id,
+      is_compliant,
+      is_strict,
+      label,
+    } = placementGroup;
     const { assignedLinodes, linodesCount, region } = usePlacementGroupData({
       placementGroup,
     });
@@ -55,7 +64,7 @@ export const PlacementGroupsRow = React.memo(
             style={{ marginRight: 8 }}
             to={`/placement-groups/${id}`}
           >
-            {label} ({AFFINITY_TYPES[affinity_type]})
+            {label}
           </Link>
           {!is_compliant && (
             <Typography component="span" sx={{ whiteSpace: 'nowrap' }}>
@@ -64,19 +73,29 @@ export const PlacementGroupsRow = React.memo(
             </Typography>
           )}
         </TableCell>
+        <Hidden smDown>
+          <TableCell>{AFFINITY_TYPES[affinity_type]}</TableCell>
+        </Hidden>
+        <Hidden smDown>
+          <TableCell>{getAffinityTypeEnforcement(is_strict)}</TableCell>
+        </Hidden>
         <TableCell data-testid={`placement-group-${id}-assigned-linodes`}>
-          <TextTooltip
-            tooltipText={
-              <List>
-                {assignedLinodes?.map((linode, idx) => (
-                  <ListItem key={`pg-linode-${idx}`}>{linode.label}</ListItem>
-                ))}
-              </List>
-            }
-            displayText={`${linodesCount}`}
-            minWidth={200}
-          />
-          &nbsp; of {region?.maximum_vms_per_pg}
+          {assignedLinodes?.length === 0 ? (
+            '0'
+          ) : (
+            <TextTooltip
+              tooltipText={
+                <List>
+                  {assignedLinodes?.map((linode, idx) => (
+                    <ListItem key={`pg-linode-${idx}`}>{linode.label}</ListItem>
+                  ))}
+                </List>
+              }
+              displayText={`${linodesCount}`}
+              minWidth={200}
+            />
+          )}
+          &nbsp; of {region?.maximum_vms_per_pg ?? 'unknown'}
         </TableCell>
         <Hidden smDown>
           <TableCell>{region?.label}</TableCell>
@@ -85,6 +104,7 @@ export const PlacementGroupsRow = React.memo(
           {actions.map((action) => (
             <InlineMenuAction
               actionText={action.title}
+              disabled={disabled}
               key={action.title}
               onClick={action.onClick}
             />

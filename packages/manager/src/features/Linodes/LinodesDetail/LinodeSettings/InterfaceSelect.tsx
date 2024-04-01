@@ -1,28 +1,29 @@
-import {
-  InterfacePayload,
-  InterfacePurpose,
-} from '@linode/api-v4/lib/linodes/types';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { VPCPanel } from 'src/features/Linodes/LinodesCreate/VPCPanel';
-import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account';
 import { useVlansQuery } from 'src/queries/vlans';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
-import { ExtendedIP } from 'src/utilities/ipUtils';
 
-interface Props {
+import type {
+  InterfacePayload,
+  InterfacePurpose,
+} from '@linode/api-v4/lib/linodes/types';
+import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
+
+interface InterfaceErrors extends VPCInterfaceErrors, OtherInterfaceErrors {}
+
+interface InterfaceSelectProps extends VPCState {
   additionalIPv4RangesForVPC?: ExtendedIP[];
-  errors: VPCInterfaceErrors & OtherInterfaceErrors;
+  errors: InterfaceErrors;
   fromAddonsPanel?: boolean;
   handleChange: (updatedInterface: ExtendedInterface) => void;
   ipamAddress?: null | string;
@@ -62,9 +63,7 @@ export interface ExtendedInterface
   purpose: ExtendedPurpose;
 }
 
-type CombinedProps = Props & VPCState;
-
-export const InterfaceSelect = (props: CombinedProps) => {
+export const InterfaceSelect = (props: InterfaceSelectProps) => {
   const {
     additionalIPv4RangesForVPC,
     errors,
@@ -88,17 +87,27 @@ export const InterfaceSelect = (props: CombinedProps) => {
   const isSmallBp = useMediaQuery(
     theme.breakpoints.down(fromAddonsPanel ? 'sm' : 1015)
   );
-  const flags = useFlags();
-  const { data: account } = useAccount();
-
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
 
   const [newVlan, setNewVlan] = React.useState('');
-  const purposeOptions = getPurposeOptions(showVPCs);
+
+  const purposeOptions: Item<ExtendedPurpose>[] = [
+    {
+      label: 'Public Internet',
+      value: 'public',
+    },
+    {
+      label: 'VPC',
+      value: 'vpc',
+    },
+    {
+      label: 'VLAN',
+      value: 'vlan',
+    },
+    {
+      label: 'None',
+      value: 'none',
+    },
+  ];
 
   const { data: vlans, isLoading } = useVlansQuery();
   const vlanOptions =
@@ -443,32 +452,6 @@ export const InterfaceSelect = (props: CombinedProps) => {
       )}
     </Grid>
   );
-};
-
-const getPurposeOptions = (showVPCs: boolean) => {
-  const purposeOptions: Item<ExtendedPurpose>[] = [
-    {
-      label: 'Public Internet',
-      value: 'public',
-    },
-    {
-      label: 'VLAN',
-      value: 'vlan',
-    },
-    {
-      label: 'None',
-      value: 'none',
-    },
-  ];
-
-  if (showVPCs) {
-    purposeOptions.splice(1, 0, {
-      label: 'VPC',
-      value: 'vpc',
-    });
-  }
-
-  return purposeOptions;
 };
 
 const unavailableInRegionHelperTextSegment =

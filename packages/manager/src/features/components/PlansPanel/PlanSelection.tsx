@@ -33,6 +33,7 @@ export interface PlanSelectionProps {
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
+  disabledToolTip?: string;
   header?: string;
   hideDisabledHelpIcons?: boolean;
   idx: number;
@@ -40,6 +41,7 @@ export interface PlanSelectionProps {
   isLimitedAvailabilityPlan: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
+  planIsDisabled?: boolean;
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionId?: Region['id'];
@@ -54,17 +56,37 @@ const getDisabledClass = (
   return disabledClasses.includes(typeClass);
 };
 
+const getToolTip = ({
+  sizeTooSmall,
+  planIsDisabled,
+  disabledToolTip,
+}: {
+  sizeTooSmall: boolean;
+  planIsDisabled?: boolean;
+  disabledToolTip?: string;
+}) => {
+  if (planIsDisabled) {
+    return disabledToolTip;
+  }
+  if (sizeTooSmall) {
+    return 'This plan is too small for the selected image.';
+  }
+  return undefined;
+};
+
 export const PlanSelection = (props: PlanSelectionProps) => {
   const {
     currentPlanHeading,
     disabled,
     disabledClasses,
     hideDisabledHelpIcons,
+    disabledToolTip,
     idx,
     isCreate,
     isLimitedAvailabilityPlan,
     linodeID,
     onSelect,
+    planIsDisabled,
     selectedDiskSize,
     selectedId,
     selectedRegionId,
@@ -84,9 +106,11 @@ export const PlanSelection = (props: PlanSelectionProps) => {
 
   const diskSize = selectedDiskSize ? selectedDiskSize : 0;
   const planTooSmall = diskSize > type.disk;
-  const tooltip = planTooSmall
-    ? 'This plan is too small for the selected image.'
-    : undefined;
+  const tooltip = getToolTip({
+    sizeTooSmall: planTooSmall,
+    planIsDisabled: planIsDisabled,
+    disabledToolTip: disabledToolTip,
+  });
   const isSamePlan = type.heading === currentPlanHeading;
   const isGPU = type.class === 'gpu';
   const isDisabledClass = getDisabledClass(type.class, disabledClasses ?? []);
@@ -115,20 +139,23 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     price?.monthly
   )}/mo ($${price?.hourly ?? UNKNOWN_PRICE}/hr)`;
 
+  const rowAriaDisabled =
+    isSamePlan || planTooSmall || isDisabledClass || planIsDisabled;
+
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
       {/* Displays Table Row for larger screens */}
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <StyledDisabledTableRow
+          aria-disabled={rowAriaDisabled}
+          disabled={rowAriaDisabled}
           onClick={() =>
             !isSamePlan && !isDisabled && !isDisabledClass && !planTooSmall
               ? onSelect(type.id)
               : undefined
           }
-          aria-disabled={isSamePlan || planTooSmall || isDisabled || disabled}
           aria-label={rowAriaLabel}
           data-qa-plan-row={type.formattedLabel}
-          disabled={isSamePlan || planTooSmall || isDisabled || disabled}
           key={type.id}
         >
           <StyledRadioCell>
@@ -219,7 +246,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             {type.vcpus}
           </TableCell>
           <TableCell center data-qa-storage noWrap>
-            {type.disk === 0 ? 'N/A' : convertMegabytesTo(type.disk, true)}
+            {convertMegabytesTo(type.disk, true)}
           </TableCell>
           {shouldShowTransfer && type.transfer ? (
             <TableCell center data-qa-transfer>

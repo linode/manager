@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
-import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
 
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { useProfile } from 'src/queries/profile';
@@ -24,7 +24,7 @@ const AddTag = (props: AddTagProps) => {
   const { data: profile } = useProfile();
   const {
     data: accountTags,
-    isLoading: accountTagsLoading,
+    isFetching: accountTagsLoading,
   } = useTagSuggestions(!profile?.restricted);
   // @todo should we toast for this? If we swallow the error the only
   // thing we lose is preexisting tabs as options; the add tag flow

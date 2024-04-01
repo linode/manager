@@ -1,7 +1,9 @@
+import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
 import { accountFactory } from 'src/factories/account';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -13,19 +15,6 @@ import {
 const defaultChildren = (props: { text: React.ReactNode }) => (
   <span>{props.text}</span>
 );
-
-let mockActiveSince = MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED;
-
-vi.mock('../../queries/account', () => {
-  return {
-    useAccount: vi.fn(() => {
-      const account = accountFactory.build({
-        active_since: mockActiveSince,
-      });
-      return { data: account };
-    }),
-  };
-});
 
 const props: SMTPRestrictionTextProps = {
   children: defaultChildren,
@@ -50,25 +39,39 @@ describe('accountCreatedAfterRestrictions', () => {
 });
 
 describe('SMTPRestrictionText component', () => {
-  it('should render when user account is created on or after the magic date', () => {
-    mockActiveSince = MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED;
+  it('should render when user account is created on or after the magic date', async () => {
+    const account = accountFactory.build({
+      active_since: MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED,
+    });
 
-    const { getByText } = renderWithTheme(
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const { findByText } = renderWithTheme(
       <SMTPRestrictionText
         supportLink={{ id: 0, label: 'Test Linode' }}
         {...props}
       />
     );
 
-    expect(
-      getByText('SMTP ports may be restricted on this Linode.', {
-        exact: false,
-      })
-    ).toBeVisible();
+    await findByText('SMTP ports may be restricted on this Linode.', {
+      exact: false,
+    });
   });
 
-  it('should not render when user account is created before the magic date', () => {
-    mockActiveSince = '2022-11-27 00:00:00Z';
+  it('should not render when user account is created before the magic date', async () => {
+    const account = accountFactory.build({
+      active_since: '2022-11-27 00:00:00Z',
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
 
     const { queryByText } = renderWithTheme(
       <SMTPRestrictionText
@@ -77,15 +80,25 @@ describe('SMTPRestrictionText component', () => {
       />
     );
 
-    expect(
-      queryByText('SMTP ports may be restricted on this Linode.', {
-        exact: false,
-      })
-    ).toBeNull();
+    await waitFor(() =>
+      expect(
+        queryByText('SMTP ports may be restricted on this Linode.', {
+          exact: false,
+        })
+      ).toBeNull()
+    );
   });
 
   it('should default to not including a link to open a support ticket', () => {
-    mockActiveSince = MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED;
+    const account = accountFactory.build({
+      active_since: MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED,
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
 
     const { getByText } = renderWithTheme(<SMTPRestrictionText {...props} />);
 
@@ -95,7 +108,15 @@ describe('SMTPRestrictionText component', () => {
   });
 
   it('should include a link to open a support ticket when the prop is provided', () => {
-    mockActiveSince = MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED;
+    const account = accountFactory.build({
+      active_since: MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED,
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
 
     const { getByText } = renderWithTheme(
       <SMTPRestrictionText

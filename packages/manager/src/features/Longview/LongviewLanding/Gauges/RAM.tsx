@@ -15,10 +15,10 @@ import {
 } from '../../shared/utilities';
 import { BaseProps as Props, baseGaugeProps } from './common';
 
-type CombinedProps = Props & LVDataProps;
+interface RAMGaugeProps extends Props, LVDataProps {}
 
 export const RAMGauge = withClientData<Props>((ownProps) => ownProps.clientID)(
-  (props: CombinedProps) => {
+  (props: RAMGaugeProps) => {
     const {
       lastUpdatedError,
       longviewClientData,

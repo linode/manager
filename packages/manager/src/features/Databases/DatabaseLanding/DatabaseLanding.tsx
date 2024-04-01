@@ -16,8 +16,8 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useDatabasesQuery } from 'src/queries/databases';
+import { useInProgressEvents } from 'src/queries/events/events';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-
 import { DatabaseEmptyState } from './DatabaseEmptyState';
 import { DatabaseRow } from './DatabaseRow';
 
@@ -26,6 +26,8 @@ const preferenceKey = 'databases';
 const DatabaseLanding = () => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
+
+  const { data: events } = useInProgressEvents();
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -129,7 +131,11 @@ const DatabaseLanding = () => {
         </TableHead>
         <TableBody>
           {data?.data.map((database: DatabaseInstance) => (
-            <DatabaseRow database={database} key={database.id} />
+            <DatabaseRow
+              database={database}
+              key={database.id}
+              events={events}
+            />
           ))}
         </TableBody>
       </Table>

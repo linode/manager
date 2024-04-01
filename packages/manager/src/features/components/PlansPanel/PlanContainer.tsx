@@ -14,7 +14,7 @@ import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 import { PlanSelection } from './PlanSelection';
 
-import type { TypeWithAvailability } from './types';
+import type { PlanSelectionType, TypeWithAvailability } from './types';
 import type { Region } from '@linode/api-v4';
 
 const tableCells = [
@@ -39,6 +39,8 @@ export interface Props {
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
   hideDisabledHelpIcons?: boolean;
+  disabledPlanTypes?: PlanSelectionType[];
+  disabledPlanTypesToolTipText?: string;
   isCreate?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
@@ -55,6 +57,8 @@ export const PlanContainer = (props: Props) => {
     disabled,
     disabledClasses,
     hideDisabledHelpIcons,
+    disabledPlanTypes,
+    disabledPlanTypesToolTipText,
     isCreate,
     linodeID,
     onSelect,
@@ -85,20 +89,25 @@ export const PlanContainer = (props: Props) => {
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
+      const planIsDisabled =
+        disabledPlanTypes?.find((element) => element.id === plan.id) !==
+        undefined;
       return (
         <PlanSelection
           isLimitedAvailabilityPlan={
             disabled ? false : plan.isLimitedAvailabilityPlan
           } // No need for tooltip due to all plans being unavailable in region
           currentPlanHeading={currentPlanHeading}
-          disabled={disabled}
+          disabled={disabled || planIsDisabled}
           disabledClasses={disabledClasses}
           hideDisabledHelpIcons={hideDisabledHelpIcons}
+          disabledToolTip={disabledPlanTypesToolTipText}
           idx={id}
           isCreate={isCreate}
           key={id}
           linodeID={linodeID}
           onSelect={onSelect}
+          planIsDisabled={planIsDisabled}
           selectedDiskSize={selectedDiskSize}
           selectedId={selectedId}
           selectedRegionId={selectedRegionId}

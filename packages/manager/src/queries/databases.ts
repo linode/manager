@@ -244,9 +244,11 @@ export const databaseEventsHandler = (event: EventHandlerData) => {
   }
 };
 
+interface DatabaseData extends Partial<Database>, Partial<DatabaseInstance> {}
+
 const updateStoreForDatabase = (
   id: number,
-  data: Partial<Database> & Partial<DatabaseInstance>,
+  data: DatabaseData,
   queryClient: QueryClient
 ) => {
   updateDatabaseStore(id, data, queryClient);

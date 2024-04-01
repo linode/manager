@@ -361,7 +361,6 @@ export const VPCSubnetsTable = (props: Props) => {
           action={linodePowerAction ?? 'Reboot'}
           isOpen={powerActionDialogOpen}
           linodeId={selectedLinode?.id}
-          manuallyUpdateConfigs={true}
           onClose={() => setPowerActionDialogOpen(false)}
         />
       )}

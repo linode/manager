@@ -19,7 +19,7 @@ import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountLoginsQuery } from 'src/queries/accountLogins';
+import { useAccountLoginsQuery } from 'src/queries/account/logins';
 import { useProfile } from 'src/queries/profile';
 
 import AccountLoginsTableRow from './AccountLoginsTableRow';

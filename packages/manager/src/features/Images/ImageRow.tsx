@@ -16,7 +16,7 @@ export interface ImageWithEvent extends Image {
   event?: Event;
 }
 
-type Props = Handlers & ImageWithEvent;
+interface Props extends Handlers, ImageWithEvent {}
 
 const ImageRow = (props: Props) => {
   const {

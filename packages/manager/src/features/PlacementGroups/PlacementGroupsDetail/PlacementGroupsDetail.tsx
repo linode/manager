@@ -7,11 +7,14 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
+import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   useMutatePlacementGroup,
   usePlacementGroupQuery,
@@ -36,6 +39,10 @@ export const PlacementGroupsDetail = () => {
     placementGroupId,
     Boolean(flags.placementGroups?.enabled)
   );
+
+  const isLinodeReadOnly = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_linodes',
+  });
 
   const {
     error: updatePlacementGroupError,
@@ -105,10 +112,21 @@ export const PlacementGroupsDetail = () => {
           },
           pathname: `/placement-groups/${label}`,
         }}
+        disabledBreadcrumbEditButton={isLinodeReadOnly}
         docsLabel="Docs"
         docsLink="TODO VM_Placement: add doc link"
         title="Placement Group Detail"
       />
+      {isLinodeReadOnly && (
+        <Notice
+          text={getRestrictedResourceText({
+            action: 'edit',
+            resourceType: 'Placement Groups',
+          })}
+          spacingTop={16}
+          variant="warning"
+        />
+      )}
       <Tabs
         index={tabIndex === -1 ? 0 : tabIndex}
         onChange={(i: number) => history.push(tabs[i].routeName)}
@@ -119,7 +137,10 @@ export const PlacementGroupsDetail = () => {
             <PlacementGroupsSummary placementGroup={placementGroup} />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
-            <PlacementGroupsLinodes placementGroup={placementGroup} />
+            <PlacementGroupsLinodes
+              isLinodeReadOnly={isLinodeReadOnly}
+              placementGroup={placementGroup}
+            />
           </SafeTabPanel>
         </TabPanels>
       </Tabs>

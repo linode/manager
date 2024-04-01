@@ -1,9 +1,7 @@
-import { makeDefaultPaymentMethod } from '@linode/api-v4/lib';
 import { PaymentMethod } from '@linode/api-v4/lib/account/types';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 
 import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
@@ -11,7 +9,7 @@ import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { Paper } from 'src/components/Paper';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
-import { queryKey } from 'src/queries/accountPayment';
+import { useMakeDefaultPaymentMethodMutation } from 'src/queries/account/payment';
 
 import { ThirdPartyPayment } from './ThirdPartyPayment';
 
@@ -44,17 +42,18 @@ export const PaymentMethodRow = (props: Props) => {
   const { is_default, type } = paymentMethod;
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
-  const queryClient = useQueryClient();
 
-  const makeDefault = (id: number) => {
-    makeDefaultPaymentMethod(id)
-      .then(() => queryClient.invalidateQueries([`${queryKey}-all`]))
-      .catch((errors) =>
-        enqueueSnackbar(
-          errors[0]?.reason || 'Unable to change your default payment method.',
-          { variant: 'error' }
-        )
-      );
+  const {
+    mutateAsync: makePaymentMethodDefault,
+  } = useMakeDefaultPaymentMethodMutation(props.paymentMethod.id);
+
+  const makeDefault = () => {
+    makePaymentMethodDefault().catch((errors) =>
+      enqueueSnackbar(
+        errors[0]?.reason || 'Unable to change your default payment method.',
+        { variant: 'error' }
+      )
+    );
   };
 
   const actions: Action[] = [
@@ -70,7 +69,7 @@ export const PaymentMethodRow = (props: Props) => {
     },
     {
       disabled: isRestrictedUser || paymentMethod.is_default,
-      onClick: () => makeDefault(paymentMethod.id),
+      onClick: makeDefault,
       title: 'Make Default',
       tooltip: paymentMethod.is_default
         ? 'This is already your default payment method.'

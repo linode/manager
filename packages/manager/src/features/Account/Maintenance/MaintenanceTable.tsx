@@ -23,7 +23,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import {
   useAccountMaintenanceQuery,
   useAllAccountMaintenanceQuery,
-} from 'src/queries/accountMaintenance';
+} from 'src/queries/account/maintenance';
 
 import { MaintenanceTableRow } from './MaintenanceTableRow';
 

@@ -1,18 +1,19 @@
 import { addPaymentMethod } from '@linode/api-v4/lib';
 import { CreditCardSchema } from '@linode/validation';
 import { InputBaseComponentProps } from '@mui/material/InputBase/InputBase';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { useQueryClient } from '@tanstack/react-query';
 import { useFormik, yupToFormErrors } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import NumberFormat, { NumberFormatProps } from 'react-number-format';
-import { useQueryClient } from '@tanstack/react-query';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
+import { accountQueries } from 'src/queries/account/queries';
 import { parseExpiryYear } from 'src/utilities/creditCard';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
@@ -81,7 +82,7 @@ const AddCreditCardForm = (props: Props) => {
       enqueueSnackbar('Successfully added Credit Card', {
         variant: 'success',
       });
-      queryClient.invalidateQueries(['account-payment-methods-all']);
+      queryClient.invalidateQueries(accountQueries.paymentMethods.queryKey);
       onClose();
     } catch (errors) {
       handleAPIErrors(errors, setFieldError, setError);

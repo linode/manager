@@ -2,9 +2,9 @@ import { PaymentMethod } from '@linode/api-v4';
 import { makePayment } from '@linode/api-v4/lib/account';
 import { APIWarning } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
@@ -22,18 +22,18 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccount } from 'src/queries/account';
-import { queryKey } from 'src/queries/accountBilling';
+import { useAccount } from 'src/queries/account/account';
 import { useProfile } from 'src/queries/profile';
 import { isCreditCardExpired } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { PayPalErrorBoundary } from '../../PaymentInfoPanel/PayPalErrorBoundary';
 import GooglePayButton from './GooglePayButton';
-import PayPalButton from './PayPalButton';
 import { CreditCardDialog } from './PaymentBits/CreditCardDialog';
 import { PaymentMethodCard } from './PaymentMethodCard';
+import PayPalButton from './PayPalButton';
 import { SetSuccess } from './types';
+import { accountQueries } from 'src/queries/account/queries';
 
 const useStyles = makeStyles()(() => ({
   button: {
@@ -189,7 +189,7 @@ export const PaymentDrawer = (props: Props) => {
           true,
           response.warnings
         );
-        queryClient.invalidateQueries([`${queryKey}-payments`]);
+        queryClient.invalidateQueries(accountQueries.payments._def);
       })
       .catch((errorResponse) => {
         setSubmitting(false);

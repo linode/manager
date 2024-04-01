@@ -38,7 +38,7 @@ import {
 
 import { manuallySetVPCConfigInterfacesToActive } from 'src/utilities/configs';
 
-import { queryKey as accountNotificationsQueryKey } from '../accountNotifications';
+import { accountQueries } from '../account/queries';
 import { queryPresets } from '../base';
 import { profileQueries } from '../profile';
 import { getAllLinodeKernelsRequest, getAllLinodesRequest } from './requests';
@@ -164,23 +164,26 @@ export const useCreateLinodeMutation = () => {
   });
 };
 
+interface LinodeCloneDataWithId extends LinodeCloneData {
+  sourceLinodeId: number;
+}
+
 export const useCloneLinodeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<
-    Linode,
-    APIError[],
-    { sourceLinodeId: number & LinodeCloneData }
-  >(({ sourceLinodeId, ...data }) => cloneLinode(sourceLinodeId, data), {
-    onSuccess(linode) {
-      queryClient.invalidateQueries([queryKey, 'paginated']);
-      queryClient.invalidateQueries([queryKey, 'all']);
-      queryClient.invalidateQueries([queryKey, 'infinite']);
-      queryClient.setQueryData(
-        [queryKey, 'linode', linode.id, 'details'],
-        linode
-      );
-    },
-  });
+  return useMutation<Linode, APIError[], LinodeCloneDataWithId>(
+    ({ sourceLinodeId, ...data }) => cloneLinode(sourceLinodeId, data),
+    {
+      onSuccess(linode) {
+        queryClient.invalidateQueries([queryKey, 'paginated']);
+        queryClient.invalidateQueries([queryKey, 'all']);
+        queryClient.invalidateQueries([queryKey, 'infinite']);
+        queryClient.setQueryData(
+          [queryKey, 'linode', linode.id, 'details'],
+          linode
+        );
+      },
+    }
+  );
 };
 
 export const useBootLinodeMutation = (
@@ -291,7 +294,7 @@ export const useLinodeResizeMutation = (id: number) => {
         queryClient.invalidateQueries([queryKey, 'all']);
         queryClient.invalidateQueries([queryKey, 'infinite']);
         queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
-        queryClient.invalidateQueries(accountNotificationsQueryKey);
+        queryClient.invalidateQueries(accountQueries.notifications.queryKey);
       },
     }
   );

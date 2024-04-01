@@ -9,7 +9,10 @@ import { PlacementGroupsLinodes } from './PlacementGroupsLinodes';
 describe('PlacementGroupsLinodes', () => {
   it('renders an error state if placement groups are undefined', () => {
     const { getByText } = renderWithTheme(
-      <PlacementGroupsLinodes placementGroup={undefined} />
+      <PlacementGroupsLinodes
+        isLinodeReadOnly={false}
+        placementGroup={undefined}
+      />
     );
 
     expect(
@@ -19,16 +22,19 @@ describe('PlacementGroupsLinodes', () => {
 
   it('features the linodes table, a filter field, a create button and a docs link', () => {
     const placementGroup = placementGroupFactory.build({
-      linodes: [
+      members: [
         {
           is_compliant: true,
-          linode: 1,
+          linode_id: 1,
         },
       ],
     });
 
     const { getByPlaceholderText, getByRole } = renderWithTheme(
-      <PlacementGroupsLinodes placementGroup={placementGroup} />
+      <PlacementGroupsLinodes
+        isLinodeReadOnly={false}
+        placementGroup={placementGroup}
+      />
     );
 
     expect(getByPlaceholderText('Search Linodes')).toBeInTheDocument();

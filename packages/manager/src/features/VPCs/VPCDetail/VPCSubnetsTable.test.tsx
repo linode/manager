@@ -7,7 +7,7 @@ import {
   subnetFactory,
 } from 'src/factories/subnets';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCSubnetsTable } from './VPCSubnetsTable';
@@ -26,8 +26,8 @@ describe('VPC Subnets table', () => {
       ],
     });
     server.use(
-      rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([subnet])));
+      http.get('*/vpcs/:vpcId/subnets', () => {
+        return HttpResponse.json(makeResourcePage([subnet]));
       })
     );
 
@@ -65,8 +65,8 @@ describe('VPC Subnets table', () => {
   it('should display no linodes text if there are no linodes associated with the subnet', async () => {
     const subnet = subnetFactory.build({ linodes: [] });
     server.use(
-      rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([subnet])));
+      http.get('*/vpcs/:vpcId/subnets', () => {
+        return HttpResponse.json(makeResourcePage([subnet]));
       })
     );
 
@@ -86,8 +86,8 @@ describe('VPC Subnets table', () => {
       linodes: [subnetAssignedLinodeDataFactory.build({ id: 1 })],
     });
     server.use(
-      rest.get('*/vpcs/:vpcId/subnets', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([subnet])));
+      http.get('*/vpcs/:vpcId/subnets', () => {
+        return HttpResponse.json(makeResourcePage([subnet]));
       })
     );
     const { getAllByRole, getByTestId, getByText } = renderWithTheme(

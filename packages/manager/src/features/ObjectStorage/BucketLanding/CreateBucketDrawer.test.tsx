@@ -8,7 +8,7 @@ import {
   regionFactory,
 } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateBucketDrawer } from './CreateBucketDrawer';
@@ -23,36 +23,34 @@ vi.mock('src/components/EnhancedSelect/Select');
 describe('CreateBucketDrawer', () => {
   it.skip('Should show a general error notice if the API returns one', async () => {
     server.use(
-      rest.post('*/object-storage/buckets', (req, res, ctx) => {
-        return res(
-          ctx.status(500),
-          ctx.json({ errors: [{ reason: 'Object Storage is offline!' }] })
+      http.post('*/object-storage/buckets', () => {
+        return HttpResponse.json(
+          { errors: [{ reason: 'Object Storage is offline!' }] },
+          {
+            status: 500,
+          }
         );
       }),
-      rest.get('*/regions', async (req, res, ctx) => {
-        return res(
-          ctx.json(
-            makeResourcePage(
-              regionFactory.buildList(1, { id: 'us-east', label: 'Newark, NJ' })
-            )
+      http.get('*/regions', async () => {
+        return HttpResponse.json(
+          makeResourcePage(
+            regionFactory.buildList(1, { id: 'us-east', label: 'Newark, NJ' })
           )
         );
       }),
-      rest.get('*object-storage/clusters', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            makeResourcePage(
-              objectStorageClusterFactory.buildList(1, {
-                id: 'us-east-1',
-                region: 'us-east',
-              })
-            )
+      http.get('*object-storage/clusters', () => {
+        return HttpResponse.json(
+          makeResourcePage(
+            objectStorageClusterFactory.buildList(1, {
+              id: 'us-east-1',
+              region: 'us-east',
+            })
           )
         );
       }),
-      rest.get('*/account/settings', (req, res, ctx) => {
-        return res(
-          ctx.json(accountSettingsFactory.build({ object_storage: 'active' }))
+      http.get('*/account/settings', () => {
+        return HttpResponse.json(
+          accountSettingsFactory.build({ object_storage: 'active' })
         );
       })
     );

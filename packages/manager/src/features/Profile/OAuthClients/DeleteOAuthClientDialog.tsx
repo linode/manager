@@ -3,7 +3,7 @@ import React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
-import { useDeleteOAuthClientMutation } from 'src/queries/accountOAuth';
+import { useDeleteOAuthClientMutation } from 'src/queries/account/oauth';
 
 interface Props {
   id: string;

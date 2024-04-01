@@ -36,7 +36,7 @@ interface Props {
   request: StackScriptsRequest;
 }
 
-type CombinedProps = Props & StateProps;
+interface StackScriptPanelContentProps extends Props, StateProps {}
 
 const defaultDialogState = {
   delete: {
@@ -51,7 +51,9 @@ const defaultDialogState = {
   stackScriptLabel: '',
 };
 
-export const StackScriptPanelContent = (props: CombinedProps) => {
+export const StackScriptPanelContent = (
+  props: StackScriptPanelContentProps
+) => {
   const { currentFilter } = props;
 
   const [mounted, setMounted] = React.useState<boolean>(false);
@@ -241,6 +243,6 @@ export const StackScriptPanelContent = (props: CombinedProps) => {
   );
 };
 
-export default compose<CombinedProps, Props>(
+export default compose<StackScriptPanelContentProps, Props>(
   StackScriptBase({ isSelecting: false, useQueryString: true })
 )(StackScriptPanelContent);

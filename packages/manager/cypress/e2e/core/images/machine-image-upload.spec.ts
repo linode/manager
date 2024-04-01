@@ -8,8 +8,8 @@ import { authenticate } from 'support/api/authentication';
 import { fbtVisible, getClick } from 'support/helpers';
 import {
   mockDeleteImage,
+  mockGetAllImages,
   mockGetCustomImages,
-  mockGetImage,
   mockUpdateImage,
 } from 'support/intercepts/images';
 import { ui } from 'support/ui';
@@ -249,10 +249,12 @@ describe('machine image', () => {
     cy.wait('@imageUpload').then((xhr) => {
       const imageId = xhr.response?.body.image.id;
       assertProcessing(label, imageId);
-      mockGetImage(label, imageId, 'available').as('getImage');
+      mockGetAllImages([
+        imageFactory.build({ label, id: imageId, status: 'available' }),
+      ]).as('getImages');
       eventIntercept(label, imageId, status);
       ui.toast.assertMessage(uploadMessage);
-      cy.wait('@getImage');
+      cy.wait('@getImages');
       ui.toast.assertMessage(availableMessage);
       cy.get(`[data-qa-image-cell="${imageId}"]`).within(() => {
         fbtVisible(label);

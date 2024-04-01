@@ -40,7 +40,9 @@ interface Props {
   sx?: SxProps;
 }
 
-type CombinedProps = Props & Partial<NoticeProps>;
+interface DismissibleBannerProps
+  extends Omit<Partial<NoticeProps>, 'children'>,
+    Props {}
 
 /**
  * ## Usage
@@ -58,7 +60,7 @@ type CombinedProps = Props & Partial<NoticeProps>;
  * - Warning: Informs users of an impending change that will have an impact on their service(s).
  * - Call to action: Primary Button or text link allows a user to take action directly from the banner.
  */
-export const DismissibleBanner = (props: CombinedProps) => {
+export const DismissibleBanner = (props: DismissibleBannerProps) => {
   const {
     actionButton,
     children,

@@ -1,7 +1,7 @@
 import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -13,6 +13,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Paper } from 'src/components/Paper';
 import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
 import KubeClusterSpecs from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useKubernetesClusterMutation,
   useKubernetesDashboardQuery,
@@ -121,6 +122,12 @@ export const KubeSummaryPanel = (props: Props) => {
     mutateAsync: resetKubeConfig,
   } = useResetKubeConfigMutation();
 
+  const isClusterReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: cluster.id,
+  });
+
   const [
     resetKubeConfigDialogOpen,
     setResetKubeConfigDialogOpen,
@@ -198,7 +205,7 @@ export const KubeSummaryPanel = (props: Props) => {
             </Grid>
             <Grid className={classes.tags}>
               <TagsPanel
-                entityId={cluster.id}
+                disabled={isClusterReadOnly}
                 tags={cluster.tags}
                 updateTags={handleUpdateTags}
               />

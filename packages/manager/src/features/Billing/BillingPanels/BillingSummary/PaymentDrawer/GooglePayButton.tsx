@@ -15,8 +15,8 @@ import {
 } from 'src/features/Billing/GooglePayProvider';
 import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 import { useScript } from 'src/hooks/useScript';
-import { useAccount } from 'src/queries/account';
-import { useClientToken } from 'src/queries/accountPayment';
+import { useAccount } from 'src/queries/account/account';
+import { useClientToken } from 'src/queries/account/payment';
 
 import { SetSuccess } from './types';
 

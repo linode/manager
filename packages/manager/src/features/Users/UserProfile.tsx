@@ -10,7 +10,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useAccountUser } from 'src/queries/accountUsers';
+import { useAccountUser } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 

@@ -1,6 +1,7 @@
+import { Event } from '@linode/api-v4';
 import {
+  Database,
   DatabaseInstance,
-  DatabaseStatus,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
@@ -8,25 +9,14 @@ import { Link } from 'react-router-dom';
 
 import { Chip } from 'src/components/Chip';
 import { Hidden } from 'src/components/Hidden';
-import { Status, StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
-import { capitalize } from 'src/utilities/capitalize';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 
-export const databaseStatusMap: Record<DatabaseStatus, Status> = {
-  active: 'active',
-  degraded: 'inactive',
-  failed: 'error',
-  provisioning: 'other',
-  restoring: 'other',
-  resuming: 'other',
-  suspended: 'error',
-  suspending: 'other',
-};
+import { DatabaseStatusDisplay } from '../DatabaseDetail/DatabaseStatusDisplay';
 
 export const databaseEngineMap: Record<Engine, string> = {
   mongodb: 'MongoDB',
@@ -36,10 +26,11 @@ export const databaseEngineMap: Record<Engine, string> = {
 };
 
 interface Props {
-  database: DatabaseInstance;
+  database: DatabaseInstance | Database;
+  events?: Event[];
 }
 
-export const DatabaseRow = ({ database }: Props) => {
+export const DatabaseRow = ({ database, events }: Props) => {
   const {
     cluster_size,
     created,
@@ -47,7 +38,6 @@ export const DatabaseRow = ({ database }: Props) => {
     id,
     label,
     region,
-    status,
     version,
   } = database;
 
@@ -81,8 +71,7 @@ export const DatabaseRow = ({ database }: Props) => {
         <Link to={`/databases/${engine}/${id}`}>{label}</Link>
       </TableCell>
       <TableCell statusCell>
-        <StatusIcon status={databaseStatusMap[status]} />
-        {capitalize(status)}
+        <DatabaseStatusDisplay events={events} database={database} />
       </TableCell>
       <Hidden smDown>
         <TableCell>{configuration}</TableCell>

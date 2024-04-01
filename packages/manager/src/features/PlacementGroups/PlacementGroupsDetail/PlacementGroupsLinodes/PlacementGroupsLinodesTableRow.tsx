@@ -7,6 +7,7 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 
 import type { Linode } from '@linode/api-v4';
@@ -28,6 +29,12 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
     );
   };
 
+  const isAllowedToEditPlacementGroup = useIsResourceRestricted({
+    grantLevel: 'read_write',
+    grantType: 'linode',
+    id: +linode.id,
+  });
+
   return (
     <TableRow
       ariaLabel={`Linode ${label}`}
@@ -46,6 +53,7 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
       <TableCell actionCell>
         <InlineMenuAction
           actionText="Unassign"
+          disabled={!isAllowedToEditPlacementGroup}
           onClick={handleOpenUnassignLinodeModal}
         />
       </TableCell>

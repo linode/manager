@@ -12,7 +12,7 @@ import {
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
 import { linodeFactory } from 'src/factories/linodes';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithTheme,
@@ -31,16 +31,12 @@ describe('SubnetLinodeRow', () => {
   const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
 
   server.use(
-    rest.get('*/linodes/instances/:linodeId', (req, res, ctx) => {
-      return res(ctx.json(linodeFactory1));
+    http.get('*/linodes/instances/:linodeId', () => {
+      return HttpResponse.json(linodeFactory1);
     }),
-    rest.get('*/linode/instances/:id/firewalls', (req, res, ctx) => {
-      return res(
-        ctx.json(
-          makeResourcePage(
-            firewallFactory.buildList(1, { label: mockFirewall0 })
-          )
-        )
+    http.get('*/linode/instances/:id/firewalls', () => {
+      return HttpResponse.json(
+        makeResourcePage(firewallFactory.buildList(1, { label: mockFirewall0 }))
       );
     })
   );
@@ -52,9 +48,9 @@ describe('SubnetLinodeRow', () => {
   it('should display linode label, reboot status, VPC IPv4 address, associated firewalls, IPv4 chip, and Reboot and Unassign buttons', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     server.use(
-      rest.get('*/instances/*/configs', async (req, res, ctx) => {
+      http.get('*/instances/*/configs', async () => {
         const configs = linodeConfigFactory.buildList(3);
-        return res(ctx.json(makeResourcePage(configs)));
+        return HttpResponse.json(makeResourcePage(configs));
       })
     );
 
@@ -111,23 +107,21 @@ describe('SubnetLinodeRow', () => {
       primary: true,
     });
     server.use(
-      rest.get('*/linodes/instances/:linodeId', (req, res, ctx) => {
-        return res(ctx.json(linodeFactory1));
+      http.get('*/linodes/instances/:linodeId', () => {
+        return HttpResponse.json(linodeFactory1);
       }),
-      rest.get('*/linode/instances/:id/firewalls', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            makeResourcePage(
-              firewallFactory.buildList(1, { label: mockFirewall0 })
-            )
+      http.get('*/linode/instances/:id/firewalls', () => {
+        return HttpResponse.json(
+          makeResourcePage(
+            firewallFactory.buildList(1, { label: mockFirewall0 })
           )
         );
       }),
-      rest.get('*/instances/*/configs', (req, res, ctx) => {
+      http.get('*/instances/*/configs', () => {
         const configs = linodeConfigFactory.build({
           interfaces: [vpcInterface],
         });
-        return res(ctx.json(makeResourcePage([configs])));
+        return HttpResponse.json(makeResourcePage([configs]));
       })
     );
 
@@ -209,8 +203,8 @@ describe('SubnetLinodeRow', () => {
     });
 
     server.use(
-      rest.get('*/instances/*/configs', async (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([configurationProfile])));
+      http.get('*/instances/*/configs', async () => {
+        return HttpResponse.json(makeResourcePage([configurationProfile]));
       })
     );
 

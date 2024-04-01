@@ -7,7 +7,7 @@ import { Box } from 'src/components/Box';
 import { Link } from 'src/components/Link';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 

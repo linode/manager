@@ -4,7 +4,7 @@ import {
   configurationsEndpointHealthFactory,
   endpointHealthFactory,
 } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ConfigurationEndpointHealth } from './ConfigurationEndpointHealth';
@@ -12,21 +12,18 @@ import { ConfigurationEndpointHealth } from './ConfigurationEndpointHealth';
 describe('ConfigurationEndpointHealth', () => {
   it('renders endpoint health from API data', async () => {
     server.use(
-      rest.get(
-        '*/v4beta/aclb/:id/configurations/endpoints-health',
-        (req, res, ctx) => {
-          const health = configurationsEndpointHealthFactory.build({
-            configurations: [
-              endpointHealthFactory.build({
-                healthy_endpoints: 10,
-                id: 0,
-                total_endpoints: 20,
-              }),
-            ],
-          });
-          return res(ctx.json(health));
-        }
-      )
+      http.get('*/v4beta/aclb/:id/configurations/endpoints-health', () => {
+        const health = configurationsEndpointHealthFactory.build({
+          configurations: [
+            endpointHealthFactory.build({
+              healthy_endpoints: 10,
+              id: 0,
+              total_endpoints: 20,
+            }),
+          ],
+        });
+        return HttpResponse.json(health);
+      })
     );
 
     const { findByText } = renderWithTheme(

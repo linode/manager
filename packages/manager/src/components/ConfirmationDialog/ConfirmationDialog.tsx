@@ -34,6 +34,7 @@ export interface ConfirmationDialogProps extends DialogProps {
   actions?: ((props: any) => JSX.Element) | JSX.Element;
   error?: JSX.Element | string;
   onClose: () => void;
+  onExited?: () => void;
   title: string;
 }
 
@@ -49,11 +50,23 @@ export interface ConfirmationDialogProps extends DialogProps {
 export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
   const { classes } = useStyles();
 
-  const { actions, children, error, onClose, title, ...dialogProps } = props;
+  const {
+    actions,
+    children,
+    error,
+    onClose,
+    onExited,
+    title,
+    ...dialogProps
+  } = props;
 
   return (
     <Dialog
       {...dialogProps}
+      TransitionProps={{
+        ...dialogProps.TransitionProps,
+        onExited,
+      }}
       onClose={(_, reason) => {
         if (reason !== 'backdropClick') {
           onClose();

@@ -1,5 +1,5 @@
 import { fireEvent } from '@testing-library/react';
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 import React from 'react';
 
 import { imageFactory, linodeFactory } from 'src/factories';
@@ -22,11 +22,11 @@ const setupMocks = () => {
   });
 
   server.use(
-    rest.get('*/linode/instances/:linodeId', (req, res, ctx) => {
-      return res(ctx.json(defaultProps.linodes[0]));
+    http.get('*/linode/instances/:linodeId', () => {
+      return HttpResponse.json(defaultProps.linodes[0]);
     }),
-    rest.get('*/images/:imageId', (req, res, ctx) => {
-      return res(ctx.json(image1));
+    http.get('*/images/:imageId', () => {
+      return HttpResponse.json(image1);
     })
   );
 };
