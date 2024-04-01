@@ -123,13 +123,14 @@ export const RemovableSelectionsList = (
   const [isRemoving, setIsRemoving] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    if (hasEncounteredError) {
-      setRemovingItemId(null);
-      setIsRemoving(false);
-    }
     if (listRef.current) {
       setListHeight(listRef.current.clientHeight);
     }
+
+    return () => {
+      setRemovingItemId(null);
+      setIsRemoving(false);
+    };
   }, [hasEncounteredError, selectionData]);
 
   const handleOnClick = (selection: RemovableItem) => {

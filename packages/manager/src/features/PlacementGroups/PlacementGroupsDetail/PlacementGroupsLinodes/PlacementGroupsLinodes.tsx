@@ -141,6 +141,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
       <PlacementGroupsAssignLinodesDrawer
         onClose={handleCloseDrawer}
         open={isAssignLinodesDrawerOpen}
+        region={region}
         selectedPlacementGroup={placementGroup}
       />
       <PlacementGroupsUnassignModal

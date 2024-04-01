@@ -28,5 +28,6 @@ export interface PlacementGroupsAssignLinodesDrawerProps {
   onClose: PlacementGroupsDrawerPropsBase['onClose'];
   onLinodeAddedToPlacementGroup?: (placementGroup: PlacementGroup) => void;
   open: PlacementGroupsDrawerPropsBase['open'];
+  region: Region | undefined;
   selectedPlacementGroup: PlacementGroup | undefined;
 }

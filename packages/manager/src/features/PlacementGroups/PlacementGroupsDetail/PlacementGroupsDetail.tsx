@@ -153,7 +153,10 @@ export const PlacementGroupsDetail = () => {
         <TabLinkList tabs={tabs} />
         <TabPanels>
           <SafeTabPanel index={0}>
-            <PlacementGroupsSummary placementGroup={placementGroup} />
+            <PlacementGroupsSummary
+              placementGroup={placementGroup}
+              region={region}
+            />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             <PlacementGroupsLinodes
