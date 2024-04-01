@@ -13,7 +13,12 @@ import {
 import { usePreferences } from 'src/queries/preferences';
 
 interface EntityInfo {
-  action?: 'cancellation' | 'deletion' | 'detachment' | 'restoration';
+  action?:
+    | 'cancellation'
+    | 'deletion'
+    | 'detachment'
+    | 'resizing'
+    | 'restoration';
   name?: string | undefined;
   primaryBtnText: string;
   subType?: 'CloseAccount' | 'Cluster' | 'ObjectStorage';
@@ -65,6 +70,10 @@ interface TypeToConfirmDialogProps {
    */
   onClick: () => void;
   /**
+   * Optional callback to be executed when the closing animation has completed
+   */
+  onExited?: () => void;
+  /**
    * The open/closed state of the dialog
    */
   open: boolean;
@@ -86,6 +95,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     loading,
     onClick,
     onClose,
+    onExited,
     open,
     textFieldStyle,
     title,
@@ -134,6 +144,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
       actions={actions}
       error={errors ? errors[0].reason : undefined}
       onClose={onClose}
+      onExited={onExited}
       open={open}
       title={title}
     >

@@ -10,7 +10,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 

@@ -2,11 +2,15 @@ import { styled } from '@mui/material/styles';
 import { TabList as ReachTabList, TabListProps } from '@reach/tabs';
 import * as React from 'react';
 
+interface TabListPropsWithClassName extends TabListProps {
+  className?: string;
+}
+
 const TabList = ({
   children,
   className,
   ...rest
-}: TabListProps & { className?: string }) => {
+}: TabListPropsWithClassName) => {
   return (
     <StyledReachTabList className={className} {...rest}>
       {children}

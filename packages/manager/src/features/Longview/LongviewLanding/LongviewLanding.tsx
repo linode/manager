@@ -23,7 +23,7 @@ import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import { useAccountSettings } from 'src/queries/accountSettings';
+import { useAccountSettings } from 'src/queries/account/settings';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { SubscriptionDialog } from './SubscriptionDialog';
@@ -31,9 +31,9 @@ import { SubscriptionDialog } from './SubscriptionDialog';
 const LongviewClients = React.lazy(() => import('./LongviewClients'));
 const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
 
-type CombinedProps = LongviewProps & RouteComponentProps<{}>;
+interface LongviewLandingProps extends LongviewProps, RouteComponentProps<{}> {}
 
-export const LongviewLanding = (props: CombinedProps) => {
+export const LongviewLanding = (props: LongviewLandingProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const activeSubscriptionRequestHook = useAPIRequest<ActiveLongviewPlan>(
     () => getActiveLongviewPlan().then((response) => response),
@@ -184,6 +184,6 @@ const StyledTabs = styled(Tabs, {
   marginTop: 0,
 }));
 
-export default compose<CombinedProps, {} & RouteComponentProps>(
+export default compose<LongviewLandingProps, RouteComponentProps>(
   withLongviewClients()
 )(LongviewLanding);

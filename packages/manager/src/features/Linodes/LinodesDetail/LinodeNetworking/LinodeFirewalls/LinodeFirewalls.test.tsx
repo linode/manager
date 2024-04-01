@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { firewallFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeFirewalls } from './LinodeFirewalls';
@@ -20,8 +20,8 @@ describe('LinodeFirewalls', () => {
 
   it('should have an empty row if the linode is not assigned to a firewall', async () => {
     server.use(
-      rest.get('*/linode/instances/1/firewalls', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/linode/instances/1/firewalls', () => {
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 
@@ -32,8 +32,8 @@ describe('LinodeFirewalls', () => {
 
   it('should have a firewall listed if the linode is assigned to one', async () => {
     server.use(
-      rest.get('*/linode/instances/1/firewalls', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([firewallFactory.build()])));
+      http.get('*/linode/instances/1/firewalls', () => {
+        return HttpResponse.json(makeResourcePage([firewallFactory.build()]));
       })
     );
 

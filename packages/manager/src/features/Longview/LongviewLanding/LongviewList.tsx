@@ -22,7 +22,7 @@ type LongviewProps = Omit<
   | 'updateLongviewClient'
 >;
 
-interface Props {
+interface Props extends LongviewProps {
   createLongviewClient: () => void;
   filteredData: LongviewClient[];
   loading: boolean;
@@ -34,9 +34,7 @@ interface Props {
   userCanCreateLongviewClient: boolean;
 }
 
-type CombinedProps = Props & LongviewProps;
-
-export const LongviewList = React.memo((props: CombinedProps) => {
+export const LongviewList = React.memo((props: Props) => {
   const {
     createLongviewClient,
     filteredData,
@@ -80,13 +78,13 @@ export const LongviewList = React.memo((props: CombinedProps) => {
   if (longviewClientsLastUpdated !== 0 && longviewClientsResults === 0) {
     return (
       <Paper
-        data-testid="no-client-list"
         sx={{
           alignItems: 'center',
           display: 'flex',
           height: '20em',
           justifyContent: 'center',
         }}
+        data-testid="no-client-list"
       >
         <Typography sx={{ fontSize: '1.1em' }} variant="body1">
           {userCanCreateLongviewClient ? (

@@ -28,7 +28,7 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 
 import { StyledRootGrid, StyledTypography } from './CommonLinodeStorage.styles';

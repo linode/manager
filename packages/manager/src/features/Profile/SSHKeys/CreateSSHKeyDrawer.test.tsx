@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { sshKeyFactory } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateSSHKeyDrawer } from './CreateSSHKeyDrawer';
@@ -45,8 +45,8 @@ describe('SSHKeyCreationDrawer', () => {
 
   it('should submit and call onClose', async () => {
     server.use(
-      rest.post('*/profile/sshkeys', (req, res, ctx) => {
-        return res(ctx.json(sshKeyFactory.build()));
+      http.post('*/profile/sshkeys', () => {
+        return HttpResponse.json(sshKeyFactory.build());
       })
     );
 

@@ -119,13 +119,14 @@ export const SelectLinodePanel = (props: Props) => {
                       <List
                         sx={(theme) => ({
                           '& > li': {
-                            display: 'list-item',
+                            display:
+                              notices.length > 1 ? 'list-item' : 'inline',
                             lineHeight: theme.spacing(3),
                             padding: 0,
                             pl: 0,
                           },
                           listStyle: 'disc',
-                          ml: theme.spacing(2),
+                          ml: notices.length > 1 ? theme.spacing(2) : 0,
                         })}
                       >
                         {notices.map((notice, i) => (
@@ -198,7 +199,6 @@ export const SelectLinodePanel = (props: Props) => {
           action={'Power Off'}
           isOpen={!!powerOffLinode}
           linodeId={powerOffLinode.linodeId}
-          manuallyUpdateConfigs={true}
           onClose={() => setPowerOffLinode(false)}
         />
       )}
