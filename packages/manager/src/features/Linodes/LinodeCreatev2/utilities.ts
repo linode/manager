@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import type { LinodeCreateType } from '../LinodesCreate/types';
+import type { CreateLinodeRequest } from '@linode/api-v4';
+import { utoa } from '../LinodesCreate/utilities';
 
 /**
  * This interface is used to type the query params on the Linode Create flow.
@@ -60,3 +62,20 @@ export const tabs: LinodeCreateType[] = [
   'Backups',
   'Clone Linode',
 ];
+
+/**
+ * Performs some transformations to the Linode Create form data so that the data
+ * is in the correct format for the API. Intended to be used in the "onSubmit" when creating a Linode.
+ *
+ * @param payload the initial raw values from the Linode Create form
+ * @returns final Linode Create payload to be sent to the API
+ */
+export const getLinodeCreatePayload = (
+  payload: CreateLinodeRequest
+): CreateLinodeRequest => {
+  if (payload.metadata?.user_data) {
+    payload.metadata.user_data = utoa(payload.metadata.user_data);
+  }
+
+  return payload;
+};
