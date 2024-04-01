@@ -23,7 +23,6 @@ import {
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-import { getPlacementGroupLinodeCount } from '../utils';
 import { PlacementGroupsLinodes } from './PlacementGroupsLinodes/PlacementGroupsLinodes';
 import { PlacementGroupsSummary } from './PlacementGroupsSummary/PlacementGroupsSummary';
 
@@ -85,7 +84,7 @@ export const PlacementGroupsDetail = () => {
     placementGroup?.members.some((pgLinode) => pgLinode.linode_id === linode.id)
   );
 
-  const linodeCount = getPlacementGroupLinodeCount(placementGroup);
+  const linodeCount = placementGroup.members.length;
   const tabs = [
     {
       routeName: `/placement-groups/${id}`,

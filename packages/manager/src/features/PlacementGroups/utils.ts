@@ -33,15 +33,6 @@ export const getPlacementGroupLinodes = (
   );
 };
 
-/**
- * Helper to get the number of Linodes in a Placement Group.
- */
-export const getPlacementGroupLinodeCount = (
-  placementGroup: PlacementGroup
-): number => {
-  return placementGroup.members.length;
-};
-
 interface HasPlacementGroupReachedCapacityOptions {
   placementGroup: PlacementGroup | undefined;
   region: Region | undefined;
@@ -60,9 +51,7 @@ export const hasPlacementGroupReachedCapacity = ({
     return false;
   }
 
-  return (
-    getPlacementGroupLinodeCount(placementGroup) >= region.maximum_vms_per_pg
-  );
+  return placementGroup.members.length >= region.maximum_vms_per_pg;
 };
 
 interface HasRegionReachedPlacementGroupCapacityOptions {

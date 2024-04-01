@@ -88,8 +88,8 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     onClose();
   };
 
-  const linodeCount = assignedLinodes?.length ?? 0;
-  const isDisabled = !selectedPlacementGroup || linodeCount > 0;
+  const assignedLinodesCount = assignedLinodes?.length ?? 0;
+  const isDisabled = !selectedPlacementGroup || assignedLinodesCount > 0;
 
   if (!selectedPlacementGroup || !assignedLinodes) {
     return (
@@ -140,7 +140,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
         />
       )}
 
-      {linodeCount > 0 ? (
+      {assignedLinodesCount > 0 ? (
         <>
           <Notice spacingTop={8} variant="warning">
             <Typography>
