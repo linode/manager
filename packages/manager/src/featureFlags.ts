@@ -72,11 +72,11 @@ export interface Flags {
   referralBannerText: ReferralBannerText;
   selfServeBetas: boolean;
   soldOutChips: boolean;
+  supportTicketSeverity: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
   taxes: Taxes;
   tpaProviders: Provider[];
-  vpc: boolean;
 }
 
 type PromotionalOfferFeature =

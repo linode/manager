@@ -6,7 +6,7 @@ import { getIsLinodeCreateTypeEdgeSupported } from 'src/components/RegionSelect/
 import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsAvailabilityQuery } from 'src/queries/regions';
+import { useRegionAvailabilityQuery } from 'src/queries/regions/regions';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
@@ -47,6 +47,8 @@ interface Props {
   tabDisabledMessage?: string;
   tabbedPanelInnerClass?: string;
   types: PlanSelectionType[];
+  disabledPlanTypes?: PlanSelectionType[];
+  disabledPlanTypesToolTipText?: string;
 }
 
 export const PlansPanel = (props: Props) => {
@@ -66,13 +68,15 @@ export const PlansPanel = (props: Props) => {
     selectedRegionID,
     showTransfer,
     types,
+    disabledPlanTypes,
+    disabledPlanTypesToolTipText,
   } = props;
 
   const flags = useFlags();
   const location = useLocation();
   const params = getQueryParamsFromQueryString(location.search);
 
-  const { data: regionAvailabilities } = useRegionsAvailabilityQuery(
+  const { data: regionAvailabilities } = useRegionAvailabilityQuery(
     selectedRegionID || '',
     Boolean(flags.soldOutChips) && selectedRegionID !== undefined
   );
@@ -188,6 +192,8 @@ export const PlansPanel = (props: Props) => {
               selectedId={selectedId}
               selectedRegionId={selectedRegionID}
               showTransfer={showTransfer}
+              disabledPlanTypes={disabledPlanTypes}
+              disabledPlanTypesToolTipText={disabledPlanTypesToolTipText}
             />
           </>
         );

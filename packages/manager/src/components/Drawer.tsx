@@ -1,7 +1,7 @@
 import Close from '@mui/icons-material/Close';
 import _Drawer, { DrawerProps } from '@mui/material/Drawer';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -10,6 +10,10 @@ import { Typography } from 'src/components/Typography';
 import { convertForAria } from 'src/utilities/stringUtils';
 
 interface Props extends DrawerProps {
+  /**
+   * Callback fired when the drawer closing animation has completed.
+   */
+  onExited?: () => void;
   /**
    * Title that appears at the top of the drawer
    */
@@ -85,7 +89,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 export const Drawer = (props: Props) => {
   const { classes, cx } = useStyles();
 
-  const { children, onClose, title, wide, ...rest } = props;
+  const { children, onClose, onExited, title, wide, ...rest } = props;
 
   const titleID = convertForAria(title);
 
@@ -107,6 +111,7 @@ export const Drawer = (props: Props) => {
       aria-labelledby={titleID}
       data-qa-drawer
       data-testid="drawer"
+      onTransitionExited={onExited}
       role="dialog"
     >
       <Grid

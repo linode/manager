@@ -2,8 +2,8 @@ import { rebuildLinode } from '@linode/api-v4/lib/linodes';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import { RebuildLinodeFromStackScriptSchema } from '@linode/validation/lib/linodes.schema';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
@@ -16,11 +16,11 @@ import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { ImageEmptyState } from 'src/features/Linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
-import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel/UserDefinedFieldsPanel';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
+import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel/UserDefinedFieldsPanel';
 import { useStackScript } from 'src/hooks/useStackScript';
 import { listToItemsByID } from 'src/queries/base';
 import { useEventsPollingActions } from 'src/queries/events/events';
@@ -274,12 +274,12 @@ export const RebuildFromStackScript = (props: Props) => {
               />
               {ss.user_defined_fields && ss.user_defined_fields.length > 0 && (
                 <UserDefinedFieldsPanel
-                  updateFor={[ss.user_defined_fields, ss.udf_data, udfErrors]}
                   errors={udfErrors}
                   handleChange={handleChangeUDF}
                   selectedLabel={ss.label}
                   selectedUsername={ss.username}
                   udf_data={ss.udf_data}
+                  updateFor={[ss.user_defined_fields, ss.udf_data, udfErrors]}
                   userDefinedFields={ss.user_defined_fields}
                 />
               )}
@@ -297,8 +297,8 @@ export const RebuildFromStackScript = (props: Props) => {
                 />
               ) : (
                 <ImageEmptyState
-                  sx={{ padding: theme.spacing(3) }}
                   errorText={errors.image}
+                  sx={{ padding: theme.spacing(3) }}
                 />
               )}
               <AccessPanel
@@ -312,37 +312,42 @@ export const RebuildFromStackScript = (props: Props) => {
                 password={values.root_pass}
                 passwordHelperText={passwordHelperText}
               />
-              <TypeToConfirm
-                confirmationText={
-                  <span>
-                    To confirm these changes, type the label of the Linode (
-                    <strong>{linodeLabel}</strong>) in the field below:
-                  </span>
-                }
-                onChange={(input) => {
-                  setConfirmationText(input);
-                }}
-                hideLabel
-                label="Linode Label"
-                textFieldStyle={{ marginBottom: 16 }}
-                title="Confirm"
-                typographyStyle={{ marginBottom: 8 }}
-                value={confirmationText}
-                visible={preferences?.type_to_confirm}
-              />
-              <ActionsPanel
-                primaryButtonProps={{
-                  'data-testid': 'rebuild',
-                  'data-qa-form-data-loading': isLoading,
-                  disabled: submitButtonDisabled,
-                  label: 'Rebuild Linode',
-                  onClick: handleRebuildButtonClick,
-                }}
-                sx={{
-                  '& button': { alignSelf: 'flex-end' },
-                  flexDirection: 'column',
-                }}
-              />
+              <Grid
+                sx={(theme) => ({
+                  marginTop: theme.spacing(2),
+                })}
+              >
+                <TypeToConfirm
+                  confirmationText={
+                    <span>
+                      To confirm these changes, type the label of the Linode (
+                      <strong>{linodeLabel}</strong>) in the field below:
+                    </span>
+                  }
+                  onChange={(input) => {
+                    setConfirmationText(input);
+                  }}
+                  hideLabel
+                  label="Linode Label"
+                  textFieldStyle={{ marginBottom: 16 }}
+                  title="Confirm"
+                  typographyStyle={{ marginBottom: 8 }}
+                  value={confirmationText}
+                  visible={preferences?.type_to_confirm}
+                />
+                <ActionsPanel
+                  primaryButtonProps={{
+                    'data-qa-form-data-loading': isLoading,
+                    'data-testid': 'rebuild',
+                    disabled: submitButtonDisabled,
+                    label: 'Rebuild Linode',
+                    onClick: handleRebuildButtonClick,
+                  }}
+                  sx={{
+                    display: 'flex',
+                  }}
+                />
+              </Grid>
             </form>
             <StackScriptDialog />
           </Grid>

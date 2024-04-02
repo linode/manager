@@ -1,28 +1,25 @@
-import { LinodeTypeClass } from '@linode/api-v4';
 import {
   Database,
   DatabaseClusterSizeObject,
   DatabasePriceObject,
+  DatabaseType,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import { PlanSelectionType } from 'src/features/components/PlansPanel/types';
-import { getPlanSelectionsByPlanType } from 'src/features/components/PlansPanel/utils';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
 import { useDatabaseMutation } from 'src/queries/databases';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 
 import {
   StyledGrid,
@@ -75,12 +72,9 @@ export const DatabaseResize = ({ database }: Props) => {
     updateDatabase({
       type: planSelected,
     }).then(() => {
-      enqueueSnackbar(
-        `Your database cluster ${database.label} is being resized.`,
-        {
-          variant: 'info',
-        }
-      );
+      enqueueSnackbar(`Database cluster ${database.label} is being resized.`, {
+        variant: 'info',
+      });
       history.push(`/databases/${database.engine}/${database.id}`);
     });
   };
@@ -117,22 +111,6 @@ export const DatabaseResize = ({ database }: Props) => {
     </>
   );
 
-  const confirmationDialogActions = (
-    <ActionsPanel
-      primaryButtonProps={{
-        'data-testid': 'button-confirm',
-        label: 'Resize',
-        loading: submitInProgress,
-        onClick: onResize,
-      }}
-      secondaryButtonProps={{
-        'data-testid': 'button-cancel',
-        label: 'Cancel',
-        onClick: () => setIsResizeConfirmationDialogOpen(false),
-      }}
-    />
-  );
-
   const costSummary = (
     <Typography sx={{ marginBottom: '10px' }} variant="h3">
       {`The cost of the resized database is ${summaryText?.price}.`}
@@ -160,7 +138,9 @@ export const DatabaseResize = ({ database }: Props) => {
       return;
     }
 
-    const selectedPlanType = dbTypes.find((type) => type.id === planSelected);
+    const selectedPlanType = dbTypes.find(
+      (type: DatabaseType) => type.id === planSelected
+    );
     if (!selectedPlanType) {
       setPlanSelected(undefined);
       setSummaryText(undefined);
@@ -195,11 +175,12 @@ export const DatabaseResize = ({ database }: Props) => {
     if (!dbTypes) {
       return [];
     }
-    return dbTypes.map((type) => {
+    return dbTypes.map((type: DatabaseType) => {
       const { label } = type;
       const formattedLabel = formatStorageUnits(label);
       const nodePricing = type.engines[selectedEngine].find(
-        (cluster) => cluster.quantity === database.cluster_size
+        (cluster: DatabaseClusterSizeObject) =>
+          cluster.quantity === database.cluster_size
       );
       const price = nodePricing?.price ?? {
         hourly: null,
@@ -220,18 +201,12 @@ export const DatabaseResize = ({ database }: Props) => {
   }, [database.cluster_size, dbTypes, selectedEngine]);
 
   const currentPlan = displayTypes?.find((type) => type.id === database.type);
-  // create an array of different class of types.
-  const typeClasses: LinodeTypeClass[] = Object.keys(
-    getPlanSelectionsByPlanType(displayTypes)
-  ).map((plan) => (plan === 'shared' ? 'standard' : (plan as LinodeTypeClass)));
-  const currentPlanClass = currentPlan?.class ?? 'dedicated';
-  // We don't have a "Nanodes" tab anymore, so use `shared`
-  const selectedTypeClass =
-    currentPlanClass === 'nanode' ? 'standard' : currentPlanClass;
-  // User cannot switch to different plan type apart from current plan while resizing a DB cluster. So disable rest of the tabs.
-  const tabsToBeDisabled = typeClasses
-    .filter((typeClass) => typeClass !== selectedTypeClass)
-    .map((plan) => (plan === 'standard' ? 'shared' : plan));
+
+  const disabledPlans = displayTypes?.filter(
+    (type) =>
+      type.disk < (currentPlan ? currentPlan.disk : 0) ||
+      (currentPlan?.class === 'dedicated' && type.disk === currentPlan?.disk)
+  );
   if (typesLoading) {
     return <CircleProgress />;
   }
@@ -249,15 +224,12 @@ export const DatabaseResize = ({ database }: Props) => {
       </Paper>
       <Paper sx={{ marginTop: 2 }}>
         <StyledPlansPanel
-          tabDisabledMessage={
-            'You can resize your cluster only within already selected plan.'
-          }
           currentPlanHeading={currentPlan?.heading}
           data-qa-select-plan
-          disabledTabs={tabsToBeDisabled}
+          disabledPlanTypes={disabledPlans}
+          disabledPlanTypesToolTipText="Resizing to smaller plans is not supported."
           header="Choose a Plan"
           onSelect={(selected: string) => setPlanSelected(selected)}
-          selectedDiskSize={currentPlan?.disk}
           selectedId={planSelected}
           types={displayTypes}
         />
@@ -275,15 +247,26 @@ export const DatabaseResize = ({ database }: Props) => {
           Resize Database Cluster
         </StyledResizeButton>
       </StyledGrid>
-      <ConfirmationDialog
-        actions={confirmationDialogActions}
-        error={resizeError?.[0].reason}
+      <TypeToConfirmDialog
+        entity={{
+          action: 'resizing',
+          name: database.label,
+          primaryBtnText: 'Resize Cluster',
+          subType: 'Cluster',
+          type: 'Database',
+        }}
+        label={'Cluster Name'}
+        loading={submitInProgress}
+        onClick={onResize}
         onClose={() => setIsResizeConfirmationDialogOpen(false)}
         open={isResizeConfirmationDialogOpen}
-        title={`Resize ${database.label}?`}
+        title={`Resize Database Cluster ${database.label}?`}
       >
+        {resizeError ? (
+          <Notice text={resizeError[0].reason} variant="error" />
+        ) : null}
         {confirmationPopUpMessage}
-      </ConfirmationDialog>
+      </TypeToConfirmDialog>
     </>
   );
 };

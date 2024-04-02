@@ -25,11 +25,11 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'gecko', label: 'Gecko' },
   { flag: 'parentChildAccountAccess', label: 'Parent/Child Account' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
-  { flag: 'vpc', label: 'VPC' },
   { flag: 'firewallNodebalancer', label: 'Firewall NodeBalancer' },
   { flag: 'recharts', label: 'Recharts' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'placementGroups', label: 'Placement Groups' },
+  { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
   { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },
 ];
 
@@ -51,9 +51,9 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
   ) => {
     const currentFlag = flags[flag];
     const updatedValue =
-      typeof currentFlag === 'boolean'
-        ? e.target.checked
-        : { ...currentFlag, enabled: e.target.checked }; // If current flag is an object, update 'enabled' key
+      typeof currentFlag == 'object' && 'enabled' in currentFlag
+        ? { ...currentFlag, enabled: e.target.checked } // If current flag is an object, update 'enabled' key
+        : e.target.checked;
     const updatedFlags = {
       ...getStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY),
       [flag]: updatedValue,

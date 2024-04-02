@@ -11,7 +11,7 @@ import { readableBytes } from 'src/utilities/unitConversions';
 import { sumStorage } from '../../shared/utilities';
 import { BaseProps as Props, baseGaugeProps } from './common';
 
-type CombinedProps = Props & LVDataProps;
+interface getUsedStorageProps extends Props, LVDataProps {}
 
 export const getUsedStorage = (data: LVDataProps['longviewClientData']) => {
   const storageInBytes = sumStorage(data.Disk);
@@ -19,7 +19,7 @@ export const getUsedStorage = (data: LVDataProps['longviewClientData']) => {
 };
 
 export const StorageGauge = withClientStats<Props>((props) => props.clientID)(
-  (props: CombinedProps) => {
+  (props: getUsedStorageProps) => {
     const {
       lastUpdatedError,
       longviewClientData,

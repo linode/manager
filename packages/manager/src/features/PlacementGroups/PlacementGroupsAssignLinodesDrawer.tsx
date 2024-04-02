@@ -15,12 +15,12 @@ import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import {
   useAssignLinodesToPlacementGroup,
-  useUnpaginatedPlacementGroupsQuery,
+  useAllPlacementGroupsQuery,
 } from 'src/queries/placementGroups';
 
 import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';
 import {
-  getAffinityEnforcement,
+  getAffinityTypeEnforcement,
   getLinodesFromAllPlacementGroups,
 } from './utils';
 
@@ -43,7 +43,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
   const {
     data: allPlacementGroups,
     error: allPlacementGroupsError,
-  } = useUnpaginatedPlacementGroupsQuery();
+  } = useAllPlacementGroupsQuery();
   const { enqueueSnackbar } = useSnackbar();
 
   // We display a notice and disable inputs in case the user reaches this drawer somehow
@@ -139,7 +139,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
       {generalError ? <Notice text={generalError} variant="error" /> : null}
       <Typography my={4}>
         <strong>Affinity Enforcement: </strong>
-        {getAffinityEnforcement(selectedPlacementGroup.is_strict)}
+        {getAffinityTypeEnforcement(selectedPlacementGroup.is_strict)}
       </Typography>
       <Divider sx={{ mb: 4 }} />
       <form onSubmit={handleAssignLinode}>
