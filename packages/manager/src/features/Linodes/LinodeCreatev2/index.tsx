@@ -22,10 +22,10 @@ import { Summary } from './Summary';
 import { Distributions } from './Tabs/Distributions';
 import { Images } from './Tabs/Images';
 import { getTabIndex, tabs, useLinodeCreateQueryParams } from './utilities';
+import { VLAN } from './VLAN';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { SubmitHandler } from 'react-hook-form';
-import { VLAN } from './VLAN';
 
 export const LinodeCreatev2 = () => {
   const methods = useForm<CreateLinodeRequest>();

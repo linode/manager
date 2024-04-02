@@ -1,4 +1,5 @@
 import React from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { Accordion } from 'src/components/Accordion';
 import { Link } from 'src/components/Link';
@@ -9,38 +10,14 @@ import { Typography } from 'src/components/Typography';
 import { VLANSelect } from 'src/components/VLANSelect';
 
 import { VLANAvailabilityNotice } from '../LinodesCreate/VLANAvailabilityNotice';
-import { useInterfaces, useLinodeCreateQueryParams } from './utilities';
+import { useLinodeCreateQueryParams } from './utilities';
+
+import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const VLAN = () => {
-  const {
-    append,
-    existsInPayload,
-    index,
-    interfaceItem,
-    update,
-    remove,
-  } = useInterfaces('vlan');
+  const { control } = useFormContext<CreateLinodeRequest>();
 
   const { params } = useLinodeCreateQueryParams();
-
-  const onVlanChange = (label: null | string) => {
-    if (label === null && existsInPayload) {
-      return remove(index);
-    }
-
-    if (!existsInPayload) {
-      append([
-        { ipam_address: '', label: '', purpose: 'public' },
-        { ipam_address: '', label, purpose: 'vlan' },
-      ]);
-    } else {
-      update(index, { ...interfaceItem!, label });
-    }
-  };
-
-  const onIPAMChange = (value: string) => {
-    update(index, { ...interfaceItem!, ipam_address: value });
-  };
 
   const isCreatingFromBackup = params.type === 'Backups';
 
@@ -72,17 +49,30 @@ export const VLAN = () => {
         </Link>
         .
       </Typography>
-      <VLANSelect
-        onChange={onVlanChange}
-        value={interfaceItem?.label ?? null}
+      <Controller
+        render={({ field, fieldState }) => (
+          <VLANSelect
+            errorText={fieldState.error?.message}
+            onChange={field.onChange}
+            value={field.value ?? null}
+          />
+        )}
+        control={control}
+        name="interfaces.0.label"
       />
-      <TextField
-        disabled={!existsInPayload}
-        label="IPAM Address"
-        onChange={(e) => onIPAMChange(e.target.value)}
-        optional
-        placeholder="192.0.2.0/24"
-        value={interfaceItem?.ipam_address ?? ''}
+      <Controller
+        render={({ field, fieldState }) => (
+          <TextField
+            errorText={fieldState.error?.message}
+            label="IPAM Address"
+            onChange={field.onChange}
+            optional
+            placeholder="192.0.2.0/24"
+            value={field.value ?? ''}
+          />
+        )}
+        control={control}
+        name="interfaces.0.ipam_address"
       />
     </Accordion>
   );

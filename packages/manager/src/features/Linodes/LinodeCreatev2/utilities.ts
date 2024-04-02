@@ -1,5 +1,3 @@
-import { CreateLinodeRequest, InterfacePurpose } from '@linode/api-v4';
-import { useFieldArray, useWatch } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -62,40 +60,3 @@ export const tabs: LinodeCreateType[] = [
   'Backups',
   'Clone Linode',
 ];
-
-export const useInterfaces = (purpose: InterfacePurpose) => {
-  const {
-    append,
-    fields: interfaces,
-    insert,
-    move,
-    prepend,
-    remove,
-    swap,
-    update,
-  } = useFieldArray<CreateLinodeRequest, 'interfaces'>({
-    name: 'interfaces',
-  });
-
-  const interfaceIndex =
-    interfaces?.findIndex((i) => i.purpose === purpose) ?? -1;
-
-  const index = interfaceIndex === -1 ? 0 : interfaceIndex;
-
-  const interfaceItem =
-    interfaceIndex !== -1 ? interfaces?.[interfaceIndex] : null;
-
-  const existsInPayload = interfaceIndex !== -1;
-
-  return {
-    append,
-    existsInPayload,
-    index,
-    insert,
-    interfaceItem,
-    interfaces,
-    remove,
-    swap,
-    update,
-  };
-};
