@@ -2,7 +2,7 @@ import { placementGroupFactory, regionFactory } from 'src/factories';
 
 import {
   affinityTypeOptions,
-  getAffinityEnforcement,
+  getAffinityTypeEnforcement,
   getLinodesFromAllPlacementGroups,
   getPlacementGroupLinodeCount,
   hasPlacementGroupReachedCapacity,
@@ -109,11 +109,11 @@ describe('getLinodesFromAllPlacementGroups', () => {
 
 describe('getAffinityEnforcement', () => {
   it('returns "Strict" if `is_strict` is true', () => {
-    expect(getAffinityEnforcement(true)).toBe('Strict');
+    expect(getAffinityTypeEnforcement(true)).toBe('Strict');
   });
 
   it('returns "Flexible" if `is_strict` is false', () => {
-    expect(getAffinityEnforcement(false)).toBe('Flexible');
+    expect(getAffinityTypeEnforcement(false)).toBe('Flexible');
   });
 });
 

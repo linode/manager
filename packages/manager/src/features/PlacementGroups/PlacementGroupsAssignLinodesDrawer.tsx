@@ -20,7 +20,7 @@ import {
 
 import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';
 import {
-  getAffinityEnforcement,
+  getAffinityTypeEnforcement,
   getLinodesFromAllPlacementGroups,
 } from './utils';
 
@@ -139,7 +139,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
       {generalError ? <Notice text={generalError} variant="error" /> : null}
       <Typography my={4}>
         <strong>Affinity Enforcement: </strong>
-        {getAffinityEnforcement(selectedPlacementGroup.is_strict)}
+        {getAffinityTypeEnforcement(selectedPlacementGroup.is_strict)}
       </Typography>
       <Divider sx={{ mb: 4 }} />
       <form onSubmit={handleAssignLinode}>
