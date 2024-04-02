@@ -13,11 +13,32 @@ import { StyledPlusIcon, StyledTagButton } from '../Button/StyledTagButton';
 import { CircleProgress } from '../CircleProgress';
 import { AddTag } from './AddTag';
 
-interface TagCellProps {
+export interface TagCellProps {
+  /**
+   * Disable adding or deleting tags.
+   */
   disabled?: boolean;
+
+  /**
+   * An optional callback that is invoked when the tag list
+   * overflows and the user clicks to view all tags.
+   */
   listAllTags?: () => void;
+
+  /**
+   * Additional styles to apply to the tag list.
+   */
   sx?: SxProps;
+
+  /**
+   * The list of tags to display.
+   */
   tags: string[];
+
+  /**
+   * A callback that is invoked when the user updates
+   * the tag list (i.e., by adding or deleting a tag).
+   */
   updateTags: (tags: string[]) => Promise<any>;
 }
 
