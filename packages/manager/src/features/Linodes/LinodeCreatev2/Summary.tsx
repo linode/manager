@@ -124,6 +124,7 @@ export const Summary = () => {
                 />
               )
             }
+            flexWrap="wrap"
             direction={isSmallScreen ? 'column' : 'row'}
             gap={1.5}
           >
