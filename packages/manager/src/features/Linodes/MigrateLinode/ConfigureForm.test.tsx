@@ -2,7 +2,7 @@ import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { typeFactory } from 'src/factories/types';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ConfigureForm } from './ConfigureForm';
@@ -48,6 +48,7 @@ const mockLinodeType = typeFactory.build({
 });
 
 const handleSelectRegion = vi.fn();
+const handlePlacementGroupChange = vi.fn();
 const currentPriceLabel = 'Current Price';
 const newPriceLabel = 'New Price';
 const currentPricePanel = 'current-price-panel';
@@ -57,6 +58,7 @@ describe('ConfigureForm component with price comparison', () => {
   const props = {
     backupEnabled: true,
     currentRegion: 'us-east',
+    handlePlacementGroupChange,
     handleSelectRegion,
     linodeType: 'g6-standard-1',
     selectedRegion: '',

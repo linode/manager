@@ -271,17 +271,18 @@ export const useLinodeChangePasswordMutation = (id: number) =>
 
 export const useLinodeMigrateMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { region: string } | undefined>(
-    (data) => scheduleOrQueueMigration(id, data),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries([queryKey, 'paginated']);
-        queryClient.invalidateQueries([queryKey, 'all']);
-        queryClient.invalidateQueries([queryKey, 'infinite']);
-        queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
-      },
-    }
-  );
+  return useMutation<
+    {},
+    APIError[],
+    { placementGroup?: number; region: string } | undefined
+  >((data) => scheduleOrQueueMigration(id, data), {
+    onSuccess() {
+      queryClient.invalidateQueries([queryKey, 'paginated']);
+      queryClient.invalidateQueries([queryKey, 'all']);
+      queryClient.invalidateQueries([queryKey, 'infinite']);
+      queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
+    },
+  });
 };
 
 export const useLinodeResizeMutation = (id: number) => {

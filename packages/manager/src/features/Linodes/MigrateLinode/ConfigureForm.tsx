@@ -3,6 +3,7 @@ import * as React from 'react';
 import EdgeServer from 'src/assets/icons/entityIcons/edge-server.svg';
 import { Flag } from 'src/components/Flag';
 import { Notice } from 'src/components/Notice/Notice';
+import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { sxEdgeIcon } from 'src/components/RegionSelect/RegionSelect.styles';
 import { TooltipIcon } from 'src/components/TooltipIcon';
@@ -28,16 +29,17 @@ import {
 import { MigrationPricing } from './MigrationPricing';
 
 import type { MigrationPricingProps } from './MigrationPricing';
-import type { Linode, PriceObject } from '@linode/api-v4';
+import type { Linode, PlacementGroup, PriceObject } from '@linode/api-v4';
 
 interface Props {
   backupEnabled: Linode['backups']['enabled'];
   currentRegion: string;
   errorText?: string;
+  handlePlacementGroupChange: (selected: PlacementGroup) => void;
   handleSelectRegion: (id: string) => void;
   helperText?: string;
   linodeType: Linode['type'];
-  selectedRegion: null | string;
+  selectedRegion: string;
 }
 
 export type MigratePricePanelType = 'current' | 'new';
@@ -47,6 +49,7 @@ export const ConfigureForm = React.memo((props: Props) => {
     backupEnabled,
     currentRegion,
     errorText,
+    handlePlacementGroupChange,
     handleSelectRegion,
     helperText,
     linodeType,
@@ -55,14 +58,43 @@ export const ConfigureForm = React.memo((props: Props) => {
 
   const flags = useFlags();
   const { data: regions } = useRegionsQuery();
+
   const { data: currentLinodeType } = useTypeQuery(
     linodeType || '',
     Boolean(linodeType)
   );
+
+  const [
+    selectedPlacementGroup,
+    setSelectedPlacementGroup,
+  ] = React.useState<PlacementGroup | null>(null);
+
   const currentActualRegion = regions?.find((r) => r.id === currentRegion);
+
+  const newRegion = regions?.find(
+    (thisRegion) => thisRegion.id === selectedRegion
+  );
+
+  const placementGroupSelectLabel = selectedRegion
+    ? `Placement Groups in ${newRegion?.label} (${newRegion?.id}) (optional)`
+    : 'Placement Group';
+
+  const hasRegionPlacementGroupCapability = Boolean(
+    newRegion?.capabilities.includes('Placement Group')
+  );
+
+  const isPlacementGroupSelectDisabled =
+    !newRegion || !hasRegionPlacementGroupCapability;
+
+  const handlePlacementGroupSelection = (placementGroup: PlacementGroup) => {
+    setSelectedPlacementGroup(placementGroup);
+    handlePlacementGroupChange(placementGroup);
+  };
+
   const country =
     regions?.find((thisRegion) => thisRegion.id == currentRegion)?.country ??
     'us';
+
   const shouldDisplayPriceComparison = Boolean(
     selectedRegion &&
       isLinodeTypeDifferentPriceInSelectedRegion({
@@ -131,7 +163,6 @@ export const ConfigureForm = React.memo((props: Props) => {
             />
           )}
         </StyledMigrationBox>
-
         <StyledMigrationBox>
           <RegionSelect
             regions={
@@ -154,6 +185,16 @@ export const ConfigureForm = React.memo((props: Props) => {
               {...panelPrice(selectedRegion, selectedRegionPrice, 'new')}
             />
           )}
+          <PlacementGroupsSelect
+            handlePlacementGroupChange={(placementGroup) => {
+              handlePlacementGroupSelection(placementGroup);
+            }}
+            disabled={isPlacementGroupSelectDisabled}
+            label={placementGroupSelectLabel}
+            noOptionsMessage="There are no Placement Groups in this region."
+            selectedPlacementGroup={selectedPlacementGroup}
+            selectedRegion={newRegion}
+          />
         </StyledMigrationBox>
       </StyledMigrationContainer>
       {!currentRegionPrice && selectedRegion && (
