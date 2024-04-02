@@ -90,6 +90,7 @@ export const VLANSelect = (props: Props) => {
       label="VLAN"
       loading={isLoading}
       options={options}
+      placeholder="Create or select a VLAN"
       sx={props.sx}
       value={selectedVLAN}
     />

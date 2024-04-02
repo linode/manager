@@ -49,7 +49,7 @@ export const VLAN = () => {
         </Link>
         .
       </Typography>
-      <Stack direction="row" flexWrap="wrap" spacing={2}>
+      <Stack columnGap={2} direction="row" flexWrap="wrap">
         <Controller
           render={({ field, fieldState }) => (
             <VLANSelect
@@ -65,12 +65,15 @@ export const VLAN = () => {
         <Controller
           render={({ field, fieldState }) => (
             <TextField
+              tooltipText={
+                'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
+              }
               errorText={fieldState.error?.message}
               label="IPAM Address"
               onChange={field.onChange}
               optional
               placeholder="192.0.2.0/24"
-              sx={{ minWidth: 300 }}
+              sx={{ maxWidth: 300 }}
               value={field.value ?? ''}
             />
           )}
