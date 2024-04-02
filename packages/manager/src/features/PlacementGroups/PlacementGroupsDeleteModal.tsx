@@ -6,7 +6,6 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
-import { NotFound } from 'src/components/NotFound';
 import { Notice } from 'src/components/Notice/Notice';
 import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
@@ -27,7 +26,6 @@ import type { ButtonProps } from 'src/components/Button/Button';
 
 interface Props {
   disableUnassignButton: boolean;
-  isLoading: boolean;
   linodes: Linode[] | undefined;
   onClose: () => void;
   open: boolean;
@@ -37,7 +35,6 @@ interface Props {
 export const PlacementGroupsDeleteModal = (props: Props) => {
   const {
     disableUnassignButton,
-    isLoading,
     linodes,
     onClose,
     open,
@@ -53,11 +50,17 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     error: unassignLinodeError,
     mutateAsync: unassignLinodes,
   } = useUnassignLinodesFromPlacementGroup(selectedPlacementGroup?.id ?? -1);
+  const [assignedLinodes, setAssignedLinodes] = React.useState<
+    Linode[] | undefined
+  >(undefined);
 
-  const assignedLinodes = React.useMemo(
-    () => getPlacementGroupLinodes(selectedPlacementGroup, linodes),
-    [selectedPlacementGroup, linodes]
-  );
+  React.useEffect(() => {
+    if (selectedPlacementGroup && linodes) {
+      setAssignedLinodes(
+        getPlacementGroupLinodes(selectedPlacementGroup, linodes)
+      );
+    }
+  }, [selectedPlacementGroup, linodes]);
 
   const error = deletePlacementError || unassignLinodeError;
 
@@ -85,7 +88,11 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
   const assignedLinodesCount = assignedLinodes?.length ?? 0;
   const isDisabled = !selectedPlacementGroup || assignedLinodesCount > 0;
 
-  if (!selectedPlacementGroup || !assignedLinodes) {
+  if (!selectedPlacementGroup) {
+    return null;
+  }
+
+  if (!assignedLinodes) {
     return (
       <ConfirmationDialog
         sx={{
@@ -102,7 +109,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
         open={open}
         title="Delete Placement Group"
       >
-        {isLoading ? <CircleProgress /> : <NotFound />}
+        <CircleProgress />
       </ConfirmationDialog>
     );
   }

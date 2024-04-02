@@ -89,7 +89,7 @@ export const PlacementGroupsLanding = React.memo(() => {
     [] as number[]
   );
 
-  const { data: linodes, isLoading: allLinodesLoading } = useAllLinodesQuery(
+  const { data: linodes } = useAllLinodesQuery(
     {},
     {
       '+or': allLinodeIDsAssigned?.map((linodeId) => ({ id: linodeId })),
@@ -293,7 +293,6 @@ export const PlacementGroupsLanding = React.memo(() => {
       />
       <PlacementGroupsDeleteModal
         disableUnassignButton={isLinodeReadOnly}
-        isLoading={allLinodesLoading}
         linodes={linodes}
         onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupDeleteModalOpen}
