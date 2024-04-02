@@ -27,9 +27,9 @@ import type { ButtonProps } from 'src/components/Button/Button';
 
 interface Props {
   disableUnassignButton: boolean;
+  isLoading: boolean;
   linodes: Linode[] | undefined;
   onClose: () => void;
-  onExited?: () => void;
   open: boolean;
   selectedPlacementGroup: PlacementGroup | undefined;
 }
@@ -37,9 +37,9 @@ interface Props {
 export const PlacementGroupsDeleteModal = (props: Props) => {
   const {
     disableUnassignButton,
+    isLoading,
     linodes,
     onClose,
-    onExited,
     open,
     selectedPlacementGroup,
   } = props;
@@ -53,17 +53,11 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     error: unassignLinodeError,
     mutateAsync: unassignLinodes,
   } = useUnassignLinodesFromPlacementGroup(selectedPlacementGroup?.id ?? -1);
-  const [assignedLinodes, setAssignedLinodes] = React.useState<
-    Linode[] | undefined
-  >(undefined);
 
-  React.useEffect(() => {
-    if (selectedPlacementGroup && linodes) {
-      setAssignedLinodes(
-        getPlacementGroupLinodes(selectedPlacementGroup, linodes)
-      );
-    }
-  }, [selectedPlacementGroup, linodes]);
+  const assignedLinodes = React.useMemo(
+    () => getPlacementGroupLinodes(selectedPlacementGroup, linodes),
+    [selectedPlacementGroup, linodes]
+  );
 
   const error = deletePlacementError || unassignLinodeError;
 
@@ -105,11 +99,10 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
           },
         }}
         onClose={onClose}
-        onExited={onExited}
         open={open}
         title="Delete Placement Group"
       >
-        {!assignedLinodes ? <CircleProgress /> : <NotFound />}
+        {isLoading ? <CircleProgress /> : <NotFound />}
       </ConfirmationDialog>
     );
   }
@@ -128,7 +121,6 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
       loading={deletePlacementLoading}
       onClick={onDelete}
       onClose={onClose}
-      onExited={onExited}
       open={open}
       title={`Delete Placement Group ${selectedPlacementGroup.label}`}
     >

@@ -45,9 +45,6 @@ export const PlacementGroupsLanding = React.memo(() => {
   const { id } = useParams<{ id: string }>();
   const theme = useTheme();
   const [query, setQuery] = React.useState<string>('');
-  const [selectedPlacementGroup, setSelectedPlacementGroup] = React.useState<
-    PlacementGroup | undefined
-  >(undefined);
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -79,6 +76,10 @@ export const PlacementGroupsLanding = React.memo(() => {
     filter
   );
 
+  const selectedPlacementGroup = placementGroups?.data.find(
+    (pg) => pg.id === Number(id)
+  );
+
   const allLinodeIDsAssigned = placementGroups?.data.reduce(
     (acc, placementGroup) => {
       return acc.concat(
@@ -88,7 +89,7 @@ export const PlacementGroupsLanding = React.memo(() => {
     [] as number[]
   );
 
-  const { data: linodes } = useAllLinodesQuery(
+  const { data: linodes, isLoading: allLinodesLoading } = useAllLinodesQuery(
     {},
     {
       '+or': allLinodeIDsAssigned?.map((linodeId) => ({ id: linodeId })),
@@ -102,41 +103,24 @@ export const PlacementGroupsLanding = React.memo(() => {
     return regions?.find((region) => region.id === placementGroup?.region);
   };
 
-  React.useEffect(() => {
-    if (id) {
-      const placementGroup = placementGroups?.data.find(
-        (pg) => pg.id === Number(id)
-      );
-      if (placementGroup) {
-        setSelectedPlacementGroup(placementGroup);
-      }
-    }
-  }, [id, placementGroups]);
-
   const isLinodeReadOnly = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
   });
 
   const handleCreatePlacementGroup = () => {
-    history.replace('/placement-groups/create');
+    history.push('/placement-groups/create');
   };
 
   const handleEditPlacementGroup = (placementGroup: PlacementGroup) => {
-    setSelectedPlacementGroup(placementGroup);
-    history.replace(`/placement-groups/edit/${placementGroup.id}`);
+    history.push(`/placement-groups/edit/${placementGroup.id}`);
   };
 
   const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
-    setSelectedPlacementGroup(placementGroup);
-    history.replace(`/placement-groups/delete/${placementGroup.id}`);
+    history.push(`/placement-groups/delete/${placementGroup.id}`);
   };
 
   const onClosePlacementGroupDrawer = () => {
-    history.replace('/placement-groups');
-  };
-
-  const onExited = () => {
-    setSelectedPlacementGroup(undefined);
+    history.push('/placement-groups');
   };
 
   const isPlacementGroupCreateDrawerOpen = location.pathname.endsWith('create');
@@ -303,16 +287,15 @@ export const PlacementGroupsLanding = React.memo(() => {
       <PlacementGroupsEditDrawer
         disableEditButton={isLinodeReadOnly}
         onClose={onClosePlacementGroupDrawer}
-        onExited={onExited}
         open={isPlacementGroupEditDrawerOpen}
         region={getPlacementGroupRegion(selectedPlacementGroup)}
         selectedPlacementGroup={selectedPlacementGroup}
       />
       <PlacementGroupsDeleteModal
         disableUnassignButton={isLinodeReadOnly}
+        isLoading={allLinodesLoading}
         linodes={linodes}
         onClose={onClosePlacementGroupDrawer}
-        onExited={onExited}
         open={isPlacementGroupDeleteModalOpen}
         selectedPlacementGroup={selectedPlacementGroup}
       />

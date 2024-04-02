@@ -135,14 +135,18 @@ export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
     AssignLinodesToPlacementGroupPayload
   >({
     mutationFn: (req) => assignLinodesToPlacementGroup(placementGroupId, req),
-    onSuccess: (_, ctx) => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
       queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
       queryClient.invalidateQueries(
         placementGroupQueries.placementGroup(placementGroupId).queryKey
       );
 
-      queryClient.invalidateQueries([linodeQueryKey, 'linode', ctx.linodes[0]]);
+      queryClient.invalidateQueries([
+        linodeQueryKey,
+        'linode',
+        variables.linodes[0],
+      ]);
     },
   });
 };
@@ -158,14 +162,18 @@ export const useUnassignLinodesFromPlacementGroup = (
   >({
     mutationFn: (req) =>
       unassignLinodesFromPlacementGroup(placementGroupId, req),
-    onSuccess: (_, ctx) => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
       queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
       queryClient.invalidateQueries(
         placementGroupQueries.placementGroup(placementGroupId).queryKey
       );
 
-      queryClient.invalidateQueries([linodeQueryKey, 'linode', ctx.linodes[0]]);
+      queryClient.invalidateQueries([
+        linodeQueryKey,
+        'linode',
+        variables.linodes[0],
+      ]);
     },
   });
 };

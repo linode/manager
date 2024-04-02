@@ -24,6 +24,7 @@ vi.mock('src/queries/placementGroups', async () => {
 });
 
 const props = {
+  isLoading: false,
   onClose: vi.fn(),
   open: true,
 };
