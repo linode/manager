@@ -175,7 +175,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
               </Button>
             )}
             disableItemsOnRemove
-            hasEncounteredError={Boolean(unassignLinodeError)}
+            hasEncounteredMutationError={Boolean(unassignLinodeError)}
             headerText={`Linodes assigned to Placement Group ${selectedPlacementGroup.label}`}
             id="assigned-linodes"
             maxWidth={540}

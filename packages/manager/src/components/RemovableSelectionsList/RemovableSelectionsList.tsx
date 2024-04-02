@@ -41,9 +41,9 @@ export interface RemovableSelectionsListProps {
    */
   disableItemsOnRemove?: boolean;
   /**
-   * If true, reset loading states.
+   * If true, reset loading states. The value should be based on a mutation status.
    */
-  hasEncounteredError?: boolean;
+  hasEncounteredMutationError?: boolean;
   /**
    * The descriptive text to display above the list
    */
@@ -100,7 +100,7 @@ export const RemovableSelectionsList = (
     LabelComponent,
     RemoveButton,
     disableItemsOnRemove = false,
-    hasEncounteredError,
+    hasEncounteredMutationError,
     headerText,
     id,
     isRemovable = true,
@@ -131,7 +131,7 @@ export const RemovableSelectionsList = (
       setRemovingItemId(null);
       setIsRemoving(false);
     };
-  }, [hasEncounteredError, selectionData]);
+  }, [hasEncounteredMutationError, selectionData]);
 
   const handleOnClick = (selection: RemovableItem) => {
     setIsRemoving(true);
