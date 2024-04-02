@@ -14,6 +14,7 @@ export interface SupportTicket {
   summary: string;
   updated: string;
   updated_by: string | null;
+  severity: TicketSeverity | null;
 }
 
 export interface SupportReply {
@@ -39,4 +40,7 @@ export interface TicketRequest {
   longviewclient_id?: number;
   nodebalancer_id?: number;
   volume_id?: number;
+  severity?: TicketSeverity;
 }
+
+export type TicketSeverity = 1 | 2 | 3;

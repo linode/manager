@@ -1,4 +1,4 @@
-import { PlacementGroup } from '@linode/api-v4';
+import { PlacementGroup, Region } from '@linode/api-v4';
 
 export interface PlacementGroupsDrawerPropsBase {
   onClose: () => void;
@@ -17,9 +17,9 @@ export interface PlacementGroupsCreateDrawerProps {
 export interface PlacementGroupsEditDrawerProps {
   disableEditButton: boolean;
   onClose: PlacementGroupsDrawerPropsBase['onClose'];
-  onExited?: () => void;
   onPlacementGroupEdit?: (placementGroup: PlacementGroup) => void;
   open: PlacementGroupsDrawerPropsBase['open'];
+  region: Region | undefined;
   selectedPlacementGroup: PlacementGroup | undefined;
 }
 
@@ -27,5 +27,6 @@ export interface PlacementGroupsAssignLinodesDrawerProps {
   onClose: PlacementGroupsDrawerPropsBase['onClose'];
   onLinodeAddedToPlacementGroup?: (placementGroup: PlacementGroup) => void;
   open: PlacementGroupsDrawerPropsBase['open'];
+  region: Region | undefined;
   selectedPlacementGroup: PlacementGroup | undefined;
 }

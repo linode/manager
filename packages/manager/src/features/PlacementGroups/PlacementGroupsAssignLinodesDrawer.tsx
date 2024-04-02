@@ -11,17 +11,17 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import {
-  useAssignLinodesToPlacementGroup,
   useAllPlacementGroupsQuery,
+  useAssignLinodesToPlacementGroup,
 } from 'src/queries/placementGroups';
 
 import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';
 import {
   getAffinityTypeEnforcement,
   getLinodesFromAllPlacementGroups,
+  hasPlacementGroupReachedCapacity,
 } from './utils';
 
 import type { PlacementGroupsAssignLinodesDrawerProps } from './types';
@@ -33,7 +33,7 @@ import type {
 export const PlacementGroupsAssignLinodesDrawer = (
   props: PlacementGroupsAssignLinodesDrawerProps
 ) => {
-  const { onClose, open, selectedPlacementGroup } = props;
+  const { onClose, open, region, selectedPlacementGroup } = props;
   const { data: allLinodesInRegion, error: linodesError } = useAllLinodesQuery(
     {},
     {
@@ -47,13 +47,15 @@ export const PlacementGroupsAssignLinodesDrawer = (
   const { enqueueSnackbar } = useSnackbar();
 
   // We display a notice and disable inputs in case the user reaches this drawer somehow
-  // (not supposed to happen as the "Assign Linode to Placement Group" button should be disabled
-  const { hasReachedCapacity, region } = usePlacementGroupData({
+  // (not supposed to happen as the "Assign Linode to Placement Group" button should be disabled)
+  const hasReachedCapacity = hasPlacementGroupReachedCapacity({
     placementGroup: selectedPlacementGroup,
+    region,
   });
-  const { mutateAsync: assignLinodes } = useAssignLinodesToPlacementGroup(
-    selectedPlacementGroup?.id ?? -1
-  );
+  const {
+    isLoading,
+    mutateAsync: assignLinodes,
+  } = useAssignLinodesToPlacementGroup(selectedPlacementGroup?.id ?? -1);
   const [selectedLinode, setSelectedLinode] = React.useState<Linode | null>(
     null
   );
@@ -164,7 +166,8 @@ export const PlacementGroupsAssignLinodesDrawer = (
               onSelectionChange={(value) => {
                 setSelectedLinode(value);
               }}
-              disabled={hasReachedCapacity}
+              checkIsOptionEqualToValue
+              disabled={hasReachedCapacity || isLoading}
               label={linodeSelectLabel}
               options={getLinodeSelectOptions()}
               placeholder="Select Linode or type to search"
@@ -184,6 +187,11 @@ export const PlacementGroupsAssignLinodesDrawer = (
               disabled: !selectedLinode || hasReachedCapacity,
               label: 'Assign Linode',
               type: 'submit',
+            }}
+            secondaryButtonProps={{
+              'data-testid': 'cancel',
+              label: 'Cancel',
+              onClick: handleDrawerClose,
             }}
             sx={{ pt: 2 }}
           />

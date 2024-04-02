@@ -12,6 +12,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { useCreateLinodeMutation } from 'src/queries/linodes/linodes';
 
 import { Access } from './Access';
+import { Actions } from './Actions';
 import { Addons } from './Addons/Addons';
 import { Details } from './Details/Details';
 import { Error } from './Error';
@@ -21,7 +22,13 @@ import { Region } from './Region';
 import { Summary } from './Summary';
 import { Distributions } from './Tabs/Distributions';
 import { Images } from './Tabs/Images';
-import { getTabIndex, tabs, useLinodeCreateQueryParams } from './utilities';
+import { UserData } from './UserData/UserData';
+import {
+  getLinodeCreatePayload,
+  getTabIndex,
+  tabs,
+  useLinodeCreateQueryParams,
+} from './utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { SubmitHandler } from 'react-hook-form';
@@ -32,10 +39,11 @@ export const LinodeCreatev2 = () => {
 
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
 
-  const onSubmit: SubmitHandler<CreateLinodeRequest> = async (data) => {
-    alert(JSON.stringify(data, null, 2));
+  const onSubmit: SubmitHandler<CreateLinodeRequest> = async (values) => {
+    const payload = getLinodeCreatePayload(values);
+    alert(JSON.stringify(payload, null, 2));
     try {
-      const linode = await createLinode(data);
+      const linode = await createLinode(payload);
 
       history.push(`/linodes/${linode.id}`);
     } catch (errors) {
@@ -93,8 +101,10 @@ export const LinodeCreatev2 = () => {
           <Details />
           <Access />
           <Firewall />
+          <UserData />
           <Addons />
           <Summary />
+          <Actions />
         </Stack>
       </form>
     </FormProvider>

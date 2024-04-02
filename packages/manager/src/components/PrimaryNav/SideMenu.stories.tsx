@@ -1,5 +1,5 @@
 import MenuIcon from '@mui/icons-material/Menu';
-import { useArgs } from '@storybook/client-api';
+import { useArgs } from '@storybook/preview-api';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
