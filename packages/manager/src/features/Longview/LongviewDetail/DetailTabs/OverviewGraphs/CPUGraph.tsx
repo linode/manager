@@ -11,8 +11,6 @@ import {
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
 
-import db1cpu from 'src/features/Longview/LongviewDetail/db1cpu.json';
-
 export const CPUGraph = (props: GraphProps) => {
   const {
     clientAPIKey,
@@ -34,13 +32,13 @@ export const CPUGraph = (props: GraphProps) => {
   );
 
   const cpuData = React.useMemo(() => {
-    const summedCPUData = sumCPU(db1cpu[0].DATA.CPU);
+    const summedCPUData = sumCPU(data.CPU);
     return pathMaybeAddDataInThePast(summedCPUData, start, [
       ['system'],
       ['user'],
       ['wait'],
     ]);
-  }, [db1cpu]);
+  }, [data.CPU]);
 
   React.useEffect(() => {
     request();

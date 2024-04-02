@@ -97,7 +97,7 @@ export const readableBytes = (
   // Some other magic to get the human-readable version
   const result = num / Math.max(Math.pow(multiplier, power), 1);
   const unit = storageUnits[power] || storageUnits[0];
-
+console.log(unit, power, storageUnits[power])
   const decimalPlaces = determineDecimalPlaces(result, unit, options);
 
   const value = parseFloat(result.toFixed(decimalPlaces));
@@ -110,6 +110,7 @@ export const readableBytes = (
       value: isNegative ? -value : value,
     };
   }
+  console.log(num, options)
 
   return {
     formatted: (isNegative ? '-' : '') + value + ' ' + unit,
@@ -134,7 +135,7 @@ const determinePower = (
     const magicallyCalculatedPower = Math.floor(
       Math.log(num) / Math.log(multiplier)
     );
-
+      console.log(magicallyCalculatedPower)
     // If the magically calculated power/unit is higher than the
     // provided maxUnit, use maxUnit instead.
     return options.maxUnit &&
@@ -173,6 +174,7 @@ export const convertBytesToTarget = (
   unit: StorageSymbol | StorageUnitExponentKey,
   value: number
 ) => {
+  console.log(unit)
   switch (unit) {
     case 'byte':
     case 'bytes':
