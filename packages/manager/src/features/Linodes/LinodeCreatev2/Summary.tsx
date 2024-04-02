@@ -30,6 +30,7 @@ export const Summary = () => {
     typeId,
     backupsEnabled,
     privateIPEnabled,
+    placementGroupId,
   ] = useWatch({
     control,
     name: [
@@ -40,6 +41,7 @@ export const Summary = () => {
       'type',
       'backups_enabled',
       'private_ip',
+      'placement_group.id',
     ],
   });
 
@@ -94,6 +96,12 @@ export const Summary = () => {
         title: 'Firewall Assigned',
       },
       show: Boolean(firewallId),
+    },
+    {
+      item: {
+        title: 'Assigned to Placement Group',
+      },
+      show: Boolean(placementGroupId),
     },
   ];
 
