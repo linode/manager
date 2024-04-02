@@ -10,8 +10,8 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import {
+import type { Filter, Params, ResourcePage as Page, PriceType } from '../types';
+import type {
   CreateNodeBalancerPayload,
   NodeBalancer,
   NodeBalancerStats,
@@ -128,5 +128,18 @@ export const getNodeBalancerFirewalls = (
     ),
     setMethod('GET'),
     setXFilter(filter),
+    setParams(params)
+  );
+
+/**
+ * getNodeBalancerTypes
+ *
+ * Return a paginated list of available NodeBalancer types; used for pricing.
+ * This endpoint does not require authentication.
+ */
+export const getNodeBalancerTypes = (params?: Params) =>
+  Request<Page<PriceType>>(
+    setURL(`${API_ROOT}/nodebalancers/types`),
+    setMethod('GET'),
     setParams(params)
   );
