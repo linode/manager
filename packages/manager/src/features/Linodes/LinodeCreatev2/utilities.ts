@@ -83,10 +83,14 @@ export const getLinodeCreatePayload = (
   return payload;
 };
 
-const getInterfacesPayload = (
+export const getInterfacesPayload = (
   interfaces: InterfacePayload[] | undefined
 ): InterfacePayload[] | undefined => {
-  return interfaces?.filter((i) => {
+  if (!interfaces) {
+    return undefined;
+  }
+
+  interfaces = interfaces.filter((i) => {
     if (i.purpose === 'vpc' && !i.vpc_id) {
       // If no vpc was selected, clear remove it from the interfaces array
       return false;
@@ -95,12 +99,16 @@ const getInterfacesPayload = (
       // If no VLAN label is specificed, remove it from the interfaces array
       return false;
     }
-    if (i.purpose === 'vlan' && !i.label) {
-      // If no VLAN label is specificed, remove it from the interfaces array
-      return false;
-    }
     return true;
   });
+
+  if (interfaces.length === 1 && interfaces[0].purpose === 'public') {
+    // If there is only 1 interface, and it is the public interface, return undefined.
+    // The API will default to adding a public interface and this makes the payload cleaner.
+    return undefined;
+  }
+
+  return interfaces;
 };
 
 export const defaultValues: CreateLinodeRequest = {

@@ -1,10 +1,12 @@
-import { useState } from 'react';
 import React from 'react';
+import { useState } from 'react';
 
 import { VLANFactory } from 'src/factories';
 import { useVLANsInfiniteQuery } from 'src/queries/vlans';
 
 import { Autocomplete } from './Autocomplete/Autocomplete';
+
+import type { SxProps, Theme } from '@mui/material';
 
 interface Props {
   /**
@@ -15,6 +17,10 @@ interface Props {
    * Is called when a VLAN is selected
    */
   onChange?: (label: null | string) => void;
+  /**
+   * Optional Styles
+   */
+  sx?: SxProps<Theme>;
   /**
    * The label of the selected VLAN
    */
@@ -80,11 +86,11 @@ export const VLANSelect = (props: Props) => {
         }
       }}
       errorText={props.errorText ?? error?.[0].reason}
-      filterOptions={x => x}
       inputValue={selectedVLAN ? selectedVLAN.label : inputValue}
       label="VLAN"
       loading={isLoading}
       options={options}
+      sx={props.sx}
       value={selectedVLAN}
     />
   );

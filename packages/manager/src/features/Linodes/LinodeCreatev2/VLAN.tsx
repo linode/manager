@@ -49,31 +49,35 @@ export const VLAN = () => {
         </Link>
         .
       </Typography>
-      <Controller
-        render={({ field, fieldState }) => (
-          <VLANSelect
-            errorText={fieldState.error?.message}
-            onChange={field.onChange}
-            value={field.value ?? null}
-          />
-        )}
-        control={control}
-        name="interfaces.1.label"
-      />
-      <Controller
-        render={({ field, fieldState }) => (
-          <TextField
-            errorText={fieldState.error?.message}
-            label="IPAM Address"
-            onChange={field.onChange}
-            optional
-            placeholder="192.0.2.0/24"
-            value={field.value ?? ''}
-          />
-        )}
-        control={control}
-        name="interfaces.1.ipam_address"
-      />
+      <Stack direction="row" flexWrap="wrap" spacing={2}>
+        <Controller
+          render={({ field, fieldState }) => (
+            <VLANSelect
+              errorText={fieldState.error?.message}
+              onChange={field.onChange}
+              sx={{ minWidth: 300 }}
+              value={field.value ?? null}
+            />
+          )}
+          control={control}
+          name="interfaces.1.label"
+        />
+        <Controller
+          render={({ field, fieldState }) => (
+            <TextField
+              errorText={fieldState.error?.message}
+              label="IPAM Address"
+              onChange={field.onChange}
+              optional
+              placeholder="192.0.2.0/24"
+              sx={{ minWidth: 300 }}
+              value={field.value ?? ''}
+            />
+          )}
+          control={control}
+          name="interfaces.1.ipam_address"
+        />
+      </Stack>
     </Accordion>
   );
 };
