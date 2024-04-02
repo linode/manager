@@ -19,12 +19,18 @@ import type { APIError, Linode } from '@linode/api-v4';
 
 export interface Props {
   error?: APIError[];
+  handleUnassignLinodeModal: (linode: Linode) => void;
+  isFetchingLinodes: boolean;
   linodes: Linode[];
-  loading: boolean;
 }
 
 export const PlacementGroupsLinodesTable = React.memo((props: Props) => {
-  const { error, linodes, loading } = props;
+  const {
+    error,
+    handleUnassignLinodeModal,
+    isFetchingLinodes,
+    linodes,
+  } = props;
 
   const orderLinodeKey = 'label';
   const orderStatusKey = 'status';
@@ -78,10 +84,11 @@ export const PlacementGroupsLinodesTable = React.memo((props: Props) => {
                     }}
                     error={_error}
                     length={paginatedAndOrderedLinodes.length}
-                    loading={loading}
+                    loading={isFetchingLinodes}
                   >
                     {paginatedAndOrderedLinodes.map((linode) => (
                       <PlacementGroupsLinodesTableRow
+                        handleUnassignLinodeModal={handleUnassignLinodeModal}
                         key={`placement-group-linode-${linode.id}`}
                         linode={linode}
                       />

@@ -1,12 +1,19 @@
 import * as React from 'react';
 
-import { placementGroupFactory } from 'src/factories';
+import {
+  linodeFactory,
+  placementGroupFactory,
+  regionFactory,
+} from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsDetail } from './PlacementGroupsDetail';
 
 const queryMocks = vi.hoisted(() => ({
+  useAllLinodesQuery: vi.fn().mockReturnValue({}),
+  useParams: vi.fn().mockReturnValue({}),
   usePlacementGroupQuery: vi.fn().mockReturnValue({}),
+  useRegionsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/placementGroups', async () => {
@@ -14,6 +21,30 @@ vi.mock('src/queries/placementGroups', async () => {
   return {
     ...actual,
     usePlacementGroupQuery: queryMocks.usePlacementGroupQuery,
+  };
+});
+
+vi.mock('src/queries/linodes/linodes', async () => {
+  const actual = await vi.importActual('src/queries/linodes/linodes');
+  return {
+    ...actual,
+    useAllLinodesQuery: queryMocks.useAllLinodesQuery,
+  };
+});
+
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
+  };
+});
+
+vi.mock('src/queries/regions/regions', async () => {
+  const actual = await vi.importActual('src/queries/regions/regions');
+  return {
+    ...actual,
+    useRegionsQuery: queryMocks.useRegionsQuery,
   };
 });
 
@@ -26,12 +57,27 @@ describe('PlacementGroupsLanding', () => {
 
   it('renders a loading state', () => {
     queryMocks.usePlacementGroupQuery.mockReturnValue({
-      data: {
-        data: placementGroupFactory.build({
+      data: placementGroupFactory.build({
+        id: 1,
+      }),
+
+      isLoading: true,
+    });
+    queryMocks.useAllLinodesQuery.mockReturnValue({
+      data: [
+        linodeFactory.build({
           id: 1,
         }),
-      },
+      ],
       isLoading: true,
+    });
+    queryMocks.useParams.mockReturnValue({ id: '1' });
+    queryMocks.useRegionsQuery.mockReturnValue({
+      data: [
+        regionFactory.build({
+          id: 'us-east',
+        }),
+      ],
     });
 
     const { getByRole } = renderWithTheme(<PlacementGroupsDetail />, {

@@ -12,7 +12,6 @@ const queryMocks = vi.hoisted(() => ({
     reset: vi.fn(),
   }),
   useParams: vi.fn().mockReturnValue({}),
-  useRegionsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('react-router-dom', async () => {
@@ -20,14 +19,6 @@ vi.mock('react-router-dom', async () => {
   return {
     ...actual,
     useParams: queryMocks.useParams,
-  };
-});
-
-vi.mock('src/queries/regions/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions/regions');
-  return {
-    ...actual,
-    useRegionsQuery: queryMocks.useRegionsQuery,
   };
 });
 
@@ -42,9 +33,6 @@ vi.mock('src/queries/placementGroups', async () => {
 describe('PlacementGroupsCreateDrawer', () => {
   it('should render, have the proper fields populated with PG values, and have uneditable fields disabled', async () => {
     queryMocks.useParams.mockReturnValue({ id: '1' });
-    queryMocks.useRegionsQuery.mockReturnValue({
-      data: regionFactory.buildList(1, { id: 'us-east', label: 'Newark, NJ' }),
-    });
 
     const { getByLabelText, getByRole, getByText } = renderWithTheme(
       <PlacementGroupsEditDrawer
@@ -58,6 +46,7 @@ describe('PlacementGroupsCreateDrawer', () => {
         onClose={vi.fn()}
         onPlacementGroupEdit={vi.fn()}
         open={true}
+        region={regionFactory.build({ id: 'us-east', label: 'Newark, NJ' })}
       />
     );
 
