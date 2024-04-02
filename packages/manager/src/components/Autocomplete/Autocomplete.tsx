@@ -1,7 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MuiAutocomplete from '@mui/material/Autocomplete';
-import React, { ReactNode } from 'react';
+import React from 'react';
 
 import { Box } from 'src/components/Box';
 import { TextField, TextFieldProps } from 'src/components/TextField';
@@ -34,7 +34,7 @@ export interface EnhancedAutocompleteProps<
   /** Removes the top margin from the input label, if desired. */
   noMarginTop?: boolean;
   /** Element to show when the Autocomplete search yields no results. */
-  noOptionsText?: ReactNode;
+  noOptionsText?: JSX.Element | string;
   placeholder?: string;
   /** Label for the "select all" option. */
   selectAllLabel?: string;
