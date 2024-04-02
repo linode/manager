@@ -31,6 +31,7 @@ export const Summary = () => {
     backupsEnabled,
     privateIPEnabled,
     placementGroupId,
+    vlanLabel,
   ] = useWatch({
     control,
     name: [
@@ -42,6 +43,7 @@ export const Summary = () => {
       'backups_enabled',
       'private_ip',
       'placement_group.id',
+      'interfaces.1.label',
     ],
   });
 
@@ -87,21 +89,27 @@ export const Summary = () => {
     },
     {
       item: {
+        title: 'VLAN Attached',
+      },
+      show: Boolean(vlanLabel),
+    },
+    {
+      item: {
         title: 'Private IP',
       },
       show: privateIPEnabled,
     },
     {
       item: {
-        title: 'Firewall Assigned',
-      },
-      show: Boolean(firewallId),
-    },
-    {
-      item: {
         title: 'Assigned to Placement Group',
       },
       show: Boolean(placementGroupId),
+    },
+    {
+      item: {
+        title: 'Firewall Assigned',
+      },
+      show: Boolean(firewallId),
     },
   ];
 
