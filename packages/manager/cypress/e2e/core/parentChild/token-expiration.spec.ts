@@ -27,7 +27,7 @@ const mockChildAccountProxyUser = accountUserFactory.build({
   user_type: 'proxy',
 });
 
-const mockChildAccountProfile = profileFactory.build({
+const mockChildAccountProxyProfile = profileFactory.build({
   username: mockChildAccountProxyUser.username,
   user_type: 'proxy',
 });
