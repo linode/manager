@@ -21,6 +21,7 @@ import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import LoadBalancerIcon from 'src/assets/icons/entityIcons/loadbalancer.svg';
 import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
+import PlacementGroupsIcon from 'src/assets/icons/entityIcons/placement-groups.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import VPCIcon from 'src/assets/icons/entityIcons/vpc.svg';
 import { Button } from 'src/components/Button/Button';
@@ -109,6 +110,12 @@ export const AddNewMenu = () => {
       entity: 'Firewall',
       icon: FirewallIcon,
       link: '/firewalls/create',
+    },
+    {
+      description: 'Control the physical placement of your Linodes',
+      entity: 'Placement Groups',
+      icon: PlacementGroupsIcon,
+      link: '/placement-groups/create',
     },
     {
       description: 'Manage your DNS records',
