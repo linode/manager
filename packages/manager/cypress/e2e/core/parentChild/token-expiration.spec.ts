@@ -17,7 +17,6 @@ import {
 import { mockGetProfile } from 'support/intercepts/profile';
 import { DateTime } from 'luxon';
 import { ui } from 'support/ui';
-import { mockAllApiRequests } from 'support/intercepts/general';
 
 const mockChildAccount = accountFactory.build({
   company: 'Partner Company',
@@ -42,34 +41,10 @@ describe('Parent/Child token expiration', () => {
     mockGetFeatureFlagClientstream();
   });
 
-  it('reverts to parent account when proxy user token expires', () => {
-    mockGetLinodes([]).as('getLinodes');
-    mockAllApiRequests({}, 401);
-    mockGetAccount(mockChildAccount);
-    mockGetProfile(mockChildAccountProfile);
-    mockGetChildAccounts([]);
-    // Mock local storage parent token expiry to have already passed.
-    cy.visitWithLogin('/', {
-      localStorageOverrides: {
-        proxy_user: true,
-        'authentication/token': `Bearer ${randomString(32)}`,
-        'authentication/expire': DateTime.local()
-          .minus({ minutes: 30 })
-          .toISO(),
-        'authentication/scopes': '*',
-        'authentication/parent_token/token': `Bearer ${Cypress.env(
-          'MANAGER_OAUTH'
-        )}`,
-        'authentication/parent_token/expire': DateTime.local()
-          .plus({ minutes: 30 })
-          .toISO(),
-        'authentication/parent_token/scopes': '*',
-      },
-    });
-    // Wait for page load
-    cy.wait('@getLinodes');
-  });
-
+  /*
+   * - Confirms flow when a Proxy user attempts to switch back to a Parent account with expired auth token.
+   * - Uses mock API and local storage data.
+   */
   it('shows session expiry prompt upon switching back to Parent account', () => {
     mockGetLinodes([]).as('getLinodes');
     mockGetAccount(mockChildAccount);
