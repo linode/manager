@@ -6,8 +6,6 @@ import { getAll } from 'src/utilities/getAll';
 
 import type { APIError, Filter, ResourcePage, VLAN } from '@linode/api-v4';
 
-export const queryKey = 'vlans';
-
 const getAllVLANs = (): Promise<VLAN[]> =>
   getAll<VLAN>((params) => getVlans(params))().then(({ data }) => data);
 
