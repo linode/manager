@@ -11,25 +11,27 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useChildAccountsInfiniteQuery } from 'src/queries/account/account';
 
+import type { UserType } from '@linode/api-v4';
+
 interface ChildAccountListProps {
   currentTokenWithBearer: string;
-  isProxyUser: boolean;
   onClose: () => void;
   onSwitchAccount: (props: {
     currentTokenWithBearer: string;
     euuid: string;
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>;
-    handleClose: () => void;
-    isProxyUser: boolean;
+    onClose: () => void;
+    userType: UserType | undefined;
   }) => void;
+  userType: UserType | undefined;
 }
 
 export const ChildAccountList = React.memo(
   ({
     currentTokenWithBearer,
-    isProxyUser,
     onClose,
     onSwitchAccount,
+    userType,
   }: ChildAccountListProps) => {
     const {
       data,
@@ -40,11 +42,12 @@ export const ChildAccountList = React.memo(
       isLoading,
       refetch: refetchChildAccounts,
     } = useChildAccountsInfiniteQuery({
-      headers: isProxyUser
-        ? {
-            Authorization: currentTokenWithBearer,
-          }
-        : undefined,
+      headers:
+        userType === 'proxy'
+          ? {
+              Authorization: currentTokenWithBearer,
+            }
+          : undefined,
     });
     const childAccounts = data?.pages.flatMap((page) => page.data);
 
@@ -92,8 +95,8 @@ export const ChildAccountList = React.memo(
               currentTokenWithBearer,
               euuid,
               event,
-              handleClose: onClose,
-              isProxyUser,
+              onClose,
+              userType,
             })
           }
           sx={(theme) => ({
