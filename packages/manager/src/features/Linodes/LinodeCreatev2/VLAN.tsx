@@ -1,5 +1,5 @@
 import React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Accordion } from 'src/components/Accordion';
 import { Link } from 'src/components/Link';
@@ -8,6 +8,9 @@ import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { VLANSelect } from 'src/components/VLANSelect';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
 import { VLANAvailabilityNotice } from '../LinodesCreate/VLANAvailabilityNotice';
 import { useLinodeCreateQueryParams } from './utilities';
@@ -17,9 +20,29 @@ import type { CreateLinodeRequest } from '@linode/api-v4';
 export const VLAN = () => {
   const { control } = useFormContext<CreateLinodeRequest>();
 
+  const { data: regions } = useRegionsQuery();
+
   const { params } = useLinodeCreateQueryParams();
 
+  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_linodes',
+  });
+
+  const [imageId, regionId] = useWatch({ control, name: ['image', 'region'] });
+
+  const regionSupportsVLANs = doesRegionSupportFeature(
+    regionId,
+    regions ?? [],
+    'Vlans'
+  );
+
   const isCreatingFromBackup = params.type === 'Backups';
+
+  const disabled =
+    !imageId ||
+    isCreatingFromBackup ||
+    isLinodeCreateRestricted ||
+    !regionSupportsVLANs;
 
   return (
     <Accordion
@@ -31,6 +54,13 @@ export const VLAN = () => {
               status="help"
               sxTooltipIcon={{ p: 0 }}
               text="You cannot attach a VLAN when deploying to a new Linode from a backup."
+            />
+          )}
+          {!imageId && !isCreatingFromBackup && (
+            <TooltipIcon
+              status="help"
+              sxTooltipIcon={{ p: 0 }}
+              text="You must select an Image to attach a VLAN."
             />
           )}
         </Stack>
@@ -53,6 +83,7 @@ export const VLAN = () => {
         <Controller
           render={({ field, fieldState }) => (
             <VLANSelect
+              disabled={disabled}
               errorText={fieldState.error?.message}
               onChange={field.onChange}
               sx={{ minWidth: 300 }}
@@ -68,6 +99,7 @@ export const VLAN = () => {
               tooltipText={
                 'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
               }
+              disabled={disabled}
               errorText={fieldState.error?.message}
               label="IPAM Address"
               onChange={field.onChange}

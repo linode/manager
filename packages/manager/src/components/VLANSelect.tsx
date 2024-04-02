@@ -10,6 +10,11 @@ import type { SxProps, Theme } from '@mui/material';
 
 interface Props {
   /**
+   * Disabled the Select
+   * @default false
+   */
+  disabled?: boolean;
+  /**
    * An error that will show below the select
    */
   errorText?: string;
@@ -85,10 +90,12 @@ export const VLANSelect = (props: Props) => {
           setInputValue(value);
         }
       }}
+      disabled={props.disabled}
       errorText={props.errorText ?? error?.[0].reason}
       inputValue={selectedVLAN ? selectedVLAN.label : inputValue}
       label="VLAN"
       loading={isLoading}
+      noOptionsText="You have no VLANs in this region. Type to create one."
       options={options}
       placeholder="Create or select a VLAN"
       sx={props.sx}

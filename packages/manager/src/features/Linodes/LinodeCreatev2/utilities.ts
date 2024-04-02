@@ -112,6 +112,7 @@ export const getInterfacesPayload = (
 };
 
 export const defaultValues: CreateLinodeRequest = {
+  image: 'linode/debian11',
   interfaces: [
     {
       ipam_address: '',
