@@ -15,7 +15,7 @@ export const vlanQueries = createQueryKeys('vlans', {
     queryKey: null,
   },
   infinite: (filter: Filter = {}) => ({
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: ({ pageParam = 1 }) =>
       getVlans({ page: pageParam, page_size: 25 }, filter),
     queryKey: [filter],
   }),
