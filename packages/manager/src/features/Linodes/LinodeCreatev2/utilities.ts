@@ -2,7 +2,10 @@ import { useHistory } from 'react-router-dom';
 
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
+import { utoa } from '../LinodesCreate/utilities';
+
 import type { LinodeCreateType } from '../LinodesCreate/types';
+import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
 
 /**
  * This interface is used to type the query params on the Linode Create flow.
@@ -60,3 +63,64 @@ export const tabs: LinodeCreateType[] = [
   'Backups',
   'Clone Linode',
 ];
+
+/**
+ * Performs some transformations to the Linode Create form data so that the data
+ * is in the correct format for the API. Intended to be used in the "onSubmit" when creating a Linode.
+ *
+ * @param payload the initial raw values from the Linode Create form
+ * @returns final Linode Create payload to be sent to the API
+ */
+export const getLinodeCreatePayload = (
+  payload: CreateLinodeRequest
+): CreateLinodeRequest => {
+  if (payload.metadata?.user_data) {
+    payload.metadata.user_data = utoa(payload.metadata.user_data);
+  }
+
+  payload.interfaces = getInterfacesPayload(payload.interfaces);
+
+  return payload;
+};
+
+const getInterfacesPayload = (
+  interfaces: InterfacePayload[] | undefined
+): InterfacePayload[] | undefined => {
+  return interfaces?.filter((i) => {
+    if (i.purpose === 'vpc' && !i.vpc_id) {
+      // If no vpc was selected, clear remove it from the interfaces array
+      return false;
+    }
+    if (i.purpose === 'vlan' && !i.label) {
+      // If no VLAN label is specificed, remove it from the interfaces array
+      return false;
+    }
+    if (i.purpose === 'vlan' && !i.label) {
+      // If no VLAN label is specificed, remove it from the interfaces array
+      return false;
+    }
+    return true;
+  });
+};
+
+export const defaultValues: CreateLinodeRequest = {
+  interfaces: [
+    {
+      ipam_address: '',
+      label: '',
+      purpose: 'public',
+    },
+    {
+      ipam_address: '',
+      label: '',
+      purpose: 'vlan',
+    },
+    {
+      ipam_address: '',
+      label: '',
+      purpose: 'vpc',
+    },
+  ],
+  region: '',
+  type: '',
+};

@@ -80,6 +80,7 @@ export const VLANSelect = (props: Props) => {
         }
       }}
       errorText={props.errorText ?? error?.[0].reason}
+      filterOptions={x => x}
       inputValue={selectedVLAN ? selectedVLAN.label : inputValue}
       label="VLAN"
       loading={isLoading}

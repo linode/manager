@@ -21,22 +21,30 @@ import { Region } from './Region';
 import { Summary } from './Summary';
 import { Distributions } from './Tabs/Distributions';
 import { Images } from './Tabs/Images';
-import { getTabIndex, tabs, useLinodeCreateQueryParams } from './utilities';
+import { UserData } from './UserData/UserData';
+import {
+  defaultValues,
+  getLinodeCreatePayload,
+  getTabIndex,
+  tabs,
+  useLinodeCreateQueryParams,
+} from './utilities';
 import { VLAN } from './VLAN';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreatev2 = () => {
-  const methods = useForm<CreateLinodeRequest>();
+  const methods = useForm<CreateLinodeRequest>({ defaultValues });
   const history = useHistory();
 
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
 
-  const onSubmit: SubmitHandler<CreateLinodeRequest> = async (data) => {
-    alert(JSON.stringify(data, null, 2));
+  const onSubmit: SubmitHandler<CreateLinodeRequest> = async (values) => {
+    const payload = getLinodeCreatePayload(values);
+    alert(JSON.stringify(payload, null, 2));
     try {
-      const linode = await createLinode(data);
+      const linode = await createLinode(payload);
 
       history.push(`/linodes/${linode.id}`);
     } catch (errors) {
@@ -95,6 +103,7 @@ export const LinodeCreatev2 = () => {
           <Access />
           <Firewall />
           <VLAN />
+          <UserData />
           <Addons />
           <Summary />
         </Stack>

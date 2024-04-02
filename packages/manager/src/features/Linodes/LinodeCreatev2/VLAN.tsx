@@ -58,7 +58,7 @@ export const VLAN = () => {
           />
         )}
         control={control}
-        name="interfaces.0.label"
+        name="interfaces.1.label"
       />
       <Controller
         render={({ field, fieldState }) => (
@@ -72,7 +72,7 @@ export const VLAN = () => {
           />
         )}
         control={control}
-        name="interfaces.0.ipam_address"
+        name="interfaces.1.ipam_address"
       />
     </Accordion>
   );
