@@ -18,7 +18,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { LinkButton } from 'src/components/LinkButton';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
@@ -290,23 +289,6 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             value={formik.values.label}
           />
           <AccessKeyRegions
-            error={
-              !createMode && formik.errors.regions ? (
-                <span>
-                  Select at least one region. To remove all regions,{' '}
-                  <LinkButton
-                    onClick={() => {
-                      onClose();
-                    }}
-                  >
-                    revoke
-                  </LinkButton>{' '}
-                  the access key.
-                </span>
-              ) : (
-                (formik.errors.regions as string)
-              )
-            }
             onBlur={() => {
               const bucketsInRegions = buckets?.filter(
                 (bucket) =>
@@ -330,6 +312,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
               formik.setFieldValue('regions', values);
             }}
             disabled={isRestrictedUser}
+            error={formik.errors.regions as string}
             name="regions"
             required
             selectedRegion={formik.values.regions}
