@@ -45,7 +45,7 @@ describe('Parent/Child token expiration', () => {
    * - Confirms flow when a Proxy user attempts to switch back to a Parent account with expired auth token.
    * - Uses mock API and local storage data.
    */
-  it('shows session expiry prompt upon switching back to Parent account', () => {
+  it('shows session expiry prompt upon switching back to Parent account with expired Parent token', () => {
     mockGetLinodes([]).as('getLinodes');
     mockGetAccount(mockChildAccount);
     mockGetProfile(mockChildAccountProfile);
