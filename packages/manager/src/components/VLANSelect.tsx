@@ -57,7 +57,7 @@ export const VLANSelect = (props: Props) => {
     error,
     fetchNextPage,
     hasNextPage,
-    isLoading,
+    isFetching,
   } = useVLANsInfiniteQuery(apiFilter, open);
 
   const vlans = data?.pages.flatMap((page) => page.data) ?? [];
@@ -73,7 +73,7 @@ export const VLANSelect = (props: Props) => {
 
   const hasVLANWithExactLabel = vlans.some((vlan) => vlan.label === inputValue);
 
-  if (!isLoading && inputValue && !hasVLANWithExactLabel) {
+  if (!isFetching && inputValue && !hasVLANWithExactLabel) {
     vlans.push(newVlanPlacehodler);
   }
 
@@ -122,7 +122,7 @@ export const VLANSelect = (props: Props) => {
       errorText={errorText ?? error?.[0].reason}
       inputValue={selectedVLAN ? selectedVLAN.label : inputValue}
       label="VLAN"
-      loading={isLoading}
+      loading={isFetching}
       noOptionsText="You have no VLANs in this region. Type to create one."
       open={open}
       options={vlans}
