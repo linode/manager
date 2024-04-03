@@ -64,13 +64,7 @@ export const VLANSelect = (props: Props) => {
     isLoading,
   } = useVLANsInfiniteQuery(searchFilter);
 
-  // const vlans = data?.pages.flatMap((page) => page.data) ?? [];
-
-  const vlans =
-    data?.pages.reduce<VLAN[]>((acc, page) => {
-      acc.concat(page.data);
-      return acc;
-    }, []) ?? [];
+  const vlans = data?.pages.flatMap((page) => page.data) ?? [];
 
   const newVlanPlacehodler = VLANFactory.build({
     label: inputValue,
