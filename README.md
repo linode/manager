@@ -4,7 +4,8 @@
   <br />
   Akamai Connected Cloud Manager
 </h3>
-
+ 
+ 
 <p align="center">
   <img alt="Linode Manager Code Coverage" src="https://cloud-manager-coverage.us-east-1.linodeobjects.com/badges.svg?v=1" />
 </p>
