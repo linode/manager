@@ -16,7 +16,6 @@ import { CloudViewTimeRangeSelect } from '../shared/TimeRangeSelect';
 import { GlobalFilterProperties, GlobalFiltersObject } from '../Models/GlobalFilterProperties';
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
-  const theme = useTheme();
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     end: 0,

@@ -1,18 +1,14 @@
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
-
 import { Divider } from 'src/components/Divider';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import Grid from '@mui/material/Unstable_Grid2';
 import {
     DataSet,
     LineGraph,
     LineGraphProps,
 } from 'src/components/LineGraph/LineGraph';
 import { Typography } from 'src/components/Typography';
-import { ZoomIcon } from './Components/Zoomer';
-import { styled, useTheme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
     message: {
@@ -38,20 +34,13 @@ export interface CloudViewLineGraphProps extends LineGraphProps {
     subtitle?: string;
     title: string;
     gridSize: number;
+    legendRows?: any[];
 }
-
-const StyledZoomIcon = styled(ZoomIcon, {
-    label:"StyledZoomIcon"
-})({
-    float:"right"
-})
 
 export const CloudViewLineGraph = React.memo((props: CloudViewLineGraphProps) => {
     const { classes } = useStyles();
 
     const { ariaLabel, error, loading, subtitle, title, ...rest } = props;
-
-    const[zoomIn, setZoomIn] = React.useState<boolean>(props.gridSize == 12);
 
     const message = error // Error state is separate, don't want to put text on top of it
         ? undefined
@@ -61,38 +50,28 @@ export const CloudViewLineGraph = React.memo((props: CloudViewLineGraphProps) =>
                 ? 'No data to display'
                 : undefined;
 
-
-    
-    
-    const handleZoomToggle = (zoomIn:boolean) => {         
-        setZoomIn(zoomIn);
-    }
-
     return (
-        <Grid xs={zoomIn?12:6}>
-            <StyledZoomIcon zoomIn={zoomIn} handleZoomToggle={handleZoomToggle}/>
-            <React.Fragment>
-                <Typography className={classes.title} variant="body1">
-                    {title}
-                    {subtitle && (
-                        <React.Fragment>
-                            &nbsp;<span>({subtitle})</span>
-                        </React.Fragment>
-                    )}
-                </Typography>
-                <Divider spacingBottom={16} spacingTop={16} />
-                <div style={{ position: 'relative' }}>
-                    {error ? (
-                        <div style={{ height: props.chartHeight || '300px' }}>
-                            <ErrorState errorText={error} />
-                        </div>
-                    ) : (
-                        <LineGraph {...rest} ariaLabel={ariaLabel!} />
-                    )}
-                    {message && <div className={classes.message}>{message}</div>}
-                </div>
-            </React.Fragment>
-        </Grid>
+        <React.Fragment>
+            <Typography className={classes.title} variant="body1">
+                {title}
+                {subtitle && (
+                    <React.Fragment>
+                        &nbsp;<span>({subtitle})</span>
+                    </React.Fragment>
+                )}
+            </Typography>
+            <Divider spacingBottom={16} spacingTop={16} />
+            <div style={{ position: 'relative' }}>
+                {error ? (
+                    <div style={{ height: props.chartHeight || '300px' }}>
+                        <ErrorState errorText={error} />
+                    </div>
+                ) : (
+                    <LineGraph {...rest} ariaLabel={ariaLabel!} legendRows={props.legendRows} />
+                )}
+                {message && <div className={classes.message}>{message}</div>}
+            </div>
+        </React.Fragment>
     );
 });
 
