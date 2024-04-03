@@ -1,6 +1,5 @@
 import { Region } from '@linode/api-v4';
 import {
-  AccessType,
   ObjectStorageBucket,
   ObjectStorageKey,
   ObjectStorageKeyRequest,
@@ -87,7 +86,7 @@ export const getDefaultScopes = (
     .map((thisBucket) => ({
       bucket_name: thisBucket.label,
       cluster: thisBucket.cluster,
-      permissions: 'none' as AccessType,
+      permissions: null,
       region: thisBucket.region,
     }))
     .sort(sortByRegion(regionLookup));
