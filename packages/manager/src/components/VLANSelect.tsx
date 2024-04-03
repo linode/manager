@@ -72,7 +72,7 @@ export const VLANSelect = (props: Props) => {
 
   const options = [...vlans];
 
-  if (vlans.length === 0 && !isLoading && inputValue) {
+  if (!isLoading && inputValue) {
     options.push(newVlanPlacehodler);
   }
 
