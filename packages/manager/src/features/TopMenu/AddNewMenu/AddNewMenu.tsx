@@ -112,7 +112,7 @@ export const AddNewMenu = () => {
       link: '/firewalls/create',
     },
     {
-      description: 'Control the physical placement of your Linodes',
+      description: "Control your Linodes' physical placement",
       entity: 'Placement Groups',
       hide: !flags.placementGroups?.enabled,
       icon: PlacementGroupsIcon,
