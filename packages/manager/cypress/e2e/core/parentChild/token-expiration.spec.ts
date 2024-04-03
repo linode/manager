@@ -48,7 +48,7 @@ describe('Parent/Child token expiration', () => {
   it('shows session expiry prompt upon switching back to Parent account with expired Parent token', () => {
     mockGetLinodes([]).as('getLinodes');
     mockGetAccount(mockChildAccount);
-    mockGetProfile(mockChildAccountProfile);
+    mockGetProfile(mockChildAccountProxyProfile);
     mockGetChildAccounts([]);
 
     // Mock local storage parent token expiry to have already passed.
