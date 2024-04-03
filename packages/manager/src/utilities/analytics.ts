@@ -28,6 +28,7 @@ interface AnalyticsEvent {
   category: string;
   data?: CustomAnalyticsData | string;
   label?: string;
+  value?: number;
 }
 
 export const sendEvent = (eventPayload: AnalyticsEvent): void => {
@@ -43,6 +44,7 @@ export const sendEvent = (eventPayload: AnalyticsEvent): void => {
       category: eventPayload.category.replace(/\|/g, ''),
       data: JSON.stringify(eventPayload.data),
       label: eventPayload.label?.replace(/\|/g, ''),
+      value: eventPayload.value,
     });
   }
 };
@@ -502,5 +504,6 @@ export const sendTestLinodeCloneEvent = (
     category: 'Test Linode Create with Powered Off Data',
     data: eventData,
     label: eventLabel,
+    value: 42,
   });
 };
