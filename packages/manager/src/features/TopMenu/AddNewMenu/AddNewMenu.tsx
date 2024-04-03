@@ -114,6 +114,7 @@ export const AddNewMenu = () => {
     {
       description: 'Control the physical placement of your Linodes',
       entity: 'Placement Groups',
+      hide: !flags.placementGroups?.enabled,
       icon: PlacementGroupsIcon,
       link: '/placement-groups/create',
     },
