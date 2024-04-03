@@ -5,7 +5,7 @@ import { useVLANsInfiniteQuery } from 'src/queries/vlans';
 
 import { Autocomplete } from './Autocomplete/Autocomplete';
 
-import type { Filter, VLAN } from '@linode/api-v4';
+import type { Filter } from '@linode/api-v4';
 import type { SxProps, Theme } from '@mui/material';
 
 interface Props {
@@ -47,14 +47,11 @@ export const VLANSelect = (props: Props) => {
 
   const [inputValue, setInputValue] = useState<string>('');
 
-  const searchFilter = inputValue
-    ? {
-        label: { '+contains': inputValue },
-        ...(filter ? filter : {}),
-      }
-    : filter
-    ? filter
-    : {};
+  const apiFilter = getVLANSelectFilter({
+    defaultFilter: filter,
+    inputValue,
+    selectedVlanLabel: value,
+  });
 
   const {
     data,
@@ -62,7 +59,7 @@ export const VLANSelect = (props: Props) => {
     fetchNextPage,
     hasNextPage,
     isLoading,
-  } = useVLANsInfiniteQuery(searchFilter);
+  } = useVLANsInfiniteQuery(apiFilter);
 
   const vlans = data?.pages.flatMap((page) => page.data) ?? [];
 
@@ -70,14 +67,11 @@ export const VLANSelect = (props: Props) => {
     label: inputValue,
   });
 
-  const options = [...vlans];
-
   if (!isLoading && inputValue) {
-    options.push(newVlanPlacehodler);
+    vlans.push(newVlanPlacehodler);
   }
 
-  const selectedVLAN =
-    options?.find((option) => option.label === value) ?? null;
+  const selectedVLAN = vlans?.find((option) => option.label === value) ?? null;
 
   return (
     <Autocomplete
@@ -103,6 +97,9 @@ export const VLANSelect = (props: Props) => {
         if (onChange) {
           onChange(value?.label ?? null);
         }
+        if (value !== newVlanPlacehodler) {
+          setInputValue('');
+        }
       }}
       onInputChange={(_, value, reason) => {
         if (reason === 'input' || reason === 'clear') {
@@ -115,10 +112,38 @@ export const VLANSelect = (props: Props) => {
       label="VLAN"
       loading={isLoading}
       noOptionsText="You have no VLANs in this region. Type to create one."
-      options={options}
+      options={vlans}
       placeholder="Create or select a VLAN"
       sx={sx}
       value={selectedVLAN}
     />
   );
+};
+
+interface VLANSelectFilterOptions {
+  defaultFilter?: Filter;
+  inputValue: string;
+  selectedVlanLabel: null | string | undefined;
+}
+
+const getVLANSelectFilter = (options: VLANSelectFilterOptions) => {
+  const { defaultFilter, inputValue, selectedVlanLabel } = options;
+
+  const baseFilter = defaultFilter ?? {};
+
+  if (inputValue && selectedVlanLabel) {
+    return {
+      ...baseFilter,
+      '+or': [{ label: { '+contains': inputValue } }, { label: inputValue }],
+    };
+  }
+
+  if (inputValue) {
+    return {
+      ...baseFilter,
+      label: { '+contains': inputValue },
+    };
+  }
+
+  return baseFilter;
 };
