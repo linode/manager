@@ -50,7 +50,6 @@ export const VLANSelect = (props: Props) => {
   const apiFilter = getVLANSelectFilter({
     defaultFilter: filter,
     inputValue,
-    selectedVlanLabel: value,
   });
 
   const {
@@ -125,20 +124,12 @@ export const VLANSelect = (props: Props) => {
 interface VLANSelectFilterOptions {
   defaultFilter?: Filter;
   inputValue: string;
-  selectedVlanLabel: null | string | undefined;
 }
 
-const getVLANSelectFilter = (options: VLANSelectFilterOptions) => {
-  const { defaultFilter, inputValue, selectedVlanLabel } = options;
+export const getVLANSelectFilter = (options: VLANSelectFilterOptions) => {
+  const { defaultFilter, inputValue } = options;
 
   const baseFilter = defaultFilter ?? {};
-
-  if (inputValue && selectedVlanLabel) {
-    return {
-      ...baseFilter,
-      '+or': [{ label: { '+contains': inputValue } }, { label: inputValue }],
-    };
-  }
 
   if (inputValue) {
     return {

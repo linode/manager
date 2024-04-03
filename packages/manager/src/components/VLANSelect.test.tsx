@@ -6,7 +6,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { VLANSelect } from './VLANSelect';
+import { getVLANSelectFilter, VLANSelect } from './VLANSelect';
 
 describe('VLANSelect', () => {
   it('should render a default "Images" label', () => {
@@ -66,5 +66,24 @@ describe('VLANSelect', () => {
     await userEvent.click(vlanOption);
 
     expect(onChange).toHaveBeenCalledWith(vlan.label);
+  });
+});
+
+describe('getVLANSelectFilter', () => {
+  it('should handle an input value', () => {
+    expect(getVLANSelectFilter({ inputValue: 'test' })).toStrictEqual({
+      label: { '+contains': 'test' },
+    });
+  });
+  it('should handle an input value with a default filter', () => {
+    expect(
+      getVLANSelectFilter({
+        defaultFilter: { region: 'us-east' },
+        inputValue: 'test',
+      })
+    ).toStrictEqual({
+      label: { '+contains': 'test' },
+      region: 'us-east',
+    });
   });
 });
