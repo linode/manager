@@ -67,7 +67,9 @@ export const VLANSelect = (props: Props) => {
     label: inputValue,
   });
 
-  if (!isLoading && inputValue) {
+  const hasVLANWithExactLabel = vlans.some((vlan) => vlan.label === inputValue);
+
+  if (!isLoading && inputValue && !hasVLANWithExactLabel) {
     vlans.push(newVlanPlacehodler);
   }
 
