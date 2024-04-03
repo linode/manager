@@ -9,7 +9,7 @@ import type { SxProps, Theme } from '@mui/material';
 
 interface Props {
   /**
-   * Disabled the Select
+   * Disable the Select
    * @default false
    */
   disabled?: boolean;
@@ -37,7 +37,7 @@ interface Props {
 
 /**
  * A VLAN select component that has the following features
- * - Infinitly loads VLANs
+ * - Infinitely loads VLANs
  * - API filters VLANs when searching
  * - Allows VLAN creation
  */

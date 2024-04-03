@@ -6,10 +6,10 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { getVLANSelectFilter, VLANSelect } from './VLANSelect';
+import { VLANSelect, getVLANSelectFilter } from './VLANSelect';
 
 describe('VLANSelect', () => {
-  it('should render a default "Images" label', () => {
+  it('should render a default "VLAN" label', () => {
     const { getByLabelText } = renderWithTheme(<VLANSelect value={null} />);
 
     expect(getByLabelText('VLAN')).toBeVisible();
