@@ -15,7 +15,6 @@ import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
-import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 import {
   useMutatePlacementGroup,
   usePlacementGroupQuery,
@@ -35,20 +34,27 @@ export const PlacementGroupsEditDrawer = (
   const {
     disableEditButton,
     onClose,
-    onExited,
     onPlacementGroupEdit,
     open,
-    selectedPlacementGroup,
+    region,
+    selectedPlacementGroup: placementGroupFromProps,
   } = props;
   const { id } = useParams<{ id: string }>();
-  const { data: placementGroupFromParam, isFetching } = usePlacementGroupQuery(
+  const {
+    data: placementGroupFromParam,
+    isFetching,
+    status,
+  } = usePlacementGroupQuery(
     Number(id),
-    Boolean(!selectedPlacementGroup)
+    open && placementGroupFromProps === undefined
   );
-  const placementGroup = selectedPlacementGroup ?? placementGroupFromParam;
-  const { region } = usePlacementGroupData({
-    placementGroup,
-  });
+
+  const placementGroup = React.useMemo(
+    () =>
+      open ? placementGroupFromProps ?? placementGroupFromParam : undefined,
+    [open, placementGroupFromProps, placementGroupFromParam]
+  );
+
   const { error, mutateAsync } = useMutatePlacementGroup(
     placementGroup?.id ?? -1
   );
@@ -63,9 +69,9 @@ export const PlacementGroupsEditDrawer = (
     setHasFormBeenSubmitted(false);
   };
 
-  const handleDrawerClose = () => {
-    onClose();
+  const handleClose = () => {
     handleResetForm();
+    onClose();
   };
 
   const handleFormSubmit = async (
@@ -123,8 +129,7 @@ export const PlacementGroupsEditDrawer = (
             })`
           : 'Edit Placement Group'
       }
-      onClose={handleDrawerClose}
-      onExited={onExited}
+      onClose={handleClose}
       open={open}
     >
       {generalError && <Notice text={generalError} variant="error" />}
@@ -134,7 +139,6 @@ export const PlacementGroupsEditDrawer = (
             <strong>Region: </strong>
             {region ? `${region.label} (${region.id})` : 'Unknown'}
           </Typography>
-
           <Typography mb={4}>
             <strong>Affinity Enforcement: </strong>
             {getAffinityTypeEnforcement(placementGroup.is_strict)}
@@ -155,7 +159,6 @@ export const PlacementGroupsEditDrawer = (
                 onChange={handleChange}
                 value={values.label}
               />
-
               <ActionsPanel
                 primaryButtonProps={{
                   'data-testid': 'submit',
@@ -167,7 +170,7 @@ export const PlacementGroupsEditDrawer = (
                 secondaryButtonProps={{
                   'data-testid': 'cancel',
                   label: 'Cancel',
-                  onClick: onClose,
+                  onClick: handleClose,
                 }}
                 sx={{ pt: 4 }}
               />
@@ -176,9 +179,9 @@ export const PlacementGroupsEditDrawer = (
         </>
       ) : isFetching ? (
         <CircleProgress />
-      ) : (
+      ) : status === 'error' ? (
         <NotFound />
-      )}
+      ) : null}
     </Drawer>
   );
 };

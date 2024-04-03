@@ -10,22 +10,20 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 
 import { PLACEMENT_GROUP_TOOLTIP_TEXT } from '../../constants';
 
-import type { PlacementGroup } from '@linode/api-v4';
+import type { PlacementGroup, Region } from '@linode/api-v4';
 
 interface Props {
   placementGroup: PlacementGroup;
+  region: Region | undefined;
 }
 
 export const PlacementGroupsSummary = (props: Props) => {
-  const { placementGroup } = props;
+  const { placementGroup, region } = props;
   const theme = useTheme();
-  const { linodesCount, region } = usePlacementGroupData({
-    placementGroup,
-  });
+  const linodesCount = placementGroup.members.length;
 
   return (
     <>
@@ -60,7 +58,7 @@ export const PlacementGroupsSummary = (props: Props) => {
             <Box display="flex">
               <StyledLabel>Linodes</StyledLabel>
               <Typography sx={{ mx: 8 }}>
-                {`${linodesCount} of ${region?.maximum_vms_per_pg}`}
+                {`${linodesCount} of ${region?.placement_group_limits.maximum_linodes_per_pg}`}
                 <TooltipIcon
                   sxTooltipIcon={{
                     marginLeft: '10px',
