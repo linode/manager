@@ -1,11 +1,12 @@
-import React from 'react';
 import { useState } from 'react';
+import React from 'react';
 
 import { VLANFactory } from 'src/factories';
 import { useVLANsInfiniteQuery } from 'src/queries/vlans';
 
 import { Autocomplete } from './Autocomplete/Autocomplete';
 
+import type { Filter } from '@linode/api-v4';
 import type { SxProps, Theme } from '@mui/material';
 
 interface Props {
@@ -18,6 +19,10 @@ interface Props {
    * An error that will show below the select
    */
   errorText?: string;
+  /**
+   * Default API filter
+   */
+  filter?: Filter;
   /**
    * Is called when a VLAN is selected
    */
@@ -35,7 +40,14 @@ interface Props {
 export const VLANSelect = (props: Props) => {
   const [inputValue, setInputValue] = useState<string>('');
 
-  const searchFilter = inputValue ? { label: { '+contains': inputValue } } : {};
+  const searchFilter = inputValue
+    ? {
+        label: { '+contains': inputValue },
+        ...(props.filter ? props.filter : {}),
+      }
+    : props.filter
+    ? props.filter
+    : {};
 
   const {
     data,

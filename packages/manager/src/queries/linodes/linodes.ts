@@ -163,7 +163,7 @@ export const useCreateLinodeMutation = () => {
       queryClient.invalidateQueries(profileQueries.grants.queryKey);
 
       if (variables.interfaces?.some((i) => i.purpose === 'vlan')) {
-        // If a Linode is create with a VLAN, invalidate vlans because
+        // If a Linode is created with a VLAN, invalidate vlans because
         // they are derived from Linode configs.
         queryClient.invalidateQueries(vlanQueries._def);
       }

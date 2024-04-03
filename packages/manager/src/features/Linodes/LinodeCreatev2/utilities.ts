@@ -78,6 +78,10 @@ export const getLinodeCreatePayload = (
     payload.metadata.user_data = utoa(payload.metadata.user_data);
   }
 
+  if (!payload.metadata?.user_data) {
+    payload.metadata = undefined;
+  }
+
   payload.interfaces = getInterfacesPayload(payload.interfaces);
 
   return payload;

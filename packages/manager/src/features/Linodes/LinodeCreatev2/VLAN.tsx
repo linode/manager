@@ -85,6 +85,7 @@ export const VLAN = () => {
             <VLANSelect
               disabled={disabled}
               errorText={fieldState.error?.message}
+              filter={{ region: regionId }}
               onChange={field.onChange}
               sx={{ minWidth: 300 }}
               value={field.value ?? null}
