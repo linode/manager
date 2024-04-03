@@ -111,7 +111,7 @@ describe('longview', () => {
    * - Creates a Linode, connects to it via SSH, and installs Longview using the given cURL command.
    * - Confirms that Cloud Manager UI updates to reflect Longview installation and data.
    */
-  it.skip('can install Longview client on a Linode', () => {
+  it('can install Longview client on a Linode', () => {
     const linodePassword = randomString(32, {
       symbols: false,
       lowercase: true,
@@ -211,7 +211,7 @@ describe('longview', () => {
     cy.wait('@ceateLongviewClient');
 
     // Confirms that UI updates to show the new client when creating one.
-    cy.findByText(`longview-client-${client.id}`).should('be.visible');
+    cy.findByText(`${client.label}`).should('be.visible');
     cy.get(`[data-qa-longview-client="${client.id}"]`)
       .should('be.visible')
       .within(() => {
