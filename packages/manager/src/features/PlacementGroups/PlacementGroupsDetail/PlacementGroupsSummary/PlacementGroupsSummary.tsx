@@ -58,7 +58,7 @@ export const PlacementGroupsSummary = (props: Props) => {
             <Box display="flex">
               <StyledLabel>Linodes</StyledLabel>
               <Typography sx={{ mx: 8 }}>
-                {`${linodesCount} of ${region?.maximum_vms_per_pg}`}
+                {`${linodesCount} of ${region?.placement_group_limits.maximum_linodes_per_pg}`}
                 <TooltipIcon
                   sxTooltipIcon={{
                     marginLeft: '10px',
