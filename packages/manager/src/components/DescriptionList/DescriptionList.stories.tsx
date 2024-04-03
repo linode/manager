@@ -21,8 +21,25 @@ const defaultItems = [
 ];
 
 const meta: Meta<DescriptionListProps> = {
+  argTypes: {
+    direction: {
+      options: ['column', 'row', 'column-reverse', 'row-reverse'],
+    },
+    stackAt: {
+      options: ['sm', 'md', 'lg', 'xl'],
+    },
+  },
   args: {
+    columnSpacing: 4,
+    direction: 'column',
+    fontSize: '0.9rem',
     items: defaultItems,
+    rowSpacing: 1,
+    stackAt: undefined,
+    sx: {
+      mb: 3,
+      mt: 3,
+    },
   },
   component: DescriptionList,
   title: 'Components/DescriptionList',

@@ -5,12 +5,12 @@ import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
 
-import type { Theme } from '@mui/material/styles';
+import type { Breakpoint, Theme } from '@mui/material/styles';
 import type { TypographyProps } from 'src/components/Typography';
 
 type CustomGridProps = Pick<
   Grid2Props,
-  'columnSpacing' | 'direction' | 'rowSpacing' | 'spacing' | 'sx'
+  'columnSpacing' | 'direction' | 'fontSize' | 'rowSpacing' | 'sx'
 >;
 
 export interface DescriptionListProps extends CustomGridProps {
@@ -24,10 +24,11 @@ export interface DescriptionListProps extends CustomGridProps {
   /**
    * The breakpoint at which the list will stack if the direction is row.
    * This is particularly useful to control lists we always their items all in row or all stacked (no in-between state).
+   * Can be one of our defined breakpoints or a number (in px).
    *
    * @default 'md' (if prop provided)
    */
-  stackAt?: 'lg' | 'md' | 'sm' | 'xs' | number;
+  stackAt?: Breakpoint | number;
 }
 
 /**
@@ -40,10 +41,11 @@ export const DescriptionList = (props: DescriptionListProps) => {
   const {
     columnSpacing = 4,
     direction = 'column',
+    fontSize,
     items,
     rowSpacing = 1,
-    spacing = 0,
-    stackAt = 'md',
+    stackAt = 0,
+    sx,
   } = props;
   const willStackAt = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down(stackAt)
@@ -57,8 +59,9 @@ export const DescriptionList = (props: DescriptionListProps) => {
       component="dl"
       container
       direction={dynamicDirection}
+      fontSize={fontSize}
       rowSpacing={rowSpacing}
-      spacing={spacing}
+      sx={sx}
     >
       {items.map((item, idx) => {
         const { description, title } = item;
