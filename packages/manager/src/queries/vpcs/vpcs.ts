@@ -28,9 +28,6 @@ import type {
   ResourcePage,
 } from '@linode/api-v4/lib/types';
 
-export const vpcQueryKey = 'vpcs';
-export const subnetQueryKey = 'subnets';
-
 // VPC queries
 export const vpcQueries = createQueryKeys('vpcs', {
   vpc: (vpcId: number) => ({
