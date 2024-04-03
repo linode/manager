@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { VLANFactory } from 'src/factories';
 import { useVLANsInfiniteQuery } from 'src/queries/vlans';
