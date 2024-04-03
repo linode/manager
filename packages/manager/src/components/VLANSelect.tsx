@@ -5,7 +5,7 @@ import { useVLANsInfiniteQuery } from 'src/queries/vlans';
 
 import { Autocomplete } from './Autocomplete/Autocomplete';
 
-import type { Filter } from '@linode/api-v4';
+import type { Filter, VLAN } from '@linode/api-v4';
 import type { SxProps, Theme } from '@mui/material';
 
 interface Props {
@@ -36,16 +36,24 @@ interface Props {
   value: null | string;
 }
 
+/**
+ * A VLAN select component that has the following features
+ * - Infinitly loads VLANs
+ * - API filters VLANs when searching
+ * - Allows VLAN creation
+ */
 export const VLANSelect = (props: Props) => {
+  const { disabled, errorText, filter, onChange, sx, value } = props;
+
   const [inputValue, setInputValue] = useState<string>('');
 
   const searchFilter = inputValue
     ? {
         label: { '+contains': inputValue },
-        ...(props.filter ? props.filter : {}),
+        ...(filter ? filter : {}),
       }
-    : props.filter
-    ? props.filter
+    : filter
+    ? filter
     : {};
 
   const {
@@ -56,7 +64,13 @@ export const VLANSelect = (props: Props) => {
     isLoading,
   } = useVLANsInfiniteQuery(searchFilter);
 
-  const vlans = data?.pages.flatMap((page) => page.data) ?? [];
+  // const vlans = data?.pages.flatMap((page) => page.data) ?? [];
+
+  const vlans =
+    data?.pages.reduce<VLAN[]>((acc, page) => {
+      acc.concat(page.data);
+      return acc;
+    }, []) ?? [];
 
   const newVlanPlacehodler = VLANFactory.build({
     label: inputValue,
@@ -69,7 +83,7 @@ export const VLANSelect = (props: Props) => {
   }
 
   const selectedVLAN =
-    options?.find((option) => option.label === props.value) ?? null;
+    options?.find((option) => option.label === value) ?? null;
 
   return (
     <Autocomplete
@@ -92,8 +106,8 @@ export const VLANSelect = (props: Props) => {
         option1.label === options2.label
       }
       onChange={(event, value) => {
-        if (props.onChange) {
-          props.onChange(value?.label ?? null);
+        if (onChange) {
+          onChange(value?.label ?? null);
         }
       }}
       onInputChange={(_, value, reason) => {
@@ -101,15 +115,15 @@ export const VLANSelect = (props: Props) => {
           setInputValue(value);
         }
       }}
-      disabled={props.disabled}
-      errorText={props.errorText ?? error?.[0].reason}
+      disabled={disabled}
+      errorText={errorText ?? error?.[0].reason}
       inputValue={selectedVLAN ? selectedVLAN.label : inputValue}
       label="VLAN"
       loading={isLoading}
       noOptionsText="You have no VLANs in this region. Type to create one."
       options={options}
       placeholder="Create or select a VLAN"
-      sx={props.sx}
+      sx={sx}
       value={selectedVLAN}
     />
   );
