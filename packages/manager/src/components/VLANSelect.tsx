@@ -44,6 +44,7 @@ interface Props {
 export const VLANSelect = (props: Props) => {
   const { disabled, errorText, filter, onChange, sx, value } = props;
 
+  const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = useState<string>('');
 
   const apiFilter = getVLANSelectFilter({
@@ -57,7 +58,7 @@ export const VLANSelect = (props: Props) => {
     fetchNextPage,
     hasNextPage,
     isLoading,
-  } = useVLANsInfiniteQuery(apiFilter);
+  } = useVLANsInfiniteQuery(apiFilter, open);
 
   const vlans = data?.pages.flatMap((page) => page.data) ?? [];
 
@@ -106,10 +107,16 @@ export const VLANSelect = (props: Props) => {
           setInputValue('');
         }
       }}
+      onClose={() => {
+        setOpen(false);
+      }}
       onInputChange={(_, value, reason) => {
         if (reason === 'input' || reason === 'clear') {
           setInputValue(value);
         }
+      }}
+      onOpen={() => {
+        setOpen(true);
       }}
       disabled={disabled}
       errorText={errorText ?? error?.[0].reason}
@@ -117,6 +124,7 @@ export const VLANSelect = (props: Props) => {
       label="VLAN"
       loading={isLoading}
       noOptionsText="You have no VLANs in this region. Type to create one."
+      open={open}
       options={vlans}
       placeholder="Create or select a VLAN"
       sx={sx}
