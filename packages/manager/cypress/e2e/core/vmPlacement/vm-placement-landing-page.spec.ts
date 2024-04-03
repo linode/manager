@@ -27,7 +27,9 @@ describe('VM Placement landing page', () => {
     cy.visitWithLogin('/placement-groups');
     cy.wait('@getPlacementGroups');
 
-    ui.heading.findByText('Placement Groups').should('be.visible');
+    ui.heading.find().within(() => {
+      cy.findByText('Placement Groups').should('be.visible');
+    });
 
     ui.button
       .findByTitle('Create Placement Groups')
