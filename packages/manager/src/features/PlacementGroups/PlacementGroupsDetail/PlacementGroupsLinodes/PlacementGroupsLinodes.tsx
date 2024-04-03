@@ -100,7 +100,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
         </Typography>
         <Typography sx={{ mt: 1 }}>
           Limit of Linodes for this Placement Group:{' '}
-          {region?.maximum_vms_per_pg}
+          {region?.placement_group_limits.maximum_linodes_per_pg}
         </Typography>
       </Box>
 

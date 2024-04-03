@@ -101,7 +101,8 @@ export const PlacementGroupsRow = React.memo(
               minWidth={250}
             />
           )}
-          &nbsp; of {region?.maximum_vms_per_pg ?? 'unknown'}
+          &nbsp; of{' '}
+          {region?.placement_group_limits.maximum_linodes_per_pg ?? 'unknown'}
         </TableCell>
         <Hidden smDown>
           <TableCell>{region?.label}</TableCell>
