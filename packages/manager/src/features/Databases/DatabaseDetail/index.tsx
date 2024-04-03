@@ -79,14 +79,17 @@ export const DatabaseDetail = () => {
       title: 'Backups',
     },
     {
-      routeName: `/databases/${engine}/${id}/resize`,
-      title: 'Resize',
-    },
-    {
       routeName: `/databases/${engine}/${id}/settings`,
       title: 'Settings',
     },
   ];
+
+  if (flags.databaseResize) {
+    tabs.splice(2, 0, {
+      routeName: `/databases/${engine}/${id}/resize`,
+      title: 'Resize',
+    });
+  }
 
   const getTabIndex = () => {
     const tabChoice = tabs.findIndex((tab) =>
@@ -163,7 +166,7 @@ export const DatabaseDetail = () => {
               <DatabaseResize database={database} />
             </SafeTabPanel>
           ) : null}
-          <SafeTabPanel index={3}>
+          <SafeTabPanel index={flags.databaseResize ? 3 : 2}>
             <DatabaseSettings database={database} />
           </SafeTabPanel>
         </TabPanels>

@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 
@@ -8,8 +8,9 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
+import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography } from 'src/components/Typography';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useDomainQuery,
   useDomainRecordsQuery,
@@ -35,6 +36,12 @@ export const DomainDetail = () => {
     isLoading: isRecordsLoading,
     refetch: refetchRecords,
   } = useDomainRecordsQuery(domainId);
+
+  const isDomainReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'domain',
+    id: domainId,
+  });
 
   const [updateError, setUpdateError] = React.useState<string | undefined>();
 
@@ -123,8 +130,8 @@ export const DomainDetail = () => {
             <StyledTypography data-qa-title variant="h3">
               Tags
             </StyledTypography>
-            <TagsPanel
-              entityId={domain.id}
+            <TagCell
+              disabled={isDomainReadOnly}
               tags={domain.tags}
               updateTags={handleUpdateTags}
             />

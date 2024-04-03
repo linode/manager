@@ -59,11 +59,11 @@ interface SubnetAssignLinodesDrawerProps {
   vpcRegion: string;
 }
 
-type LinodeAndConfigData = Linode & {
+interface LinodeAndConfigData extends Linode {
   configId: number;
   interfaceData: Interface | undefined;
   linodeConfigLabel: string;
-};
+}
 
 export const SubnetAssignLinodesDrawer = (
   props: SubnetAssignLinodesDrawerProps

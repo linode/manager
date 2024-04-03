@@ -3,7 +3,7 @@ import { ThemeOptions } from '@mui/material/styles';
 import { breakpoints } from 'src/foundations/breakpoints';
 import { latoWeb } from 'src/foundations/fonts';
 
-const inputMaxWidth = 416;
+export const inputMaxWidth = 416;
 
 export const bg = {
   app: '#f4f5f6',
@@ -306,6 +306,7 @@ export const lightTheme: ThemeOptions = {
         },
         noOptions: {
           border: `1px solid ${primaryColors.main}`,
+          borderTop: 0,
         },
         option: {
           '&.Mui-focused, :hover': {

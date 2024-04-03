@@ -3,6 +3,7 @@ import { AFFINITY_TYPES } from '@linode/api-v4/lib/placement-groups';
 import type {
   AffinityEnforcement,
   CreatePlacementGroupPayload,
+  Linode,
   PlacementGroup,
   Region,
 } from '@linode/api-v4';
@@ -10,19 +11,26 @@ import type {
 /**
  * Helper to get the affinity enforcement readable string.
  */
-export const getAffinityEnforcement = (
+export const getAffinityTypeEnforcement = (
   is_strict: boolean
 ): AffinityEnforcement => {
   return is_strict ? 'Strict' : 'Flexible';
 };
 
 /**
- * Helper to get the number of Linodes in a Placement Group.
+ * Helper to get the full linodes objects assigned to a Placement Group.
  */
-export const getPlacementGroupLinodeCount = (
-  placementGroup: PlacementGroup
-): number => {
-  return placementGroup.members.length;
+export const getPlacementGroupLinodes = (
+  placementGroup: PlacementGroup | undefined,
+  linodes: Linode[] | undefined
+) => {
+  if (!placementGroup || !linodes) {
+    return;
+  }
+
+  return linodes.filter((linode) =>
+    placementGroup.members.some((pgLinode) => pgLinode.linode_id === linode.id)
+  );
 };
 
 interface HasPlacementGroupReachedCapacityOptions {
@@ -33,7 +41,7 @@ interface HasPlacementGroupReachedCapacityOptions {
 /**
  * Helper to determine if a Placement Group has reached its linode capacity.
  *
- * based on the region's `maximum_vms_per_pg`.
+ * based on the region's `maximum_linodes_per_pg`.
  */
 export const hasPlacementGroupReachedCapacity = ({
   placementGroup,
@@ -44,7 +52,8 @@ export const hasPlacementGroupReachedCapacity = ({
   }
 
   return (
-    getPlacementGroupLinodeCount(placementGroup) >= region.maximum_vms_per_pg
+    placementGroup.members.length >=
+    region.placement_group_limits.maximum_linodes_per_pg
   );
 };
 
@@ -66,7 +75,8 @@ export const hasRegionReachedPlacementGroupCapacity = ({
     return false;
   }
 
-  const { maximum_pgs_per_customer } = region;
+  const { placement_group_limits } = region;
+  const { maximum_pgs_per_customer } = placement_group_limits;
   const placementGroupsInRegion = allPlacementGroups.filter(
     (pg) => pg.region === region.id
   );

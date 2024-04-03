@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { Paper } from 'src/components/Paper';
-import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
+import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography } from 'src/components/Typography';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useFlags } from 'src/hooks/useFlags';
@@ -133,9 +133,8 @@ export const SummaryPanel = () => {
         <StyledTitle data-qa-title variant="h3">
           Tags
         </StyledTitle>
-        <TagsPanel
+        <TagCell
           disabled={isNodeBalancerReadOnly}
-          entityId={nodebalancer.id}
           tags={nodebalancer?.tags}
           updateTags={(tags) => updateNodeBalancer({ tags })}
         />

@@ -6,7 +6,7 @@ import { Hidden } from 'src/components/Hidden';
 
 import PrimaryNav from './PrimaryNav';
 
-export const SIDEBAR_WIDTH = 190;
+export const SIDEBAR_WIDTH = 232;
 export const SIDEBAR_COLLAPSED_WIDTH = 52;
 
 export interface SideMenuProps {

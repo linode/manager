@@ -10,10 +10,15 @@ import type { FirewallRuleTableRowProps } from './FirewallRuleTable';
 
 type StyledFirewallRuleButtonProps = Pick<FirewallRuleTableRowProps, 'status'>;
 
-type StyledFirewallRuleBoxProps = StyledFirewallRuleButtonProps &
-  Pick<FirewallRuleTableRowProps, 'disabled' | 'originalIndex'> & {
-    ruleId: number;
-  };
+interface FirewallRuleTableRowPropsWithRuleId
+  extends Pick<FirewallRuleTableRowProps, 'disabled' | 'originalIndex'> {
+  ruleId: number;
+}
+
+interface StyledFirewallRuleBoxProps
+  extends FirewallRuleTableRowPropsWithRuleId {
+  status: FirewallRuleTableRowProps['status'];
+}
 
 export const sxBox = {
   alignItems: 'center',

@@ -164,23 +164,26 @@ export const useCreateLinodeMutation = () => {
   });
 };
 
+interface LinodeCloneDataWithId extends LinodeCloneData {
+  sourceLinodeId: number;
+}
+
 export const useCloneLinodeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<
-    Linode,
-    APIError[],
-    { sourceLinodeId: number & LinodeCloneData }
-  >(({ sourceLinodeId, ...data }) => cloneLinode(sourceLinodeId, data), {
-    onSuccess(linode) {
-      queryClient.invalidateQueries([queryKey, 'paginated']);
-      queryClient.invalidateQueries([queryKey, 'all']);
-      queryClient.invalidateQueries([queryKey, 'infinite']);
-      queryClient.setQueryData(
-        [queryKey, 'linode', linode.id, 'details'],
-        linode
-      );
-    },
-  });
+  return useMutation<Linode, APIError[], LinodeCloneDataWithId>(
+    ({ sourceLinodeId, ...data }) => cloneLinode(sourceLinodeId, data),
+    {
+      onSuccess(linode) {
+        queryClient.invalidateQueries([queryKey, 'paginated']);
+        queryClient.invalidateQueries([queryKey, 'all']);
+        queryClient.invalidateQueries([queryKey, 'infinite']);
+        queryClient.setQueryData(
+          [queryKey, 'linode', linode.id, 'details'],
+          linode
+        );
+      },
+    }
+  );
 };
 
 export const useBootLinodeMutation = (
