@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-import { VLANFactory } from 'src/factories';
 import { useVLANsInfiniteQuery } from 'src/queries/vlans';
 
 import { Autocomplete } from './Autocomplete/Autocomplete';
@@ -62,9 +61,14 @@ export const VLANSelect = (props: Props) => {
 
   const vlans = data?.pages.flatMap((page) => page.data) ?? [];
 
-  const newVlanPlacehodler = VLANFactory.build({
+  const newVlanPlacehodler = {
+    cidr_block: '',
+    created: '',
+    id: 0,
     label: inputValue,
-  });
+    linodes: [],
+    region: '',
+  };
 
   const hasVLANWithExactLabel = vlans.some((vlan) => vlan.label === inputValue);
 
