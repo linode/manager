@@ -17,8 +17,8 @@ import { RemovableSelectionsListTable } from 'src/components/RemovableSelections
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { defaultPublicInterface } from 'src/features/Linodes/LinodesCreate/LinodeCreate';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
   VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK,
@@ -200,7 +200,6 @@ export const SubnetAssignLinodesDrawer = (
       await invalidateQueries({
         configId,
         linodeId: selectedLinode?.id ?? -1,
-        subnetId: subnet?.id ?? -1,
         vpcId,
       });
     } catch (errors) {
@@ -244,7 +243,6 @@ export const SubnetAssignLinodesDrawer = (
         configId,
         interfaceId: interfaceData?.id ?? -1,
         linodeId,
-        subnetId: subnet?.id ?? -1,
         vpcId,
       });
     } catch (errors) {
