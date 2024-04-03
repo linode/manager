@@ -48,6 +48,8 @@ export interface Widgets {
   chart_type:string;
   y_label:string;
   filters:Filters[];
+  serviceType?:string;
+  time_granularity:TimeGranularity;
 }
 
 export interface Filters {
