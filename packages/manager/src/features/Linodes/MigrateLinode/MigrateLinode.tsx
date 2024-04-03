@@ -1,4 +1,3 @@
-import { PlacementGroup } from '@linode/api-v4';
 import { Event } from '@linode/api-v4/lib/account';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
@@ -44,6 +43,8 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { addUsedDiskSpace } from '../LinodesDetail/LinodeStorage/LinodeDisks';
 import { CautionNotice } from './CautionNotice';
 import { ConfigureForm } from './ConfigureForm';
+
+import type { PlacementGroup } from '@linode/api-v4';
 
 interface Props {
   linodeId: number | undefined;

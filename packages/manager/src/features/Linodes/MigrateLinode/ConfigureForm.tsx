@@ -57,6 +57,7 @@ export const ConfigureForm = React.memo((props: Props) => {
   } = props;
 
   const flags = useFlags();
+  const showPlacementGroups = Boolean(flags.placementGroups?.enabled);
   const { data: regions } = useRegionsQuery();
 
   const { data: currentLinodeType } = useTypeQuery(
@@ -185,16 +186,18 @@ export const ConfigureForm = React.memo((props: Props) => {
               {...panelPrice(selectedRegion, selectedRegionPrice, 'new')}
             />
           )}
-          <PlacementGroupsSelect
-            handlePlacementGroupChange={(placementGroup) => {
-              handlePlacementGroupSelection(placementGroup);
-            }}
-            disabled={isPlacementGroupSelectDisabled}
-            label={placementGroupSelectLabel}
-            noOptionsMessage="There are no Placement Groups in this region."
-            selectedPlacementGroup={selectedPlacementGroup}
-            selectedRegion={newRegion}
-          />
+          {showPlacementGroups && (
+            <PlacementGroupsSelect
+              handlePlacementGroupChange={(placementGroup) => {
+                handlePlacementGroupSelection(placementGroup);
+              }}
+              disabled={isPlacementGroupSelectDisabled}
+              label={placementGroupSelectLabel}
+              noOptionsMessage="There are no Placement Groups in this region."
+              selectedPlacementGroup={selectedPlacementGroup}
+              selectedRegion={newRegion}
+            />
+          )}
         </StyledMigrationBox>
       </StyledMigrationContainer>
       {!currentRegionPrice && selectedRegion && (
