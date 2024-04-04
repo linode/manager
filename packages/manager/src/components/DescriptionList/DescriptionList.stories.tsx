@@ -25,17 +25,17 @@ const defaultItems = [
 ];
 
 const meta: Meta<DescriptionListProps> = {
-  argTypes: {
-    direction: {
-      options: ['column', 'row', 'column-reverse', 'row-reverse'],
-    },
-    stackAt: {
-      options: ['sm', 'md', 'lg', 'xl'],
-    },
-  },
+  // argTypes: {
+  //   direction: {
+  //     options: ['column', 'row', 'column-reverse', 'row-reverse'],
+  //   },
+  //   stackAt: {
+  //     options: ['sm', 'md', 'lg', 'xl'],
+  //   },
+  // },
   args: {
     columnSpacing: 4,
-    direction: 'column',
+    displayMode: 'column',
     fontSize: '0.9rem',
     items: defaultItems,
     rowSpacing: 1,
@@ -55,15 +55,30 @@ type Story = StoryObj<DescriptionListProps>;
 
 export const Column: Story = {
   name: 'Column (default)',
-  render: (args) => <DescriptionList {...args} items={args.items} />,
+  render: (args: DescriptionListProps) => (
+    <DescriptionList {...args} items={args.items} />
+  ),
 };
 
 export const Row: Story = {
   name: 'Row',
-  render: (args) => (
+  render: (args: DescriptionListProps) => (
     <DescriptionList
       {...args}
-      direction="row"
+      displayMode="row"
+      items={args.items}
+      stackAt="md"
+    />
+  ),
+};
+
+export const Grid: Story = {
+  name: 'Grid',
+  render: (args: DescriptionListProps) => (
+    <DescriptionList
+      {...args}
+      displayMode="grid"
+      gridProps={{ columns: 2 }}
       items={args.items}
       stackAt="md"
     />

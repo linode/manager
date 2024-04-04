@@ -1,25 +1,51 @@
-import { styled } from '@mui/material/styles';
-import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
+import { SxProps } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 
+import {
+  StyledDL,
+  StyledDLItemSeparator,
+  StyledDT,
+} from './DescriptionList.styles';
+
 import type { Breakpoint, Theme } from '@mui/material/styles';
-import type { TypographyProps } from 'src/components/Typography';
 
-type CustomGridProps = Pick<
-  Grid2Props,
-  'columnSpacing' | 'direction' | 'fontSize' | 'rowSpacing' | 'sx'
->;
-
-export interface DescriptionListProps extends CustomGridProps {
+type BaseDescriptionListProps = {
+  /**
+   * The amount of space between the title and description.
+   * Only for the "row" and "grid" display modes.
+   *
+   * @default 4
+   */
+  columnSpacing?: number;
+  /**
+   * The display mode of the list.
+   * - "column" will display the list in a column (stacked)
+   * - "row" will display the list in one, wrappable row
+   * - "grid" will display the list in a grid, which can be configured via the `gridProps` prop
+   *
+   * @default 'column'
+   */
+  displayMode?: 'column' | 'row';
+  /**
+   * The font size of the title and description.
+   * If not provided, the default font size is 0.9rem.
+   *
+   * @default '0.9rem'
+   */
+  fontSize?: string;
   /**
    * Array of objects containing a title and description matching the semantic markup of a description list.
+   * Includes an optional tooltip for contextual help.
    */
   items: {
     description: string;
     title: string;
+    tooltip?: string;
   }[];
   /**
    * The breakpoint at which the list will stack if the direction is row.
@@ -28,8 +54,33 @@ export interface DescriptionListProps extends CustomGridProps {
    *
    * @default 'md' (if prop provided)
    */
+  rowSpacing?: number;
+  /**
+   * The optional breakpoint at which the list will stack if the direction is row or grid.
+   */
   stackAt?: Breakpoint | number;
+  /**
+   * Additional styles to apply to the component.
+   */
+  sx?: SxProps;
+};
+
+interface GridDescriptionListProps
+  extends Omit<BaseDescriptionListProps, 'displayMode'> {
+  displayMode?: 'grid';
+  /**
+   * Props to pass to the Grid
+   * Only for the "grid" display mode.
+   */
+  gridProps: {
+    columnSpacing?: number;
+    columns: number;
+  };
 }
+
+export type DescriptionListProps =
+  | BaseDescriptionListProps
+  | GridDescriptionListProps;
 
 /**
  * DescriptionList is a component that displays a list of items in a semantic description list format.
@@ -40,61 +91,57 @@ export interface DescriptionListProps extends CustomGridProps {
 export const DescriptionList = (props: DescriptionListProps) => {
   const {
     columnSpacing = 4,
-    direction = 'column',
+    displayMode = 'column',
     fontSize,
     items,
     rowSpacing = 1,
     stackAt = 0,
     sx,
   } = props;
-  const willStackAt = useMediaQuery((theme: Theme) =>
+  let gridProps;
+  if ('gridProps' in props) {
+    gridProps = props.gridProps;
+  }
+
+  const isStacked = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down(stackAt)
   );
-  const dynamicDirection =
-    direction === 'row' && willStackAt ? 'column' : direction;
+  const responsiveMode =
+    (displayMode === 'grid' || displayMode === 'row') && isStacked
+      ? 'column'
+      : displayMode;
 
   return (
-    <StyledDL
-      columnSpacing={columnSpacing}
-      component="dl"
-      container
-      direction={dynamicDirection}
-      fontSize={fontSize}
-      rowSpacing={rowSpacing}
-      sx={sx}
-    >
-      {items.map((item, idx) => {
-        const { description, title } = item;
+    <Box display="flex">
+      <StyledDL
+        columnSpacing={columnSpacing}
+        component="dl"
+        container
+        displayMode={responsiveMode}
+        fontSize={fontSize}
+        gridColumns={gridProps?.columns}
+        isStacked={isStacked}
+        rowSpacing={rowSpacing}
+        sx={sx}
+      >
+        {items.map((item, idx) => {
+          const { description, title, tooltip } = item;
 
-        return (
-          <StyledDLItemSeparator key={idx}>
-            <StyledDT component="dt">{title}</StyledDT>
-            <Typography component="dd">{description}</Typography>
-          </StyledDLItemSeparator>
-        );
-      })}
-    </StyledDL>
+          return (
+            <StyledDLItemSeparator key={idx}>
+              <StyledDT component="dt">{title}</StyledDT>
+              <Typography component="dd">{description}</Typography>
+              {tooltip && (
+                <TooltipIcon
+                  status="help"
+                  sxTooltipIcon={{ px: 1, py: 0, top: -2 }}
+                  text={tooltip}
+                />
+              )}
+            </StyledDLItemSeparator>
+          );
+        })}
+      </StyledDL>
+    </Box>
   );
 };
-
-const StyledDL = styled(Grid, {
-  label: 'StyledDL',
-})<Grid2Props>(({ ...props }) => ({
-  '& dt, & dd': {
-    fontSize: props.fontSize ? props.fontSize : '0.9rem',
-  },
-}));
-
-const StyledDLItemSeparator = styled(Grid, {
-  label: 'StyledDLItemSeparator',
-})(() => ({
-  display: 'flex',
-  flexWrap: 'wrap',
-}));
-
-const StyledDT = styled(Typography, {
-  label: 'StyledDT',
-})<TypographyProps>(({ theme }) => ({
-  fontFamily: theme.font.bold,
-  marginRight: theme.spacing(0.75),
-}));

@@ -37,6 +37,8 @@ describe('Description List', () => {
 
   it('renders a column by default', () => {
     const { container } = renderWithTheme(<DescriptionList items={items} />);
-    expect(container.firstChild).toHaveStyle('flex-direction: column');
+    expect(container.firstChild?.firstChild).toHaveStyle(
+      'flex-direction: column'
+    );
   });
 });
