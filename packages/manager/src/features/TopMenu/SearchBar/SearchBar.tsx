@@ -92,7 +92,7 @@ const SearchBar = (props: SearchProps) => {
   // know if the account is large or not
   const shouldMakeRequests =
     searchActive && isLargeAccount !== undefined && !isLargeAccount;
-
+console.log(searchActive, isLargeAccount, shouldMakeRequests)
   // Data fetching
   const { data: objectStorageClusters } = useObjectStorageClusters(
     shouldMakeRequests
@@ -105,7 +105,7 @@ const SearchBar = (props: SearchProps) => {
   const { data: clusters } = useAllKubernetesClustersQuery(shouldMakeRequests);
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
   const { data: nodebalancers } = useAllNodeBalancersQuery(shouldMakeRequests);
-  const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
+  const { data: _privateImages, isFetching: imagesLoading } = useAllImagesQuery(
     {},
     { is_public: false }, // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
     shouldMakeRequests
@@ -115,7 +115,7 @@ const SearchBar = (props: SearchProps) => {
     { is_public: true },
     searchActive
   );
-  const { data: linodes, isLoading: linodesLoading } = useAllLinodesQuery(
+  const { data: linodes, isFetching: linodesLoading } = useAllLinodesQuery(
     {},
     {},
     shouldMakeRequests
@@ -287,6 +287,11 @@ const SearchBar = (props: SearchProps) => {
     return true;
   };
 
+  console.log('large acc', isLargeAccount)
+  console.log('apiSearchLoading', apiSearchLoading)
+  console.log('linodesLoading', linodesLoading)
+  console.log('imagesLoading', imagesLoading)
+  console.log(Boolean(apiError) && apiError !== 'Unauthorized')
   const finalOptions = createFinalOptions(
     isLargeAccount ? apiResults : combinedResults,
     searchText,
