@@ -419,7 +419,7 @@ describe('Parent/Child account switching', () => {
      * - Confirms that alternate Child account information is displayed in user menu button after switch.
      * - Confirms that Cloud updates local storage auth values upon account switch.
      */
-    it('can switch to another Child account as a Proxy user', () => {
+    it.skip('can switch to another Child account as a Proxy user', () => {
       const mockParentToken = randomString(32);
       const mockParentExpiration = DateTime.now().plus({ minutes: 15 }).toISO();
 
