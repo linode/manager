@@ -31,6 +31,7 @@ import {
   useLinodeCreateQueryParams,
 } from './utilities';
 import { VLAN } from './VLAN';
+import { VPC } from './VPC';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { SubmitHandler } from 'react-hook-form';
@@ -102,6 +103,7 @@ export const LinodeCreatev2 = () => {
           <Plan />
           <Details />
           <Access />
+          <VPC />
           <Firewall />
           <VLAN />
           <UserData />
