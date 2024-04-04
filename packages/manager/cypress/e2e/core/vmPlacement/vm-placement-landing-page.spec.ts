@@ -6,11 +6,13 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { mockGetPlacementGroups } from 'support/intercepts/vm-placement';
 import { ui } from 'support/ui';
 
+import type { Flags } from 'src/featureFlags';
+
 describe('VM Placement landing page', () => {
   // Mock the VM Placement Groups feature flag to be enabled for each test in this block.
   beforeEach(() => {
     mockAppendFeatureFlags({
-      placementGroups: makeFeatureFlagData({
+      placementGroups: makeFeatureFlagData<Flags['placementGroups']>({
         beta: true,
         enabled: true,
       }),
