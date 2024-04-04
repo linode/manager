@@ -1,6 +1,7 @@
-import { LinodeType } from '@linode/api-v4/lib/linodes/types';
 import * as Factory from 'factory.ts';
 
+import type { LinodeType } from '@linode/api-v4/lib/linodes/types';
+import type { PriceType } from '@linode/api-v4/src/types';
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
@@ -113,4 +114,26 @@ export const extendedTypeFactory = Factory.Sync.makeFactory<ExtendedType>({
   successor: typeFactory.build().successor,
   transfer: typeFactory.build().transfer,
   vcpus: typeFactory.build().vcpus,
+});
+
+export const nodeBalancerTypeFactory = Factory.Sync.makeFactory<PriceType>({
+  id: 'nodebalancer',
+  label: 'NodeBalancer',
+  price: {
+    hourly: 0.015,
+    monthly: 10.0,
+  },
+  region_prices: [
+    {
+      hourly: 0.018,
+      id: 'id-cgk',
+      monthly: 12.0,
+    },
+    {
+      hourly: 0.021,
+      id: 'br-gru',
+      monthly: 14.0,
+    },
+  ],
+  transfer: 0,
 });

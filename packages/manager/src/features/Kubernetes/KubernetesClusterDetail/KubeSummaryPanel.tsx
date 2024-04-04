@@ -11,7 +11,7 @@ import { Button } from 'src/components/Button/Button';
 import { Chip } from 'src/components/Chip';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Paper } from 'src/components/Paper';
-import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
+import { TagCell } from 'src/components/TagCell/TagCell';
 import KubeClusterSpecs from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
@@ -204,7 +204,7 @@ export const KubeSummaryPanel = (props: Props) => {
               </Button>
             </Grid>
             <Grid className={classes.tags}>
-              <TagsPanel
+              <TagCell
                 disabled={isClusterReadOnly}
                 tags={cluster.tags}
                 updateTags={handleUpdateTags}
