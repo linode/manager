@@ -201,14 +201,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           icon: <Linode />,
         },
         {
-          betaChipClassName: 'beta-chip-placement-groups',
-          display: 'Placement Groups',
-          hide: !flags.placementGroups?.enabled,
-          href: '/placement-groups',
-          icon: <PlacementGroups />,
-          isBeta: flags.placementGroups?.beta,
-        },
-        {
           display: 'Volumes',
           href: '/volumes',
           icon: <Volume />,
@@ -249,6 +241,14 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           display: 'Images',
           href: '/images',
           icon: <Image />,
+        },
+        {
+          betaChipClassName: 'beta-chip-placement-groups',
+          display: 'Placement Groups',
+          hide: !flags.placementGroups?.enabled,
+          href: '/placement-groups',
+          icon: <PlacementGroups />,
+          isBeta: flags.placementGroups?.beta,
         },
       ],
       [
