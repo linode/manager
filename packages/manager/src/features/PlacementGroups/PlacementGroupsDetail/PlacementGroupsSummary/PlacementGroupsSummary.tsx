@@ -5,6 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
+import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
@@ -26,7 +27,7 @@ export const PlacementGroupsSummary = (props: Props) => {
   const linodesCount = placementGroup.members.length;
 
   return (
-    <>
+    <Box sx={{ mt: 1 }}>
       {!placementGroup.is_compliant && (
         <Notice spacingBottom={20} spacingTop={24} variant="warning">
           <Typography fontFamily={theme.font.bold}>
@@ -56,6 +57,14 @@ export const PlacementGroupsSummary = (props: Props) => {
         <Grid container spacing={1}>
           <Grid md={8} sm={12}>
             <Box display="flex">
+              <DescriptionList
+                items={[
+                  {
+                    description: `${linodesCount} of ${region?.placement_group_limits.maximum_linodes_per_pg}`,
+                    title: 'Linodes',
+                  },
+                ]}
+              />
               <StyledLabel>Linodes</StyledLabel>
               <Typography sx={{ mx: 8 }}>
                 {`${linodesCount} of ${region?.placement_group_limits.maximum_linodes_per_pg}`}
@@ -87,7 +96,7 @@ export const PlacementGroupsSummary = (props: Props) => {
           </Grid>
         </Grid>
       </Paper>
-    </>
+    </Box>
   );
 };
 

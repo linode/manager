@@ -18,6 +18,10 @@ const defaultItems = [
     description: 'Another description',
     title: 'Another Title',
   },
+  {
+    description: 'Fourth description',
+    title: 'Number 4',
+  },
 ];
 
 const meta: Meta<DescriptionListProps> = {
