@@ -237,15 +237,16 @@ export const SearchLanding = (props: SearchLandingProps) => {
 
   const resultsEmpty = equals(finalResults, emptyResults);
 
-  const loading =
-    areLinodesLoading ||
-    areBucketsLoading ||
-    areClustersLoading ||
-    areDomainsLoading ||
-    areVolumesLoading ||
-    areKubernetesClustersLoading ||
-    areImagesLoading ||
-    areNodeBalancersLoading;
+  const loading = isLargeAccount
+    ? apiSearchLoading
+    : areLinodesLoading ||
+      areBucketsLoading ||
+      areClustersLoading ||
+      areDomainsLoading ||
+      areVolumesLoading ||
+      areKubernetesClustersLoading ||
+      areImagesLoading ||
+      areNodeBalancersLoading;
 
   const errorMessage = getErrorMessage();
 
