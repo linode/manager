@@ -7,6 +7,8 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { Summary } from './Summary';
 
+import type { CreateLinodeRequest } from '@linode/api-v4';
+
 describe('Linode Create v2 Summary', () => {
   it('should render a heading based on the Linode label', async () => {
     const label = 'my-linode-1';
@@ -196,5 +198,26 @@ describe('Linode Create v2 Summary', () => {
     });
 
     await findByText('$4.20/month');
+  });
+
+  it('should render a summary item for an attached VLAN', async () => {
+    const {
+      getByText,
+    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+      component: <Summary />,
+      useFormOptions: {
+        defaultValues: {
+          interfaces: [
+            {},
+            {
+              label: 'my-vlan',
+              purpose: 'vlan',
+            },
+          ],
+        },
+      },
+    });
+
+    expect(getByText('VLAN Attached')).toBeVisible();
   });
 });

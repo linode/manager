@@ -24,17 +24,19 @@ import { Distributions } from './Tabs/Distributions';
 import { Images } from './Tabs/Images';
 import { UserData } from './UserData/UserData';
 import {
+  defaultValues,
   getLinodeCreatePayload,
   getTabIndex,
   tabs,
   useLinodeCreateQueryParams,
 } from './utilities';
+import { VLAN } from './VLAN';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreatev2 = () => {
-  const methods = useForm<CreateLinodeRequest>();
+  const methods = useForm<CreateLinodeRequest>({ defaultValues });
   const history = useHistory();
 
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
@@ -101,6 +103,7 @@ export const LinodeCreatev2 = () => {
           <Details />
           <Access />
           <Firewall />
+          <VLAN />
           <UserData />
           <Addons />
           <Summary />
