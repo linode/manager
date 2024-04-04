@@ -34,7 +34,11 @@ import { confirmObjectStorage } from '../utilities';
 import { AccessKeyRegions } from './AccessKeyRegions/AccessKeyRegions';
 import { LimitedAccessControls } from './LimitedAccessControls';
 import { MODE } from './types';
-import { generateUpdatePayload, hasLabelOrRegionsChanged } from './utils';
+import {
+  generateUpdatePayload,
+  hasAccessBeenSelectedForAllBuckets,
+  hasLabelOrRegionsChanged,
+} from './utils';
 
 export interface AccessKeyDrawerProps {
   isRestrictedUser: boolean;
@@ -194,7 +198,10 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     (mode !== 'creating' &&
       objectStorageKey &&
       objectStorageKey?.regions?.length > 0 &&
-      !hasLabelOrRegionsChanged(formik.values, objectStorageKey));
+      !hasLabelOrRegionsChanged(formik.values, objectStorageKey)) ||
+    (mode === 'creating' &&
+      limitedAccessChecked &&
+      !hasAccessBeenSelectedForAllBuckets(formik.values.bucket_access));
 
   const beforeSubmit = () => {
     confirmObjectStorage<FormState>(
