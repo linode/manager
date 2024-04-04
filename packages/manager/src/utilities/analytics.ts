@@ -8,16 +8,29 @@ declare global {
 }
 
 type DTMSatellite = {
-  track: (eventName: string, eventPayload: Record<string, unknown>) => void;
+  track: (
+    eventName: string,
+    eventPayload: AnalyticsPayload | PageViewPayload
+  ) => void;
 };
+
+interface PageViewPayload {
+  url: string;
+}
+
+export interface CustomAnalyticsData {
+  isLinodePoweredOff?: boolean;
+}
 
 interface AnalyticsEvent {
   action: string;
   category: string;
-  details?: Record<string, unknown>;
+  data?: CustomAnalyticsData;
   label?: string;
   value?: number;
 }
+
+type AnalyticsPayload = Omit<AnalyticsEvent, 'data'> & { data?: string };
 
 export const sendEvent = (eventPayload: AnalyticsEvent): void => {
   if (!ADOBE_ANALYTICS_URL) {
@@ -30,7 +43,7 @@ export const sendEvent = (eventPayload: AnalyticsEvent): void => {
     window._satellite.track('custom event', {
       action: eventPayload.action.replace(/\|/g, ''),
       category: eventPayload.category.replace(/\|/g, ''),
-      details: JSON.stringify(eventPayload.details),
+      data: eventPayload.data ? JSON.stringify(eventPayload.data) : undefined,
       label: eventPayload.label?.replace(/\|/g, ''),
       value: eventPayload.value,
     });
@@ -146,12 +159,12 @@ export const sendCreateNodeBalancerEvent = (eventLabel: string): void => {
 export const sendCreateLinodeEvent = (
   eventAction: string,
   eventLabel: string,
-  details?: Record<string, unknown>
+  eventData?: CustomAnalyticsData
 ): void => {
   sendEvent({
     action: eventAction,
     category: 'Create Linode',
-    details,
+    data: eventData,
     label: eventLabel,
   });
 };
