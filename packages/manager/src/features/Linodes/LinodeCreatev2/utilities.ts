@@ -1,3 +1,4 @@
+import { useFormContext, useWatch } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -5,7 +6,12 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { utoa } from '../LinodesCreate/utilities';
 
 import type { LinodeCreateType } from '../LinodesCreate/types';
-import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
+import type {
+  CreateLinodeRequest,
+  InterfacePayload,
+  InterfacePurpose,
+} from '@linode/api-v4';
+import { useEffect } from 'react';
 
 /**
  * This interface is used to type the query params on the Linode Create flow.
@@ -129,7 +135,7 @@ export const defaultValues: CreateLinodeRequest = {
     {
       ipam_address: '',
       label: '',
-      purpose: 'public',
+      purpose: 'vpc',
     },
     {
       ipam_address: '',
@@ -139,9 +145,40 @@ export const defaultValues: CreateLinodeRequest = {
     {
       ipam_address: '',
       label: '',
-      purpose: 'vpc',
+      purpose: 'public',
     },
   ],
   region: '',
   type: '',
+};
+
+export const useInterfaceIndex = (purpose: InterfacePurpose) => {
+  const { control, setValue } = useFormContext<CreateLinodeRequest>();
+  const interfaces = useWatch({
+    control,
+    name: 'interfaces',
+  });
+  const hasPrivateIP = useWatch({
+    control,
+    name: 'private_ip',
+  });
+
+  useEffect(() => {
+    const vpcInterface = interfaces?.find((i) => i.purpose === 'vpc');
+    const vlanInterface = interfaces?.find((i) => i.purpose === 'vlan');
+    const publicInterface = interfaces?.find((i) => i.purpose === 'public');
+
+    const hasVPCSelected = Boolean(vpcInterface?.vpc_id);
+    const hasVLANSelected = Boolean(vpcInterface?.label);
+
+    if (hasVPCSelected && hasVLANSelected && hasPrivateIP) {
+      setValue('interfaces', [vpcInterface!, vlanInterface!, publicInterface!]);
+      return;
+    }
+  }, [interfaces, hasPrivateIP]);
+
+  const indexOfInterface =
+    interfaces?.findIndex((i) => i.purpose === purpose) ?? -1;
+
+  return { indexOfInterface };
 };

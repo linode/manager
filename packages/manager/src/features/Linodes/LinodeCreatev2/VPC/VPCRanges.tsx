@@ -15,7 +15,7 @@ export const VPCRanges = () => {
 
   const { append, fields, remove } = useFieldArray({
     control,
-    name: 'interfaces.2.ip_ranges',
+    name: 'interfaces.0.ip_ranges',
   });
 
   return (
@@ -24,8 +24,9 @@ export const VPCRanges = () => {
         {fields.map((field, index) => (
           <Stack alignItems="center" direction="row" key={field.id}>
             <Controller
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <TextField
+                  errorText={fieldState.error?.message}
                   hideLabel
                   label={`IP Range ${index}`}
                   onChange={field.onChange}
@@ -34,7 +35,7 @@ export const VPCRanges = () => {
                 />
               )}
               control={control}
-              name={`interfaces.2.ip_ranges.${index}`}
+              name={`interfaces.0.ip_ranges.${index}`}
             />
             <IconButton
               aria-label={`Remove IP Range ${index}`}

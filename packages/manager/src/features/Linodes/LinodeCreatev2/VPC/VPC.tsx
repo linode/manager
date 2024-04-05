@@ -46,9 +46,9 @@ export const VPC = () => {
     control,
     name: [
       'region',
-      'interfaces.2.vpc_id',
-      'interfaces.2.subnet_id',
-      'interfaces.2.ipv4.vpc',
+      'interfaces.0.vpc_id',
+      'interfaces.0.subnet_id',
+      'interfaces.0.ipv4.vpc',
     ],
   });
 
@@ -91,7 +91,7 @@ export const VPC = () => {
               />
             )}
             control={control}
-            name="interfaces.2.vpc_id"
+            name="interfaces.0.vpc_id"
           />
           {regionId && !regionSupportsVPCs && (
             <Typography>
@@ -127,7 +127,7 @@ export const VPC = () => {
                   />
                 )}
                 control={control}
-                name="interfaces.2.subnet_id"
+                name="interfaces.0.subnet_id"
               />
               {selectedSubnetId && (
                 <>
@@ -156,7 +156,7 @@ export const VPC = () => {
                       />
                     )}
                     control={control}
-                    name="interfaces.2.ipv4.vpc"
+                    name="interfaces.0.ipv4.vpc"
                   />
                   {linodeVPCIPAddress !== null &&
                     linodeVPCIPAddress !== undefined && (
@@ -172,7 +172,7 @@ export const VPC = () => {
                           />
                         )}
                         control={control}
-                        name="interfaces.2.ipv4.vpc"
+                        name="interfaces.0.ipv4.vpc"
                       />
                     )}
                   <Controller
@@ -200,7 +200,7 @@ export const VPC = () => {
                       />
                     )}
                     control={control}
-                    name="interfaces.2.ipv4.nat_1_1"
+                    name="interfaces.0.ipv4.nat_1_1"
                   />
                   <Divider />
                   <Typography variant="h3">
@@ -228,7 +228,7 @@ export const VPC = () => {
         </Stack>
       </Stack>
       <VPCCreateDrawer
-        handleSelectVPC={(vpcId) => setValue('interfaces.1.vpc_id', vpcId)}
+        handleSelectVPC={(vpcId) => setValue('interfaces.0.vpc_id', vpcId)}
         onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}
         selectedRegion={regionId}

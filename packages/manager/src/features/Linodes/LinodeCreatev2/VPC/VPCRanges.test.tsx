@@ -15,9 +15,9 @@ describe('VPCRanges', () => {
       useFormOptions: {
         defaultValues: {
           interfaces: [
-            {},
-            {},
             { ip_ranges: ['192.168.1.1/24'], subnet_id: 5, vpc_id: 4 },
+            {},
+            {},
           ],
           region: 'fake-region',
         },
@@ -36,7 +36,7 @@ describe('VPCRanges', () => {
       component: <VPCRanges />,
       useFormOptions: {
         defaultValues: {
-          interfaces: [{}, {}, { ip_ranges: [], subnet_id: 5, vpc_id: 4 }],
+          interfaces: [{ ip_ranges: [], subnet_id: 5, vpc_id: 4 }, {}, {}],
           region: 'fake-region',
         },
       },
@@ -61,9 +61,9 @@ describe('VPCRanges', () => {
       useFormOptions: {
         defaultValues: {
           interfaces: [
-            {},
-            {},
             { ip_ranges: ['192.168.1.1/24'], subnet_id: 5, vpc_id: 4 },
+            {},
+            {},
           ],
           region: 'fake-region',
         },

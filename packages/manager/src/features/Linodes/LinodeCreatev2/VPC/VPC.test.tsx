@@ -58,7 +58,7 @@ describe('VPC', () => {
       component: <VPC />,
       useFormOptions: {
         defaultValues: {
-          interfaces: [{}, {}, { vpc_id: 4 }],
+          interfaces: [{ vpc_id: 4 }, {}, {}],
           region: 'fake-region',
         },
       },
@@ -75,7 +75,7 @@ describe('VPC', () => {
       component: <VPC />,
       useFormOptions: {
         defaultValues: {
-          interfaces: [{}, {}, { subnet_id: 5, vpc_id: 4 }],
+          interfaces: [{ subnet_id: 5, vpc_id: 4 }, {}, {}],
           region: 'fake-region',
         },
       },
@@ -102,9 +102,9 @@ describe('VPC', () => {
       useFormOptions: {
         defaultValues: {
           interfaces: [
-            {},
-            {},
             { ipv4: { vpc: undefined }, subnet_id: 5, vpc_id: 4 },
+            {},
+            {},
           ],
           region: 'fake-region',
         },
@@ -125,7 +125,7 @@ describe('VPC', () => {
       component: <VPC />,
       useFormOptions: {
         defaultValues: {
-          interfaces: [{}, {}, { ipv4: { vpc: '' }, subnet_id: 5, vpc_id: 4 }],
+          interfaces: [{ ipv4: { vpc: '' }, subnet_id: 5, vpc_id: 4 }, {}, {}],
           region: 'fake-region',
         },
       },

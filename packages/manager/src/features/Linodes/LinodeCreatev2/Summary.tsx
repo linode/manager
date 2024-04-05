@@ -45,7 +45,7 @@ export const Summary = () => {
       'private_ip',
       'placement_group.id',
       'interfaces.1.label',
-      'interfaces.2.vpc_id',
+      'interfaces.0.vpc_id',
     ],
   });
 
