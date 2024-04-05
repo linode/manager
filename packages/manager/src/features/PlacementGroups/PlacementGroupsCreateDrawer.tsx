@@ -4,13 +4,13 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import { useCreatePlacementGroup } from 'src/queries/placementGroups';
@@ -147,10 +147,15 @@ export const PlacementGroupsCreateDrawer = (
         <Stack spacing={1}>
           {generalError && <Notice text={generalError} variant="error" />}
           {selectedRegionFromProps && (
-            <Typography data-testid="selected-region" py={2}>
-              <strong>Region: </strong>
-              {`${selectedRegionFromProps.label} (${selectedRegionFromProps.id})`}
-            </Typography>
+            <DescriptionList
+              items={[
+                {
+                  description: `${selectedRegionFromProps.label} (${selectedRegionFromProps.id})`,
+                  title: 'Region',
+                },
+              ]}
+              sx={{ my: 2 }}
+            />
           )}
           <Divider hidden={!selectedRegionId} />
           <TextField

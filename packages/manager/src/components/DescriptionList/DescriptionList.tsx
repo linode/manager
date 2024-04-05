@@ -13,8 +13,9 @@ import {
 } from './DescriptionList.styles';
 
 import type { Breakpoint, Theme } from '@mui/material/styles';
+import type { TooltipIconProps } from 'src/components/TooltipIcon';
 
-type BaseDescriptionListProps = {
+type DescriptionListBaseProps = {
   /**
    * The amount of space between the title and description.
    * Only for the "row" and "grid" display modes.
@@ -45,7 +46,11 @@ type BaseDescriptionListProps = {
   items: {
     description: string;
     title: string;
-    tooltip?: string;
+    tooltip?: {
+      position?: TooltipIconProps['tooltipPosition'];
+      text: TooltipIconProps['text'];
+      width?: TooltipIconProps['width'];
+    };
   }[];
   /**
    * The breakpoint at which the list will stack if the direction is row.
@@ -65,8 +70,8 @@ type BaseDescriptionListProps = {
   sx?: SxProps;
 };
 
-interface GridDescriptionListProps
-  extends Omit<BaseDescriptionListProps, 'displayMode'> {
+interface DescriptionListGridProps
+  extends Omit<DescriptionListBaseProps, 'displayMode'> {
   displayMode?: 'grid';
   /**
    * Props to pass to the Grid
@@ -79,8 +84,8 @@ interface GridDescriptionListProps
 }
 
 export type DescriptionListProps =
-  | BaseDescriptionListProps
-  | GridDescriptionListProps;
+  | DescriptionListBaseProps
+  | DescriptionListGridProps;
 
 /**
  * DescriptionList is a component that displays a list of items in a semantic description list format.
@@ -135,7 +140,9 @@ export const DescriptionList = (props: DescriptionListProps) => {
                 <TooltipIcon
                   status="help"
                   sxTooltipIcon={{ px: 1, py: 0, top: -2 }}
-                  text={tooltip}
+                  text={tooltip?.text}
+                  tooltipPosition={tooltip?.position}
+                  width={tooltip?.width}
                 />
               )}
             </StyledDLItemSeparator>

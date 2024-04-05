@@ -153,8 +153,7 @@ export const PlacementGroupsEditDrawer = (
               },
             ]}
             sx={{
-              mb: 3,
-              mt: 3,
+              my: 2,
             }}
           />
           <Divider />

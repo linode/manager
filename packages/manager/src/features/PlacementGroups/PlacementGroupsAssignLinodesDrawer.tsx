@@ -4,9 +4,9 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
+import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
-import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { TooltipIcon } from 'src/components/TooltipIcon';
@@ -95,15 +95,10 @@ export const PlacementGroupsAssignLinodesDrawer = (
     return null;
   }
 
-  const { affinity_type, label } = selectedPlacementGroup;
+  const { affinity_type, is_strict, label } = selectedPlacementGroup;
   const linodeSelectLabel = region
     ? `Linodes in ${region.label} (${region.id})`
     : 'Linodes';
-
-  const drawerTitle =
-    label && affinity_type
-      ? `Assign Linodes to Placement Group ${label} (${AFFINITY_TYPES[affinity_type]})`
-      : 'Assign Linodes to Placement Group';
 
   const handleAssignLinode = async (e: React.SyntheticEvent<HTMLElement>) => {
     e.preventDefault();
@@ -137,13 +132,26 @@ export const PlacementGroupsAssignLinodesDrawer = (
   };
 
   return (
-    <Drawer onClose={handleDrawerClose} open={open} title={drawerTitle}>
+    <Drawer
+      onClose={handleDrawerClose}
+      open={open}
+      title={`Assign Linodes to Placement Group ${label}`}
+    >
       {generalError ? <Notice text={generalError} variant="error" /> : null}
-      <Typography my={4}>
-        <strong>Affinity Enforcement: </strong>
-        {getAffinityTypeEnforcement(selectedPlacementGroup.is_strict)}
-      </Typography>
-      <Divider sx={{ mb: 4 }} />
+      <DescriptionList
+        items={[
+          {
+            description: AFFINITY_TYPES[affinity_type],
+            title: 'Affinity Type',
+          },
+          {
+            description: getAffinityTypeEnforcement(is_strict),
+            title: 'Affinity Type Enforcement',
+          },
+        ]}
+        sx={{ my: 2 }}
+      />
+      <Divider sx={{ mb: 3 }} />
       <form onSubmit={handleAssignLinode}>
         <Stack spacing={1}>
           {hasReachedCapacity && open && (
@@ -154,12 +162,6 @@ export const PlacementGroupsAssignLinodesDrawer = (
           )}
           <Typography>
             A Linode can only be assigned to a single Placement Group.
-          </Typography>
-
-          <Typography>
-            If you need to create a new Linode, go to{' '}
-            <Link to="/linodes/create">Create Linode</Link> and return to this
-            page to assign it to this Placement Group.
           </Typography>
           <Box sx={{ alignItems: 'flex-end', display: 'flex' }}>
             <LinodeSelect

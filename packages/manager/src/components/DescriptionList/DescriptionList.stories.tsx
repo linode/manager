@@ -16,7 +16,10 @@ const defaultItems = [
   },
   {
     description: 'Another description',
-    title: 'Another Title',
+    title: 'With a tooltip',
+    tooltip: {
+      text: 'This is a tooltip',
+    },
   },
   {
     description: 'Fourth description',
@@ -25,14 +28,6 @@ const defaultItems = [
 ];
 
 const meta: Meta<DescriptionListProps> = {
-  // argTypes: {
-  //   direction: {
-  //     options: ['column', 'row', 'column-reverse', 'row-reverse'],
-  //   },
-  //   stackAt: {
-  //     options: ['sm', 'md', 'lg', 'xl'],
-  //   },
-  // },
   args: {
     columnSpacing: 4,
     displayMode: 'column',

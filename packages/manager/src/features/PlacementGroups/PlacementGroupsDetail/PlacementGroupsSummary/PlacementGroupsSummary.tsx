@@ -26,7 +26,7 @@ export const PlacementGroupsSummary = (props: Props) => {
   const linodesCount = placementGroup.members.length;
 
   return (
-    <Box sx={{ mt: 1 }}>
+    <Box sx={{ mb: 3, mt: 1 }}>
       {!placementGroup.is_compliant && (
         <Notice spacingBottom={20} spacingTop={24} variant="warning">
           <Typography fontFamily={theme.font.bold}>
@@ -57,7 +57,7 @@ export const PlacementGroupsSummary = (props: Props) => {
               {
                 description: `${linodesCount} of ${region?.placement_group_limits.maximum_linodes_per_pg}`,
                 title: 'Linodes',
-                tooltip: PLACEMENT_GROUP_TOOLTIP_TEXT,
+                tooltip: { text: PLACEMENT_GROUP_TOOLTIP_TEXT, width: 275 },
               },
               {
                 description: AFFINITY_TYPES[placementGroup?.affinity_type],

@@ -106,7 +106,6 @@ export const PlacementGroupsDetail = () => {
           ],
           onEditHandlers: {
             editableTextTitle: label,
-            editableTextTitleSuffix: ` (${AFFINITY_TYPES[affinity_type]})`,
             errorText,
             onCancel: resetEditableLabel,
             onEdit: handleLabelEdit,
