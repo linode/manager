@@ -132,7 +132,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
           ? error[0].reason
           : 'An error occurred while adding the Linode to the group'
       );
-      enqueueSnackbar(error[0]?.reason, { variant: 'error' });
+      enqueueSnackbar(error, { variant: 'error' });
     }
   };
 
