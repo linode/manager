@@ -2,6 +2,7 @@ import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Stack } from 'src/components/Stack';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -66,6 +67,7 @@ export const LinodeCreatev2 = () => {
 
   return (
     <FormProvider {...methods}>
+      <DocumentTitleSegment segment="Create a Linode" />
       <LandingHeader
         docsLabel="Getting Started"
         docsLink="https://www.linode.com/docs/guides/platform/get-started/"
