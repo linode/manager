@@ -97,8 +97,13 @@ const addLeftHeader = (
     addLine('Tax ID(s):');
     doc.setFont(baseFont, 'normal');
 
+    // M3-7847 Add Akamai's Japanese QI System ID to Japanese Invoices.
     if (countryTax) {
-      addLine(`${countryTax.tax_name}: ${countryTax.tax_id}`);
+      const line =
+        country === 'JP'
+          ? `QI Registration # ${countryTax.qi_registration}`
+          : `${countryTax.tax_name}: ${countryTax.tax_id}`;
+      addLine(line);
     }
     if (provincialTax) {
       addLine(`${provincialTax.tax_name}: ${provincialTax.tax_id}`);
@@ -199,7 +204,7 @@ interface PrintInvoiceOptions {
 export const printInvoice = async (
   options: PrintInvoiceOptions
 ): Promise<PdfResult> => {
-  const { account, invoice, items, taxes, timezone, regions } = options;
+  const { account, invoice, items, regions, taxes, timezone } = options;
 
   try {
     const itemsPerPage = 12;
