@@ -49,13 +49,15 @@ export const PlacementGroupsCreateDrawer = (
     setHasRegionReachedPGCapacity,
   ] = React.useState<boolean>(false);
 
+  const [regionSelected, setRegionSelected] = React.useState<Region>();
+
   const selectedRegionFromProps = regions?.find(
     (r) => r.id === selectedRegionId
   );
 
   const handleRegionSelect = (region: Region['id']) => {
     const selectedRegion = regions?.find((r) => r.id === region);
-
+    setRegionSelected(selectedRegion);
     setFieldValue('region', region);
     setHasRegionReachedPGCapacity(
       hasRegionReachedPlacementGroupCapacity({
@@ -184,6 +186,17 @@ export const PlacementGroupsCreateDrawer = (
               regions={regions ?? []}
               selectedId={selectedRegionId ?? values.region}
             />
+          )}
+          {values.region && (
+            <Typography>
+              The maximum number of placement groups in this region is:{' '}
+              <strong>
+                {
+                  regionSelected?.placement_group_limits
+                    .maximum_pgs_per_customer
+                }
+              </strong>
+            </Typography>
           )}
           <PlacementGroupsAffinityTypeSelect
             disabledPlacementGroupCreateButton={
