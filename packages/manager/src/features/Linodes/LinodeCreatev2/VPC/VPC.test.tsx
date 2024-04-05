@@ -93,4 +93,50 @@ describe('VPC', () => {
 
     expect(getByText('Assign additional IPv4 ranges')).toBeInTheDocument();
   });
+
+  it('should check the VPC IPv4 if a "ipv4.vpc" is null/undefined', async () => {
+    const {
+      getByLabelText,
+    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+      component: <VPC />,
+      useFormOptions: {
+        defaultValues: {
+          interfaces: [
+            {},
+            {},
+            { ipv4: { vpc: undefined }, subnet_id: 5, vpc_id: 4 },
+          ],
+          region: 'fake-region',
+        },
+      },
+    });
+
+    expect(
+      getByLabelText(
+        'Auto-assign a VPC IPv4 address for this Linode in the VPC'
+      )
+    ).toBeChecked();
+  });
+
+  it('should uncheck the VPC IPv4 if a "ipv4.vpc" is a string value and show the VPC IP TextField', async () => {
+    const {
+      getByLabelText,
+    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+      component: <VPC />,
+      useFormOptions: {
+        defaultValues: {
+          interfaces: [{}, {}, { ipv4: { vpc: '' }, subnet_id: 5, vpc_id: 4 }],
+          region: 'fake-region',
+        },
+      },
+    });
+
+    expect(
+      getByLabelText(
+        'Auto-assign a VPC IPv4 address for this Linode in the VPC'
+      )
+    ).not.toBeChecked();
+
+    expect(getByLabelText('VPC IPv4 (required)')).toBeVisible();
+  });
 });
