@@ -3,17 +3,17 @@ import { WithStartAndEnd } from "src/features/Longview/request.types";
 
 export interface GlobalFilterProperties {
 
-    handleAnyFilterChange(filters:GlobalFiltersObject) : void|undefined;
+    handleAnyFilterChange(filters:FiltersObject) : void|undefined;
 
 }
 
 
-export interface GlobalFiltersObject {
+export interface FiltersObject {
     region:string;
     serviceType:string;
     resource:string[];
     interval:string;
     timeRange:WithStartAndEnd;
-    step:TimeGranularity;
-    duration:TimeDuration;    
+    step?:TimeGranularity;
+    duration?:TimeDuration;    
 }

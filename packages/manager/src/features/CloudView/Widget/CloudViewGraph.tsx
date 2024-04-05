@@ -5,7 +5,7 @@ import { CircleProgress } from "src/components/CircleProgress";
 import { CloudViewLineGraph } from "./CloudViewLineGraph";
 import { useCloudViewMetricsQuery } from "src/queries/cloudview/metrics";
 import { CloudViewMetricsRequest, Widgets } from "@linode/api-v4";
-import { GlobalFiltersObject } from "../Models/GlobalFilterProperties";
+import { FiltersObject } from "../Models/GlobalFilterProperties";
 import { getMetrics, formatPercentage } from "src/utilities/statMetrics";
 import Grid from '@mui/material/Unstable_Grid2';
 import { ZoomIcon } from "./Components/Zoomer";
@@ -13,16 +13,14 @@ import { styled, useTheme } from '@mui/material/styles';
 
 export interface CloudViewGraphProperties {
 
-    isToday: boolean;
-    ariaLabel: string;
-    errorLabel: string;
-    unit: string;
-    dashboardFilters: GlobalFiltersObject;
-    serviceType: string;
-    widget: Widgets;
+    ariaLabel?: string;
+    unit:string; // this should come from dashboard, which maintains map for service types in a separate API call
+    errorLabel?: string; //error label can come from dashboard
+    dashboardFilters: FiltersObject;    
+    widget: Widgets; //this comes from dashboard, has inbuilt metrics, agg_func,group_by,filters,gridsize etc , also helpful in publishing any changes
 
     //any change in the current widget, call and pass this function and handle in parent component
-    widgetChange: (widget: Widgets) => void;
+    handleWidgetChange: (widget: Widgets) => void;
 }
 
 
@@ -37,11 +35,13 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
 
     const [legendRows, setLegendRows] = React.useState<any[]>([]);
 
-    const [loading, setLoading] = React.useState<boolean>(true);
+    const [loading, setLoading] = React.useState<boolean>(false);
 
     const [error, setError] = React.useState<boolean>(false);
 
     const [zoomIn, setZoomIn] = React.useState<boolean>(props.widget.size == 12);
+
+    const [widget, setWidget] = React.useState<Widgets>({...props.widget}); //any change in agg_functions, step, group_by, will be published to dashboard component for save
 
     const theme = useTheme();
 
@@ -58,16 +58,23 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
         request.group_by = props.widget.group_by;
         request.instance_id = props.dashboardFilters?.resource!;
         request.metric = props.widget.metric!;
-        request.duration = props.dashboardFilters?.duration;
-        request.step = props.dashboardFilters?.step;
+        request.duration = props.dashboardFilters?.duration!;
+        request.step = props.dashboardFilters?.step!; //todo, move to widgets
         request.startTime = props.dashboardFilters?.timeRange.start;
         request.endTime = props.dashboardFilters?.timeRange.end;
         return request;
     };
 
 
-    const { data: metricsList, isLoading, isError, status } = useCloudViewMetricsQuery(props.dashboardFilters.serviceType,
+    const { data: metricsList, isLoading, status } = useCloudViewMetricsQuery(props.widget.serviceType!,
         getCloudViewMetricsRequest(), props); //fetch the metrics on any property change
+    
+    React.useEffect(() => {
+
+        //on any change in the widget object, just publish the changes to parent component using a callback function
+        props.handleWidgetChange(widget);
+
+    }, [widget])
 
     /**
      * This will be executed, each time when we receive response from metrics api 
@@ -77,6 +84,7 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
 
         let dimensions: any[] = [];
 
+        //for now we will use this guy, but once we decide how to work with coloring, it should be dynamic
         let colors: string[] = [theme.graphs.cpu.system,
         theme.graphs.cpu.user,
         theme.graphs.cpu.wait]
@@ -93,20 +101,26 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
                     data: seriesDataFormatter(graphData.values,
                         props.dashboardFilters && props.dashboardFilters.timeRange ? props.dashboardFilters.timeRange.start : 0,
                         props.dashboardFilters && props.dashboardFilters.timeRange ? props.dashboardFilters.timeRange.end : 0),
-                    label: graphData.metric.state,                    
-                    borderWidth: 3
+                    label: graphData.metric.state                                        
                 }
 
                 //construct a legend row with the dimension
                 constructLegendRow(dimension);
                 dimensions.push(dimension);
-            })
+            })            
             
             //chart dimensions
             setData(dimensions);
 
             //loading off
-            setLoading(false);
+            setLoading(false);            
+        }
+
+        if(status == 'error') {
+            setError((error) => true);
+        } else {
+            //set error false
+            setError((error) => false);
         }
 
     }, [status, metricsList])
@@ -114,10 +128,6 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
 
     if (isLoading) {
         return (<CircleProgress />);
-    }
-
-    if (isError) {
-        setError((error) => true);
     }
 
     const constructLegendRow = (dimension: any) => {
@@ -151,8 +161,9 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
             <StyledZoomIcon zoomIn={zoomIn} handleZoomToggle={handleZoomToggle}/>            
             <CloudViewLineGraph
                 data={data}
-                ariaLabel={props.ariaLabel}
-                error={error ? props.errorLabel : undefined}
+                ariaLabel={props.ariaLabel?props.ariaLabel:''}
+                error={error ? (props.errorLabel 
+                    && props.errorLabel.length>0?props.errorLabel:'Error while rendering widget') : undefined}
                 loading={loading}
                 nativeLegend={true}
                 showToday={getShowToday()}

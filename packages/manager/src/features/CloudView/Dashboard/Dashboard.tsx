@@ -4,7 +4,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useCloudViewDashboardByIdQuery } from 'src/queries/cloudview/dashboards';
 import CloudViewIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
-import { GlobalFiltersObject } from '../Models/GlobalFilterProperties';
+import { FiltersObject } from '../Models/GlobalFilterProperties';
 import { CloudViewGraph, CloudViewGraphProperties } from '../Widget/CloudViewGraph';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
@@ -13,7 +13,7 @@ import { Dashboard, Widgets } from '@linode/api-v4';
 
 export interface DashboardProperties {    
     dashbaord:Dashboard; // this will be done in upcoming sprint
-    dashboardFilters:GlobalFiltersObject;
+    dashboardFilters:FiltersObject;
 }
 
 export const CloudPulseDashboard = (props: DashboardProperties) => { //todo define a proper properties class
@@ -63,7 +63,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => { //todo defi
                 cloudViewGraphProperties.dashboardFilters?.region &&
                 cloudViewGraphProperties.dashboardFilters?.resource) {
                 return dashboard.widgets.map((element, index) => {
-                    return <CloudViewGraph key={index} {...getCloudViewGraphProperties(element)} />
+                    return <CloudViewGraph key={index} {...getCloudViewGraphProperties(element)} handleWidgetChange={(widget:Widgets) => {}}/>
                 });
             } else {
                 return (<StyledPlaceholder

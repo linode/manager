@@ -13,7 +13,7 @@ import {
 } from '../shared/ResourceSelect';
 import { CloudViewServiceSelect } from '../shared/ServicetypeSelect';
 import { CloudViewTimeRangeSelect } from '../shared/TimeRangeSelect';
-import { GlobalFilterProperties, GlobalFiltersObject } from '../Models/GlobalFilterProperties';
+import { GlobalFilterProperties, FiltersObject } from '../Models/GlobalFilterProperties';
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
 
@@ -66,7 +66,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
 
   const emitGlobalFilterChange = () => {
 
-    let globalFilters = {} as GlobalFiltersObject;
+    let globalFilters = {} as FiltersObject;
     globalFilters.region = selectedRegion!;
     globalFilters.interval = selectedInterval!
     globalFilters.resource = selectedResourceId

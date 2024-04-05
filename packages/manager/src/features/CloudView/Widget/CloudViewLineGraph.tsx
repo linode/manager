@@ -76,6 +76,8 @@ export const CloudViewLineGraph = React.memo((props: CloudViewLineGraphProps) =>
 });
 
 export const isDataEmpty = (data: DataSet[]) => {
+    console.log("printing");
+    console.log(data);
     return data.every(
         (thisSeries) =>
             thisSeries.data.length === 0 ||
