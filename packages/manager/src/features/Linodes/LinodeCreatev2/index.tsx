@@ -31,7 +31,7 @@ import {
   useLinodeCreateQueryParams,
 } from './utilities';
 import { VLAN } from './VLAN';
-import { VPC } from './VPC';
+import { VPC } from './VPC/VPC';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { SubmitHandler } from 'react-hook-form';

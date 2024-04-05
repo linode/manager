@@ -1,18 +1,11 @@
-import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react';
-import {
-  Controller,
-  useFieldArray,
-  useFormContext,
-  useWatch,
-} from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { IconButton } from 'src/components/IconButton';
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import { Notice } from 'src/components/Notice/Notice';
@@ -23,9 +16,13 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { VPCSelect } from 'src/components/VPCSelect';
 import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useVPCQuery } from 'src/queries/vpcs';
+import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
-import { VPCCreateDrawer } from '../LinodesCreate/VPCCreateDrawer';
+import { REGION_CAVEAT_HELPER_TEXT } from '../../LinodesCreate/constants';
+import { VPCCreateDrawer } from '../../LinodesCreate/VPCCreateDrawer';
+import { VPCRanges } from './VPCRanges';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
@@ -37,6 +34,8 @@ export const VPC = () => {
     formState,
     setValue,
   } = useFormContext<CreateLinodeRequest>();
+
+  const { data: regions } = useRegionsQuery();
 
   const [
     regionId,
@@ -52,6 +51,12 @@ export const VPC = () => {
       'interfaces.2.ipv4.vpc',
     ],
   });
+
+  const regionSupportsVPCs = doesRegionSupportFeature(
+    regionId,
+    regions ?? [],
+    'VPCs'
+  );
 
   const { data: selectedVPC } = useVPCQuery(
     selectedVPCId ?? -1,
@@ -72,6 +77,10 @@ export const VPC = () => {
           <Controller
             render={({ field, fieldState }) => (
               <VPCSelect
+                textFieldProps={{
+                  tooltipText: REGION_CAVEAT_HELPER_TEXT,
+                }}
+                disabled={!regionSupportsVPCs}
                 errorText={fieldState.error?.message}
                 filter={{ region: regionId }}
                 label="Assign VPC"
@@ -84,11 +93,18 @@ export const VPC = () => {
             control={control}
             name="interfaces.2.vpc_id"
           />
-          <Box>
-            <LinkButton onClick={() => setIsCreateDrawerOpen(true)}>
-              Create VPC
-            </LinkButton>
-          </Box>
+          {regionId && !regionSupportsVPCs && (
+            <Typography>
+              VPC is not available in the selected region.
+            </Typography>
+          )}
+          {regionId && regionSupportsVPCs && (
+            <Box>
+              <LinkButton onClick={() => setIsCreateDrawerOpen(true)}>
+                Create VPC
+              </LinkButton>
+            </Box>
+          )}
           {selectedVPCId && (
             <>
               <Controller
@@ -218,47 +234,5 @@ export const VPC = () => {
         selectedRegion={regionId}
       />
     </Paper>
-  );
-};
-
-const VPCRanges = () => {
-  const { control } = useFormContext<CreateLinodeRequest>();
-
-  const { append, fields, remove } = useFieldArray({
-    control,
-    name: 'interfaces.2.ip_ranges',
-  });
-
-  return (
-    <Stack spacing={1}>
-      <Stack>
-        {fields.map((field, index) => (
-          <Stack alignItems="center" direction="row" key={field.id}>
-            <Controller
-              render={({ field }) => (
-                <TextField
-                  hideLabel
-                  label={`IP Range ${index}`}
-                  onChange={field.onChange}
-                  placeholder="10.0.0.0/24"
-                  value={field.value}
-                />
-              )}
-              control={control}
-              name={`interfaces.2.ip_ranges.${index}`}
-            />
-            <IconButton
-              aria-label={`Remove IP Range ${index}`}
-              onClick={() => remove(index)}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Stack>
-        ))}
-      </Stack>
-      <Box>
-        <LinkButton onClick={() => append('')}>Add IPv4 Range</LinkButton>
-      </Box>
-    </Stack>
   );
 };
