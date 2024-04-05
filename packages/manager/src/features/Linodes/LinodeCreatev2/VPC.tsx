@@ -215,6 +215,7 @@ export const VPC = () => {
         handleSelectVPC={(vpcId) => setValue('interfaces.1.vpc_id', vpcId)}
         onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}
+        selectedRegion={regionId}
       />
     </Paper>
   );
