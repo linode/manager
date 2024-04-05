@@ -11,6 +11,7 @@ interface ResourcesMoreLinkProps extends LinkProps {
 
 const StyledMoreLink = styled(Link)<ResourcesMoreLinkProps>(({ ...props }) => ({
   alignItems: props.external ? 'baseline' : 'center',
+  textWrap: 'balance',
 }));
 
 export const ResourcesMoreLink = (props: ResourcesMoreLinkProps) => {
