@@ -10,6 +10,11 @@ interface ResourcesMoreLinkProps extends LinkProps {
 }
 
 const StyledMoreLink = styled(Link)<ResourcesMoreLinkProps>(({ ...props }) => ({
+  '& svg': {
+    // nifty trick to avoid the icon from wrapping by itself after the last word
+    marginLeft: -18,
+    transform: 'translateX(18px)',
+  },
   alignItems: props.external ? 'baseline' : 'center',
 }));
 
