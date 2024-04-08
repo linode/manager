@@ -55,12 +55,14 @@ export const DeleteLinodeDialog = (props: Props) => {
     // @TODO VPC: potentially revisit using the linodeEventsHandler in linode/events.ts to invalidate queries rather than here
     // See PR #9814 for more details
     if (vpcIds.length > 0) {
-      queryClient.invalidateQueries(vpcQueries.all);
+      queryClient.invalidateQueries(vpcQueries.all.queryKey);
       queryClient.invalidateQueries(vpcQueries.paginated._def);
       // invalidate data for specific vpcs this linode is assigned to
       vpcIds.forEach((vpcId) => {
         queryClient.invalidateQueries(vpcQueries.vpc(vpcId).queryKey);
-        queryClient.invalidateQueries(vpcQueries.vpc(vpcId)._ctx.subnets);
+        queryClient.invalidateQueries(
+          vpcQueries.vpc(vpcId)._ctx.subnets.queryKey
+        );
       });
     }
     onClose();

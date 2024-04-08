@@ -397,12 +397,14 @@ export const LinodeConfigDialog = (props: Props) => {
       }
 
       // Ensure VPC query data is up-to-date
-      if (
-        configData.interfaces?.some(
-          (thisInterface) => thisInterface.purpose === 'vpc'
-        )
-      ) {
-        queryClient.invalidateQueries(vpcQueries._def);
+      const vpcId = configData.interfaces?.find(
+        (thisInterface) => thisInterface.purpose === 'vpc'
+      )?.vpc_id;
+
+      if (vpcId) {
+        queryClient.invalidateQueries(vpcQueries.all.queryKey);
+        queryClient.invalidateQueries(vpcQueries.paginated._def);
+        queryClient.invalidateQueries(vpcQueries.vpc(vpcId).queryKey);
       }
 
       enqueueSnackbar(
