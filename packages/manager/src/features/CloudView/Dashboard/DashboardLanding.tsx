@@ -62,7 +62,9 @@ export const DashBoardLanding = () => {
     // todo, whatever when a new dashboard is loaded
   };
 
-  const dashbaordChange = (dashboard: Dashboard) => {};
+  const dashbaordChange = (dashboard: Dashboard) => {
+    //todo, whenever a change in dashboard happens
+  };
 
   return (
     <Paper>

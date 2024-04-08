@@ -8,9 +8,9 @@ import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
 import { FiltersObject } from '../Models/GlobalFilterProperties';
 import {
-  CloudViewGraph,
-  CloudViewGraphProperties,
-} from '../Widget/CloudViewGraph';
+  CloudViewWidget,
+  CloudViewWidgetProperties,
+} from '../Widget/CloudViewWidget';
 
 export interface DashboardProperties {
   dashbaord: Dashboard; // this will be done in upcoming sprint
@@ -26,7 +26,9 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   const [
     cloudViewGraphProperties,
     setCloudViewGraphProperties,
-  ] = React.useState<CloudViewGraphProperties>({} as CloudViewGraphProperties);
+  ] = React.useState<CloudViewWidgetProperties>(
+    {} as CloudViewWidgetProperties
+  );
 
   React.useEffect(() => {
     // set as dashboard filter
@@ -34,10 +36,11 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       ...cloudViewGraphProperties,
       dashboardFilters: props.dashboardFilters,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.dashboardFilters]); // execute every time when there is dashboardFilters change
 
   const getCloudViewGraphProperties = (widget: Widgets) => {
-    const graphProp: CloudViewGraphProperties = {} as CloudViewGraphProperties;
+    const graphProp: CloudViewWidgetProperties = {} as CloudViewWidgetProperties;
     graphProp.widget = { ...widget };
     graphProp.dashboardFilters = props.dashboardFilters;
     graphProp.unit = '%';
@@ -60,7 +63,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       ) {
         return props.dashbaord.widgets.map((element, index) => {
           return (
-            <CloudViewGraph
+            <CloudViewWidget
               key={index}
               {...getCloudViewGraphProperties(element)}
               handleWidgetChange={handleWidgetChange}
