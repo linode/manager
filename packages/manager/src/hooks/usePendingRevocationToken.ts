@@ -6,8 +6,6 @@ import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { useProfile } from 'src/queries/profile';
 import { usePersonalAccessTokensQuery } from 'src/queries/tokens';
 
-import { useRestrictedGlobalGrantCheck } from './useRestrictedGlobalGrantCheck';
-
 /**
  * Custom hook to manage the ID of a personal access token pending revocation.
  *
@@ -28,14 +26,8 @@ export const usePendingRevocationToken = () => {
   const { data: profile } = useProfile();
   const currentTokenWithBearer = useCurrentToken() ?? '';
 
-  // Only run query on proxy and parent accounts with child_account_access.
-  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'child_account_access',
-  });
-  const isQueryEnabled = Boolean(
-    (profile?.user_type === 'parent' && !isChildAccountAccessRestricted) ||
-      profile?.user_type === 'proxy'
-  );
+  // Only run query on proxy accounts.
+  const isQueryEnabled = Boolean(profile?.user_type === 'proxy');
 
   const { data: personalAccessTokens } = usePersonalAccessTokensQuery(
     {},
