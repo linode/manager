@@ -3,9 +3,8 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import { useVolumeTypesQuery } from 'src/queries/types';
-import { getDynamicVolumePrice } from 'src/utilities/pricing/dynamicVolumePrice';
-
+import { useVolumeTypesQuery } from 'src/queries/volumes';
+import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 interface Props {
   currentSize: number;
   regionId: string;
@@ -16,7 +15,7 @@ export const PricePanel = ({ currentSize, regionId, value }: Props) => {
   const { data: types } = useVolumeTypesQuery();
 
   const getPrice = (size: number) => {
-    return getDynamicVolumePrice({
+    return getDCSpecificPriceByType({
       regionId,
       size,
       type: types?.[0],

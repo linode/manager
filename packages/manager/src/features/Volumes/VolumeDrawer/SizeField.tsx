@@ -9,10 +9,10 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
-import { getDynamicVolumePrice } from 'src/utilities/pricing/dynamicVolumePrice';
+import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 
 import { SIZE_FIELD_WIDTH } from '../VolumeCreate';
-import { useVolumeTypesQuery } from 'src/queries/types';
+import { useVolumeTypesQuery } from 'src/queries/volumes';
 
 interface Props {
   disabled?: boolean;
@@ -68,7 +68,7 @@ export const SizeField = (props: Props) => {
     ? `This volume can range from ${resize} GB to ${MAX_VOLUME_SIZE} GB in size.`
     : undefined;
 
-  const price = getDynamicVolumePrice({
+  const price = getDCSpecificPriceByType({
     regionId,
     size: value,
     type: types?.[0],

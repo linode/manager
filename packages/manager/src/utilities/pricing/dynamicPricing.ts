@@ -107,6 +107,7 @@ export const getDCSpecificPriceByType = ({
       return region_price.id === regionId;
     })?.monthly ?? type.price.monthly;
 
+  // If pricing is determined by size of the entity
   if (size && price) {
     return (size * price).toFixed(2);
   }

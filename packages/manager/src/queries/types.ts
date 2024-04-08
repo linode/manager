@@ -1,10 +1,4 @@
-import {
-  LinodeType,
-  VolumeType,
-  getLinodeTypes,
-  getType,
-  getVolumeTypes,
-} from '@linode/api-v4';
+import { LinodeType, getLinodeTypes, getType } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import {
   QueryClient,
@@ -62,17 +56,3 @@ export const useSpecificTypes = (types: string[], enabled = true) => {
 export const useTypeQuery = (type: string, enabled = true) => {
   return useSpecificTypes([type], enabled)[0];
 };
-
-const getAllVolumeTypes = () =>
-  getAll<VolumeType>((params) => getVolumeTypes(params))().then(
-    (data) => data.data
-  );
-
-export const useVolumeTypesQuery = () =>
-  useQuery<VolumeType[], APIError[]>(
-    [`${queryKey}-volumes`],
-    getAllVolumeTypes,
-    {
-      ...queryPresets.oneTimeFetch,
-    }
-  );
