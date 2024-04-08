@@ -33,43 +33,49 @@ const wrapper = ({ children }: any) => (
   </switchAccountSessionContext.Provider>
 );
 
+// Utility function to render the hook with the wrapper and initialProps
+const renderUseIsParentTokenExpiredHook = ({
+  isProxyUser,
+}: {
+  isProxyUser: boolean;
+}) =>
+  renderHook(() => useIsParentTokenExpired({ isProxyUser }), {
+    initialProps: isProxyUser,
+    wrapper,
+  });
+
 describe('useIsParentTokenExpired', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    queryMocks.isParentTokenValid.mockReturnValue(true);
   });
 
   it('should not mark parent token as expired if it is valid', () => {
-    queryMocks.isParentTokenValid.mockReturnValue(true);
-    const { result } = renderHook(
-      () => useIsParentTokenExpired({ isProxyUser: true }),
-      { wrapper }
-    );
+    const { result } = renderUseIsParentTokenExpiredHook({
+      isProxyUser: true,
+    });
 
     expect(result.current.isParentTokenExpired).toBe(false);
   });
 
   it('should mark parent token as expired if it is invalid', () => {
     queryMocks.isParentTokenValid.mockReturnValue(false);
-    const { result } = renderHook(
-      () => useIsParentTokenExpired({ isProxyUser: true }),
-      { wrapper }
-    );
+    const { result } = renderUseIsParentTokenExpiredHook({
+      isProxyUser: true,
+    });
 
     expect(result.current.isParentTokenExpired).toBe(true);
   });
 
   it('should not update the session context when isParentTokenExpired is false', () => {
-    queryMocks.isParentTokenValid.mockReturnValue(true);
-    renderHook(() => useIsParentTokenExpired({ isProxyUser: true }), {
-      wrapper,
+    renderUseIsParentTokenExpiredHook({
+      isProxyUser: true,
     });
 
     expect(mockUpdateState).not.toHaveBeenCalled();
   });
 
   it('should react to isProxyUser changes', () => {
-    queryMocks.isParentTokenValid.mockReturnValue(false);
-
     const { rerender, result } = renderHook(
       ({ isProxyUser }) => useIsParentTokenExpired({ isProxyUser }),
       {
@@ -81,7 +87,8 @@ describe('useIsParentTokenExpired', () => {
     // Initially, with isProxyUser false, token should not be marked as expired
     expect(result.current.isParentTokenExpired).toBe(false);
 
-    // Rerender with isProxyUser true
+    // Change mock value, rerender with isProxyUser true
+    queryMocks.isParentTokenValid.mockReturnValue(false);
     rerender({ isProxyUser: true });
 
     // Now, if the token is invalid, isParentTokenExpired should be true
