@@ -2,6 +2,7 @@ import { createPlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Divider } from 'src/components/Divider';
@@ -49,15 +50,10 @@ export const PlacementGroupsCreateDrawer = (
     setHasRegionReachedPGCapacity,
   ] = React.useState<boolean>(false);
 
-  const [regionSelected, setRegionSelected] = React.useState<Region>();
-
-  const selectedRegionFromProps = regions?.find(
-    (r) => r.id === selectedRegionId
-  );
+  const location = useLocation();
+  const displayRegionHeaderText = location.pathname.includes('/linodes/create');
 
   const handleRegionSelect = (region: Region['id']) => {
-    const selectedRegion = regions?.find((r) => r.id === region);
-    setRegionSelected(selectedRegion);
     setFieldValue('region', region);
     setHasRegionReachedPGCapacity(
       hasRegionReachedPlacementGroupCapacity({
@@ -129,6 +125,13 @@ export const PlacementGroupsCreateDrawer = (
 
   const generalError = error?.find((e) => !e.field)?.reason;
 
+  const selectedRegion = React.useMemo(
+    () => regions?.find((region) => region.id == values.region),
+    [regions, values.region]
+  );
+
+  const pgRegionLimitHelperText = `The maximum number of placement groups in this region is: ${selectedRegion?.placement_group_limits.maximum_pgs_per_customer}`;
+
   return (
     <Drawer
       onClose={handleDrawerClose}
@@ -148,10 +151,10 @@ export const PlacementGroupsCreateDrawer = (
       <form onSubmit={handleSubmit}>
         <Stack spacing={1}>
           {generalError && <Notice text={generalError} variant="error" />}
-          {selectedRegionFromProps && (
+          {selectedRegion && displayRegionHeaderText && (
             <Typography data-testid="selected-region" py={2}>
               <strong>Region: </strong>
-              {`${selectedRegionFromProps.label} (${selectedRegionFromProps.id})`}
+              {`${selectedRegion.label} (${selectedRegion.id})`}
             </Typography>
           )}
           <Divider hidden={!selectedRegionId} />
@@ -182,21 +185,11 @@ export const PlacementGroupsCreateDrawer = (
                 handleRegionSelect(selection);
               }}
               currentCapability="Placement Group"
-              helperText="Only regions supporting Placement Groups are listed."
+              helperText={values.region && pgRegionLimitHelperText}
               regions={regions ?? []}
               selectedId={selectedRegionId ?? values.region}
+              tooltipText="Only regions supporting Placement Groups are listed."
             />
-          )}
-          {values.region && (
-            <Typography>
-              The maximum number of placement groups in this region is:{' '}
-              <strong>
-                {
-                  regionSelected?.placement_group_limits
-                    .maximum_pgs_per_customer
-                }
-              </strong>
-            </Typography>
           )}
           <PlacementGroupsAffinityTypeSelect
             disabledPlacementGroupCreateButton={
