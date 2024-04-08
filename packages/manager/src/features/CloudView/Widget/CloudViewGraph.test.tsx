@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { fireEvent, screen } from '@testing-library/react';
 import { CloudViewGraph } from './CloudViewGraph';
 import { FiltersObject } from '../Models/GlobalFilterProperties';
 import { TimeDuration, TimeGranularity, Widgets } from '@linode/api-v4';

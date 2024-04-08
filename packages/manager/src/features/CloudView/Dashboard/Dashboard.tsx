@@ -1,8 +1,5 @@
 import * as React from 'react';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import { useCloudViewDashboardByIdQuery } from 'src/queries/cloudview/dashboards';
 import CloudViewIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
 import { FiltersObject } from '../Models/GlobalFilterProperties';
 import { CloudViewGraph, CloudViewGraphProperties } from '../Widget/CloudViewGraph';
@@ -14,17 +11,15 @@ import { Dashboard, Widgets } from '@linode/api-v4';
 export interface DashboardProperties {    
     dashbaord:Dashboard; // this will be done in upcoming sprint
     dashboardFilters:FiltersObject;
+
+    //on any change in dashboard
+    onDashboardChange:(dashboard:Dashboard) => void;
 }
 
 export const CloudPulseDashboard = (props: DashboardProperties) => { //todo define a proper properties class
 
 
     const [cloudViewGraphProperties, setCloudViewGraphProperties] = React.useState<CloudViewGraphProperties>({} as CloudViewGraphProperties);
-
-    var dashboardId = 1    
-
-    const { data: dashboard, isError: dashboardLoadError,
-        isLoading: dashboardLoadLoding } = useCloudViewDashboardByIdQuery(dashboardId);
 
     React.useEffect(() => {
 
@@ -33,21 +28,12 @@ export const CloudPulseDashboard = (props: DashboardProperties) => { //todo defi
 
     }, [props.dashboardFilters]) //execute every time when there is dashboardFilters change
 
-    if (dashboardLoadLoding) {
-        return <CircleProgress />
-    }
-
-    if (dashboardLoadError) {
-        return <ErrorState errorText={'Error while fetching dashboards with id ' + 1 + ', please retry.'}></ErrorState>
-    }
-
     const getCloudViewGraphProperties = (widget:Widgets) => {
 
         let graphProp:CloudViewGraphProperties = {} as CloudViewGraphProperties;
         graphProp.widget = {...widget};
         graphProp.dashboardFilters = props.dashboardFilters;
-        graphProp.unit = "%";
-        graphProp.serviceType = widget.serviceType!;
+        graphProp.unit = "%";        
         graphProp.ariaLabel = widget.label;
         graphProp.errorLabel = 'Error While loading data'     
 
@@ -57,12 +43,12 @@ export const CloudPulseDashboard = (props: DashboardProperties) => { //todo defi
 
     const RenderWidgets = () => {
 
-        if (dashboard != undefined) {
+        if (props.dashbaord != undefined) {
 
             if (cloudViewGraphProperties.dashboardFilters?.serviceType &&
                 cloudViewGraphProperties.dashboardFilters?.region &&
                 cloudViewGraphProperties.dashboardFilters?.resource) {
-                return dashboard.widgets.map((element, index) => {
+                return props.dashbaord.widgets.map((element, index) => {
                     return <CloudViewGraph key={index} {...getCloudViewGraphProperties(element)} handleWidgetChange={(widget:Widgets) => {}}/>
                 });
             } else {

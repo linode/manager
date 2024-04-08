@@ -18,7 +18,7 @@ export const CloudViewTabs = React.memo((props: Props) => {
   const tabs = [
     {
       routeName: `${props.match.url}/home`,
-      title: 'Home',
+      title: 'Dashboards',
     },
     {
       routeName: `${props.match.url}/feature/dashboards`,
@@ -57,7 +57,7 @@ export const CloudViewTabs = React.memo((props: Props) => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <Overview/>
+              <DashBoardLanding/>
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <DashBoardLanding  />

@@ -33,9 +33,7 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
 
     const [data, setData] = React.useState<Array<any>>([]);
 
-    const [legendRows, setLegendRows] = React.useState<any[]>([]);
-
-    const [loading, setLoading] = React.useState<boolean>(false);
+    const [legendRows, setLegendRows] = React.useState<any[]>([]);    
 
     const [error, setError] = React.useState<boolean>(false);
 
@@ -110,10 +108,7 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
             })            
             
             //chart dimensions
-            setData(dimensions);
-
-            //loading off
-            setLoading(false);            
+            setData(dimensions);                      
         }
 
         if(status == 'error') {
@@ -164,7 +159,7 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
                 ariaLabel={props.ariaLabel?props.ariaLabel:''}
                 error={error ? (props.errorLabel 
                     && props.errorLabel.length>0?props.errorLabel:'Error while rendering widget') : undefined}
-                loading={loading}
+                loading={isLoading}
                 nativeLegend={true}
                 showToday={getShowToday()}
                 subtitle={props.unit}
