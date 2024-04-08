@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-04-05] - v1.116.1
+
+### Fixed:
+
+- Search indefinitely loading on large accounts ([#10351](https://github.com/linode/manager/pull/10351))
+
 ## [2024-04-01] - v1.116.0
 
 ### Changed:
