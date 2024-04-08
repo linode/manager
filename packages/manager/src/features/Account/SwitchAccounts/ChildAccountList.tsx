@@ -39,7 +39,7 @@ export const ChildAccountList = React.memo(
       hasNextPage,
       isError,
       isFetchingNextPage,
-      isLoading,
+      isInitialLoading,
       refetch: refetchChildAccounts,
     } = useChildAccountsInfiniteQuery({
       headers:
@@ -51,7 +51,7 @@ export const ChildAccountList = React.memo(
     });
     const childAccounts = data?.pages.flatMap((page) => page.data);
 
-    if (isLoading) {
+    if (isInitialLoading) {
       return (
         <Box display="flex" justifyContent="center">
           <CircleProgress mini size={70} />
@@ -59,7 +59,7 @@ export const ChildAccountList = React.memo(
       );
     }
 
-    if (childAccounts?.length === 0) {
+    if (childAccounts?.length === 0 || !childAccounts) {
       return (
         <Notice variant="info">There are no indirect customer accounts.</Notice>
       );

@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
-import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
+import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 
 const queryMocks = vi.hoisted(() => ({
   isParentTokenValid: vi.fn().mockReturnValue({}),
@@ -31,7 +31,7 @@ const wrapper = ({ children }: any) => (
   </switchAccountSessionContext.Provider>
 );
 
-describe('useParentTokenManagement', () => {
+describe('useIsParentTokenExpired', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -39,7 +39,7 @@ describe('useParentTokenManagement', () => {
   it('should not mark parent token as expired if it is valid', async () => {
     queryMocks.isParentTokenValid.mockReturnValue(true);
     const { result } = renderHook(
-      () => useParentTokenManagement({ isProxyUser: true }),
+      () => useIsParentTokenExpired({ isProxyUser: true }),
       { wrapper }
     );
 
@@ -49,7 +49,7 @@ describe('useParentTokenManagement', () => {
   it('should mark parent token as expired if it is invalid', async () => {
     queryMocks.isParentTokenValid.mockReturnValue(false);
     const { result } = renderHook(
-      () => useParentTokenManagement({ isProxyUser: true }),
+      () => useIsParentTokenExpired({ isProxyUser: true }),
       { wrapper }
     );
 
@@ -58,7 +58,7 @@ describe('useParentTokenManagement', () => {
 
   it('should not update the session context when isParentTokenExpired is false', async () => {
     queryMocks.isParentTokenValid.mockReturnValue(true);
-    renderHook(() => useParentTokenManagement({ isProxyUser: true }), {
+    renderHook(() => useIsParentTokenExpired({ isProxyUser: true }), {
       wrapper,
     });
 

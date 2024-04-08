@@ -1,7 +1,7 @@
 import { Token } from '@linode/api-v4';
 import React from 'react';
 
-import { getPersonalAccessTokenForRevocation } from 'src/features/Account/utils';
+import { getPersonalAccessTokenForRevocation } from 'src/features/Account/SwitchAccounts/utils';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { usePersonalAccessTokensQuery } from 'src/queries/tokens';
 
