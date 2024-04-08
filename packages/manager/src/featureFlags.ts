@@ -42,6 +42,12 @@ interface PlacementGroupsFlag {
   enabled: boolean;
 }
 
+interface GeckoFlag {
+  beta: boolean;
+  enabled: boolean;
+  ga: boolean;
+}
+
 type OneClickApp = Record<string, string>;
 
 export interface Flags {
@@ -54,6 +60,7 @@ export interface Flags {
   disableLargestGbPlans: boolean;
   firewallNodebalancer: boolean;
   gecko: boolean;
+  gecko2: GeckoFlag;
   ipv6Sharing: boolean;
   linodeCloneUiChanges: boolean;
   linodeCreateRefactor: boolean;
