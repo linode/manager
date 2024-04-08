@@ -4,6 +4,7 @@ import {
   ObjectStorageKey,
   ObjectStorageKeyRequest,
   Scope,
+  UpdateObjectStorageKeyRequest,
 } from '@linode/api-v4/lib/object-storage';
 import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
 import { Formik, FormikProps } from 'formik';
@@ -38,7 +39,7 @@ export interface AccessKeyDrawerProps {
   objectStorageKey?: ObjectStorageKey;
   onClose: () => void;
   onSubmit: (
-    values: ObjectStorageKeyRequest,
+    values: ObjectStorageKeyRequest | UpdateObjectStorageKeyRequest,
     formikProps: FormikProps<ObjectStorageKeyRequest>
   ) => void;
   open: boolean;
@@ -162,16 +163,29 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     // don't include any bucket_access information in the payload.
 
     // If any/all values are 'none', don't include them in the response.
-    const access = values.bucket_access ?? [];
-    const payload = limitedAccessChecked
-      ? {
-          ...values,
-          bucket_access: access.filter(
-            (thisAccess) => thisAccess.permissions !== 'none'
-          ),
-        }
-      : { ...values, bucket_access: null };
+    let payload = {};
+    if (
+      mode === 'creating' &&
+      'bucket_access' in values &&
+      values.bucket_access !== null &&
+      limitedAccessChecked
+    ) {
+      const access = values?.bucket_access ?? [];
+      payload = {
+        ...values,
+        bucket_access: access.filter(
+          (thisAccess) => thisAccess.permissions !== 'none'
+        ),
+      };
+    } else {
+      payload = { ...values, bucket_access: null };
+    }
 
+    if (mode === 'editing') {
+      payload = {
+        label: values.label,
+      };
+    }
     return onSubmit(payload, formikProps);
   };
 
