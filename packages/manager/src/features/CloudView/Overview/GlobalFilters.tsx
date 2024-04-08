@@ -5,6 +5,10 @@ import * as React from 'react';
 
 import { WithStartAndEnd } from 'src/features/Longview/request.types';
 
+import {
+  FiltersObject,
+  GlobalFilterProperties,
+} from '../Models/GlobalFilterProperties';
 import { CloudViewIntervalSelect } from '../shared/IntervalSelect';
 import { CloudViewRegionSelect } from '../shared/RegionSelect';
 import {
@@ -13,10 +17,8 @@ import {
 } from '../shared/ResourceSelect';
 import { CloudViewServiceSelect } from '../shared/ServicetypeSelect';
 import { CloudViewTimeRangeSelect } from '../shared/TimeRangeSelect';
-import { GlobalFilterProperties, FiltersObject } from '../Models/GlobalFilterProperties';
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
-
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     end: 0,
     start: 0,
@@ -34,10 +36,14 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   ] = React.useState<CloudViewResourceTypes>();
 
   React.useEffect(() => {
-
     emitGlobalFilterChange();
-
-  }, [time, selectedInterval, selectedRegion, selectedResourceId, selectedService]) //if anything changes, emit an event to parent component
+  }, [
+    time,
+    selectedInterval,
+    selectedRegion,
+    selectedResourceId,
+    selectedService,
+  ]); // if anything changes, emit an event to parent component
 
   const handleTimeRangeChange = (start: number, end: number) => {
     console.log('TimeRange: ', start, end);
@@ -65,64 +71,57 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   };
 
   const emitGlobalFilterChange = () => {
-
-    let globalFilters = {} as FiltersObject;
+    const globalFilters = {} as FiltersObject;
     globalFilters.region = selectedRegion!;
-    globalFilters.interval = selectedInterval!
-    globalFilters.resource = selectedResourceId
-    globalFilters.serviceType = selectedService!
+    globalFilters.interval = selectedInterval!;
+    globalFilters.resource = selectedResourceId;
+    globalFilters.serviceType = selectedService!;
     globalFilters.timeRange = time;
-    globalFilters.step = {
-      unit:selectedInterval?.substring(1)!,
-      value:parseInt(selectedInterval?.charAt(0)!)
+
+    if(selectedInterval) {
+      globalFilters.step = {
+        unit: selectedInterval.substring(1)!,
+        // eslint-disable-next-line radix
+        value: parseInt(selectedInterval.charAt(0)!),
+      };
     }    
     props.handleAnyFilterChange(globalFilters);
-  }
-
+  };
 
   return (
-      <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
-        <StyledGrid xs={12}>
-          <Grid sx={{ fontSize: 'medium' }}>
-            <div>Region</div>
-          </Grid>
-          <Grid sx={{ marginLeft: 2, width: 250 }}>
-            <StyledCloudViewRegionSelect
-              handleRegionChange={handleRegionChange}
-            />
-          </Grid>
-          <Grid sx={{ marginLeft: 4, fontSize: 'medium' }}>
-            <div>Service Type</div>
-          </Grid>
-          <Grid sx={{ marginLeft: 0.2, width: 100 }}>
-            <CloudViewServiceSelect handleServiceChange={handleServiceChange} />
-          </Grid>
-          <Grid sx={{ fontSize: 'medium', marginLeft: 6 }}>
-            <div>Resource</div>
-          </Grid>
-          <Grid sx={{ marginLeft: 2, width: 200 }}>
-            <StyledCloudViewResourceSelect
-              handleResourceChange={handleResourceChange}
-              region={selectedRegion}
-              resourceType={selectedService}
-              disabled={!selectedService}
-            />
-          </Grid>
-          <Grid sx={{ marginLeft: 8 }}>
-            <StyledCloudViewIntervalSelect
-              handleIntervalChange={handleIntervalChange}
-            />
-          </Grid>
-          <Grid sx={{ marginLeft: 3 }}>
-            <StyledCloudViewTimeRangeSelect
-              defaultValue={'Past 30 Minutes'}
-              handleStatsChange={handleTimeRangeChange}
-              hideLabel
-              label="Select Time Range"
-            />
-          </Grid>
-        </StyledGrid>
-      </Grid>
+    <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
+      <StyledGrid xs={12}>
+        <Grid sx={{ marginLeft: 2, width: 200 }}>
+          <StyledCloudViewRegionSelect
+            handleRegionChange={handleRegionChange}
+          />
+        </Grid>
+        <Grid sx={{ marginLeft: 2, width: 200 }}>
+          <CloudViewServiceSelect handleServiceChange={handleServiceChange} />
+        </Grid>
+        <Grid sx={{ marginLeft: 3, width: 200 }}>
+          <StyledCloudViewResourceSelect
+            disabled={!selectedService}
+            handleResourceChange={handleResourceChange}
+            region={selectedRegion}
+            resourceType={selectedService}
+          />
+        </Grid>
+        <Grid sx={{ marginLeft: 5 }}>
+          <StyledCloudViewIntervalSelect
+            handleIntervalChange={handleIntervalChange}
+          />
+        </Grid>
+        <Grid sx={{ marginLeft: 3 }}>
+          <StyledCloudViewTimeRangeSelect
+            defaultValue={'Past 30 Minutes'}
+            handleStatsChange={handleTimeRangeChange}
+            hideLabel
+            label="Select Time Range"
+          />
+        </Grid>
+      </StyledGrid>
+    </Grid>
   );
 });
 
