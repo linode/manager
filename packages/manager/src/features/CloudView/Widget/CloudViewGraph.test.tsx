@@ -7,7 +7,7 @@ import { getMetricsResponse } from 'src/mocks/metricsMocker';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { FiltersObject } from '../Models/GlobalFilterProperties';
-import { CloudViewGraph } from './CloudViewGraph';
+import { CloudViewWidget } from './CloudViewWidget';
 
 const queryMocks = vi.hoisted(() => ({
   useCloudViewMetricsQuery: vi.fn().mockReturnValue({}),
@@ -22,14 +22,20 @@ vi.mock('src/queries/cloudview/metrics', async () => {
   };
 });
 
+const errorLabel = 'Error Loading Data';
+const circleProgress = 'circle-progress';
+
 describe('Cloud View Graph Widget', () => {
   queryMocks.useProfile.mockReturnValue({
     data: profileFactory.build({ user_type: 'child' }),
   });
 
   it('renders a line graph with required widgets', () => {
-    const handleWidgetChange = (widget: Widgets) => {
+    let widget = {} as Widgets;
+
+    const handleWidgetChange = (widgetParam: Widgets) => {
       // dummy
+      widget = { ...widgetParam };
     };
 
     const dashboardFilters = {} as FiltersObject;
@@ -62,13 +68,13 @@ describe('Cloud View Graph Widget', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <CloudViewGraph
+      <CloudViewWidget
         ariaLabel={'Test'}
         dashboardFilters={dashboardFilters}
-        errorLabel={'Error Loading Data'}
+        errorLabel={errorLabel}
         handleWidgetChange={handleWidgetChange}
         unit={'%'}
-        widget={{} as Widgets}
+        widget={widget}
       />
     );
 
@@ -78,12 +84,15 @@ describe('Cloud View Graph Widget', () => {
 
     // there should be no error and circle progress
     expect(() => getByTestId('ErrorOutlineIcon')).toThrow();
-    expect(() => getByTestId('circle-progress')).toThrow();
+    expect(() => getByTestId(circleProgress)).toThrow();
   });
 
   it('renders a circle progress if metrics API is still loading', () => {
-    const handleWidgetChange = (widget: Widgets) => {
+    let widget = {} as Widgets;
+
+    const handleWidgetChange = (widgetParam: Widgets) => {
       // dummy
+      widget = { ...widgetParam };
     };
 
     const dashboardFilters = {} as FiltersObject;
@@ -116,17 +125,17 @@ describe('Cloud View Graph Widget', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <CloudViewGraph
+      <CloudViewWidget
         ariaLabel={'Test'}
         dashboardFilters={dashboardFilters}
-        errorLabel={'Error Loading Data'}
+        errorLabel={errorLabel}
         handleWidgetChange={handleWidgetChange}
         unit={'%'}
-        widget={{} as Widgets}
+        widget={widget}
       />
     );
 
-    expect(getByTestId('circle-progress')).toBeInTheDocument();
+    expect(getByTestId(circleProgress)).toBeInTheDocument();
 
     // there should be no error and linegraph wrapper
     expect(() => getByTestId('ErrorOutlineIcon')).toThrow();
@@ -134,8 +143,11 @@ describe('Cloud View Graph Widget', () => {
   });
 
   it('renders a error state progress if metrics API response is error', () => {
-    const handleWidgetChange = (widget: Widgets) => {
+    let widget = {} as Widgets;
+
+    const handleWidgetChange = (widgetParam: Widgets) => {
       // dummy
+      widget = { ...widgetParam };
     };
 
     const dashboardFilters = {} as FiltersObject;
@@ -159,23 +171,26 @@ describe('Cloud View Graph Widget', () => {
     });
 
     const { getByTestId, getByText } = renderWithTheme(
-      <CloudViewGraph
+      <CloudViewWidget
         ariaLabel={'Test'}
         dashboardFilters={dashboardFilters}
-        errorLabel={'Error Loading Data'}
+        errorLabel={errorLabel}
         handleWidgetChange={handleWidgetChange}
         unit={'%'}
-        widget={{} as Widgets}
+        widget={widget}
       />
     );
 
     expect(getByTestId('ErrorOutlineIcon')).toBeInTheDocument();
-    expect(() => getByTestId('circle-progress')).toThrow();
-    expect(getByText('Error Loading Data')).toBeInTheDocument();
+    expect(() => getByTestId(circleProgress)).toThrow();
+    expect(getByText(errorLabel)).toBeInTheDocument();
   }),
     it('renders a error state progress if metrics API response is error with default error message', () => {
-      const handleWidgetChange = (widget: Widgets) => {
+      let widget = {} as Widgets;
+
+      const handleWidgetChange = (widgetParam: Widgets) => {
         // dummy
+        widget = { ...widgetParam };
       };
 
       const dashboardFilters = {} as FiltersObject;
@@ -199,17 +214,17 @@ describe('Cloud View Graph Widget', () => {
       });
 
       const { getByTestId, getByText } = renderWithTheme(
-        <CloudViewGraph
+        <CloudViewWidget
           ariaLabel={'Test'}
           dashboardFilters={dashboardFilters}
           handleWidgetChange={handleWidgetChange}
           unit={'%'}
-          widget={{} as Widgets}
+          widget={widget}
         />
       );
 
       expect(getByTestId('ErrorOutlineIcon')).toBeInTheDocument();
-      expect(() => getByTestId('circle-progress')).toThrow();
+      expect(() => getByTestId(circleProgress)).toThrow();
       expect(getByText('Error while rendering widget')).toBeInTheDocument();
     });
 });

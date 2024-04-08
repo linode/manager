@@ -13,9 +13,10 @@ import { CloudViewLineGraph } from './CloudViewLineGraph';
 import { ZoomIcon } from './Components/Zoomer';
 import { seriesDataFormatter } from './Formatters/CloudViewFormatter';
 
-export interface CloudViewGraphProperties { //we can try renaming this CloudViewWidget
+export interface CloudViewWidgetProperties {
+  // we can try renaming this CloudViewWidget
   ariaLabel?: string;
-  dashboardFilters: FiltersObject;
+  dashboardFilters: FiltersObject; // this is dashboard level global filters
   errorLabel?: string; // error label can come from dashboard
   // any change in the current widget, call and pass this function and handle in parent component
   handleWidgetChange: (widget: Widgets) => void;
@@ -24,14 +25,14 @@ export interface CloudViewGraphProperties { //we can try renaming this CloudView
   widget: Widgets; // this comes from dashboard, has inbuilt metrics, agg_func,group_by,filters,gridsize etc , also helpful in publishing any changes
 }
 
-export const CloudViewGraph = (props: CloudViewGraphProperties) => {
+export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
   const { data: profile } = useProfile();
 
   const timezone = profile?.timezone || 'US/Eastern';
 
   const [data, setData] = React.useState<Array<any>>([]);
 
-  const [legendRows, setLegendRows] = React.useState<any[]>([]);
+  const [legendRows] = React.useState<any[]>([]);
 
   const [error, setError] = React.useState<boolean>(false);
 
@@ -73,7 +74,7 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
   React.useEffect(() => {
     // on any change in the widget object, just publish the changes to parent component using a callback function
     props.handleWidgetChange(widget);
-  }, [widget]);
+  }, [props, widget]);
 
   /**
    * This will be executed, each time when we receive response from metrics api
@@ -92,7 +93,8 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
     if (status == 'success') {
       let index = 0;
 
-      metricsList.data.result.forEach((graphData) => {  //todo, move it to utils at a widget level
+      metricsList.data.result.forEach((graphData) => {
+        // todo, move it to utils at a widget level
         const dimension = {
           backgroundColor: colors[index++],
           borderColor: colors[index],
@@ -109,7 +111,14 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
         };
 
         // construct a legend row with the dimension
-        constructLegendRow(dimension);
+        const legendRow = {
+          data: getMetrics(dimension.data as number[][]),
+          format: formatPercentage,
+          legendColor: dimension.backgroundColor,
+          legendTitle: dimension.label,
+        };
+
+        legendRows.push(legendRow);
         dimensions.push(dimension);
       });
 
@@ -123,25 +132,12 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
       // set error false
       setError(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, metricsList]);
 
   if (isLoading) {
     return <CircleProgress />;
   }
-
-  const constructLegendRow = (dimension: any) => {
-    const legendRow = {
-      data: getMetrics(dimension.data as number[][]),
-      format: formatPercentage,
-      legendColor: dimension.backgroundColor,
-      legendTitle: dimension.label,
-    };
-
-    setLegendRows((legendRows) => {
-      legendRows?.push(legendRow);
-      return legendRows;
-    });
-  };
 
   const handleZoomToggle = (zoomIn: boolean) => {
     setZoomIn(zoomIn);
@@ -172,7 +168,7 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
   return (
     <Grid xs={zoomIn ? 12 : 6}>
       {/* add further components like group by resource, aggregate_function, step here , for sample added zoom icon here*/}
-      <StyledZoomIcon handleZoomToggle={handleZoomToggle} zoomIn={zoomIn}/>      
+      <StyledZoomIcon handleZoomToggle={handleZoomToggle} zoomIn={zoomIn} />
       <CloudViewLineGraph
         error={
           error
