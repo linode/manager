@@ -1,22 +1,9 @@
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useAllVPCsQuery } from 'src/queries/vpcs/vpcs';
+import { useVPCQuery } from 'src/queries/vpcs/vpcs';
 
 import type { Interface } from '@linode/api-v4/lib/linodes/types';
 
 export const useVPCConfigInterface = (linodeId: number) => {
-  const { data: vpcData } = useAllVPCsQuery();
-  const vpcsList = vpcData ?? [];
-
-  const vpcLinodeIsAssignedTo = vpcsList.find((vpc) => {
-    const subnets = vpc.subnets;
-
-    return Boolean(
-      subnets.find((subnet) =>
-        subnet.linodes.some((linodeInfo) => linodeInfo.id === linodeId)
-      )
-    );
-  });
-
   const { data: configs } = useAllLinodeConfigsQuery(linodeId);
   let configInterfaceWithVPC: Interface | undefined;
 
@@ -25,7 +12,7 @@ export const useVPCConfigInterface = (linodeId: number) => {
     const interfaces = config.interfaces;
 
     const interfaceWithVPC = interfaces.find(
-      (_interface) => _interface.vpc_id === vpcLinodeIsAssignedTo?.id
+      (_interface) => _interface.purpose === 'vpc'
     );
 
     if (interfaceWithVPC) {
@@ -34,6 +21,10 @@ export const useVPCConfigInterface = (linodeId: number) => {
 
     return interfaceWithVPC;
   });
+
+  const { data: vpcLinodeIsAssignedTo } = useVPCQuery(
+    configInterfaceWithVPC?.vpc_id ?? -1
+  );
 
   // A VPC-only Linode is a Linode that has at least one config interface with primary set to true and purpose vpc and no ipv4.nat_1_1 value
   const isVPCOnlyLinode = Boolean(
