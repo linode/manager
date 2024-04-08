@@ -49,7 +49,9 @@ describe('hasPlacementGroupReachedCapacity', () => {
           members: initialLinodeData,
         }),
         region: regionFactory.build({
-          maximum_vms_per_pg: 3,
+          placement_group_limits: {
+            maximum_linodes_per_pg: 3,
+          },
         }),
       })
     ).toBe(true);
@@ -62,7 +64,9 @@ describe('hasPlacementGroupReachedCapacity', () => {
           members: initialLinodeData,
         }),
         region: regionFactory.build({
-          maximum_vms_per_pg: 4,
+          placement_group_limits: {
+            maximum_linodes_per_pg: 4,
+          },
         }),
       })
     ).toBe(false);
@@ -118,7 +122,9 @@ describe('hasRegionReachedPlacementGroupCapacity', () => {
         }),
         region: regionFactory.build({
           id: 'us-east',
-          maximum_pgs_per_customer: 2,
+          placement_group_limits: {
+            maximum_pgs_per_customer: 2,
+          },
         }),
       })
     ).toBe(true);
@@ -132,7 +138,9 @@ describe('hasRegionReachedPlacementGroupCapacity', () => {
         }),
         region: regionFactory.build({
           id: 'us-east',
-          maximum_pgs_per_customer: 4,
+          placement_group_limits: {
+            maximum_pgs_per_customer: 4,
+          },
         }),
       })
     ).toBe(false);
