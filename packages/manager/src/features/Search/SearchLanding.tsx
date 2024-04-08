@@ -85,12 +85,18 @@ export const SearchLanding = (props: SearchLandingProps) => {
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
   );
+  // We only want to fetch all entities if we know they
+  // are not a large account. We do this rather than `!isLargeAccount`
+  // because we don't want to fetch all entities if isLargeAccount is loading (undefined).
+  const shouldFetchAllEntities = isLargeAccount === false;
 
   const {
     data: objectStorageClusters,
     error: objectStorageClustersError,
     isLoading: areClustersLoading,
-  } = useObjectStorageClusters(!isLargeAccount && !isObjMultiClusterEnabled);
+  } = useObjectStorageClusters(
+    shouldFetchAllEntities && !isObjMultiClusterEnabled
+  );
 
   /*
    @TODO OBJ Multicluster:'region' will become required, and the
@@ -104,7 +110,7 @@ export const SearchLanding = (props: SearchLandingProps) => {
     isLoading: areBucketsLoading,
   } = useObjectStorageBuckets({
     clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
-    enabled: !isLargeAccount,
+    enabled: shouldFetchAllEntities,
     isObjMultiClusterEnabled,
     regions: isObjMultiClusterEnabled
       ? regionsSupportingObjectStorage
@@ -115,43 +121,43 @@ export const SearchLanding = (props: SearchLandingProps) => {
     data: domains,
     error: domainsError,
     isLoading: areDomainsLoading,
-  } = useAllDomainsQuery(!isLargeAccount);
+  } = useAllDomainsQuery(shouldFetchAllEntities);
 
   const {
     data: kubernetesClusters,
     error: kubernetesClustersError,
     isLoading: areKubernetesClustersLoading,
-  } = useAllKubernetesClustersQuery(!isLargeAccount);
+  } = useAllKubernetesClustersQuery(shouldFetchAllEntities);
 
   const {
     data: nodebalancers,
     error: nodebalancersError,
     isLoading: areNodeBalancersLoading,
-  } = useAllNodeBalancersQuery(!isLargeAccount);
+  } = useAllNodeBalancersQuery(shouldFetchAllEntities);
 
   const {
     data: volumes,
     error: volumesError,
     isLoading: areVolumesLoading,
-  } = useAllVolumesQuery({}, {}, !isLargeAccount);
+  } = useAllVolumesQuery({}, {}, shouldFetchAllEntities);
 
   const {
     data: _privateImages,
     error: imagesError,
     isLoading: areImagesLoading,
-  } = useAllImagesQuery({}, { is_public: false }, !isLargeAccount); // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
+  } = useAllImagesQuery({}, { is_public: false }, shouldFetchAllEntities); // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
 
   const { data: publicImages } = useAllImagesQuery(
     {},
     { is_public: true },
-    !isLargeAccount
+    shouldFetchAllEntities
   );
 
   const {
     data: linodes,
     error: linodesError,
     isLoading: areLinodesLoading,
-  } = useAllLinodesQuery({}, {}, !isLargeAccount);
+  } = useAllLinodesQuery({}, {}, shouldFetchAllEntities);
 
   const typesQuery = useSpecificTypes(
     (linodes ?? []).map((linode) => linode.type).filter(isNotNullOrUndefined)
@@ -265,15 +271,16 @@ export const SearchLanding = (props: SearchLandingProps) => {
 
   const resultsEmpty = equals(finalResults, emptyResults);
 
-  const loading =
-    areLinodesLoading ||
-    (areBucketsLoading && !isObjMultiClusterEnabled) ||
-    (areClustersLoading && !isObjMultiClusterEnabled) ||
-    areDomainsLoading ||
-    areVolumesLoading ||
-    areKubernetesClustersLoading ||
-    areImagesLoading ||
-    areNodeBalancersLoading;
+  const loading = isLargeAccount
+    ? apiSearchLoading
+    : areLinodesLoading ||
+      (areBucketsLoading && !isObjMultiClusterEnabled) ||
+      (areClustersLoading && !isObjMultiClusterEnabled) ||
+      areDomainsLoading ||
+      areVolumesLoading ||
+      areKubernetesClustersLoading ||
+      areImagesLoading ||
+      areNodeBalancersLoading;
 
   const errorMessage = getErrorMessage();
 
