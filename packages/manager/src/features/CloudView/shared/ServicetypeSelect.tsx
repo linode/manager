@@ -42,9 +42,10 @@ export const CloudViewServiceSelect = React.memo(
         disableClearable
         fullWidth
         isOptionEqualToValue={(option, value) => option.label === value.label}
-        label=""
+        label=''
+        placeholder='Select Service'
         noMarginTop
-        options={getServicesList()}
+        options={getServicesList()}                
       />
     );
   }

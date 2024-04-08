@@ -109,6 +109,7 @@ export const CloudViewResourceSelect = (
       options={getResourceList()}
       value={selectedResource ? selectedResource.label : ''}
       disabled={props.disabled}
+      placeholder='Select Resources'
     />
   );
 };

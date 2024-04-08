@@ -4,7 +4,7 @@ import { seriesDataFormatter } from "./Formatters/CloudViewFormatter";
 import { CircleProgress } from "src/components/CircleProgress";
 import { CloudViewLineGraph } from "./CloudViewLineGraph";
 import { useCloudViewMetricsQuery } from "src/queries/cloudview/metrics";
-import { CloudViewMetricsRequest, Widgets } from "@linode/api-v4";
+import { CloudViewMetricsRequest, Filters, Widgets } from "@linode/api-v4"
 import { FiltersObject } from "../Models/GlobalFilterProperties";
 import { getMetrics, formatPercentage } from "src/utilities/statMetrics";
 import Grid from '@mui/material/Unstable_Grid2';
@@ -52,20 +52,20 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
 
     const getCloudViewMetricsRequest = (): CloudViewMetricsRequest => {
         let request = {} as CloudViewMetricsRequest;
-        request.aggregate_function = props.widget.aggregate_function;
-        request.group_by = props.widget.group_by;
+        request.aggregate_function = widget.aggregate_function;
+        request.group_by = widget.group_by;
         request.instance_id = props.dashboardFilters?.resource!;
-        request.metric = props.widget.metric!;
+        request.metric = widget.metric!;
         request.duration = props.dashboardFilters?.duration!;
         request.step = props.dashboardFilters?.step!; //todo, move to widgets
         request.startTime = props.dashboardFilters?.timeRange.start;
         request.endTime = props.dashboardFilters?.timeRange.end;
-        return request;
+        return request; 
     };
 
 
     const { data: metricsList, isLoading, status } = useCloudViewMetricsQuery(props.widget.serviceType!,
-        getCloudViewMetricsRequest(), props); //fetch the metrics on any property change
+        getCloudViewMetricsRequest(), props, widget); //fetch the metrics on any property change
     
     React.useEffect(() => {
 
@@ -112,10 +112,10 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
         }
 
         if(status == 'error') {
-            setError((error) => true);
+            setError(true);
         } else {
             //set error false
-            setError((error) => false);
+            setError(false);
         }
 
     }, [status, metricsList])
@@ -142,6 +142,22 @@ export const CloudViewGraph = (props: CloudViewGraphProperties) => {
 
     const handleZoomToggle = (zoomIn: boolean) => {
         setZoomIn(zoomIn);
+    }
+
+    const handleAggregateFunctionChange = (aggregateValue:string) => {
+        //todo, add implementation once component is ready
+    }
+
+    const handleFilterChange = (widgetFilter:Filters[]) => {
+        //todo, add implementation once component is ready
+    }
+
+    const handleGroupByChange = (groupby:string) => {
+        //todo, add implememtation once component is ready
+    }
+
+    const handleGranularityChange = (step:string) => {
+        //todo, add implementation once component is ready
     }
 
     const StyledZoomIcon = styled(ZoomIcon, {
