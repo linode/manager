@@ -23,7 +23,8 @@ export const useVPCConfigInterface = (linodeId: number) => {
   });
 
   const { data: vpcLinodeIsAssignedTo } = useVPCQuery(
-    configInterfaceWithVPC?.vpc_id ?? -1
+    configInterfaceWithVPC?.vpc_id ?? -1,
+    Boolean(configInterfaceWithVPC)
   );
 
   // A VPC-only Linode is a Linode that has at least one config interface with primary set to true and purpose vpc and no ipv4.nat_1_1 value
