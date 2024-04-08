@@ -1,5 +1,3 @@
-import { PriceObject, RegionPriceObject } from 'src/linodes/types';
-
 export interface Volume {
   id: number;
   label: string;
@@ -16,14 +14,6 @@ export interface Volume {
 }
 
 type VolumeHardwareType = 'hdd' | 'nvme';
-
-export interface VolumeType {
-  id: string;
-  label: string;
-  price: PriceObject;
-  region_prices: RegionPriceObject[];
-  transfer: number;
-}
 
 export type VolumeStatus =
   | 'creating'

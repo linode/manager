@@ -12,14 +12,13 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page, PriceType } from '../types';
 import {
   AttachVolumePayload,
   CloneVolumePayload,
   ResizeVolumePayload,
   Volume,
   VolumeRequestPayload,
-  VolumeType,
 } from './types';
 
 /**
@@ -56,7 +55,7 @@ export const getVolumes = (params?: Params, filters?: Filter) =>
  * This endpoint does not require authentication.
  */
 export const getVolumeTypes = (params?: Params) =>
-  Request<Page<VolumeType>>(
+  Request<Page<PriceType>>(
     setURL(`${API_ROOT}/volumes/types`),
     setMethod('GET'),
     setParams(params)
