@@ -1,61 +1,63 @@
-import * as React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { ZoomIcon } from './Zoomer';
 import { fireEvent } from '@testing-library/react';
+import * as React from 'react';
+
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { ZoomIcon } from './Zoomer';
 
 describe('Zoomer Component', () => {
-    it('renders zoom in icon when zoomin prop is true', () => {
+  it('renders zoom in icon when zoomin prop is true', () => {
+    const handleZoomToggle = (zoomIn: boolean) => {};
 
-        const handleZoomToggle = (zoomIn:boolean) => {            
-        };
+    const { getByTestId } = renderWithTheme(
+      <ZoomIcon handleZoomToggle={handleZoomToggle} zoomIn={true} />
+    );
+    expect(getByTestId('ZoomInMapIcon')).toBeInTheDocument();
+  });
+  it('renders zoom out icon when zoomin prop is false', () => {
+    const handleZoomToggle = (zoomIn: boolean) => {};
 
-        const {getByTestId} =  renderWithTheme(<ZoomIcon zoomIn={true} handleZoomToggle={handleZoomToggle}/>);        
-        expect(getByTestId('ZoomInMapIcon')).toBeInTheDocument();         
-    })
-    it('renders zoom out icon when zoomin prop is false', () => {
+    const { getByTestId } = renderWithTheme(
+      <ZoomIcon handleZoomToggle={handleZoomToggle} zoomIn={false} />
+    );
+    expect(getByTestId('ZoomOutMapIcon')).toBeInTheDocument();
+  });
 
-        const handleZoomToggle = (zoomIn:boolean) => {            
-        };
+  it('changes from zoomin to zoomout on click when zoom in is present', () => {
+    const handleZoomToggle = (zoomIn: boolean) => {};
 
-        const {getByTestId} = renderWithTheme(<ZoomIcon zoomIn={false} handleZoomToggle={handleZoomToggle}/>)
-        expect(getByTestId('ZoomOutMapIcon')).toBeInTheDocument();  
-    })
+    const { getByTestId } = renderWithTheme(
+      <ZoomIcon handleZoomToggle={handleZoomToggle} zoomIn={true} />
+    );
 
-    it('changes from zoomin to zoomout on click when zoom in is present', () => {
+    let icon = getByTestId('ZoomInMapIcon');
 
-        const handleZoomToggle = (zoomIn:boolean) => {            
-        };
+    expect(icon).toBeInTheDocument();
 
-        const {getByTestId} = renderWithTheme(<ZoomIcon zoomIn={true} handleZoomToggle={handleZoomToggle}/>)
+    fireEvent.click(icon);
 
-        let icon  = getByTestId('ZoomInMapIcon')
+    // now it should be changed to ZoomOut
+    icon = getByTestId('ZoomOutMapIcon');
 
-        expect(icon).toBeInTheDocument();  
+    expect(icon).toBeInTheDocument();
+  });
 
-        fireEvent.click(icon)
+  it('changes from zoomout to zoomin on click when zoom out is present', () => {
+    const handleZoomToggle = (zoomIn: boolean) => {};
 
-        //now it should be changed to ZoomOut
-        icon  = getByTestId('ZoomOutMapIcon')
+    const { getByTestId } = renderWithTheme(
+      <ZoomIcon handleZoomToggle={handleZoomToggle} zoomIn={false} />
+    );
 
-        expect(icon).toBeInTheDocument(); 
-    })
+    let icon = getByTestId('ZoomOutMapIcon');
 
-    it('changes from zoomout to zoomin on click when zoom out is present', () => {
+    expect(icon).toBeInTheDocument();
 
-        const handleZoomToggle = (zoomIn:boolean) => {            
-        };
+    fireEvent.click(icon);
 
-        const {getByTestId} = renderWithTheme(<ZoomIcon zoomIn={false} handleZoomToggle={handleZoomToggle}/>)
+    // now it should be changed to ZoomOut
+    icon = getByTestId('ZoomInMapIcon');
 
-        let icon  = getByTestId('ZoomOutMapIcon')
-
-        expect(icon).toBeInTheDocument();  
-
-        fireEvent.click(icon)
-
-        //now it should be changed to ZoomOut
-        icon  = getByTestId('ZoomInMapIcon')
-
-        expect(icon).toBeInTheDocument(); 
-    })
-})
+    expect(icon).toBeInTheDocument();
+  });
+});
