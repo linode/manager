@@ -2,7 +2,13 @@ import ZoomInMap from '@mui/icons-material/ZoomInMap';
 import ZoomOutMap from '@mui/icons-material/ZoomOutMap';
 import * as React from 'react';
 
-export const ZoomIcon = (props: any) => {
+export interface ZoomIconProperties {
+  className?: string;
+  handleZoomToggle: (zoomIn: boolean) => void;
+  zoomIn: boolean;
+}
+
+export const ZoomIcon = (props: ZoomIconProperties) => {
   const [zoomIn, setZoomIn] = React.useState<boolean>(props.zoomIn);
 
   const handleClick = () => {
@@ -11,7 +17,7 @@ export const ZoomIcon = (props: any) => {
 
   React.useEffect(() => {
     props.handleZoomToggle(zoomIn);
-  }, [zoomIn]);
+  });
 
   const ToggleZoomer = () => {
     if (zoomIn) {

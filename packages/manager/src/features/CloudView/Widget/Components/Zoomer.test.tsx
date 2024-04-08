@@ -7,27 +7,40 @@ import { ZoomIcon } from './Zoomer';
 
 describe('Zoomer Component', () => {
   it('renders zoom in icon when zoomin prop is true', () => {
-    const handleZoomToggle = (zoomIn: boolean) => {};
+    let zoomIn = true;
+
+    const handleZoomToggle = (zoomInParameter: boolean) => {
+      zoomIn = zoomInParameter;
+    };
 
     const { getByTestId } = renderWithTheme(
-      <ZoomIcon handleZoomToggle={handleZoomToggle} zoomIn={true} />
+      <ZoomIcon handleZoomToggle={handleZoomToggle} zoomIn={zoomIn} />
     );
     expect(getByTestId('ZoomInMapIcon')).toBeInTheDocument();
   });
+
   it('renders zoom out icon when zoomin prop is false', () => {
-    const handleZoomToggle = (zoomIn: boolean) => {};
+    let zoomIn = false;
+
+    const handleZoomToggle = (zoomInParameter: boolean) => {
+      zoomIn = zoomInParameter;
+    };
 
     const { getByTestId } = renderWithTheme(
-      <ZoomIcon handleZoomToggle={handleZoomToggle} zoomIn={false} />
+      <ZoomIcon handleZoomToggle={handleZoomToggle} zoomIn={zoomIn} />
     );
     expect(getByTestId('ZoomOutMapIcon')).toBeInTheDocument();
   });
 
   it('changes from zoomin to zoomout on click when zoom in is present', () => {
-    const handleZoomToggle = (zoomIn: boolean) => {};
+    let zoomIn = true;
+
+    const handleZoomToggle = (zoomInParameter: boolean) => {
+      zoomIn = zoomInParameter;
+    };
 
     const { getByTestId } = renderWithTheme(
-      <ZoomIcon handleZoomToggle={handleZoomToggle} zoomIn={true} />
+      <ZoomIcon handleZoomToggle={handleZoomToggle} zoomIn={zoomIn} />
     );
 
     let icon = getByTestId('ZoomInMapIcon');
@@ -43,10 +56,14 @@ describe('Zoomer Component', () => {
   });
 
   it('changes from zoomout to zoomin on click when zoom out is present', () => {
-    const handleZoomToggle = (zoomIn: boolean) => {};
+    let zoomIn = false;
+
+    const handleZoomToggle = (zoomInParameter: boolean) => {
+      zoomIn = zoomInParameter;
+    };
 
     const { getByTestId } = renderWithTheme(
-      <ZoomIcon handleZoomToggle={handleZoomToggle} zoomIn={false} />
+      <ZoomIcon handleZoomToggle={handleZoomToggle} zoomIn={zoomIn} />
     );
 
     let icon = getByTestId('ZoomOutMapIcon');
