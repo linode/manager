@@ -18,9 +18,9 @@ export const Images = () => {
     Boolean(stackscriptId)
   );
 
-  const imageSelectVariant = stackscript?.images.includes('any/all')
-    ? 'all'
-    : 'public';
+  const shouldFilterImages = !stackscript?.images.includes('any/all');
+
+  const imageSelectVariant = shouldFilterImages ? 'public' : 'all';
 
   return (
     <Paper>
@@ -28,6 +28,11 @@ export const Images = () => {
       <Controller<CreateLinodeRequest, 'image'>
         render={({ field, fieldState }) => (
           <ImageSelectv2
+            filter={
+              shouldFilterImages
+                ? (image) => stackscript?.images.includes(image.id) ?? false
+                : undefined
+            }
             errorText={fieldState.error?.message}
             onChange={(e, image) => field.onChange(image?.id ?? null)}
             value={field.value}

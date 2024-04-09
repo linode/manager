@@ -16,6 +16,10 @@ interface Props {
 export const StackScriptSelectionRow = (props: Props) => {
   const { isSelected, onSelect, stackscript } = props;
 
+  if (stackscript.username.startsWith('lke-service-account-')) {
+    return null;
+  }
+
   return (
     <TableRow>
       <TableCell>

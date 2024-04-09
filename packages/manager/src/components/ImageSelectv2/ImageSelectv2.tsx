@@ -17,6 +17,10 @@ export type ImageSelectVariant = 'all' | 'private' | 'public';
 interface Props
   extends Omit<Partial<EnhancedAutocompleteProps<Image>>, 'value'> {
   /**
+   * Optional filter function applied to the options.
+   */
+  filter?: (image: Image) => boolean;
+  /**
    * The ID of the selected image
    */
   value: null | string | undefined;
@@ -30,7 +34,7 @@ interface Props
 }
 
 export const ImageSelectv2 = (props: Props) => {
-  const { variant, ...rest } = props;
+  const { filter, variant, ...rest } = props;
 
   const { data: images, error, isLoading } = useAllImagesQuery(
     {},
@@ -39,6 +43,8 @@ export const ImageSelectv2 = (props: Props) => {
 
   // We can't filter out Kubernetes images using the API so we filter them here
   const options = getFilteredImagesForImageSelect(images, variant);
+
+  const filteredOptions = filter ? options?.filter(filter) : options;
 
   const value = images?.find((i) => i.id === props.value);
 
@@ -55,7 +61,7 @@ export const ImageSelectv2 = (props: Props) => {
       groupBy={(option) => option.vendor ?? 'My Images'}
       label="Images"
       loading={isLoading}
-      options={options ?? []}
+      options={filteredOptions ?? []}
       placeholder="Choose an image"
       {...rest}
       errorText={rest.errorText ?? error?.[0].reason}
