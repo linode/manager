@@ -123,7 +123,7 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
           variant="error"
         />
       )}
-      <Typography>Are you sure you want to remove this Linode?</Typography>
+      <Typography>Are you sure you want to unassign this Linode?</Typography>
     </ConfirmationDialog>
   );
 };

@@ -7,13 +7,13 @@ import { useParams } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
+import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { NotFound } from 'src/components/NotFound';
 import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import {
   useMutatePlacementGroup,
@@ -124,9 +124,7 @@ export const PlacementGroupsEditDrawer = (
     <Drawer
       title={
         placementGroup
-          ? `Edit Placement Group ${placementGroup.label} (${
-              AFFINITY_TYPES[placementGroup.affinity_type]
-            })`
+          ? `Edit Placement Group ${placementGroup.label}`
           : 'Edit Placement Group'
       }
       onClose={handleClose}
@@ -135,14 +133,29 @@ export const PlacementGroupsEditDrawer = (
       {generalError && <Notice text={generalError} variant="error" />}
       {placementGroup ? (
         <>
-          <Typography mb={1} mt={4}>
-            <strong>Region: </strong>
-            {region ? `${region.label} (${region.id})` : 'Unknown'}
-          </Typography>
-          <Typography mb={4}>
-            <strong>Affinity Enforcement: </strong>
-            {getAffinityTypeEnforcement(placementGroup.is_strict)}
-          </Typography>
+          <DescriptionList
+            items={[
+              {
+                description: region
+                  ? `${region.label} (${region.id})`
+                  : 'Unknown',
+                title: 'Region',
+              },
+              {
+                description: AFFINITY_TYPES[placementGroup.affinity_type],
+                title: 'Affinity',
+              },
+              {
+                description: getAffinityTypeEnforcement(
+                  placementGroup.is_strict
+                ),
+                title: 'Affinity Enforcement',
+              },
+            ]}
+            sx={{
+              my: 2,
+            }}
+          />
           <Divider />
           <form onSubmit={handleSubmit}>
             <Stack spacing={1}>

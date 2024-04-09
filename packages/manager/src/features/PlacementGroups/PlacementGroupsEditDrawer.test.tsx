@@ -52,7 +52,7 @@ describe('PlacementGroupsCreateDrawer', () => {
 
     expect(
       getByRole('heading', {
-        name: 'Edit Placement Group PG-to-edit (Anti-affinity)',
+        name: 'Edit Placement Group PG-to-edit',
       })
     ).toBeInTheDocument();
     expect(getByText('Newark, NJ (us-east)')).toBeInTheDocument();

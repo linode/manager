@@ -1,15 +1,11 @@
-import { useMediaQuery } from '@mui/material';
-import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Stack } from 'src/components/Stack';
-import { Typography } from 'src/components/Typography';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 
 import {
@@ -39,8 +35,6 @@ export const PlacementGroupsLinodes = (props: Props) => {
     region,
   } = props;
   const history = useHistory();
-  const theme = useTheme();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const [searchText, setSearchText] = React.useState('');
   const [selectedLinode, setSelectedLinode] = React.useState<
     Linode | undefined
@@ -93,17 +87,6 @@ export const PlacementGroupsLinodes = (props: Props) => {
 
   return (
     <Stack spacing={2}>
-      <Box sx={{ px: matchesSmDown ? 2 : 0, py: 2 }}>
-        <Typography>
-          The following Linodes have been assigned to this Placement Group. A
-          Linode can only be assigned to a single Placement Group.
-        </Typography>
-        <Typography sx={{ mt: 1 }}>
-          Limit of Linodes for this Placement Group:{' '}
-          {region?.placement_group_limits.maximum_linodes_per_pg}
-        </Typography>
-      </Box>
-
       <Grid container justifyContent="space-between">
         <Grid flexGrow={1} sm={6} sx={{ mb: 1 }} xs={12}>
           <DebouncedSearchTextField
