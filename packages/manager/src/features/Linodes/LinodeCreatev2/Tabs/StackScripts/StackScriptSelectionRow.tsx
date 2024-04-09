@@ -8,13 +8,14 @@ import { TableRow } from 'src/components/TableRow';
 import type { StackScript } from '@linode/api-v4';
 
 interface Props {
+  disabled?: boolean;
   isSelected: boolean;
   onSelect: () => void;
   stackscript: StackScript;
 }
 
 export const StackScriptSelectionRow = (props: Props) => {
-  const { isSelected, onSelect, stackscript } = props;
+  const { disabled, isSelected, onSelect, stackscript } = props;
 
   if (stackscript.username.startsWith('lke-service-account-')) {
     return null;
@@ -23,7 +24,7 @@ export const StackScriptSelectionRow = (props: Props) => {
   return (
     <TableRow>
       <TableCell>
-        <Radio checked={isSelected} onChange={onSelect} />
+        <Radio checked={isSelected} disabled={disabled} onChange={onSelect} />
       </TableCell>
       <TableCell>{stackscript.label}</TableCell>
       <TableCell actionCell>

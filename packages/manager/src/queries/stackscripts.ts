@@ -52,9 +52,13 @@ export const useStackScriptQuery = (id: number, enabled = true) =>
     enabled,
   });
 
-export const useStackScriptsInfiniteQuery = (filter: Filter = {}) =>
+export const useStackScriptsInfiniteQuery = (
+  filter: Filter = {},
+  enabled = true
+) =>
   useInfiniteQuery<ResourcePage<StackScript>, APIError[]>({
     ...stackscriptQueries.infinite(filter),
+    enabled,
     getNextPageParam: ({ page, pages }) => {
       if (page === pages) {
         return undefined;

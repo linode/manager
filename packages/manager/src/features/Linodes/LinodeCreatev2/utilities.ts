@@ -12,6 +12,7 @@ import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
  * This interface is used to type the query params on the Linode Create flow.
  */
 interface LinodeCreateQueryParams {
+  stackScriptID: string | undefined;
   subtype: StackScriptTabType | undefined;
   type: LinodeCreateType | undefined;
 }
@@ -32,9 +33,12 @@ export const useLinodeCreateQueryParams = () => {
   };
 
   const params = {
+    stackScriptID: rawParams.stackScriptID
+      ? Number(rawParams.stackScriptID)
+      : undefined,
     subtype: rawParams.subtype as StackScriptTabType | undefined,
     type: rawParams.type as LinodeCreateType | undefined,
-  } as LinodeCreateQueryParams;
+  };
 
   return { params, updateParams };
 };
@@ -126,25 +130,34 @@ export const getInterfacesPayload = (
   return interfaces;
 };
 
-export const defaultValues: CreateLinodeRequest = {
-  image: 'linode/debian11',
-  interfaces: [
-    {
-      ipam_address: '',
-      label: '',
-      purpose: 'public',
-    },
-    {
-      ipam_address: '',
-      label: '',
-      purpose: 'vlan',
-    },
-    {
-      ipam_address: '',
-      label: '',
-      purpose: 'vpc',
-    },
-  ],
-  region: '',
-  type: '',
+export const defaultValues = async (): Promise<CreateLinodeRequest> => {
+  const queryParams = getQueryParamsFromQueryString(window.location.search);
+
+  const stackScriptID = queryParams.stackScriptID
+    ? Number(queryParams.stackScriptID)
+    : undefined;
+
+  return {
+    image: 'linode/debian11',
+    interfaces: [
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'public',
+      },
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'vlan',
+      },
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'vpc',
+      },
+    ],
+    region: '',
+    stackscript_id: stackScriptID,
+    type: '',
+  };
 };

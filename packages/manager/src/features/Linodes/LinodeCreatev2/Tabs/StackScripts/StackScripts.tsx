@@ -22,8 +22,10 @@ export const StackScripts = () => {
       <Paper>
         <Typography variant="h2">Create From:</Typography>
         <Tabs
+          onChange={(index) =>
+            updateParams({ stackScriptID: undefined, subtype: tabs[index] })
+          }
           index={getStackScriptTabIndex(params.subtype)}
-          onChange={(index) => updateParams({ subtype: tabs[index] })}
         >
           <TabList>
             <Tab>Account StackScripts</Tab>

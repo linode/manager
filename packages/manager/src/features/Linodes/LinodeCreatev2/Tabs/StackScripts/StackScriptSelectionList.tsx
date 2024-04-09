@@ -3,6 +3,8 @@ import { useController } from 'react-hook-form';
 import { Waypoint } from 'react-waypoint';
 
 import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
+import { Stack } from 'src/components/Stack';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell/TableCell';
@@ -12,11 +14,15 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
-import { useStackScriptsInfiniteQuery } from 'src/queries/stackscripts';
+import {
+  useStackScriptQuery,
+  useStackScriptsInfiniteQuery,
+} from 'src/queries/stackscripts';
 
+import { useLinodeCreateQueryParams } from '../../utilities';
 import { StackScriptSelectionRow } from './StackScriptSelectionRow';
+import { StackScriptTabType } from './utilities';
 
-import type { StackScriptTabType } from './utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 interface Props {
@@ -44,6 +50,15 @@ export const StackScriptSelectionList = ({ type }: Props) => {
         }
       : { mine: true };
 
+  const { params, updateParams } = useLinodeCreateQueryParams();
+
+  const hasPreselectedStackScript = Boolean(params.stackScriptID);
+
+  const { data: stackscript } = useStackScriptQuery(
+    params.stackScriptID ?? -1,
+    hasPreselectedStackScript
+  );
+
   const {
     data,
     error,
@@ -51,16 +66,50 @@ export const StackScriptSelectionList = ({ type }: Props) => {
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = useStackScriptsInfiniteQuery({
-    ['+order']: order,
-    ['+order_by']: orderBy,
-    ...filter,
-  });
+  } = useStackScriptsInfiniteQuery(
+    {
+      ['+order']: order,
+      ['+order_by']: orderBy,
+      ...filter,
+    },
+    !hasPreselectedStackScript
+  );
 
   const stackscripts = data?.pages.flatMap((page) => page.data);
 
+  if (hasPreselectedStackScript) {
+    return (
+      <Stack spacing={1}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ width: 20 }}></TableCell>
+              <TableCell>StackScript</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {stackscript && (
+              <StackScriptSelectionRow
+                disabled
+                isSelected={field.value === stackscript.id}
+                onSelect={() => field.onChange(stackscript.id)}
+                stackscript={stackscript}
+              />
+            )}
+          </TableBody>
+        </Table>
+        <Box display="flex" justifyContent="flex-end">
+          <Button onClick={() => updateParams({ stackScriptID: undefined })}>
+            Choose Another StackScript
+          </Button>
+        </Box>
+      </Stack>
+    );
+  }
+
   return (
-    <Box sx={{ maxHeight: 500, overflow: 'auto' }}>
+    <Stack spacing={1} sx={{ maxHeight: 500, overflow: 'auto' }}>
       <Table>
         <TableHead>
           <TableRow>
@@ -91,6 +140,6 @@ export const StackScriptSelectionList = ({ type }: Props) => {
           {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
         </TableBody>
       </Table>
-    </Box>
+    </Stack>
   );
 };
