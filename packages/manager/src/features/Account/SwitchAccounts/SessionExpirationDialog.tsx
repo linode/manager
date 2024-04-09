@@ -67,7 +67,7 @@ export const SessionExpirationDialog = React.memo(
     }${timeRemaining.seconds}`;
 
     const intervalCallback = () => {
-      if (timeRemaining.minutes < 15 && timeRemaining.seconds === 50) {
+      if (timeRemaining.minutes === 5) {
         sessionExpirationContext.updateState({ isOpen: true });
       }
       setTimeRemaining((prev) => {
