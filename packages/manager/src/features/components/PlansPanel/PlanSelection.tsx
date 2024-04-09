@@ -58,16 +58,14 @@ const getDisabledClass = (
 
 const getToolTip = ({
   disabledToolTip,
-  isSamePlan,
   planIsDisabled,
   sizeTooSmall,
 }: {
   disabledToolTip?: string;
-  isSamePlan: boolean;
   planIsDisabled?: boolean;
   sizeTooSmall: boolean;
 }) => {
-  if (planIsDisabled && !isSamePlan) {
+  if (planIsDisabled) {
     return disabledToolTip;
   }
   if (sizeTooSmall) {
@@ -110,9 +108,8 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   const planTooSmall = diskSize > type.disk;
   const isSamePlan = type.heading === currentPlanHeading;
   const tooltip = getToolTip({
-    disabledToolTip: disabledToolTip,
-    isSamePlan: isSamePlan,
-    planIsDisabled: planIsDisabled,
+    disabledToolTip,
+    planIsDisabled,
     sizeTooSmall: planTooSmall,
   });
   const isGPU = type.class === 'gpu';
@@ -150,15 +147,15 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       {/* Displays Table Row for larger screens */}
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <StyledDisabledTableRow
-          aria-disabled={rowAriaDisabled}
-          disabled={rowAriaDisabled}
           onClick={() =>
             !isSamePlan && !isDisabled && !isDisabledClass && !planTooSmall
               ? onSelect(type.id)
               : undefined
           }
+          aria-disabled={rowAriaDisabled}
           aria-label={rowAriaLabel}
           data-qa-plan-row={type.formattedLabel}
+          disabled={rowAriaDisabled}
           key={type.id}
         >
           <StyledRadioCell>
