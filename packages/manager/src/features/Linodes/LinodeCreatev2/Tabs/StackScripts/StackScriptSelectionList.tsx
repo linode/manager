@@ -21,7 +21,11 @@ import {
 
 import { useLinodeCreateQueryParams } from '../../utilities';
 import { StackScriptSelectionRow } from './StackScriptSelectionRow';
-import { StackScriptTabType } from './utilities';
+import {
+  StackScriptTabType,
+  accountStackScriptFilter,
+  communityStackScriptFilter,
+} from './utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
@@ -39,17 +43,6 @@ export const StackScriptSelectionList = ({ type }: Props) => {
     name: 'stackscript_id',
   });
 
-  const filter =
-    type === 'Community'
-      ? {
-          '+and': [
-            { username: { '+neq': 'linode' } },
-            { username: { '+neq': 'linode-stackscripts' } },
-          ],
-          mine: false,
-        }
-      : { mine: true };
-
   const { params, updateParams } = useLinodeCreateQueryParams();
 
   const hasPreselectedStackScript = Boolean(params.stackScriptID);
@@ -58,6 +51,11 @@ export const StackScriptSelectionList = ({ type }: Props) => {
     params.stackScriptID ?? -1,
     hasPreselectedStackScript
   );
+
+  const filter =
+    type === 'Community'
+      ? communityStackScriptFilter
+      : accountStackScriptFilter;
 
   const {
     data,
@@ -109,7 +107,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
   }
 
   return (
-    <Stack spacing={1} sx={{ maxHeight: 500, overflow: 'auto' }}>
+    <Box sx={{ maxHeight: 500, overflow: 'auto' }}>
       <Table>
         <TableHead>
           <TableRow>
@@ -140,6 +138,6 @@ export const StackScriptSelectionList = ({ type }: Props) => {
           {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
         </TableBody>
       </Table>
-    </Stack>
+    </Box>
   );
 };

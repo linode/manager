@@ -15,3 +15,13 @@ export const getStackScriptTabIndex = (tab: StackScriptTabType | undefined) => {
 };
 
 export const tabs = ['Account', 'Community'] as const;
+
+export const communityStackScriptFilter = {
+  '+and': [
+    { username: { '+neq': 'linode' } },
+    { username: { '+neq': 'linode-stackscripts' } },
+  ],
+  mine: false,
+};
+
+export const accountStackScriptFilter = { mine: true };
