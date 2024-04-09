@@ -35,7 +35,7 @@ import {
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useStackScriptsOCA } from 'src/queries/stackscripts';
+import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import useStyles from './PrimaryNav.styles';
@@ -115,7 +115,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     data: oneClickApps,
     error: oneClickAppsError,
     isLoading: oneClickAppsLoading,
-  } = useStackScriptsOCA(enableMarketplacePrefetch);
+  } = useMarketplaceAppsQuery(enableMarketplacePrefetch);
 
   const {
     data: clusters,

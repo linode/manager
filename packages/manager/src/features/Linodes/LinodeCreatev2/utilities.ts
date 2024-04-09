@@ -5,12 +5,14 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { utoa } from '../LinodesCreate/utilities';
 
 import type { LinodeCreateType } from '../LinodesCreate/types';
+import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
 import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
 
 /**
  * This interface is used to type the query params on the Linode Create flow.
  */
 interface LinodeCreateQueryParams {
+  subtype: StackScriptTabType | undefined;
   type: LinodeCreateType | undefined;
 }
 
@@ -30,6 +32,7 @@ export const useLinodeCreateQueryParams = () => {
   };
 
   const params = {
+    subtype: rawParams.subtype as StackScriptTabType | undefined,
     type: rawParams.type as LinodeCreateType | undefined,
   } as LinodeCreateQueryParams;
 
