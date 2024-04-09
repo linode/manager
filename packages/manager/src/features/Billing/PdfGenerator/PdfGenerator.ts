@@ -97,16 +97,16 @@ const addLeftHeader = (
     addLine('Tax ID(s):');
     doc.setFont(baseFont, 'normal');
 
+    if (countryTax) {
+      addLine(`${countryTax.tax_name}: ${countryTax.tax_id}`);
+    }
     /**
      * M3-7847 Add Akamai's Japanese QI System ID to Japanese Invoices.
      * Since LD automatically serves Tax data based on the user's
      * we can check on qi_registration field to render QI Registration.
      * */
-
-    if (countryTax) {
-      const line = countryTax.qi_registration
-        ? `QI Registration # ${countryTax.qi_registration}`
-        : `${countryTax.tax_name}: ${countryTax.tax_id}`;
+    if (countryTax && countryTax.qi_registration) {
+      const line = `QI Registration # ${countryTax.qi_registration}`;
       addLine(line);
     }
     if (provincialTax) {
