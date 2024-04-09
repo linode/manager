@@ -134,7 +134,7 @@ export const getInterfacesPayload = (
   }
 
   // If no special case is met, don't send `interfaces` in the Linode
-  // create payload. This will cause the API to deault to giving the Linode
+  // create payload. This will cause the API to default to giving the Linode
   // public communication.
   return undefined;
 };
