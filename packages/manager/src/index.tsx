@@ -63,9 +63,12 @@ const Main = () => {
                 <Route component={Logout} exact path="/logout" />
                 <Route component={CancelLanding} exact path="/cancel" />
                 <Snackbar
+                  SnackbarProps={{
+                    // @ts-expect-error used for testing 🥺
+                    'data-qa-toast': true,
+                  }}
                   anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                   autoHideDuration={4000}
-                  data-qa-toast
                   hideIconVariant={true}
                   maxSnack={3}
                 >
