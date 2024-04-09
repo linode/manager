@@ -37,10 +37,16 @@ export const ResizeVolumeDrawer = (props: Props) => {
 
   const { data: grants } = useGrants();
 
+  const [isInvalidPrice, setIsInvalidPrice] = React.useState<boolean>(false);
+
   const isReadOnly =
     grants !== undefined &&
     grants.volume.find((grant) => grant.id === volume?.id)?.permissions ===
       'read_only';
+
+  const handleInvalidPrice = (isInvalidPrice: boolean) => {
+    return setIsInvalidPrice(isInvalidPrice);
+  };
 
   const {
     dirty,
@@ -99,6 +105,7 @@ export const ResizeVolumeDrawer = (props: Props) => {
         <SizeField
           disabled={isReadOnly}
           error={errors.size}
+          handleInvalidPrice={handleInvalidPrice}
           name="size"
           onBlur={handleBlur}
           onChange={handleChange}
@@ -113,7 +120,7 @@ export const ResizeVolumeDrawer = (props: Props) => {
         />
         <ActionsPanel
           primaryButtonProps={{
-            disabled: isReadOnly || !dirty,
+            disabled: isReadOnly || !dirty || isInvalidPrice,
             label: 'Resize Volume',
             loading: isSubmitting,
             type: 'submit',

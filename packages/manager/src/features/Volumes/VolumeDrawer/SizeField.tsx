@@ -1,4 +1,5 @@
 import { Theme } from '@mui/material/styles';
+import { useEffect } from 'react';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -8,15 +9,19 @@ import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+import { useVolumeTypesQuery } from 'src/queries/volumes';
+import {
+  PRICES_RELOAD_ERROR_NOTICE_TEXT,
+  UNKNOWN_PRICE,
+} from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 
 import { SIZE_FIELD_WIDTH } from '../VolumeCreate';
-import { useVolumeTypesQuery } from 'src/queries/volumes';
 
 interface Props {
   disabled?: boolean;
   error?: string;
+  handleInvalidPrice: (isInvalidPrice: boolean) => void;
   hasSelectedRegion?: boolean;
   isFromLinode?: boolean;
   name: string;
@@ -50,6 +55,7 @@ export const SizeField = (props: Props) => {
 
   const {
     error,
+    handleInvalidPrice,
     hasSelectedRegion,
     isFromLinode,
     name,
@@ -64,15 +70,15 @@ export const SizeField = (props: Props) => {
 
   const { data: types } = useVolumeTypesQuery();
 
-  const helperText = resize
-    ? `This volume can range from ${resize} GB to ${MAX_VOLUME_SIZE} GB in size.`
-    : undefined;
-
   const price = getDCSpecificPriceByType({
     regionId,
     size: value,
     type: types?.[0],
   });
+
+  const helperText = resize
+    ? `This volume can range from ${resize} GB to ${MAX_VOLUME_SIZE} GB in size.`
+    : undefined;
 
   const priceDisplayText = (
     <FormHelperText>
@@ -90,6 +96,11 @@ export const SizeField = (props: Props) => {
     </Box>
   );
 
+  useEffect(() => {
+    const isInvalidPrice = Boolean(regionId && !price);
+    handleInvalidPrice(isInvalidPrice);
+  }, [handleInvalidPrice, price, regionId]);
+
   return (
     <>
       <TextField
@@ -98,7 +109,7 @@ export const SizeField = (props: Props) => {
         }}
         className={textFieldStyles}
         data-qa-size
-        errorText={error}
+        errorText={regionId && !price ? PRICES_RELOAD_ERROR_NOTICE_TEXT : error}
         helperText={helperText}
         label="Size"
         name={name}

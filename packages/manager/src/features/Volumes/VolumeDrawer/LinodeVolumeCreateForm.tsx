@@ -59,7 +59,13 @@ export const LinodeVolumeCreateForm = (props: Props) => {
 
   const { checkForNewEvents } = useEventsPollingActions();
 
-  const disabled = profile?.restricted && !grants?.global.add_volumes;
+  const [isInvalidPrice, setIsInvalidPrice] = React.useState<boolean>(false);
+
+  const isReadOnly = profile?.restricted && !grants?.global.add_volumes;
+
+  const handleInvalidPrice = (isInvalidPrice: boolean) => {
+    return setIsInvalidPrice(isInvalidPrice);
+  };
 
   const {
     errors,
@@ -112,12 +118,12 @@ export const LinodeVolumeCreateForm = (props: Props) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {disabled && (
+      {isReadOnly && (
         <Notice
           text={
             "You don't have permissions to create a new Volume. Please contact an account administrator for details."
           }
-          important
+          variant="error"
         />
       )}
       {error && <Notice text={error} variant="error" />}
@@ -145,7 +151,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
       </Typography>
       <TextField
         data-qa-volume-label
-        disabled={disabled}
+        disabled={isReadOnly}
         errorText={touched.label ? errors.label : undefined}
         label="Label"
         name="label"
@@ -155,8 +161,9 @@ export const LinodeVolumeCreateForm = (props: Props) => {
         value={values.label}
       />
       <SizeField
-        disabled={disabled}
+        disabled={isReadOnly}
         error={touched.size ? errors.size : undefined}
+        handleInvalidPrice={handleInvalidPrice}
         isFromLinode
         name="size"
         onBlur={handleBlur}
@@ -165,7 +172,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
         value={values.size}
       />
       <ConfigSelect
-        disabled={disabled}
+        disabled={isReadOnly}
         error={touched.config_id ? errors.config_id : undefined}
         key={linode.id}
         linodeId={linode.id}
@@ -191,7 +198,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
               : undefined
             : undefined
         }
-        disabled={disabled}
+        disabled={isReadOnly}
         label="Tags"
         name="tags"
         value={values.tags.map((tag) => ({ label: tag, value: tag }))}
@@ -203,7 +210,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
       />
       <ActionsPanel
         primaryButtonProps={{
-          disabled,
+          disabled: isReadOnly || isInvalidPrice,
           label: 'Create Volume',
           loading: isSubmitting,
           type: 'submit',
