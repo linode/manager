@@ -890,10 +890,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
         /** Analytics creation event */
         handleAnalytics({
-          clonedLinode: linodeID
+          label: this.state.selectedStackScriptLabel,
+          linode: linodeID
             ? this.props.linodesData?.find((linode) => linode.id == linodeID)
             : undefined,
-          label: this.state.selectedStackScriptLabel,
           payload,
           type: createType,
         });
@@ -999,12 +999,12 @@ const actionsAndLabels = {
 };
 
 const handleAnalytics = (details: {
-  clonedLinode?: Linode;
   label?: string;
+  linode?: Linode;
   payload: CreateLinodeRequest;
   type: CreateTypes;
 }) => {
-  const { clonedLinode, label, payload, type } = details;
+  const { label, linode: linode, payload, type } = details;
   const eventInfo = actionsAndLabels[type];
   let eventAction = 'unknown';
   let eventLabel = '';
@@ -1026,8 +1026,8 @@ const handleAnalytics = (details: {
   sendCreateLinodeEvent(
     eventAction,
     eventLabel,
-    clonedLinode
-      ? { isLinodePoweredOff: clonedLinode.status === 'offline' }
+    linode && eventAction == 'clone'
+      ? { isLinodePoweredOff: linode.status === 'offline' }
       : undefined
   );
 };
