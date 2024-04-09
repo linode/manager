@@ -90,7 +90,11 @@ export const readableBytes = (
     num = -num;
   }
 
-  const power = determinePower(num, storageUnits, options);
+  // If no maxUnit is provided, default to the highest unit
+  const power = determinePower(num, storageUnits, {
+    ...options,
+    maxUnit: options.maxUnit ?? storageUnits[storageUnits.length - 1],
+  });
 
   const multiplier = options.base10 ? 1000 : 1024;
 
