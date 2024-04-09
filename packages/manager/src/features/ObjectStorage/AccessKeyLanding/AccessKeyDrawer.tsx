@@ -166,8 +166,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     let payload = {};
     if (
       mode === 'creating' &&
-      'bucket_access' in values &&
-      values.bucket_access !== null &&
+      values?.bucket_access !== null &&
       limitedAccessChecked
     ) {
       const access = values?.bucket_access ?? [];
