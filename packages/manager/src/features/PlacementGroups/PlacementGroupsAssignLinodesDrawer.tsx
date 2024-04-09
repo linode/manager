@@ -16,6 +16,7 @@ import {
   useAllPlacementGroupsQuery,
   useAssignLinodesToPlacementGroup,
 } from 'src/queries/placementGroups';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';
 import {
@@ -121,13 +122,13 @@ export const PlacementGroupsAssignLinodesDrawer = (
         variant: 'success',
       });
       handleDrawerClose();
-    } catch (error) {
-      setGeneralError(
-        error?.[0]?.reason
-          ? error[0].reason
-          : 'An error occurred while adding the Linode to the group'
+    } catch (errorResponse) {
+      const error = getErrorStringOrDefault(
+        errorResponse,
+        'An error occurred while adding the Linode to the group'
       );
-      enqueueSnackbar(error[0]?.reason, { variant: 'error' });
+      setGeneralError(error);
+      enqueueSnackbar(error, { variant: 'error' });
     }
   };
 

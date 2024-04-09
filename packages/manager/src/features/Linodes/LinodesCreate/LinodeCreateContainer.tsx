@@ -8,7 +8,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { vpcsValidateIP } from '@linode/validation';
 import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
-import { WithSnackbarProps, withSnackbar } from 'notistack';
+import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -63,11 +63,11 @@ import {
 } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { isEURegion } from 'src/utilities/formatRegion';
 import {
   getGDPRDetails,
   getSelectedRegionGroup,
 } from 'src/utilities/formatRegion';
-import { isEURegion } from 'src/utilities/formatRegion';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
@@ -127,8 +127,7 @@ interface State {
   vpcIPv4AddressOfLinode?: string;
 }
 
-type CombinedProps = WithSnackbarProps &
-  CreateType &
+type CombinedProps = CreateType &
   WithImagesProps &
   WithTypesProps &
   WithLinodesProps &
@@ -896,12 +895,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         );
 
         /** show toast */
-        this.props.enqueueSnackbar(
-          `Your Linode ${response.label} is being created.`,
-          {
-            variant: 'success',
-          }
-        );
+        enqueueSnackbar(`Your Linode ${response.label} is being created.`, {
+          variant: 'success',
+        });
 
         /** reset the Events polling */
         this.props.checkForNewEvents();
@@ -977,7 +973,6 @@ export default recompose<CombinedProps, {}>(
   withRegions,
   withTypes,
   connected,
-  withSnackbar,
   withFeatureFlags,
   withProfile,
   withAgreements,
