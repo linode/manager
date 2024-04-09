@@ -11,6 +11,7 @@ import {
   setTokenInLocalStorage,
 } from 'src/features/Account/SwitchAccounts/utils';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
+import { useInterval } from 'src/hooks/useInterval';
 import { useAccount } from 'src/queries/account/account';
 import { usePersonalAccessTokensQuery } from 'src/queries/tokens';
 import { parseAPIDate } from 'src/utilities/date';
@@ -65,6 +66,30 @@ export const SessionExpirationDialog = React.memo(
       timeRemaining.seconds < 10 ? '0' : ''
     }${timeRemaining.seconds}`;
 
+    const intervalCallback = () => {
+      if (timeRemaining.minutes < 15 && timeRemaining.seconds === 50) {
+        sessionExpirationContext.updateState({ isOpen: true });
+      }
+      setTimeRemaining((prev) => {
+        if (prev.minutes === 0 && prev.seconds === 0) {
+          cancel();
+          handleLogout();
+          return prev;
+        }
+        return {
+          minutes: prev.seconds === 0 ? prev.minutes - 1 : prev.minutes,
+          seconds: prev.seconds === 0 ? 59 : prev.seconds - 1,
+        };
+      });
+    };
+
+    const { cancel } = useInterval({
+      callback: intervalCallback,
+      cancelOnError: false,
+      delay: 1000,
+      startImmediately: true,
+    });
+
     /**
      * Redirect to the logout page if the parent token is invalid.
      * Otherwise, switch back to the parent account.
@@ -76,11 +101,9 @@ export const SessionExpirationDialog = React.memo(
         history.push('/logout');
       }
 
-      try {
-        await revokeToken();
-      } catch (error) {
-        // Swallow error: Allow user account switching; tokens expire naturally.
-      }
+      await revokeToken().catch(() => {
+        /* Allow user account switching; tokens will expire naturally. */
+      });
 
       updateCurrentToken({ userType: 'parent' });
 
@@ -94,11 +117,9 @@ export const SessionExpirationDialog = React.memo(
 
     const handleRefreshToken = async ({ euuid }: { euuid: string }) => {
       try {
-        try {
-          await revokeToken();
-        } catch (error) {
-          // Swallow error: Allow user account switching; tokens expire naturally.
-        }
+        await revokeToken().catch(() => {
+          /* Allow user account switching; tokens will expire naturally. */
+        });
 
         const proxyToken = await createToken(euuid);
 
@@ -124,10 +145,9 @@ export const SessionExpirationDialog = React.memo(
      * Upon component unmount, it clears the timeout to prevent memory leaks, ensuring the countdown stops accurately.
      */
     useEffect(() => {
-      let timeoutId: NodeJS.Timeout | undefined;
-
       const checkTokenExpiry = () => {
         const expiryString = getStorage('authentication/proxy_token/expire');
+
         if (!expiryString) {
           return;
         }
@@ -137,36 +157,16 @@ export const SessionExpirationDialog = React.memo(
           .diffNow(['minutes', 'seconds'])
           .toObject();
 
-        // Format the remaining time as MM:SS, ensuring minutes and seconds are correctly rounded
-        const minutes = Math.max(0, Math.floor(diff.minutes ?? 0));
-        const seconds = Math.max(0, Math.floor(diff.seconds ?? 0) % 60); // Ensure seconds don't exceed 60
-
+        // Format the remaining time as MM:SS
         setTimeRemaining({
-          minutes,
-          seconds,
+          minutes: Math.max(0, Math.floor(diff.minutes ?? 0)),
+          seconds: Math.max(0, Math.floor(diff.seconds ?? 0) % 60),
         });
-
-        // Set or reset the timeout to check every second for real-time countdown accuracy
-        timeoutId = setTimeout(checkTokenExpiry, 1000);
       };
 
       // Initial timer setup
       checkTokenExpiry();
-
-      // Cleanup function to clear the timeout when the component unmounts
-      return () => {
-        if (timeoutId) {
-          clearTimeout(timeoutId);
-        }
-      };
     }, []);
-
-    useEffect(() => {
-      if (timeRemaining.minutes < 5) {
-        sessionExpirationContext.updateState({ isOpen: true });
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [timeRemaining.minutes, sessionExpirationContext.updateState]);
 
     const actions = (
       <ActionsPanel
