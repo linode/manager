@@ -72,7 +72,7 @@ export const PlacementGroupsLinodesTable = React.memo((props: Props) => {
                       handleClick={handleOrderChange}
                       label={orderStatusKey}
                     >
-                      Status
+                      Linode Status
                     </TableSortCell>
                     <TableCell />
                   </TableRow>
