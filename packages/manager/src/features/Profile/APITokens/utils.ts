@@ -57,12 +57,11 @@ export const levelMap = {
   view: 1,
 };
 
-const defaultScopeMap = (perms: typeof basePerms): Record<string, 0> =>
-  perms.reduce((obj, key) => ({ ...obj, [key]: 0 }), {});
-
-const defaultScopeMapForCreation = (
-  perms: typeof basePerms
-): Record<string, 0> => perms.reduce((obj, key) => ({ ...obj, [key]: -1 }), {});
+const defaultScopeMap = (
+  perms: typeof basePerms,
+  isCreateFlow?: boolean
+): Record<string, -1 | 0> =>
+  perms.reduce((obj, key) => ({ ...obj, [key]: isCreateFlow ? -1 : 0 }), {});
 
 /**
  * This function accepts scopes strings as given by the API, which have the following format:
@@ -98,18 +97,13 @@ export const scopeStringToPermTuples = (
     return basePerms.map((perm) => [perm, 2] as Permission);
   }
 
-  const scopeMap = scopes.split(permRegex).reduce(
-    (map, scopeStr) => {
-      const [perm, level] = scopeStr.split(':');
-      return {
-        ...map,
-        [perm]: levelMap[level],
-      };
-    },
-    isCreateFlow
-      ? defaultScopeMapForCreation(basePerms)
-      : defaultScopeMap(basePerms)
-  );
+  const scopeMap = scopes.split(permRegex).reduce((map, scopeStr) => {
+    const [perm, level] = scopeStr.split(':');
+    return {
+      ...map,
+      [perm]: levelMap[level],
+    };
+  }, defaultScopeMap(basePerms, isCreateFlow));
 
   /**
    * So there are deprecated permission types that have been folded into a parent permission. So
