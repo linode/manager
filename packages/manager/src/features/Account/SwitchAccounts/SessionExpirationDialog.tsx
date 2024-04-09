@@ -85,7 +85,7 @@ export const SessionExpirationDialog = React.memo(
 
     const { cancel } = useInterval({
       callback: intervalCallback,
-      cancelOnError: false,
+      cancelOnError: true,
       delay: 1000,
       startImmediately: true,
     });
