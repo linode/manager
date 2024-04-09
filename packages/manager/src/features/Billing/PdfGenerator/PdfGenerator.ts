@@ -100,7 +100,7 @@ const addLeftHeader = (
     // M3-7847 Add Akamai's Japanese QI System ID to Japanese Invoices.
     if (countryTax) {
       const line =
-        country === 'JP'
+        country === 'JP' && countryTax.qi_registration
           ? `QI Registration # ${countryTax.qi_registration}`
           : `${countryTax.tax_name}: ${countryTax.tax_id}`;
       addLine(line);
