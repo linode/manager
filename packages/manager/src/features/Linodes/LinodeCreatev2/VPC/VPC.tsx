@@ -77,6 +77,11 @@ export const VPC = () => {
           <Controller
             render={({ field, fieldState }) => (
               <VPCSelect
+                helperText={
+                  regionId && !regionSupportsVPCs
+                    ? 'VPC is not available in the selected region.'
+                    : undefined
+                }
                 textFieldProps={{
                   tooltipText: REGION_CAVEAT_HELPER_TEXT,
                 }}
@@ -93,11 +98,6 @@ export const VPC = () => {
             control={control}
             name="interfaces.0.vpc_id"
           />
-          {regionId && !regionSupportsVPCs && (
-            <Typography>
-              VPC is not available in the selected region.
-            </Typography>
-          )}
           {regionId && regionSupportsVPCs && (
             <Box>
               <LinkButton onClick={() => setIsCreateDrawerOpen(true)}>
@@ -150,6 +150,10 @@ export const VPC = () => {
                           </Stack>
                         }
                         onChange={(e, checked) =>
+                          // If "Auto-assign" is checked, set the VPC IP to null
+                          // so that it gets auto-assigned. Otherwise, set it to
+                          // an empty string so that the TextField renders and a
+                          // user can enter one.
                           field.onChange(checked ? null : '')
                         }
                         control={<Checkbox sx={{ ml: -1 }} />}
