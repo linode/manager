@@ -81,12 +81,10 @@ export const SwitchAccountDrawer = ({ onClose, open, userType }: Props) => {
 
       try {
         if (isProxyUser) {
-          try {
-            // Revoke proxy token before switching accounts.
-            await revokeToken();
-          } catch (error) {
-            // Swallow error: Allow user account switching; tokens expire naturally.
-          }
+          // Revoke proxy token before switching accounts.
+          await revokeToken().catch(() => {
+            /* Allow user account switching; tokens will expire naturally. */
+          });
         } else {
           // Before switching to a child account, update the parent token in local storage.
           updateParentTokenInLocalStorage({ currentTokenWithBearer });
@@ -128,11 +126,9 @@ export const SwitchAccountDrawer = ({ onClose, open, userType }: Props) => {
     setSubmitting(true);
 
     // Revoke proxy token before switching to parent account.
-    try {
-      await revokeToken();
-    } catch (error) {
-      // Swallow error
-    }
+    await revokeToken().catch(() => {
+      /* Allow user account switching; tokens will expire naturally. */
+    });
 
     updateCurrentToken({ userType: 'parent' });
 
