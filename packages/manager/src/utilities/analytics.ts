@@ -30,7 +30,9 @@ interface AnalyticsEvent {
   value?: number;
 }
 
-type AnalyticsPayload = Omit<AnalyticsEvent, 'data'> & { data?: string };
+interface AnalyticsPayload extends Omit<AnalyticsEvent, 'data'> {
+  data?: string;
+}
 
 export const sendEvent = (eventPayload: AnalyticsEvent): void => {
   if (!ADOBE_ANALYTICS_URL) {
