@@ -58,12 +58,17 @@ describe('PlacementGroupsCreateDrawer', () => {
     expect(getByText('Anti-affinity')).toBeInTheDocument();
   });
 
-  it('should populate the region select with the selected region prop', async () => {
+  it('should display the region if the selectedRegionId is passed to the drawer', async () => {
     const { getByTestId } = renderWithTheme(
       <PlacementGroupsCreateDrawer
         selectedRegionId="us-east"
         {...commonProps}
-      />
+      />,
+      {
+        MemoryRouter: {
+          initialEntries: ['/linodes/create'],
+        },
+      }
     );
 
     await waitFor(() => {
