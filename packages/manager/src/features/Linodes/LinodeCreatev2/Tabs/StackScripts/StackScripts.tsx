@@ -12,7 +12,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 
 import { useLinodeCreateQueryParams } from '../../utilities';
-import { Images } from './Images';
+import { StackScriptImages } from './StackScriptImages';
 import { StackScriptSelectionList } from './StackScriptSelectionList';
 import { getStackScriptTabIndex, tabs } from './utilities';
 
@@ -55,7 +55,7 @@ export const StackScripts = () => {
           </TabPanels>
         </Tabs>
       </Paper>
-      <Images />
+      <StackScriptImages />
     </Stack>
   );
 };

@@ -58,7 +58,7 @@ describe('StackScriptSelectionList', () => {
     expect(getByText('Choose Another StackScript')).toBeVisible();
   });
 
-  it('checks the selected StackScripts Radio if it is selected', async () => {
+  it('checks the selected StackScripts Radio if it is clicked', async () => {
     const stackscripts = stackScriptFactory.buildList(5);
 
     const selectedStackScript = stackscripts[2];

@@ -17,7 +17,7 @@ export const StackScriptDetailsDialog = (props: Props) => {
 
   const { data: stackscript, error, isLoading } = useStackScriptQuery(
     id ?? -1,
-    Boolean(id)
+    id !== undefined
   );
 
   const title = stackscript

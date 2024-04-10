@@ -20,7 +20,7 @@ import {
 } from 'src/queries/stackscripts';
 
 import { useLinodeCreateQueryParams } from '../../utilities';
-import { StackScriptDetailsDialog } from './StackScriptDialog';
+import { StackScriptDetailsDialog } from './StackScriptDetailsDialog';
 import { StackScriptSelectionRow } from './StackScriptSelectionRow';
 import {
   accountStackScriptFilter,

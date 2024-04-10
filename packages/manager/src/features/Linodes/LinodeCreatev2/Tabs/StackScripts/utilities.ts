@@ -1,5 +1,13 @@
 export type StackScriptTabType = 'Account' | 'Community';
 
+export const tabs = ['Account', 'Community'] as const;
+
+/**
+ * Returns the index of the currently selected StackScripts tab
+ *
+ * @param tab the current tab. Currently, this value comes from 'subtype' query param on the Linode Create flow.
+ * @returns the index of the selected tab
+ */
 export const getStackScriptTabIndex = (tab: StackScriptTabType | undefined) => {
   if (tab === undefined) {
     return 0;
@@ -14,8 +22,11 @@ export const getStackScriptTabIndex = (tab: StackScriptTabType | undefined) => {
   return tabIndex;
 };
 
-export const tabs = ['Account', 'Community'] as const;
-
+/**
+ * API filter for fetching community StackScripts
+ *
+ * We omit some usernames so that Marketplace StackScripts don't show up.
+ */
 export const communityStackScriptFilter = {
   '+and': [
     { username: { '+neq': 'linode' } },
@@ -24,4 +35,7 @@ export const communityStackScriptFilter = {
   mine: false,
 };
 
+/**
+ * API filter for fetching account StackScripts
+ */
 export const accountStackScriptFilter = { mine: true };

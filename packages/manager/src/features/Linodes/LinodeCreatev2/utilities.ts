@@ -147,7 +147,7 @@ export const defaultValues = async (): Promise<CreateLinodeRequest> => {
     : undefined;
 
   return {
-    image: 'linode/debian11',
+    image: stackScriptID ? undefined : 'linode/debian11',
     interfaces: [
       {
         ipam_address: '',

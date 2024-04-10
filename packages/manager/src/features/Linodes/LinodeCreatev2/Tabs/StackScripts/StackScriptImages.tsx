@@ -8,14 +8,14 @@ import { useStackScriptQuery } from 'src/queries/stackscripts';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
-export const Images = () => {
-  const stackscriptId = useWatch<CreateLinodeRequest>({
+export const StackScriptImages = () => {
+  const stackscriptId = useWatch<CreateLinodeRequest, 'stackscript_id'>({
     name: 'stackscript_id',
   });
 
   const { data: stackscript } = useStackScriptQuery(
-    stackscriptId,
-    Boolean(stackscriptId)
+    stackscriptId ?? -1,
+    stackscriptId !== null && stackscriptId !== undefined
   );
 
   const shouldFilterImages = !stackscript?.images.includes('any/all');
