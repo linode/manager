@@ -77,10 +77,9 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       type,
     });
 
-  // Gecko Beta
   const hideEdgeRegions =
     !flags.gecko2?.enabled ||
-    !flags.gecko2?.beta ||
+    flags.gecko2?.ga ||
     !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
 
   const isGeckoGA =
