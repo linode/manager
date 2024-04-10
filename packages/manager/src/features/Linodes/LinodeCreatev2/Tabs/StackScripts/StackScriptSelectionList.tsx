@@ -150,16 +150,12 @@ export const StackScriptSelectionList = ({ type }: Props) => {
           ))}
           {error && <TableRowError colSpan={3} message={error[0].reason} />}
           {isLoading && <TableRowLoading columns={3} rows={25} />}
-          {isFetchingNextPage && <TableRowLoading columns={3} rows={1} />}
-          {hasNextPage && (
-            <TableRow>
-              <TableCell>
-                <Waypoint onEnter={() => fetchNextPage()} />
-              </TableCell>
-            </TableRow>
+          {(isFetchingNextPage || hasNextPage) && (
+            <TableRowLoading columns={3} rows={1} />
           )}
         </TableBody>
       </Table>
+      {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
       <StackScriptDetailsDialog
         id={selectedStackScriptId}
         onClose={() => setSelectedStackScriptId(undefined)}
