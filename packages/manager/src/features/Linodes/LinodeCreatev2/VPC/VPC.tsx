@@ -63,8 +63,8 @@ export const VPC = () => {
     Boolean(selectedVPCId)
   );
 
-  // This is here only to determine which copy should show...
-  const { data } = useVPCsQuery({}, {});
+  // This is here only to determine which copy to show...
+  const { data } = useVPCsQuery({}, { region: regionId }, regionSupportsVPCs);
 
   const copy =
     data?.results === 0
