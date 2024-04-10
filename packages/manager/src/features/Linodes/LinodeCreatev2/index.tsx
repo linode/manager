@@ -44,8 +44,8 @@ export const LinodeCreatev2 = () => {
   const methods = useForm<CreateLinodeRequest>({
     defaultValues,
     resolver: yupResolver(CreateLinodeSchema),
-    mode: 'onChange',
   });
+
   const history = useHistory();
 
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
