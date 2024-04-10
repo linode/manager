@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useController } from 'react-hook-form';
 import { Waypoint } from 'react-waypoint';
 
@@ -28,6 +28,7 @@ import {
 } from './utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
+import { StackScriptDetailsDialog } from './StackScriptDialog';
 
 interface Props {
   type: StackScriptTabType;
@@ -42,6 +43,8 @@ export const StackScriptSelectionList = ({ type }: Props) => {
   const { field } = useController<CreateLinodeRequest, 'stackscript_id'>({
     name: 'stackscript_id',
   });
+
+  const [selectedStackScriptId, setSelectedStackScriptId] = useState<number>();
 
   const { params, updateParams } = useLinodeCreateQueryParams();
 
@@ -83,7 +86,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             <TableRow>
               <TableCell sx={{ width: 20 }}></TableCell>
               <TableCell>StackScript</TableCell>
-              <TableCell></TableCell>
+              <TableCell sx={{ minWidth: 120 }}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -91,6 +94,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
               <StackScriptSelectionRow
                 disabled
                 isSelected={field.value === stackscript.id}
+                onOpenDetails={() => setSelectedStackScriptId(stackscript.id)}
                 onSelect={() => field.onChange(stackscript.id)}
                 stackscript={stackscript}
               />
@@ -128,6 +132,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             <StackScriptSelectionRow
               isSelected={field.value === stackscript.id}
               key={stackscript.id}
+              onOpenDetails={() => setSelectedStackScriptId(stackscript.id)}
               onSelect={() => field.onChange(stackscript.id)}
               stackscript={stackscript}
             />
@@ -138,6 +143,11 @@ export const StackScriptSelectionList = ({ type }: Props) => {
           {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
         </TableBody>
       </Table>
+      <StackScriptDetailsDialog
+        id={selectedStackScriptId}
+        onClose={() => setSelectedStackScriptId(undefined)}
+        open={selectedStackScriptId !== undefined}
+      />
     </Box>
   );
 };
