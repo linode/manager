@@ -58,6 +58,7 @@ export const ImageSelectv2 = (props: Props) => {
           listItemProps={props}
         />
       )}
+      clearOnBlur
       groupBy={(option) => option.vendor ?? 'My Images'}
       label="Images"
       loading={isLoading}

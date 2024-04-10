@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useController } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 import { Waypoint } from 'react-waypoint';
 
 import { Box } from 'src/components/Box';
@@ -40,7 +40,10 @@ export const StackScriptSelectionList = ({ type }: Props) => {
     orderBy: 'deployments_total',
   });
 
-  const { field } = useController<CreateLinodeRequest, 'stackscript_id'>({
+  const { control, setValue } = useFormContext<CreateLinodeRequest>();
+
+  const { field } = useController({
+    control,
     name: 'stackscript_id',
   });
 
@@ -135,17 +138,26 @@ export const StackScriptSelectionList = ({ type }: Props) => {
         <TableBody>
           {stackscripts?.map((stackscript) => (
             <StackScriptSelectionRow
+              onSelect={() => {
+                setValue('image', null);
+                field.onChange(stackscript.id);
+              }}
               isSelected={field.value === stackscript.id}
               key={stackscript.id}
               onOpenDetails={() => setSelectedStackScriptId(stackscript.id)}
-              onSelect={() => field.onChange(stackscript.id)}
               stackscript={stackscript}
             />
           ))}
           {error && <TableRowError colSpan={3} message={error[0].reason} />}
           {isLoading && <TableRowLoading columns={3} rows={25} />}
           {isFetchingNextPage && <TableRowLoading columns={3} rows={1} />}
-          {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
+          {hasNextPage && (
+            <TableRow>
+              <TableCell>
+                <Waypoint onEnter={() => fetchNextPage()} />
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
       <StackScriptDetailsDialog
