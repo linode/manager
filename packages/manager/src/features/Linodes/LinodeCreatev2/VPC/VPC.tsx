@@ -211,7 +211,7 @@ export const VPC = () => {
                     />
                   </Box>
                   <Divider />
-                  <Typography variant="h3">
+                  <Typography fontFamily={(theme) => theme.font.bold}>
                     Assign additional IPv4 ranges
                   </Typography>
                   {formState.errors.interfaces?.[1]?.ip_ranges?.message && (
