@@ -45,28 +45,17 @@ export const PlacementGroupsCreateDrawer = (
     hasFormBeenSubmitted,
     setHasFormBeenSubmitted,
   } = useFormValidateOnChange();
-  const [
-    hasRegionReachedPGCapacity,
-    setHasRegionReachedPGCapacity,
-  ] = React.useState<boolean>(false);
 
   const location = useLocation();
   const displayRegionHeaderText = location.pathname.includes('/linodes/create');
 
   const handleRegionSelect = (region: Region['id']) => {
     setFieldValue('region', region);
-    setHasRegionReachedPGCapacity(
-      hasRegionReachedPlacementGroupCapacity({
-        allPlacementGroups,
-        region: selectedRegion,
-      })
-    );
   };
 
   const handleResetForm = () => {
     resetForm();
     setHasFormBeenSubmitted(false);
-    setHasRegionReachedPGCapacity(false);
   };
 
   const handleDrawerClose = () => {
@@ -131,6 +120,10 @@ export const PlacementGroupsCreateDrawer = (
   );
 
   const pgRegionLimitHelperText = `The maximum number of placement groups in this region is: ${selectedRegion?.placement_group_limits.maximum_pgs_per_customer}`;
+  const isRegionAtCapacity = hasRegionReachedPlacementGroupCapacity({
+    allPlacementGroups,
+    region: selectedRegion,
+  });
 
   return (
     <Drawer
@@ -177,7 +170,7 @@ export const PlacementGroupsCreateDrawer = (
                 Boolean(selectedRegionId) || disabledPlacementGroupCreateButton
               }
               errorText={
-                hasRegionReachedPGCapacity
+                isRegionAtCapacity
                   ? 'This region has reached capacity'
                   : errors.region
               }
@@ -211,7 +204,7 @@ export const PlacementGroupsCreateDrawer = (
               'data-testid': 'submit',
               disabled:
                 isSubmitting ||
-                hasRegionReachedPGCapacity ||
+                isRegionAtCapacity ||
                 disabledPlacementGroupCreateButton,
               label: 'Create Placement Group',
               loading: isSubmitting,
