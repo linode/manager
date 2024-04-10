@@ -16,6 +16,7 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { VPCSelect } from 'src/components/VPCSelect';
 import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
+import { inputMaxWidth } from 'src/foundations/themes/light';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useVPCQuery, useVPCsQuery } from 'src/queries/vpcs';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
@@ -91,6 +92,9 @@ export const VPC = () => {
                     : undefined
                 }
                 textFieldProps={{
+                  sx: (theme) => ({
+                    [theme.breakpoints.up('sm')]: { minWidth: inputMaxWidth },
+                  }),
                   tooltipText: REGION_CAVEAT_HELPER_TEXT,
                 }}
                 disabled={!regionSupportsVPCs}
