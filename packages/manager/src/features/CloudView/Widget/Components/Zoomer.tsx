@@ -9,22 +9,16 @@ export interface ZoomIconProperties {
 }
 
 export const ZoomIcon = (props: ZoomIconProperties) => {
-  const [zoomIn, setZoomIn] = React.useState<boolean>(props.zoomIn);
-
-  const handleClick = () => {
-    setZoomIn((zoomIn) => !zoomIn);
+  const handleClick = (needZoomIn: boolean) => {
+    props.handleZoomToggle(needZoomIn);
   };
 
-  React.useEffect(() => {
-    props.handleZoomToggle(zoomIn);
-  });
-
   const ToggleZoomer = () => {
-    if (zoomIn) {
-      return <ZoomInMap onClick={handleClick} />;
+    if (props.zoomIn) {
+      return <ZoomInMap onClick={() => handleClick(false)} />;
     }
 
-    return <ZoomOutMap onClick={handleClick} />;
+    return <ZoomOutMap onClick={() => handleClick(true)} />;
   };
 
   return (

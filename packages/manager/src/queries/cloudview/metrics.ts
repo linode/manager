@@ -3,10 +3,10 @@ import { queryKey } from "../preferences";
 import { useQuery } from '@tanstack/react-query';
 
 export const useCloudViewMetricsQuery = (serviceType:string, 
-    request:CloudViewMetricsRequest, props:any, widget:Widgets) => {
+    request:CloudViewMetricsRequest, props:any, widgetProps:any[]) => {
 
         return useQuery<CloudViewMetricsResponse, APIError[]>(
-            [queryKey, serviceType, request, props, widget], //querykey and dashboardId makes this uniquely identifiable
+            [queryKey, serviceType, request, props, widgetProps], //querykey and dashboardId makes this uniquely identifiable
             () => getCloudViewMetrics(serviceType, request),
             {
                 enabled: true,                                

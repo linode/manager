@@ -36,8 +36,6 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
 
   const [error, setError] = React.useState<boolean>(false);
 
-  const [zoomIn, setZoomIn] = React.useState<boolean>(props.widget.size == 12);
-
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget }); // any change in agg_functions, step, group_by, will be published to dashboard component for save
 
   const theme = useTheme();
@@ -64,17 +62,22 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     return request;
   };
 
-  const { data: metricsList, isLoading, status } = useCloudViewMetricsQuery(
+  const {
+    data: metricsList,
+    isLoading,
+    status,
+  } = useCloudViewMetricsQuery(
     props.widget.serviceType!,
     getCloudViewMetricsRequest(),
     props,
-    widget
+    [widget.aggregate_function, widget.group_by, widget.time_granularity]
   ); // fetch the metrics on any property change
 
   React.useEffect(() => {
     // on any change in the widget object, just publish the changes to parent component using a callback function
     props.handleWidgetChange(widget);
-  }, [props, widget]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [widget]);
 
   /**
    * This will be executed, each time when we receive response from metrics api
@@ -96,8 +99,8 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
       metricsList.data.result.forEach((graphData) => {
         // todo, move it to utils at a widget level
         const dimension = {
-          backgroundColor: colors[index++],
-          borderColor: colors[index],
+          backgroundColor: colors[index],
+          borderColor: colors[index++],
           data: seriesDataFormatter(
             graphData.values,
             props.dashboardFilters && props.dashboardFilters.timeRange
@@ -135,12 +138,14 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, metricsList]);
 
-  if (isLoading) {
+  if (isLoading || (status == 'success' && data.length == 0)) {
     return <CircleProgress />;
   }
 
-  const handleZoomToggle = (zoomIn: boolean) => {
-    setZoomIn(zoomIn);
+  const handleZoomToggle = (zoomInValue: boolean) => {
+    setWidget((widget) => {
+      return { ...widget, size: zoomInValue ? 12 : 6 };
+    });
   };
 
   const handleAggregateFunctionChange = (aggregateValue: string) => {
@@ -166,9 +171,12 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
   });
 
   return (
-    <Grid xs={zoomIn ? 12 : 6}>
+    <Grid xs={widget.size}>
       {/* add further components like group by resource, aggregate_function, step here , for sample added zoom icon here*/}
-      <StyledZoomIcon handleZoomToggle={handleZoomToggle} zoomIn={zoomIn} />
+      <StyledZoomIcon
+        handleZoomToggle={handleZoomToggle}
+        zoomIn={widget.size == 12 ? true : false}
+      />
       <CloudViewLineGraph
         error={
           error
