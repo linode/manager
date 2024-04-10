@@ -57,13 +57,13 @@ const getDisabledClass = (
 };
 
 const getToolTip = ({
-  sizeTooSmall,
-  planIsDisabled,
   disabledToolTip,
+  planIsDisabled,
+  sizeTooSmall,
 }: {
-  sizeTooSmall: boolean;
-  planIsDisabled?: boolean;
   disabledToolTip?: string;
+  planIsDisabled?: boolean;
+  sizeTooSmall: boolean;
 }) => {
   if (planIsDisabled) {
     return disabledToolTip;
@@ -79,8 +79,8 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     currentPlanHeading,
     disabled,
     disabledClasses,
-    hideDisabledHelpIcons,
     disabledToolTip,
+    hideDisabledHelpIcons,
     idx,
     isCreate,
     isLimitedAvailabilityPlan,
@@ -106,12 +106,12 @@ export const PlanSelection = (props: PlanSelectionProps) => {
 
   const diskSize = selectedDiskSize ? selectedDiskSize : 0;
   const planTooSmall = diskSize > type.disk;
-  const tooltip = getToolTip({
-    sizeTooSmall: planTooSmall,
-    planIsDisabled: planIsDisabled,
-    disabledToolTip: disabledToolTip,
-  });
   const isSamePlan = type.heading === currentPlanHeading;
+  const tooltip = getToolTip({
+    disabledToolTip,
+    planIsDisabled,
+    sizeTooSmall: planTooSmall,
+  });
   const isGPU = type.class === 'gpu';
   const isDisabledClass = getDisabledClass(type.class, disabledClasses ?? []);
   const shouldShowTransfer = showTransfer && type.transfer;
@@ -147,15 +147,15 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       {/* Displays Table Row for larger screens */}
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <StyledDisabledTableRow
-          aria-disabled={rowAriaDisabled}
-          disabled={rowAriaDisabled}
           onClick={() =>
             !isSamePlan && !isDisabled && !isDisabledClass && !planTooSmall
               ? onSelect(type.id)
               : undefined
           }
+          aria-disabled={rowAriaDisabled}
           aria-label={rowAriaLabel}
           data-qa-plan-row={type.formattedLabel}
+          disabled={rowAriaDisabled}
           key={type.id}
         >
           <StyledRadioCell>
