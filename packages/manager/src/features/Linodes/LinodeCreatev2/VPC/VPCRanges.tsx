@@ -20,38 +20,36 @@ export const VPCRanges = () => {
 
   return (
     <Stack spacing={1}>
-      <Stack>
-        {fields.map((field, index) => (
-          <Stack
-            alignItems="flex-start"
-            direction="row"
-            key={field.id}
-            spacing={0.5}
+      {fields.map((field, index) => (
+        <Stack
+          alignItems="flex-start"
+          direction="row"
+          key={field.id}
+          spacing={0.5}
+        >
+          <Controller
+            render={({ field, fieldState }) => (
+              <TextField
+                errorText={fieldState.error?.message}
+                hideLabel
+                label={`IP Range ${index}`}
+                onChange={field.onChange}
+                placeholder="10.0.0.0/24"
+                value={field.value}
+              />
+            )}
+            control={control}
+            name={`interfaces.0.ip_ranges.${index}`}
+          />
+          <IconButton
+            aria-label={`Remove IP Range ${index}`}
+            onClick={() => remove(index)}
+            sx={{ padding: 0.75 }}
           >
-            <Controller
-              render={({ field, fieldState }) => (
-                <TextField
-                  errorText={fieldState.error?.message}
-                  hideLabel
-                  label={`IP Range ${index}`}
-                  onChange={field.onChange}
-                  placeholder="10.0.0.0/24"
-                  value={field.value}
-                />
-              )}
-              control={control}
-              name={`interfaces.0.ip_ranges.${index}`}
-            />
-            <IconButton
-              aria-label={`Remove IP Range ${index}`}
-              onClick={() => remove(index)}
-              sx={{ padding: 0.75 }}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Stack>
-        ))}
-      </Stack>
+            <CloseIcon />
+          </IconButton>
+        </Stack>
+      ))}
       <Box>
         <LinkButton onClick={() => append('')}>Add IPv4 Range</LinkButton>
       </Box>

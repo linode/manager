@@ -139,57 +139,57 @@ export const VPC = () => {
               />
               {selectedSubnetId && (
                 <>
-                  <Box pl={1.5}>
+                  <Stack>
                     <Controller
                       render={({ field }) => (
-                        <FormControlLabel
-                          checked={
-                            field.value === null || field.value === undefined
-                          }
-                          label={
-                            <Stack alignItems="center" direction="row">
-                              <Typography>
-                                Auto-assign a VPC IPv4 address for this Linode
-                                in the VPC
-                              </Typography>
-                              <TooltipIcon
-                                status="help"
-                                text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
-                              />
-                            </Stack>
-                          }
-                          onChange={(e, checked) =>
-                            // If "Auto-assign" is checked, set the VPC IP to null
-                            // so that it gets auto-assigned. Otherwise, set it to
-                            // an empty string so that the TextField renders and a
-                            // user can enter one.
-                            field.onChange(checked ? null : '')
-                          }
-                          control={<Checkbox sx={{ ml: -1 }} />}
-                        />
+                        <Box>
+                          <FormControlLabel
+                            checked={
+                              field.value === null || field.value === undefined
+                            }
+                            label={
+                              <Stack alignItems="center" direction="row">
+                                <Typography>
+                                  Auto-assign a VPC IPv4 address for this Linode
+                                  in the VPC
+                                </Typography>
+                                <TooltipIcon
+                                  status="help"
+                                  text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
+                                />
+                              </Stack>
+                            }
+                            onChange={(e, checked) =>
+                              // If "Auto-assign" is checked, set the VPC IP to null
+                              // so that it gets auto-assigned. Otherwise, set it to
+                              // an empty string so that the TextField renders and a
+                              // user can enter one.
+                              field.onChange(checked ? null : '')
+                            }
+                            control={<Checkbox sx={{ ml: 0.5 }} />}
+                          />
+                        </Box>
                       )}
                       control={control}
                       name="interfaces.0.ipv4.vpc"
                     />
-                  </Box>
-                  {linodeVPCIPAddress !== null &&
-                    linodeVPCIPAddress !== undefined && (
-                      <Controller
-                        render={({ field, fieldState }) => (
-                          <TextField
-                            errorText={fieldState.error?.message}
-                            label="VPC IPv4"
-                            noMarginTop
-                            onChange={field.onChange}
-                            required
-                            value={field.value}
-                          />
-                        )}
-                        control={control}
-                        name="interfaces.0.ipv4.vpc"
-                      />
-                    )}
-                  <Box pl={1.5}>
+                    {linodeVPCIPAddress !== null &&
+                      linodeVPCIPAddress !== undefined && (
+                        <Controller
+                          render={({ field, fieldState }) => (
+                            <TextField
+                              errorText={fieldState.error?.message}
+                              label="VPC IPv4"
+                              onChange={field.onChange}
+                              required
+                              sx={{ my: 2 }}
+                              value={field.value}
+                            />
+                          )}
+                          control={control}
+                          name="interfaces.0.ipv4.vpc"
+                        />
+                      )}
                     <Controller
                       render={({ field }) => (
                         <FormControlLabel
@@ -210,14 +210,14 @@ export const VPC = () => {
                             field.onChange(checked ? 'any' : null)
                           }
                           checked={field.value === 'any'}
-                          control={<Checkbox sx={{ ml: -1 }} />}
+                          control={<Checkbox sx={{ ml: 0.5 }} />}
                           sx={{ mt: 0 }}
                         />
                       )}
                       control={control}
                       name="interfaces.0.ipv4.nat_1_1"
                     />
-                  </Box>
+                  </Stack>
                   <Divider />
                   <Typography fontFamily={(theme) => theme.font.bold}>
                     Assign additional IPv4 ranges
