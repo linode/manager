@@ -189,7 +189,8 @@ export const PlacementGroupsCreateDrawer = (
 
                 return {
                   disabled: isRegionAtCapacity,
-                  reason: 'This region has reached capacity',
+                  reason:
+                    ' You’ve reached the limit of placement groups you can create in this Region.',
                 };
               }}
               handleSelection={(selection) => {

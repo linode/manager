@@ -32,6 +32,7 @@ export const RegionOption = ({
   selected,
 }: Props) => {
   const isDisabledMenuItem = option.disabledProps?.disabled ?? false;
+  const disabledMenuItemReason = option.disabledProps?.reason;
 
   return (
     <Tooltip
@@ -39,17 +40,9 @@ export const RegionOption = ({
         sx: { '& .MuiTooltip-tooltip': { minWidth: 215 } },
       }}
       title={
-        isDisabledMenuItem ? (
-          <>
-            There may be limited capacity in this region.{' '}
-            <Link to="https://www.linode.com/global-infrastructure/availability">
-              Learn more
-            </Link>
-            .
-          </>
-        ) : (
-          ''
-        )
+        isDisabledMenuItem && disabledMenuItemReason
+          ? disabledMenuItemReason
+          : ''
       }
       disableFocusListener={!isDisabledMenuItem}
       disableHoverListener={!isDisabledMenuItem}
@@ -92,12 +85,8 @@ export const RegionOption = ({
                 &nbsp;(This region is an Edge site.)
               </Box>
             )}
-            {isDisabledMenuItem && (
-              <Box sx={visuallyHidden}>
-                Disabled option - There may be limited capacity in this region.
-                Learn more at
-                https://www.linode.com/global-infrastructure/availability.
-              </Box>
+            {isDisabledMenuItem && disabledMenuItemReason && (
+              <Box sx={visuallyHidden}>{disabledMenuItemReason}</Box>
             )}
           </Box>
           {selected && <SelectedIcon visible={selected} />}
