@@ -58,8 +58,8 @@ describe('PlacementGroupsCreateDrawer', () => {
     expect(getByText('Anti-affinity')).toBeInTheDocument();
   });
 
-  it('should display the region if the selectedRegionId is passed to the drawer', async () => {
-    const { getByTestId } = renderWithTheme(
+  it('should populate the region select with the selected region prop', async () => {
+    const { getByText } = renderWithTheme(
       <PlacementGroupsCreateDrawer
         selectedRegionId="us-east"
         {...commonProps}
@@ -72,9 +72,7 @@ describe('PlacementGroupsCreateDrawer', () => {
     );
 
     await waitFor(() => {
-      expect(getByTestId('selected-region')).toHaveTextContent(
-        'Newark, NJ (us-east)'
-      );
+      expect(getByText('Newark, NJ (us-east)')).toBeInTheDocument();
     });
   });
 

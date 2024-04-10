@@ -5,13 +5,13 @@ import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import { useCreatePlacementGroup } from 'src/queries/placementGroups';
@@ -145,10 +145,15 @@ export const PlacementGroupsCreateDrawer = (
         <Stack spacing={1}>
           {generalError && <Notice text={generalError} variant="error" />}
           {selectedRegion && displayRegionHeaderText && (
-            <Typography data-testid="selected-region" py={2}>
-              <strong>Region: </strong>
-              {`${selectedRegion.label} (${selectedRegion.id})`}
-            </Typography>
+            <DescriptionList
+              items={[
+                {
+                  description: `${selectedRegion.label} (${selectedRegion.id})`,
+                  title: 'Region',
+                },
+              ]}
+              sx={{ my: 2 }}
+            />
           )}
           <Divider hidden={!selectedRegionId} />
           <TextField
