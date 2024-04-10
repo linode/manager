@@ -179,6 +179,19 @@ export const PlacementGroupsCreateDrawer = (
                   ? 'This region has reached capacity'
                   : errors.region
               }
+              handleDisabledRegion={(region) => {
+                const isRegionAtCapacity = hasRegionReachedPlacementGroupCapacity(
+                  {
+                    allPlacementGroups,
+                    region,
+                  }
+                );
+
+                return {
+                  disabled: isRegionAtCapacity,
+                  reason: 'This region has reached capacity',
+                };
+              }}
               handleSelection={(selection) => {
                 handleRegionSelect(selection);
               }}

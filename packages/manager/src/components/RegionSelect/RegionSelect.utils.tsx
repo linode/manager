@@ -1,5 +1,7 @@
 import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
+import * as React from 'react';
 
+import { Link } from 'src/components/Link';
 import {
   getRegionCountryGroup,
   getSelectedRegion,
@@ -27,37 +29,60 @@ const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 export const getRegionOptions = ({
   accountAvailabilityData,
   currentCapability,
+  handleDisabledRegion,
   regionFilter,
   regions,
 }: GetRegionOptions): RegionSelectOption[] => {
   const filteredRegionsByCapability = currentCapability
     ? regions.filter((region) =>
-        region.capabilities.includes(currentCapability)
-      )
+      region.capabilities.includes(currentCapability)
+    )
     : regions;
 
   const filteredRegionsByCapabilityAndSiteType = regionFilter
     ? filteredRegionsByCapability.filter(
-        (region) => region.site_type === regionFilter
-      )
+      (region) => region.site_type === regionFilter
+    )
     : filteredRegionsByCapability;
+
+  const isRegionUnavailable = (region: Region) =>
+    isRegionOptionUnavailable({
+      accountAvailabilityData,
+      currentCapability,
+      region,
+    });
 
   return filteredRegionsByCapabilityAndSiteType
     .map((region: Region) => {
       const group = getRegionCountryGroup(region);
+
+      const disabledProps = isRegionUnavailable(region)
+        ? {
+          disabled: true,
+          reason: (
+            <>
+              There may be limited capacity in this region.{' '}
+              <Link to="https://www.linode.com/global-infrastructure/availability">
+                Learn more
+              </Link>
+              .
+            </>
+          ),
+        }
+        : handleDisabledRegion?.(region)?.disabled
+          ? handleDisabledRegion(region)
+          : {
+            disabled: false,
+          };
 
       return {
         data: {
           country: region.country,
           region: group,
         },
+        disabledProps,
         label: `${region.label} (${region.id})`,
         site_type: region.site_type,
-        unavailable: getRegionOptionAvailability({
-          accountAvailabilityData,
-          currentCapability,
-          region,
-        }),
         value: region.id,
       };
     })
@@ -107,8 +132,6 @@ export const getRegionOptions = ({
  * @returns an RegionSelectOption object for the currently selected region.
  */
 export const getSelectedRegionById = ({
-  accountAvailabilityData,
-  currentCapability,
   regions,
   selectedRegionId,
 }: GetSelectedRegionById): RegionSelectOption | undefined => {
@@ -127,11 +150,6 @@ export const getSelectedRegionById = ({
     },
     label: `${selectedRegion.label} (${selectedRegion.id})`,
     site_type: selectedRegion.site_type,
-    unavailable: getRegionOptionAvailability({
-      accountAvailabilityData,
-      currentCapability,
-      region: selectedRegion,
-    }),
     value: selectedRegion.id,
   };
 };
@@ -141,7 +159,7 @@ export const getSelectedRegionById = ({
  *
  * @returns a boolean indicating whether the region is available to the user.
  */
-export const getRegionOptionAvailability = ({
+export const isRegionOptionUnavailable = ({
   accountAvailabilityData,
   currentCapability,
   region,
@@ -153,9 +171,9 @@ export const getRegionOptionAvailability = ({
   const regionWithUnavailability:
     | AccountAvailability
     | undefined = accountAvailabilityData.find(
-    (regionAvailability: AccountAvailability) =>
-      regionAvailability.region === region.id
-  );
+      (regionAvailability: AccountAvailability) =>
+        regionAvailability.region === region.id
+    );
 
   if (!regionWithUnavailability) {
     return false;

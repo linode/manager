@@ -31,7 +31,7 @@ export const RegionOption = ({
   props,
   selected,
 }: Props) => {
-  const isDisabledMenuItem = option.unavailable;
+  const isDisabledMenuItem = option.disabledProps?.disabled ?? false;
 
   return (
     <Tooltip
@@ -76,8 +76,8 @@ export const RegionOption = ({
           isDisabledMenuItem
             ? e.preventDefault()
             : props.onClick
-            ? props.onClick(e)
-            : null
+              ? props.onClick(e)
+              : null
         }
         aria-disabled={undefined}
       >
