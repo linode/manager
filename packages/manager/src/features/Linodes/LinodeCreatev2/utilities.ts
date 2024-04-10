@@ -28,7 +28,16 @@ export const useLinodeCreateQueryParams = () => {
   const rawParams = getQueryParamsFromQueryString(history.location.search);
 
   const updateParams = (params: Partial<LinodeCreateQueryParams>) => {
-    const newParams = new URLSearchParams({ ...rawParams, ...params });
+    const newParams = new URLSearchParams(rawParams);
+
+    for (const key in params) {
+      if (!params[key]) {
+        newParams.delete(key);
+      } else {
+        newParams.set(key, params[key]);
+      }
+    }
+
     history.push({ search: newParams.toString() });
   };
 

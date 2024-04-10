@@ -20,15 +20,15 @@ import {
 } from 'src/queries/stackscripts';
 
 import { useLinodeCreateQueryParams } from '../../utilities';
+import { StackScriptDetailsDialog } from './StackScriptDialog';
 import { StackScriptSelectionRow } from './StackScriptSelectionRow';
 import {
-  StackScriptTabType,
   accountStackScriptFilter,
   communityStackScriptFilter,
 } from './utilities';
 
+import type { StackScriptTabType } from './utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
-import { StackScriptDetailsDialog } from './StackScriptDialog';
 
 interface Props {
   type: StackScriptTabType;
@@ -102,7 +102,12 @@ export const StackScriptSelectionList = ({ type }: Props) => {
           </TableBody>
         </Table>
         <Box display="flex" justifyContent="flex-end">
-          <Button onClick={() => updateParams({ stackScriptID: undefined })}>
+          <Button
+            onClick={() => {
+              field.onChange(null);
+              updateParams({ stackScriptID: undefined });
+            }}
+          >
             Choose Another StackScript
           </Button>
         </Box>

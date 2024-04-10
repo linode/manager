@@ -28,12 +28,7 @@ export const StackScriptSelectionRow = (props: Props) => {
   return (
     <TableRow>
       <TableCell>
-        <Radio
-          checked={isSelected}
-          disabled={disabled}
-          id={`stackscript-${stackscript.id}`}
-          onChange={onSelect}
-        />
+        <Radio checked={isSelected} disabled={disabled} onChange={onSelect} />
       </TableCell>
       <TableCell>
         <Stack>
