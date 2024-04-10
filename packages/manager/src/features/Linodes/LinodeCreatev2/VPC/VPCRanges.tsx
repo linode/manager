@@ -22,7 +22,12 @@ export const VPCRanges = () => {
     <Stack spacing={1}>
       <Stack>
         {fields.map((field, index) => (
-          <Stack alignItems="center" direction="row" key={field.id}>
+          <Stack
+            alignItems="flex-start"
+            direction="row"
+            key={field.id}
+            spacing={0.5}
+          >
             <Controller
               render={({ field, fieldState }) => (
                 <TextField
@@ -40,6 +45,7 @@ export const VPCRanges = () => {
             <IconButton
               aria-label={`Remove IP Range ${index}`}
               onClick={() => remove(index)}
+              sx={{ padding: 0.75 }}
             >
               <CloseIcon />
             </IconButton>
