@@ -17,7 +17,7 @@ import { Typography } from 'src/components/Typography';
 import { VPCSelect } from 'src/components/VPCSelect';
 import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useVPCQuery } from 'src/queries/vpcs';
+import { useVPCQuery, useVPCsQuery } from 'src/queries/vpcs';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
 import { REGION_CAVEAT_HELPER_TEXT } from '../../LinodesCreate/constants';
@@ -63,12 +63,20 @@ export const VPC = () => {
     Boolean(selectedVPCId)
   );
 
+  // This is here only to determine which copy should show...
+  const { data } = useVPCsQuery({}, {});
+
+  const copy =
+    data?.results === 0
+      ? 'Allow Linode to communicate in an isolated environment.'
+      : 'Assign this Linode to an existing VPC.';
+
   return (
     <Paper>
       <Stack spacing={2}>
         <Typography variant="h2">VPC</Typography>
         <Typography>
-          Assign this Linode to an existing VPC.{' '}
+          {copy}{' '}
           <Link to="https://www.linode.com/docs/products/networking/vpc/guides/assign-services/">
             Learn more.
           </Link>
