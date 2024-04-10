@@ -131,37 +131,39 @@ export const VPC = () => {
               />
               {selectedSubnetId && (
                 <>
-                  <Controller
-                    render={({ field }) => (
-                      <FormControlLabel
-                        checked={
-                          field.value === null || field.value === undefined
-                        }
-                        label={
-                          <Stack alignItems="center" direction="row">
-                            <Typography>
-                              Auto-assign a VPC IPv4 address for this Linode in
-                              the VPC
-                            </Typography>
-                            <TooltipIcon
-                              status="help"
-                              text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
-                            />
-                          </Stack>
-                        }
-                        onChange={(e, checked) =>
-                          // If "Auto-assign" is checked, set the VPC IP to null
-                          // so that it gets auto-assigned. Otherwise, set it to
-                          // an empty string so that the TextField renders and a
-                          // user can enter one.
-                          field.onChange(checked ? null : '')
-                        }
-                        control={<Checkbox sx={{ ml: -1 }} />}
-                      />
-                    )}
-                    control={control}
-                    name="interfaces.0.ipv4.vpc"
-                  />
+                  <Box pl={1.5}>
+                    <Controller
+                      render={({ field }) => (
+                        <FormControlLabel
+                          checked={
+                            field.value === null || field.value === undefined
+                          }
+                          label={
+                            <Stack alignItems="center" direction="row">
+                              <Typography>
+                                Auto-assign a VPC IPv4 address for this Linode
+                                in the VPC
+                              </Typography>
+                              <TooltipIcon
+                                status="help"
+                                text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
+                              />
+                            </Stack>
+                          }
+                          onChange={(e, checked) =>
+                            // If "Auto-assign" is checked, set the VPC IP to null
+                            // so that it gets auto-assigned. Otherwise, set it to
+                            // an empty string so that the TextField renders and a
+                            // user can enter one.
+                            field.onChange(checked ? null : '')
+                          }
+                          control={<Checkbox sx={{ ml: -1 }} />}
+                        />
+                      )}
+                      control={control}
+                      name="interfaces.0.ipv4.vpc"
+                    />
+                  </Box>
                   {linodeVPCIPAddress !== null &&
                     linodeVPCIPAddress !== undefined && (
                       <Controller
@@ -179,33 +181,35 @@ export const VPC = () => {
                         name="interfaces.0.ipv4.vpc"
                       />
                     )}
-                  <Controller
-                    render={({ field }) => (
-                      <FormControlLabel
-                        label={
-                          <Stack alignItems="center" direction="row">
-                            <Typography>
-                              Assign a public IPv4 address for this Linode
-                            </Typography>
-                            <TooltipIcon
-                              text={
-                                'Access the internet through the public IPv4 address using static 1:1 NAT.'
-                              }
-                              status="help"
-                            />
-                          </Stack>
-                        }
-                        onChange={(e, checked) =>
-                          field.onChange(checked ? 'any' : null)
-                        }
-                        checked={field.value === 'any'}
-                        control={<Checkbox sx={{ ml: -1 }} />}
-                        sx={{ mt: 0 }}
-                      />
-                    )}
-                    control={control}
-                    name="interfaces.0.ipv4.nat_1_1"
-                  />
+                  <Box pl={1.5}>
+                    <Controller
+                      render={({ field }) => (
+                        <FormControlLabel
+                          label={
+                            <Stack alignItems="center" direction="row">
+                              <Typography>
+                                Assign a public IPv4 address for this Linode
+                              </Typography>
+                              <TooltipIcon
+                                text={
+                                  'Access the internet through the public IPv4 address using static 1:1 NAT.'
+                                }
+                                status="help"
+                              />
+                            </Stack>
+                          }
+                          onChange={(e, checked) =>
+                            field.onChange(checked ? 'any' : null)
+                          }
+                          checked={field.value === 'any'}
+                          control={<Checkbox sx={{ ml: -1 }} />}
+                          sx={{ mt: 0 }}
+                        />
+                      )}
+                      control={control}
+                      name="interfaces.0.ipv4.nat_1_1"
+                    />
+                  </Box>
                   <Divider />
                   <Typography variant="h3">
                     Assign additional IPv4 ranges
