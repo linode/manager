@@ -91,9 +91,9 @@ export const getLinodeCreatePayload = (
 };
 
 /**
- * Performans transformation and ordering on the Linode Create "interfaces" form data.
+ * Transforms and orders the Linode Create "interfaces" form data.
  *
- * We need this so we can put interfaces in the correct order and omit unused iterfaces.
+ * We need this so we can put interfaces in the correct order and omit unused interfaces.
  *
  * @param interfaces raw interfaces from the Linode create flow form
  * @returns a transformed interfaces array in the correct order and with the expected values for the API
