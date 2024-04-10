@@ -1,10 +1,10 @@
 import { accountAvailabilityFactory, regionFactory } from 'src/factories';
 
 import {
-  getRegionOptionAvailability,
   getRegionOptions,
   getSelectedRegionById,
   getSelectedRegionsByIds,
+  isRegionOptionUnavailable,
 } from './RegionSelect.utils';
 
 import type { RegionSelectOption } from './RegionSelect.types';
@@ -223,7 +223,7 @@ describe('getSelectedRegionById', () => {
 
 describe('getRegionOptionAvailability', () => {
   it('should return true if the region is not available', () => {
-    const result = getRegionOptionAvailability({
+    const result = isRegionOptionUnavailable({
       accountAvailabilityData,
       currentCapability: 'Linodes',
       region: regionFactory.build({
@@ -235,7 +235,7 @@ describe('getRegionOptionAvailability', () => {
   });
 
   it('should return false if the region is available', () => {
-    const result = getRegionOptionAvailability({
+    const result = isRegionOptionUnavailable({
       accountAvailabilityData,
       currentCapability: 'Linodes',
       region: regionFactory.build({

@@ -4,7 +4,6 @@ import React from 'react';
 import EdgeServer from 'src/assets/icons/entityIcons/edge-server.svg';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
-import { Link } from 'src/components/Link';
 import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 
