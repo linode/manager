@@ -13,6 +13,7 @@ import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
+import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
@@ -66,3 +67,18 @@ export const useStackScriptsInfiniteQuery = (
       return page + 1;
     },
   });
+
+export const stackScriptEventHandler = ({
+  event,
+  queryClient,
+}: EventHandlerData) => {
+  // Keep the infinite store up to date
+  queryClient.invalidateQueries(stackscriptQueries.infinite._def);
+
+  // If the event has a StackScript entity attached, invalidate it
+  if (event.entity?.id) {
+    queryClient.invalidateQueries(
+      stackscriptQueries.stackscript(event.entity.id).queryKey
+    );
+  }
+};
