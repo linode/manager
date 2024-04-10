@@ -64,21 +64,18 @@ const expectedRegions: RegionSelectOption[] = [
     },
     label: 'US Location (us-1)',
     site_type: 'core',
-    unavailable: false,
     value: 'us-1',
   },
   {
     data: { country: 'ca', region: 'North America' },
     label: 'CA Location (ca-1)',
     site_type: 'core',
-    unavailable: false,
     value: 'ca-1',
   },
   {
     data: { country: 'jp', region: 'Asia' },
     label: 'JP Location (jp-1)',
     site_type: 'core',
-    unavailable: false,
     value: 'jp-1',
   },
 ];

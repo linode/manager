@@ -36,7 +36,11 @@ export const RegionOption = ({
   return (
     <Tooltip
       PopperProps={{
-        sx: { '& .MuiTooltip-tooltip': { minWidth: 215 } },
+        sx: {
+          '& .MuiTooltip-tooltip': {
+            minWidth: option.disabledProps?.tooltipWidth ?? 215,
+          },
+        },
       }}
       title={
         isDisabledMenuItem && disabledMenuItemReason
@@ -68,8 +72,8 @@ export const RegionOption = ({
           isDisabledMenuItem
             ? e.preventDefault()
             : props.onClick
-              ? props.onClick(e)
-              : null
+            ? props.onClick(e)
+            : null
         }
         aria-disabled={undefined}
       >

@@ -12,6 +12,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import { useCreatePlacementGroup } from 'src/queries/placementGroups';
@@ -174,11 +175,6 @@ export const PlacementGroupsCreateDrawer = (
               disabled={
                 Boolean(selectedRegionId) || disabledPlacementGroupCreateButton
               }
-              errorText={
-                isRegionAtCapacity
-                  ? 'This region has reached capacity'
-                  : errors.region
-              }
               handleDisabledRegion={(region) => {
                 const isRegionAtCapacity = hasRegionReachedPlacementGroupCapacity(
                   {
@@ -189,8 +185,19 @@ export const PlacementGroupsCreateDrawer = (
 
                 return {
                   disabled: isRegionAtCapacity,
-                  reason:
-                    ' You’ve reached the limit of placement groups you can create in this Region.',
+                  reason: (
+                    <>
+                      <Typography>
+                        You’ve reached the limit of placement groups you can
+                        create in this Region.
+                      </Typography>
+                      <Typography mt={2}>
+                        The maximum number of placement groups in this region
+                        is:
+                      </Typography>
+                    </>
+                  ),
+                  tooltipWidth: 300,
                 };
               }}
               handleSelection={(selection) => {

@@ -17,6 +17,7 @@ export interface RegionSelectOption {
   disabledProps?: {
     disabled: boolean;
     reason?: JSX.Element | string;
+    tooltipWidth?: number;
   };
   label: string;
   site_type: RegionSite;
