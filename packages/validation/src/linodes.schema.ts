@@ -272,7 +272,7 @@ export const CreateLinodeSchema = object({
   swap_size: number().notRequired(),
   image: string().when('stackscript_id', {
     is: (value?: number) => value !== undefined,
-    then: string().required('Image is required.'),
+    then: string().ensure().required('Image is required.'),
     otherwise: string().nullable().notRequired(),
   }),
   authorized_keys: array().of(string()).notRequired(),
