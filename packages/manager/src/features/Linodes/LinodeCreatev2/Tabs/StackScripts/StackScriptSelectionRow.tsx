@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
@@ -28,22 +29,29 @@ export const StackScriptSelectionRow = (props: Props) => {
   return (
     <TableRow>
       <TableCell>
-        <Radio checked={isSelected} disabled={disabled} onChange={onSelect} />
+        <Radio
+          checked={isSelected}
+          disabled={disabled}
+          id={`stackscript-${stackscript.id}`}
+          onChange={onSelect}
+        />
       </TableCell>
       <TableCell>
-        <Stack>
-          <Typography>
-            {stackscript.username} / {stackscript.label}
-          </Typography>
-          <Typography
-            sx={(theme) => ({
-              color: theme.textColors.tableHeader,
-              fontSize: '.75rem',
-            })}
-          >
-            {truncate(stackscript.description, 100)}
-          </Typography>
-        </Stack>
+        <label htmlFor={`stackscript-${stackscript.id}`}>
+          <Stack sx={{ cursor: 'pointer' }}>
+            <Typography>
+              {stackscript.username} / {stackscript.label}
+            </Typography>
+            <Typography
+              sx={(theme) => ({
+                color: theme.textColors.tableHeader,
+                fontSize: '.75rem',
+              })}
+            >
+              {truncate(stackscript.description, 100)}
+            </Typography>
+          </Stack>
+        </label>
       </TableCell>
       <TableCell actionCell sx={{ minWidth: 120 }}>
         <InlineMenuAction actionText="Show Details" onClick={onOpenDetails} />
