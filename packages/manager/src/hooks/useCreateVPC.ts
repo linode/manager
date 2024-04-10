@@ -181,6 +181,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   };
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       description: '',
       label: '',

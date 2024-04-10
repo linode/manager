@@ -195,7 +195,15 @@ export const LinodeInterfaceSchema = object().shape({
     .of(string())
     .when('purpose', {
       is: 'vpc',
-      then: array().of(string().test(validateIP)).notRequired(),
+      then: array()
+        .of(
+          string().test(
+            'valid-ip-range',
+            'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
+            validateIP
+          )
+        )
+        .notRequired(),
       otherwise: array().test({
         name: testnameDisallowedBasedOnPurpose('VPC'),
         message: testmessageDisallowedBasedOnPurpose('vpc', 'ip_ranges'),

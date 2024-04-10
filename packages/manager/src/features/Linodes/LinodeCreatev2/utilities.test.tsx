@@ -40,40 +40,252 @@ describe('getLinodeCreatePayload', () => {
 });
 
 describe('getInterfacesPayload', () => {
-  it('should remove a VLAN from the payload if the label is empty', () => {
+  it('should return undefined when there is no vpc or vlan', () => {
     expect(
-      getInterfacesPayload([
-        {
-          ipam_address: '',
-          label: '',
-          purpose: 'vlan',
-        },
-      ])
-    ).toStrictEqual([]);
-  });
-
-  it('should remove a VPC from the payload if the id is not set', () => {
-    expect(
-      getInterfacesPayload([
-        {
-          ipam_address: '',
-          label: '',
-          purpose: 'vpc',
-          vpc_id: null,
-        },
-      ])
-    ).toStrictEqual([]);
-  });
-
-  it('should return undefined if there is only a public interface', () => {
-    expect(
-      getInterfacesPayload([
-        {
-          ipam_address: '',
-          label: '',
-          purpose: 'public',
-        },
-      ])
+      getInterfacesPayload(
+        [
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vpc',
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vlan',
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'public',
+          },
+        ],
+        false
+      )
     ).toStrictEqual(undefined);
+  });
+
+  it('should return a public interface and a VLAN interface when a VLAN is selected', () => {
+    expect(
+      getInterfacesPayload(
+        [
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vpc',
+          },
+          {
+            ipam_address: '',
+            label: 'my-vlan',
+            purpose: 'vlan',
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'public',
+          },
+        ],
+        false
+      )
+    ).toStrictEqual([
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'public',
+      },
+      {
+        ipam_address: '',
+        label: 'my-vlan',
+        purpose: 'vlan',
+      },
+    ]);
+  });
+
+  it('should return a public interface and a VLAN interface when a VLAN is selected with a private IP', () => {
+    expect(
+      getInterfacesPayload(
+        [
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vpc',
+          },
+          {
+            ipam_address: '',
+            label: 'my-vlan',
+            purpose: 'vlan',
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'public',
+          },
+        ],
+        true
+      )
+    ).toStrictEqual([
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'public',
+      },
+      {
+        ipam_address: '',
+        label: 'my-vlan',
+        purpose: 'vlan',
+      },
+    ]);
+  });
+
+  it('should return a VPC interface if only a VPC is selected', () => {
+    expect(
+      getInterfacesPayload(
+        [
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vpc',
+            vpc_id: 5,
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vlan',
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'public',
+          },
+        ],
+        false
+      )
+    ).toStrictEqual([
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'vpc',
+        vpc_id: 5,
+      },
+    ]);
+  });
+
+  it('should return a VPC interface and a public interface if a VPC is selected and Private IP is enabled', () => {
+    expect(
+      getInterfacesPayload(
+        [
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vpc',
+            vpc_id: 5,
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vlan',
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'public',
+          },
+        ],
+        true
+      )
+    ).toStrictEqual([
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'vpc',
+        vpc_id: 5,
+      },
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'public',
+      },
+    ]);
+  });
+
+  it('should return a VPC interface and a VLAN interface when both are specified (no private IP)', () => {
+    expect(
+      getInterfacesPayload(
+        [
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vpc',
+            vpc_id: 5,
+          },
+          {
+            ipam_address: '',
+            label: 'my-vlan',
+            purpose: 'vlan',
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'public',
+          },
+        ],
+        false
+      )
+    ).toStrictEqual([
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'vpc',
+        vpc_id: 5,
+      },
+      {
+        ipam_address: '',
+        label: 'my-vlan',
+        purpose: 'vlan',
+      },
+    ]);
+  });
+
+  it('should return a VPC, VLAN, and Public interface if a VPC is selcted, a VLAN is selected, and Private IP is enabled', () => {
+    expect(
+      getInterfacesPayload(
+        [
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vpc',
+            vpc_id: 5,
+          },
+          {
+            ipam_address: '',
+            label: 'my-vlan',
+            purpose: 'vlan',
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'public',
+          },
+        ],
+        true
+      )
+    ).toStrictEqual([
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'vpc',
+        vpc_id: 5,
+      },
+      {
+        ipam_address: '',
+        label: 'my-vlan',
+        purpose: 'vlan',
+      },
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'public',
+      },
+    ]);
   });
 });
