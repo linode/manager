@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Resource links to NodeBalancers empty state landing page ([#10345](https://github.com/linode/manager/pull/10345))
 - New DescriptionList component ([#10325](https://github.com/linode/manager/pull/10325))
+- Akamai's Japanese QI System ID to Japanese Invoices ([#10356](https://github.com/linode/manager/pull/10356))
 
 ### Changed:
 
