@@ -27,6 +27,7 @@ import VPCIcon from 'src/assets/icons/entityIcons/vpc.svg';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
+import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 import { useDatabaseEnginesQuery } from 'src/queries/databases';
@@ -63,6 +64,7 @@ export const AddNewMenu = () => {
     (checkRestrictedUser && !enginesLoading && !enginesError);
 
   const { isACLBEnabled } = useIsACLBEnabled();
+  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -114,7 +116,7 @@ export const AddNewMenu = () => {
     {
       description: "Control your Linodes' physical placement",
       entity: 'Placement Groups',
-      hide: !flags.placementGroups?.enabled,
+      hide: !isPlacementGroupsEnabled,
       icon: PlacementGroupsIcon,
       link: '/placement-groups/create',
     },
