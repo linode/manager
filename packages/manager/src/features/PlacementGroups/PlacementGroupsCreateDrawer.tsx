@@ -2,6 +2,7 @@ import { createPlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
@@ -44,31 +45,17 @@ export const PlacementGroupsCreateDrawer = (
     hasFormBeenSubmitted,
     setHasFormBeenSubmitted,
   } = useFormValidateOnChange();
-  const [
-    hasRegionReachedPGCapacity,
-    setHasRegionReachedPGCapacity,
-  ] = React.useState<boolean>(false);
 
-  const selectedRegionFromProps = regions?.find(
-    (r) => r.id === selectedRegionId
-  );
+  const location = useLocation();
+  const displayRegionHeaderText = location.pathname.includes('/linodes/create');
 
   const handleRegionSelect = (region: Region['id']) => {
-    const selectedRegion = regions?.find((r) => r.id === region);
-
     setFieldValue('region', region);
-    setHasRegionReachedPGCapacity(
-      hasRegionReachedPlacementGroupCapacity({
-        allPlacementGroups,
-        region: selectedRegion,
-      })
-    );
   };
 
   const handleResetForm = () => {
     resetForm();
     setHasFormBeenSubmitted(false);
-    setHasRegionReachedPGCapacity(false);
   };
 
   const handleDrawerClose = () => {
@@ -127,6 +114,17 @@ export const PlacementGroupsCreateDrawer = (
 
   const generalError = error?.find((e) => !e.field)?.reason;
 
+  const selectedRegion = React.useMemo(
+    () => regions?.find((region) => region.id == values.region),
+    [regions, values.region]
+  );
+
+  const pgRegionLimitHelperText = `The maximum number of placement groups in this region is: ${selectedRegion?.placement_group_limits?.maximum_pgs_per_customer}`;
+  const isRegionAtCapacity = hasRegionReachedPlacementGroupCapacity({
+    allPlacementGroups,
+    region: selectedRegion,
+  });
+
   return (
     <Drawer
       onClose={handleDrawerClose}
@@ -146,11 +144,11 @@ export const PlacementGroupsCreateDrawer = (
       <form onSubmit={handleSubmit}>
         <Stack spacing={1}>
           {generalError && <Notice text={generalError} variant="error" />}
-          {selectedRegionFromProps && (
+          {selectedRegion && displayRegionHeaderText && (
             <DescriptionList
               items={[
                 {
-                  description: `${selectedRegionFromProps.label} (${selectedRegionFromProps.id})`,
+                  description: `${selectedRegion.label} (${selectedRegion.id})`,
                   title: 'Region',
                 },
               ]}
@@ -177,7 +175,7 @@ export const PlacementGroupsCreateDrawer = (
                 Boolean(selectedRegionId) || disabledPlacementGroupCreateButton
               }
               errorText={
-                hasRegionReachedPGCapacity
+                isRegionAtCapacity
                   ? 'This region has reached capacity'
                   : errors.region
               }
@@ -185,9 +183,10 @@ export const PlacementGroupsCreateDrawer = (
                 handleRegionSelect(selection);
               }}
               currentCapability="Placement Group"
-              helperText="Only regions supporting Placement Groups are listed."
+              helperText={values.region && pgRegionLimitHelperText}
               regions={regions ?? []}
               selectedId={selectedRegionId ?? values.region}
+              tooltipText="Only regions supporting Placement Groups are listed."
             />
           )}
           <PlacementGroupsAffinityTypeSelect
@@ -210,7 +209,7 @@ export const PlacementGroupsCreateDrawer = (
               'data-testid': 'submit',
               disabled:
                 isSubmitting ||
-                hasRegionReachedPGCapacity ||
+                isRegionAtCapacity ||
                 disabledPlacementGroupCreateButton,
               label: 'Create Placement Group',
               loading: isSubmitting,

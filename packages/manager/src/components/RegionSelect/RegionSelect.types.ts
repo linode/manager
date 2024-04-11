@@ -42,6 +42,7 @@ export interface RegionSelectProps
   required?: boolean;
   selectedId: null | string;
   showEdgeIconHelperText?: boolean;
+  tooltipText?: string;
   width?: number;
 }
 
@@ -63,6 +64,7 @@ export interface RegionMultiSelectProps
   required?: boolean;
   selectedIds: string[];
   sortRegionOptions?: (a: RegionSelectOption, b: RegionSelectOption) => number;
+  tooltipText?: string;
   width?: number;
 }
 

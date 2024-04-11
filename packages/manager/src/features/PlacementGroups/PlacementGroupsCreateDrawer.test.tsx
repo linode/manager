@@ -63,7 +63,12 @@ describe('PlacementGroupsCreateDrawer', () => {
       <PlacementGroupsCreateDrawer
         selectedRegionId="us-east"
         {...commonProps}
-      />
+      />,
+      {
+        MemoryRouter: {
+          initialEntries: ['/linodes/create'],
+        },
+      }
     );
 
     await waitFor(() => {
