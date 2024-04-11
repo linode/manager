@@ -1,14 +1,22 @@
 import type { Linode, LongviewClient } from '@linode/api-v4';
 import { createLongviewClient } from '@linode/api-v4';
+import { longviewResponseFactory, longviewClientFactory } from 'src/factories';
+import { LongviewResponse } from 'src/features/Longview/request.types';
 import { authenticate } from 'support/api/authentication';
 import {
   longviewInstallTimeout,
   longviewStatusTimeout,
+  longviewEmptyStateMessage,
+  longviewAddClientButtonText,
 } from 'support/constants/longview';
 import {
   interceptFetchLongviewStatus,
   interceptGetLongviewClients,
+  mockGetLongviewClients,
+  mockFetchLongviewStatus,
+  mockCreateLongviewClient,
 } from 'support/intercepts/longview';
+import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createAndBootLinode } from 'support/util/linodes';
 import { randomLabel, randomString } from 'support/util/random';
@@ -175,5 +183,45 @@ describe('longview', () => {
           cy.findByText('Storage').should('be.visible');
         });
     });
+  });
+
+  /*
+   * - Confirms that the landing page empty state message is displayed when no Longview clients are present.
+   * - Confirms that UI updates to show the new client when creating one.
+   */
+  it('displays empty state message when no clients are present and shows the new client when creating one', () => {
+    const client: LongviewClient = longviewClientFactory.build();
+    const status: LongviewResponse = longviewResponseFactory.build();
+    mockGetLongviewClients([]).as('getLongviewClients');
+    mockCreateLongviewClient(client).as('createLongviewClient');
+    mockFetchLongviewStatus(status).as('fetchLongviewStatus');
+
+    cy.visitWithLogin('/longview');
+    cy.wait('@getLongviewClients');
+
+    // Confirms that a landing page empty state message is displayed
+    cy.findByText(longviewEmptyStateMessage).should('be.visible');
+    cy.findByText(longviewAddClientButtonText).should('be.visible');
+
+    ui.button
+      .findByTitle(longviewAddClientButtonText)
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+    cy.wait('@createLongviewClient');
+
+    // Confirms that UI updates to show the new client when creating one.
+    cy.findByText(`${client.label}`).should('be.visible');
+    cy.get(`[data-qa-longview-client="${client.id}"]`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Waiting for data...').should('not.exist');
+        cy.findByText('CPU').should('be.visible');
+        cy.findByText('RAM').should('be.visible');
+        cy.findByText('Swap').should('be.visible');
+        cy.findByText('Load').should('be.visible');
+        cy.findByText('Network').should('be.visible');
+        cy.findByText('Storage').should('be.visible');
+      });
   });
 });
