@@ -1,7 +1,11 @@
 import { createLinodeRequestFactory } from 'src/factories';
 
 import { base64UserData, userData } from '../LinodesCreate/utilities.test';
-import { getLinodeCreatePayload, getTabIndex } from './utilities';
+import {
+  getInterfacesPayload,
+  getLinodeCreatePayload,
+  getTabIndex,
+} from './utilities';
 
 describe('getTabIndex', () => {
   it('should return 0 when there is no value specifying the tab', () => {
@@ -32,5 +36,256 @@ describe('getLinodeCreatePayload', () => {
       ...values,
       metadata: { user_data: base64UserData },
     });
+  });
+});
+
+describe('getInterfacesPayload', () => {
+  it('should return undefined when there is no vpc or vlan', () => {
+    expect(
+      getInterfacesPayload(
+        [
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vpc',
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vlan',
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'public',
+          },
+        ],
+        false
+      )
+    ).toStrictEqual(undefined);
+  });
+
+  it('should return a public interface and a VLAN interface when a VLAN is selected', () => {
+    expect(
+      getInterfacesPayload(
+        [
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vpc',
+          },
+          {
+            ipam_address: '',
+            label: 'my-vlan',
+            purpose: 'vlan',
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'public',
+          },
+        ],
+        false
+      )
+    ).toStrictEqual([
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'public',
+      },
+      {
+        ipam_address: '',
+        label: 'my-vlan',
+        purpose: 'vlan',
+      },
+    ]);
+  });
+
+  it('should return a public interface and a VLAN interface when a VLAN is selected with a private IP', () => {
+    expect(
+      getInterfacesPayload(
+        [
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vpc',
+          },
+          {
+            ipam_address: '',
+            label: 'my-vlan',
+            purpose: 'vlan',
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'public',
+          },
+        ],
+        true
+      )
+    ).toStrictEqual([
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'public',
+      },
+      {
+        ipam_address: '',
+        label: 'my-vlan',
+        purpose: 'vlan',
+      },
+    ]);
+  });
+
+  it('should return a VPC interface if only a VPC is selected', () => {
+    expect(
+      getInterfacesPayload(
+        [
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vpc',
+            vpc_id: 5,
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vlan',
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'public',
+          },
+        ],
+        false
+      )
+    ).toStrictEqual([
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'vpc',
+        vpc_id: 5,
+      },
+    ]);
+  });
+
+  it('should return a VPC interface and a public interface if a VPC is selected and Private IP is enabled', () => {
+    expect(
+      getInterfacesPayload(
+        [
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vpc',
+            vpc_id: 5,
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vlan',
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'public',
+          },
+        ],
+        true
+      )
+    ).toStrictEqual([
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'vpc',
+        vpc_id: 5,
+      },
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'public',
+      },
+    ]);
+  });
+
+  it('should return a VPC interface and a VLAN interface when both are specified (no private IP)', () => {
+    expect(
+      getInterfacesPayload(
+        [
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vpc',
+            vpc_id: 5,
+          },
+          {
+            ipam_address: '',
+            label: 'my-vlan',
+            purpose: 'vlan',
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'public',
+          },
+        ],
+        false
+      )
+    ).toStrictEqual([
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'vpc',
+        vpc_id: 5,
+      },
+      {
+        ipam_address: '',
+        label: 'my-vlan',
+        purpose: 'vlan',
+      },
+    ]);
+  });
+
+  it('should return a VPC, VLAN, and Public interface if a VPC is selcted, a VLAN is selected, and Private IP is enabled', () => {
+    expect(
+      getInterfacesPayload(
+        [
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'vpc',
+            vpc_id: 5,
+          },
+          {
+            ipam_address: '',
+            label: 'my-vlan',
+            purpose: 'vlan',
+          },
+          {
+            ipam_address: '',
+            label: '',
+            purpose: 'public',
+          },
+        ],
+        true
+      )
+    ).toStrictEqual([
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'vpc',
+        vpc_id: 5,
+      },
+      {
+        ipam_address: '',
+        label: 'my-vlan',
+        purpose: 'vlan',
+      },
+      {
+        ipam_address: '',
+        label: '',
+        purpose: 'public',
+      },
+    ]);
   });
 });

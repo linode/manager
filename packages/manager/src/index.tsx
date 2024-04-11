@@ -65,7 +65,6 @@ const Main = () => {
                 <Snackbar
                   anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                   autoHideDuration={4000}
-                  data-qa-toast
                   hideIconVariant={true}
                   maxSnack={3}
                 >
