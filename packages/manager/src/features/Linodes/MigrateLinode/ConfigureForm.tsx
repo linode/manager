@@ -186,7 +186,7 @@ export const ConfigureForm = React.memo((props: Props) => {
               {...panelPrice(selectedRegion, selectedRegionPrice, 'new')}
             />
           )}
-          {showPlacementGroups && (
+          {showPlacementGroups && hasRegionPlacementGroupCapability && (
             <PlacementGroupsSelect
               handlePlacementGroupChange={(placementGroup) => {
                 handlePlacementGroupSelection(placementGroup);
