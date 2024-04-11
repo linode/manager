@@ -80,7 +80,7 @@ export const FromLinodeContent = (props: CombinedProps) => {
       (linode) => !getIsEdgeRegion(regionsData, linode.region) // Hide linodes that are in an edge region
     );
 
-  const filteredLinodes = flags.gecko
+  const filteredLinodes = flags.gecko2?.enabled
     ? filterEdgeLinodes(linodesData)
     : linodesData;
 

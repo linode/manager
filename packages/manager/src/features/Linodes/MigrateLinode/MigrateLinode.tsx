@@ -151,7 +151,7 @@ export const MigrateLinode = React.memo((props: Props) => {
   );
 
   const edgeRegionWarning =
-    flags.gecko && linodeIsInEdgeRegion
+    flags.gecko2?.enabled && linodeIsInEdgeRegion
       ? 'Edge sites may only be migrated to other Edge sites.'
       : undefined;
 

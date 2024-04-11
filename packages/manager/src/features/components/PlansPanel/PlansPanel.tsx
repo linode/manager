@@ -87,7 +87,7 @@ export const PlansPanel = (props: Props) => {
   );
 
   const hideEdgeRegions =
-    !flags.gecko ||
+    !flags.gecko2?.enabled ||
     !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
 
   const showEdgePlanTable =
