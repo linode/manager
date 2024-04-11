@@ -12,6 +12,7 @@ import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
  * This interface is used to type the query params on the Linode Create flow.
  */
 interface LinodeCreateQueryParams {
+  imageID: string | undefined;
   stackScriptID: string | undefined;
   subtype: StackScriptTabType | undefined;
   type: LinodeCreateType | undefined;
@@ -27,6 +28,9 @@ export const useLinodeCreateQueryParams = () => {
 
   const rawParams = getQueryParamsFromQueryString(history.location.search);
 
+  /**
+   * Updates query params
+   */
   const updateParams = (params: Partial<LinodeCreateQueryParams>) => {
     const newParams = new URLSearchParams(rawParams);
 
@@ -41,7 +45,17 @@ export const useLinodeCreateQueryParams = () => {
     history.push({ search: newParams.toString() });
   };
 
+  /**
+   * Replaces query params with the provided values
+   */
+  const setParams = (params: Partial<LinodeCreateQueryParams>) => {
+    const newParams = new URLSearchParams(params);
+
+    history.push({ search: newParams.toString() });
+  };
+
   const params = {
+    imageID: rawParams.imageID as string | undefined,
     stackScriptID: rawParams.stackScriptID
       ? Number(rawParams.stackScriptID)
       : undefined,
@@ -49,7 +63,7 @@ export const useLinodeCreateQueryParams = () => {
     type: rawParams.type as LinodeCreateType | undefined,
   };
 
-  return { params, updateParams };
+  return { params, setParams, updateParams };
 };
 
 /**
@@ -155,6 +169,24 @@ export const getInterfacesPayload = (
   return undefined;
 };
 
+const defaultVPCInterface = {
+  ipam_address: '',
+  label: '',
+  purpose: 'vpc',
+} as const;
+
+const defaultVLANInterface = {
+  ipam_address: '',
+  label: '',
+  purpose: 'vlan',
+} as const;
+
+const defaultPublicInterface = {
+  ipam_address: '',
+  label: '',
+  purpose: 'public',
+} as const;
+
 export const defaultValues = async (): Promise<CreateLinodeRequest> => {
   const queryParams = getQueryParamsFromQueryString(window.location.search);
 
@@ -162,27 +194,59 @@ export const defaultValues = async (): Promise<CreateLinodeRequest> => {
     ? Number(queryParams.stackScriptID)
     : undefined;
 
+  const imageID = queryParams.imageID;
+
   return {
-    image: stackScriptID ? undefined : 'linode/debian11',
+    image: stackScriptID ? undefined : imageID ?? 'linode/debian11',
     interfaces: [
-      {
-        ipam_address: '',
-        label: '',
-        purpose: 'vpc',
-      },
-      {
-        ipam_address: '',
-        label: '',
-        purpose: 'vlan',
-      },
-      {
-        ipam_address: '',
-        label: '',
-        purpose: 'public',
-      },
+      defaultVPCInterface,
+      defaultVLANInterface,
+      defaultPublicInterface,
     ],
     region: '',
     stackscript_id: stackScriptID,
     type: '',
   };
+};
+
+const defaultValuesForImages = {
+  interfaces: [
+    defaultVPCInterface,
+    defaultVLANInterface,
+    defaultPublicInterface,
+  ],
+  region: '',
+  type: '',
+};
+
+const defaultValuesForDistributions = {
+  image: 'linode/debian11',
+  interfaces: [
+    defaultVPCInterface,
+    defaultVLANInterface,
+    defaultPublicInterface,
+  ],
+  region: '',
+  type: '',
+};
+
+const defaultValuesForStackScripts = {
+  image: undefined,
+  interfaces: [
+    defaultVPCInterface,
+    defaultVLANInterface,
+    defaultPublicInterface,
+  ],
+  region: '',
+  stackscript_id: null,
+  type: '',
+};
+
+export const defaultValuesMap: Record<LinodeCreateType, CreateLinodeRequest> = {
+  Backups: defaultValuesForImages,
+  'Clone Linode': defaultValuesForImages,
+  Distributions: defaultValuesForDistributions,
+  Images: defaultValuesForImages,
+  'One-Click': defaultValuesForImages,
+  StackScripts: defaultValuesForStackScripts,
 };

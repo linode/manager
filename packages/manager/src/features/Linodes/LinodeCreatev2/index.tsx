@@ -27,6 +27,7 @@ import { StackScripts } from './Tabs/StackScripts/StackScripts';
 import { UserData } from './UserData/UserData';
 import {
   defaultValues,
+  defaultValuesMap,
   getLinodeCreatePayload,
   getTabIndex,
   tabs,
@@ -62,7 +63,7 @@ export const LinodeCreatev2 = () => {
     }
   };
 
-  const { params, updateParams } = useLinodeCreateQueryParams();
+  const { params, setParams } = useLinodeCreateQueryParams();
 
   const currentTabIndex = getTabIndex(params.type);
 
@@ -78,8 +79,12 @@ export const LinodeCreatev2 = () => {
         <Error />
         <Stack gap={3}>
           <Tabs
+            onChange={(index) => {
+              const newTab = tabs[index];
+              setParams({ type: newTab });
+              methods.reset(defaultValuesMap[newTab]);
+            }}
             index={currentTabIndex}
-            onChange={(index) => updateParams({ type: tabs[index] })}
           >
             <TabList>
               <Tab>Distributions</Tab>

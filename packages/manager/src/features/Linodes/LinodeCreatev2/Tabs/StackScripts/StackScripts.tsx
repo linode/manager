@@ -20,7 +20,7 @@ import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const StackScripts = () => {
   const { params, updateParams } = useLinodeCreateQueryParams();
-  const { formState, setValue } = useFormContext<CreateLinodeRequest>();
+  const { formState, reset } = useFormContext<CreateLinodeRequest>();
 
   return (
     <Stack spacing={3}>
@@ -37,7 +37,12 @@ export const StackScripts = () => {
         <Tabs
           onChange={(index) => {
             updateParams({ stackScriptID: undefined, subtype: tabs[index] });
-            setValue('stackscript_id', null);
+            reset((prev) => ({
+              ...prev,
+              image: null,
+              stackscript_data: null,
+              stackscript_id: null,
+            }));
           }}
           index={getStackScriptTabIndex(params.subtype)}
         >
