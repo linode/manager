@@ -98,11 +98,13 @@ export const MigrateLinode = React.memo((props: Props) => {
   const { data: regionsData } = useRegionsQuery();
   const flags = useFlags();
 
-  const [selectedRegion, handleSelectRegion] = React.useState<string>('');
+  const [selectedRegion, handleSelectRegion] = React.useState<null | string>(
+    null
+  );
   const [
     placementGroupSelection,
     setPlacementGroupSelection,
-  ] = React.useState<PlacementGroup>();
+  ] = React.useState<PlacementGroup | null>();
 
   const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
 
@@ -127,7 +129,7 @@ export const MigrateLinode = React.memo((props: Props) => {
     if (open) {
       reset();
       setConfirmed(false);
-      handleSelectRegion('');
+      handleSelectRegion(null);
     }
   }, [open]);
 

@@ -35,11 +35,11 @@ interface Props {
   backupEnabled: Linode['backups']['enabled'];
   currentRegion: string;
   errorText?: string;
-  handlePlacementGroupChange: (selected: PlacementGroup) => void;
+  handlePlacementGroupChange: (selected: PlacementGroup | null) => void;
   handleSelectRegion: (id: string) => void;
   helperText?: string;
   linodeType: Linode['type'];
-  selectedRegion: string;
+  selectedRegion: null | string;
 }
 
 export type MigratePricePanelType = 'current' | 'new';
@@ -70,6 +70,10 @@ export const ConfigureForm = React.memo((props: Props) => {
     setSelectedPlacementGroup,
   ] = React.useState<PlacementGroup | null>(null);
 
+  React.useEffect(() => {
+    handlePlacementGroupSelection(null);
+  }, [selectedRegion]);
+
   const currentActualRegion = regions?.find((r) => r.id === currentRegion);
 
   const newRegion = regions?.find(
@@ -87,7 +91,9 @@ export const ConfigureForm = React.memo((props: Props) => {
   const isPlacementGroupSelectDisabled =
     !newRegion || !hasRegionPlacementGroupCapability;
 
-  const handlePlacementGroupSelection = (placementGroup: PlacementGroup) => {
+  const handlePlacementGroupSelection = (
+    placementGroup: PlacementGroup | null
+  ) => {
     setSelectedPlacementGroup(placementGroup);
     handlePlacementGroupChange(placementGroup);
   };
