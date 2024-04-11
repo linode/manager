@@ -1,5 +1,3 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { CreateLinodeSchema } from '@linode/validation';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
@@ -41,11 +39,7 @@ import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreatev2 = () => {
-  const methods = useForm<CreateLinodeRequest>({
-    defaultValues,
-    resolver: yupResolver(CreateLinodeSchema),
-  });
-
+  const methods = useForm<CreateLinodeRequest>({ defaultValues });
   const history = useHistory();
 
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
