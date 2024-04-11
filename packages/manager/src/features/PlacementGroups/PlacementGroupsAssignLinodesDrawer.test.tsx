@@ -12,9 +12,8 @@ import { PlacementGroupsAssignLinodesDrawer } from './PlacementGroupsAssignLinod
 
 const queryMocks = vi.hoisted(() => ({
   useAllLinodesQuery: vi.fn().mockReturnValue({}),
-  useAssignLinodesToPlacementGroup: vi.fn().mockReturnValue({}),
-  useRegionsQuery: vi.fn().mockReturnValue({}),
   useAllPlacementGroupsQuery: vi.fn().mockReturnValue({}),
+  useAssignLinodesToPlacementGroup: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/linodes/linodes', async () => {
@@ -30,14 +29,6 @@ vi.mock('src/queries/placementGroups', async () => {
   return {
     ...actual,
     useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
-  };
-});
-
-vi.mock('src/queries/regions/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions/regions');
-  return {
-    ...actual,
-    useRegionsQuery: queryMocks.useRegionsQuery,
   };
 });
 
@@ -60,6 +51,7 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
       <PlacementGroupsAssignLinodesDrawer
         onClose={vi.fn()}
         open={true}
+        region={regionFactory.build()}
         selectedPlacementGroup={placementGroupFactory.build()}
       />
     );
@@ -75,7 +67,6 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
         linodeFactory.build({ id: 11, label: 'Linode-11', region: 'us-east' }),
       ],
     });
-    queryMocks.useRegionsQuery.mockReturnValue(regionFactory.buildList(5));
     queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: placementGroupFactory.build(),
     });
@@ -135,6 +126,7 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
         })}
         onClose={vi.fn()}
         open={true}
+        region={regionFactory.build()}
       />
     );
 

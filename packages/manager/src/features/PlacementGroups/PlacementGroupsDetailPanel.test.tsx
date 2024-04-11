@@ -10,8 +10,8 @@ const defaultProps = {
 };
 
 const queryMocks = vi.hoisted(() => ({
-  useRegionsQuery: vi.fn().mockReturnValue({}),
   useAllPlacementGroupsQuery: vi.fn().mockReturnValue({}),
+  useRegionsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/regions/regions', async () => {
@@ -41,12 +41,16 @@ describe('PlacementGroupsDetailPanel', () => {
         regionFactory.build({
           capabilities: ['Placement Group'],
           id: 'ca-central',
-          maximum_vms_per_pg: 1,
+          placement_group_limits: {
+            maximum_linodes_per_pg: 1,
+          },
         }),
         regionFactory.build({
           capabilities: ['Placement Group'],
           id: 'us-west',
-          maximum_pgs_per_customer: 1,
+          placement_group_limits: {
+            maximum_pgs_per_customer: 1,
+          },
         }),
         regionFactory.build({
           id: 'us-southeast',

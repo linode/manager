@@ -2,6 +2,7 @@ import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Stack } from 'src/components/Stack';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -12,6 +13,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { useCreateLinodeMutation } from 'src/queries/linodes/linodes';
 
 import { Access } from './Access';
+import { Actions } from './Actions';
 import { Addons } from './Addons/Addons';
 import { Details } from './Details/Details';
 import { Error } from './Error';
@@ -23,17 +25,20 @@ import { Distributions } from './Tabs/Distributions';
 import { Images } from './Tabs/Images';
 import { UserData } from './UserData/UserData';
 import {
+  defaultValues,
   getLinodeCreatePayload,
   getTabIndex,
   tabs,
   useLinodeCreateQueryParams,
 } from './utilities';
+import { VLAN } from './VLAN';
+import { VPC } from './VPC/VPC';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreatev2 = () => {
-  const methods = useForm<CreateLinodeRequest>();
+  const methods = useForm<CreateLinodeRequest>({ defaultValues });
   const history = useHistory();
 
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
@@ -62,6 +67,7 @@ export const LinodeCreatev2 = () => {
 
   return (
     <FormProvider {...methods}>
+      <DocumentTitleSegment segment="Create a Linode" />
       <LandingHeader
         docsLabel="Getting Started"
         docsLink="https://www.linode.com/docs/guides/platform/get-started/"
@@ -99,10 +105,13 @@ export const LinodeCreatev2 = () => {
           <Plan />
           <Details />
           <Access />
+          <VPC />
           <Firewall />
+          <VLAN />
           <UserData />
           <Addons />
           <Summary />
+          <Actions />
         </Stack>
       </form>
     </FormProvider>

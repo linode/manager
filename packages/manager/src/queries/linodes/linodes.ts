@@ -41,6 +41,7 @@ import { manuallySetVPCConfigInterfacesToActive } from 'src/utilities/configs';
 import { accountQueries } from '../account/queries';
 import { queryPresets } from '../base';
 import { profileQueries } from '../profile';
+import { vlanQueries } from '../vlans';
 import { getAllLinodeKernelsRequest, getAllLinodesRequest } from './requests';
 
 export const queryKey = 'linodes';
@@ -150,7 +151,7 @@ export const useDeleteLinodeMutation = (id: number) => {
 export const useCreateLinodeMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Linode, APIError[], CreateLinodeRequest>(createLinode, {
-    onSuccess(linode) {
+    onSuccess(linode, variables) {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.invalidateQueries([queryKey, 'all']);
       queryClient.invalidateQueries([queryKey, 'infinite']);
@@ -160,6 +161,12 @@ export const useCreateLinodeMutation = () => {
       );
       // If a restricted user creates an entity, we must make sure grants are up to date.
       queryClient.invalidateQueries(profileQueries.grants.queryKey);
+
+      if (variables.interfaces?.some((i) => i.purpose === 'vlan')) {
+        // If a Linode is created with a VLAN, invalidate vlans because
+        // they are derived from Linode configs.
+        queryClient.invalidateQueries(vlanQueries._def);
+      }
     },
   });
 };

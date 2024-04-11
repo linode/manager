@@ -70,6 +70,7 @@ import {
   nodeBalancerConfigFactory,
   nodeBalancerConfigNodeFactory,
   nodeBalancerFactory,
+  nodeBalancerTypeFactory,
   nodePoolFactory,
   notificationFactory,
   objectStorageBucketFactory,
@@ -892,6 +893,10 @@ export const handlers = [
   http.get('*/v4/nodebalancers', () => {
     const nodeBalancers = nodeBalancerFactory.buildList(1);
     return HttpResponse.json(makeResourcePage(nodeBalancers));
+  }),
+  http.get('*/v4/nodebalancers/types', () => {
+    const nodeBalancerTypes = nodeBalancerTypeFactory.buildList(1);
+    return HttpResponse.json(makeResourcePage(nodeBalancerTypes));
   }),
   http.get('*/v4/nodebalancers/:nodeBalancerID', ({ params }) => {
     const nodeBalancer = nodeBalancerFactory.build({

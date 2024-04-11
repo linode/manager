@@ -38,16 +38,19 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
-import { useNodebalancerCreateMutation } from 'src/queries/nodebalancers';
+import {
+  useNodeBalancerTypesQuery,
+  useNodebalancerCreateMutation,
+} from 'src/queries/nodebalancers';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { NODEBALANCER_PRICE } from 'src/utilities/pricing/constants';
+import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
 import {
-  getDCSpecificPrice,
+  getDCSpecificPriceByType,
   renderMonthlyPriceToCorrectDecimalPlace,
 } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -99,6 +102,7 @@ const NodeBalancerCreate = () => {
   const { data: agreements } = useAccountAgreements();
   const { data: profile } = useProfile();
   const { data: regions } = useRegionsQuery();
+  const { data: types } = useNodeBalancerTypesQuery();
 
   const {
     error,
@@ -418,10 +422,11 @@ const NodeBalancerCreate = () => {
   const regionLabel = regions?.find((r) => r.id === nodeBalancerFields.region)
     ?.label;
 
-  const price = getDCSpecificPrice({
-    basePrice: NODEBALANCER_PRICE,
+  const price = getDCSpecificPriceByType({
     regionId: nodeBalancerFields.region,
+    type: types?.[0],
   });
+  const isInvalidPrice = Boolean(nodeBalancerFields.region && !price);
 
   const summaryItems = [];
 
@@ -448,7 +453,9 @@ const NodeBalancerCreate = () => {
 
   if (nodeBalancerFields.region) {
     summaryItems.unshift({
-      title: `$${renderMonthlyPriceToCorrectDecimalPlace(Number(price))}/month`,
+      title: `$${renderMonthlyPriceToCorrectDecimalPlace(
+        price ? Number(price) : undefined
+      )}/month`,
     });
   }
 
@@ -642,15 +649,20 @@ const NodeBalancerCreate = () => {
         justifyContent={'flex-end'}
       >
         <Button
+          disabled={
+            (showGDPRCheckbox && !hasSignedAgreement) ||
+            isRestricted ||
+            isInvalidPrice
+          }
           sx={{
             flexShrink: 0,
             mx: matchesSmDown ? theme.spacing(1) : null,
           }}
           buttonType="primary"
           data-qa-deploy-nodebalancer
-          disabled={(showGDPRCheckbox && !hasSignedAgreement) || isRestricted}
           loading={isLoading}
           onClick={onCreate}
+          tooltipText={isInvalidPrice ? PRICE_ERROR_TOOLTIP_TEXT : ''}
         >
           Create NodeBalancer
         </Button>
