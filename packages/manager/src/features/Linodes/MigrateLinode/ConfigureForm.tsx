@@ -192,12 +192,18 @@ export const ConfigureForm = React.memo((props: Props) => {
               {...panelPrice(selectedRegion, selectedRegionPrice, 'new')}
             />
           )}
-          {showPlacementGroups && hasRegionPlacementGroupCapability && (
+          {showPlacementGroups && (
             <PlacementGroupsSelect
               handlePlacementGroupChange={(placementGroup) => {
                 handlePlacementGroupSelection(placementGroup);
               }}
+              textFieldProps={{
+                tooltipText: hasRegionPlacementGroupCapability
+                  ? ''
+                  : 'Placement Groups are not available in this region.',
+              }}
               disabled={isPlacementGroupSelectDisabled}
+              key={selectedRegion}
               label={placementGroupSelectLabel}
               noOptionsMessage="There are no Placement Groups in this region."
               selectedPlacementGroup={selectedPlacementGroup}
