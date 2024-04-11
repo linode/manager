@@ -43,7 +43,6 @@ interface PlacementGroupsFlag {
 }
 
 interface GeckoFlag {
-  beta: boolean;
   enabled: boolean;
   ga: boolean;
 }
@@ -59,7 +58,7 @@ export interface Flags {
   databases: boolean;
   disableLargestGbPlans: boolean;
   firewallNodebalancer: boolean;
-  gecko: boolean;
+  gecko: boolean; // @TODO gecko: delete this after next release
   gecko2: GeckoFlag;
   ipv6Sharing: boolean;
   linodeCloneUiChanges: boolean;
