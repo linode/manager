@@ -2,9 +2,10 @@ import { useHistory } from 'react-router-dom';
 
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import type { LinodeCreateType } from '../LinodesCreate/types';
-import type { CreateLinodeRequest } from '@linode/api-v4';
 import { utoa } from '../LinodesCreate/utilities';
+
+import type { LinodeCreateType } from '../LinodesCreate/types';
+import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
 
 /**
  * This interface is used to type the query params on the Linode Create flow.
@@ -77,5 +78,86 @@ export const getLinodeCreatePayload = (
     payload.metadata.user_data = utoa(payload.metadata.user_data);
   }
 
+  if (!payload.metadata?.user_data) {
+    payload.metadata = undefined;
+  }
+
+  payload.interfaces = getInterfacesPayload(
+    payload.interfaces,
+    Boolean(payload.private_ip)
+  );
+
   return payload;
+};
+
+/**
+ * Transforms and orders the Linode Create "interfaces" form data.
+ *
+ * We need this so we can put interfaces in the correct order and omit unused interfaces.
+ *
+ * @param interfaces raw interfaces from the Linode create flow form
+ * @returns a transformed interfaces array in the correct order and with the expected values for the API
+ */
+export const getInterfacesPayload = (
+  interfaces: InterfacePayload[] | undefined,
+  hasPrivateIP: boolean | undefined
+): InterfacePayload[] | undefined => {
+  if (!interfaces) {
+    return undefined;
+  }
+
+  const vpcInterface = interfaces[0];
+  const vlanInterface = interfaces[1];
+  const publicInterface = interfaces[2];
+
+  const hasVPC = Boolean(vpcInterface.vpc_id);
+  const hasVLAN = Boolean(vlanInterface.label);
+
+  if (hasVPC && hasVLAN && hasPrivateIP) {
+    return [vpcInterface, vlanInterface, publicInterface];
+  }
+
+  if (hasVLAN && hasVPC) {
+    return [vpcInterface, vlanInterface];
+  }
+
+  if (hasVPC && hasPrivateIP) {
+    return [vpcInterface, publicInterface];
+  }
+
+  if (hasVLAN) {
+    return [publicInterface, vlanInterface];
+  }
+
+  if (hasVPC) {
+    return [vpcInterface];
+  }
+
+  // If no special case is met, don't send `interfaces` in the Linode
+  // create payload. This will cause the API to default to giving the Linode
+  // public communication.
+  return undefined;
+};
+
+export const defaultValues: CreateLinodeRequest = {
+  image: 'linode/debian11',
+  interfaces: [
+    {
+      ipam_address: '',
+      label: '',
+      purpose: 'vpc',
+    },
+    {
+      ipam_address: '',
+      label: '',
+      purpose: 'vlan',
+    },
+    {
+      ipam_address: '',
+      label: '',
+      purpose: 'public',
+    },
+  ],
+  region: '',
+  type: '',
 };

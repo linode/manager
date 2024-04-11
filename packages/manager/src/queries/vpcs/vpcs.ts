@@ -65,9 +65,14 @@ export const useAllVPCsQuery = (enabled = true) =>
     enabled,
   });
 
-export const useVPCsQuery = (params: Params, filter: Filter) => {
+export const useVPCsQuery = (
+  params: Params,
+  filter: Filter,
+  enabled = true
+) => {
   return useQuery<ResourcePage<VPC>, APIError[]>({
     ...vpcQueries.paginated(params, filter),
+    enabled,
     keepPreviousData: true,
   });
 };

@@ -48,7 +48,7 @@ import {
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { queryKey as vlansQueryKey } from 'src/queries/vlans';
+import { vlanQueries } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import { vpcQueries } from 'src/queries/vpcs/vpcs';
 import {
@@ -393,7 +393,7 @@ export const LinodeConfigDialog = (props: Props) => {
           (thisInterface) => thisInterface.purpose === 'vlan'
         )
       ) {
-        queryClient.invalidateQueries([vlansQueryKey]);
+        queryClient.invalidateQueries(vlanQueries._def);
       }
 
       // Ensure VPC query data is up-to-date
@@ -454,9 +454,6 @@ export const LinodeConfigDialog = (props: Props) => {
 
   React.useEffect(() => {
     if (open) {
-      // Ensure VLANs are fresh.
-      queryClient.invalidateQueries([vlansQueryKey]);
-
       /**
        * If config is defined, we're editing. Set the state
        * to the values of the config.

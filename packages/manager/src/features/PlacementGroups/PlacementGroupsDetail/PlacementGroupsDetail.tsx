@@ -1,6 +1,6 @@
 import { AFFINITY_TYPES } from '@linode/api-v4';
 import * as React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -8,10 +8,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { Notice } from 'src/components/Notice/Notice';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -28,8 +24,7 @@ import { PlacementGroupsSummary } from './PlacementGroupsSummary/PlacementGroups
 
 export const PlacementGroupsDetail = () => {
   const flags = useFlags();
-  const { id, tab } = useParams<{ id: string; tab?: string }>();
-  const history = useHistory();
+  const { id } = useParams<{ id: string }>();
   const placementGroupId = +id;
 
   const {
@@ -84,19 +79,7 @@ export const PlacementGroupsDetail = () => {
     placementGroup?.members.some((pgLinode) => pgLinode.linode_id === linode.id)
   );
 
-  const linodeCount = placementGroup.members.length;
-  const tabs = [
-    {
-      routeName: `/placement-groups/${id}`,
-      title: 'Summary',
-    },
-    {
-      routeName: `/placement-groups/${id}/linodes`,
-      title: `Linodes (${linodeCount})`,
-    },
-  ];
   const { affinity_type, label } = placementGroup;
-  const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : -1;
 
   const resetEditableLabel = () => {
     return `${label} (${AFFINITY_TYPES[affinity_type]})`;
@@ -123,7 +106,6 @@ export const PlacementGroupsDetail = () => {
           ],
           onEditHandlers: {
             editableTextTitle: label,
-            editableTextTitleSuffix: ` (${AFFINITY_TYPES[affinity_type]})`,
             errorText,
             onCancel: resetEditableLabel,
             onEdit: handleLabelEdit,
@@ -145,29 +127,14 @@ export const PlacementGroupsDetail = () => {
           variant="warning"
         />
       )}
-      <Tabs
-        index={tabIndex === -1 ? 0 : tabIndex}
-        onChange={(i: number) => history.push(tabs[i].routeName)}
-      >
-        <TabLinkList tabs={tabs} />
-        <TabPanels>
-          <SafeTabPanel index={0}>
-            <PlacementGroupsSummary
-              placementGroup={placementGroup}
-              region={region}
-            />
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <PlacementGroupsLinodes
-              assignedLinodes={assignedLinodes}
-              isFetchingLinodes={isFetchingLinodes}
-              isLinodeReadOnly={isLinodeReadOnly}
-              placementGroup={placementGroup}
-              region={region}
-            />
-          </SafeTabPanel>
-        </TabPanels>
-      </Tabs>
+      <PlacementGroupsSummary placementGroup={placementGroup} region={region} />
+      <PlacementGroupsLinodes
+        assignedLinodes={assignedLinodes}
+        isFetchingLinodes={isFetchingLinodes}
+        isLinodeReadOnly={isLinodeReadOnly}
+        placementGroup={placementGroup}
+        region={region}
+      />
     </>
   );
 };
