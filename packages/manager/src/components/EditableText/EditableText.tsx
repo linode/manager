@@ -15,15 +15,15 @@ import { TextField, TextFieldProps } from '../TextField';
 const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
   (theme: Theme, _params, classes) => ({
     button: {
-      '&:first-of-type': {
+      '&[aria-label="Save"]': {
         marginLeft: theme.spacing(2),
         [theme.breakpoints.down('md')]: {
           marginLeft: theme.spacing(2),
         },
       },
       background: 'transparent !important',
+      height: 34,
       marginLeft: 0,
-      marginTop: 2,
       minWidth: 'auto',
       paddingLeft: 6,
       paddingRight: 6,
@@ -131,7 +131,7 @@ interface Props {
   textSuffix?: string;
 }
 
-type PassThroughProps = Props & Omit<TextFieldProps, 'label'>;
+interface PassThroughProps extends Props, Omit<TextFieldProps, 'label'> {}
 
 export const EditableText = (props: PassThroughProps) => {
   const { classes } = useStyles();

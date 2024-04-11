@@ -35,9 +35,9 @@ interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
 }
 
-export type Props = LinodeEntityDetailProps & {
+export interface Props extends LinodeEntityDetailProps {
   handlers: LinodeHandlers;
-};
+}
 
 // =============================================================================
 // Header
@@ -59,8 +59,12 @@ export interface HeaderProps {
   variant?: TypographyProps['variant'];
 }
 
+interface LinodeEntityDetailHeaderProps extends HeaderProps {
+  handlers: LinodeHandlers;
+}
+
 export const LinodeEntityDetailHeader = (
-  props: HeaderProps & { handlers: LinodeHandlers }
+  props: LinodeEntityDetailHeaderProps
 ) => {
   const theme = useTheme();
   const queryClient = useQueryClient();

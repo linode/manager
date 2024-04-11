@@ -24,7 +24,7 @@ export const updateObjectStorageKeysSchema = object({
     .of(string())
     .min(
       1,
-      'You need to select at least one region. To delete all keys, go to the Access Keys page in Cloud Manager and select Revoke.'
+      `Select at least one region. To remove all regions, use 'Revoke' in the actions menu and remove the access key.`
     )
     .notRequired(),
 });

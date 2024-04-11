@@ -165,8 +165,13 @@ export const renderWithThemeAndFormik = <T extends FormikValues>(
   configObj: FormikConfig<T>
 ) => renderWithTheme(<Formik {...configObj}>{ui}</Formik>);
 
+interface UseFormPropsWithChildren<T extends FieldValues>
+  extends UseFormProps<T> {
+  children: React.ReactNode;
+}
+
 const FormContextWrapper = <T extends FieldValues>(
-  props: UseFormProps<T> & { children: React.ReactNode }
+  props: UseFormPropsWithChildren<T>
 ) => {
   const formMethods = useForm<T>(props);
 

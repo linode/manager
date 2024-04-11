@@ -36,11 +36,13 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { placementGroupQueries } from 'src/queries/placementGroups';
 import { manuallySetVPCConfigInterfacesToActive } from 'src/utilities/configs';
 
 import { accountQueries } from '../account/queries';
 import { queryPresets } from '../base';
 import { profileQueries } from '../profile';
+import { vlanQueries } from '../vlans';
 import { getAllLinodeKernelsRequest, getAllLinodesRequest } from './requests';
 
 export const queryKey = 'linodes';
@@ -137,12 +139,30 @@ export const useLinodeLishTokenQuery = (id: number) => {
 
 export const useDeleteLinodeMutation = (id: number) => {
   const queryClient = useQueryClient();
+  const linode = queryClient.getQueryData<Linode>([
+    queryKey,
+    'linode',
+    id,
+    'details',
+  ]);
+  const placementGroupId = linode?.placement_group?.id;
+
   return useMutation<{}, APIError[]>(() => deleteLinode(id), {
     onSuccess() {
       queryClient.removeQueries([queryKey, 'linode', id]);
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.invalidateQueries([queryKey, 'all']);
       queryClient.invalidateQueries([queryKey, 'infinite']);
+
+      // If the linode is assigned to a placement group,
+      // we need to invalidate the placement group queries
+      if (placementGroupId) {
+        queryClient.invalidateQueries(
+          placementGroupQueries.placementGroup(placementGroupId).queryKey
+        );
+        queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
+        queryClient.invalidateQueries(placementGroupQueries.paginated._def);
+      }
     },
   });
 };
@@ -150,7 +170,7 @@ export const useDeleteLinodeMutation = (id: number) => {
 export const useCreateLinodeMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Linode, APIError[], CreateLinodeRequest>(createLinode, {
-    onSuccess(linode) {
+    onSuccess(linode, variables) {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.invalidateQueries([queryKey, 'all']);
       queryClient.invalidateQueries([queryKey, 'infinite']);
@@ -160,27 +180,47 @@ export const useCreateLinodeMutation = () => {
       );
       // If a restricted user creates an entity, we must make sure grants are up to date.
       queryClient.invalidateQueries(profileQueries.grants.queryKey);
+
+      if (variables.interfaces?.some((i) => i.purpose === 'vlan')) {
+        // If a Linode is created with a VLAN, invalidate vlans because
+        // they are derived from Linode configs.
+        queryClient.invalidateQueries(vlanQueries._def);
+      }
+
+      // If the Linode is assigned to a placement group on creation,
+      // we need to invalidate the placement group queries
+      if (variables.placement_group?.id) {
+        queryClient.invalidateQueries(
+          placementGroupQueries.placementGroup(variables.placement_group.id)
+            .queryKey
+        );
+        queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
+        queryClient.invalidateQueries(placementGroupQueries.paginated._def);
+      }
     },
   });
 };
 
+interface LinodeCloneDataWithId extends LinodeCloneData {
+  sourceLinodeId: number;
+}
+
 export const useCloneLinodeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<
-    Linode,
-    APIError[],
-    { sourceLinodeId: number & LinodeCloneData }
-  >(({ sourceLinodeId, ...data }) => cloneLinode(sourceLinodeId, data), {
-    onSuccess(linode) {
-      queryClient.invalidateQueries([queryKey, 'paginated']);
-      queryClient.invalidateQueries([queryKey, 'all']);
-      queryClient.invalidateQueries([queryKey, 'infinite']);
-      queryClient.setQueryData(
-        [queryKey, 'linode', linode.id, 'details'],
-        linode
-      );
-    },
-  });
+  return useMutation<Linode, APIError[], LinodeCloneDataWithId>(
+    ({ sourceLinodeId, ...data }) => cloneLinode(sourceLinodeId, data),
+    {
+      onSuccess(linode) {
+        queryClient.invalidateQueries([queryKey, 'paginated']);
+        queryClient.invalidateQueries([queryKey, 'all']);
+        queryClient.invalidateQueries([queryKey, 'infinite']);
+        queryClient.setQueryData(
+          [queryKey, 'linode', linode.id, 'details'],
+          linode
+        );
+      },
+    }
+  );
 };
 
 export const useBootLinodeMutation = (

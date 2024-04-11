@@ -1,15 +1,17 @@
-import { placementGroupFactory, regionFactory } from 'src/factories';
+import {
+  linodeFactory,
+  placementGroupFactory,
+  regionFactory,
+} from 'src/factories';
 
 import {
   affinityTypeOptions,
-  getAffinityEnforcement,
+  getAffinityTypeEnforcement,
   getLinodesFromAllPlacementGroups,
-  getPlacementGroupLinodeCount,
+  getPlacementGroupLinodes,
   hasPlacementGroupReachedCapacity,
   hasRegionReachedPlacementGroupCapacity,
 } from './utils';
-
-import type { PlacementGroup } from '@linode/api-v4';
 
 const initialLinodeData = [
   {
@@ -25,16 +27,6 @@ const initialLinodeData = [
     linode_id: 3,
   },
 ];
-
-describe('getPlacementGroupLinodeCount', () => {
-  it('returns the length of the linode_ids array', () => {
-    expect(
-      getPlacementGroupLinodeCount({
-        members: initialLinodeData,
-      } as PlacementGroup)
-    ).toBe(3);
-  });
-});
 
 describe('affinityTypeOptions', () => {
   it('returns an array of objects with label and value properties', () => {
@@ -57,7 +49,9 @@ describe('hasPlacementGroupReachedCapacity', () => {
           members: initialLinodeData,
         }),
         region: regionFactory.build({
-          maximum_vms_per_pg: 3,
+          placement_group_limits: {
+            maximum_linodes_per_pg: 3,
+          },
         }),
       })
     ).toBe(true);
@@ -70,7 +64,9 @@ describe('hasPlacementGroupReachedCapacity', () => {
           members: initialLinodeData,
         }),
         region: regionFactory.build({
-          maximum_vms_per_pg: 4,
+          placement_group_limits: {
+            maximum_linodes_per_pg: 4,
+          },
         }),
       })
     ).toBe(false);
@@ -109,11 +105,11 @@ describe('getLinodesFromAllPlacementGroups', () => {
 
 describe('getAffinityEnforcement', () => {
   it('returns "Strict" if `is_strict` is true', () => {
-    expect(getAffinityEnforcement(true)).toBe('Strict');
+    expect(getAffinityTypeEnforcement(true)).toBe('Strict');
   });
 
   it('returns "Flexible" if `is_strict` is false', () => {
-    expect(getAffinityEnforcement(false)).toBe('Flexible');
+    expect(getAffinityTypeEnforcement(false)).toBe('Flexible');
   });
 });
 
@@ -126,7 +122,9 @@ describe('hasRegionReachedPlacementGroupCapacity', () => {
         }),
         region: regionFactory.build({
           id: 'us-east',
-          maximum_pgs_per_customer: 2,
+          placement_group_limits: {
+            maximum_pgs_per_customer: 2,
+          },
         }),
       })
     ).toBe(true);
@@ -140,9 +138,66 @@ describe('hasRegionReachedPlacementGroupCapacity', () => {
         }),
         region: regionFactory.build({
           id: 'us-east',
-          maximum_pgs_per_customer: 4,
+          placement_group_limits: {
+            maximum_pgs_per_customer: 4,
+          },
         }),
       })
     ).toBe(false);
+  });
+});
+
+describe('getPlacementGroupLinodes', () => {
+  it('returns an array of linodes assigned to a placement group', () => {
+    const linodes = linodeFactory.buildList(3);
+
+    const placementGroup = placementGroupFactory.build({
+      members: [
+        { is_compliant: true, linode_id: 1 },
+        { is_compliant: true, linode_id: 2 },
+      ],
+    });
+
+    expect(getPlacementGroupLinodes(placementGroup, linodes)).toEqual([
+      linodeFactory.build({
+        id: 1,
+        label: 'linode-1',
+      }),
+      linodeFactory.build({
+        id: 2,
+        label: 'linode-2',
+      }),
+    ]);
+  });
+
+  it('returns an empty array if no linodes are assigned to the placement group', () => {
+    const linodes = linodeFactory.buildList(3);
+
+    const placementGroup = placementGroupFactory.build({
+      members: [],
+    });
+
+    expect(getPlacementGroupLinodes(placementGroup, linodes)).toEqual([]);
+  });
+
+  it('returns an empty array if no linodes are provided', () => {
+    const linodes = undefined;
+
+    const placementGroup = placementGroupFactory.build({
+      members: [
+        { is_compliant: true, linode_id: 1 },
+        { is_compliant: true, linode_id: 2 },
+      ],
+    });
+
+    expect(getPlacementGroupLinodes(placementGroup, linodes)).toBeUndefined();
+  });
+
+  it('returns an empty array if no placement group is provided', () => {
+    const linodes = linodeFactory.buildList(3);
+
+    const placementGroup = undefined;
+
+    expect(getPlacementGroupLinodes(placementGroup, linodes)).toBeUndefined();
   });
 });

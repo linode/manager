@@ -5,13 +5,22 @@ import {
   supportReplyFactory,
   supportTicketFactory,
 } from 'src/factories/support';
+import { breakpoints } from 'src/foundations/breakpoints';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
+import {
+  renderWithTheme,
+  resizeScreenSize,
+  wrapWithTheme,
+} from 'src/utilities/testHelpers';
 
 import { SupportTicketDetail } from './SupportTicketDetail';
 
 describe('Support Ticket Detail', () => {
+  beforeAll(() => {
+    resizeScreenSize(breakpoints.values.lg);
+  });
+
   it('should display a loading spinner', () => {
     renderWithTheme(<SupportTicketDetail />);
     expect(screen.getByTestId('circle-progress')).toBeInTheDocument();

@@ -12,6 +12,10 @@ import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceTogg
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import {
+  WithFeatureFlagProps,
+  withFeatureFlags,
+} from 'src/containers/flags.container';
+import {
   WithProfileProps,
   withProfile,
 } from 'src/containers/profile.container';
@@ -87,11 +91,15 @@ export interface LinodesLandingProps {
   someLinodesHaveScheduledMaintenance: boolean;
 }
 
-type CombinedProps = LinodesLandingProps & RouteProps & WithProfileProps;
+type CombinedProps = LinodesLandingProps &
+  RouteProps &
+  WithFeatureFlagProps &
+  WithProfileProps;
 
 class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
+      flags,
       grants,
       linodesData,
       linodesInTransition,
@@ -158,6 +166,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        {flags.gecko2?.enabled && flags.gecko2?.ga && 'Gecko GA'}
         <LinodeResize
           linodeId={this.state.selectedLinodeID}
           onClose={this.closeDialogs}
@@ -446,7 +455,8 @@ const sendGroupByAnalytic = (value: boolean) => {
 
 export const enhanced = compose<CombinedProps, LinodesLandingProps>(
   withRouter,
-  withProfile
+  withProfile,
+  withFeatureFlags
 );
 
 export default enhanced(ListLinodes);

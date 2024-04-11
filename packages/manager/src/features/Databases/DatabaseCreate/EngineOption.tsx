@@ -1,9 +1,8 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Item } from 'src/components/EnhancedSelect';
 import { Option } from 'src/components/EnhancedSelect/components/Option';
 
 import type { OptionProps } from 'react-select';
@@ -19,7 +18,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 interface EngineOptionProps extends OptionProps<any, any> {
-  data: Item<string> & { flag: JSX.Element };
+  data: {
+    flag: JSX.Element;
+    value: string;
+  };
 }
 
 export const EngineOption = (props: EngineOptionProps) => {

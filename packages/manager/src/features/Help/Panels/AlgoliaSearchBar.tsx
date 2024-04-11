@@ -53,9 +53,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = AlgoliaProps & RouteComponentProps<{}>;
+interface AlgoliaSearchBarProps extends AlgoliaProps, RouteComponentProps<{}> {}
 
-const AlgoliaSearchBar = (props: CombinedProps) => {
+const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
   const { classes } = useStyles();
   const [inputValue, setInputValue] = React.useState('');
   const {

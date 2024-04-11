@@ -78,8 +78,14 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     });
 
   const hideEdgeRegions =
-    !flags.gecko ||
+    !flags.gecko2?.enabled ||
+    flags.gecko2?.ga ||
     !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
+
+  const isGeckoGA =
+    flags.gecko2?.enabled &&
+    flags.gecko2?.ga &&
+    getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
 
   const showEdgeIconHelperText = Boolean(
     !hideEdgeRegions &&
@@ -130,6 +136,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           </Typography>
         </Notice>
       ) : null}
+      {isGeckoGA && 'Gecko GA'}
       <RegionSelect
         currentCapability={currentCapability}
         disabled={disabled}

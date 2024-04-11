@@ -17,9 +17,9 @@ import type {
 
 export type PlansTypes<T> = Record<LinodeTypeClass, T[]>;
 
-type PlansByType<T> = Omit<PlansTypes<T>, 'nanode' | 'standard'> & {
+interface PlansByType<T> extends Omit<PlansTypes<T>, 'nanode' | 'standard'> {
   shared: T[];
-};
+}
 
 // We could update this to add or remove any new or existing plan tabs.
 export const planTypeOrder: (

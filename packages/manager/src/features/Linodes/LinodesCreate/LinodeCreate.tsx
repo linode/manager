@@ -199,11 +199,13 @@ interface CreateTab extends Tab {
   type: CreateTypes;
 }
 
+interface LinodeCreateComponentProps extends CombinedProps, DispatchProps {}
+
 export class LinodeCreate extends React.PureComponent<
-  CombinedProps & DispatchProps,
+  LinodeCreateComponentProps,
   State
 > {
-  constructor(props: CombinedProps & DispatchProps) {
+  constructor(props: LinodeCreateComponentProps) {
     super(props);
 
     /** Get the query params as an object, excluding the "?" */
@@ -472,7 +474,7 @@ export class LinodeCreate extends React.PureComponent<
       (imageIsCloudInitCompatible || linodeIsCloudInitCompatible);
 
     const isEdgeRegionSelected = Boolean(
-      flags.gecko &&
+      flags.gecko2?.enabled &&
         getIsEdgeRegion(regionsData, this.props.selectedRegionID ?? '')
     );
 
