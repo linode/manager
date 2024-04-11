@@ -70,12 +70,6 @@ export const ConfigureForm = React.memo((props: Props) => {
     setSelectedPlacementGroup,
   ] = React.useState<PlacementGroup | null>(null);
 
-  React.useEffect(() => {
-    if (selectedRegion) {
-      setSelectedPlacementGroup(null);
-    }
-  }, [selectedRegion]);
-
   const currentActualRegion = regions?.find((r) => r.id === currentRegion);
 
   const newRegion = regions?.find(
