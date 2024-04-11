@@ -119,7 +119,7 @@ export const PlacementGroupsCreateDrawer = (
     [regions, values.region]
   );
 
-  const pgRegionLimitHelperText = `The maximum number of placement groups in this region is: ${selectedRegion?.placement_group_limits.maximum_pgs_per_customer}`;
+  const pgRegionLimitHelperText = `The maximum number of placement groups in this region is: ${selectedRegion?.placement_group_limits?.maximum_pgs_per_customer}`;
   const isRegionAtCapacity = hasRegionReachedPlacementGroupCapacity({
     allPlacementGroups,
     region: selectedRegion,

@@ -71,7 +71,7 @@ export const hasRegionReachedPlacementGroupCapacity = ({
   allPlacementGroups,
   region,
 }: HasRegionReachedPlacementGroupCapacityOptions): boolean => {
-  if (!region || !allPlacementGroups) {
+  if (!region?.placement_group_limits || !allPlacementGroups) {
     return false;
   }
 
