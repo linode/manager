@@ -474,7 +474,7 @@ export class LinodeCreate extends React.PureComponent<
       (imageIsCloudInitCompatible || linodeIsCloudInitCompatible);
 
     const isEdgeRegionSelected = Boolean(
-      flags.gecko &&
+      flags.gecko2?.enabled &&
         getIsEdgeRegion(regionsData, this.props.selectedRegionID ?? '')
     );
 
