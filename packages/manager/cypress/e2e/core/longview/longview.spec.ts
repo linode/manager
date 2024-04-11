@@ -193,7 +193,7 @@ describe('longview', () => {
     const client: LongviewClient = longviewClientFactory.build();
     const status: LongviewResponse = longviewResponseFactory.build();
     mockGetLongviewClients([]).as('getLongviewClients');
-    mockCreateLongviewClient(client).as('ceateLongviewClient');
+    mockCreateLongviewClient(client).as('createLongviewClient');
     mockFetchLongviewStatus(status).as('fetchLongviewStatus');
 
     cy.visitWithLogin('/longview');
@@ -208,7 +208,7 @@ describe('longview', () => {
       .should('be.visible')
       .should('be.enabled')
       .click();
-    cy.wait('@ceateLongviewClient');
+    cy.wait('@createLongviewClient');
 
     // Confirms that UI updates to show the new client when creating one.
     cy.findByText(`${client.label}`).should('be.visible');
