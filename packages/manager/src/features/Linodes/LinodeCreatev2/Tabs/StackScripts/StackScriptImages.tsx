@@ -44,7 +44,8 @@ export const StackScriptImages = () => {
             filter={imageFilter}
             helperText={helperText}
             noOptionsText="No Compatible Images Available"
-            onChange={(e, image) => field.onChange(image?.id ?? null)}
+            onChange={(image) => field.onChange(image?.id ?? null)}
+            selectIfOnlyOneOption
             value={field.value}
             variant={imageSelectVariant}
           />

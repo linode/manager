@@ -40,7 +40,13 @@ export const StackScriptSelectionRow = (props: Props) => {
         <label htmlFor={`stackscript-${stackscript.id}`}>
           <Stack sx={{ cursor: 'pointer' }}>
             <Typography>
-              {stackscript.username} / {stackscript.label}
+              {stackscript.username} /{' '}
+              <Typography
+                component="span"
+                fontFamily={(theme) => theme.font.bold}
+              >
+                {stackscript.label}
+              </Typography>
             </Typography>
             <Typography
               sx={(theme) => ({

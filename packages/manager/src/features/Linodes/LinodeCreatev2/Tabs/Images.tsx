@@ -23,7 +23,7 @@ export const Images = () => {
       <ImageSelectv2
         disabled={isCreateLinodeRestricted}
         errorText={fieldState.error?.message}
-        onChange={(_, image) => field.onChange(image?.id ?? null)}
+        onChange={(image) => field.onChange(image?.id ?? null)}
         value={field.value}
         variant="private"
       />
