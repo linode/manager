@@ -1,3 +1,4 @@
+import { CircularProgress } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -9,10 +10,7 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { useVolumeTypesQuery } from 'src/queries/volumes';
-import {
-  PRICES_RELOAD_ERROR_NOTICE_TEXT,
-  UNKNOWN_PRICE,
-} from 'src/utilities/pricing/constants';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 
 import { SIZE_FIELD_WIDTH } from '../VolumeCreate';
@@ -65,7 +63,7 @@ export const SizeField = (props: Props) => {
     ...rest
   } = props;
 
-  const { data: types, isError, isLoading } = useVolumeTypesQuery();
+  const { data: types, isLoading } = useVolumeTypesQuery();
 
   const helperText = resize
     ? `This volume can range from ${resize} GB to ${MAX_VOLUME_SIZE} GB in size.`
@@ -76,8 +74,6 @@ export const SizeField = (props: Props) => {
     size: value,
     type: types?.[0],
   });
-
-  const isInvalidPrice = Boolean(regionId && !price) || isError;
 
   const priceDisplayText = (
     <FormHelperText>
@@ -101,11 +97,9 @@ export const SizeField = (props: Props) => {
         InputProps={{
           endAdornment: <InputAdornment position="end"> GB </InputAdornment>,
         }}
-        errorText={
-          !isLoading && isInvalidPrice ? PRICES_RELOAD_ERROR_NOTICE_TEXT : error
-        }
         className={textFieldStyles}
         data-qa-size
+        errorText={error}
         helperText={helperText}
         label="Size"
         name={name}
@@ -117,7 +111,13 @@ export const SizeField = (props: Props) => {
         {...rest}
       />
       <div className={classes.priceDisplay}>
-        {hasSelectedRegion ? priceDisplayText : dynamicPricingHelperText}
+        {regionId && isLoading ? (
+          <CircularProgress size={16} />
+        ) : hasSelectedRegion ? (
+          priceDisplayText
+        ) : (
+          dynamicPricingHelperText
+        )}
       </div>
     </>
   );

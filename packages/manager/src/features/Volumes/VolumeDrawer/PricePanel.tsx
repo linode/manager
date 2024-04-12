@@ -1,3 +1,4 @@
+import { CircularProgress } from '@mui/material';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -12,7 +13,7 @@ interface Props {
 }
 
 export const PricePanel = ({ currentSize, regionId, value }: Props) => {
-  const { data: types } = useVolumeTypesQuery();
+  const { data: types, isLoading } = useVolumeTypesQuery();
 
   const getPrice = (size: number) => {
     return getDCSpecificPriceByType({
@@ -35,7 +36,11 @@ export const PricePanel = ({ currentSize, regionId, value }: Props) => {
 
   return (
     <Box marginTop={4}>
-      <DisplayPrice interval="mo" price={price ? Number(price) : '--.--'} />
+      {isLoading ? (
+        <CircularProgress size={18} />
+      ) : (
+        <DisplayPrice interval="mo" price={price ? Number(price) : '--.--'} />
+      )}
     </Box>
   );
 };

@@ -23,6 +23,7 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
 import { ConfigSelect } from './ConfigSelect';
 import { PricePanel } from './PricePanel';
@@ -64,7 +65,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
   const { checkForNewEvents } = useEventsPollingActions();
 
   const isReadOnly = profile?.restricted && !grants?.global.add_volumes;
-  const isInvalidPrice = (types === undefined && !isLoading) || isError;
+  const isInvalidPrice = !types || isError;
 
   const {
     errors,
@@ -211,6 +212,8 @@ export const LinodeVolumeCreateForm = (props: Props) => {
           disabled: isReadOnly || isInvalidPrice,
           label: 'Create Volume',
           loading: isSubmitting,
+          tooltipText:
+            !isLoading && isInvalidPrice ? PRICES_RELOAD_ERROR_NOTICE_TEXT : '',
           type: 'submit',
         }}
         secondaryButtonProps={{

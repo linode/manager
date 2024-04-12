@@ -18,9 +18,9 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
 import { PricePanel } from './VolumeDrawer/PricePanel';
-import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 interface Props {
   onClose: () => void;
   open: boolean;
@@ -37,7 +37,7 @@ export const CloneVolumeDrawer = (props: Props) => {
   const { checkForNewEvents } = useEventsPollingActions();
 
   const { data: grants } = useGrants();
-  const { data: types, isError } = useVolumeTypesQuery();
+  const { data: types, isError, isLoading } = useVolumeTypesQuery();
 
   // Even if a restricted user has the ability to create Volumes, they
   // can't clone a Volume they only have read only permission on.
@@ -46,7 +46,7 @@ export const CloneVolumeDrawer = (props: Props) => {
     grants.volume.find((grant) => grant.id === volume?.id)?.permissions ===
       'read_only';
 
-  const isInvalidPrice = types === undefined || isError;
+  const isInvalidPrice = !types || isError;
 
   const {
     errors,
@@ -118,7 +118,10 @@ export const CloneVolumeDrawer = (props: Props) => {
             disabled: isReadOnly || isInvalidPrice,
             label: 'Clone Volume',
             loading: isSubmitting,
-            tooltipText: isInvalidPrice ? PRICES_RELOAD_ERROR_NOTICE_TEXT : '',
+            tooltipText:
+              !isLoading && isInvalidPrice
+                ? PRICES_RELOAD_ERROR_NOTICE_TEXT
+                : '',
             type: 'submit',
           }}
           secondaryButtonProps={{

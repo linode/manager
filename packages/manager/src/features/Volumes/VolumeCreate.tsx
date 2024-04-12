@@ -39,6 +39,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
 import { ConfigSelect } from './VolumeDrawer/ConfigSelect';
 import { SizeField } from './VolumeDrawer/SizeField';
@@ -220,7 +221,7 @@ export const VolumeCreate = () => {
     selectedRegionId: values.region,
   });
 
-  const isInvalidPrice = (types === undefined && !isLoading) || isError;
+  const isInvalidPrice = !types || isError;
 
   const disabled = Boolean(
     doesNotHavePermission ||
@@ -405,6 +406,11 @@ export const VolumeCreate = () => {
           </Paper>
           <Box display="flex" justifyContent="flex-end">
             <Button
+              tooltipText={
+                !isLoading && isInvalidPrice
+                  ? PRICES_RELOAD_ERROR_NOTICE_TEXT
+                  : ''
+              }
               buttonType="primary"
               className={classes.button}
               data-qa-deploy-linode

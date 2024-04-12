@@ -17,6 +17,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
 import { PricePanel } from './VolumeDrawer/PricePanel';
 import { SizeField } from './VolumeDrawer/SizeField';
@@ -46,7 +47,7 @@ export const ResizeVolumeDrawer = (props: Props) => {
     grants.volume.find((grant) => grant.id === volume?.id)?.permissions ===
       'read_only';
 
-  const isInvalidPrice = (types === undefined && !isLoading) || isError;
+  const isInvalidPrice = !types || isError;
 
   const {
     dirty,
@@ -122,6 +123,10 @@ export const ResizeVolumeDrawer = (props: Props) => {
             disabled: isReadOnly || !dirty || isInvalidPrice,
             label: 'Resize Volume',
             loading: isSubmitting,
+            tooltipText:
+              !isLoading && isInvalidPrice
+                ? PRICES_RELOAD_ERROR_NOTICE_TEXT
+                : '',
             type: 'submit',
           }}
           secondaryButtonProps={{
