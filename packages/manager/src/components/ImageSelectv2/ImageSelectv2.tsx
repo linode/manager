@@ -84,6 +84,10 @@ export const ImageSelectv2 = (props: Props) => {
       options={filteredOptions ?? []}
       placeholder="Choose an image"
       {...rest}
+      disableClearable={
+        rest.disableClearable ??
+        (selectIfOnlyOneOption && filteredOptions?.length === 1)
+      }
       errorText={rest.errorText ?? error?.[0].reason}
       onChange={(e, image) => onChange(image)}
       value={value ?? null}
