@@ -189,6 +189,46 @@ describe('getRegionOptions', () => {
 
     expect(result).toEqual(expectedRegionsWithEdge);
   });
+
+  it('should have its option disabled if the region is unavailable', () => {
+    const _regions = [
+      ...regions,
+      regionFactory.build({
+        capabilities: ['Linodes'],
+        country: 'us',
+        id: 'ap-south',
+        label: 'US Location 2',
+      }),
+    ];
+
+    const result: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regions: _regions,
+    });
+
+    const unavailableRegion = result.find(
+      (region) => region.value === 'ap-south'
+    );
+
+    expect(unavailableRegion?.disabledProps?.disabled).toBe(true);
+  });
+
+  it('should have its option disabled if `handleDisabledRegion` is passed', () => {
+    const result: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      handleDisabledRegion: (region) => ({
+        ...region,
+        disabled: true,
+      }),
+      regions,
+    });
+
+    const unavailableRegion = result.find((region) => region.value === 'us-1');
+
+    expect(unavailableRegion?.disabledProps?.disabled).toBe(true);
+  });
 });
 
 describe('getSelectedRegionById', () => {
