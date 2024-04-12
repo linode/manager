@@ -167,4 +167,24 @@ describe('ConfigureForm component with price comparison', () => {
       );
     });
   });
+
+  it('shouldn render the PlacementGroupsSelect component when a region with Placement Groups capability is selected', async () => {
+    const wrapper = renderWithTheme(
+      <ConfigureForm
+        {...props}
+        currentRegion="us-east"
+        selectedRegion="us-central"
+      />,
+      {
+        flags: { placementGroups: { beta: true, enabled: true } },
+      }
+    );
+
+    // Verify that the PlacementGroupsSelect component is rendered
+    await waitFor(() => {
+      expect(
+        wrapper.getByTestId('placement-groups-select')
+      ).toBeInTheDocument();
+    });
+  });
 });
