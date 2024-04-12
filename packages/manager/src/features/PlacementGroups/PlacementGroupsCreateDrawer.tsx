@@ -121,10 +121,6 @@ export const PlacementGroupsCreateDrawer = (
   );
 
   const pgRegionLimitHelperText = `The maximum number of placement groups in this region is: ${selectedRegion?.placement_group_limits?.maximum_pgs_per_customer}`;
-  const isRegionAtCapacity = hasRegionReachedPlacementGroupCapacity({
-    allPlacementGroups,
-    region: selectedRegion,
-  });
 
   return (
     <Drawer
@@ -231,7 +227,8 @@ export const PlacementGroupsCreateDrawer = (
               'data-testid': 'submit',
               disabled:
                 isSubmitting ||
-                isRegionAtCapacity ||
+                !values.region ||
+                !values.label ||
                 disabledPlacementGroupCreateButton,
               label: 'Create Placement Group',
               loading: isSubmitting,
