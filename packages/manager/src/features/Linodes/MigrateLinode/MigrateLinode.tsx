@@ -175,12 +175,12 @@ export const MigrateLinode = React.memo((props: Props) => {
       return;
     }
 
-    const placemenGroupPayload = placementGroupSelection?.id
+    const placementGroupPayload = placementGroupSelection?.id
       ? { id: placementGroupSelection.id }
       : undefined;
 
     return migrateLinode({
-      placement_group: placemenGroupPayload,
+      placement_group: placementGroupPayload,
       region: selectedRegion,
     }).then(() => {
       checkForNewEvents();
