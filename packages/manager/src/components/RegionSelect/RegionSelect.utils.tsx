@@ -22,6 +22,7 @@ const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
 /**
  * Returns an array of OptionType objects for use in the RegionSelect component.
+ * Handles the disabled state of each region based on the user's account availability or an optional custom handler.
  * Regions are sorted alphabetically by region, with North America first.
  *
  * @returns An array of RegionSelectOption objects
@@ -35,14 +36,14 @@ export const getRegionOptions = ({
 }: GetRegionOptions): RegionSelectOption[] => {
   const filteredRegionsByCapability = currentCapability
     ? regions.filter((region) =>
-      region.capabilities.includes(currentCapability)
-    )
+        region.capabilities.includes(currentCapability)
+      )
     : regions;
 
   const filteredRegionsByCapabilityAndSiteType = regionFilter
     ? filteredRegionsByCapability.filter(
-      (region) => region.site_type === regionFilter
-    )
+        (region) => region.site_type === regionFilter
+      )
     : filteredRegionsByCapability;
 
   const isRegionUnavailable = (region: Region) =>
@@ -56,22 +57,24 @@ export const getRegionOptions = ({
     .map((region: Region) => {
       const group = getRegionCountryGroup(region);
 
+      // The region availability is the first check we run, regardless of the handleDisabledRegion function.
+      // This check always runs, and if the region is unavailable, the region will be disabled.
       const disabledProps = isRegionUnavailable(region)
         ? {
-          disabled: true,
-          reason: (
-            <>
-              There may be limited capacity in this region.{' '}
-              <Link to="https://www.linode.com/global-infrastructure/availability">
-                Learn more
-              </Link>
-              .
-            </>
-          ),
-        }
+            disabled: true,
+            reason: (
+              <>
+                There may be limited capacity in this region.{' '}
+                <Link to="https://www.linode.com/global-infrastructure/availability">
+                  Learn more
+                </Link>
+                .
+              </>
+            ),
+          }
         : handleDisabledRegion?.(region)?.disabled
-          ? handleDisabledRegion(region)
-          : {
+        ? handleDisabledRegion(region)
+        : {
             disabled: false,
           };
 
@@ -171,9 +174,9 @@ export const isRegionOptionUnavailable = ({
   const regionWithUnavailability:
     | AccountAvailability
     | undefined = accountAvailabilityData.find(
-      (regionAvailability: AccountAvailability) =>
-        regionAvailability.region === region.id
-    );
+    (regionAvailability: AccountAvailability) =>
+      regionAvailability.region === region.id
+  );
 
   if (!regionWithUnavailability) {
     return false;

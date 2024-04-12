@@ -103,7 +103,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete
         getOptionDisabled={(option: RegionSelectOption) =>
-          option.disabledProps?.disabled ?? false
+          Boolean(option.disabledProps?.disabled)
         }
         isOptionEqualToValue={(
           option: RegionSelectOption,

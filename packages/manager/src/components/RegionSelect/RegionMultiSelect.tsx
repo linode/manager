@@ -92,7 +92,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
       <StyledAutocompleteContainer sx={{ width }}>
         <Autocomplete
           getOptionDisabled={(option: RegionSelectOption) =>
-            option.disabledProps?.disabled ?? false
+            Boolean(option.disabledProps?.disabled)
           }
           groupBy={(option: RegionSelectOption) => {
             return option?.data?.region;
