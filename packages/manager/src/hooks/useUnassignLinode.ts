@@ -32,6 +32,7 @@ export const useUnassignLinode = () => {
     vpcId,
   }: InvalidateSubnetLinodeConfigQueryIds) => {
     const queryKeys = [
+      vpcQueries.all.queryKey,
       vpcQueries.paginated._def,
       vpcQueries.vpc(vpcId).queryKey,
       vpcQueries.vpc(vpcId)._ctx.subnets.queryKey,

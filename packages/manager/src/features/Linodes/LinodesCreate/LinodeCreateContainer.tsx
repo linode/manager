@@ -912,6 +912,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           this.state.selectedVPCId !== -1
         ) {
           this.props.queryClient.invalidateQueries(vpcQueries.all.queryKey);
+          this.props.queryClient.invalidateQueries(vpcQueries.paginated._def);
+          this.props.queryClient.invalidateQueries(
+            vpcQueries.vpc(this.state.selectedVPCId).queryKey
+          );
         }
 
         /** send the user to the Linode detail page */
