@@ -68,7 +68,7 @@ export const SizeField = (props: Props) => {
     ...rest
   } = props;
 
-  const { data: types, isLoading, isError } = useVolumeTypesQuery();
+  const { data: types, isError, isLoading } = useVolumeTypesQuery();
 
   const price = getDCSpecificPriceByType({
     regionId,
