@@ -1,5 +1,9 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { volumeFactory, linodeFactory } from '@src/factories';
+import {
+  volumeFactory,
+  linodeFactory,
+  volumeTypeFactory,
+} from '@src/factories';
 import {
   mockGetLinodes,
   mockGetLinodeDetails,
@@ -10,6 +14,7 @@ import {
   mockGetVolumes,
   mockDetachVolume,
   mockGetVolumeTypesError,
+  mockGetVolumeTypes,
 } from 'support/intercepts/volumes';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { ui } from 'support/ui';
@@ -74,11 +79,13 @@ const localStorageOverrides = {
 };
 
 describe('volumes', () => {
-  it('creates a volume without linode from volumes page', () => {
+  it.only('creates a volume without linode from volumes page', () => {
     const mockVolume = volumeFactory.build({ label: randomLabel() });
+    const mockVolumeTypes = volumeTypeFactory.buildList(1);
 
     mockGetVolumes([]).as('getVolumes');
     mockCreateVolume(mockVolume).as('createVolume');
+    mockGetVolumeTypes(mockVolumeTypes).as('getVolumeTypes');
 
     cy.visitWithLogin('/volumes', {
       preferenceOverrides,
@@ -88,6 +95,8 @@ describe('volumes', () => {
     ui.button.findByTitle('Create Volume').should('be.visible').click();
 
     cy.url().should('endWith', 'volumes/create');
+
+    cy.wait('@getVolumeTypes');
 
     ui.button.findByTitle('Create Volume').should('be.visible').click();
 
@@ -238,10 +247,14 @@ describe('volumes', () => {
 
     cy.wait(['@getVolumeTypesError']);
 
-    // Confirm that unknown pricing placeholder text displays, error displays, and create button is disabled.
+    // Confirm that unknown pricing placeholder text displays, create button is disabled, and error tooltip displays.
     cy.findByText(`$${UNKNOWN_PRICE}/month`).should('be.visible');
-    cy.findByText(PRICES_RELOAD_ERROR_NOTICE_TEXT).should('be.visible');
-    ui.button.findByTitle('Create Volume').should('be.disabled');
+    ui.button
+      .findByTitle('Create Volume')
+      .should('be.visible')
+      .should('be.disabled')
+      .trigger('mouseover');
+    ui.tooltip.findByText(PRICES_RELOAD_ERROR_NOTICE_TEXT).should('be.visible');
   });
 
   it('does not allow creation of a volume with invalid pricing from linode details', () => {
@@ -282,10 +295,16 @@ describe('volumes', () => {
       .within(() => {
         cy.findByText('Create and Attach Volume').should('be.visible').click();
 
-        // Confirm that unknown pricing placeholder text displays, error displays, and create button is disabled.
+        // Confirm that unknown pricing placeholder text displays, create button is disabled, and error tooltip displays.
         cy.contains(`$${UNKNOWN_PRICE}/mo`).should('be.visible');
-        cy.findByText(PRICES_RELOAD_ERROR_NOTICE_TEXT).should('be.visible');
-        ui.button.findByTitle('Create Volume').should('be.disabled');
+        ui.button
+          .findByTitle('Create Volume')
+          .should('be.visible')
+          .should('be.disabled')
+          .trigger('mouseover');
+        ui.tooltip
+          .findByText(PRICES_RELOAD_ERROR_NOTICE_TEXT)
+          .should('be.visible');
       });
   });
 });
