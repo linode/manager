@@ -12,7 +12,10 @@ import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { useCreateVolumeMutation } from 'src/queries/volumes';
+import {
+  useCreateVolumeMutation,
+  useVolumeTypesQuery,
+} from 'src/queries/volumes';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
@@ -56,16 +59,12 @@ export const LinodeVolumeCreateForm = (props: Props) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { mutateAsync: createVolume } = useCreateVolumeMutation();
+  const { data: types, isError, isLoading } = useVolumeTypesQuery();
 
   const { checkForNewEvents } = useEventsPollingActions();
 
-  const [isInvalidPrice, setIsInvalidPrice] = React.useState<boolean>(false);
-
   const isReadOnly = profile?.restricted && !grants?.global.add_volumes;
-
-  const handleIsInvalidPrice = (isInvalidPrice: boolean) => {
-    return setIsInvalidPrice(isInvalidPrice);
-  };
+  const isInvalidPrice = (types === undefined && !isLoading) || isError;
 
   const {
     errors,
@@ -163,7 +162,6 @@ export const LinodeVolumeCreateForm = (props: Props) => {
       <SizeField
         disabled={isReadOnly}
         error={touched.size ? errors.size : undefined}
-        handleInvalidPrice={handleIsInvalidPrice}
         isFromLinode
         name="size"
         onBlur={handleBlur}

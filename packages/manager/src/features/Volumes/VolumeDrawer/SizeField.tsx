@@ -1,5 +1,4 @@
 import { Theme } from '@mui/material/styles';
-import { useEffect } from 'react';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -21,7 +20,6 @@ import { SIZE_FIELD_WIDTH } from '../VolumeCreate';
 interface Props {
   disabled?: boolean;
   error?: string;
-  handleInvalidPrice: (isInvalidPrice: boolean) => void;
   hasSelectedRegion?: boolean;
   isFromLinode?: boolean;
   name: string;
@@ -55,7 +53,6 @@ export const SizeField = (props: Props) => {
 
   const {
     error,
-    handleInvalidPrice,
     hasSelectedRegion,
     isFromLinode,
     name,
@@ -97,10 +94,6 @@ export const SizeField = (props: Props) => {
       <Typography>Select a region to see cost per month.</Typography>
     </Box>
   );
-
-  useEffect(() => {
-    handleInvalidPrice(isInvalidPrice);
-  }, [handleInvalidPrice, isInvalidPrice]);
 
   return (
     <>

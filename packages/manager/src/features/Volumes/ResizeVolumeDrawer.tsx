@@ -9,7 +9,10 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useGrants } from 'src/queries/profile';
-import { useResizeVolumeMutation } from 'src/queries/volumes';
+import {
+  useResizeVolumeMutation,
+  useVolumeTypesQuery,
+} from 'src/queries/volumes';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -36,17 +39,14 @@ export const ResizeVolumeDrawer = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: grants } = useGrants();
-
-  const [isInvalidPrice, setIsInvalidPrice] = React.useState<boolean>(false);
+  const { data: types, isError, isLoading } = useVolumeTypesQuery();
 
   const isReadOnly =
     grants !== undefined &&
     grants.volume.find((grant) => grant.id === volume?.id)?.permissions ===
       'read_only';
 
-  const handleInvalidPrice = (isInvalidPrice: boolean) => {
-    return setIsInvalidPrice(isInvalidPrice);
-  };
+  const isInvalidPrice = (types === undefined && !isLoading) || isError;
 
   const {
     dirty,
@@ -105,7 +105,6 @@ export const ResizeVolumeDrawer = (props: Props) => {
         <SizeField
           disabled={isReadOnly}
           error={errors.size}
-          handleInvalidPrice={handleInvalidPrice}
           name="size"
           onBlur={handleBlur}
           onChange={handleChange}

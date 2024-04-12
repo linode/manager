@@ -27,7 +27,10 @@ import {
 } from 'src/queries/account/agreements';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useCreateVolumeMutation } from 'src/queries/volumes';
+import {
+  useCreateVolumeMutation,
+  useVolumeTypesQuery,
+} from 'src/queries/volumes';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
@@ -105,6 +108,8 @@ export const VolumeCreate = () => {
   const theme = useTheme();
   const { classes } = useStyles();
   const history = useHistory();
+
+  const { data: types, isError, isLoading } = useVolumeTypesQuery();
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -203,7 +208,6 @@ export const VolumeCreate = () => {
     },
     validationSchema: CreateVolumeSchema,
   });
-  const [isInvalidPrice, setIsInvalidPrice] = React.useState<boolean>(false);
 
   const { config_id, linode_id } = values;
 
@@ -216,15 +220,13 @@ export const VolumeCreate = () => {
     selectedRegionId: values.region,
   });
 
+  const isInvalidPrice = (types === undefined && !isLoading) || isError;
+
   const disabled = Boolean(
     doesNotHavePermission ||
       (showGDPRCheckbox && !hasSignedAgreement) ||
       isInvalidPrice
   );
-
-  const handleInvalidPrice = (isInvalidPrice: boolean) => {
-    return setIsInvalidPrice(isInvalidPrice);
-  };
 
   const handleLinodeChange = (linode: Linode | null) => {
     if (linode !== null) {
@@ -375,7 +377,6 @@ export const VolumeCreate = () => {
               <SizeField
                 disabled={doesNotHavePermission}
                 error={touched.size ? errors.size : undefined}
-                handleInvalidPrice={handleInvalidPrice}
                 hasSelectedRegion={!isNilOrEmpty(values.region)}
                 name="size"
                 onBlur={handleBlur}
