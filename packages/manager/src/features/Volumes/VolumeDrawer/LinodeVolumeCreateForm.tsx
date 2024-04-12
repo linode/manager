@@ -63,7 +63,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
 
   const isReadOnly = profile?.restricted && !grants?.global.add_volumes;
 
-  const handleInvalidPrice = (isInvalidPrice: boolean) => {
+  const handleIsInvalidPrice = (isInvalidPrice: boolean) => {
     return setIsInvalidPrice(isInvalidPrice);
   };
 
@@ -163,7 +163,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
       <SizeField
         disabled={isReadOnly}
         error={touched.size ? errors.size : undefined}
-        handleInvalidPrice={handleInvalidPrice}
+        handleInvalidPrice={handleIsInvalidPrice}
         isFromLinode
         name="size"
         onBlur={handleBlur}

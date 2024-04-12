@@ -68,13 +68,15 @@ export const SizeField = (props: Props) => {
     ...rest
   } = props;
 
-  const { data: types } = useVolumeTypesQuery();
+  const { data: types, isLoading, isError } = useVolumeTypesQuery();
 
   const price = getDCSpecificPriceByType({
     regionId,
     size: value,
     type: types?.[0],
   });
+
+  const isInvalidPrice = Boolean(regionId && !price) || isError;
 
   const helperText = resize
     ? `This volume can range from ${resize} GB to ${MAX_VOLUME_SIZE} GB in size.`
@@ -97,9 +99,8 @@ export const SizeField = (props: Props) => {
   );
 
   useEffect(() => {
-    const isInvalidPrice = Boolean(regionId && !price);
     handleInvalidPrice(isInvalidPrice);
-  }, [handleInvalidPrice, price, regionId]);
+  }, [handleInvalidPrice, isInvalidPrice]);
 
   return (
     <>
@@ -107,9 +108,11 @@ export const SizeField = (props: Props) => {
         InputProps={{
           endAdornment: <InputAdornment position="end"> GB </InputAdornment>,
         }}
+        errorText={
+          !isLoading && isInvalidPrice ? PRICES_RELOAD_ERROR_NOTICE_TEXT : error
+        }
         className={textFieldStyles}
         data-qa-size
-        errorText={regionId && !price ? PRICES_RELOAD_ERROR_NOTICE_TEXT : error}
         helperText={helperText}
         label="Size"
         name={name}
