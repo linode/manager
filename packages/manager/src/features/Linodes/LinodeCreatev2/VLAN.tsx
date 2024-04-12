@@ -86,6 +86,7 @@ export const VLAN = () => {
               disabled={disabled}
               errorText={fieldState.error?.message}
               filter={{ region: regionId }}
+              onBlur={field.onBlur}
               onChange={field.onChange}
               sx={{ minWidth: 300 }}
               value={field.value ?? null}
@@ -102,7 +103,9 @@ export const VLAN = () => {
               }
               disabled={disabled}
               errorText={fieldState.error?.message}
+              inputRef={field.ref}
               label="IPAM Address"
+              onBlur={field.onBlur}
               onChange={field.onChange}
               optional
               placeholder="192.0.2.0/24"

@@ -133,9 +133,11 @@ export const VPC = () => {
                     errorText={fieldState.error?.message}
                     label="Subnet"
                     noMarginTop
+                    onBlur={field.onBlur}
                     onChange={(e, subnet) => field.onChange(subnet?.id ?? null)}
                     options={selectedVPC?.subnets ?? []}
                     placeholder="Select Subnet"
+                    ref={field.ref}
                   />
                 )}
                 control={control}
@@ -183,7 +185,9 @@ export const VPC = () => {
                           render={({ field, fieldState }) => (
                             <TextField
                               errorText={fieldState.error?.message}
+                              inputRef={field.ref}
                               label="VPC IPv4"
+                              onBlur={field.onBlur}
                               onChange={field.onChange}
                               required
                               sx={{ my: 2 }}
