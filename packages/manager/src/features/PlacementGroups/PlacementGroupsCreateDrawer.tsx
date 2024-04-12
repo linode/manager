@@ -193,7 +193,8 @@ export const PlacementGroupsCreateDrawer = (
                       </Typography>
                       <Typography mt={2}>
                         The maximum number of placement groups in this region
-                        is:
+                        is:{' '}
+                        {region.placement_group_limits.maximum_pgs_per_customer}
                       </Typography>
                     </>
                   ),

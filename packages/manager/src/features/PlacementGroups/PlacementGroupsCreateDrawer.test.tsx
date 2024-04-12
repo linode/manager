@@ -137,12 +137,15 @@ describe('PlacementGroupsCreateDrawer', () => {
       target: { value: regionWithoutCapacity },
     });
     await waitFor(() => {
-      const selectedRegionOption = getByText(regionWithoutCapacity);
-      fireEvent.click(selectedRegionOption);
+      expect(getByText(regionWithoutCapacity)).toBeInTheDocument();
     });
 
     await waitFor(() => {
-      expect(getByText('This region has reached capacity')).toBeInTheDocument();
+      expect(
+        getByText(
+          'You’ve reached the limit of placement groups you can create in this Region.'
+        )
+      ).toBeInTheDocument();
     });
   });
 });

@@ -62,18 +62,27 @@ const expectedRegions: RegionSelectOption[] = [
       country: 'us',
       region: 'North America',
     },
+    disabledProps: {
+      disabled: false,
+    },
     label: 'US Location (us-1)',
     site_type: 'core',
     value: 'us-1',
   },
   {
     data: { country: 'ca', region: 'North America' },
+    disabledProps: {
+      disabled: false,
+    },
     label: 'CA Location (ca-1)',
     site_type: 'core',
     value: 'ca-1',
   },
   {
     data: { country: 'jp', region: 'Asia' },
+    disabledProps: {
+      disabled: false,
+    },
     label: 'JP Location (jp-1)',
     site_type: 'core',
     value: 'jp-1',
@@ -83,16 +92,20 @@ const expectedRegions: RegionSelectOption[] = [
 const expectedEdgeRegions = [
   {
     data: { country: 'us', region: 'North America' },
+    disabledProps: {
+      disabled: false,
+    },
     label: 'Gecko Edge Test (us-edge-1)',
     site_type: 'edge',
-    unavailable: false,
     value: 'us-edge-1',
   },
   {
     data: { country: 'us', region: 'North America' },
+    disabledProps: {
+      disabled: false,
+    },
     label: 'Gecko Edge Test 2 (us-edge-2)',
     site_type: 'edge',
-    unavailable: false,
     value: 'us-edge-2',
   },
 ];
@@ -197,7 +210,6 @@ describe('getSelectedRegionById', () => {
       },
       label: 'US Location (us-1)',
       site_type: 'core',
-      unavailable: false,
       value: 'us-1',
     };
 
@@ -263,7 +275,6 @@ describe('getSelectedRegionsByIds', () => {
         },
         label: 'US Location (us-1)',
         site_type: 'core',
-        unavailable: false,
         value: 'us-1',
       },
       {
@@ -273,7 +284,6 @@ describe('getSelectedRegionsByIds', () => {
         },
         label: 'CA Location (ca-1)',
         site_type: 'core',
-        unavailable: false,
         value: 'ca-1',
       },
     ];
@@ -299,7 +309,6 @@ describe('getSelectedRegionsByIds', () => {
         },
         label: 'US Location (us-1)',
         site_type: 'core',
-        unavailable: false,
         value: 'us-1',
       },
     ];
