@@ -1,11 +1,17 @@
 import * as React from 'react';
 
-import { accountUserFactory } from 'src/factories/accountUsers';
+import { profileFactory } from 'src/factories';
+import { grantsFactory } from 'src/factories/grants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import ContactInformation from './ContactInformation';
 
 const EDIT_BUTTON_ID = 'edit-contact-info';
+
+const queryMocks = vi.hoisted(() => ({
+  useGrants: vi.fn().mockReturnValue({}),
+  useProfile: vi.fn().mockReturnValue({}),
+}));
 
 const props = {
   address1: '123 Linode Lane',
@@ -17,46 +23,35 @@ const props = {
   firstName: 'Linny',
   lastName: 'The Platypus',
   phone: '19005553221',
+  profile: queryMocks.useProfile().data,
   state: 'PA',
   taxId: '1337',
   zip: '19106',
 };
 
-const queryMocks = vi.hoisted(() => ({
-  useAccountUser: vi.fn().mockReturnValue({}),
-  useGrants: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('src/queries/accountUsers', async () => {
-  const actual = await vi.importActual<any>('src/queries/accountUsers');
+vi.mock('src/queries/profile', async () => {
+  const actual = await vi.importActual<any>('src/queries/profile');
   return {
     ...actual,
-    useAccountUser: queryMocks.useAccountUser,
+    useGrants: queryMocks.useGrants,
+    useProfile: queryMocks.useProfile,
   };
-});
-
-// TODO: When we figure out issue with Vitest circular dependencies
-// vi.mock('src/queries/profile', async () => {
-//   const actual = await vi.importActual<any>('src/queries/profile');
-//   return {
-//     ...actual,
-//     useGrants: queryMocks.useGrants,
-//   };
-// });
-
-queryMocks.useAccountUser.mockReturnValue({
-  data: accountUserFactory.build({ user_type: 'parent' }),
 });
 
 describe('Edit Contact Information', () => {
   it('should be disabled for all child users', () => {
-    queryMocks.useAccountUser.mockReturnValue({
-      data: accountUserFactory.build({ user_type: 'child' }),
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({
+        user_type: 'child',
+      }),
     });
 
-    const { getByTestId } = renderWithTheme(<ContactInformation {...props} />, {
-      flags: { parentChildAccountAccess: true },
-    });
+    const { getByTestId } = renderWithTheme(
+      <ContactInformation {...props} profile={queryMocks.useProfile().data} />,
+      {
+        flags: { parentChildAccountAccess: true },
+      }
+    );
 
     expect(getByTestId(EDIT_BUTTON_ID)).toHaveAttribute(
       'aria-disabled',
@@ -64,21 +59,27 @@ describe('Edit Contact Information', () => {
     );
   });
 
-  // TODO: When we figure out issue with Vitest circular dependencies
-  // it('should be disabled for non-parent/child restricted users', () => {
-  //   queryMocks.useGrants.mockReturnValue({
-  //     data: grantsFactory.build({
-  //       global: {
-  //         account_access: 'read_only',
-  //       },
-  //     }),
-  //   });
+  it('should be disabled for restricted users', () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({
+        restricted: true,
+        user_type: 'default',
+      }),
+    });
 
-  //   const { getByTestId } = renderWithTheme(<ContactInformation {...props} />);
+    queryMocks.useGrants.mockReturnValue({
+      data: grantsFactory.build({
+        global: {
+          account_access: 'read_only',
+        },
+      }),
+    });
 
-  //   expect(getByTestId(EDIT_BUTTON_ID)).toHaveAttribute(
-  //     'aria-disabled',
-  //     'true'
-  //   );
-  // });
+    const { getByTestId } = renderWithTheme(<ContactInformation {...props} />);
+
+    expect(getByTestId(EDIT_BUTTON_ID)).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
+  });
 });

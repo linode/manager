@@ -13,9 +13,9 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
-import { EventWithStore } from 'src/events';
+import { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 import type {
   APIError,
@@ -70,6 +70,8 @@ export const useSupportTicketCloseMutation = (id: number) => {
   });
 };
 
-export const supportTicketEventHandler = ({ queryClient }: EventWithStore) => {
+export const supportTicketEventHandler = ({
+  queryClient,
+}: EventHandlerData) => {
   queryClient.invalidateQueries([queryKey]);
 };

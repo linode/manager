@@ -2,7 +2,7 @@ import { APIError, Firewall, Linode } from '@linode/api-v4';
 import { Config, Interface } from '@linode/api-v4/lib/linodes/types';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -22,6 +22,7 @@ import {
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
+import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
 import {
   NETWORK_INTERFACES_GUIDE_URL,
@@ -206,6 +207,16 @@ export const SubnetLinodeRow = (props: Props) => {
       </Hidden>
       <Hidden smDown>
         <StyledTableCell>
+          {getIPRangesCellContents(
+            configs ?? [],
+            configsLoading,
+            subnetId,
+            configsError ?? undefined
+          )}
+        </StyledTableCell>
+      </Hidden>
+      <Hidden smDown>
+        <StyledTableCell>
           {getFirewallsCellString(
             attachedFirewalls?.data ?? [],
             firewallsLoading,
@@ -294,6 +305,30 @@ const getIPv4Link = (configInterface: Interface | undefined): JSX.Element => {
   );
 };
 
+const getIPRangesCellContents = (
+  configs: Config[],
+  loading: boolean,
+  subnetId: number,
+  error?: APIError[]
+): JSX.Element | string => {
+  if (loading) {
+    return 'Loading...';
+  }
+
+  if (error) {
+    return 'Error retrieving VPC IPv4s';
+  }
+
+  if (configs.length === 0) {
+    return 'None';
+  }
+
+  const configInterface = getSubnetInterfaceFromConfigs(configs, subnetId);
+  return determineNoneSingleOrMultipleWithChip(
+    configInterface?.ip_ranges ?? []
+  );
+};
+
 const getFirewallLinks = (data: Firewall[]): JSX.Element => {
   const firstThreeFirewalls = data.slice(0, 3);
   return (
@@ -324,6 +359,9 @@ export const SubnetLinodeTableRowHead = (
     <StyledTableHeadCell sx={{ width: '14%' }}>Status</StyledTableHeadCell>
     <Hidden smDown>
       <StyledTableHeadCell>VPC IPv4</StyledTableHeadCell>
+    </Hidden>
+    <Hidden smDown>
+      <StyledTableHeadCell>VPC IPv4 Ranges</StyledTableHeadCell>
     </Hidden>
     <Hidden smDown>
       <StyledTableHeadCell>Firewalls</StyledTableHeadCell>

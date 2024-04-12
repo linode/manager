@@ -22,7 +22,7 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const vpcQueryKey = 'vpcs';
 export const subnetQueryKey = 'subnets';
@@ -31,7 +31,7 @@ export const subnetQueryKey = 'subnets';
 export const useVPCsQuery = (
   params: Params,
   filter: Filter,
-  enabled: boolean = true
+  enabled = true
 ) => {
   return useQuery<ResourcePage<VPC>, APIError[]>(
     [vpcQueryKey, 'paginated', params, filter],

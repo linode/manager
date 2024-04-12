@@ -1,4 +1,4 @@
-import { EventStatus } from '@linode/api-v4/types';
+import { EventStatus } from '@linode/api-v4';
 import { eventFactory, imageFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import 'cypress-file-upload';
@@ -9,7 +9,6 @@ import { fbtVisible, getClick } from 'support/helpers';
 import {
   mockDeleteImage,
   mockGetCustomImages,
-  mockGetImage,
   mockUpdateImage,
 } from 'support/intercepts/images';
 import { ui } from 'support/ui';
@@ -249,10 +248,12 @@ describe('machine image', () => {
     cy.wait('@imageUpload').then((xhr) => {
       const imageId = xhr.response?.body.image.id;
       assertProcessing(label, imageId);
-      mockGetImage(label, imageId, 'available').as('getImage');
+      mockGetCustomImages([
+        imageFactory.build({ label, id: imageId, status: 'available' }),
+      ]).as('getImages');
       eventIntercept(label, imageId, status);
       ui.toast.assertMessage(uploadMessage);
-      cy.wait('@getImage');
+      cy.wait('@getImages');
       ui.toast.assertMessage(availableMessage);
       cy.get(`[data-qa-image-cell="${imageId}"]`).within(() => {
         fbtVisible(label);

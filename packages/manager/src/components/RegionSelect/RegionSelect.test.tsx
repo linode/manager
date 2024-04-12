@@ -22,6 +22,7 @@ describe('RegionSelect', () => {
     regions,
     required: false,
     selectedId: '',
+    tooltipText: '',
     width: 100,
   };
 
@@ -38,10 +39,10 @@ describe('RegionSelect', () => {
   });
 
   it('should render a Select component with the correct helper text', () => {
-    const { getByLabelText } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <RegionSelect {...props} helperText="helper text" />
     );
-    expect(getByLabelText('helper text')).toBeInTheDocument();
+    expect(getByText('helper text')).toBeInTheDocument();
   });
 
   it('should render a Select component with the correct error text', () => {
@@ -63,5 +64,23 @@ describe('RegionSelect', () => {
       <RegionSelect {...props} disabled={true} />
     );
     expect(getByTestId('textfield-input')).toBeDisabled();
+  });
+
+  it('should render a Select component with edge region text', () => {
+    const newProps = {
+      ...props,
+      showEdgeIconHelperText: true,
+    };
+    const { getByTestId } = renderWithTheme(<RegionSelect {...newProps} />);
+    expect(getByTestId('region-select-edge-text')).toBeInTheDocument();
+  });
+
+  it('should render a Select component with no edge region text', () => {
+    const newProps = {
+      ...props,
+      showEdgeIconHelperText: false,
+    };
+    const { queryByTestId } = renderWithTheme(<RegionSelect {...newProps} />);
+    expect(queryByTestId('region-select-edge-text')).not.toBeInTheDocument();
   });
 });

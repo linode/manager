@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -24,9 +23,11 @@ import { usePagination } from 'src/hooks/usePagination';
 import {
   useAccountMaintenanceQuery,
   useAllAccountMaintenanceQuery,
-} from 'src/queries/accountMaintenance';
+} from 'src/queries/account/maintenance';
 
 import { MaintenanceTableRow } from './MaintenanceTableRow';
+
+import type { AccountMaintenance, Filter } from '@linode/api-v4';
 
 const preferenceKey = 'account-maintenance';
 
@@ -73,15 +74,18 @@ const MaintenanceTable = ({ type }: Props) => {
     type
   );
 
-  const filters: Record<'completed' | 'pending', any> = {
-    completed: 'completed',
-    pending: { '+or': ['pending, started'] },
+  /**
+   * We use a different API filter depending on the table's `type`
+   */
+  const filters: Record<Props['type'], Filter> = {
+    completed: { status: 'completed' },
+    pending: { status: { '+or': ['pending', 'started'] } },
   };
 
-  const filter = {
+  const filter: Filter = {
     '+order': order,
     '+order_by': orderBy,
-    status: filters[type],
+    ...filters[type],
   };
 
   const { data: csv, refetch: getCSVData } = useAllAccountMaintenanceQuery(

@@ -4,14 +4,14 @@ import React from 'react';
 
 import { renderWithThemeAndFormik } from 'src/utilities/testHelpers';
 
+import { handlers } from './LoadBalancerConfiguration.test';
 import {
   LoadBalancerCreateFormData,
   initialValues,
-} from './LoadBalancerCreate';
+} from './LoadBalancerCreateFormWrapper';
 import { Routes } from './Routes';
-import { handlers } from './LoadBalancerConfiguration.test';
 
-describe('Routes (AGLB full create flow)', () => {
+describe('Routes (ACLB full create flow)', () => {
   it('renders a title and an add button', () => {
     const { getByText } = renderWithThemeAndFormik(
       <Routes configurationIndex={0} handlers={handlers} />,
@@ -26,7 +26,6 @@ describe('Routes (AGLB full create flow)', () => {
       ...initialValues,
       configurations: [
         {
-          service_targets: [],
           certificates: [],
           label: 'test',
           port: 8080,
@@ -36,6 +35,7 @@ describe('Routes (AGLB full create flow)', () => {
             { label: 'test-2', protocol: 'http', rules: [] },
             { label: 'test-3', protocol: 'http', rules: [] },
           ],
+          service_targets: [],
         },
       ],
     };
@@ -48,7 +48,7 @@ describe('Routes (AGLB full create flow)', () => {
       expect(getByText(route.label)).toBeVisible();
     }
   });
-  it('can remove a route', () => {
+  it('can remove a route', async () => {
     const routes: RoutePayload[] = [
       { label: 'test-1', protocol: 'http', rules: [] },
       { label: 'test-2', protocol: 'http', rules: [] },
@@ -59,12 +59,12 @@ describe('Routes (AGLB full create flow)', () => {
       ...initialValues,
       configurations: [
         {
-          service_targets: [],
           certificates: [],
           label: 'test',
           port: 8080,
           protocol: 'http',
           routes,
+          service_targets: [],
         },
       ],
     };
@@ -78,10 +78,10 @@ describe('Routes (AGLB full create flow)', () => {
     );
 
     const actionMenu = getByLabelText(`Action Menu for Route test-2`);
-    userEvent.click(actionMenu);
+    await userEvent.click(actionMenu);
 
     const deleteButton = getByText('Remove');
-    userEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
 
     expect(queryByText('test-2')).not.toBeInTheDocument();
     expect(getByText('test-1')).toBeInTheDocument();

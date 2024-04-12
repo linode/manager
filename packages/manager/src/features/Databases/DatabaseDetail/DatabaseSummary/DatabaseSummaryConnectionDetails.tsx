@@ -242,7 +242,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
           <Typography>
             <span>password</span> = {password}
           </Typography>
-          {credentialsLoading ? (
+          {showCredentials && credentialsLoading ? (
             <div className={classes.progressCtn}>
               <CircleProgress mini noPadding size={12} />
             </div>

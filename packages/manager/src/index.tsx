@@ -1,9 +1,8 @@
 import CssBaseline from '@mui/material/CssBaseline';
-import 'font-logos/assets/font-logos.css';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
+import { createRoot } from 'react-dom/client';
 import { Provider as ReduxStoreProvider } from 'react-redux';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 
@@ -16,14 +15,14 @@ import { setupInterceptors } from 'src/request';
 import { storeFactory } from 'src/store';
 
 import { App } from './App';
-import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 import NullComponent from './components/NullComponent';
 import { loadDevTools, shouldEnableDevTools } from './dev-tools/load';
 import './index.css';
+import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 import { queryClientFactory } from './queries/base';
 
 const queryClient = queryClientFactory();
-const store = storeFactory(queryClient);
+const store = storeFactory();
 
 setupInterceptors(store);
 
@@ -66,7 +65,6 @@ const Main = () => {
                 <Snackbar
                   anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                   autoHideDuration={4000}
-                  data-qa-toast
                   hideIconVariant={true}
                   maxSnack={3}
                 >
@@ -97,7 +95,9 @@ async function loadApp() {
     // This ensures the MSW is setup before we start making API calls.
     await loadDevTools(store);
   }
-  ReactDOM.render(<Main />, document.getElementById('root'));
+  const container = document.getElementById('root');
+  const root = createRoot(container!);
+  root.render(<Main />);
 }
 
 loadApp();

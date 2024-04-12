@@ -5,7 +5,7 @@
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 
-import type { Volume } from '@linode/api-v4/types';
+import type { Volume } from '@linode/api-v4';
 
 /**
  * Intercepts GET request to fetch Volumes and mocks response.
@@ -112,4 +112,13 @@ export const interceptDeleteVolume = (
   volumeId: number
 ): Cypress.Chainable<null> => {
   return cy.intercept('DELETE', apiMatcher(`volumes/${volumeId}`));
+};
+
+/**
+ * Intercepts POST request to migrate volumes and mocks response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockMigrateVolumes = (): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher(`volumes/migrate`), {});
 };

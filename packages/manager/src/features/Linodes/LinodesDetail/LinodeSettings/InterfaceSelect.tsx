@@ -1,26 +1,29 @@
-import {
-  InterfacePayload,
-  InterfacePurpose,
-} from '@linode/api-v4/lib/linodes/types';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { VPCPanel } from 'src/features/Linodes/LinodesCreate/VPCPanel';
-import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account';
 import { useVlansQuery } from 'src/queries/vlans';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 
-interface Props {
-  errors: VPCInterfaceErrors & OtherInterfaceErrors;
+import type {
+  InterfacePayload,
+  InterfacePurpose,
+} from '@linode/api-v4/lib/linodes/types';
+import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
+
+interface InterfaceErrors extends VPCInterfaceErrors, OtherInterfaceErrors {}
+
+interface InterfaceSelectProps extends VPCState {
+  additionalIPv4RangesForVPC?: ExtendedIP[];
+  errors: InterfaceErrors;
   fromAddonsPanel?: boolean;
   handleChange: (updatedInterface: ExtendedInterface) => void;
   ipamAddress?: null | string;
@@ -33,6 +36,7 @@ interface Props {
   slotNumber: number;
 }
 interface VPCInterfaceErrors {
+  ipRangeError?: string;
   labelError?: string;
   publicIPv4Error?: string;
   subnetError?: string;
@@ -59,10 +63,9 @@ export interface ExtendedInterface
   purpose: ExtendedPurpose;
 }
 
-type CombinedProps = Props & VPCState;
-
-export const InterfaceSelect = (props: CombinedProps) => {
+export const InterfaceSelect = (props: InterfaceSelectProps) => {
   const {
+    additionalIPv4RangesForVPC,
     errors,
     fromAddonsPanel,
     handleChange,
@@ -84,17 +87,27 @@ export const InterfaceSelect = (props: CombinedProps) => {
   const isSmallBp = useMediaQuery(
     theme.breakpoints.down(fromAddonsPanel ? 'sm' : 1015)
   );
-  const flags = useFlags();
-  const { data: account } = useAccount();
-
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
 
   const [newVlan, setNewVlan] = React.useState('');
-  const purposeOptions = getPurposeOptions(showVPCs);
+
+  const purposeOptions: Item<ExtendedPurpose>[] = [
+    {
+      label: 'Public Internet',
+      value: 'public',
+    },
+    {
+      label: 'VPC',
+      value: 'vpc',
+    },
+    {
+      label: 'VLAN',
+      value: 'vlan',
+    },
+    {
+      label: 'None',
+      value: 'none',
+    },
+  ];
 
   const { data: vlans, isLoading } = useVlansQuery();
   const vlanOptions =
@@ -117,6 +130,9 @@ export const InterfaceSelect = (props: CombinedProps) => {
   );
   const [autoAssignLinodeIPv4, setAutoAssignLinodeIPv4] = React.useState(
     Boolean(nattedIPv4Address)
+  );
+  const _additionalIPv4RangesForVPC = additionalIPv4RangesForVPC?.map(
+    (ip_range) => ip_range.address
   );
 
   const handlePurposeChange = (selected: Item<InterfacePurpose>) => {
@@ -142,6 +158,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
     // Only clear VPC related fields if VPC selection changes
     if (selectedVPCId !== vpcId) {
       handleChange({
+        ip_ranges: _additionalIPv4RangesForVPC,
         ipam_address: null,
         ipv4: {
           nat_1_1: autoAssignLinodeIPv4 ? 'any' : undefined,
@@ -155,8 +172,22 @@ export const InterfaceSelect = (props: CombinedProps) => {
     }
   };
 
+  const handleIPv4RangeChange = (ipv4Ranges: ExtendedIP[]) => {
+    const changeObj = {
+      ip_ranges: ipv4Ranges.map((ip_range) => ip_range.address),
+      ipam_address: null,
+      label: null,
+      purpose,
+      subnet_id: subnetId,
+      vpc_id: vpcId,
+    };
+
+    handleChange(changeObj);
+  };
+
   const handleSubnetChange = (selectedSubnetId: number) =>
     handleChange({
+      ip_ranges: _additionalIPv4RangesForVPC,
       ipam_address: null,
       ipv4: {
         nat_1_1: autoAssignLinodeIPv4 ? 'any' : undefined,
@@ -170,6 +201,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
 
   const handleVPCIPv4Input = (vpcIPv4Input: string) => {
     const changeObj = {
+      ip_ranges: _additionalIPv4RangesForVPC,
       ipam_address: null,
       label: null,
       purpose,
@@ -204,6 +236,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
     }
 
     const changeObj = {
+      ip_ranges: _additionalIPv4RangesForVPC,
       ipam_address: null,
       label: null,
       purpose,
@@ -386,9 +419,11 @@ export const InterfaceSelect = (props: CombinedProps) => {
             toggleAutoassignIPv4WithinVPCEnabled={() =>
               setAutoAssignVPCIPv4((autoAssignVPCIPv4) => !autoAssignVPCIPv4)
             }
+            additionalIPv4RangesForVPC={additionalIPv4RangesForVPC ?? []}
             assignPublicIPv4Address={autoAssignLinodeIPv4}
             autoassignIPv4WithinVPC={autoAssignVPCIPv4}
             from="linodeConfig"
+            handleIPv4RangeChange={handleIPv4RangeChange}
             handleSelectVPC={handleVPCLabelChange}
             handleSubnetChange={handleSubnetChange}
             handleVPCIPv4Change={handleVPCIPv4Input}
@@ -397,6 +432,7 @@ export const InterfaceSelect = (props: CombinedProps) => {
             selectedSubnetId={subnetId}
             selectedVPCId={vpcId}
             subnetError={errors.subnetError}
+            vpcIPRangesError={errors.ipRangeError}
             vpcIPv4AddressOfLinode={vpcIPv4}
             vpcIPv4Error={errors.vpcIPv4Error}
             vpcIdError={errors.vpcError}
@@ -416,32 +452,6 @@ export const InterfaceSelect = (props: CombinedProps) => {
       )}
     </Grid>
   );
-};
-
-const getPurposeOptions = (showVPCs: boolean) => {
-  const purposeOptions: Item<ExtendedPurpose>[] = [
-    {
-      label: 'Public Internet',
-      value: 'public',
-    },
-    {
-      label: 'VLAN',
-      value: 'vlan',
-    },
-    {
-      label: 'None',
-      value: 'none',
-    },
-  ];
-
-  if (showVPCs) {
-    purposeOptions.splice(1, 0, {
-      label: 'VPC',
-      value: 'vpc',
-    });
-  }
-
-  return purposeOptions;
 };
 
 const unavailableInRegionHelperTextSegment =

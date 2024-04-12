@@ -21,8 +21,6 @@ import {
   propEq,
 } from 'ramda';
 import * as React from 'react';
-import { compose as recompose } from 'recompose';
-import { Subscription } from 'rxjs/Subscription';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
@@ -38,9 +36,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Typography } from 'src/components/Typography';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container';
 import {
   getAPIErrorOrDefault,
   getErrorStringOrDefault,
@@ -53,10 +48,14 @@ import { DomainRecordActionMenu } from './DomainRecordActionMenu';
 import { DomainRecordDrawer } from './DomainRecordDrawer';
 import { StyledDiv, StyledGrid, StyledTableCell } from './DomainRecords.styles';
 
-interface DomainRecordsProps {
+interface UpdateDomainDataProps extends UpdateDomainPayload {
+  id: number;
+}
+
+interface Props {
   domain: Domain;
   domainRecords: DomainRecord[];
-  updateDomain: (data: { id: number } & UpdateDomainPayload) => Promise<Domain>;
+  updateDomain: (data: UpdateDomainDataProps) => Promise<Domain>;
   updateRecords: () => void;
 }
 
@@ -80,8 +79,6 @@ interface State {
   types: IType[];
 }
 
-type CombinedProps = DomainRecordsProps & FeatureFlagConsumerProps;
-
 interface IType {
   columns: {
     render: (r: Domain | DomainRecord) => JSX.Element | null | string;
@@ -100,8 +97,8 @@ const createLink = (title: string, handler: () => void) => (
   </Button>
 );
 
-class DomainRecords extends React.Component<CombinedProps, State> {
-  constructor(props: CombinedProps) {
+class DomainRecords extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       confirmDialog: {
@@ -113,7 +110,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     };
   }
 
-  componentDidUpdate(prevProps: CombinedProps) {
+  componentDidUpdate(prevProps: Props) {
     if (
       !equals(prevProps.domainRecords, this.props.domainRecords) ||
       !equals(prevProps.domain, this.props.domain)
@@ -329,8 +326,6 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       });
     this.updateConfirmDialog((c) => ({ ...c, submitting: true }));
   };
-
-  eventsSubscription$: Subscription;
 
   generateTypes = (): IType[] => [
     /** SOA Record */
@@ -882,12 +877,10 @@ const prependLinodeNS = compose<any, any, DomainRecord[]>(
 );
 
 const getNSRecords = compose<
-  DomainRecordsProps,
+  Props,
   DomainRecord[],
   DomainRecord[],
   DomainRecord[]
 >(prependLinodeNS, filter(typeEq('NS')), pathOr([], ['domainRecords']));
 
-export default recompose<CombinedProps, DomainRecordsProps>(withFeatureFlags)(
-  DomainRecords
-);
+export default DomainRecords;

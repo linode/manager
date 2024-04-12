@@ -1,11 +1,10 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { databaseInstanceFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { capitalize } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 import {
@@ -17,12 +16,7 @@ import {
 import DatabaseLanding from './DatabaseLanding';
 import DatabaseRow from './DatabaseRow';
 
-const queryClient = new QueryClient();
-
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 const loadingTestId = 'circle-progress';
 
@@ -31,8 +25,7 @@ describe('Database Table Row', () => {
     const database = databaseInstanceFactory.build();
 
     const { getByText } = renderWithTheme(
-      wrapWithTableBody(<DatabaseRow database={database} />),
-      { queryClient }
+      wrapWithTableBody(<DatabaseRow database={database} />)
     );
 
     // Check to see if the row rendered some data
@@ -47,8 +40,7 @@ describe('Database Table Row', () => {
     });
 
     const { getByText } = renderWithTheme(
-      wrapWithTableBody(<DatabaseRow database={database} />),
-      { queryClient }
+      wrapWithTableBody(<DatabaseRow database={database} />)
     );
 
     // Check to see if the row rendered the relative date
@@ -59,19 +51,17 @@ describe('Database Table Row', () => {
 describe('Database Table', () => {
   it('should render database landing table with items', async () => {
     server.use(
-      rest.get('*/databases/instances', (req, res, ctx) => {
+      http.get('*/databases/instances', () => {
         const databases = databaseInstanceFactory.buildList(1, {
           status: 'active',
         });
-        return res(ctx.json(makeResourcePage(databases)));
+        return HttpResponse.json(makeResourcePage(databases));
       })
     );
 
-    const {
-      getAllByText,
-      getByTestId,
-      queryAllByText,
-    } = renderWithTheme(<DatabaseLanding />, { queryClient });
+    const { getAllByText, getByTestId, queryAllByText } = renderWithTheme(
+      <DatabaseLanding />
+    );
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -92,14 +82,12 @@ describe('Database Table', () => {
 
   it('should render database landing with empty state', async () => {
     server.use(
-      rest.get('*/databases/instances', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/databases/instances', () => {
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(<DatabaseLanding />, {
-      queryClient,
-    });
+    const { getByTestId, getByText } = renderWithTheme(<DatabaseLanding />);
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 

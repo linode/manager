@@ -12,7 +12,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { TextField } from 'src/components/TextField';
-import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
+import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aclb/routes';
 import { capitalize } from 'src/utilities/capitalize';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
@@ -92,13 +92,13 @@ export const EditRouteDrawer = (props: Props) => {
             Protocol
           </FormLabel>
           <FormControlLabel
-            control={<Radio />}
+            control={<Radio checked={formik.values.protocol === 'http'} />}
             data-qa-radio="HTTP"
             label="HTTP"
             value="http"
           />
           <FormControlLabel
-            control={<Radio />}
+            control={<Radio checked={formik.values.protocol === 'tcp'} />}
             data-qa-radio="TCP"
             label="TCP"
             value="tcp"

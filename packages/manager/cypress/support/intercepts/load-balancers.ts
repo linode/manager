@@ -13,7 +13,7 @@ import type {
 } from '@linode/api-v4';
 
 /**
- * Intercepts GET request to fetch an AGLB load balancer and mocks response.
+ * Intercepts GET request to fetch an ACLB load balancer and mocks response.
  *
  * @param loadBalancer - Load balancer with which to mock response.
  *
@@ -22,13 +22,13 @@ import type {
 export const mockGetLoadBalancer = (loadBalancer: Loadbalancer) => {
   return cy.intercept(
     'GET',
-    apiMatcher(`/aglb/${loadBalancer.id}`),
+    apiMatcher(`/aclb/${loadBalancer.id}`),
     makeResponse(loadBalancer)
   );
 };
 
 /**
- * Intercepts GET request to retrieve AGLB load balancers and mocks response.
+ * Intercepts GET request to retrieve ACLB load balancers and mocks response.
  *
  * @param loadBalancers - Load balancers with which to mock response.
  *
@@ -37,24 +37,24 @@ export const mockGetLoadBalancer = (loadBalancer: Loadbalancer) => {
 export const mockGetLoadBalancers = (loadBalancers: Loadbalancer[]) => {
   return cy.intercept(
     'GET',
-    apiMatcher('/aglb*'),
+    apiMatcher('/aclb*'),
     paginateResponse(loadBalancers)
   );
 };
 
 /**
- * Intercepts DELETE requests to delete an AGLB load balancer.
+ * Intercepts DELETE requests to delete an ACLB load balancer.
  *
  * @param loadBalancerId - ID of load balancer for which to delete.
  *
  * @returns Cypress chainable.
  */
 export const mockDeleteLoadBalancer = (loadBalancerId: number) => {
-  return cy.intercept('DELETE', apiMatcher(`/aglb/${loadBalancerId}`), {});
+  return cy.intercept('DELETE', apiMatcher(`/aclb/${loadBalancerId}`), {});
 };
 
 /**
- * Intercepts DELETE requests to delete an AGLB load balancer and mocks HTTP 500 error response.
+ * Intercepts DELETE requests to delete an ACLB load balancer and mocks HTTP 500 error response.
  *
  * @param loadBalancerId - ID of load balancer for which to delete.
  * @param message - Optional error message with which to respond.
@@ -68,13 +68,13 @@ export const mockDeleteLoadBalancerError = (
   const defaultMessage = 'An error occurred while deleting Load Balancer.';
   return cy.intercept(
     'DELETE',
-    apiMatcher(`/aglb/${loadBalancerId}`),
+    apiMatcher(`/aclb/${loadBalancerId}`),
     makeErrorResponse(message ?? defaultMessage, 500)
   );
 };
 
 /**
- * Intercepts GET requests to retrieve AGLB load balancer configurations and mocks response.
+ * Intercepts GET requests to retrieve ACLB load balancer configurations and mocks response.
  *
  * @param loadBalancerId - ID of load balancer for which to mock configurations.
  * @param configurations - Load balancer configurations with which to mock response.
@@ -87,13 +87,13 @@ export const mockGetLoadBalancerConfigurations = (
 ) => {
   return cy.intercept(
     'GET',
-    apiMatcher(`/aglb/${loadBalancerId}/configurations*`),
+    apiMatcher(`/aclb/${loadBalancerId}/configurations*`),
     paginateResponse(configurations)
   );
 };
 
 /**
- * Intercepts DELETE requests to delete an AGLB load balancer configuration.
+ * Intercepts DELETE requests to delete an ACLB load balancer configuration.
  *
  * @param loadBalancerId - ID of load balancer for which to delete the configuration.
  * @param configId - ID of the configuration being deleted.
@@ -106,13 +106,13 @@ export const mockDeleteLoadBalancerConfiguration = (
 ) => {
   return cy.intercept(
     'DELETE',
-    apiMatcher(`/aglb/${loadBalancerId}/configurations/${configId}`),
+    apiMatcher(`/aclb/${loadBalancerId}/configurations/${configId}`),
     {}
   );
 };
 
 /**
- * Intercepts DELETE requests to delete an AGLB load balancer configuration and returns an error.
+ * Intercepts DELETE requests to delete an ACLB load balancer configuration and returns an error.
  *
  * @param loadBalancerId - ID of load balancer for which to delete the configuration.
  * @param configId - ID of the configuration being deleted.
@@ -126,16 +126,16 @@ export const mockDeleteLoadBalancerConfigurationError = (
 ) => {
   return cy.intercept(
     'DELETE',
-    apiMatcher(`/aglb/${loadBalancerId}/configurations/${configId}`),
+    apiMatcher(`/aclb/${loadBalancerId}/configurations/${configId}`),
     makeResponse({ errors: [{ reason: error }] }, 500)
   );
 };
 
 /**
- * Intercepts POST request to create an AGLB configuration.
+ * Intercepts POST request to create an ACLB configuration.
  *
  * @param loadBalancerId - ID of load balancer for which to create the configuration.
- * @param configuration - The AGLB configuration being created.
+ * @param configuration - The ACLB configuration being created.
  *
  * @returns Cypress chainable.
  */
@@ -145,16 +145,16 @@ export const mockCreateLoadBalancerConfiguration = (
 ) => {
   return cy.intercept(
     'POST',
-    apiMatcher(`/aglb/${loadBalancerId}/configurations`),
+    apiMatcher(`/aclb/${loadBalancerId}/configurations`),
     makeResponse(configuration)
   );
 };
 
 /**
- * Intercepts PUT request to update an AGLB configuration.
+ * Intercepts PUT request to update an ACLB configuration.
  *
  * @param loadBalancerId - ID of load balancer for which to update the configuration.
- * @param configuration - The AGLB configuration being updated.
+ * @param configuration - The ACLB configuration being updated.
  *
  * @returns Cypress chainable.
  */
@@ -164,16 +164,16 @@ export const mockUpdateLoadBalancerConfiguration = (
 ) => {
   return cy.intercept(
     'PUT',
-    apiMatcher(`/aglb/${loadBalancerId}/configurations/${configuration.id}`),
+    apiMatcher(`/aclb/${loadBalancerId}/configurations/${configuration.id}`),
     makeResponse(configuration)
   );
 };
 
 /**
- * Intercepts PUT request to update an AGLB configuration.
+ * Intercepts PUT request to update an ACLB configuration.
  *
  * @param loadBalancerId - ID of load balancer for which to update the configuration.
- * @param configuration - The AGLB configuration being updated.
+ * @param configuration - The ACLB configuration being updated.
  *
  * @returns Cypress chainable.
  */
@@ -184,13 +184,13 @@ export const mockUpdateLoadBalancerConfigurationError = (
 ) => {
   return cy.intercept(
     'PUT',
-    apiMatcher(`/aglb/${loadBalancerId}/configurations/${configurationId}`),
+    apiMatcher(`/aclb/${loadBalancerId}/configurations/${configurationId}`),
     makeResponse({ errors }, 400)
   );
 };
 
 /**
- * Intercepts POST request to create an AGLB configuration and returns an error.
+ * Intercepts POST request to create an ACLB configuration and returns an error.
  *
  * @param loadBalancerId - ID of load balancer for which to create the configuration.
  * @param errors - Array of API errors to mock.
@@ -203,13 +203,13 @@ export const mockCreateLoadBalancerConfigurationError = (
 ) => {
   return cy.intercept(
     'POST',
-    apiMatcher(`/aglb/${loadBalancerId}/configurations`),
+    apiMatcher(`/aclb/${loadBalancerId}/configurations`),
     makeResponse({ errors }, 500)
   );
 };
 
 /**
- * Intercepts GET requests to retrieve AGLB load balancer certificates and mocks response.
+ * Intercepts GET requests to retrieve ACLB load balancer certificates and mocks response.
  *
  * @param loadBalancerId - ID of load balancer for which to mock certificates.
  * @param certificates - Load balancer certificates with which to mock response.
@@ -222,13 +222,13 @@ export const mockGetLoadBalancerCertificates = (
 ) => {
   return cy.intercept(
     'GET',
-    apiMatcher(`/aglb/${loadBalancerId}/certificates*`),
+    apiMatcher(`/aclb/${loadBalancerId}/certificates*`),
     paginateResponse(certificates)
   );
 };
 
 /**
- * Intercepts POST request to upload an AGLB load balancer certificate and mocks a success response.
+ * Intercepts POST request to upload an ACLB load balancer certificate and mocks a success response.
  *
  * @param loadBalancerId - ID of load balancer for which to mock certificates.
  *
@@ -240,13 +240,13 @@ export const mockUploadLoadBalancerCertificate = (
 ) => {
   return cy.intercept(
     'POST',
-    apiMatcher(`/aglb/${loadBalancerId}/certificates`),
+    apiMatcher(`/aclb/${loadBalancerId}/certificates`),
     makeResponse(certificate)
   );
 };
 
 /**
- * Intercepts DELETE request to delete an AGLB load balancer certificate and mocks a success response.
+ * Intercepts DELETE request to delete an ACLB load balancer certificate and mocks a success response.
  *
  * @param loadBalancerId - ID of load balancer for which to delete certificates.
  * @param certificateId - ID of certificate for which to remove.
@@ -259,13 +259,13 @@ export const mockDeleteLoadBalancerCertificate = (
 ) => {
   return cy.intercept(
     'DELETE',
-    apiMatcher(`/aglb/${loadBalancerId}/certificates/${certificateId}`),
+    apiMatcher(`/aclb/${loadBalancerId}/certificates/${certificateId}`),
     makeResponse()
   );
 };
 
 /**
- * Intercepts GET request to retrieve AGLB service targets and mocks HTTP 500 error response.
+ * Intercepts GET request to retrieve ACLB service targets and mocks HTTP 500 error response.
  *
  * @param loadBalancerId - ID of load balancer for which to delete certificates.
  * @param certificateId - ID of certificate for which to remove.
@@ -282,13 +282,13 @@ export const mockDeleteLoadBalancerCertificateError = (
     'An error occurred while deleting Load Balancer certificate.';
   return cy.intercept(
     'DELETE',
-    apiMatcher(`/aglb/${loadBalancerId}/certificates/${certificateId}`),
+    apiMatcher(`/aclb/${loadBalancerId}/certificates/${certificateId}`),
     makeErrorResponse(message ?? defaultMessage, 500)
   );
 };
 
 /**
- * Intercepts PUT request to update an AGLB load balancer certificate and mocks a success response.
+ * Intercepts PUT request to update an ACLB load balancer certificate and mocks a success response.
  *
  * @param loadBalancerId - ID of load balancer for which to mock certificates.
  *
@@ -300,32 +300,32 @@ export const mockUpdateLoadBalancerCertificate = (
 ) => {
   return cy.intercept(
     'PUT',
-    apiMatcher(`/aglb/${loadBalancerId}/certificates/${certificate.id}`),
+    apiMatcher(`/aclb/${loadBalancerId}/certificates/${certificate.id}`),
     makeResponse(certificate)
   );
 };
 
 /**
- * Intercepts GET request to retrieve AGLB service targets and mocks response.
+ * Intercepts GET request to retrieve ACLB service targets and mocks response.
  *
  * @param serviceTargets - Service targets with which to mock response.
  *
  * @returns Cypress chainable.
  */
-// TODO: AGLB - We should probably remove this mock and use "mockGetLoadBalancerServiceTargets" below.
+// TODO: ACLB - We should probably remove this mock and use "mockGetLoadBalancerServiceTargets" below.
 export const mockGetServiceTargets = (
   loadBalancer: Loadbalancer,
   serviceTargets: ServiceTarget[]
 ) => {
   return cy.intercept(
     'GET',
-    apiMatcher(`/aglb/${loadBalancer.id}/service-targets*`),
+    apiMatcher(`/aclb/${loadBalancer.id}/service-targets*`),
     paginateResponse(serviceTargets)
   );
 };
 
 /**
- * Intercepts GET request to retrieve AGLB service targets and mocks HTTP 500 error response.
+ * Intercepts GET request to retrieve ACLB service targets and mocks HTTP 500 error response.
  *
  * @param message - Optional error message with which to respond.
  *
@@ -335,7 +335,7 @@ export const mockGetServiceTargetsError = (message?: string) => {
   const defaultMessage = 'An error occurred while retrieving service targets';
   return cy.intercept(
     'GET',
-    apiMatcher('/aglb/service-targets*'),
+    apiMatcher('/aclb/service-targets*'),
     makeErrorResponse(message ?? defaultMessage, 500)
   );
 };
@@ -354,7 +354,7 @@ export const mockCreateServiceTarget = (
 ) => {
   return cy.intercept(
     'POST',
-    apiMatcher(`/aglb/${loadBalancer.id}/service-targets`),
+    apiMatcher(`/aclb/${loadBalancer.id}/service-targets`),
     makeResponse(serviceTarget)
   );
 };
@@ -373,7 +373,7 @@ export const mockUpdateServiceTarget = (
 ) => {
   return cy.intercept(
     'PUT',
-    apiMatcher(`/aglb/${loadBalancer.id}/service-targets/${serviceTarget.id}`),
+    apiMatcher(`/aclb/${loadBalancer.id}/service-targets/${serviceTarget.id}`),
     makeResponse(serviceTarget)
   );
 };
@@ -389,13 +389,13 @@ export const mockUpdateServiceTarget = (
 export const mockCreateRoute = (loadBalancer: Loadbalancer, route: Route) => {
   return cy.intercept(
     'POST',
-    apiMatcher(`/aglb/${loadBalancer.id}/routes`),
+    apiMatcher(`/aclb/${loadBalancer.id}/routes`),
     makeResponse(route)
   );
 };
 
 /**
- * Intercepts GET requests to retrieve AGLB load balancer routes and mocks response.
+ * Intercepts GET requests to retrieve ACLB load balancer routes and mocks response.
  *
  * @param loadBalancerId - ID of load balancer for which to mock certificates.
  * @param routes - Load balancer routes with which to mock response.
@@ -408,13 +408,13 @@ export const mockGetLoadBalancerRoutes = (
 ) => {
   return cy.intercept(
     'GET',
-    apiMatcher(`/aglb/${loadBalancerId}/routes*`),
+    apiMatcher(`/aclb/${loadBalancerId}/routes*`),
     paginateResponse(routes)
   );
 };
 
 /**
- * Intercepts GET requests to retrieve AGLB load balancer service targets and mocks response.
+ * Intercepts GET requests to retrieve ACLB load balancer service targets and mocks response.
  *
  * @param loadBalancerId - ID of load balancer for which to mock certificates.
  * @param serviceTargets - Load balancer service targets with which to mock response.
@@ -427,7 +427,7 @@ export const mockGetLoadBalancerServiceTargets = (
 ) => {
   return cy.intercept(
     'GET',
-    apiMatcher(`/aglb/${loadBalancerId}/service-targets*`),
+    apiMatcher(`/aclb/${loadBalancerId}/service-targets*`),
     paginateResponse(serviceTargets)
   );
 };
@@ -443,7 +443,7 @@ export const mockGetLoadBalancerServiceTargets = (
 export const mockUpdateRoute = (loadBalancer: Loadbalancer, route: Route) => {
   return cy.intercept(
     'PUT',
-    apiMatcher(`/aglb/${loadBalancer.id}/routes/${route.id}`),
+    apiMatcher(`/aclb/${loadBalancer.id}/routes/${route.id}`),
     makeResponse(route)
   );
 };
@@ -462,7 +462,7 @@ export const mockUpdateRouteError = (
 ) => {
   return cy.intercept(
     'PUT',
-    apiMatcher(`/aglb/${loadBalancer.id}/routes/${route.id}`),
+    apiMatcher(`/aclb/${loadBalancer.id}/routes/${route.id}`),
     makeResponse(
       {
         errors: [

@@ -70,9 +70,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = MenuItemProps & WrapperMenuItemProps;
+interface WrapperMenuItemCombinedProps
+  extends Omit<MenuItemProps, 'ref'>,
+    WrapperMenuItemProps {}
 
-export const WrapperMenuItem = (props: CombinedProps) => {
+export const WrapperMenuItem = (props: WrapperMenuItemCombinedProps) => {
   const { classes } = useStyles();
   const { className, isLoading, tooltip, ...rest } = props;
   const shouldWrapLabel = isLoading || tooltip;

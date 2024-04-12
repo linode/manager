@@ -1,5 +1,5 @@
 import { Linode, deleteLinode, getLinodes } from '@linode/api-v4';
-import { CreateLinodeRequest } from '@linode/api-v4/types';
+import { CreateLinodeRequest } from '@linode/api-v4';
 import { linodeFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { oauthToken, pageSize } from 'support/constants/api';
@@ -18,7 +18,7 @@ export const createMockLinodeList = (data?: {}, listNumber: number = 1) => {
   );
 };
 
-const defaultLinodeRequestBody: Partial<CreateLinodeRequest> = {
+const defaultLinodeRequestBody = {
   authorized_users: [],
   backups_enabled: false,
   booted: true,
@@ -30,7 +30,7 @@ const defaultLinodeRequestBody: Partial<CreateLinodeRequest> = {
   type: 'g6-standard-2',
 };
 
-const linodeRequest = (linodeData) => {
+const linodeRequest = (linodeData: CreateLinodeRequest) => {
   return cy.request({
     auth: {
       bearer: oauthToken,

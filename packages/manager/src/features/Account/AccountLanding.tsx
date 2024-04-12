@@ -11,10 +11,19 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { useAccount } from 'src/queries/account';
-import { useGrants } from 'src/queries/profile';
+import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
+import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useFlags } from 'src/hooks/useFlags';
+import { usePendingRevocationToken } from 'src/hooks/usePendingRevocationToken';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useAccount } from 'src/queries/account/account';
+import { useProfile } from 'src/queries/profile';
+import { sendSwitchAccountEvent } from 'src/utilities/analytics';
 
 import AccountLogins from './AccountLogins';
+import { SwitchAccountButton } from './SwitchAccountButton';
+import { SwitchAccountDrawer } from './SwitchAccountDrawer';
 
 const Billing = React.lazy(() =>
   import('src/features/Billing/BillingDetail').then((module) => ({
@@ -42,11 +51,32 @@ const AccountLanding = () => {
   const history = useHistory();
   const location = useLocation();
   const { data: account } = useAccount();
-  const { data: grants } = useGrants();
+  const { data: profile } = useProfile();
 
-  const accountAccessGrant = grants?.global?.account_access;
-  const readOnlyAccountAccess = accountAccessGrant === 'read_only';
+  const flags = useFlags();
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
+  const sessionContext = React.useContext(switchAccountSessionContext);
+  const {
+    getPendingRevocationToken,
+    pendingRevocationToken,
+  } = usePendingRevocationToken();
+
   const isAkamaiAccount = account?.billing_source === 'akamai';
+  const isProxyUser = profile?.user_type === 'proxy';
+  const isChildUser = profile?.user_type === 'child';
+  const isParentUser = profile?.user_type === 'parent';
+
+  const isReadOnly =
+    useRestrictedGlobalGrantCheck({
+      globalGrantType: 'account_access',
+      permittedGrantLevel: 'read_write',
+    }) || isChildUser;
+
+  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'child_account_access',
+  });
+
+  const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
 
   const tabs = [
     {
@@ -81,6 +111,20 @@ const AccountLanding = () => {
     '/account/billing/edit',
   ];
 
+  const handleAccountSwitch = () => {
+    if (isParentTokenExpired) {
+      return sessionContext.updateState({
+        isOpen: true,
+      });
+    }
+
+    if (isProxyUser) {
+      getPendingRevocationToken();
+    }
+
+    setIsDrawerOpen(true);
+  };
+
   const getDefaultTabIndex = () => {
     const tabChoice = tabs.findIndex((tab) =>
       Boolean(matchPath(tab.routeName, { path: location.pathname }))
@@ -107,10 +151,20 @@ const AccountLanding = () => {
   let idx = 0;
 
   const isBillingTabSelected = location.pathname.match(/billing/);
+  const canSwitchBetweenParentOrProxyAccount =
+    flags.parentChildAccountAccess &&
+    ((!isChildAccountAccessRestricted && isParentUser) || isProxyUser);
 
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
       pathname: '/account',
+    },
+    buttonDataAttrs: {
+      disabled: isReadOnly,
+      tooltipText: getRestrictedResourceText({
+        isChildUser,
+        resourceType: 'Account',
+      }),
     },
     title: 'Account',
   };
@@ -124,7 +178,15 @@ const AccountLanding = () => {
       landingHeaderProps.onButtonClick = () =>
         history.replace('/account/billing/make-payment');
     }
-    landingHeaderProps.disabledCreateButton = readOnlyAccountAccess;
+    landingHeaderProps.extraActions = canSwitchBetweenParentOrProxyAccount ? (
+      <SwitchAccountButton
+        onClick={() => {
+          sendSwitchAccountEvent('Account Landing');
+          handleAccountSwitch();
+        }}
+        data-testid="switch-account-button"
+      />
+    ) : undefined;
   }
 
   return (
@@ -158,6 +220,12 @@ const AccountLanding = () => {
           </TabPanels>
         </React.Suspense>
       </Tabs>
+      <SwitchAccountDrawer
+        onClose={() => setIsDrawerOpen(false)}
+        open={isDrawerOpen}
+        proxyToken={pendingRevocationToken}
+        userType={profile?.user_type}
+      />
     </React.Fragment>
   );
 };

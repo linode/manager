@@ -195,7 +195,15 @@ export const LinodeInterfaceSchema = object().shape({
     .of(string())
     .when('purpose', {
       is: 'vpc',
-      then: array().of(string().test(validateIP)).max(1).notRequired(),
+      then: array()
+        .of(
+          string().test(
+            'valid-ip-range',
+            'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
+            validateIP
+          )
+        )
+        .notRequired(),
       otherwise: array().test({
         name: testnameDisallowedBasedOnPurpose('VPC'),
         message: testmessageDisallowedBasedOnPurpose('vpc', 'ip_ranges'),
@@ -260,6 +268,10 @@ const MetadataSchema = object({
   user_data: string().notRequired().nullable(true),
 });
 
+const PlacementGroupPayloadSchema = object({
+  id: number().notRequired().nullable(true),
+});
+
 export const CreateLinodeSchema = object({
   type: string().ensure().required('Plan is required.'),
   region: string().ensure().required('Region is required.'),
@@ -269,7 +281,7 @@ export const CreateLinodeSchema = object({
   image: string().when('stackscript_id', {
     is: (value?: number) => value !== undefined,
     then: string().required('Image is required.'),
-    otherwise: string().notRequired(),
+    otherwise: string().nullable().notRequired(),
   }),
   authorized_keys: array().of(string()).notRequired(),
   backups_enabled: boolean().notRequired(),
@@ -293,7 +305,8 @@ export const CreateLinodeSchema = object({
   }),
   interfaces: LinodeInterfacesSchema,
   metadata: MetadataSchema,
-  firewall_id: number().notRequired(),
+  firewall_id: number().nullable().notRequired(),
+  placement_group: PlacementGroupPayloadSchema,
 });
 
 const alerts = object({

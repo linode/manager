@@ -15,6 +15,7 @@ export interface ActionHandlers {
   handleDetails: () => void;
   handleEdit: () => void;
   handleResize: () => void;
+  handleUpgrade: () => void;
 }
 
 export interface Props {

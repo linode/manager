@@ -1,25 +1,21 @@
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { accountFactory, regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCPanel, VPCPanelProps } from './VPCPanel';
 
-const queryClient = new QueryClient();
-
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 const props = {
+  additionalIPv4RangesForVPC: [],
   assignPublicIPv4Address: false,
   autoassignIPv4WithinVPC: true,
   from: 'linodeCreate' as VPCPanelProps['from'],
+  handleIPv4RangeChange: vi.fn(),
   handleSelectVPC: vi.fn(),
   handleSubnetChange: vi.fn(),
   handleVPCIPv4Change: vi.fn(),
@@ -42,39 +38,15 @@ describe('VPCPanel', () => {
     });
 
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(account));
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
       })
     );
 
-    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
-      queryClient,
-    });
+    const wrapper = renderWithTheme(<VPCPanel {...props} />);
 
     await waitFor(() => {
       expect(wrapper.getByTestId(vpcPanelTestId)).toBeInTheDocument();
-    });
-  });
-
-  it('should display the VPC Panel if the VPC feature flag is on', async () => {
-    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
-      flags: { vpc: true },
-      queryClient,
-    });
-
-    await waitFor(() => {
-      expect(wrapper.getByTestId(vpcPanelTestId)).toBeInTheDocument();
-    });
-  });
-
-  it('should not display the VPC Panel if the user does not have the VPC account capability and the VPC feature flag is off', async () => {
-    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
-      flags: { vpc: false },
-      queryClient,
-    });
-
-    await waitFor(() => {
-      expect(wrapper.queryByTestId(vpcPanelTestId)).not.toBeInTheDocument();
     });
   });
 
@@ -82,20 +54,17 @@ describe('VPCPanel', () => {
     const _props = { ...props, region: 'us-east', selectedVPCId: 5 };
 
     server.use(
-      rest.get('*/regions', (req, res, ctx) => {
+      http.get('*/regions', () => {
         const usEast = regionFactory.build({
           capabilities: ['VPCs'],
           id: 'us-east',
         });
         const regions = regionFactory.buildList(5);
-        return res(ctx.json(makeResourcePage([usEast, ...regions])));
+        return HttpResponse.json(makeResourcePage([usEast, ...regions]));
       })
     );
 
-    const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
-      flags: { vpc: true },
-      queryClient,
-    });
+    const wrapper = renderWithTheme(<VPCPanel {..._props} />);
 
     await waitFor(() => {
       expect(
@@ -105,23 +74,25 @@ describe('VPCPanel', () => {
   });
 
   it('should have the VPC IPv4 auto-assign checkbox checked by default', async () => {
-    const _props = { ...props, region: 'us-east', selectedVPCId: 5 };
+    const _props = {
+      ...props,
+      region: 'us-east',
+      selectedSubnetId: 2,
+      selectedVPCId: 5,
+    };
 
     server.use(
-      rest.get('*/regions', (req, res, ctx) => {
+      http.get('*/regions', () => {
         const usEast = regionFactory.build({
           capabilities: ['VPCs'],
           id: 'us-east',
         });
         const regions = regionFactory.buildList(5);
-        return res(ctx.json(makeResourcePage([usEast, ...regions])));
+        return HttpResponse.json(makeResourcePage([usEast, ...regions]));
       })
     );
 
-    const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
-      flags: { vpc: true },
-      queryClient,
-    });
+    const wrapper = renderWithTheme(<VPCPanel {..._props} />);
 
     await waitFor(() => {
       // the "Auto-assign a VPC IPv4 address for this Linode in the VPC" checkbox is the first one (0 index)
@@ -131,22 +102,19 @@ describe('VPCPanel', () => {
 
   it('should display helper text if there are no vpcs in the selected region and "from" is "linodeCreate"', async () => {
     server.use(
-      rest.get('*/regions', (req, res, ctx) => {
+      http.get('*/regions', () => {
         const usEast = regionFactory.build({
           capabilities: ['VPCs'],
           id: 'us-east',
         });
-        return res(ctx.json(makeResourcePage([usEast])));
+        return HttpResponse.json(makeResourcePage([usEast]));
       }),
-      rest.get('*/vpcs', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/vpcs', () => {
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 
-    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
-      flags: { vpc: true },
-      queryClient,
-    });
+    const wrapper = renderWithTheme(<VPCPanel {...props} />);
 
     await waitFor(() => {
       expect(
@@ -159,24 +127,20 @@ describe('VPCPanel', () => {
 
   it('should not display helper text if there are no vpcs in the selected region and "from" is "linodeConfig"', async () => {
     server.use(
-      rest.get('*/regions', (req, res, ctx) => {
+      http.get('*/regions', () => {
         const usEast = regionFactory.build({
           capabilities: ['VPCs'],
           id: 'us-east',
         });
-        return res(ctx.json(makeResourcePage([usEast])));
+        return HttpResponse.json(makeResourcePage([usEast]));
       }),
-      rest.get('*/vpcs', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/vpcs', () => {
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 
     const wrapper = renderWithTheme(
-      <VPCPanel {...props} from="linodeConfig" />,
-      {
-        flags: { vpc: true },
-        queryClient,
-      }
+      <VPCPanel {...props} from="linodeConfig" />
     );
 
     await waitFor(() => {
@@ -189,19 +153,16 @@ describe('VPCPanel', () => {
   });
   it('shows helper text for when "from" = "linodeCreate" if the selected region does not support VPCs', async () => {
     server.use(
-      rest.get('*/regions', (req, res, ctx) => {
+      http.get('*/regions', () => {
         const usEast = regionFactory.build({
           capabilities: [],
           id: 'us-east',
         });
-        return res(ctx.json(makeResourcePage([usEast])));
+        return HttpResponse.json(makeResourcePage([usEast]));
       })
     );
 
-    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
-      flags: { vpc: true },
-      queryClient,
-    });
+    const wrapper = renderWithTheme(<VPCPanel {...props} />);
 
     await waitFor(() => {
       expect(
@@ -211,19 +172,16 @@ describe('VPCPanel', () => {
   });
   it('should show the "Create VPC" drawer link when from = "linodeCreate" and a region that supports VPCs is selected', async () => {
     server.use(
-      rest.get('*/regions', (req, res, ctx) => {
+      http.get('*/regions', () => {
         const usEast = regionFactory.build({
           capabilities: ['VPCs'],
           id: 'us-east',
         });
-        return res(ctx.json(makeResourcePage([usEast])));
+        return HttpResponse.json(makeResourcePage([usEast]));
       })
     );
 
-    const wrapper = renderWithTheme(<VPCPanel {...props} />, {
-      flags: { vpc: true },
-      queryClient,
-    });
+    const wrapper = renderWithTheme(<VPCPanel {...props} />);
 
     await waitFor(() => {
       expect(wrapper.queryByText('Create VPC')).toBeInTheDocument();
@@ -234,25 +192,23 @@ describe('VPCPanel', () => {
       ...props,
       autoassignIPv4WithinVPC: false,
       region: 'us-east',
+      selectedSubnetId: 2,
       selectedVPCId: 5,
       vpcIPv4AddressOfLinode: '10.0.4.3',
     };
 
     server.use(
-      rest.get('*/regions', (req, res, ctx) => {
+      http.get('*/regions', () => {
         const usEast = regionFactory.build({
           capabilities: ['VPCs'],
           id: 'us-east',
         });
         const regions = regionFactory.buildList(5);
-        return res(ctx.json(makeResourcePage([usEast, ...regions])));
+        return HttpResponse.json(makeResourcePage([usEast, ...regions]));
       })
     );
 
-    const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
-      flags: { vpc: true },
-      queryClient,
-    });
+    const wrapper = renderWithTheme(<VPCPanel {..._props} />);
 
     await waitFor(() => {
       expect(
@@ -269,24 +225,22 @@ describe('VPCPanel', () => {
       ...props,
       assignPublicIPv4Address: true,
       region: 'us-east',
+      selectedSubnetId: 2,
       selectedVPCId: 5,
     };
 
     server.use(
-      rest.get('*/regions', (req, res, ctx) => {
+      http.get('*/regions', () => {
         const usEast = regionFactory.build({
           capabilities: ['VPCs'],
           id: 'us-east',
         });
         const regions = regionFactory.buildList(5);
-        return res(ctx.json(makeResourcePage([usEast, ...regions])));
+        return HttpResponse.json(makeResourcePage([usEast, ...regions]));
       })
     );
 
-    const wrapper = renderWithTheme(<VPCPanel {..._props} />, {
-      flags: { vpc: true },
-      queryClient,
-    });
+    const wrapper = renderWithTheme(<VPCPanel {..._props} />);
 
     await waitFor(() => {
       expect(

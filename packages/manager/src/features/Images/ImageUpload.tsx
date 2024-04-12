@@ -1,9 +1,9 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
@@ -24,9 +24,9 @@ import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
-} from 'src/queries/accountAgreements';
+} from 'src/queries/account/agreements';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
 import { setPendingUpload } from 'src/store/pendingUpload';
@@ -275,6 +275,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             errorText={errorMap.region}
             handleSelection={setRegion}
             label="Region"
+            regionFilter="core" // Images service will not be supported for Gecko Beta
             regions={regions}
             required
             selectedId={region}

@@ -1,17 +1,31 @@
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
+import { MaterialDesignContent } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { CloseSnackbar } from './CloseSnackbar';
 
+import type { Theme } from '@mui/material/styles';
+
+const StyledMaterialDesignContent = styled(MaterialDesignContent)(
+  ({ theme }: { theme: Theme }) => ({
+    '&.notistack-MuiContent-error': {
+      borderLeft: `6px solid ${theme.palette.error.dark}`,
+    },
+    '&.notistack-MuiContent-info': {
+      borderLeft: `6px solid ${theme.palette.primary.main}`,
+    },
+    '&.notistack-MuiContent-success': {
+      borderLeft: `6px solid ${theme.palette.success.main}`, // corrected to palette.success
+    },
+    '&.notistack-MuiContent-warning': {
+      borderLeft: `6px solid ${theme.palette.warning.dark}`,
+    },
+  })
+);
+
 const useStyles = makeStyles()((theme: Theme) => ({
-  error: {
-    borderLeft: `6px solid ${theme.palette.error.dark}`,
-  },
-  info: {
-    borderLeft: `6px solid ${theme.palette.primary.main}`,
-  },
   root: {
     '& div': {
       backgroundColor: `${theme.bg.white} !important`,
@@ -31,12 +45,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
         paddingLeft: 0,
       },
     },
-  },
-  success: {
-    borderLeft: `6px solid ${theme.color.green}`,
-  },
-  warning: {
-    borderLeft: `6px solid ${theme.palette.warning.dark}`,
   },
 }));
 
@@ -59,6 +67,12 @@ export const Snackbar = (props: SnackbarProviderProps) => {
     <SnackbarProvider
       ref={notistackRef}
       {...rest}
+      Components={{
+        error: StyledMaterialDesignContent,
+        info: StyledMaterialDesignContent,
+        success: StyledMaterialDesignContent,
+        warning: StyledMaterialDesignContent,
+      }}
       action={(key) => (
         <CloseSnackbar
           onClick={onClickDismiss(key)}
@@ -67,10 +81,6 @@ export const Snackbar = (props: SnackbarProviderProps) => {
       )}
       classes={{
         root: classes.root,
-        variantError: classes.error,
-        variantInfo: classes.info,
-        variantSuccess: classes.success,
-        variantWarning: classes.warning,
       }}
     >
       {children}

@@ -21,7 +21,7 @@ import { Typography } from 'src/components/Typography';
 import {
   useAccountSettings,
   useMutateAccountSettings,
-} from 'src/queries/accountSettings';
+} from 'src/queries/account/settings';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllTypes } from 'src/queries/types';
 import { pluralize } from 'src/utilities/pluralize';
@@ -181,9 +181,7 @@ all new Linodes will automatically be backed up.`
           &nbsp;
           <DisplayPrice
             price={
-              totalBackupsPrice && isNumber(totalBackupsPrice)
-                ? totalBackupsPrice
-                : UNKNOWN_PRICE
+              isNumber(totalBackupsPrice) ? totalBackupsPrice : UNKNOWN_PRICE
             }
             interval="mo"
           />

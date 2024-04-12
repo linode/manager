@@ -12,7 +12,7 @@ import { RadioGroup } from 'src/components/RadioGroup';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useLoadBalancerRouteCreateMutation } from 'src/queries/aglb/routes';
+import { useLoadBalancerRouteCreateMutation } from 'src/queries/aclb/routes';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { RouteSelect } from './RouteSelect';
@@ -43,7 +43,7 @@ export const AddRouteDrawer = (props: Props) => {
   return (
     <Drawer onClose={onClose} open={open} title="Add Route">
       <Stack spacing={1}>
-        <Typography>{ROUTE_COPY.Description.main}</Typography>
+        <Typography>{ROUTE_COPY.Protocol.main}</Typography>
         <Typography>{ROUTE_COPY.Description[routeProtocol]}</Typography>
       </Stack>
       <RadioGroup onChange={(_, value) => setMode(value as Mode)} value={mode}>
@@ -174,7 +174,7 @@ const AddNewRouteForm = (props: AddNewRouteFormProps) => {
       />
       <ActionsPanel
         primaryButtonProps={{
-          label: 'Create Route',
+          label: 'Create and Add',
           loading: isLoading,
           type: 'submit',
         }}

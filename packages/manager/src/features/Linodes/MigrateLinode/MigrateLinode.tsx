@@ -7,19 +7,23 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
+import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { MBpsInterDC } from 'src/constants';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
-import useEvents from 'src/hooks/useEvents';
 import { useFlags } from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
-} from 'src/queries/accountAgreements';
+} from 'src/queries/account/agreements';
+import { isEventRelevantToLinode } from 'src/queries/events/event.helpers';
+import {
+  useEventsPollingActions,
+  useInProgressEvents,
+} from 'src/queries/events/events';
 import { useImageQuery } from 'src/queries/images';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
@@ -27,9 +31,8 @@ import {
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
-import { isEventRelevantToLinode } from 'src/store/events/event.selectors';
 import { sendMigrationInitiatedEvent } from 'src/utilities/analytics';
 import { formatDate } from 'src/utilities/formatDate';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
@@ -52,6 +55,8 @@ export const MigrateLinode = React.memo((props: Props) => {
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
+  const { checkForNewEvents } = useEventsPollingActions();
+
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
     linodeId !== undefined && open
@@ -72,10 +77,10 @@ export const MigrateLinode = React.memo((props: Props) => {
     linodeId !== undefined && open
   );
 
-  const { events } = useEvents();
+  const { data: events } = useInProgressEvents();
 
   const eventsForLinode = linodeId
-    ? events.filter((event) => isEventRelevantToLinode(event, linodeId))
+    ? events?.filter((event) => isEventRelevantToLinode(event, linodeId)) ?? []
     : [];
 
   const {
@@ -140,6 +145,16 @@ export const MigrateLinode = React.memo((props: Props) => {
       : undefined;
   }, [flags.metadata, linode, regionsData, selectedRegion]);
 
+  const linodeIsInEdgeRegion = getIsEdgeRegion(
+    regionsData ?? [],
+    linode?.region ?? ''
+  );
+
+  const edgeRegionWarning =
+    flags.gecko2?.enabled && linodeIsInEdgeRegion
+      ? 'Edge sites may only be migrated to other Edge sites.'
+      : undefined;
+
   if (!linode) {
     return null;
   }
@@ -156,7 +171,7 @@ export const MigrateLinode = React.memo((props: Props) => {
     return migrateLinode({
       region: selectedRegion,
     }).then(() => {
-      resetEventsPolling();
+      checkForNewEvents();
       sendMigrationInitiatedEvent(
         region,
         selectedRegion,
@@ -220,6 +235,7 @@ export const MigrateLinode = React.memo((props: Props) => {
         notifications={notifications}
       /> */}
       <CautionNotice
+        edgeRegionWarning={edgeRegionWarning}
         hasConfirmed={hasConfirmed}
         linodeId={linodeId}
         metadataWarning={metadataMigrateWarning}

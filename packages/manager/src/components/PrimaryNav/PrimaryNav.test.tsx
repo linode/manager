@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import { rest, server } from 'src/mocks/testServer';
+import { accountFactory } from 'src/factories';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
@@ -19,8 +20,8 @@ const queryString = 'menu-item-Managed';
 describe('PrimaryNav', () => {
   it('only contains a "Managed" menu link if the user has Managed services.', async () => {
     server.use(
-      rest.get('*/account/maintenance', (req, res, ctx) => {
-        return res(ctx.json({ managed: false }));
+      http.get('*/account/maintenance', () => {
+        return HttpResponse.json({ managed: false });
       })
     );
 
@@ -33,8 +34,8 @@ describe('PrimaryNav', () => {
     expect(queryByTestId(queryString)).not.toBeInTheDocument();
 
     server.use(
-      rest.get('*/account/maintenance', (req, res, ctx) => {
-        return res(ctx.json({ managed: true }));
+      http.get('*/account/maintenance', () => {
+        return HttpResponse.json({ managed: true });
       })
     );
 
@@ -69,5 +70,63 @@ describe('PrimaryNav', () => {
     });
 
     expect(getByTestId('menu-item-Databases')).toBeInTheDocument();
+  });
+
+  it('should show ACLB if the feature flag is on, but there is not an account capability', async () => {
+    const account = accountFactory.build({
+      capabilities: [],
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const { findByText } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags: { aclb: true },
+    });
+
+    const loadbalancerNavItem = await findByText('Cloud Load Balancers');
+
+    expect(loadbalancerNavItem).toBeVisible();
+  });
+
+  it('should show ACLB if the feature flag is off, but the account has the capability', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Akamai Cloud Load Balancer'],
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const { findByText } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags: { aclb: false },
+    });
+
+    const loadbalancerNavItem = await findByText('Cloud Load Balancers');
+
+    expect(loadbalancerNavItem).toBeVisible();
+  });
+
+  it('should not show ACLB if the feature flag is off and there is no account capability', async () => {
+    const account = accountFactory.build({
+      capabilities: [],
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const { queryByText } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags: { aclb: false },
+    });
+
+    expect(queryByText('Cloud Load Balancers')).not.toBeInTheDocument();
   });
 });

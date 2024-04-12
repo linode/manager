@@ -6,11 +6,7 @@ export const getEngineFromDatabaseEntityURL = (url: string) => {
   return url.match(/databases\/(\w*)\/instances/i)?.[1];
 };
 
-export const getLinkForEvent = (
-  action: EventAction,
-  entity: Entity | null,
-  deleted: boolean | string | undefined
-) => {
+export const getLinkForEvent = (action: EventAction, entity: Entity | null) => {
   const type = entity?.type;
   const id = entity?.id;
   const label = entity?.label;
@@ -40,7 +36,7 @@ export const getLinkForEvent = (
    * If we have a deletion event or an event that is marked as referring to a deleted entity
    * we don't want a clickable action.
    */
-  if (action.includes('_delete') || deleted) {
+  if (action.includes('_delete')) {
     return;
   }
 
@@ -110,6 +106,9 @@ export const getLinkForEvent = (
     case 'vpc':
       return `/vpcs/${id}`;
 
+    case 'placement_group':
+      return `/placement-groups/${id}`;
+
     default:
       return;
   }
@@ -143,6 +142,8 @@ export const getLinkTargets = (entity: Entity | null) => {
       return '/longview';
     case 'volume':
       return '/volumes';
+    case 'placement_group':
+      return `/placement-groups/${entity.id}`;
     default:
       return null;
   }

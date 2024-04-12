@@ -11,6 +11,7 @@ export interface LabelProps {
 export interface EditableProps {
   editableTextTitle: string;
   errorText?: string;
+  handleAnalyticsEvent?: () => void;
   onCancel: () => void;
   onEdit: (value: string) => Promise<any>;
 }

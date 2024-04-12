@@ -19,12 +19,12 @@ import { Typography } from 'src/components/Typography';
 import {
   useLoadBalancerConfigurationCreateMutation,
   useLoadBalancerConfigurationMutation,
-} from 'src/queries/aglb/configurations';
+} from 'src/queries/aclb/configurations';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { AddRouteDrawer } from '../Routes/AddRouteDrawer';
 import { RoutesTable } from '../Routes/RoutesTable';
-import { ApplyCertificatesDrawer } from './ApplyCertificatesDrawer';
+import { AddCertificateDrawer } from './AddCertificateDrawer';
 import { CertificateTable } from './CertificateTable';
 import { DeleteConfigurationDialog } from './DeleteConfigurationDialog';
 import {
@@ -34,7 +34,12 @@ import {
   protocolOptions,
 } from './constants';
 
-import type { Configuration, ConfigurationPayload } from '@linode/api-v4';
+import type {
+  CertificateConfig,
+  Configuration,
+  ConfigurationPayload,
+  Protocol,
+} from '@linode/api-v4';
 
 interface EditProps {
   configuration: Configuration;
@@ -57,9 +62,11 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
     loadbalancerId: string;
   }>();
 
-  const [isApplyCertDialogOpen, setIsApplyCertDialogOpen] = useState(false);
+  const [isAddCertDrawerOpen, setIsAddCertDrawerOpen] = useState(false);
   const [isAddRouteDrawerOpen, setIsAddRouteDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const [hasChangedPort, setHasChangedPort] = useState(false);
 
   const [routesTableQuery, setRoutesTableQuery] = useState('');
 
@@ -120,8 +127,9 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
 
   const handleRemoveCert = (index: number) => {
     formik.setFieldTouched('certificates');
-    formik.values.certificates.splice(index, 1);
-    formik.setFieldValue('certificates', formik.values.certificates);
+    const newCerts = [...formik.values.certificates];
+    newCerts.splice(index, 1);
+    formik.setFieldValue('certificates', newCerts);
   };
 
   const handleRemoveRoute = (index: number) => {
@@ -133,17 +141,53 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
     formik.setFieldValue('route_ids', newRouteIds);
   };
 
-  const handleAddCerts = (certificates: Configuration['certificates']) => {
+  const handleAddCerts = (certificate: CertificateConfig) => {
     formik.setFieldTouched('certificates');
     formik.setFieldValue('certificates', [
       ...formik.values.certificates,
-      ...certificates,
+      certificate,
     ]);
   };
 
   const handleReset = () => {
     formik.resetForm();
+    setHasChangedPort(false);
     reset();
+  };
+
+  const handleProtocolChange = (protocol: Protocol) => {
+    let certificates = [...formik.values.certificates];
+    let port = formik.values.port;
+
+    if (protocol !== 'https') {
+      // Clear the certificates array if the selected protocol is not HTTPS.
+      // The API will error if you try to pass certificates for HTTP or TCP.
+      certificates = [];
+    }
+
+    if (!hasChangedPort) {
+      // If the user has not manually changed the port, and they select HTTP,
+      // set the port to 80 for them.
+      if (protocol === 'http') {
+        port = 80;
+      }
+
+      // If the user has not manually changed the port, and they select HTTPS,
+      // set the port to 443 for them.
+      if (protocol === 'https') {
+        port = 443;
+      }
+    }
+
+    formik.setFormikState((prev) => ({
+      ...prev,
+      values: {
+        ...prev.values,
+        certificates,
+        port,
+        protocol,
+      },
+    }));
   };
 
   const generalErrors = error?.reduce((acc, { field, reason }) => {
@@ -168,15 +212,19 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
         />
       )}
       <TextField
-        errorText={formik.errors.label}
+        errorText={formik.touched.label ? formik.errors.label : undefined}
         label="Configuration Label"
         name="label"
+        onBlur={formik.handleBlur}
         onChange={formik.handleChange}
         value={formik.values.label}
       />
       <Stack spacing={2}>
         <Stack direction="row" spacing={2}>
           <Autocomplete
+            onChange={(e, { value }) => {
+              handleProtocolChange(value);
+            }}
             textFieldProps={{
               labelTooltipText: CONFIGURATION_COPY.Protocol,
             }}
@@ -186,15 +234,18 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
             disableClearable
             errorText={formik.errors.protocol}
             label="Protocol"
-            onChange={(e, { value }) => formik.setFieldValue('protocol', value)}
             options={protocolOptions}
           />
           <TextField
-            errorText={formik.errors.port}
+            onChange={(e) => {
+              formik.handleChange(e);
+              setHasChangedPort(true);
+            }}
+            errorText={formik.touched.port ? formik.errors.port : undefined}
             label="Port"
             labelTooltipText={CONFIGURATION_COPY.Port}
             name="port"
-            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             type="number"
             value={formik.values.port}
           />
@@ -229,13 +280,10 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
             />
             <Box mt={2}>
               <Button
-                onClick={() => {
-                  setIsApplyCertDialogOpen(true);
-                }}
                 buttonType="outlined"
+                onClick={() => setIsAddCertDrawerOpen(true)}
               >
-                Apply {formik.values.certificates.length > 0 ? 'More' : ''}{' '}
-                Certificates
+                Add Certificate
               </Button>
             </Box>
           </Stack>
@@ -308,11 +356,11 @@ export const ConfigurationForm = (props: CreateProps | EditProps) => {
         onClose={() => setIsAddRouteDrawerOpen(false)}
         open={isAddRouteDrawerOpen}
       />
-      <ApplyCertificatesDrawer
+      <AddCertificateDrawer
         loadbalancerId={loadbalancerId}
         onAdd={handleAddCerts}
-        onClose={() => setIsApplyCertDialogOpen(false)}
-        open={isApplyCertDialogOpen}
+        onClose={() => setIsAddCertDrawerOpen(false)}
+        open={isAddCertDrawerOpen}
       />
       {mode === 'edit' && (
         <DeleteConfigurationDialog

@@ -6,7 +6,7 @@ import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';

@@ -30,22 +30,27 @@ import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
-} from 'src/queries/accountAgreements';
-import { useNodebalancerCreateMutation } from 'src/queries/nodebalancers';
-import { useGrants, useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
+} from 'src/queries/account/agreements';
+import {
+  useNodeBalancerTypesQuery,
+  useNodebalancerCreateMutation,
+} from 'src/queries/nodebalancers';
+import { useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { NODEBALANCER_PRICE } from 'src/utilities/pricing/constants';
+import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
 import {
-  getDCSpecificPrice,
+  getDCSpecificPriceByType,
   renderMonthlyPriceToCorrectDecimalPlace,
 } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -61,8 +66,13 @@ import {
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
 import type { APIError } from '@linode/api-v4/lib/types';
 
+interface NodeBalancerConfigFieldsWithStatusAndErrors
+  extends NodeBalancerConfigFieldsWithStatus {
+  errors?: APIError[];
+}
+
 interface NodeBalancerFieldsState {
-  configs: (NodeBalancerConfigFieldsWithStatus & { errors?: any })[];
+  configs: NodeBalancerConfigFieldsWithStatusAndErrors[];
   firewall_id?: number;
   label?: string;
   region?: string;
@@ -90,9 +100,9 @@ const defaultFieldsStates = {
 const NodeBalancerCreate = () => {
   const flags = useFlags();
   const { data: agreements } = useAccountAgreements();
-  const { data: grants } = useGrants();
   const { data: profile } = useProfile();
   const { data: regions } = useRegionsQuery();
+  const { data: types } = useNodeBalancerTypesQuery();
 
   const {
     error,
@@ -126,11 +136,12 @@ const NodeBalancerCreate = () => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const disabled =
-    Boolean(profile?.restricted) && !grants?.global.add_nodebalancers;
+  const isRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_nodebalancers',
+  });
 
   const addNodeBalancer = () => {
-    if (disabled) {
+    if (isRestricted) {
       return;
     }
     setNodeBalancerFields((prev) => ({
@@ -411,10 +422,11 @@ const NodeBalancerCreate = () => {
   const regionLabel = regions?.find((r) => r.id === nodeBalancerFields.region)
     ?.label;
 
-  const price = getDCSpecificPrice({
-    basePrice: NODEBALANCER_PRICE,
+  const price = getDCSpecificPriceByType({
     regionId: nodeBalancerFields.region,
+    type: types?.[0],
   });
+  const isInvalidPrice = Boolean(nodeBalancerFields.region && !price);
 
   const summaryItems = [];
 
@@ -441,7 +453,9 @@ const NodeBalancerCreate = () => {
 
   if (nodeBalancerFields.region) {
     summaryItems.unshift({
-      title: `$${renderMonthlyPriceToCorrectDecimalPlace(Number(price))}/month`,
+      title: `$${renderMonthlyPriceToCorrectDecimalPlace(
+        price ? Number(price) : undefined
+      )}/month`,
     });
   }
 
@@ -453,20 +467,22 @@ const NodeBalancerCreate = () => {
           breadcrumbDataAttrs: {
             'data-qa-create-nodebalancer-header': true,
           },
+          crumbOverrides: [{ label: 'NodeBalancers', position: 1 }],
           pathname: '/nodebalancers/create',
         }}
         title="Create"
       />
-      {generalError && !disabled && (
+      {generalError && !isRestricted && (
         <Notice spacingTop={8} variant="error">
           {generalError}
         </Notice>
       )}
-      {disabled && (
+      {isRestricted && (
         <Notice
-          text={
-            "You don't have permissions to create a new NodeBalancer. Please contact an account administrator for details."
-          }
+          text={getRestrictedResourceText({
+            action: 'create',
+            resourceType: 'NodeBalancers',
+          })}
           important
           spacingTop={16}
           variant="error"
@@ -474,7 +490,7 @@ const NodeBalancerCreate = () => {
       )}
       <Paper>
         <TextField
-          disabled={disabled}
+          disabled={isRestricted}
           errorText={hasErrorFor('label')}
           label={'NodeBalancer Label'}
           noMarginTop
@@ -490,17 +506,16 @@ const NodeBalancerCreate = () => {
                 }))
               : []
           }
-          disabled={disabled}
+          disabled={isRestricted}
           onChange={tagsChange}
           tagError={hasErrorFor('tags')}
         />
       </Paper>
       <SelectRegionPanel
         currentCapability="NodeBalancers"
-        disabled={disabled}
+        disabled={isRestricted}
         error={hasErrorFor('region')}
         handleSelection={regionChange}
-        regions={regions ?? []}
         selectedId={nodeBalancerFields.region}
       />
       {flags.firewallNodebalancer && (
@@ -518,6 +533,7 @@ const NodeBalancerCreate = () => {
               <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
             </Typography>
           }
+          disabled={isRestricted}
           entityType="nodebalancer"
           selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
         />
@@ -575,7 +591,7 @@ const NodeBalancerCreate = () => {
                 checkPassive={nodeBalancerFields.configs[idx].check_passive!}
                 checkPath={nodeBalancerFields.configs[idx].check_path!}
                 configIdx={idx}
-                disabled={disabled}
+                disabled={isRestricted}
                 errors={nodeBalancerConfig.errors}
                 healthCheckType={nodeBalancerFields.configs[idx].check!}
                 nodeBalancerRegion={nodeBalancerFields.region}
@@ -607,7 +623,7 @@ const NodeBalancerCreate = () => {
       </Box>
       <Button
         buttonType="outlined"
-        disabled={disabled}
+        disabled={isRestricted}
         onClick={addNodeBalancer}
         sx={matchesSmDown ? { marginLeft: theme.spacing(2) } : null}
       >
@@ -633,15 +649,20 @@ const NodeBalancerCreate = () => {
         justifyContent={'flex-end'}
       >
         <Button
+          disabled={
+            (showGDPRCheckbox && !hasSignedAgreement) ||
+            isRestricted ||
+            isInvalidPrice
+          }
           sx={{
             flexShrink: 0,
             mx: matchesSmDown ? theme.spacing(1) : null,
           }}
           buttonType="primary"
           data-qa-deploy-nodebalancer
-          disabled={showGDPRCheckbox && !hasSignedAgreement}
           loading={isLoading}
           onClick={onCreate}
+          tooltipText={isInvalidPrice ? PRICE_ERROR_TOOLTIP_TEXT : ''}
         >
           Create NodeBalancer
         </Button>

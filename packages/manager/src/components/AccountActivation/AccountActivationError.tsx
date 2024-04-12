@@ -9,7 +9,7 @@ interface InnerProps {
   errors: APIError[];
 }
 
-type CombinedProps = Props & InnerProps;
+interface CombinedProps extends Props, InnerProps {}
 
 const AccountActivationError = (props: CombinedProps) => {
   React.useEffect(() => {
@@ -23,10 +23,12 @@ const AccountActivationError = (props: CombinedProps) => {
 
   return (
     <React.Fragment>
-      {getAPIErrorOrDefault(
-        props.errors,
-        'Your account is not yet activated. Please reach out to support@linode.com for more information'
-      )}
+      {
+        getAPIErrorOrDefault(
+          props.errors,
+          'Your account is not yet activated. Please reach out to support@linode.com for more information'
+        )[0].reason
+      }
     </React.Fragment>
   );
 };

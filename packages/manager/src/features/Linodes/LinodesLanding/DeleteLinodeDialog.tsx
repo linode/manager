@@ -1,19 +1,16 @@
+import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
-import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import {
   useDeleteLinodeMutation,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 import { subnetQueryKey, vpcQueryKey } from 'src/queries/vpcs';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { getVPCsFromLinodeConfigs } from './utils';
 
@@ -26,14 +23,8 @@ interface Props {
 
 export const DeleteLinodeDialog = (props: Props) => {
   const queryClient = useQueryClient();
-  const flags = useFlags();
-  const { data: account } = useAccount();
 
-  const enableVPCActions = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const { linodeId, onClose, onSuccess, open } = props;
 
@@ -44,7 +35,7 @@ export const DeleteLinodeDialog = (props: Props) => {
 
   const { data: configs } = useAllLinodeConfigsQuery(
     linodeId ?? -1,
-    linodeId !== undefined && open && enableVPCActions
+    linodeId !== undefined && open
   );
 
   const { error, isLoading, mutateAsync, reset } = useDeleteLinodeMutation(
@@ -59,9 +50,8 @@ export const DeleteLinodeDialog = (props: Props) => {
 
   const onDelete = async () => {
     await mutateAsync();
-    const vpcIds = enableVPCActions
-      ? getVPCsFromLinodeConfigs(configs ?? [])
-      : [];
+    const vpcIds = getVPCsFromLinodeConfigs(configs ?? []);
+
     // @TODO VPC: potentially revisit using the linodeEventsHandler in linode/events.ts to invalidate queries rather than here
     // See PR #9814 for more details
     if (vpcIds.length > 0) {
@@ -78,7 +68,7 @@ export const DeleteLinodeDialog = (props: Props) => {
       });
     }
     onClose();
-    resetEventsPolling();
+    checkForNewEvents();
 
     if (onSuccess) {
       onSuccess();

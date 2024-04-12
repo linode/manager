@@ -1,5 +1,4 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -69,41 +68,48 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
       <Box
         sx={(theme) => ({
           [theme.breakpoints.down('md')]: {
+            alignItems: 'flex-start',
             flexDirection: 'column',
           },
         })}
+        alignItems="flex-end"
         display="flex"
         justifyContent="space-between"
       >
         <TextField
           {...textFieldProps}
-          sx={(theme) => ({
-            minWidth: 415,
-            [theme.breakpoints.down('md')]: {
-              minWidth: 'auto',
+          containerProps={{
+            sx: {
+              width: '100%',
             },
-          })}
+          }}
           disabled={disabled}
           errorText={fieldError}
           label={label}
           onBlur={(e) => setValue(e.target.value)}
           onChange={(e) => setValue(e.target.value)}
-          tooltipText={tooltipText ? tooltipText : undefined}
           trimmed={trimmed}
           value={value}
         />
         <ActionsPanel
           primaryButtonProps={{
+            'data-testid': 'Button',
             disabled: disabled || value === initialValue,
             label: `Update ${label}`,
             loading: submitting,
             onClick: handleSubmit,
-            sx: (theme: Theme) => ({
+            sx: {
+              margin: '0',
               minWidth: 180,
-              [theme.breakpoints.up('md')]: {
-                marginTop: 2,
-              },
-            }),
+            },
+            tooltipText:
+              tooltipText && typeof tooltipText === 'string'
+                ? tooltipText
+                : undefined,
+          }}
+          sx={{
+            flexShrink: 0,
+            padding: 0,
           }}
         />
       </Box>

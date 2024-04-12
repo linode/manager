@@ -1,5 +1,17 @@
 import { mockGetAccount, mockUpdateAccount } from 'support/intercepts/account';
 import { accountFactory } from 'src/factories/account';
+import type { Account } from '@linode/api-v4';
+import { ui } from 'support/ui';
+import { profileFactory } from '@src/factories';
+
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+
+import { mockGetProfile } from 'support/intercepts/profile';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { randomLabel } from 'support/util/random';
 
 /* eslint-disable sonarjs/no-duplicate-string */
 const accountData = accountFactory.build({
@@ -44,20 +56,20 @@ const newAccountData = accountFactory.build({
   zip: '19108',
 });
 
-const checkAccountContactDisplay = (data) => {
+const checkAccountContactDisplay = (accountInfo: Account) => {
   cy.findByText('Billing Contact').should('be.visible');
-  cy.findByText(data['company']).should('be.visible');
+  cy.findByText(accountInfo['company']).should('be.visible');
   cy.get('[data-qa-contact-name]').should('be.visible');
-  cy.findByText(data['first_name'], { exact: false });
-  cy.findByText(data['last_name'], { exact: false });
-  cy.contains(data['address_1']);
-  cy.contains(data['address_2']);
-  cy.findByText(data['state'], { exact: false });
-  cy.findByText(data['zip'], { exact: false });
+  cy.findByText(accountInfo['first_name'], { exact: false });
+  cy.findByText(accountInfo['last_name'], { exact: false });
+  cy.contains(accountInfo['address_1']);
+  cy.contains(accountInfo['address_2']);
+  cy.findByText(accountInfo['state'], { exact: false });
+  cy.findByText(accountInfo['zip'], { exact: false });
   cy.get('[data-qa-contact-email="true"]').within(() => {
-    cy.findByText(data['email']);
+    cy.findByText(accountInfo['email']);
   });
-  cy.findByText(data['phone']);
+  cy.findByText(accountInfo['phone']);
 };
 
 describe('Billing Contact', () => {
@@ -65,80 +77,116 @@ describe('Billing Contact', () => {
     // mock the user's account data and confirm that it is displayed correctly upon page load
     mockGetAccount(accountData).as('getAccount');
     cy.visitWithLogin('/account/billing');
-    checkAccountContactDisplay(accountData);
 
     // edit the billing contact information
     mockUpdateAccount(newAccountData).as('updateAccount');
     cy.get('[data-qa-contact-summary]').within((_contact) => {
+      checkAccountContactDisplay(accountData);
       cy.findByText('Edit').should('be.visible').click();
     });
-    // check drawer is visible
-    cy.findByLabelText('First Name')
+
+    ui.drawer
+      .findByTitle('Edit Billing Contact Info')
       .should('be.visible')
-      .click()
-      .clear()
-      .type(newAccountData['first_name']);
-    cy.findByLabelText('Last Name')
-      .should('be.visible')
-      .click()
-      .clear()
-      .type(newAccountData['last_name']);
-    cy.findByLabelText('Company Name')
-      .should('be.visible')
-      .click()
-      .clear()
-      .type(newAccountData['company']);
-    cy.findByLabelText('Address')
-      .should('be.visible')
-      .click()
-      .clear()
-      .type(newAccountData['address_1']);
-    cy.findByLabelText('Address 2')
-      .should('be.visible')
-      .click()
-      .clear()
-      .type(newAccountData['address_2']);
-    cy.findByLabelText('Email (required)')
-      .should('be.visible')
-      .click()
-      .clear()
-      .type(newAccountData['email']);
-    cy.findByLabelText('City')
-      .should('be.visible')
-      .click()
-      .clear()
-      .type(newAccountData['city']);
-    cy.findByLabelText('Postal Code')
-      .should('be.visible')
-      .click()
-      .clear()
-      .type(newAccountData['zip']);
-    cy.findByLabelText('Phone')
-      .should('be.visible')
-      .click()
-      .clear()
-      .type(newAccountData['phone']);
-    cy.get('[data-qa-contact-country]').click().type('United States{enter}');
-    cy.get('[data-qa-contact-state-province]')
-      .should('be.visible')
-      .click()
-      .type(`${newAccountData['state']}{enter}`);
-    cy.findByLabelText('Tax ID')
-      .should('be.visible')
-      .click()
-      .clear()
-      .type(newAccountData['tax_id']);
-    cy.get('[data-qa-save-contact-info="true"]')
-      .click()
-      .then(() => {
-        cy.wait('@updateAccount').then((xhr) => {
-          expect(xhr.response?.body).to.eql(newAccountData);
-        });
+      .within(() => {
+        cy.findByLabelText('First Name')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['first_name']);
+        cy.findByLabelText('Last Name')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['last_name']);
+        cy.findByLabelText('Company Name')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['company']);
+        cy.findByLabelText('Address')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['address_1']);
+        cy.findByLabelText('Address 2')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['address_2']);
+        cy.findByLabelText('Email (required)')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['email']);
+        cy.findByLabelText('City')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['city']);
+        cy.findByLabelText('Postal Code')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['zip']);
+        cy.findByLabelText('Phone')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['phone']);
+        cy.get('[data-qa-contact-country]')
+          .click()
+          .type('United States{enter}');
+        cy.get('[data-qa-contact-state-province]')
+          .should('be.visible')
+          .click()
+          .type(`${newAccountData['state']}{enter}`);
+        cy.findByLabelText('Tax ID')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newAccountData['tax_id']);
+        cy.get('[data-qa-save-contact-info="true"]')
+          .click()
+          .then(() => {
+            cy.wait('@updateAccount').then((xhr) => {
+              expect(xhr.response?.body).to.eql(newAccountData);
+            });
+          });
       });
 
     // check the page updates to reflect the edits
     cy.get('[data-qa-contact-summary]').within(() => {
       checkAccountContactDisplay(newAccountData);
     });
+  });
+});
+
+describe('Parent/Child feature disabled', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      parentChildAccountAccess: makeFeatureFlagData(false),
+    });
+    mockGetFeatureFlagClientstream();
+  });
+
+  it('disables company name for Parent users', () => {
+    const mockProfile = profileFactory.build({
+      username: randomLabel(),
+      restricted: false,
+      user_type: 'parent',
+    });
+
+    mockGetProfile(mockProfile);
+    cy.visitWithLogin('/account/billing/edit');
+
+    ui.drawer
+      .findByTitle('Edit Billing Contact Info')
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Company Name')
+          .should('be.visible')
+          .should('be.disabled');
+      });
   });
 });

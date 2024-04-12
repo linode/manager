@@ -20,15 +20,15 @@ vi.mock('src/hooks/useAPIRequest', () => ({
   }),
 }));
 
-vi.mock('src/queries/accountTransfer', () => ({
-  useAccountTransfer: vi.fn().mockReturnValue({
+vi.mock('src/queries/account/transfer', () => ({
+  useAccountNetworkTransfer: vi.fn().mockReturnValue({
     data: accountTransferFactory.build(),
     error: undefined,
     isLoading: false,
   }),
 }));
 
-vi.mock('src/queries/regions', () => {
+vi.mock('src/queries/regions/regions', () => {
   const mockRegions = [
     ...regionFactory.buildList(5),
     regionWithDynamicPricingFactory.build(),

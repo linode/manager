@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions';
-import { useArgs } from '@storybook/client-api';
+import { useArgs } from '@storybook/preview-api';
 import * as React from 'react';
 
 import { EditableText } from './EditableText';
@@ -21,6 +21,24 @@ export const Default: Story = {
     };
 
     return <EditableText {...args} onEdit={onEdit} />;
+  },
+};
+
+export const WithSuffix: Story = {
+  args: {
+    onCancel: action('onCancel'),
+    text: 'I have a suffix',
+  },
+  render: (args) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [, setLocalArgs] = useArgs();
+    const onEdit = (updatedText: string) => {
+      return Promise.resolve(setLocalArgs({ text: updatedText }));
+    };
+
+    return (
+      <EditableText {...args} onEdit={onEdit} textSuffix=" (I am the suffix)" />
+    );
   },
 };
 

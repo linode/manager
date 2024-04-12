@@ -1,13 +1,14 @@
 import Dialog from '@mui/material/Dialog';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 
+import { useIsACLBEnabled } from './features/LoadBalancers/utils';
 import { useAccountManagement } from './hooks/useAccountManagement';
-import { useFlags } from './hooks/useFlags';
+import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   input: {
@@ -53,20 +54,21 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-interface Props {
-  onClose: () => void;
-  open: boolean;
-}
-
-export const GoTo = React.memo((props: Props) => {
+export const GoTo = React.memo(() => {
   const { classes } = useStyles();
   const routerHistory = useHistory();
   const { _hasAccountAccess, _isManagedAccount } = useAccountManagement();
-  const flags = useFlags();
+
+  const { isACLBEnabled } = useIsACLBEnabled();
+  const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
+
+  const onClose = () => {
+    setGoToOpen(false);
+  };
 
   const onSelect = (item: Item<string>) => {
     routerHistory.push(item.value);
-    props.onClose();
+    onClose();
   };
 
   const links = React.useMemo(
@@ -87,12 +89,11 @@ export const GoTo = React.memo((props: Props) => {
       },
       {
         display: 'Load Balancers',
-        hide: !flags.aglb,
+        hide: !isACLBEnabled,
         href: '/loadbalancers',
       },
       {
         display: 'VPC',
-        hide: !flags.vpc,
         href: '/vpcs',
       },
       {
@@ -148,7 +149,7 @@ export const GoTo = React.memo((props: Props) => {
         href: '/profile/display',
       },
     ],
-    [_hasAccountAccess, _isManagedAccount]
+    [_hasAccountAccess, _isManagedAccount, isACLBEnabled]
   );
 
   const options: Item[] = React.useMemo(
@@ -169,8 +170,8 @@ export const GoTo = React.memo((props: Props) => {
   return (
     <Dialog
       classes={dialogClasses}
-      onClose={props.onClose}
-      open={props.open}
+      onClose={onClose}
+      open={goToOpen}
       title="Go To..."
     >
       {/* I was about to put a "@todo" item for mobile display, but realized

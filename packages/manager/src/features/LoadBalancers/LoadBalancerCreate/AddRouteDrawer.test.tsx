@@ -5,9 +5,9 @@ import React from 'react';
 import { renderWithThemeAndFormik } from 'src/utilities/testHelpers';
 
 import { AddRouteDrawer } from './AddRouteDrawer';
-import { initialValues } from './LoadBalancerCreate';
+import { initialValues } from './LoadBalancerCreateFormWrapper';
 
-describe('AddRouteDrawer (AGLB full create flow)', () => {
+describe('AddRouteDrawer (ACLB full create flow)', () => {
   it('renders a title', () => {
     const { getByText } = renderWithThemeAndFormik(
       <AddRouteDrawer
@@ -54,9 +54,9 @@ describe('AddRouteDrawer (AGLB full create flow)', () => {
       'button'
     );
 
-    userEvent.type(labelTextField, 'my-route');
+    await userEvent.type(labelTextField, 'my-route');
 
-    userEvent.click(addButton!);
+    await userEvent.click(addButton!);
 
     await waitFor(() => expect(onClose).toBeCalled());
   });

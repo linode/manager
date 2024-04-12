@@ -1,5 +1,6 @@
-import type { AxiosError } from 'axios';
 import type { APIError } from '@linode/api-v4';
+import type { AxiosError } from 'axios';
+import { timeout } from 'support/util/backoff';
 
 type LinodeApiV4Error = {
   errors: APIError[];
@@ -49,10 +50,11 @@ const isAxiosError = (e: any): e is AxiosError => {
  */
 const isLinodeApiError = (e: any): e is AxiosError<LinodeApiV4Error> => {
   if (isAxiosError(e)) {
-    const errorData = e.response?.data?.errors;
+    const responseData = e.response?.data as any;
     return (
-      Array.isArray(errorData) &&
-      errorData.every((item: any) => {
+      responseData.errors &&
+      Array.isArray(responseData.errors) &&
+      responseData.errors.every((item: any) => {
         return 'reason' in item;
       })
     );
@@ -69,7 +71,7 @@ const isLinodeApiError = (e: any): e is AxiosError<LinodeApiV4Error> => {
  *
  * @returns A new error with added information in message, or `e`.
  */
-const enhanceError = (e: any) => {
+const enhanceError = (e: Error) => {
   // Check for most specific error types first.
   if (isLinodeApiError(e)) {
     // If `e` is a Linode APIv4 error response, show the status code, error messages,
@@ -85,7 +87,7 @@ const enhanceError = (e: any) => {
     });
 
     const requestInfo =
-      !!e.request?.responseURL && !!e.config.method
+      !!e.request?.responseURL && !!e.config?.method
         ? `\nRequest: ${e.config.method.toUpperCase()} ${e.request.responseURL}`
         : '';
 
@@ -100,7 +102,7 @@ const enhanceError = (e: any) => {
       : `Request failed`;
 
     const requestInfo =
-      !!e.request?.responseURL && !!e.config.method
+      !!e.request?.responseURL && !!e.config?.method
         ? `\nRequest: ${e.config.method.toUpperCase()} ${e.request.responseURL}`
         : '';
 
@@ -184,7 +186,7 @@ Cypress.Commands.add(
       return { log: false };
     })();
 
-    const timeout = (() => {
+    const timeoutLength = (() => {
       if (typeof labelOrOptions !== 'string') {
         return labelOrOptions?.timeout;
       }
@@ -196,7 +198,7 @@ Cypress.Commands.add(
       end: false,
       message: commandLabel,
       name: 'defer',
-      timeout,
+      timeout: timeoutLength,
     });
 
     // Wraps the given promise in order to update Cypress's log on completion.
@@ -206,6 +208,11 @@ Cypress.Commands.add(
         result = await promise;
       } catch (e: any) {
         commandLog.error(e);
+        // If we're getting rate limited, timeout for 15 seconds so that
+        // test reattempts do not immediately trigger more 429 responses.
+        if (isAxiosError(e) && e.response?.status === 429) {
+          await timeout(15000);
+        }
         throw enhanceError(e);
       }
       commandLog.end();

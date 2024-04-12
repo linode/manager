@@ -9,7 +9,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useUpdateVPCMutation } from 'src/queries/vpcs';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -42,7 +42,11 @@ export const VPCEditDrawer = (props: Props) => {
     reset,
   } = useUpdateVPCMutation(vpc?.id ?? -1);
 
-  const form = useFormik<UpdateVPCPayload & { none?: string }>({
+  interface UpdateVPCPayloadWithNone extends UpdateVPCPayload {
+    none?: string;
+  }
+
+  const form = useFormik<UpdateVPCPayloadWithNone>({
     enableReinitialize: true,
     initialValues: {
       description: vpc?.description,

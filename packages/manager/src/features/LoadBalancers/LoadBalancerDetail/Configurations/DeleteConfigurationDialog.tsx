@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useLoadBalancerConfigurationDeleteMutation } from 'src/queries/aglb/configurations';
+import { useLoadBalancerConfigurationDeleteMutation } from 'src/queries/aclb/configurations';
 
 import type { Configuration } from '@linode/api-v4';
 
@@ -20,14 +20,25 @@ export const DeleteConfigurationDialog = (props: Props) => {
     error,
     isLoading,
     mutateAsync,
+    reset,
   } = useLoadBalancerConfigurationDeleteMutation(
     loadbalancerId,
     configuration.id
   );
 
-  const onDelete = async () => {
-    await mutateAsync();
+  const handleClose = () => {
+    // Clear the error when the dialog closes so that is does not persist
+    reset();
     onClose();
+  };
+
+  const onDelete = async () => {
+    try {
+      await mutateAsync();
+      handleClose();
+    } catch (error) {
+      // Swallow error
+    }
   };
 
   return (
@@ -41,12 +52,12 @@ export const DeleteConfigurationDialog = (props: Props) => {
           }}
           secondaryButtonProps={{
             label: 'Cancel',
-            onClick: onClose,
+            onClick: handleClose,
           }}
         />
       }
       error={error?.[0]?.reason}
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       title={`Delete Configuration ${configuration.label}?`}
     >

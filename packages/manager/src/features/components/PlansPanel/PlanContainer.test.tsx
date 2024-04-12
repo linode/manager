@@ -7,9 +7,19 @@ import { mockMatchMedia } from 'src/utilities/testHelpers';
 
 import { PlanContainer } from './PlanContainer';
 
-import type { PlanSelectionType } from './types';
+import type { TypeWithAvailability } from './types';
 
-const mockPlans: PlanSelectionType[] = planSelectionTypeFactory.buildList(2);
+const mockPlan1: TypeWithAvailability = {
+  ...planSelectionTypeFactory.build(),
+  isLimitedAvailabilityPlan: false,
+};
+
+const mockPlan2: TypeWithAvailability = {
+  ...planSelectionTypeFactory.build(),
+  isLimitedAvailabilityPlan: true,
+};
+
+const mockPlans = [mockPlan1, mockPlan2];
 
 beforeAll(() => mockMatchMedia());
 

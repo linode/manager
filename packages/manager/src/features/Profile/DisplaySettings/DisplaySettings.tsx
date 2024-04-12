@@ -13,7 +13,8 @@ import { Paper } from 'src/components/Paper';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
 
@@ -29,6 +30,8 @@ export const DisplaySettings = () => {
   );
   const location = useLocation<{ focusEmail: boolean }>();
   const emailRef = React.createRef<HTMLInputElement>();
+
+  const isProxyUser = profile?.user_type === 'proxy';
 
   React.useEffect(() => {
     if (location.state?.focusEmail && emailRef.current) {
@@ -63,53 +66,68 @@ export const DisplaySettings = () => {
     </>
   );
 
+  const tooltipForDisabledUsernameField = profile?.restricted
+    ? 'Restricted users cannot update their username. Please contact an account administrator.'
+    : isProxyUser
+    ? RESTRICTED_FIELD_TOOLTIP
+    : undefined;
+
+  const tooltipForDisabledEmailField = isProxyUser
+    ? RESTRICTED_FIELD_TOOLTIP
+    : undefined;
+
   return (
     <Paper>
-      <Box
-        sx={{
-          gap: 2,
-          marginBottom: theme.spacing(4),
-          marginTop: theme.spacing(),
-        }}
-        display="flex"
-      >
-        <GravatarByEmail email={profile?.email ?? ''} height={88} width={88} />
-        <div>
-          <Typography sx={{ fontSize: '1rem' }} variant="h2">
-            Profile photo
-            <StyledTooltipIcon
-              sxTooltipIcon={{
-                marginLeft: '6px',
-                marginTop: '-2px',
-                padding: 0,
-              }}
-              interactive
-              status="help"
-              text={tooltipIconText}
+      {!isProxyUser && (
+        <>
+          <Box
+            sx={{
+              gap: 2,
+              marginBottom: theme.spacing(4),
+              marginTop: theme.spacing(),
+            }}
+            display="flex"
+          >
+            <GravatarByEmail
+              email={profile?.email ?? ''}
+              height={88}
+              width={88}
             />
-          </Typography>
-          <StyledProfileCopy variant="body1">
-            Create, upload, and manage your globally recognized avatar from a
-            single place with Gravatar.
-          </StyledProfileCopy>
-          <StyledAddImageLink external to="https://en.gravatar.com/">
-            Manage photo
-          </StyledAddImageLink>
-        </div>
-      </Box>
-      <Divider />
+            <div>
+              <Typography sx={{ fontSize: '1rem' }} variant="h2">
+                Profile photo
+                <StyledTooltipIcon
+                  sxTooltipIcon={{
+                    marginLeft: '6px',
+                    marginTop: '-2px',
+                    padding: 0,
+                  }}
+                  interactive
+                  status="help"
+                  text={tooltipIconText}
+                />
+              </Typography>
+              <StyledProfileCopy variant="body1">
+                Create, upload, and manage your globally recognized avatar from
+                a single place with Gravatar.
+              </StyledProfileCopy>
+              <StyledAddImageLink external to="https://en.gravatar.com/">
+                Manage photo
+              </StyledAddImageLink>
+            </div>
+          </Box>
+          <Divider />
+        </>
+      )}
+
       <SingleTextFieldForm
-        tooltipText={
-          profile?.restricted
-            ? 'Restricted users cannot update their username. Please contact an account administrator.'
-            : undefined
-        }
-        disabled={profile?.restricted}
+        disabled={profile?.restricted || isProxyUser}
         initialValue={profile?.username}
         key={usernameResetToken}
         label="Username"
         submitForm={updateUsername}
         successCallback={requestProfile}
+        tooltipText={tooltipForDisabledUsernameField}
         trimmed
       />
       <Divider spacingTop={24} />
@@ -125,11 +143,13 @@ export const DisplaySettings = () => {
             refetch();
           }
         }}
+        disabled={isProxyUser}
         initialValue={profile?.email}
         inputRef={emailRef}
         key={emailResetToken}
         label="Email"
         submitForm={updateEmail}
+        tooltipText={tooltipForDisabledEmailField}
         trimmed
         type="email"
       />

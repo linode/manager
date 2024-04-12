@@ -26,10 +26,10 @@ interface State {
   username: string;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
+interface CreateUserDrawerProps extends Props, RouteComponentProps<{}> {}
 
-class CreateUserDrawer extends React.Component<CombinedProps, State> {
-  componentDidUpdate(prevProps: CombinedProps) {
+class CreateUserDrawer extends React.Component<CreateUserDrawerProps, State> {
+  componentDidUpdate(prevProps: CreateUserDrawerProps) {
     if (this.props.open === true && prevProps.open === false) {
       this.setState({
         email: '',

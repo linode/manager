@@ -4,8 +4,8 @@ import {
   Payment,
   getInvoiceItems,
 } from '@linode/api-v4/lib/account';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -27,25 +27,25 @@ import { TableRow } from 'src/components/TableRow';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
+import { getShouldUseAkamaiBilling } from 'src/features/Billing/billingUtils';
 import {
   printInvoice,
   printPayment,
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
-import { getShouldUseAkamaiBilling } from 'src/features/Billing/billingUtils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSet } from 'src/hooks/useSet';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import {
   useAllAccountInvoices,
   useAllAccountPayments,
-} from 'src/queries/accountBilling';
+} from 'src/queries/account/billing';
 import { useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 import { getAll } from 'src/utilities/getAll';
 
 import { getTaxID } from '../../billingUtils';
-import { useRegionsQuery } from 'src/queries/regions';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activeSince: {
@@ -595,9 +595,9 @@ export const paymentToActivityFeedItem = (
 export const getCutoffFromDateRange = (
   range: DateRange,
   currentDatetime?: string
-): string | undefined => {
+): null | string => {
   if (range === 'All Time') {
-    return undefined;
+    return null;
   }
 
   const date = currentDatetime ? parseAPIDate(currentDatetime) : DateTime.utc();
@@ -629,7 +629,7 @@ export const getCutoffFromDateRange = (
 /**
  * @param endDate in ISO format
  */
-export const makeFilter = (endDate?: string): any => {
+export const makeFilter = (endDate: null | string) => {
   const filter: any = {
     '+order': 'desc',
     '+order_by': 'date',

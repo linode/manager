@@ -4,11 +4,7 @@ import { apiMatcher } from 'support/util/intercepts';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { authenticate } from 'support/api/authentication';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockGetFeatureFlagClientstream } from 'support/intercepts/feature-flags';
 
 authenticate();
 describe('resize linode', () => {
@@ -17,9 +13,6 @@ describe('resize linode', () => {
   });
 
   it('resizes a linode by increasing size: warm migration', () => {
-    mockAppendFeatureFlags({
-      unifiedMigrations: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
     createLinode().then((linode) => {
@@ -44,9 +37,6 @@ describe('resize linode', () => {
   });
 
   it('resizes a linode by increasing size: cold migration', () => {
-    mockAppendFeatureFlags({
-      unifiedMigrations: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     createLinode().then((linode) => {
       cy.intercept(
@@ -71,9 +61,6 @@ describe('resize linode', () => {
   });
 
   it('resizes a linode by increasing size when offline: cold migration', () => {
-    mockAppendFeatureFlags({
-      unifiedMigrations: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     createLinode().then((linode) => {
       cy.visitWithLogin(`/linodes/${linode.id}`);

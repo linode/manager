@@ -32,7 +32,7 @@ import {
   vpcAssignLinodeRebootNotice,
   vpcUnassignLinodeRebootNotice,
 } from 'support/constants/vpc';
-import { VPC, Linode, Config } from '@linode/api-v4/types';
+import { VPC, Linode, Config } from '@linode/api-v4';
 
 describe('VPC assign/unassign flows', () => {
   let mockVPCs: VPC[];
@@ -153,7 +153,7 @@ describe('VPC assign/unassign flows', () => {
         mockGetLinodeConfigs(mockLinode.id, [mockConfig]).as(
           'getLinodeConfigs'
         );
-        cy.findByLabelText('Linodes')
+        cy.findByLabelText('Linode')
           .should('be.visible')
           .click()
           .type(mockLinode.label)

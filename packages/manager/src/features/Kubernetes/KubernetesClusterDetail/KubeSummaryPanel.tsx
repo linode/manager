@@ -1,19 +1,19 @@
 import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Chip } from 'src/components/Chip';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Paper } from 'src/components/Paper';
-import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
+import { TagCell } from 'src/components/TagCell/TagCell';
 import KubeClusterSpecs from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
-import { useFlags } from 'src/hooks/useFlags';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useKubernetesClusterMutation,
   useKubernetesDashboardQuery,
@@ -103,7 +103,6 @@ interface Props {
 export const KubeSummaryPanel = (props: Props) => {
   const { cluster } = props;
   const { classes } = useStyles();
-  const flags = useFlags();
   const { enqueueSnackbar } = useSnackbar();
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
@@ -112,20 +111,22 @@ export const KubeSummaryPanel = (props: Props) => {
     cluster.id
   );
 
-  const isKubeDashboardFeatureEnabled = Boolean(
-    flags.kubernetesDashboardAvailability
-  );
-
   const {
     data: dashboard,
     error: dashboardError,
-  } = useKubernetesDashboardQuery(cluster.id, isKubeDashboardFeatureEnabled);
+  } = useKubernetesDashboardQuery(cluster.id);
 
   const {
     error: resetKubeConfigError,
     isLoading: isResettingKubeConfig,
     mutateAsync: resetKubeConfig,
   } = useResetKubeConfigMutation();
+
+  const isClusterReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: cluster.id,
+  });
 
   const [
     resetKubeConfigDialogOpen,
@@ -173,28 +174,26 @@ export const KubeSummaryPanel = (props: Props) => {
             xs={12}
           >
             <Grid className={classes.actionRow}>
-              {cluster.control_plane.high_availability ? (
+              {cluster.control_plane.high_availability && (
                 <Chip
                   label="HA CLUSTER"
-                  outlineColor="green"
                   size="small"
+                  sx={(theme) => ({ borderColor: theme.color.green })}
                   variant="outlined"
                 />
-              ) : null}
-              {isKubeDashboardFeatureEnabled ? (
-                <Button
-                  onClick={() => {
-                    window.open(dashboard?.url, '_blank');
-                  }}
-                  buttonType="secondary"
-                  className={classes.dashboard}
-                  compactY
-                  disabled={Boolean(dashboardError) || !dashboard}
-                >
-                  Kubernetes Dashboard
-                  <OpenInNewIcon />
-                </Button>
-              ) : null}
+              )}
+              <Button
+                onClick={() => {
+                  window.open(dashboard?.url, '_blank');
+                }}
+                buttonType="secondary"
+                className={classes.dashboard}
+                compactY
+                disabled={Boolean(dashboardError) || !dashboard}
+              >
+                Kubernetes Dashboard
+                <OpenInNewIcon />
+              </Button>
               <Button
                 buttonType="secondary"
                 className={classes.deleteClusterBtn}
@@ -205,7 +204,11 @@ export const KubeSummaryPanel = (props: Props) => {
               </Button>
             </Grid>
             <Grid className={classes.tags}>
-              <TagsPanel tags={cluster.tags} updateTags={handleUpdateTags} />
+              <TagCell
+                disabled={isClusterReadOnly}
+                tags={cluster.tags}
+                updateTags={handleUpdateTags}
+              />
             </Grid>
           </Grid>
         </Grid>

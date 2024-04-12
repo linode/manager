@@ -38,6 +38,13 @@ export const VPC_CREATE_FORM_VPC_HELPER_TEXT =
 export const VPC_REBOOT_MESSAGE =
   'The VPC configuration has been updated. Reboot the Linode to reflect configuration changes.';
 
+export const VPC_READ_ONLY_TOOLTIP = 'VPC does not support Read Only access';
+
+export const ASSIGN_IPV4_RANGES_TITLE = 'Assign additional IPv4 ranges';
+
+export const ASSIGN_IPV4_RANGES_DESCRIPTION =
+  'Assign additional IPv4 address ranges that the VPC can use to reach services running on this Linode.';
+
 // Linode Config dialog helper text for unrecommended configurations
 export const LINODE_UNREACHABLE_HELPER_TEXT =
   'This network configuration is not recommended. The Linode will not be reachable or able to reach Linodes in the other subnets of the VPC. We recommend selecting VPC as the primary interface and checking the “Assign a public IPv4 address for this Linode” checkbox.';
@@ -63,3 +70,6 @@ export const VPC_GETTING_STARTED_LINK =
 
 export const VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK =
   'https://www.linode.com/docs/products/compute/compute-instances/guides/configuration-profiles/';
+
+export const ASSIGN_COMPUTE_INSTANCE_TO_VPC_LINK =
+  'https://www.linode.com/docs/products/networking/vpc/guides/assign-services/';

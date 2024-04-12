@@ -906,6 +906,28 @@ export const oneClickApps: OCA[] = [
     website: 'https://joplinapp.org/',
   },
   {
+    alt_description: 'Data science notebook.',
+    alt_name: 'Data science and machine learning development environment.',
+    categories: ['Productivity'],
+    colors: {
+      end: '9e9e9e',
+      start: 'f37626',
+    },
+    description:
+      'JupyterLab is a cutting-edge web-based, interactive development environment, geared towards data science, machine learning and other scientific computing workflows.',
+    logo_url: 'jupyter.svg',
+    name: 'JupyterLab',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/jupyterlab/',
+        title: 'Deploy JupyterLab through the Linode Marketplace',
+      },
+    ],
+    summary: 'Data science development environment.',
+    website: 'https://jupyter.org',
+  },
+  {
     alt_description:
       'Security research and testing platform with hundreds of tools for reverse engineering, penetration testing, and more.',
     alt_name: 'Security research',
@@ -989,6 +1011,28 @@ export const oneClickApps: OCA[] = [
       },
     ],
     summary: `The LEMP stack replaces the Apache web server component with NGINX (“Engine-X”), providing the E in the acronym: Linux, NGINX, MySQL/MariaDB, PHP.`,
+  },
+  {
+    alt_description:
+      'LinuxGSM is a command line utility that simplifies self-hosting multiplayer game servers.',
+    alt_name: 'Multiplayer Game Servers',
+    categories: ['Games'],
+    colors: {
+      end: 'F6BD0C',
+      start: '000000',
+    },
+    description: `Self hosted multiplayer game servers.`,
+    logo_url: 'linuxgsm.svg',
+    name: 'LinuxGSM',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/linuxgsm/',
+        title: 'Deploy LinuxGSM through the Linode Marketplace',
+      },
+    ],
+    summary: 'Simple command line multiplayer game servers.',
+    website: 'https://docs.linuxgsm.com',
   },
   {
     alt_description: 'Optimized control panel server.',
@@ -1299,6 +1343,28 @@ export const oneClickApps: OCA[] = [
     website: 'https://www.mysql.com/',
   },
   {
+    alt_description: `Microservice centeric stream processing.`,
+    alt_name: 'Microservice messaging bus',
+    categories: ['Development'],
+    colors: {
+      end: '000000',
+      start: '0086FF',
+    },
+    description:
+      'NATS is a distributed PubSub technology that enables applications to securely communicate across any combination of cloud vendors, on-premise, edge, web and mobile, and devices.',
+    logo_url: 'nats.svg',
+    name: 'NATS Single Node',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/nats-single-node/',
+        title: 'Deploy NATS single node through the Linode Marketplace',
+      },
+    ],
+    summary: 'Cloud native application messaging service.',
+    website: 'https://nats.io',
+  },
+  {
     alt_description:
       'File storage alternative to Dropbox and office suite alternative to Microsoft Office.',
     alt_name: 'File storage management & business tool suite',
@@ -1558,6 +1624,27 @@ export const oneClickApps: OCA[] = [
     summary:
       'Dropbox and OneDrive alternative that lets you remain in control of your files.',
     website: 'https://doc.owncloud.com/docs/next/',
+  },
+  {
+    alt_description: 'Password Manager',
+    alt_name: 'Passbolt',
+    categories: ['Security'],
+    colors: {
+      end: 'D40101',
+      start: '171717',
+    },
+    description: `Passbolt is an open-source password manager designed for teams and businesses. It allows users to securely store, share and manage passwords.`,
+    logo_url: 'passbolt.svg',
+    name: 'Passbolt',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/passbolt/',
+        title: 'Deploy Passbolt through the Linode Marketplace',
+      },
+    ],
+    summary: 'Open-source password manager for teams and businesses.',
+    website: 'https://www.passbolt.com/',
   },
   {
     alt_description: 'Password Manager',

@@ -7,9 +7,9 @@ import { EditRouteDrawer } from './EditRouteDrawer';
 import {
   LoadBalancerCreateFormData,
   initialValues,
-} from './LoadBalancerCreate';
+} from './LoadBalancerCreateFormWrapper';
 
-describe('EditRouteDrawer (AGLB full create flow)', () => {
+describe('EditRouteDrawer (ACLB full create flow)', () => {
   it('renders a title', () => {
     const { getByText } = renderWithThemeAndFormik(
       <EditRouteDrawer
@@ -60,10 +60,10 @@ describe('EditRouteDrawer (AGLB full create flow)', () => {
 
     expect(saveButton).toHaveAttribute('aria-disabled', 'true');
 
-    userEvent.type(routeLabelTextField, 'my-new-label');
+    await userEvent.type(routeLabelTextField, 'my-new-label');
 
     expect(saveButton).toHaveAttribute('aria-disabled', 'false');
 
-    userEvent.click(saveButton!);
+    await userEvent.click(saveButton!);
   });
 });

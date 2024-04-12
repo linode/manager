@@ -1,7 +1,7 @@
 import type { APIWarning, RequestOptions } from '../types';
 import type { Capabilities, Region } from '../regions';
 
-export type UserType = 'child' | 'parent' | 'proxy';
+export type UserType = 'child' | 'parent' | 'proxy' | 'default';
 
 export interface User {
   email: string;
@@ -30,7 +30,7 @@ export interface User {
   ssh_keys: string[];
   tfa_enabled: boolean;
   username: string;
-  user_type: UserType | null;
+  user_type: UserType;
   verified_phone_number: string | null;
 }
 
@@ -60,6 +60,7 @@ export interface Account {
 export type BillingSource = 'linode' | 'akamai';
 
 export type AccountCapability =
+  | 'Akamai Cloud Load Balancer'
   | 'Block Storage'
   | 'Cloud Firewall'
   | 'Kubernetes'
@@ -70,6 +71,8 @@ export type AccountCapability =
   | 'NodeBalancers'
   | 'Object Storage Access Key Regions'
   | 'Object Storage'
+  | 'Placement Group'
+  | 'Support Ticket Severity'
   | 'Vlans'
   | 'VPCs';
 
@@ -285,7 +288,8 @@ export type EventAction =
   | 'community_question_reply'
   | 'credit_card_updated'
   | 'database_low_disk_space'
-  | 'database_scale'
+  | 'database_resize'
+  | 'database_resize_create'
   | 'database_backup_restore'
   | 'database_create'
   | 'database_credentials_reset'
@@ -354,6 +358,12 @@ export type EventAction =
   | 'nodebalancer_delete'
   | 'nodebalancer_update'
   | 'password_reset'
+  | 'placement_group_assign'
+  | 'placement_group_created'
+  | 'placement_group_assigned'
+  | 'placement_group_unassigned'
+  | 'placement_group_updated'
+  | 'placement_group_deleted'
   | 'profile_update'
   | 'stackscript_create'
   | 'stackscript_delete'
@@ -410,7 +420,6 @@ export interface Event {
   time_remaining: null | string;
   username: string | null;
   secondary_entity: Entity | null;
-  _initial?: boolean;
   message: string | null;
 }
 /**

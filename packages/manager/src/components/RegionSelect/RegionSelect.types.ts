@@ -1,8 +1,11 @@
+import React from 'react';
+
 import type {
   AccountAvailability,
   Capabilities,
   Country,
   Region,
+  RegionSite,
 } from '@linode/api-v4';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
 
@@ -12,6 +15,7 @@ export interface RegionSelectOption {
     region: string;
   };
   label: string;
+  site_type: RegionSite;
   unavailable: boolean;
   value: string;
 }
@@ -33,9 +37,34 @@ export interface RegionSelectProps
   helperText?: string;
   isClearable?: boolean;
   label?: string;
+  regionFilter?: RegionSite;
   regions: Region[];
   required?: boolean;
   selectedId: null | string;
+  showEdgeIconHelperText?: boolean;
+  tooltipText?: string;
+  width?: number;
+}
+
+export interface RegionMultiSelectProps
+  extends Omit<
+    EnhancedAutocompleteProps<RegionSelectOption, false>,
+    'label' | 'onChange' | 'options'
+  > {
+  SelectedRegionsList?: React.ComponentType<{
+    onRemove: (region: string) => void;
+    selectedRegions: RegionSelectOption[];
+  }>;
+  currentCapability: Capabilities | undefined;
+  handleSelection: (ids: string[]) => void;
+  helperText?: string;
+  isClearable?: boolean;
+  label?: string;
+  regions: Region[];
+  required?: boolean;
+  selectedIds: string[];
+  sortRegionOptions?: (a: RegionSelectOption, b: RegionSelectOption) => number;
+  tooltipText?: string;
   width?: number;
 }
 
@@ -45,6 +74,7 @@ export interface RegionOptionAvailability {
 }
 
 export interface GetRegionOptions extends RegionOptionAvailability {
+  regionFilter?: RegionSite;
   regions: Region[];
 }
 
@@ -56,3 +86,12 @@ export interface GetSelectedRegionById extends RegionOptionAvailability {
 export interface GetRegionOptionAvailability extends RegionOptionAvailability {
   region: Region;
 }
+
+export interface GetSelectedRegionsByIdsArgs {
+  accountAvailabilityData: AccountAvailability[] | undefined;
+  currentCapability: Capabilities | undefined;
+  regions: Region[];
+  selectedRegionIds: string[];
+}
+
+export type SupportedEdgeTypes = 'Distributions' | 'StackScripts';

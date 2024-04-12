@@ -1,13 +1,12 @@
 import { Event, Image, ImageStatus } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { useQueryClient } from '@tanstack/react-query';
 import produce from 'immer';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
-import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -31,13 +30,15 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { listToItemsByID } from 'src/queries/base';
 import {
-  queryKey,
-  removeImageFromCache,
+  isEventImageUpload,
+  isEventInProgressDiskImagize,
+} from 'src/queries/events/event.helpers';
+import { useEventsInfiniteQuery } from 'src/queries/events/events';
+import {
+  imageQueries,
   useDeleteImageMutation,
   useImagesQuery,
 } from 'src/queries/images';
-import { ApplicationState } from 'src/store';
-import imageEvents from 'src/store/selectors/imageEvents';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import ImageRow, { ImageWithEvent } from './ImageRow';
@@ -78,7 +79,7 @@ interface ImageDialogState {
   submitting: boolean;
 }
 
-type CombinedProps = ImageDrawerState & ImageDialogState;
+interface ImagesLandingProps extends ImageDrawerState, ImageDialogState {}
 
 const defaultDrawerState = {
   description: '',
@@ -96,19 +97,15 @@ const defaultDialogState = {
   submitting: false,
 };
 
-export const ImagesLanding: React.FC<CombinedProps> = () => {
+export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
   const { classes } = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
 
-  // Pagination, order, and query hooks for manual/custom images
-  const paginationForManualImages = usePagination(
-    1,
-    `${queryKey}-manual`,
-    'manual'
-  );
+  const paginationForManualImages = usePagination(1, 'images-manual', 'manual');
+
   const {
     handleOrderChange: handleManualImagesOrderChange,
     order: manualImagesOrder,
@@ -118,7 +115,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
       order: 'asc',
       orderBy: 'label',
     },
-    `${queryKey}-manual-order`,
+    'images-manual-order',
     'manual'
   );
 
@@ -146,7 +143,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   // Pagination, order, and query hooks for automatic/recovery images
   const paginationForAutomaticImages = usePagination(
     1,
-    `${queryKey}-automatic`,
+    'images-automatic',
     'automatic'
   );
   const {
@@ -158,7 +155,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
       order: 'asc',
       orderBy: 'label',
     },
-    `${queryKey}-automatic-order`,
+    'images-automatic-order',
     'automatic'
   );
 
@@ -185,19 +182,24 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
 
   const { mutateAsync: deleteImage } = useDeleteImageMutation();
 
-  const eventState = useSelector((state: ApplicationState) => state.events);
-  const events = imageEvents(eventState);
+  const { events } = useEventsInfiniteQuery();
+
+  const imageEvents =
+    events?.filter(
+      (event) =>
+        isEventInProgressDiskImagize(event) || isEventImageUpload(event)
+    ) ?? [];
 
   // Private images with the associated events tied in.
   const manualImagesData = getImagesWithEvents(
     manualImages?.data ?? [],
-    events
+    imageEvents
   );
 
   // Automatic images with the associated events tied in.
   const automaticImagesData = getImagesWithEvents(
     automaticImages?.data ?? [],
-    events
+    imageEvents
   );
 
   const [drawer, setDrawer] = React.useState<ImageDrawerState>(
@@ -277,7 +279,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     imageLabel: string,
     imageDescription: string
   ) => {
-    removeImageFromCache(queryClient);
+    queryClient.invalidateQueries(imageQueries.paginated._def);
     history.push('/images/create/upload', {
       imageDescription,
       imageLabel,
@@ -285,7 +287,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   };
 
   const onCancelFailedClick = () => {
-    removeImageFromCache(queryClient);
+    queryClient.invalidateQueries(imageQueries.paginated._def);
   };
 
   const openForEdit = (label: string, description: string, imageID: string) => {

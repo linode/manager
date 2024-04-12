@@ -3,33 +3,27 @@ import {
   LinodeBackupsResponse,
   getLinodeBackups,
 } from '@linode/api-v4/lib/linodes';
-import { compose as ramdaCompose } from 'ramda';
 import * as React from 'react';
 
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Paper } from 'src/components/Paper';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { reportException } from 'src/exceptionReporting';
-import { extendType } from 'src/utilities/extendType';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { SelectBackupPanel } from '../SelectBackupPanel';
-import SelectLinodePanel from '../SelectLinodePanel';
+import { SelectLinodePanel } from '../SelectLinodePanel/SelectLinodePanel';
 import {
   BackupFormStateHandlers,
   Info,
   ReduxStateProps,
   WithLinodesTypesRegionsAndImages,
 } from '../types';
-import { extendLinodes, getRegionIDFromLinodeID } from '../utilities';
 import { StyledGrid } from './CommonTabbedContent.styles';
 
 export interface LinodeWithBackups extends Linode {
   currentBackups: LinodeBackupsResponse;
-}
-
-interface Props {
-  disabled?: boolean;
 }
 
 interface State {
@@ -39,8 +33,7 @@ interface State {
   selectedLinodeWithBackups?: LinodeWithBackups;
 }
 
-export type CombinedProps = Props &
-  BackupFormStateHandlers &
+export type CombinedProps = BackupFormStateHandlers &
   ReduxStateProps &
   WithLinodesTypesRegionsAndImages;
 
@@ -52,9 +45,6 @@ const errorResources = {
   tags: 'Tags for this Linode',
   type: 'A plan selection',
 };
-
-const filterLinodesWithBackups = (linodes: Linode[]) =>
-  linodes.filter((linode) => linode.backups.enabled);
 
 export class FromBackupsContent extends React.Component<CombinedProps, State> {
   componentDidMount() {
@@ -74,24 +64,26 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   render() {
     const { isGettingBackups, selectedLinodeWithBackups } = this.state;
     const {
-      disabled,
       errors,
-      imagesData,
       linodesData,
       regionsData,
       selectedBackupID,
       selectedLinodeID,
       setBackupID,
-      typesData,
+      userCannotCreateLinode,
     } = this.props;
-
-    const extendedTypes = typesData?.map(extendType);
 
     const hasErrorFor = getAPIErrorFor(errorResources, errors);
 
     const userHasBackups = linodesData.some(
       (thisLinode) => thisLinode.backups.enabled
     );
+
+    const filterLinodesWithBackups = (linodes: Linode[]) =>
+      linodes.filter(
+        (linode) =>
+          linode.backups.enabled && !getIsEdgeRegion(regionsData, linode.region) // Hide linodes that are in an edge region
+      );
 
     return (
       <StyledGrid>
@@ -110,28 +102,16 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
         ) : (
           <React.Fragment>
             <SelectLinodePanel
-              linodes={ramdaCompose(
-                (linodes: Linode[]) =>
-                  extendLinodes(
-                    linodes,
-                    imagesData,
-                    extendedTypes,
-                    regionsData
-                  ),
-                filterLinodesWithBackups
-              )(linodesData)}
-              notice={{
-                level: 'warning',
-                text: `This newly created Linode will be created with
-                          the same password and SSH Keys (if any) as the original Linode.
-                          Also note that this Linode will need to be manually booted after it finishes
-                          provisioning.`,
-              }}
-              disabled={disabled}
+              notices={[
+                `This newly created Linode will be created with
+                          the same password and SSH Keys (if any) as the original Linode.`,
+                'This Linode will need to be manually booted after it finishes provisioning.',
+              ]}
+              disabled={userCannotCreateLinode}
               error={hasErrorFor('linode_id')}
               handleSelection={this.handleLinodeSelect}
+              linodes={filterLinodesWithBackups(linodesData)}
               selectedLinodeID={selectedLinodeID}
-              updateFor={[selectedLinodeID, errors]}
             />
             <SelectBackupPanel
               error={hasErrorFor('backup_id') || this.state.backupsError}
@@ -160,10 +140,9 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       });
       throw new Error('selectedLinodeID is not a number');
     }
-    const regionID = getRegionIDFromLinodeID(
-      this.props.linodesData,
-      selectedLinodeID
-    );
+    const regionID = this.props.linodesData.find(
+      (linode) => linode.id == selectedLinodeID
+    )?.region;
     this.props.updateRegionID(regionID || '');
   }
 
@@ -196,8 +175,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
         this.setState({ isGettingBackups: false, selectedLinodeWithBackups });
       })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .catch((err) => {
+      .catch(() => {
         this.setState({
           backupsError: 'Error retrieving backups for this Linode.',
           isGettingBackups: false,

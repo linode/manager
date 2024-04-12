@@ -1,34 +1,26 @@
-import { screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient, setLogger } from 'react-query';
 
 import {
   objectStorageBucketFactory,
   objectStorageClusterFactory,
 } from 'src/factories/objectStorage';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
-import { queryPresets } from 'src/queries/base';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BucketLanding } from './BucketLanding';
 
-const queryClient = new QueryClient({
-  defaultOptions: { queries: queryPresets.oneTimeFetch },
-});
-
 describe('ObjectStorageLanding', () => {
-  afterEach(() => {
-    queryClient.clear();
-    // If necessary, reset React Query logger.
-    setLogger(console);
-  });
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
 
   it('renders a loading state', () => {
     // Mock Buckets
     server.use(
-      rest.get('*/object-storage/buckets', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/object-storage/buckets', () => {
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 
@@ -40,43 +32,25 @@ describe('ObjectStorageLanding', () => {
   it('renders an empty state', async () => {
     // Mock Clusters
     server.use(
-      rest.get('*/object-storage/clusters', (req, res, ctx) => {
+      http.get('*/object-storage/clusters', () => {
         const clusters = objectStorageClusterFactory.buildList(4);
-        return res(ctx.json(makeResourcePage(clusters)));
+        return HttpResponse.json(makeResourcePage(clusters));
       })
     );
 
     // Mock Buckets
     server.use(
-      rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/object-storage/buckets/*', () => {
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 
-    renderWithTheme(<BucketLanding />, { queryClient });
+    renderWithTheme(<BucketLanding />);
 
-    await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
-
-    screen.getByTestId('placeholder-button');
+    await screen.findByTestId('placeholder-button');
   });
 
   it('renders per-cluster errors', async () => {
-    // Suppress logging React Query errors to CLI since this test is expected
-    // to trigger errors.
-    //
-    // Note: Logging options improved in React Query v4 and `setLogger` will
-    // be removed in v5. We will be able to accomplish this more cleanly once
-    // we upgrade.
-    //
-    // See also:
-    // - https://github.com/TanStack/query/issues/125
-    // - https://github.com/TanStack/query/discussions/4252
-    setLogger({
-      log: () => {},
-      warn: () => {},
-      error: () => {},
-    });
-
     objectStorageBucketFactory.resetSequenceNumber();
     objectStorageClusterFactory.resetSequenceNumber();
 
@@ -86,76 +60,65 @@ describe('ObjectStorageLanding', () => {
 
     // Mock Clusters
     server.use(
-      rest.get('*/object-storage/clusters', (req, res, ctx) => {
+      http.get('*/object-storage/clusters', () => {
         const upClusters = objectStorageClusterFactory.buildList(1, {
           region: 'ap-south-1',
         });
-        return res(ctx.json(makeResourcePage([downCluster, ...upClusters])));
+        return HttpResponse.json(
+          makeResourcePage([downCluster, ...upClusters])
+        );
       })
     );
 
     // Mock Buckets
     server.use(
-      rest.get('*/object-storage/buckets/cluster-0', (req, res, ctx) => {
-        return res.once(
-          ctx.status(500),
-          ctx.json([{ reason: 'Cluster offline!' }])
-        );
-      }),
-      rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            makeResourcePage(
-              objectStorageBucketFactory.buildList(2, { cluster: 'ap-south-1' })
-            )
+      http.get(
+        '*/object-storage/buckets/cluster-0',
+        () => {
+          return HttpResponse.json([{ reason: 'Cluster offline!' }], {
+            status: 500,
+          });
+        },
+        {
+          once: true,
+        }
+      ),
+      http.get('*/object-storage/buckets/*', () => {
+        return HttpResponse.json(
+          makeResourcePage(
+            objectStorageBucketFactory.buildList(2, { cluster: 'ap-south-1' })
           )
         );
       })
     );
 
-    renderWithTheme(<BucketLanding />, { queryClient });
+    renderWithTheme(<BucketLanding />);
 
-    await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
-
-    screen.getByText(/^There was an error loading buckets in Fremont, CA/);
+    await screen.findByText(
+      /^There was an error loading buckets in Fremont, CA/
+    );
   });
 
   it('renders general error state', async () => {
-    // Suppress logging React Query errors to CLI since this test is expected
-    // to trigger errors.
-    //
-    // Note: Logging options improved in React Query v4 and `setLogger` will
-    // be removed in v5. We will be able to accomplish this more cleanly once
-    // we upgrade.
-    //
-    // See also:
-    // - https://github.com/TanStack/query/issues/125
-    // - https://github.com/TanStack/query/discussions/4252
-    setLogger({
-      log: () => {},
-      warn: () => {},
-      error: () => {},
-    });
-
     // Mock Clusters
     server.use(
-      rest.get('*/object-storage/clusters', (req, res, ctx) => {
+      http.get('*/object-storage/clusters', () => {
         const clusters = objectStorageClusterFactory.buildList(1);
-        return res(ctx.json(makeResourcePage(clusters)));
+        return HttpResponse.json(makeResourcePage(clusters));
       })
     );
 
     // Mock Buckets
     server.use(
-      rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-        return res(ctx.status(500), ctx.json([{ reason: 'Cluster offline!' }]));
+      http.get('*/object-storage/buckets/*', () => {
+        return HttpResponse.json([{ reason: 'Cluster offline!' }], {
+          status: 500,
+        });
       })
     );
-    renderWithTheme(<BucketLanding />, { queryClient });
+    renderWithTheme(<BucketLanding />);
 
-    await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
-
-    screen.getByText(/^There was an error retrieving your buckets/);
+    await screen.findByText(/^There was an error retrieving your buckets/);
   });
 
   it('renders rows for each Bucket', async () => {
@@ -163,25 +126,23 @@ describe('ObjectStorageLanding', () => {
 
     // Mock Clusters
     server.use(
-      rest.get('*/object-storage/clusters', (req, res, ctx) => {
+      http.get('*/object-storage/clusters', () => {
         const clusters = objectStorageClusterFactory.buildList(1);
-        return res(ctx.json(makeResourcePage(clusters)));
+        return HttpResponse.json(makeResourcePage(clusters));
       })
     );
 
     // Mock Buckets
     server.use(
-      rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage(buckets)));
+      http.get('*/object-storage/buckets/*', () => {
+        return HttpResponse.json(makeResourcePage(buckets));
       })
     );
 
-    renderWithTheme(<BucketLanding />, { queryClient });
+    renderWithTheme(<BucketLanding />);
 
-    await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
-
-    screen.getByText(buckets[0].label);
-    screen.getByText(buckets[1].label);
+    await screen.findByText(buckets[0].label);
+    await screen.findByText(buckets[1].label);
   });
 
   it('renders a "Total usage" section if there is more than one Bucket', async () => {
@@ -191,23 +152,21 @@ describe('ObjectStorageLanding', () => {
 
     // Mock Clusters
     server.use(
-      rest.get('*/object-storage/clusters', (req, res, ctx) => {
+      http.get('*/object-storage/clusters', () => {
         const clusters = objectStorageClusterFactory.buildList(1);
-        return res(ctx.json(makeResourcePage(clusters)));
+        return HttpResponse.json(makeResourcePage(clusters));
       })
     );
 
     // Mock Buckets
     server.use(
-      rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage(buckets)));
+      http.get('*/object-storage/buckets/*', () => {
+        return HttpResponse.json(makeResourcePage(buckets));
       })
     );
 
-    renderWithTheme(<BucketLanding />, { queryClient });
+    renderWithTheme(<BucketLanding />);
 
-    await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
-
-    screen.getByText(/Total storage used: 10 GB/);
+    await screen.findByText(/Total storage used: 10 GB/);
   });
 });

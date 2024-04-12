@@ -6,7 +6,7 @@ import React from 'react';
 import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
 
 import { Box } from 'src/components/Box';
-import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aglb/routes';
+import { useLoadBalancerRouteUpdateMutation } from 'src/queries/aclb/routes';
 
 import { RuleRow } from './RuleRow';
 import {
@@ -93,7 +93,7 @@ export const RulesTable = (props: Props) => {
               width: xsDown ? '50%' : '15%',
             }}
           >
-            Execution
+            Execution Order
           </Box>
           <Box sx={{ ...sxItemSpacing, width: xsDown ? '45%' : '20%' }}>
             Match Value

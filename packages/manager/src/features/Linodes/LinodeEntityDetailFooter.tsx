@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -29,18 +29,19 @@ interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
 }
 
-export type Props = LinodeEntityDetailProps & {
+export interface Props extends LinodeEntityDetailProps {
   handlers: LinodeHandlers;
-};
+}
 
 interface FooterProps {
+  isLinodesGrantReadOnly: boolean;
   linodeCreated: string;
   linodeId: number;
   linodeLabel: string;
   linodePlan: null | string;
   linodeRegionDisplay: null | string;
   linodeTags: string[];
-  openTagDrawer: (tags: string[]) => void;
+  openTagDrawer: () => void;
 }
 
 export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
@@ -49,6 +50,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
   const { data: profile } = useProfile();
 
   const {
+    isLinodesGrantReadOnly,
     linodeCreated,
     linodeId,
     linodePlan,
@@ -153,13 +155,9 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
       >
         <TagCell
           sx={{
-            [theme.breakpoints.down('lg')]: {
-              '& > button': {
-                marginRight: theme.spacing(0.5),
-              },
-              flexDirection: 'row-reverse',
-            },
+            width: '100%',
           }}
+          disabled={isLinodesGrantReadOnly}
           listAllTags={openTagDrawer}
           tags={linodeTags}
           updateTags={updateTags}

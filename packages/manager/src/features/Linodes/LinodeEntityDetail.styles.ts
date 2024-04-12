@@ -6,25 +6,14 @@ import { Theme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
-import { Chip } from 'src/components/Chip';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
-import { omittedProps } from 'src/utilities/omittedProps';
-
-import type { HeaderProps } from './LinodeEntityDetailHeader';
 
 // ---------------------------------------------------------------------
 // Header Styles
 // ---------------------------------------------------------------------
-
-type StyledChipProps = Pick<HeaderProps, 'isSummaryView'> & {
-  hasSecondaryStatus: boolean;
-  isOffline: boolean;
-  isOther: boolean;
-  isRunning: boolean;
-};
 
 export const StyledLink = styled(Link, { label: 'StyledLink' })(
   ({ theme }) => ({
@@ -33,52 +22,6 @@ export const StyledLink = styled(Link, { label: 'StyledLink' })(
       textDecoration: 'underline',
     },
     marginLeft: theme.spacing(),
-  })
-);
-
-export const StyledChip = styled(Chip, {
-  label: 'StyledChip',
-  shouldForwardProp: omittedProps([
-    'isSummaryView',
-    'hasSecondaryStatus',
-    'isOffline',
-    'isOther',
-    'isRunning',
-  ]),
-})<StyledChipProps>(
-  ({
-    hasSecondaryStatus,
-    isOffline,
-    isOther,
-    isRunning,
-    isSummaryView,
-    theme,
-  }) => ({
-    '&:before': {
-      ...(isOffline && {
-        backgroundColor: theme.color.grey8,
-      }),
-      ...(isOther && {
-        backgroundColor: theme.palette.warning.dark,
-      }),
-      ...(isRunning && {
-        backgroundColor: theme.palette.success.dark,
-      }),
-    },
-    borderRadius: 0,
-    fontSize: '0.875rem',
-    height: theme.spacing(3),
-    letterSpacing: '.5px',
-    marginLeft: theme.spacing(2),
-    ...(hasSecondaryStatus && {
-      borderRight: `1px solid ${theme.borderColors.borderTypography}`,
-      paddingRight: `${theme.spacing(2)}`,
-    }),
-    ...(isSummaryView && {
-      [theme.breakpoints.down('lg')]: {
-        marginLeft: theme.spacing(),
-      },
-    }),
   })
 );
 

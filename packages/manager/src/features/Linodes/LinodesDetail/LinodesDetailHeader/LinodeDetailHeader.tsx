@@ -13,15 +13,17 @@ import {
   Action,
   PowerActionsDialog,
 } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
-import { useFlags } from 'src/hooks/useFlags';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
-import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics';
+import {
+  sendEditBreadcrumbEvent,
+  sendLinodeCreateFlowDocsClickEvent,
+  sendUpdateLinodeLabelEvent,
+} from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -31,14 +33,11 @@ import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodeResize/LinodeResize';
+import { VolumesUpgradeBanner } from '../VolumesUpgradeBanner';
 import { HostMaintenance } from './HostMaintenance';
 import { MutationNotification } from './MutationNotification';
 import Notifications from './Notifications';
-
-interface TagDrawerProps {
-  open: boolean;
-  tags: string[];
-}
+import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 
 const LinodeDetailHeader = () => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
@@ -61,13 +60,11 @@ const LinodeDetailHeader = () => {
     matchedLinodeId
   );
 
-  const flags = useFlags();
-  const { account } = useAccountManagement();
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: matchedLinodeId,
+  });
 
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
   const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
@@ -89,11 +86,9 @@ const LinodeDetailHeader = () => {
   const [enableBackupsDialogOpen, setEnableBackupsDialogOpen] = React.useState(
     false
   );
+  const isUpgradeVolumesDialogOpen = queryParams.upgrade === 'true';
 
-  const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
-    open: false,
-    tags: [],
-  });
+  const [tagDrawerOpen, setTagDrawerOpen] = React.useState<boolean>(false);
 
   const history = useHistory();
 
@@ -120,20 +115,15 @@ const LinodeDetailHeader = () => {
   };
 
   const closeTagDrawer = () => {
-    setTagDrawer((tagDrawer) => ({ ...tagDrawer, open: false }));
+    setTagDrawerOpen(false);
   };
 
-  const openTagDrawer = (tags: string[]) => {
-    setTagDrawer({
-      open: true,
-      tags,
-    });
+  const openTagDrawer = () => {
+    setTagDrawerOpen(true);
   };
 
   const updateTags = (tags: string[]) => {
-    return updateLinode({ tags }).then((_) => {
-      setTagDrawer((tagDrawer) => ({ ...tagDrawer, tags }));
-    });
+    return updateLinode({ tags });
   };
 
   const {
@@ -160,6 +150,7 @@ const LinodeDetailHeader = () => {
     return updateLinodeLabel(label)
       .then(() => {
         resetEditableLabel();
+        sendUpdateLinodeLabelEvent('Breadcrumb');
       })
       .catch((updateError) => {
         const errorReasons: string[] = [updateError.message];
@@ -217,19 +208,21 @@ const LinodeDetailHeader = () => {
 
   return (
     <>
-      <HostMaintenance linodeStatus={linode?.status ?? 'running'} />
+      <HostMaintenance linodeStatus={linode.status} />
       <MutationNotification linodeId={matchedLinodeId} />
       <Notifications />
+      <VolumesUpgradeBanner linodeId={linode.id} />
       <ProductInformationBanner bannerLocation="Linodes" />
       <LandingHeader
         breadcrumbProps={{
           onEditHandlers: {
-            editableTextTitle: linode?.label ?? '',
+            editableTextTitle: linode.label,
             errorText: editableLabelError,
+            handleAnalyticsEvent: () => sendEditBreadcrumbEvent(),
             onCancel: resetEditableLabel,
             onEdit: handleLinodeLabelUpdate,
           },
-          pathname: `/linodes/${linode?.label}`,
+          pathname: `/linodes/${linode.label}`,
         }}
         onDocsClick={() => {
           sendLinodeCreateFlowDocsClickEvent('Getting Started');
@@ -245,10 +238,9 @@ const LinodeDetailHeader = () => {
         openTagDrawer={openTagDrawer}
       />
       <PowerActionsDialog
-        action={powerAction ?? 'Reboot'}
+        action={powerAction}
         isOpen={powerDialogOpen}
         linodeId={matchedLinodeId}
-        manuallyUpdateConfigs={showVPCs}
         onClose={closeDialogs}
       />
       <DeleteLinodeDialog
@@ -277,12 +269,17 @@ const LinodeDetailHeader = () => {
         onClose={closeDialogs}
         open={migrateDialogOpen}
       />
+      <UpgradeVolumesDialog
+        linode={linode}
+        onClose={closeDialogs}
+        open={isUpgradeVolumesDialogOpen}
+      />
       <TagDrawer
-        entityID={linode?.id}
-        entityLabel={linode?.label ?? ''}
+        disabled={isLinodesGrantReadOnly}
+        entityLabel={linode.label}
         onClose={closeTagDrawer}
-        open={tagDrawer.open}
-        tags={tagDrawer.tags}
+        open={tagDrawerOpen}
+        tags={linode.tags}
         updateTags={updateTags}
       />
       <EnableBackupsDialog

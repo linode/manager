@@ -1,20 +1,14 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
-import { Provider } from 'react-redux';
 
-import { linodes } from 'src/__data__/linodes';
-import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
-import { queryClientFactory } from 'src/queries/base';
-import { storeFactory } from 'src/store';
+import { linodeFactory } from 'src/factories';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CombinedProps, FromLinodeContent } from './FromLinodeContent';
-
-const store = storeFactory(queryClientFactory());
 
 const mockProps: CombinedProps = {
   accountBackupsEnabled: false,
   imagesData: {},
-  linodesData: linodes,
+  linodesData: [],
   regionsData: [],
   typesData: [],
   updateDiskSize: vi.fn(),
@@ -25,34 +19,25 @@ const mockProps: CombinedProps = {
   userCannotCreateLinode: false,
 };
 
-describe('FromImageContent', () => {
-  const component = shallow(
-    <Provider store={store}>
-      <LinodeThemeWrapper>
-        <FromLinodeContent {...mockProps} />
-      </LinodeThemeWrapper>
-    </Provider>
-  );
+describe('FromLinodeContent', () => {
+  it('should render an empty state if the user has no Linodes', () => {
+    const { getByText } = renderWithTheme(<FromLinodeContent {...mockProps} />);
 
-  const componentWithoutLinodes = shallow(
-    <Provider store={store}>
-      <LinodeThemeWrapper>
-        <FromLinodeContent {...mockProps} linodesData={[]} />
-      </LinodeThemeWrapper>
-    </Provider>
-  );
-
-  it('should render without crashing', () => {
-    expect(component).toHaveLength(1);
+    expect(
+      getByText(
+        'You do not have any existing Linodes to clone from. Please first create a Linode from either an Image or StackScript.'
+      )
+    ).toBeVisible();
   });
 
-  it.skip('should render a Placeholder when linodes prop has no length', () => {
-    expect(componentWithoutLinodes.find('[data-qa-placeholder]')).toHaveLength(
-      1
+  it("should render a user's linodes", () => {
+    const linodes = linodeFactory.buildList(1, {
+      label: 'this-linode-should-render',
+    });
+    const { getByText } = renderWithTheme(
+      <FromLinodeContent {...mockProps} linodesData={linodes} />
     );
-  });
 
-  it.skip('should render SelectLinode panel', () => {
-    expect(component.find('[data-qa-linode-panel]')).toHaveLength(1);
+    expect(getByText('this-linode-should-render')).toBeVisible();
   });
 });

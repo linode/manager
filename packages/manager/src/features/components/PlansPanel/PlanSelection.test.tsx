@@ -1,12 +1,15 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { PLAN_IS_SOLD_OUT_COPY } from 'src/constants';
-import { planSelectionTypeFactory } from 'src/factories/types';
+import {
+  extendedTypeFactory,
+  planSelectionTypeFactory,
+} from 'src/factories/types';
+import { LIMITED_AVAILABILITY_TEXT } from 'src/features/components/PlansPanel/constants';
 import { breakpoints } from 'src/foundations/breakpoints';
+import { resizeScreenSize } from 'src/utilities/testHelpers';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { resizeScreenSize } from 'src/utilities/testHelpers';
 
 import { PlanSelection } from './PlanSelection';
 
@@ -25,7 +28,7 @@ const mockPlan: PlanSelectionType = planSelectionTypeFactory.build({
 
 const defaultProps: PlanSelectionProps = {
   idx: 0,
-  isPlanSoldOut: false,
+  isLimitedAvailabilityPlan: false,
   onSelect: () => vi.fn(),
   type: mockPlan,
 };
@@ -61,7 +64,7 @@ describe('PlanSelection (table, desktop)', () => {
     expect(container.querySelector('[data-qa-storage]')).toHaveTextContent(
       '1024 GB'
     );
-    expect(queryByLabelText(PLAN_IS_SOLD_OUT_COPY)).toBeNull();
+    expect(queryByLabelText(LIMITED_AVAILABILITY_TEXT)).toBeNull();
   });
 
   it('renders the table row with unknown prices if a region is not selected', () => {
@@ -118,6 +121,75 @@ describe('PlanSelection (table, desktop)', () => {
     expect(container.querySelector('[data-qa-storage]')).toHaveTextContent(
       '1024 GB'
     );
+  });
+
+  it('should not display an error message for $0 regions', () => {
+    const propsWithRegionZeroPrice = {
+      ...defaultProps,
+      type: planSelectionTypeFactory.build({
+        heading: 'Dedicated 20 GB',
+        region_prices: [
+          {
+            hourly: 0,
+            id: 'br-gru',
+            monthly: 0,
+          },
+        ],
+        subHeadings: [
+          '$10/mo ($0.015/hr)',
+          '1 CPU, 50 GB Storage, 2 GB RAM',
+          '2 TB Transfer',
+          '40 Gbps In / 2 Gbps Out',
+        ],
+      }),
+    };
+    const { container } = renderWithTheme(
+      wrapWithTableBody(
+        <PlanSelection
+          {...propsWithRegionZeroPrice}
+          selectedRegionId={'br-gru'}
+        />
+      )
+    );
+
+    const monthlyTableCell = container.querySelector('[data-qa-monthly]');
+    const hourlyTableCell = container.querySelector('[data-qa-hourly]');
+    expect(monthlyTableCell).toHaveTextContent('$0');
+    // error tooltip button should not display
+    expect(
+      monthlyTableCell?.querySelector('[data-qa-help-button]')
+    ).not.toBeInTheDocument();
+    expect(hourlyTableCell).toHaveTextContent('$0');
+    expect(
+      hourlyTableCell?.querySelector('[data-qa-help-button]')
+    ).not.toBeInTheDocument();
+  });
+
+  it('shows limited availability messaging for 512 GB plans', async () => {
+    const bigPlanType = extendedTypeFactory.build({
+      heading: 'Dedicated 512 GB',
+      label: 'Dedicated 512GB',
+    });
+
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
+      wrapWithTableBody(
+        <PlanSelection
+          {...defaultProps}
+          isLimitedAvailabilityPlan={true}
+          type={bigPlanType}
+        />,
+        { flags: { disableLargestGbPlans: true } }
+      )
+    );
+
+    const button = getByTestId('limited-availability');
+    fireEvent.mouseOver(button);
+
+    await waitFor(() => {
+      expect(getByRole('tooltip')).toBeInTheDocument();
+    });
+
+    expect(getByText(LIMITED_AVAILABILITY_TEXT)).toBeVisible();
   });
 });
 
@@ -202,15 +274,41 @@ describe('PlanSelection (card, mobile)', () => {
     ).toHaveTextContent('40 Gbps In / 2 Gbps Out');
   });
 
-  it('shows a chip if plan is sold out', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('verifies the presence of a help icon button accompanied by descriptive text for plans marked as "Limited Availability".', async () => {
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
       <PlanSelection
         {...defaultProps}
-        isPlanSoldOut={true}
+        isLimitedAvailabilityPlan={true}
         selectedRegionId={'us-east'}
       />
     );
 
-    expect(getByLabelText(PLAN_IS_SOLD_OUT_COPY)).toBeInTheDocument();
+    const selectionCard = getByTestId('selection-card');
+    fireEvent.mouseOver(selectionCard);
+
+    await waitFor(() => {
+      expect(getByRole('tooltip')).toBeInTheDocument();
+    });
+
+    expect(getByText(LIMITED_AVAILABILITY_TEXT)).toBeVisible();
+  });
+
+  it('is disabled for 512 GB plans', () => {
+    const bigPlanType = extendedTypeFactory.build({
+      heading: 'Dedicated 512 GB',
+      label: 'Dedicated 512GB',
+    });
+
+    const { getByTestId } = renderWithTheme(
+      <PlanSelection
+        {...defaultProps}
+        isLimitedAvailabilityPlan={false}
+        type={bigPlanType}
+      />,
+      { flags: { disableLargestGbPlans: true } }
+    );
+
+    const selectionCard = getByTestId('selection-card');
+    expect(selectionCard).toBeDisabled();
   });
 });

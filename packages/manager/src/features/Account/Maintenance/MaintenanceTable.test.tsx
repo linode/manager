@@ -4,12 +4,10 @@ import {
   within,
 } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { accountMaintenanceFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
-import { queryPresets } from 'src/queries/base';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 import {
@@ -21,14 +19,7 @@ import {
 import { MaintenanceTable } from './MaintenanceTable';
 import { MaintenanceTableRow } from './MaintenanceTableRow';
 
-const queryClient = new QueryClient({
-  defaultOptions: { queries: queryPresets.oneTimeFetch },
-});
-
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 const loadingTestId = 'table-row-loading';
 
@@ -57,11 +48,11 @@ describe('Maintenance Table Row', () => {
 describe('Maintenance Table', () => {
   it('should render maintenance table with items', async () => {
     server.use(
-      rest.get('*/account/maintenance', (req, res, ctx) => {
+      http.get('*/account/maintenance', () => {
         const accountMaintenance = accountMaintenanceFactory.buildList(1, {
           status: 'pending',
         });
-        return res(ctx.json(makeResourcePage(accountMaintenance)));
+        return HttpResponse.json(makeResourcePage(accountMaintenance));
       })
     );
     renderWithTheme(<MaintenanceTable type="pending" />);
@@ -88,12 +79,12 @@ describe('Maintenance Table', () => {
 
   it('should render maintenance table with empty state', async () => {
     server.use(
-      rest.get('*/account/maintenance', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/account/maintenance', () => {
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 
-    renderWithTheme(<MaintenanceTable type="pending" />, { queryClient });
+    renderWithTheme(<MaintenanceTable type="pending" />);
 
     expect(await screen.findByTestId('table-row-empty')).toBeInTheDocument();
 

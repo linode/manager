@@ -62,6 +62,7 @@ import type {
   NodeBalancerConfigFieldsWithStatus,
   NodeBalancerConfigNodeFields,
 } from '../types';
+import type { Grants } from '@linode/api-v4';
 
 const StyledPortsSpan = styled('span', {
   label: 'StyledPortsSpan',
@@ -87,6 +88,7 @@ const StyledConfigsButton = styled(Button, {
 }));
 
 interface Props {
+  grants: Grants | undefined;
   nodeBalancerLabel: string;
   nodeBalancerRegion: string;
 }
@@ -123,7 +125,15 @@ interface State {
   panelNodeMessages: string[];
 }
 
-type CombinedProps = Props & RouteProps & PreloadedProps & WithQueryClientProps;
+interface NodeBalancerConfigWithNodes extends NodeBalancerConfig {
+  nodes: NodeBalancerConfigNode[];
+}
+
+interface NodeBalancerConfigurationsProps
+  extends Props,
+    RouteProps,
+    PreloadedProps,
+    WithQueryClientProps {}
 
 const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
@@ -157,7 +167,10 @@ const formatNodesStatus = (nodes: NodeBalancerConfigNodeFields[]) => {
     statuses.unknown ? `, ${statuses.unknown} unknown` : ''
   }`;
 };
-class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
+class NodeBalancerConfigurations extends React.Component<
+  NodeBalancerConfigurationsProps,
+  State
+> {
   render() {
     const { nodeBalancerLabel } = this.props;
     const {
@@ -167,6 +180,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       hasUnsavedConfig,
       panelMessages,
     } = this.state;
+
+    const isNodeBalancerReadOnly = this.isNodeBalancerReadOnly();
 
     return (
       <div>
@@ -183,6 +198,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             <StyledConfigsButton
               buttonType="outlined"
               data-qa-add-config
+              disabled={isNodeBalancerReadOnly}
               onClick={() => this.addNodeBalancerConfig()}
             >
               {configs.length === 0
@@ -540,6 +556,18 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     return true;
   };
 
+  isNodeBalancerReadOnly = () => {
+    const { grants } = this.props;
+    const { nodeBalancerId } = this.props.match.params;
+    return Boolean(
+      grants?.nodebalancer?.some(
+        (grant) =>
+          grant.id === Number(nodeBalancerId) &&
+          grant.permissions === 'read_only'
+      )
+    );
+  };
+
   onCloseConfirmation = () =>
     this.setState({
       deleteConfigConfirmDialog: {
@@ -610,12 +638,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     panelMessages: string[],
     configErrors: any[],
     configSubmitting: any[]
-  ) => (
-    config: NodeBalancerConfig & {
-      nodes: NodeBalancerConfigNode[];
-    },
-    idx: number
-  ) => {
+  ) => (config: NodeBalancerConfigWithNodes, idx: number) => {
     const isNewConfig =
       this.state.hasUnsavedConfig && idx === this.state.configs.length - 1;
     const { panelNodeMessages } = this.state;
@@ -627,6 +650,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const isExpanded = expandedConfigId
       ? parseInt(expandedConfigId, 10) === config.id
       : false;
+
+    const isNodeBalancerReadOnly = this.isNodeBalancerReadOnly();
 
     const L = {
       algorithmLens: lensTo(['algorithm']),
@@ -687,6 +712,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           checkPassive={view(L.checkPassiveLens, this.state)}
           checkPath={view(L.checkPathLens, this.state)}
           configIdx={idx}
+          disabled={isNodeBalancerReadOnly}
           errors={configErrors[idx]}
           forEdit
           healthCheckAttempts={view(L.healthCheckAttemptsLens, this.state)}
@@ -1146,7 +1172,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   };
 }
 
-const preloaded = PromiseLoader<CombinedProps>({
+const preloaded = PromiseLoader<NodeBalancerConfigurationsProps>({
   configs: (props) => {
     const {
       match: {
@@ -1157,7 +1183,7 @@ const preloaded = PromiseLoader<CombinedProps>({
   },
 });
 
-const enhanced = composeC<CombinedProps, Props>(
+const enhanced = composeC<NodeBalancerConfigurationsProps, Props>(
   withRouter,
   preloaded,
   withQueryClient

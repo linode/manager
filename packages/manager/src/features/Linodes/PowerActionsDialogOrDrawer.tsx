@@ -8,7 +8,7 @@ import Select from 'src/components/EnhancedSelect/Select';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import {
   useBootLinodeMutation,
@@ -23,7 +23,6 @@ interface Props {
   action: Action;
   isOpen: boolean;
   linodeId: number | undefined;
-  manuallyUpdateConfigs?: boolean;
   onClose: () => void;
 }
 
@@ -39,7 +38,7 @@ export const selectDefaultConfig = (configs?: Config[]) =>
   configs?.length === 1 ? configs[0].id : undefined;
 
 export const PowerActionsDialog = (props: Props) => {
-  const { action, isOpen, linodeId, manuallyUpdateConfigs, onClose } = props;
+  const { action, isOpen, linodeId, onClose } = props;
   const theme = useTheme();
 
   const { data: linode } = useLinodeQuery(
@@ -60,25 +59,21 @@ export const PowerActionsDialog = (props: Props) => {
     error: bootError,
     isLoading: isBooting,
     mutateAsync: bootLinode,
-  } = useBootLinodeMutation(
-    linodeId ?? -1,
-    manuallyUpdateConfigs ? configs : undefined
-  );
+  } = useBootLinodeMutation(linodeId ?? -1, configs);
 
   const {
     error: rebootError,
     isLoading: isRebooting,
     mutateAsync: rebootLinode,
-  } = useRebootLinodeMutation(
-    linodeId ?? -1,
-    manuallyUpdateConfigs ? configs : undefined
-  );
+  } = useRebootLinodeMutation(linodeId ?? -1, configs);
 
   const {
     error: shutdownError,
     isLoading: isShuttingDown,
     mutateAsync: shutdownLinode,
   } = useShutdownLinodeMutation(linodeId ?? -1);
+
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const [selectedConfigID, setSelectConfigID] = React.useState<null | number>(
     null
@@ -117,7 +112,7 @@ export const PowerActionsDialog = (props: Props) => {
       const mutateAsync = mutationMap[action as 'Power Off'];
       await mutateAsync();
     }
-    resetEventsPolling();
+    checkForNewEvents();
     onClose();
   };
 

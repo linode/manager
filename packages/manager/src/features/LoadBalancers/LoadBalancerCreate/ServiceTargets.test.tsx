@@ -4,7 +4,7 @@ import React from 'react';
 import { serviceTargetFactory } from 'src/factories';
 import { renderWithThemeAndFormik } from 'src/utilities/testHelpers';
 
-import { LoadBalancerCreateFormData } from './LoadBalancerCreate';
+import { LoadBalancerCreateFormData } from './LoadBalancerCreateFormWrapper';
 import { ServiceTargets } from './ServiceTargets';
 import { handlers } from './LoadBalancerConfiguration.test';
 
@@ -47,7 +47,7 @@ describe('ServiceTargets', () => {
       'button'
     );
 
-    userEvent.click(addServiceTargetButton!);
+    await userEvent.click(addServiceTargetButton!);
 
     expect(handlers.handleAddServiceTarget).toHaveBeenCalled();
   });

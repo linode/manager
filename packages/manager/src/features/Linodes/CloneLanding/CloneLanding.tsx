@@ -27,7 +27,7 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
@@ -58,6 +58,8 @@ const CloneLanding = () => {
   const match = useRouteMatch();
   const location = useLocation();
   const theme = useTheme();
+
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const linodeId = Number(_linodeId);
 
@@ -240,7 +242,7 @@ const CloneLanding = () => {
     request()
       .then(() => {
         setSubmitting(false);
-        resetEventsPolling();
+        checkForNewEvents();
         history.push(`/linodes/${linodeId}/configurations`);
       })
       .catch((errors) => {
@@ -337,8 +339,7 @@ const CloneLanding = () => {
               selectedDisks={disksInState.filter((disk) => {
                 return (
                   // This disk has been individually selected ...
-                  state.diskSelection[disk.id].isSelected &&
-                  // ... AND it's associated configs are NOT selected
+                  state.diskSelection[disk.id].isSelected && // ... AND it's associated configs are NOT selected
                   intersection(
                     pathOr(
                       [],

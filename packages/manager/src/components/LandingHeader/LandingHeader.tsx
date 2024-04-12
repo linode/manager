@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme, styled, useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
@@ -18,6 +18,7 @@ export interface LandingHeaderProps {
   breadcrumbProps?: BreadcrumbProps;
   buttonDataAttrs?: { [key: string]: boolean | string };
   createButtonText?: string;
+  disabledBreadcrumbEditButton?: boolean;
   disabledCreateButton?: boolean;
   docsLabel?: string;
   docsLink?: string;
@@ -43,6 +44,7 @@ export const LandingHeader = ({
   breadcrumbProps,
   buttonDataAttrs,
   createButtonText,
+  disabledBreadcrumbEditButton,
   disabledCreateButton,
   docsLabel,
   docsLink,
@@ -61,14 +63,16 @@ export const LandingHeader = ({
   const labelTitle = title?.toString();
 
   const xsDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+  const customXsDownBreakpoint = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down(636)
+  );
+  const customSmMdBetweenBreakpoint = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.between(636, 'md')
+  );
 
   const docsAnalyticsLabel = analyticsLabel
     ? analyticsLabel
     : `${title} Landing`;
-
-  const sxButton = {
-    marginLeft: theme.spacing(1),
-  };
 
   return (
     <Grid
@@ -87,11 +91,26 @@ export const LandingHeader = ({
           removeCrumbX={removeCrumbX}
           {...breadcrumbDataAttrs}
           {...breadcrumbProps}
+          disabledBreadcrumbEditButton={disabledBreadcrumbEditButton}
         />
       </Grid>
       {!shouldHideDocsAndCreateButtons && (
         <Grid>
-          <Grid alignItems="center" container justifyContent="flex-end">
+          <Grid
+            sx={{
+              flex: '1 1 auto',
+              marginLeft: customSmMdBetweenBreakpoint
+                ? theme.spacing(2)
+                : customXsDownBreakpoint
+                ? theme.spacing(1)
+                : undefined,
+            }}
+            alignItems="center"
+            display="flex"
+            flexWrap={xsDown ? 'wrap' : 'nowrap'}
+            gap={3}
+            justifyContent="flex-end"
+          >
             {betaFeedbackLink && (
               <span
                 style={{
@@ -124,7 +143,6 @@ export const LandingHeader = ({
                     loading={loading}
                     onClick={onButtonClick}
                     onKeyPress={onButtonKeyPress}
-                    sx={sxButton}
                     {...buttonDataAttrs}
                   >
                     {createButtonText ?? `Create ${entity}`}
@@ -139,6 +157,8 @@ export const LandingHeader = ({
   );
 };
 
-const Actions = styled('div')(({ theme }) => ({
-  marginLeft: `${theme.spacing(2)}`,
+const Actions = styled('div')(() => ({
+  display: 'flex',
+  gap: '24px',
+  justifyContent: 'flex-end',
 }));

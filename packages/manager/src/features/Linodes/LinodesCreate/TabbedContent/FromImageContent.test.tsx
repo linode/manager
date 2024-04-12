@@ -1,14 +1,8 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
-import { Provider } from 'react-redux';
 
-import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
-import { queryClientFactory } from 'src/queries/base';
-import { storeFactory } from 'src/store';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CombinedProps, FromImageContent } from './FromImageContent';
-
-const store = storeFactory(queryClientFactory());
 
 const mockProps: CombinedProps = {
   accountBackupsEnabled: false,
@@ -22,19 +16,21 @@ const mockProps: CombinedProps = {
 };
 
 describe('FromImageContent', () => {
-  const component = shallow(
-    <Provider store={store}>
-      <LinodeThemeWrapper>
-        <FromImageContent {...mockProps} />
-      </LinodeThemeWrapper>
-    </Provider>
-  );
+  it('should render an image select', () => {
+    const { getByLabelText } = renderWithTheme(
+      <FromImageContent {...mockProps} />
+    );
 
-  it('should render without crashing', () => {
-    expect(component).toHaveLength(1);
+    expect(getByLabelText('Images')).toBeVisible();
   });
 
-  it.skip('should render SelectImage panel', () => {
-    expect(component.find('[data-qa-select-image-panel]')).toHaveLength(1);
+  it('should render empty state if user has no images and variant is private', () => {
+    const { getByText } = renderWithTheme(
+      <FromImageContent {...mockProps} variant="private" />
+    );
+
+    expect(
+      getByText('You don’t have any private Images.', { exact: false })
+    ).toBeVisible();
   });
 });

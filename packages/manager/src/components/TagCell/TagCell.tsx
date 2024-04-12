@@ -1,26 +1,49 @@
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
 
-import Plus from 'src/assets/icons/plusSign.svg';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { IconButton } from 'src/components/IconButton';
 import { Tag } from 'src/components/Tag/Tag';
+import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { omittedProps } from 'src/utilities/omittedProps';
 
+import { StyledPlusIcon, StyledTagButton } from '../Button/StyledTagButton';
+import { CircleProgress } from '../CircleProgress';
 import { AddTag } from './AddTag';
 
-interface TagCellProps {
-  listAllTags: (tags: string[]) => void;
+export interface TagCellProps {
+  /**
+   * Disable adding or deleting tags.
+   */
+  disabled?: boolean;
+
+  /**
+   * An optional callback that is invoked when the tag list
+   * overflows and the user clicks to view all tags.
+   */
+  listAllTags?: () => void;
+
+  /**
+   * Additional styles to apply to the tag list.
+   */
   sx?: SxProps;
+
+  /**
+   * The list of tags to display.
+   */
   tags: string[];
+
+  /**
+   * A callback that is invoked when the user updates
+   * the tag list (i.e., by adding or deleting a tag).
+   */
   updateTags: (tags: string[]) => Promise<any>;
 }
 
 // https://stackoverflow.com/questions/143815/determine-if-an-html-elements-content-overflows
-const checkOverflow = (el: any) => {
+const checkOverflow = (el: HTMLElement) => {
   const curOverflow = el.style.overflow;
 
   if (!curOverflow || curOverflow === 'visible') {
@@ -34,100 +57,123 @@ const checkOverflow = (el: any) => {
   return isOverflowing;
 };
 
-const TagCell = (props: TagCellProps) => {
-  const { sx, tags, updateTags } = props;
+export const TagCell = (props: TagCellProps) => {
+  const { disabled, listAllTags, sx, tags } = props;
 
-  const [hasOverflow, setOverflow] = React.useState<boolean>(false);
-  const [addingTag, setAddingTag] = React.useState<boolean>(false);
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const overflowRef = React.useCallback(
-    (node) => {
-      if (node !== null) {
-        setOverflow(checkOverflow(node));
-      }
-    },
-    // The function doesn't care about tags directly,
-    // but if the tags list changes we want to check to see if
-    // the overflow state has changed.
-    // eslint-disable-next-line
-    [tags]
+  const [addingTag, setAddingTag] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+
+  const [elRef, setElRef] = React.useState<HTMLDivElement | null>(null);
+
+  const windowDimensions = useWindowDimensions();
+
+  const [hasOverflow, setHasOverflow] = React.useState(false);
+  React.useLayoutEffect(() => {
+    setHasOverflow(!!elRef && checkOverflow(elRef));
+  }, [windowDimensions, tags, elRef]);
+
+  const handleUpdateTag = (updatedTags: string[]) => {
+    setLoading(true);
+    return props.updateTags(updatedTags).finally(() => {
+      setLoading(false);
+    });
+  };
+
+  const panelView = listAllTags == undefined;
+
+  const AddButton = (props: { panel?: boolean }) => (
+    <StyledTagButton
+      buttonType="outlined"
+      disabled={disabled}
+      endIcon={<StyledPlusIcon disabled={disabled} />}
+      onClick={() => setAddingTag(true)}
+      panel={props.panel}
+      title="Add a tag"
+    >
+      Add a tag
+    </StyledTagButton>
   );
 
-  const handleAddTag = async (tag: string) => {
-    await updateTags([...tags, tag]);
-  };
-
-  const handleDeleteTag = (tagToDelete: string) => {
-    setLoading(true);
-    updateTags(tags.filter((tag) => tag !== tagToDelete)).finally(() =>
-      setLoading(false)
-    );
-  };
-
   return (
-    <StyledGrid
-      alignItems="center"
-      container
-      direction="row"
-      sx={sx}
-      wrap="nowrap"
-    >
-      {loading ? (
-        <StyledCircleDiv>
-          <CircleProgress mini />
-        </StyledCircleDiv>
-      ) : null}
-      {addingTag ? (
-        <AddTag
-          addTag={handleAddTag}
-          inDetailsContext
-          onClose={() => setAddingTag(false)}
-          tags={tags}
-        />
-      ) : (
-        <>
-          <StyledTagListDiv hasOverflow={hasOverflow} ref={overflowRef}>
+    <>
+      {(addingTag || panelView) && (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            height: 40,
+            justifyContent: panelView ? 'flex-start' : 'flex-end',
+            marginBottom: panelView ? 4 : 0,
+            width: '100%',
+          }}
+        >
+          {panelView && !addingTag && <AddButton panel />}
+          {addingTag && (
+            <AddTag
+              addTag={(tag) => handleUpdateTag([...tags, tag])}
+              existingTags={tags}
+              onClose={() => setAddingTag(false)}
+            />
+          )}
+        </div>
+      )}
+      {(!addingTag || panelView) && (
+        <StyledGrid
+          alignItems="center"
+          container
+          direction="row"
+          sx={sx}
+          wrap={panelView ? 'wrap' : 'nowrap'}
+        >
+          <StyledTagListDiv
+            hasOverflow={hasOverflow && listAllTags != undefined}
+            ref={setElRef}
+            wrap={listAllTags == undefined}
+          >
+            {loading ? (
+              <StyledCircleDiv>
+                <CircleProgress mini />
+              </StyledCircleDiv>
+            ) : null}
             {tags.map((thisTag) => (
               <StyledTag
+                onDelete={
+                  disabled
+                    ? undefined
+                    : () =>
+                        handleUpdateTag(tags.filter((tag) => tag !== thisTag))
+                }
                 colorVariant="lightBlue"
+                disabled={disabled}
                 key={`tag-item-${thisTag}`}
                 label={thisTag}
                 loading={loading}
-                onDelete={() => handleDeleteTag(thisTag)}
               />
             ))}
           </StyledTagListDiv>
-          {hasOverflow ? (
+          {hasOverflow && !panelView ? (
             <StyledIconButton
               aria-label="Display all tags"
               disableRipple
-              onClick={() => props.listAllTags(tags)}
-              onKeyPress={() => props.listAllTags(tags)}
+              onClick={() => listAllTags()}
+              onKeyPress={() => listAllTags()}
               size="large"
             >
               <MoreHoriz />
             </StyledIconButton>
           ) : null}
-          <StyledAddTagButton
-            onClick={() => setAddingTag(true)}
-            title="Add a tag"
-          >
-            Add a tag
-            <Plus />
-          </StyledAddTagButton>
-        </>
+          {!panelView && <AddButton />}
+        </StyledGrid>
       )}
-    </StyledGrid>
+    </>
   );
 };
 
-export { TagCell };
-
-const StyledGrid = styled(Grid)({
-  justifyContent: 'flex-end',
+const StyledGrid = styled(Grid)((props) => ({
+  justifyContent: props.wrap == 'wrap' ? 'flex-start' : 'flex-end',
   minHeight: 40,
   position: 'relative',
-});
+}));
 
 const StyledCircleDiv = styled('div')({
   alignItems: 'center',
@@ -140,15 +186,16 @@ const StyledCircleDiv = styled('div')({
 });
 
 const StyledTagListDiv = styled('div', {
-  shouldForwardProp: omittedProps(['hasOverflow']),
+  shouldForwardProp: omittedProps(['hasOverflow', 'wrap']),
 })<{
   hasOverflow: boolean;
+  wrap: boolean;
 }>(({ ...props }) => ({
   '& .MuiChip-root:last-child': {
     marginRight: 4,
   },
   display: 'flex',
-  flexWrap: 'nowrap',
+  flexWrap: props.wrap ? 'wrap' : 'nowrap',
   overflow: 'hidden',
   position: 'relative',
   whiteSpace: 'nowrap',
@@ -183,26 +230,4 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     marginLeft: 0,
   },
   width: '40px',
-}));
-
-const StyledAddTagButton = styled('button')(({ theme }) => ({
-  '& svg': {
-    color: theme.color.tagIcon,
-    height: 10,
-    marginLeft: 10,
-    width: 10,
-  },
-  alignItems: 'center',
-  backgroundColor: theme.color.tagButton,
-  border: 'none',
-  borderRadius: 3,
-  color: theme.textColors.linkActiveLight,
-  cursor: 'pointer',
-  display: 'flex',
-  fontFamily: theme.font.bold,
-  fontSize: 14,
-  height: 30,
-  paddingLeft: 10,
-  paddingRight: 10,
-  whiteSpace: 'nowrap',
 }));

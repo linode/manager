@@ -4,7 +4,7 @@ import type {
   Region,
   DatabaseEngine,
   DatabaseType,
-} from '@linode/api-v4/types';
+} from '@linode/api-v4';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { databaseEngineFactory, databaseTypeFactory } from '@src/factories';
@@ -61,7 +61,7 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
     engine: 'MySQL',
     label: randomLabel(),
     linodeType: 'g6-nanode-1',
-    region: chooseRegion({ capability: 'Managed Databases' }),
+    region: chooseRegion({ capabilities: ['Managed Databases'] }),
     version: '8',
   },
   {
@@ -70,7 +70,7 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
     engine: 'MySQL',
     label: randomLabel(),
     linodeType: 'g6-dedicated-16',
-    region: chooseRegion({ capability: 'Managed Databases' }),
+    region: chooseRegion({ capabilities: ['Managed Databases'] }),
     version: '5',
   },
   // {
@@ -89,7 +89,7 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
     engine: 'PostgreSQL',
     label: randomLabel(),
     linodeType: 'g6-nanode-1',
-    region: chooseRegion({ capability: 'Managed Databases' }),
+    region: chooseRegion({ capabilities: ['Managed Databases'] }),
     version: '13',
   },
 ];

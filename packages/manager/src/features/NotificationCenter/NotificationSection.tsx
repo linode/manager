@@ -40,6 +40,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 export interface NotificationItem {
   body: JSX.Element | string;
   countInTotal: boolean;
+  eventId: number;
   id: string;
 }
 
@@ -160,8 +161,8 @@ const ContentBody = React.memo((props: BodyProps) => {
     <>
       {_content.map((thisItem) => (
         <StyledNotificationItem
+          header={props.header}
           key={`notification-row-${thisItem.id}`}
-          {...props}
         >
           {thisItem.body}
         </StyledNotificationItem>
@@ -231,14 +232,8 @@ const StyledLToggleContainer = styled(Box, {
 
 const StyledNotificationItem = styled(Box, {
   label: 'StyledNotificationItem',
-  shouldForwardProp: omittedProps([
-    'count',
-    'emptyMessage',
-    'header',
-    'loading',
-    'content',
-  ]),
-})<NotificationSectionProps>(({ theme, ...props }) => ({
+  shouldForwardProp: omittedProps(['header']),
+})<{ header: string }>(({ theme, ...props }) => ({
   '& p': {
     color: theme.textColors.headlineStatic,
     lineHeight: '1.25rem',

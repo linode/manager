@@ -1,7 +1,12 @@
 import { arrayToList } from 'src/utilities/arrayToList';
 import { ExtendedType } from 'src/utilities/extendType';
 
-import { PlanSelectionType } from './types';
+import {
+  DBAAS_DEDICATED_512_GB_PLAN,
+  DEDICATED_512_GB_PLAN,
+  PREMIUM_512_GB_PLAN,
+} from './constants';
+import { PlanSelectionType, TypeWithAvailability } from './types';
 
 import type {
   Capabilities,
@@ -12,9 +17,9 @@ import type {
 
 export type PlansTypes<T> = Record<LinodeTypeClass, T[]>;
 
-type PlansByType<T> = Omit<PlansTypes<T>, 'nanode' | 'standard'> & {
+interface PlansByType<T> extends Omit<PlansTypes<T>, 'nanode' | 'standard'> {
   shared: T[];
-};
+}
 
 // We could update this to add or remove any new or existing plan tabs.
 export const planTypeOrder: (
@@ -74,11 +79,11 @@ export const getPlanSelectionsByPlanType = <
   }, {} as PlansByType<T>);
 };
 
-export const determineInitialPlanCategoryTab = <T>(
+export const determineInitialPlanCategoryTab = (
   types: (ExtendedType | PlanSelectionType)[],
   selectedId?: string,
   currentPlanHeading?: string
-) => {
+): number => {
   const plans = getPlanSelectionsByPlanType(types);
 
   const tabOrder: LinodeTypeClass[] = Object.keys(plans).map((plan) =>
@@ -111,20 +116,20 @@ export const getRegionsWithCapability = (
   return arrayToList(withCapability ?? []);
 };
 
-interface PlanSoldOutStatusOptions {
+interface LimitedAvailabilityPlanStatusOptions {
   plan: PlanSelectionType;
   regionAvailabilities: RegionAvailability[] | undefined;
   selectedRegionId: Region['id'] | undefined;
 }
 
 /**
- * Utility to determine if a plan is sold out based on a region's availability.
+ * Utility to determine if a plan is limited availability based on a region's availability.
  */
-export const getIsPlanSoldOut = ({
+export const getIsLimitedAvailability = ({
   plan,
   regionAvailabilities,
   selectedRegionId,
-}: PlanSoldOutStatusOptions): boolean => {
+}: LimitedAvailabilityPlanStatusOptions): boolean => {
   if (!regionAvailabilities || !selectedRegionId) {
     return false;
   }
@@ -194,6 +199,67 @@ export const planTabInfoContent = {
     key: 'shared',
     title: 'Shared CPU',
     typography:
-      ' Shared CPU instances are good for medium-duty workloads and are a good mix of performance, resources, and price.',
+      'Shared CPU instances are good for medium-duty workloads and are a good mix of performance, resources, and price.',
   },
+};
+
+/**
+ * If the Dedicated 512 GB plan is present in the response, overwrite it.
+ * If it isn't, insert a placeholder at the end of the array.
+ */
+export const replaceOrAppendPlaceholder512GbPlans = (
+  types: (ExtendedType | PlanSelectionType)[]
+) => {
+  const isInDatabasesFlow = types.some((type) => type.label.includes('DBaaS'));
+
+  // Function to replace or append a specific plan
+  const replaceOrAppendPlan = <T extends ExtendedType | PlanSelectionType>(
+    planLabel: string,
+    planData: T
+  ) => {
+    const index = types.findIndex((type) => type.label === planLabel);
+
+    if (index !== -1) {
+      types[index] = planData;
+    } else {
+      types.push(planData);
+    }
+  };
+
+  if (isInDatabasesFlow) {
+    replaceOrAppendPlan('DBaaS - Dedicated 512GB', DBAAS_DEDICATED_512_GB_PLAN);
+  } else {
+    // For Linodes and LKE
+    replaceOrAppendPlan('Dedicated 512GB', DEDICATED_512_GB_PLAN);
+    replaceOrAppendPlan('Premium 512GB', PREMIUM_512_GB_PLAN);
+  }
+
+  return types;
+};
+
+/**
+ * Used to determine the contents of certain notices about availability and whether tooltips regarding
+ * limited availability for plans are displayed within plan tables.
+ *
+ * @param plans An array of plans in a LinodeTypeClass, e.g. Dedicated or Shared plans
+ *
+ * @returns boolean
+ */
+export const isMajorityLimitedAvailabilityPlans = (
+  plans: TypeWithAvailability[]
+): boolean => {
+  const plansTotal = plans.length;
+
+  const countOfLimitedAvailabilityPlans = plans.filter(
+    (plan) => plan.isLimitedAvailabilityPlan
+  ).length;
+
+  const limitedAvailabilityToTotalRatio =
+    countOfLimitedAvailabilityPlans / plansTotal;
+
+  if (limitedAvailabilityToTotalRatio > 0.5) {
+    return true;
+  }
+
+  return false;
 };

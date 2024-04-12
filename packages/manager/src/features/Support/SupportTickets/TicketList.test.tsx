@@ -1,20 +1,14 @@
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { supportTicketFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Props, TicketList } from './TicketList';
 
-const queryClient = new QueryClient();
-
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 const props: Props = {
   filterStatus: 'open',
@@ -30,20 +24,18 @@ describe('TicketList', () => {
 
   it('should render ticket table containing tickets', async () => {
     server.use(
-      rest.get('*/support/tickets', (req, res, ctx) => {
+      http.get('*/support/tickets', () => {
         const tickets = supportTicketFactory.buildList(1, {
           status: 'open',
           summary: 'my linode is broken :(',
         });
-        return res(ctx.json(makeResourcePage(tickets)));
+        return HttpResponse.json(makeResourcePage(tickets));
       })
     );
 
-    const {
-      getAllByText,
-      getByTestId,
-      queryAllByText,
-    } = renderWithTheme(<TicketList filterStatus="open" />, { queryClient });
+    const { getAllByText, getByTestId, queryAllByText } = renderWithTheme(
+      <TicketList filterStatus="open" />
+    );
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -64,16 +56,13 @@ describe('TicketList', () => {
 
   it('should render ticket list empty state', async () => {
     server.use(
-      rest.get('*/support/tickets', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/support/tickets', () => {
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 
     const { getByTestId, getByText } = renderWithTheme(
-      <TicketList filterStatus="open" />,
-      {
-        queryClient,
-      }
+      <TicketList filterStatus="open" />
     );
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));

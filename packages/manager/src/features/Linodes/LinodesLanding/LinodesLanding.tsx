@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
@@ -13,10 +12,14 @@ import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceTogg
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import {
+  WithFeatureFlagProps,
+  withFeatureFlags,
+} from 'src/containers/flags.container';
+import {
   WithProfileProps,
   withProfile,
 } from 'src/containers/profile.container';
-import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { BackupsCTA } from 'src/features/Backups/BackupsCTA';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import { DialogType } from 'src/features/Linodes/types';
@@ -31,7 +34,6 @@ import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuil
 import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodesDetail/LinodeResize/LinodeResize';
 import { Action, PowerActionsDialog } from '../PowerActionsDialogOrDrawer';
-import { linodesInTransition as _linodesInTransition } from '../transitions';
 import { CardView } from './CardView';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import { DisplayGroupedLinodes } from './DisplayGroupedLinodes';
@@ -48,7 +50,6 @@ import { ExtendedStatus, statusToPriority } from './utils';
 import type { Config } from '@linode/api-v4/lib/linodes/types';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
-import type { MapState } from 'src/store/types';
 
 interface State {
   deleteDialogOpen: boolean;
@@ -84,24 +85,32 @@ type RouteProps = RouteComponentProps<Params>;
 export interface LinodesLandingProps {
   LandingHeader?: React.ReactElement;
   linodesData: LinodeWithMaintenance[];
+  linodesInTransition: Set<number>;
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
   someLinodesHaveScheduledMaintenance: boolean;
 }
 
 type CombinedProps = LinodesLandingProps &
-  StateProps &
   RouteProps &
+  WithFeatureFlagProps &
   WithProfileProps;
 
 class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
+      flags,
+      grants,
       linodesData,
       linodesInTransition,
       linodesRequestError,
       linodesRequestLoading,
+      profile,
     } = this.props;
+
+    const isLinodesGrantReadOnly =
+      Boolean(profile.data?.restricted) &&
+      !grants.data?.global?.['add_linodes'];
 
     const params = new URLSearchParams(this.props.location.search);
 
@@ -157,6 +166,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        {flags.gecko2?.enabled && flags.gecko2?.ga && 'Gecko GA'}
         <LinodeResize
           linodeId={this.state.selectedLinodeID}
           onClose={this.closeDialogs}
@@ -220,9 +230,17 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                         ) : (
                           <div>
                             <LandingHeader
+                              buttonDataAttrs={{
+                                tooltipText: getRestrictedResourceText({
+                                  action: 'create',
+                                  isSingular: false,
+                                  resourceType: 'Linodes',
+                                }),
+                              }}
                               onButtonClick={() =>
                                 this.props.history.push('/linodes/create')
                               }
+                              disabledCreateButton={isLinodesGrantReadOnly}
                               docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
                               entity="Linode"
                               title="Linodes"
@@ -435,23 +453,10 @@ const sendGroupByAnalytic = (value: boolean) => {
   sendGroupByTagEnabledEvent(eventCategory, value);
 };
 
-interface StateProps {
-  linodesInTransition: Set<number>;
-}
-
-const mapStateToProps: MapState<StateProps, LinodesLandingProps> = (state) => {
-  return {
-    linodesInTransition: _linodesInTransition(state.events.events),
-  };
-};
-
-const connected = connect(mapStateToProps, undefined);
-
 export const enhanced = compose<CombinedProps, LinodesLandingProps>(
   withRouter,
-  connected,
-  withFeatureFlagConsumer,
-  withProfile
+  withProfile,
+  withFeatureFlags
 );
 
 export default enhanced(ListLinodes);

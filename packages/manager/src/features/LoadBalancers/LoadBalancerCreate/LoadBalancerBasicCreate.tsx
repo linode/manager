@@ -12,8 +12,8 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
-import { AGLB_FEEDBACK_FORM_URL } from 'src/features/LoadBalancers/constants';
-import { useLoadBalancerBasicCreateMutation } from 'src/queries/aglb/loadbalancers';
+import { ACLB_FEEDBACK_FORM_URL } from 'src/features/LoadBalancers/constants';
+import { useLoadBalancerBasicCreateMutation } from 'src/queries/aclb/loadbalancers';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { LoadBalancerRegions } from './LoadBalancerRegions';
@@ -58,13 +58,13 @@ export const LoadBalancerBasicCreate = () => {
         breadcrumbProps={{
           crumbOverrides: [
             {
-              label: 'Global Load Balancers',
+              label: 'Cloud Load Balancers',
               position: 1,
             },
           ],
           pathname: location.pathname,
         }}
-        betaFeedbackLink={AGLB_FEEDBACK_FORM_URL}
+        betaFeedbackLink={ACLB_FEEDBACK_FORM_URL}
         title="Create"
       />
       <Stack spacing={3}>

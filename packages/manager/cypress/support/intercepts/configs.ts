@@ -4,7 +4,7 @@
 
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
-import { Config } from '@linode/api-v4/types';
+import { Config } from '@linode/api-v4';
 import { makeResponse } from 'support/util/response';
 
 /**

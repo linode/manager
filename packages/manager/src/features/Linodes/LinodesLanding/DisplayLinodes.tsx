@@ -26,13 +26,13 @@ import type { Config } from '@linode/api-v4/lib/linodes';
 
 export interface RenderLinodesProps
   extends PaginationProps<LinodeWithMaintenance> {
-  data: Props['data'];
-  openDialog: Props['openDialog'];
-  openPowerActionDialog: Props['openPowerActionDialog'];
+  data: DisplayLinodesProps['data'];
+  openDialog: DisplayLinodesProps['openDialog'];
+  openPowerActionDialog: DisplayLinodesProps['openPowerActionDialog'];
   showHead?: boolean;
 }
 
-interface Props {
+interface DisplayLinodesProps extends OrderByProps<LinodeWithMaintenance> {
   component: React.ComponentType<RenderLinodesProps>;
   data: LinodeWithMaintenance[];
   display: 'grid' | 'list';
@@ -51,9 +51,7 @@ interface Props {
   updatePageUrl: (page: number) => void;
 }
 
-type CombinedProps = Props & OrderByProps<LinodeWithMaintenance>;
-
-export const DisplayLinodes = React.memo((props: CombinedProps) => {
+export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const {
     component: Component,
     data,
@@ -68,6 +66,9 @@ export const DisplayLinodes = React.memo((props: CombinedProps) => {
     updatePageUrl,
     ...rest
   } = props;
+
+  const displayViewDescriptionId = React.useId();
+  const groupByDescriptionId = React.useId();
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
   const numberOfLinodesWithMaintenance = React.useMemo(() => {
@@ -143,13 +144,13 @@ export const DisplayLinodes = React.memo((props: CombinedProps) => {
                   <StyledControlHeader isGroupedByTag={linodesAreGrouped}>
                     <div
                       className="visually-hidden"
-                      id="displayViewDescription"
+                      id={displayViewDescriptionId}
                     >
                       Currently in {linodeViewPreference} view
                     </div>
                     <Tooltip placement="top" title="List view">
                       <StyledToggleButton
-                        aria-describedby={'displayViewDescription'}
+                        aria-describedby={displayViewDescriptionId}
                         aria-label="Toggle display"
                         disableRipple
                         isActive={true}
@@ -160,14 +161,14 @@ export const DisplayLinodes = React.memo((props: CombinedProps) => {
                       </StyledToggleButton>
                     </Tooltip>
 
-                    <div className="visually-hidden" id="groupByDescription">
+                    <div className="visually-hidden" id={groupByDescriptionId}>
                       {linodesAreGrouped
                         ? 'group by tag is currently enabled'
                         : 'group by tag is currently disabled'}
                     </div>
                     <Tooltip placement="top-end" title="Group by tag">
                       <StyledToggleButton
-                        aria-describedby={'groupByDescription'}
+                        aria-describedby={groupByDescriptionId}
                         aria-label={`Toggle group by tag`}
                         disableRipple
                         isActive={linodesAreGrouped}

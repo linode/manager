@@ -6,12 +6,11 @@ import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
-import { useLoadBalancerQuery } from 'src/queries/aglb/loadbalancers';
-// import { useRegionsQuery } from 'src/queries/regions';
+import { useLoadBalancerQuery } from 'src/queries/aclb/loadbalancers';
 
 import { Ports } from '../LoadBalancerLanding/Ports';
 import { LoadBalancerEndpointHealth } from './LoadBalancerEndpointHealth';
-import { LoadBalancerRegions } from './LoadBalancerRegions';
+import { LoadBalancerRegionsList } from './LoadBalancerRegions';
 
 export const LoadBalancerSummary = () => {
   const { loadbalancerId } = useParams<{ loadbalancerId: string }>();
@@ -19,7 +18,6 @@ export const LoadBalancerSummary = () => {
   const id = Number(loadbalancerId);
 
   const { data: loadbalancer } = useLoadBalancerQuery(id);
-  // const { data: regions } = useRegionsQuery();
 
   const items = [
     {
@@ -44,15 +42,9 @@ export const LoadBalancerSummary = () => {
     },
     {
       title: 'Regions',
-      value: <LoadBalancerRegions />,
-      // Uncomment the line below to show the regions returned by the API.
-      // value: (
-      //   <Typography>
-      //     {loadbalancer?.regions
-      //       .map((region) => regions?.find((r) => r.id === region)?.label)
-      //       .join(', ')}
-      //   </Typography>
-      // ),
+      value: (
+        <LoadBalancerRegionsList regionIds={loadbalancer?.regions ?? []} />
+      ),
     },
   ];
 

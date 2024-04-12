@@ -3,7 +3,7 @@ import React from 'react';
 import { profileFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantsFactory } from 'src/factories/grants';
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithTheme,
@@ -54,16 +54,14 @@ describe('UserRow', () => {
 
     server.use(
       // Mock the grants of the additional user on the parent account.
-      rest.get('*/account/users/*/grants', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            grantsFactory.build({ global: { child_account_access: true } })
-          )
+      http.get('*/account/users/*/grants', () => {
+        return HttpResponse.json(
+          grantsFactory.build({ global: { child_account_access: true } })
         );
       }),
-      // Mock the active account, which must be of `parent` user type to see the Child Account Access column.
-      rest.get('*/account/users/*', (req, res, ctx) => {
-        return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
+      // Mock the active profile, which must be of `parent` user type to see the Child Account Access column.
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ user_type: 'parent' }));
       })
     );
 
@@ -81,16 +79,14 @@ describe('UserRow', () => {
 
     server.use(
       // Mock the grants of the additional user on the parent account.
-      rest.get('*/account/users/*/grants', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            grantsFactory.build({ global: { child_account_access: false } })
-          )
+      http.get('*/account/users/*/grants', () => {
+        return HttpResponse.json(
+          grantsFactory.build({ global: { child_account_access: false } })
         );
       }),
-      // Mock the active account, which must be of `parent` user type to see the Child Account Access column.
-      rest.get('*/account/users/*', (req, res, ctx) => {
-        return res(ctx.json(accountUserFactory.build({ user_type: 'parent' })));
+      // Mock the active profile, which must be of `parent` user type to see the Child Account Access column.
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ user_type: 'parent' }));
       })
     );
 
@@ -108,16 +104,16 @@ describe('UserRow', () => {
 
     server.use(
       // Mock the grants of the additional user on the parent account.
-      rest.get('*/account/users/*/grants', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            grantsFactory.build({ global: { child_account_access: true } })
-          )
+      http.get('*/account/users/*/grants', () => {
+        return HttpResponse.json(
+          grantsFactory.build({ global: { child_account_access: true } })
         );
       }),
-      // Mock the active account, which must NOT be of `parent` user type to hide the Child Account Access column.
-      rest.get('*/account/users/*', (req, res, ctx) => {
-        return res(ctx.json(accountUserFactory.build({ user_type: null })));
+      // Mock the active profile, which must NOT be of `parent` user type to hide the Child Account Access column.
+      http.get('*/profile', () => {
+        return HttpResponse.json(
+          profileFactory.build({ user_type: 'default' })
+        );
       })
     );
 
@@ -126,7 +122,41 @@ describe('UserRow', () => {
         flags: { parentChildAccountAccess: true },
       })
     );
-    expect(queryByText('Child Account Access')).not.toBeInTheDocument();
+    expect(queryByText('Enabled')).not.toBeInTheDocument();
+  });
+
+  it('renders only a username, email, and account access status for a Proxy user', async () => {
+    const mockLogin = {
+      login_datetime: '2022-02-09T16:19:26',
+    };
+    const proxyUser = accountUserFactory.build({
+      email: 'proxy@proxy.com',
+      last_login: mockLogin,
+      restricted: true,
+      user_type: 'proxy',
+      username: 'proxyUsername',
+    });
+
+    server.use(
+      // Mock the active profile for the child account.
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ user_type: 'child' }));
+      })
+    );
+
+    const { findByText, queryByText } = renderWithTheme(
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={proxyUser} />, {
+        flags: { parentChildAccountAccess: true },
+      })
+    );
+
+    // Renders Username, Email, and Account Access fields for a proxy user.
+    expect(await findByText('proxyUsername')).toBeInTheDocument();
+    expect(await findByText('proxy@proxy.com')).toBeInTheDocument();
+    expect(await findByText('Limited')).toBeInTheDocument();
+
+    // Does not render the Last Login for a proxy user.
+    expect(queryByText('2022-02-09T16:19:26')).not.toBeInTheDocument();
   });
 
   it('renders "Never" if last_login is null', () => {
@@ -141,8 +171,8 @@ describe('UserRow', () => {
   it('renders a timestamp of the last_login if it was successful', async () => {
     // Because we are unit testing a timestamp, set our timezone to UTC
     server.use(
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ timezone: 'utc' })));
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
       })
     );
 
@@ -164,8 +194,8 @@ describe('UserRow', () => {
   it('renders a timestamp and "Failed" of the last_login if it was failed', async () => {
     // Because we are unit testing a timestamp, set our timezone to UTC
     server.use(
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ timezone: 'utc' })));
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
       })
     );
 

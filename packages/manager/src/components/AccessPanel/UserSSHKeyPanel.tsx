@@ -14,7 +14,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { Typography } from 'src/components/Typography';
 import { CreateSSHKeyDrawer } from 'src/features/Profile/SSHKeys/CreateSSHKeyDrawer';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountUsers } from 'src/queries/accountUsers';
+import { useAccountUsers } from 'src/queries/account/users';
 import { useProfile, useSSHKeysQuery } from 'src/queries/profile';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
@@ -76,8 +76,10 @@ const UserSSHKeyPanel = (props: Props) => {
     isLoading: isAccountUsersLoading,
   } = useAccountUsers(
     {
-      page: pagination.page,
-      page_size: pagination.pageSize,
+      params: {
+        page: pagination.page,
+        page_size: pagination.pageSize,
+      },
     }
     // { ssh_keys: { '+neq': null } }
   );

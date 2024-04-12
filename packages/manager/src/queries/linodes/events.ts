@@ -1,8 +1,8 @@
-import { EventWithStore } from 'src/events';
-import { queryKey as accountNotificationsQueryKey } from 'src/queries/accountNotifications';
+import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
 import { queryKey as volumesQueryKey } from 'src/queries/volumes';
 
+import { accountQueries } from '../account/queries';
 import { queryKey } from './linodes';
 
 import type { Event } from '@linode/api-v4';
@@ -13,7 +13,10 @@ import type { Event } from '@linode/api-v4';
  * This event handler runs for any event prefixed with "linode".
  * For example, "linode_create", "linode_boot", "linode_resize", ...
  */
-export const linodeEventsHandler = ({ event, queryClient }: EventWithStore) => {
+export const linodeEventsHandler = ({
+  event,
+  queryClient,
+}: EventHandlerData) => {
   const linodeId = event.entity?.id;
 
   // Early return to cut down the number of invalidations.
@@ -27,7 +30,7 @@ export const linodeEventsHandler = ({ event, queryClient }: EventWithStore) => {
   // Some Linode events are an indication that the reponse from /v4/account/notifications
   // has changed, so refetch notifications.
   if (shouldRequestNotifications(event)) {
-    queryClient.invalidateQueries(accountNotificationsQueryKey);
+    queryClient.invalidateQueries(accountQueries.notifications.queryKey);
   }
 
   switch (event.action) {
@@ -111,7 +114,7 @@ export const linodeEventsHandler = ({ event, queryClient }: EventWithStore) => {
  * Disks have their own handler beacuse the actions are not prefixed with "linode_".
  * They are prefixed with "disk_". For example "disk_create" or "disk_delete".
  */
-export const diskEventHandler = ({ event, queryClient }: EventWithStore) => {
+export const diskEventHandler = ({ event, queryClient }: EventHandlerData) => {
   const linodeId = event.entity?.id;
 
   if (!linodeId || ['scheduled', 'started'].includes(event.status)) {

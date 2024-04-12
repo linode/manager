@@ -1,104 +1,179 @@
-import { Typography, styled } from '@mui/material';
-import { AxiosHeaders } from 'axios';
+import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
-import { Stack } from 'src/components/Stack';
-import { useFlags } from 'src/hooks/useFlags';
-import { useChildAccounts } from 'src/queries/account';
-import { useAccountUser } from 'src/queries/accountUsers';
-import { useProfile } from 'src/queries/profile';
-import { authentication } from 'src/utilities/storage';
+import { Typography } from 'src/components/Typography';
+import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
+import {
+  isParentTokenValid,
+  updateCurrentTokenBasedOnUserType,
+} from 'src/features/Account/utils';
+import { useCurrentToken } from 'src/hooks/useAuthentication';
+import { useRevokePersonalAccessTokenMutation } from 'src/queries/tokens';
+import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics';
+import { getStorage, setStorage } from 'src/utilities/storage';
+
+import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
+import {
+  updateParentTokenInLocalStorage,
+  updateProxyTokenInLocalStorage,
+} from './SwitchAccounts/utils';
+
+import type { APIError, Token, UserType } from '@linode/api-v4';
+import type { State as AuthState } from 'src/store/authentication';
 
 interface Props {
   onClose: () => void;
   open: boolean;
-  username: string;
+  proxyToken?: Token;
+  userType: UserType | undefined;
 }
 
 export const SwitchAccountDrawer = (props: Props) => {
-  const { onClose, open } = props;
+  const { onClose, open, proxyToken, userType } = props;
+  const proxyTokenLabel = proxyToken?.label;
+  const isProxyUser = userType === 'proxy';
 
-  const flags = useFlags();
+  const [isParentTokenError, setIsParentTokenError] = React.useState<
+    APIError[]
+  >([]);
+  const [isProxyTokenError, setIsProxyTokenError] = React.useState<APIError[]>(
+    []
+  );
 
-  const handleClose = () => {
+  const { mutateAsync: revokeToken } = useRevokePersonalAccessTokenMutation(
+    proxyToken?.id ?? -1
+  );
+  const { enqueueSnackbar } = useSnackbar();
+  const currentTokenWithBearer = useCurrentToken() ?? '';
+
+  const currentParentTokenWithBearer =
+    getStorage('authentication/parent_token/token') ?? '';
+
+  const handleProxyTokenRevocation = React.useCallback(async () => {
+    try {
+      await revokeToken();
+      enqueueSnackbar(`Successfully revoked ${proxyTokenLabel}.`, {
+        variant: 'success',
+      });
+    } catch (error) {
+      enqueueSnackbar(`Failed to revoke ${proxyTokenLabel}.`, {
+        variant: 'error',
+      });
+    }
+  }, [enqueueSnackbar, proxyTokenLabel, revokeToken]);
+
+  const refreshPage = React.useCallback(() => {
+    location.reload();
+  }, []);
+
+  const handleSwitchToChildAccount = React.useCallback(
+    async ({
+      currentTokenWithBearer,
+      euuid,
+      event,
+      onClose,
+      userType,
+    }: {
+      currentTokenWithBearer?: AuthState['token'];
+      euuid: string;
+      event: React.MouseEvent<HTMLElement>;
+      onClose: (e: React.SyntheticEvent<HTMLElement>) => void;
+      userType: UserType | undefined;
+    }) => {
+      const isProxyUser = userType === 'proxy';
+
+      if (isProxyUser) {
+        // Revoke proxy token before switching accounts.
+        await handleProxyTokenRevocation();
+      } else {
+        // Before switching to a child account, update the parent token in local storage.
+        updateParentTokenInLocalStorage({ currentTokenWithBearer });
+      }
+
+      try {
+        await updateProxyTokenInLocalStorage({
+          euuid,
+          token: isProxyUser
+            ? getStorage('authentication/parent_token/token')
+            : currentTokenWithBearer,
+          userType: isProxyUser ? 'proxy' : 'parent',
+        });
+      } catch (error) {
+        setIsProxyTokenError(error);
+        throw error;
+      }
+
+      onClose(event);
+      refreshPage();
+    },
+    [handleProxyTokenRevocation, refreshPage]
+  );
+
+  const handleSwitchToParentAccount = React.useCallback(async () => {
+    if (!isParentTokenValid()) {
+      const expiredTokenError: APIError = {
+        field: 'token',
+        reason: PARENT_USER_SESSION_EXPIRED,
+      };
+
+      setIsParentTokenError([expiredTokenError]);
+
+      return;
+    }
+
+    // Revoke proxy token before switching to parent account.
+    await handleProxyTokenRevocation();
+
+    updateCurrentTokenBasedOnUserType({ userType: 'parent' });
+
+    // Reset flag for proxy user to display success toast once.
+    setStorage('proxy_user', 'false');
+
     onClose();
-  };
-
-  const { data: profile } = useProfile();
-  const { data: user } = useAccountUser(profile?.username ?? '');
-
-  // From proxy accounts, make a request on behalf of the parent account to fetch child accounts.
-  const headers =
-    flags.parentChildAccountAccess && user?.user_type === 'proxy'
-      ? new AxiosHeaders({ Authorization: authentication.token.get() }) // TODO: Parent/Child - M3-7430: replace this token with the parent token in local storage.
-      : undefined;
-  const { data: childAccounts, error, isLoading } = useChildAccounts({
-    headers,
-  });
-
-  const renderChildAccounts = React.useCallback(() => {
-    if (isLoading) {
-      return <CircleProgress mini />;
-    }
-
-    if (childAccounts?.results === 0) {
-      return <Notice variant="info">There are no child accounts.</Notice>;
-    }
-
-    if (error) {
-      return (
-        <Notice variant="error">
-          There was an error loading child accounts.
-        </Notice>
-      );
-    }
-
-    return childAccounts?.data.map((childAccount, idx) => (
-      <StyledChildAccountLinkButton
-        onClick={() => {
-          // TODO: Parent/Child - M3-7430
-          // handleAccountSwitch();
-        }}
-        key={`child-account-link-button-${idx}`}
-      >
-        {childAccount.company}
-      </StyledChildAccountLinkButton>
-    ));
-  }, [childAccounts, error, isLoading]);
+    refreshPage();
+  }, [onClose, handleProxyTokenRevocation, refreshPage]);
 
   return (
-    <Drawer onClose={handleClose} open={open} title="Switch Account">
-      <StyledTypography>
+    <Drawer onClose={onClose} open={open} title="Switch Account">
+      {isProxyTokenError.length > 0 && (
+        <Notice text={isProxyTokenError[0].reason} variant="error" />
+      )}
+      {isParentTokenError.length > 0 && (
+        <Notice text={isParentTokenError[0].reason} variant="error" />
+      )}
+      <Typography
+        sx={(theme) => ({
+          margin: `${theme.spacing(3)} 0`,
+        })}
+      >
         Select an account to view and manage its settings and configurations
-        {user?.user_type === 'proxy' && (
+        {isProxyUser && (
           <>
-            {' '}
-            or {/* TODO: Parent/Child - M3-7430 */}
+            {' or '}
             <StyledLinkButton
+              onClick={() => {
+                sendSwitchToParentAccountEvent();
+                handleSwitchToParentAccount();
+              }}
               aria-label="parent-account-link"
-              onClick={() => null}
             >
               switch back to your account
             </StyledLinkButton>
           </>
         )}
         .
-      </StyledTypography>
-      <Stack alignItems={'flex-start'} data-testid="child-account-list">
-        {renderChildAccounts()}
-      </Stack>
+      </Typography>
+      <ChildAccountList
+        currentTokenWithBearer={
+          isProxyUser ? currentParentTokenWithBearer : currentTokenWithBearer
+        }
+        onClose={onClose}
+        onSwitchAccount={handleSwitchToChildAccount}
+        userType={userType}
+      />
     </Drawer>
   );
 };
-
-const StyledTypography = styled(Typography)(({ theme }) => ({
-  margin: `${theme.spacing(3)} 0`,
-}));
-
-const StyledChildAccountLinkButton = styled(StyledLinkButton)(({ theme }) => ({
-  marginBottom: theme.spacing(2),
-}));

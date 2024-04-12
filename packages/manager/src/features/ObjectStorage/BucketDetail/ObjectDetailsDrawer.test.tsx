@@ -1,9 +1,8 @@
 import { act, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { profileFactory } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
@@ -41,13 +40,11 @@ const props: ObjectDetailsDrawerProps = {
 describe('ObjectDetailsDrawer', () => {
   it('renders formatted size, formatted last modified, truncated URL', async () => {
     server.use(
-      rest.get('*/profile', (req, res, ctx) =>
-        res(ctx.json(profileFactory.build({ timezone: 'utc' })))
+      http.get('*/profile', () =>
+        HttpResponse.json(profileFactory.build({ timezone: 'utc' }))
       )
     );
-    const { getByText } = renderWithTheme(<ObjectDetailsDrawer {...props} />, {
-      queryClient: new QueryClient(),
-    });
+    const { getByText } = renderWithTheme(<ObjectDetailsDrawer {...props} />);
 
     // The date rendering depends on knowing the profile timezone
     await waitFor(() =>

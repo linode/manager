@@ -9,22 +9,21 @@ import { makeStyles } from 'tss-react/mui';
 import { Button } from 'src/components/Button/Button';
 import { ClickAwayListener } from 'src/components/ClickAwayListener';
 import { H1Header } from 'src/components/H1Header/H1Header';
-import { fadeIn } from 'src/styles/keyframes';
 
 import { TextField, TextFieldProps } from '../TextField';
 
 const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
   (theme: Theme, _params, classes) => ({
     button: {
-      '&:first-of-type': {
+      '&[aria-label="Save"]': {
         marginLeft: theme.spacing(2),
         [theme.breakpoints.down('md')]: {
           marginLeft: theme.spacing(2),
         },
       },
       background: 'transparent !important',
+      height: 34,
       marginLeft: 0,
-      marginTop: 2,
       minWidth: 'auto',
       paddingLeft: 6,
       paddingRight: 6,
@@ -63,7 +62,7 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
           color: theme.color.grey1,
         },
       },
-      border: '1px solid transparent',
+      borderLeft: '1px solid transparent',
     },
     input: {
       fontFamily: theme.font.bold,
@@ -92,7 +91,6 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
       wordBreak: 'break-all',
     },
     textField: {
-      animation: `${fadeIn} .3s ease-in-out forwards`,
       margin: 0,
     },
     underlineOnHover: {
@@ -105,7 +103,12 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
 
 interface Props {
   className?: string;
+  disabledBreadcrumbEditButton?: boolean;
   errorText?: string;
+  /**
+   * Send event analytics
+   */
+  handleAnalyticsEvent?: () => void;
   /**
    * Optional link for the text when it is not in editing mode
    */
@@ -122,9 +125,13 @@ interface Props {
    * The text inside the textbox
    */
   text: string;
+  /**
+   * Optional suffix to append to the text when it is not in editing mode
+   */
+  textSuffix?: string;
 }
 
-type PassThroughProps = Props & Omit<TextFieldProps, 'label'>;
+interface PassThroughProps extends Props, Omit<TextFieldProps, 'label'> {}
 
 export const EditableText = (props: PassThroughProps) => {
   const { classes } = useStyles();
@@ -133,11 +140,14 @@ export const EditableText = (props: PassThroughProps) => {
   const [text, setText] = React.useState(props.text);
   const {
     className,
+    disabledBreadcrumbEditButton,
     errorText,
+    handleAnalyticsEvent,
     labelLink,
     onCancel,
     onEdit,
     text: propText,
+    textSuffix,
     ...rest
   } = props;
 
@@ -155,6 +165,10 @@ export const EditableText = (props: PassThroughProps) => {
   };
 
   const openEdit = () => {
+    // Send analytics when pencil icon is clicked.
+    if (handleAnalyticsEvent) {
+      handleAnalyticsEvent();
+    }
     setIsEditing(true);
   };
 
@@ -192,7 +206,11 @@ export const EditableText = (props: PassThroughProps) => {
     }
   };
   const labelText = (
-    <H1Header className={classes.root} data-qa-editable-text title={text} />
+    <H1Header
+      className={classes.root}
+      data-qa-editable-text
+      title={`${text}${textSuffix ?? ''}`}
+    />
   );
 
   return !isEditing && !errorText ? (
@@ -212,6 +230,7 @@ export const EditableText = (props: PassThroughProps) => {
         aria-label={`Edit ${text}`}
         className={`${classes.button} ${classes.editIcon}`}
         data-qa-edit-button
+        disabled={disabledBreadcrumbEditButton}
         onClick={openEdit}
       >
         <Edit className={classes.icon} />
@@ -239,6 +258,7 @@ export const EditableText = (props: PassThroughProps) => {
           value={text}
         />
         <Button
+          aria-label="Save"
           className={classes.button}
           data-qa-save-edit
           onClick={finishEditing}
@@ -246,6 +266,7 @@ export const EditableText = (props: PassThroughProps) => {
           <Check className={classes.icon} />
         </Button>
         <Button
+          aria-label="Cancel"
           className={classes.button}
           data-qa-cancel-edit
           onClick={cancelEditing}

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useLoadBalancerRouteDeleteMutation } from 'src/queries/aglb/routes';
+import { useLoadBalancerRouteDeleteMutation } from 'src/queries/aclb/routes';
 
 import type { Route } from '@linode/api-v4';
 
@@ -16,14 +16,26 @@ interface Props {
 export const DeleteRouteDialog = (props: Props) => {
   const { loadbalancerId, onClose, open, route } = props;
 
-  const { error, isLoading, mutateAsync } = useLoadBalancerRouteDeleteMutation(
-    loadbalancerId,
-    route?.id ?? -1
-  );
+  const {
+    error,
+    isLoading,
+    mutateAsync,
+    reset,
+  } = useLoadBalancerRouteDeleteMutation(loadbalancerId, route?.id ?? -1);
+
+  const handleClose = () => {
+    // Clear the error when the dialog closes so that is does not persist
+    reset();
+    onClose();
+  };
 
   const onDelete = async () => {
-    await mutateAsync();
-    onClose();
+    try {
+      await mutateAsync();
+      handleClose();
+    } catch (error) {
+      // Swallow error
+    }
   };
 
   return (
@@ -37,12 +49,12 @@ export const DeleteRouteDialog = (props: Props) => {
           }}
           secondaryButtonProps={{
             label: 'Cancel',
-            onClick: onClose,
+            onClick: handleClose,
           }}
         />
       }
       error={error?.[0]?.reason}
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       title={`Delete Route ${route?.label}?`}
     >

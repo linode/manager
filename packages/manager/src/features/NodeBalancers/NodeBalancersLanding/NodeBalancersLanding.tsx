@@ -14,14 +14,15 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerTableRow } from './NodeBalancerTableRow';
 import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';
-
 const preferenceKey = 'nodebalancers';
 
 export const NodeBalancersLanding = () => {
@@ -35,6 +36,9 @@ export const NodeBalancersLanding = () => {
 
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
+  const isRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_nodebalancers',
+  });
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -86,6 +90,14 @@ export const NodeBalancersLanding = () => {
     <>
       <DocumentTitleSegment segment="NodeBalancers" />
       <LandingHeader
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'NodeBalancers',
+          }),
+        }}
+        disabledCreateButton={isRestricted}
         docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
         entity="NodeBalancer"
         onButtonClick={() => history.push('/nodebalancers/create')}

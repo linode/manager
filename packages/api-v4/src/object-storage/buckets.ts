@@ -72,6 +72,23 @@ export const getBucketsInCluster = (
   );
 
 /**
+ * getBucketsInRegion
+ *
+ * Gets a list of a user's Object Storage Buckets in the specified region.
+ */
+export const getBucketsInRegion = (
+  regionId: string,
+  params?: Params,
+  filters?: Filter
+) =>
+  Request<Page<ObjectStorageBucket>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+    setURL(`${API_ROOT}/object-storage/buckets/${encodeURIComponent(regionId)}`)
+  );
+
+/**
  * createBucket
  *
  * Creates a new Bucket on your account.
@@ -101,6 +118,35 @@ export const deleteBucket = ({
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
         cluster
+      )}/${encodeURIComponent(label)}`
+    ),
+    setMethod('DELETE')
+  );
+
+/**
+ * deleteBucketWithRegion
+ *
+ * Removes a Bucket from your account with region.
+ *
+ * NOTE: Attempting to delete a non-empty bucket will result in an error.
+ */
+/*
+   @TODO OBJ Multicluster: deleteBucketWithRegion is a function,
+   once feature is rolled out we replace it with existing deleteBucket
+   by updating it with region instead of cluster.
+  */
+
+export const deleteBucketWithRegion = ({
+  region,
+  label,
+}: {
+  region: string;
+  label: string;
+}) =>
+  Request<ObjectStorageBucket>(
+    setURL(
+      `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
+        region
       )}/${encodeURIComponent(label)}`
     ),
     setMethod('DELETE')

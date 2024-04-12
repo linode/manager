@@ -15,10 +15,10 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import {
-  AGLB_DOCS,
-  AGLB_FEEDBACK_FORM_URL,
+  ACLB_DOCS,
+  ACLB_FEEDBACK_FORM_URL,
 } from 'src/features/LoadBalancers/constants';
-import { useLoadBalancerQuery } from 'src/queries/aglb/loadbalancers';
+import { useLoadBalancerQuery } from 'src/queries/aclb/loadbalancers';
 
 const LoadBalancerSummary = React.lazy(() =>
   import('./LoadBalancerSummary').then((module) => ({
@@ -110,16 +110,16 @@ export const LoadBalancerDetail = () => {
         breadcrumbProps={{
           crumbOverrides: [
             {
-              label: 'Global Load Balancers',
+              label: 'Cloud Load Balancers',
               position: 1,
             },
           ],
           labelOptions: { noCap: true },
           pathname: `/loadbalancers/${loadbalancer?.label}`,
         }}
-        betaFeedbackLink={AGLB_FEEDBACK_FORM_URL}
+        betaFeedbackLink={ACLB_FEEDBACK_FORM_URL}
         docsLabel="Docs"
-        docsLink={AGLB_DOCS.GettingStarted}
+        docsLink={ACLB_DOCS.GettingStarted}
       />
       <Tabs index={tabIndex === -1 ? 0 : tabIndex} onChange={() => null}>
         <TabLinkList

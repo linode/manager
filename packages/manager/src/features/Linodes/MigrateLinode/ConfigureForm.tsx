@@ -1,10 +1,14 @@
 import * as React from 'react';
 
+import EdgeServer from 'src/assets/icons/entityIcons/edge-server.svg';
 import { Flag } from 'src/components/Flag';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { sxEdgeIcon } from 'src/components/RegionSelect/RegionSelect.styles';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useFlags } from 'src/hooks/useFlags';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';
@@ -49,6 +53,7 @@ export const ConfigureForm = React.memo((props: Props) => {
     selectedRegion,
   } = props;
 
+  const flags = useFlags();
   const { data: regions } = useRegionsQuery();
   const { data: currentLinodeType } = useTypeQuery(
     linodeType || '',
@@ -98,6 +103,8 @@ export const ConfigureForm = React.memo((props: Props) => {
     [backupEnabled, currentLinodeType]
   );
 
+  const linodeIsInEdgeRegion = currentActualRegion?.site_type === 'edge';
+
   return (
     <StyledPaper>
       <Typography variant="h3">Configure Migration</Typography>
@@ -109,6 +116,14 @@ export const ConfigureForm = React.memo((props: Props) => {
             <Typography>{`${getRegionCountryGroup(currentActualRegion)}: ${
               currentActualRegion?.label ?? currentRegion
             }`}</Typography>
+            {linodeIsInEdgeRegion && (
+              <TooltipIcon
+                icon={<EdgeServer />}
+                status="other"
+                sxTooltipIcon={sxEdgeIcon}
+                text="This region is an Edge server."
+              />
+            )}
           </StyledDiv>
           {shouldDisplayPriceComparison && (
             <MigrationPricing
@@ -119,6 +134,9 @@ export const ConfigureForm = React.memo((props: Props) => {
 
         <StyledMigrationBox>
           <RegionSelect
+            regionFilter={
+              flags.gecko2?.enabled && linodeIsInEdgeRegion ? 'edge' : 'core'
+            }
             regions={
               regions?.filter(
                 (eachRegion) => eachRegion.id !== currentRegion

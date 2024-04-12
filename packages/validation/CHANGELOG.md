@@ -1,12 +1,52 @@
-## [2024-01-08] - v0.37.0
+## [2024-04-01] - v0.43.0
 
+### Changed:
+
+- Make `image` nullable in `CreateLinodeSchema` ([#10281](https://github.com/linode/manager/pull/10281))
+- Enforce that the `certificates` array is empty for `http` and `tcp` configurations ([#10311](https://github.com/linode/manager/pull/10311))
+- Allow `firewall_id` to be `null` in `CreateLinodeSchema` ([#10319](https://github.com/linode/manager/pull/10319))
+
+## [2024-03-18] - v0.42.0
+
+
+### Changed:
+
+- Update TCP rules to not include a `match_condition` ([#10264](https://github.com/linode/manager/pull/10264))
+
+
+## [2024-03-04] - v0.41.0
+
+### Upcoming Features:
+
+- Add Placement Group data in Create Linode payload ([#10195](https://github.com/linode/manager/pull/10195))
+- Placement Group types update ([#10200](https://github.com/linode/manager/pull/10200))
+
+## [2024-02-13] - v0.40.0
+
+### Changed:
+
+- ip_ranges field in LinodeInterfaceSchema no longer limited to 1 element ([#10089](https://github.com/linode/manager/pull/10089))
+
+## [2024-02-05] - v0.39.0
+
+### Upcoming Features:
+
+- Add `path_regex` as a valid ACLB rule match field ([#10126](https://github.com/linode/manager/pull/10126))
+
+## [2024-01-22] - v0.38.0
+
+### Changed:
+
+- Revise createObjectStorageKeysSchema to include optional 'regions' field ([#10063](https://github.com/linode/manager/pull/10063))
+- Make `allow_list` not required for updateDatabaseSchema and added optional `type` property ([#9869](https://github.com/linode/manager/pull/9869))
+
+## [2024-01-08] - v0.37.0
 
 ### Tech Stories:
 
 - Add Lint Github Action ([#9973](https://github.com/linode/manager/pull/9973))
 
 ## [2023-12-11] - v0.36.0
-
 
 ### Upcoming Features:
 
@@ -17,13 +57,11 @@
 
 ## [2023-11-13] - v0.35.0
 
-
 ### Upcoming Features:
 
 - Add `CreateLoadBalancerEndpointSchema`, `CreateLoadBalancerServiceTargetSchema`, `CreateLoadBalancerRuleSchema`, `ConfigurationSchema`, and `CreateLoadBalancerSchema` for AGLB ([#9848](https://github.com/linode/manager/pull/9848))
 - Add `UpdateConfigurationSchema` for AGLB ([#9853](https://github.com/linode/manager/pull/9853))
 - Add missing label validation to `UpdateCertificateSchema` for AGLB ([#9880](https://github.com/linode/manager/pull/9880))
-
 
 ## [2023-10-30] - v0.34.0
 

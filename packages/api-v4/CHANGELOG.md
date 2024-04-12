@@ -1,16 +1,82 @@
-## [2024-01-08] - v0.107.0
-
+## [2024-04-01] - v0.113.0
 
 ### Added:
 
--  Optional `headers` to `getProfile` function ([#9987](https://github.com/linode/manager/pull/9987))
+- Event type for database resize create (#10262)
+- jsdoc style comments to `CreateLinodeRequest` based on API documentation ([#10319](https://github.com/linode/manager/pull/10319))
+
+### Changed:
+
+- Allow `image` to be `null` in `CreateLinodeRequest` ([#10281](https://github.com/linode/manager/pull/10281))
+- Allow `firewall_id` to be `null` in `CreateLinodeRequest` ([#10319](https://github.com/linode/manager/pull/10319))
+
+### Tech Stories:
+
+- Update `axios` to resolve `follow-redirects` CVE-2024-28849 ([#10291](https://github.com/linode/manager/pull/10291))
+
+## [2024-03-18] - v0.112.0
+
+
+### Changed:
+
+- Make `match_condition` optional in Rule types to support TCP rules ([#10264](https://github.com/linode/manager/pull/10264))
+- Make `type` and `region` required in `CreateLinodeRequest` ([#10268](https://github.com/linode/manager/pull/10268))
+
+### Upcoming Features:
+
+- Add Placement Groups events types ([#10221](https://github.com/linode/manager/pull/10221))
+- Add temporary deleteBucketWithRegion method for OBJ Multicluster ([#10244](https://github.com/linode/manager/pull/10244))
+
+## [2024-03-04] - v0.111.0
+
+### Changed:
+
+- Rename `database_scale` type to `database_resize` ([#10193](https://github.com/linode/manager/pull/10193))
+
+### Upcoming Features:
+
+- Accept placement group in Linode create payload ([#10195](https://github.com/linode/manager/pull/10195))
+
+## [2024-02-20] - v0.110.0
+
+### Upcoming Features:
+
+- Update /account and /profile UserType from `null` to `"default"` ([#10176](https://github.com/linode/manager/pull/10176))
+
+## [2024-02-05] - v0.109.0
+
+### Fixed:
+
+- Accept `InterfacePayload` type when creating a Linode with interfaces specified ([#10086](https://github.com/linode/manager/pull/10086))
+- Remove incorrect `_initial` property on `Event` type ([#9949](https://github.com/linode/manager/pull/9949))
+
+### Upcoming Features:
+
+- Add `user_type` to /profile endpoint for Parent/Child user roles ([#10080](https://github.com/linode/manager/pull/10080))
+- Add `Akamai Cloud Load Balancer` to `AccountCapability` type ([#10098](https://github.com/linode/manager/pull/10098))
+
+## [2024-01-22] - v0.108.0
+
+### Added:
+
+- AGLB endpoint health endpoints ([#10008](https://github.com/linode/manager/pull/10008))
+- Ability to scale up Database instances ([#9869](https://github.com/linode/manager/pull/9869))
+
+### Changed:
+
+- Adjust several OBJ types to accommodate forthcoming API changes ([#9996](https://github.com/linode/manager/pull/9996))
+
+## [2024-01-08] - v0.107.0
+
+### Added:
+
+- Optional `headers` to `getProfile` function ([#9987](https://github.com/linode/manager/pull/9987))
 
 ### Tech Stories:
 
 - Add Lint GitHub Action ([#9973](https://github.com/linode/manager/pull/9973))
 
 ## [2023-12-11] - v0.106.0
-
 
 ### Added:
 
@@ -29,7 +95,6 @@
 - Add new endpoints for Parent/Child account switching ([#9944](https://github.com/linode/manager/pull/9944))
 
 ## [2023-11-13] - v0.105.0
-
 
 ### Upcoming Features:
 

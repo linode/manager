@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useAccountUserDeleteMutation } from 'src/queries/accountUsers';
+import { useAccountUserDeleteMutation } from 'src/queries/account/users';
 
 interface Props {
   onClose: () => void;

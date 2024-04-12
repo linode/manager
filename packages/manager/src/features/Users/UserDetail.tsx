@@ -1,9 +1,9 @@
-import { getUser, updateUser } from '@linode/api-v4/lib/account';
+import { User, getUser, updateUser } from '@linode/api-v4/lib/account';
 import { updateProfile } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
+import { useQueryClient } from '@tanstack/react-query';
 import { clone } from 'ramda';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
 import {
   matchPath,
   useHistory,
@@ -18,7 +18,8 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { queryKey } from 'src/queries/account';
+import { accountQueries } from 'src/queries/account/queries';
+import { useAccountUser } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -26,11 +27,12 @@ import UserPermissions from './UserPermissions';
 import { UserProfile } from './UserProfile';
 
 export const UserDetail = () => {
-  const { username: usernameParam } = useParams<{ username: string }>();
+  const { username: currentUsername } = useParams<{ username: string }>();
   const location = useLocation<{ newUsername: string; success: boolean }>();
   const history = useHistory();
 
   const { data: profile, refetch: refreshProfile } = useProfile();
+  const { data: user } = useAccountUser(currentUsername ?? '');
 
   const queryClient = useQueryClient();
 
@@ -62,17 +64,17 @@ export const UserDetail = () => {
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
-      routeName: `/account/users/${usernameParam}/profile`,
+      routeName: `/account/users/${currentUsername}/profile`,
       title: 'User Profile',
     },
     {
-      routeName: `/account/users/${usernameParam}/permissions`,
+      routeName: `/account/users/${currentUsername}/permissions`,
       title: 'User Permissions',
     },
   ];
 
   React.useEffect(() => {
-    getUser(usernameParam)
+    getUser(currentUsername)
       .then((user) => {
         setOriginalUsername(user.username);
         setUsername(user.username);
@@ -141,7 +143,15 @@ export const UserDetail = () => {
         if (profile?.username === originalUsername) {
           refreshProfile();
         } else {
-          queryClient.invalidateQueries([queryKey, 'users']);
+          // Invalidate the paginated store
+          queryClient.invalidateQueries(
+            accountQueries.users._ctx.paginated._def
+          );
+          // set the user in the store
+          queryClient.setQueryData<User>(
+            accountQueries.users._ctx.user(user.username).queryKey,
+            user
+          );
         }
 
         history.replace(`/account/users/${user.username}`, {
@@ -193,6 +203,8 @@ export const UserDetail = () => {
     history.push(tabs[index].routeName);
   };
 
+  const isProxyUser = user?.user_type === 'proxy';
+
   if (error) {
     return (
       <React.Fragment>
@@ -221,7 +233,7 @@ export const UserDetail = () => {
         )}
         onChange={navToURL}
       >
-        <TabLinkList tabs={tabs} />
+        {!isProxyUser && <TabLinkList tabs={tabs} />}
 
         {createdUsername && (
           <Notice
@@ -250,10 +262,10 @@ export const UserDetail = () => {
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             <UserPermissions
+              accountUsername={profile?.username}
               clearNewUser={clearNewUser}
-              currentUser={profile?.username}
+              currentUsername={username}
               queryClient={queryClient}
-              username={username}
             />
           </SafeTabPanel>
         </TabPanels>

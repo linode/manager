@@ -11,20 +11,20 @@ import { TableRow } from 'src/components/TableRow';
 import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import {
   getProgressOrDefault,
   linodeInTransition,
   transitionText,
 } from 'src/features/Linodes/transitions';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import { useInProgressEvents } from 'src/queries/events/events';
 import { useTypeQuery } from 'src/queries/types';
-import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import { IPAddress } from '../IPAddress';
-import { LinodeActionMenu } from '../LinodeActionMenu';
 import { LinodeHandlers } from '../LinodesLanding';
 import { RegionIndicator } from '../RegionIndicator';
 import { getLinodeIconStatus, parseMaintenanceStartTime } from '../utils';
@@ -34,7 +34,9 @@ import {
   StyledMaintenanceTableCell,
 } from './LinodeRow.styles';
 
-type Props = LinodeWithMaintenance & { handlers: LinodeHandlers };
+interface Props extends LinodeWithMaintenance {
+  handlers: LinodeHandlers;
+}
 
 export const LinodeRow = (props: Props) => {
   const {
@@ -53,7 +55,11 @@ export const LinodeRow = (props: Props) => {
 
   const { data: linodeType } = useTypeQuery(type ?? '', type !== null);
 
-  const recentEvent = useRecentEventForLinode(id);
+  const { data: events } = useInProgressEvents();
+
+  const recentEvent = events?.find(
+    (e) => e.entity?.type === 'linode' && e.entity.id === id
+  );
 
   const isBareMetalInstance = linodeType?.class === 'metal';
 
