@@ -85,7 +85,12 @@ export const SizeField = (props: Props) => {
     </FormHelperText>
   );
 
-  const dynamicPricingHelperText = !resize && !isFromLinode && (
+  // The price display is only visible next to the size field on the Volumes Create page.
+  const shouldShowPrice = !resize && !isFromLinode;
+  const shouldShowPriceLoadingSpinner =
+    regionId && isLoading && shouldShowPrice;
+
+  const dynamicPricingHelperText = shouldShowPrice && (
     <Box marginLeft={'10px'} marginTop={'4px'}>
       <Typography>Select a region to see cost per month.</Typography>
     </Box>
@@ -111,7 +116,7 @@ export const SizeField = (props: Props) => {
         {...rest}
       />
       <div className={classes.priceDisplay}>
-        {regionId && isLoading ? (
+        {shouldShowPriceLoadingSpinner ? (
           <CircularProgress size={16} />
         ) : hasSelectedRegion ? (
           priceDisplayText
