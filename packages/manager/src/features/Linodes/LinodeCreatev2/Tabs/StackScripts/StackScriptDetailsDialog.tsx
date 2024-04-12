@@ -7,8 +7,17 @@ import { StackScript } from 'src/components/StackScript/StackScript';
 import { useStackScriptQuery } from 'src/queries/stackscripts';
 
 interface Props {
+  /**
+   * The id of the StackScript
+   */
   id: number | undefined;
+  /**
+   * Function called when when the dialog is closed
+   */
   onClose: () => void;
+  /**
+   * Controls the open/close state of the dialog
+   */
   open: boolean;
 }
 

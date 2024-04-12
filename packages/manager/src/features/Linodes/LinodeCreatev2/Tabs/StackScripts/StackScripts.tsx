@@ -22,6 +22,18 @@ export const StackScripts = () => {
   const { params, updateParams } = useLinodeCreateQueryParams();
   const { formState, reset } = useFormContext<CreateLinodeRequest>();
 
+  const onTabChange = (index: number) => {
+    // Update the "subtype" query param. (This switches between "Community" and "Account" tabs).
+    updateParams({ stackScriptID: undefined, subtype: tabs[index] });
+    // Reset the selected image, the selected StackScript, and the StackScript data when changing tabs.
+    reset((prev) => ({
+      ...prev,
+      image: null,
+      stackscript_data: null,
+      stackscript_id: null,
+    }));
+  };
+
   return (
     <Stack spacing={3}>
       <Paper>
@@ -35,16 +47,8 @@ export const StackScripts = () => {
           />
         )}
         <Tabs
-          onChange={(index) => {
-            updateParams({ stackScriptID: undefined, subtype: tabs[index] });
-            reset((prev) => ({
-              ...prev,
-              image: null,
-              stackscript_data: null,
-              stackscript_id: null,
-            }));
-          }}
           index={getStackScriptTabIndex(params.subtype)}
+          onChange={onTabChange}
         >
           <TabList>
             <Tab>Account StackScripts</Tab>

@@ -67,6 +67,14 @@ export const LinodeCreatev2 = () => {
 
   const currentTabIndex = getTabIndex(params.type);
 
+  const onTabChange = (index: number) => {
+    const newTab = tabs[index];
+    // Update tab "type" query param. (This changes the selected tab)
+    setParams({ type: newTab });
+    // Reset the form values
+    methods.reset(defaultValuesMap[newTab]);
+  };
+
   return (
     <FormProvider {...methods}>
       <DocumentTitleSegment segment="Create a Linode" />
@@ -78,14 +86,7 @@ export const LinodeCreatev2 = () => {
       <form onSubmit={methods.handleSubmit(onSubmit)}>
         <Error />
         <Stack gap={3}>
-          <Tabs
-            onChange={(index) => {
-              const newTab = tabs[index];
-              setParams({ type: newTab });
-              methods.reset(defaultValuesMap[newTab]);
-            }}
-            index={currentTabIndex}
-          >
+          <Tabs index={currentTabIndex} onChange={onTabChange}>
             <TabList>
               <Tab>Distributions</Tab>
               <Tab>Marketplace</Tab>

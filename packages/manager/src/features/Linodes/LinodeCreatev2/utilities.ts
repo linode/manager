@@ -187,6 +187,12 @@ const defaultPublicInterface = {
   purpose: 'public',
 } as const;
 
+/**
+ * This function initializes the Linode Create flow form
+ * when the form mounts.
+ *
+ * The default values are dependent on the query params present.
+ */
 export const defaultValues = async (): Promise<CreateLinodeRequest> => {
   const queryParams = getQueryParamsFromQueryString(window.location.search);
 
@@ -197,7 +203,7 @@ export const defaultValues = async (): Promise<CreateLinodeRequest> => {
   const imageID = queryParams.imageID;
 
   return {
-    image: stackScriptID ? undefined : imageID ?? 'linode/debian11',
+    image: stackScriptID ? imageID : imageID ?? 'linode/debian11',
     interfaces: [
       defaultVPCInterface,
       defaultVLANInterface,
@@ -242,6 +248,9 @@ const defaultValuesForStackScripts = {
   type: '',
 };
 
+/**
+ * A map that conatins default values for each Tab of the Linode Create flow.
+ */
 export const defaultValuesMap: Record<LinodeCreateType, CreateLinodeRequest> = {
   Backups: defaultValuesForImages,
   'Clone Linode': defaultValuesForImages,
