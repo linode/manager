@@ -14,7 +14,10 @@ import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
-import { mockGetProfile } from 'support/intercepts/profile';
+import {
+  mockGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
@@ -23,7 +26,7 @@ import { PARENT_USER } from 'src/features/Account/constants';
 /**
  * Initialize test users before tests
  *
- * @param mockProfile - Account porfile.
+ * @param mockProfile - Account profile.
  * @param enableChildAccountAccess - Child account access switch.
  *
  * @returns User array.
@@ -31,34 +34,32 @@ import { PARENT_USER } from 'src/features/Account/constants';
 const initTestUsers = (profile: Profile, enableChildAccountAccess: boolean) => {
   const mockProfile = profile;
 
-  const mockUser = accountUserFactory.build({
-    username: 'unrestricted-user',
-    restricted: false,
-  });
+  const mockRestrictedParentWithoutChildAccountAccess = accountUserFactory.build(
+    {
+      username: 'restricted-parent-user-without-child-account-access',
+      restricted: true,
+      user_type: 'parent',
+    }
+  );
 
-  const mockRestrictedUser = accountUserFactory.build({
-    username: 'restricted-user',
-    restricted: false,
-  });
-
-  const mockChildUser = accountUserFactory.build({
-    username: 'child-user',
-    restricted: false,
-    user_type: 'child',
-  });
-
-  const mockProxyUser = accountUserFactory.build({
-    username: 'proxy-user',
-    restricted: false,
-    user_type: 'proxy',
+  const mockRestrictedParentWithChildAccountAccess = accountUserFactory.build({
+    username: 'restricted-parent-user-with-child-account-access',
+    restricted: true,
+    user_type: 'parent',
   });
 
   const mockUsers = [
-    mockUser,
-    mockRestrictedUser,
-    mockChildUser,
-    mockProxyUser,
+    mockRestrictedParentWithoutChildAccountAccess,
+    mockRestrictedParentWithChildAccountAccess,
   ];
+
+  const mockParentNoAccountAccessGrants = grantsFactory.build({
+    global: { child_account_access: false },
+  });
+
+  const mockParentWithAccountAccessGrants = grantsFactory.build({
+    global: { child_account_access: true },
+  });
 
   const mockProfileGrants = grantsFactory.build({
     global: { child_account_access: enableChildAccountAccess },
@@ -72,11 +73,17 @@ const initTestUsers = (profile: Profile, enableChildAccountAccess: boolean) => {
 
   // Initially mock user with unrestricted account access.
   mockGetUsers(mockUsers).as('getUsers');
-  mockUsers.forEach((user) => {
-    mockGetUser(user);
-    mockGetUserGrantsUnrestrictedAccess(user.username);
-  });
-  mockGetUserGrants(mockProfile.username, mockProfileGrants);
+  mockGetUser(mockRestrictedParentWithoutChildAccountAccess);
+  mockGetUserGrants(
+    mockRestrictedParentWithoutChildAccountAccess.username,
+    mockParentNoAccountAccessGrants
+  );
+  mockGetUser(mockRestrictedParentWithChildAccountAccess);
+  mockGetUserGrants(
+    mockRestrictedParentWithChildAccountAccess.username,
+    mockParentWithAccountAccessGrants
+  );
+  mockGetProfileGrants(mockProfileGrants);
   mockGetProfile(mockProfile);
 
   return mockUsers;
@@ -91,7 +98,7 @@ describe('Users landing page', () => {
    * Confirm that a "Child account access" column is present in the users table for parent users, but not for other types (default, proxy, and child))
    * Confirm the column reflects the status of child account access for the corresponding users
    */
-  it('shows "Child account access" column for unrestricted parent users', () => {
+  it('shows "Child account access" column for unrestricted parent users and shows restricted parent users who have the correct grant status', () => {
     const mockProfile = profileFactory.build({
       username: 'unrestricted-parent-user',
       restricted: false,
@@ -110,29 +117,21 @@ describe('Users landing page', () => {
       cy.get(`[aria-label="User ${user.username}"]`)
         .should('be.visible')
         .within(() => {
-          // The status should be "Disabled" when the user with "child_account_access" grant
-          cy.findByText('Enabled').should('be.visible');
+          if (
+            user.username ===
+            'restricted-parent-user-without-child-account-access'
+          ) {
+            // The status should be "Disabled" when the user without "child_account_access" grant
+            cy.findByText('Disabled').should('be.visible');
+          } else {
+            // The status should be "Enabled" when the user without "child_account_access" grant
+            cy.findByText('Enabled').should('be.visible');
+          }
         });
     });
   });
 
-  it('shows "Child account access" column for restricted parent users child_account_access grant set to false', () => {
-    const mockProfile = profileFactory.build({
-      username: 'restricted-parent-user',
-      restricted: true,
-      user_type: 'parent',
-    });
-
-    initTestUsers(mockProfile, false);
-
-    // Navigate to Users & Grants page.
-    cy.visitWithLogin('/account/users');
-
-    // Confirm that "Child account access" column is present
-    cy.findByText('Child Account Access').should('be.visible');
-  });
-
-  it('shows "Child account access" column for restricted parent users child_account_access grant set to false', () => {
+  it('"Child account access" column is visiable for restricted parent users child_account_access grant set to true', () => {
     const mockProfile = profileFactory.build({
       username: 'restricted-parent-user',
       restricted: true,
@@ -146,6 +145,22 @@ describe('Users landing page', () => {
 
     // Confirm that "Child account access" column is present
     cy.findByText('Child Account Access').should('be.visible');
+  });
+
+  it('"Child account access" column is not visiable for restricted parent users child_account_access grant set to false', () => {
+    const mockProfile = profileFactory.build({
+      username: 'restricted-parent-user',
+      restricted: true,
+      user_type: 'parent',
+    });
+
+    initTestUsers(mockProfile, false);
+
+    // Navigate to Users & Grants page.
+    cy.visitWithLogin('/account/users');
+
+    // Confirm that "Child account access" column is not present
+    cy.findByText('Child Account Access').should('not.exist');
   });
 
   it('hides "Child account access" column for default users', () => {
