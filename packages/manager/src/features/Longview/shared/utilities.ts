@@ -371,7 +371,6 @@ export const getMaxUnitAndFormatNetwork = (
 
 export const getMaxUnit = (stats: Stat[][]) => {
   const max = Math.max(...stats.map(statMax));
-  console.log(...stats.map(statMax), readableBytes(max * 1024))
   return readableBytes(max * 1024).unit; // LV always returns in KB, need bytes here
 };
 
