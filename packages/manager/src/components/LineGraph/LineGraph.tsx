@@ -11,6 +11,7 @@ import {
 import { curry } from 'ramda';
 import * as React from 'react';
 
+import { humanizeLargeData } from 'src/components/AreaChart/utils';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
@@ -113,22 +114,6 @@ const lineOptions: ChartDataSets = {
   lineTension: 0,
   pointHitRadius: 10,
   pointRadius: 0,
-};
-
-const humanizeLargeData = (value: number) => {
-  if (value >= 1000000000000) {
-    return value / 1000000000000 + 'T';
-  }
-  if (value >= 1000000000) {
-    return value / 1000000000 + 'B';
-  }
-  if (value >= 1000000) {
-    return value / 1000000 + 'M';
-  }
-  if (value >= 1000) {
-    return value / 1000 + 'K';
-  }
-  return value;
 };
 
 /**

@@ -1,5 +1,6 @@
 import {
   getAccessibleTimestamp,
+  humanizeLargeData,
   tooltipLabelFormatter,
   tooltipValueFormatter,
 } from './utils';
@@ -27,5 +28,16 @@ describe('tooltipValueFormatter', () => {
     expect(tooltipValueFormatter(5.434939999999999, ' Kb/s')).toBe('5.43 Kb/s');
     expect(tooltipValueFormatter(5, ' Kb/s')).toBe('5 Kb/s');
     expect(tooltipValueFormatter(0.000234, '%')).toBe('0%');
+  });
+});
+
+describe('humanizeLargeData', () => {
+  it.only('should return the value as an abbreviated string if the value is >= 1000', () => {
+    expect(humanizeLargeData(999)).toBe('999');
+    expect(humanizeLargeData(1125)).toBe('1.1K');
+    expect(humanizeLargeData(231434)).toBe('231.4K');
+    expect(humanizeLargeData(1010000)).toBe('1M');
+    expect(humanizeLargeData(12345678900)).toBe('12.3B');
+    expect(humanizeLargeData(1543212345678)).toBe('1.5T');
   });
 });
