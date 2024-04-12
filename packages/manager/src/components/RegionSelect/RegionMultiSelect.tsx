@@ -1,11 +1,18 @@
+import CloseIcon from '@mui/icons-material/Close';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { StyledListItem } from 'src/components/Autocomplete/Autocomplete.styles';
+import { Box } from 'src/components/Box';
+import { Chip } from 'src/components/Chip';
+import { Flag } from 'src/components/Flag';
 import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 import { RegionOption } from './RegionOption';
-import { StyledAutocompleteContainer } from './RegionSelect.styles';
+import {
+  StyledAutocompleteContainer,
+  StyledFlagContainer,
+} from './RegionSelect.styles';
 import {
   getRegionOptions,
   getSelectedRegionsByIds,
@@ -15,6 +22,27 @@ import type {
   RegionMultiSelectProps,
   RegionSelectOption,
 } from './RegionSelect.types';
+
+interface LabelComponentProps {
+  selection: RegionSelectOption;
+}
+
+const SelectedRegion = ({ selection }: LabelComponentProps) => {
+  return (
+    <Box
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+        flexGrow: 1,
+      }}
+    >
+      <StyledFlagContainer>
+        <Flag country={selection.data.country} />
+      </StyledFlagContainer>
+      {selection.label}
+    </Box>
+  );
+};
 
 export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
   const {
@@ -117,6 +145,17 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
               />
             );
           }}
+          renderTags={(tagValue, getTagProps) => {
+            return tagValue.map((option, index) => (
+              <Chip
+                {...getTagProps({ index })}
+                deleteIcon={<CloseIcon />}
+                key={index}
+                label={<SelectedRegion selection={option} />}
+                onDelete={() => handleRemoveOption(option.value)}
+              />
+            ));
+          }}
           sx={(theme) => ({
             [theme.breakpoints.up('md')]: {
               width: '416px',
@@ -142,7 +181,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
           onBlur={onBlur}
           options={options}
           placeholder={placeholder ?? 'Select Regions'}
-          renderTags={() => null}
           value={selectedRegions}
         />
       </StyledAutocompleteContainer>
