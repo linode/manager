@@ -70,6 +70,10 @@ export const SizeField = (props: Props) => {
 
   const { data: types, isError, isLoading } = useVolumeTypesQuery();
 
+  const helperText = resize
+    ? `This volume can range from ${resize} GB to ${MAX_VOLUME_SIZE} GB in size.`
+    : undefined;
+
   const price = getDCSpecificPriceByType({
     regionId,
     size: value,
@@ -77,10 +81,6 @@ export const SizeField = (props: Props) => {
   });
 
   const isInvalidPrice = Boolean(regionId && !price) || isError;
-
-  const helperText = resize
-    ? `This volume can range from ${resize} GB to ${MAX_VOLUME_SIZE} GB in size.`
-    : undefined;
 
   const priceDisplayText = (
     <FormHelperText>
