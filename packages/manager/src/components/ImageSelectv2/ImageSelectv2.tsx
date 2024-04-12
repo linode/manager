@@ -26,7 +26,7 @@ interface Props
   /**
    * Called when the value is changed
    */
-  onChange: (image: Image | null) => void;
+  onChange?: (image: Image | null) => void;
   /**
    * If there is only one avaiblable option, selected it by default.
    */
@@ -88,8 +88,12 @@ export const ImageSelectv2 = (props: Props) => {
         rest.disableClearable ??
         (selectIfOnlyOneOption && filteredOptions?.length === 1)
       }
+      onChange={(e, image) => {
+        if (onChange) {
+          onChange(image);
+        }
+      }}
       errorText={rest.errorText ?? error?.[0].reason}
-      onChange={(e, image) => onChange(image)}
       value={value ?? null}
     />
   );
