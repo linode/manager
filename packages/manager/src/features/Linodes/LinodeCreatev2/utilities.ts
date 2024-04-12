@@ -172,16 +172,22 @@ export const defaultValues: CreateLinodeRequest = {
  * Unfortunately, we have to wrap `yupResolver` so that we can transform the payload
  * using `getLinodeCreatePayload` before validaton happens.
  */
-export const resolver: Resolver<CreateLinodeRequest> = (
+export const resolver: Resolver<CreateLinodeRequest> = async (
   values,
   context,
   options
 ) => {
   const transformedValues = getLinodeCreatePayload(values);
 
-  return yupResolver(CreateLinodeSchema, {}, { rawValues: true })(
-    transformedValues,
-    context,
-    options
-  );
+  const { errors } = await yupResolver(
+    CreateLinodeSchema,
+    {},
+    { rawValues: true }
+  )(transformedValues, context, options);
+
+  if (errors) {
+    return { errors, values };
+  }
+
+  return { errors: {}, values };
 };
