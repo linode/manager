@@ -168,7 +168,7 @@ describe('ConfigureForm component with price comparison', () => {
     });
   });
 
-  it('shouldn render the PlacementGroupsSelect component when a region with Placement Groups capability is selected', async () => {
+  it('shouldn render the PlacementGroupsSelect component when a new region is selected', async () => {
     const wrapper = renderWithTheme(
       <ConfigureForm
         {...props}
