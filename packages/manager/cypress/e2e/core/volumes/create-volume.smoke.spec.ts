@@ -79,7 +79,7 @@ const localStorageOverrides = {
 };
 
 describe('volumes', () => {
-  it.only('creates a volume without linode from volumes page', () => {
+  it('creates a volume without linode from volumes page', () => {
     const mockVolume = volumeFactory.build({ label: randomLabel() });
     const mockVolumeTypes = volumeTypeFactory.buildList(1);
 
