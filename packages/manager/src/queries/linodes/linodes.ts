@@ -312,11 +312,20 @@ export const useLinodeMigrateMutation = (id: number) => {
   return useMutation<{}, APIError[], MigrateLinodeRequest>(
     (data) => scheduleOrQueueMigration(id, data),
     {
-      onSuccess() {
+      onSuccess(id, data) {
         queryClient.invalidateQueries([queryKey, 'paginated']);
         queryClient.invalidateQueries([queryKey, 'all']);
         queryClient.invalidateQueries([queryKey, 'infinite']);
         queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
+
+        if (data.placement_group?.id) {
+          queryClient.invalidateQueries(
+            placementGroupQueries.placementGroup(data.placement_group.id)
+              .queryKey
+          );
+          queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
+          queryClient.invalidateQueries(placementGroupQueries.paginated._def);
+        }
       },
     }
   );
