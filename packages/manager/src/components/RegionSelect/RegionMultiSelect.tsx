@@ -54,7 +54,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     helperText,
     isClearable,
     label,
-    onBlur,
     placeholder,
     regions,
     required,
@@ -79,8 +78,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
 
   const handleRegionChange = (selection: RegionSelectOption[]) => {
     setSelectedRegions(selection);
-    const selectedIds = selection.map((region) => region.value);
-    handleSelection(selectedIds);
   };
 
   useEffect(() => {
@@ -126,6 +123,10 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             option: RegionSelectOption,
             value: RegionSelectOption
           ) => option.value === value.value}
+          onBlur={() => {
+            const selectedIds = selectedRegions.map((region) => region.value);
+            handleSelection(selectedIds);
+          }}
           onChange={(_, selectedOption) =>
             handleRegionChange(selectedOption as RegionSelectOption[])
           }
@@ -178,7 +179,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
           loading={accountAvailabilityLoading}
           multiple
           noOptionsText="No results"
-          onBlur={onBlur}
           options={options}
           placeholder={placeholder ?? 'Select Regions'}
           value={selectedRegions}
