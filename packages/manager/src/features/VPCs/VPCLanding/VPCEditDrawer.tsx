@@ -10,7 +10,7 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useUpdateVPCMutation } from 'src/queries/vpcs';
+import { useUpdateVPCMutation } from 'src/queries/vpcs/vpcs';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useVPCsQuery } from 'src/queries/vpcs';
+import { useVPCsQuery } from 'src/queries/vpcs/vpcs';
 
 import { Autocomplete } from './Autocomplete/Autocomplete';
 
