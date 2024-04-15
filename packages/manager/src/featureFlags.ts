@@ -5,6 +5,7 @@ import type { NoticeVariant } from 'src/components/Notice/Notice';
 // These flags should correspond with active features flags in LD
 
 export interface TaxDetail {
+  qi_registration?: string;
   tax_id: string;
   tax_name: string;
 }
@@ -42,6 +43,11 @@ interface PlacementGroupsFlag {
   enabled: boolean;
 }
 
+interface GeckoFlag {
+  enabled: boolean;
+  ga: boolean;
+}
+
 type OneClickApp = Record<string, string>;
 
 export interface Flags {
@@ -53,7 +59,8 @@ export interface Flags {
   databases: boolean;
   disableLargestGbPlans: boolean;
   firewallNodebalancer: boolean;
-  gecko: boolean;
+  gecko: boolean; // @TODO gecko: delete this after next release
+  gecko2: GeckoFlag;
   ipv6Sharing: boolean;
   linodeCloneUiChanges: boolean;
   linodeCreateRefactor: boolean;
@@ -72,11 +79,11 @@ export interface Flags {
   referralBannerText: ReferralBannerText;
   selfServeBetas: boolean;
   soldOutChips: boolean;
+  supportTicketSeverity: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
   taxes: Taxes;
   tpaProviders: Provider[];
-  vpc: boolean;
 }
 
 type PromotionalOfferFeature =

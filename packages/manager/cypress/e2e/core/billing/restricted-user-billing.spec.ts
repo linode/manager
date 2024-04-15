@@ -5,6 +5,7 @@
 import { paymentMethodFactory, profileFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
+import { ADMINISTRATOR, PARENT_USER } from 'src/features/Account/constants';
 import { mockGetPaymentMethods, mockGetUser } from 'support/intercepts/account';
 import {
   mockAppendFeatureFlags,
@@ -173,6 +174,56 @@ const assertAddPaymentMethodEnabled = () => {
     });
 };
 
+/**
+ * Asserts that the "Make a Payment" button is disabled.
+ *
+ * Additionally confirms that clicking the "Make a Payment" button reveals
+ * a tooltip and does not open the "Make a Payment" drawer.
+ *
+ * @param tooltipText - Expected tooltip message to be shown to the user.
+ */
+const assertMakeAPaymentDisabled = (tooltipText: string) => {
+  // Confirm "Make A Payment" button is disabled, then click it.
+  ui.button
+    .findByTitle('Make a Payment')
+    .should('be.visible')
+    .should('be.disabled')
+    .click();
+
+  // Assert that "Make a Payment" drawer does not open and that tooltip is revealed.
+  cy.get(`[data-qa-drawer-title="Make a Payment"]`).should('not.exist');
+  ui.tooltip.findByText(tooltipText).should('be.visible');
+};
+
+/**
+ * Asserts that the "Make a Payment" button is enabled.
+ *
+ * Additionally confirms that clicking the "Make a Payment" button reveals
+ * a tooltip and does not open the "Make a Payment" drawer.
+ *
+ * @param tooltipText - Expected tooltip message to be shown to the user.
+ */
+const assertMakeAPaymentEnabled = () => {
+  // Confirm "Make A Payment" button is enabled, then click it.
+  ui.button
+    .findByTitle('Make a Payment')
+    .should('be.visible')
+    .should('be.enabled')
+    .click();
+
+  cy.get(`[data-qa-drawer-title="Make a Payment"]`).should('be.visible');
+  ui.drawer
+    .findByTitle('Make a Payment')
+    .should('be.visible')
+    .within(() => {
+      ui.button
+        .findByTitle('Pay Now')
+        .should('be.visible')
+        .should('be.enabled');
+      ui.drawerCloseButton.find().click();
+    });
+};
+
 describe('restricted user billing flows', () => {
   beforeEach(() => {
     mockGetPaymentMethods(mockPaymentMethods);
@@ -215,6 +266,7 @@ describe('restricted user billing flows', () => {
       cy.visitWithLogin('/account/billing');
       assertEditBillingInfoEnabled();
       assertAddPaymentMethodEnabled();
+      assertMakeAPaymentEnabled();
     });
   });
 
@@ -261,6 +313,10 @@ describe('restricted user billing flows', () => {
 
       assertEditBillingInfoDisabled(restrictedUserTooltip);
       assertAddPaymentMethodDisabled(restrictedUserTooltip);
+      assertMakeAPaymentDisabled(
+        restrictedUserTooltip +
+          ` Please contact your ${ADMINISTRATOR} to request the necessary permissions.`
+      );
     });
 
     /*
@@ -287,6 +343,10 @@ describe('restricted user billing flows', () => {
 
       assertEditBillingInfoDisabled(restrictedUserTooltip);
       assertAddPaymentMethodDisabled(restrictedUserTooltip);
+      assertMakeAPaymentDisabled(
+        restrictedUserTooltip +
+          ` Please contact your ${PARENT_USER} to request the necessary permissions.`
+      );
     });
 
     /*
@@ -323,6 +383,7 @@ describe('restricted user billing flows', () => {
       cy.findByText(mockProfileRegular.username);
       assertEditBillingInfoEnabled();
       assertAddPaymentMethodEnabled();
+      assertMakeAPaymentEnabled();
 
       // Confirm button behavior for parent users.
       mockGetProfile(mockProfileParent);
@@ -331,6 +392,7 @@ describe('restricted user billing flows', () => {
       cy.findByText(mockProfileParent.username);
       assertEditBillingInfoEnabled();
       assertAddPaymentMethodEnabled();
+      assertMakeAPaymentEnabled();
     });
   });
 });

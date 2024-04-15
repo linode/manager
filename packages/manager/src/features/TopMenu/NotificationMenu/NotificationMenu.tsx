@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 
 import Bell from 'src/assets/icons/notification.svg';
 import { Button } from 'src/components/Button/Button';
+import { Chip } from 'src/components/Chip';
 import { ClickAwayListener } from 'src/components/ClickAwayListener';
 import { WrapperMenuItem } from 'src/components/MenuItem/MenuItem';
 import { MenuList } from 'src/components/MenuList';
@@ -20,7 +21,7 @@ import { useFormattedNotifications } from 'src/features/NotificationCenter/Notif
 import Notifications from 'src/features/NotificationCenter/Notifications';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { usePrevious } from 'src/hooks/usePrevious';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMarkEventsAsSeen } from 'src/queries/events/events';
 import { ThunkDispatch } from 'src/store/types';
 import { omittedProps } from 'src/utilities/omittedProps';
@@ -36,19 +37,18 @@ const NotificationIconWrapper = styled(StyledTopMenuIconWrapper, {
   color: props.isMenuOpen ? '#606469' : '#c9c7c7',
 }));
 
-const NotificationIconBadge = styled('div')(({ theme }) => ({
-  alignItems: 'center',
-  backgroundColor: theme.color.green,
-  borderRadius: '50%',
-  color: 'white',
-  display: 'flex',
+const StyledChip = styled(Chip)(() => ({
+  '& .MuiChip-label': {
+    paddingLeft: 2,
+    paddingRight: 2,
+  },
   fontSize: '0.72rem',
   height: '1rem',
   justifyContent: 'center',
   left: 20,
+  padding: 0,
   position: 'absolute',
-  top: 2,
-  width: '1rem',
+  top: 1,
 }));
 
 export const NotificationMenu = () => {
@@ -135,7 +135,12 @@ export const NotificationMenu = () => {
           <NotificationIconWrapper isMenuOpen={notificationContext.menuOpen}>
             <Bell />
             {numNotifications > 0 ? (
-              <NotificationIconBadge>{numNotifications}</NotificationIconBadge>
+              <StyledChip
+                color="success"
+                component="span"
+                label={numNotifications}
+                size="small"
+              />
             ) : null}
           </NotificationIconWrapper>
         </Button>

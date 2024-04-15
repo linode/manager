@@ -21,9 +21,12 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useAccountSettings } from 'src/queries/accountSettings';
-import { useObjectStorageBucketsFromRegions } from 'src/queries/objectStorage';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccountSettings } from 'src/queries/account/settings';
+import { useObjectStorageBuckets } from 'src/queries/objectStorage';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 import { sortByString } from 'src/utilities/sort-by';
 
@@ -99,11 +102,20 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     open,
   } = props;
 
+  const { account } = useAccountManagement();
+  const flags = useFlags();
+
+  const isObjMultiClusterEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
+
   const { data: regions } = useRegionsQuery();
 
   const regionsLookup = regions && getRegionsByRegionId(regions);
 
-  const regionsSupportObjectStorage = regions?.filter((region) =>
+  const regionsSupportingObjectStorage = regions?.filter((region) =>
     region.capabilities.includes('Object Storage')
   );
 
@@ -111,7 +123,10 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     data: objectStorageBuckets,
     error: bucketsError,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBucketsFromRegions(regionsSupportObjectStorage);
+  } = useObjectStorageBuckets({
+    isObjMultiClusterEnabled,
+    regions: regionsSupportingObjectStorage,
+  });
 
   const { data: accountSettings } = useAccountSettings();
 

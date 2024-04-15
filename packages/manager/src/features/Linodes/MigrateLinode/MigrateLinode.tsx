@@ -18,7 +18,7 @@ import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
-} from 'src/queries/accountAgreements';
+} from 'src/queries/account/agreements';
 import { isEventRelevantToLinode } from 'src/queries/events/event.helpers';
 import {
   useEventsPollingActions,
@@ -31,7 +31,7 @@ import {
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { sendMigrationInitiatedEvent } from 'src/utilities/analytics';
 import { formatDate } from 'src/utilities/formatDate';
@@ -151,7 +151,7 @@ export const MigrateLinode = React.memo((props: Props) => {
   );
 
   const edgeRegionWarning =
-    flags.gecko && linodeIsInEdgeRegion
+    flags.gecko2?.enabled && linodeIsInEdgeRegion
       ? 'Edge sites may only be migrated to other Edge sites.'
       : undefined;
 

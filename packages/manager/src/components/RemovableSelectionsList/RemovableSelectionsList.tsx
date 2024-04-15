@@ -18,12 +18,13 @@ import type { SxProps, Theme } from '@mui/material';
 import type { ButtonProps } from 'src/components/Button/Button';
 
 export type RemovableItem = {
-  id: number;
-  label: string;
   // The remaining key-value pairs must have their values typed
   // as 'any' because we do not know what types they could be.
   // Trying to type them as 'unknown' led to type errors.
-} & { [key: string]: any };
+  [key: string]: any;
+  id: number;
+  label: string;
+};
 
 export interface RemovableSelectionsListProps {
   /**
@@ -35,6 +36,14 @@ export interface RemovableSelectionsListProps {
    * Has no effect if isRemovable is false
    */
   RemoveButton?: (props: ButtonProps) => JSX.Element;
+  /**
+   * If true, disable all items when one is removed to prevent race conditions with multiple removals.
+   */
+  disableItemsOnRemove?: boolean;
+  /**
+   * If true, reset loading states. The value should be based on a mutation status.
+   */
+  hasEncounteredMutationError?: boolean;
   /**
    * The descriptive text to display above the list
    */
@@ -74,6 +83,11 @@ export interface RemovableSelectionsListProps {
    */
   selectionData: RemovableItem[];
   /**
+   * Will display a loading indicator in place of the remove button when removing an item.
+   * Only if isRemovable and RemoveButton are true.
+   */
+  showLoadingIndicatorOnRemove?: boolean;
+  /**
    * Additional styles to apply to the component
    */
   sx?: SxProps<Theme>;
@@ -85,6 +99,8 @@ export const RemovableSelectionsList = (
   const {
     LabelComponent,
     RemoveButton,
+    disableItemsOnRemove = false,
+    hasEncounteredMutationError,
     headerText,
     id,
     isRemovable = true,
@@ -94,20 +110,32 @@ export const RemovableSelectionsList = (
     onRemove,
     preferredDataLabel,
     selectionData,
+    showLoadingIndicatorOnRemove = false,
     sx,
   } = props;
 
   // used to determine when to display a box-shadow to indicate scrollability
   const listRef = React.useRef<HTMLUListElement>(null);
   const [listHeight, setListHeight] = React.useState<number>(0);
+  const [removingItemId, setRemovingItemId] = React.useState<null | number>(
+    null
+  );
+  const [isRemoving, setIsRemoving] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (listRef.current) {
       setListHeight(listRef.current.clientHeight);
     }
-  }, [selectionData]);
+
+    return () => {
+      setRemovingItemId(null);
+      setIsRemoving(false);
+    };
+  }, [hasEncounteredMutationError, selectionData]);
 
   const handleOnClick = (selection: RemovableItem) => {
+    setIsRemoving(true);
+    setRemovingItemId(selection.id);
     onRemove(selection);
   };
 
@@ -139,7 +167,15 @@ export const RemovableSelectionsList = (
                   </StyledLabel>
                   {isRemovable &&
                     (RemoveButton ? (
-                      <RemoveButton onClick={() => handleOnClick(selection)} />
+                      <RemoveButton
+                        loading={
+                          showLoadingIndicatorOnRemove &&
+                          isRemoving &&
+                          removingItemId === selection.id
+                        }
+                        disabled={disableItemsOnRemove && isRemoving}
+                        onClick={() => handleOnClick(selection)}
+                      />
                     ) : (
                       <IconButton
                         aria-label={`remove ${

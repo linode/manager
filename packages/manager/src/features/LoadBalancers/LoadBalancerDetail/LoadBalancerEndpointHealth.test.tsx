@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { loadbalancerEndpointHealthFactory } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LoadBalancerEndpointHealth } from './LoadBalancerEndpointHealth';
@@ -9,12 +9,12 @@ import { LoadBalancerEndpointHealth } from './LoadBalancerEndpointHealth';
 describe('LoadBalancerEndpointHealth', () => {
   it('renders endpoint health from API data', async () => {
     server.use(
-      rest.get('*/v4beta/aclb/:id/endpoints-health', (req, res, ctx) => {
+      http.get('*/v4beta/aclb/:id/endpoints-health', () => {
         const health = loadbalancerEndpointHealthFactory.build({
           healthy_endpoints: 150,
           total_endpoints: 200,
         });
-        return res(ctx.json(health));
+        return HttpResponse.json(health);
       })
     );
 

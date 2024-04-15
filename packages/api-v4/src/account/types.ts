@@ -72,6 +72,7 @@ export type AccountCapability =
   | 'Object Storage Access Key Regions'
   | 'Object Storage'
   | 'Placement Group'
+  | 'Support Ticket Severity'
   | 'Vlans'
   | 'VPCs';
 
@@ -288,6 +289,7 @@ export type EventAction =
   | 'credit_card_updated'
   | 'database_low_disk_space'
   | 'database_resize'
+  | 'database_resize_create'
   | 'database_backup_restore'
   | 'database_create'
   | 'database_credentials_reset'

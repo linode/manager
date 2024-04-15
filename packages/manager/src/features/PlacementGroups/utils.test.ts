@@ -1,40 +1,32 @@
-import { placementGroupFactory, regionFactory } from 'src/factories';
+import {
+  linodeFactory,
+  placementGroupFactory,
+  regionFactory,
+} from 'src/factories';
 
 import {
   affinityTypeOptions,
-  getAffinityEnforcement,
+  getAffinityTypeEnforcement,
   getLinodesFromAllPlacementGroups,
-  getPlacementGroupLinodeCount,
+  getPlacementGroupLinodes,
   hasPlacementGroupReachedCapacity,
   hasRegionReachedPlacementGroupCapacity,
 } from './utils';
 
-import type { PlacementGroup } from '@linode/api-v4';
-
 const initialLinodeData = [
   {
     is_compliant: true,
-    linode: 1,
+    linode_id: 1,
   },
   {
     is_compliant: true,
-    linode: 2,
+    linode_id: 2,
   },
   {
     is_compliant: true,
-    linode: 3,
+    linode_id: 3,
   },
 ];
-
-describe('getPlacementGroupLinodeCount', () => {
-  it('returns the length of the linode_ids array', () => {
-    expect(
-      getPlacementGroupLinodeCount({
-        linodes: initialLinodeData,
-      } as PlacementGroup)
-    ).toBe(3);
-  });
-});
 
 describe('affinityTypeOptions', () => {
   it('returns an array of objects with label and value properties', () => {
@@ -54,10 +46,12 @@ describe('hasPlacementGroupReachedCapacity', () => {
     expect(
       hasPlacementGroupReachedCapacity({
         placementGroup: placementGroupFactory.build({
-          linodes: initialLinodeData,
+          members: initialLinodeData,
         }),
         region: regionFactory.build({
-          maximum_vms_per_pg: 3,
+          placement_group_limits: {
+            maximum_linodes_per_pg: 3,
+          },
         }),
       })
     ).toBe(true);
@@ -67,10 +61,12 @@ describe('hasPlacementGroupReachedCapacity', () => {
     expect(
       hasPlacementGroupReachedCapacity({
         placementGroup: placementGroupFactory.build({
-          linodes: initialLinodeData,
+          members: initialLinodeData,
         }),
         region: regionFactory.build({
-          maximum_vms_per_pg: 4,
+          placement_group_limits: {
+            maximum_linodes_per_pg: 4,
+          },
         }),
       })
     ).toBe(false);
@@ -81,24 +77,24 @@ describe('getLinodesFromAllPlacementGroups', () => {
   it('returns an array of unique linode ids from all placement groups', () => {
     expect(
       getLinodesFromAllPlacementGroups([
-        { linodes: initialLinodeData },
-        {
-          linodes: [
+        placementGroupFactory.build({ members: initialLinodeData }),
+        placementGroupFactory.build({
+          members: [
             {
               is_compliant: true,
-              linode: 3,
+              linode_id: 3,
             },
             {
               is_compliant: true,
-              linode: 4,
+              linode_id: 4,
             },
             {
               is_compliant: true,
-              linode: 5,
+              linode_id: 5,
             },
           ],
-        },
-      ] as PlacementGroup[])
+        }),
+      ])
     ).toEqual([1, 2, 3, 4, 5]);
   });
 
@@ -109,11 +105,11 @@ describe('getLinodesFromAllPlacementGroups', () => {
 
 describe('getAffinityEnforcement', () => {
   it('returns "Strict" if `is_strict` is true', () => {
-    expect(getAffinityEnforcement(true)).toBe('Strict');
+    expect(getAffinityTypeEnforcement(true)).toBe('Strict');
   });
 
   it('returns "Flexible" if `is_strict` is false', () => {
-    expect(getAffinityEnforcement(false)).toBe('Flexible');
+    expect(getAffinityTypeEnforcement(false)).toBe('Flexible');
   });
 });
 
@@ -126,7 +122,9 @@ describe('hasRegionReachedPlacementGroupCapacity', () => {
         }),
         region: regionFactory.build({
           id: 'us-east',
-          maximum_pgs_per_customer: 2,
+          placement_group_limits: {
+            maximum_pgs_per_customer: 2,
+          },
         }),
       })
     ).toBe(true);
@@ -140,9 +138,66 @@ describe('hasRegionReachedPlacementGroupCapacity', () => {
         }),
         region: regionFactory.build({
           id: 'us-east',
-          maximum_pgs_per_customer: 4,
+          placement_group_limits: {
+            maximum_pgs_per_customer: 4,
+          },
         }),
       })
     ).toBe(false);
+  });
+});
+
+describe('getPlacementGroupLinodes', () => {
+  it('returns an array of linodes assigned to a placement group', () => {
+    const linodes = linodeFactory.buildList(3);
+
+    const placementGroup = placementGroupFactory.build({
+      members: [
+        { is_compliant: true, linode_id: 1 },
+        { is_compliant: true, linode_id: 2 },
+      ],
+    });
+
+    expect(getPlacementGroupLinodes(placementGroup, linodes)).toEqual([
+      linodeFactory.build({
+        id: 1,
+        label: 'linode-1',
+      }),
+      linodeFactory.build({
+        id: 2,
+        label: 'linode-2',
+      }),
+    ]);
+  });
+
+  it('returns an empty array if no linodes are assigned to the placement group', () => {
+    const linodes = linodeFactory.buildList(3);
+
+    const placementGroup = placementGroupFactory.build({
+      members: [],
+    });
+
+    expect(getPlacementGroupLinodes(placementGroup, linodes)).toEqual([]);
+  });
+
+  it('returns an empty array if no linodes are provided', () => {
+    const linodes = undefined;
+
+    const placementGroup = placementGroupFactory.build({
+      members: [
+        { is_compliant: true, linode_id: 1 },
+        { is_compliant: true, linode_id: 2 },
+      ],
+    });
+
+    expect(getPlacementGroupLinodes(placementGroup, linodes)).toBeUndefined();
+  });
+
+  it('returns an empty array if no placement group is provided', () => {
+    const linodes = linodeFactory.buildList(3);
+
+    const placementGroup = undefined;
+
+    expect(getPlacementGroupLinodes(placementGroup, linodes)).toBeUndefined();
   });
 });

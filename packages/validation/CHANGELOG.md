@@ -1,3 +1,19 @@
+## [2024-04-01] - v0.43.0
+
+### Changed:
+
+- Make `image` nullable in `CreateLinodeSchema` ([#10281](https://github.com/linode/manager/pull/10281))
+- Enforce that the `certificates` array is empty for `http` and `tcp` configurations ([#10311](https://github.com/linode/manager/pull/10311))
+- Allow `firewall_id` to be `null` in `CreateLinodeSchema` ([#10319](https://github.com/linode/manager/pull/10319))
+
+## [2024-03-18] - v0.42.0
+
+
+### Changed:
+
+- Update TCP rules to not include a `match_condition` ([#10264](https://github.com/linode/manager/pull/10264))
+
+
 ## [2024-03-04] - v0.41.0
 
 ### Upcoming Features:

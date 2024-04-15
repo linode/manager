@@ -15,8 +15,9 @@ import { switchAccountSessionContext } from 'src/context/switchAccountSessionCon
 import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
+import { usePendingRevocationToken } from 'src/hooks/usePendingRevocationToken';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import { useProfile } from 'src/queries/profile';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics';
 
@@ -55,6 +56,10 @@ const AccountLanding = () => {
   const flags = useFlags();
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
   const sessionContext = React.useContext(switchAccountSessionContext);
+  const {
+    getPendingRevocationToken,
+    pendingRevocationToken,
+  } = usePendingRevocationToken();
 
   const isAkamaiAccount = account?.billing_source === 'akamai';
   const isProxyUser = profile?.user_type === 'proxy';
@@ -111,6 +116,10 @@ const AccountLanding = () => {
       return sessionContext.updateState({
         isOpen: true,
       });
+    }
+
+    if (isProxyUser) {
+      getPendingRevocationToken();
     }
 
     setIsDrawerOpen(true);
@@ -212,9 +221,10 @@ const AccountLanding = () => {
         </React.Suspense>
       </Tabs>
       <SwitchAccountDrawer
-        isProxyUser={isProxyUser}
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
+        proxyToken={pendingRevocationToken}
+        userType={profile?.user_type}
       />
     </React.Fragment>
   );

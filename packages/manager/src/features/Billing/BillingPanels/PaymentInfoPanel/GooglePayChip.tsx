@@ -11,7 +11,7 @@ import {
   initGooglePaymentInstance,
 } from 'src/features/Billing/GooglePayProvider';
 import { useScript } from 'src/hooks/useScript';
-import { useClientToken } from 'src/queries/accountPayment';
+import { useClientToken } from 'src/queries/account/payment';
 
 const useStyles = makeStyles()(() => ({
   button: {

@@ -8,7 +8,7 @@ import React from 'react';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 
 type Props = {

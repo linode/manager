@@ -1,21 +1,32 @@
-import { PlacementGroup } from '@linode/api-v4';
+import { PlacementGroup, Region } from '@linode/api-v4';
 
-export type PlacementGroupsDrawerPropsBase = {
+export interface PlacementGroupsDrawerPropsBase {
   onClose: () => void;
   open: boolean;
-};
+}
 
-export type PlacementGroupsCreateDrawerProps = PlacementGroupsDrawerPropsBase & {
+export interface PlacementGroupsCreateDrawerProps {
   allPlacementGroups: PlacementGroup[];
+  disabledPlacementGroupCreateButton: boolean;
+  onClose: PlacementGroupsDrawerPropsBase['onClose'];
   onPlacementGroupCreate?: (placementGroup: PlacementGroup) => void;
+  open: PlacementGroupsDrawerPropsBase['open'];
   selectedRegionId?: string;
-};
+}
 
-export type PlacementGroupsEditDrawerProps = PlacementGroupsDrawerPropsBase & {
+export interface PlacementGroupsEditDrawerProps {
+  disableEditButton: boolean;
+  onClose: PlacementGroupsDrawerPropsBase['onClose'];
   onPlacementGroupEdit?: (placementGroup: PlacementGroup) => void;
-};
-
-export type PlacementGroupsAssignLinodesDrawerProps = PlacementGroupsDrawerPropsBase & {
-  onLinodeAddedToPlacementGroup?: (placementGroup: PlacementGroup) => void;
+  open: PlacementGroupsDrawerPropsBase['open'];
+  region: Region | undefined;
   selectedPlacementGroup: PlacementGroup | undefined;
-};
+}
+
+export interface PlacementGroupsAssignLinodesDrawerProps {
+  onClose: PlacementGroupsDrawerPropsBase['onClose'];
+  onLinodeAddedToPlacementGroup?: (placementGroup: PlacementGroup) => void;
+  open: PlacementGroupsDrawerPropsBase['open'];
+  region: Region | undefined;
+  selectedPlacementGroup: PlacementGroup | undefined;
+}

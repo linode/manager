@@ -20,7 +20,9 @@ type TooltipIconStatus =
   | 'success'
   | 'warning';
 
-type EnhancedTooltipProps = TooltipProps & { width?: number };
+interface EnhancedTooltipProps extends TooltipProps {
+  width?: number;
+}
 
 export interface TooltipIconProps
   extends Omit<TooltipProps, 'children' | 'leaveDelay' | 'title'> {
@@ -163,7 +165,16 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       title={text}
       width={width}
     >
-      <IconButton data-qa-help-button size="large" sx={sxTooltipIcon}>
+      <IconButton
+        onClick={(e) => {
+          // This prevents unwanted behavior when clicking a tooltip icon.
+          // See https://github.com/linode/manager/pull/10331#pullrequestreview-1971338778
+          e.stopPropagation();
+        }}
+        data-qa-help-button
+        size="large"
+        sx={sxTooltipIcon}
+      >
         {renderIcon}
       </IconButton>
     </StyledTooltip>

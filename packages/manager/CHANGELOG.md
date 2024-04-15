@@ -4,6 +4,122 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-04-08] - v1.116.1
+
+### Fixed:
+
+- Search indefinitely loading on large accounts ([#10351](https://github.com/linode/manager/pull/10351))
+- Returning proper scope when selecting all perms ([#10359](https://github.com/linode/manager/pull/10359))
+
+## [2024-04-01] - v1.116.0
+
+### Changed:
+
+- Notifications for database resize events ([#10262](https://github.com/linode/manager/pull/10262))
+- Clear ACLB configuration certificates if `http` or `tcp` protocol is selected ([#10311](https://github.com/linode/manager/pull/10311))
+- Revamp Primary Navigation ([#10137](https://github.com/linode/manager/pull/10137))
+
+### Fixed:
+
+- Spacing between copy and Rebuild Linode button in Rebuild dialog ([#10283](https://github.com/linode/manager/pull/10283))
+- Loading state missing from Users & Grants table ([#10303](https://github.com/linode/manager/pull/10303))
+- Wrong status indicator when provisioning a LKE ([#10320](https://github.com/linode/manager/pull/10320))
+- Hide DBaaS resize tab behind feature flag ([#10324](https://github.com/linode/manager/pull/10324))
+
+### Tech Stories:
+
+- Update account queries to use query key factory ([#10260](https://github.com/linode/manager/pull/10260))
+- Upgrade MSW to 2.2.3 ([#10285](https://github.com/linode/manager/pull/10285))
+- Update `axios` to resolve `follow-redirects` CVE-2024-28849 ([#10291](https://github.com/linode/manager/pull/10291))
+- Remove use of flags.vpc and related logic in codebase ([#10299](https://github.com/linode/manager/pull/10299))
+- Use query key factory for region queries ([#10301](https://github.com/linode/manager/pull/10301))
+- Use query key factory for image queries ([#10302](https://github.com/linode/manager/pull/10302))
+- Remove VPC feature flag ([#10306](https://github.com/linode/manager/pull/10306))
+- Replace Typescript intersections with interfaces ([#10309](https://github.com/linode/manager/pull/10309))
+
+### Tests:
+
+- Add Parent/Child account switching UI tests for Child->Parent and Child->Child flows ([#10288](https://github.com/linode/manager/pull/10288))
+- Resolve Firewall update test flake ([#10289](https://github.com/linode/manager/pull/10289))
+
+### Upcoming Features:
+
+- Set up grants and permissions for Placement Groups ([#10257](https://github.com/linode/manager/pull/10257))
+- Add Create Placement Group flow in Details panel of Linode Create flow ([#10273](https://github.com/linode/manager/pull/10273))
+- Gecko Beta Demo feedback ([#10284](https://github.com/linode/manager/pull/10284))
+- Update Placement Groups types & payload ([#10300](https://github.com/linode/manager/pull/10300))
+- Add placement group item to checkout summary ([#10304](https://github.com/linode/manager/pull/10304))
+- Hide the Child Account Access table header for parent users without the enabled grant ([#10305](https://github.com/linode/manager/pull/10305))
+- Update Placement Groups UI for Edit Drawer & Delete Modal ([#10312](https://github.com/linode/manager/pull/10312))
+- Revoke proxy PAT when switching accounts ([#10313](https://github.com/linode/manager/pull/10313))
+- Implement Placement Groups Query Key Factory ([#10314](https://github.com/linode/manager/pull/10314))
+- Linode Create Refactor
+  - Access ([#10308](https://github.com/linode/manager/pull/10308))
+  - Details ([#10297](https://github.com/linode/manager/pull/10297))
+  - Firewall ([#10315](https://github.com/linode/manager/pull/10315))
+  - Add-ons ([#10319](https://github.com/linode/manager/pull/10319))
+  - Images and Distributions ([#10281](https://github.com/linode/manager/pull/10281))
+
+## [2024-03-18] - v1.115.0
+
+
+### Added:
+
+- Invoice byline for powered down instances ([#10208](https://github.com/linode/manager/pull/10208))
+- LinuxGSM and Passbolt to Marketplace ([#10272](https://github.com/linode/manager/pull/10272))
+- Linode Clone UI refinements ([#10280](https://github.com/linode/manager/pull/10280))
+
+### Changed:
+
+- Allow the disabling of the TypeToConfirm input ([#10205](https://github.com/linode/manager/pull/10205))
+- Disable 512GB Plans ([#10228](https://github.com/linode/manager/pull/10228))
+- Update ACLB Match Condition Tooltips and Placeholders ([#10271](https://github.com/linode/manager/pull/10271))
+- Source ACLB region info from API data and use Jakarta instead of Sydney ([#10274](https://github.com/linode/manager/pull/10274))
+- Improve the Linodes restricted user experience ([#10227](https://github.com/linode/manager/pull/10227))
+
+### Fixed:
+
+- Persisting error messages in ACLB delete dialogs ([#10254](https://github.com/linode/manager/pull/10254))
+- ACLB TCP rule creation ([#10264](https://github.com/linode/manager/pull/10264))
+- Ensure IP / Mask for firewall rules drawer correctly populates ([#10279](https://github.com/linode/manager/pull/10279))
+- Linode Rebuild Dialog state not being reset properly ([#10287](https://github.com/linode/manager/pull/10287))
+
+### Tech Stories:
+
+- Upgrade to TanStack Query v4 ([#10236](https://github.com/linode/manager/pull/10236))
+- Use `@lukemorales/query-key-factory` for Profile Queries ([#10241](https://github.com/linode/manager/pull/10241))
+- Update root eslint parser to `@typescript-eslint/parser` ([#10243](https://github.com/linode/manager/pull/10243))
+- Implement new useId() hook in several components ([#10261](https://github.com/linode/manager/pull/10261))
+- Linode Create Refactor - Part 1 ([#10268](https://github.com/linode/manager/pull/10268))
+
+### Tests:
+
+- Add Cypress test to check empty state in Images landing page ([#10167](https://github.com/linode/manager/pull/10167))
+- Add tests for child user verification banner ([#10204](https://github.com/linode/manager/pull/10204))
+- Refactor Cypress region utils, address region capacity flake ([#10242](https://github.com/linode/manager/pull/10242))
+- Resolve OBJ Bucket create/delete E2E test flake ([#10245](https://github.com/linode/manager/pull/10245))
+- Fix URL redirect flake for Images empty state landing page test ([#10267](https://github.com/linode/manager/pull/10267))
+
+### Upcoming Features:
+
+- Update Placement Group Create & Edit Drawers ([#10205](https://github.com/linode/manager/pull/10205))
+- Add scrolling for S3 hostnames in the Access Keys modal. ([#10218](https://github.com/linode/manager/pull/10218))
+- Placement Groups events and notifications ([#10221](https://github.com/linode/manager/pull/10221))
+- Disable Cloning, Private IP, Backups for edge regions ([#10222](https://github.com/linode/manager/pull/10222))
+- Show correct status of Child Account Enabled column for parent users ([#10233](https://github.com/linode/manager/pull/10233))
+- Hide "Switch Account" buttons if child_account_access is false ([#10237](https://github.com/linode/manager/pull/10237))
+- Only support Edge to Edge Migrations ([#10238](https://github.com/linode/manager/pull/10238))
+- Update Buckets landing page to use regions instead of clusters ([#10244](https://github.com/linode/manager/pull/10244))
+- Display parent email in user menu for restricted parent users without access to company name ([#10248](https://github.com/linode/manager/pull/10248))
+- Adjust user table column count for parent/child ([#10252](https://github.com/linode/manager/pull/10252))
+- Linode plan table updates for Edge regions ([#10255](https://github.com/linode/manager/pull/10255))
+- Change Placement Group Feature Flag to return a JSON object ([#10256](https://github.com/linode/manager/pull/10256))
+- Update copy from Business Partner to Parent User ([#10259](https://github.com/linode/manager/pull/10259))
+- Update Assign Linode Drawer and improve query skipping ([#10263](https://github.com/linode/manager/pull/10263))
+- Add Parent/Child Account copy and account management improvements ([#10270](https://github.com/linode/manager/pull/10270))
+- Improve Proxy Account Visibility with Distinct Visual Indicators ([#10277](https://github.com/linode/manager/pull/10277))
+
+
 ## [2024-03-04] - v1.114.0
 
 ### Added:

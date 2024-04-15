@@ -1,3 +1,32 @@
+## [2024-04-01] - v0.113.0
+
+### Added:
+
+- Event type for database resize create (#10262)
+- jsdoc style comments to `CreateLinodeRequest` based on API documentation ([#10319](https://github.com/linode/manager/pull/10319))
+
+### Changed:
+
+- Allow `image` to be `null` in `CreateLinodeRequest` ([#10281](https://github.com/linode/manager/pull/10281))
+- Allow `firewall_id` to be `null` in `CreateLinodeRequest` ([#10319](https://github.com/linode/manager/pull/10319))
+
+### Tech Stories:
+
+- Update `axios` to resolve `follow-redirects` CVE-2024-28849 ([#10291](https://github.com/linode/manager/pull/10291))
+
+## [2024-03-18] - v0.112.0
+
+
+### Changed:
+
+- Make `match_condition` optional in Rule types to support TCP rules ([#10264](https://github.com/linode/manager/pull/10264))
+- Make `type` and `region` required in `CreateLinodeRequest` ([#10268](https://github.com/linode/manager/pull/10268))
+
+### Upcoming Features:
+
+- Add Placement Groups events types ([#10221](https://github.com/linode/manager/pull/10221))
+- Add temporary deleteBucketWithRegion method for OBJ Multicluster ([#10244](https://github.com/linode/manager/pull/10244))
+
 ## [2024-03-04] - v0.111.0
 
 ### Changed:

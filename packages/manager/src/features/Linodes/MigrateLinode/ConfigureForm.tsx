@@ -8,7 +8,7 @@ import { sxEdgeIcon } from 'src/components/RegionSelect/RegionSelect.styles';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';
@@ -134,6 +134,9 @@ export const ConfigureForm = React.memo((props: Props) => {
 
         <StyledMigrationBox>
           <RegionSelect
+            regionFilter={
+              flags.gecko2?.enabled && linodeIsInEdgeRegion ? 'edge' : 'core'
+            }
             regions={
               regions?.filter(
                 (eachRegion) => eachRegion.id !== currentRegion
@@ -146,7 +149,6 @@ export const ConfigureForm = React.memo((props: Props) => {
             errorText={errorText}
             handleSelection={handleSelectRegion}
             label="New Region"
-            regionFilter={flags.gecko && linodeIsInEdgeRegion ? 'edge' : 'core'}
             selectedId={selectedRegion}
           />
           {shouldDisplayPriceComparison && selectedRegion && (

@@ -7,12 +7,12 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import {
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
 } from 'src/queries/kubernetes';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import KubeSummaryPanel from './KubeSummaryPanel';

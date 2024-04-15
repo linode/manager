@@ -14,7 +14,7 @@ interface Props {
   bannerLocation: ProductInformationBannerLocation;
 }
 
-type ProductInformationBannerProps = Props & Partial<NoticeProps>;
+interface ProductInformationBannerProps extends Props, Partial<NoticeProps> {}
 
 export const ProductInformationBanner = React.memo(
   (props: ProductInformationBannerProps) => {

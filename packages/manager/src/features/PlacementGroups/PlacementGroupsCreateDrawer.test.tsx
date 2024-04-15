@@ -7,6 +7,7 @@ import { PlacementGroupsCreateDrawer } from './PlacementGroupsCreateDrawer';
 
 const commonProps = {
   allPlacementGroups: [],
+  disabledPlacementGroupCreateButton: false,
   onClose: vi.fn(),
   open: true,
 };
@@ -58,17 +59,20 @@ describe('PlacementGroupsCreateDrawer', () => {
   });
 
   it('should populate the region select with the selected region prop', async () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <PlacementGroupsCreateDrawer
         selectedRegionId="us-east"
         {...commonProps}
-      />
+      />,
+      {
+        MemoryRouter: {
+          initialEntries: ['/linodes/create'],
+        },
+      }
     );
 
     await waitFor(() => {
-      expect(getByTestId('selected-region')).toHaveTextContent(
-        'Newark, NJ (us-east)'
-      );
+      expect(getByText('Newark, NJ (us-east)')).toBeInTheDocument();
     });
   });
 
@@ -100,7 +104,7 @@ describe('PlacementGroupsCreateDrawer', () => {
       expect(
         queryMocks.useCreatePlacementGroup().mutateAsync
       ).toHaveBeenCalledWith({
-        affinity_type: 'anti_affinity',
+        affinity_type: 'anti_affinity:local',
         is_strict: true,
         label: 'my-label',
         region: 'us-east',
@@ -111,7 +115,20 @@ describe('PlacementGroupsCreateDrawer', () => {
   it('should display an error message if the region has reached capacity', async () => {
     const regionWithoutCapacity = 'Fremont, CA (us-west)';
     const { getByPlaceholderText, getByText } = renderWithTheme(
-      <PlacementGroupsCreateDrawer {...commonProps} />
+      <PlacementGroupsCreateDrawer
+        {...commonProps}
+        allPlacementGroups={[
+          {
+            affinity_type: 'affinity:local',
+            id: 1,
+            is_compliant: true,
+            is_strict: true,
+            label: 'my-placement-group',
+            members: [],
+            region: 'us-west',
+          },
+        ]}
+      />
     );
 
     const regionSelect = getByPlaceholderText('Select a Region');

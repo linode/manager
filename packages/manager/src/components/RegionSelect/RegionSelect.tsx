@@ -6,7 +6,7 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 import { RegionOption } from './RegionOption';
 import {
@@ -45,13 +45,14 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     required,
     selectedId,
     showEdgeIconHelperText,
+    tooltipText,
     width,
   } = props;
 
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,
-  } = useAccountAvailabilitiesQueryUnpaginated();
+  } = useAllAccountAvailabilitiesQuery();
 
   const regionFromSelectedId: RegionSelectOption | null =
     getSelectedRegionById({
@@ -141,7 +142,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
               </StyledFlagContainer>
             ),
           },
-          tooltipText: helperText,
+          tooltipText,
         }}
         autoHighlight
         clearOnBlur
@@ -151,6 +152,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         errorText={errorText}
         getOptionDisabled={(option: RegionSelectOption) => option.unavailable}
         groupBy={(option: RegionSelectOption) => option.data.region}
+        helperText={helperText}
         label={label ?? 'Region'}
         loading={accountAvailabilityLoading}
         loadingText="Loading regions..."

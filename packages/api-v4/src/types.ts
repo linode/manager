@@ -1,3 +1,5 @@
+import type { PriceObject, RegionPriceObject } from './linodes/types';
+
 export interface APIError {
   field?: string;
   reason: string;
@@ -114,4 +116,12 @@ export interface RequestHeaders {
   'Content-Length'?: number;
   'User-Agent'?: string;
   'Content-Type'?: RequestContentType;
+}
+
+export interface PriceType {
+  id: string;
+  label: string;
+  price: PriceObject;
+  region_prices: RegionPriceObject[];
+  transfer: number;
 }

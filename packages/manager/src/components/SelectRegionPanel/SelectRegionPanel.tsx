@@ -11,7 +11,7 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import { Typography } from 'src/components/Typography';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 import {
@@ -78,8 +78,14 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     });
 
   const hideEdgeRegions =
-    !flags.gecko ||
+    !flags.gecko2?.enabled ||
+    flags.gecko2?.ga ||
     !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
+
+  const isGeckoGA =
+    flags.gecko2?.enabled &&
+    flags.gecko2?.ga &&
+    getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
 
   const showEdgeIconHelperText = Boolean(
     !hideEdgeRegions &&
@@ -130,6 +136,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           </Typography>
         </Notice>
       ) : null}
+      {isGeckoGA && 'Gecko GA'}
       <RegionSelect
         currentCapability={currentCapability}
         disabled={disabled}
