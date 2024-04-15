@@ -2,7 +2,10 @@ import { useHistory } from 'react-router-dom';
 
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
+import { utoa } from '../LinodesCreate/utilities';
+
 import type { LinodeCreateType } from '../LinodesCreate/types';
+import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
 
 /**
  * This interface is used to type the query params on the Linode Create flow.
@@ -60,3 +63,85 @@ export const tabs: LinodeCreateType[] = [
   'Backups',
   'Clone Linode',
 ];
+
+/**
+ * Performs some transformations to the Linode Create form data so that the data
+ * is in the correct format for the API. Intended to be used in the "onSubmit" when creating a Linode.
+ *
+ * @param payload the initial raw values from the Linode Create form
+ * @returns final Linode Create payload to be sent to the API
+ */
+export const getLinodeCreatePayload = (
+  payload: CreateLinodeRequest
+): CreateLinodeRequest => {
+  if (payload.metadata?.user_data) {
+    payload.metadata.user_data = utoa(payload.metadata.user_data);
+  }
+
+  if (!payload.metadata?.user_data) {
+    payload.metadata = undefined;
+  }
+
+  payload.interfaces = getInterfacesPayload(payload.interfaces);
+
+  return payload;
+};
+
+/**
+ * Performans transformation and ordering on the Linode Create "interfaces" form data.
+ *
+ * We need this so we can put interfaces in the correct order and omit unused iterfaces.
+ *
+ * @param interfaces raw interfaces from the Linode create flow form
+ * @returns a transformed interfaces array in the correct order and with the expected values for the API
+ */
+export const getInterfacesPayload = (
+  interfaces: InterfacePayload[] | undefined
+): InterfacePayload[] | undefined => {
+  if (!interfaces) {
+    return undefined;
+  }
+
+  interfaces = interfaces.filter((i) => {
+    if (i.purpose === 'vpc' && !i.vpc_id) {
+      // If no vpc was selected, clear remove it from the interfaces array
+      return false;
+    }
+    if (i.purpose === 'vlan' && !i.label) {
+      // If no VLAN label is specificed, remove it from the interfaces array
+      return false;
+    }
+    return true;
+  });
+
+  if (interfaces.length === 1 && interfaces[0].purpose === 'public') {
+    // If there is only 1 interface, and it is the public interface, return undefined.
+    // The API will default to adding a public interface and this makes the payload cleaner.
+    return undefined;
+  }
+
+  return interfaces;
+};
+
+export const defaultValues: CreateLinodeRequest = {
+  image: 'linode/debian11',
+  interfaces: [
+    {
+      ipam_address: '',
+      label: '',
+      purpose: 'public',
+    },
+    {
+      ipam_address: '',
+      label: '',
+      purpose: 'vlan',
+    },
+    {
+      ipam_address: '',
+      label: '',
+      purpose: 'vpc',
+    },
+  ],
+  region: '',
+  type: '',
+};

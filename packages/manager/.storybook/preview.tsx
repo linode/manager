@@ -53,7 +53,6 @@ const preview: Preview = {
     }),
   ],
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
     backgrounds: {
       grid: {
         disable: true,

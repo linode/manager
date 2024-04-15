@@ -4,6 +4,55 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-04-15] - v1.117.0
+
+### Added:
+
+- Resource links to NodeBalancers empty state landing page ([#10345](https://github.com/linode/manager/pull/10345))
+- New DescriptionList component ([#10325](https://github.com/linode/manager/pull/10325))
+- Akamai's Japanese QI System ID to Japanese Invoices ([#10356](https://github.com/linode/manager/pull/10356))
+
+### Changed:
+
+- Improve tags experience ([#10122](https://github.com/linode/manager/pull/10122))
+- Use Chip for notification badge ([#10333](https://github.com/linode/manager/pull/10333))
+
+### Fixed:
+
+- Direction of the Bucket Access ACL select field carat with `Autocomplete` ([#10286](https://github.com/linode/manager/pull/10286))
+- Reset SSH key form state on cancel ([#10344](https://github.com/linode/manager/pull/10344))
+- `usePersonAccessTokensQuery` running without option to be disabled ([#10358](https://github.com/linode/manager/pull/10358))
+- Unable to update label of OBJ limited access key ([#10362](https://github.com/linode/manager/pull/10362))
+- Tooltip displaying for current Dedicated plan when resizing Database Cluster ([#10364](https://github.com/linode/manager/pull/10364))
+
+### Tech Stories:
+
+- Price NodeBalancers dynamically with `nodebalancers/types` endpoint ([#10265](https://github.com/linode/manager/pull/10265))
+- Update Storybook to 8.0.5 ([#10336](https://github.com/linode/manager/pull/10336))
+- Update Notistack to 3.0.1 ([#10357](https://github.com/linode/manager/pull/10357))
+
+### Tests:
+
+- Add tests to check Parent and Child Close Account flows ([#10316](https://github.com/linode/manager/pull/10316), [#10296](https://github.com/linode/manager/pull/10296))
+- Add UI test for account switch flow with expired Parent token ([#10341](https://github.com/linode/manager/pull/10341))
+- Add Cypress tests for Account billing drawers ([#10349](https://github.com/linode/manager/pull/10349))
+
+### Upcoming Features:
+
+- Disable fetching buckets with clusters when ObjMultiClusterEnabled flag is enabled (#10282)
+- Update error message in EditAccessKeyDrawer ([#10329](https://github.com/linode/manager/pull/10329))
+- Support ticket severity ([#10317](https://github.com/linode/manager/pull/10317))
+- Refactor account switching utils for reusability and automatic token refreshing ([#10323](https://github.com/linode/manager/pull/10323))
+- Update Placement Groups detail and summaries ([#10325](https://github.com/linode/manager/pull/10325))
+- Update and clean up Placement Group assign/unassign features (#10328)
+- Update navigation and add new menu items for Placement Groups  ([#10340](https://github.com/linode/manager/pull/10340))
+- Update UI for Region Placement Groups Limits type changes ([#10343](https://github.com/linode/manager/pull/10343))
+- Linode Create Refactor:
+  - User Data ([#10331](https://github.com/linode/manager/pull/10331))
+  - Summary ([#10334](https://github.com/linode/manager/pull/10334))
+  - VLANs  ([#10342](https://github.com/linode/manager/pull/10342))
+- Include powered-off status in Clone Linode event ([#10337](https://github.com/linode/manager/pull/10337))
+
 ## [2024-04-08] - v1.116.1
 
 ### Fixed:

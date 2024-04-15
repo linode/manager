@@ -59,7 +59,7 @@ describe('PlacementGroupsCreateDrawer', () => {
   });
 
   it('should populate the region select with the selected region prop', async () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <PlacementGroupsCreateDrawer
         selectedRegionId="us-east"
         {...commonProps}
@@ -67,9 +67,7 @@ describe('PlacementGroupsCreateDrawer', () => {
     );
 
     await waitFor(() => {
-      expect(getByTestId('selected-region')).toHaveTextContent(
-        'Newark, NJ (us-east)'
-      );
+      expect(getByText('Newark, NJ (us-east)')).toBeInTheDocument();
     });
   });
 

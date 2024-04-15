@@ -40,7 +40,11 @@ describe('PlacementGroupsUnassignModal', () => {
     });
 
     const { getByLabelText, getByRole } = renderWithTheme(
-      <PlacementGroupsUnassignModal onClose={() => null} open />
+      <PlacementGroupsUnassignModal
+        onClose={() => null}
+        open
+        selectedLinode={undefined}
+      />
     );
 
     getByLabelText('Unassign test-linode');

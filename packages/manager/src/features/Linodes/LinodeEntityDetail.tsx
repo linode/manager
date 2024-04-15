@@ -31,7 +31,7 @@ interface LinodeEntityDetailProps {
   id: number;
   isSummaryView?: boolean;
   linode: Linode;
-  openTagDrawer: (tags: string[]) => void;
+  openTagDrawer: () => void;
   variant?: TypographyProps['variant'];
 }
 

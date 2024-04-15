@@ -10,8 +10,11 @@ describe('PlacementGroupsLinodes', () => {
   it('renders an error state if placement groups are undefined', () => {
     const { getByText } = renderWithTheme(
       <PlacementGroupsLinodes
+        assignedLinodes={[]}
+        isFetchingLinodes={false}
         isLinodeReadOnly={false}
         placementGroup={undefined}
+        region={undefined}
       />
     );
 
@@ -32,8 +35,11 @@ describe('PlacementGroupsLinodes', () => {
 
     const { getByPlaceholderText, getByRole } = renderWithTheme(
       <PlacementGroupsLinodes
+        assignedLinodes={[]}
+        isFetchingLinodes={false}
         isLinodeReadOnly={false}
         placementGroup={placementGroup}
+        region={undefined}
       />
     );
 
