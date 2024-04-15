@@ -172,6 +172,9 @@ export const ConfigureForm = React.memo((props: Props) => {
         </StyledMigrationBox>
         <StyledMigrationBox>
           <RegionSelect
+            regionFilter={
+              flags.gecko2?.enabled && linodeIsInEdgeRegion ? 'edge' : 'core'
+            }
             regions={
               regions?.filter(
                 (eachRegion) => eachRegion.id !== currentRegion
@@ -184,7 +187,6 @@ export const ConfigureForm = React.memo((props: Props) => {
             errorText={errorText}
             handleSelection={handleSelectRegion}
             label="New Region"
-            regionFilter={flags.gecko && linodeIsInEdgeRegion ? 'edge' : 'core'}
             selectedId={selectedRegion}
           />
           {shouldDisplayPriceComparison && selectedRegion && (
