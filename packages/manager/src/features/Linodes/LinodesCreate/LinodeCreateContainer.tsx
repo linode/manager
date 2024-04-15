@@ -54,7 +54,7 @@ import withAgreements, {
 } from 'src/features/Account/Agreements/withAgreements';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import { reportAgreementSigningError } from 'src/queries/account/agreements';
-import { vpcQueryKey } from 'src/queries/vpcs';
+import { vpcQueries } from 'src/queries/vpcs/vpcs';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { MapState } from 'src/store/types';
 import {
@@ -911,7 +911,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           this.state.selectedVPCId !== undefined &&
           this.state.selectedVPCId !== -1
         ) {
-          this.props.queryClient.invalidateQueries([vpcQueryKey, 'paginated']);
+          this.props.queryClient.invalidateQueries(vpcQueries.all.queryKey);
+          this.props.queryClient.invalidateQueries(vpcQueries.paginated._def);
+          this.props.queryClient.invalidateQueries(
+            vpcQueries.vpc(this.state.selectedVPCId).queryKey
+          );
         }
 
         /** send the user to the Linode detail page */
