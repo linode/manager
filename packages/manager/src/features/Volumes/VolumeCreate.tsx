@@ -1,11 +1,11 @@
 import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { Theme, useTheme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
@@ -27,7 +27,10 @@ import {
 } from 'src/queries/account/agreements';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useCreateVolumeMutation } from 'src/queries/volumes';
+import {
+  useCreateVolumeMutation,
+  useVolumeTypesQuery,
+} from 'src/queries/volumes';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
@@ -36,6 +39,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
 import { ConfigSelect } from './VolumeDrawer/ConfigSelect';
 import { SizeField } from './VolumeDrawer/SizeField';
@@ -105,6 +109,8 @@ export const VolumeCreate = () => {
   const theme = useTheme();
   const { classes } = useStyles();
   const history = useHistory();
+
+  const { data: types, isError, isLoading } = useVolumeTypesQuery();
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -215,8 +221,12 @@ export const VolumeCreate = () => {
     selectedRegionId: values.region,
   });
 
+  const isInvalidPrice = !types || isError;
+
   const disabled = Boolean(
-    doesNotHavePermission || (showGDPRCheckbox && !hasSignedAgreement)
+    doesNotHavePermission ||
+      (showGDPRCheckbox && !hasSignedAgreement) ||
+      isInvalidPrice
   );
 
   const handleLinodeChange = (linode: Linode | null) => {
@@ -396,6 +406,11 @@ export const VolumeCreate = () => {
           </Paper>
           <Box display="flex" justifyContent="flex-end">
             <Button
+              tooltipText={
+                !isLoading && isInvalidPrice
+                  ? PRICES_RELOAD_ERROR_NOTICE_TEXT
+                  : ''
+              }
               buttonType="primary"
               className={classes.button}
               data-qa-deploy-linode
