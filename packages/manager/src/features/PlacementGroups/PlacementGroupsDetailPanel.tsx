@@ -10,7 +10,6 @@ import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 import { PlacementGroupsCreateDrawer } from 'src/features/PlacementGroups/PlacementGroupsCreateDrawer';
 import { hasRegionReachedPlacementGroupCapacity } from 'src/features/PlacementGroups/utils';
-import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -26,7 +25,6 @@ interface Props {
 }
 
 export const PlacementGroupsDetailPanel = (props: Props) => {
-  const flags = useFlags();
   const theme = useTheme();
   const { handlePlacementGroupChange, selectedRegionId } = props;
   const { data: allPlacementGroups } = useAllPlacementGroupsQuery();
@@ -151,16 +149,14 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
           </Button>
         )}
       </Box>
-      {flags.placementGroups?.enabled && (
-        <PlacementGroupsCreateDrawer
-          allPlacementGroups={allPlacementGroups || []}
-          disabledPlacementGroupCreateButton={isLinodeReadOnly}
-          onClose={() => setIsCreatePlacementGroupDrawerOpen(false)}
-          onPlacementGroupCreate={handlePlacementGroupCreated}
-          open={isCreatePlacementGroupDrawerOpen}
-          selectedRegionId={selectedRegionId}
-        />
-      )}
+      <PlacementGroupsCreateDrawer
+        allPlacementGroups={allPlacementGroups || []}
+        disabledPlacementGroupCreateButton={isLinodeReadOnly}
+        onClose={() => setIsCreatePlacementGroupDrawerOpen(false)}
+        onPlacementGroupCreate={handlePlacementGroupCreated}
+        open={isCreatePlacementGroupDrawerOpen}
+        selectedRegionId={selectedRegionId}
+      />
     </>
   );
 };
