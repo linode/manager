@@ -26,9 +26,11 @@ export const useAppTokensQuery = (params?: Params, filter?: Filter) => {
 
 export const usePersonalAccessTokensQuery = (
   params?: Params,
-  filter?: Filter
+  filter?: Filter,
+  enabled = true
 ) => {
   return useQuery<ResourcePage<Token>, APIError[]>({
+    enabled,
     keepPreviousData: true,
     ...profileQueries.personalAccessTokens(params, filter),
   });
