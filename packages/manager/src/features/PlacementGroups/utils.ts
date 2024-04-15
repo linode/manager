@@ -1,5 +1,8 @@
 import { AFFINITY_TYPES } from '@linode/api-v4/lib/placement-groups';
 
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account/account';
+
 import type {
   AffinityEnforcement,
   CreatePlacementGroupPayload,
@@ -117,4 +120,31 @@ export const getLinodesFromAllPlacementGroups = (
   }, []);
 
   return Array.from(new Set(linodeIds));
+};
+
+/**
+ * Hook to determine if the Placement Group feature should be visible to the user.
+ * Dased on the user's account capability and the feature flag.
+ *
+ * @returns {boolean} - Whether the Placement Group feature is enabled for the current user.
+ */
+export const useIsPlacementGroupsEnabled = (): {
+  isPlacementGroupsEnabled: boolean;
+} => {
+  const { data: account, error } = useAccount();
+  const flags = useFlags();
+
+  if (error || !flags) {
+    return { isPlacementGroupsEnabled: false };
+  }
+
+  const hasAccountCapability = account?.capabilities?.includes(
+    'Placement Group'
+  );
+  const isFeatureFlagEnabled = flags.placementGroups?.enabled;
+  const isPlacementGroupsEnabled = Boolean(
+    hasAccountCapability && isFeatureFlagEnabled
+  );
+
+  return { isPlacementGroupsEnabled };
 };

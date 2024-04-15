@@ -7,7 +7,7 @@ import { TagsInput, TagsInputProps } from 'src/components/TagsInput/TagsInput';
 import { TextField, TextFieldProps } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { PlacementGroupsDetailPanel } from 'src/features/PlacementGroups/PlacementGroupsDetailPanel';
-import { useFlags } from 'src/hooks/useFlags';
+import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 
 import type { PlacementGroup } from '@linode/api-v4';
 
@@ -28,9 +28,7 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
     tagsInputProps,
   } = props;
   const theme = useTheme();
-  const flags = useFlags();
-
-  const showPlacementGroups = Boolean(flags.placementGroups?.enabled);
+  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
   return (
     <Paper
@@ -60,8 +58,7 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
       />
 
       {tagsInputProps && <TagsInput {...tagsInputProps} />}
-
-      {showPlacementGroups && (
+      {isPlacementGroupsEnabled && (
         <PlacementGroupsDetailPanel
           handlePlacementGroupChange={handlePlacementGroupChange}
           selectedRegionId={selectedRegionId}

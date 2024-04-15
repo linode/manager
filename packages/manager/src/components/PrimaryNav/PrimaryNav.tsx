@@ -26,6 +26,7 @@ import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
+import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePrefetch } from 'src/hooks/usePreFetch';
@@ -170,6 +171,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     (checkRestrictedUser && !enginesLoading && !enginesError);
 
   const { isACLBEnabled } = useIsACLBEnabled();
+  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
   const prefetchObjectStorage = () => {
     if (!enableObjectPrefetch) {
@@ -245,7 +247,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         {
           betaChipClassName: 'beta-chip-placement-groups',
           display: 'Placement Groups',
-          hide: !flags.placementGroups?.enabled,
+          hide: !isPlacementGroupsEnabled,
           href: '/placement-groups',
           icon: <PlacementGroups />,
           isBeta: flags.placementGroups?.beta,
@@ -322,6 +324,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       allowMarketplacePrefetch,
       flags.databaseBeta,
       isACLBEnabled,
+      isPlacementGroupsEnabled,
       flags.placementGroups,
     ]
   );

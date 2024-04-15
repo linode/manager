@@ -1,8 +1,7 @@
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { profileFactory } from 'src/factories';
-import { grantsFactory } from 'src/factories/grants';
+import { grantsFactory, profileFactory } from 'src/factories';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
@@ -37,7 +36,7 @@ describe('Linode Create Details', () => {
     expect(getByText('Type to choose or create a tag.')).toBeVisible();
   });
 
-  it('renders an placement group details if the flag is on', () => {
+  it('renders an placement group details if the flag is on', async () => {
     const { getByText } = renderWithThemeAndHookFormContext({
       component: <Details />,
       options: {
@@ -45,9 +44,11 @@ describe('Linode Create Details', () => {
       },
     });
 
-    expect(
-      getByText('Select a region above to see available Placement Groups.')
-    ).toBeVisible();
+    await waitFor(() => {
+      expect(
+        getByText('Select a region above to see available Placement Groups.')
+      ).toBeVisible();
+    });
   });
 
   it('does not render the placement group select if the flag is off', () => {
