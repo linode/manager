@@ -3,9 +3,9 @@ import { Theme, styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import EnhancedSelect from 'src/components/EnhancedSelect';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -128,6 +128,10 @@ export const AccessSelect = React.memo((props: Props) => {
     ? 'CORS Enabled'
     : 'CORS Disabled';
 
+  const selectedOption =
+    _options.find((thisOption) => thisOption.value === selectedACL) ??
+    _options.find((thisOption) => thisOption.value === 'private');
+
   return (
     <>
       {updateAccessSuccess ? (
@@ -139,24 +143,22 @@ export const AccessSelect = React.memo((props: Props) => {
 
       {errorText ? <Notice text={errorText} variant="error" /> : null}
 
-      <EnhancedSelect
-        onChange={(selected) => {
+      <Autocomplete
+        onChange={(_, selected) => {
           if (selected) {
             setUpdateAccessSuccess(false);
             setUpdateAccessError('');
             setSelectedACL(selected.value as ACLType);
           }
         }}
-        value={_options.find(
-          (thisOption) => thisOption.value === selectedACL ?? 'private'
-        )}
         data-testid="acl-select"
-        disabled={accessLoading}
-        isClearable={false}
-        isLoading={accessLoading}
+        disableClearable
+        disabled={Boolean(accessError)}
         label="Access Control List (ACL)"
-        options={_options}
+        loading={accessLoading}
+        options={!accessLoading ? _options : []}
         placeholder={accessLoading ? 'Loading access...' : 'Select an ACL...'}
+        value={!accessLoading ? selectedOption : undefined}
       />
 
       <div style={{ marginTop: 8, minHeight: 16 }}>

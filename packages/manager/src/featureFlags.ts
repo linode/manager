@@ -5,6 +5,7 @@ import type { NoticeVariant } from 'src/components/Notice/Notice';
 // These flags should correspond with active features flags in LD
 
 export interface TaxDetail {
+  qi_registration?: string;
   tax_id: string;
   tax_name: string;
 }
@@ -72,6 +73,7 @@ export interface Flags {
   referralBannerText: ReferralBannerText;
   selfServeBetas: boolean;
   soldOutChips: boolean;
+  supportTicketSeverity: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
   taxes: Taxes;

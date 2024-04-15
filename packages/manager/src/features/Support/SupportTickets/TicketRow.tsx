@@ -10,6 +10,8 @@ import { Typography } from 'src/components/Typography';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
+import { severityLabelMap, useTicketSeverityCapability } from './ticketUtils';
+
 interface Props {
   ticket: SupportTicket;
 }
@@ -33,6 +35,8 @@ const renderEntityLink = (ticket: SupportTicket) => {
 };
 
 export const TicketRow = ({ ticket }: Props) => {
+  const hasSeverityCapability = useTicketSeverityCapability();
+
   const ticketSummary = sanitizeHTML({
     disallowedTagsMode: 'discard',
     sanitizingTier: 'none',
@@ -52,14 +56,21 @@ export const TicketRow = ({ ticket }: Props) => {
       <Hidden mdDown>
         <TableCell data-qa-support-id>{ticket.id}</TableCell>
       </Hidden>
-      <TableCell
-        sx={{
-          lineHeight: 1.1,
-        }}
-        data-qa-support-entity
-      >
-        {renderEntityLink(ticket)}
-      </TableCell>
+      <Hidden mdDown>
+        <TableCell
+          sx={{
+            lineHeight: 1.1,
+          }}
+          data-qa-support-entity
+        >
+          {renderEntityLink(ticket)}
+        </TableCell>
+      </Hidden>
+      {hasSeverityCapability && (
+        <TableCell data-qa-support-severity>
+          {ticket.severity ? severityLabelMap.get(ticket.severity) : ''}
+        </TableCell>
+      )}
       <Hidden smDown>
         <TableCell data-qa-support-date>
           <DateTimeDisplay value={ticket.opened} />
