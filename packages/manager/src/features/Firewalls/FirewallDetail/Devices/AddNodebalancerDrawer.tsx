@@ -1,10 +1,10 @@
 import { NodeBalancer } from '@linode/api-v4';
 import { useTheme } from '@mui/material';
+import { useQueryClient } from '@tanstack/react-query';
+import { sanitize } from 'dompurify';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import sanitize from 'sanitize-html';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';

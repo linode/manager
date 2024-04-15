@@ -15,7 +15,7 @@ import { unsafe_MarkdownIt } from 'src/utilities/markdown';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 import { useColorMode } from 'src/utilities/theme';
 
-import type { IOptions } from 'sanitize-html';
+// import type { IOptions } from 'sanitize-html';
 
 hljs.registerLanguage('apache', apache);
 hljs.registerLanguage('bash', bash);
@@ -35,7 +35,7 @@ export type SupportedLanguage =
 export interface HighlightedMarkdownProps {
   className?: string;
   language?: SupportedLanguage;
-  sanitizeOptions?: IOptions;
+  sanitizeOptions?: any;
   textOrMarkdown: string;
 }
 
