@@ -22,6 +22,8 @@ interface Props {
 export const StackScriptSelectionRow = (props: Props) => {
   const { disabled, isSelected, onOpenDetails, onSelect, stackscript } = props;
 
+  // Never show LKE StackScripts. We try to hide these from the user, even though they
+  // are returned by the API.
   if (stackscript.username.startsWith('lke-service-account-')) {
     return null;
   }
