@@ -15,7 +15,8 @@ import { unsafe_MarkdownIt } from 'src/utilities/markdown';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 import { useColorMode } from 'src/utilities/theme';
 
-// import type { IOptions } from 'sanitize-html';
+import type { Config } from 'dompurify';
+import type { DisallowedTagsMode } from 'src/utilities/sanitizeHTML';
 
 hljs.registerLanguage('apache', apache);
 hljs.registerLanguage('bash', bash);
@@ -32,10 +33,14 @@ export type SupportedLanguage =
   | 'shell'
   | 'yaml';
 
+interface SanitizeOptions extends Config {
+  disallowedTagsMode?: DisallowedTagsMode;
+}
+
 export interface HighlightedMarkdownProps {
   className?: string;
   language?: SupportedLanguage;
-  sanitizeOptions?: any;
+  sanitizeOptions?: SanitizeOptions;
   textOrMarkdown: string;
 }
 

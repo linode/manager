@@ -7,9 +7,11 @@ import { getAllowedHTMLTags, isURLValid } from './sanitizeHTML.utils';
 import type { AllowedHTMLTagsTier } from './sanitizeHTML.utils';
 import type { Config } from 'dompurify';
 
+export type DisallowedTagsMode = 'discard' | 'escape';
+
 interface SanitizeHTMLOptions {
   allowMoreTags?: string[];
-  disallowedTagsMode?: 'discard' | 'escape';
+  disallowedTagsMode?: DisallowedTagsMode;
   options?: Config;
   sanitizingTier: AllowedHTMLTagsTier;
   text: string;

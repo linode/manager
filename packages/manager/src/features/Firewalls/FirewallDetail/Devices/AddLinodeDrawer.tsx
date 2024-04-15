@@ -95,8 +95,8 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const errorNotice = () => {
     let errorMsg = sanitize(localError || '', {
-      allowedAttributes: {},
-      allowedTags: [], // Disallow all HTML tags,
+      ALLOWED_ATTR: [],
+      ALLOWED_TAGS: [], // Disallow all HTML tags,
     });
     // match something like: Linode <linode_label> (ID <linode_id>)
 
