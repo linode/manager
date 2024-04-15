@@ -3,6 +3,7 @@ import React from 'react';
 
 import { getPersonalAccessTokenForRevocation } from 'src/features/Account/utils';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
+import { useProfile } from 'src/queries/profile';
 import { usePersonalAccessTokensQuery } from 'src/queries/tokens';
 
 /**
@@ -22,8 +23,17 @@ export const usePendingRevocationToken = () => {
   const [pendingRevocationToken, setPendingRevocationToken] = React.useState<
     Token | undefined
   >(undefined);
+  const { data: profile } = useProfile();
   const currentTokenWithBearer = useCurrentToken() ?? '';
-  const { data: personalAccessTokens } = usePersonalAccessTokensQuery();
+
+  // Only run query on proxy accounts.
+  const isQueryEnabled = Boolean(profile?.user_type === 'proxy');
+
+  const { data: personalAccessTokens } = usePersonalAccessTokensQuery(
+    {},
+    {},
+    isQueryEnabled
+  );
 
   const getPendingRevocationToken = async () => {
     if (!personalAccessTokens?.data) {

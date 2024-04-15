@@ -12,49 +12,34 @@ import { useProfile } from 'src/queries/profile';
 import { RenderLinodesProps } from './DisplayLinodes';
 
 export const CardView = (props: RenderLinodesProps) => {
+  const { data, openDialog, openPowerActionDialog } = props;
+
   const { data: profile } = useProfile();
 
-  const [tagDrawer, setTagDrawer] = React.useState<{
-    entityID: number;
-    entityLabel: string;
-    tags: string[];
-  }>();
+  const [tagDrawerLinodeId, setTagDrawerLinodeId] = React.useState<number>();
+
+  const tagDrawerLinode = React.useMemo(
+    () => data.find((linode) => linode.id == tagDrawerLinodeId),
+    [data, tagDrawerLinodeId]
+  );
 
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
-    tagDrawer?.entityID ?? -1
+    tagDrawerLinodeId ?? -1
   );
 
   const isLinodesGrantReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
     grantType: 'linode',
-    id: tagDrawer?.entityID,
+    id: tagDrawerLinodeId,
   });
 
   const closeTagDrawer = () => {
-    setTagDrawer(undefined);
-  };
-
-  const openTagDrawer = (
-    entityLabel: string,
-    entityID: number,
-    tags: string[]
-  ) => {
-    setTagDrawer({
-      entityID,
-      entityLabel,
-      tags,
-    });
+    setTagDrawerLinodeId(undefined);
   };
 
   const updateTags = (tags: string[]) => {
-    return updateLinode({ tags }).then((_) => {
-      if (tagDrawer) {
-        setTagDrawer({ ...tagDrawer, tags });
-      }
-    });
+    return updateLinode({ tags });
   };
-
-  const { data, openDialog, openPowerActionDialog } = props;
 
   if (!profile?.username) {
     return null;
@@ -89,24 +74,22 @@ export const CardView = (props: RenderLinodesProps) => {
                   onOpenResizeDialog: () =>
                     openDialog('resize', linode.id, linode.label),
                 }}
-                openTagDrawer={(tags) =>
-                  openTagDrawer(linode.label, linode.id, tags)
-                }
                 id={linode.id}
                 isSummaryView
                 linode={linode}
+                openTagDrawer={() => setTagDrawerLinodeId(linode.id)}
               />
             </StyledSummaryGrid>
           </React.Fragment>
         ))}
       </Grid>
-      {tagDrawer && (
+      {tagDrawerLinode && (
         <TagDrawer
           disabled={isLinodesGrantReadOnly}
-          entityLabel={tagDrawer.entityLabel}
+          entityLabel={tagDrawerLinode.label}
           onClose={closeTagDrawer}
-          open={true}
-          tags={tagDrawer.tags}
+          open
+          tags={tagDrawerLinode.tags}
           updateTags={updateTags}
         />
       )}

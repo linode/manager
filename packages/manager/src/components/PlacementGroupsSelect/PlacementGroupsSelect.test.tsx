@@ -90,7 +90,9 @@ describe('PlacementGroupSelect', () => {
         selectedRegion={regionFactory.build({
           capabilities: ['Placement Group'],
           id: 'ca-central',
-          maximum_vms_per_pg: 1,
+          placement_group_limits: {
+            maximum_linodes_per_pg: 1,
+          },
         })}
       />
     );

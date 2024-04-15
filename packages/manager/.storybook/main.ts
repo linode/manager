@@ -20,7 +20,6 @@ const config: StorybookConfig = {
     name: '@storybook/react-vite',
     options: {},
   },
-  features: { storyStoreV7: true },
   typescript: {
     reactDocgenTypescriptOptions: {
       // makes union prop types like variant and size appear as select controls
@@ -33,6 +32,8 @@ const config: StorybookConfig = {
           ? !/node_modules\/(?!@mui)/.test(prop.parent.fileName)
           : true,
     },
+
+    reactDocgen: 'react-docgen-typescript',
   },
   docs: {
     autodocs: true,

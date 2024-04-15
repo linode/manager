@@ -1,5 +1,5 @@
 <h3 align="center">
-  <img src="https://github.com/linode/manager/blob/develop/packages/manager/src/assets/logo/akamai-logo.svg" width="200" />
+  <img src="https://github.com/linode/manager/blob/develop/packages/manager/src/assets/logo/akamai-logo-color.svg" width="200" />
   <br />
   <br />
   Akamai Connected Cloud Manager

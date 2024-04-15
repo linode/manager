@@ -26,7 +26,7 @@ const mockRegions = {
   // Mock data as needed
   error: null,
 };
-vi.mock('src/queries/regions', () => ({
+vi.mock('src/queries/regions/regions', () => ({
   useRegionsQuery: vi.fn(() => mockRegions),
 }));
 

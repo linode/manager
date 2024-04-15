@@ -41,7 +41,7 @@ interface FooterProps {
   linodePlan: null | string;
   linodeRegionDisplay: null | string;
   linodeTags: string[];
-  openTagDrawer: (tags: string[]) => void;
+  openTagDrawer: () => void;
 }
 
 export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
@@ -155,12 +155,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
       >
         <TagCell
           sx={{
-            [theme.breakpoints.down('lg')]: {
-              '& > button': {
-                marginRight: theme.spacing(0.5),
-              },
-              flexDirection: 'row-reverse',
-            },
+            width: '100%',
           }}
           disabled={isLinodesGrantReadOnly}
           listAllTags={openTagDrawer}

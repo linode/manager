@@ -6,6 +6,8 @@ import React from 'react';
 import { Box } from 'src/components/Box';
 import { TextField, TextFieldProps } from 'src/components/TextField';
 
+import { CircleProgress } from '../CircleProgress';
+import { InputAdornment } from '../InputAdornment';
 import {
   CustomPopper,
   SelectedIcon,
@@ -31,8 +33,8 @@ export interface EnhancedAutocompleteProps<
   label: string;
   /** Removes the top margin from the input label, if desired. */
   noMarginTop?: boolean;
-  /** Text to show when the Autocomplete search yields no results. */
-  noOptionsText?: string;
+  /** Element to show when the Autocomplete search yields no results. */
+  noOptionsText?: JSX.Element | string;
   placeholder?: string;
   /** Label for the "select all" option. */
   selectAllLabel?: string;
@@ -115,10 +117,15 @@ export const Autocomplete = <
             ...params.InputProps,
             ...textFieldProps?.InputProps,
             endAdornment: (
-              <React.Fragment>
+              <>
+                {loading && (
+                  <InputAdornment position="end">
+                    <CircleProgress mini={true} />
+                  </InputAdornment>
+                )}
                 {textFieldProps?.InputProps?.endAdornment}
                 {params.InputProps.endAdornment}
-              </React.Fragment>
+              </>
             ),
           }}
         />
