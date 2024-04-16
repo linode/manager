@@ -34,7 +34,7 @@ export const sanitizeHTML = ({
     KEEP_CONTENT: disallowedTagsMode === 'discard' ? false : true,
     RETURN_DOM: false,
     RETURN_DOM_FRAGMENT: false,
-    RETURN_TRUSTED_TYPE: true,
+    RETURN_TRUSTED_TYPE: false,
     ...options,
   });
 
@@ -76,5 +76,6 @@ export const sanitizeHTML = ({
   });
 
   // Perform sanitization
-  return DOMPurify.sanitize(text).trim();
+  const output = DOMPurify.sanitize(text);
+  return output.trim();
 };
