@@ -1,25 +1,26 @@
+import { IconButton } from '@mui/material';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import HelpSVGIcon from 'src/assets/icons/get_help.svg';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+import { Link } from 'src/components/Link';
 
-import { StyledTopMenuIconWrapper, TopMenuIcon } from './TopMenuIcon';
+import { TopMenuTooltip } from './TopMenuIcon';
 
 export const Help = () => {
-  const history = useHistory();
-
   return (
-    <TopMenuIcon title="Help & Support">
-      <StyledLinkButton
-        aria-label="Help & Support"
-        onClick={() => history.push('/support')}
-        role="link"
-      >
-        <StyledTopMenuIconWrapper>
-          <HelpSVGIcon status="help" />
-        </StyledTopMenuIconWrapper>
-      </StyledLinkButton>
-    </TopMenuIcon>
+    <TopMenuTooltip title="Help & Support">
+      <Link to="/support">
+        <IconButton
+          sx={{
+            '&:hover, &:focus': {
+              color: '#606469',
+            },
+            color: '#c9c7c7',
+          }}
+        >
+          <HelpSVGIcon height="20px" width="20px" />
+        </IconButton>
+      </Link>
+    </TopMenuTooltip>
   );
 };
