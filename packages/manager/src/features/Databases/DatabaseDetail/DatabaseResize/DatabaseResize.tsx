@@ -203,9 +203,13 @@ export const DatabaseResize = ({ database }: Props) => {
 
   const currentPlan = displayTypes?.find((type) => type.id === database.type);
 
-  const disabledPlans = displayTypes?.filter(
-    (type) => type.disk <= (currentPlan ? currentPlan.disk : 0)
+  const currentPlanDisk = currentPlan ? currentPlan.disk : 0;
+  const disabledPlans = displayTypes?.filter((type) =>
+    type.class === 'dedicated'
+      ? type.disk < currentPlanDisk
+      : type.disk <= currentPlanDisk
   );
+
   if (typesLoading) {
     return <CircleProgress />;
   }
