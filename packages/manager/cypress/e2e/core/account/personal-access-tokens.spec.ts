@@ -75,7 +75,19 @@ describe('Personal access tokens', () => {
           .should('be.visible')
           .should('be.disabled');
 
-        // Specify scopes by selecting the "No Access" Select All radio button.
+        // Select just one scope.
+        cy.get('[data-qa-row="Account"]').within(() => {
+          cy.get('[type="radio"]').first().click();
+        });
+
+        // Confirm submit button is still disabled without specifying ALL scopes.
+        ui.buttonGroup
+          .findButtonByTitle('Create Token')
+          .scrollIntoView()
+          .should('be.visible')
+          .should('be.disabled');
+
+        // Specify ALL scopes by selecting the "No Access" Select All radio button.
         cy.get('[data-qa-perm-no-access-radio]').click();
         cy.get('[data-qa-perm-no-access-radio]').should(
           'have.attr',
@@ -83,7 +95,7 @@ describe('Personal access tokens', () => {
           'true'
         );
 
-        // Attempt to submit form without specifying a label.
+        // Confirm submit button is enabled; attempt to submit form without specifying a label.
         ui.buttonGroup
           .findButtonByTitle('Create Token')
           .scrollIntoView()
@@ -96,7 +108,7 @@ describe('Personal access tokens', () => {
           .scrollIntoView()
           .should('be.visible');
 
-        // Specify a label and attempt to re-submit.
+        // Specify a label and re-submit.
         cy.findByLabelText('Label')
           .scrollIntoView()
           .should('be.visible')
