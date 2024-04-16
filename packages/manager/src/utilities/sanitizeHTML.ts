@@ -7,12 +7,16 @@ import { getAllowedHTMLTags, isURLValid } from './sanitizeHTML.utils';
 import type { AllowedHTMLTagsTier } from './sanitizeHTML.utils';
 import type { Config } from 'dompurify';
 
-export type DisallowedTagsMode = 'discard' | 'escape';
+type DisallowedTagsMode = 'discard' | 'escape';
+
+export interface SanitizeOptions extends Config {
+  disallowedTagsMode?: DisallowedTagsMode;
+}
 
 interface SanitizeHTMLOptions {
   allowMoreTags?: string[];
   disallowedTagsMode?: DisallowedTagsMode;
-  options?: Config;
+  sanitizeOptions?: Config;
   sanitizingTier: AllowedHTMLTagsTier;
   text: string;
 }
@@ -20,7 +24,7 @@ interface SanitizeHTMLOptions {
 export const sanitizeHTML = ({
   allowMoreTags,
   disallowedTagsMode = 'escape',
-  options = {},
+  sanitizeOptions: options = {},
   sanitizingTier,
   text,
 }: SanitizeHTMLOptions) => {

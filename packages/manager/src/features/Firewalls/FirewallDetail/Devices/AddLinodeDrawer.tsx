@@ -1,6 +1,5 @@
 import { Linode } from '@linode/api-v4';
 import { useTheme } from '@mui/material';
-import { sanitize } from 'dompurify';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -19,6 +18,7 @@ import {
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
+import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 interface Props {
   helperText: string;
@@ -94,10 +94,14 @@ export const AddLinodeDrawer = (props: Props) => {
   };
 
   const errorNotice = () => {
-    let errorMsg = sanitize(localError || '', {
-      ALLOWED_ATTR: [],
-      ALLOWED_TAGS: [], // Disallow all HTML tags,
-    });
+    let errorMsg = sanitizeHTML({
+      sanitizeOptions: {
+        ALLOWED_ATTR: [],
+        ALLOWED_TAGS: [], // Disallow all HTML tags,
+      },
+      sanitizingTier: 'strict',
+      text: localError || '',
+    }).toString();
     // match something like: Linode <linode_label> (ID <linode_id>)
 
     const linode = /Linode (.+?) \(ID ([^\)]+)\)/i.exec(errorMsg);
