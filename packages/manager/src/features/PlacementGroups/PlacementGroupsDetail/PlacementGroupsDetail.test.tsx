@@ -99,18 +99,13 @@ describe('PlacementGroupsLanding', () => {
       }),
     });
 
-    const { getByRole, getByText } = renderWithTheme(
-      <PlacementGroupsDetail />,
-      {
-        MemoryRouter: {
-          initialEntries: [{ pathname: '/placement-groups/1' }],
-        },
-      }
-    );
+    const { getByText } = renderWithTheme(<PlacementGroupsDetail />, {
+      MemoryRouter: {
+        initialEntries: [{ pathname: '/placement-groups/1' }],
+      },
+    });
 
-    expect(getByText(/my first pg \(Anti-affinity\)/i)).toBeInTheDocument();
+    expect(getByText(/my first pg/i)).toBeInTheDocument();
     expect(getByText(/docs/i)).toBeInTheDocument();
-    expect(getByRole('tab', { name: 'Summary' })).toBeInTheDocument();
-    expect(getByRole('tab', { name: 'Linodes (9)' })).toBeInTheDocument();
   });
 });

@@ -62,7 +62,7 @@ export const VLANSelect = (props: Props) => {
 
   const vlans = data?.pages.flatMap((page) => page.data) ?? [];
 
-  const newVlanPlacehodler = {
+  const newVlanPlaceholder = {
     cidr_block: '',
     created: '',
     id: 0,
@@ -74,7 +74,7 @@ export const VLANSelect = (props: Props) => {
   const hasVLANWithExactLabel = vlans.some((vlan) => vlan.label === inputValue);
 
   if (!isFetching && inputValue && !hasVLANWithExactLabel) {
-    vlans.push(newVlanPlacehodler);
+    vlans.push(newVlanPlaceholder);
   }
 
   const selectedVLAN = vlans?.find((option) => option.label === value) ?? null;
@@ -94,7 +94,7 @@ export const VLANSelect = (props: Props) => {
         },
       }}
       getOptionLabel={(option) =>
-        option === newVlanPlacehodler ? `Create "${inputValue}"` : option.label
+        option === newVlanPlaceholder ? `Create "${inputValue}"` : option.label
       }
       isOptionEqualToValue={(option1, options2) =>
         option1.label === options2.label
@@ -103,7 +103,7 @@ export const VLANSelect = (props: Props) => {
         if (onChange) {
           onChange(value?.label ?? null);
         }
-        if (value !== newVlanPlacehodler) {
+        if (value !== newVlanPlaceholder) {
           setInputValue('');
         }
       }}

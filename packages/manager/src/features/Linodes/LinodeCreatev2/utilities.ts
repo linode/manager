@@ -82,45 +82,61 @@ export const getLinodeCreatePayload = (
     payload.metadata = undefined;
   }
 
-  payload.interfaces = getInterfacesPayload(payload.interfaces);
+  payload.interfaces = getInterfacesPayload(
+    payload.interfaces,
+    Boolean(payload.private_ip)
+  );
 
   return payload;
 };
 
 /**
- * Performans transformation and ordering on the Linode Create "interfaces" form data.
+ * Transforms and orders the Linode Create "interfaces" form data.
  *
- * We need this so we can put interfaces in the correct order and omit unused iterfaces.
+ * We need this so we can put interfaces in the correct order and omit unused interfaces.
  *
  * @param interfaces raw interfaces from the Linode create flow form
  * @returns a transformed interfaces array in the correct order and with the expected values for the API
  */
 export const getInterfacesPayload = (
-  interfaces: InterfacePayload[] | undefined
+  interfaces: InterfacePayload[] | undefined,
+  hasPrivateIP: boolean | undefined
 ): InterfacePayload[] | undefined => {
   if (!interfaces) {
     return undefined;
   }
 
-  interfaces = interfaces.filter((i) => {
-    if (i.purpose === 'vpc' && !i.vpc_id) {
-      // If no vpc was selected, clear remove it from the interfaces array
-      return false;
-    }
-    if (i.purpose === 'vlan' && !i.label) {
-      // If no VLAN label is specificed, remove it from the interfaces array
-      return false;
-    }
-    return true;
-  });
+  const vpcInterface = interfaces[0];
+  const vlanInterface = interfaces[1];
+  const publicInterface = interfaces[2];
 
-  if (interfaces.length === 1 && interfaces[0].purpose === 'public') {
-    // If there is only 1 interface, and it is the public interface, return undefined.
-    // The API will default to adding a public interface and this makes the payload cleaner.
-    return undefined;
+  const hasVPC = Boolean(vpcInterface.vpc_id);
+  const hasVLAN = Boolean(vlanInterface.label);
+
+  if (hasVPC && hasVLAN && hasPrivateIP) {
+    return [vpcInterface, vlanInterface, publicInterface];
   }
 
-  return interfaces;
+  if (hasVLAN && hasVPC) {
+    return [vpcInterface, vlanInterface];
+  }
+
+  if (hasVPC && hasPrivateIP) {
+    return [vpcInterface, publicInterface];
+  }
+
+  if (hasVLAN) {
+    return [publicInterface, vlanInterface];
+  }
+
+  if (hasVPC) {
+    return [vpcInterface];
+  }
+
+  // If no special case is met, don't send `interfaces` in the Linode
+  // create payload. This will cause the API to default to giving the Linode
+  // public communication.
+  return undefined;
 };
 
 export const defaultValues: CreateLinodeRequest = {
@@ -129,7 +145,7 @@ export const defaultValues: CreateLinodeRequest = {
     {
       ipam_address: '',
       label: '',
-      purpose: 'public',
+      purpose: 'vpc',
     },
     {
       ipam_address: '',
@@ -139,7 +155,7 @@ export const defaultValues: CreateLinodeRequest = {
     {
       ipam_address: '',
       label: '',
-      purpose: 'vpc',
+      purpose: 'public',
     },
   ],
   region: '',
