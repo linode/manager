@@ -170,7 +170,7 @@ export const defaultValues: CreateLinodeRequest = {
  * Provides dynamic validation to the Linode Create form.
  *
  * Unfortunately, we have to wrap `yupResolver` so that we can transform the payload
- * using `getLinodeCreatePayload` before validaton happens.
+ * using `getLinodeCreatePayload` before validation happens.
  */
 export const resolver: Resolver<CreateLinodeRequest> = async (
   values,
