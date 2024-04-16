@@ -88,7 +88,7 @@ export const VLAN = () => {
               filter={{ region: regionId }}
               onBlur={field.onBlur}
               onChange={field.onChange}
-              sx={{ minWidth: 300 }}
+              sx={{ width: 300 }}
               value={field.value ?? null}
             />
           )}
@@ -101,6 +101,7 @@ export const VLAN = () => {
               tooltipText={
                 'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
               }
+              containerProps={{ maxWidth: 335 }}
               disabled={disabled}
               errorText={fieldState.error?.message}
               inputRef={field.ref}
@@ -109,7 +110,6 @@ export const VLAN = () => {
               onChange={field.onChange}
               optional
               placeholder="192.0.2.0/24"
-              sx={{ maxWidth: 300 }}
               value={field.value ?? ''}
             />
           )}
