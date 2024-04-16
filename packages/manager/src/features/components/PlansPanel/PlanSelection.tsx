@@ -147,16 +147,12 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       {/* Displays Table Row for larger screens */}
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <StyledDisabledTableRow
-          onClick={() =>
-            !isSamePlan && !isDisabled && !isDisabledClass && !planTooSmall
-              ? onSelect(type.id)
-              : undefined
-          }
           aria-disabled={rowAriaDisabled}
           aria-label={rowAriaLabel}
           data-qa-plan-row={type.formattedLabel}
           disabled={rowAriaDisabled}
           key={type.id}
+          onClick={() => (!rowAriaDisabled ? onSelect(type.id) : undefined)}
         >
           <StyledRadioCell>
             {!isSamePlan && (
@@ -173,7 +169,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
                       planTooSmall || disabled || isDisabled || isDisabledClass
                     }
                     id={type.id}
-                    onChange={() => onSelect(type.id)}
                   />
                 }
                 aria-label={type.heading}
