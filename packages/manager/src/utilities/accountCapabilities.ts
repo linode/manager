@@ -3,12 +3,10 @@ import type { AccountCapability } from '@linode/api-v4';
 /**
  * Determines if a feature should be enabled.
  *
- * @returns true if the feature is returned from account.capabilities AND if it is explicitly enabled
+ * @returns true if the feature is returned from account.capabilities **AND** if it is explicitly enabled
  * by a feature flag
  *
- * If you need to launch a production feature, but have it be gated,
- * you would turn the flag *off* for that environment, but have the API return
- * the account capability.
+ * If the feature will never depend on account.capabilites, use Launch Darkly flags directly via the useFlags hook instead.
  */
 export const isFeatureEnabledV2 = (
   featureName: AccountCapability,
@@ -19,7 +17,7 @@ export const isFeatureEnabledV2 = (
 };
 
 /**
- * DEPRECATED USE isFeatureEnabledV2
+ * @deprecated Use isFeatureEnabledV2 instead
  *
  * Determines if a feature should be enabled.
  *
