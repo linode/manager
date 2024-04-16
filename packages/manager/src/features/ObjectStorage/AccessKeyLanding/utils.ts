@@ -1,9 +1,9 @@
-import { ObjectStorageKey, Scope } from '@linode/api-v4/lib/object-storage';
+import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 
 import { areArraysEqual } from 'src/utilities/areArraysEqual';
 import { sortByString } from 'src/utilities/sort-by';
 
-import { FormState } from './OMC_AccessKeyDrawer';
+import { DisplayedAccessKeyScope, FormState } from './OMC_AccessKeyDrawer';
 
 type UpdatePayload =
   | { label: FormState['label'] }
@@ -74,13 +74,13 @@ export const hasLabelOrRegionsChanged = (
 
 /**
  * Determines whether the selection of access key scopes has been made for every bucket,
- * since by default, the permissions are set to null.
+ * since by default, the displayed permissions are set to null.
  *
  * @param bucketAccess - The array of bucket objects.
  * @returns {boolean} True if all buckets have permissions set to none/read_only/read_write or if there are no buckets, false otherwise.
  */
 export const hasAccessBeenSelectedForAllBuckets = (
-  bucketAccess: Scope[] | null
+  bucketAccess: DisplayedAccessKeyScope[] | null
 ): boolean => {
   if (!bucketAccess) {
     return true;

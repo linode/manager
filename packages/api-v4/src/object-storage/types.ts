@@ -17,7 +17,7 @@ export type AccessType = 'read_only' | 'read_write' | 'none';
 
 export interface Scope {
   bucket_name: string;
-  permissions: AccessType | null;
+  permissions: AccessType;
   cluster: string;
   region?: string; // @TODO OBJ Multicluster: Remove optional indicator when API changes get released to prod
 }

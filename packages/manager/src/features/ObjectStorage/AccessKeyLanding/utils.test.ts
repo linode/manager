@@ -1,6 +1,6 @@
-import { Scope, ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+import { ObjectStorageKey, Scope } from '@linode/api-v4/lib/object-storage';
 
-import { FormState } from './OMC_AccessKeyDrawer';
+import { DisplayedAccessKeyScope, FormState } from './OMC_AccessKeyDrawer';
 import {
   generateUpdatePayload,
   hasAccessBeenSelectedForAllBuckets,
@@ -102,14 +102,14 @@ describe('hasLabelOrRegionsChanged', () => {
 });
 
 describe('hasAccessBeenSelectedForAllBuckets', () => {
-  const bucketWithoutAccessSelected: Scope = {
+  const bucketWithoutAccessSelected: DisplayedAccessKeyScope = {
     bucket_name: 'obj-bucket-1',
     cluster: 'us-lax-1',
     permissions: null,
     region: 'us-lax',
   };
 
-  const bucketWithAccessSelected: Scope = {
+  const bucketWithAccessSelected: DisplayedAccessKeyScope = {
     bucket_name: 'obj-bucket-1',
     cluster: 'us-lax-1',
     permissions: 'read_only',
