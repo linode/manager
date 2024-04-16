@@ -29,10 +29,12 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
   const { handlePlacementGroupChange, selectedRegionId } = props;
   const { data: allPlacementGroups } = useAllPlacementGroupsQuery();
   const { data: regions } = useRegionsQuery();
+
   const [
     isCreatePlacementGroupDrawerOpen,
     setIsCreatePlacementGroupDrawerOpen,
   ] = React.useState(false);
+
   const [
     selectedPlacementGroup,
     setSelectedPlacementGroup,

@@ -451,6 +451,14 @@ export interface CreateLinodeRequest {
   placement_group?: CreateLinodePlacementGroupPayload;
 }
 
+export interface MigrateLinodeRequest {
+  placement_group?: {
+    id: number;
+    compliant_only?: boolean;
+  };
+  region: string;
+}
+
 export type RescueRequestObject = Pick<
   Devices,
   'sda' | 'sdb' | 'sdc' | 'sdd' | 'sde' | 'sdf' | 'sdg'
