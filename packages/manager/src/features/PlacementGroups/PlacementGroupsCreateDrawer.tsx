@@ -188,7 +188,7 @@ export const PlacementGroupsCreateDrawer = (
                     <>
                       <Typography>
                         You’ve reached the limit of placement groups you can
-                        create in this Region.
+                        create in this region.
                       </Typography>
                       <Typography mt={2}>
                         The maximum number of placement groups in this region
