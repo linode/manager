@@ -58,14 +58,16 @@ const getDisabledClass = (
 
 const getToolTip = ({
   disabledToolTip,
+  isSamePlan,
   planIsDisabled,
   sizeTooSmall,
 }: {
   disabledToolTip?: string;
+  isSamePlan: boolean;
   planIsDisabled?: boolean;
   sizeTooSmall: boolean;
 }) => {
-  if (planIsDisabled) {
+  if (planIsDisabled && !isSamePlan) {
     return disabledToolTip;
   }
   if (sizeTooSmall) {
@@ -109,6 +111,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   const isSamePlan = type.heading === currentPlanHeading;
   const tooltip = getToolTip({
     disabledToolTip,
+    isSamePlan,
     planIsDisabled,
     sizeTooSmall: planTooSmall,
   });
@@ -169,6 +172,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
                       planTooSmall || disabled || isDisabled || isDisabledClass
                     }
                     id={type.id}
+                    onChange={() => onSelect(type.id)}
                   />
                 }
                 aria-label={type.heading}
