@@ -127,7 +127,7 @@ describe('PlacementGroupsDetailPanel', () => {
       />
     );
 
-    const select = getByPlaceholderText('Select a Placement Group');
+    const select = getByPlaceholderText('None');
     expect(select).toBeEnabled();
     expect(
       getByRole('button', { name: /create placement group/i })
