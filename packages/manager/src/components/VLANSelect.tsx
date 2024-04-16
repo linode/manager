@@ -22,7 +22,7 @@ interface Props {
    */
   filter?: Filter;
   /**
-   * Called when the field is blured
+   * Called when the field is blurred
    */
   onBlur?: () => void;
   /**
