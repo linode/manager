@@ -25,6 +25,9 @@ export const sanitizeHTML = ({
   text,
 }: SanitizeHTMLOptions) => {
   DOMPurify.setConfig({
+    ALLOWED_ATTR: allowedHTMLAttr,
+    ALLOWED_TAGS: getAllowedHTMLTags(sanitizingTier, allowMoreTags),
+    KEEP_CONTENT: disallowedTagsMode === 'discard' ? false : true,
     RETURN_DOM: false,
     RETURN_DOM_FRAGMENT: false,
     RETURN_TRUSTED_TYPE: true,
@@ -32,7 +35,7 @@ export const sanitizeHTML = ({
   });
 
   // Define transform function for anchor tags
-  const transformAnchor = (node: HTMLAnchorElement) => {
+  const anchorHandler = (node: HTMLAnchorElement) => {
     const href = node.getAttribute('href') ?? '';
 
     // If the URL is invalid, transform to a span.
@@ -50,22 +53,24 @@ export const sanitizeHTML = ({
         node.setAttribute('rel', 'noopener noreferrer');
       } else {
         node.removeAttribute('rel');
+        node.removeAttribute('target');
       }
-      node.removeAttribute('target');
     }
   };
 
   // Register hooks for DOMPurify
   DOMPurify.addHook('uponSanitizeElement', (node, data) => {
     if (data.tagName === 'a') {
-      transformAnchor(node as HTMLAnchorElement);
+      anchorHandler(node as HTMLAnchorElement);
+    } else if (data.tagName === 'span') {
+      // Allow class attribute only for span elements
+      const classAttr = node.getAttribute('class');
+      if (classAttr && classAttr.trim() !== 'version') {
+        node.removeAttribute('class');
+      }
     }
   });
 
   // Perform sanitization
-  return DOMPurify.sanitize(text, {
-    ALLOWED_ATTR: allowedHTMLAttr, // Provide the allowed attributes object
-    ALLOWED_TAGS: getAllowedHTMLTags(sanitizingTier, allowMoreTags),
-    KEEP_CONTENT: disallowedTagsMode === 'discard' ? false : true,
-  }).trim();
+  return DOMPurify.sanitize(text).trim();
 };
