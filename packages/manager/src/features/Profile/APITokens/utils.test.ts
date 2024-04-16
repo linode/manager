@@ -4,7 +4,7 @@ import { ExcludedScope } from './CreateAPITokenDrawer';
 import {
   Permission,
   allScopesAreTheSame,
-  arePermissionsEqual,
+  hasAccessBeenSelectedForAllScopes,
   isWayInTheFuture,
   scopeStringToPermTuples,
 } from './utils';
@@ -362,27 +362,46 @@ describe('APIToken utils', () => {
   });
 });
 
-describe('arePermissionsEqual', () => {
-  const scopes: Permission[] = [
-    ['account', 0],
-    ['child_account', 0],
-    ['databases', 0],
-    ['domains', 0],
-    ['events', 0],
-    ['firewall', 0],
-    ['images', 0],
-    ['ips', 0],
-    ['linodes', 0],
-    ['lke', 0],
-    ['longview', 0],
-    ['nodebalancers', 0],
-    ['object_storage', 0],
-    ['stackscripts', 0],
-    ['volumes', 0],
+describe('hasAccessBeenSelectedForAllScopes', () => {
+  const defaultScopes: Permission[] = [
+    ['account', -1],
+    ['child_account', -1],
+    ['databases', -1],
+    ['domains', -1],
+    ['events', -1],
+    ['firewall', -1],
+    ['images', -1],
+    ['ips', -1],
+    ['linodes', -1],
+    ['lke', -1],
+    ['longview', -1],
+    ['nodebalancers', -1],
+    ['object_storage', -1],
+    ['stackscripts', -1],
+    ['volumes', -1],
+    ['vpc', -1],
+  ];
+
+  const missingSelectionScopes: Permission[] = [
+    ['account', -1],
+    ['child_account', -1],
+    ['databases', -1],
+    ['domains', -1],
+    ['events', -1],
+    ['firewall', -1],
+    ['images', -1],
+    ['ips', -1],
+    ['linodes', -1],
+    ['lke', -1],
+    ['longview', -1],
+    ['nodebalancers', -1],
+    ['object_storage', -1],
+    ['stackscripts', -1],
+    ['volumes', -1],
     ['vpc', 0],
   ];
 
-  const differentScopes: Permission[] = [
+  const allSelectedScopes: Permission[] = [
     ['account', 1],
     ['child_account', 0],
     ['databases', 0],
@@ -391,7 +410,7 @@ describe('arePermissionsEqual', () => {
     ['firewall', 0],
     ['images', 0],
     ['ips', 0],
-    ['linodes', 0],
+    ['linodes', 2],
     ['lke', 0],
     ['longview', 0],
     ['nodebalancers', 0],
@@ -401,10 +420,15 @@ describe('arePermissionsEqual', () => {
     ['vpc', 0],
   ];
 
-  it('should return true if two sets of permissions are equal', () => {
-    expect(arePermissionsEqual(scopes, scopes)).toBe(true);
+  it('should return false if scopes are all set to a default of no selection', () => {
+    expect(hasAccessBeenSelectedForAllScopes(defaultScopes)).toBe(false);
   });
-  it('should return false if two sets of permissions are different', () => {
-    expect(arePermissionsEqual(scopes, differentScopes)).toBe(false);
+  it('should return false if at least one scope does not have a selection', () => {
+    expect(hasAccessBeenSelectedForAllScopes(missingSelectionScopes)).toBe(
+      false
+    );
+  });
+  it('should return true if all scopes have a valid selection', () => {
+    expect(hasAccessBeenSelectedForAllScopes(allSelectedScopes)).toBe(true);
   });
 });

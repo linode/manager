@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon';
 
-import { areArraysEqual } from 'src/utilities/areArraysEqual';
 import { isPast } from 'src/utilities/isPast';
 
 import { ExcludedScope } from './CreateAPITokenDrawer';
@@ -57,11 +56,16 @@ export const levelMap = {
   view: 1,
 };
 
+export const NO_SCOPE_SELECTION = -1;
+
 const defaultScopeMap = (
   perms: typeof basePerms,
   isCreateFlow?: boolean
 ): Record<string, -1 | 0> =>
-  perms.reduce((obj, key) => ({ ...obj, [key]: isCreateFlow ? -1 : 0 }), {});
+  perms.reduce(
+    (obj, key) => ({ ...obj, [key]: isCreateFlow ? NO_SCOPE_SELECTION : 0 }),
+    {}
+  );
 
 /**
  * This function accepts scopes strings as given by the API, which have the following format:
@@ -248,15 +252,20 @@ Omit<typeof basePermNameMap, T[number]['name']> => {
 };
 
 /**
- * Compares two sets of permissions to determine if any scopes have changed.
- * For example, to check whether the user has made scope form selections.
- * @returns true if the new perms are the same as the initial perms
+ * Determines whether a selection has been made for every scope, since by default, the scope permissions are set to null.
+ *
+ * @param scopeTuples - The array of scope tuples.
+ * @returns {boolean} True if all scopes have permissions set to none/read_only/read_write, false otherwise.
  */
-export const arePermissionsEqual = (
-  initialScopes: Permission[],
-  newScopes: Permission[]
+export const hasAccessBeenSelectedForAllScopes = (
+  scopeTuples: Permission[]
 ): boolean => {
-  return initialScopes.every((scope: Permission, i: number) =>
-    areArraysEqual(scope, newScopes[i])
+  const validAccessLevels = [
+    levelMap['none'],
+    levelMap['read_only'],
+    levelMap['read_write'],
+  ];
+  return scopeTuples.every((scopeTuple) =>
+    validAccessLevels.includes(scopeTuple[1])
   );
 };

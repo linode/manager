@@ -33,8 +33,8 @@ import {
 import {
   Permission,
   allScopesAreTheSame,
-  arePermissionsEqual,
   basePermNameMap,
+  hasAccessBeenSelectedForAllScopes,
   permTuplesToScopeString,
   scopeStringToPermTuples,
 } from './utils';
@@ -370,10 +370,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
       <ActionsPanel
         primaryButtonProps={{
           'data-testid': 'create-button',
-          disabled: arePermissionsEqual(
-            initialValues.scopes,
-            form.values.scopes
-          ),
+          disabled: !hasAccessBeenSelectedForAllScopes(form.values.scopes),
           label: 'Create Token',
           loading: isLoading,
           onClick: () => form.handleSubmit(),
