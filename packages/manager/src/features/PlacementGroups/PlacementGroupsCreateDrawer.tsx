@@ -15,7 +15,10 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
-import { useCreatePlacementGroup } from 'src/queries/placementGroups';
+import {
+  useAllPlacementGroupsQuery,
+  useCreatePlacementGroup,
+} from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -32,7 +35,6 @@ export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps
 ) => {
   const {
-    allPlacementGroups,
     disabledPlacementGroupCreateButton,
     onClose,
     onPlacementGroupCreate,
@@ -40,6 +42,7 @@ export const PlacementGroupsCreateDrawer = (
     selectedRegionId,
   } = props;
   const { data: regions } = useRegionsQuery();
+  const { data: allPlacementGroups } = useAllPlacementGroupsQuery();
   const { error, mutateAsync } = useCreatePlacementGroup();
   const { enqueueSnackbar } = useSnackbar();
   const {

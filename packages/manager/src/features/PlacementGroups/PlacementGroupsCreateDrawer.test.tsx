@@ -115,20 +115,7 @@ describe('PlacementGroupsCreateDrawer', () => {
   it('should display an error message if the region has reached capacity', async () => {
     const regionWithoutCapacity = 'Fremont, CA (us-west)';
     const { getByPlaceholderText, getByText } = renderWithTheme(
-      <PlacementGroupsCreateDrawer
-        {...commonProps}
-        allPlacementGroups={[
-          {
-            affinity_type: 'affinity:local',
-            id: 1,
-            is_compliant: true,
-            is_strict: true,
-            label: 'my-placement-group',
-            members: [],
-            region: 'us-west',
-          },
-        ]}
-      />
+      <PlacementGroupsCreateDrawer {...commonProps} />
     );
 
     const regionSelect = getByPlaceholderText('Select a Region');
