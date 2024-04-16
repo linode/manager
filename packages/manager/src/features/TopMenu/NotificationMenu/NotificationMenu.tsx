@@ -33,7 +33,7 @@ const StyledChip = styled(Chip)(() => ({
   left: 20,
   padding: 0,
   position: 'absolute',
-  top: 1,
+  top: 4,
 }));
 
 export const NotificationMenu = () => {
