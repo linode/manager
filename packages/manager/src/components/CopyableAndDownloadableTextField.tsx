@@ -1,11 +1,11 @@
 import { Theme } from '@mui/material/styles';
-import snakeCase from 'lodash/snakeCase';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DownloadTooltip } from 'src/components/DownloadTooltip';
 import { TextField, TextFieldProps } from 'src/components/TextField';
+import { snakeCase } from 'src/utilities/snakeCase';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copyIcon: {
