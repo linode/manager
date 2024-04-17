@@ -77,11 +77,11 @@ export const oneClickApps: OCA[] = [
     alt_name: 'NoSQL database cluster',
     categories: ['Development'],
     colors: {
-      end: 'tbd',
-      start: 'tbd',
+      end: 'd3fof6',
+      start: '1a6a86',
     },
     description: `Distributed, masterless, replicating NoSQL database cluster.`,
-    logo_url: 'apachecassandra.svg',
+    logo_url: 'cassandra.svg',
     name: 'Apache Cassandra Cluster',
     related_guides: [
       {
@@ -583,12 +583,12 @@ export const oneClickApps: OCA[] = [
     alt_name: 'GlusterFS',
     categories: ['Development'],
     colors: {
-      end: 'tbd',
-      start: 'tbd',
+      end: '784900',
+      start: 'D4AC5C',
     },
     description:
       'GlusterFS is an open source, software scalable network filesystem. This app deploys three GlusterFS servers and three GlusterFS clients.',
-    logo_url: 'gluster.svg',
+    logo_url: 'glusterfs.svg',
     name: 'GlusterFS Cluster',
     related_guides: [
       {
