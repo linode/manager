@@ -9,7 +9,6 @@ import {
   subnetFactory,
   vpcFactory,
 } from 'src/factories';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
@@ -54,8 +53,8 @@ describe('Linode Entity Detail', () => {
         return HttpResponse.json(account);
       }),
 
-      http.get('*/vpcs', () => {
-        return HttpResponse.json(makeResourcePage([vpc]));
+      http.get('*/vpcs/:vpcId', () => {
+        return HttpResponse.json(vpc);
       })
     );
 
@@ -80,15 +79,11 @@ describe('Linode Entity Detail', () => {
       linodes: [subnetAssignedLinodeDataFactory.build({ id: linode.id })],
     });
 
-    const _vpcs = vpcFactory.buildList(3);
-    const vpcs = [
-      ..._vpcs,
-      vpcFactory.build({ label: 'test-vpc', subnets: [subnet] }),
-    ];
+    const vpc = vpcFactory.build({ label: 'test-vpc', subnets: [subnet] });
 
     server.use(
-      http.get('*/vpcs', () => {
-        return HttpResponse.json(makeResourcePage(vpcs));
+      http.get('*/vpcs/:vpcId', () => {
+        return HttpResponse.json(vpc);
       })
     );
 

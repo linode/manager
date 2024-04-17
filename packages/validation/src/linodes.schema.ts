@@ -173,7 +173,9 @@ export const LinodeInterfaceSchema = object().shape({
   primary: boolean().notRequired(),
   subnet_id: number().when('purpose', {
     is: 'vpc',
-    then: number().required('Subnet is required.'),
+    then: number()
+      .transform((value) => (isNaN(value) ? undefined : value))
+      .required('Subnet is required.'),
     otherwise: number().test({
       name: testnameDisallowedBasedOnPurpose('VPC'),
       message: testmessageDisallowedBasedOnPurpose('vpc', 'subnet_id'),

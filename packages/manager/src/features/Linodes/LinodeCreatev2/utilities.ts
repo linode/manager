@@ -1,3 +1,5 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import { CreateLinodeSchema } from '@linode/validation';
 import { useHistory } from 'react-router-dom';
 
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -7,6 +9,7 @@ import { utoa } from '../LinodesCreate/utilities';
 import type { LinodeCreateType } from '../LinodesCreate/types';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
 import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
+import type { Resolver } from 'react-hook-form';
 
 /**
  * This interface is used to type the query params on the Linode Create flow.
@@ -104,20 +107,21 @@ export const tabs: LinodeCreateType[] = [
 export const getLinodeCreatePayload = (
   payload: CreateLinodeRequest
 ): CreateLinodeRequest => {
-  if (payload.metadata?.user_data) {
-    payload.metadata.user_data = utoa(payload.metadata.user_data);
+  const values = { ...payload };
+  if (values.metadata?.user_data) {
+    values.metadata.user_data = utoa(values.metadata.user_data);
   }
 
-  if (!payload.metadata?.user_data) {
-    payload.metadata = undefined;
+  if (!values.metadata?.user_data) {
+    values.metadata = undefined;
   }
 
-  payload.interfaces = getInterfacesPayload(
-    payload.interfaces,
-    Boolean(payload.private_ip)
+  values.interfaces = getInterfacesPayload(
+    values.interfaces,
+    Boolean(values.private_ip)
   );
 
-  return payload;
+  return values;
 };
 
 /**
@@ -258,4 +262,30 @@ export const defaultValuesMap: Record<LinodeCreateType, CreateLinodeRequest> = {
   Images: defaultValuesForImages,
   'One-Click': defaultValuesForImages,
   StackScripts: defaultValuesForStackScripts,
+};
+
+/**
+ * Provides dynamic validation to the Linode Create form.
+ *
+ * Unfortunately, we have to wrap `yupResolver` so that we can transform the payload
+ * using `getLinodeCreatePayload` before validation happens.
+ */
+export const resolver: Resolver<CreateLinodeRequest> = async (
+  values,
+  context,
+  options
+) => {
+  const transformedValues = getLinodeCreatePayload(values);
+
+  const { errors } = await yupResolver(
+    CreateLinodeSchema,
+    {},
+    { rawValues: true }
+  )(transformedValues, context, options);
+
+  if (errors) {
+    return { errors, values };
+  }
+
+  return { errors: {}, values };
 };

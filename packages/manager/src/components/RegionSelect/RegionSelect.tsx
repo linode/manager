@@ -45,6 +45,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     required,
     selectedId,
     showEdgeIconHelperText,
+    tooltipText,
     width,
   } = props;
 
@@ -124,6 +125,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           },
         })}
         textFieldProps={{
+          ...props.textFieldProps,
           InputProps: {
             endAdornment: regionFilter !== 'core' &&
               selectedRegion?.site_type === 'edge' && (
@@ -141,7 +143,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
               </StyledFlagContainer>
             ),
           },
-          tooltipText: helperText,
+          tooltipText,
         }}
         autoHighlight
         clearOnBlur
@@ -151,6 +153,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         errorText={errorText}
         getOptionDisabled={(option: RegionSelectOption) => option.unavailable}
         groupBy={(option: RegionSelectOption) => option.data.region}
+        helperText={helperText}
         label={label ?? 'Region'}
         loading={accountAvailabilityLoading}
         loadingText="Loading regions..."

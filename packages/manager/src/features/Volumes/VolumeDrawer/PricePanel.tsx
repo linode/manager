@@ -1,10 +1,11 @@
+import { CircularProgress } from '@mui/material';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import { getDynamicVolumePrice } from 'src/utilities/pricing/dynamicVolumePrice';
-
+import { useVolumeTypesQuery } from 'src/queries/volumes';
+import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 interface Props {
   currentSize: number;
   regionId: string;
@@ -12,10 +13,13 @@ interface Props {
 }
 
 export const PricePanel = ({ currentSize, regionId, value }: Props) => {
+  const { data: types, isLoading } = useVolumeTypesQuery();
+
   const getPrice = (size: number) => {
-    return getDynamicVolumePrice({
+    return getDCSpecificPriceByType({
       regionId,
       size,
+      type: types?.[0],
     });
   };
 
@@ -32,7 +36,11 @@ export const PricePanel = ({ currentSize, regionId, value }: Props) => {
 
   return (
     <Box marginTop={4}>
-      <DisplayPrice interval="mo" price={Number(price)} />
+      {isLoading ? (
+        <CircularProgress size={18} />
+      ) : (
+        <DisplayPrice interval="mo" price={price ? Number(price) : '--.--'} />
+      )}
     </Box>
   );
 };

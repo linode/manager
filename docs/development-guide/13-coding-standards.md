@@ -158,39 +158,3 @@ For this reason, extending types with interfaces/extends is suggested over creat
 ```
 
 Source: [TypeScript Wiki](https://github.com/microsoft/TypeScript/wiki/Performance#preferring-interfaces-over-intersections)
-
-## Adobe Analytics
-
-### Writing a Custom Event
-
-Custom events live (mostly) in `src/utilities/analytics.ts`. Try to write and export custom events in this file if possible, and import them in the component(s) where they are used.
-
-```tsx
-// Component.tsx {file(s) where the event is called, for quick reference}
-// OtherComponent.tsx
-
-sendDescriptiveNameEvent () => {
-      category: '{Descriptive/Page Name}',
-      action: '{interaction such as Click, Hover, Focus}:{input type such as button, link, toggle, checkbox, text field} e.g. Click:link',
-      label: '{string associated with the event; e.g event label} (optional)',
-      value: '{number associated with the event; e.g. size of a volume} (optional)',
-}
-```
-
-When adding a new custom event, coordinating with UX on the event's `category`, `action`, `label`, and `value` props values ensures consistency across our data.
-
-Avoid including pipes (`|`) as delimiters in any of the event properties. They are used in Adobe Analytics to separate fields.
-
-Avoid creating custom events that collect such as search queries, entity names, or other forms of user input. Custom events can still be fired on these actions with a generic `label` or no label at all.
-
-Examples
-
-- `sendMarketplaceSearchEvent` fires when selecting a category from the dropdown (`label` is predefined) and clicking the search field (a generic `label` is used).
-- `sendBucketCreateEvent` sends the region of the bucket, but does not send the bucket label.
-
-### Locally Testing Page Views & Custom Events and/or Troubleshooting
-
-1. Set the `REACT_APP_ADOBE_ANALYTICS_URL` environment variable in `.env`.
-2. Use the browser tools Network tab, filter requests by "adobe", and check that successful network requests have been made to load the launch script and its extensions.
-3. In the browser console, type `_satellite.setDebug(true)`.
-4. Refresh the page. You should see Adobe debug log output in the console. Each page view change or custom event that fires should be visible in the logs.

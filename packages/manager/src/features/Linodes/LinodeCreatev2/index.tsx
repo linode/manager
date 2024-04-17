@@ -30,6 +30,7 @@ import {
   defaultValuesMap,
   getLinodeCreatePayload,
   getTabIndex,
+  resolver,
   tabs,
   useLinodeCreateQueryParams,
 } from './utilities';
@@ -40,7 +41,12 @@ import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreatev2 = () => {
-  const methods = useForm<CreateLinodeRequest>({ defaultValues });
+  const methods = useForm<CreateLinodeRequest>({
+    defaultValues,
+    mode: 'onBlur',
+    resolver,
+  });
+
   const history = useHistory();
 
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
