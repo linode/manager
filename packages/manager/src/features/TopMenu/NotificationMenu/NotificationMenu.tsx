@@ -20,7 +20,7 @@ import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMarkEventsAsSeen } from 'src/queries/events/events';
 import { ThunkDispatch } from 'src/store/types';
 
-import { TopMenuTooltip } from '../TopMenuIcon';
+import { topMenuIconButtonSx, TopMenuTooltip } from '../TopMenuTooltip';
 
 const StyledChip = styled(Chip)(() => ({
   '& .MuiChip-label': {
@@ -88,13 +88,8 @@ export const NotificationMenu = () => {
       <TopMenuTooltip title="Notifications">
         <IconButton
           sx={(theme) => ({
-            '&:hover, &:focus': {
-              color: '#606469',
-            },
+            ...topMenuIconButtonSx(theme),
             color: notificationContext.menuOpen ? '#606469' : '#c9c7c7',
-            [theme.breakpoints.down('sm')]: {
-              padding: 1,
-            },
           })}
           aria-haspopup="true"
           aria-label="Notifications"

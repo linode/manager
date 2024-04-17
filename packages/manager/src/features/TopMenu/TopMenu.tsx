@@ -14,7 +14,7 @@ import { Community } from './Community';
 import { Help } from './Help';
 import { NotificationMenu } from './NotificationMenu/NotificationMenu';
 import SearchBar from './SearchBar/SearchBar';
-import { TopMenuTooltip } from './TopMenuIcon';
+import { TopMenuTooltip } from './TopMenuTooltip';
 import { UserMenu } from './UserMenu';
 
 export interface TopMenuProps {
