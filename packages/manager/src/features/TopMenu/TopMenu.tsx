@@ -64,7 +64,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           variant="dense"
         >
           <Hidden mdDown>
-            <TopMenuTooltip key={navHoverText} title={navHoverText}>
+            <TopMenuTooltip title={navHoverText}>
               <IconButton
                 aria-label="open menu"
                 color="inherit"
@@ -77,7 +77,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
             </TopMenuTooltip>
           </Hidden>
           <Hidden mdUp>
-            <TopMenuTooltip key={navHoverText} title={navHoverText}>
+            <TopMenuTooltip title={navHoverText}>
               <IconButton
                 aria-label="open menu"
                 color="inherit"
