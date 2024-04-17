@@ -10,7 +10,10 @@ import { TopMenuTooltip, topMenuIconButtonSx } from './TopMenuTooltip';
 export const Community = () => {
   return (
     <TopMenuTooltip title="Linode Cloud Community (opens in new tab)">
-      <Link to={LINODE_COMMUNITY_URL}>
+      <Link
+        accessibleAriaLabel="Linode Cloud Community"
+        to={LINODE_COMMUNITY_URL}
+      >
         <IconButton sx={topMenuIconButtonSx}>
           <CommunitySVGIcon height="20px" width="20px" />
         </IconButton>
