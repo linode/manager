@@ -56,7 +56,7 @@ export const levelMap = {
   view: 1,
 };
 
-export const NO_SCOPE_SELECTION = -1;
+const NO_SCOPE_SELECTION = -1;
 
 const defaultScopeMap = (
   perms: typeof basePerms,

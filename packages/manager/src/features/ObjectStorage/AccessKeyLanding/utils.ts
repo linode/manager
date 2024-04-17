@@ -1,9 +1,8 @@
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
-
 import { areArraysEqual } from 'src/utilities/areArraysEqual';
 import { sortByString } from 'src/utilities/sort-by';
 
-import { DisplayedAccessKeyScope, FormState } from './OMC_AccessKeyDrawer';
+import type { DisplayedAccessKeyScope, FormState } from './OMC_AccessKeyDrawer';
+import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 
 type UpdatePayload =
   | { label: FormState['label'] }

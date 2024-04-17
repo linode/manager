@@ -1,11 +1,11 @@
-import { ObjectStorageKey, Scope } from '@linode/api-v4/lib/object-storage';
-
-import { DisplayedAccessKeyScope, FormState } from './OMC_AccessKeyDrawer';
 import {
   generateUpdatePayload,
   hasAccessBeenSelectedForAllBuckets,
   hasLabelOrRegionsChanged,
 } from './utils';
+
+import type { DisplayedAccessKeyScope, FormState } from './OMC_AccessKeyDrawer';
+import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 
 describe('generateUpdatePayload', () => {
   const initialValues: FormState = {
@@ -135,7 +135,7 @@ describe('hasAccessBeenSelectedForAllBuckets', () => {
   });
 
   it('returns true if there are no buckets', () => {
-    const bucket_access: Scope[] = [];
+    const bucket_access: DisplayedAccessKeyScope[] = [];
     expect(hasAccessBeenSelectedForAllBuckets(bucket_access)).toBe(true);
   });
 });
