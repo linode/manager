@@ -1,3 +1,4 @@
+import { TimeDuration } from '@linode/api-v4';
 import * as React from 'react';
 
 import Select, {
@@ -11,7 +12,11 @@ interface Props
     'defaultValue' | 'onChange'
   > {
   defaultValue?: Labels;
-  handleStatsChange?: (start: number, end: number) => void;
+  handleStatsChange?: (
+    start: number,
+    end: number,
+    timeDuration: TimeDuration
+  ) => void;
 }
 
 export type Labels =
@@ -41,6 +46,11 @@ export const CloudViewTimeRangeSelect = React.memo((props: Props) => {
     'Past 30 Minutes'
   );
 
+  const [apiTimeDuration, setApiTimeDuration] = React.useState<TimeDuration>({
+    unit: 'min',
+    value: 30,
+  });
+
   /*
     Why division by 1000?
 
@@ -63,23 +73,42 @@ export const CloudViewTimeRangeSelect = React.memo((props: Props) => {
             new Date().getFullYear()
           )
         ),
-        Math.round(nowInSeconds)
+        Math.round(nowInSeconds),
+        apiTimeDuration
       );
     }
-  }, []);
+  }, [apiTimeDuration]);
 
   const options = generateSelectOptions(`${new Date().getFullYear()}`);
 
   const handleChange = (item: Item<Labels, Labels>) => {
     setTimeRange(item.value);
+    setTimeDurationFromTimeRange(item.value);
+  };
 
-    if (!!handleStatsChange) {
-      handleStatsChange(
-        Math.round(
-          generateStartTime(item.value, nowInSeconds, new Date().getFullYear())
-        ),
-        Math.round(nowInSeconds)
-      );
+  const setTimeDurationFromTimeRange = (label: string) => {
+    if (label == 'Past 30 Minutes') {
+      setApiTimeDuration({ unit: 'min', value: 30 });
+    }
+
+    if (label == 'Past 24 Hours') {
+      setApiTimeDuration({ unit: 'hr', value: 24 });
+    }
+
+    if (label == 'Past 12 Hours') {
+      setApiTimeDuration({ unit: 'hr', value: 12 });
+    }
+
+    if (label == 'Past 7 Days') {
+      setApiTimeDuration({ unit: 'days', value: 7 });
+    }
+
+    if (label == 'Past 30 Days') {
+      setApiTimeDuration({ unit: 'days', value: 30 });
+    }
+
+    if (label == 'Past Year') {
+      setApiTimeDuration({ unit: 'days', value: 365 });
     }
   };
 

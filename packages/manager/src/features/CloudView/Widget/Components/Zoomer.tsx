@@ -15,10 +15,20 @@ export const ZoomIcon = (props: ZoomIconProperties) => {
 
   const ToggleZoomer = () => {
     if (props.zoomIn) {
-      return <ZoomInMap onClick={() => handleClick(false)} />;
+      return (
+        <ZoomInMap
+          onClick={() => handleClick(false)}
+          style={{ color: 'grey', fontSize: 'x-large' }}
+        />
+      );
     }
 
-    return <ZoomOutMap onClick={() => handleClick(true)} />;
+    return (
+      <ZoomOutMap
+        onClick={() => handleClick(true)}
+        style={{ color: 'grey', fontSize: 'x-large' }}
+      />
+    );
   };
 
   return (

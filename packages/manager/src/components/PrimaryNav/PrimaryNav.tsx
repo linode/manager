@@ -270,9 +270,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           icon: <Longview />,
         },
         {
-          display: 'CloudView',
+          display: 'Monitor',
           hide: !showCloudView,
-          href: '/cloudview',
+          href: '/monitor/cloudpulse',
           icon: <CloudView />,
           isBeta: false,
         },

@@ -108,6 +108,7 @@ import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
 import { getStorage } from 'src/utilities/storage';
+
 import { getMetricsResponse } from './metricsMocker';
 
 export const makeResourcePage = <T>(
@@ -244,8 +245,8 @@ const databases = [
         req.params.engine === 'mysql'
           ? pickRandom(possibleMySQLReplicationTypes)
           : req.params.engine === 'postgresql'
-            ? pickRandom(possiblePostgresReplicationTypes)
-            : (undefined as any),
+          ? pickRandom(possiblePostgresReplicationTypes)
+          : (undefined as any),
       ssl_connection: true,
       storage_engine:
         req.params.engine === 'mongodb' ? 'wiredtiger' : undefined,
@@ -557,185 +558,185 @@ const cloudView = [
     // );
   }),
 
-  rest.post('*/aclp/service/*/metrics', async (req, res, ctx) => {
-    await sleep(1000)        
-    return res(ctx.json(getMetricsResponse(req.body)));
+  rest.post('*/monitor/service/*/metrics', async (req, res, ctx) => {
+    await sleep(1000);
+    const data = getMetricsResponse(req.body);
+    return res(ctx.json(data));
   }),
 
-  //dashboards
-  rest.get('*/cloudview/dashboards',
-    async (req, res, ctx) => {
-      await sleep(100); // this is to test out loading feature
-      //TODO, decide how to work on widgets and filters (for now keeping static ones)
-      // return res(ctx.json(makeResourcePage(dashboardFactory.buildList(10))))
-      return res(ctx.json(makeResourcePage([{
-        id: 1,
-        label: "Akamai Global Dashboard",        
-        instance_id: 2,        
-        created: "2023-07-12T16:08:53",
-        updated: "2023-07-12T16:08:53",
-        widgets: [{
-          label: "HTTP_200",
-          service_type: "ACLB",
-          region_id:2,
-          namespace_id: 2,
-          metric: "200",
-          aggregate_function: "sum",
-          group_by: "",
-          y_label: "count",
-          color:"red",
-          size:"6",
-          chart_type:"line",          
-          filters: []
-        }, {
-          label: "HTTP_400",
-          service_type: "ACLB",
-          metric: "400",
-          aggregate_function: "sum",
-          group_by: "",
-          y_label: "count",
-          color:"red",
-          size:"6",
-          chart_type:"line",
-          region_id:1,
-          namespace_id:1,
-          filters: []
-        }, {
-          label: "HTTP_500",
-          service_type: "ACLB",
-          metric: "500",
-          aggregate_function: "sum",
-          group_by: "",
-          y_label: "count",
-          color:"skyblue",
-          size:"6",
-          chart_type:"line",
-          region_id:1,
-          namespace_id:1,
-          filters: []
-        }, {
-          label: "HTTP_401",
-          service_type: "ACLB",
-          metric: "401",
-          aggregate_function: "sum",
-          group_by: "",
-          y_label: "count",
-          color:"green",
-          size:"6",
-          chart_type:"line",
-          region_id:1,
-          namespace_id:1,
-          filters: []
-        }], 
-        filters:[ {
-          key:"service_type",
-          operator:"eq",
-          value:"ACLB"
-          },
+  // dashboards
+  rest.get('*/monitor/dashboards', async (req, res, ctx) => {
+    await sleep(100); // this is to test out loading feature
+    // TODO, decide how to work on widgets and filters (for now keeping static ones)
+    // return res(ctx.json(makeResourcePage(dashboardFactory.buildList(10))))
+    return res(
+      ctx.json(
+        makeResourcePage([
           {
-            key:"region",
-            operator:"eq",
-            value:"us-east"
+            created: '2023-07-12T16:08:53',
+            id: req.params.id,
+            label: 'Akamai Global Dashboard',
+            service_type: 'ACLB',
+            time_duration: {
+              unit: 'hr',
+              value: 1,
+            },
+            time_granularity: {
+              unit: 'sec',
+              value: 1,
+            },
+            updated: '2023-07-12T16:08:53',
+            widgets: [
+              {
+                aggregate_function: 'sum',
+                chart_type: 'line',
+                color: 'lightred',
+                filters: [],
+                group_by: '',
+                label: 'CPU',
+                metric: '200',
+                namespace_id: 1,
+                region_id: 1,
+                service_type: 'ACLB',
+                size: 12,
+                unit: '%',
+                y_label: 'count',
+              },
+              {
+                aggregate_function: 'sum',
+                chart_type: 'line',
+                color: 'skyblue',
+                filters: [],
+                group_by: '',
+                label: 'HTTP_400',
+                metric: '400',
+                namespace_id: 1,
+                region_id: 1,
+                service_type: 'ACLB',
+                size: 6,
+                unit: '%',
+                y_label: 'count',
+              },
+              {
+                aggregate_function: 'sum',
+                chart_type: 'line',
+                color: 'skyblue',
+                filters: [],
+                group_by: '',
+                label: 'HTTP_500',
+                metric: '500',
+                namespace_id: 1,
+                region_id: 1,
+                service_type: 'ACLB',
+                size: 6,
+                unit: '%',
+                y_label: 'count',
+              },
+              {
+                aggregate_function: 'sum',
+                chart_type: 'line',
+                color: 'lightgreen',
+                filters: [],
+                group_by: '',
+                label: 'Network',
+                metric: '401',
+                namespace_id: 1,
+                region_id: 1,
+                service_type: 'ACLB',
+                size: 6,
+                unit: 'Kb/s',
+                y_label: 'count',
+              },
+            ],
           },
-          {
-            key:"interval",
-            operator:"eq",
-            value:"1m"
-          }
-        ],
-        time_granularity: {
-          unit:"sec",
-          value:1
-        }, 
-        time_duration: {
-          unit:"hr",
-          value:1
-        }
-      }])))
-    }),
+        ])
+      )
+    );
+  }),
 
-  rest.get('*/cloudview/dashboards/:id',
-    async (req, res, ctx) => {
-
-      await sleep(100) // this is to test out loading feature
-      if (req.params.id) {
-
-        return res(ctx.json({
+  rest.get('*/monitor/dashboards/:id', async (req, res, ctx) => {
+    await sleep(100); // this is to test out loading feature
+    if (req.params.id) {
+      return res(
+        ctx.json({
+          created: '2023-07-12T16:08:53',
           id: req.params.id,
-          label: "Akamai Global Dashboard",
-          service_type: "ACLB",          
-          created: "2023-07-12T16:08:53",
-          updated: "2023-07-12T16:08:53",          
-          widgets: [{
-            label: "HTTP_200",
-            service_type: "ACLB",
-            metric: "200",
-            aggregate_function: "sum",
-            group_by: "",
-            y_label: "count",
-            color:"lightred",
-            size:12,
-            chart_type:"line",
-            region_id:1,
-            namespace_id:1,            
-            filters: []
-          }, {
-            label: "HTTP_400",
-            service_type: "ACLB",
-            metric: "400",
-            aggregate_function: "sum",
-            group_by: "",
-            y_label: "count",
-            color:"skyblue",
-            size:6,
-            chart_type:"line",
-            region_id:1,
-            namespace_id:1,
-            filters: []
-          }, {
-            label: "HTTP_500",
-            service_type: "ACLB",
-            metric: "500",
-            aggregate_function: "sum",
-            group_by: "",
-            y_label: "count",
-            color:"skyblue",
-            size:6,
-            chart_type:"line",
-            region_id:1,
-            namespace_id:1,
-            filters: []
-          }, {
-            label: "HTTP_401",
-            service_type: "ACLB",
-            metric: "401",
-            aggregate_function: "sum",
-            group_by: "",
-            y_label: "count",
-            color:"lightgreen",
-            size:6,
-            chart_type:"line",
-            region_id:1,
-            namespace_id:1,
-            filters: []
-          }],
-          time_granularity: {
-            unit:"sec",
-            value:1
-          }, 
+          label: 'Akamai Global Dashboard',
+          service_type: 'ACLB',
           time_duration: {
-            unit:"hr",
-            value:1
-          }
-        }, 
-        ))
-        
-      } else {
-        //TODO, decide how to work on widgets and filters (for now keeping static ones)
-        return res(ctx.json(dashboardFactory.build({ id: 0 })))
-      }
-    }),
-
+            unit: 'hr',
+            value: 1,
+          },
+          time_granularity: {
+            unit: 'sec',
+            value: 1,
+          },
+          updated: '2023-07-12T16:08:53',
+          widgets: [
+            {
+              aggregate_function: 'sum',
+              chart_type: 'line',
+              color: 'lightred',
+              filters: [],
+              group_by: '',
+              label: 'HTTP_200',
+              metric: '200',
+              namespace_id: 1,
+              region_id: 1,
+              service_type: 'ACLB',
+              size: 12,
+              y_label: 'count',
+            },
+            {
+              aggregate_function: 'sum',
+              chart_type: 'line',
+              color: 'skyblue',
+              filters: [],
+              group_by: '',
+              label: 'HTTP_400',
+              metric: '400',
+              namespace_id: 1,
+              region_id: 1,
+              service_type: 'ACLB',
+              size: 6,
+              y_label: 'count',
+            },
+            {
+              aggregate_function: 'sum',
+              chart_type: 'line',
+              color: 'skyblue',
+              filters: [],
+              group_by: '',
+              label: 'HTTP_500',
+              metric: '500',
+              namespace_id: 1,
+              region_id: 1,
+              service_type: 'ACLB',
+              size: 6,
+              y_label: 'count',
+            },
+            {
+              aggregate_function: 'sum',
+              chart_type: 'line',
+              color: 'lightgreen',
+              filters: [],
+              group_by: '',
+              label: 'HTTP_401',
+              metric: '401',
+              namespace_id: 1,
+              region_id: 1,
+              service_type: 'ACLB',
+              size: 6,
+              y_label: 'count',
+            },
+          ],
+        })
+      );
+    } else {
+      // TODO, decide how to work on widgets and filters (for now keeping static ones)
+      return res(ctx.json(dashboardFactory.build({ id: 0 })));
+    }
+  }),
 
   rest.get('*/cloudview/services', async (req, res, ctx) => {
     await sleep(2000);
@@ -1551,9 +1552,9 @@ export const handlers = [
       headers.status === 'completed'
         ? accountMaintenanceFactory.buildList(30, { status: 'completed' })
         : [
-          ...accountMaintenanceFactory.buildList(90, { status: 'pending' }),
-          ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
-        ];
+            ...accountMaintenanceFactory.buildList(90, { status: 'pending' }),
+            ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
+          ];
 
     if (req.headers.get('x-filter')) {
       accountMaintenance.sort((a, b) => {
@@ -1780,9 +1781,9 @@ export const handlers = [
       const grantsResponse = grantsFactory.build({
         global: parentAccountNonAdminUser.restricted
           ? {
-            cancel_account: false,
-            child_account_access: true,
-          }
+              cancel_account: false,
+              child_account_access: true,
+            }
           : undefined,
       });
       return res(ctx.json(grantsResponse));

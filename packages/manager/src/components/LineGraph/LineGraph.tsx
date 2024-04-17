@@ -188,6 +188,11 @@ export const LineGraph = (props: LineGraphProps) => {
       animation: { duration: 0 },
       legend: {
         display: _nativeLegend,
+        onClick: (e, legendItem) => {
+          if (legendItem) {
+            handleLegendClick(legendItem.datasetIndex!);
+          }
+        },
         position: _nativeLegend ? 'bottom' : undefined,
       },
       maintainAspectRatio: false,

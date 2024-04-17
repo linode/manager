@@ -1,4 +1,5 @@
 import { Dashboard, Widgets } from '@linode/api-v4';
+import { Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
@@ -34,16 +35,30 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     // set as dashboard filter
     setCloudViewGraphProperties({
       ...cloudViewGraphProperties,
-      dashboardFilters: props.dashboardFilters,
+      globalFilters: props.dashboardFilters,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.dashboardFilters]); // execute every time when there is dashboardFilters change
 
+  // const {
+  //   data: metricDefinitions,
+  //   isError,
+  //   isLoading,
+  // } = useGetCloudViewServicesByServiceType(props.dashbaord.serviceType);
+
+  // if (isLoading) {
+  //   return <CircleProgress />;
+  // }
+
+  // if (isError) {
+  //   return <ErrorState errorText={'Error loading metric definitions'} />;
+  // }
+
   const getCloudViewGraphProperties = (widget: Widgets) => {
     const graphProp: CloudViewWidgetProperties = {} as CloudViewWidgetProperties;
     graphProp.widget = { ...widget };
-    graphProp.dashboardFilters = props.dashboardFilters;
-    graphProp.unit = '%';
+    graphProp.globalFilters = props.dashboardFilters;
+    graphProp.unit = widget.unit ? widget.unit : '%';
     graphProp.ariaLabel = widget.label;
     graphProp.errorLabel = 'Error While loading data';
 
@@ -55,20 +70,26 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   };
 
   const RenderWidgets = () => {
+    let colorIndex = 0;
     if (props.dashbaord != undefined) {
       if (
-        cloudViewGraphProperties.dashboardFilters?.serviceType &&
-        cloudViewGraphProperties.dashboardFilters?.region &&
-        cloudViewGraphProperties.dashboardFilters?.resource
+        cloudViewGraphProperties.globalFilters?.serviceType &&
+        cloudViewGraphProperties.globalFilters?.region &&
+        cloudViewGraphProperties.globalFilters?.resource
       ) {
         return props.dashbaord.widgets.map((element, index) => {
-          return (
-            <CloudViewWidget
-              key={index}
-              {...getCloudViewGraphProperties(element)}
-              handleWidgetChange={handleWidgetChange}
-            />
-          );
+          if (element && element != undefined) {
+            return (
+              <CloudViewWidget
+                key={index}
+                {...getCloudViewGraphProperties(element)}
+                handleWidgetChange={handleWidgetChange}
+                useColorIndex={colorIndex++}
+              />
+            );
+          } else {
+            return <React.Fragment key={index}></React.Fragment>;
+          }
         });
       } else {
         return (
@@ -98,7 +119,13 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   });
 
   return (
-    <Grid container spacing={2}>
+    <Grid
+      className={'graphgrid'}
+      columnSpacing={1.5}
+      container
+      rowSpacing={0}
+      spacing={2}
+    >
       <RenderWidgets />
     </Grid>
   );

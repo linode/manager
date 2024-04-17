@@ -9,20 +9,15 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 
-import { Namespaces } from './Namespaces/Namespaces';
-import { Overview } from './Overview/Overview';
 import { DashBoardLanding } from './Dashboard/DashboardLanding';
+import { Namespaces } from './Namespaces/Namespaces';
 type Props = RouteComponentProps<{}>;
 
 export const CloudViewTabs = React.memo((props: Props) => {
   const tabs = [
     {
-      routeName: `${props.match.url}/home`,
+      routeName: `${props.match.url}/dashboards`,
       title: 'Dashboards',
-    },
-    {
-      routeName: `${props.match.url}/feature/dashboards`,
-      title: 'Dashboards & Widgets',
     },
     {
       routeName: `${props.match.url}/namespaces`,
@@ -41,7 +36,7 @@ export const CloudViewTabs = React.memo((props: Props) => {
   return (
     <>
       <LandingHeader
-        breadcrumbProps={{ pathname: '/Cloud View' }}
+        breadcrumbProps={{ pathname: '/Akamai Cloud Pulse' }}
         docsLabel="Getting Started"
         docsLink="https://www.linode.com/docs/"
       />
@@ -57,12 +52,9 @@ export const CloudViewTabs = React.memo((props: Props) => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <DashBoardLanding/>
+              <DashBoardLanding />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
-              <DashBoardLanding  />
-            </SafeTabPanel>
-            <SafeTabPanel index={2}>
               <Namespaces />
             </SafeTabPanel>
           </TabPanels>

@@ -10,7 +10,7 @@ export const getCloudViewMetrics = (
     serviceType?:string, metricsRequest?:CloudViewMetricsRequest) =>       
 
   Request<CloudViewMetricsResponse>(
-    setURL(`${CLOUDVIEW_METRICS_ROOT}/aclp/service/${encodeURIComponent(serviceType!)}/metrics`),
+    setURL(`${CLOUDVIEW_METRICS_ROOT}/monitor/service/${encodeURIComponent(serviceType!)}/metrics`),
     setMethod('POST'),
     setData(metricsRequest)
   );

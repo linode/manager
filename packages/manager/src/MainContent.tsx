@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -391,7 +391,10 @@ export const MainContent = () => {
                           )}
                           {showVPCs && <Route component={VPC} path="/vpcs" />}
                           {showCloudView && (
-                            <Route component={CloudView} path="/cloudview" />
+                            <Route
+                              component={CloudView}
+                              path="/monitor/cloudpulse"
+                            />
                           )}
                           <Redirect exact from="/" to={defaultRoot} />
                           {/** We don't want to break any bookmarks. This can probably be removed eventually. */}

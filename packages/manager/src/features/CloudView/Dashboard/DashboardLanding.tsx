@@ -4,7 +4,10 @@ import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { useCloudViewDashboardByIdQuery } from 'src/queries/cloudview/dashboards';
+import {
+  useCloudViewDashboardByIdQuery,
+  useCloudViewDashboardsQuery,
+} from 'src/queries/cloudview/dashboards';
 
 import { FiltersObject } from '../Models/GlobalFilterProperties';
 import { GlobalFilters } from '../Overview/GlobalFilters';
@@ -21,7 +24,7 @@ export const DashBoardLanding = () => {
     data: dashboard,
     isError: dashboardLoadError,
     isLoading: dashboardLoadLoding,
-  } = useCloudViewDashboardByIdQuery(dashboardId);
+  } = useCloudViewDashboardsQuery();
 
   if (dashboardLoadLoding) {
     return <CircleProgress />;
@@ -63,29 +66,33 @@ export const DashBoardLanding = () => {
   };
 
   const dashbaordChange = (dashboard: Dashboard) => {
-    //todo, whenever a change in dashboard happens
+    // todo, whenever a change in dashboard happens
   };
 
   return (
-    <Paper>
-      <div style={{ display: 'flex' }}>
-        <div style={{ marginTop: '30px', width: '40%' }}>
-          <h3>{'Akamai Cloud Pulse Dashboard'}</h3>
+    // <Paper className={'graphpaper'}>
+    <>
+      <Paper>
+        <div style={{ display: 'flex' }}>
+          <div style={{ marginLeft: '10px', marginTop: '30px', width: '40%' }}>
+            <h3>{'Dashboard 1'}</h3>
+          </div>
+          <div style={{ width: '80%' }}>
+            <GlobalFilters
+              handleAnyFilterChange={(filters: FiltersObject) =>
+                handleGlobalFilterChange(filters)
+              }
+            ></GlobalFilters>
+          </div>
         </div>
-        <div style={{ width: '80%' }}>
-          <GlobalFilters
-            handleAnyFilterChange={(filters: FiltersObject) =>
-              handleGlobalFilterChange(filters)
-            }
-          ></GlobalFilters>
-        </div>
-      </div>
+      </Paper>
       <Divider></Divider>
       <CloudPulseDashboard
         {...dashboardProp}
-        dashbaord={dashboard}
+        dashbaord={dashboard.data[0]}
         onDashboardChange={dashbaordChange}
       />
-    </Paper>
+    </>
+    // </Paper>
   );
 };

@@ -54,7 +54,11 @@ export const CloudViewLineGraph = React.memo(
 
     return (
       <React.Fragment>
-        <Typography className={classes.title} variant="body1">
+        <Typography
+          className={classes.title}
+          style={{ marginLeft: '13px', marginTop: '25px' }}
+          variant="body1"
+        >
           {title}
           {subtitle && (
             <React.Fragment>
@@ -62,7 +66,7 @@ export const CloudViewLineGraph = React.memo(
             </React.Fragment>
           )}
         </Typography>
-        <Divider spacingBottom={16} spacingTop={16} />
+        <Divider spacingBottom={32} spacingTop={32} />
         <div style={{ position: 'relative' }}>
           {error ? (
             <div style={{ height: props.chartHeight || '300px' }}>

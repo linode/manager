@@ -1,4 +1,9 @@
-import { TimeDuration, TimeGranularity, Widgets } from '@linode/api-v4';
+import {
+  MetricDefinitions,
+  TimeDuration,
+  TimeGranularity,
+  Widgets,
+} from '@linode/api-v4';
 import * as React from 'react';
 
 import { profileFactory } from 'src/factories';
@@ -32,10 +37,12 @@ describe('Cloud View Graph Widget', () => {
 
   it('renders a line graph with required widgets', () => {
     let widget = {} as Widgets;
+    let metricDefinitions = {} as MetricDefinitions;
 
     const handleWidgetChange = (widgetParam: Widgets) => {
       // dummy
       widget = { ...widgetParam };
+      metricDefinitions = { ...metricDefinitions };
     };
 
     const dashboardFilters = {} as FiltersObject;
@@ -70,9 +77,10 @@ describe('Cloud View Graph Widget', () => {
     const { getByTestId } = renderWithTheme(
       <CloudViewWidget
         ariaLabel={'Test'}
-        dashboardFilters={dashboardFilters}
+        globalFilters={dashboardFilters}
         errorLabel={errorLabel}
         handleWidgetChange={handleWidgetChange}
+        metricDefinition={metricDefinitions}
         unit={'%'}
         widget={widget}
       />
@@ -89,10 +97,12 @@ describe('Cloud View Graph Widget', () => {
 
   it('renders a circle progress if metrics API is still loading', () => {
     let widget = {} as Widgets;
+    let metricDefinitions = {} as MetricDefinitions;
 
     const handleWidgetChange = (widgetParam: Widgets) => {
       // dummy
       widget = { ...widgetParam };
+      metricDefinitions = { ...metricDefinitions };
     };
 
     const dashboardFilters = {} as FiltersObject;
@@ -127,9 +137,10 @@ describe('Cloud View Graph Widget', () => {
     const { getByTestId } = renderWithTheme(
       <CloudViewWidget
         ariaLabel={'Test'}
-        dashboardFilters={dashboardFilters}
+        globalFilters={dashboardFilters}
         errorLabel={errorLabel}
         handleWidgetChange={handleWidgetChange}
+        metricDefinition={metricDefinitions}
         unit={'%'}
         widget={widget}
       />
@@ -144,10 +155,12 @@ describe('Cloud View Graph Widget', () => {
 
   it('renders a error state progress if metrics API response is error', () => {
     let widget = {} as Widgets;
+    let metricDefinitions = {} as MetricDefinitions;
 
     const handleWidgetChange = (widgetParam: Widgets) => {
       // dummy
       widget = { ...widgetParam };
+      metricDefinitions = { ...metricDefinitions };
     };
 
     const dashboardFilters = {} as FiltersObject;
@@ -173,9 +186,10 @@ describe('Cloud View Graph Widget', () => {
     const { getByTestId, getByText } = renderWithTheme(
       <CloudViewWidget
         ariaLabel={'Test'}
-        dashboardFilters={dashboardFilters}
+        globalFilters={dashboardFilters}
         errorLabel={errorLabel}
         handleWidgetChange={handleWidgetChange}
+        metricDefinition={metricDefinitions}
         unit={'%'}
         widget={widget}
       />
@@ -187,10 +201,12 @@ describe('Cloud View Graph Widget', () => {
   }),
     it('renders a error state progress if metrics API response is error with default error message', () => {
       let widget = {} as Widgets;
+      let metricDefinitions = {} as MetricDefinitions;
 
       const handleWidgetChange = (widgetParam: Widgets) => {
         // dummy
         widget = { ...widgetParam };
+        metricDefinitions = { ...metricDefinitions };
       };
 
       const dashboardFilters = {} as FiltersObject;
@@ -216,8 +232,9 @@ describe('Cloud View Graph Widget', () => {
       const { getByTestId, getByText } = renderWithTheme(
         <CloudViewWidget
           ariaLabel={'Test'}
-          dashboardFilters={dashboardFilters}
+          globalFilters={dashboardFilters}
           handleWidgetChange={handleWidgetChange}
+          metricDefinition={metricDefinitions}
           unit={'%'}
           widget={widget}
         />

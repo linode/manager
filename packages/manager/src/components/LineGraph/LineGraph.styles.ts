@@ -47,8 +47,6 @@ export const StyledTable = styled(Table, {
     border: 0,
   },
 
-  maxWidth: '600px',
-
   [theme.breakpoints.down('lg')]: {
     width: '100%',
   },
@@ -65,7 +63,7 @@ export const StyledTable = styled(Table, {
     maxWidth: '100%',
   },
 
-  width: '85%',
+  width: '100%',
 }));
 
 export const StyledTableBody = styled(TableBody, {

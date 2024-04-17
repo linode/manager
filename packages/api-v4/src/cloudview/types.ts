@@ -1,4 +1,4 @@
-import { Filter } from "src/types";
+import { Filter } from 'src/types';
 
 export interface Namespace {
   id: number;
@@ -15,96 +15,91 @@ export interface Namespace {
 }
 
 export interface Dashboard {
-
   id: number;
-  label:string;      
-  widgets:Widgets[];
-  created:string;
-  updated:string;  
-  time_granularity:TimeGranularity;
-  time_duration:TimeDuration;
-
+  label: string;
+  widgets: Widgets[];
+  created: string;
+  updated: string;
+  time_granularity: TimeGranularity;
+  time_duration: TimeDuration;
+  serviceType: string;
 }
 
 export interface TimeGranularity {
-  unit:string;
-  value:number;
+  unit: string;
+  value: number;
 }
 
 export interface TimeDuration {
-  unit:string;
-  value:number;
+  unit: string;
+  value: number;
 }
 
 export interface Widgets {
-  label:string;
-  metric:string;
-  aggregate_function:string;
-  group_by:string;
-  region_id:number;
-  namespace_id:number;
-  color:string;
-  size:number;
-  chart_type:string;
-  y_label:string;
-  filters:Filters[];
-  serviceType:string;
-  time_granularity:TimeGranularity;
+  label: string;
+  metric: string;
+  aggregate_function: string;
+  group_by: string;
+  region_id: number;
+  namespace_id: number;
+  color: string;
+  size: number;
+  chart_type: string;
+  y_label: string;
+  filters: Filters[];
+  serviceType: string;
+  resource_id: string[];
+  time_granularity: TimeGranularity;
+  time_duration: TimeDuration;
+  unit: string;
 }
 
 export interface Filters {
-  key:string;
-  operator:string;
-  value:string;
+  key: string;
+  operator: string;
+  value: string;
 }
 
 export interface CloudViewMetricsRequest {
-  metric:string; //done
-  instance_id:string[]; //this comes from widget itself
-  filters:Filter[];  //widget level
-  aggregate_function:string; // come from widget
-  group_by:string; // come from widget
-  duration:TimeDuration; // come from dashboard
-  step:TimeGranularity; //comes from dashboard
-  counter:number;
-  startTime:number;
-  endTime:number;
+  metric: string; // done
+  instance_id: string[]; // this comes from widget itself
+  filters: Filter[]; // widget level
+  aggregate_function: string; // come from widget
+  group_by: string; // come from widget
+  duration: TimeDuration; // come from dashboard
+  step: TimeGranularity; // comes from dashboard
+  counter: number;
+  startTime: number;
+  endTime: number;
 }
 
 export interface CloudViewMetricsResponse {
-
-  data:CloudViewMetricsResponseData;
-  isPartial:boolean;
-  stats:{
-    series_fetched:number;
-  },
-  status:string;
+  data: CloudViewMetricsResponseData;
+  isPartial: boolean;
+  stats: {
+    series_fetched: number;
+  };
+  status: string;
 }
 
 export interface CloudViewMetricsResponseData {
-
-  result:CloudViewMetricsList[];
-  result_type:string;  
-
+  result: CloudViewMetricsList[];
+  result_type: string;
 }
 
 export interface CloudViewMetricsList {
-
-  metric:any;
-  values:Array<CloudViewMetricValues>;
-
+  metric: any;
+  values: Array<CloudViewMetricValues>;
 }
 
 export interface CloudViewMetrics {
-  
-  label:string;
-  metric:string;
-
+  label: string;
+  metric: string;
 }
 
 export interface CloudViewMetricValues {
-  timestamp:number;
-  value:string;
+  timestamp: number;
+  value: string;
 }
 
 export interface NamespaceApiKey {
@@ -138,4 +133,29 @@ export interface ServiceTypes {
       }[];
     }[];
   }[];
+}
+
+export interface MonitorServiceType {
+  service_type: string;
+  price: string;
+  available_metrics: AvailableMetrics[];
+}
+
+export interface MetricDefinitions {
+  available_metrics: AvailableMetrics[];
+}
+
+export interface AvailableMetrics {
+  label: string;
+  metric: string;
+  metric_type: string;
+  unit: string;
+  scrape_interval: string;
+  available_aggregate_functions: AvailableAggregateFunctions[];
+}
+
+export interface AvailableAggregateFunctions {
+  label: string;
+  dim_label: string;
+  values: string[];
 }

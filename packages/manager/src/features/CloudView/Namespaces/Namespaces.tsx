@@ -22,11 +22,11 @@ export const Namespaces = React.memo(() => {
   const isCreateNamespaceDrawerOpen = location.pathname.endsWith('create');
 
   const onOpenCreateDrawer = () => {
-    history.replace('/cloudview/namespaces/create');
+    history.replace('/monitor/cloudpulse/namespaces/create');
   };
 
   const onCloseCreateDrawer = () => {
-    history.replace('/cloudview/namespaces');
+    history.replace('/monitor/cloudpulse/namespaces');
   };
 
   if (isLoading) {
