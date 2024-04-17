@@ -92,6 +92,7 @@ export const VPC = () => {
                     : undefined
                 }
                 textFieldProps={{
+                  inputRef: field.ref,
                   sx: (theme) => ({
                     [theme.breakpoints.up('sm')]: { minWidth: inputMaxWidth },
                   }),
@@ -125,6 +126,9 @@ export const VPC = () => {
                     getOptionLabel={(subnet) =>
                       `${subnet.label} (${subnet.ipv4})`
                     }
+                    textFieldProps={{
+                      inputRef: field.ref,
+                    }}
                     value={
                       selectedVPC?.subnets.find(
                         (subnet) => subnet.id === field.value
@@ -133,6 +137,7 @@ export const VPC = () => {
                     errorText={fieldState.error?.message}
                     label="Subnet"
                     noMarginTop
+                    onBlur={field.onBlur}
                     onChange={(e, subnet) => field.onChange(subnet?.id ?? null)}
                     options={selectedVPC?.subnets ?? []}
                     placeholder="Select Subnet"
@@ -182,11 +187,14 @@ export const VPC = () => {
                         <Controller
                           render={({ field, fieldState }) => (
                             <TextField
+                              containerProps={{ sx: { mb: 1, mt: 1 } }}
                               errorText={fieldState.error?.message}
+                              inputRef={field.ref}
                               label="VPC IPv4"
+                              noMarginTop
+                              onBlur={field.onBlur}
                               onChange={field.onChange}
                               required
-                              sx={{ my: 2 }}
                               value={field.value}
                             />
                           )}
@@ -240,6 +248,12 @@ export const VPC = () => {
                     </Link>
                     .
                   </Typography>
+                  {formState.errors.interfaces?.[0]?.ip_ranges?.message && (
+                    <Notice
+                      text={formState.errors.interfaces[0]?.ip_ranges?.message}
+                      variant="error"
+                    />
+                  )}
                   <VPCRanges />
                 </>
               )}

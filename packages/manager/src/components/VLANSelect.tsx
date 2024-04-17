@@ -22,6 +22,10 @@ interface Props {
    */
   filter?: Filter;
   /**
+   * Called when the field is blurred
+   */
+  onBlur?: () => void;
+  /**
    * Is called when a VLAN is selected
    */
   onChange?: (label: null | string) => void;
@@ -42,7 +46,7 @@ interface Props {
  * - Allows VLAN creation
  */
 export const VLANSelect = (props: Props) => {
-  const { disabled, errorText, filter, onChange, sx, value } = props;
+  const { disabled, errorText, filter, onBlur, onChange, sx, value } = props;
 
   const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = useState<string>('');
@@ -124,6 +128,7 @@ export const VLANSelect = (props: Props) => {
       label="VLAN"
       loading={isFetching}
       noOptionsText="You have no VLANs in this region. Type to create one."
+      onBlur={onBlur}
       open={open}
       options={vlans}
       placeholder="Create or select a VLAN"

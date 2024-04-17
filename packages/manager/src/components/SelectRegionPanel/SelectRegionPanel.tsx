@@ -26,8 +26,10 @@ import { DocsLink } from '../DocsLink/DocsLink';
 import { Link } from '../Link';
 
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 
 interface SelectRegionPanelProps {
+  RegionSelectProps?: Partial<RegionSelectProps>;
   currentCapability: Capabilities;
   disabled?: boolean;
   error?: string;
@@ -49,6 +51,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     helperText,
     selectedId,
     selectedLinodeTypeId,
+    RegionSelectProps,
   } = props;
 
   const flags = useFlags();
@@ -147,6 +150,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         regions={regions ?? []}
         selectedId={selectedId || null}
         showEdgeIconHelperText={showEdgeIconHelperText}
+        {...RegionSelectProps}
       />
       {showClonePriceWarning && (
         <Notice

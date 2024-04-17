@@ -125,6 +125,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           },
         })}
         textFieldProps={{
+          ...props.textFieldProps,
           InputProps: {
             endAdornment: regionFilter !== 'core' &&
               selectedRegion?.site_type === 'edge' && (

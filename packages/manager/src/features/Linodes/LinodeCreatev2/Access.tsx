@@ -32,9 +32,11 @@ export const Access = () => {
               autoComplete="off"
               disabled={isLinodeCreateRestricted}
               errorText={fieldState.error?.message}
+              inputRef={field.ref}
               label="Root Password"
               name="password"
               noMarginTop
+              onBlur={field.onBlur}
               onChange={field.onChange}
               placeholder="Enter a password."
               value={field.value ?? ''}

@@ -27,7 +27,9 @@ export const Details = () => {
           <TextField
             disabled={isCreateLinodeRestricted}
             errorText={fieldState.error?.message}
+            inputRef={field.ref}
             label="Linode Label"
+            onBlur={field.onBlur}
             onChange={field.onChange}
             value={field.value ?? ''}
           />
