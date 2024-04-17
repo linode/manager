@@ -115,7 +115,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       loading={isLoading || loading}
       onBlur={onBlur}
       options={placementGroupsOptions ?? []}
-      placeholder="Select a Placement Group"
+      placeholder="None"
       sx={sx}
       value={selection}
       {...textFieldProps}

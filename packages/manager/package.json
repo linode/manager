@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.116.1",
+  "version": "1.117.0",
   "private": true,
   "type": "module",
   "bugs": {

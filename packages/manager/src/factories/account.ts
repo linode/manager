@@ -46,6 +46,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
     'LKE HA Control Planes',
     'Machine Images',
     'Managed Databases',
+    'Placement Group',
   ],
   city: 'Colorado',
   company: Factory.each((i) => `company-${i}`),

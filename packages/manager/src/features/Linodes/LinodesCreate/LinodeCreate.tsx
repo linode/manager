@@ -861,10 +861,7 @@ export class LinodeCreate extends React.PureComponent<
       image: this.props.selectedImageID,
       label: this.props.label,
       placement_group:
-        this.props.flags.placementGroups?.enabled &&
-        placement_group_payload.id !== -1
-          ? placement_group_payload
-          : undefined,
+        placement_group_payload.id !== -1 ? placement_group_payload : undefined,
       private_ip: this.props.privateIPEnabled,
       region: this.props.selectedRegionID ?? '',
       root_pass: this.props.password,

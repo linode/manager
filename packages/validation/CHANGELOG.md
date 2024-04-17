@@ -1,3 +1,9 @@
+## [2024-04-15] - v0.44.0
+
+### Changed:
+
+- Update Regions error message in `updateObjectStorageKeysSchema` ([#10329](https://github.com/linode/manager/pull/10329))
+
 ## [2024-04-01] - v0.43.0
 
 ### Changed:
