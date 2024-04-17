@@ -11,12 +11,15 @@ export const Help = () => {
     <TopMenuTooltip title="Help & Support">
       <Link to="/support">
         <IconButton
-          sx={{
+          sx={(theme) => ({
             '&:hover, &:focus': {
               color: '#606469',
             },
             color: '#c9c7c7',
-          }}
+            [theme.breakpoints.down('sm')]: {
+              padding: 1,
+            },
+          })}
         >
           <HelpSVGIcon height="20px" width="20px" />
         </IconButton>

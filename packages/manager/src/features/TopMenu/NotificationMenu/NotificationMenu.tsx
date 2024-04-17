@@ -87,12 +87,15 @@ export const NotificationMenu = () => {
     <>
       <TopMenuTooltip title="Notifications">
         <IconButton
-          sx={{
+          sx={(theme) => ({
             '&:hover, &:focus': {
               color: '#606469',
             },
             color: notificationContext.menuOpen ? '#606469' : '#c9c7c7',
-          }}
+            [theme.breakpoints.down('sm')]: {
+              padding: 1,
+            },
+          })}
           aria-haspopup="true"
           aria-label="Notifications"
           id={menuButtonId}

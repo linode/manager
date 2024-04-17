@@ -12,12 +12,15 @@ export const Community = () => {
     <TopMenuTooltip title="Linode Cloud Community (opens in new tab)">
       <Link to={LINODE_COMMUNITY_URL}>
         <IconButton
-          sx={{
+          sx={(theme) => ({
             '&:hover, &:focus': {
               color: '#606469',
             },
             color: '#c9c7c7',
-          }}
+            [theme.breakpoints.down('sm')]: {
+              padding: 1,
+            },
+          })}
         >
           <CommunitySVGIcon height="20px" width="20px" />
         </IconButton>
