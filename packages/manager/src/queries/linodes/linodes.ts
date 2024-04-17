@@ -5,6 +5,7 @@ import {
   Kernel,
   Linode,
   LinodeCloneData,
+  MigrateLinodeRequest,
   ResizeLinodePayload,
   changeLinodePassword,
   cloneLinode,
@@ -308,14 +309,23 @@ export const useLinodeChangePasswordMutation = (id: number) =>
 
 export const useLinodeMigrateMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { region: string } | undefined>(
+  return useMutation<{}, APIError[], MigrateLinodeRequest>(
     (data) => scheduleOrQueueMigration(id, data),
     {
-      onSuccess() {
+      onSuccess(id, data) {
         queryClient.invalidateQueries([queryKey, 'paginated']);
         queryClient.invalidateQueries([queryKey, 'all']);
         queryClient.invalidateQueries([queryKey, 'infinite']);
         queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
+
+        if (data.placement_group?.id) {
+          queryClient.invalidateQueries(
+            placementGroupQueries.placementGroup(data.placement_group.id)
+              .queryKey
+          );
+          queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
+          queryClient.invalidateQueries(placementGroupQueries.paginated._def);
+        }
       },
     }
   );
