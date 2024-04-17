@@ -74,7 +74,7 @@ export const RegionOption = ({
             <StyledFlagContainer>
               <Flag country={data.country} />
             </StyledFlagContainer>
-            {label}
+            {label.substring(0, label.indexOf(`(${value})`))}
             {displayEdgeRegionIcon && (
               <Box sx={visuallyHidden}>
                 &nbsp;(This region is an edge region.)
@@ -84,6 +84,7 @@ export const RegionOption = ({
               <Box sx={visuallyHidden}>{isRegionDisabledReason}</Box>
             )}
           </Box>
+          {`(${value})`}
           {selected && <SelectedIcon visible={selected} />}
           {displayEdgeRegionIcon && (
             <TooltipIcon
