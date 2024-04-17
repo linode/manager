@@ -39,6 +39,8 @@ export const sendEvent = (eventPayload: AnalyticsEvent): void => {
       label: eventPayload.label?.replace(/\|/g, ''),
       value: eventPayload.value,
     });
+  } else {
+    console.error("Not loaded")
   }
 };
 

@@ -48,7 +48,19 @@ export const GravatarByEmail = (props: Props) => {
   );
 };
 
+const waitForAdobeAnalyticsToBeLoaded = () =>
+  new Promise<void>((resolve) => {
+    const interval = setInterval(() => {
+      if (window._satellite) {
+        resolve();
+        clearInterval(interval);
+      }
+    }, 1000);
+  });
+
 async function checkForGravatarAndSendEvent(url: string) {
+  await waitForAdobeAnalyticsToBeLoaded();
+
   try {
     const response = await fetch(url);
 
