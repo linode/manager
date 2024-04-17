@@ -44,6 +44,8 @@ import { addUsedDiskSpace } from '../LinodesDetail/LinodeStorage/LinodeDisks';
 import { CautionNotice } from './CautionNotice';
 import { ConfigureForm } from './ConfigureForm';
 
+import type { PlacementGroup } from '@linode/api-v4';
+
 interface Props {
   linodeId: number | undefined;
   onClose: () => void;
@@ -99,8 +101,13 @@ export const MigrateLinode = React.memo((props: Props) => {
   const [selectedRegion, handleSelectRegion] = React.useState<null | string>(
     null
   );
+  const [
+    placementGroupSelection,
+    setPlacementGroupSelection,
+  ] = React.useState<PlacementGroup | null>();
 
   const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
+
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
     false
   );
@@ -168,7 +175,12 @@ export const MigrateLinode = React.memo((props: Props) => {
       return;
     }
 
+    const placementGroupPayload = placementGroupSelection?.id
+      ? { id: placementGroupSelection.id }
+      : undefined;
+
     return migrateLinode({
+      placement_group: placementGroupPayload,
       region: selectedRegion,
     }).then(() => {
       checkForNewEvents();
@@ -245,6 +257,7 @@ export const MigrateLinode = React.memo((props: Props) => {
       <ConfigureForm
         backupEnabled={linode.backups.enabled}
         currentRegion={region}
+        handlePlacementGroupChange={setPlacementGroupSelection}
         handleSelectRegion={handleSelectRegion}
         linodeType={linode.type}
         selectedRegion={selectedRegion}
