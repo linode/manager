@@ -36,7 +36,12 @@ const SelectedRegion = ({ selection }: LabelComponentProps) => {
         flexGrow: 1,
       }}
     >
-      <StyledFlagContainer>
+      <StyledFlagContainer
+        sx={(theme) => ({
+          marginRight: theme.spacing(1 / 2),
+          transform: 'scale(0.8)',
+        })}
+      >
         <Flag country={selection.data.country} />
       </StyledFlagContainer>
       {selection.label}
