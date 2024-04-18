@@ -9,6 +9,7 @@ import { IconButton } from 'src/components/IconButton';
 import { Radio } from 'src/components/Radio/Radio';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { LINODE_NETWORK_IN } from 'src/constants';
@@ -24,7 +25,6 @@ import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import { LIMITED_AVAILABILITY_TEXT } from './constants';
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
-import { StyledDisabledTableRow } from './PlansPanel.styles';
 
 import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
@@ -104,8 +104,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     Boolean(flags.disableLargestGbPlans) &&
     !disabled;
 
-  const isDisabled = isLimitedAvailabilityPlan || disabled512GbPlan;
-
   const diskSize = selectedDiskSize ? selectedDiskSize : 0;
   const planTooSmall = diskSize > type.disk;
   const isSamePlan = type.heading === currentPlanHeading;
@@ -142,20 +140,26 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     price?.monthly
   )}/mo ($${price?.hourly ?? UNKNOWN_PRICE}/hr)`;
 
-  const rowAriaDisabled =
-    isSamePlan || planTooSmall || isDisabledClass || planIsDisabled;
+  const rowIsDisabled =
+    isSamePlan ||
+    planTooSmall ||
+    isDisabledClass ||
+    planIsDisabled ||
+    disabled ||
+    isLimitedAvailabilityPlan ||
+    disabled512GbPlan;
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
       {/* Displays Table Row for larger screens */}
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
-        <StyledDisabledTableRow
-          aria-disabled={rowAriaDisabled}
+        <TableRow
+          aria-disabled={rowIsDisabled}
           aria-label={rowAriaLabel}
           data-qa-plan-row={type.formattedLabel}
-          disabled={rowAriaDisabled}
+          disabled={rowIsDisabled}
           key={type.id}
-          onClick={() => (!rowAriaDisabled ? onSelect(type.id) : undefined)}
+          onClick={() => (!rowIsDisabled ? onSelect(type.id) : undefined)}
         >
           <StyledRadioCell>
             {!isSamePlan && (
@@ -164,12 +168,15 @@ export const PlanSelection = (props: PlanSelectionProps) => {
                   <Radio
                     checked={
                       !disabled &&
-                      !isDisabled &&
+                      !rowIsDisabled &&
                       !planTooSmall &&
                       type.id === String(selectedId)
                     }
                     disabled={
-                      planTooSmall || disabled || isDisabled || isDisabledClass
+                      planTooSmall ||
+                      disabled ||
+                      rowIsDisabled ||
+                      isDisabledClass
                     }
                     id={type.id}
                     onChange={() => onSelect(type.id)}
@@ -181,10 +188,25 @@ export const PlanSelection = (props: PlanSelectionProps) => {
               />
             )}
           </StyledRadioCell>
-          <TableCell data-qa-plan-name>
+          <TableCell
+            className={
+              rowIsDisabled && !hideDisabledHelpIcons ? 'hasTooltip' : ''
+            }
+            data-qa-plan-name
+          >
             {type.heading} &nbsp;
-            {isDisabled && !hideDisabledHelpIcons && (
+            {rowIsDisabled && !hideDisabledHelpIcons && (
               <Tooltip
+                PopperProps={{
+                  sx: {
+                    '& .MuiTooltip-tooltip': {
+                      minWidth: 225,
+                    },
+                  },
+                }}
+                sx={{
+                  top: -2,
+                }}
                 data-qa-tooltip={LIMITED_AVAILABILITY_TEXT}
                 data-testid="limited-availability"
                 placement="right-start"
@@ -259,7 +281,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
               {type.network_out / 1000} Gbps
             </TableCell>
           ) : null}
-        </StyledDisabledTableRow>
+        </TableRow>
       </Hidden>
 
       {/* Displays SelectionCard for small screens */}
@@ -269,7 +291,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             planTooSmall ||
             isSamePlan ||
             disabled ||
-            isDisabled ||
+            rowIsDisabled ||
             isDisabledClass
           }
           headingDecoration={
@@ -283,7 +305,11 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           }
           subheadings={[
             ...type.subHeadings,
-            isDisabled ? <Chip label="Limited Deployment Availability" /> : '',
+            rowIsDisabled ? (
+              <Chip label="Limited Deployment Availability" />
+            ) : (
+              ''
+            ),
           ]}
           sxTooltip={{
             // There's no easy way to override the margin or transform due to inline styles and existing specificity rules.
@@ -293,7 +319,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           heading={type.heading}
           key={type.id}
           onClick={() => onSelect(type.id)}
-          tooltip={isDisabled ? LIMITED_AVAILABILITY_TEXT : tooltip}
+          tooltip={rowIsDisabled ? LIMITED_AVAILABILITY_TEXT : tooltip}
         />
       </Hidden>
     </React.Fragment>

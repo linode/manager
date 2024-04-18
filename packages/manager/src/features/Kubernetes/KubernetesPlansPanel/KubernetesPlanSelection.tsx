@@ -13,9 +13,9 @@ import { Hidden } from 'src/components/Hidden';
 import { IconButton } from 'src/components/IconButton';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import { Tooltip } from 'src/components/Tooltip';
 import { LIMITED_AVAILABILITY_TEXT } from 'src/features/components/PlansPanel/constants';
-import { StyledDisabledTableRow } from 'src/features/components/PlansPanel/PlansPanel.styles';
 import { useFlags } from 'src/hooks/useFlags';
 import {
   PRICE_ERROR_TOOLTIP_TEXT,
@@ -108,7 +108,7 @@ export const KubernetesPlanSelection = (
     <React.Fragment key={`tabbed-panel-${idx}`}>
       {/* Displays Table Row for larger screens */}
       <Hidden mdDown>
-        <StyledDisabledTableRow
+        <TableRow
           data-qa-plan-row={type.formattedLabel}
           disabled={isDisabled}
           key={type.id}
@@ -118,6 +118,13 @@ export const KubernetesPlanSelection = (
               {type.heading} &nbsp;
               {(isLimitedAvailabilityPlan || disabled512GbPlan) && (
                 <Tooltip
+                  PopperProps={{
+                    sx: {
+                      '& .MuiTooltip-tooltip': {
+                        minWidth: 225,
+                      },
+                    },
+                  }}
                   sx={{
                     alignItems: 'center',
                   }}
@@ -192,7 +199,7 @@ export const KubernetesPlanSelection = (
               )}
             </StyledInputOuter>
           </TableCell>
-        </StyledDisabledTableRow>
+        </TableRow>
       </Hidden>
       {/* Displays SelectionCard for small screens */}
       <Hidden mdUp>

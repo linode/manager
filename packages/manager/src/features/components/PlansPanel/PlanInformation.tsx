@@ -91,7 +91,8 @@ export const limitedAvailabilityBannerTestId =
 
 export const determineLimitedAvailabilityNoticeCopy = (
   mostClassPlansAreLimitedAvailability: boolean,
-  docsLink: string
+  docsLink: string,
+  planTypeLabel: string
 ) => {
   return (
     <DismissibleBanner
@@ -108,7 +109,7 @@ export const determineLimitedAvailabilityNoticeCopy = (
       {mostClassPlansAreLimitedAvailability ? (
         <StyledNoticeTypography>
           These plans have limited deployment availability.{' '}
-          <Link to={docsLink}>Learn more</Link>.
+          <Link to={docsLink}>Learn more</Link> about our {planTypeLabel} plans.
         </StyledNoticeTypography>
       ) : (
         <StyledNoticeTypography>
@@ -127,19 +128,22 @@ export const generateLimitedAvailabilityJsx = (
     case 'dedicated':
       return determineLimitedAvailabilityNoticeCopy(
         mostClassPlansAreLimitedAvailability,
-        DEDICATED_COMPUTE_INSTANCES_LINK
+        DEDICATED_COMPUTE_INSTANCES_LINK,
+        'Dedicated CPU'
       );
 
     case 'premium':
       return determineLimitedAvailabilityNoticeCopy(
         mostClassPlansAreLimitedAvailability,
-        PREMIUM_COMPUTE_INSTANCES_LINK
+        PREMIUM_COMPUTE_INSTANCES_LINK,
+        'Premium CPU'
       );
 
     case 'gpu':
       return determineLimitedAvailabilityNoticeCopy(
         mostClassPlansAreLimitedAvailability,
-        GPU_COMPUTE_INSTANCES_LINK
+        GPU_COMPUTE_INSTANCES_LINK,
+        'GPU'
       );
 
     default:

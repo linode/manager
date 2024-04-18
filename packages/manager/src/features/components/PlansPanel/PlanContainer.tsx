@@ -38,9 +38,9 @@ export interface Props {
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
-  hideDisabledHelpIcons?: boolean;
   disabledPlanTypes?: PlanSelectionType[];
   disabledPlanTypesToolTipText?: string;
+  hideDisabledHelpIcons?: boolean;
   isCreate?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
@@ -56,9 +56,9 @@ export const PlanContainer = (props: Props) => {
     currentPlanHeading,
     disabled,
     disabledClasses,
-    hideDisabledHelpIcons,
     disabledPlanTypes,
     disabledPlanTypesToolTipText,
+    hideDisabledHelpIcons,
     isCreate,
     linodeID,
     onSelect,
@@ -94,14 +94,16 @@ export const PlanContainer = (props: Props) => {
         undefined;
       return (
         <PlanSelection
+          disabled={
+            disabled || planIsDisabled || plan.isLimitedAvailabilityPlan
+          }
           isLimitedAvailabilityPlan={
             disabled ? false : plan.isLimitedAvailabilityPlan
           } // No need for tooltip due to all plans being unavailable in region
           currentPlanHeading={currentPlanHeading}
-          disabled={disabled || planIsDisabled}
           disabledClasses={disabledClasses}
-          hideDisabledHelpIcons={hideDisabledHelpIcons}
           disabledToolTip={disabledPlanTypesToolTipText}
+          hideDisabledHelpIcons={hideDisabledHelpIcons}
           idx={id}
           isCreate={isCreate}
           key={id}
@@ -117,6 +119,8 @@ export const PlanContainer = (props: Props) => {
       );
     });
   }, [
+    disabledPlanTypes,
+    disabledPlanTypesToolTipText,
     plans,
     selectedRegionId,
     disabled,
