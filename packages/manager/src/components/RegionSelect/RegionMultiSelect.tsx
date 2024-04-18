@@ -123,13 +123,13 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             option: RegionSelectOption,
             value: RegionSelectOption
           ) => option.value === value.value}
-          onBlur={() => {
-            const selectedIds = selectedRegions.map((region) => region.value);
-            handleSelection(selectedIds);
-          }}
           onChange={(_, selectedOption) =>
             handleRegionChange(selectedOption as RegionSelectOption[])
           }
+          onClose={() => {
+            const selectedIds = selectedRegions.map((region) => region.value);
+            handleSelection(selectedIds);
+          }}
           renderOption={(props, option, { selected }) => {
             if (!option.data) {
               // Render options like "Select All / Deselect All "
@@ -150,6 +150,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             return tagValue.map((option, index) => (
               <Chip
                 {...getTagProps({ index })}
+                data-testid={option.value}
                 deleteIcon={<CloseIcon />}
                 key={index}
                 label={<SelectedRegion selection={option} />}
@@ -166,6 +167,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             InputProps: {
               required,
             },
+            placeholder: selectedRegions.length > 0 ? '' : placeholder,
             tooltipText: helperText,
           }}
           autoHighlight

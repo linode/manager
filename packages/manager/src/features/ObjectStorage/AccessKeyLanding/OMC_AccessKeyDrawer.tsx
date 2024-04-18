@@ -183,7 +183,6 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
       }
     },
     validateOnBlur: true,
-    validateOnChange: false,
     validationSchema: createMode
       ? createObjectStorageKeysSchema
       : updateObjectStorageKeysSchema,
@@ -194,7 +193,6 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     isRestrictedUser ||
     (mode !== 'creating' &&
       objectStorageKey &&
-      objectStorageKey?.regions?.length > 0 &&
       !hasLabelOrRegionsChanged(formik.values, objectStorageKey));
 
   const beforeSubmit = () => {
@@ -279,8 +277,8 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
           <TextField
             data-qa-add-label
             disabled={isRestrictedUser || mode === 'viewing'}
-            error={!!formik.errors.label}
-            errorText={formik.errors.label}
+            error={formik.touched.label ? !!formik.errors.label : false}
+            errorText={formik.touched.label ? formik.errors.label : undefined}
             label="Label"
             name="label"
             onBlur={formik.handleBlur}
@@ -289,18 +287,11 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             value={formik.values.label}
           />
           <AccessKeyRegions
-            onBlur={() => {
-              const bucketsInRegions = buckets?.filter(
-                (bucket) =>
-                  bucket.region && formik.values.regions.includes(bucket.region)
-              );
-
-              formik.setFieldValue(
-                'bucket_access',
-                getDefaultScopes(bucketsInRegions, regionsLookup)
-              );
-              formik.validateField('regions');
-            }}
+            error={
+              formik.touched.regions
+                ? (formik.errors.regions as string)
+                : undefined
+            }
             onChange={(values) => {
               const bucketsInRegions = buckets?.filter(
                 (bucket) => bucket.region && values.includes(bucket.region)
@@ -310,9 +301,9 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                 getDefaultScopes(bucketsInRegions, regionsLookup)
               );
               formik.setFieldValue('regions', values);
+              formik.setFieldTouched('regions', true, true);
             }}
             disabled={isRestrictedUser}
-            error={formik.errors.regions as string}
             name="regions"
             required
             selectedRegion={formik.values.regions}
