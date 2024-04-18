@@ -8,7 +8,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { vpcsValidateIP } from '@linode/validation';
 import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
-import { WithSnackbarProps, withSnackbar } from 'notistack';
+import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -53,8 +53,8 @@ import withAgreements, {
   AgreementsProps,
 } from 'src/features/Account/Agreements/withAgreements';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
-import { reportAgreementSigningError } from 'src/queries/accountAgreements';
-import { vpcQueryKey } from 'src/queries/vpcs';
+import { reportAgreementSigningError } from 'src/queries/account/agreements';
+import { vpcQueries } from 'src/queries/vpcs/vpcs';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { MapState } from 'src/store/types';
 import {
@@ -63,11 +63,11 @@ import {
 } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { isEURegion } from 'src/utilities/formatRegion';
 import {
   getGDPRDetails,
   getSelectedRegionGroup,
 } from 'src/utilities/formatRegion';
-import { isEURegion } from 'src/utilities/formatRegion';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
@@ -127,8 +127,7 @@ interface State {
   vpcIPv4AddressOfLinode?: string;
 }
 
-type CombinedProps = WithSnackbarProps &
-  CreateType &
+type CombinedProps = CreateType &
   WithImagesProps &
   WithTypesProps &
   WithLinodesProps &
@@ -283,6 +282,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             handleAgreementChange={this.handleAgreementChange}
             handleFirewallChange={this.handleFirewallChange}
             handleIPv4RangesForVPC={this.handleVPCIPv4RangesChange}
+            handlePlacementGroupChange={this.setPlacementGroupSelection}
             handleSelectUDFs={this.setUDFs}
             handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
             handleSubmitForm={this.submitForm}
@@ -311,7 +311,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             updateLabel={this.updateCustomLabel}
             updateLinodeID={this.setLinodeID}
             updatePassword={this.setPassword}
-            updatePlacementGroupSelection={this.setPlacementGroupSelection}
             updateRegionID={this.setRegionID}
             updateStackScript={this.setStackScript}
             updateTags={this.setTags}
@@ -615,6 +614,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     );
     this.setState({
       disabledClasses,
+      placementGroupSelection: undefined,
       selectedRegionID: selectedRegionId,
       // When the region gets changed, ensure the VPC-related selections are cleared
       selectedSubnetId: undefined,
@@ -754,7 +754,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
                 field: 'placement_group',
                 reason: `${this.state.placementGroupSelection?.label} (${
                   this.state.placementGroupSelection?.affinity_type ===
-                  'affinity'
+                  'affinity:local'
                     ? 'Affinity'
                     : 'Anti-affinity'
                 }) doesn't have any capacity for this Linode.`,
@@ -888,19 +888,19 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         }
 
         /** Analytics creation event */
-        handleAnalytics(
-          createType,
+        handleAnalytics({
+          label: this.state.selectedStackScriptLabel,
+          linode: linodeID
+            ? this.props.linodesData?.find((linode) => linode.id == linodeID)
+            : undefined,
           payload,
-          this.state.selectedStackScriptLabel
-        );
+          type: createType,
+        });
 
         /** show toast */
-        this.props.enqueueSnackbar(
-          `Your Linode ${response.label} is being created.`,
-          {
-            variant: 'success',
-          }
-        );
+        enqueueSnackbar(`Your Linode ${response.label} is being created.`, {
+          variant: 'success',
+        });
 
         /** reset the Events polling */
         this.props.checkForNewEvents();
@@ -911,7 +911,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           this.state.selectedVPCId !== undefined &&
           this.state.selectedVPCId !== -1
         ) {
-          this.props.queryClient.invalidateQueries([vpcQueryKey, 'paginated']);
+          this.props.queryClient.invalidateQueries(vpcQueries.all.queryKey);
+          this.props.queryClient.invalidateQueries(vpcQueries.paginated._def);
+          this.props.queryClient.invalidateQueries(
+            vpcQueries.vpc(this.state.selectedVPCId).queryKey
+          );
         }
 
         /** send the user to the Linode detail page */
@@ -976,7 +980,6 @@ export default recompose<CombinedProps, {}>(
   withRegions,
   withTypes,
   connected,
-  withSnackbar,
   withFeatureFlags,
   withProfile,
   withAgreements,
@@ -994,11 +997,13 @@ const actionsAndLabels = {
   fromStackScript: { action: 'stackscript', labelPayloadKey: 'stackscript_id' },
 };
 
-const handleAnalytics = (
-  type: CreateTypes,
-  payload: CreateLinodeRequest,
-  label?: string
-) => {
+const handleAnalytics = (details: {
+  label?: string;
+  linode?: Linode;
+  payload: CreateLinodeRequest;
+  type: CreateTypes;
+}) => {
+  const { label, linode: linode, payload, type } = details;
   const eventInfo = actionsAndLabels[type];
   let eventAction = 'unknown';
   let eventLabel = '';
@@ -1017,5 +1022,11 @@ const handleAnalytics = (
     eventLabel = label;
   }
 
-  sendCreateLinodeEvent(eventAction, eventLabel);
+  sendCreateLinodeEvent(
+    eventAction,
+    eventLabel,
+    linode && eventAction == 'clone'
+      ? { isLinodePoweredOff: linode.status === 'offline' }
+      : undefined
+  );
 };

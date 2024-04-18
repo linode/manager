@@ -45,7 +45,7 @@ export const APITokenMenu = (props: Props) => {
             openEditDrawer(token);
           },
           title: 'Rename',
-          tooltip: PROXY_USER_RESTRICTED_TOOLTIP_TEXT,
+          tooltip: isProxyUser ? PROXY_USER_RESTRICTED_TOOLTIP_TEXT : undefined,
         }
       : null,
     {

@@ -13,7 +13,7 @@ interface Handlers {
   openMutationDrawer: () => void;
 }
 
-export type MutationDrawerProps = State & Handlers;
+export interface MutationDrawerProps extends State, Handlers {}
 
 export default withStateHandlers<State, Handlers>(
   (ownProps) => ({

@@ -9,8 +9,7 @@ import {
   subnetFactory,
   vpcFactory,
 } from 'src/factories';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -35,47 +34,6 @@ describe('Linode Entity Detail', () => {
   const vpcSectionTestId = 'vpc-section-title';
   const assignedVPCLabelTestId = 'assigned-vpc-label';
 
-  it('should not display a VPC section if the feature flag is off and the account capabilities do not include VPC', async () => {
-    const account = accountFactory.build({
-      capabilities: accountCapabilitiesWithoutVPC,
-    });
-
-    const subnet = subnetFactory.build({
-      id: 2,
-      linodes: [subnetAssignedLinodeDataFactory.build({ id: 5 })],
-    });
-
-    const vpc = vpcFactory.build({
-      subnets: [subnet],
-    });
-
-    server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(account));
-      }),
-
-      rest.get('*/vpcs', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([vpc])));
-      })
-    );
-
-    const { queryByTestId } = renderWithTheme(
-      <LinodeEntityDetail
-        handlers={handlers}
-        id={5}
-        linode={linode}
-        openTagDrawer={vi.fn()}
-      />,
-      {
-        flags: { vpc: false },
-      }
-    );
-
-    await waitFor(() => {
-      expect(queryByTestId(vpcSectionTestId)).not.toBeInTheDocument();
-    });
-  });
-
   it('should not display the VPC section if the linode is not assigned to a VPC', async () => {
     const account = accountFactory.build({
       capabilities: [...accountCapabilitiesWithoutVPC, 'VPCs'],
@@ -91,12 +49,12 @@ describe('Linode Entity Detail', () => {
     });
 
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(account));
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
       }),
 
-      rest.get('*/vpcs', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([vpc])));
+      http.get('*/vpcs/:vpcId', () => {
+        return HttpResponse.json(vpc);
       })
     );
 
@@ -121,15 +79,11 @@ describe('Linode Entity Detail', () => {
       linodes: [subnetAssignedLinodeDataFactory.build({ id: linode.id })],
     });
 
-    const _vpcs = vpcFactory.buildList(3);
-    const vpcs = [
-      ..._vpcs,
-      vpcFactory.build({ label: 'test-vpc', subnets: [subnet] }),
-    ];
+    const vpc = vpcFactory.build({ label: 'test-vpc', subnets: [subnet] });
 
     server.use(
-      rest.get('*/vpcs', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage(vpcs)));
+      http.get('*/vpcs/:vpcId', () => {
+        return HttpResponse.json(vpc);
       })
     );
 
@@ -141,7 +95,6 @@ describe('Linode Entity Detail', () => {
         openTagDrawer={vi.fn()}
       />,
       {
-        flags: { vpc: true },
         queryClient,
       }
     );

@@ -21,9 +21,12 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useAccountSettings } from 'src/queries/accountSettings';
-import { useObjectStorageBucketsFromRegions } from 'src/queries/objectStorage';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccountSettings } from 'src/queries/account/settings';
+import { useObjectStorageBuckets } from 'src/queries/objectStorage';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 import { sortByString } from 'src/utilities/sort-by';
 
@@ -32,7 +35,11 @@ import { confirmObjectStorage } from '../utilities';
 import { AccessKeyRegions } from './AccessKeyRegions/AccessKeyRegions';
 import { LimitedAccessControls } from './LimitedAccessControls';
 import { MODE } from './types';
-import { generateUpdatePayload, hasLabelOrRegionsChanged } from './utils';
+import {
+  generateUpdatePayload,
+  hasAccessBeenSelectedForAllBuckets,
+  hasLabelOrRegionsChanged,
+} from './utils';
 
 export interface AccessKeyDrawerProps {
   isRestrictedUser: boolean;
@@ -49,6 +56,11 @@ export interface AccessKeyDrawerProps {
   open: boolean;
 }
 
+// Access key scopes displayed in the drawer can have no permission or "No Access" selected, which are not valid API permissions.
+export interface DisplayedAccessKeyScope extends Omit<Scope, 'permissions'> {
+  permissions: AccessType | null;
+}
+
 export interface FormState {
   bucket_access: Scope[] | null;
   label: string;
@@ -63,8 +75,8 @@ export interface FormState {
  */
 
 export const sortByRegion = (regionLookup: { [key: string]: Region }) => (
-  a: Scope,
-  b: Scope
+  a: DisplayedAccessKeyScope,
+  b: DisplayedAccessKeyScope
 ) => {
   if (!a.region || !b.region) {
     return 0;
@@ -79,12 +91,12 @@ export const sortByRegion = (regionLookup: { [key: string]: Region }) => (
 export const getDefaultScopes = (
   buckets: ObjectStorageBucket[],
   regionLookup: { [key: string]: Region } = {}
-): Scope[] =>
+): DisplayedAccessKeyScope[] =>
   buckets
     .map((thisBucket) => ({
       bucket_name: thisBucket.label,
       cluster: thisBucket.cluster,
-      permissions: 'none' as AccessType,
+      permissions: null,
       region: thisBucket.region,
     }))
     .sort(sortByRegion(regionLookup));
@@ -99,11 +111,20 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     open,
   } = props;
 
+  const { account } = useAccountManagement();
+  const flags = useFlags();
+
+  const isObjMultiClusterEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
+
   const { data: regions } = useRegionsQuery();
 
   const regionsLookup = regions && getRegionsByRegionId(regions);
 
-  const regionsSupportObjectStorage = regions?.filter((region) =>
+  const regionsSupportingObjectStorage = regions?.filter((region) =>
     region.capabilities.includes('Object Storage')
   );
 
@@ -111,7 +132,10 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     data: objectStorageBuckets,
     error: bucketsError,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBucketsFromRegions(regionsSupportObjectStorage);
+  } = useObjectStorageBuckets({
+    isObjMultiClusterEnabled,
+    regions: regionsSupportingObjectStorage,
+  });
 
   const { data: accountSettings } = useAccountSettings();
 
@@ -148,13 +172,15 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
       // If the user hasn't toggled the Limited Access button,
       // don't include any bucket_access information in the payload.
 
-      // If any/all values are 'none', don't include them in the response.
+      // If any/all permissions are 'none' or null, don't include them in the response.
       const access = values.bucket_access ?? [];
       const payload = limitedAccessChecked
         ? {
             ...values,
             bucket_access: access.filter(
-              (thisAccess) => thisAccess.permissions !== 'none'
+              (thisAccess: DisplayedAccessKeyScope) =>
+                thisAccess.permissions !== 'none' &&
+                thisAccess.permissions !== null
             ),
           }
         : { ...values, bucket_access: null };
@@ -180,7 +206,10 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     (mode !== 'creating' &&
       objectStorageKey &&
       objectStorageKey?.regions?.length > 0 &&
-      !hasLabelOrRegionsChanged(formik.values, objectStorageKey));
+      !hasLabelOrRegionsChanged(formik.values, objectStorageKey)) ||
+    (mode === 'creating' &&
+      limitedAccessChecked &&
+      !hasAccessBeenSelectedForAllBuckets(formik.values.bucket_access));
 
   const beforeSubmit = () => {
     confirmObjectStorage<FormState>(

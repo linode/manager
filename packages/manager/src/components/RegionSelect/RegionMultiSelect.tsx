@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { StyledListItem } from 'src/components/Autocomplete/Autocomplete.styles';
-import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 import { RegionOption } from './RegionOption';
 import { StyledAutocompleteContainer } from './RegionSelect.styles';
@@ -38,7 +38,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,
-  } = useAccountAvailabilitiesQueryUnpaginated();
+  } = useAllAccountAvailabilitiesQuery();
 
   const [selectedRegions, setSelectedRegions] = useState<RegionSelectOption[]>(
     getSelectedRegionsByIds({
@@ -91,6 +91,9 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     <>
       <StyledAutocompleteContainer sx={{ width }}>
         <Autocomplete
+          getOptionDisabled={(option: RegionSelectOption) =>
+            Boolean(option.disabledProps?.disabled)
+          }
           groupBy={(option: RegionSelectOption) => {
             return option?.data?.region;
           }}
@@ -134,7 +137,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
           disableClearable={!isClearable}
           disabled={disabled}
           errorText={errorText}
-          getOptionDisabled={(option: RegionSelectOption) => option.unavailable}
           label={label ?? 'Regions'}
           loading={accountAvailabilityLoading}
           multiple

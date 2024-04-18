@@ -8,8 +8,8 @@ import { useHistory } from 'react-router-dom';
 import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { useAccount, useMutateAccount } from 'src/queries/account';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
+import { useAccount, useMutateAccount } from 'src/queries/account/account';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 
 import { StyledGrid } from './EmailBounce.styles';

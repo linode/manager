@@ -2,7 +2,7 @@ import Avatar from '@mui/material/Avatar';
 import * as React from 'react';
 
 import UserIcon from 'src/assets/icons/account.svg';
-import { useAccountUser } from 'src/queries/accountUsers';
+import { useAccountUser } from 'src/queries/account/users';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 import { DEFAULT_AVATAR_SIZE } from './GravatarByEmail';

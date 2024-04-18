@@ -9,7 +9,7 @@ import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageClusters } from 'src/queries/objectStorage';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 import { readableBytes } from 'src/utilities/unitConversions';
@@ -42,7 +42,6 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
     size,
   } = props;
 
-  const { data: clusters } = useObjectStorageClusters();
   const { data: regions } = useRegionsQuery();
 
   const flags = useFlags();
@@ -52,6 +51,10 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
+  );
+
+  const { data: clusters } = useObjectStorageClusters(
+    !isObjMultiClusterEnabled
   );
 
   const actualCluster = clusters?.find((c) => c.id === cluster);

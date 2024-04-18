@@ -173,7 +173,9 @@ export const LinodeInterfaceSchema = object().shape({
   primary: boolean().notRequired(),
   subnet_id: number().when('purpose', {
     is: 'vpc',
-    then: number().required('Subnet is required.'),
+    then: number()
+      .transform((value) => (isNaN(value) ? undefined : value))
+      .required('Subnet is required.'),
     otherwise: number().test({
       name: testnameDisallowedBasedOnPurpose('VPC'),
       message: testmessageDisallowedBasedOnPurpose('vpc', 'subnet_id'),
@@ -195,7 +197,15 @@ export const LinodeInterfaceSchema = object().shape({
     .of(string())
     .when('purpose', {
       is: 'vpc',
-      then: array().of(string().test(validateIP)).notRequired(),
+      then: array()
+        .of(
+          string().test(
+            'valid-ip-range',
+            'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
+            validateIP
+          )
+        )
+        .notRequired(),
       otherwise: array().test({
         name: testnameDisallowedBasedOnPurpose('VPC'),
         message: testmessageDisallowedBasedOnPurpose('vpc', 'ip_ranges'),
@@ -267,13 +277,13 @@ const PlacementGroupPayloadSchema = object({
 export const CreateLinodeSchema = object({
   type: string().ensure().required('Plan is required.'),
   region: string().ensure().required('Region is required.'),
-  stackscript_id: number().notRequired(),
+  stackscript_id: number().nullable().notRequired(),
   backup_id: number().notRequired(),
   swap_size: number().notRequired(),
   image: string().when('stackscript_id', {
     is: (value?: number) => value !== undefined,
-    then: string().required('Image is required.'),
-    otherwise: string().notRequired(),
+    then: string().ensure().required('Image is required.'),
+    otherwise: string().nullable().notRequired(),
   }),
   authorized_keys: array().of(string()).notRequired(),
   backups_enabled: boolean().notRequired(),
@@ -297,7 +307,7 @@ export const CreateLinodeSchema = object({
   }),
   interfaces: LinodeInterfacesSchema,
   metadata: MetadataSchema,
-  firewall_id: number().notRequired(),
+  firewall_id: number().nullable().notRequired(),
   placement_group: PlacementGroupPayloadSchema,
 });
 

@@ -983,6 +983,10 @@ describe('LKE cluster updates for DC-specific prices', () => {
       .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
       .should('be.visible')
       .within(() => {
+        cy.findByText('Shared CPU')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
         cy.findByText('Linode 0 GB')
           .should('be.visible')
           .closest('tr')
@@ -1209,6 +1213,10 @@ describe('LKE cluster updates for DC-specific prices', () => {
       .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
       .should('be.visible')
       .within(() => {
+        cy.findByText('Shared CPU')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
         cy.findByText('Linode 2 GB')
           .should('be.visible')
           .closest('tr')

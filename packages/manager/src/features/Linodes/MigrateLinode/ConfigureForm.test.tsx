@@ -2,7 +2,7 @@ import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { typeFactory } from 'src/factories/types';
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ConfigureForm } from './ConfigureForm';
@@ -48,6 +48,7 @@ const mockLinodeType = typeFactory.build({
 });
 
 const handleSelectRegion = vi.fn();
+const handlePlacementGroupChange = vi.fn();
 const currentPriceLabel = 'Current Price';
 const newPriceLabel = 'New Price';
 const currentPricePanel = 'current-price-panel';
@@ -57,6 +58,7 @@ describe('ConfigureForm component with price comparison', () => {
   const props = {
     backupEnabled: true,
     currentRegion: 'us-east',
+    handlePlacementGroupChange,
     handleSelectRegion,
     linodeType: 'g6-standard-1',
     selectedRegion: '',
@@ -64,8 +66,8 @@ describe('ConfigureForm component with price comparison', () => {
 
   beforeEach(() => {
     server.use(
-      rest.get('*/linode/types/g6-standard-1', (req, res, ctx) => {
-        return res(ctx.json(mockLinodeType));
+      http.get('*/linode/types/g6-standard-1', () => {
+        return HttpResponse.json(mockLinodeType);
       })
     );
   });
@@ -163,6 +165,26 @@ describe('ConfigureForm component with price comparison', () => {
       expect(getByTestId(newPricePanel)).toHaveTextContent(
         '$14.40/month, $0.021/hour'
       );
+    });
+  });
+
+  it('should render the PlacementGroupsSelect component when a new region is selected', async () => {
+    const wrapper = renderWithTheme(
+      <ConfigureForm
+        {...props}
+        currentRegion="us-east"
+        selectedRegion="us-central"
+      />,
+      {
+        flags: { placementGroups: { beta: true, enabled: true } },
+      }
+    );
+
+    // Verify that the PlacementGroupsSelect component is rendered
+    await waitFor(() => {
+      expect(
+        wrapper.getByTestId('placement-groups-select')
+      ).toBeInTheDocument();
     });
   });
 });

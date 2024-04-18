@@ -1,6 +1,4 @@
-import _ from 'lodash';
 import React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { Waypoint } from 'react-waypoint';
 
 import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
@@ -11,30 +9,29 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
-import {
-  queryKey as accountQueryKey,
-  useChildAccountsInfiniteQuery,
-} from 'src/queries/account';
+import { useChildAccountsInfiniteQuery } from 'src/queries/account/account';
+
+import type { UserType } from '@linode/api-v4';
 
 interface ChildAccountListProps {
   currentTokenWithBearer: string;
-  isProxyUser: boolean;
   onClose: () => void;
   onSwitchAccount: (props: {
     currentTokenWithBearer: string;
     euuid: string;
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>;
-    handleClose: () => void;
-    isProxyUser: boolean;
+    onClose: () => void;
+    userType: UserType | undefined;
   }) => void;
+  userType: UserType | undefined;
 }
 
 export const ChildAccountList = React.memo(
   ({
     currentTokenWithBearer,
-    isProxyUser,
     onClose,
     onSwitchAccount,
+    userType,
   }: ChildAccountListProps) => {
     const {
       data,
@@ -45,13 +42,13 @@ export const ChildAccountList = React.memo(
       isLoading,
       refetch: refetchChildAccounts,
     } = useChildAccountsInfiniteQuery({
-      headers: isProxyUser
-        ? {
-            Authorization: currentTokenWithBearer,
-          }
-        : undefined,
+      headers:
+        userType === 'proxy'
+          ? {
+              Authorization: currentTokenWithBearer,
+            }
+          : undefined,
     });
-    const queryClient = useQueryClient();
     const childAccounts = data?.pages.flatMap((page) => page.data);
 
     if (isLoading) {
@@ -77,18 +74,11 @@ export const ChildAccountList = React.memo(
             Try again or contact support if the issue persists.
           </Typography>
           <Button
-            onClick={() => {
-              queryClient.invalidateQueries([
-                accountQueryKey,
-                'childAccounts',
-                'infinite',
-              ]);
-              refetchChildAccounts();
-            }}
             sx={(theme) => ({
               marginTop: theme.spacing(2),
             })}
             buttonType="primary"
+            onClick={() => refetchChildAccounts()}
           >
             Try again
           </Button>
@@ -105,8 +95,8 @@ export const ChildAccountList = React.memo(
               currentTokenWithBearer,
               euuid,
               event,
-              handleClose: onClose,
-              isProxyUser,
+              onClose,
+              userType,
             })
           }
           sx={(theme) => ({

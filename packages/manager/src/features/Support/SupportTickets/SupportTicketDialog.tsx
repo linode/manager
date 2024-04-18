@@ -1,4 +1,5 @@
 import {
+  TicketSeverity,
   createSupportTicket,
   uploadAttachment,
 } from '@linode/api-v4/lib/support';
@@ -11,15 +12,15 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Accordion } from 'src/components/Accordion';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useAccount } from 'src/queries/account';
+import { useAccount } from 'src/queries/account/account';
 import { useAllDatabasesQuery } from 'src/queries/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
@@ -37,15 +38,17 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 
 import { AttachFileForm } from '../AttachFileForm';
+import { FileAttachment } from '../index';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import { MarkdownReference } from '../SupportTicketDetail/TabbedReply/MarkdownReference';
 import { TabbedReply } from '../SupportTicketDetail/TabbedReply/TabbedReply';
-import { FileAttachment } from '../index';
+import { TICKET_SEVERITY_TOOLTIP_TEXT } from './constants';
 import SupportTicketSMTPFields, {
   fieldNameToLabelMap,
   smtpDialogTitle,
   smtpHelperText,
 } from './SupportTicketSMTPFields';
+import { severityLabelMap, useTicketSeverityCapability } from './ticketUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   expPanelSummary: {
@@ -147,6 +150,14 @@ const entityIdToNameMap: Record<EntityType, string> = {
   volume_id: 'Volume',
 };
 
+const severityOptions: {
+  label: string;
+  value: TicketSeverity;
+}[] = Array.from(severityLabelMap).map(([severity, label]) => ({
+  label,
+  value: severity,
+}));
+
 export const entitiesToItems = (type: string, entities: any) => {
   return entities.map((entity: any) => {
     return type === 'domain_id'
@@ -174,18 +185,25 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const { data: account } = useAccount();
 
+  const hasSeverityCapability = useTicketSeverityCapability();
+
   const valuesFromStorage = storage.supportText.get();
 
   // Ticket information
   const [summary, setSummary] = React.useState<string>(
     getInitialValue(prefilledTitle, valuesFromStorage.title)
   );
+  const [
+    selectedSeverity,
+    setSelectedSeverity,
+  ] = React.useState<TicketSeverity>();
   const [description, setDescription] = React.useState<string>(
     getInitialValue(prefilledDescription, valuesFromStorage.description)
   );
   const [entityType, setEntityType] = React.useState<EntityType>(
     prefilledEntity?.type ?? 'general'
   );
+  const [entityInputValue, setEntityInputValue] = React.useState<string>('');
   const [entityID, setEntityID] = React.useState<string>(
     prefilledEntity ? String(prefilledEntity.id) : ''
   );
@@ -305,17 +323,14 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     // setErrors?
   };
 
-  const handleEntityTypeChange = (e: Item<string>) => {
+  const handleEntityTypeChange = (type: EntityType) => {
     // Don't reset things if the type hasn't changed
-    if (entityType === e.value) {
+    if (type === entityType) {
       return;
     }
-    setEntityType(e.value as EntityType);
+    setEntityType(type);
     setEntityID('');
-  };
-
-  const handleEntityIDChange = (selected: Item | null) => {
-    setEntityID(String(selected?.value) ?? '');
+    setEntityInputValue('');
   };
 
   const handleSMTPFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -435,6 +450,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     createSupportTicket({
       description: _description,
       [entityType]: Number(entityID),
+      severity: selectedSeverity,
       summary,
     })
       .then((response) => {
@@ -482,7 +498,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const generalError = hasErrorFor.none;
   const inputError = hasErrorFor.input;
 
-  const topicOptions = [
+  const topicOptions: { label: string; value: EntityType }[] = [
     { label: 'General/Account/Billing', value: 'general' },
     ...renderEntityTypes(),
   ];
@@ -491,7 +507,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     return eachTopic.value === entityType;
   });
 
-  const getEntityOptions = (): Item<any, string>[] => {
+  const getEntityOptions = (): { label: string; value: number }[] => {
     const reactQueryEntityDataMap = {
       database_id: databases,
       domain_id: domains,
@@ -560,6 +576,16 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     entityOptions.find((thisEntity) => String(thisEntity.value) === entityID) ||
     null;
 
+  const selectedSeverityLabel =
+    selectedSeverity && severityLabelMap.get(selectedSeverity);
+  const selectedSeverityOption =
+    selectedSeverity != undefined && selectedSeverityLabel != undefined
+      ? {
+          label: selectedSeverityLabel,
+          value: selectedSeverity,
+        }
+      : undefined;
+
   return (
     <Dialog
       fullHeight
@@ -587,6 +613,26 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
             required
             value={summary}
           />
+          {hasSeverityCapability && (
+            <Autocomplete
+              onChange={(e, severity) =>
+                setSelectedSeverity(
+                  severity != null ? severity.value : undefined
+                )
+              }
+              textFieldProps={{
+                tooltipPosition: 'right',
+                tooltipText: TICKET_SEVERITY_TOOLTIP_TEXT,
+              }}
+              autoHighlight
+              clearOnBlur
+              data-qa-ticket-severity
+              label="Severity"
+              options={severityOptions}
+              sx={{ maxWidth: 'initial' }}
+              value={selectedSeverityOption ?? null}
+            />
+          )}
           {ticketType === 'smtp' ? (
             <SupportTicketSMTPFields
               formState={smtpFields}
@@ -596,24 +642,27 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
             <React.Fragment>
               {props.hideProductSelection ? null : (
                 <React.Fragment>
-                  <Select
+                  <Autocomplete
                     data-qa-ticket-entity-type
-                    isClearable={false}
+                    disableClearable
                     label="What is this regarding?"
-                    onChange={handleEntityTypeChange}
+                    onChange={(e, type) => handleEntityTypeChange(type.value)}
                     options={topicOptions}
                     value={selectedTopic}
                   />
                   {!['general', 'none'].includes(entityType) && (
                     <>
-                      <Select
+                      <Autocomplete
+                        onChange={(e, id) =>
+                          setEntityID(id ? String(id?.value) : '')
+                        }
                         data-qa-ticket-entity-id
                         disabled={entityOptions.length === 0}
                         errorText={entityError || inputError}
-                        isClearable={false}
-                        isLoading={areEntitiesLoading}
+                        inputValue={entityInputValue}
                         label={entityIdToNameMap[entityType] ?? 'Entity Select'}
-                        onChange={handleEntityIDChange}
+                        loading={areEntitiesLoading}
+                        onInputChange={(e, value) => setEntityInputValue(value)}
                         options={entityOptions}
                         placeholder={`Select a ${entityIdToNameMap[entityType]}`}
                         value={selectedEntity}

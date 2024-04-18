@@ -6,7 +6,7 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 import { RegionOption } from './RegionOption';
 import {
@@ -36,6 +36,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     currentCapability,
     disabled,
     errorText,
+    handleDisabledRegion,
     handleSelection,
     helperText,
     isClearable,
@@ -45,13 +46,14 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     required,
     selectedId,
     showEdgeIconHelperText,
+    tooltipText,
     width,
   } = props;
 
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,
-  } = useAccountAvailabilitiesQueryUnpaginated();
+  } = useAllAccountAvailabilitiesQuery();
 
   const regionFromSelectedId: RegionSelectOption | null =
     getSelectedRegionById({
@@ -84,15 +86,25 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
       getRegionOptions({
         accountAvailabilityData: accountAvailability,
         currentCapability,
+        handleDisabledRegion,
         regionFilter,
         regions,
       }),
-    [accountAvailability, currentCapability, regions, regionFilter]
+    [
+      accountAvailability,
+      currentCapability,
+      handleDisabledRegion,
+      regions,
+      regionFilter,
+    ]
   );
 
   return (
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete
+        getOptionDisabled={(option: RegionSelectOption) =>
+          Boolean(option.disabledProps?.disabled)
+        }
         isOptionEqualToValue={(
           option: RegionSelectOption,
           { value }: RegionSelectOption
@@ -124,6 +136,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           },
         })}
         textFieldProps={{
+          ...props.textFieldProps,
           InputProps: {
             endAdornment: regionFilter !== 'core' &&
               selectedRegion?.site_type === 'edge' && (
@@ -141,7 +154,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
               </StyledFlagContainer>
             ),
           },
-          tooltipText: helperText,
+          tooltipText,
         }}
         autoHighlight
         clearOnBlur
@@ -149,8 +162,8 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         disableClearable={!isClearable}
         disabled={disabled}
         errorText={errorText}
-        getOptionDisabled={(option: RegionSelectOption) => option.unavailable}
         groupBy={(option: RegionSelectOption) => option.data.region}
+        helperText={helperText}
         label={label ?? 'Region'}
         loading={accountAvailabilityLoading}
         loadingText="Loading regions..."

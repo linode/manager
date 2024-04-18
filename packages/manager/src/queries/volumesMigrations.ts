@@ -6,7 +6,7 @@ import {
 import { VolumesMigrationQueue } from '@linode/api-v4/lib/volumes/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { queryKey as notificationsQueryKey } from './accountNotifications';
+import { accountQueries } from './account/queries';
 import { queryPresets } from './base';
 
 const queryKey = 'volumes-migrations';
@@ -32,7 +32,7 @@ export const useVolumesMigrateMutation = () => {
       // the `volume_migration_scheduled` notification.
       setTimeout(() => {
         // Refetch notifications after 1.5 seconds. The API needs some time to process.
-        queryClient.invalidateQueries(notificationsQueryKey);
+        queryClient.invalidateQueries(accountQueries.notifications.queryKey);
       }, 1500);
     },
   });

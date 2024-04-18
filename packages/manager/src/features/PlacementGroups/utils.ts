@@ -1,8 +1,12 @@
 import { AFFINITY_TYPES } from '@linode/api-v4/lib/placement-groups';
 
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account/account';
+
 import type {
   AffinityEnforcement,
   CreatePlacementGroupPayload,
+  Linode,
   PlacementGroup,
   Region,
 } from '@linode/api-v4';
@@ -10,19 +14,26 @@ import type {
 /**
  * Helper to get the affinity enforcement readable string.
  */
-export const getAffinityEnforcement = (
+export const getAffinityTypeEnforcement = (
   is_strict: boolean
 ): AffinityEnforcement => {
   return is_strict ? 'Strict' : 'Flexible';
 };
 
 /**
- * Helper to get the number of Linodes in a Placement Group.
+ * Helper to get the full linodes objects assigned to a Placement Group.
  */
-export const getPlacementGroupLinodeCount = (
-  placementGroup: PlacementGroup
-): number => {
-  return placementGroup.linodes.length;
+export const getPlacementGroupLinodes = (
+  placementGroup: PlacementGroup | undefined,
+  linodes: Linode[] | undefined
+) => {
+  if (!placementGroup || !linodes) {
+    return;
+  }
+
+  return linodes.filter((linode) =>
+    placementGroup.members.some((pgLinode) => pgLinode.linode_id === linode.id)
+  );
 };
 
 interface HasPlacementGroupReachedCapacityOptions {
@@ -33,7 +44,7 @@ interface HasPlacementGroupReachedCapacityOptions {
 /**
  * Helper to determine if a Placement Group has reached its linode capacity.
  *
- * based on the region's `maximum_vms_per_pg`.
+ * based on the region's `maximum_linodes_per_pg`.
  */
 export const hasPlacementGroupReachedCapacity = ({
   placementGroup,
@@ -44,7 +55,8 @@ export const hasPlacementGroupReachedCapacity = ({
   }
 
   return (
-    getPlacementGroupLinodeCount(placementGroup) >= region.maximum_vms_per_pg
+    placementGroup.members.length >=
+    region.placement_group_limits.maximum_linodes_per_pg
   );
 };
 
@@ -62,11 +74,12 @@ export const hasRegionReachedPlacementGroupCapacity = ({
   allPlacementGroups,
   region,
 }: HasRegionReachedPlacementGroupCapacityOptions): boolean => {
-  if (!region || !allPlacementGroups) {
+  if (!region?.placement_group_limits || !allPlacementGroups) {
     return false;
   }
 
-  const { maximum_pgs_per_customer } = region;
+  const { placement_group_limits } = region;
+  const { maximum_pgs_per_customer } = placement_group_limits;
   const placementGroupsInRegion = allPlacementGroups.filter(
     (pg) => pg.region === region.id
   );
@@ -100,8 +113,38 @@ export const getLinodesFromAllPlacementGroups = (
   }
 
   const linodeIds = allPlacementGroups.reduce((acc, placementGroup) => {
-    return [...acc, ...placementGroup.linodes.map((linode) => linode.linode)];
+    return [
+      ...acc,
+      ...placementGroup.members.map((member) => member.linode_id),
+    ];
   }, []);
 
   return Array.from(new Set(linodeIds));
+};
+
+/**
+ * Hook to determine if the Placement Group feature should be visible to the user.
+ * Dased on the user's account capability and the feature flag.
+ *
+ * @returns {boolean} - Whether the Placement Group feature is enabled for the current user.
+ */
+export const useIsPlacementGroupsEnabled = (): {
+  isPlacementGroupsEnabled: boolean;
+} => {
+  const { data: account, error } = useAccount();
+  const flags = useFlags();
+
+  if (error || !flags) {
+    return { isPlacementGroupsEnabled: false };
+  }
+
+  const hasAccountCapability = account?.capabilities?.includes(
+    'Placement Group'
+  );
+  const isFeatureFlagEnabled = flags.placementGroups?.enabled;
+  const isPlacementGroupsEnabled = Boolean(
+    hasAccountCapability && isFeatureFlagEnabled
+  );
+
+  return { isPlacementGroupsEnabled };
 };

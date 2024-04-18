@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { databaseInstanceFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { capitalize } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 import {
@@ -51,11 +51,11 @@ describe('Database Table Row', () => {
 describe('Database Table', () => {
   it('should render database landing table with items', async () => {
     server.use(
-      rest.get('*/databases/instances', (req, res, ctx) => {
+      http.get('*/databases/instances', () => {
         const databases = databaseInstanceFactory.buildList(1, {
           status: 'active',
         });
-        return res(ctx.json(makeResourcePage(databases)));
+        return HttpResponse.json(makeResourcePage(databases));
       })
     );
 
@@ -82,8 +82,8 @@ describe('Database Table', () => {
 
   it('should render database landing with empty state', async () => {
     server.use(
-      rest.get('*/databases/instances', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/databases/instances', () => {
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 

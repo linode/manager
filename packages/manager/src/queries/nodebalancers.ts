@@ -13,16 +13,12 @@ import {
   getNodeBalancerConfigs,
   getNodeBalancerFirewalls,
   getNodeBalancerStats,
+  getNodeBalancerTypes,
   getNodeBalancers,
   updateNodeBalancer,
   updateNodeBalancerConfig,
 } from '@linode/api-v4';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   useInfiniteQuery,
   useMutation,
@@ -40,10 +36,30 @@ import { queryPresets } from './base';
 import { itemInListCreationHandler, itemInListMutationHandler } from './base';
 import { profileQueries } from './profile';
 
+import type {
+  APIError,
+  Filter,
+  Params,
+  PriceType,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
+
 export const queryKey = 'nodebalancers';
 
 export const NODEBALANCER_STATS_NOT_READY_API_MESSAGE =
   'Stats are unavailable at this time.';
+
+const getAllNodeBalancerTypes = () =>
+  getAll<PriceType>((params) => getNodeBalancerTypes(params))().then(
+    (results) => results.data
+  );
+
+export const typesQueries = createQueryKeys('types', {
+  nodebalancers: {
+    queryFn: getAllNodeBalancerTypes,
+    queryKey: null,
+  },
+});
 
 const getIsTooEarlyForStats = (created?: string) => {
   if (!created) {
@@ -131,12 +147,17 @@ export const useNodebalancerConfigCreateMutation = (id: number) => {
   );
 };
 
+interface CreateNodeBalancerConfigWithConfig
+  extends Partial<CreateNodeBalancerConfig> {
+  configId: number;
+}
+
 export const useNodebalancerConfigUpdateMutation = (nodebalancerId: number) => {
   const queryClient = useQueryClient();
   return useMutation<
     NodeBalancerConfig,
     APIError[],
-    Partial<CreateNodeBalancerConfig> & { configId: number }
+    CreateNodeBalancerConfigWithConfig
   >(
     ({ configId, ...data }) =>
       updateNodeBalancerConfig(nodebalancerId, configId, data),
@@ -237,3 +258,9 @@ export const useNodeBalancersFirewallsQuery = (nodebalancerId: number) =>
     () => getNodeBalancerFirewalls(nodebalancerId),
     queryPresets.oneTimeFetch
   );
+
+export const useNodeBalancerTypesQuery = () =>
+  useQuery<PriceType[], APIError[]>({
+    ...queryPresets.oneTimeFetch,
+    ...typesQueries.nodebalancers,
+  });

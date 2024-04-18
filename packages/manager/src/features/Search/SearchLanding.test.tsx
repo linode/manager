@@ -6,10 +6,10 @@ import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { searchbarResult1 } from 'src/__data__/searchResults';
 import { linodeTypeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { CombinedProps as Props, SearchLanding } from './SearchLanding';
+import { SearchLandingProps as Props, SearchLanding } from './SearchLanding';
 import { emptyResults } from './utils';
 
 const props: Props = {
@@ -30,11 +30,11 @@ const propsWithResults: Props = {
 describe('Component', () => {
   beforeEach(() => {
     server.use(
-      rest.get('*/domains', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/domains', () => {
+        return HttpResponse.json(makeResourcePage([]));
       }),
-      rest.get('*/linode/types/*', (req, res, ctx) => {
-        return res(ctx.json(linodeTypeFactory.build()));
+      http.get('*/linode/types/*', () => {
+        return HttpResponse.json(linodeTypeFactory.build());
       })
     );
   });

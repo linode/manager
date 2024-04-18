@@ -51,8 +51,12 @@ export const getOAuthClient = (clientId: number) =>
  *
  */
 
+interface OAuthClientWithSecret extends OAuthClient {
+  secret: string;
+}
+
 export const createOAuthClient = (data: OAuthClientRequest) =>
-  Request<OAuthClient & { secret: string }>(
+  Request<OAuthClientWithSecret>(
     setURL(`${API_ROOT}/account/oauth-clients`),
     setMethod('POST'),
     setData(data, createOAuthClientSchema)
@@ -69,7 +73,7 @@ export const createOAuthClient = (data: OAuthClientRequest) =>
  *
  */
 export const resetOAuthClientSecret = (clientId: number | string) =>
-  Request<OAuthClient & { secret: string }>(
+  Request<OAuthClientWithSecret>(
     setURL(
       `${API_ROOT}/account/oauth-clients/${encodeURIComponent(
         clientId

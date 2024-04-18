@@ -12,8 +12,6 @@ const queryMocks = vi.hoisted(() => ({
     reset: vi.fn(),
   }),
   useParams: vi.fn().mockReturnValue({}),
-  usePlacementGroupQuery: vi.fn().mockReturnValue({}),
-  useRegionsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('react-router-dom', async () => {
@@ -24,49 +22,37 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-vi.mock('src/queries/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions');
-  return {
-    ...actual,
-    useRegionsQuery: queryMocks.useRegionsQuery,
-  };
-});
-
 vi.mock('src/queries/placementGroups', async () => {
   const actual = await vi.importActual('src/queries/placementGroups');
   return {
     ...actual,
     useMutatePlacementGroup: queryMocks.useMutatePlacementGroup,
-    usePlacementGroupQuery: queryMocks.usePlacementGroupQuery,
   };
 });
 
 describe('PlacementGroupsCreateDrawer', () => {
   it('should render, have the proper fields populated with PG values, and have uneditable fields disabled', async () => {
     queryMocks.useParams.mockReturnValue({ id: '1' });
-    queryMocks.useRegionsQuery.mockReturnValue({
-      data: regionFactory.buildList(1, { id: 'us-east', label: 'Newark, NJ' }),
-    });
-    queryMocks.usePlacementGroupQuery.mockReturnValue({
-      data: placementGroupFactory.build({
-        affinity_type: 'anti_affinity',
-        id: 1,
-        label: 'PG-to-edit',
-        region: 'us-east',
-      }),
-    });
 
     const { getByLabelText, getByRole, getByText } = renderWithTheme(
       <PlacementGroupsEditDrawer
+        selectedPlacementGroup={placementGroupFactory.build({
+          affinity_type: 'anti_affinity:local',
+          id: 1,
+          label: 'PG-to-edit',
+          region: 'us-east',
+        })}
+        disableEditButton={false}
         onClose={vi.fn()}
         onPlacementGroupEdit={vi.fn()}
         open={true}
+        region={regionFactory.build({ id: 'us-east', label: 'Newark, NJ' })}
       />
     );
 
     expect(
       getByRole('heading', {
-        name: 'Edit Placement Group PG-to-edit (Anti-affinity)',
+        name: 'Edit Placement Group PG-to-edit',
       })
     ).toBeInTheDocument();
     expect(getByText('Newark, NJ (us-east)')).toBeInTheDocument();

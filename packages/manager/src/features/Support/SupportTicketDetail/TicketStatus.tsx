@@ -1,8 +1,11 @@
 import { SupportTicket } from '@linode/api-v4/lib/support/types';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
+import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
+import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Typography } from 'src/components/Typography';
@@ -11,13 +14,15 @@ import { capitalize } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 
+import { SeverityChip } from './SeverityChip';
+
 type Props = Pick<
   SupportTicket,
-  'entity' | 'status' | 'updated' | 'updated_by'
+  'entity' | 'severity' | 'status' | 'updated' | 'updated_by'
 >;
 
 export const TicketStatus = (props: Props) => {
-  const { entity, status, updated, updated_by } = props;
+  const { entity, severity, status, updated, updated_by } = props;
 
   const { data: profile } = useProfile();
 
@@ -42,34 +47,36 @@ export const TicketStatus = (props: Props) => {
   };
 
   return (
-    <Stack
-      sx={(theme) => ({
-        flexFlow: 'row wrap',
-        marginBottom: theme.spacing(3),
-        [theme.breakpoints.down('md')]: {
-          marginLeft: theme.spacing(1),
-        },
-      })}
+    <Paper
+      data-qa-ticket-status
+      sx={(theme) => ({ p: `${theme.spacing()} ${theme.spacing(2)}` })}
     >
-      <Stack
-        sx={{
-          display: 'inline-flex',
-          flexDirection: 'row',
-        }}
-      >
-        <StyledStatusIcon
-          ariaLabel={`Ticket status is ${status}`}
-          status={status === 'closed' ? 'inactive' : 'active'}
-        />
-        {capitalize(status)}
+      <Stack direction="row">
+        <Grid alignItems="center" container direction="row" xs>
+          <StyledStatusIcon
+            ariaLabel={`Ticket status is ${status}`}
+            status={status === 'closed' ? 'inactive' : 'active'}
+          />
+          <Typography sx={(theme) => ({ fontFamily: theme.font.bold })}>
+            {capitalize(status)}
+          </Typography>
+          <Hidden smDown>
+            &nbsp;
+            <Typography>
+              | {statusUpdateText} by {updated_by} at {formattedDate}
+            </Typography>
+            &nbsp;
+            {renderEntityLabel()}
+          </Hidden>
+        </Grid>
+        {severity && (
+          <Stack alignItems="center" direction="row" spacing={1}>
+            <Typography>Severity:</Typography>
+            <SeverityChip severity={severity} />
+          </Stack>
+        )}
       </Stack>
-      &nbsp;
-      <Typography>
-        | {statusUpdateText} by {updated_by} at {formattedDate}
-      </Typography>
-      &nbsp;
-      {renderEntityLabel()}
-    </Stack>
+    </Paper>
   );
 };
 

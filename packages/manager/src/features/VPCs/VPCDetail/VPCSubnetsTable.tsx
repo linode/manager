@@ -23,7 +23,7 @@ import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDra
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useSubnetsQuery } from 'src/queries/vpcs';
+import { useSubnetsQuery } from 'src/queries/vpcs/vpcs';
 
 import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
 import { SubnetCreateDrawer } from './SubnetCreateDrawer';
@@ -361,7 +361,6 @@ export const VPCSubnetsTable = (props: Props) => {
           action={linodePowerAction ?? 'Reboot'}
           isOpen={powerActionDialogOpen}
           linodeId={selectedLinode?.id}
-          manuallyUpdateConfigs={true}
           onClose={() => setPowerActionDialogOpen(false)}
         />
       )}
