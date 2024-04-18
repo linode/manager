@@ -20,7 +20,7 @@ import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMarkEventsAsSeen } from 'src/queries/events/events';
 import { ThunkDispatch } from 'src/store/types';
 
-import { topMenuIconButtonSx, TopMenuTooltip } from '../TopMenuTooltip';
+import { TopMenuTooltip, topMenuIconButtonSx } from '../TopMenuTooltip';
 
 const StyledChip = styled(Chip)(() => ({
   '& .MuiChip-label': {
@@ -83,6 +83,8 @@ export const NotificationMenu = () => {
     markEventsAsSeen,
   ]);
 
+  const id = notificationContext.menuOpen ? 'notifications-popover' : undefined;
+
   return (
     <>
       <TopMenuTooltip title="Notifications">
@@ -91,20 +93,16 @@ export const NotificationMenu = () => {
             ...topMenuIconButtonSx(theme),
             color: notificationContext.menuOpen ? '#606469' : '#c9c7c7',
           })}
+          aria-describedby={id}
           aria-haspopup="true"
-          aria-label="Notifications"
+          aria-label={`${numNotifications} unread notifications`}
           id={menuButtonId}
           onClick={handleNotificationMenuToggle}
           ref={anchorRef}
         >
           <Bell height="20px" width="20px" />
           {numNotifications > 0 && (
-            <StyledChip
-              color="success"
-              component="span"
-              label={numNotifications}
-              size="small"
-            />
+            <StyledChip color="success" label={numNotifications} size="small" />
           )}
         </IconButton>
       </TopMenuTooltip>
@@ -128,6 +126,7 @@ export const NotificationMenu = () => {
           },
         }}
         anchorEl={anchorRef.current}
+        id={id}
         onClose={handleClose}
         open={notificationContext.menuOpen}
       >
