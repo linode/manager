@@ -95,7 +95,7 @@ export const NotificationMenu = () => {
           })}
           aria-describedby={id}
           aria-haspopup="true"
-          aria-label={`${numNotifications} unread notifications`}
+          aria-label="Notifications"
           id={menuButtonId}
           onClick={handleNotificationMenuToggle}
           ref={anchorRef}
