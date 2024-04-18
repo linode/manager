@@ -4,7 +4,6 @@ import React from 'react';
 import EdgeServer from 'src/assets/icons/entityIcons/edge-server.svg';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
-import { Link } from 'src/components/Link';
 import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 
@@ -31,73 +30,58 @@ export const RegionOption = ({
   props,
   selected,
 }: Props) => {
-  const isDisabledMenuItem = option.unavailable;
+  const { className, onClick } = props;
+  const { data, disabledProps, label, value } = option;
+  const isRegionDisabled = Boolean(disabledProps?.disabled);
+  const isRegionDisabledReason = disabledProps?.reason;
 
   return (
     <Tooltip
       PopperProps={{
-        sx: { '& .MuiTooltip-tooltip': { minWidth: 215 } },
+        sx: {
+          '& .MuiTooltip-tooltip': {
+            minWidth: disabledProps?.tooltipWidth ?? 215,
+          },
+        },
       }}
       title={
-        isDisabledMenuItem ? (
-          <>
-            There may be limited capacity in this region.{' '}
-            <Link to="https://www.linode.com/global-infrastructure/availability">
-              Learn more
-            </Link>
-            .
-          </>
-        ) : (
-          ''
-        )
+        isRegionDisabled && isRegionDisabledReason ? isRegionDisabledReason : ''
       }
-      disableFocusListener={!isDisabledMenuItem}
-      disableHoverListener={!isDisabledMenuItem}
-      disableTouchListener={!isDisabledMenuItem}
+      disableFocusListener={!isRegionDisabled}
+      disableHoverListener={!isRegionDisabled}
+      disableTouchListener={!isRegionDisabled}
       enterDelay={200}
       enterNextDelay={200}
       enterTouchDelay={200}
-      key={option.value}
+      key={value}
     >
       <StyledListItem
         {...props}
-        className={
-          isDisabledMenuItem
-            ? `${props.className} Mui-disabled`
-            : props.className
-        }
         componentsProps={{
           root: {
-            'data-qa-option': option.value,
-            'data-testid': option.value,
+            'data-qa-option': value,
+            'data-testid': value,
           } as ListItemComponentsPropsOverrides,
         }}
         onClick={(e) =>
-          isDisabledMenuItem
-            ? e.preventDefault()
-            : props.onClick
-            ? props.onClick(e)
-            : null
+          isRegionDisabled ? e.preventDefault() : onClick ? onClick(e) : null
         }
         aria-disabled={undefined}
+        className={isRegionDisabled ? `${className} Mui-disabled` : className}
       >
         <>
           <Box alignItems="center" display="flex" flexGrow={1}>
             <StyledFlagContainer>
-              <Flag country={option.data.country} />
+              <Flag country={data.country} />
             </StyledFlagContainer>
-            {option.label}
+            {label}
             {displayEdgeServerIcon && (
               <Box sx={visuallyHidden}>
                 &nbsp;(This region is an Edge site.)
               </Box>
             )}
-            {isDisabledMenuItem && (
-              <Box sx={visuallyHidden}>
-                Disabled option - There may be limited capacity in this region.
-                Learn more at
-                https://www.linode.com/global-infrastructure/availability.
-              </Box>
+            {isRegionDisabled && isRegionDisabledReason && (
+              <Box sx={visuallyHidden}>{isRegionDisabledReason}</Box>
             )}
           </Box>
           {selected && <SelectedIcon visible={selected} />}

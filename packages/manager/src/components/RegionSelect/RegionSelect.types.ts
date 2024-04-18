@@ -14,9 +14,13 @@ export interface RegionSelectOption {
     country: Country;
     region: string;
   };
+  disabledProps?: {
+    disabled: boolean;
+    reason?: JSX.Element | string;
+    tooltipWidth?: number;
+  };
   label: string;
   site_type: RegionSite;
-  unavailable: boolean;
   value: string;
 }
 
@@ -33,6 +37,9 @@ export interface RegionSelectProps
    * See `ImageUpload.tsx` for an example of a RegionSelect with an undefined `currentCapability` - there is no capability associated with Images yet.
    */
   currentCapability: Capabilities | undefined;
+  handleDisabledRegion?: (
+    region: Region
+  ) => RegionSelectOption['disabledProps'];
   handleSelection: (id: string) => void;
   helperText?: string;
   isClearable?: boolean;
@@ -71,6 +78,9 @@ export interface RegionMultiSelectProps
 export interface RegionOptionAvailability {
   accountAvailabilityData: AccountAvailability[] | undefined;
   currentCapability: Capabilities | undefined;
+  handleDisabledRegion?: (
+    region: Region
+  ) => RegionSelectOption['disabledProps'];
 }
 
 export interface GetRegionOptions extends RegionOptionAvailability {

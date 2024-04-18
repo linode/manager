@@ -152,7 +152,6 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
         )}
       </Box>
       <PlacementGroupsCreateDrawer
-        allPlacementGroups={allPlacementGroups || []}
         disabledPlacementGroupCreateButton={isLinodeReadOnly}
         onClose={() => setIsCreatePlacementGroupDrawerOpen(false)}
         onPlacementGroupCreate={handlePlacementGroupCreated}

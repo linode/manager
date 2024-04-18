@@ -1,6 +1,7 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
+import { placementGroupFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsCreateDrawer } from './PlacementGroupsCreateDrawer';
@@ -13,6 +14,7 @@ const commonProps = {
 };
 
 const queryMocks = vi.hoisted(() => ({
+  useAllPlacementGroupsQuery: vi.fn().mockReturnValue({}),
   useCreatePlacementGroup: vi.fn().mockReturnValue({
     mutateAsync: vi.fn().mockResolvedValue({}),
     reset: vi.fn(),
@@ -23,6 +25,7 @@ vi.mock('src/queries/placementGroups', async () => {
   const actual = await vi.importActual('src/queries/placementGroups');
   return {
     ...actual,
+    useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
     useCreatePlacementGroup: queryMocks.useCreatePlacementGroup,
   };
 });
@@ -113,22 +116,12 @@ describe('PlacementGroupsCreateDrawer', () => {
   });
 
   it('should display an error message if the region has reached capacity', async () => {
+    queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
+      data: [placementGroupFactory.build({ region: 'us-west' })],
+    });
     const regionWithoutCapacity = 'Fremont, CA (us-west)';
     const { getByPlaceholderText, getByText } = renderWithTheme(
-      <PlacementGroupsCreateDrawer
-        {...commonProps}
-        allPlacementGroups={[
-          {
-            affinity_type: 'affinity:local',
-            id: 1,
-            is_compliant: true,
-            is_strict: true,
-            label: 'my-placement-group',
-            members: [],
-            region: 'us-west',
-          },
-        ]}
-      />
+      <PlacementGroupsCreateDrawer {...commonProps} />
     );
 
     const regionSelect = getByPlaceholderText('Select a Region');
@@ -137,12 +130,15 @@ describe('PlacementGroupsCreateDrawer', () => {
       target: { value: regionWithoutCapacity },
     });
     await waitFor(() => {
-      const selectedRegionOption = getByText(regionWithoutCapacity);
-      fireEvent.click(selectedRegionOption);
+      expect(getByText(regionWithoutCapacity)).toBeInTheDocument();
     });
 
     await waitFor(() => {
-      expect(getByText('This region has reached capacity')).toBeInTheDocument();
+      expect(
+        getByText(
+          'You’ve reached the limit of placement groups you can create in this region.'
+        )
+      ).toBeInTheDocument();
     });
   });
 });
