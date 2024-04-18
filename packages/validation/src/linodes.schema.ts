@@ -277,12 +277,12 @@ const PlacementGroupPayloadSchema = object({
 export const CreateLinodeSchema = object({
   type: string().ensure().required('Plan is required.'),
   region: string().ensure().required('Region is required.'),
-  stackscript_id: number().notRequired(),
+  stackscript_id: number().nullable().notRequired(),
   backup_id: number().notRequired(),
   swap_size: number().notRequired(),
   image: string().when('stackscript_id', {
     is: (value?: number) => value !== undefined,
-    then: string().required('Image is required.'),
+    then: string().ensure().required('Image is required.'),
     otherwise: string().nullable().notRequired(),
   }),
   authorized_keys: array().of(string()).notRequired(),

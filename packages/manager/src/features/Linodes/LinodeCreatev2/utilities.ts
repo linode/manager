@@ -7,6 +7,7 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { utoa } from '../LinodesCreate/utilities';
 
 import type { LinodeCreateType } from '../LinodesCreate/types';
+import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
 import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
 import type { Resolver } from 'react-hook-form';
 
@@ -14,6 +15,9 @@ import type { Resolver } from 'react-hook-form';
  * This interface is used to type the query params on the Linode Create flow.
  */
 interface LinodeCreateQueryParams {
+  imageID: string | undefined;
+  stackScriptID: string | undefined;
+  subtype: StackScriptTabType | undefined;
   type: LinodeCreateType | undefined;
 }
 
@@ -27,16 +31,42 @@ export const useLinodeCreateQueryParams = () => {
 
   const rawParams = getQueryParamsFromQueryString(history.location.search);
 
+  /**
+   * Updates query params
+   */
   const updateParams = (params: Partial<LinodeCreateQueryParams>) => {
-    const newParams = new URLSearchParams({ ...rawParams, ...params });
+    const newParams = new URLSearchParams(rawParams);
+
+    for (const key in params) {
+      if (!params[key]) {
+        newParams.delete(key);
+      } else {
+        newParams.set(key, params[key]);
+      }
+    }
+
+    history.push({ search: newParams.toString() });
+  };
+
+  /**
+   * Replaces query params with the provided values
+   */
+  const setParams = (params: Partial<LinodeCreateQueryParams>) => {
+    const newParams = new URLSearchParams(params);
+
     history.push({ search: newParams.toString() });
   };
 
   const params = {
+    imageID: rawParams.imageID as string | undefined,
+    stackScriptID: rawParams.stackScriptID
+      ? Number(rawParams.stackScriptID)
+      : undefined,
+    subtype: rawParams.subtype as StackScriptTabType | undefined,
     type: rawParams.type as LinodeCreateType | undefined,
-  } as LinodeCreateQueryParams;
+  };
 
-  return { params, updateParams };
+  return { params, setParams, updateParams };
 };
 
 /**
@@ -143,27 +173,95 @@ export const getInterfacesPayload = (
   return undefined;
 };
 
-export const defaultValues: CreateLinodeRequest = {
-  image: 'linode/debian11',
+const defaultVPCInterface = {
+  ipam_address: '',
+  label: '',
+  purpose: 'vpc',
+} as const;
+
+const defaultVLANInterface = {
+  ipam_address: '',
+  label: '',
+  purpose: 'vlan',
+} as const;
+
+const defaultPublicInterface = {
+  ipam_address: '',
+  label: '',
+  purpose: 'public',
+} as const;
+
+/**
+ * This function initializes the Linode Create flow form
+ * when the form mounts.
+ *
+ * The default values are dependent on the query params present.
+ */
+export const defaultValues = async (): Promise<CreateLinodeRequest> => {
+  const queryParams = getQueryParamsFromQueryString(window.location.search);
+
+  const stackScriptID = queryParams.stackScriptID
+    ? Number(queryParams.stackScriptID)
+    : undefined;
+
+  const imageID = queryParams.imageID;
+
+  return {
+    image: stackScriptID ? imageID : imageID ?? 'linode/debian11',
+    interfaces: [
+      defaultVPCInterface,
+      defaultVLANInterface,
+      defaultPublicInterface,
+    ],
+    region: '',
+    stackscript_id: stackScriptID,
+    type: '',
+  };
+};
+
+const defaultValuesForImages = {
   interfaces: [
-    {
-      ipam_address: '',
-      label: '',
-      purpose: 'vpc',
-    },
-    {
-      ipam_address: '',
-      label: '',
-      purpose: 'vlan',
-    },
-    {
-      ipam_address: '',
-      label: '',
-      purpose: 'public',
-    },
+    defaultVPCInterface,
+    defaultVLANInterface,
+    defaultPublicInterface,
   ],
   region: '',
   type: '',
+};
+
+const defaultValuesForDistributions = {
+  image: 'linode/debian11',
+  interfaces: [
+    defaultVPCInterface,
+    defaultVLANInterface,
+    defaultPublicInterface,
+  ],
+  region: '',
+  type: '',
+};
+
+const defaultValuesForStackScripts = {
+  image: undefined,
+  interfaces: [
+    defaultVPCInterface,
+    defaultVLANInterface,
+    defaultPublicInterface,
+  ],
+  region: '',
+  stackscript_id: null,
+  type: '',
+};
+
+/**
+ * A map that conatins default values for each Tab of the Linode Create flow.
+ */
+export const defaultValuesMap: Record<LinodeCreateType, CreateLinodeRequest> = {
+  Backups: defaultValuesForImages,
+  'Clone Linode': defaultValuesForImages,
+  Distributions: defaultValuesForDistributions,
+  Images: defaultValuesForImages,
+  'One-Click': defaultValuesForImages,
+  StackScripts: defaultValuesForStackScripts,
 };
 
 /**

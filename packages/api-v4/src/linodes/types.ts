@@ -363,7 +363,7 @@ export interface CreateLinodeRequest {
    *
    * This field cannot be used when deploying from a Backup or a Private Image.
    */
-  stackscript_id?: number;
+  stackscript_id?: number | null;
   /**
    * A Backup ID from another Linode’s available backups.
    *
