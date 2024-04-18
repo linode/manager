@@ -17,6 +17,7 @@ import {
   StyledClusterCell,
   StyledRadioCell,
   StyledRadioRow,
+  StyledSelectAllRadioRow,
   StyledTableRoot,
 } from './AccessTable.styles';
 
@@ -76,8 +77,9 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
   };
 
   const allScopesEqual = (accessType: AccessType) => {
-    return bucket_access.every(
-      (thisScope) => thisScope.permissions === accessType
+    return (
+      bucket_access.length > 0 &&
+      bucket_access.every((thisScope) => thisScope.permissions === accessType)
     );
   };
 
@@ -105,7 +107,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
       </TableHead>
       <TableBody>
         {mode === 'creating' && (
-          <StyledRadioRow data-qa-row="Select All" disabled={disabled}>
+          <StyledSelectAllRadioRow data-qa-row="Select All" disabled={disabled}>
             <TableCell colSpan={2} padding="checkbox" parentColumn="Region">
               <strong>Select All</strong>
             </TableCell>
@@ -151,7 +153,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
                 value="read-write"
               />
             </TableCell>
-          </StyledRadioRow>
+          </StyledSelectAllRadioRow>
         )}
         {bucket_access.length === 0 ? (
           <TableRowEmpty

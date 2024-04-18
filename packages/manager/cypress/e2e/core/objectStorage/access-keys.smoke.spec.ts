@@ -342,9 +342,14 @@ describe('object storage access keys smoke tests', () => {
             .click()
             .type('{esc}');
 
-          // Enable "Limited Access" toggle for access key, and select access rules.
+          // Enable "Limited Access" toggle for access key and confirm Create button is disabled.
           cy.findByText('Limited Access').should('be.visible').click();
 
+          ui.buttonGroup
+            .findButtonByTitle('Create Access Key')
+            .should('be.disabled');
+
+          // Select access rules for all buckets to enable Create button.
           mockBuckets.forEach((mockBucket) => {
             cy.findByText(mockBucket.label)
               .should('be.visible')
