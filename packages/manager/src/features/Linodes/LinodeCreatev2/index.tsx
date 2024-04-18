@@ -23,11 +23,14 @@ import { Region } from './Region';
 import { Summary } from './Summary';
 import { Distributions } from './Tabs/Distributions';
 import { Images } from './Tabs/Images';
+import { StackScripts } from './Tabs/StackScripts/StackScripts';
 import { UserData } from './UserData/UserData';
 import {
   defaultValues,
+  defaultValuesMap,
   getLinodeCreatePayload,
   getTabIndex,
+  resolver,
   tabs,
   useLinodeCreateQueryParams,
 } from './utilities';
@@ -38,7 +41,12 @@ import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreatev2 = () => {
-  const methods = useForm<CreateLinodeRequest>({ defaultValues });
+  const methods = useForm<CreateLinodeRequest>({
+    defaultValues,
+    mode: 'onBlur',
+    resolver,
+  });
+
   const history = useHistory();
 
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
@@ -61,9 +69,17 @@ export const LinodeCreatev2 = () => {
     }
   };
 
-  const { params, updateParams } = useLinodeCreateQueryParams();
+  const { params, setParams } = useLinodeCreateQueryParams();
 
   const currentTabIndex = getTabIndex(params.type);
+
+  const onTabChange = (index: number) => {
+    const newTab = tabs[index];
+    // Update tab "type" query param. (This changes the selected tab)
+    setParams({ type: newTab });
+    // Reset the form values
+    methods.reset(defaultValuesMap[newTab]);
+  };
 
   return (
     <FormProvider {...methods}>
@@ -76,10 +92,7 @@ export const LinodeCreatev2 = () => {
       <form onSubmit={methods.handleSubmit(onSubmit)}>
         <Error />
         <Stack gap={3}>
-          <Tabs
-            index={currentTabIndex}
-            onChange={(index) => updateParams({ type: tabs[index] })}
-          >
+          <Tabs index={currentTabIndex} onChange={onTabChange}>
             <TabList>
               <Tab>Distributions</Tab>
               <Tab>Marketplace</Tab>
@@ -93,7 +106,9 @@ export const LinodeCreatev2 = () => {
                 <Distributions />
               </SafeTabPanel>
               <SafeTabPanel index={1}>Marketplace</SafeTabPanel>
-              <SafeTabPanel index={2}>StackScripts</SafeTabPanel>
+              <SafeTabPanel index={2}>
+                <StackScripts />
+              </SafeTabPanel>
               <SafeTabPanel index={3}>
                 <Images />
               </SafeTabPanel>

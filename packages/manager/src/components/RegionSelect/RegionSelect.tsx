@@ -36,6 +36,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     currentCapability,
     disabled,
     errorText,
+    handleDisabledRegion,
     handleSelection,
     helperText,
     isClearable,
@@ -85,15 +86,25 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
       getRegionOptions({
         accountAvailabilityData: accountAvailability,
         currentCapability,
+        handleDisabledRegion,
         regionFilter,
         regions,
       }),
-    [accountAvailability, currentCapability, regions, regionFilter]
+    [
+      accountAvailability,
+      currentCapability,
+      handleDisabledRegion,
+      regions,
+      regionFilter,
+    ]
   );
 
   return (
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete
+        getOptionDisabled={(option: RegionSelectOption) =>
+          Boolean(option.disabledProps?.disabled)
+        }
         isOptionEqualToValue={(
           option: RegionSelectOption,
           { value }: RegionSelectOption
@@ -125,6 +136,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           },
         })}
         textFieldProps={{
+          ...props.textFieldProps,
           InputProps: {
             endAdornment: regionFilter !== 'core' &&
               selectedRegion?.site_type === 'edge' && (
@@ -150,7 +162,6 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         disableClearable={!isClearable}
         disabled={disabled}
         errorText={errorText}
-        getOptionDisabled={(option: RegionSelectOption) => option.unavailable}
         groupBy={(option: RegionSelectOption) => option.data.region}
         helperText={helperText}
         label={label ?? 'Region'}
