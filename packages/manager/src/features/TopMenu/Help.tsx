@@ -9,11 +9,14 @@ import { TopMenuTooltip, topMenuIconButtonSx } from './TopMenuTooltip';
 export const Help = () => {
   return (
     <TopMenuTooltip title="Help & Support">
-      <Link accessibleAriaLabel="Help & Support" to="/support">
-        <IconButton sx={topMenuIconButtonSx}>
-          <HelpSVGIcon height="20px" width="20px" />
-        </IconButton>
-      </Link>
+      <IconButton
+        aria-label="Help & Support"
+        component={Link}
+        sx={topMenuIconButtonSx}
+        to="/support"
+      >
+        <HelpSVGIcon height="20px" width="20px" />
+      </IconButton>
     </TopMenuTooltip>
   );
 };
