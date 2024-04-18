@@ -17,7 +17,6 @@ import {
   determineInitialPlanCategoryTab,
   getIsLimitedAvailability,
   getPlanSelectionsByPlanType,
-  isMajorityLimitedAvailabilityPlans,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
 } from './utils';
@@ -32,6 +31,8 @@ interface Props {
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
+  disabledPlanTypes?: PlanSelectionType[];
+  disabledPlanTypesToolTipText?: string;
   disabledTabs?: string[];
   docsLink?: JSX.Element;
   error?: string;
@@ -47,8 +48,6 @@ interface Props {
   tabDisabledMessage?: string;
   tabbedPanelInnerClass?: string;
   types: PlanSelectionType[];
-  disabledPlanTypes?: PlanSelectionType[];
-  disabledPlanTypesToolTipText?: string;
 }
 
 export const PlansPanel = (props: Props) => {
@@ -57,6 +56,8 @@ export const PlansPanel = (props: Props) => {
     copy,
     currentPlanHeading,
     disabled,
+    disabledPlanTypes,
+    disabledPlanTypesToolTipText,
     docsLink,
     error,
     header,
@@ -68,8 +69,6 @@ export const PlansPanel = (props: Props) => {
     selectedRegionID,
     showTransfer,
     types,
-    disabledPlanTypes,
-    disabledPlanTypesToolTipText,
   } = props;
 
   const flags = useFlags();
@@ -118,8 +117,8 @@ export const PlansPanel = (props: Props) => {
   // @TODO Gecko: Get plan data from API when it's available instead of hardcoding
   const plans = showEdgePlanTable
     ? {
-        dedicated: getDedicatedEdgePlanType(),
-      }
+      dedicated: getDedicatedEdgePlanType(),
+    }
     : _plans;
 
   const {
@@ -146,10 +145,6 @@ export const PlansPanel = (props: Props) => {
       }
     );
 
-    const mostClassPlansAreLimitedAvailability = isMajorityLimitedAvailabilityPlans(
-      plansForThisLinodeTypeClass
-    );
-
     return {
       disabled: props.disabledTabs ? props.disabledTabs?.includes(plan) : false,
       render: () => {
@@ -162,10 +157,8 @@ export const PlansPanel = (props: Props) => {
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                 plan
               )}
-              mostClassPlansAreLimitedAvailability={
-                mostClassPlansAreLimitedAvailability
-              }
               disabledClasses={props.disabledClasses}
+              hasDisabledPlans={false} // TODO GETWELL based on other TODO
               hasSelectedRegion={hasSelectedRegion}
               planType={plan}
               regionsData={regionsData || []}
@@ -177,13 +170,12 @@ export const PlansPanel = (props: Props) => {
               />
             )}
             <PlanContainer
-              hideDisabledHelpIcons={
-                mostClassPlansAreLimitedAvailability &&
-                flags.disableLargestGbPlans
-              } // Making it conditional on the flag avoids scenario w/ flag off where all plans on a tab could be disabled with no explanation
               currentPlanHeading={currentPlanHeading}
               disabled={disabled || isPlanPanelDisabled(plan)}
               disabledClasses={props.disabledClasses}
+              disabledPlanTypes={disabledPlanTypes}
+              disabledPlanTypesToolTipText={disabledPlanTypesToolTipText}
+              hideDisabledHelpIcons={false} // TODO GETWELL: determined by callback from plan container if we have more than half of the plans disabledd
               isCreate={isCreate}
               linodeID={linodeID}
               onSelect={onSelect}
@@ -192,8 +184,6 @@ export const PlansPanel = (props: Props) => {
               selectedId={selectedId}
               selectedRegionId={selectedRegionID}
               showTransfer={showTransfer}
-              disabledPlanTypes={disabledPlanTypes}
-              disabledPlanTypesToolTipText={disabledPlanTypesToolTipText}
             />
           </>
         );

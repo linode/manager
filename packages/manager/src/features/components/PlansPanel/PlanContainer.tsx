@@ -9,6 +9,7 @@ import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { useFlags } from 'src/hooks/useFlags';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
@@ -54,7 +55,7 @@ export interface Props {
 export const PlanContainer = (props: Props) => {
   const {
     currentPlanHeading,
-    disabled,
+    disabled: isWholePanelDisabled,
     disabledClasses,
     disabledPlanTypes,
     disabledPlanTypesToolTipText,
@@ -68,6 +69,7 @@ export const PlanContainer = (props: Props) => {
     selectedRegionId,
     showTransfer,
   } = props;
+  const flags = useFlags();
   const location = useLocation();
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
@@ -88,19 +90,31 @@ export const PlanContainer = (props: Props) => {
     !selectedRegionId && !isDatabaseCreateFlow && !isDatabaseResizeFlow;
 
   const renderPlanSelection = React.useCallback(() => {
+    const allDisabledPlans: string[] = [];
+
+    if (disabledPlanTypes) {
+      disabledPlanTypes.forEach((plan) => {
+        allDisabledPlans.push(plan.id);
+      });
+    }
+
     return plans.map((plan, id) => {
-      const planIsDisabled =
-        disabledPlanTypes?.find((element) => element.id === plan.id) !==
-        undefined;
+      // Determine if the plan should be disabled solely due to being a 512GB plan
+      const isDisabled512GbPlan =
+        plan.label.includes('512GB') &&
+        Boolean(flags.disableLargestGbPlans) &&
+        !isWholePanelDisabled;
+
+      if (plan.isLimitedAvailabilityPlan || isDisabled512GbPlan) {
+        allDisabledPlans.push(plan.id);
+      }
+
+      const isPlanDisabled = allDisabledPlans.includes(plan.id);
+
       return (
         <PlanSelection
-          disabled={
-            disabled || planIsDisabled || plan.isLimitedAvailabilityPlan
-          }
-          isLimitedAvailabilityPlan={
-            disabled ? false : plan.isLimitedAvailabilityPlan
-          } // No need for tooltip due to all plans being unavailable in region
           currentPlanHeading={currentPlanHeading}
+          disabled={isWholePanelDisabled || isPlanDisabled}
           disabledClasses={disabledClasses}
           disabledToolTip={disabledPlanTypesToolTipText}
           hideDisabledHelpIcons={hideDisabledHelpIcons}
@@ -109,7 +123,7 @@ export const PlanContainer = (props: Props) => {
           key={id}
           linodeID={linodeID}
           onSelect={onSelect}
-          planIsDisabled={planIsDisabled}
+          planIsDisabled={isPlanDisabled}
           selectedDiskSize={selectedDiskSize}
           selectedId={selectedId}
           selectedRegionId={selectedRegionId}
@@ -123,7 +137,7 @@ export const PlanContainer = (props: Props) => {
     disabledPlanTypesToolTipText,
     plans,
     selectedRegionId,
-    disabled,
+    isWholePanelDisabled,
     currentPlanHeading,
     disabledClasses,
     hideDisabledHelpIcons,
@@ -133,6 +147,7 @@ export const PlanContainer = (props: Props) => {
     selectedDiskSize,
     selectedId,
     showTransfer,
+    flags.disableLargestGbPlans,
   ]);
 
   return (

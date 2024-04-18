@@ -13,7 +13,6 @@ import { TableRow } from 'src/components/TableRow';
 import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { LINODE_NETWORK_IN } from 'src/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
   PRICE_ERROR_TOOLTIP_TEXT,
@@ -38,7 +37,6 @@ export interface PlanSelectionProps {
   hideDisabledHelpIcons?: boolean;
   idx: number;
   isCreate?: boolean;
-  isLimitedAvailabilityPlan: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   planIsDisabled?: boolean;
@@ -85,7 +83,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     hideDisabledHelpIcons,
     idx,
     isCreate,
-    isLimitedAvailabilityPlan,
     linodeID,
     onSelect,
     planIsDisabled,
@@ -95,14 +92,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     showTransfer,
     type,
   } = props;
-
-  const flags = useFlags();
-
-  // Determine if the plan should be disabled solely due to being a 512GB plan
-  const disabled512GbPlan =
-    type.label.includes('512GB') &&
-    Boolean(flags.disableLargestGbPlans) &&
-    !disabled;
 
   const diskSize = selectedDiskSize ? selectedDiskSize : 0;
   const planTooSmall = diskSize > type.disk;
@@ -128,8 +117,8 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     type && type.formattedLabel && isSamePlan
       ? `${type.formattedLabel} this is your current plan`
       : planTooSmall
-      ? `${type.formattedLabel} this plan is too small for resize`
-      : type.formattedLabel;
+        ? `${type.formattedLabel} this plan is too small for resize`
+        : type.formattedLabel;
 
   // DC Dynamic price logic - DB creation and DB resize flows are currently out of scope
   const isDatabaseFlow = location.pathname.includes('/databases');
@@ -141,13 +130,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   )}/mo ($${price?.hourly ?? UNKNOWN_PRICE}/hr)`;
 
   const rowIsDisabled =
-    isSamePlan ||
-    planTooSmall ||
-    isDisabledClass ||
-    planIsDisabled ||
-    disabled ||
-    isLimitedAvailabilityPlan ||
-    disabled512GbPlan;
+    isSamePlan || planTooSmall || isDisabledClass || planIsDisabled || disabled;
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
