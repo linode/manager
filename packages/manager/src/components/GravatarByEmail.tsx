@@ -2,7 +2,10 @@ import Avatar from '@mui/material/Avatar';
 import * as React from 'react';
 
 import UserIcon from 'src/assets/icons/account.svg';
-import { sendHasGravatarEvent } from 'src/utilities/analytics';
+import {
+  sendHasGravatarEvent,
+  waitForAdobeAnalyticsToBeLoaded,
+} from 'src/utilities/analytics';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 export const DEFAULT_AVATAR_SIZE = 28;
@@ -48,20 +51,17 @@ export const GravatarByEmail = (props: Props) => {
   );
 };
 
-const waitForAdobeAnalyticsToBeLoaded = () =>
-  new Promise<void>((resolve) => {
-    const interval = setInterval(() => {
-      if (window._satellite) {
-        resolve();
-        clearInterval(interval);
-      }
-    }, 1000);
-  });
-
+/**
+ * Given a Gravatar URL, this function waits for Adobe Analytics
+ * to load (if it is not already loaded) and captures an Analytics
+ * event saying whether or not the user has a Gravatar.
+ *
+ * Make sure the URL passed has `?d=404`
+ */
 async function checkForGravatarAndSendEvent(url: string) {
-  await waitForAdobeAnalyticsToBeLoaded();
-
   try {
+    await waitForAdobeAnalyticsToBeLoaded();
+
     const response = await fetch(url);
 
     if (response.status === 200) {
@@ -71,7 +71,7 @@ async function checkForGravatarAndSendEvent(url: string) {
       sendHasGravatarEvent(false);
     }
   } catch (error) {
-    // Unable to make fetch (probably due to a network error)
-    // Don't report any analytics when this happens.
+    // Analytics didn't load or the fetch to Gravatar
+    // failed. Event won't be logged.
   }
 }
