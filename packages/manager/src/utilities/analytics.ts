@@ -64,6 +64,7 @@ export const waitForAdobeAnalyticsToBeLoaded = () =>
       if (window._satellite) {
         resolve();
         clearInterval(interval);
+        return;
       }
 
       attempts++;
