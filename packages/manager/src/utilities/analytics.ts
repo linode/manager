@@ -32,9 +32,8 @@ interface AnalyticsEvent {
 
 type FormEventType =
   | 'formError'
-  | 'formFocus'
+  | 'formFocus' // Focus is used for Form Start
   | 'formInput'
-  | 'formStart'
   | 'formStepInteraction'
   | 'formSubmit';
 interface BasicFormEvent {
@@ -133,22 +132,31 @@ export const sendFormEvent = (
   eventPayload: FormPayload,
   eventType: FormEventType
 ): void => {
-  const formEventPayload = { formName: eventPayload.formName };
+  const formEventPayload = {
+    formName: eventPayload.formName.replace(/\|/g, ''),
+  };
   if (!ADOBE_ANALYTICS_URL) {
     return;
   }
 
-  // Send a Direct Call Rule if our environment is configured with an Adobe Launch script
+  // Send a Direct Call Rule if our environment is configured with an Adobe Launch script.
   if (window._satellite) {
+    // Depending on the type of form event, send the correct payload for a form focus, input, step, or error.
     if (eventType === 'formInput' && 'inputValue' in eventPayload) {
-      formEventPayload['inputValue'] = eventPayload.inputValue;
+      formEventPayload['inputValue'] = eventPayload.inputValue.replace(
+        /\|/g,
+        ''
+      );
     } else if (
       eventType === 'formStepInteraction' &&
       'stepName' in eventPayload
     ) {
-      formEventPayload['stepName'] = eventPayload.stepName;
+      formEventPayload['stepName'] = eventPayload.stepName.replace(/\|/g, '');
     } else if (eventType === 'formError' && 'formError' in eventPayload) {
-      formEventPayload['inputValue'] = eventPayload.formError;
+      formEventPayload['inputValue'] = eventPayload.formError.replace(
+        /\|/g,
+        ''
+      );
     }
 
     window._satellite.track(eventType, formEventPayload);
@@ -626,4 +634,44 @@ export const sendLinodeCreateFormStartEvent = (formNameDescription: string) => {
     formName: `Linode Create Form - ${formNameDescription}`,
   };
   sendFormEvent(formPayload, 'formFocus');
+};
+
+export const sendLinodeCreateFormStepEvent = (
+  formName: string,
+  formStep: string
+) => {
+  const formPayload: FormStepEvent = {
+    formName: `Linode Create Form - ${formName}`,
+    stepName: formStep,
+  };
+  sendFormEvent(formPayload, 'formStepInteraction');
+};
+
+export const sendLinodeCreateFormInputEvent = (
+  formName: string,
+  formInput: string
+) => {
+  const formPayload: FormInputEvent = {
+    formName: `Linode Create Form - ${formName}`,
+    inputValue: formInput,
+  };
+  sendFormEvent(formPayload, 'formInput');
+};
+
+export const sendLinodeCreateFormSubmitEvent = (formName: string) => {
+  const formPayload: BasicFormEvent = {
+    formName: `Linode Create Form - ${formName}`,
+  };
+  sendFormEvent(formPayload, 'formSubmit');
+};
+
+export const sendLinodeCreateFormErrorEvent = (
+  formName: string,
+  formError: string
+) => {
+  const formPayload: FormErrorEvent = {
+    formError,
+    formName: `Linode Create Form - ${formName}`,
+  };
+  sendFormEvent(formPayload, 'formError');
 };
