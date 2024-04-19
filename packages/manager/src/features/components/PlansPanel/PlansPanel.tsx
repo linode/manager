@@ -56,6 +56,7 @@ export const PlansPanel = (props: Props) => {
     copy,
     currentPlanHeading,
     disabled,
+    disabledClasses,
     disabledPlanTypes,
     disabledPlanTypesToolTipText,
     docsLink,
@@ -65,6 +66,7 @@ export const PlansPanel = (props: Props) => {
     linodeID,
     onSelect,
     regionsData,
+    selectedDiskSize,
     selectedId,
     selectedRegionID,
     showTransfer,
@@ -117,8 +119,8 @@ export const PlansPanel = (props: Props) => {
   // @TODO Gecko: Get plan data from API when it's available instead of hardcoding
   const plans = showEdgePlanTable
     ? {
-      dedicated: getDedicatedEdgePlanType(),
-    }
+        dedicated: getDedicatedEdgePlanType(),
+      }
     : _plans;
 
   const {
@@ -145,6 +147,26 @@ export const PlansPanel = (props: Props) => {
       }
     );
 
+    const allDisabledPlans = plansForThisLinodeTypeClass.reduce((acc, plan) => {
+      // Determine if the plan should be disabled solely due to being a 512GB plan
+      const isDisabled512GbPlan =
+        plan.label.includes('512GB') && Boolean(flags.disableLargestGbPlans);
+      // && !isWholePanelDisabled;
+
+      if (
+        plan.isLimitedAvailabilityPlan ||
+        isDisabled512GbPlan ||
+        disabledPlanTypes?.some((disabledPlan) => disabledPlan.id === plan.id)
+      ) {
+        return [...acc, plan.id];
+      }
+
+      return acc;
+    }, []);
+    const hasDisabledPlans = allDisabledPlans.length > 0;
+    const hasMajorityOfPlansDisabled =
+      allDisabledPlans.length >= plansForThisLinodeTypeClass.length / 2;
+
     return {
       disabled: props.disabledTabs ? props.disabledTabs?.includes(plan) : false,
       render: () => {
@@ -157,8 +179,8 @@ export const PlansPanel = (props: Props) => {
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                 plan
               )}
-              disabledClasses={props.disabledClasses}
-              hasDisabledPlans={false} // TODO GETWELL based on other TODO
+              disabledClasses={disabledClasses}
+              hasDisabledPlans={hasDisabledPlans}
               hasSelectedRegion={hasSelectedRegion}
               planType={plan}
               regionsData={regionsData || []}
@@ -170,17 +192,17 @@ export const PlansPanel = (props: Props) => {
               />
             )}
             <PlanContainer
+              allDisabledPlans={allDisabledPlans}
               currentPlanHeading={currentPlanHeading}
               disabled={disabled || isPlanPanelDisabled(plan)}
-              disabledClasses={props.disabledClasses}
-              disabledPlanTypes={disabledPlanTypes}
+              disabledClasses={disabledClasses}
               disabledPlanTypesToolTipText={disabledPlanTypesToolTipText}
-              hideDisabledHelpIcons={false} // TODO GETWELL: determined by callback from plan container if we have more than half of the plans disabledd
+              hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
               isCreate={isCreate}
               linodeID={linodeID}
               onSelect={onSelect}
               plans={plansForThisLinodeTypeClass}
-              selectedDiskSize={props.selectedDiskSize}
+              selectedDiskSize={selectedDiskSize}
               selectedId={selectedId}
               selectedRegionId={selectedRegionID}
               showTransfer={showTransfer}

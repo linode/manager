@@ -9,13 +9,12 @@ import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { useFlags } from 'src/hooks/useFlags';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 import { PlanSelection } from './PlanSelection';
 
-import type { PlanSelectionType, TypeWithAvailability } from './types';
+import type { TypeWithAvailability } from './types';
 import type { Region } from '@linode/api-v4';
 
 const tableCells = [
@@ -36,12 +35,12 @@ const tableCells = [
 ];
 
 export interface Props {
+  allDisabledPlans: string[];
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
-  disabledPlanTypes?: PlanSelectionType[];
   disabledPlanTypesToolTipText?: string;
-  hideDisabledHelpIcons?: boolean;
+  hasMajorityOfPlansDisabled: boolean;
   isCreate?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
@@ -54,12 +53,12 @@ export interface Props {
 
 export const PlanContainer = (props: Props) => {
   const {
+    allDisabledPlans,
     currentPlanHeading,
     disabled: isWholePanelDisabled,
     disabledClasses,
-    disabledPlanTypes,
     disabledPlanTypesToolTipText,
-    hideDisabledHelpIcons,
+    hasMajorityOfPlansDisabled,
     isCreate,
     linodeID,
     onSelect,
@@ -69,7 +68,6 @@ export const PlanContainer = (props: Props) => {
     selectedRegionId,
     showTransfer,
   } = props;
-  const flags = useFlags();
   const location = useLocation();
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
@@ -90,40 +88,24 @@ export const PlanContainer = (props: Props) => {
     !selectedRegionId && !isDatabaseCreateFlow && !isDatabaseResizeFlow;
 
   const renderPlanSelection = React.useCallback(() => {
-    const allDisabledPlans: string[] = [];
-
-    if (disabledPlanTypes) {
-      disabledPlanTypes.forEach((plan) => {
-        allDisabledPlans.push(plan.id);
-      });
-    }
-
     return plans.map((plan, id) => {
-      // Determine if the plan should be disabled solely due to being a 512GB plan
-      const isDisabled512GbPlan =
-        plan.label.includes('512GB') &&
-        Boolean(flags.disableLargestGbPlans) &&
-        !isWholePanelDisabled;
-
-      if (plan.isLimitedAvailabilityPlan || isDisabled512GbPlan) {
-        allDisabledPlans.push(plan.id);
-      }
-
       const isPlanDisabled = allDisabledPlans.includes(plan.id);
 
       return (
         <PlanSelection
+          hideDisabledHelpIcons={
+            isWholePanelDisabled || hasMajorityOfPlansDisabled
+          }
           currentPlanHeading={currentPlanHeading}
-          disabled={isWholePanelDisabled || isPlanDisabled}
           disabledClasses={disabledClasses}
           disabledToolTip={disabledPlanTypesToolTipText}
-          hideDisabledHelpIcons={hideDisabledHelpIcons}
           idx={id}
           isCreate={isCreate}
+          isPlanDisabled={isPlanDisabled}
+          isWholePanelDisabled={isWholePanelDisabled}
           key={id}
           linodeID={linodeID}
           onSelect={onSelect}
-          planIsDisabled={isPlanDisabled}
           selectedDiskSize={selectedDiskSize}
           selectedId={selectedId}
           selectedRegionId={selectedRegionId}
@@ -133,21 +115,20 @@ export const PlanContainer = (props: Props) => {
       );
     });
   }, [
-    disabledPlanTypes,
+    allDisabledPlans,
     disabledPlanTypesToolTipText,
+    hasMajorityOfPlansDisabled,
     plans,
     selectedRegionId,
     isWholePanelDisabled,
     currentPlanHeading,
     disabledClasses,
-    hideDisabledHelpIcons,
     isCreate,
     linodeID,
     onSelect,
     selectedDiskSize,
     selectedId,
     showTransfer,
-    flags.disableLargestGbPlans,
   ]);
 
   return (

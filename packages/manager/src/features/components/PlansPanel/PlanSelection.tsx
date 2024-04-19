@@ -30,16 +30,16 @@ import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
 
 export interface PlanSelectionProps {
   currentPlanHeading?: string;
-  disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
   disabledToolTip?: string;
   header?: string;
   hideDisabledHelpIcons?: boolean;
   idx: number;
   isCreate?: boolean;
+  isPlanDisabled?: boolean;
+  isWholePanelDisabled?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
-  planIsDisabled?: boolean;
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionId?: Region['id'];
@@ -77,15 +77,15 @@ const getToolTip = ({
 export const PlanSelection = (props: PlanSelectionProps) => {
   const {
     currentPlanHeading,
-    disabled,
     disabledClasses,
     disabledToolTip,
     hideDisabledHelpIcons,
     idx,
     isCreate,
+    isPlanDisabled,
+    isWholePanelDisabled,
     linodeID,
     onSelect,
-    planIsDisabled,
     selectedDiskSize,
     selectedId,
     selectedRegionId,
@@ -117,8 +117,8 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     type && type.formattedLabel && isSamePlan
       ? `${type.formattedLabel} this is your current plan`
       : planTooSmall
-        ? `${type.formattedLabel} this plan is too small for resize`
-        : type.formattedLabel;
+      ? `${type.formattedLabel} this plan is too small for resize`
+      : type.formattedLabel;
 
   // DC Dynamic price logic - DB creation and DB resize flows are currently out of scope
   const isDatabaseFlow = location.pathname.includes('/databases');
@@ -130,7 +130,11 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   )}/mo ($${price?.hourly ?? UNKNOWN_PRICE}/hr)`;
 
   const rowIsDisabled =
-    isSamePlan || planTooSmall || isDisabledClass || planIsDisabled || disabled;
+    isSamePlan ||
+    planTooSmall ||
+    isDisabledClass ||
+    isPlanDisabled ||
+    isWholePanelDisabled;
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -150,14 +154,14 @@ export const PlanSelection = (props: PlanSelectionProps) => {
                 control={
                   <Radio
                     checked={
-                      !disabled &&
+                      !isWholePanelDisabled &&
                       !rowIsDisabled &&
                       !planTooSmall &&
                       type.id === String(selectedId)
                     }
                     disabled={
                       planTooSmall ||
-                      disabled ||
+                      isWholePanelDisabled ||
                       rowIsDisabled ||
                       isDisabledClass
                     }
@@ -273,7 +277,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           disabled={
             planTooSmall ||
             isSamePlan ||
-            disabled ||
+            isWholePanelDisabled ||
             rowIsDisabled ||
             isDisabledClass
           }
