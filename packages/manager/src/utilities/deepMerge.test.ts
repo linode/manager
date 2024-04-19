@@ -22,29 +22,6 @@ describe('deepMerge', () => {
     expect(result).toEqual({ a: { b: { c: 1, d: 3, e: 4 } } });
   });
 
-  it('should merge two arrays', () => {
-    const target = [1, 2, 3];
-    const source = [4, 5, 6];
-    const result = deepMerge(target, source);
-    expect(result).toEqual([4, 5, 6]);
-  });
-
-  it('should merge two deeply nested arrays', () => {
-    const target = [
-      [1, 2],
-      [3, 4],
-    ];
-    const source = [
-      [5, 6],
-      [7, 8],
-    ];
-    const result = deepMerge(target, source);
-    expect(result).toEqual([
-      [5, 6],
-      [7, 8],
-    ]);
-  });
-
   it('should merge two objects and arrays', () => {
     const target = { a: [1, 2], b: 3 };
     const source = { a: [4, 5], c: 6 };

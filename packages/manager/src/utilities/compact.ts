@@ -4,6 +4,4 @@
  * @param array
  * @returns Array without falsy values
  */
-export const compact = <T>(array: T[]): T[] => {
-  return array.filter(Boolean);
-};
+export const compact = <T>(array: T[]): T[] => array.filter(Boolean);
