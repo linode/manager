@@ -110,7 +110,7 @@ describe('Linode Config', () => {
       cy.findByLabelText('List of Configurations').within(() => {
         cy.get('tr').should('have.length', 2);
         containsVisible(
-          `${linode.id}-test-config – Latest 64 bit (6.2.9-x86_64-linode160)`
+          `${linode.id}-test-config – Latest 64 bit (6.7.9-x86_64-linode163)`
         );
         containsVisible('eth0 – Public Internet');
       });
@@ -467,7 +467,7 @@ describe('Linode Config', () => {
         cy.findByLabelText('List of Configurations').within(() => {
           cy.get('tr').should('have.length', 2);
           containsVisible(
-            `sharable-configuration – Latest 64 bit (6.2.9-x86_64-linode160)`
+            `sharable-configuration – Latest 64 bit (6.7.9-x86_64-linode163)`
           );
           containsVisible('eth0 – Public Internet');
         });
