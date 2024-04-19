@@ -2,8 +2,8 @@ import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import { Theme, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
+import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { StyledNoticeTypography } from 'src/features/Linodes/LinodesCreate/PlansAvailabilityNotice.styles';
 
@@ -11,7 +11,6 @@ import { PlansAvailabilityNotice } from '../../Linodes/LinodesCreate/PlansAvaila
 import {
   DEDICATED_COMPUTE_INSTANCES_LINK,
   GPU_COMPUTE_INSTANCES_LINK,
-  LIMITED_AVAILABILITY_DISMISSIBLEBANNER_KEY,
   PREMIUM_COMPUTE_INSTANCES_LINK,
 } from './constants';
 import { MetalNotice } from './MetalNotice';
@@ -143,7 +142,7 @@ export const LimitedAvailabilityNoticeCopy = (
 ) => {
   const { docsLink, hasDisabledPlans, planTypeLabel } = props;
   return (
-    <DismissibleBanner
+    <Notice
       sx={(theme: Theme) => ({
         marginBottom: theme.spacing(3),
         marginLeft: 0,
@@ -151,7 +150,6 @@ export const LimitedAvailabilityNoticeCopy = (
         padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
       })}
       dataTestId={limitedAvailabilityBannerTestId}
-      preferenceKey={LIMITED_AVAILABILITY_DISMISSIBLEBANNER_KEY}
       variant="warning"
     >
       {hasDisabledPlans ? (
@@ -164,6 +162,6 @@ export const LimitedAvailabilityNoticeCopy = (
           <Link to={docsLink}>Learn more</Link> about plans and availability.
         </StyledNoticeTypography>
       )}
-    </DismissibleBanner>
+    </Notice>
   );
 };

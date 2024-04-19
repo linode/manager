@@ -23,7 +23,10 @@ const plans: TypeWithAvailability[] = [
 ];
 
 const props: KubernetesPlanContainerProps = {
+  allDisabledPlans: [],
   getTypeCount: vi.fn(),
+  hasMajorityOfPlansDisabled: false,
+  isWholePanelDisabled: false,
   onSelect: vi.fn(),
   plans,
   selectedRegionId: undefined,

@@ -26,8 +26,10 @@ const tableCells = [
 ];
 
 export interface KubernetesPlanContainerProps {
-  disabled?: boolean;
+  allDisabledPlans: string[];
   getTypeCount: (planId: string) => number;
+  hasMajorityOfPlansDisabled: boolean;
+  isWholePanelDisabled: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
   plans: TypeWithAvailability[];
@@ -40,8 +42,10 @@ export const KubernetesPlanContainer = (
   props: KubernetesPlanContainerProps
 ) => {
   const {
-    disabled,
+    allDisabledPlans,
     getTypeCount,
+    hasMajorityOfPlansDisabled,
+    isWholePanelDisabled,
     onAdd,
     onSelect,
     plans,
@@ -54,14 +58,15 @@ export const KubernetesPlanContainer = (
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
+      const isPlanDisabled = allDisabledPlans.includes(plan.id);
+
       return (
         <KubernetesPlanSelection
-          isLimitedAvailabilityPlan={
-            disabled ? false : plan.isLimitedAvailabilityPlan
-          } // No need for tooltip due to all plans being unavailable in region
-          disabled={disabled}
           getTypeCount={getTypeCount}
+          hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
           idx={id}
+          isPlanDisabled={isPlanDisabled}
+          isWholePanelDisabled={isWholePanelDisabled}
           key={id}
           onAdd={onAdd}
           onSelect={onSelect}
@@ -73,7 +78,9 @@ export const KubernetesPlanContainer = (
       );
     });
   }, [
-    disabled,
+    allDisabledPlans,
+    isWholePanelDisabled,
+    hasMajorityOfPlansDisabled,
     getTypeCount,
     onAdd,
     onSelect,

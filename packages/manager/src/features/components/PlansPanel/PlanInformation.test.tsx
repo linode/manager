@@ -11,6 +11,7 @@ import {
 import type { PlanInformationProps } from './PlanInformation';
 
 const mockProps: PlanInformationProps = {
+  hasDisabledPlans: false,
   hasSelectedRegion: true,
   isSelectedRegionEligibleForPlan: false,
   planType: 'standard',

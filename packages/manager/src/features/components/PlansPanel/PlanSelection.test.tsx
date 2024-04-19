@@ -28,7 +28,6 @@ const mockPlan: PlanSelectionType = planSelectionTypeFactory.build({
 
 const defaultProps: PlanSelectionProps = {
   idx: 0,
-  isLimitedAvailabilityPlan: false,
   onSelect: () => vi.fn(),
   type: mockPlan,
 };
@@ -173,11 +172,7 @@ describe('PlanSelection (table, desktop)', () => {
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
       wrapWithTableBody(
-        <PlanSelection
-          {...defaultProps}
-          isLimitedAvailabilityPlan={true}
-          type={bigPlanType}
-        />,
+        <PlanSelection {...defaultProps} type={bigPlanType} />,
         { flags: { disableLargestGbPlans: true } }
       )
     );
@@ -276,11 +271,7 @@ describe('PlanSelection (card, mobile)', () => {
 
   it('verifies the presence of a help icon button accompanied by descriptive text for plans marked as "Limited Availability".', async () => {
     const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <PlanSelection
-        {...defaultProps}
-        isLimitedAvailabilityPlan={true}
-        selectedRegionId={'us-east'}
-      />
+      <PlanSelection {...defaultProps} selectedRegionId={'us-east'} />
     );
 
     const selectionCard = getByTestId('selection-card');
@@ -300,11 +291,7 @@ describe('PlanSelection (card, mobile)', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <PlanSelection
-        {...defaultProps}
-        isLimitedAvailabilityPlan={false}
-        type={bigPlanType}
-      />,
+      <PlanSelection {...defaultProps} type={bigPlanType} />,
       { flags: { disableLargestGbPlans: true } }
     );
 

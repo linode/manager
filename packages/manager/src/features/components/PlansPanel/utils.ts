@@ -14,6 +14,7 @@ import type {
   Region,
   RegionAvailability,
 } from '@linode/api-v4';
+import type { Flags } from 'src/featureFlags';
 
 export type PlansTypes<T> = Record<LinodeTypeClass, T[]>;
 
@@ -237,29 +238,68 @@ export const replaceOrAppendPlaceholder512GbPlans = (
   return types;
 };
 
+interface ExtractPlansInformationProps {
+  disableLargestGbPlans: Flags['disableLargestGbPlans'] | undefined;
+  disabledPlanTypes?: PlanSelectionType[];
+  plans: PlanSelectionType[];
+  regionAvailabilities: RegionAvailability[] | undefined;
+  selectedRegionId: Region['id'] | undefined;
+}
+
 /**
- * Used to determine the contents of certain notices about availability and whether tooltips regarding
- * limited availability for plans are displayed within plan tables.
+ * Extracts plan information and determines if any plans are disabled.
+ * Used for Linode and Kubernetes selection Plan tables and notices.
  *
- * @param plans An array of plans in a LinodeTypeClass, e.g. Dedicated or Shared plans
+ * @param disabledPlanTypes A list of disabled plan types. Optional.
+ * @param plans The plans for the Linode type class.
+ * @param regionAvailabilities The region availabilities.
+ * @param selectedRegionId The selected region ID.
  *
- * @returns boolean
+ * @returns An object containing the plan information and disabled logic.
  */
-export const isMajorityLimitedAvailabilityPlans = (
-  plans: TypeWithAvailability[]
-): boolean => {
-  const plansTotal = plans.length;
+export const extractPlansInformation = ({
+  disableLargestGbPlans,
+  disabledPlanTypes,
+  plans,
+  regionAvailabilities,
+  selectedRegionId,
+}: ExtractPlansInformationProps) => {
+  const plansForThisLinodeTypeClass: TypeWithAvailability[] = plans.map(
+    (plan) => {
+      return {
+        ...plan,
+        isLimitedAvailabilityPlan: getIsLimitedAvailability({
+          plan,
+          regionAvailabilities,
+          selectedRegionId,
+        }),
+      };
+    }
+  );
 
-  const countOfLimitedAvailabilityPlans = plans.filter(
-    (plan) => plan.isLimitedAvailabilityPlan
-  ).length;
+  const allDisabledPlans = plansForThisLinodeTypeClass.reduce((acc, plan) => {
+    // Determine if the plan should be disabled solely due to being a 512GB plan
+    const isDisabled512GbPlan =
+      plan.label.includes('512GB') && Boolean(disableLargestGbPlans);
 
-  const limitedAvailabilityToTotalRatio =
-    countOfLimitedAvailabilityPlans / plansTotal;
+    if (
+      plan.isLimitedAvailabilityPlan ||
+      isDisabled512GbPlan ||
+      disabledPlanTypes?.some((disabledPlan) => disabledPlan.id === plan.id)
+    ) {
+      return [...acc, plan.id];
+    }
 
-  if (limitedAvailabilityToTotalRatio > 0.5) {
-    return true;
-  }
+    return acc;
+  }, []);
+  const hasDisabledPlans = allDisabledPlans.length > 0;
+  const hasMajorityOfPlansDisabled =
+    allDisabledPlans.length >= plansForThisLinodeTypeClass.length / 2;
 
-  return false;
+  return {
+    allDisabledPlans,
+    hasDisabledPlans,
+    hasMajorityOfPlansDisabled,
+    plansForThisLinodeTypeClass,
+  };
 };

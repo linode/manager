@@ -5,8 +5,6 @@ export const LIMITED_AVAILABILITY_TEXT =
   'This plan has limited deployment availability.';
 export const LIMITED_AVAILABILITY_LINK =
   'https://www.linode.com/global-infrastructure/availability/';
-export const LIMITED_AVAILABILITY_DISMISSIBLEBANNER_KEY =
-  'plan-limited-availability-notice';
 
 export const DEDICATED_COMPUTE_INSTANCES_LINK =
   'https://www.linode.com/docs/products/compute/compute-instances/plans/dedicated-cpu/';

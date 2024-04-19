@@ -15,13 +15,13 @@ import { PlanContainer } from './PlanContainer';
 import { PlanInformation } from './PlanInformation';
 import {
   determineInitialPlanCategoryTab,
-  getIsLimitedAvailability,
+  extractPlansInformation,
   getPlanSelectionsByPlanType,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
 } from './utils';
 
-import type { PlanSelectionType, TypeWithAvailability } from './types';
+import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
@@ -133,39 +133,19 @@ export const PlansPanel = (props: Props) => {
   });
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
-    const _plansForThisLinodeTypeClass: PlanSelectionType[] = plans[plan];
-    const plansForThisLinodeTypeClass: TypeWithAvailability[] = _plansForThisLinodeTypeClass.map(
-      (plan) => {
-        return {
-          ...plan,
-          isLimitedAvailabilityPlan: getIsLimitedAvailability({
-            plan,
-            regionAvailabilities,
-            selectedRegionId: selectedRegionID,
-          }),
-        };
-      }
-    );
-
-    const allDisabledPlans = plansForThisLinodeTypeClass.reduce((acc, plan) => {
-      // Determine if the plan should be disabled solely due to being a 512GB plan
-      const isDisabled512GbPlan =
-        plan.label.includes('512GB') && Boolean(flags.disableLargestGbPlans);
-      // && !isWholePanelDisabled;
-
-      if (
-        plan.isLimitedAvailabilityPlan ||
-        isDisabled512GbPlan ||
-        disabledPlanTypes?.some((disabledPlan) => disabledPlan.id === plan.id)
-      ) {
-        return [...acc, plan.id];
-      }
-
-      return acc;
-    }, []);
-    const hasDisabledPlans = allDisabledPlans.length > 0;
-    const hasMajorityOfPlansDisabled =
-      allDisabledPlans.length >= plansForThisLinodeTypeClass.length / 2;
+    const plansMap: PlanSelectionType[] = plans[plan];
+    const {
+      allDisabledPlans,
+      hasDisabledPlans,
+      hasMajorityOfPlansDisabled,
+      plansForThisLinodeTypeClass,
+    } = extractPlansInformation({
+      disableLargestGbPlans: flags.disableLargestGbPlans,
+      disabledPlanTypes,
+      plans: plansMap,
+      regionAvailabilities,
+      selectedRegionId: selectedRegionID,
+    });
 
     return {
       disabled: props.disabledTabs ? props.disabledTabs?.includes(plan) : false,

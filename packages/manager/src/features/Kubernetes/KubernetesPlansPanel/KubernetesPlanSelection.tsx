@@ -16,7 +16,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Tooltip } from 'src/components/Tooltip';
 import { LIMITED_AVAILABILITY_TEXT } from 'src/features/components/PlansPanel/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   PRICE_ERROR_TOOLTIP_TEXT,
   UNKNOWN_PRICE,
@@ -28,10 +27,11 @@ import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import type { TypeWithAvailability } from 'src/features/components/PlansPanel/types';
 
 export interface KubernetesPlanSelectionProps {
-  disabled?: boolean;
   getTypeCount: (planId: string) => number;
+  hasMajorityOfPlansDisabled: boolean;
   idx: number;
-  isLimitedAvailabilityPlan: boolean;
+  isPlanDisabled: boolean;
+  isWholePanelDisabled: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
   selectedId?: string;
@@ -44,10 +44,11 @@ export const KubernetesPlanSelection = (
   props: KubernetesPlanSelectionProps
 ) => {
   const {
-    disabled,
     getTypeCount,
+    hasMajorityOfPlansDisabled,
     idx,
-    isLimitedAvailabilityPlan,
+    isPlanDisabled,
+    isWholePanelDisabled,
     onAdd,
     onSelect,
     selectedId,
@@ -56,14 +57,7 @@ export const KubernetesPlanSelection = (
     updatePlanCount,
   } = props;
 
-  const flags = useFlags();
-
-  // Determine if the plan should be disabled solely due to being a 512GB plan
-  const disabled512GbPlan =
-    type.label.includes('512GB') &&
-    Boolean(flags.disableLargestGbPlans) &&
-    !disabled;
-  const isDisabled = disabled || isLimitedAvailabilityPlan || disabled512GbPlan;
+  const isDisabled = isPlanDisabled || isWholePanelDisabled;
   const count = getTypeCount(type.id);
   const price: PriceObject | undefined = getLinodeRegionPrice(
     type,
@@ -88,13 +82,8 @@ export const KubernetesPlanSelection = (
         />
         {onAdd && (
           <Button
-            disabled={
-              count < 1 ||
-              disabled ||
-              isLimitedAvailabilityPlan ||
-              disabled512GbPlan
-            }
             buttonType="primary"
+            disabled={count < 1 || isDisabled}
             onClick={() => onAdd(type.id, count)}
             sx={{ marginLeft: '10px', minWidth: '85px' }}
           >
@@ -116,7 +105,7 @@ export const KubernetesPlanSelection = (
           <TableCell data-qa-plan-name>
             <Box alignItems="center">
               {type.heading} &nbsp;
-              {(isLimitedAvailabilityPlan || disabled512GbPlan) && (
+              {isDisabled && !hasMajorityOfPlansDisabled && (
                 <Tooltip
                   PopperProps={{
                     sx: {

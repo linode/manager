@@ -33,8 +33,10 @@ const typeWithAvailability: TypeWithAvailability = {
 
 const props: KubernetesPlanSelectionProps = {
   getTypeCount: vi.fn(),
+  hasMajorityOfPlansDisabled: false,
   idx: 0,
-  isLimitedAvailabilityPlan: false,
+  isPlanDisabled: false,
+  isWholePanelDisabled: false,
   onAdd: vi.fn(),
   onSelect: vi.fn(),
   selectedRegionId: 'us-east',
@@ -126,11 +128,7 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
       wrapWithTableBody(
-        <KubernetesPlanSelection
-          {...props}
-          isLimitedAvailabilityPlan={true}
-          type={bigPlanType}
-        />,
+        <KubernetesPlanSelection {...props} type={bigPlanType} />,
         { flags: { disableLargestGbPlans: true } }
       )
     );
@@ -185,11 +183,7 @@ describe('KubernetesPlanSelection (cards, mobile view)', () => {
 
   it('shows limited availability messaging', async () => {
     const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <KubernetesPlanSelection
-        {...props}
-        isLimitedAvailabilityPlan={true}
-        selectedRegionId={'us-east'}
-      />
+      <KubernetesPlanSelection {...props} selectedRegionId={'us-east'} />
     );
 
     const selectionCard = getByTestId('selection-card');
@@ -212,11 +206,7 @@ describe('KubernetesPlanSelection (cards, mobile view)', () => {
     };
 
     const { getByTestId } = renderWithTheme(
-      <KubernetesPlanSelection
-        {...props}
-        isLimitedAvailabilityPlan={false}
-        type={bigPlanType}
-      />,
+      <KubernetesPlanSelection {...props} type={bigPlanType} />,
       { flags: { disableLargestGbPlans: true } }
     );
 
