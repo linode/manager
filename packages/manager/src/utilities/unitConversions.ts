@@ -90,14 +90,17 @@ export const readableBytes = (
     num = -num;
   }
 
-  const power = determinePower(num, storageUnits, options);
+  // If no maxUnit is provided, default to the highest unit
+  const power = determinePower(num, storageUnits, {
+    ...options,
+    maxUnit: options.maxUnit ?? storageUnits[storageUnits.length - 1],
+  });
 
   const multiplier = options.base10 ? 1000 : 1024;
 
   // Some other magic to get the human-readable version
   const result = num / Math.max(Math.pow(multiplier, power), 1);
   const unit = storageUnits[power] || storageUnits[0];
-
   const decimalPlaces = determineDecimalPlaces(result, unit, options);
 
   const value = parseFloat(result.toFixed(decimalPlaces));
@@ -119,7 +122,7 @@ export const readableBytes = (
 };
 
 // `power` corresponds to storageUnits.indexOf(<UNIT WE WANT TO USE>)
-const determinePower = (
+export const determinePower = (
   num: number,
   storageUnits: StorageSymbol[],
   options: ReadableBytesOptions
