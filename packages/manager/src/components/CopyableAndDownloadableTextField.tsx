@@ -5,7 +5,6 @@ import { makeStyles } from 'tss-react/mui';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DownloadTooltip } from 'src/components/DownloadTooltip';
 import { TextField, TextFieldProps } from 'src/components/TextField';
-import { snakeCase } from 'src/utilities/snakeCase';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copyIcon: {
@@ -58,4 +57,16 @@ export const CopyableAndDownloadableTextField = (props: Props) => {
       disabled
     />
   );
+};
+
+const snakeCase = (str: string | undefined): string => {
+  if (!str) {
+    return '';
+  }
+
+  return str
+    .replace(/\W+/g, ' ')
+    .split(/ |\B(?=[A-Z])/)
+    .map((word) => word.toLowerCase())
+    .join('_');
 };

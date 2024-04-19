@@ -24,14 +24,10 @@ export const omittedProps = <Props>(props: Array<keyof Props>) => (
  * @param toRemove Array of props to remove
  * @returns Object with props removed
  */
-export function omitProps<Props extends {}, Keys extends keyof Props>(
+export const omitProps = <Props extends {}, Keys extends keyof Props & string>(
   props: Props,
-  toRemove: Keys[]
-): Omit<Props, Keys> {
-  return Object.keys(props).reduce((obj, key) => {
-    if (!toRemove.includes(key as any)) {
-      (obj as any)[key] = props[key as keyof Props];
-    }
-    return obj;
-  }, {} as Omit<Props, Keys>);
-}
+  toRemove: Keys[] & string[]
+) =>
+  Object.fromEntries(
+    Object.entries(props).filter(([key]) => !toRemove.includes(key))
+  ) as Omit<Props, Keys>;
