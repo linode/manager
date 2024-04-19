@@ -25,6 +25,7 @@ import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode'
 import { DialogType } from 'src/features/Linodes/types';
 import {
   sendGroupByTagEnabledEvent,
+  sendLinodeCreateFormStartEvent,
   sendLinodesViewEvent,
 } from 'src/utilities/analytics';
 import { LinodeWithMaintenance } from 'src/utilities/linodes';
@@ -235,9 +236,12 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                                   resourceType: 'Linodes',
                                 }),
                               }}
-                              onButtonClick={() =>
-                                this.props.history.push('/linodes/create')
-                              }
+                              onButtonClick={() => {
+                                this.props.history.push('/linodes/create');
+                                sendLinodeCreateFormStartEvent(
+                                  'Form start option 2 - Filled state create'
+                                );
+                              }}
                               disabledCreateButton={isLinodesGrantReadOnly}
                               docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
                               entity="Linode"

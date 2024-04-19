@@ -10,7 +10,7 @@ declare global {
 type DTMSatellite = {
   track: (
     eventName: string,
-    eventPayload: AnalyticsPayload | PageViewPayload
+    eventPayload: AnalyticsPayload | FormPayload | PageViewPayload
   ) => void;
 };
 
@@ -29,6 +29,35 @@ interface AnalyticsEvent {
   label?: string;
   value?: number;
 }
+
+type FormEventType =
+  | 'formError'
+  | 'formFocus'
+  | 'formInput'
+  | 'formStart'
+  | 'formStepInteraction'
+  | 'formSubmit';
+interface BasicFormEvent {
+  formName: string;
+}
+
+interface FormInputEvent extends BasicFormEvent {
+  inputValue: string;
+}
+
+interface FormStepEvent extends BasicFormEvent {
+  stepName: string;
+}
+
+interface FormErrorEvent extends BasicFormEvent {
+  formError: string;
+}
+
+type FormPayload =
+  | BasicFormEvent
+  | FormErrorEvent
+  | FormInputEvent
+  | FormStepEvent;
 
 interface AnalyticsPayload extends Omit<AnalyticsEvent, 'data'> {
   data?: string;
@@ -75,6 +104,56 @@ export const waitForAdobeAnalyticsToBeLoaded = () =>
       }
     }, 1000);
   });
+
+export const sendFormInputEvent = (
+  eventPayload: FormInputEvent,
+  eventType: FormEventType
+): void => {
+  if (!ADOBE_ANALYTICS_URL) {
+    return;
+  }
+
+  // Send a Direct Call Rule if our environment is configured with an Adobe Launch script
+  if (window._satellite) {
+    // Just don't allow pipes in strings for Adobe Analytics processing.
+
+    // if (eventType === 'formInput'){
+    // } else if (eventType === 'formStepInteraction'){
+    // } else if (eventType === 'formError'){
+    // } else {
+    // }
+    window._satellite.track(eventType, {
+      formName: eventPayload.formName.replace(/\|/g, ''),
+      inputValue: eventPayload.inputValue.replace(/\|/g, ''),
+    });
+  }
+};
+
+export const sendFormEvent = (
+  eventPayload: FormPayload,
+  eventType: FormEventType
+): void => {
+  const formEventPayload = { formName: eventPayload.formName };
+  if (!ADOBE_ANALYTICS_URL) {
+    return;
+  }
+
+  // Send a Direct Call Rule if our environment is configured with an Adobe Launch script
+  if (window._satellite) {
+    if (eventType === 'formInput' && 'inputValue' in eventPayload) {
+      formEventPayload['inputValue'] = eventPayload.inputValue;
+    } else if (
+      eventType === 'formStepInteraction' &&
+      'stepName' in eventPayload
+    ) {
+      formEventPayload['stepName'] = eventPayload.stepName;
+    } else if (eventType === 'formError' && 'formError' in eventPayload) {
+      formEventPayload['inputValue'] = eventPayload.formError;
+    }
+
+    window._satellite.track(eventType, formEventPayload);
+  }
+};
 
 // LinodeActionMenu.tsx
 export const sendLinodeActionEvent = (): void => {
@@ -539,4 +618,12 @@ export const sendManageGravatarEvent = () => {
     category: 'Gravatar',
     label: 'Manage photo',
   });
+};
+
+// LinodesLanding.tsx
+export const sendLinodeCreateFormStartEvent = (formNameDescription: string) => {
+  const formPayload: BasicFormEvent = {
+    formName: `Linode Create Form - ${formNameDescription}`,
+  };
+  sendFormEvent(formPayload, 'formFocus');
 };
