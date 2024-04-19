@@ -1,5 +1,4 @@
 import { useTheme } from '@mui/material/styles';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
@@ -9,7 +8,6 @@ import { Disk, StatWithDummyPoint } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
-import db1disk from 'src/features/Longview/LongviewDetail/db1disk.json';
 
 export const DiskGraph = (props: GraphProps) => {
   const {
@@ -38,12 +36,8 @@ export const DiskGraph = (props: GraphProps) => {
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
   const { error, read, swap, write } = React.useMemo(
-    () =>
-      processDiskData(
-        db1disk[0].DATA.Disk,
-        db1disk[0].DATA.SysInfo.type
-      ),
-    [db1disk]
+    () => processDiskData(data.Disk ?? {}, data.SysInfo?.type ?? 'kvm'),
+    [data.Disk, data.SysInfo]
   );
 
   return (
@@ -146,14 +140,11 @@ export const processDiskData = (
       if (thisDisk.isswap === 1) {
         // For swap, Classic combines reads and writes into a single metric
         // Note: we are assuming only one disk will have isswap === 1
-        acc.swap = appendStats(
-          pathOr([], ['reads'], thisDisk),
-          pathOr([], ['writes'], thisDisk)
-        );
+        acc.swap = appendStats(thisDisk.reads ?? [], thisDisk.writes ?? []);
       } else {
         // Not a swap, add reads and writes to running total
-        acc.read = appendStats(acc.read, pathOr([], ['reads'], thisDisk));
-        acc.write = appendStats(acc.write, pathOr([], ['writes'], thisDisk));
+        acc.read = appendStats(acc.read, thisDisk.reads ?? []);
+        acc.write = appendStats(acc.write, thisDisk.writes ?? []);
       }
       return acc;
     },

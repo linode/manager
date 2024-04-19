@@ -1,5 +1,4 @@
 import { useTheme } from '@mui/material/styles';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
@@ -13,7 +12,6 @@ import { convertData, formatMemory } from '../../../shared/formatters';
 import { generateUsedMemory, getMaxUnit } from '../../../shared/utilities';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
-import db1memory from 'src/features/Longview/LongviewDetail/db1memory.json';
 
 export const MemoryGraph = (props: GraphProps) => {
   const {
@@ -41,14 +39,10 @@ export const MemoryGraph = (props: GraphProps) => {
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
-  const buffers = db1memory[0].DATA.Memory.real.buffers;
-  const cache = db1memory[0].DATA.Memory.real.cache;
-  const used = getUsedMemory(
-    db1memory[0].DATA.Memory.real.used,
-    cache,
-    buffers
-  );
-  const swap = pathOr<Stat[]>([], ['Memory', 'swap', 'used'], data);
+  const buffers = data.Memory?.real.buffers ?? [];
+  const cache = data.Memory?.real.cache ?? [];
+  const used = getUsedMemory(data.Memory?.real.used ?? [], cache, buffers);
+  const swap = data.Memory?.swap.used ?? [];
 
   // Determine the unit based on the largest value
   const unit = React.useMemo(() => getMaxUnit([buffers, cache, used, swap]), [
@@ -115,9 +109,9 @@ export const getUsedMemory = (used: Stat[], cache: Stat[], buffers: Stat[]) => {
   const totalLength = used.length;
   let i = 0;
   for (i; i < totalLength; i++) {
-    const _used = pathOr({}, [i], used);
-    const _cache = pathOr(0, [i, 'y'], cache);
-    const _buffers = pathOr(0, [i, 'y'], buffers);
+    const _used = used[i] ?? {};
+    const _cache = cache[i].y ?? 0;
+    const _buffers = buffers[i].y ?? 0;
     const calculatedUsed = generateUsedMemory(_used.y, _buffers, _cache);
     result.push({
       // Time will be converted to ms in convertData
