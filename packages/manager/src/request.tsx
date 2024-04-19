@@ -6,17 +6,12 @@ import {
   AxiosRequestConfig,
   AxiosResponse,
 } from 'axios';
-import * as React from 'react';
 
-import { AccountActivationError } from 'src/components/AccountActivation';
-import { MigrateError } from 'src/components/MigrateError';
-import { VerificationError } from 'src/components/VerificationError';
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 import { interceptErrors } from 'src/utilities/interceptAPIError';
 
-import { SupportError } from './components/SupportError';
 import { ApplicationStore } from './store';
 import { getEnvLocalStorageOverrides } from './utilities/storage';
 
@@ -45,8 +40,6 @@ export const handleError = (
     store.dispatch(handleLogout());
   }
 
-  const config = error.response?.config;
-  const url = config?.url ?? '';
   const status: number = error.response?.status ?? 0;
   const errors: APIError[] = error.response?.data?.errors ?? [
     { reason: DEFAULT_ERROR_MESSAGE },
@@ -62,30 +55,11 @@ export const handleError = (
     );
   }
 
-  /** AxiosError contains the original POST data as stringified JSON */
-  let requestData;
-  try {
-    requestData = JSON.parse(error.config?.data ?? '');
-  } catch {
-    requestData = {};
-  }
-  const requestedLinodeType = requestData?.type ?? '';
-
   const interceptedErrors = interceptErrors(errors, [
     {
-      condition: (e) => !!e.reason.match(/verification is required/i),
-      replacementText: (
-        <VerificationError
-          title={
-            requestedLinodeType.match(/gpu/i)
-              ? 'GPU Request'
-              : 'Verification Request'
-          }
-        />
-      ),
-    },
-    {
-      callback: () => {
+      condition: (e) =>
+        !!e.reason.match(/account must be activated/i) && status === 403,
+      effect: () => {
         if (store && !store.getState().globalErrors.account_unactivated) {
           store.dispatch(
             setErrors({
@@ -94,30 +68,8 @@ export const handleError = (
           );
         }
       },
-      condition: (e) =>
-        !!e.reason.match(/account must be activated/i) && status === 403,
-      /**
-       * this component when rendered will set an account activation
-       * error in the globalErrors Redux state. The only issue here
-       * is that if a component is not rendering the actual error message
-       * that comes down, the Redux state will never be set.
-       *
-       * This means that we have 2 options
-       *
-       * 1. Dispatch the globalError Redux action somewhere in the interceptor.
-       * 2. Fix the Landing page components to display the actual error being passed.
-       */
-      replacementText: <AccountActivationError errors={errors} />,
     },
-    {
-      condition: (e) => {
-        return (
-          !!e.reason.match(/migrations are currently disabled/i) &&
-          !!url.match(/migrate/i)
-        );
-      },
-      replacementText: <MigrateError />,
-    },
+    /** TODO replace with inline RenderError
     {
       condition: (e) => {
         return (
@@ -127,7 +79,7 @@ export const handleError = (
         );
       },
       replacementText: <SupportError errors={errors} />,
-    },
+    },*/
   ]);
 
   // Downstream components should only have to handle ApiFieldErrors, not AxiosErrors.

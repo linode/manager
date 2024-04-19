@@ -83,9 +83,7 @@ export const CredentialList = () => {
         });
       })
       .catch((e) =>
-        handleError(
-          getAPIErrorOrDefault(e, 'Error deleting this credential.')[0].reason
-        )
+        handleError(getAPIErrorOrDefault(e, 'Error deleting this credential.'))
       );
   };
 
@@ -273,7 +271,7 @@ export const CredentialList = () => {
       </OrderBy>
       <DeletionDialog
         entity="credential"
-        error={dialog.error}
+        error={dialog.errors?.[0]?.reason}
         label={dialog.entityLabel || ''}
         loading={dialog.isLoading}
         onClose={closeDialog}

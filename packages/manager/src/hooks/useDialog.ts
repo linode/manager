@@ -4,7 +4,7 @@ import * as React from 'react';
 export interface DialogState<T> {
   entityID: T;
   entityLabel?: string;
-  error?: string;
+  errors?: APIError[];
   isLoading: boolean;
   isOpen: boolean;
 }
@@ -53,11 +53,11 @@ export const useDialog = <T extends number | string | undefined>(
 ): {
   closeDialog: () => void;
   dialog: DialogState<T>;
-  handleError: (e: string) => void;
+  handleError: (e: APIError[]) => void;
   openDialog: (id: T, label?: string) => void;
   submitDialog: (params: T) => Promise<any>;
 } => {
-  const [error, setErrors] = React.useState<string | undefined>();
+  const [errors, setErrors] = React.useState<APIError[]>();
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [isLoading, setLoading] = React.useState<boolean>(false);
   const [entityID, setEntityID] = React.useState<T>(-1 as T);
@@ -86,7 +86,7 @@ export const useDialog = <T extends number | string | undefined>(
          * Consumers can use the exposed handleError method
          * directly if they want to override this with a custom message.
          */
-        handleError(e[0].reason);
+        handleError(e);
         return Promise.reject(e);
       });
   };
@@ -105,7 +105,7 @@ export const useDialog = <T extends number | string | undefined>(
     setOpen(false);
   };
 
-  const handleError = (e: string) => {
+  const handleError = (e: APIError[]) => {
     setErrors(e);
     setLoading(false);
   };
@@ -122,7 +122,7 @@ export const useDialog = <T extends number | string | undefined>(
 
   return {
     closeDialog,
-    dialog: { entityID, entityLabel, error, isLoading, isOpen },
+    dialog: { entityID, entityLabel, errors, isLoading, isOpen },
     handleError,
     openDialog,
     submitDialog,

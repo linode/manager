@@ -3,6 +3,8 @@ import * as React from 'react';
 import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
 
+import type { ErrorMatcher } from './RenderError';
+
 export const MigrateError: React.FC<{}> = () => {
   return (
     <Typography>
@@ -14,4 +16,9 @@ export const MigrateError: React.FC<{}> = () => {
       />
     </Typography>
   );
+};
+
+export const migrateErrorMatcher: ErrorMatcher = {
+  condition: (e) => !!e.reason.match(/migrations are currently disabled/i),
+  element: <MigrateError />,
 };
