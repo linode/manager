@@ -22,7 +22,7 @@ export interface Dashboard {
   updated: string;
   time_granularity: TimeGranularity;
   time_duration: TimeDuration;
-  serviceType: string;
+  service_type: string;
 }
 
 export interface TimeGranularity {

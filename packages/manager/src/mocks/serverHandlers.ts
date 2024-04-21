@@ -576,7 +576,7 @@ const cloudView = [
             created: '2023-07-12T16:08:53',
             id: req.params.id,
             label: 'Akamai Global Dashboard',
-            service_type: 'ACLB',
+            service_type: 'linodes',
             time_duration: {
               unit: 'hr',
               value: 1,

@@ -35,8 +35,8 @@ export const NamespaceDeleteDialog = (props: Props) => {
         variant: 'success',
       });
       onClose();
-      if (history.location.pathname !== '/cloudview/namespaces') {
-        history.push('/cloudview/namespaces');
+      if (history.location.pathname !== '/monitor/cloudpulse/namespaces') {
+        history.push('/monitor/cloudpulse/namespaces');
       }
     });
   };

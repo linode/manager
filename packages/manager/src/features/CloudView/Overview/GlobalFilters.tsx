@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { TimeDuration, TimeGranularity } from '@linode/api-v4';
+import { Dashboard, TimeDuration, TimeGranularity } from '@linode/api-v4';
 import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
@@ -10,13 +10,11 @@ import {
   FiltersObject,
   GlobalFilterProperties,
 } from '../Models/GlobalFilterProperties';
+import { CloudViewDashboardSelect } from '../shared/DashboardSelect';
 import { CloudViewIntervalSelect } from '../shared/IntervalSelect';
 import { CloudViewRegionSelect } from '../shared/RegionSelect';
-import {
-  CloudViewResourceSelect,
-  CloudViewResourceTypes,
-} from '../shared/ResourceSelect';
-import { CloudViewServiceSelect } from '../shared/ServicetypeSelect';
+import { CloudViewMultiResourceSelect } from '../shared/ResourceMultiSelect';
+import { CloudViewResourceTypes } from '../shared/ResourceSelect';
 import { CloudViewTimeRangeSelect } from '../shared/TimeRangeSelect';
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
@@ -34,6 +32,10 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const [selectedRegion, setRegion] = React.useState<string>();
 
   const [selectedResourceId, setResourceId] = React.useState<any>();
+
+  const [selectedDashboard, setDashboard] = React.useState<
+    Dashboard | undefined
+  >();
 
   const [
     selectedService,
@@ -63,6 +65,11 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     apiGranularity,
   ]); // if anything changes, emit an event to parent component
 
+  React.useEffect(() => {
+    props.handleDashboardChange(selectedDashboard!);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDashboard]); // if anything changes, emit an event to parent component
+
   const handleTimeRangeChange = (
     start: number,
     end: number,
@@ -86,14 +93,15 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     setRegion(region);
   };
 
-  const handleResourceChange = (resourceId: any) => {
+  const handleResourceChange = (resourceId: any[]) => {
     console.log('Resource ID: ', resourceId);
-    setResourceId(resourceId);
+    setResourceId(resourceId.map(obj => obj.label));
   };
 
-  const handleServiceChange = (service: CloudViewResourceTypes) => {
-    console.log('Service Type: ', service);
-    setService(service);
+  const handleDashboardChange = (dashboard: Dashboard | undefined) => {
+    console.log('Selected Dashboard: ', dashboard);
+    setDashboard(dashboard);
+    setService(dashboard?.service_type);
   };
 
   const convertIntervalToGranularity = (interval: string | undefined) => {
@@ -120,13 +128,15 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   return (
     <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
       <StyledGrid xs={12}>
+        <Grid sx={{ width: 300 }}>
+          <CloudViewDashboardSelect
+            handleDashboardChange={handleDashboardChange}
+          />
+        </Grid>
         <Grid sx={{ marginLeft: 2, width: 200 }}>
           <StyledCloudViewRegionSelect
             handleRegionChange={handleRegionChange}
           />
-        </Grid>
-        <Grid sx={{ marginLeft: 2, width: 200 }}>
-          <CloudViewServiceSelect handleServiceChange={handleServiceChange} />
         </Grid>
         <Grid sx={{ marginLeft: 3, width: 200 }}>
           <StyledCloudViewResourceSelect
@@ -160,7 +170,7 @@ const StyledCloudViewRegionSelect = styled(CloudViewRegionSelect, {
   width: 100,
 });
 
-const StyledCloudViewResourceSelect = styled(CloudViewResourceSelect, {
+const StyledCloudViewResourceSelect = styled(CloudViewMultiResourceSelect, {
   label: 'StyledCloudViewResourceSelect',
 })({
   width: 100,

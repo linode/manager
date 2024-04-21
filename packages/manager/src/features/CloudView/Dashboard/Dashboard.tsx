@@ -73,41 +73,55 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     let colorIndex = 0;
     if (props.dashbaord != undefined) {
       if (
-        cloudViewGraphProperties.globalFilters?.serviceType &&
+        props.dashbaord?.service_type &&
         cloudViewGraphProperties.globalFilters?.region &&
         cloudViewGraphProperties.globalFilters?.resource
       ) {
-        return props.dashbaord.widgets.map((element, index) => {
-          if (element && element != undefined) {
-            return (
-              <CloudViewWidget
-                key={index}
-                {...getCloudViewGraphProperties(element)}
-                handleWidgetChange={handleWidgetChange}
-                useColorIndex={colorIndex++}
-              />
-            );
-          } else {
-            return <React.Fragment key={index}></React.Fragment>;
-          }
-        });
+        return (
+          <Grid
+            className={'graphgrid'}
+            columnSpacing={1.5}
+            container
+            rowSpacing={0}
+            spacing={2}
+          >
+            {props.dashbaord.widgets.map((element, index) => {
+              if (element && element != undefined) {
+                return (
+                  <CloudViewWidget
+                    key={index}
+                    {...getCloudViewGraphProperties(element)}
+                    handleWidgetChange={handleWidgetChange}
+                    useColorIndex={colorIndex++}
+                  />
+                );
+              } else {
+                return <React.Fragment key={index}></React.Fragment>;
+              }
+            })}{' '}
+          </Grid>
+        );
       } else {
         return (
-          <StyledPlaceholder
-            icon={CloudViewIcon}
-            subtitle="Select Service Type, Region and Resource to visualize metrics"
-            title=""
-          />
+          <Paper>
+            <StyledPlaceholder
+              icon={CloudViewIcon}
+              subtitle="Select Service Type, Region and Resource to visualize metrics"
+              title=""
+            />
+          </Paper>
         );
       }
     } else {
       return (
-        <StyledPlaceholder
-          subtitle="No visualizations are available at this moment.
+        <Paper>
+          <StyledPlaceholder
+            subtitle="No visualizations are available at this moment.
         Create Dashboards to list here."
-          icon={CloudViewIcon}
-          title=""
-        />
+            icon={CloudViewIcon}
+            title=""
+          />
+        </Paper>
       );
     }
   };
@@ -118,15 +132,5 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     flex: 'auto',
   });
 
-  return (
-    <Grid
-      className={'graphgrid'}
-      columnSpacing={1.5}
-      container
-      rowSpacing={0}
-      spacing={2}
-    >
-      <RenderWidgets />
-    </Grid>
-  );
+  return <RenderWidgets />;
 };
