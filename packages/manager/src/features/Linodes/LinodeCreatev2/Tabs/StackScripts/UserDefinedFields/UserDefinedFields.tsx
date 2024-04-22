@@ -1,8 +1,8 @@
 import { CreateLinodeRequest } from '@linode/api-v4';
 import React from 'react';
 import { useWatch } from 'react-hook-form';
-import { Box } from 'src/components/Box';
 
+import { Box } from 'src/components/Box';
 import { Paper } from 'src/components/Paper';
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
 import { Stack } from 'src/components/Stack';

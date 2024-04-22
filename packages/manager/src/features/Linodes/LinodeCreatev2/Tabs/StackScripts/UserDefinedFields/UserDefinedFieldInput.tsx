@@ -15,11 +15,11 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 
 import {
+  getIsUDFHeader,
+  getIsUDFMultiSelect,
+  getIsUDFPasswordField,
   getIsUDFRequired,
-  isHeader,
-  isMultiSelect,
-  isOneSelect,
-  isPasswordField,
+  getIsUDFSingleSelect,
 } from './utilities';
 
 import type { CreateLinodeRequest, UserDefinedField } from '@linode/api-v4';
@@ -35,14 +35,16 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
     name: 'stackscript_data',
   });
 
+  const udfs = field.value;
+
   const onChange = (key: string, value: string) => {
     field.onChange({
-      ...field.value,
+      ...udfs,
       [key]: value,
     });
   };
 
-  if (isHeader(userDefinedField)) {
+  if (getIsUDFHeader(userDefinedField)) {
     return (
       <Stack>
         <Divider />
@@ -51,7 +53,11 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
     );
   }
 
-  if (isMultiSelect(userDefinedField)) {
+  if (getIsUDFMultiSelect(userDefinedField)) {
+    const options = userDefinedField
+      .manyof!.split(',')
+      .map((option) => ({ label: option }));
+
     return (
       <Autocomplete
         onChange={(e, options) =>
@@ -64,13 +70,13 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
         label={userDefinedField.label}
         multiple
         noMarginTop
-        options={userDefinedField.manyof!.split(',') ?? []}
-        value={field.value[userDefinedField.name] ?? null}
+        options={options}
+        value={udfs[userDefinedField.name].split(',') ?? null}
       />
     );
   }
 
-  if (isOneSelect(userDefinedField)) {
+  if (getIsUDFSingleSelect(userDefinedField)) {
     const options = userDefinedField
       .oneof!.split(',')
       .map((option) => ({ label: option }));
@@ -79,12 +85,15 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
       return (
         <Autocomplete
           onChange={(_, option) =>
-            onChange(userDefinedField.name, option?.label ?? '')
+            onChange(userDefinedField.name, option.label)
           }
+          textFieldProps={{
+            required: isRequired,
+          }}
           value={options.find(
-            (option) => option.label === field.value[userDefinedField.name]
+            (option) => option.label === udfs[userDefinedField.name]
           )}
-          disableClearable={isRequired}
+          disableClearable
           label={userDefinedField.label}
           options={options}
         />
@@ -106,7 +115,7 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
               control={<Radio />}
               key={option.label}
               label={option.label}
-              onChange={(e) => onChange(userDefinedField.name, option.label)}
+              onChange={() => onChange(userDefinedField.name, option.label)}
             />
           ))}
         </RadioGroup>
@@ -114,7 +123,7 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
     );
   }
 
-  if (isPasswordField(userDefinedField.name)) {
+  if (getIsUDFPasswordField(userDefinedField)) {
     const isTokenPassword = userDefinedField.name === 'token_password';
     return (
       <PasswordInput

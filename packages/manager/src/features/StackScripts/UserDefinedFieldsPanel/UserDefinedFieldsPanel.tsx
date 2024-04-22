@@ -10,7 +10,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
 import { Typography } from 'src/components/Typography';
-import { isHeader, isMultiSelect, isOneSelect, isPasswordField, separateUDFsByRequiredStatus } from 'src/features/Linodes/LinodeCreatev2/Tabs/StackScripts/UserDefinedFields/utilities';
+import { getIsUDFHeader, getIsUDFMultiSelect, getIsUDFSingleSelect, getIsUDFPasswordField, separateUDFsByRequiredStatus } from 'src/features/Linodes/LinodeCreatev2/Tabs/StackScripts/UserDefinedFields/utilities';
 
 import { AppInfo } from '../../Linodes/LinodesCreate/AppInfo';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
@@ -39,7 +39,7 @@ const renderField = (
   // if the 'default' key is returned from the API, the field is optional
   const isOptional = field.hasOwnProperty('default');
 
-  if (isHeader(field)) {
+  if (getIsUDFHeader(field)) {
     return (
       <Grid key={field.name} lg={5} style={{ marginTop: 24 }} xs={12}>
         <Divider />
@@ -48,7 +48,7 @@ const renderField = (
     );
   }
 
-  if (isMultiSelect(field)) {
+  if (getIsUDFMultiSelect(field)) {
     return (
       <Grid key={field.name} lg={5} xs={12}>
         <UserDefinedMultiSelect
@@ -63,7 +63,7 @@ const renderField = (
       </Grid>
     );
   }
-  if (isOneSelect(field)) {
+  if (getIsUDFSingleSelect(field)) {
     return (
       <Grid key={field.name} lg={5} xs={12}>
         <UserDefinedSelect
@@ -77,7 +77,7 @@ const renderField = (
       </Grid>
     );
   }
-  if (isPasswordField(field.name)) {
+  if (getIsUDFPasswordField(field)) {
     const isTokenPassword = field.name === 'token_password';
     return (
       <Grid key={field.name} lg={5} xs={12}>

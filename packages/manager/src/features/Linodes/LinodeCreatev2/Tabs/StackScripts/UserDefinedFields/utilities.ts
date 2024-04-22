@@ -18,11 +18,22 @@ export const separateUDFsByRequiredStatus = (udfs: UserDefinedField[] = []) => {
   );
 };
 
+/**
+ * @returns true if a User Defined Field should be considered optional
+ */
 export const getIsUDFOptional = (udf: UserDefinedField) =>
   udf.hasOwnProperty('default') && !udf.hasOwnProperty('required');
 
-export const getIsUDFRequired = (udf: UserDefinedField) => !getIsUDFOptional(udf);
+/**
+ * @returns true if a User Defined Field should be considered required
+ */
+export const getIsUDFRequired = (udf: UserDefinedField) =>
+  !getIsUDFOptional(udf);
 
+/**
+ * Given an array of User Defined Fields, this returns an object of
+ * key-value pairs based on the default values.
+ */
 export const getDefaultUDFData = (
   userDefinedFields: UserDefinedField[]
 ): Record<string, string> =>
@@ -33,18 +44,30 @@ export const getDefaultUDFData = (
     return accum;
   }, {});
 
-export const isPasswordField = (udfName: string) => {
-  return udfName.toLowerCase().includes('password');
+/**
+ * @returns true if a user defined field should be treated as a password
+ */
+export const getIsUDFPasswordField = (udf: UserDefinedField) => {
+  return udf.name.toLowerCase().includes('password');
 };
 
-export const isOneSelect = (udf: UserDefinedField) => {
-  return !!udf.oneof; // if we have a oneof prop, it's a radio button
+/**
+ * @returns true if a user defined field should be treated as a single select
+ */
+export const getIsUDFSingleSelect = (udf: UserDefinedField) => {
+  return !!udf.oneof;
 };
 
-export const isMultiSelect = (udf: UserDefinedField) => {
-  return !!udf.manyof; // if we have a manyof prop, it's a checkbox
+/**
+ * @returns true if a user defined field should be treated as a multi-select
+ */
+export const getIsUDFMultiSelect = (udf: UserDefinedField) => {
+  return !!udf.manyof;
 };
 
-export const isHeader = (udf: UserDefinedField) => {
+/**
+ * @returns true if a user defined field should be treated as a header
+ */
+export const getIsUDFHeader = (udf: UserDefinedField) => {
   return udf.header?.toLowerCase() === 'yes';
 };
