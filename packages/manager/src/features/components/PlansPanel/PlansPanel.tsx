@@ -25,7 +25,7 @@ import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
-interface Props {
+export interface PlansPanelProps {
   className?: string;
   copy?: string;
   currentPlanHeading?: string;
@@ -50,7 +50,7 @@ interface Props {
   types: PlanSelectionType[];
 }
 
-export const PlansPanel = (props: Props) => {
+export const PlansPanel = (props: PlansPanelProps) => {
   const {
     className,
     copy,

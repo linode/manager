@@ -250,7 +250,7 @@ interface ExtractPlansInformationProps {
  * Extracts plan information and determines if any plans are disabled.
  * Used for Linode and Kubernetes selection Plan tables and notices.
  *
- * @param disabledPlanTypes A list of disabled plan types. Optional.
+ * @param disabledPlanTypes A curated list of disabled plan types. Optional.
  * @param plans The plans for the Linode type class.
  * @param regionAvailabilities The region availabilities.
  * @param selectedRegionId The selected region ID.
@@ -282,6 +282,10 @@ export const extractPlansInformation = ({
     const isDisabled512GbPlan =
       plan.label.includes('512GB') && Boolean(disableLargestGbPlans);
 
+    // Determine if the plan should be disabled due to
+    // - having limited availability (API based)
+    // - being a 512GB plan (hard coded)
+    // - being "manually" disabled by the parent component
     if (
       plan.isLimitedAvailabilityPlan ||
       isDisabled512GbPlan ||
