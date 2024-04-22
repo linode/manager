@@ -81,7 +81,7 @@ export const Row = (props: RowProps) => {
       <TableCell data-qa-event-message-cell parentColumn="Event">
         <HighlightedMarkdown
           sanitizeOptions={{
-            allowedTags: ['a'],
+            ALLOWED_TAGS: ['a'],
             disallowedTagsMode: 'discard',
           }}
           textOrMarkdown={message}

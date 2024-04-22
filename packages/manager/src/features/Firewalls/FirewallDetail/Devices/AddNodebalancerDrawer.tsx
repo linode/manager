@@ -1,10 +1,9 @@
 import { NodeBalancer } from '@linode/api-v4';
 import { useTheme } from '@mui/material';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import sanitize from 'sanitize-html';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
@@ -22,6 +21,7 @@ import { queryKey } from 'src/queries/nodebalancers';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
+import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 interface Props {
   helperText: string;
@@ -103,10 +103,14 @@ export const AddNodebalancerDrawer = (props: Props) => {
   };
 
   const errorNotice = () => {
-    let errorMsg = sanitize(localError || '', {
-      allowedAttributes: {},
-      allowedTags: [], // Disallow all HTML tags,
-    });
+    let errorMsg = sanitizeHTML({
+      sanitizeOptions: {
+        ALLOWED_ATTR: [],
+        ALLOWED_TAGS: [], // Disallow all HTML tags,
+      },
+      sanitizingTier: 'strict',
+      text: localError || '',
+    }).toString();
     // match something like: NodeBalancer <nodebalancer_label> (ID <nodebalancer_id>)
 
     const nodebalancer = /NodeBalancer (.+?) \(ID ([^\)]+)\)/i.exec(errorMsg);
