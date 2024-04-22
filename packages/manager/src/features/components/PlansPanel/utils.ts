@@ -298,7 +298,8 @@ export const extractPlansInformation = ({
   }, []);
   const hasDisabledPlans = allDisabledPlans.length > 0;
   const hasMajorityOfPlansDisabled =
-    allDisabledPlans.length >= plansForThisLinodeTypeClass.length / 2;
+    plans.length !== 1 &&
+    allDisabledPlans.length > plansForThisLinodeTypeClass.length / 2;
 
   return {
     allDisabledPlans,
