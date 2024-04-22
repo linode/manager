@@ -1,8 +1,9 @@
 import { CreateLinodeRequest } from '@linode/api-v4';
 import React from 'react';
-import { useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { Box } from 'src/components/Box';
+import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
 import { Stack } from 'src/components/Stack';
@@ -16,6 +17,8 @@ export const UserDefinedFields = () => {
   const stackscriptId = useWatch<CreateLinodeRequest, 'stackscript_id'>({
     name: 'stackscript_id',
   });
+
+  const { formState } = useFormContext<CreateLinodeRequest>();
 
   const hasStackscriptSelected =
     stackscriptId !== null && stackscriptId !== undefined;
@@ -39,6 +42,12 @@ export const UserDefinedFields = () => {
     <Paper>
       <Stack spacing={2}>
         <Typography variant="h2">{stackscript.label} Setup</Typography>
+        {formState.errors.stackscript_data && (
+          <Notice
+            text={formState.errors.stackscript_data.message as string}
+            variant="error"
+          />
+        )}
         <Stack spacing={2}>
           {requiredUDFs.map((field) => (
             <UserDefinedFieldInput key={field.name} userDefinedField={field} />

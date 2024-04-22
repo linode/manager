@@ -66,9 +66,9 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
         label={userDefinedField.label}
         multiple
         noMarginTop
-        onChange={(e, options) => field.onChange(options.join(',')) }
+        onChange={(e, options) => field.onChange(options.join(','))}
         options={options}
-        value={field.value.split(',') ?? null}
+        value={field.value?.split(',') ?? []}
       />
     );
   }
