@@ -2,6 +2,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import { styled } from '@mui/material/styles';
 
 import { Box } from 'src/components/Box';
+import { Chip } from 'src/components/Chip';
 import { ListItem } from 'src/components/ListItem';
 
 export const StyledAutocompleteContainer = styled(Box, {
@@ -107,4 +108,21 @@ export const SelectedIcon = styled(DoneIcon, {
   marginRight: '5px',
   visibility: visible ? 'visible' : 'hidden',
   width: 17,
+}));
+
+export const StyledChip = styled(Chip)(() => ({
+  '& .MuiChip-deleteIcon': {
+    '& svg': {
+      borderRadius: '50%',
+    },
+    padding: 0,
+  },
+  '& .MuiChip-deleteIcon.MuiSvgIcon-root': {
+    '&:hover': {
+      backgroundColor: '#fff',
+      color: '#3683dc',
+    },
+    backgroundColor: '#3683dc',
+    color: '#fff',
+  },
 }));
