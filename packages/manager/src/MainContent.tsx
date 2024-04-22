@@ -245,7 +245,7 @@ export const MainContent = () => {
       flags?.mainContentBanner?.key
     );
 
-  const showCloudPulse = Boolean(flags.cloudPulse);
+  const showCloudPulse = Boolean(flags.cloudView);
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,
@@ -391,7 +391,10 @@ export const MainContent = () => {
                           )}
                           <Route component={VPC} path="/vpcs" />
                           {showCloudPulse && (
-                            <Route component={CloudPulse} path="/cloudpulse" />
+                            <Route
+                              component={CloudPulse}
+                              path="/monitor/cloudpulse"
+                            />
                           )}
                           <Redirect exact from="/" to={defaultRoot} />
                           {/** We don't want to break any bookmarks. This can probably be removed eventually. */}

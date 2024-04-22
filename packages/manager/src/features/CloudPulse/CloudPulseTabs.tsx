@@ -1,4 +1,4 @@
-import { Paper } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 

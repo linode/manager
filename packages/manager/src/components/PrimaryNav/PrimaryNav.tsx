@@ -48,7 +48,7 @@ type NavEntity =
   | 'Account'
   | 'Betas'
   | 'Cloud Load Balancers'
-  | 'CloudPulse'
+  | 'Monitor'
   | 'Dashboard'
   | 'Databases'
   | 'Domains'
@@ -172,7 +172,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     ) ||
     (checkRestrictedUser && !enginesLoading && !enginesError);
 
-  const showCloudPulse = Boolean(flags.cloudPulse);
+  const showCloudPulse = Boolean(flags.cloudView);
   const { isACLBEnabled } = useIsACLBEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
@@ -294,7 +294,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         {
           display: 'Monitor',
           hide: !showCloudPulse,
-          href: '/cloudpulse',
+          href: '/monitor/cloudpulse',
           icon: <CloudPulse />,
           isBeta: false,
         },
