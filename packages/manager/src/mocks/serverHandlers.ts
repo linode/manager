@@ -589,7 +589,7 @@ const cloudView = [
               {
                 aggregate_function: 'sum',
                 chart_type: 'line',
-                color: 'lightred',
+                color: 'blue',
                 filters: [],
                 group_by: '',
                 label: 'CPU',
@@ -604,7 +604,7 @@ const cloudView = [
               {
                 aggregate_function: 'sum',
                 chart_type: 'line',
-                color: 'skyblue',
+                color: 'red',
                 filters: [],
                 group_by: '',
                 label: 'HTTP_400',
@@ -619,7 +619,7 @@ const cloudView = [
               {
                 aggregate_function: 'sum',
                 chart_type: 'line',
-                color: 'skyblue',
+                color: 'yellow',
                 filters: [],
                 group_by: '',
                 label: 'HTTP_500',
@@ -634,7 +634,7 @@ const cloudView = [
               {
                 aggregate_function: 'sum',
                 chart_type: 'line',
-                color: 'lightgreen',
+                color: 'green',
                 filters: [],
                 group_by: '',
                 label: 'Network',

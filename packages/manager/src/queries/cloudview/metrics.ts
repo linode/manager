@@ -19,6 +19,7 @@ export const useCloudViewMetricsQuery = (
     () => getCloudViewMetrics(serviceType, request),
     {
       enabled: true,
+      refetchInterval: 5000,
     }
   );
 };

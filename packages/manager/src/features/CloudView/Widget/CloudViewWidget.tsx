@@ -19,6 +19,7 @@ import { FiltersObject } from '../Models/GlobalFilterProperties';
 import { CloudViewLineGraph } from './CloudViewLineGraph';
 import { ZoomIcon } from './Components/Zoomer';
 import { seriesDataFormatter } from './Formatters/CloudViewFormatter';
+import { COLOR_MAP } from './Utils/WidgetColorPalettes';
 
 export interface CloudViewWidgetProperties {
   // we can try renaming this CloudViewWidget
@@ -122,44 +123,12 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
    */
   React.useEffect(() => {
     const dimensions: any[] = [];
-    const color: Array<string[]> = [];
 
     // for now we will use this guy, but once we decide how to work with coloring, it should be dynamic
-    const colors: string[] = [
-      theme.graphs.cpu.system,
-      theme.graphs.cpu.user,
-      theme.graphs.cpu.wait,
-    ];
-
-    const colors2: string[] = [
-      `rgb(136, 247, 192, 0.5)`,
-      `rgb(7, 166, 87,0.5)`,
-      `rgb(3, 94, 49,0.5)`,
-    ];
-
-    const colors3: string[] = [
-      `rgb(252, 177, 174, 0.5)`,
-      `rgb(196, 100, 96,0.5)`,
-      `rgb(232, 16, 7,0.5)`,
-    ];
-
-    const colors4: string[] = [
-      `rgb(243, 245, 188, 0.5)`,
-      `rgb(204, 209, 54,0.5)`,
-      `rgb(148, 153, 9,0.5)`,
-    ];
-
-    color.push(colors);
-    color.push(colors2);
-    color.push(colors3);
-    color.push(colors4);
+    const colors: string[] = COLOR_MAP.get(props.widget.color)!;
 
     if (status == 'success') {
       let index = 0;
-      const useColorCombo =
-        props.useColorIndex && props.useColorIndex <= 3
-          ? color[props.useColorIndex]
-          : color[0];
 
       metricsList.data.result.forEach((graphData) => {
         // todo, move it to utils at a widget level
@@ -167,8 +136,8 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
           return;
         }
         const dimension = {
-          backgroundColor: useColorCombo[index],
-          borderColor: useColorCombo[index++],
+          backgroundColor: colors[index],
+          borderColor: colors[index++],
           data: seriesDataFormatter(
             graphData.values,
             props.globalFilters && props.globalFilters.timeRange
