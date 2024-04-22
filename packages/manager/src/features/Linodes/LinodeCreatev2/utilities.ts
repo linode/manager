@@ -8,7 +8,7 @@ import { utoa } from '../LinodesCreate/utilities';
 
 import type { LinodeCreateType } from '../LinodesCreate/types';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
-import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
+import { CreateLinodeRequest, getStackScript, InterfacePayload } from '@linode/api-v4';
 import type { Resolver } from 'react-hook-form';
 
 /**
@@ -204,6 +204,10 @@ export const defaultValues = async (): Promise<CreateLinodeRequest> => {
     ? Number(queryParams.stackScriptID)
     : undefined;
 
+  const stackscript = stackScriptID
+    ? await getStackScript(stackScriptID)
+    : null;
+
   const imageID = queryParams.imageID;
 
   return {
@@ -214,6 +218,7 @@ export const defaultValues = async (): Promise<CreateLinodeRequest> => {
       defaultPublicInterface,
     ],
     region: '',
+    stackscript_data: stackscript?.user_defined_fields,
     stackscript_id: stackScriptID,
     type: '',
   };

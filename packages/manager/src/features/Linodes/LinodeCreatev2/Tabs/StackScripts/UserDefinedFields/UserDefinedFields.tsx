@@ -1,6 +1,7 @@
 import { CreateLinodeRequest } from '@linode/api-v4';
 import React from 'react';
 import { useWatch } from 'react-hook-form';
+import { Box } from 'src/components/Box';
 
 import { Paper } from 'src/components/Paper';
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
@@ -36,26 +37,34 @@ export const UserDefinedFields = () => {
 
   return (
     <Paper>
-      <Typography variant="h2">{stackscript.label} Setup</Typography>
-      {requiredUDFs.map((field) => (
-        <UserDefinedFieldInput key={field.name} userDefinedField={field} />
-      ))}
-      {optionalUDFs.length !== 0 && (
-        <ShowMoreExpansion defaultExpanded name="Advanced Options">
-          <Stack spacing={1}>
-            <Typography>
-              These fields are additional configuration options and are not
-              required for creation.
-            </Typography>
-            {optionalUDFs.map((field) => (
-              <UserDefinedFieldInput
-                key={field.name}
-                userDefinedField={field}
-              />
-            ))}
-          </Stack>
-        </ShowMoreExpansion>
-      )}
+      <Stack spacing={2}>
+        <Typography variant="h2">{stackscript.label} Setup</Typography>
+        <Stack spacing={2}>
+          {requiredUDFs.map((field) => (
+            <UserDefinedFieldInput key={field.name} userDefinedField={field} />
+          ))}
+        </Stack>
+        <Box>
+          {optionalUDFs.length !== 0 && (
+            <ShowMoreExpansion defaultExpanded name="Advanced Options">
+              <Stack spacing={1}>
+                <Typography py={1}>
+                  These fields are additional configuration options and are not
+                  required for creation.
+                </Typography>
+                <Stack spacing={2}>
+                  {optionalUDFs.map((field) => (
+                    <UserDefinedFieldInput
+                      key={field.name}
+                      userDefinedField={field}
+                    />
+                  ))}
+                </Stack>
+              </Stack>
+            </ShowMoreExpansion>
+          )}
+        </Box>
+      </Stack>
     </Paper>
   );
 };

@@ -7,22 +7,21 @@ import type { UserDefinedField } from '@linode/api-v4';
  */
 export const separateUDFsByRequiredStatus = (udfs: UserDefinedField[] = []) => {
   return udfs.reduce(
-    (accum, eachUDF) => {
-      /**
-       * if the "default" key exists, it's optional
-       */
-      if (
-        eachUDF.hasOwnProperty('default') &&
-        !eachUDF.hasOwnProperty('required')
-      ) {
-        return [[...accum[0]], [...accum[1], eachUDF]];
+    (accum, udf) => {
+      if (getIsUDFOptional(udf)) {
+        return [[...accum[0]], [...accum[1], udf]];
       } else {
-        return [[...accum[0], eachUDF], [...accum[1]]];
+        return [[...accum[0], udf], [...accum[1]]];
       }
     },
     [[], []]
   );
 };
+
+export const getIsUDFOptional = (udf: UserDefinedField) =>
+  udf.hasOwnProperty('default') && !udf.hasOwnProperty('required');
+
+export const getIsUDFRequired = (udf: UserDefinedField) => !getIsUDFOptional(udf);
 
 export const getDefaultUDFData = (
   userDefinedFields: UserDefinedField[]
