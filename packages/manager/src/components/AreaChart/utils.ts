@@ -17,6 +17,22 @@ export const tooltipLabelFormatter = (timestamp: number, timezone: string) =>
 export const tooltipValueFormatter = (value: number, unit: string) =>
   `${roundTo(value)}${unit}`;
 
+export const humanizeLargeData = (value: number) => {
+  if (value >= 1000000000000) {
+    return +(value / 1000000000000).toFixed(1) + 'T';
+  }
+  if (value >= 1000000000) {
+    return +(value / 1000000000).toFixed(1) + 'B';
+  }
+  if (value >= 1000000) {
+    return +(value / 1000000).toFixed(1) + 'M';
+  }
+  if (value >= 1000) {
+    return +(value / 1000).toFixed(1) + 'K';
+  }
+  return `${value}`;
+};
+
 export const timeData: LinodeNetworkTimeData[] = [
   {
     'Public Outbound Traffic': 5.434939999999999,
