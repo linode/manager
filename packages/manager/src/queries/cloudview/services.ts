@@ -1,6 +1,6 @@
 import {
   MetricDefinitions,
-  ServiceType,
+  MonitorServiceType,
   ServiceTypes,
   getCloudViewServiceTypes,
   getMetricDefinitionsByServiceType,
@@ -23,7 +23,7 @@ export const useCloudViewServices = () => {
 };
 
 export const useGetCloudViewServicesByServiceType = (serviceType: string) => {
-  return useQuery<ServiceType, APIError[]>(
+  return useQuery<MonitorServiceType, APIError[]>(
     [queryKey, serviceTypeKey, serviceType],
     () => getMonitorServiceTypeInformationByServiceType(serviceType),
     {

@@ -697,25 +697,6 @@ export const getMetricsResponse = (requestBody: any) => {
   return {};
 };
 
-const getArrayData = (
-  incrementer: number,
-  interval: number,
-  start: number,
-  end: number
-) => {
-  const arrayData: Array<number[]> = [];
-  let j = 1;
-  for (let i = start; i < end; i = i + interval) {
-    const element: number[] = [];
-    element[0] = i;
-    element[1] = j + incrementer;
-    j = j + incrementer;
-    arrayData.push(element);
-  }
-
-  return arrayData;
-};
-
 const getArrayDataRandomIncrementAndDecrement = (
   incrementer: number,
   interval: number,

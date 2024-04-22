@@ -1,5 +1,5 @@
 import { Dashboard } from '@linode/api-v4';
-import { Divider, Paper } from '@mui/material';
+import { Paper } from '@mui/material';
 import * as React from 'react';
 
 import { FiltersObject } from '../Models/GlobalFilterProperties';

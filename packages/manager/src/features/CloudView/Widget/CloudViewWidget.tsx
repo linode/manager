@@ -250,7 +250,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     <Grid xs={widget.size}>
       <Paper style={{ height: '98%', width: '100%' }}>
         {/* add further components like group by resource, aggregate_function, step here , for sample added zoom icon here*/}
-        <div className={widget.metric} style={{ margin: '10px' }}>
+        <div className={widget.metric} style={{ margin: '1%' }}>
           <StyledZoomIcon
             handleZoomToggle={handleZoomToggle}
             zoomIn={widget.size == 12 ? true : false}

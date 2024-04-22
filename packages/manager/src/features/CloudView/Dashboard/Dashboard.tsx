@@ -40,20 +40,6 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.dashboardFilters]); // execute every time when there is dashboardFilters change
 
-  // const {
-  //   data: metricDefinitions,
-  //   isError,
-  //   isLoading,
-  // } = useGetCloudViewServicesByServiceType(props.dashbaord.serviceType);
-
-  // if (isLoading) {
-  //   return <CircleProgress />;
-  // }
-
-  // if (isError) {
-  //   return <ErrorState errorText={'Error loading metric definitions'} />;
-  // }
-
   const getCloudViewGraphProperties = (widget: Widgets) => {
     const graphProp: CloudViewWidgetProperties = {} as CloudViewWidgetProperties;
     graphProp.widget = { ...widget };
@@ -75,16 +61,11 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       if (
         props.dashbaord?.service_type &&
         cloudViewGraphProperties.globalFilters?.region &&
-        cloudViewGraphProperties.globalFilters?.resource
+        cloudViewGraphProperties.globalFilters?.resource &&
+        cloudViewGraphProperties.globalFilters?.resource.length > 0
       ) {
         return (
-          <Grid
-            className={'graphgrid'}
-            columnSpacing={1.5}
-            container
-            rowSpacing={0}
-            spacing={2}
-          >
+          <Grid columnSpacing={1.5} container rowSpacing={0} spacing={2}>
             {props.dashbaord.widgets.map((element, index) => {
               if (element && element != undefined) {
                 return (
@@ -92,7 +73,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
                     key={index}
                     {...getCloudViewGraphProperties(element)}
                     handleWidgetChange={handleWidgetChange}
-                    useColorIndex={colorIndex++}
+                    useColorIndex={colorIndex++} // todo, remove the color index
                   />
                 );
               } else {

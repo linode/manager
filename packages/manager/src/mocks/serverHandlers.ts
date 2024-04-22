@@ -23,7 +23,6 @@ import {
   appTokenFactory,
   betaFactory,
   certificateFactory,
-  cloudViewWidgetFactory,
   configurationFactory,
   configurationsEndpointHealthFactory,
   contactFactory,
