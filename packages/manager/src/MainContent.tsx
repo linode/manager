@@ -181,6 +181,12 @@ const PlacementGroups = React.lazy(() =>
   }))
 );
 
+const CloudPulse = React.lazy(() =>
+  import('src/features/CloudPulse/CloudPulseLanding').then((module) => ({
+    default: module.CloudPulseLanding,
+  }))
+);
+
 export const MainContent = () => {
   const { classes, cx } = useStyles();
   const flags = useFlags();
@@ -239,6 +245,7 @@ export const MainContent = () => {
       flags?.mainContentBanner?.key
     );
 
+  const showCloudPulse = Boolean(flags.cloudPulse);
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,
@@ -383,6 +390,9 @@ export const MainContent = () => {
                             <Route component={BetaRoutes} path="/betas" />
                           )}
                           <Route component={VPC} path="/vpcs" />
+                          {showCloudPulse && (
+                            <Route component={CloudPulse} path="/cloudpulse" />
+                          )}
                           <Redirect exact from="/" to={defaultRoot} />
                           {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                           <Redirect from="/dashboard" to={defaultRoot} />

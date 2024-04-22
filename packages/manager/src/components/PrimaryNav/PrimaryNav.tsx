@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
 
 import Account from 'src/assets/icons/account.svg';
+import CloudPulse from 'src/assets/icons/cloudpulse.svg';
 import Beta from 'src/assets/icons/entityIcons/beta.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
@@ -47,6 +48,7 @@ type NavEntity =
   | 'Account'
   | 'Betas'
   | 'Cloud Load Balancers'
+  | 'CloudPulse'
   | 'Dashboard'
   | 'Databases'
   | 'Domains'
@@ -170,6 +172,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     ) ||
     (checkRestrictedUser && !enginesLoading && !enginesError);
 
+  const showCloudPulse = Boolean(flags.cloudPulse);
   const { isACLBEnabled } = useIsACLBEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
@@ -287,6 +290,13 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           display: 'Longview',
           href: '/longview',
           icon: <Longview />,
+        },
+        {
+          display: 'Monitor',
+          hide: !showCloudPulse,
+          href: '/cloudpulse',
+          icon: <CloudPulse />,
+          isBeta: false,
         },
         {
           attr: { 'data-qa-one-click-nav-btn': true },
