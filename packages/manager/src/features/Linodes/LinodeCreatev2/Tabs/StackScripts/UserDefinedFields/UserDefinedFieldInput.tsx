@@ -1,5 +1,5 @@
 import React from 'react';
-import { useController } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Divider } from 'src/components/Divider';
@@ -31,9 +31,12 @@ interface Props {
 export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
   const isRequired = getIsUDFRequired(userDefinedField);
 
+  const { formState } = useFormContext<CreateLinodeRequest>();
   const { field } = useController<CreateLinodeRequest, 'stackscript_data'>({
     name: 'stackscript_data',
   });
+
+  const error = formState.errors?.[userDefinedField.name]?.message;
 
   const udfs = field.value;
 
@@ -66,7 +69,7 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
         textFieldProps={{
           required: isRequired,
         }}
-        // errorText={error}
+        errorText={error}
         label={userDefinedField.label}
         multiple
         noMarginTop
@@ -136,7 +139,7 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
             </>
           ) : undefined
         }
-        // errorText={error}
+        errorText={error}
         label={userDefinedField.label}
         noMarginTop
         onChange={(e) => onChange(userDefinedField.name, e.target.value)}
@@ -152,7 +155,7 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
     <TextField
       helperText={userDefinedField.example}
       label={userDefinedField.label}
-      // errorText={error}
+      errorText={error}
       noMarginTop
       onChange={(e) => onChange(userDefinedField.name, e.target.value)}
       required={isRequired}
