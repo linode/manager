@@ -172,8 +172,11 @@ describe('PlanSelection (table, desktop)', () => {
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
       wrapWithTableBody(
-        <PlanSelection {...defaultProps} type={bigPlanType} />,
-        { flags: { disableLargestGbPlans: true } }
+        <PlanSelection
+          {...defaultProps}
+          isPlanDisabled={true}
+          type={bigPlanType}
+        />
       )
     );
 
@@ -267,35 +270,5 @@ describe('PlanSelection (card, mobile)', () => {
     expect(
       container.querySelector('[data-qa-select-card-subheading="subheading-4"]')
     ).toHaveTextContent('40 Gbps In / 2 Gbps Out');
-  });
-
-  it('verifies the presence of a help icon button accompanied by descriptive text for plans marked as "Limited Availability".', async () => {
-    const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <PlanSelection {...defaultProps} selectedRegionId={'us-east'} />
-    );
-
-    const selectionCard = getByTestId('selection-card');
-    fireEvent.mouseOver(selectionCard);
-
-    await waitFor(() => {
-      expect(getByRole('tooltip')).toBeInTheDocument();
-    });
-
-    expect(getByText(LIMITED_AVAILABILITY_TEXT)).toBeVisible();
-  });
-
-  it('is disabled for 512 GB plans', () => {
-    const bigPlanType = extendedTypeFactory.build({
-      heading: 'Dedicated 512 GB',
-      label: 'Dedicated 512GB',
-    });
-
-    const { getByTestId } = renderWithTheme(
-      <PlanSelection {...defaultProps} type={bigPlanType} />,
-      { flags: { disableLargestGbPlans: true } }
-    );
-
-    const selectionCard = getByTestId('selection-card');
-    expect(selectionCard).toBeDisabled();
   });
 });
