@@ -6,7 +6,7 @@ import { Paper } from 'src/components/Paper';
 export const CloudPulseLanding = () => {
   return (
     <>
-      <LandingHeader removeCrumbX={1} title="Cloud Pulse" />
+      <LandingHeader removeCrumbX={1} title="Akamai Cloud Pulse" />
       <Paper></Paper>
     </>
   );
