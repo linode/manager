@@ -31,21 +31,17 @@ interface Props {
 export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
   const isRequired = getIsUDFRequired(userDefinedField);
 
-  const { formState } = useFormContext<CreateLinodeRequest>();
-  const { field } = useController<CreateLinodeRequest, 'stackscript_data'>({
-    name: 'stackscript_data',
+  const { control, formState } = useFormContext<CreateLinodeRequest>();
+
+  const { field } = useController<CreateLinodeRequest>({
+    control,
+    name: `stackscript_data.${userDefinedField.name}`,
   });
 
-  const error = formState.errors?.[userDefinedField.name]?.message;
-
-  const udfs = field.value;
-
-  const onChange = (key: string, value: string) => {
-    field.onChange({
-      ...udfs,
-      [key]: value,
-    });
-  };
+  const error = formState.errors?.[userDefinedField.name]?.message?.replace(
+    'the UDF',
+    ''
+  );
 
   if (getIsUDFHeader(userDefinedField)) {
     return (
@@ -63,9 +59,6 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
 
     return (
       <Autocomplete
-        onChange={(e, options) =>
-          onChange(userDefinedField.name, options.join(','))
-        }
         textFieldProps={{
           required: isRequired,
         }}
@@ -73,8 +66,9 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
         label={userDefinedField.label}
         multiple
         noMarginTop
+        onChange={(e, options) => field.onChange(options.join(',')) }
         options={options}
-        value={udfs[userDefinedField.name].split(',') ?? null}
+        value={field.value.split(',') ?? null}
       />
     );
   }
@@ -87,18 +81,14 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
     if (options.length > 4) {
       return (
         <Autocomplete
-          onChange={(_, option) =>
-            onChange(userDefinedField.name, option.label)
-          }
           textFieldProps={{
             required: isRequired,
           }}
-          value={options.find(
-            (option) => option.label === udfs[userDefinedField.name]
-          )}
           disableClearable
           label={userDefinedField.label}
+          onChange={(_, option) => field.onChange(option.label)}
           options={options}
+          value={options.find((option) => option.label === field.value)}
         />
       );
     }
@@ -114,11 +104,11 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
         >
           {options.map((option) => (
             <FormControlLabel
-              checked={option.label === field.value[userDefinedField.name]}
+              checked={option.label === field.value}
               control={<Radio />}
               key={option.label}
               label={option.label}
-              onChange={() => onChange(userDefinedField.name, option.label)}
+              onChange={() => field.onChange(option.label)}
             />
           ))}
         </RadioGroup>
@@ -142,24 +132,24 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
         errorText={error}
         label={userDefinedField.label}
         noMarginTop
-        onChange={(e) => onChange(userDefinedField.name, e.target.value)}
+        onChange={(e) => field.onChange(e.target.value)}
         placeholder={isTokenPassword ? 'Enter your token' : 'Enter a password.'}
         required={isRequired}
         tooltipInteractive={isTokenPassword}
-        value={field.value[userDefinedField.name] || ''}
+        value={field.value ?? ''}
       />
     );
   }
 
   return (
     <TextField
+      errorText={error}
       helperText={userDefinedField.example}
       label={userDefinedField.label}
-      errorText={error}
       noMarginTop
-      onChange={(e) => onChange(userDefinedField.name, e.target.value)}
+      onChange={(e) => field.onChange(e.target.value)}
       required={isRequired}
-      value={field.value[userDefinedField.name] || ''}
+      value={field.value ?? ''}
     />
   );
 };
