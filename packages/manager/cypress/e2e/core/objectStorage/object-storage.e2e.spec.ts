@@ -343,8 +343,10 @@ describe('object storage end-to-end tests', () => {
           assertStatusForUrlAtAlias('@bucketObjectUrl', 403);
 
           // Make object public, confirm it can be accessed, then close drawer.
-          cy.findByText('Access Control List (ACL)')
+          cy.findByLabelText('Access Control List (ACL)')
             .should('be.visible')
+            .should('not.have.value', 'Loading access...')
+            .should('have.value', 'Private')
             .click()
             .type('Public Read');
 
@@ -417,8 +419,10 @@ describe('object storage end-to-end tests', () => {
     cy.wait('@getBucketAccess');
 
     // Make object public, confirm it can be accessed.
-    cy.findByText('Access Control List (ACL)')
+    cy.findByLabelText('Access Control List (ACL)')
       .should('be.visible')
+      .should('not.have.value', 'Loading access...')
+      .should('have.value', 'Private')
       .click()
       .type('Public Read');
 
