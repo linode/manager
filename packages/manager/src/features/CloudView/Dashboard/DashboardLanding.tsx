@@ -44,7 +44,7 @@ export const DashBoardLanding = () => {
     <>
       <Paper>
         <div style={{ display: 'flex' }}>
-          <div style={{ width: '80%' }}>
+          <div style={{ width: '100%' }}>
             <GlobalFilters
               handleAnyFilterChange={(filters: FiltersObject) =>
                 handleGlobalFilterChange(filters)

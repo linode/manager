@@ -95,7 +95,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
 
   const handleResourceChange = (resourceId: any[]) => {
     console.log('Resource ID: ', resourceId);
-    setResourceId(resourceId.map(obj => obj.label));
+    setResourceId(resourceId.map((obj) => obj.label));
   };
 
   const handleDashboardChange = (dashboard: Dashboard | undefined) => {
@@ -138,7 +138,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             handleRegionChange={handleRegionChange}
           />
         </Grid>
-        <Grid sx={{ marginLeft: 3, width: 200 }}>
+        <Grid sx={{ marginLeft: 3, width: 250 }}>
           <StyledCloudViewResourceSelect
             disabled={!selectedService}
             handleResourceChange={handleResourceChange}
@@ -151,7 +151,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             handleIntervalChange={handleIntervalChange}
           />
         </Grid>
-        <Grid sx={{ marginLeft: 12 }}>
+        <Grid sx={{ marginLeft: 12, width: 250 }}>
           <StyledCloudViewTimeRangeSelect
             defaultValue={'Past 30 Minutes'}
             handleStatsChange={handleTimeRangeChange}
