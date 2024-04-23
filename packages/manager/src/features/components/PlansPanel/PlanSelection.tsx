@@ -36,15 +36,15 @@ export interface PlanSelectionProps {
   hideDisabledHelpIcons?: boolean;
   idx: number;
   isCreate?: boolean;
-  isPlanDisabled?: boolean;
-  isWholePanelDisabled?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
+  planIsDisabled?: boolean;
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionId?: Region['id'];
   showTransfer?: boolean;
   type: PlanSelectionType;
+  wholePanelIsDisabled?: boolean;
 }
 
 const getDisabledClass = (
@@ -82,15 +82,15 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     hideDisabledHelpIcons,
     idx,
     isCreate,
-    isPlanDisabled,
-    isWholePanelDisabled,
     linodeID,
     onSelect,
+    planIsDisabled,
     selectedDiskSize,
     selectedId,
     selectedRegionId,
     showTransfer,
     type,
+    wholePanelIsDisabled,
   } = props;
 
   const diskSize = selectedDiskSize ? selectedDiskSize : 0;
@@ -133,8 +133,8 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     isSamePlan ||
     planTooSmall ||
     isDisabledClass ||
-    isPlanDisabled ||
-    isWholePanelDisabled;
+    planIsDisabled ||
+    wholePanelIsDisabled;
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -154,14 +154,14 @@ export const PlanSelection = (props: PlanSelectionProps) => {
                 control={
                   <Radio
                     checked={
-                      !isWholePanelDisabled &&
+                      !wholePanelIsDisabled &&
                       !rowIsDisabled &&
                       !planTooSmall &&
                       type.id === String(selectedId)
                     }
                     disabled={
                       planTooSmall ||
-                      isWholePanelDisabled ||
+                      wholePanelIsDisabled ||
                       rowIsDisabled ||
                       isDisabledClass
                     }
@@ -277,7 +277,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           disabled={
             planTooSmall ||
             isSamePlan ||
-            isWholePanelDisabled ||
+            wholePanelIsDisabled ||
             rowIsDisabled ||
             isDisabledClass
           }

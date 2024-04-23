@@ -30,14 +30,14 @@ export interface KubernetesPlanSelectionProps {
   getTypeCount: (planId: string) => number;
   hasMajorityOfPlansDisabled: boolean;
   idx: number;
-  isPlanDisabled: boolean;
-  isWholePanelDisabled: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
+  planIsDisabled: boolean;
   selectedId?: string;
   selectedRegionId?: Region['id'];
   type: TypeWithAvailability;
   updatePlanCount: (planId: string, newCount: number) => void;
+  wholePanelIsDisabled: boolean;
 }
 
 export const KubernetesPlanSelection = (
@@ -47,17 +47,17 @@ export const KubernetesPlanSelection = (
     getTypeCount,
     hasMajorityOfPlansDisabled,
     idx,
-    isPlanDisabled,
-    isWholePanelDisabled,
     onAdd,
     onSelect,
+    planIsDisabled,
     selectedId,
     selectedRegionId,
     type,
     updatePlanCount,
+    wholePanelIsDisabled,
   } = props;
 
-  const isDisabled = isPlanDisabled || isWholePanelDisabled;
+  const isDisabled = planIsDisabled || wholePanelIsDisabled;
   const count = getTypeCount(type.id);
   const price: PriceObject | undefined = getLinodeRegionPrice(
     type,
@@ -106,7 +106,7 @@ export const KubernetesPlanSelection = (
             <Box alignItems="center">
               {type.heading} &nbsp;
               {isDisabled &&
-                !isWholePanelDisabled &&
+                !wholePanelIsDisabled &&
                 !hasMajorityOfPlansDisabled && (
                   <Tooltip
                     PopperProps={{

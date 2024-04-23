@@ -35,13 +35,13 @@ const props: KubernetesPlanSelectionProps = {
   getTypeCount: vi.fn(),
   hasMajorityOfPlansDisabled: false,
   idx: 0,
-  isPlanDisabled: false,
-  isWholePanelDisabled: false,
   onAdd: vi.fn(),
   onSelect: vi.fn(),
+  planIsDisabled: false,
   selectedRegionId: 'us-east',
   type: typeWithAvailability,
   updatePlanCount: vi.fn(),
+  wholePanelIsDisabled: false,
 };
 
 describe('KubernetesPlanSelection (table, desktop view)', () => {
@@ -130,7 +130,7 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
       wrapWithTableBody(
         <KubernetesPlanSelection
           {...props}
-          isPlanDisabled={true}
+          planIsDisabled={true}
           type={bigPlanType}
         />
       )

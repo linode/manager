@@ -29,13 +29,13 @@ export interface KubernetesPlanContainerProps {
   allDisabledPlans: string[];
   getTypeCount: (planId: string) => number;
   hasMajorityOfPlansDisabled: boolean;
-  isWholePanelDisabled: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
   plans: TypeWithAvailability[];
   selectedId?: string;
   selectedRegionId?: string;
   updatePlanCount: (planId: string, newCount: number) => void;
+  wholePanelIsDisabled: boolean;
 }
 
 export const KubernetesPlanContainer = (
@@ -45,13 +45,13 @@ export const KubernetesPlanContainer = (
     allDisabledPlans,
     getTypeCount,
     hasMajorityOfPlansDisabled,
-    isWholePanelDisabled,
     onAdd,
     onSelect,
     plans,
     selectedId,
     selectedRegionId,
     updatePlanCount,
+    wholePanelIsDisabled,
   } = props;
 
   const shouldDisplayNoRegionSelectedMessage = !selectedRegionId;
@@ -65,21 +65,21 @@ export const KubernetesPlanContainer = (
           getTypeCount={getTypeCount}
           hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
           idx={id}
-          isPlanDisabled={isPlanDisabled}
-          isWholePanelDisabled={isWholePanelDisabled}
           key={id}
           onAdd={onAdd}
           onSelect={onSelect}
+          planIsDisabled={isPlanDisabled}
           selectedId={selectedId}
           selectedRegionId={selectedRegionId}
           type={plan}
           updatePlanCount={updatePlanCount}
+          wholePanelIsDisabled={wholePanelIsDisabled}
         />
       );
     });
   }, [
     allDisabledPlans,
-    isWholePanelDisabled,
+    wholePanelIsDisabled,
     hasMajorityOfPlansDisabled,
     getTypeCount,
     onAdd,

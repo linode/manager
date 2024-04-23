@@ -101,16 +101,16 @@ export const PlanContainer = (props: Props) => {
           disabledToolTip={disabledPlanTypesToolTipText}
           idx={id}
           isCreate={isCreate}
-          isPlanDisabled={isPlanDisabled}
-          isWholePanelDisabled={isWholePanelDisabled}
           key={id}
           linodeID={linodeID}
           onSelect={onSelect}
+          planIsDisabled={isPlanDisabled}
           selectedDiskSize={selectedDiskSize}
           selectedId={selectedId}
           selectedRegionId={selectedRegionId}
           showTransfer={showTransfer}
           type={plan}
+          wholePanelIsDisabled={isWholePanelDisabled}
         />
       );
     });

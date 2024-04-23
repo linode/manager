@@ -104,13 +104,13 @@ export const KubernetesPlansPanel = (props: Props) => {
               allDisabledPlans={allDisabledPlans}
               getTypeCount={getTypeCount}
               hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
-              isWholePanelDisabled={isPlanPanelDisabled(plan)}
               onAdd={onAdd}
               onSelect={onSelect}
               plans={plansForThisLinodeTypeClass}
               selectedId={selectedId}
               selectedRegionId={selectedRegionId}
               updatePlanCount={updatePlanCount}
+              wholePanelIsDisabled={isPlanPanelDisabled(plan)}
             />
           </>
         );

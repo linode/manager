@@ -26,11 +26,11 @@ const props: KubernetesPlanContainerProps = {
   allDisabledPlans: [],
   getTypeCount: vi.fn(),
   hasMajorityOfPlansDisabled: false,
-  isWholePanelDisabled: false,
   onSelect: vi.fn(),
   plans,
   selectedRegionId: undefined,
   updatePlanCount: vi.fn(),
+  wholePanelIsDisabled: false,
 };
 
 beforeAll(() => mockMatchMedia());

@@ -174,7 +174,7 @@ describe('PlanSelection (table, desktop)', () => {
       wrapWithTableBody(
         <PlanSelection
           {...defaultProps}
-          isPlanDisabled={true}
+          planIsDisabled={true}
           type={bigPlanType}
         />
       )
