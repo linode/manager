@@ -182,6 +182,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
               linodeID={linodeID}
               onSelect={onSelect}
               plans={plansForThisLinodeTypeClass}
+              planType={plan}
               selectedDiskSize={selectedDiskSize}
               selectedId={selectedId}
               selectedRegionId={selectedRegionID}

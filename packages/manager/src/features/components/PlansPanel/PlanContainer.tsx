@@ -49,6 +49,7 @@ export interface Props {
   isCreate?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
+  planType?: LinodeTypeClass;
   plans: TypeWithAvailability[];
   selectedDiskSize?: number;
   selectedId?: string;
@@ -67,6 +68,7 @@ export const PlanContainer = (props: Props) => {
     isCreate,
     linodeID,
     onSelect,
+    planType,
     plans,
     selectedDiskSize,
     selectedId,
@@ -92,60 +94,108 @@ export const PlanContainer = (props: Props) => {
   const shouldDisplayNoRegionSelectedMessage =
     !selectedRegionId && !isDatabaseCreateFlow && !isDatabaseResizeFlow;
 
-  const renderPlanSelection = React.useCallback(() => {
-    return plans.map((plan, id) => {
-      const isPlanDisabled = allDisabledPlans.some(
-        (disabledPlan) => disabledPlan.id === plan.id
-      );
-      const currentDisabledPlan = allDisabledPlans.find(
-        (disabledPlan) => disabledPlan.id === plan.id
-      );
-      const currentDisabledPlanStatus = currentDisabledPlan && {
-        isDisabled512GbPlan: currentDisabledPlan.isDisabled512GbPlan,
-        isLimitedAvailabilityPlan:
-          currentDisabledPlan.isLimitedAvailabilityPlan,
-      };
+  const renderPlanSelection = React.useCallback(
+    (filter?: ((plan: TypeWithAvailability) => boolean) | undefined) => {
+      const _plans = filter ? plans.filter(filter) : plans;
 
-      return (
-        <PlanSelection
-          hideDisabledHelpIcons={
-            isWholePanelDisabled || hasMajorityOfPlansDisabled
-          }
-          currentPlanHeading={currentPlanHeading}
-          disabledClasses={disabledClasses}
-          disabledStatus={currentDisabledPlanStatus}
-          disabledToolTip={disabledPlanTypesToolTipText}
-          idx={id}
-          isCreate={isCreate}
-          key={id}
-          linodeID={linodeID}
-          onSelect={onSelect}
-          planIsDisabled={isPlanDisabled}
-          selectedDiskSize={selectedDiskSize}
-          selectedId={selectedId}
-          selectedRegionId={selectedRegionId}
-          showTransfer={showTransfer}
-          type={plan}
-          wholePanelIsDisabled={isWholePanelDisabled}
-        />
-      );
-    });
-  }, [
-    allDisabledPlans,
-    disabledPlanTypesToolTipText,
-    hasMajorityOfPlansDisabled,
-    plans,
-    selectedRegionId,
-    isWholePanelDisabled,
-    currentPlanHeading,
-    disabledClasses,
-    isCreate,
-    linodeID,
-    onSelect,
-    selectedDiskSize,
-    selectedId,
-    showTransfer,
-  ]);
+      return _plans.map((plan, id) => {
+        const isPlanDisabled = allDisabledPlans.some(
+          (disabledPlan) => disabledPlan.id === plan.id
+        );
+        const currentDisabledPlan = allDisabledPlans.find(
+          (disabledPlan) => disabledPlan.id === plan.id
+        );
+        const currentDisabledPlanStatus = currentDisabledPlan && {
+          isDisabled512GbPlan: currentDisabledPlan.isDisabled512GbPlan,
+          isLimitedAvailabilityPlan:
+            currentDisabledPlan.isLimitedAvailabilityPlan,
+        };
+
+        return (
+          <PlanSelection
+            hideDisabledHelpIcons={
+              isWholePanelDisabled || hasMajorityOfPlansDisabled
+            }
+            currentPlanHeading={currentPlanHeading}
+            disabledClasses={disabledClasses}
+            disabledStatus={currentDisabledPlanStatus}
+            disabledToolTip={disabledPlanTypesToolTipText}
+            idx={id}
+            isCreate={isCreate}
+            key={id}
+            linodeID={linodeID}
+            onSelect={onSelect}
+            planIsDisabled={isPlanDisabled}
+            selectedDiskSize={selectedDiskSize}
+            selectedId={selectedId}
+            selectedRegionId={selectedRegionId}
+            showTransfer={showTransfer}
+            type={plan}
+            wholePanelIsDisabled={isWholePanelDisabled}
+          />
+        );
+      });
+    },
+    [
+      allDisabledPlans,
+      disabledPlanTypesToolTipText,
+      hasMajorityOfPlansDisabled,
+      plans,
+      selectedRegionId,
+      isWholePanelDisabled,
+      currentPlanHeading,
+      disabledClasses,
+      isCreate,
+      linodeID,
+      onSelect,
+      selectedDiskSize,
+      selectedId,
+      showTransfer,
+    ]
+  );
+
+  const PlanSelectionTable = ({
+    filter,
+  }: {
+    filter?: (plan: TypeWithAvailability) => boolean;
+  }) => (
+    <StyledTable aria-label="List of Linode Plans" spacingBottom={16}>
+      <TableHead>
+        <TableRow>
+          {tableCells.map(({ cellName, center, noWrap, testId }) => {
+            const attributeValue = `${testId}-header`;
+            if (
+              (!shouldShowTransfer && testId === 'transfer') ||
+              (!shouldShowNetwork && testId === 'network')
+            ) {
+              return null;
+            }
+            return (
+              <StyledTableCell
+                center={center}
+                data-qa={attributeValue}
+                isPlanCell={cellName === 'Plan'}
+                key={testId}
+                noWrap={noWrap}
+              >
+                {cellName}
+              </StyledTableCell>
+            );
+          })}
+        </TableRow>
+      </TableHead>
+      <TableBody role="radiogroup">
+        {shouldDisplayNoRegionSelectedMessage ? (
+          <TableRowEmpty
+            colSpan={9}
+            message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
+          />
+        ) : (
+          renderPlanSelection(filter)
+        )}
+      </TableBody>
+    </StyledTable>
+  );
 
   return (
     <Grid container spacing={2}>
@@ -164,42 +214,22 @@ export const PlanContainer = (props: Props) => {
       </Hidden>
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <Grid xs={12}>
-          <StyledTable aria-label="List of Linode Plans" spacingBottom={16}>
-            <TableHead>
-              <TableRow>
-                {tableCells.map(({ cellName, center, noWrap, testId }) => {
-                  const attributeValue = `${testId}-header`;
-                  if (
-                    (!shouldShowTransfer && testId === 'transfer') ||
-                    (!shouldShowNetwork && testId === 'network')
-                  ) {
-                    return null;
-                  }
-                  return (
-                    <StyledTableCell
-                      center={center}
-                      data-qa={attributeValue}
-                      isPlanCell={cellName === 'Plan'}
-                      key={testId}
-                      noWrap={noWrap}
-                    >
-                      {cellName}
-                    </StyledTableCell>
-                  );
-                })}
-              </TableRow>
-            </TableHead>
-            <TableBody role="radiogroup">
-              {shouldDisplayNoRegionSelectedMessage ? (
-                <TableRowEmpty
-                  colSpan={9}
-                  message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
-                />
-              ) : (
-                renderPlanSelection()
-              )}
-            </TableBody>
-          </StyledTable>
+          {planType === 'gpu' && selectedRegionId ? (
+            <>
+              <PlanSelectionTable
+                filter={(plan: TypeWithAvailability) => {
+                  return plan.label.includes('Ada');
+                }}
+              />
+              <PlanSelectionTable
+                filter={(plan: TypeWithAvailability) =>
+                  !plan.label.includes('Ada')
+                }
+              />
+            </>
+          ) : (
+            <PlanSelectionTable />
+          )}
         </Grid>
       </Hidden>
     </Grid>
