@@ -50,6 +50,28 @@ export const oneClickApps: OCA[] = [
   },
   {
     alt_description:
+      'Free high-performance media streaming, including livestreaming.',
+    alt_name: 'Free media streaming app',
+    categories: ['Media and Entertainment'],
+    colors: {
+      end: '0a0a0a',
+      start: 'df0718',
+    },
+    description: `Self-hosted free version to optimize and record video streaming for webinars, gaming, and more.`,
+    logo_url: 'antmediaserver.svg',
+    name: 'Ant Media Server: Community Edition',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/antmediaserver/',
+        title: 'Deploy Ant Media Server through the Linode Marketplace',
+      },
+    ],
+    summary: 'A reliable, flexible and scalable video streaming solution.',
+    website: 'https://antmedia.io/',
+  },
+  {
+    alt_description:
       'Low latency live streaming including WebRTC streaming, CMAF, and HLS.',
     alt_name: 'Media streaming app',
     categories: ['Media and Entertainment'],

@@ -72,8 +72,7 @@ export const baseApps = {
   // deprecated april 29 2024
   // '781317': 'Valheim',
   '804143': 'Peppermint',
-  // deprecated april 29 2024
-  // '804144': 'Ant Media Server',
+  '804144': 'Ant Media Server',
   '804172': 'Owncast',
   '869127': 'Moodle',
   '869129': 'aaPanel',
@@ -143,6 +142,7 @@ export const baseApps = {
   // uncomment after 4/29/24 release
   // '1350733': 'Jitsi Cluster',
   // '1350783': 'GlusterFS Cluster',
+  // do not uncomment cassandra. eta 5/28 - 6/10
   // '1350845': 'Cassandra Cluster',
 };
 
