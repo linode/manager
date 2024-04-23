@@ -58,14 +58,16 @@ const getDisabledClass = (
 
 const getToolTip = ({
   disabledToolTip,
+  isSamePlan,
   planIsDisabled,
   sizeTooSmall,
 }: {
   disabledToolTip?: string;
+  isSamePlan: boolean;
   planIsDisabled?: boolean;
   sizeTooSmall: boolean;
 }) => {
-  if (planIsDisabled) {
+  if (planIsDisabled && !isSamePlan) {
     return disabledToolTip;
   }
   if (sizeTooSmall) {
@@ -109,6 +111,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   const isSamePlan = type.heading === currentPlanHeading;
   const tooltip = getToolTip({
     disabledToolTip,
+    isSamePlan,
     planIsDisabled,
     sizeTooSmall: planTooSmall,
   });
@@ -147,16 +150,12 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       {/* Displays Table Row for larger screens */}
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <StyledDisabledTableRow
-          onClick={() =>
-            !isSamePlan && !isDisabled && !isDisabledClass && !planTooSmall
-              ? onSelect(type.id)
-              : undefined
-          }
           aria-disabled={rowAriaDisabled}
           aria-label={rowAriaLabel}
           data-qa-plan-row={type.formattedLabel}
           disabled={rowAriaDisabled}
           key={type.id}
+          onClick={() => (!rowAriaDisabled ? onSelect(type.id) : undefined)}
         >
           <StyledRadioCell>
             {!isSamePlan && (
