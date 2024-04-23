@@ -70,13 +70,18 @@ export const getRegionOptions = ({
             disabled: false,
           };
 
+      const getLabel = () => {
+        const [city, country] = region.label.split(', ');
+        return `${country}, ${city}`;
+      };
+
       return {
         data: {
           country: region.country,
           region: group,
         },
         disabledProps,
-        label: `${region.label} (${region.id})`,
+        label: `${getLabel()} (${region.id})`,
         site_type: region.site_type,
         value: region.id,
       };
@@ -104,17 +109,12 @@ export const getRegionOptions = ({
         return 1;
       }
 
-      // Then we group by country
-      if (region1.data.country < region2.data.country) {
-        return 1;
-      }
-      if (region1.data.country > region2.data.country) {
-        return -1;
-      }
-
-      // If regions are in the same group or country, sort alphabetically by label
+      // // Then we group by label
       if (region1.label < region2.label) {
         return -1;
+      }
+      if (region1.label > region2.label) {
+        return 1;
       }
 
       return 1;
