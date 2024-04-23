@@ -23,8 +23,6 @@ export const baseApps = {
   '401698': 'Drupal - Latest One-Click',
   '401701': 'LAMP One-Click',
   '401702': 'MERN One-Click',
-  // deprecated april 29 2024
-  // '401703': 'Rust - Latest One-Click',
   '401706': 'WireGuard - Latest One-Click',
   '401707': 'GitLab - Latest One-Click',
   '401708': 'WooCommerce - Latest One-Click',
@@ -35,9 +33,6 @@ export const baseApps = {
   '604068': 'Shadowsocks - Latest One-Click',
   '606691': 'LEMP - Latest One-Click',
   '607026': 'MySQL - Latest One-Click',
-  // deprecated april 29 2024
-  // '607034': 'Prometheus - Latest One-Click',
-  // '607256': 'Grafana - Latest One-Click',
   '607401': 'Jenkins - Latest One-Click',
   '607433': 'Docker - Latest One-Click',
   '607488': 'Redis One-Click',
@@ -48,9 +43,6 @@ export const baseApps = {
   '611376': 'PostgreSQL One-Click',
   '611895': 'MEAN One-Click',
   '632758': 'Nextcloud',
-  // deprecated april 29 2024
-  //'662116': 'Webmin',
-  //'662117': 'Virtualmin',
   '662118': 'Azuracast',
   '662119': 'Plex',
   '662121': 'Jitsi',
@@ -69,8 +61,6 @@ export const baseApps = {
   '741207': 'Yacht',
   '741208': 'Zabbix',
   '774829': 'ServerWand',
-  // deprecated april 29 2024
-  // '781317': 'Valheim',
   '804143': 'Peppermint',
   '804144': 'Ant Media Server',
   '804172': 'Owncast',
@@ -139,11 +129,8 @@ export const baseApps = {
   '1308539': 'NATS Single Node',
   '1329430': 'Passbolt',
   '1329462': 'LinuxGSM',
-  // uncomment after 4/29/24 release
-  // '1350733': 'Jitsi Cluster',
-  // '1350783': 'GlusterFS Cluster',
-  // do not uncomment cassandra. eta 5/28 - 6/10
-  // '1350845': 'Cassandra Cluster',
+  '1350733': 'Jitsi Cluster',
+  '1350783': 'GlusterFS Cluster',
 };
 
 const oneClickFilter = [

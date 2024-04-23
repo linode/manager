@@ -95,28 +95,6 @@ export const oneClickApps: OCA[] = [
   },
   {
     alt_description:
-      'Lineraly scalable, fault tolerant, open source NoSQL distributed database.',
-    alt_name: 'NoSQL database cluster',
-    categories: ['Development'],
-    colors: {
-      end: 'd3fof6',
-      start: '1a6a86',
-    },
-    description: `Distributed, masterless, replicating NoSQL database cluster.`,
-    logo_url: 'cassandra.svg',
-    name: 'Apache Cassandra Cluster',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/apache-cassandra/',
-        title: 'Deploy Apache Cassandra Cluster through the Linode Marketplace',
-      },
-    ],
-    summary: 'Open source NoSQL database cluster.',
-    website: 'https://cassandra.apache.org/doc/latest/',
-  },
-  {
-    alt_description:
       'Open-source workflow management platform for data engineering pipelines.',
     alt_name: 'Workflow management platform',
     categories: ['Development'],
@@ -601,7 +579,7 @@ export const oneClickApps: OCA[] = [
     website: 'https://gopaddle.io/',
   },
   {
-    alt_description: 'Open source, Highly available, shared filesystem.',
+    alt_description: 'Open source, highly available, shared filesystem.',
     alt_name: 'GlusterFS',
     categories: ['Development'],
     colors: {
