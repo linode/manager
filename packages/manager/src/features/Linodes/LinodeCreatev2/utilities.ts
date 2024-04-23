@@ -116,6 +116,10 @@ export const getLinodeCreatePayload = (
     values.metadata = undefined;
   }
 
+  if (values.placement_group?.id === undefined) {
+    values.placement_group = undefined;
+  }
+
   values.interfaces = getInterfacesPayload(
     values.interfaces,
     Boolean(values.private_ip)

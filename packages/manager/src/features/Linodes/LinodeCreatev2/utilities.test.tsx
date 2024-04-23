@@ -37,6 +37,17 @@ describe('getLinodeCreatePayload', () => {
       metadata: { user_data: base64UserData },
     });
   });
+
+  it('should remove placement_group from the payload if no id exists', () => {
+    const values = createLinodeRequestFactory.build({
+      placement_group: {},
+    });
+
+    expect(getLinodeCreatePayload(values)).toEqual({
+      ...values,
+      placement_group: undefined,
+    });
+  });
 });
 
 describe('getInterfacesPayload', () => {
