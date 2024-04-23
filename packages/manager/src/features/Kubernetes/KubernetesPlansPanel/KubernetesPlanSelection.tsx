@@ -199,7 +199,7 @@ export const KubernetesPlanSelection = (
         <SelectionCard
           subheadings={[
             ...subHeadings,
-            isDisabled ? <Chip label="Limited Availability" /> : '',
+            isDisabled ? <Chip label="Limited Deployment Availability" /> : '',
           ]}
           checked={type.id === String(selectedId)}
           disabled={isDisabled}

@@ -284,7 +284,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           }
           subheadings={[
             ...type.subHeadings,
-            isDisabled ? <Chip label="Limited Availability" /> : '',
+            isDisabled ? <Chip label="Limited Deployment Availability" /> : '',
           ]}
           sxTooltip={{
             // There's no easy way to override the margin or transform due to inline styles and existing specificity rules.
