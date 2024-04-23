@@ -22,18 +22,18 @@ export const Namespaces = React.memo(() => {
   const isCreateNamespaceDrawerOpen = location.pathname.endsWith('create');
 
   const onOpenCreateDrawer = () => {
-    history.replace('/monitor/cloudpulse/namespaces/create');
+    history.replace('/cloudview/namespaces/create');
   };
 
   const onCloseCreateDrawer = () => {
-    history.replace('/monitor/cloudpulse/namespaces');
+    history.replace('/cloudview/namespaces');
   };
 
   if (isLoading) {
     return <CircleProgress />;
   }
 
-  if (data?.results === 0) {
+  if (data?.results === 0 || data?.data == undefined) {
     return (
       <>
         <Paper>
@@ -67,7 +67,6 @@ export const Namespaces = React.memo(() => {
       </Paper>
     );
   }
-
   return (
     <React.Fragment>
       <Paper>
@@ -78,7 +77,7 @@ export const Namespaces = React.memo(() => {
           entity="Namespace"
           onButtonClick={onOpenCreateDrawer}
         />
-        <NamespaceList></NamespaceList>
+        <NamespaceList namespacesList={data.data}></NamespaceList>
       </Paper>
       <CreateNamespaceDrawer
         onClose={onCloseCreateDrawer}

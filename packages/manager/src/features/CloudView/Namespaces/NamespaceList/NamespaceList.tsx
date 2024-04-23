@@ -3,122 +3,42 @@ import Grid from '@mui/material/Grid/Grid';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { CircleProgress } from 'src/components/CircleProgress';
-import {
-  CollapsibleTable,
-  TableItem,
-} from 'src/components/CollapsibleTable/CollapsibleTable';
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { DateTimeDisplay } from 'src/components/DateTimeDisplay/DateTimeDisplay';
-import { Divider } from 'src/components/Divider';
-import { DocsLink } from 'src/components/DocsLink/DocsLink';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Flag } from 'src/components/Flag';
 import { GroupByTagToggle } from 'src/components/GroupByTagToggle';
-import { Paper } from 'src/components/Paper';
-import { Stack } from 'src/components/Stack';
+import OrderBy from 'src/components/OrderBy';
+import Paginate from 'src/components/Paginate';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { TableCell } from 'src/components/TableCell/TableCell';
-import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { Typography } from 'src/components/Typography';
-import { StyledContainerGrid } from 'src/features/Longview/shared/InstallationInstructions.styles';
-import { useOrder } from 'src/hooks/useOrder';
-import {
-  useCloudViewNameSpacesQuery,
-  useNamespaceApiKey,
-} from 'src/queries/cloudview/namespaces';
+import { TableRow } from 'src/components/TableRow/TableRow';
+import { TableSortCell } from 'src/components/TableSortCell';
 
-import { NamespaceDeleteDialog } from '../NamespaceDeleteDialogue';
+import NamespaceDetail from './NamespaceDetail';
 
-export const NamespaceList = React.memo(() => {
-  const [selectedNamespace, setSelectedNamespace] = React.useState<
-    Namespace | undefined
-  >();
-  const [
-    deleteNamespaceDialogOpen,
-    setDeleteNamespaceDialogOpen,
-  ] = React.useState(false);
-  const { handleOrderChange, order, orderBy } = useOrder({
-    order: 'desc',
-    orderBy: 'date',
-  });
+export interface TableProps {
+  namespacesList: Namespace[];
+}
 
-  const {
-    data: namespaces,
-    isError,
-    isLoading,
-  } = useCloudViewNameSpacesQuery();
-  if (isLoading) {
-    return <CircleProgress />;
-  }
+export const NamespaceList = React.memo((props: TableProps) => {
+  const { namespacesList } = props;
 
-  if (!namespaces || isError) {
-    return (
-      <ErrorState errorText="There was a problem retrieving the namespaces. Please try again" />
-    );
-  }
-
-  const GetApiKey = (id: number) => {
-    const { data: active_keys } = useNamespaceApiKey(id);
-
-    if (!active_keys) {
-      return 'Error in receiving api';
-    }
-
-    return active_keys?.active_keys[0].api_key;
-  };
-
-  const handleDeleteNamespace = (namespace: Namespace) => {
-    setSelectedNamespace(namespace);
-    setDeleteNamespaceDialogOpen(true);
-  };
-
-  const NamespaceTableRowHead = (
-    <>
-      <TableSortCell
-        active={orderBy === 'name'}
-        direction={order}
-        handleClick={handleOrderChange}
-        label="name"
-      >
-        Name
-      </TableSortCell>
-      <TableCell>Data Type</TableCell>
-      <TableSortCell
-        active={orderBy === 'region'}
-        direction={order}
-        handleClick={handleOrderChange}
-        label="region"
-      >
-        Region
-      </TableSortCell>
-      <TableSortCell
-        active={orderBy === 'date'}
-        direction={order}
-        handleClick={handleOrderChange}
-        label="date"
-      >
-        Creation Date
-      </TableSortCell>
-      <TableCell>
-        <GroupByTagToggle
-          toggleGroupByTag={function (): boolean {
-            throw new Error('Function not implemented.');
-          }}
-          isGroupedByTag={false}
-        ></GroupByTagToggle>
-      </TableCell>
-    </>
-  );
-
-  const getTableItems = (): TableItem[] => {
-    return namespaces.data.map((namespace) => {
+  const getTableItems = (data: Namespace[]) => {
+    return data.map((namespace) => {
       const OuterTableCells = (
         <>
           <TableCell>{namespace.type}</TableCell>
           <TableCell>
-            <Grid sx={{ display: 'flex', flexDirection: 'row' }}>
+            <Grid
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                // justifyContent: 'center',
+                margin: '5px',
+              }}
+            >
               <Flag country={'us'}></Flag>
-              {namespace.region}
+              <div style={{ padding: '5px' }}> {namespace.region}</div>
             </Grid>
           </TableCell>
           <TableCell>
@@ -132,7 +52,7 @@ export const NamespaceList = React.memo(() => {
               actionsList={[
                 {
                   onClick: () => {
-                    handleDeleteNamespace(namespace);
+                    // Actions
                   },
                   title: 'Delete',
                 },
@@ -142,86 +62,90 @@ export const NamespaceList = React.memo(() => {
           </TableCell>
         </>
       );
-      const api_key = GetApiKey(namespace.id);
-      const InnerTable = (
-        <Paper>
-          <Typography sx={{ width: '40em' }} variant="h3">
-            Before this Namespace can store data, you need to install and
-            configure your agents. After installation, it may be a few minutes
-            before the Namespace begins receiving data.
-          </Typography>
-          <Stack sx={{ paddingTop: '20px', width: '60em' }}>
-            <StyledContainerGrid spacing={2}>
-              <CopyTooltip text={api_key} />
-              <Grid paddingLeft="5px">
-                <strong>Api-Key:</strong>
-              </Grid>
-              <Grid paddingLeft="7px">
-                <code>{api_key}</code>
-              </Grid>
-            </StyledContainerGrid>
-            <StyledContainerGrid>
-              <CopyTooltip text={namespace.urls.ingest} />
-              <Grid paddingLeft="5px">
-                <strong> Cloud View Endpoint: </strong>
-              </Grid>
-              <Grid paddingLeft="7px">
-                <code>{namespace.urls.ingest}.</code>
-              </Grid>
-            </StyledContainerGrid>
-            <StyledContainerGrid>
-              <CopyTooltip text={namespace.urls.read} />
-              <Grid paddingLeft="5px">
-                <strong>Cloud View Read Endpoint: </strong>
-              </Grid>
-              <Grid paddingLeft="7px">
-                <code>{namespace.urls.read}</code>
-              </Grid>
-            </StyledContainerGrid>
-          </Stack>
-          <Stack
-            divider={
-              <Divider dark flexItem orientation="vertical" variant="middle" />
-            }
-            direction="row"
-            display="flex"
-            paddingTop="15px"
-            spacing={3}
-          >
-            <DocsLink
-              href={'https://www.linode.com/docs/'}
-              label="Troubleshooting guide"
-            ></DocsLink>
-            <DocsLink
-              href={'https://www.linode.com/docs/'}
-              label="Manual installation instructions"
-            ></DocsLink>
-          </Stack>
-        </Paper>
-      );
 
       return {
-        InnerTable,
+        InnerTable: <NamespaceDetail namespace={namespace} />,
         OuterTableCells,
         id: namespace.id,
         label: namespace.label,
       };
     });
   };
-
   return (
-    <>
-      <CollapsibleTable
-        TableItems={getTableItems()}
-        TableRowEmpty={<TableCell></TableCell>}
-        TableRowHead={NamespaceTableRowHead}
-      ></CollapsibleTable>
-      <NamespaceDeleteDialog
-        id={selectedNamespace?.id}
-        label={selectedNamespace?.label}
-        onClose={() => setDeleteNamespaceDialogOpen(false)}
-        open={deleteNamespaceDialogOpen}
-      />
-    </>
+    <OrderBy
+      data={namespacesList}
+      order="desc"
+      orderBy="created"
+      preferenceKey="cloudview-namespaces"
+    >
+      {({ data: namespacesList, handleOrderChange, order, orderBy }) => (
+        <Paginate data={namespacesList}>
+          {({
+            count,
+            data: data,
+            handlePageChange,
+            handlePageSizeChange,
+            page,
+            pageSize,
+          }) => (
+            <>
+              <CollapsibleTable
+                TableRowHead={
+                  <TableRow>
+                    <TableSortCell
+                      sx={{
+                        width: '33%',
+                      }}
+                      active={orderBy === 'label'}
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label="label"
+                    >
+                      Name
+                    </TableSortCell>
+                    <TableCell sx={{ width: '18%' }}>Data Type</TableCell>
+                    <TableSortCell
+                      active={orderBy === 'region'}
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label="region"
+                      sx={{ width: '24%' }}
+                    >
+                      Region
+                    </TableSortCell>
+                    <TableSortCell
+                      active={orderBy === 'created'}
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label="created"
+                      sx={{ width: '20%' }}
+                    >
+                      Creation Date (UTC)
+                    </TableSortCell>
+                    <TableCell sx={{ width: '4%' }}>
+                      <GroupByTagToggle
+                        toggleGroupByTag={function (): boolean {
+                          throw new Error('Function not implemented.');
+                        }}
+                        isGroupedByTag={false}
+                      ></GroupByTagToggle>
+                    </TableCell>
+                  </TableRow>
+                }
+                TableItems={getTableItems(data)}
+                TableRowEmpty={<TableCell></TableCell>}
+              />
+              <PaginationFooter
+                count={count}
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                page={page}
+                pageSize={pageSize}
+              />
+            </>
+          )}
+        </Paginate>
+      )}
+    </OrderBy>
   );
 });
