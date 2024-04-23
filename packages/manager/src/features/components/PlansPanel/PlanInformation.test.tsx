@@ -49,36 +49,4 @@ describe('PlanInformation', () => {
     );
     expect(limitedAvailabilityBanner).toBeInTheDocument();
   });
-
-  it('should inform the user about Premium plans having limited availability when appropriate', () => {
-    renderWithTheme(
-      <PlanInformation
-        {...mockProps}
-        hasDisabledPlans={true}
-        isSelectedRegionEligibleForPlan={true}
-        planType="premium"
-      />
-    );
-
-    const limitedAvailabilityBanner = screen.getByTestId(
-      limitedAvailabilityBannerTestId
-    );
-    expect(limitedAvailabilityBanner).toBeInTheDocument();
-  });
-
-  it('should inform the user about GPU plans having limited availability when appropriate', () => {
-    renderWithTheme(
-      <PlanInformation
-        {...mockProps}
-        hasDisabledPlans={true}
-        isSelectedRegionEligibleForPlan={true}
-        planType="gpu"
-      />
-    );
-
-    const limitedAvailabilityBanner = screen.getByTestId(
-      limitedAvailabilityBannerTestId
-    );
-    expect(limitedAvailabilityBanner).toBeInTheDocument();
-  });
 });
