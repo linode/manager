@@ -38,6 +38,7 @@ describe('PlanInformation', () => {
     renderWithTheme(
       <PlanInformation
         {...mockProps}
+        hasDisabledPlans={true}
         isSelectedRegionEligibleForPlan={true}
         planType="dedicated"
       />
@@ -53,6 +54,7 @@ describe('PlanInformation', () => {
     renderWithTheme(
       <PlanInformation
         {...mockProps}
+        hasDisabledPlans={true}
         isSelectedRegionEligibleForPlan={true}
         planType="premium"
       />
@@ -68,6 +70,7 @@ describe('PlanInformation', () => {
     renderWithTheme(
       <PlanInformation
         {...mockProps}
+        hasDisabledPlans={true}
         isSelectedRegionEligibleForPlan={true}
         planType="gpu"
       />

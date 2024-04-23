@@ -8,6 +8,10 @@ export const LIMITED_AVAILABILITY_LINK =
 
 export const DEDICATED_COMPUTE_INSTANCES_LINK =
   'https://www.linode.com/docs/products/compute/compute-instances/plans/dedicated-cpu/';
+export const SHARED_COMPUTE_INSTANCES_LINK =
+  'https://www.linode.com/docs/products/compute/compute-instances/plans/shared-cpu/';
+export const HIGH_MEMORY_COMPUTE_INSTANCES_LINK =
+  'https://www.linode.com/docs/products/compute/compute-instances/plans/high-memory/';
 export const PREMIUM_COMPUTE_INSTANCES_LINK =
   'https://www.linode.com/docs/products/compute/compute-instances/plans/premium/';
 export const GPU_COMPUTE_INSTANCES_LINK =

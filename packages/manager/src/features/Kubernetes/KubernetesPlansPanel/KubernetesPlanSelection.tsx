@@ -105,33 +105,35 @@ export const KubernetesPlanSelection = (
           <TableCell data-qa-plan-name>
             <Box alignItems="center">
               {type.heading} &nbsp;
-              {isDisabled && !hasMajorityOfPlansDisabled && (
-                <Tooltip
-                  PopperProps={{
-                    sx: {
-                      '& .MuiTooltip-tooltip': {
-                        minWidth: 225,
+              {isDisabled &&
+                !isWholePanelDisabled &&
+                !hasMajorityOfPlansDisabled && (
+                  <Tooltip
+                    PopperProps={{
+                      sx: {
+                        '& .MuiTooltip-tooltip': {
+                          minWidth: 225,
+                        },
                       },
-                    },
-                  }}
-                  sx={{
-                    alignItems: 'center',
-                  }}
-                  data-qa-tooltip={LIMITED_AVAILABILITY_TEXT}
-                  data-testid="limited-availability"
-                  placement="right-start"
-                  title={LIMITED_AVAILABILITY_TEXT}
-                >
-                  <IconButton disableRipple size="small">
-                    <HelpOutline
-                      sx={{
-                        height: 16,
-                        width: 16,
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-              )}
+                    }}
+                    sx={{
+                      alignItems: 'center',
+                    }}
+                    data-qa-tooltip={LIMITED_AVAILABILITY_TEXT}
+                    data-testid="limited-availability"
+                    placement="right-start"
+                    title={LIMITED_AVAILABILITY_TEXT}
+                  >
+                    <IconButton disableRipple size="small">
+                      <HelpOutline
+                        sx={{
+                          height: 16,
+                          width: 16,
+                        }}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                )}
             </Box>
           </TableCell>
           <TableCell

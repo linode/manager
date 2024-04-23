@@ -11,7 +11,9 @@ import { PlansAvailabilityNotice } from '../../Linodes/LinodesCreate/PlansAvaila
 import {
   DEDICATED_COMPUTE_INSTANCES_LINK,
   GPU_COMPUTE_INSTANCES_LINK,
+  HIGH_MEMORY_COMPUTE_INSTANCES_LINK,
   PREMIUM_COMPUTE_INSTANCES_LINK,
+  SHARED_COMPUTE_INSTANCES_LINK,
 } from './constants';
 import { MetalNotice } from './MetalNotice';
 import { planTabInfoContent } from './utils';
@@ -86,12 +88,11 @@ export const PlanInformation = (props: PlanInformationProps) => {
   );
 };
 
-export const limitedAvailabilityBannerTestId =
-  'limited-availability-dismissible-banner';
+export const limitedAvailabilityBannerTestId = 'limited-availability-banner';
 
 interface LimitedAvailabilityNoticeProps {
   hasDisabledPlans: boolean;
-  planType: LinodeTypeClass;
+  planType: 'shared' | LinodeTypeClass;
 }
 
 export const LimitedAvailabilityNotice = (
@@ -109,6 +110,24 @@ export const LimitedAvailabilityNotice = (
         />
       );
 
+    case 'shared':
+      return (
+        <LimitedAvailabilityNoticeCopy
+          docsLink={SHARED_COMPUTE_INSTANCES_LINK}
+          hasDisabledPlans={hasDisabledPlans}
+          planTypeLabel="Shared CPU"
+        />
+      );
+
+    case 'highmem':
+      return (
+        <LimitedAvailabilityNoticeCopy
+          docsLink={HIGH_MEMORY_COMPUTE_INSTANCES_LINK}
+          hasDisabledPlans={hasDisabledPlans}
+          planTypeLabel="High Memory"
+        />
+      );
+
     case 'premium':
       return (
         <LimitedAvailabilityNoticeCopy
@@ -117,6 +136,7 @@ export const LimitedAvailabilityNotice = (
           planTypeLabel="Premium CPU"
         />
       );
+
     case 'gpu':
       return (
         <LimitedAvailabilityNoticeCopy
@@ -141,7 +161,8 @@ export const LimitedAvailabilityNoticeCopy = (
   props: LimitedAvailabilityNoticeCopyProps
 ) => {
   const { docsLink, hasDisabledPlans, planTypeLabel } = props;
-  return (
+
+  return hasDisabledPlans ? (
     <Notice
       sx={(theme: Theme) => ({
         marginBottom: theme.spacing(3),
@@ -152,16 +173,10 @@ export const LimitedAvailabilityNoticeCopy = (
       dataTestId={limitedAvailabilityBannerTestId}
       variant="warning"
     >
-      {hasDisabledPlans ? (
-        <StyledNoticeTypography>
-          These plans have limited deployment availability.{' '}
-          <Link to={docsLink}>Learn more</Link> about our {planTypeLabel} plans.
-        </StyledNoticeTypography>
-      ) : (
-        <StyledNoticeTypography>
-          <Link to={docsLink}>Learn more</Link> about plans and availability.
-        </StyledNoticeTypography>
-      )}
+      <StyledNoticeTypography>
+        These plans have limited deployment availability.{' '}
+        <Link to={docsLink}>Learn more</Link> about our {planTypeLabel} plans.
+      </StyledNoticeTypography>
     </Notice>
-  );
+  ) : null;
 };
