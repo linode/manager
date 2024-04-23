@@ -69,6 +69,7 @@ describe('object storage access keys smoke tests', () => {
         cy.findByLabelText('Label').click().type(mockAccessKey.label);
         ui.buttonGroup
           .findButtonByTitle('Create Access Key')
+          .scrollIntoView()
           .should('be.visible')
           .should('be.enabled')
           .click();
