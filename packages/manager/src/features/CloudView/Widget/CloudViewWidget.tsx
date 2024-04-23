@@ -24,6 +24,7 @@ import { COLOR_MAP } from './Utils/WidgetColorPalettes';
 export interface CloudViewWidgetProperties {
   // we can try renaming this CloudViewWidget
   ariaLabel?: string;
+  authToken: string;
   errorLabel?: string; // error label can come from dashboard
   globalFilters?: FiltersObject; // this is dashboard level global filters, its also optional
   // any change in the current widget, call and pass this function and handle in parent component

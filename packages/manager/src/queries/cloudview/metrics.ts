@@ -16,7 +16,7 @@ export const useCloudViewMetricsQuery = (
 ) => {
   return useQuery<CloudViewMetricsResponse, APIError[]>(
     [queryKey, serviceType, request, props, widgetProps], // querykey and dashboardId makes this uniquely identifiable
-    () => getCloudViewMetrics(serviceType, request),
+    () => getCloudViewMetrics(props.authToken, serviceType, request),
     {
       enabled: true,
       refetchInterval: 5000,

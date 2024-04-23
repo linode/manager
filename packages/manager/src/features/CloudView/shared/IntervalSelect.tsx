@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
-interface CloudViewIntervalSelectProps {
+export interface CloudViewIntervalSelectProps {
   className?: string;
   handleIntervalChange: (interval: string | undefined) => void;
 }
@@ -28,7 +28,7 @@ export const CloudViewIntervalSelect = React.memo(
       },
     ];
 
-    const [selectedInterval, setInterval] = React.useState<string>('1m');
+    const [selectedInterval, setInterval] = React.useState<string>('1minute');
 
     React.useEffect(() => {
       props.handleIntervalChange(selectedInterval);
@@ -41,6 +41,7 @@ export const CloudViewIntervalSelect = React.memo(
           setInterval(timeInterval.value);
         }}
         className={props.className}
+        data-testid="cloudview-interval-select"
         defaultValue={intervalOptions[0]}
         disableClearable
         fullWidth={false}

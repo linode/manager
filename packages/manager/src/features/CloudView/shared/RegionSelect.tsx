@@ -4,7 +4,7 @@ import * as React from 'react';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useRegionsQuery } from 'src/queries/regions';
 
-interface CloudViewRegionSelectProps {
+export interface CloudViewRegionSelectProps {
   handleRegionChange: (region: string | undefined) => void;
 }
 

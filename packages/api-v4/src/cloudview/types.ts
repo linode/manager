@@ -159,3 +159,12 @@ export interface AvailableAggregateFunctions {
   dim_label: string;
   values: string[];
 }
+
+export interface JWEToken {
+  payload: any; // remove
+  token: string;
+}
+
+export interface GetJWETokenPayload {
+  resource_id: number[];
+}

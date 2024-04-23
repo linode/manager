@@ -1,4 +1,4 @@
-import { Dashboard, Widgets } from '@linode/api-v4';
+import { Dashboard, GetJWETokenPayload, Widgets } from '@linode/api-v4';
 import { Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -12,6 +12,11 @@ import {
   CloudViewWidget,
   CloudViewWidgetProperties,
 } from '../Widget/CloudViewWidget';
+import { useCloudViewJWEtokenQuery } from 'src/queries/cloudview/dashboards';
+import {
+  useLinodeResourcesQuery,
+  useLoadBalancerResourcesQuery,
+} from 'src/queries/cloudview/resources';
 
 export interface DashboardProperties {
   dashbaord: Dashboard; // this will be done in upcoming sprint
@@ -22,6 +27,33 @@ export interface DashboardProperties {
 }
 
 export const CloudPulseDashboard = (props: DashboardProperties) => {
+  const resourceOptions: any = {};
+
+  // returns a list of resource IDs to be passed as part of getJWEToken call
+  const getResourceIDsPayload = () => {
+    const jweTokenPayload: GetJWETokenPayload = {
+      resource_id: [],
+    };
+    jweTokenPayload.resource_id = resourceOptions[
+      props?.dashbaord?.service_type
+    ]?.data?.map((resource: any) => resource.id);
+    return jweTokenPayload;
+  };
+
+  ({ data: resourceOptions['linode'] } = useLinodeResourcesQuery(
+    props?.dashbaord?.service_type === 'linode'
+  ));
+
+  ({ data: resourceOptions['aclb'] } = useLoadBalancerResourcesQuery(
+    props?.dashbaord?.service_type === 'aclb'
+  ));
+
+  const { data: jweToken } = useCloudViewJWEtokenQuery(
+    props?.dashbaord?.service_type,
+    getResourceIDsPayload(),
+    resourceOptions[props?.dashbaord?.service_type] ? true : false
+  );
+
   // todo define a proper properties class
 
   const [
@@ -62,7 +94,8 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
         props.dashbaord?.service_type &&
         cloudViewGraphProperties.globalFilters?.region &&
         cloudViewGraphProperties.globalFilters?.resource &&
-        cloudViewGraphProperties.globalFilters?.resource.length > 0
+        cloudViewGraphProperties.globalFilters?.resource.length > 0 &&
+        jweToken?.token
       ) {
         return (
           <Grid columnSpacing={1.5} container rowSpacing={0} spacing={2}>
@@ -72,6 +105,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
                   <CloudViewWidget
                     key={index}
                     {...getCloudViewGraphProperties(element)}
+                    authToken={jweToken?.token}
                     handleWidgetChange={handleWidgetChange}
                     useColorIndex={colorIndex++} // todo, remove the color index
                   />

@@ -45,11 +45,11 @@ export const CloudViewMultiResourceSelect = (
       : [];
   };
 
-  ({ data: resourceOptions['linodes'] } = useLinodeResourcesQuery(
-    props.resourceType === 'linodes'
+  ({ data: resourceOptions['linode'] } = useLinodeResourcesQuery(
+    props.resourceType === 'linode'
   ));
-  ({ data: resourceOptions['ACLB'] } = useLoadBalancerResourcesQuery(
-    props.resourceType === 'ACLB'
+  ({ data: resourceOptions['aclb'] } = useLoadBalancerResourcesQuery(
+    props.resourceType === 'aclb'
   ));
 
   React.useEffect(() => {
