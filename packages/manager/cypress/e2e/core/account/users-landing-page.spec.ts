@@ -121,17 +121,17 @@ describe('Users landing page', () => {
             user.username ===
             'restricted-parent-user-without-child-account-access'
           ) {
-            // The status should be "Disabled" when the user without "child_account_access" grant
+            // The status should be "Disabled" for the user without "child_account_access" grant
             cy.findByText('Disabled').should('be.visible');
           } else {
-            // The status should be "Enabled" when the user without "child_account_access" grant
+            // The status should be "Enabled" for the user without "child_account_access" grant
             cy.findByText('Enabled').should('be.visible');
           }
         });
     });
   });
 
-  it('"Child account access" column is visiable for restricted parent users child_account_access grant set to true', () => {
+  it('shows "Child account access" column for restricted parent users with child_account_access grant set to true', () => {
     const mockProfile = profileFactory.build({
       username: 'restricted-parent-user',
       restricted: true,
@@ -147,7 +147,7 @@ describe('Users landing page', () => {
     cy.findByText('Child Account Access').should('be.visible');
   });
 
-  it('"Child account access" column is not visiable for restricted parent users child_account_access grant set to false', () => {
+  it('hides "Child account access" column for restricted parent users with child_account_access grant set to false', () => {
     const mockProfile = profileFactory.build({
       username: 'restricted-parent-user',
       restricted: true,
