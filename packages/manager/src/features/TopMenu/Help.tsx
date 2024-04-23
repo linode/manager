@@ -10,7 +10,7 @@ export const Help = () => {
   return (
     <TopMenuTooltip title="Help & Support">
       <IconButton
-        aria-label="Help & Support"
+        accessibleAriaLabel="Help & Support"
         component={Link}
         sx={topMenuIconButtonSx}
         to="/support"
