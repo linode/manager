@@ -187,7 +187,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
                 PopperProps={{
                   sx: {
                     '& .MuiTooltip-tooltip': {
-                      minWidth: 225,
+                      width: 175,
                     },
                   },
                 }}
