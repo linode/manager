@@ -1,3 +1,5 @@
+// TODO: Cypress
+// Move this to cypress component testing once the setup is complete - see https://github.com/linode/manager/pull/10134
 import { fbtClick } from 'support/helpers';
 import { ui } from 'support/ui';
 import {
