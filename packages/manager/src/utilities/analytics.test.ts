@@ -1,4 +1,7 @@
-import { generateTimeOfDay } from './analytics';
+import {
+  generateTimeOfDay,
+  waitForAdobeAnalyticsToBeLoaded,
+} from './analytics';
 
 describe('Utility Functions', () => {
   it('should generate human-readable time of day', () => {
@@ -30,4 +33,22 @@ describe('Utility Functions', () => {
     expect(generateTimeOfDay(-1)).toBe('Other');
     expect(generateTimeOfDay(25)).toBe('Other');
   });
+});
+
+describe('waitForAdobeAnalyticsToBeLoaded', () => {
+  it('should resolve if adobe is defined ', () => {
+    vi.stubGlobal('_satellite', {});
+    expect(waitForAdobeAnalyticsToBeLoaded()).resolves.toBe(undefined);
+  });
+
+  it(
+    'should reject if adobe is not defined after 5 seconds',
+    () => {
+      vi.stubGlobal('_satellite', undefined);
+      expect(waitForAdobeAnalyticsToBeLoaded()).rejects.toThrow(
+        'Adobe Analytics did not load after 5 seconds'
+      );
+    },
+    { timeout: 7000 }
+  );
 });
