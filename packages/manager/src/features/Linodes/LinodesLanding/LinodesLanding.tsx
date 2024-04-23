@@ -99,7 +99,6 @@ type CombinedProps = LinodesLandingProps &
 class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
-      flags,
       grants,
       linodesData,
       linodesInTransition,
@@ -166,7 +165,6 @@ class ListLinodes extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        {flags.gecko2?.enabled && flags.gecko2?.ga && 'Gecko GA'}
         <LinodeResize
           linodeId={this.state.selectedLinodeID}
           onClose={this.closeDialogs}

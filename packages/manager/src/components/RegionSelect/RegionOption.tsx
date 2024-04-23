@@ -1,7 +1,7 @@
 import { visuallyHidden } from '@mui/utils';
 import React from 'react';
 
-import EdgeServer from 'src/assets/icons/entityIcons/edge-server.svg';
+import EdgeRegion from 'src/assets/icons/entityIcons/edge-region.svg';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
 import { Tooltip } from 'src/components/Tooltip';
@@ -18,14 +18,14 @@ import { RegionSelectOption } from './RegionSelect.types';
 import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
 type Props = {
-  displayEdgeServerIcon?: boolean;
+  displayEdgeRegionIcon?: boolean;
   option: RegionSelectOption;
   props: React.HTMLAttributes<HTMLLIElement>;
   selected?: boolean;
 };
 
 export const RegionOption = ({
-  displayEdgeServerIcon,
+  displayEdgeRegionIcon,
   option,
   props,
   selected,
@@ -75,9 +75,9 @@ export const RegionOption = ({
               <Flag country={data.country} />
             </StyledFlagContainer>
             {label}
-            {displayEdgeServerIcon && (
+            {displayEdgeRegionIcon && (
               <Box sx={visuallyHidden}>
-                &nbsp;(This region is an Edge site.)
+                &nbsp;(This region is an edge region.)
               </Box>
             )}
             {isRegionDisabled && isRegionDisabledReason && (
@@ -85,12 +85,12 @@ export const RegionOption = ({
             )}
           </Box>
           {selected && <SelectedIcon visible={selected} />}
-          {displayEdgeServerIcon && (
+          {displayEdgeRegionIcon && (
             <TooltipIcon
-              icon={<EdgeServer />}
+              icon={<EdgeRegion />}
               status="other"
               sxTooltipIcon={sxEdgeIcon}
-              text="This region is an edge site."
+              text="This region is an edge region."
             />
           )}
         </>

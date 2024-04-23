@@ -24,9 +24,9 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { Box } from '../Box';
 import { DocsLink } from '../DocsLink/DocsLink';
 import { Link } from '../Link';
+import { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
-import { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 
 interface SelectRegionPanelProps {
   RegionSelectProps?: Partial<RegionSelectProps>;
@@ -44,6 +44,7 @@ interface SelectRegionPanelProps {
 
 export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const {
+    RegionSelectProps,
     currentCapability,
     disabled,
     error,
@@ -51,7 +52,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     helperText,
     selectedId,
     selectedLinodeTypeId,
-    RegionSelectProps,
   } = props;
 
   const flags = useFlags();
@@ -84,11 +84,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     !flags.gecko2?.enabled ||
     flags.gecko2?.ga ||
     !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
-
-  const isGeckoGA =
-    flags.gecko2?.enabled &&
-    flags.gecko2?.ga &&
-    getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
 
   const showEdgeIconHelperText = Boolean(
     !hideEdgeRegions &&
@@ -139,7 +134,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           </Typography>
         </Notice>
       ) : null}
-      {isGeckoGA && 'Gecko GA'}
       <RegionSelect
         currentCapability={currentCapability}
         disabled={disabled}
