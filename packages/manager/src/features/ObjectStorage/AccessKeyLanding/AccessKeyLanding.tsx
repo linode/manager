@@ -6,7 +6,6 @@ import {
   revokeObjectStorageKey,
   updateObjectStorageKey,
 } from '@linode/api-v4/lib/object-storage';
-import { useQueryClient } from '@tanstack/react-query';
 import { FormikBag, FormikHelpers } from 'formik';
 import * as React from 'react';
 
@@ -19,7 +18,6 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountSettings } from 'src/queries/account/settings';
-import { queryKey } from 'src/queries/objectStorage';
 import { useObjectStorageAccessKeys } from 'src/queries/objectStorage';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import {
@@ -56,7 +54,6 @@ export const AccessKeyLanding = (props: Props) => {
   } = props;
 
   const pagination = usePagination(1);
-  const queryClient = useQueryClient();
 
   const { data, error, isLoading, refetch } = useObjectStorageAccessKeys({
     page: pagination.page,
@@ -118,7 +115,6 @@ export const AccessKeyLanding = (props: Props) => {
 
         // "Refresh" keys to include the newly created key
         refetch();
-        queryClient.invalidateQueries([`${queryKey}-buckets`]);
 
         props.closeAccessDrawer();
         displayKeysDialog.open();
