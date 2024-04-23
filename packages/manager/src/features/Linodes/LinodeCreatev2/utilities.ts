@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { getStackScript } from '@linode/api-v4';
 import { CreateLinodeSchema } from '@linode/validation';
 import { useHistory } from 'react-router-dom';
 
@@ -8,7 +9,7 @@ import { utoa } from '../LinodesCreate/utilities';
 
 import type { LinodeCreateType } from '../LinodesCreate/types';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
-import { CreateLinodeRequest, getStackScript, InterfacePayload } from '@linode/api-v4';
+import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
 import type { Resolver } from 'react-hook-form';
 
 /**

@@ -3,7 +3,7 @@ import type { UserDefinedField } from '@linode/api-v4';
 /**
  * Used to separate required UDFs from non-required ones
  *
- * @return nested array [[...requiredUDFs], [...nonRequiredUDFs]]
+ * @returns nested array [[...requiredUDFs], [...nonRequiredUDFs]]
  */
 export const separateUDFsByRequiredStatus = (udfs: UserDefinedField[] = []) => {
   return udfs.reduce(
