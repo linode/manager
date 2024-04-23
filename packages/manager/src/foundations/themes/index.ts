@@ -1,18 +1,18 @@
 import { createTheme } from '@mui/material/styles';
-import _merge from 'lodash/merge';
 
 import { latoWeb } from 'src/foundations/fonts';
-// Types & Interfaces
-import { customDarkModeOptions } from 'src/foundations/themes/dark';
 // Themes & Brands
 import { darkTheme } from 'src/foundations/themes/dark';
+// Types & Interfaces
+import { customDarkModeOptions } from 'src/foundations/themes/dark';
+import { lightTheme } from 'src/foundations/themes/light';
 import {
   bg,
   borderColors,
   color,
   textColors,
 } from 'src/foundations/themes/light';
-import { lightTheme } from 'src/foundations/themes/light';
+import { deepMerge } from 'src/utilities/deepMerge';
 
 export type ThemeName = 'dark' | 'light';
 
@@ -81,4 +81,4 @@ declare module '@mui/material/styles/createTheme' {
 }
 
 export const light = createTheme(lightTheme);
-export const dark = createTheme(_merge(lightTheme, darkTheme));
+export const dark = createTheme(deepMerge(lightTheme, darkTheme));
