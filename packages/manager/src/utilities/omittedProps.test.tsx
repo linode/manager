@@ -1,7 +1,7 @@
 // Styled component using omittedProps
 import styled from '@emotion/styled';
 
-import { omittedProps } from './omittedProps';
+import { omitProps, omittedProps } from './omittedProps';
 
 type StyledProps = {
   anotherProp?: string;
@@ -36,5 +36,21 @@ describe('omittedProps utility', () => {
     expect(component).not.toHaveAttribute('extraProp');
     expect(component).not.toHaveAttribute('anotherProp');
     expect(component).toHaveStyle('color: rgb(255, 0, 0)');
+  });
+});
+
+describe('omitProps utility', () => {
+  it('filters out omitted props', () => {
+    const props = {
+      anotherProp: 'another',
+      color: 'red',
+      extraProp: 'extra',
+    };
+
+    const filteredProps = omitProps(props, ['extraProp', 'anotherProp']);
+
+    expect(filteredProps).not.toHaveProperty('extraProp');
+    expect(filteredProps).not.toHaveProperty('anotherProp');
+    expect(filteredProps).toHaveProperty('color', 'red');
   });
 });

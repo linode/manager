@@ -1,5 +1,4 @@
 import { sanitizeUrl } from '@braintree/sanitize-url';
-import { omit } from 'lodash';
 import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -10,6 +9,7 @@ import {
   flattenChildrenIntoAriaLabel,
   opensInNewTab,
 } from 'src/utilities/link';
+import { omitProps } from 'src/utilities/omittedProps';
 
 import type { LinkProps as _LinkProps } from 'react-router-dom';
 
@@ -97,7 +97,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
       );
     }
 
-    const routerLinkProps = omit(props, [
+    const routerLinkProps = omitProps(props, [
       'accessibleAriaLabel',
       'external',
       'forceCopyColor',
