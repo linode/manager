@@ -140,6 +140,10 @@ export const useCreateBucketMutation = () => {
     APIError[],
     ObjectStorageBucketRequestPayload
   >(createBucket, {
+    onMutate: async () => {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries([`${queryKey}-buckets`]);
+    },
     onSuccess: (newEntity) => {
       // Invalidate account settings because it contains obj information
       queryClient.invalidateQueries(accountQueries.settings.queryKey);
@@ -150,6 +154,7 @@ export const useCreateBucketMutation = () => {
           errors: oldData?.errors || [],
         })
       );
+      queryClient.invalidateQueries([`${queryKey}-buckets`]);
     },
   });
 };
