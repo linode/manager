@@ -1,7 +1,8 @@
 import type { PlanSelectionType } from './types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
-export const LIMITED_AVAILABILITY_TEXT = 'This plan has limited availability.';
+export const LIMITED_AVAILABILITY_TEXT =
+  'This plan has limited deployment availability.';
 export const LIMITED_AVAILABILITY_LINK =
   'https://www.linode.com/global-infrastructure/availability/';
 export const LIMITED_AVAILABILITY_DISMISSIBLEBANNER_KEY =

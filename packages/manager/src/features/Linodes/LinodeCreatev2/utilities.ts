@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { getStackScript } from '@linode/api-v4';
 import { CreateLinodeSchema } from '@linode/validation';
 import { useHistory } from 'react-router-dom';
 
@@ -116,6 +117,10 @@ export const getLinodeCreatePayload = (
     values.metadata = undefined;
   }
 
+  if (values.placement_group?.id === undefined) {
+    values.placement_group = undefined;
+  }
+
   values.interfaces = getInterfacesPayload(
     values.interfaces,
     Boolean(values.private_ip)
@@ -204,6 +209,10 @@ export const defaultValues = async (): Promise<CreateLinodeRequest> => {
     ? Number(queryParams.stackScriptID)
     : undefined;
 
+  const stackscript = stackScriptID
+    ? await getStackScript(stackScriptID)
+    : null;
+
   const imageID = queryParams.imageID;
 
   return {
@@ -214,6 +223,7 @@ export const defaultValues = async (): Promise<CreateLinodeRequest> => {
       defaultPublicInterface,
     ],
     region: '',
+    stackscript_data: stackscript?.user_defined_fields,
     stackscript_id: stackScriptID,
     type: '',
   };
