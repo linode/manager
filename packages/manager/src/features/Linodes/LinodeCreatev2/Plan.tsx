@@ -9,10 +9,14 @@ import { useAllTypes } from 'src/queries/types';
 import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics';
 import { extendType } from 'src/utilities/extendType';
 
+import { useLinodeCreateQueryParams } from './utilities';
+
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const Plan = () => {
   const regionId = useWatch<CreateLinodeRequest>({ name: 'region' });
+
+  const { params } = useLinodeCreateQueryParams();
 
   const { field, fieldState } = useController<CreateLinodeRequest>({
     name: 'type',
@@ -40,7 +44,7 @@ export const Plan = () => {
       disabled={isLinodeCreateRestricted}
       error={fieldState.error?.message}
       isCreate
-      linodeID={undefined} // @todo add cloning support
+      linodeID={params.linodeID}
       onSelect={field.onChange}
       regionsData={regions} // @todo move this query deeper if possible
       selectedId={field.value}

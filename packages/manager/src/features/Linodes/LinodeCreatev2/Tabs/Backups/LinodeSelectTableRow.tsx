@@ -43,6 +43,10 @@ export const LinodeSelectTableRow = (props: Props) => {
         <FormControlLabel
           onChange={() => {
             setValue('backup_id', null);
+            setValue('region', linode.region);
+            if (linode.type) {
+              setValue('type', linode.type);
+            }
             updateParams({ linodeID: String(linode.id) });
           }}
           checked={linode.id === params.linodeID}

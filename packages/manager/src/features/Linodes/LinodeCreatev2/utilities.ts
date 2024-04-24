@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { getStackScript } from '@linode/api-v4';
+import { getLinode, getStackScript } from '@linode/api-v4';
 import { CreateLinodeSchema } from '@linode/validation';
 import { useHistory } from 'react-router-dom';
 
@@ -220,6 +220,12 @@ export const defaultValues = async (): Promise<CreateLinodeRequest> => {
     ? Number(queryParams.backupID)
     : undefined;
 
+  const linodeID = queryParams.linodeID
+    ? Number(queryParams.linodeID)
+    : undefined;
+
+  const linode = linodeID ? await getLinode(linodeID) : null;
+
   const imageID = queryParams.imageID;
 
   return {
@@ -230,12 +236,12 @@ export const defaultValues = async (): Promise<CreateLinodeRequest> => {
       defaultVLANInterface,
       defaultPublicInterface,
     ],
-    region: '',
+    region: linode ? linode.region : '',
     stackscript_data: stackscript?.user_defined_fields
       ? getDefaultUDFData(stackscript.user_defined_fields)
       : undefined,
     stackscript_id: stackScriptID,
-    type: '',
+    type: linode?.type ? linode.type : '',
   };
 };
 
