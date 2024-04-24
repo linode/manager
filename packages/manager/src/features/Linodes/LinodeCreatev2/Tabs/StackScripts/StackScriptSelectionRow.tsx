@@ -15,7 +15,7 @@ interface Props {
   disabled?: boolean;
   isSelected: boolean;
   onOpenDetails: () => void;
-  onSelect: () => void;
+  onSelect?: () => void;
   stackscript: StackScript;
 }
 
