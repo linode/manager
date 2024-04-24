@@ -130,13 +130,14 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     const colors: string[] = COLOR_MAP.get(props.widget.color)!;
 
     if (status == 'success') {
-      const index = 0;
+      let index = 0;
 
       metricsList.data.result.forEach((graphData) => {
         // todo, move it to utils at a widget level
         if (graphData == undefined || graphData == null) {
           return;
         }
+        console.log(graphData.metric.LINODE_ID);
         const color = colors[index];
         const dimension = {
           backgroundColor: color,
@@ -146,7 +147,9 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
             graphData.values[0][0],
             graphData.values[graphData.values.length - 1][0]
           ),
-          label: props.widget.metric,
+          label: graphData.metric.LINODE_ID
+            ? graphData.metric.LINODE_ID
+            : props.widget.metric,
         };
 
         // construct a legend row with the dimension
@@ -158,6 +161,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
         };
         legendRowsData.push(legendRow);
         dimensions.push(dimension);
+        index = index + 3;
       });
 
       // chart dimensions
@@ -175,13 +179,15 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
   }, [status, metricsList]);
 
   if (isLoading || (status == 'success' && data.length == 0)) {
-    return (<Grid xs={widget.size}>
-      <Paper style={{ height: '98%', width: '100%' }}>
-      <div style={{ margin: '1%' }}>
-      <CircleProgress />
-      </div>
-      </Paper>
-      </Grid>);
+    return (
+      <Grid xs={widget.size}>
+        <Paper style={{ height: '98%', width: '100%' }}>
+          <div style={{ margin: '1%' }}>
+            <CircleProgress />
+          </div>
+        </Paper>
+      </Grid>
+    );
   }
 
   const handleZoomToggle = (zoomInValue: boolean) => {

@@ -564,7 +564,7 @@ const cloudView = [
   }),
 
   // dashboards
-  rest.get('*/monitor/dashboards', async (req, res, ctx) => {
+  rest.get('*/monitors/dashboards', async (req, res, ctx) => {
     await sleep(100); // this is to test out loading feature
     // TODO, decide how to work on widgets and filters (for now keeping static ones)
     // return res(ctx.json(makeResourcePage(dashboardFactory.buildList(10))))
@@ -1275,7 +1275,7 @@ export const handlers = [
             created: '2020-01-01',
             group: '',
             hypervisor: 'kvm',
-            id: 44777,
+            id: 57407248,
             image: 'metadata-test-image',
             ipv4: ['50.116.6.212', '192.168.203.1'],
             ipv6: '2600:3c00::f03c:92ff:fee2:6c40/64',

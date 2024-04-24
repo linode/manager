@@ -14,8 +14,13 @@ export const getDashboardById = (dashboardId?: number) =>
 
 export const getDashboards = () =>
   Request<ResourcePage<Dashboard>>(
-    setURL(`${API_ROOT}/monitor/dashboards`),
-    setMethod('GET')
+    setURL(
+      `http://blr-lhv95n.bangalore.corp.akamai.com:9000/v4/monitor/services/linode/dashboards`
+    ),
+    setMethod('GET'),
+    setHeaders({
+      Authorization: 'Bearer vagrant',
+    })
   );
 
 export const getJWEToken = (data: GetJWETokenPayload, serviceType: string) =>
