@@ -6,12 +6,12 @@ import { useHistory } from 'react-router-dom';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { utoa } from '../LinodesCreate/utilities';
+import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
 import type { LinodeCreateType } from '../LinodesCreate/types';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
 import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
 import type { Resolver } from 'react-hook-form';
-import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
 /**
  * This interface is used to type the query params on the Linode Create flow.

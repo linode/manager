@@ -2,6 +2,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import { useController } from 'react-hook-form';
 
+import { CircularProgress } from 'src/components/CircularProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
@@ -21,10 +22,12 @@ export const BackupSelect = () => {
 
   const hasSelectedLinode = params.linodeID !== undefined;
 
-  const { data } = useLinodeBackupsQuery(
+  const { data, isLoading } = useLinodeBackupsQuery(
     params.linodeID ?? -1,
     hasSelectedLinode
   );
+
+  const hasNoBackups = !isLoading && data?.automatic.length === 0 && !data.snapshot.current;
 
   return (
     <Paper>
@@ -32,6 +35,14 @@ export const BackupSelect = () => {
         <Typography variant="h2">Select Backup</Typography>
         {fieldState.error?.message && (
           <Notice text={fieldState.error.message} variant="error" />
+        )}
+        {isLoading && (
+          <Stack alignItems="center">
+            <CircularProgress />
+          </Stack>
+        )}
+        {hasNoBackups && (
+          <Typography>This Linode does not have any backups.</Typography>
         )}
         <Grid container spacing={2}>
           {data?.automatic.map((backup) => (
