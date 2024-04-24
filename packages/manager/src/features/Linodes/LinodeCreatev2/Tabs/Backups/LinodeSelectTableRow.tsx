@@ -1,4 +1,5 @@
 import React from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Radio } from 'src/components/Radio/Radio';
@@ -13,16 +14,16 @@ import { capitalize } from 'src/utilities/capitalize';
 
 import { useLinodeCreateQueryParams } from '../../utilities';
 
-import type { Linode } from '@linode/api-v4';
+import type { CreateLinodeRequest, Linode } from '@linode/api-v4';
 
 interface Props {
   linode: Linode;
-  onSelect: () => void;
 }
 
 export const LinodeSelectTableRow = (props: Props) => {
   const { linode } = props;
 
+  const { setValue } = useFormContext<CreateLinodeRequest>();
   const { params, updateParams } = useLinodeCreateQueryParams();
 
   const { data: image } = useImageQuery(
@@ -40,10 +41,13 @@ export const LinodeSelectTableRow = (props: Props) => {
     <TableRow key={linode.label}>
       <TableCell>
         <FormControlLabel
+          onChange={() => {
+            setValue('backup_id', null);
+            updateParams({ linodeID: String(linode.id) });
+          }}
           checked={linode.id === params.linodeID}
           control={<Radio />}
           label={linode.label}
-          onChange={() => updateParams({ linodeID: String(linode.id) })}
         />
       </TableCell>
       <TableCell statusCell>

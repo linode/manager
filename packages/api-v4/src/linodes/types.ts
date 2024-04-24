@@ -373,7 +373,7 @@ export interface CreateLinodeRequest {
    *
    * This field and the image field are mutually exclusive.
    */
-  backup_id?: number;
+  backup_id?: number | null;
   /**
    * When deploying from an Image, this field is optional, otherwise it is ignored.
    * This is used to set the swap disk size for the newly-created Linode.
