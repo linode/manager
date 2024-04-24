@@ -33,7 +33,7 @@ export const getFilteredImagesForImageSelect = (
   images: Image[] | undefined,
   variant: ImageSelectVariant | undefined
 ) => {
-  return variant === 'public'
-    ? images?.filter((image) => !image.id.includes('kube'))
-    : images;
+  return variant === 'private'
+    ? images
+    : images?.filter((image) => !image.id.includes('kube'));
 };

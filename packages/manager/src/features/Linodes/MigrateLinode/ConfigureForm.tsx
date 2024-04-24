@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import EdgeServer from 'src/assets/icons/entityIcons/edge-server.svg';
+import EdgeRegion from 'src/assets/icons/entityIcons/edge-region.svg';
 import { Flag } from 'src/components/Flag';
 import { Notice } from 'src/components/Notice/Notice';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
@@ -157,10 +157,10 @@ export const ConfigureForm = React.memo((props: Props) => {
             }`}</Typography>
             {linodeIsInEdgeRegion && (
               <TooltipIcon
-                icon={<EdgeServer />}
+                icon={<EdgeRegion />}
                 status="other"
                 sxTooltipIcon={sxEdgeIcon}
-                text="This region is an Edge server."
+                text="This region is an edge region."
               />
             )}
           </StyledDiv>
