@@ -149,7 +149,7 @@ export const PlacementGroupsCreateDrawer = (
               items={[
                 {
                   description: `${selectedRegion.label} (${selectedRegion.id})`,
-                  title: 'Region:',
+                  title: 'Region',
                 },
               ]}
               sx={{ my: 2 }}
