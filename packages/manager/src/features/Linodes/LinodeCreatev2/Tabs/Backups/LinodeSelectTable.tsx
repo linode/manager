@@ -13,6 +13,8 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
 
+import { LinodeSelectTableRow } from './LinodeSelectTableRow';
+
 import type { Theme } from '@mui/material';
 
 export const LinodeSelectTable = () => {
@@ -40,8 +42,9 @@ export const LinodeSelectTable = () => {
   );
 
   return (
-    <Stack pt={1} spacing={1}>
+    <Stack pt={1} spacing={2}>
       <DebouncedSearchTextField
+        clearable
         hideLabel
         isSearching={isFetching}
         label="Search"
@@ -77,13 +80,7 @@ export const LinodeSelectTable = () => {
           </TableHead>
           <TableBody>
             {linodes?.data.map((linode) => (
-              <TableRow key={linode.label}>
-                <TableCell>{linode.label}</TableCell>
-                <TableCell>{linode.status}</TableCell>
-                <TableCell>{linode.image}</TableCell>
-                <TableCell>{linode.type}</TableCell>
-                <TableCell>{linode.region}</TableCell>
-              </TableRow>
+              <LinodeSelectTableRow key={linode.id} linode={linode} />
             ))}
           </TableBody>
         </Table>

@@ -9,7 +9,7 @@ export const BackupsWarning = () => {
         style={{
           lineHeight: 1.5,
           marginBottom: 4,
-          marginLeft: -18,
+          marginLeft: -20,
           marginTop: 4,
         }}
       >
