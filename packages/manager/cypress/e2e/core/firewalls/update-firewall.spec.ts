@@ -437,21 +437,24 @@ describe('update firewall', () => {
 
       cy.visitWithLogin(`/firewalls/${firewall.id}`);
 
-      cy.get(`[aria-label="Edit ${firewall.label}"]`).click();
+      cy.findByLabelText(`Edit ${firewall.label}`).click();
       cy.get(`[id="edit-${firewall.label}-label"]`)
         .click()
         .clear()
         .type(`${newFirewallLabel}{enter}`);
 
-      cy.reload();
+      // Confirm Firewall label updates in breadcrumbs.
+      ui.entityHeader.find().within(() => {
+        cy.findByText(newFirewallLabel).should('be.visible');
+        cy.findByText('firewalls').click();
+      });
 
-      // Confirm firewall label is updated on details page.
+      // Confirm firewall label is updated on landing page without refresh.
       cy.findByText(newFirewallLabel).should('be.visible');
 
-      cy.visitWithLogin('/firewalls');
-
-      // Confirm firewall label is updated on landing page.
-      cy.findByText(newFirewallLabel).closest('tr').should('be.visible');
+      // Confirm firewall label is updated on landing page after refresh.
+      cy.reload();
+      cy.findByText(newFirewallLabel).should('be.visible');
     });
   });
 });
