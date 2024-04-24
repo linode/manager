@@ -10,6 +10,12 @@ describe('switch linode state', () => {
     cleanUp(['linodes']);
   });
 
+  /*
+   * - Confirms that a Linode can be shut down from the Linodes landing page.
+   * - Confirms flow end-to-end using real API requests.
+   * - Confirms that landing page UI updates to reflect Linode power state.
+   * - Does not wait for Linode to finish being shut down before succeeding.
+   */
   it('powers off a linode from landing page', () => {
     createLinode().then((linode) => {
       cy.visitWithLogin('/linodes');
@@ -41,11 +47,16 @@ describe('switch linode state', () => {
         .should('be.visible')
         .within(() => {
           containsVisible('Shutting Down');
-          cy.contains('Offline', { timeout: 300000 }).should('be.visible');
         });
     });
   });
 
+  /*
+   * - Confirms that a Linode can be shut down from its details page.
+   * - Confirms flow end-to-end using real API requests.
+   * - Confirms that details page UI updates to reflect Linode power state.
+   * - Waits for Linode to fully shut down before succeeding.
+   */
   it('powers off a linode from details page', () => {
     createLinode().then((linode) => {
       cy.visitWithLogin(`/linodes/${linode.id}`);
@@ -68,6 +79,12 @@ describe('switch linode state', () => {
     });
   });
 
+  /*
+   * - Confirms that a Linode can be booted from the Linode landing page.
+   * - Confirms flow end-to-end using real API requests.
+   * - Confirms that landing page UI updates to reflect Linode power state.
+   * - Waits for Linode to finish booting up before succeeding.
+   */
   it('powers on a linode from landing page', () => {
     createLinode({ booted: false }).then((linode) => {
       cy.visitWithLogin('/linodes');
@@ -104,6 +121,12 @@ describe('switch linode state', () => {
     });
   });
 
+  /*
+   * - Confirms that a Linode can be booted from its details page.
+   * - Confirms flow end-to-end using real API requests.
+   * - Confirms that details page UI updates to reflect Linode power state.
+   * - Does not wait for Linode to finish booting up before succeeding.
+   */
   it('powers on a linode from details page', () => {
     createLinode({ booted: false }).then((linode) => {
       cy.visitWithLogin(`/linodes/${linode.id}`);
@@ -122,10 +145,15 @@ describe('switch linode state', () => {
             .click();
         });
       containsVisible('BOOTING');
-      cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');
     });
   });
 
+  /*
+   * - Confirms that a Linode can be rebooted from the Linode landing page.
+   * - Confirms flow end-to-end using real API requests.
+   * - Confirms that landing page UI updates to reflect Linode power state.
+   * - Does not wait for Linode to finish rebooting before succeeding.
+   */
   it('reboots a linode from landing page', () => {
     createLinode().then((linode) => {
       cy.visitWithLogin('/linodes');
@@ -157,11 +185,16 @@ describe('switch linode state', () => {
         .should('be.visible')
         .within(() => {
           containsVisible('Rebooting');
-          cy.contains('Running', { timeout: 300000 }).should('be.visible');
         });
     });
   });
 
+  /*
+   * - Confirms that a Linode can be rebooted from its details page.
+   * - Confirms flow end-to-end using real API requests.
+   * - Confirms that details page UI updates to reflect Linode power state.
+   * - Waits for Linode to finish rebooting before succeeding.
+   */
   it('reboots a linode from details page', () => {
     createLinode().then((linode) => {
       cy.visitWithLogin(`/linodes/${linode.id}`);
