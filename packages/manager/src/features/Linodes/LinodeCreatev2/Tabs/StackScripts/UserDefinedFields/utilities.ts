@@ -9,9 +9,9 @@ export const separateUDFsByRequiredStatus = (udfs: UserDefinedField[] = []) => {
   return udfs.reduce(
     (accum, udf) => {
       if (getIsUDFOptional(udf)) {
-        return [[...accum[0]], [...accum[1], udf]];
+        return [accum[0], [...accum[1], udf]];
       } else {
-        return [[...accum[0], udf], [...accum[1]]];
+        return [[...accum[0], udf], accum[1]];
       }
     },
     [[], []]
