@@ -100,15 +100,15 @@ export const CloudViewTimeRangeSelect = React.memo((props: Props) => {
     }
 
     if (label == 'Past 7 Days') {
-      setApiTimeDuration({ unit: 'days', value: 7 });
+      setApiTimeDuration({ unit: 'day', value: 7 });
     }
 
     if (label == 'Past 30 Days') {
-      setApiTimeDuration({ unit: 'days', value: 30 });
+      setApiTimeDuration({ unit: 'day', value: 30 });
     }
 
     if (label == 'Past Year') {
-      setApiTimeDuration({ unit: 'days', value: 365 });
+      setApiTimeDuration({ unit: 'day', value: 365 });
     }
   };
 
