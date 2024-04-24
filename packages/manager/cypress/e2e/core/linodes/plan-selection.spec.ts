@@ -125,7 +125,7 @@ describe('displays linode plans panel based on availability', () => {
     // Dedicated CPU tab
     // Should be selected/open by default
     // Should have the limited availability notice
-    // Should contains 4 plans (5 rows including the header row)
+    // Should contain 4 plans (5 rows including the header row)
     // Should have 2 plans disabled
     // Should have tooltips for the disabled plans (not more than half disabled plans in the panel)
     cy.get(linodePlansPanel).within(() => {
@@ -144,7 +144,7 @@ describe('displays linode plans panel based on availability', () => {
 
     // Shared CPU tab
     // Should have no notices
-    // Should contains 3 plans (4 rows including the header row)
+    // Should contain 3 plans (4 rows including the header row)
     // Should have 0 disabled plan
     // Should have no tooltip for the disabled plan
     fbtClick('Shared CPU');
@@ -162,7 +162,7 @@ describe('displays linode plans panel based on availability', () => {
 
     // High Memory tab
     // Should have the limited availability notice
-    // Should contains 1 plan (2 rows including the header row)
+    // Should contain 1 plan (2 rows including the header row)
     // Should have one disabled plan
     // Should have tooltip for the disabled plan (more than half disabled plans in the panel, but only one plan)
     fbtClick('High Memory');
@@ -179,7 +179,7 @@ describe('displays linode plans panel based on availability', () => {
 
     // GPU tab
     // Should have the unavailable notice
-    // Should contains 1 plan (2 rows including the header row)
+    // Should contain 1 plan (2 rows including the header row)
     // Should have its panel disabled
     // Should not have tooltip for the disabled plan (not needed on disabled panels)
     fbtClick('GPU');
@@ -197,7 +197,7 @@ describe('displays linode plans panel based on availability', () => {
     // Premium CPU
     // Should have the unavailable notice
     // Only present since we manually inject the 512 plan for it
-    // Should contains 1 plan (2 rows including the header row)
+    // Should contain 1 plan (2 rows including the header row)
     // Should have its whole panel disabled
     // Should not have tooltip for the disabled plan (not needed on disabled panels)
     fbtClick('Premium CPU');
@@ -235,7 +235,7 @@ describe('displays kubernetes plans panel based on availability', () => {
     // Dedicated CPU tab
     // Should be selected/open by default
     // Should have the limited availability notice
-    // Should contains 4 plans (5 rows including the header row)
+    // Should contain 4 plans (5 rows including the header row)
     // Should have 2 plans disabled
     // Should have tooltips for the disabled plans (not more than half disabled plans in the panel)
     // All inputs for a row should be enabled if row is enabled (only testing one row in suite)
@@ -273,7 +273,7 @@ describe('displays kubernetes plans panel based on availability', () => {
 
     // Shared CPU tab
     // Should have no notices
-    // Should contains 3 plans (4 rows including the header row)
+    // Should contain 3 plans (4 rows including the header row)
     // Should have 1 disabled plan
     // Should have tooltip for the disabled plan (not more than half disabled plans in the panel)
     fbtClick('Shared CPU');
@@ -300,7 +300,7 @@ describe('displays kubernetes plans panel based on availability', () => {
 
     // High Memory tab
     // Should have the limited availability notice
-    // Should contains 1 plan (2 rows including the header row)
+    // Should contain 1 plan (2 rows including the header row)
     // Should have one disabled plan
     // Should have tooltip for the disabled plan (more than half disabled plans in the panel, but only one plan)
     fbtClick('High Memory');
@@ -321,7 +321,7 @@ describe('displays kubernetes plans panel based on availability', () => {
     // Premium CPU
     // Should have the unavailable notice
     // Only present since we manually inject the 512 plan for it
-    // Should contains 1 plan (2 rows including the header row)
+    // Should contain 1 plan (2 rows including the header row)
     // Should have its whole panel disabled
     // Should not have tooltip for the disabled plan (not needed on disabled panels)
     fbtClick('Premium CPU');
