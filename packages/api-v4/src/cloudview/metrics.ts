@@ -19,3 +19,21 @@ export const getCloudViewMetrics = (
       Authorization: `Bearer ${jweToken}`,
     })
   );
+
+export const getCloudViewMetricsAPI = (
+  jweToken: string,
+  serviceType?: string,
+  metricsRequest?: CloudViewMetricsRequest
+) =>
+  Request<CloudViewMetricsResponse>(
+    setURL(
+      `https://aclp-us-iad.cloud-observability-dev.akadns.net/monitor/service/${encodeURIComponent(
+        serviceType!
+      )}/metrics`
+    ),
+    setMethod('POST'),
+    setData(metricsRequest),
+    setHeaders({
+      Authorization: 'Bearer ' + jweToken,
+    })
+  );

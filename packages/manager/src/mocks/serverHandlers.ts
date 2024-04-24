@@ -557,7 +557,7 @@ const cloudView = [
     // );
   }),
 
-  rest.post('*/monitor/service/*/metrics', async (req, res, ctx) => {
+  rest.post('*/monitors/service/*/metrics', async (req, res, ctx) => {
     await sleep(1000);
     const data = getMetricsResponse(req.body);
     return res(ctx.json(data));
@@ -587,13 +587,13 @@ const cloudView = [
             updated: '2023-07-12T16:08:53',
             widgets: [
               {
-                aggregate_function: 'sum',
+                aggregate_function: 'avg',
                 chart_type: 'line',
                 color: 'blue',
                 filters: [],
                 group_by: '',
                 label: 'CPU',
-                metric: '200',
+                metric: 'system_memory_usage_bytes',
                 namespace_id: 1,
                 region_id: 1,
                 service_type: 'ACLB',
@@ -602,13 +602,13 @@ const cloudView = [
                 y_label: 'count',
               },
               {
-                aggregate_function: 'sum',
+                aggregate_function: 'avg',
                 chart_type: 'line',
                 color: 'red',
                 filters: [],
                 group_by: '',
                 label: 'HTTP_400',
-                metric: '400',
+                metric: 'system_network_io_bytes_total',
                 namespace_id: 1,
                 region_id: 1,
                 service_type: 'ACLB',
@@ -617,13 +617,13 @@ const cloudView = [
                 y_label: 'count',
               },
               {
-                aggregate_function: 'sum',
+                aggregate_function: 'avg',
                 chart_type: 'line',
                 color: 'yellow',
                 filters: [],
                 group_by: '',
                 label: 'HTTP_500',
-                metric: '500',
+                metric: 'system_cpu_utilization_ratio',
                 namespace_id: 1,
                 region_id: 1,
                 service_type: 'ACLB',
@@ -632,13 +632,13 @@ const cloudView = [
                 y_label: 'count',
               },
               {
-                aggregate_function: 'sum',
+                aggregate_function: 'avg',
                 chart_type: 'line',
                 color: 'green',
                 filters: [],
                 group_by: '',
                 label: 'Network',
-                metric: '401',
+                metric: 'system_disk_operations_total',
                 namespace_id: 1,
                 region_id: 1,
                 service_type: 'ACLB',
@@ -725,6 +725,60 @@ const cloudView = [
               },
             ],
           },
+          {
+            created: 'Thu, 18 Apr 2024 05:31:58 GMT',
+            id: 2,
+            label: '1stLinodeDashboad',
+            service_type: 'linode',
+            type: 'standard',
+            updated: null,
+            widgets: [
+              {
+                aggregate_function: 'avg',
+                chart_type: 'line',
+                color: 'blue',
+                label: 'CPU utilization ratio',
+                metric: 'system_cpu_utilization_ratio',
+                service_type: 'linode',
+                size: 12,
+                unit: 'percent',
+                y_label: 'system_cpu_utilization_ratio',
+              },
+              {
+                aggregate_function: 'avg',
+                chart_type: 'line',
+                color: 'red',
+                label: 'Bytes of memory in use',
+                metric: 'system_memory_usage_bytes',
+                service_type: 'linode',
+                size: 12,
+                unit: 'byte',
+                y_label: 'system_memory_usage_bytes',
+              },
+              {
+                aggregate_function: 'avg',
+                chart_type: 'line',
+                color: 'green',
+                label: 'Number of bytes transmitted and received',
+                metric: 'system_network_io_bytes_total',
+                service_type: 'linode',
+                size: 6,
+                unit: 'bits_per_second',
+                y_label: 'system_network_io_bytes_total',
+              },
+              {
+                aggregate_function: 'avg',
+                chart_type: 'line',
+                color: 'yellow',
+                label: 'Disk operations count',
+                metric: 'system_disk_operations_total',
+                service_type: 'linode',
+                size: 6,
+                unit: 'rate',
+                y_label: 'system_disk_operations_total',
+              },
+            ],
+          },
         ])
       )
     );
@@ -752,7 +806,7 @@ const cloudView = [
             {
               aggregate_function: 'sum',
               chart_type: 'line',
-              color: 'lightred',
+              color: 'blue',
               filters: [],
               group_by: '',
               label: 'HTTP_200',
@@ -766,7 +820,7 @@ const cloudView = [
             {
               aggregate_function: 'sum',
               chart_type: 'line',
-              color: 'skyblue',
+              color: 'red',
               filters: [],
               group_by: '',
               label: 'HTTP_400',
@@ -780,7 +834,7 @@ const cloudView = [
             {
               aggregate_function: 'sum',
               chart_type: 'line',
-              color: 'skyblue',
+              color: 'yellow',
               filters: [],
               group_by: '',
               label: 'HTTP_500',
@@ -794,7 +848,7 @@ const cloudView = [
             {
               aggregate_function: 'sum',
               chart_type: 'line',
-              color: 'lightgreen',
+              color: 'green',
               filters: [],
               group_by: '',
               label: 'HTTP_401',
@@ -867,10 +921,10 @@ const cloudView = [
       })
     );
   }),
-  rest.post('*/monitor/service/linode/token', (req, res, ctx) => {
+  rest.post('*/monitorss/service/linode/token', (req, res, ctx) => {
     return res(ctx.json({ token: 'testlinodetoken' }));
   }),
-  rest.post('*/monitor/service/aclb/token', (req, res, ctx) => {
+  rest.post('*/monitorss/service/aclb/token', (req, res, ctx) => {
     return res(ctx.json({ token: 'testaclbtoken' }));
   }),
 ];
@@ -1114,7 +1168,7 @@ export const handlers = [
         // return res(ctx.json(makeResourcePage(filteredLinodes)));
       }
     }
-    //Use these Linode IDs to test using actual APIs
+    // Use these Linode IDs to test using actual APIs
     return res(
       ctx.json(
         makeResourcePage([
@@ -1137,7 +1191,7 @@ export const handlers = [
             created: '2020-01-01',
             group: '',
             hypervisor: 'kvm',
-            id: 77579,
+            id: 57352521,
             image: 'linode/debian10',
             ipv4: ['000.000.000.000'],
             ipv6: '2600:3c00::f03c:92ff:fee2:6c40/64',

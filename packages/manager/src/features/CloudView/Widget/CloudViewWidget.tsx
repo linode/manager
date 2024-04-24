@@ -43,7 +43,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
 
   const [data, setData] = React.useState<Array<any>>([]);
 
-  const [legendRows] = React.useState<any[]>([]);
+  const [legendRows, setLegendRows] = React.useState<any[]>([]);
 
   const [error, setError] = React.useState<boolean>(false);
 
@@ -70,23 +70,23 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     request.aggregate_function = widget.aggregate_function;
     request.group_by = widget.group_by;
     if (props.globalFilters) {
-      request.instance_id = props.globalFilters.resource!;
+      request.resource_id = props.globalFilters.resource!;
     } else {
-      request.instance_id = widget.resource_id;
+      request.resource_id = widget.resource_id;
     }
     request.metric = widget.metric!;
-    request.duration = props.globalFilters
+    request.time_duration = props.globalFilters
       ? props.globalFilters.duration!
       : widget.time_duration;
-    request.step = props.globalFilters
+    request.time_granularity = props.globalFilters
       ? props.globalFilters.step!
       : widget.time_granularity; // todo, move to widgets
 
-    if (props.globalFilters) {
-      // this has been kept because for mocking data, we will remove this
-      request.startTime = props.globalFilters?.timeRange.start;
-      request.endTime = props.globalFilters?.timeRange.end;
-    }
+    // if (props.globalFilters) {
+    //   // this has been kept because for mocking data, we will remove this
+    //   request.startTime = props.globalFilters?.timeRange.start;
+    //   request.endTime = props.globalFilters?.timeRange.end;
+    // }
     return request;
   };
 
@@ -124,48 +124,45 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
    */
   React.useEffect(() => {
     const dimensions: any[] = [];
+    const legendRowsData: any[] = [];
 
     // for now we will use this guy, but once we decide how to work with coloring, it should be dynamic
     const colors: string[] = COLOR_MAP.get(props.widget.color)!;
 
     if (status == 'success') {
-      let index = 0;
+      const index = 0;
 
       metricsList.data.result.forEach((graphData) => {
         // todo, move it to utils at a widget level
         if (graphData == undefined || graphData == null) {
           return;
         }
+        const color = colors[index];
         const dimension = {
-          backgroundColor: colors[index],
-          borderColor: colors[index++],
+          backgroundColor: color,
+          borderColor: color,
           data: seriesDataFormatter(
             graphData.values,
-            props.globalFilters && props.globalFilters.timeRange
-              ? props.globalFilters.timeRange.start
-              : 0,
-            props.globalFilters && props.globalFilters.timeRange
-              ? props.globalFilters.timeRange.end
-              : 0
+            graphData.values[0][0],
+            graphData.values[graphData.values.length - 1][0]
           ),
-          label: graphData.metric.state,
+          label: props.widget.metric,
         };
 
         // construct a legend row with the dimension
         const legendRow = {
           data: getMetrics(dimension.data as number[][]),
-          // format: widget.unit == '%' ? formatPercentage : formatNumber,
           format: (value: number) => tooltipValueFormatter(value, widget.unit),
-          legendColor: dimension.backgroundColor,
-          legendTitle: dimension.label,
+          legendColor: color,
+          legendTitle: props.widget.metric,
         };
-
-        legendRows.push(legendRow);
+        legendRowsData.push(legendRow);
         dimensions.push(dimension);
       });
 
       // chart dimensions
       setData(dimensions);
+      setLegendRows(legendRowsData);
     }
 
     if (status == 'error') {

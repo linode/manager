@@ -22,6 +22,7 @@ export const ZoomIcon = (props: ZoomIconProperties) => {
         />
       );
     }
+    
 
     return (
       <ZoomOutMap

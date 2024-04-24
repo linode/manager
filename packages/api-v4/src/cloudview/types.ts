@@ -62,15 +62,15 @@ export interface Filters {
 
 export interface CloudViewMetricsRequest {
   metric: string; // done
-  instance_id: string[]; // this comes from widget itself
   filters: Filter[]; // widget level
   aggregate_function: string; // come from widget
   group_by: string; // come from widget
-  duration: TimeDuration; // come from dashboard
-  step: TimeGranularity; // comes from dashboard
+  time_duration: TimeDuration; // come from dashboard
+  time_granularity: TimeGranularity; // comes from dashboard
   counter: number;
   startTime: number;
   endTime: number;
+  resource_id: string[];
 }
 
 export interface CloudViewMetricsResponse {

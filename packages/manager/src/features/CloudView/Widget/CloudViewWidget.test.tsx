@@ -82,8 +82,7 @@ describe('Cloud View Graph Widget', () => {
         handleWidgetChange={handleWidgetChange}
         metricDefinition={metricDefinitions}
         unit={'%'}
-        widget={widget}
-      />
+        widget={widget} authToken={''}      />
     );
 
     expect(getByTestId('ZoomOutMapIcon')).toBeInTheDocument();
@@ -142,8 +141,7 @@ describe('Cloud View Graph Widget', () => {
         handleWidgetChange={handleWidgetChange}
         metricDefinition={metricDefinitions}
         unit={'%'}
-        widget={widget}
-      />
+        widget={widget} authToken={''}      />
     );
 
     expect(getByTestId(circleProgress)).toBeInTheDocument();
@@ -191,8 +189,7 @@ describe('Cloud View Graph Widget', () => {
         handleWidgetChange={handleWidgetChange}
         metricDefinition={metricDefinitions}
         unit={'%'}
-        widget={widget}
-      />
+        widget={widget} authToken={''}      />
     );
 
     expect(getByTestId('ErrorOutlineIcon')).toBeInTheDocument();
@@ -236,8 +233,7 @@ describe('Cloud View Graph Widget', () => {
           handleWidgetChange={handleWidgetChange}
           metricDefinition={metricDefinitions}
           unit={'%'}
-          widget={widget}
-        />
+          widget={widget} authToken={''}        />
       );
 
       expect(getByTestId('ErrorOutlineIcon')).toBeInTheDocument();
