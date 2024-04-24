@@ -21,6 +21,7 @@ import { Firewall } from './Firewall';
 import { Plan } from './Plan';
 import { Region } from './Region';
 import { Summary } from './Summary';
+import { Backups } from './Tabs/Backups/Backups';
 import { Distributions } from './Tabs/Distributions';
 import { Images } from './Tabs/Images';
 import { StackScripts } from './Tabs/StackScripts/StackScripts';
@@ -112,7 +113,9 @@ export const LinodeCreatev2 = () => {
               <SafeTabPanel index={3}>
                 <Images />
               </SafeTabPanel>
-              <SafeTabPanel index={4}>Bckups</SafeTabPanel>
+              <SafeTabPanel index={4}>
+                <Backups />
+              </SafeTabPanel>
               <SafeTabPanel index={5}>Clone Linode</SafeTabPanel>
             </TabPanels>
           </Tabs>
