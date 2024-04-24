@@ -852,7 +852,7 @@ export const oneClickApps: OCA[] = [
     },
     description: `Secure, stable, and free alternative to popular video conferencing services. Use built-in features to limit meeting access with passwords or stream on YouTube so anyone can attend.`,
     logo_url: 'jitsi.svg',
-    name: 'Jitsi Cluster',
+    name: 'Jitsi',
     related_guides: [
       {
         href:
@@ -874,7 +874,7 @@ export const oneClickApps: OCA[] = [
     },
     description: `Secure, stable, and free alternative to popular video conferencing services. This app deploys four networked Jitsi nodes.`,
     logo_url: 'jitsi.svg',
-    name: 'Jitsi',
+    name: 'Jitsi Cluster',
     related_guides: [
       {
         href:
