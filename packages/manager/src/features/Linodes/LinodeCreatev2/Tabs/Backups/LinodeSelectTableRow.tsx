@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { FormControlLabel } from 'src/components/FormControlLabel';
+import { Radio } from 'src/components/Radio/Radio';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -9,14 +11,19 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { capitalize } from 'src/utilities/capitalize';
 
+import { useLinodeCreateQueryParams } from '../../utilities';
+
 import type { Linode } from '@linode/api-v4';
 
 interface Props {
   linode: Linode;
+  onSelect: () => void;
 }
 
 export const LinodeSelectTableRow = (props: Props) => {
   const { linode } = props;
+
+  const { params, updateParams } = useLinodeCreateQueryParams();
 
   const { data: image } = useImageQuery(
     linode.image ?? '',
@@ -31,7 +38,14 @@ export const LinodeSelectTableRow = (props: Props) => {
 
   return (
     <TableRow key={linode.label}>
-      <TableCell>{linode.label}</TableCell>
+      <TableCell>
+        <FormControlLabel
+          checked={linode.id === params.linodeID}
+          control={<Radio />}
+          label={linode.label}
+          onChange={() => updateParams({ linodeID: String(linode.id) })}
+        />
+      </TableCell>
       <TableCell statusCell>
         <StatusIcon status={getLinodeIconStatus(linode.status)} />
         {capitalize(linode.status)}

@@ -16,6 +16,7 @@ import type { Resolver } from 'react-hook-form';
  */
 interface LinodeCreateQueryParams {
   imageID: string | undefined;
+  linodeID: string | undefined;
   stackScriptID: string | undefined;
   subtype: StackScriptTabType | undefined;
   type: LinodeCreateType | undefined;
@@ -59,6 +60,7 @@ export const useLinodeCreateQueryParams = () => {
 
   const params = {
     imageID: rawParams.imageID as string | undefined,
+    linodeID: rawParams.linodeID ? Number(rawParams.linodeID) : undefined,
     stackScriptID: rawParams.stackScriptID
       ? Number(rawParams.stackScriptID)
       : undefined,

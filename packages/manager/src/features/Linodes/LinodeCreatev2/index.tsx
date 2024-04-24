@@ -21,7 +21,6 @@ import { Firewall } from './Firewall';
 import { Plan } from './Plan';
 import { Region } from './Region';
 import { Summary } from './Summary';
-import { Backups } from './Tabs/Backups/Backups';
 import { Distributions } from './Tabs/Distributions';
 import { Images } from './Tabs/Images';
 import { StackScripts } from './Tabs/StackScripts/StackScripts';
@@ -40,6 +39,7 @@ import { VPC } from './VPC/VPC';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { SubmitHandler } from 'react-hook-form';
+import { Backups } from './Tabs/Backups/Backups';
 
 export const LinodeCreatev2 = () => {
   const methods = useForm<CreateLinodeRequest>({
