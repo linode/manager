@@ -181,8 +181,8 @@ export const PlansPanel = (props: PlansPanelProps) => {
               isCreate={isCreate}
               linodeID={linodeID}
               onSelect={onSelect}
-              plans={plansForThisLinodeTypeClass}
               planType={plan}
+              plans={plansForThisLinodeTypeClass}
               selectedDiskSize={selectedDiskSize}
               selectedId={selectedId}
               selectedRegionId={selectedRegionID}

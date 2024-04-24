@@ -9,6 +9,7 @@ import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { Typography } from 'src/components/Typography';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
@@ -94,9 +95,36 @@ export const PlanContainer = (props: Props) => {
   const shouldDisplayNoRegionSelectedMessage =
     !selectedRegionId && !isDatabaseCreateFlow && !isDatabaseResizeFlow;
 
+  interface PlanSelectionFilterOptionsTable {
+    filter?: (plan: TypeWithAvailability) => boolean;
+    header?: string;
+  }
+  interface PlanSelectionFilterOptions {
+    planType: LinodeTypeClass;
+    tables: PlanSelectionFilterOptionsTable[];
+  }
+
+  const planFilters: PlanSelectionFilterOptions[] = [
+    {
+      planType: 'gpu',
+      tables: [
+        {
+          filter: (plan: TypeWithAvailability) => plan.label.includes('Ada'),
+          header: 'NVIDIA RTX 4000 Ada',
+        },
+        {
+          filter: (plan: TypeWithAvailability) => !plan.label.includes('Ada'),
+          header: 'NVIDIA Quadro RTXz 6000',
+        },
+      ],
+    },
+  ];
+
   const renderPlanSelection = React.useCallback(
-    (filter?: ((plan: TypeWithAvailability) => boolean) | undefined) => {
-      const _plans = filter ? plans.filter(filter) : plans;
+    (filterOptions?: PlanSelectionFilterOptionsTable) => {
+      const _plans = filterOptions?.filter
+        ? plans.filter(filterOptions.filter)
+        : plans;
 
       return _plans.map((plan, id) => {
         const isPlanDisabled = allDisabledPlans.some(
@@ -136,6 +164,7 @@ export const PlanContainer = (props: Props) => {
         );
       });
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       allDisabledPlans,
       disabledPlanTypesToolTipText,
@@ -154,15 +183,14 @@ export const PlanContainer = (props: Props) => {
     ]
   );
 
-  const PlanSelectionTable = ({
-    filter,
-  }: {
-    filter?: (plan: TypeWithAvailability) => boolean;
-  }) => (
+  const PlanSelectionTable = (
+    filterOptions?: PlanSelectionFilterOptionsTable
+  ) => (
     <StyledTable aria-label="List of Linode Plans" spacingBottom={16}>
       <TableHead>
         <TableRow>
           {tableCells.map(({ cellName, center, noWrap, testId }) => {
+            const isPlanCell = cellName === 'Plan';
             const attributeValue = `${testId}-header`;
             if (
               (!shouldShowTransfer && testId === 'transfer') ||
@@ -174,11 +202,13 @@ export const PlanContainer = (props: Props) => {
               <StyledTableCell
                 center={center}
                 data-qa={attributeValue}
-                isPlanCell={cellName === 'Plan'}
+                isPlanCell={isPlanCell}
                 key={testId}
                 noWrap={noWrap}
               >
-                {cellName}
+                {isPlanCell && filterOptions?.header
+                  ? filterOptions?.header
+                  : cellName}
               </StyledTableCell>
             );
           })}
@@ -191,7 +221,7 @@ export const PlanContainer = (props: Props) => {
             message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
           />
         ) : (
-          renderPlanSelection(filter)
+          renderPlanSelection(filterOptions)
         )}
       </TableBody>
     </StyledTable>
@@ -208,25 +238,39 @@ export const PlanContainer = (props: Props) => {
             text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
             variant="info"
           />
+        ) : selectedRegionId ? (
+          planFilters.map((filter) =>
+            planType === filter.planType
+              ? filter.tables.map((table) => [
+                  <Grid key={table.header} xs={12}>
+                    <Typography variant="h3">{table.header}</Typography>
+                  </Grid>,
+                  renderPlanSelection({
+                    filter: table.filter,
+                  }),
+                ])
+              : renderPlanSelection()
+          )
         ) : (
           renderPlanSelection()
         )}
       </Hidden>
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <Grid xs={12}>
-          {planType === 'gpu' && selectedRegionId ? (
-            <>
-              <PlanSelectionTable
-                filter={(plan: TypeWithAvailability) => {
-                  return plan.label.includes('Ada');
-                }}
-              />
-              <PlanSelectionTable
-                filter={(plan: TypeWithAvailability) =>
-                  !plan.label.includes('Ada')
-                }
-              />
-            </>
+          {selectedRegionId ? (
+            planFilters.map((filter) =>
+              planType === filter.planType ? (
+                filter.tables.map((table, idx) => (
+                  <PlanSelectionTable
+                    filter={table.filter}
+                    header={table.header}
+                    key={`plan-filter-${idx}`}
+                  />
+                ))
+              ) : (
+                <PlanSelectionTable key={planType} />
+              )
+            )
           ) : (
             <PlanSelectionTable />
           )}
