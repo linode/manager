@@ -374,3 +374,39 @@ export const mockMigrateLinode = (
     {}
   );
 };
+
+/**
+ * Intercepts GET request to fetch Linode kernels and mocks response.
+ *
+ * @param mockKernels - Array of Kernel objects with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLinodeKernels = (
+  mockKernels: Kernel[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('linode/kernels*'),
+    paginateResponse(mockKernels)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch a Linode kernel and mocks response.
+ *
+ * @param kernelId - ID of Kernel for which to mock response.
+ * @param mockKernel - Kernel object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLinodeKernel = (
+  kernelId: string,
+  mockKernel: Kernel
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/kernels/${kernelId}`),
+    makeResponse(mockKernel)
+  );
+};
