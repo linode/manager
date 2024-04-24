@@ -33,7 +33,7 @@ export const LinodeSelectTable = () => {
     // backups: { enabled: true }, womp womp, we can't filter on keys of objects
   };
 
-  const { data: linodes, error, isLoading, isFetching } = useLinodesQuery(
+  const { data: linodes, isFetching } = useLinodesQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,

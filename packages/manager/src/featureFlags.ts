@@ -65,6 +65,7 @@ export interface Flags {
   linodeCloneUiChanges: boolean;
   linodeCreateRefactor: boolean;
   linodeCreateWithFirewall: boolean;
+  linodeDiskEncryption: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;
   objMultiCluster: boolean;

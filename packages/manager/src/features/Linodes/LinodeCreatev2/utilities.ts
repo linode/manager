@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { getStackScript } from '@linode/api-v4';
 import { CreateLinodeSchema } from '@linode/validation';
 import { useHistory } from 'react-router-dom';
 
@@ -10,6 +11,7 @@ import type { LinodeCreateType } from '../LinodesCreate/types';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
 import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
 import type { Resolver } from 'react-hook-form';
+import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
 /**
  * This interface is used to type the query params on the Linode Create flow.
@@ -118,6 +120,10 @@ export const getLinodeCreatePayload = (
     values.metadata = undefined;
   }
 
+  if (values.placement_group?.id === undefined) {
+    values.placement_group = undefined;
+  }
+
   values.interfaces = getInterfacesPayload(
     values.interfaces,
     Boolean(values.private_ip)
@@ -206,6 +212,10 @@ export const defaultValues = async (): Promise<CreateLinodeRequest> => {
     ? Number(queryParams.stackScriptID)
     : undefined;
 
+  const stackscript = stackScriptID
+    ? await getStackScript(stackScriptID)
+    : null;
+
   const backupID = queryParams.backupID
     ? Number(queryParams.backupID)
     : undefined;
@@ -221,6 +231,9 @@ export const defaultValues = async (): Promise<CreateLinodeRequest> => {
       defaultPublicInterface,
     ],
     region: '',
+    stackscript_data: stackscript?.user_defined_fields
+      ? getDefaultUDFData(stackscript.user_defined_fields)
+      : undefined,
     stackscript_id: stackScriptID,
     type: '',
   };
