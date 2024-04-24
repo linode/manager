@@ -50,7 +50,7 @@ import {
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { vlanQueries } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes';
-import { vpcQueryKey } from 'src/queries/vpcs';
+import { vpcQueries } from 'src/queries/vpcs/vpcs';
 import {
   DevicesAsStrings,
   createDevicesFromStrings,
@@ -397,12 +397,14 @@ export const LinodeConfigDialog = (props: Props) => {
       }
 
       // Ensure VPC query data is up-to-date
-      if (
-        configData.interfaces?.some(
-          (thisInterface) => thisInterface.purpose === 'vpc'
-        )
-      ) {
-        queryClient.invalidateQueries([vpcQueryKey]);
+      const vpcId = configData.interfaces?.find(
+        (thisInterface) => thisInterface.purpose === 'vpc'
+      )?.vpc_id;
+
+      if (vpcId) {
+        queryClient.invalidateQueries(vpcQueries.all.queryKey);
+        queryClient.invalidateQueries(vpcQueries.paginated._def);
+        queryClient.invalidateQueries(vpcQueries.vpc(vpcId).queryKey);
       }
 
       enqueueSnackbar(

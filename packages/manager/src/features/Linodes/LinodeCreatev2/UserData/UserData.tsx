@@ -80,22 +80,24 @@ export const UserData = () => {
       <Controller
         render={({ field, fieldState }) => (
           <TextField
-            onBlur={(e) =>
+            onBlur={(e) => {
+              field.onBlur();
               checkFormat({
                 hasInputValueChanged: false,
                 userData: e.target.value,
-              })
-            }
+              });
+            }}
             onChange={(e) => {
+              field.onChange(e);
               checkFormat({
                 hasInputValueChanged: true,
                 userData: e.target.value,
               });
-              field.onChange(e);
             }}
             disabled={isLinodeCreateRestricted}
             errorText={fieldState.error?.message}
             expand
+            inputRef={field.ref}
             label="User Data"
             labelTooltipText="Compatible formats include cloud-config data and executable scripts."
             multiline

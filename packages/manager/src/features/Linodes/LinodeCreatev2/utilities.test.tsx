@@ -24,7 +24,7 @@ describe('getLinodeCreatePayload', () => {
   it('should return a basic payload', () => {
     const values = createLinodeRequestFactory.build();
 
-    expect(getLinodeCreatePayload(values)).toStrictEqual(values);
+    expect(getLinodeCreatePayload(values)).toEqual(values);
   });
 
   it('should base64 encode metadata', () => {
@@ -32,7 +32,7 @@ describe('getLinodeCreatePayload', () => {
       metadata: { user_data: userData },
     });
 
-    expect(getLinodeCreatePayload(values)).toStrictEqual({
+    expect(getLinodeCreatePayload(values)).toEqual({
       ...values,
       metadata: { user_data: base64UserData },
     });

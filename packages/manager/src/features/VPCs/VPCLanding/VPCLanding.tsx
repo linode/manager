@@ -16,7 +16,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useVPCsQuery } from 'src/queries/vpcs';
+import { useVPCsQuery } from 'src/queries/vpcs/vpcs';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { VPCDeleteDialog } from './VPCDeleteDialog';
