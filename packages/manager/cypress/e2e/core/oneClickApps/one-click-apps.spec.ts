@@ -72,21 +72,23 @@ describe('OneClick Apps (OCA)', () => {
         });
       });
 
-      // Check drawer content for one OCA candidate
-      const candidate = trimmedApps[0].label;
+      // Check drawer content for one OCA candidate.
+      const candidateApp = trimmedApps[0];
+      const candidateLabel = handleAppLabel(trimmedApps[0]).label;
+
       const stackScriptCandidate = cy
-        .get(`[data-qa-selection-card-info="${candidate}"]`)
+        .get(`[data-qa-selection-card-info="${candidateLabel}"]`)
         .first();
       stackScriptCandidate.should('exist').click();
 
       const app: OCA | undefined = mapStackScriptLabelToOCA({
         oneClickApps,
-        stackScriptLabel: candidate,
+        stackScriptLabel: candidateApp.label,
       });
 
       if (!app) {
         throw new Error(
-          `Failed to map StackScript label '${candidate}' to a One-Click App`
+          `Failed to map StackScript label '${candidateLabel}' to a One-Click App`
         );
       }
 
@@ -106,13 +108,13 @@ describe('OneClick Apps (OCA)', () => {
       const initialNumberOfApps = trimmedApps.length;
       cy.findByPlaceholderText('Search for app name')
         .should('exist')
-        .type(candidate);
+        .type(candidateLabel);
       cy.findByTestId('one-click-apps-container').within(() => {
         cy.get('[data-qa-selection-card="true"]').should(
           'have.length.below',
           initialNumberOfApps
         );
-        cy.get(`[data-qa-selection-card-info="${candidate}"]`).should(
+        cy.get(`[data-qa-selection-card-info="${candidateLabel}"]`).should(
           'be.visible'
         );
       });
