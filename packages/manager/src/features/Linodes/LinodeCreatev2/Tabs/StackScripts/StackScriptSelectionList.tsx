@@ -29,6 +29,7 @@ import {
 
 import type { StackScriptTabType } from './utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
+import { getDefaultUDFData } from './UserDefinedFields/utilities';
 
 interface Props {
   type: StackScriptTabType;
@@ -98,7 +99,6 @@ export const StackScriptSelectionList = ({ type }: Props) => {
                 disabled
                 isSelected={field.value === stackscript.id}
                 onOpenDetails={() => setSelectedStackScriptId(stackscript.id)}
-                onSelect={() => field.onChange(stackscript.id)}
                 stackscript={stackscript}
               />
             )}
@@ -140,6 +140,10 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             <StackScriptSelectionRow
               onSelect={() => {
                 setValue('image', null);
+                setValue(
+                  'stackscript_data',
+                  getDefaultUDFData(stackscript.user_defined_fields)
+                );
                 field.onChange(stackscript.id);
               }}
               isSelected={field.value === stackscript.id}
