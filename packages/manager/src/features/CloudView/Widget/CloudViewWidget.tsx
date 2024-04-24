@@ -175,7 +175,13 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
   }, [status, metricsList]);
 
   if (isLoading || (status == 'success' && data.length == 0)) {
-    return <CircleProgress />;
+    return (<Grid xs={widget.size}>
+      <Paper style={{ height: '98%', width: '100%' }}>
+      <div style={{ margin: '1%' }}>
+      <CircleProgress />
+      </div>
+      </Paper>
+      </Grid>);
   }
 
   const handleZoomToggle = (zoomInValue: boolean) => {
