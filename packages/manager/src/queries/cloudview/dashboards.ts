@@ -44,6 +44,7 @@ export const useCloudViewJWEtokenQuery = (
     {
       enabled: runQuery,
       keepPreviousData: true,
+      refetchOnWindowFocus: false,
     }
   );
 };

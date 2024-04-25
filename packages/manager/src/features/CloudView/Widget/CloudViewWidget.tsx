@@ -251,7 +251,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
             subtitle={props.unit}
             suggestedMax={10}
             timezone={timezone}
-            title={props.widget.label.toUpperCase()}
+            title={props.widget.label}
             unit={props.unit}
           />
         </div>

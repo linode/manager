@@ -5,18 +5,20 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import CloudViewIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { useCloudViewJWEtokenQuery } from 'src/queries/cloudview/dashboards';
+import {
+  useLinodeResourcesQuery,
+  useLoadBalancerResourcesQuery,
+} from 'src/queries/cloudview/resources';
 
 import { FiltersObject } from '../Models/GlobalFilterProperties';
 import {
   CloudViewWidget,
   CloudViewWidgetProperties,
 } from '../Widget/CloudViewWidget';
-import { useCloudViewJWEtokenQuery } from 'src/queries/cloudview/dashboards';
-import {
-  useLinodeResourcesQuery,
-  useLoadBalancerResourcesQuery,
-} from 'src/queries/cloudview/resources';
+import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 
 export interface DashboardProperties {
   dashbaord: Dashboard; // this will be done in upcoming sprint
@@ -48,7 +50,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     props?.dashbaord?.service_type === 'aclb'
   ));
 
-  const { data: jweToken } = useCloudViewJWEtokenQuery(
+  const { data: jweToken, isError, isSuccess } = useCloudViewJWEtokenQuery(
     props?.dashbaord?.service_type,
     getResourceIDsPayload(),
     resourceOptions[props?.dashbaord?.service_type] ? true : false
@@ -71,6 +73,20 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.dashboardFilters]); // execute every time when there is dashboardFilters change
+
+  const StyledErrorState = styled(Placeholder, {
+    label: 'StyledErrorState',
+  })({
+    height: '100%',
+  });
+
+  if (isError) {
+    return (
+      <Paper style={{ height: '100%' }}>
+        <StyledErrorState title="Failed to get jwe token"/>
+      </Paper>
+    );
+  }
 
   const getCloudViewGraphProperties = (widget: Widgets) => {
     const graphProp: CloudViewWidgetProperties = {} as CloudViewWidgetProperties;
