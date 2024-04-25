@@ -27,6 +27,7 @@ import { Images } from './Tabs/Images';
 import { StackScripts } from './Tabs/StackScripts/StackScripts';
 import { UserData } from './UserData/UserData';
 import {
+  LinodeCreateFormValues,
   defaultValues,
   defaultValuesMap,
   getLinodeCreatePayload,
@@ -38,11 +39,10 @@ import {
 import { VLAN } from './VLAN';
 import { VPC } from './VPC/VPC';
 
-import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreatev2 = () => {
-  const methods = useForm<CreateLinodeRequest>({
+  const methods = useForm<LinodeCreateFormValues>({
     defaultValues,
     mode: 'onBlur',
     resolver,
@@ -52,7 +52,7 @@ export const LinodeCreatev2 = () => {
 
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
 
-  const onSubmit: SubmitHandler<CreateLinodeRequest> = async (values) => {
+  const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
     const payload = getLinodeCreatePayload(values);
     alert(JSON.stringify(payload, null, 2));
     try {

@@ -1,6 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React, { useState } from 'react';
+import { useWatch } from 'react-hook-form';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -21,7 +22,10 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
 import { isNumeric } from 'src/utilities/stringUtils';
 
-import { useLinodeCreateQueryParams } from '../../utilities';
+import {
+  LinodeCreateFormValues,
+  useLinodeCreateQueryParams,
+} from '../../utilities';
 import { LinodeSelectTableRow } from './LinodeSelectTableRow';
 
 import type { Theme } from '@mui/material';
@@ -31,24 +35,29 @@ export const LinodeSelectTable = () => {
     theme.breakpoints.up('md')
   );
 
+  const linode = useWatch<LinodeCreateFormValues, 'linode'>({ name: 'linode' });
+
   const { params, updateParams } = useLinodeCreateQueryParams();
 
-  const [query, setQuery] = useState(
-    params.linodeID !== undefined ? String(params.linodeID) : ''
+  const [preselectedLinodeId, setPreselectedLinodeId] = useState(
+    params.linodeID
   );
+  const [query, setQuery] = useState(linode?.label ?? '');
 
   const pagination = usePagination();
   const order = useOrder();
 
-  const filter = {
-    '+or': [
-      { label: { '+contains': query } },
-      ...(isNumeric(query) ? [{ id: Number(query) }] : []),
-    ],
-    '+order': order.order,
-    '+order_by': order.orderBy,
-    // backups: { enabled: true }, womp womp! We can't filter on values within objects
-  };
+  const filter = preselectedLinodeId
+    ? { id: preselectedLinodeId }
+    : {
+        '+or': [
+          { label: { '+contains': query } },
+          ...(isNumeric(query) ? [{ id: Number(query) }] : []),
+        ],
+        '+order': order.order,
+        '+order_by': order.orderBy,
+        // backups: { enabled: true }, womp womp! We can't filter on values within objects
+      };
 
   const { data, error, isFetching, isLoading } = useLinodesQuery(
     {
@@ -62,8 +71,13 @@ export const LinodeSelectTable = () => {
     <Stack pt={1} spacing={2}>
       <DebouncedSearchTextField
         customValue={{
-          onChange: (value) => setQuery(value ?? ''),
-          value: query,
+          onChange: (value) => {
+            if (!value && preselectedLinodeId) {
+              setPreselectedLinodeId(undefined);
+            }
+            setQuery(value ?? '');
+          },
+          value: preselectedLinodeId ? linode?.label ?? '' : query,
         }}
         clearable
         hideLabel
@@ -71,7 +85,7 @@ export const LinodeSelectTable = () => {
         label="Search"
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search"
-        value={query}
+        // value={query}
       />
       {matchesMdUp ? (
         <>

@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { getLinode, getStackScript } from '@linode/api-v4';
 import { CreateLinodeSchema } from '@linode/validation';
+import { omit } from 'lodash';
 import { useHistory } from 'react-router-dom';
 
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -10,7 +11,11 @@ import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utiliti
 
 import type { LinodeCreateType } from '../LinodesCreate/types';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
-import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
+import type {
+  CreateLinodeRequest,
+  InterfacePayload,
+  Linode,
+} from '@linode/api-v4';
 import type { Resolver } from 'react-hook-form';
 
 /**
@@ -116,9 +121,9 @@ export const tabs: LinodeCreateType[] = [
  * @returns final Linode Create payload to be sent to the API
  */
 export const getLinodeCreatePayload = (
-  payload: CreateLinodeRequest
+  formValues: LinodeCreateFormValues
 ): CreateLinodeRequest => {
-  const values = { ...payload };
+  const values = omit(formValues, ['linode']);
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
   }
@@ -206,13 +211,17 @@ const defaultPublicInterface = {
   purpose: 'public',
 } as const;
 
+export interface LinodeCreateFormValues extends CreateLinodeRequest {
+  linode?: Linode | null;
+}
+
 /**
  * This function initializes the Linode Create flow form
  * when the form mounts.
  *
  * The default values are dependent on the query params present.
  */
-export const defaultValues = async (): Promise<CreateLinodeRequest> => {
+export const defaultValues = async (): Promise<LinodeCreateFormValues> => {
   const queryParams = getQueryParamsFromQueryString(window.location.search);
   const params = getParsedLinodeCreateQueryParams(queryParams);
 
@@ -235,6 +244,7 @@ export const defaultValues = async (): Promise<CreateLinodeRequest> => {
       defaultVLANInterface,
       defaultPublicInterface,
     ],
+    linode,
     region: linode ? linode.region : '',
     stackscript_data: stackscript?.user_defined_fields
       ? getDefaultUDFData(stackscript.user_defined_fields)
@@ -295,12 +305,14 @@ export const defaultValuesMap: Record<LinodeCreateType, CreateLinodeRequest> = {
  * Unfortunately, we have to wrap `yupResolver` so that we can transform the payload
  * using `getLinodeCreatePayload` before validation happens.
  */
-export const resolver: Resolver<CreateLinodeRequest> = async (
+export const resolver: Resolver<LinodeCreateFormValues> = async (
   values,
   context,
   options
 ) => {
-  const transformedValues = getLinodeCreatePayload(values);
+  const transformedValues = getLinodeCreatePayload(
+    values
+  ) as LinodeCreateFormValues;
 
   const { errors } = await yupResolver(
     CreateLinodeSchema,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Radio } from 'src/components/Radio/Radio';
@@ -13,9 +13,9 @@ import { useTypeQuery } from 'src/queries/types';
 import { capitalize } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
-import { useLinodeCreateQueryParams } from '../../utilities';
+import { LinodeCreateFormValues } from '../../utilities';
 
-import type { CreateLinodeRequest, Linode } from '@linode/api-v4';
+import type { Linode } from '@linode/api-v4';
 
 interface Props {
   linode: Linode;
@@ -24,8 +24,10 @@ interface Props {
 export const LinodeSelectTableRow = (props: Props) => {
   const { linode } = props;
 
-  const { setValue } = useFormContext<CreateLinodeRequest>();
-  const { params, updateParams } = useLinodeCreateQueryParams();
+  const { setValue } = useFormContext<LinodeCreateFormValues>();
+  const { field } = useController<LinodeCreateFormValues, 'linode'>({
+    name: 'linode',
+  });
 
   const { data: image } = useImageQuery(
     linode.image ?? '',
@@ -43,14 +45,14 @@ export const LinodeSelectTableRow = (props: Props) => {
       <TableCell>
         <FormControlLabel
           onChange={() => {
-            setValue('backup_id', null);
+            setValue('backup_id', null, { shouldTouch: true });
             setValue('region', linode.region);
             if (linode.type) {
               setValue('type', linode.type);
             }
-            updateParams({ linodeID: String(linode.id) });
+            field.onChange(linode);
           }}
-          checked={linode.id === params.linodeID}
+          checked={linode.id === field.value?.id}
           control={<Radio />}
           label={linode.label}
           sx={{ gap: 2 }}

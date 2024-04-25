@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
-import { useController } from 'react-hook-form';
+import { useController, useWatch } from 'react-hook-form';
 
 import { CircularProgress } from 'src/components/CircularProgress';
 import { Notice } from 'src/components/Notice/Notice';
@@ -10,20 +10,21 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useLinodeBackupsQuery } from 'src/queries/linodes/backups';
 
-import { useLinodeCreateQueryParams } from '../../utilities';
+import { LinodeCreateFormValues } from '../../utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const BackupSelect = () => {
-  const { params } = useLinodeCreateQueryParams();
   const { field, fieldState } = useController<CreateLinodeRequest, 'backup_id'>(
     { name: 'backup_id' }
   );
 
-  const hasSelectedLinode = params.linodeID !== undefined;
+  const linode = useWatch<LinodeCreateFormValues, 'linode'>({ name: 'linode' });
+
+  const hasSelectedLinode = Boolean(linode);
 
   const { data, isFetching } = useLinodeBackupsQuery(
-    params.linodeID ?? -1,
+    linode?.id ?? -1,
     hasSelectedLinode
   );
 
