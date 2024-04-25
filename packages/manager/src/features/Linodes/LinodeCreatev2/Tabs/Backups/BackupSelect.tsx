@@ -31,6 +31,47 @@ export const BackupSelect = () => {
   const hasNoBackups =
     !isFetching && data?.automatic.length === 0 && !data.snapshot.current;
 
+  const renderContent = () => {
+    if (!hasSelectedLinode) {
+      return <Typography>First, select a Linode</Typography>;
+    }
+
+    if (isFetching) {
+      return (
+        <Stack alignItems="center">
+          <CircularProgress />
+        </Stack>
+      );
+    }
+
+    if (hasNoBackups) {
+      return <Typography>This Linode does not have any backups.</Typography>;
+    }
+
+    return (
+      <Grid container spacing={2}>
+        {data?.automatic.map((backup) => (
+          <SelectionCard
+            checked={backup.id === field.value}
+            heading="Automatic"
+            key={backup.id}
+            onClick={() => field.onChange(backup.id)}
+            subheadings={[backup.created]}
+          />
+        ))}
+        {data?.snapshot.current && (
+          <SelectionCard
+            checked={data?.snapshot.current.id === field.value}
+            heading={data?.snapshot.current.label ?? 'Snapshot'}
+            key={data?.snapshot.current.id}
+            onClick={() => field.onChange(data?.snapshot.current?.id)}
+            subheadings={[data?.snapshot.current?.created]}
+          />
+        )}
+      </Grid>
+    );
+  };
+
   return (
     <Paper>
       <Stack spacing={2}>
@@ -38,35 +79,7 @@ export const BackupSelect = () => {
         {fieldState.error?.message && (
           <Notice text={fieldState.error.message} variant="error" />
         )}
-        {isFetching && (
-          <Stack alignItems="center">
-            <CircularProgress />
-          </Stack>
-        )}
-        {hasNoBackups && (
-          <Typography>This Linode does not have any backups.</Typography>
-        )}
-        {!hasSelectedLinode && <Typography>First, select a Linode</Typography>}
-        <Grid container spacing={2}>
-          {data?.automatic.map((backup) => (
-            <SelectionCard
-              checked={backup.id === field.value}
-              heading="Automatic"
-              key={backup.id}
-              onClick={() => field.onChange(backup.id)}
-              subheadings={[backup.created]}
-            />
-          ))}
-          {data?.snapshot.current && (
-            <SelectionCard
-              checked={data?.snapshot.current.id === field.value}
-              heading={data?.snapshot.current.label ?? 'Snapshot'}
-              key={data?.snapshot.current.id}
-              onClick={() => field.onChange(data?.snapshot.current?.id)}
-              subheadings={[data?.snapshot.current?.created]}
-            />
-          )}
-        </Grid>
+        {renderContent()}
       </Stack>
     </Paper>
   );
