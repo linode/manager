@@ -4,7 +4,7 @@ import React from 'react';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { Marketplace } from './Marketplace';
-import { categories } from './utilities';
+import { uniqueCategories } from './utilities';
 
 describe('Marketplace', () => {
   it('should render a header', () => {
@@ -54,7 +54,7 @@ describe('Marketplace', () => {
     await userEvent.click(select);
 
     // Verify all categories are rendered in the dropdown list
-    for (const category of categories) {
+    for (const category of uniqueCategories) {
       expect(getByText(category)).toBeVisible();
     }
 
