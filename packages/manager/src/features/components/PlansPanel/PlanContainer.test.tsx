@@ -27,6 +27,8 @@ describe('PlanContainer', () => {
   it('shows the no region selected message when no region is selected', () => {
     const { getByText } = renderWithTheme(
       <PlanContainer
+        allDisabledPlans={[]}
+        hasMajorityOfPlansDisabled={false}
         onSelect={() => {}}
         plans={mockPlans}
         selectedRegionId={undefined}

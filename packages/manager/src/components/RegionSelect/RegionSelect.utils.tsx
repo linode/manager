@@ -1,7 +1,5 @@
 import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
-import * as React from 'react';
 
-import { Link } from 'src/components/Link';
 import {
   getRegionCountryGroup,
   getSelectedRegion,
@@ -62,15 +60,9 @@ export const getRegionOptions = ({
       const disabledProps = isRegionUnavailable(region)
         ? {
             disabled: true,
-            reason: (
-              <>
-                There may be limited capacity in this region.{' '}
-                <Link to="https://www.linode.com/global-infrastructure/availability">
-                  Learn more
-                </Link>
-                .
-              </>
-            ),
+            reason:
+              'This region is currently unavailable. For help, open a support ticket.',
+            tooltipWidth: 250,
           }
         : handleDisabledRegion?.(region)?.disabled
         ? handleDisabledRegion(region)

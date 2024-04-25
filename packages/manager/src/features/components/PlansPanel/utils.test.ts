@@ -3,6 +3,7 @@ import { planSelectionTypeFactory, typeFactory } from 'src/factories/types';
 
 import {
   determineInitialPlanCategoryTab,
+  extractPlansInformation,
   getIsLimitedAvailability,
   getPlanSelectionsByPlanType,
   planTypeOrder,
@@ -217,5 +218,115 @@ describe('getIsLimitedAvailability', () => {
     });
 
     expect(result).toBe(false);
+  });
+});
+
+describe('extractPlansInformation', () => {
+  const g6Standard1 = planSelectionTypeFactory.build({
+    id: 'g6-standard-1',
+  });
+  const g7Standard1 = planSelectionTypeFactory.build({
+    id: 'g7-standard-1',
+  });
+  const g6Nanode1 = planSelectionTypeFactory.build({
+    id: 'g6-nanode-1',
+  });
+  it('should return correct information when less than half of plans are disabled', () => {
+    const result = extractPlansInformation({
+      disableLargestGbPlans: false,
+      disabledPlanTypes: [g6Standard1],
+      plans: [g6Standard1, g7Standard1, g6Nanode1],
+      regionAvailabilities: [],
+      selectedRegionId: 'us-east-1',
+    });
+
+    expect(result).toHaveProperty('allDisabledPlans', [
+      {
+        ...g6Standard1,
+        ...{
+          isDisabled512GbPlan: false,
+          isLimitedAvailabilityPlan: false,
+        },
+      },
+    ]);
+    expect(result).toHaveProperty('hasDisabledPlans', true);
+    expect(result).toHaveProperty('hasMajorityOfPlansDisabled', false);
+    expect(result).toHaveProperty('plansForThisLinodeTypeClass', [
+      {
+        ...g6Standard1,
+        isLimitedAvailabilityPlan: false,
+      },
+      {
+        ...g7Standard1,
+        isLimitedAvailabilityPlan: false,
+      },
+      {
+        ...g6Nanode1,
+        isLimitedAvailabilityPlan: false,
+      },
+    ]);
+  });
+
+  it('should return correct information when all plans are disabled', () => {
+    const result = extractPlansInformation({
+      disableLargestGbPlans: false,
+      disabledPlanTypes: [g6Standard1, g6Nanode1],
+      plans: [g6Standard1, g6Nanode1],
+      regionAvailabilities: [],
+      selectedRegionId: 'us-east-1',
+    });
+
+    expect(result).toHaveProperty('allDisabledPlans', [
+      {
+        ...g6Standard1,
+        ...{
+          isDisabled512GbPlan: false,
+          isLimitedAvailabilityPlan: false,
+        },
+      },
+      {
+        ...g6Nanode1,
+        ...{
+          isDisabled512GbPlan: false,
+          isLimitedAvailabilityPlan: false,
+        },
+      },
+    ]);
+    expect(result).toHaveProperty('hasDisabledPlans', true);
+    expect(result).toHaveProperty('hasMajorityOfPlansDisabled', true);
+    expect(result).toHaveProperty('plansForThisLinodeTypeClass', [
+      {
+        ...g6Standard1,
+        isLimitedAvailabilityPlan: false,
+      },
+      {
+        ...g6Nanode1,
+        isLimitedAvailabilityPlan: false,
+      },
+    ]);
+  });
+
+  it('should return correct information when no plans are disabled', () => {
+    const result = extractPlansInformation({
+      disableLargestGbPlans: false,
+      disabledPlanTypes: [],
+      plans: [g6Standard1, g6Nanode1],
+      regionAvailabilities: [],
+      selectedRegionId: 'us-east-1',
+    });
+
+    expect(result).toHaveProperty('allDisabledPlans', []);
+    expect(result).toHaveProperty('hasDisabledPlans', false);
+    expect(result).toHaveProperty('hasMajorityOfPlansDisabled', false);
+    expect(result).toHaveProperty('plansForThisLinodeTypeClass', [
+      {
+        ...g6Standard1,
+        isLimitedAvailabilityPlan: false,
+      },
+      {
+        ...g6Nanode1,
+        isLimitedAvailabilityPlan: false,
+      },
+    ]);
   });
 });
