@@ -58,6 +58,7 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
       />
 
       {tagsInputProps && <TagsInput {...tagsInputProps} />}
+
       {isPlacementGroupsEnabled && (
         <PlacementGroupsDetailPanel
           handlePlacementGroupChange={handlePlacementGroupChange}

@@ -194,9 +194,9 @@ export const PlacementGroupsLanding = React.memo(() => {
         }}
         debounceTime={250}
         hideLabel
-        label="Filter"
+        label="Search"
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Filter"
+        placeholder="Search Placement Groups"
         sx={{ mb: 4 }}
         value={query}
       />
