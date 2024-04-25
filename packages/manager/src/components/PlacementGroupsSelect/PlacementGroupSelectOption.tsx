@@ -15,7 +15,7 @@ import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
 interface PlacementGroupSelectOptionProps {
   disabled?: boolean;
-  label: string;
+  label: JSX.Element;
   props: React.HTMLAttributes<HTMLLIElement>;
   selected?: boolean;
   value: PlacementGroup;

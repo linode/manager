@@ -4,6 +4,7 @@ import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { Stack } from 'src/components/Stack';
 import { TextFieldProps } from 'src/components/TextField';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
@@ -71,8 +72,27 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     return null;
   }
 
-  const formatLabel = (placementGroup: PlacementGroup) =>
-    `${placementGroup.label} (${AFFINITY_TYPES[placementGroup.affinity_type]})`;
+  const optionLabel = (placementGroup: PlacementGroup, selected?: boolean) => (
+    <Stack
+      alignItems="center"
+      direction="row"
+      flex={1}
+      position="relative"
+      width="100%"
+    >
+      <Stack component="span">{placementGroup.label}</Stack>{' '}
+      <Stack
+        sx={{
+          position: 'absolute',
+          right: selected ? 14 : 34,
+          whiteSpace: 'nowrap',
+        }}
+        component="span"
+      >
+        ({AFFINITY_TYPES[placementGroup.affinity_type]})
+      </Stack>
+    </Stack>
+  );
 
   const placementGroupsOptions: PlacementGroup[] = placementGroups.filter(
     (placementGroup) => placementGroup.region === selectedRegion?.id
@@ -96,7 +116,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
           <PlacementGroupSelectOption
             disabled={isDisabledPlacementGroup(option, selectedRegion)}
             key={option.id}
-            label={formatLabel(option)}
+            label={optionLabel(option, selected)}
             props={props}
             selected={selected}
             value={option}
@@ -109,7 +129,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       disableClearable={!clearable}
       disabled={Boolean(!selectedRegion?.id) || disabled}
       errorText={errorText}
-      getOptionLabel={formatLabel}
+      getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
       id={id}
       label={label}
       loading={isLoading || loading}
