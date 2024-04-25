@@ -119,7 +119,7 @@ export const LinodeCreatev2 = () => {
               <SafeTabPanel index={5}>Clone Linode</SafeTabPanel>
             </TabPanels>
           </Tabs>
-          <Region />
+          {params.type !== 'Backups' && <Region />}
           <Plan />
           <Details />
           <Access />
