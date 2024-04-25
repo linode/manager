@@ -80,7 +80,7 @@ describe('Cloud View Graph Widget', () => {
         globalFilters={dashboardFilters}
         errorLabel={errorLabel}
         handleWidgetChange={handleWidgetChange}
-        metricDefinition={metricDefinitions}
+        availableMetrics={metricDefinitions.available_metrics[0]}
         unit={'%'}
         widget={widget} authToken={''}      />
     );
@@ -139,7 +139,7 @@ describe('Cloud View Graph Widget', () => {
         globalFilters={dashboardFilters}
         errorLabel={errorLabel}
         handleWidgetChange={handleWidgetChange}
-        metricDefinition={metricDefinitions}
+        availableMetrics={metricDefinitions.available_metrics[0]}
         unit={'%'}
         widget={widget} authToken={''}      />
     );
@@ -187,7 +187,7 @@ describe('Cloud View Graph Widget', () => {
         globalFilters={dashboardFilters}
         errorLabel={errorLabel}
         handleWidgetChange={handleWidgetChange}
-        metricDefinition={metricDefinitions}
+        availableMetrics={metricDefinitions.available_metrics[0]}
         unit={'%'}
         widget={widget} authToken={''}      />
     );
@@ -231,7 +231,7 @@ describe('Cloud View Graph Widget', () => {
           ariaLabel={'Test'}
           globalFilters={dashboardFilters}
           handleWidgetChange={handleWidgetChange}
-          metricDefinition={metricDefinitions}
+          availableMetrics={metricDefinitions.available_metrics[0]}
           unit={'%'}
           widget={widget} authToken={''}        />
       );
