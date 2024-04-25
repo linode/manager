@@ -41,6 +41,7 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import useStyles from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
+import { sendLinodeCreateFormStartEvent } from 'src/utilities/analytics';
 
 type NavEntity =
   | 'Account'
@@ -461,9 +462,16 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
     linkIsActive(href, locationSearch, locationPathname, activeLinks)
   );
 
+  const handleAnalyticsFormEvent = (entity: NavEntity) => {
+    if (entity === 'Marketplace') {
+      sendLinodeCreateFormStartEvent(4, 'Global side nav marketplace create');
+    }
+  };
+
   return (
     <Link
       onClick={(e: React.ChangeEvent<any>) => {
+        handleAnalyticsFormEvent(display);
         closeMenu();
         if (onClick) {
           onClick(e);

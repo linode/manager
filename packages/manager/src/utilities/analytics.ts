@@ -628,10 +628,16 @@ export const sendManageGravatarEvent = () => {
   });
 };
 
+// AddNewMenu.tsx
 // LinodesLanding.tsx
-export const sendLinodeCreateFormStartEvent = (formNameDescription: string) => {
+// LinodesLandingEmptyState.tsx
+// PrimaryNav.tsx
+export const sendLinodeCreateFormStartEvent = (
+  optionNum: 1 | 2 | 3 | 4,
+  formNameDescription: string
+) => {
   const formPayload: BasicFormEvent = {
-    formName: `Linode Create Form - ${formNameDescription}`,
+    formName: `Linode Create Form - Form start option ${optionNum} - ${formNameDescription}`,
   };
   sendFormEvent(formPayload, 'formFocus');
 };
@@ -658,9 +664,9 @@ export const sendLinodeCreateFormInputEvent = (
   sendFormEvent(formPayload, 'formInput');
 };
 
-export const sendLinodeCreateFormSubmitEvent = (formName: string) => {
+export const sendLinodeCreateFormSubmitEvent = () => {
   const formPayload: BasicFormEvent = {
-    formName: `Linode Create Form - ${formName}`,
+    formName: 'Linode Create Form',
   };
   sendFormEvent(formPayload, 'formSubmit');
 };

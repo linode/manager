@@ -61,6 +61,7 @@ import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
 import {
   sendApiAwarenessClickEvent,
   sendLinodeCreateFlowDocsClickEvent,
+  sendLinodeCreateFormSubmitEvent,
 } from 'src/utilities/analytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -795,10 +796,13 @@ export class LinodeCreate extends React.PureComponent<
                 userCannotCreateLinode ||
                 (showGDPRCheckbox && !signedAgreement)
               }
+              onClick={() => {
+                sendLinodeCreateFormSubmitEvent();
+                this.createLinode();
+              }}
               buttonType="primary"
               data-qa-deploy-linode
               loading={formIsSubmitting}
-              onClick={this.createLinode}
             >
               Create Linode
             </StyledCreateButton>
