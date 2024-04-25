@@ -22,12 +22,13 @@ export const BackupSelect = () => {
 
   const hasSelectedLinode = params.linodeID !== undefined;
 
-  const { data, isLoading } = useLinodeBackupsQuery(
+  const { data, isFetching } = useLinodeBackupsQuery(
     params.linodeID ?? -1,
     hasSelectedLinode
   );
 
-  const hasNoBackups = !isLoading && data?.automatic.length === 0 && !data.snapshot.current;
+  const hasNoBackups =
+    !isFetching && data?.automatic.length === 0 && !data.snapshot.current;
 
   return (
     <Paper>
@@ -36,7 +37,7 @@ export const BackupSelect = () => {
         {fieldState.error?.message && (
           <Notice text={fieldState.error.message} variant="error" />
         )}
-        {isLoading && (
+        {isFetching && (
           <Stack alignItems="center">
             <CircularProgress />
           </Stack>
@@ -44,6 +45,7 @@ export const BackupSelect = () => {
         {hasNoBackups && (
           <Typography>This Linode does not have any backups.</Typography>
         )}
+        {!hasSelectedLinode && <Typography>First, select a Linode</Typography>}
         <Grid container spacing={2}>
           {data?.automatic.map((backup) => (
             <SelectionCard
