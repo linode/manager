@@ -13,10 +13,9 @@ import { Hidden } from 'src/components/Hidden';
 import { IconButton } from 'src/components/IconButton';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import { Tooltip } from 'src/components/Tooltip';
 import { LIMITED_AVAILABILITY_TEXT } from 'src/features/components/PlansPanel/constants';
-import { StyledDisabledTableRow } from 'src/features/components/PlansPanel/PlansPanel.styles';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   PRICE_ERROR_TOOLTIP_TEXT,
   UNKNOWN_PRICE,
@@ -28,42 +27,44 @@ import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import type { TypeWithAvailability } from 'src/features/components/PlansPanel/types';
 
 export interface KubernetesPlanSelectionProps {
-  disabled?: boolean;
+  disabledStatus:
+    | {
+        isDisabled512GbPlan: boolean;
+        isLimitedAvailabilityPlan: boolean;
+      }
+    | undefined;
   getTypeCount: (planId: string) => number;
+  hasMajorityOfPlansDisabled: boolean;
   idx: number;
-  isLimitedAvailabilityPlan: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
+  planIsDisabled: boolean;
   selectedId?: string;
   selectedRegionId?: Region['id'];
   type: TypeWithAvailability;
   updatePlanCount: (planId: string, newCount: number) => void;
+  wholePanelIsDisabled: boolean;
 }
 
 export const KubernetesPlanSelection = (
   props: KubernetesPlanSelectionProps
 ) => {
   const {
-    disabled,
+    disabledStatus,
     getTypeCount,
+    hasMajorityOfPlansDisabled,
     idx,
-    isLimitedAvailabilityPlan,
     onAdd,
     onSelect,
+    planIsDisabled,
     selectedId,
     selectedRegionId,
     type,
     updatePlanCount,
+    wholePanelIsDisabled,
   } = props;
 
-  const flags = useFlags();
-
-  // Determine if the plan should be disabled solely due to being a 512GB plan
-  const disabled512GbPlan =
-    type.label.includes('512GB') &&
-    Boolean(flags.disableLargestGbPlans) &&
-    !disabled;
-  const isDisabled = disabled || isLimitedAvailabilityPlan || disabled512GbPlan;
+  const isDisabled = planIsDisabled || wholePanelIsDisabled;
   const count = getTypeCount(type.id);
   const price: PriceObject | undefined = getLinodeRegionPrice(
     type,
@@ -88,13 +89,8 @@ export const KubernetesPlanSelection = (
         />
         {onAdd && (
           <Button
-            disabled={
-              count < 1 ||
-              disabled ||
-              isLimitedAvailabilityPlan ||
-              disabled512GbPlan
-            }
             buttonType="primary"
+            disabled={count < 1 || isDisabled}
             onClick={() => onAdd(type.id, count)}
             sx={{ marginLeft: '10px', minWidth: '85px' }}
           >
@@ -108,7 +104,7 @@ export const KubernetesPlanSelection = (
     <React.Fragment key={`tabbed-panel-${idx}`}>
       {/* Displays Table Row for larger screens */}
       <Hidden mdDown>
-        <StyledDisabledTableRow
+        <TableRow
           data-qa-plan-row={type.formattedLabel}
           disabled={isDisabled}
           key={type.id}
@@ -116,26 +112,39 @@ export const KubernetesPlanSelection = (
           <TableCell data-qa-plan-name>
             <Box alignItems="center">
               {type.heading} &nbsp;
-              {(isLimitedAvailabilityPlan || disabled512GbPlan) && (
-                <Tooltip
-                  sx={{
-                    alignItems: 'center',
-                  }}
-                  data-qa-tooltip={LIMITED_AVAILABILITY_TEXT}
-                  data-testid="limited-availability"
-                  placement="right-start"
-                  title={LIMITED_AVAILABILITY_TEXT}
-                >
-                  <IconButton disableRipple size="small">
-                    <HelpOutline
-                      sx={{
-                        height: 16,
-                        width: 16,
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-              )}
+              {isDisabled &&
+                !wholePanelIsDisabled &&
+                !hasMajorityOfPlansDisabled &&
+                (Boolean(disabledStatus?.isDisabled512GbPlan) ||
+                  Boolean(disabledStatus?.isLimitedAvailabilityPlan)) && (
+                  <Tooltip
+                    PopperProps={{
+                      sx: {
+                        '& .MuiTooltip-tooltip': {
+                          minWidth: 225,
+                        },
+                      },
+                    }}
+                    sx={{
+                      alignItems: 'center',
+                    }}
+                    data-qa-tooltip={LIMITED_AVAILABILITY_TEXT}
+                    data-testid="limited-availability"
+                    placement="right-start"
+                    title={LIMITED_AVAILABILITY_TEXT}
+                  >
+                    <IconButton disableRipple size="small">
+                      <HelpOutline
+                        sx={{
+                          height: 18,
+                          position: 'relative',
+                          top: -2,
+                          width: 18,
+                        }}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                )}
             </Box>
           </TableCell>
           <TableCell
@@ -192,7 +201,7 @@ export const KubernetesPlanSelection = (
               )}
             </StyledInputOuter>
           </TableCell>
-        </StyledDisabledTableRow>
+        </TableRow>
       </Hidden>
       {/* Displays SelectionCard for small screens */}
       <Hidden mdUp>

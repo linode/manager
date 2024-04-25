@@ -1,5 +1,5 @@
-import { default as _TableRow } from '@mui/material/TableRow';
 import { styled } from '@mui/material/styles';
+import { default as _TableRow } from '@mui/material/TableRow';
 
 import { omittedProps } from 'src/utilities/omittedProps';
 
@@ -63,14 +63,10 @@ export const StyledTableRow = styled(_TableRow, {
     backgroundColor: theme.bg.lightBlue1,
   }),
   ...(props.disabled && {
-    '& td': {
+    '& td:not(.hasTooltip *), & td:has(.hasTooltip):not(.MuiRadio-root)': {
       color:
-        theme.palette.mode === 'dark'
-          ? theme.color.grey6
-          : theme.color.disabledText,
+        theme.palette.mode === 'dark' ? theme.color.grey6 : theme.color.grey1,
     },
-    backgroundColor:
-      theme.palette.mode === 'dark' ? '#32363c' : 'rgba(247, 247, 247, 0.25)',
   }),
 }));
 
