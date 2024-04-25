@@ -31,16 +31,15 @@ export const VPCTopSectionContent = (props: Props) => {
       <StyledBodyTypography isDrawer={isDrawer} variant="body1">
         {VPC_CREATE_FORM_VPC_HELPER_TEXT}{' '}
         <Link
-          onClick={() => {
-            if (isFromLinodeCreate) {
-              sendLinodeCreateFormStepEvent({
-                action: 'click',
-                category: 'link',
-                formName: 'VPC',
-                label: 'Learn more',
-              });
-            }
-          }}
+          onClick={() =>
+            isFromLinodeCreate &&
+            sendLinodeCreateFormStepEvent({
+              action: 'click',
+              category: 'link',
+              formName: 'Create VPC Drawer',
+              label: 'Learn more',
+            })
+          }
           to="https://www.linode.com/docs/products/networking/vpc/"
         >
           Learn more

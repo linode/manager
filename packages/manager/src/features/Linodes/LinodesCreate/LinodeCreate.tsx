@@ -61,6 +61,7 @@ import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
 import {
   sendApiAwarenessClickEvent,
   sendLinodeCreateFlowDocsClickEvent,
+  sendLinodeCreateFormStepEvent,
   sendLinodeCreateFormSubmitEvent,
 } from 'src/utilities/analytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
@@ -629,6 +630,11 @@ export class LinodeCreate extends React.PureComponent<
                 <DocsLink
                   onClick={() => {
                     sendLinodeCreateFlowDocsClickEvent('Choosing a Plan');
+                    sendLinodeCreateFormStepEvent({
+                      action: 'click',
+                      category: 'link',
+                      label: 'Choosing a Plan',
+                    });
                   }}
                   href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
                   label="Choosing a Plan"
@@ -712,7 +718,20 @@ export class LinodeCreate extends React.PureComponent<
                 <Typography>
                   Assign an existing Firewall to this Linode to control inbound
                   and outbound network traffic.{' '}
-                  <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
+                  <Link
+                    onClick={() =>
+                      sendLinodeCreateFormStepEvent({
+                        action: 'click',
+                        category: 'link',
+                        formName: 'Firewall Panel',
+                        label: 'Learn more',
+                      })
+                    }
+                    to={FIREWALL_GET_STARTED_LINK}
+                  >
+                    Learn more
+                  </Link>
+                  .
                 </Typography>
               }
               disabled={userCannotCreateLinode}

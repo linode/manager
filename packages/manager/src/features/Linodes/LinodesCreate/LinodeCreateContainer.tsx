@@ -60,6 +60,7 @@ import { MapState } from 'src/store/types';
 import {
   sendCreateLinodeEvent,
   sendLinodeCreateFlowDocsClickEvent,
+  sendLinodeCreateFormStepEvent,
 } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
@@ -262,9 +263,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         <ProductInformationBanner bannerLocation="LinodeCreate" />
         <Grid className="m0" container spacing={0}>
           <LandingHeader
-            onDocsClick={() =>
-              sendLinodeCreateFlowDocsClickEvent('Getting Started')
-            }
+            onDocsClick={() => {
+              sendLinodeCreateFlowDocsClickEvent('Getting Started');
+              sendLinodeCreateFormStepEvent({
+                action: 'click',
+                category: 'link',
+                label: 'Getting Started',
+              });
+            }}
             docsLabel="Getting Started"
             docsLink="https://www.linode.com/docs/guides/platform/get-started/"
             title="Create"

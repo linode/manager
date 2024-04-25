@@ -245,16 +245,15 @@ export const CreateFirewallDrawer = React.memo(
 
     const learnMoreLink = (
       <Link
-        onClick={() => {
-          if (isFromLinodeCreate) {
-            sendLinodeCreateFormStepEvent({
-              action: 'click',
-              category: 'link',
-              formName: 'Firewall',
-              label: 'Learn more',
-            });
-          }
-        }}
+        onClick={() =>
+          isFromLinodeCreate &&
+          sendLinodeCreateFormStepEvent({
+            action: 'click',
+            category: 'link',
+            formName: 'Create Firewall Drawer',
+            label: 'Learn more',
+          })
+        }
         to={FIREWALL_LIMITS_CONSIDERATIONS_LINK}
       >
         Learn more
@@ -366,13 +365,13 @@ export const CreateFirewallDrawer = React.memo(
               label: 'Create Firewall',
               loading: isSubmitting,
               onClick: () =>
-                isFromLinodeCreate
-                  ? sendLinodeCreateFormStepEvent({
-                      action: 'click',
-                      category: 'button',
-                      label: 'Create Firewall',
-                    })
-                  : undefined,
+                isFromLinodeCreate &&
+                sendLinodeCreateFormStepEvent({
+                  action: 'click',
+                  category: 'button',
+                  formName: 'Create Firewall Drawer',
+                  label: 'Create Firewall',
+                }),
               type: 'submit',
             }}
             secondaryButtonProps={{

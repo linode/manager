@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -81,7 +81,7 @@ export const VPCCreateDrawer = (props: Props) => {
                 sendLinodeCreateFormStepEvent({
                   action: 'click',
                   category: 'button',
-                  label: 'Create VPC',
+                  label: 'Create VPC Drawer',
                 });
                 onCreateVPC();
               },

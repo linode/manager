@@ -27,6 +27,7 @@ import { VPCCreateDrawer } from './VPCCreateDrawer';
 
 import type { Item } from 'src/components/EnhancedSelect';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics';
 
 export interface VPCPanelProps {
   additionalIPv4RangesForVPC: ExtendedIP[];
@@ -142,7 +143,18 @@ export const VPCPanel = (props: VPCPanelProps) => {
     return (
       <>
         {copy}{' '}
-        <Link to="https://www.linode.com/docs/products/networking/vpc/guides/assign-services/">
+        <Link
+          onClick={() =>
+            fromLinodeCreate &&
+            sendLinodeCreateFormStepEvent({
+              action: 'click',
+              category: 'link',
+              formName: 'VPC Panel',
+              label: 'Learn more',
+            })
+          }
+          to="https://www.linode.com/docs/products/networking/vpc/guides/assign-services/"
+        >
           Learn more
         </Link>
         .

@@ -104,30 +104,6 @@ export const waitForAdobeAnalyticsToBeLoaded = () =>
     }, 1000);
   });
 
-export const sendFormInputEvent = (
-  eventPayload: FormInputEvent,
-  eventType: FormEventType
-): void => {
-  if (!ADOBE_ANALYTICS_URL) {
-    return;
-  }
-
-  // Send a Direct Call Rule if our environment is configured with an Adobe Launch script
-  if (window._satellite) {
-    // Just don't allow pipes in strings for Adobe Analytics processing.
-
-    // if (eventType === 'formInput'){
-    // } else if (eventType === 'formStepInteraction'){
-    // } else if (eventType === 'formError'){
-    // } else {
-    // }
-    window._satellite.track(eventType, {
-      formName: eventPayload.formName.replace(/\|/g, ''),
-      inputValue: eventPayload.inputValue.replace(/\|/g, ''),
-    });
-  }
-};
-
 export const sendFormEvent = (
   eventPayload: FormPayload,
   eventType: FormEventType
