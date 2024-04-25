@@ -1,8 +1,10 @@
 import { APIError } from '@linode/api-v4';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics';
 import { SubnetFieldState } from 'src/utilities/subnets';
 
 import { VPC_CREATE_FORM_SUBNET_HELPER_TEXT } from '../../constants';
@@ -23,6 +25,9 @@ interface Props {
 export const SubnetContent = (props: Props) => {
   const { disabled, isDrawer, onChangeField, subnetErrors, subnets } = props;
 
+  const location = useLocation();
+  const isFromLinodeCreate = location.pathname.includes('/linodes/create');
+
   return (
     <>
       <StyledHeaderTypography isDrawer={isDrawer} variant="h2">
@@ -30,7 +35,18 @@ export const SubnetContent = (props: Props) => {
       </StyledHeaderTypography>
       <StyledBodyTypography isDrawer={isDrawer} variant="body1">
         {VPC_CREATE_FORM_SUBNET_HELPER_TEXT}{' '}
-        <Link to="https://www.linode.com/docs/products/networking/vpc/guides/subnets/">
+        <Link
+          onClick={() =>
+            isFromLinodeCreate &&
+            sendLinodeCreateFormStepEvent({
+              action: 'click',
+              category: 'link',
+              formName: 'VPC Subnets',
+              label: 'Learn more',
+            })
+          }
+          to="https://www.linode.com/docs/products/networking/vpc/guides/subnets/"
+        >
           Learn more
         </Link>
         .

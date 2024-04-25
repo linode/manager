@@ -5,13 +5,13 @@ import {
   Firewall,
   FirewallDeviceEntityType,
 } from '@linode/api-v4/lib/firewalls';
-import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
+import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
@@ -26,16 +26,18 @@ import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelec
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCreateFirewall } from 'src/queries/firewalls';
+import { useAllFirewallsQuery } from 'src/queries/firewalls';
+import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
 import { useGrants } from 'src/queries/profile';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
-import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
 
 import {
   LINODE_CREATE_FLOW_TEXT,
@@ -77,6 +79,9 @@ export const CreateFirewallDrawer = React.memo(
 
     const { enqueueSnackbar } = useSnackbar();
     const queryClient = useQueryClient();
+
+    const location = useLocation();
+    const isFromLinodeCreate = location.pathname.includes('/linodes/create');
 
     const {
       errors,
@@ -239,7 +244,21 @@ export const CreateFirewallDrawer = React.memo(
     })();
 
     const learnMoreLink = (
-      <Link to={FIREWALL_LIMITS_CONSIDERATIONS_LINK}>Learn more</Link>
+      <Link
+        onClick={() => {
+          if (isFromLinodeCreate) {
+            sendLinodeCreateFormStepEvent({
+              action: 'click',
+              category: 'link',
+              formName: 'Firewall',
+              label: 'Learn more',
+            });
+          }
+        }}
+        to={FIREWALL_LIMITS_CONSIDERATIONS_LINK}
+      >
+        Learn more
+      </Link>
     );
 
     const generalError =
@@ -346,6 +365,14 @@ export const CreateFirewallDrawer = React.memo(
               disabled: userCannotAddFirewall,
               label: 'Create Firewall',
               loading: isSubmitting,
+              onClick: () =>
+                isFromLinodeCreate
+                  ? sendLinodeCreateFormStepEvent({
+                      action: 'click',
+                      category: 'button',
+                      label: 'Create Firewall',
+                    })
+                  : undefined,
               type: 'submit',
             }}
             secondaryButtonProps={{

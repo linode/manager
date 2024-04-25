@@ -1,11 +1,13 @@
 import { Region } from '@linode/api-v4';
 import { FormikErrors } from 'formik';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
 import { CreateVPCFieldState } from 'src/hooks/useCreateVPC';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics';
 
 import { VPC_CREATE_FORM_VPC_HELPER_TEXT } from '../../constants';
 import { StyledBodyTypography } from './VPCCreateForm.styles';
@@ -21,11 +23,26 @@ interface Props {
 
 export const VPCTopSectionContent = (props: Props) => {
   const { disabled, errors, isDrawer, onChangeField, regions, values } = props;
+  const location = useLocation();
+  const isFromLinodeCreate = location.pathname.includes('/linodes/create');
+
   return (
     <>
       <StyledBodyTypography isDrawer={isDrawer} variant="body1">
         {VPC_CREATE_FORM_VPC_HELPER_TEXT}{' '}
-        <Link to="https://www.linode.com/docs/products/networking/vpc/">
+        <Link
+          onClick={() => {
+            if (isFromLinodeCreate) {
+              sendLinodeCreateFormStepEvent({
+                action: 'click',
+                category: 'link',
+                formName: 'VPC',
+                label: 'Learn more',
+              });
+            }
+          }}
+          to="https://www.linode.com/docs/products/networking/vpc/"
+        >
           Learn more
         </Link>
         .

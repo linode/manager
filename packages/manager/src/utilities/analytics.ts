@@ -642,13 +642,26 @@ export const sendLinodeCreateFormStartEvent = (
   sendFormEvent(formPayload, 'formFocus');
 };
 
-export const sendLinodeCreateFormStepEvent = (
-  formName: string,
-  formStep: string
-) => {
+interface FormStepOptions {
+  action: string;
+  category: string;
+  formName?: string;
+  label: string;
+}
+
+// CreateFirewallDrawer.tsx
+// SubnetContent.tsx
+// VPCTopSectionContent.tsx
+// VPCCreateDrawer.tsx
+export const sendLinodeCreateFormStepEvent = ({
+  action,
+  category,
+  formName,
+  label,
+}: FormStepOptions) => {
   const formPayload: FormStepEvent = {
-    formName: `Linode Create Form - ${formName}`,
-    stepName: formStep,
+    formName: `Linode Create Form${formName ? ` - ${formName}` : ''}`,
+    stepName: `${label} - ${action}:${category}`,
   };
   sendFormEvent(formPayload, 'formStepInteraction');
 };
