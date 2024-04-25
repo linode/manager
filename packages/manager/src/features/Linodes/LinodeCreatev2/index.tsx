@@ -23,6 +23,7 @@ import { Region } from './Region';
 import { Summary } from './Summary';
 import { Distributions } from './Tabs/Distributions';
 import { Images } from './Tabs/Images';
+import { Marketplace } from './Tabs/Marketplace/Marketplace';
 import { StackScripts } from './Tabs/StackScripts/StackScripts';
 import { UserData } from './UserData/UserData';
 import {
@@ -105,7 +106,9 @@ export const LinodeCreatev2 = () => {
               <SafeTabPanel index={0}>
                 <Distributions />
               </SafeTabPanel>
-              <SafeTabPanel index={1}>Marketplace</SafeTabPanel>
+              <SafeTabPanel index={1}>
+                <Marketplace />
+              </SafeTabPanel>
               <SafeTabPanel index={2}>
                 <StackScripts />
               </SafeTabPanel>
