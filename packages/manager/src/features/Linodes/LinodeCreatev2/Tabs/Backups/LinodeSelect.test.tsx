@@ -43,7 +43,7 @@ describe('LinodeSelect', () => {
     }
   });
 
-  it('should select a linode based on query params', async () => {
+  it('should select a linode based on form state', async () => {
     const selectedLinode = linodeFactory.build({
       id: 1,
       label: 'my-selected-linode',
@@ -57,10 +57,8 @@ describe('LinodeSelect', () => {
 
     const { findByLabelText } = renderWithThemeAndHookFormContext({
       component: <LinodeSelect />,
-      options: {
-        MemoryRouter: {
-          initialEntries: ['/linodes/create?type=Backups&linodeID=1'],
-        },
+      useFormOptions: {
+        defaultValues: { linode: selectedLinode },
       },
     });
 

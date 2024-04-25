@@ -20,7 +20,9 @@ describe('LinodeSelectTableRow', () => {
     const linode = linodeFactory.build();
 
     const { getByLabelText } = renderWithThemeAndHookFormContext({
-      component: wrapWithTableBody(<LinodeSelectTableRow linode={linode} />),
+      component: wrapWithTableBody(
+        <LinodeSelectTableRow linode={linode} onSelect={vi.fn()} selected />
+      ),
     });
 
     expect(getByLabelText(linode.label)).toHaveRole('radio');
@@ -40,7 +42,9 @@ describe('LinodeSelectTableRow', () => {
     );
 
     const { findByText } = renderWithThemeAndHookFormContext({
-      component: wrapWithTableBody(<LinodeSelectTableRow linode={linode} />),
+      component: wrapWithTableBody(
+        <LinodeSelectTableRow linode={linode} onSelect={vi.fn()} selected />
+      ),
     });
 
     await findByText(image.label);
@@ -60,7 +64,9 @@ describe('LinodeSelectTableRow', () => {
     );
 
     const { findByText } = renderWithThemeAndHookFormContext({
-      component: wrapWithTableBody(<LinodeSelectTableRow linode={linode} />),
+      component: wrapWithTableBody(
+        <LinodeSelectTableRow linode={linode} onSelect={vi.fn()} selected />
+      ),
     });
 
     await findByText(region.label);
@@ -80,7 +86,9 @@ describe('LinodeSelectTableRow', () => {
     );
 
     const { findByText } = renderWithThemeAndHookFormContext({
-      component: wrapWithTableBody(<LinodeSelectTableRow linode={linode} />),
+      component: wrapWithTableBody(
+        <LinodeSelectTableRow linode={linode} onSelect={vi.fn()} selected />
+      ),
     });
 
     await findByText(type.label);

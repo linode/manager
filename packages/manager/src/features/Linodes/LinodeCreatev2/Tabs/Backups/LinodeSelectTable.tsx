@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React, { useState } from 'react';
-import { useWatch } from 'react-hook-form';
+import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -29,19 +29,26 @@ import {
 import { LinodeSelectTableRow } from './LinodeSelectTableRow';
 
 import type { Theme } from '@mui/material';
+import { Linode } from '@linode/api-v4';
 
 export const LinodeSelectTable = () => {
   const matchesMdUp = useMediaQuery((theme: Theme) =>
     theme.breakpoints.up('md')
   );
 
+  const { setValue } = useFormContext<LinodeCreateFormValues>();
   const linode = useWatch<LinodeCreateFormValues, 'linode'>({ name: 'linode' });
 
-  const { params, updateParams } = useLinodeCreateQueryParams();
+  const { field } = useController<LinodeCreateFormValues, 'linode'>({
+    name: 'linode',
+  });
+
+  const { params } = useLinodeCreateQueryParams();
 
   const [preselectedLinodeId, setPreselectedLinodeId] = useState(
     params.linodeID
   );
+
   const [query, setQuery] = useState(linode?.label ?? '');
 
   const pagination = usePagination();
@@ -67,6 +74,15 @@ export const LinodeSelectTable = () => {
     filter
   );
 
+  const handleSelect = (linode: Linode) => {
+    setValue('backup_id', null);
+    setValue('region', linode.region);
+    if (linode.type) {
+      setValue('type', linode.type);
+    }
+    field.onChange(linode);
+  };
+
   return (
     <Stack pt={1} spacing={2}>
       <DebouncedSearchTextField
@@ -85,7 +101,6 @@ export const LinodeSelectTable = () => {
         label="Search"
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search"
-        // value={query}
       />
       {matchesMdUp ? (
         <>
@@ -118,7 +133,12 @@ export const LinodeSelectTable = () => {
               {error && <TableRowError colSpan={5} message={error[0].reason} />}
               {data?.results === 0 && <TableRowEmpty colSpan={5} />}
               {data?.data.map((linode) => (
-                <LinodeSelectTableRow key={linode.id} linode={linode} />
+                <LinodeSelectTableRow
+                  key={linode.id}
+                  linode={linode}
+                  onSelect={() => handleSelect(linode)}
+                  selected={linode.id === field.value?.id}
+                />
               ))}
             </TableBody>
           </Table>
@@ -134,12 +154,10 @@ export const LinodeSelectTable = () => {
         <Grid container spacing={2}>
           {data?.data.map((linode) => (
             <SelectLinodeCard
-              handleSelection={() =>
-                updateParams({ linodeID: String(linode.id) })
-              }
+              handleSelection={() => handleSelect(linode)}
               key={linode.id}
               linode={linode}
-              selected={linode.id === params.linodeID}
+              selected={linode.id === field.value?.id}
             />
           ))}
           {data?.results === 0 && (

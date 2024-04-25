@@ -1,15 +1,13 @@
 import React from 'react';
 
-import { backupFactory } from 'src/factories';
+import { backupFactory, linodeFactory } from 'src/factories';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { BackupSelect } from './BackupSelect';
 
-import type {
-  CreateLinodeRequest,
-  LinodeBackupsResponse,
-} from '@linode/api-v4';
+import type { LinodeCreateFormValues } from '../../utilities';
+import type { LinodeBackupsResponse } from '@linode/api-v4';
 
 describe('BackupSelect', () => {
   it('renders a heading', () => {
@@ -23,7 +21,7 @@ describe('BackupSelect', () => {
     expect(heading.tagName).toBe('H2');
   });
 
-  it('should render backups based on the selected Linode ID in query params', async () => {
+  it('should render backups based on the selected Linode ID in form state', async () => {
     const backups: LinodeBackupsResponse = {
       automatic: backupFactory.buildList(3),
       snapshot: {
@@ -41,12 +39,10 @@ describe('BackupSelect', () => {
     const {
       findAllByText,
       getByText,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
       component: <BackupSelect />,
-      options: {
-        MemoryRouter: {
-          initialEntries: ['/linodes/create?type=Backups&linodeID=2'],
-        },
+      useFormOptions: {
+        defaultValues: { linode: linodeFactory.build({ id: 2 }) },
       },
     });
 
