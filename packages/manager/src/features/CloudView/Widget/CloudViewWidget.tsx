@@ -91,7 +91,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
   };
 
   const tooltipValueFormatter = (value: number, unit: string) =>
-    `${roundTo(value)}${unit}`;
+    `${roundTo(value)} ${unit}`;
 
   const getServiceType = () => {
     return props.widget.serviceType
@@ -137,7 +137,6 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
         if (graphData == undefined || graphData == null) {
           return;
         }
-        console.log(graphData.metric.LINODE_ID);
         const color = colors[index];
         const dimension = {
           backgroundColor: color,
@@ -252,7 +251,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
             subtitle={props.unit}
             suggestedMax={10}
             timezone={timezone}
-            title={props.widget.label}
+            title={props.widget.label.toUpperCase()}
             unit={props.unit}
           />
         </div>

@@ -1340,6 +1340,90 @@ export const handlers = [
             updated: '2020-01-01',
             watchdog_enabled: true,
           },
+          {
+            alerts: {
+              cpu: 10,
+              io: 10000,
+              network_in: 0,
+              network_out: 0,
+              transfer_quota: 80,
+            },
+            backups: {
+              enabled: true,
+              last_successful: '2020-01-01',
+              schedule: {
+                day: 'Scheduling',
+                window: 'Scheduling',
+              },
+            },
+            created: '2020-01-01',
+            group: '',
+            hypervisor: 'kvm',
+            id: 44777,
+            image: 'metadata-test-image',
+            ipv4: ['50.116.6.212', '192.168.203.1'],
+            ipv6: '2600:3c00::f03c:92ff:fee2:6c40/64',
+            label: 'test_linode',
+            placement_group: {
+              affinity_type: 'anti_affinity',
+              id: 1,
+              is_compliant: false,
+              is_strict: true,
+              label: 'pg-1',
+              linodes: [
+                {
+                  is_compliant: true,
+                  linode: 1,
+                },
+                {
+                  is_compliant: true,
+                  linode: 2,
+                },
+                {
+                  is_compliant: true,
+                  linode: 3,
+                },
+                {
+                  is_compliant: true,
+                  linode: 5,
+                },
+                {
+                  is_compliant: true,
+                  linode: 6,
+                },
+                {
+                  is_compliant: true,
+                  linode: 7,
+                },
+                {
+                  is_compliant: true,
+                  linode: 8,
+                },
+                {
+                  is_compliant: true,
+                  linode: 9,
+                },
+                {
+                  is_compliant: false,
+                  linode: 43,
+                },
+              ],
+              region: 'us-east',
+            },
+            region: 'us-east',
+            specs: {
+              disk: 51200,
+              gpus: 0,
+              memory: 2048,
+              transfer: 2000,
+              vcpus: 1,
+            },
+            status: 'running',
+            tags: [],
+            type: 'g6-standard-1',
+            updated: '2020-01-01',
+            watchdog_enabled: true,
+          }
         ])
       )
     );
