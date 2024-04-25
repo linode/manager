@@ -108,6 +108,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
           <Button
             onClick={() => {
               field.onChange(null);
+              setValue('image', null);
               updateParams({ stackScriptID: undefined });
             }}
           >

@@ -22,9 +22,19 @@ import type { Resolver } from 'react-hook-form';
  * This interface is used to type the query params on the Linode Create flow.
  */
 interface LinodeCreateQueryParams {
+  backupID: string | undefined;
   imageID: string | undefined;
   linodeID: string | undefined;
   stackScriptID: string | undefined;
+  subtype: StackScriptTabType | undefined;
+  type: LinodeCreateType | undefined;
+}
+
+interface ParsedLinodeCreateQueryParams {
+  backupID: number | undefined;
+  imageID: string | undefined;
+  linodeID: number | undefined;
+  stackScriptID: number | undefined;
   subtype: StackScriptTabType | undefined;
   type: LinodeCreateType | undefined;
 }
@@ -72,7 +82,7 @@ export const useLinodeCreateQueryParams = () => {
 
 const getParsedLinodeCreateQueryParams = (rawParams: {
   [key: string]: string;
-}) => {
+}): ParsedLinodeCreateQueryParams => {
   return {
     backupID: rawParams.backupID ? Number(rawParams.backupID) : undefined,
     imageID: rawParams.imageID as string | undefined,
@@ -246,12 +256,7 @@ export const defaultValues = async (): Promise<LinodeCreateFormValues> => {
 
   return {
     backup_id: params.backupID,
-    image:
-      queryParams.type === 'Backups'
-        ? null
-        : params.stackScriptID
-        ? params.imageID
-        : params.imageID ?? 'linode/debian11',
+    image: getDefaultImageId(params),
     interfaces: [
       defaultVPCInterface,
       defaultVLANInterface,
@@ -265,6 +270,26 @@ export const defaultValues = async (): Promise<LinodeCreateFormValues> => {
     stackscript_id: params.stackScriptID,
     type: linode?.type ? linode.type : '',
   };
+};
+
+const getDefaultImageId = (params: ParsedLinodeCreateQueryParams) => {
+  // You can't have an Image selected when deploying from a backup.
+  if (params.type === 'Backups') {
+    return null;
+  }
+
+  // Always default debian for the distributions tab.
+  if (!params.type || params.type === 'Distributions') {
+    return 'linode/debian11';
+  }
+
+  // If the user is deep linked to the Images tab with a preselected image,
+  // default to it.
+  if (params.type === 'Images' && params.imageID) {
+    return params.imageID;
+  }
+
+  return null;
 };
 
 const defaultValuesForImages = {
