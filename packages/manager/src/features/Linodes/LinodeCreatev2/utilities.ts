@@ -230,7 +230,12 @@ export const defaultValues = async (): Promise<CreateLinodeRequest> => {
 
   return {
     backup_id: backupID,
-    image: stackScriptID ? imageID : imageID ?? 'linode/debian11',
+    image:
+      queryParams.type === 'Backups'
+        ? null
+        : stackScriptID
+        ? imageID
+        : imageID ?? 'linode/debian11',
     interfaces: [
       defaultVPCInterface,
       defaultVLANInterface,

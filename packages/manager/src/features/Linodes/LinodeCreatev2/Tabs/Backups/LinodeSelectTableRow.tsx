@@ -11,6 +11,7 @@ import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { capitalize } from 'src/utilities/capitalize';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 import { useLinodeCreateQueryParams } from '../../utilities';
 
@@ -59,7 +60,9 @@ export const LinodeSelectTableRow = (props: Props) => {
         {capitalize(linode.status)}
       </TableCell>
       <TableCell>{image?.label ?? linode.image}</TableCell>
-      <TableCell>{type?.label ?? linode.type}</TableCell>
+      <TableCell>
+        {type?.label ? formatStorageUnits(type.label) : linode.type}
+      </TableCell>
       <TableCell>{region?.label ?? linode.region}</TableCell>
     </TableRow>
   );
