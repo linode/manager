@@ -74,11 +74,13 @@ export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
       textFieldProps={{
         tooltipText: (
           <Typography>
-            Linodes in a placement group that use ‘Affinity’ always exist on the
-            same host. This can help with performance. Linodes in a placement
-            group that use ‘Anti-affinity: Host’ are never on the same host. Use
+            Linodes in a placement group that use Affinity are physically closer
+            together, possibly on the same hardware. This can help with
+            performance. Linodes in a placement group that use Anti-affinity are
+            in separate fault domains, but still in the same data center. Use
             this to support a high-availability model.
             <br />
+            {/* TODO VM_Placement: Add link path or determine if removal desired */}
             <Link to="TODO VM_Placement: update link">Learn more.</Link>
           </Typography>
         ),

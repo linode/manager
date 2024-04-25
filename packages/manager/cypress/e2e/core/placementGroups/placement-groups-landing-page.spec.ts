@@ -39,7 +39,7 @@ describe('VM Placement landing page', () => {
     });
 
     ui.button
-      .findByTitle('Create Placement Groups')
+      .findByTitle('Create Placement Group')
       .should('be.visible')
       .should('be.enabled')
       .click();

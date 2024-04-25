@@ -162,7 +162,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
             />
           )}
           <Typography>
-            A Linode can only be assigned to a single Placement Group.
+            A Linode can only be assigned to one placement group.
           </Typography>
           <Box sx={{ alignItems: 'flex-end', display: 'flex' }}>
             <LinodeSelect

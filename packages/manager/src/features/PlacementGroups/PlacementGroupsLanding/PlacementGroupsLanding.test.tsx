@@ -89,7 +89,7 @@ describe('PlacementGroupsLanding', () => {
 
     expect(
       getByText(
-        'Control the physical placement or distribution of virtual machines (VMs) instances within a data center or availability zone.'
+        'Control the physical placement or distribution of Linode instances within a data center or availability zone.'
       )
     ).toBeInTheDocument();
   });

@@ -81,7 +81,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
           variant="warning"
         >
           <Typography fontFamily={theme.font.bold}>
-            Select a region above to see available Placement Groups.
+            Select a Region for your Linode to see existing placement groups.
           </Typography>
         </Notice>
       )}
@@ -93,8 +93,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
           variant="warning"
         >
           <Typography fontFamily={theme.font.bold}>
-            The selected region does not currently have Placement Group
-            capabilities. Only these{' '}
+            Currently, only specific{' '}
             <TextTooltip
               sxTypography={{
                 fontFamily: theme.font.bold,
@@ -111,7 +110,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
               displayText="regions"
               minWidth={225}
             />{' '}
-            support Placement Groups.
+            support placement groups.
           </Typography>
         </Notice>
       )}
