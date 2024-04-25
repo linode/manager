@@ -20,7 +20,7 @@ export const useCloudViewMetricsQuery = (
     () => getCloudViewMetricsAPI(props.authToken, serviceType, request),
     {
       enabled: true,
-      refetchInterval: 5000,
+      refetchInterval: 60000,
     }
   );
 };
