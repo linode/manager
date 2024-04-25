@@ -59,7 +59,7 @@ export const LinodeSelectTable = () => {
     : {
         '+or': [
           { label: { '+contains': query } },
-          ...(isNumeric(query) ? [{ id: Number(query) }] : []),
+          ...(isNumeric(query) ? [{ id: Number(query) }] : []), // let users filter by Linode id
         ],
         '+order': order.order,
         '+order_by': order.orderBy,

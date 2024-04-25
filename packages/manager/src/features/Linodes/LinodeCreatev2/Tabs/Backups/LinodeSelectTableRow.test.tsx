@@ -1,3 +1,4 @@
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import {
@@ -26,6 +27,55 @@ describe('LinodeSelectTableRow', () => {
     });
 
     expect(getByLabelText(linode.label)).toHaveRole('radio');
+  });
+
+  it('should render a checked Radio if selected is true', () => {
+    const linode = linodeFactory.build();
+
+    const { getByLabelText } = renderWithThemeAndHookFormContext({
+      component: wrapWithTableBody(
+        <LinodeSelectTableRow linode={linode} onSelect={vi.fn()} selected />
+      ),
+    });
+
+    expect(getByLabelText(linode.label)).toBeChecked();
+  });
+
+  it('should render a unchecked Radio if selected is false', () => {
+    const linode = linodeFactory.build();
+
+    const { getByLabelText } = renderWithThemeAndHookFormContext({
+      component: wrapWithTableBody(
+        <LinodeSelectTableRow
+          linode={linode}
+          onSelect={vi.fn()}
+          selected={false}
+        />
+      ),
+    });
+
+    expect(getByLabelText(linode.label)).not.toBeChecked();
+  });
+
+  it('should should call onSelect when a radio is selected', async () => {
+    const linode = linodeFactory.build();
+
+    const onSelect = vi.fn();
+
+    const { getByLabelText } = renderWithThemeAndHookFormContext({
+      component: wrapWithTableBody(
+        <LinodeSelectTableRow
+          linode={linode}
+          onSelect={onSelect}
+          selected={false}
+        />
+      ),
+    });
+
+    const radio = getByLabelText(linode.label);
+    await userEvent.click(radio);
+
+    expect(onSelect).toHaveBeenCalledOnce();
   });
 
   it('should render a Linode image label', async () => {
