@@ -211,7 +211,20 @@ const defaultPublicInterface = {
   purpose: 'public',
 } as const;
 
+/**
+ * We extend the API's payload type so that we can hold some extra state
+ * in the react-hook-form form.
+ *
+ * For example, we add `linode` so we can store the currently selected Linode
+ * for the Backups and Clone tab.
+ *
+ * For any extra values added to the form, we should make sure `getLinodeCreatePayload`
+ * removes the from the payload before it is sent to the API.
+ */
 export interface LinodeCreateFormValues extends CreateLinodeRequest {
+  /**
+   * The currently selected Linode
+   */
   linode?: Linode | null;
 }
 

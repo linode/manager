@@ -28,8 +28,8 @@ import {
 } from '../../utilities';
 import { LinodeSelectTableRow } from './LinodeSelectTableRow';
 
+import type { Linode } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
-import { Linode } from '@linode/api-v4';
 
 export const LinodeSelectTable = () => {
   const matchesMdUp = useMediaQuery((theme: Theme) =>
