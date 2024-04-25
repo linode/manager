@@ -107,7 +107,7 @@ export const determineLimitedAvailabilityNoticeCopy = (
     >
       {mostClassPlansAreLimitedAvailability ? (
         <StyledNoticeTypography>
-          These plans have limited availability.{' '}
+          These plans have limited deployment availability.{' '}
           <Link to={docsLink}>Learn more</Link>.
         </StyledNoticeTypography>
       ) : (
