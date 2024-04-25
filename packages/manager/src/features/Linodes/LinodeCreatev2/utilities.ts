@@ -60,7 +60,16 @@ export const useLinodeCreateQueryParams = () => {
     history.push({ search: newParams.toString() });
   };
 
-  const params = {
+  const params = getParsedLinodeCreateQueryParams(rawParams);
+
+  return { params, setParams, updateParams };
+};
+
+const getParsedLinodeCreateQueryParams = (rawParams: {
+  [key: string]: string;
+}) => {
+  return {
+    backupID: rawParams.backupID ? Number(rawParams.backupID) : undefined,
     imageID: rawParams.imageID as string | undefined,
     linodeID: rawParams.linodeID ? Number(rawParams.linodeID) : undefined,
     stackScriptID: rawParams.stackScriptID
@@ -69,8 +78,6 @@ export const useLinodeCreateQueryParams = () => {
     subtype: rawParams.subtype as StackScriptTabType | undefined,
     type: rawParams.type as LinodeCreateType | undefined,
   };
-
-  return { params, setParams, updateParams };
 };
 
 /**
@@ -207,35 +214,22 @@ const defaultPublicInterface = {
  */
 export const defaultValues = async (): Promise<CreateLinodeRequest> => {
   const queryParams = getQueryParamsFromQueryString(window.location.search);
+  const params = getParsedLinodeCreateQueryParams(queryParams);
 
-  const stackScriptID = queryParams.stackScriptID
-    ? Number(queryParams.stackScriptID)
-    : undefined;
-
-  const stackscript = stackScriptID
-    ? await getStackScript(stackScriptID)
+  const stackscript = params.stackScriptID
+    ? await getStackScript(params.stackScriptID)
     : null;
 
-  const backupID = queryParams.backupID
-    ? Number(queryParams.backupID)
-    : undefined;
-
-  const linodeID = queryParams.linodeID
-    ? Number(queryParams.linodeID)
-    : undefined;
-
-  const linode = linodeID ? await getLinode(linodeID) : null;
-
-  const imageID = queryParams.imageID;
+  const linode = params.linodeID ? await getLinode(params.linodeID) : null;
 
   return {
-    backup_id: backupID,
+    backup_id: params.backupID,
     image:
       queryParams.type === 'Backups'
         ? null
-        : stackScriptID
-        ? imageID
-        : imageID ?? 'linode/debian11',
+        : params.stackScriptID
+        ? params.imageID
+        : params.imageID ?? 'linode/debian11',
     interfaces: [
       defaultVPCInterface,
       defaultVLANInterface,
@@ -245,7 +239,7 @@ export const defaultValues = async (): Promise<CreateLinodeRequest> => {
     stackscript_data: stackscript?.user_defined_fields
       ? getDefaultUDFData(stackscript.user_defined_fields)
       : undefined,
-    stackscript_id: stackScriptID,
+    stackscript_id: params.stackScriptID,
     type: linode?.type ? linode.type : '',
   };
 };

@@ -19,6 +19,7 @@ import { SelectLinodeCard } from 'src/features/Linodes/LinodesCreate/SelectLinod
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
+import { isNumeric } from 'src/utilities/stringUtils';
 
 import { useLinodeCreateQueryParams } from '../../utilities';
 import { LinodeSelectTableRow } from './LinodeSelectTableRow';
@@ -32,12 +33,18 @@ export const LinodeSelectTable = () => {
 
   const { params, updateParams } = useLinodeCreateQueryParams();
 
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(
+    params.linodeID !== undefined ? String(params.linodeID) : ''
+  );
+
   const pagination = usePagination();
   const order = useOrder();
 
   const filter = {
-    '+or': [{ label: { '+contains': query } }],
+    '+or': [
+      { label: { '+contains': query } },
+      ...(isNumeric(query) ? [{ id: Number(query) }] : []),
+    ],
     '+order': order.order,
     '+order_by': order.orderBy,
     // backups: { enabled: true }, womp womp! We can't filter on values within objects
@@ -54,6 +61,10 @@ export const LinodeSelectTable = () => {
   return (
     <Stack pt={1} spacing={2}>
       <DebouncedSearchTextField
+        customValue={{
+          onChange: (value) => setQuery(value ?? ''),
+          value: query,
+        }}
         clearable
         hideLabel
         isSearching={isFetching}
