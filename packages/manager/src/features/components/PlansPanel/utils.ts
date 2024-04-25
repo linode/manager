@@ -281,6 +281,11 @@ export const extractPlansInformation = ({
     // Determine if the plan should be disabled solely due to being a 512GB plan
     const isDisabled512GbPlan =
       plan.label.includes('512GB') && Boolean(disableLargestGbPlans);
+    const _plan = {
+      ...plan,
+      isDisabled512GbPlan,
+      isLimitedAvailabilityPlan: plan.isLimitedAvailabilityPlan,
+    };
 
     // Determine if the plan should be disabled due to
     // - having limited availability (API based)
@@ -291,7 +296,7 @@ export const extractPlansInformation = ({
       isDisabled512GbPlan ||
       disabledPlanTypes?.some((disabledPlan) => disabledPlan.id === plan.id)
     ) {
-      return [...acc, plan.id];
+      return [...acc, _plan];
     }
 
     return acc;

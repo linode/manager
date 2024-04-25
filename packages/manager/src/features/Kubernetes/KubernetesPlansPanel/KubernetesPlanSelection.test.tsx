@@ -32,6 +32,10 @@ const typeWithAvailability: TypeWithAvailability = {
 };
 
 const props: KubernetesPlanSelectionProps = {
+  disabledStatus: {
+    isDisabled512GbPlan: false,
+    isLimitedAvailabilityPlan: false,
+  },
   getTypeCount: vi.fn(),
   hasMajorityOfPlansDisabled: false,
   idx: 0,
@@ -130,6 +134,10 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
       wrapWithTableBody(
         <KubernetesPlanSelection
           {...props}
+          disabledStatus={{
+            isDisabled512GbPlan: true,
+            isLimitedAvailabilityPlan: false,
+          }}
           planIsDisabled={true}
           type={bigPlanType}
         />

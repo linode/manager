@@ -240,7 +240,15 @@ describe('extractPlansInformation', () => {
       selectedRegionId: 'us-east-1',
     });
 
-    expect(result).toHaveProperty('allDisabledPlans', ['g6-standard-1']);
+    expect(result).toHaveProperty('allDisabledPlans', [
+      {
+        ...g6Standard1,
+        ...{
+          isDisabled512GbPlan: false,
+          isLimitedAvailabilityPlan: false,
+        },
+      },
+    ]);
     expect(result).toHaveProperty('hasDisabledPlans', true);
     expect(result).toHaveProperty('hasMajorityOfPlansDisabled', false);
     expect(result).toHaveProperty('plansForThisLinodeTypeClass', [
@@ -269,8 +277,20 @@ describe('extractPlansInformation', () => {
     });
 
     expect(result).toHaveProperty('allDisabledPlans', [
-      'g6-standard-1',
-      'g6-nanode-1',
+      {
+        ...g6Standard1,
+        ...{
+          isDisabled512GbPlan: false,
+          isLimitedAvailabilityPlan: false,
+        },
+      },
+      {
+        ...g6Nanode1,
+        ...{
+          isDisabled512GbPlan: false,
+          isLimitedAvailabilityPlan: false,
+        },
+      },
     ]);
     expect(result).toHaveProperty('hasDisabledPlans', true);
     expect(result).toHaveProperty('hasMajorityOfPlansDisabled', true);

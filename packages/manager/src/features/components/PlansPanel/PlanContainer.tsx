@@ -34,8 +34,13 @@ const tableCells = [
   },
 ];
 
+type AllDisabledPlans = TypeWithAvailability & {
+  isDisabled512GbPlan: boolean;
+  isLimitedAvailabilityPlan: boolean;
+};
+
 export interface Props {
-  allDisabledPlans: string[];
+  allDisabledPlans: AllDisabledPlans[];
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
@@ -89,7 +94,17 @@ export const PlanContainer = (props: Props) => {
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
-      const isPlanDisabled = allDisabledPlans.includes(plan.id);
+      const isPlanDisabled = allDisabledPlans.some(
+        (disabledPlan) => disabledPlan.id === plan.id
+      );
+      const currentDisabledPlan = allDisabledPlans.find(
+        (disabledPlan) => disabledPlan.id === plan.id
+      );
+      const currentDisabledPlanStatus = currentDisabledPlan && {
+        isDisabled512GbPlan: currentDisabledPlan.isDisabled512GbPlan,
+        isLimitedAvailabilityPlan:
+          currentDisabledPlan.isLimitedAvailabilityPlan,
+      };
 
       return (
         <PlanSelection
@@ -98,6 +113,7 @@ export const PlanContainer = (props: Props) => {
           }
           currentPlanHeading={currentPlanHeading}
           disabledClasses={disabledClasses}
+          disabledStatus={currentDisabledPlanStatus}
           disabledToolTip={disabledPlanTypesToolTipText}
           idx={id}
           isCreate={isCreate}

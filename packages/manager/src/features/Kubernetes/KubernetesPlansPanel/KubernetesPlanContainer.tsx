@@ -25,8 +25,13 @@ const tableCells = [
   { cellName: 'Quantity', center: false, noWrap: false, testId: 'quantity' },
 ];
 
+type AllDisabledPlans = TypeWithAvailability & {
+  isDisabled512GbPlan: boolean;
+  isLimitedAvailabilityPlan: boolean;
+};
+
 export interface KubernetesPlanContainerProps {
-  allDisabledPlans: string[];
+  allDisabledPlans: AllDisabledPlans[];
   getTypeCount: (planId: string) => number;
   hasMajorityOfPlansDisabled: boolean;
   onAdd?: (key: string, value: number) => void;
@@ -58,10 +63,21 @@ export const KubernetesPlanContainer = (
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
-      const isPlanDisabled = allDisabledPlans.includes(plan.id);
+      const isPlanDisabled = allDisabledPlans.some(
+        (disabledPlan) => disabledPlan.id === plan.id
+      );
+      const currentDisabledPlan = allDisabledPlans.find(
+        (disabledPlan) => disabledPlan.id === plan.id
+      );
+      const currentDisabledPlanStatus = currentDisabledPlan && {
+        isDisabled512GbPlan: currentDisabledPlan.isDisabled512GbPlan,
+        isLimitedAvailabilityPlan:
+          currentDisabledPlan.isLimitedAvailabilityPlan,
+      };
 
       return (
         <KubernetesPlanSelection
+          disabledStatus={currentDisabledPlanStatus}
           getTypeCount={getTypeCount}
           hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
           idx={id}

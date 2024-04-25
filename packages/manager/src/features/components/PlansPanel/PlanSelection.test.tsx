@@ -27,6 +27,10 @@ const mockPlan: PlanSelectionType = planSelectionTypeFactory.build({
 });
 
 const defaultProps: PlanSelectionProps = {
+  disabledStatus: {
+    isDisabled512GbPlan: false,
+    isLimitedAvailabilityPlan: false,
+  },
   idx: 0,
   onSelect: () => vi.fn(),
   type: mockPlan,
@@ -174,6 +178,10 @@ describe('PlanSelection (table, desktop)', () => {
       wrapWithTableBody(
         <PlanSelection
           {...defaultProps}
+          disabledStatus={{
+            isDisabled512GbPlan: true,
+            isLimitedAvailabilityPlan: false,
+          }}
           planIsDisabled={true}
           type={bigPlanType}
         />

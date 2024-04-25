@@ -27,6 +27,12 @@ import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import type { TypeWithAvailability } from 'src/features/components/PlansPanel/types';
 
 export interface KubernetesPlanSelectionProps {
+  disabledStatus:
+    | {
+        isDisabled512GbPlan: boolean;
+        isLimitedAvailabilityPlan: boolean;
+      }
+    | undefined;
   getTypeCount: (planId: string) => number;
   hasMajorityOfPlansDisabled: boolean;
   idx: number;
@@ -44,6 +50,7 @@ export const KubernetesPlanSelection = (
   props: KubernetesPlanSelectionProps
 ) => {
   const {
+    disabledStatus,
     getTypeCount,
     hasMajorityOfPlansDisabled,
     idx,
@@ -107,7 +114,9 @@ export const KubernetesPlanSelection = (
               {type.heading} &nbsp;
               {isDisabled &&
                 !wholePanelIsDisabled &&
-                !hasMajorityOfPlansDisabled && (
+                !hasMajorityOfPlansDisabled &&
+                (Boolean(disabledStatus?.isDisabled512GbPlan) ||
+                  Boolean(disabledStatus?.isLimitedAvailabilityPlan)) && (
                   <Tooltip
                     PopperProps={{
                       sx: {
@@ -127,8 +136,10 @@ export const KubernetesPlanSelection = (
                     <IconButton disableRipple size="small">
                       <HelpOutline
                         sx={{
-                          height: 16,
-                          width: 16,
+                          height: 18,
+                          position: 'relative',
+                          top: -2,
+                          width: 18,
                         }}
                       />
                     </IconButton>

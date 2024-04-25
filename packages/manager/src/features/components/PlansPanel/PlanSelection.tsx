@@ -31,6 +31,12 @@ import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
 export interface PlanSelectionProps {
   currentPlanHeading?: string;
   disabledClasses?: LinodeTypeClass[];
+  disabledStatus:
+    | {
+        isDisabled512GbPlan: boolean;
+        isLimitedAvailabilityPlan: boolean;
+      }
+    | undefined;
   disabledToolTip?: string;
   header?: string;
   hideDisabledHelpIcons?: boolean;
@@ -78,6 +84,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   const {
     currentPlanHeading,
     disabledClasses,
+    disabledStatus,
     disabledToolTip,
     hideDisabledHelpIcons,
     idx,
@@ -182,33 +189,36 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             data-qa-plan-name
           >
             {type.heading} &nbsp;
-            {rowIsDisabled && !hideDisabledHelpIcons && (
-              <Tooltip
-                PopperProps={{
-                  sx: {
-                    '& .MuiTooltip-tooltip': {
-                      width: 175,
+            {rowIsDisabled &&
+              !hideDisabledHelpIcons &&
+              (Boolean(disabledStatus?.isDisabled512GbPlan) ||
+                Boolean(disabledStatus?.isLimitedAvailabilityPlan)) && (
+                <Tooltip
+                  PopperProps={{
+                    sx: {
+                      '& .MuiTooltip-tooltip': {
+                        width: 175,
+                      },
                     },
-                  },
-                }}
-                sx={{
-                  top: -2,
-                }}
-                data-qa-tooltip={LIMITED_AVAILABILITY_TEXT}
-                data-testid="limited-availability"
-                placement="right-start"
-                title={LIMITED_AVAILABILITY_TEXT}
-              >
-                <IconButton disableRipple size="small">
-                  <HelpOutline
-                    sx={{
-                      height: 16,
-                      width: 16,
-                    }}
-                  />
-                </IconButton>
-              </Tooltip>
-            )}
+                  }}
+                  sx={{
+                    top: -2,
+                  }}
+                  data-qa-tooltip={LIMITED_AVAILABILITY_TEXT}
+                  data-testid="limited-availability"
+                  placement="right"
+                  title={LIMITED_AVAILABILITY_TEXT}
+                >
+                  <IconButton disableRipple size="small">
+                    <HelpOutline
+                      sx={{
+                        height: 18,
+                        width: 18,
+                      }}
+                    />
+                  </IconButton>
+                </Tooltip>
+              )}
             {(isSamePlan || type.id === selectedLinodePlanType) && (
               <StyledChip
                 aria-label="This is your current plan"
@@ -216,17 +226,26 @@ export const PlanSelection = (props: PlanSelectionProps) => {
                 label="Current Plan"
               />
             )}
-            {tooltip && (
-              <TooltipIcon
-                sxTooltipIcon={{
-                  paddingBottom: '0px !important',
-                  paddingTop: '0px !important',
-                }}
-                status="help"
-                text={tooltip}
-                tooltipPosition="right-end"
-              />
-            )}
+            {tooltip &&
+              !(
+                Boolean(disabledStatus?.isDisabled512GbPlan) ||
+                Boolean(disabledStatus?.isLimitedAvailabilityPlan)
+              ) && (
+                <TooltipIcon
+                  sxTooltipIcon={{
+                    paddingBottom: '0px !important',
+                    paddingTop: '0px !important',
+                    svg: {
+                      height: 18,
+                      width: 18,
+                    },
+                    top: -2,
+                  }}
+                  status="help"
+                  text={tooltip}
+                  tooltipPosition="right"
+                />
+              )}
           </TableCell>
           <TableCell
             data-qa-monthly
