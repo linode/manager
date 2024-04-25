@@ -53,6 +53,7 @@ export const LinodeSelectTableRow = (props: Props) => {
           checked={linode.id === params.linodeID}
           control={<Radio />}
           label={linode.label}
+          sx={{ gap: 2 }}
         />
       </TableCell>
       <TableCell statusCell>
