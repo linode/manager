@@ -868,6 +868,78 @@ const cloudView = [
     }
   }),
 
+  rest.get(
+    '*/monitor/services/:serviceType/metricDefinitions',
+    async (req, res, ctx) => {
+      return res(
+        ctx.json({
+          available_metrics: [
+            {
+              label: 'CPU utilization',
+              metric: '200',
+              unit: '%',
+              y_label: 'count',
+              mteric_type: '',
+              scrape_interval: '',
+              available_aggregate_functions: [
+                'min',
+                'max',
+                'avg',
+                'sum',
+                'count',
+              ],
+            },
+            {
+              label: 'Memory Usage',
+              metric: '400',
+              unit: '%',
+              y_label: 'count',
+              mteric_type: '',
+              scrape_interval: '',
+              available_aggregate_functions: [
+                'min',
+                'max',
+                'avg',
+                'sum',
+                'count',
+              ],
+            },
+            {
+              label: 'Network Traffic',
+              metric: '500',
+              unit: '%',
+              y_label: 'count',
+              mteric_type: '',
+              scrape_interval: '',
+              available_aggregate_functions: [
+                'min',
+                'max',
+                'avg',
+                'sum',
+                'count',
+              ],
+            },
+            {
+              label: 'Disk I/O',
+              metric: '401',
+              unit: 'Kb/s',
+              y_label: 'count',
+              mteric_type: '',
+              scrape_interval: '',
+              available_aggregate_functions: [
+                'min',
+                'max',
+                'avg',
+                'sum',
+                'count',
+              ],
+            },
+          ],
+        })
+      );
+    }
+  ),
+
   rest.get('*/cloudview/services', async (req, res, ctx) => {
     await sleep(2000);
     return res(
