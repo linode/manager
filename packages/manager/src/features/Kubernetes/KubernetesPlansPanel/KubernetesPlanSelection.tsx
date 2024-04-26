@@ -54,17 +54,9 @@ export const KubernetesPlanSelection = (
     updatePlanCount,
     wholePanelIsDisabled,
   } = props;
-  const {
-    isDisabled512GbPlan,
-    isLimitedAvailabilityPlan,
-    isManuallyDisabled,
-  } = plan;
 
   const isRowDisabled =
-    wholePanelIsDisabled ||
-    isManuallyDisabled ||
-    isLimitedAvailabilityPlan ||
-    isDisabled512GbPlan;
+    wholePanelIsDisabled || plan.planHasLimitedAvailability || plan.planIs512Gb;
   const count = getTypeCount(plan.id);
   const price: PriceObject | undefined = getLinodeRegionPrice(
     plan,
@@ -115,8 +107,7 @@ export const KubernetesPlanSelection = (
               {isRowDisabled &&
                 !wholePanelIsDisabled &&
                 !hasMajorityOfPlansDisabled &&
-                (Boolean(isDisabled512GbPlan) ||
-                  Boolean(isLimitedAvailabilityPlan)) && (
+                (plan.planIs512Gb || plan.planHasLimitedAvailability) && (
                   <Tooltip
                     PopperProps={{
                       sx: {

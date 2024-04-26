@@ -40,7 +40,7 @@ export interface PlanContainerProps {
   currentPlanHeading?: string;
   hasMajorityOfPlansDisabled: boolean;
   isCreate?: boolean;
-  isWholePanelDisabled?: boolean;
+  wholePanelIsDisabled?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   planType?: LinodeTypeClass;
@@ -57,7 +57,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
     currentPlanHeading,
     hasMajorityOfPlansDisabled,
     isCreate,
-    isWholePanelDisabled,
+    wholePanelIsDisabled,
     linodeID,
     onSelect,
     planType,
@@ -123,7 +123,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
             currentPlanHeading={currentPlanHeading}
             idx={id}
             isCreate={isCreate}
-            isWholePanelDisabled={isWholePanelDisabled}
+            wholePanelIsDisabled={wholePanelIsDisabled}
             key={id}
             linodeID={linodeID}
             onSelect={onSelect}
@@ -142,7 +142,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
       hasMajorityOfPlansDisabled,
       plans,
       selectedRegionId,
-      isWholePanelDisabled,
+      wholePanelIsDisabled,
       currentPlanHeading,
       isCreate,
       linodeID,

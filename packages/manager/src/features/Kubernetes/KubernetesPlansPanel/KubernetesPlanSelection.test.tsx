@@ -28,10 +28,9 @@ const storage = '1024 GB';
 
 const typeWithAvailability: TypeWithAvailability = {
   ...extendedTypeFactory.build(),
-  belongsToDisabledClass: false,
-  isDisabled512GbPlan: false,
-  isLimitedAvailabilityPlan: false,
-  isManuallyDisabled: false,
+  planBelongsToDisabledClass: false,
+  planIs512Gb: false,
+  planHasLimitedAvailability: false,
 };
 
 const props: KubernetesPlanSelectionProps = {
@@ -124,10 +123,9 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
         heading: 'Dedicated 512 GB',
         label: 'Dedicated 512GB',
       }),
-      belongsToDisabledClass: false,
-      isDisabled512GbPlan: false,
-      isLimitedAvailabilityPlan: true,
-      isManuallyDisabled: false,
+      planBelongsToDisabledClass: false,
+      planIs512Gb: false,
+      planHasLimitedAvailability: true,
     };
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(

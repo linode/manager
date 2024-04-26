@@ -241,7 +241,6 @@ export const replaceOrAppendPlaceholder512GbPlans = (
 interface ExtractPlansInformationProps {
   disableLargestGbPlansFlag: Flags['disableLargestGbPlans'] | undefined;
   disabledClasses?: LinodeTypeClass[];
-  disabledPlans?: PlanSelectionType[];
   plans: PlanSelectionType[];
   regionAvailabilities: RegionAvailability[] | undefined;
   selectedRegionId: Region['id'] | undefined;
@@ -251,7 +250,8 @@ interface ExtractPlansInformationProps {
  * Extracts plan information and determines if any plans are disabled.
  * Used for Linode and Kubernetes selection Plan tables and notices.
  *
- * @param disabledPlans A curated list of disabled plan types. Optional.
+ * @param disableLargestGbPlansFlag The flag to disable the largest GB plans.
+ * @param disabledClasses The disabled classes (aka linode types).
  * @param plans The plans for the Linode type class.
  * @param regionAvailabilities The region availabilities.
  * @param selectedRegionId The selected region ID.
@@ -261,49 +261,47 @@ interface ExtractPlansInformationProps {
 export const extractPlansInformation = ({
   disableLargestGbPlansFlag,
   disabledClasses,
-  disabledPlans,
   plans,
   regionAvailabilities,
   selectedRegionId,
 }: ExtractPlansInformationProps) => {
   const plansForThisLinodeTypeClass: TypeWithAvailability[] = plans.map(
     (plan) => {
-      const isDisabled512GbPlan =
+      const planIs512Gb =
         plan.label.includes('512GB') && Boolean(disableLargestGbPlansFlag);
-      const isManuallyDisabled = Boolean(
-        disabledPlans?.some((disabledPlan) => disabledPlan.id === plan.id)
-      );
-      const isLimitedAvailabilityPlan = getIsLimitedAvailability({
+      const planHasLimitedAvailability = getIsLimitedAvailability({
         plan,
         regionAvailabilities,
         selectedRegionId,
       });
-      const belongsToDisabledClass = Boolean(
+      const planBelongsToDisabledClass = Boolean(
         disabledClasses?.includes(plan.class)
       );
 
       return {
         ...plan,
-        belongsToDisabledClass,
-        isDisabled512GbPlan,
-        isLimitedAvailabilityPlan,
-        isManuallyDisabled,
+        planBelongsToDisabledClass,
+        planHasLimitedAvailability,
+        planIs512Gb,
       };
     }
   );
 
   const allDisabledPlans = plansForThisLinodeTypeClass.reduce((acc, plan) => {
-    // Determine if the plan should be disabled solely due to being a 512GB plan
+    const {
+      planBelongsToDisabledClass,
+      planHasLimitedAvailability,
+      planIs512Gb,
+    } = plan;
 
     // Determine if the plan should be disabled due to
+    // - belonging to a disabled class
     // - having limited availability (API based)
     // - being a 512GB plan (hard coded)
-    // - being "manually" disabled by the parent component
     if (
-      plan.belongsToDisabledClass ||
-      plan.isLimitedAvailabilityPlan ||
-      plan.isDisabled512GbPlan ||
-      plan.isManuallyDisabled
+      planBelongsToDisabledClass ||
+      planHasLimitedAvailability ||
+      planIs512Gb
     ) {
       return [...acc, plan];
     }

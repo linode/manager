@@ -13,10 +13,9 @@ export interface PlanSelectionType extends BaseType {
 }
 
 export interface PlanSelectionAvailabilityTypes {
-  belongsToDisabledClass: boolean;
-  isDisabled512GbPlan: boolean;
-  isLimitedAvailabilityPlan: boolean;
-  isManuallyDisabled: boolean;
+  planBelongsToDisabledClass: boolean;
+  planHasLimitedAvailability: boolean;
+  planIs512Gb: boolean;
 }
 interface ExtendedTypeWithAvailability
   extends ExtendedType,

@@ -81,7 +81,6 @@ export const KubernetesPlansPanel = (props: Props) => {
       plansForThisLinodeTypeClass,
     } = extractPlansInformation({
       disableLargestGbPlansFlag: flags.disableLargestGbPlans,
-      disabledPlans: [],
       plans: plansMap,
       regionAvailabilities,
       selectedRegionId,

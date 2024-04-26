@@ -1,17 +1,13 @@
-import HelpOutline from '@mui/icons-material/HelpOutline';
 import * as React from 'react';
 
 import { Chip } from 'src/components/Chip';
 import { Currency } from 'src/components/Currency';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Hidden } from 'src/components/Hidden';
-import { IconButton } from 'src/components/IconButton';
 import { Radio } from 'src/components/Radio/Radio';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Tooltip } from 'src/components/Tooltip';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
@@ -23,6 +19,7 @@ import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import { LIMITED_AVAILABILITY_TEXT } from './constants';
+import { DisabledPlanSelectionTooltip } from './DisabledPlanSelectionTooltip';
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
 
 import type { TypeWithAvailability } from './types';
@@ -31,11 +28,10 @@ import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
 export interface PlanSelectionProps {
   currentPlanHeading?: string;
   disabledClasses?: LinodeTypeClass[];
-  disabledToolTip?: string;
   header?: string;
   idx: number;
   isCreate?: boolean;
-  isWholePanelDisabled?: boolean;
+  wholePanelIsDisabled?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   plan: TypeWithAvailability;
@@ -45,33 +41,12 @@ export interface PlanSelectionProps {
   showTransfer?: boolean;
 }
 
-const getToolTip = ({
-  disabledToolTip,
-  isSamePlan,
-  planIsDisabled,
-  sizeTooSmall,
-}: {
-  disabledToolTip?: string;
-  isSamePlan: boolean;
-  planIsDisabled?: boolean;
-  sizeTooSmall: boolean;
-}) => {
-  if (planIsDisabled && !isSamePlan) {
-    return disabledToolTip;
-  }
-  if (sizeTooSmall) {
-    return 'This plan is too small for the selected image.';
-  }
-  return undefined;
-};
-
 export const PlanSelection = (props: PlanSelectionProps) => {
   const {
     currentPlanHeading,
-    disabledToolTip,
     idx,
     isCreate,
-    isWholePanelDisabled,
+    wholePanelIsDisabled,
     linodeID,
     onSelect,
     plan,
@@ -81,20 +56,14 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     showTransfer,
   } = props;
   const {
-    belongsToDisabledClass,
-    isDisabled512GbPlan,
-    isLimitedAvailabilityPlan,
-    isManuallyDisabled,
+    planBelongsToDisabledClass,
+    planHasLimitedAvailability,
+    planIs512Gb,
   } = plan;
 
   const diskSize = selectedDiskSize ? selectedDiskSize : 0;
-  const planTooSmall = diskSize > plan.disk;
+  const planIsTooSmall = diskSize > plan.disk;
   const isSamePlan = plan.heading === currentPlanHeading;
-  const tooltip = getToolTip({
-    disabledToolTip,
-    isSamePlan,
-    sizeTooSmall: planTooSmall,
-  });
   const isGPU = plan.class === 'gpu';
   const shouldShowTransfer = showTransfer && plan.transfer;
   const shouldShowNetwork = showTransfer && plan.network_out;
@@ -108,7 +77,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   const rowAriaLabel =
     plan && plan.formattedLabel && isSamePlan
       ? `${plan.formattedLabel} this is your current plan`
-      : planTooSmall
+      : planIsTooSmall
       ? `${plan.formattedLabel} this plan is too small for resize`
       : plan.formattedLabel;
 
@@ -123,12 +92,11 @@ export const PlanSelection = (props: PlanSelectionProps) => {
 
   const rowIsDisabled =
     isSamePlan ||
-    planTooSmall ||
-    belongsToDisabledClass ||
-    isDisabled512GbPlan ||
-    isLimitedAvailabilityPlan ||
-    isManuallyDisabled ||
-    isWholePanelDisabled;
+    planIsTooSmall ||
+    planBelongsToDisabledClass ||
+    planIs512Gb ||
+    planHasLimitedAvailability ||
+    wholePanelIsDisabled;
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -148,16 +116,16 @@ export const PlanSelection = (props: PlanSelectionProps) => {
                 control={
                   <Radio
                     checked={
-                      !isWholePanelDisabled &&
+                      !wholePanelIsDisabled &&
                       !rowIsDisabled &&
-                      !planTooSmall &&
+                      !planIsTooSmall &&
                       plan.id === String(selectedId)
                     }
                     disabled={
-                      planTooSmall ||
-                      isWholePanelDisabled ||
+                      planIsTooSmall ||
+                      wholePanelIsDisabled ||
                       rowIsDisabled ||
-                      belongsToDisabledClass
+                      planBelongsToDisabledClass
                     }
                     id={plan.id}
                     onChange={() => onSelect(plan.id)}
@@ -174,54 +142,20 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             data-qa-plan-name
           >
             {plan.heading} &nbsp;
-            {isLimitedAvailabilityPlan && (
-              <Tooltip
-                PopperProps={{
-                  sx: {
-                    '& .MuiTooltip-tooltip': {
-                      width: 175,
-                    },
-                  },
-                }}
-                sx={{
-                  top: -2,
-                }}
-                data-qa-tooltip={LIMITED_AVAILABILITY_TEXT}
-                data-testid="limited-availability"
-                placement="right"
-                title={LIMITED_AVAILABILITY_TEXT}
-              >
-                <IconButton disableRipple size="small">
-                  <HelpOutline
-                    sx={{
-                      height: 18,
-                      width: 18,
-                    }}
-                  />
-                </IconButton>
-              </Tooltip>
-            )}
+            <DisabledPlanSelectionTooltip
+              disabledReasons={{
+                planBelongsToDisabledClass,
+                planHasLimitedAvailability,
+                planIs512Gb,
+                planIsTooSmall,
+              }}
+              wholePanelIsDisabled={wholePanelIsDisabled}
+            />
             {(isSamePlan || plan.id === selectedLinodePlanType) && (
               <StyledChip
                 aria-label="This is your current plan"
                 data-qa-current-plan
                 label="Current Plan"
-              />
-            )}
-            {tooltip && !isLimitedAvailabilityPlan && (
-              <TooltipIcon
-                sxTooltipIcon={{
-                  paddingBottom: '0px !important',
-                  paddingTop: '0px !important',
-                  svg: {
-                    height: 18,
-                    width: 18,
-                  },
-                  top: -2,
-                }}
-                status="help"
-                text={tooltip}
-                tooltipPosition="right"
               />
             )}
           </TableCell>
@@ -272,11 +206,11 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
         <SelectionCard
           disabled={
-            planTooSmall ||
+            planIsTooSmall ||
             isSamePlan ||
-            isWholePanelDisabled ||
+            wholePanelIsDisabled ||
             rowIsDisabled ||
-            belongsToDisabledClass
+            planBelongsToDisabledClass
           }
           headingDecoration={
             isSamePlan || plan.id === selectedLinodePlanType ? (
@@ -303,7 +237,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           heading={plan.heading}
           key={plan.id}
           onClick={() => onSelect(plan.id)}
-          tooltip={rowIsDisabled ? LIMITED_AVAILABILITY_TEXT : tooltip}
+          tooltip={rowIsDisabled ? LIMITED_AVAILABILITY_TEXT : ''}
         />
       </Hidden>
     </React.Fragment>

@@ -234,7 +234,6 @@ describe('extractPlansInformation', () => {
   it('should return correct information when less than half of plans are disabled', () => {
     const result = extractPlansInformation({
       disableLargestGbPlansFlag: false,
-      disabledPlans: [g6Standard1],
       plans: [g6Standard1, g7Standard1, g6Nanode1],
       regionAvailabilities: [],
       selectedRegionId: 'us-east-1',
@@ -244,8 +243,8 @@ describe('extractPlansInformation', () => {
       {
         ...g6Standard1,
         ...{
-          isDisabled512GbPlan: false,
-          isLimitedAvailabilityPlan: false,
+          planIs512Gb: false,
+          planHasLimitedAvailability: false,
         },
       },
     ]);
@@ -254,15 +253,15 @@ describe('extractPlansInformation', () => {
     expect(result).toHaveProperty('plansForThisLinodeTypeClass', [
       {
         ...g6Standard1,
-        isLimitedAvailabilityPlan: false,
+        planHasLimitedAvailability: false,
       },
       {
         ...g7Standard1,
-        isLimitedAvailabilityPlan: false,
+        planHasLimitedAvailability: false,
       },
       {
         ...g6Nanode1,
-        isLimitedAvailabilityPlan: false,
+        planHasLimitedAvailability: false,
       },
     ]);
   });
@@ -270,7 +269,6 @@ describe('extractPlansInformation', () => {
   it('should return correct information when all plans are disabled', () => {
     const result = extractPlansInformation({
       disableLargestGbPlansFlag: false,
-      disabledPlans: [g6Standard1, g6Nanode1],
       plans: [g6Standard1, g6Nanode1],
       regionAvailabilities: [],
       selectedRegionId: 'us-east-1',
@@ -280,15 +278,15 @@ describe('extractPlansInformation', () => {
       {
         ...g6Standard1,
         ...{
-          isDisabled512GbPlan: false,
-          isLimitedAvailabilityPlan: false,
+          planIs512Gb: false,
+          planHasLimitedAvailability: false,
         },
       },
       {
         ...g6Nanode1,
         ...{
-          isDisabled512GbPlan: false,
-          isLimitedAvailabilityPlan: false,
+          planIs512Gb: false,
+          planHasLimitedAvailability: false,
         },
       },
     ]);
@@ -297,11 +295,11 @@ describe('extractPlansInformation', () => {
     expect(result).toHaveProperty('plansForThisLinodeTypeClass', [
       {
         ...g6Standard1,
-        isLimitedAvailabilityPlan: false,
+        planHasLimitedAvailability: false,
       },
       {
         ...g6Nanode1,
-        isLimitedAvailabilityPlan: false,
+        planHasLimitedAvailability: false,
       },
     ]);
   });
@@ -309,7 +307,6 @@ describe('extractPlansInformation', () => {
   it('should return correct information when no plans are disabled', () => {
     const result = extractPlansInformation({
       disableLargestGbPlansFlag: false,
-      disabledPlans: [],
       plans: [g6Standard1, g6Nanode1],
       regionAvailabilities: [],
       selectedRegionId: 'us-east-1',
@@ -321,11 +318,11 @@ describe('extractPlansInformation', () => {
     expect(result).toHaveProperty('plansForThisLinodeTypeClass', [
       {
         ...g6Standard1,
-        isLimitedAvailabilityPlan: false,
+        planHasLimitedAvailability: false,
       },
       {
         ...g6Nanode1,
-        isLimitedAvailabilityPlan: false,
+        planHasLimitedAvailability: false,
       },
     ]);
   });
