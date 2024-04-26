@@ -95,31 +95,10 @@ export const PlansPanel = (props: PlansPanelProps) => {
     !hideEdgeRegions &&
     getIsEdgeRegion(regionsData ?? [], selectedRegionID ?? '');
 
-  const getDedicatedEdgePlanType = () => {
-    // 256GB and 512GB plans will not be supported for Edge
-    const plansUpTo128GB = _plans.dedicated.filter(
-      (planType) =>
-        !['Dedicated 256 GB', 'Dedicated 512 GB'].includes(
-          planType.formattedLabel
-        )
-    );
-
-    return plansUpTo128GB.map((plan) => {
-      delete plan.transfer;
-      return {
-        ...plan,
-        price: {
-          hourly: 0,
-          monthly: 0,
-        },
-      };
-    });
-  };
-
   // @TODO Gecko: Get plan data from API when it's available instead of hardcoding
   const plans = showEdgePlanTable
     ? {
-        dedicated: getDedicatedEdgePlanType(),
+        dedicated: types.filter((type) => type.class == 'edge'),
       }
     : _plans;
 
