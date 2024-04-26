@@ -1,8 +1,10 @@
+/**
+ * @file Script to generate a TOD test results payload given a path containing JUnit XML files.
+ */
+
 import { program } from 'commander';
-// import { readFileSync } from 'fs';
 import * as fs from 'fs/promises';
 import { resolve } from 'path';
-
 
 program
   .name('tod-payload')
@@ -14,6 +16,8 @@ program
   .option('-u, --appBuildUrl <str>', 'Application build URL')
   .option('-v, --appVersion <str>', 'Application version')
   .option('-t, --appTeam <str>', 'Application team name')
+  .option('-f, --fail', 'Treat payload as failure')
+  .option('-o, --output <str>', 'Optional path to output TOD payload file')
 
   .action((junitPath: string) => {
     return main(junitPath);
@@ -36,17 +40,29 @@ const main = async (junitPath: string) => {
     return fs.readFile(junitFile, 'utf8');
   }));
 
-  console.log({
+  const payload = JSON.stringify({
     team: program.opts()['appTeam'],
     name: program.opts()['appName'],
     buildName: program.opts()['appBuild'],
     semanticVersion: program.opts()['appVersion'],
     buildUrl: program.opts()['appBuildUrl'],
-    pass: true,
+    pass: !program.opts()['fail'],
     xunitResults: junitContents.map((junitContent) => {
       return btoa(junitContent);
     }),
   });
+
+  const outputPath = program.opts()['output'];
+  if (outputPath) {
+    try {
+      await fs.writeFile(outputPath, payload);
+    }
+    catch (e: unknown) {
+      console.warn(`Failed to output payload to ${outputPath}`);
+    }
+  }
+
+  console.log(payload);
 };
 
 program.parse(process.argv);
