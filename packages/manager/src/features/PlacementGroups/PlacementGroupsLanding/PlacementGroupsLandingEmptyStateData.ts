@@ -16,15 +16,16 @@ export const headers: ResourcesHeaders = {
 export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
-      text: '',
-      to: '',
+      text: 'Overview of Placement Groups',
+      to:
+        'https://www.linode.com/docs/products/compute/compute-instances/guides/placement-groups/',
     },
   ],
   moreInfo: {
-    text: '',
-    to: '',
+    text: 'Check out all our Docs',
+    to: 'https://www.linode.com/docs/',
   },
-  title: '',
+  title: 'Getting Started Guides',
 };
 
 export const linkAnalyticsEvent: ResourcesLinks['linkAnalyticsEvent'] = {
