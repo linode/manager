@@ -28,8 +28,7 @@ export const BackupSelect = () => {
     hasSelectedLinode
   );
 
-  const hasNoBackups =
-    !isFetching && data?.automatic.length === 0 && !data.snapshot.current;
+  const hasNoBackups = data?.automatic.length === 0 && !data.snapshot.current;
 
   const renderContent = () => {
     if (!hasSelectedLinode) {
