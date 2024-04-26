@@ -31,8 +31,7 @@ export interface PlansPanelProps {
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
-  disabledPlanTypes?: PlanSelectionType[];
-  disabledPlanTypesToolTipText?: string;
+  disabledPlans?: PlanSelectionType[];
   disabledTabs?: string[];
   docsLink?: JSX.Element;
   error?: string;
@@ -57,8 +56,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     currentPlanHeading,
     disabled,
     disabledClasses,
-    disabledPlanTypes,
-    disabledPlanTypesToolTipText,
+    disabledPlans,
     docsLink,
     error,
     header,
@@ -140,8 +138,9 @@ export const PlansPanel = (props: PlansPanelProps) => {
       hasMajorityOfPlansDisabled,
       plansForThisLinodeTypeClass,
     } = extractPlansInformation({
-      disableLargestGbPlans: flags.disableLargestGbPlans,
-      disabledPlanTypes,
+      disableLargestGbPlansFlag: flags.disableLargestGbPlans,
+      disabledClasses,
+      disabledPlans,
       plans: plansMap,
       regionAvailabilities,
       selectedRegionId: selectedRegionID,
@@ -174,11 +173,9 @@ export const PlansPanel = (props: PlansPanelProps) => {
             <PlanContainer
               allDisabledPlans={allDisabledPlans}
               currentPlanHeading={currentPlanHeading}
-              disabled={disabled || isPlanPanelDisabled(plan)}
-              disabledClasses={disabledClasses}
-              disabledPlanTypesToolTipText={disabledPlanTypesToolTipText}
               hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
               isCreate={isCreate}
+              isWholePanelDisabled={disabled || isPlanPanelDisabled(plan)}
               linodeID={linodeID}
               onSelect={onSelect}
               planType={plan}

@@ -233,8 +233,8 @@ describe('extractPlansInformation', () => {
   });
   it('should return correct information when less than half of plans are disabled', () => {
     const result = extractPlansInformation({
-      disableLargestGbPlans: false,
-      disabledPlanTypes: [g6Standard1],
+      disableLargestGbPlansFlag: false,
+      disabledPlans: [g6Standard1],
       plans: [g6Standard1, g7Standard1, g6Nanode1],
       regionAvailabilities: [],
       selectedRegionId: 'us-east-1',
@@ -269,8 +269,8 @@ describe('extractPlansInformation', () => {
 
   it('should return correct information when all plans are disabled', () => {
     const result = extractPlansInformation({
-      disableLargestGbPlans: false,
-      disabledPlanTypes: [g6Standard1, g6Nanode1],
+      disableLargestGbPlansFlag: false,
+      disabledPlans: [g6Standard1, g6Nanode1],
       plans: [g6Standard1, g6Nanode1],
       regionAvailabilities: [],
       selectedRegionId: 'us-east-1',
@@ -308,8 +308,8 @@ describe('extractPlansInformation', () => {
 
   it('should return correct information when no plans are disabled', () => {
     const result = extractPlansInformation({
-      disableLargestGbPlans: false,
-      disabledPlanTypes: [],
+      disableLargestGbPlansFlag: false,
+      disabledPlans: [],
       plans: [g6Standard1, g6Nanode1],
       regionAvailabilities: [],
       selectedRegionId: 'us-east-1',

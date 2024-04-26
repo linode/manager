@@ -14,9 +14,9 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { PlanSelection } from './PlanSelection';
 
 import type { PlanSelectionProps } from './PlanSelection';
-import type { PlanSelectionType } from './types';
+import type { TypeWithAvailability } from './types';
 
-const mockPlan: PlanSelectionType = planSelectionTypeFactory.build({
+const mockPlan: TypeWithAvailability = planSelectionTypeFactory.build({
   heading: 'Dedicated 20 GB',
   subHeadings: [
     '$10/mo ($0.015/hr)',
@@ -27,13 +27,9 @@ const mockPlan: PlanSelectionType = planSelectionTypeFactory.build({
 });
 
 const defaultProps: PlanSelectionProps = {
-  disabledStatus: {
-    isDisabled512GbPlan: false,
-    isLimitedAvailabilityPlan: false,
-  },
   idx: 0,
   onSelect: () => vi.fn(),
-  type: mockPlan,
+  plan: mockPlan,
 };
 
 describe('PlanSelection (table, desktop)', () => {
@@ -175,17 +171,7 @@ describe('PlanSelection (table, desktop)', () => {
     });
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
-      wrapWithTableBody(
-        <PlanSelection
-          {...defaultProps}
-          disabledStatus={{
-            isDisabled512GbPlan: true,
-            isLimitedAvailabilityPlan: false,
-          }}
-          planIsDisabled={true}
-          type={bigPlanType}
-        />
-      )
+      wrapWithTableBody(<PlanSelection {...defaultProps} plan={bigPlanType} />)
     );
 
     const button = getByTestId('limited-availability');

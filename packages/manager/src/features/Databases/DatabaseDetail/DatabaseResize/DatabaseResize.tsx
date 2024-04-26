@@ -229,8 +229,7 @@ export const DatabaseResize = ({ database }: Props) => {
         <StyledPlansPanel
           currentPlanHeading={currentPlan?.heading}
           data-qa-select-plan
-          disabledPlanTypes={disabledPlans}
-          disabledPlanTypesToolTipText="Resizing to smaller plans is not supported."
+          disabledPlans={disabledPlans}
           header="Choose a Plan"
           onSelect={(selected: string) => setPlanSelected(selected)}
           selectedId={planSelected}

@@ -2,7 +2,10 @@ import * as Factory from 'factory.ts';
 
 import type { LinodeType } from '@linode/api-v4/lib/linodes/types';
 import type { PriceType } from '@linode/api-v4/src/types';
-import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
+import type {
+  PlanSelectionAvailabilityTypes,
+  TypeWithAvailability,
+} from 'src/features/components/PlansPanel/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
@@ -54,13 +57,17 @@ export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
   vcpus: 8,
 });
 
-export const planSelectionTypeFactory = Factory.Sync.makeFactory<PlanSelectionType>(
+export const planSelectionTypeFactory = Factory.Sync.makeFactory<TypeWithAvailability>(
   {
+    belongsToDisabledClass: false,
     class: typeFactory.build().class,
     disk: typeFactory.build().disk,
     formattedLabel: '',
     heading: 'Dedicated 20 GB',
     id: typeFactory.build().id,
+    isDisabled512GbPlan: false,
+    isLimitedAvailabilityPlan: false,
+    isManuallyDisabled: false,
     label: typeFactory.build().label,
     memory: typeFactory.build().memory,
     network_out: typeFactory.build().network_out,
@@ -77,7 +84,9 @@ export const planSelectionTypeFactory = Factory.Sync.makeFactory<PlanSelectionTy
   }
 );
 
-export const extendedTypeFactory = Factory.Sync.makeFactory<ExtendedType>({
+export const extendedTypeFactory = Factory.Sync.makeFactory<
+  ExtendedType & PlanSelectionAvailabilityTypes
+>({
   addons: {
     backups: {
       price: {
@@ -98,6 +107,7 @@ export const extendedTypeFactory = Factory.Sync.makeFactory<ExtendedType>({
       ],
     },
   },
+  belongsToDisabledClass: false,
   class: typeFactory.build().class,
   disk: typeFactory.build().disk,
   formattedLabel: '',
@@ -105,6 +115,9 @@ export const extendedTypeFactory = Factory.Sync.makeFactory<ExtendedType>({
   heading: 'Dedicated 20 GB',
   id: typeFactory.build().id,
   isDeprecated: false,
+  isDisabled512GbPlan: false,
+  isLimitedAvailabilityPlan: false,
+  isManuallyDisabled: false,
   label: typeFactory.build().label,
   memory: typeFactory.build().memory,
   network_out: typeFactory.build().network_out,

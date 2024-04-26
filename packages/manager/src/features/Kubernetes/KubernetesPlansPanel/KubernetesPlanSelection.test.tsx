@@ -28,22 +28,20 @@ const storage = '1024 GB';
 
 const typeWithAvailability: TypeWithAvailability = {
   ...extendedTypeFactory.build(),
+  belongsToDisabledClass: false,
+  isDisabled512GbPlan: false,
   isLimitedAvailabilityPlan: false,
+  isManuallyDisabled: false,
 };
 
 const props: KubernetesPlanSelectionProps = {
-  disabledStatus: {
-    isDisabled512GbPlan: false,
-    isLimitedAvailabilityPlan: false,
-  },
   getTypeCount: vi.fn(),
   hasMajorityOfPlansDisabled: false,
   idx: 0,
   onAdd: vi.fn(),
   onSelect: vi.fn(),
-  planIsDisabled: false,
+  plan: typeWithAvailability,
   selectedRegionId: 'us-east',
-  type: typeWithAvailability,
   updatePlanCount: vi.fn(),
   wholePanelIsDisabled: false,
 };
@@ -96,7 +94,6 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
             },
           ],
         }),
-        isLimitedAvailabilityPlan: false,
       },
     };
     const { container } = renderWithTheme(
@@ -127,20 +124,15 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
         heading: 'Dedicated 512 GB',
         label: 'Dedicated 512GB',
       }),
-      isLimitedAvailabilityPlan: false,
+      belongsToDisabledClass: false,
+      isDisabled512GbPlan: false,
+      isLimitedAvailabilityPlan: true,
+      isManuallyDisabled: false,
     };
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
       wrapWithTableBody(
-        <KubernetesPlanSelection
-          {...props}
-          disabledStatus={{
-            isDisabled512GbPlan: true,
-            isLimitedAvailabilityPlan: false,
-          }}
-          planIsDisabled={true}
-          type={bigPlanType}
-        />
+        <KubernetesPlanSelection {...props} plan={bigPlanType} />
       )
     );
 

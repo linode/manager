@@ -35,19 +35,12 @@ const tableCells = [
   },
 ];
 
-type AllDisabledPlans = TypeWithAvailability & {
-  isDisabled512GbPlan: boolean;
-  isLimitedAvailabilityPlan: boolean;
-};
-
-export interface Props {
-  allDisabledPlans: AllDisabledPlans[];
+export interface PlanContainerProps {
+  allDisabledPlans: TypeWithAvailability[];
   currentPlanHeading?: string;
-  disabled?: boolean;
-  disabledClasses?: LinodeTypeClass[];
-  disabledPlanTypesToolTipText?: string;
   hasMajorityOfPlansDisabled: boolean;
   isCreate?: boolean;
+  isWholePanelDisabled?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   planType?: LinodeTypeClass;
@@ -58,15 +51,13 @@ export interface Props {
   showTransfer?: boolean;
 }
 
-export const PlanContainer = (props: Props) => {
+export const PlanContainer = (props: PlanContainerProps) => {
   const {
     allDisabledPlans,
     currentPlanHeading,
-    disabled: isWholePanelDisabled,
-    disabledClasses,
-    disabledPlanTypesToolTipText,
     hasMajorityOfPlansDisabled,
     isCreate,
+    isWholePanelDisabled,
     linodeID,
     onSelect,
     planType,
@@ -127,39 +118,20 @@ export const PlanContainer = (props: Props) => {
         : plans;
 
       return _plans.map((plan, id) => {
-        const isPlanDisabled = allDisabledPlans.some(
-          (disabledPlan) => disabledPlan.id === plan.id
-        );
-        const currentDisabledPlan = allDisabledPlans.find(
-          (disabledPlan) => disabledPlan.id === plan.id
-        );
-        const currentDisabledPlanStatus = currentDisabledPlan && {
-          isDisabled512GbPlan: currentDisabledPlan.isDisabled512GbPlan,
-          isLimitedAvailabilityPlan:
-            currentDisabledPlan.isLimitedAvailabilityPlan,
-        };
-
         return (
           <PlanSelection
-            hideDisabledHelpIcons={
-              isWholePanelDisabled || hasMajorityOfPlansDisabled
-            }
             currentPlanHeading={currentPlanHeading}
-            disabledClasses={disabledClasses}
-            disabledStatus={currentDisabledPlanStatus}
-            disabledToolTip={disabledPlanTypesToolTipText}
             idx={id}
             isCreate={isCreate}
+            isWholePanelDisabled={isWholePanelDisabled}
             key={id}
             linodeID={linodeID}
             onSelect={onSelect}
-            planIsDisabled={isPlanDisabled}
+            plan={plan}
             selectedDiskSize={selectedDiskSize}
             selectedId={selectedId}
             selectedRegionId={selectedRegionId}
             showTransfer={showTransfer}
-            type={plan}
-            wholePanelIsDisabled={isWholePanelDisabled}
           />
         );
       });
@@ -167,13 +139,11 @@ export const PlanContainer = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       allDisabledPlans,
-      disabledPlanTypesToolTipText,
       hasMajorityOfPlansDisabled,
       plans,
       selectedRegionId,
       isWholePanelDisabled,
       currentPlanHeading,
-      disabledClasses,
       isCreate,
       linodeID,
       onSelect,
