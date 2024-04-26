@@ -120,12 +120,14 @@ export const useResizeVolumeMutation = () => {
     mutationFn: ({ volumeId, ...data }) => resizeVolume(volumeId, data),
     onSuccess(volume) {
       // Invalidate all lists
-      queryClient.invalidateQueries(volumeQueries.lists.queryKey);
-      // If the volume is assigned to a Linode, invalidate that volume's list
+      queryClient.invalidateQueries({
+        queryKey: volumeQueries.lists.queryKey,
+      });
+      // If the volume is assigned to a Linode, invalidate that Linode's list
       if (volume.linode_id) {
-        queryClient.invalidateQueries(
-          volumeQueries.linode(volume.linode_id)._ctx.volumes._def
-        );
+        queryClient.invalidateQueries({
+          queryKey: volumeQueries.linode(volume.linode_id)._ctx.volumes._def,
+        });
       }
     },
   });
@@ -140,7 +142,9 @@ export const useCloneVolumeMutation = () => {
   return useMutation<Volume, APIError[], CloneVolumePayloadWithId>({
     mutationFn: ({ volumeId, ...data }) => cloneVolume(volumeId, data),
     onSuccess() {
-      queryClient.invalidateQueries(volumeQueries.lists.queryKey);
+      queryClient.invalidateQueries({
+        queryKey: volumeQueries.lists.queryKey,
+      });
     },
   });
 };
@@ -150,7 +154,9 @@ export const useDeleteVolumeMutation = () => {
   return useMutation<{}, APIError[], { id: number }>({
     mutationFn: ({ id }) => deleteVolume(id),
     onSuccess() {
-      queryClient.invalidateQueries(volumeQueries.lists.queryKey);
+      queryClient.invalidateQueries({
+        queryKey: volumeQueries.lists.queryKey,
+      });
     },
   });
 };
@@ -160,9 +166,13 @@ export const useCreateVolumeMutation = () => {
   return useMutation<Volume, APIError[], VolumeRequestPayload>({
     mutationFn: createVolume,
     onSuccess() {
-      queryClient.invalidateQueries(volumeQueries.lists.queryKey);
+      queryClient.invalidateQueries({
+        queryKey: volumeQueries.lists.queryKey,
+      });
       // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries(profileQueries.grants.queryKey);
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.grants.queryKey,
+      });
     },
   });
 };
@@ -178,7 +188,9 @@ export const useVolumesMigrateMutation = () => {
       // the `volume_migration_scheduled` notification.
       setTimeout(() => {
         // Refetch notifications after 1.5 seconds. The API needs some time to process.
-        queryClient.invalidateQueries(accountQueries.notifications.queryKey);
+        queryClient.invalidateQueries({
+          queryKey: accountQueries.notifications.queryKey,
+        });
       }, 1500);
     },
   });
@@ -194,12 +206,14 @@ export const useUpdateVolumeMutation = () => {
     mutationFn: ({ volumeId, ...data }) => updateVolume(volumeId, data),
     onSuccess(volume) {
       // Invalidate all lists
-      queryClient.invalidateQueries(volumeQueries.lists.queryKey);
-      // If the volume is assigned to a Linode, invalidate that volume's list
+      queryClient.invalidateQueries({
+        queryKey: volumeQueries.lists.queryKey,
+      });
+      // If the volume is assigned to a Linode, invalidate that Linodes's list
       if (volume.linode_id) {
-        queryClient.invalidateQueries(
-          volumeQueries.linode(volume.linode_id)._ctx.volumes._def
-        );
+        queryClient.invalidateQueries({
+          queryKey: volumeQueries.linode(volume.linode_id)._ctx.volumes._def,
+        });
       }
     },
   });
@@ -215,12 +229,14 @@ export const useAttachVolumeMutation = () => {
     mutationFn: ({ volumeId, ...data }) => attachVolume(volumeId, data),
     onSuccess(volume) {
       // Invalidate all lists
-      queryClient.invalidateQueries(volumeQueries.lists.queryKey);
-      // If the volume is assigned to a Linode, invalidate that volume's list
+      queryClient.invalidateQueries({
+        queryKey: volumeQueries.lists.queryKey,
+      });
+      // If the volume is assigned to a Linode, invalidate that Linode's list
       if (volume.linode_id) {
-        queryClient.invalidateQueries(
-          volumeQueries.linode(volume.linode_id)._ctx.volumes._def
-        );
+        queryClient.invalidateQueries({
+          queryKey: volumeQueries.linode(volume.linode_id)._ctx.volumes._def,
+        });
       }
     },
   });

@@ -13,7 +13,9 @@ export const volumeEventsHandler = ({
   queryClient,
 }: EventHandlerData) => {
   if (['failed', 'finished', 'notification'].includes(event.status)) {
-    queryClient.invalidateQueries(volumeQueries.lists.queryKey);
+    queryClient.invalidateQueries({
+      queryKey: volumeQueries.lists.queryKey,
+    });
   }
 
   if (
@@ -22,14 +24,18 @@ export const volumeEventsHandler = ({
   ) {
     // if a migration finishes, we want to re-request notifications so that the `volume_migration_imminent`
     // notification goes away.
-    queryClient.invalidateQueries(accountQueries.notifications.queryKey);
+    queryClient.invalidateQueries({
+      queryKey: accountQueries.notifications.queryKey,
+    });
   }
 
   if (event.action === 'volume_clone') {
     // The API gives us no way to know when a cloned volume transitions from
     // creating to active, so we will just refresh after 10 seconds
     setTimeout(() => {
-      queryClient.invalidateQueries(volumeQueries.lists.queryKey);
+      queryClient.invalidateQueries({
+        queryKey: volumeQueries.lists.queryKey,
+      });
     }, 10000);
   }
 };
