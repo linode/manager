@@ -27,6 +27,7 @@ const mockPlan: TypeWithAvailability = planSelectionTypeFactory.build({
 });
 
 const defaultProps: PlanSelectionProps = {
+  hasMajorityOfPlansDisabled: false,
   idx: 0,
   onSelect: () => vi.fn(),
   plan: mockPlan,

@@ -14,13 +14,18 @@ interface disabledTooltipReasons extends PlanSelectionAvailabilityTypes {
 
 export interface DisabledPlanSelectionTooltipProps {
   disabledReasons: disabledTooltipReasons;
+  hasMajorityOfPlansDisabled: boolean;
   wholePanelIsDisabled: boolean | undefined;
 }
 
 export const DisabledPlanSelectionTooltip = (
   props: DisabledPlanSelectionTooltipProps
 ) => {
-  const { disabledReasons, wholePanelIsDisabled } = props;
+  const {
+    disabledReasons,
+    hasMajorityOfPlansDisabled,
+    wholePanelIsDisabled,
+  } = props;
   const {
     planBelongsToDisabledClass,
     planHasLimitedAvailability,
@@ -30,6 +35,7 @@ export const DisabledPlanSelectionTooltip = (
 
   const showTooltip =
     !wholePanelIsDisabled &&
+    !hasMajorityOfPlansDisabled &&
     (planBelongsToDisabledClass ||
       planIs512Gb ||
       planHasLimitedAvailability ||

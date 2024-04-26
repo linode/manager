@@ -40,7 +40,6 @@ export interface PlanContainerProps {
   currentPlanHeading?: string;
   hasMajorityOfPlansDisabled: boolean;
   isCreate?: boolean;
-  wholePanelIsDisabled?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   planType?: LinodeTypeClass;
@@ -49,6 +48,7 @@ export interface PlanContainerProps {
   selectedId?: string;
   selectedRegionId?: Region['id'];
   showTransfer?: boolean;
+  wholePanelIsDisabled?: boolean;
 }
 
 export const PlanContainer = (props: PlanContainerProps) => {
@@ -57,7 +57,6 @@ export const PlanContainer = (props: PlanContainerProps) => {
     currentPlanHeading,
     hasMajorityOfPlansDisabled,
     isCreate,
-    wholePanelIsDisabled,
     linodeID,
     onSelect,
     planType,
@@ -66,6 +65,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
     selectedId,
     selectedRegionId,
     showTransfer,
+    wholePanelIsDisabled,
   } = props;
   const location = useLocation();
 
@@ -121,9 +121,9 @@ export const PlanContainer = (props: PlanContainerProps) => {
         return (
           <PlanSelection
             currentPlanHeading={currentPlanHeading}
+            hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
             idx={id}
             isCreate={isCreate}
-            wholePanelIsDisabled={wholePanelIsDisabled}
             key={id}
             linodeID={linodeID}
             onSelect={onSelect}
@@ -132,6 +132,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
             selectedId={selectedId}
             selectedRegionId={selectedRegionId}
             showTransfer={showTransfer}
+            wholePanelIsDisabled={wholePanelIsDisabled}
           />
         );
       });

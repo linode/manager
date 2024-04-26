@@ -172,7 +172,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
               currentPlanHeading={currentPlanHeading}
               hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
               isCreate={isCreate}
-              wholePanelIsDisabled={disabled || isPlanPanelDisabled(plan)}
               linodeID={linodeID}
               onSelect={onSelect}
               planType={plan}
@@ -181,6 +180,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
               selectedId={selectedId}
               selectedRegionId={selectedRegionID}
               showTransfer={showTransfer}
+              wholePanelIsDisabled={disabled || isPlanPanelDisabled(plan)}
             />
           </>
         );

@@ -28,10 +28,10 @@ import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
 export interface PlanSelectionProps {
   currentPlanHeading?: string;
   disabledClasses?: LinodeTypeClass[];
+  hasMajorityOfPlansDisabled: boolean;
   header?: string;
   idx: number;
   isCreate?: boolean;
-  wholePanelIsDisabled?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   plan: TypeWithAvailability;
@@ -39,14 +39,15 @@ export interface PlanSelectionProps {
   selectedId?: string;
   selectedRegionId?: Region['id'];
   showTransfer?: boolean;
+  wholePanelIsDisabled?: boolean;
 }
 
 export const PlanSelection = (props: PlanSelectionProps) => {
   const {
     currentPlanHeading,
+    hasMajorityOfPlansDisabled,
     idx,
     isCreate,
-    wholePanelIsDisabled,
     linodeID,
     onSelect,
     plan,
@@ -54,6 +55,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     selectedId,
     selectedRegionId,
     showTransfer,
+    wholePanelIsDisabled,
   } = props;
   const {
     planBelongsToDisabledClass,
@@ -149,6 +151,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
                 planIs512Gb,
                 planIsTooSmall,
               }}
+              hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
               wholePanelIsDisabled={wholePanelIsDisabled}
             />
             {(isSamePlan || plan.id === selectedLinodePlanType) && (
