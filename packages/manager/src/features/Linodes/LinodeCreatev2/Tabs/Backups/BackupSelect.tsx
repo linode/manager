@@ -3,6 +3,7 @@ import React from 'react';
 import { useController, useWatch } from 'react-hook-form';
 
 import { CircularProgress } from 'src/components/CircularProgress';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
@@ -51,20 +52,30 @@ export const BackupSelect = () => {
       <Grid container spacing={2}>
         {data?.automatic.map((backup) => (
           <SelectionCard
+            subheadings={[
+              <DateTimeDisplay
+                key={`backup-${backup.id}-date`}
+                value={backup.created}
+              />,
+            ]}
             checked={backup.id === field.value}
             heading="Automatic"
             key={backup.id}
             onClick={() => field.onChange(backup.id)}
-            subheadings={[backup.created]}
           />
         ))}
         {data?.snapshot.current && (
           <SelectionCard
-            checked={data?.snapshot.current.id === field.value}
-            heading={data?.snapshot.current.label ?? 'Snapshot'}
-            key={data?.snapshot.current.id}
-            onClick={() => field.onChange(data?.snapshot.current?.id)}
-            subheadings={[data?.snapshot.current?.created]}
+            subheadings={[
+              <DateTimeDisplay
+                key={`backup-${data.snapshot.current.id}-date`}
+                value={data.snapshot.current.created}
+              />,
+            ]}
+            checked={data.snapshot.current.id === field.value}
+            heading={data.snapshot.current.label ?? 'Snapshot'}
+            key={data.snapshot.current.id}
+            onClick={() => field.onChange(data.snapshot.current!.id)}
           />
         )}
       </Grid>
