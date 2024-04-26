@@ -19,14 +19,12 @@ const _PAST_12_HOURS = 'Past 12 Hours';
 const _PAST_24_HOURS = 'Past 24 Hours';
 const _PAST_30_DAYS = 'Past 30 Days';
 const _PAST_30_MINUTES = 'Past 30 Minutes';
-const _PAST_YEAR = 'Past Year';
 export type Labels =
   | 'Past 7 Days'
   | 'Past 12 Hours'
   | 'Past 24 Hours'
   | 'Past 30 Days'
-  | 'Past 30 Minutes'
-  | 'Past Year';
+  | 'Past 30 Minutes';
 
 export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
   const { defaultValue, handleStatsChange, ...restOfSelectProps } = props;
@@ -62,20 +60,14 @@ export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
     // but the calcs to turn that into start/end numbers live here)
     if (!!handleStatsChange) {
       handleStatsChange(
-        Math.round(
-          generateStartTime(
-            selectedTimeRange,
-            nowInSeconds,
-            new Date().getFullYear()
-          )
-        ),
+        Math.round(generateStartTime(selectedTimeRange, nowInSeconds)),
         Math.round(nowInSeconds)
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTimeRange]);
 
-  const options = generateSelectOptions(`${new Date().getFullYear()}`);
+  const options = generateSelectOptions();
 
   const handleChange = (item: Item<Labels, Labels>) => {
     setTimeRange(item.value);
@@ -102,9 +94,7 @@ export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
  *
  * @param { string } currentYear - the current year
  */
-export const generateSelectOptions = (
-  currentYear: string
-): Item<Labels, Labels>[] => {
+export const generateSelectOptions = (): Item<Labels, Labels>[] => {
   const baseOptions: Item<Labels, Labels>[] = [
     {
       label: _PAST_30_MINUTES,
@@ -130,14 +120,6 @@ export const generateSelectOptions = (
       label: _PAST_30_DAYS,
       value: _PAST_30_DAYS,
     },
-    {
-      label: _PAST_YEAR,
-      value: _PAST_YEAR,
-    },
-    {
-      label: `${currentYear}` as Labels,
-      value: `${currentYear}` as Labels,
-    },
   ];
 };
 
@@ -145,11 +127,7 @@ export const generateSelectOptions = (
  *
  * @returns start time in seconds (NOT milliseconds)
  */
-export const generateStartTime = (
-  modifier: Labels,
-  nowInSeconds: number,
-  currentYear: number
-) => {
+export const generateStartTime = (modifier: Labels, nowInSeconds: number) => {
   switch (modifier) {
     case _PAST_30_MINUTES:
       return nowInSeconds - 30 * 60;
@@ -159,11 +137,7 @@ export const generateStartTime = (
       return nowInSeconds - 24 * 60 * 60;
     case _PAST_7_DAYS:
       return nowInSeconds - 7 * 24 * 60 * 60;
-    case _PAST_30_DAYS:
-      return nowInSeconds - 30 * 24 * 60 * 60;
-    case _PAST_YEAR:
-      return nowInSeconds - 365 * 24 * 60 * 60;
     default:
-      return new Date(`Jan 1 ${currentYear}`).getTime() / 1000;
+      return nowInSeconds - 30 * 24 * 60 * 60;
   }
 };
