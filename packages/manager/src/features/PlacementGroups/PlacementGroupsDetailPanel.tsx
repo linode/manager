@@ -124,7 +124,6 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
             width: '100%',
           }}
           textFieldProps={{
-            tooltipClasses: 'poo',
             tooltipPosition: 'right',
             tooltipText: PLACEMENT_GROUP_SELECT_TOOLTIP_COPY,
           }}
