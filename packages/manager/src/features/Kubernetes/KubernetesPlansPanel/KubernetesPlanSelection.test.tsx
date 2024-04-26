@@ -29,8 +29,8 @@ const storage = '1024 GB';
 const typeWithAvailability: TypeWithAvailability = {
   ...extendedTypeFactory.build(),
   planBelongsToDisabledClass: false,
-  planIs512Gb: false,
   planHasLimitedAvailability: false,
+  planIs512Gb: false,
 };
 
 const props: KubernetesPlanSelectionProps = {
@@ -83,7 +83,7 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
   it('should not display an error message for $0 regions', () => {
     const propsWithRegionZeroPrice = {
       ...props,
-      type: {
+      plan: {
         ...extendedTypeFactory.build({
           region_prices: [
             {
@@ -124,8 +124,8 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
         label: 'Dedicated 512GB',
       }),
       planBelongsToDisabledClass: false,
-      planIs512Gb: false,
       planHasLimitedAvailability: true,
+      planIs512Gb: false,
     };
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(

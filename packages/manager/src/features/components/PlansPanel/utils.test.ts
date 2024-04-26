@@ -1,4 +1,5 @@
 import { extendedTypes } from 'src/__data__/ExtendedType';
+import { regionAvailabilityFactory } from 'src/factories';
 import { planSelectionTypeFactory, typeFactory } from 'src/factories/types';
 
 import {
@@ -235,16 +236,23 @@ describe('extractPlansInformation', () => {
     const result = extractPlansInformation({
       disableLargestGbPlansFlag: false,
       plans: [g6Standard1, g7Standard1, g6Nanode1],
-      regionAvailabilities: [],
-      selectedRegionId: 'us-east-1',
+      regionAvailabilities: [
+        regionAvailabilityFactory.build({
+          available: false,
+          plan: 'g6-standard-1',
+          region: 'us-east',
+        }),
+      ],
+      selectedRegionId: 'us-east',
     });
 
     expect(result).toHaveProperty('allDisabledPlans', [
       {
         ...g6Standard1,
         ...{
+          planBelongsToDisabledClass: false,
+          planHasLimitedAvailability: true,
           planIs512Gb: false,
-          planHasLimitedAvailability: false,
         },
       },
     ]);
@@ -253,15 +261,21 @@ describe('extractPlansInformation', () => {
     expect(result).toHaveProperty('plansForThisLinodeTypeClass', [
       {
         ...g6Standard1,
-        planHasLimitedAvailability: false,
+        planBelongsToDisabledClass: false,
+        planHasLimitedAvailability: true,
+        planIs512Gb: false,
       },
       {
         ...g7Standard1,
+        planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
+        planIs512Gb: false,
       },
       {
         ...g6Nanode1,
+        planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
+        planIs512Gb: false,
       },
     ]);
   });
@@ -270,23 +284,36 @@ describe('extractPlansInformation', () => {
     const result = extractPlansInformation({
       disableLargestGbPlansFlag: false,
       plans: [g6Standard1, g6Nanode1],
-      regionAvailabilities: [],
-      selectedRegionId: 'us-east-1',
+      regionAvailabilities: [
+        regionAvailabilityFactory.build({
+          available: false,
+          plan: 'g6-standard-1',
+          region: 'us-east',
+        }),
+        regionAvailabilityFactory.build({
+          available: false,
+          plan: 'g6-nanode-1',
+          region: 'us-east',
+        }),
+      ],
+      selectedRegionId: 'us-east',
     });
 
     expect(result).toHaveProperty('allDisabledPlans', [
       {
         ...g6Standard1,
         ...{
+          planBelongsToDisabledClass: false,
+          planHasLimitedAvailability: true,
           planIs512Gb: false,
-          planHasLimitedAvailability: false,
         },
       },
       {
         ...g6Nanode1,
         ...{
+          planBelongsToDisabledClass: false,
+          planHasLimitedAvailability: true,
           planIs512Gb: false,
-          planHasLimitedAvailability: false,
         },
       },
     ]);
@@ -295,11 +322,19 @@ describe('extractPlansInformation', () => {
     expect(result).toHaveProperty('plansForThisLinodeTypeClass', [
       {
         ...g6Standard1,
-        planHasLimitedAvailability: false,
+        ...{
+          planBelongsToDisabledClass: false,
+          planHasLimitedAvailability: true,
+          planIs512Gb: false,
+        },
       },
       {
         ...g6Nanode1,
-        planHasLimitedAvailability: false,
+        ...{
+          planBelongsToDisabledClass: false,
+          planHasLimitedAvailability: true,
+          planIs512Gb: false,
+        },
       },
     ]);
   });
@@ -308,8 +343,19 @@ describe('extractPlansInformation', () => {
     const result = extractPlansInformation({
       disableLargestGbPlansFlag: false,
       plans: [g6Standard1, g6Nanode1],
-      regionAvailabilities: [],
-      selectedRegionId: 'us-east-1',
+      regionAvailabilities: [
+        regionAvailabilityFactory.build({
+          available: true,
+          plan: 'g6-standard-1',
+          region: 'us-east',
+        }),
+        regionAvailabilityFactory.build({
+          available: true,
+          plan: 'g6-nanode-1',
+          region: 'us-east',
+        }),
+      ],
+      selectedRegionId: 'us-east',
     });
 
     expect(result).toHaveProperty('allDisabledPlans', []);
@@ -318,11 +364,15 @@ describe('extractPlansInformation', () => {
     expect(result).toHaveProperty('plansForThisLinodeTypeClass', [
       {
         ...g6Standard1,
+        planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
+        planIs512Gb: false,
       },
       {
         ...g6Nanode1,
+        planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
+        planIs512Gb: false,
       },
     ]);
   });

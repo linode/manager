@@ -126,7 +126,7 @@ describe('PlanSelection (table, desktop)', () => {
   it('should not display an error message for $0 regions', () => {
     const propsWithRegionZeroPrice = {
       ...defaultProps,
-      type: planSelectionTypeFactory.build({
+      plan: planSelectionTypeFactory.build({
         heading: 'Dedicated 20 GB',
         region_prices: [
           {
@@ -169,6 +169,7 @@ describe('PlanSelection (table, desktop)', () => {
     const bigPlanType = extendedTypeFactory.build({
       heading: 'Dedicated 512 GB',
       label: 'Dedicated 512GB',
+      planHasLimitedAvailability: true,
     });
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(

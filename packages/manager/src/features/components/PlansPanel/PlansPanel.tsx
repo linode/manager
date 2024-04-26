@@ -39,7 +39,9 @@ export interface PlansPanelProps {
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   regionsData?: Region[];
-  selectedDiskSize?: number;
+  disableSmallerPlans?: {
+    selectedDiskSize?: number;
+  };
   selectedId?: string;
   selectedRegionID?: string;
   showTransfer?: boolean;
@@ -62,7 +64,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     linodeID,
     onSelect,
     regionsData,
-    selectedDiskSize,
+    disableSmallerPlans,
     selectedId,
     selectedRegionID,
     showTransfer,
@@ -176,7 +178,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
               onSelect={onSelect}
               planType={plan}
               plans={plansForThisLinodeTypeClass}
-              selectedDiskSize={selectedDiskSize}
+              selectedDiskSize={disableSmallerPlans?.selectedDiskSize}
               selectedId={selectedId}
               selectedRegionId={selectedRegionID}
               showTransfer={showTransfer}

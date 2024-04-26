@@ -4,7 +4,10 @@ import * as React from 'react';
 import { IconButton } from 'src/components/IconButton';
 import { Tooltip } from 'src/components/Tooltip';
 
-import { LIMITED_AVAILABILITY_TEXT } from './constants';
+import {
+  LIMITED_AVAILABILITY_TEXT,
+  SMALLER_PLAN_DISABLED_TEXT,
+} from './constants';
 
 import type { PlanSelectionAvailabilityTypes } from './types';
 
@@ -51,7 +54,7 @@ export const DisabledPlanSelectionTooltip = (
     }
 
     if (planIsTooSmall) {
-      return 'This plan is not available for Linodes with smaller disks.';
+      return SMALLER_PLAN_DISABLED_TEXT;
     }
 
     return LIMITED_AVAILABILITY_TEXT;

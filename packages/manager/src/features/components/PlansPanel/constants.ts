@@ -5,6 +5,8 @@ export const LIMITED_AVAILABILITY_TEXT =
   'This plan has limited deployment availability.';
 export const LIMITED_AVAILABILITY_LINK =
   'https://www.linode.com/global-infrastructure/availability/';
+export const SMALLER_PLAN_DISABLED_TEXT =
+  'Resizing to smaller plans is not supported';
 
 export const DEDICATED_COMPUTE_INSTANCES_LINK =
   'https://www.linode.com/docs/products/compute/compute-instances/plans/dedicated-cpu/';

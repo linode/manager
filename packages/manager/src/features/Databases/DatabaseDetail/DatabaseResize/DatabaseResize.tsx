@@ -222,11 +222,13 @@ export const DatabaseResize = ({ database }: Props) => {
       </Paper>
       <Paper sx={{ marginTop: 2 }}>
         <StyledPlansPanel
+          disableSmallerPlans={{
+            selectedDiskSize: currentPlanDisk,
+          }}
           currentPlanHeading={currentPlan?.heading}
           data-qa-select-plan
           header="Choose a Plan"
           onSelect={(selected: string) => setPlanSelected(selected)}
-          selectedDiskSize={currentPlanDisk}
           selectedId={planSelected}
           types={displayTypes}
         />
