@@ -123,12 +123,16 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
             mb: 1,
             width: '100%',
           }}
+          textFieldProps={{
+            tooltipClasses: 'poo',
+            tooltipPosition: 'right',
+            tooltipText: PLACEMENT_GROUP_SELECT_TOOLTIP_COPY,
+          }}
           disabled={isPlacementGroupSelectDisabled}
           label={placementGroupSelectLabel}
           noOptionsMessage="There are no Placement Groups in this region."
           selectedPlacementGroup={selectedPlacementGroup}
           selectedRegion={selectedRegion}
-          textFieldProps={{ tooltipText: PLACEMENT_GROUP_SELECT_TOOLTIP_COPY }}
         />
         {selectedRegion && hasRegionPlacementGroupCapability && (
           <Button
@@ -142,6 +146,9 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
               mt: -0.75,
               p: 0,
             })}
+            sxEndIcon={{
+              color: theme.color.grey4,
+            }}
             onClick={() => setIsCreatePlacementGroupDrawerOpen(true)}
             tooltipText="This region has reached its Placement Group capacity."
             variant="text"

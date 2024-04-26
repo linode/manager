@@ -1,10 +1,7 @@
-import { AFFINITY_TYPES } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Stack } from 'src/components/Stack';
 import { TextFieldProps } from 'src/components/TextField';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
@@ -12,6 +9,7 @@ import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 import { PlacementGroupSelectOption } from './PlacementGroupSelectOption';
 
 import type { PlacementGroup, Region } from '@linode/api-v4';
+import type { SxProps } from '@mui/system';
 
 export interface PlacementGroupsSelectProps {
   clearable?: boolean;
@@ -72,28 +70,6 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     return null;
   }
 
-  const optionLabel = (placementGroup: PlacementGroup, selected?: boolean) => (
-    <Stack
-      alignItems="center"
-      direction="row"
-      flex={1}
-      position="relative"
-      width="100%"
-    >
-      <Stack component="span">{placementGroup.label}</Stack>{' '}
-      <Stack
-        sx={{
-          position: 'absolute',
-          right: selected ? 14 : 34,
-          whiteSpace: 'nowrap',
-        }}
-        component="span"
-      >
-        ({AFFINITY_TYPES[placementGroup.affinity_type]})
-      </Stack>
-    </Stack>
-  );
-
   const placementGroupsOptions: PlacementGroup[] = placementGroups.filter(
     (placementGroup) => placementGroup.region === selectedRegion?.id
   );
@@ -116,7 +92,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
           <PlacementGroupSelectOption
             disabled={isDisabledPlacementGroup(option, selectedRegion)}
             key={option.id}
-            label={optionLabel(option, selected)}
+            label={option.label}
             props={props}
             selected={selected}
             value={option}

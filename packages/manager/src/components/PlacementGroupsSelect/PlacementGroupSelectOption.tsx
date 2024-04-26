@@ -1,8 +1,9 @@
-import { PlacementGroup } from '@linode/api-v4';
+import { AFFINITY_TYPES, PlacementGroup } from '@linode/api-v4';
 import { visuallyHidden } from '@mui/utils';
 import React from 'react';
 
 import { Box } from 'src/components/Box';
+import { Stack } from 'src/components/Stack';
 import { Tooltip } from 'src/components/Tooltip';
 import { PLACEMENT_GROUP_HAS_NO_CAPACITY } from 'src/features/PlacementGroups/constants';
 
@@ -15,7 +16,7 @@ import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
 interface PlacementGroupSelectOptionProps {
   disabled?: boolean;
-  label: JSX.Element;
+  label: string;
   props: React.HTMLAttributes<HTMLLIElement>;
   selected?: boolean;
   value: PlacementGroup;
@@ -63,7 +64,18 @@ export const PlacementGroupSelectOption = ({
         aria-disabled={undefined}
       >
         <Box alignItems="center" display="flex" flexGrow={1}>
-          {label}
+          <Stack alignItems="center" direction="row" flexGrow={1} gap={2}>
+            <Stack>{label}</Stack>
+            <Stack flexGrow={1} />
+            <Stack
+              sx={{
+                position: 'relative',
+                right: selected ? 14 : 34,
+              }}
+            >
+              ({AFFINITY_TYPES[value.affinity_type]})
+            </Stack>
+          </Stack>
           {disabled && (
             <Box
               sx={visuallyHidden}
