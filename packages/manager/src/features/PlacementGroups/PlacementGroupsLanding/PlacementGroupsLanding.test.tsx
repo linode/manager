@@ -93,4 +93,17 @@ describe('PlacementGroupsLanding', () => {
       )
     ).toBeInTheDocument();
   });
+
+  it('should render placement group Getting Started Guides on landing page with empty state', () => {
+    queryMocks.usePlacementGroupsQuery.mockReturnValue({
+      data: {
+        data: [],
+        results: 0,
+      },
+    });
+
+    const { getByText } = renderWithTheme(<PlacementGroupsLanding />);
+
+    expect(getByText('Getting Started Guides')).toBeInTheDocument();
+  });
 });

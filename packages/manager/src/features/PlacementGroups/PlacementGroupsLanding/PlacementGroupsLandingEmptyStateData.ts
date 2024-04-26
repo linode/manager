@@ -1,4 +1,7 @@
-import { PLACEMENT_GROUP_LABEL } from 'src/features/PlacementGroups/constants';
+import {
+  PLACEMENT_GROUP_LABEL,
+  PLACEMENT_GROUPS_DOCS_LINK,
+} from 'src/features/PlacementGroups/constants';
 
 import type {
   ResourcesHeaders,
@@ -16,15 +19,15 @@ export const headers: ResourcesHeaders = {
 export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
-      text: '',
-      to: '',
+      text: 'Overview of Placement Groups',
+      to: PLACEMENT_GROUPS_DOCS_LINK,
     },
   ],
   moreInfo: {
-    text: '',
-    to: '',
+    text: 'Check out all our Docs',
+    to: 'https://www.linode.com/docs/',
   },
-  title: '',
+  title: 'Getting Started Guides',
 };
 
 export const linkAnalyticsEvent: ResourcesLinks['linkAnalyticsEvent'] = {
