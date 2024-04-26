@@ -1,4 +1,7 @@
-import { PLACEMENT_GROUP_LABEL } from 'src/features/PlacementGroups/constants';
+import {
+  PLACEMENT_GROUP_LABEL,
+  PLACEMENT_GROUPS_DOCS_LINK,
+} from 'src/features/PlacementGroups/constants';
 
 import type {
   ResourcesHeaders,
@@ -17,8 +20,7 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Overview of Placement Groups',
-      to:
-        'https://www.linode.com/docs/products/compute/compute-instances/guides/placement-groups/',
+      to: PLACEMENT_GROUPS_DOCS_LINK,
     },
   ],
   moreInfo: {

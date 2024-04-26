@@ -6,6 +6,7 @@ import { ListItem } from 'src/components/ListItem';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 
+import { PLACEMENT_GROUPS_DOCS_LINK } from './constants';
 import { affinityTypeOptions } from './utils';
 
 import type { FormikHelpers } from 'formik';
@@ -35,7 +36,7 @@ export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
               isDisabledMenuItem ? (
                 <Typography>
                   Only supporting Anti-affinity host placement groups for Beta.{' '}
-                  <Link to="TODO VM_Placement: update link">Learn more</Link>.
+                  <Link to={PLACEMENT_GROUPS_DOCS_LINK}>Learn more</Link>.
                 </Typography>
               ) : (
                 ''
@@ -80,8 +81,7 @@ export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
             in separate fault domains, but still in the same data center. Use
             this to support a high-availability model.
             <br />
-            {/* TODO VM_Placement: Add link path or determine if removal desired */}
-            <Link to="TODO VM_Placement: update link">Learn more.</Link>
+            <Link to={PLACEMENT_GROUPS_DOCS_LINK}>Learn more.</Link>
           </Typography>
         ),
       }}
