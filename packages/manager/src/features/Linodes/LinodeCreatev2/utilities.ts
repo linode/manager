@@ -19,6 +19,11 @@ import type {
 import type { Resolver } from 'react-hook-form';
 
 /**
+ * This is the ID of the Image of the default distribution.
+ */
+const DEFAULT_DISTRIBUTION = 'linode/debian11';
+
+/**
  * This interface is used to type the query params on the Linode Create flow.
  */
 interface LinodeCreateQueryParams {
@@ -229,7 +234,7 @@ const defaultPublicInterface = {
  * for the Backups and Clone tab.
  *
  * For any extra values added to the form, we should make sure `getLinodeCreatePayload`
- * removes the from the payload before it is sent to the API.
+ * removes them from the payload before it is sent to the API.
  */
 export interface LinodeCreateFormValues extends CreateLinodeRequest {
   /**
@@ -280,7 +285,7 @@ const getDefaultImageId = (params: ParsedLinodeCreateQueryParams) => {
 
   // Always default debian for the distributions tab.
   if (!params.type || params.type === 'Distributions') {
-    return 'linode/debian11';
+    return DEFAULT_DISTRIBUTION;
   }
 
   // If the user is deep linked to the Images tab with a preselected image,
@@ -303,7 +308,7 @@ const defaultValuesForImages = {
 };
 
 const defaultValuesForDistributions = {
-  image: 'linode/debian11',
+  image: DEFAULT_DISTRIBUTION,
   interfaces: [
     defaultVPCInterface,
     defaultVLANInterface,
