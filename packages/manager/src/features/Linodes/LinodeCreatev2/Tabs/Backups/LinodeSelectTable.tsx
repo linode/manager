@@ -3,6 +3,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import React, { useState } from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
+import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Stack } from 'src/components/Stack';
@@ -151,19 +152,21 @@ export const LinodeSelectTable = () => {
           />
         </>
       ) : (
-        <Grid container spacing={2}>
-          {data?.data.map((linode) => (
-            <SelectLinodeCard
-              handleSelection={() => handleSelect(linode)}
-              key={linode.id}
-              linode={linode}
-              selected={linode.id === field.value?.id}
-            />
-          ))}
-          {data?.results === 0 && (
-            <Typography padding={1}>No results</Typography>
-          )}
-        </Grid>
+        <Box>
+          <Grid container spacing={2}>
+            {data?.data.map((linode) => (
+              <SelectLinodeCard
+                handleSelection={() => handleSelect(linode)}
+                key={linode.id}
+                linode={linode}
+                selected={linode.id === field.value?.id}
+              />
+            ))}
+            {data?.results === 0 && (
+              <Typography padding={1}>No results</Typography>
+            )}
+          </Grid>
+        </Box>
       )}
     </Stack>
   );
