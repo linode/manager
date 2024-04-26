@@ -149,7 +149,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
             sendLinodeCreateFormStepEvent({
               action: 'click',
               category: 'link',
-              formName: 'VPC Panel',
+              formStepName: 'VPC Panel',
               label: 'Learn more',
             })
           }

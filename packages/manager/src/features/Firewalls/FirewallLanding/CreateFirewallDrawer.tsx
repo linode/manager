@@ -250,7 +250,7 @@ export const CreateFirewallDrawer = React.memo(
           sendLinodeCreateFormStepEvent({
             action: 'click',
             category: 'link',
-            formName: 'Create Firewall Drawer',
+            formStepName: 'Create Firewall Drawer',
             label: 'Learn more',
           })
         }
@@ -369,7 +369,7 @@ export const CreateFirewallDrawer = React.memo(
                 sendLinodeCreateFormStepEvent({
                   action: 'click',
                   category: 'button',
-                  formName: 'Create Firewall Drawer',
+                  formStepName: 'Create Firewall Drawer',
                   label: 'Create Firewall',
                 }),
               type: 'submit',

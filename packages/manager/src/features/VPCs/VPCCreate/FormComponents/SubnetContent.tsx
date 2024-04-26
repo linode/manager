@@ -41,7 +41,7 @@ export const SubnetContent = (props: Props) => {
             sendLinodeCreateFormStepEvent({
               action: 'click',
               category: 'link',
-              formName: 'VPC Subnets',
+              formStepName: 'VPC Subnets',
               label: 'Learn more',
             })
           }

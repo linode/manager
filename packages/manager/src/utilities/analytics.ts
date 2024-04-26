@@ -608,12 +608,9 @@ export const sendManageGravatarEvent = () => {
 // LinodesLanding.tsx
 // LinodesLandingEmptyState.tsx
 // PrimaryNav.tsx
-export const sendLinodeCreateFormStartEvent = (
-  optionNum: 1 | 2 | 3 | 4,
-  formNameDescription: string
-) => {
+export const sendLinodeCreateFormStartEvent = (formStartName: string) => {
   const formPayload: BasicFormEvent = {
-    formName: `Linode Create Form - Form start option ${optionNum} - ${formNameDescription}`,
+    formName: `Linode Create Form - Form Start - ${formStartName}`,
   };
   sendFormEvent(formPayload, 'formFocus');
 };
@@ -621,7 +618,7 @@ export const sendLinodeCreateFormStartEvent = (
 interface FormStepOptions {
   action: string;
   category: string;
-  formName?: string;
+  formStepName?: string;
   label: string;
 }
 
@@ -632,41 +629,42 @@ interface FormStepOptions {
 export const sendLinodeCreateFormStepEvent = ({
   action,
   category,
-  formName,
+  formStepName,
   label,
 }: FormStepOptions) => {
   const formPayload: FormStepEvent = {
-    formName: `Linode Create Form${formName ? ` - ${formName}` : ''}`,
+    formName: `Linode Create Form - Form Step${
+      formStepName ? ` - ${formStepName}` : ''
+    }`,
     stepName: `${label} - ${action}:${category}`,
   };
   sendFormEvent(formPayload, 'formStepInteraction');
 };
 
 export const sendLinodeCreateFormInputEvent = (
-  formName: string,
-  formInput: string
+  formInputName: string,
+  formInputValue: string
 ) => {
   const formPayload: FormInputEvent = {
-    formName: `Linode Create Form - ${formName}`,
-    inputValue: formInput,
+    formName: `Linode Create Form - Form Input${
+      formInputName ? ` - ${formInputName}` : ''
+    }`,
+    inputValue: formInputValue,
   };
   sendFormEvent(formPayload, 'formInput');
 };
 
 export const sendLinodeCreateFormSubmitEvent = () => {
   const formPayload: BasicFormEvent = {
-    formName: 'Linode Create Form',
+    formName: 'Linode Create Form - Form Submit',
   };
   sendFormEvent(formPayload, 'formSubmit');
 };
 
-export const sendLinodeCreateFormErrorEvent = (
-  formName: string,
-  formError: string
-) => {
+export const sendLinodeCreateFormErrorEvent = (formError: string) => {
   const formPayload: FormErrorEvent = {
     formError,
-    formName: `Linode Create Form - ${formName}`,
+    formName: 'Linode Create Form - Form Error',
   };
   sendFormEvent(formPayload, 'formError');
 };

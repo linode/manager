@@ -723,7 +723,7 @@ export class LinodeCreate extends React.PureComponent<
                       sendLinodeCreateFormStepEvent({
                         action: 'click',
                         category: 'link',
-                        formName: 'Firewall Panel',
+                        formStepName: 'Firewall Panel',
                         label: 'Learn more',
                       })
                     }

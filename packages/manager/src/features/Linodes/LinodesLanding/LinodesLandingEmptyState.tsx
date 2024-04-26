@@ -65,7 +65,7 @@ export const LinodesLandingEmptyState = () => {
               category: linkAnalyticsEvent.category,
               label: 'Create Linode',
             });
-            sendLinodeCreateFormStartEvent(1, 'Empty state create');
+            sendLinodeCreateFormStartEvent('Empty State Create');
           },
           tooltipText: getRestrictedResourceText({
             action: 'create',

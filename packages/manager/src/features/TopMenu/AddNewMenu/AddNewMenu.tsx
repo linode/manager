@@ -77,7 +77,9 @@ export const AddNewMenu = () => {
 
   const handleAnalyticsFormEvent = (entity: string) => {
     if (entity === 'Linode') {
-      sendLinodeCreateFormStartEvent(3, 'Global top nav create');
+      sendLinodeCreateFormStartEvent('Global Header Linode Create');
+    } else if (entity === 'Marketplace') {
+      sendLinodeCreateFormStartEvent('Global Header Marketplace Create');
     }
   };
 

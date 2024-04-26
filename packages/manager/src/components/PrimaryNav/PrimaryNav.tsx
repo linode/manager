@@ -464,7 +464,7 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
 
   const handleAnalyticsFormEvent = (entity: NavEntity) => {
     if (entity === 'Marketplace') {
-      sendLinodeCreateFormStartEvent(4, 'Global side nav marketplace create');
+      sendLinodeCreateFormStartEvent('Global Side Nav Marketplace Create');
     }
   };
 
