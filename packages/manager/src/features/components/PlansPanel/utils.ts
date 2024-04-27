@@ -4,9 +4,17 @@ import { ExtendedType } from 'src/utilities/extendType';
 import {
   DBAAS_DEDICATED_512_GB_PLAN,
   DEDICATED_512_GB_PLAN,
+  LIMITED_AVAILABILITY_COPY,
+  PLAN_IS_CURRENTLY_UNAVAILABLE_COPY,
+  PLAN_NOT_AVAILABLE_IN_REGION_COPY,
   PREMIUM_512_GB_PLAN,
+  SMALLER_PLAN_DISABLED_COPY,
 } from './constants';
-import { PlanSelectionType, TypeWithAvailability } from './types';
+import {
+  DisabledPlanSelectionTooltipProps,
+  PlanSelectionType,
+  TypeWithAvailability,
+} from './types';
 
 import type {
   Capabilities,
@@ -319,4 +327,28 @@ export const extractPlansInformation = ({
     hasMajorityOfPlansDisabled,
     plansForThisLinodeTypeClass,
   };
+};
+
+export const getDisabledPlanReasonCopy = ({
+  planBelongsToDisabledClass,
+  planIsTooSmall,
+  wholePanelIsDisabled,
+}: {
+  planBelongsToDisabledClass: DisabledPlanSelectionTooltipProps['disabledReasons']['planBelongsToDisabledClass'];
+  planIsTooSmall: DisabledPlanSelectionTooltipProps['disabledReasons']['planIsTooSmall'];
+  wholePanelIsDisabled: DisabledPlanSelectionTooltipProps['wholePanelIsDisabled'];
+}): string => {
+  if (wholePanelIsDisabled) {
+    return PLAN_NOT_AVAILABLE_IN_REGION_COPY;
+  }
+
+  if (planBelongsToDisabledClass) {
+    return PLAN_IS_CURRENTLY_UNAVAILABLE_COPY;
+  }
+
+  if (planIsTooSmall) {
+    return SMALLER_PLAN_DISABLED_COPY;
+  }
+
+  return LIMITED_AVAILABILITY_COPY;
 };

@@ -15,7 +15,7 @@ import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Tooltip } from 'src/components/Tooltip';
-import { LIMITED_AVAILABILITY_TEXT } from 'src/features/components/PlansPanel/constants';
+import { LIMITED_AVAILABILITY_COPY } from 'src/features/components/PlansPanel/constants';
 import {
   PRICE_ERROR_TOOLTIP_TEXT,
   UNKNOWN_PRICE,
@@ -119,10 +119,10 @@ export const KubernetesPlanSelection = (
                     sx={{
                       alignItems: 'center',
                     }}
-                    data-qa-tooltip={LIMITED_AVAILABILITY_TEXT}
+                    data-qa-tooltip={LIMITED_AVAILABILITY_COPY}
                     data-testid="limited-availability"
                     placement="right-start"
-                    title={LIMITED_AVAILABILITY_TEXT}
+                    title={LIMITED_AVAILABILITY_COPY}
                   >
                     <IconButton disableRipple size="small">
                       <HelpOutline
@@ -213,7 +213,7 @@ export const KubernetesPlanSelection = (
           key={plan.id}
           onClick={() => onSelect(plan.id)}
           renderVariant={renderVariant}
-          tooltip={isRowDisabled ? LIMITED_AVAILABILITY_TEXT : undefined}
+          tooltip={isRowDisabled ? LIMITED_AVAILABILITY_COPY : undefined}
         />
       </Hidden>
     </React.Fragment>

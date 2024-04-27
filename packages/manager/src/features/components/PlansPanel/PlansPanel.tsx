@@ -29,6 +29,9 @@ export interface PlansPanelProps {
   className?: string;
   copy?: string;
   currentPlanHeading?: string;
+  disableSmallerPlans?: {
+    selectedDiskSize?: number;
+  };
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
   disabledTabs?: string[];
@@ -39,9 +42,6 @@ export interface PlansPanelProps {
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   regionsData?: Region[];
-  disableSmallerPlans?: {
-    selectedDiskSize?: number;
-  };
   selectedId?: string;
   selectedRegionID?: string;
   showTransfer?: boolean;
@@ -55,6 +55,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     className,
     copy,
     currentPlanHeading,
+    disableSmallerPlans,
     disabled,
     disabledClasses,
     docsLink,
@@ -64,7 +65,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
     linodeID,
     onSelect,
     regionsData,
-    disableSmallerPlans,
     selectedId,
     selectedRegionID,
     showTransfer,

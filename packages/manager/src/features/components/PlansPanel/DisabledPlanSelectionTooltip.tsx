@@ -1,25 +1,13 @@
 import HelpOutline from '@mui/icons-material/HelpOutline';
+import { visuallyHidden } from '@mui/utils';
 import * as React from 'react';
 
 import { IconButton } from 'src/components/IconButton';
 import { Tooltip } from 'src/components/Tooltip';
 
-import {
-  LIMITED_AVAILABILITY_TEXT,
-  SMALLER_PLAN_DISABLED_TEXT,
-} from './constants';
+import { getDisabledPlanReasonCopy } from './utils';
 
-import type { PlanSelectionAvailabilityTypes } from './types';
-
-interface disabledTooltipReasons extends PlanSelectionAvailabilityTypes {
-  planIsTooSmall: boolean;
-}
-
-export interface DisabledPlanSelectionTooltipProps {
-  disabledReasons: disabledTooltipReasons;
-  hasMajorityOfPlansDisabled: boolean;
-  wholePanelIsDisabled: boolean | undefined;
-}
+import type { DisabledPlanSelectionTooltipProps } from './types';
 
 export const DisabledPlanSelectionTooltip = (
   props: DisabledPlanSelectionTooltipProps
@@ -29,36 +17,17 @@ export const DisabledPlanSelectionTooltip = (
     hasMajorityOfPlansDisabled,
     wholePanelIsDisabled,
   } = props;
-  const {
+  const { planBelongsToDisabledClass, planIsTooSmall } = disabledReasons;
+  const tooltipCopy = getDisabledPlanReasonCopy({
     planBelongsToDisabledClass,
-    planHasLimitedAvailability,
-    planIs512Gb,
     planIsTooSmall,
-  } = disabledReasons;
+    wholePanelIsDisabled,
+  });
 
-  const showTooltip =
-    !wholePanelIsDisabled &&
-    !hasMajorityOfPlansDisabled &&
-    (planBelongsToDisabledClass ||
-      planIs512Gb ||
-      planHasLimitedAvailability ||
-      planIsTooSmall);
-
-  if (!showTooltip) {
-    return null;
-  }
-
-  const pickTooltipCopy = (): string => {
-    if (planBelongsToDisabledClass) {
-      return 'This plan is not available in this region.';
-    }
-
-    if (planIsTooSmall) {
-      return SMALLER_PLAN_DISABLED_TEXT;
-    }
-
-    return LIMITED_AVAILABILITY_TEXT;
-  };
+  // If the entire panel is disabled, or if the majority of plans are disabled,
+  // we want to visually hide the tooltip icon.
+  // We keep it in the dom for accessibility purposes.
+  const isVisuallyHidden = wholePanelIsDisabled || hasMajorityOfPlansDisabled;
 
   return (
     <Tooltip
@@ -72,12 +41,16 @@ export const DisabledPlanSelectionTooltip = (
       sx={{
         top: -2,
       }}
-      data-qa-tooltip={pickTooltipCopy()}
+      data-qa-tooltip={tooltipCopy}
       data-testid="limited-availability"
       placement="right"
-      title={pickTooltipCopy()}
+      title={tooltipCopy}
     >
-      <IconButton disableRipple size="small">
+      <IconButton
+        disableRipple
+        size="small"
+        sx={isVisuallyHidden ? visuallyHidden : {}}
+      >
         <HelpOutline
           sx={{
             height: 16,

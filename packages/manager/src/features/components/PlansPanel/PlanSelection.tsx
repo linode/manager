@@ -18,7 +18,6 @@ import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/d
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
-import { LIMITED_AVAILABILITY_TEXT } from './constants';
 import { DisabledPlanSelectionTooltip } from './DisabledPlanSelectionTooltip';
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
 
@@ -76,13 +75,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   );
   const selectedLinodePlanType = linode?.type;
 
-  const rowAriaLabel =
-    plan && plan.formattedLabel && isSamePlan
-      ? `${plan.formattedLabel} this is your current plan`
-      : planIsTooSmall
-      ? `${plan.formattedLabel} this plan is too small for resize`
-      : plan.formattedLabel;
-
   // DC Dynamic price logic - DB creation and DB resize flows are currently out of scope
   const isDatabaseFlow = location.pathname.includes('/databases');
   const price: PriceObject | undefined = !isDatabaseFlow
@@ -105,10 +97,8 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       {/* Displays Table Row for larger screens */}
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <TableRow
-          aria-disabled={rowIsDisabled}
-          aria-label={rowAriaLabel}
+          className={rowIsDisabled ? 'disabled-row' : ''}
           data-qa-plan-row={plan.formattedLabel}
-          disabled={rowIsDisabled}
           key={plan.id}
           onClick={() => (!rowIsDisabled ? onSelect(plan.id) : undefined)}
         >
@@ -240,7 +230,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           heading={plan.heading}
           key={plan.id}
           onClick={() => onSelect(plan.id)}
-          tooltip={rowIsDisabled ? LIMITED_AVAILABILITY_TEXT : ''}
+          // tooltip={rowIsDisabled ? LIMITED_AVAILABILITY_TEXT : ''}
         />
       </Hidden>
     </React.Fragment>

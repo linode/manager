@@ -5,7 +5,7 @@ import {
   extendedTypeFactory,
   planSelectionTypeFactory,
 } from 'src/factories/types';
-import { LIMITED_AVAILABILITY_TEXT } from 'src/features/components/PlansPanel/constants';
+import { LIMITED_AVAILABILITY_COPY } from 'src/features/components/PlansPanel/constants';
 import { breakpoints } from 'src/foundations/breakpoints';
 import { resizeScreenSize } from 'src/utilities/testHelpers';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
@@ -64,7 +64,7 @@ describe('PlanSelection (table, desktop)', () => {
     expect(container.querySelector('[data-qa-storage]')).toHaveTextContent(
       '1024 GB'
     );
-    expect(queryByLabelText(LIMITED_AVAILABILITY_TEXT)).toBeNull();
+    expect(queryByLabelText(LIMITED_AVAILABILITY_COPY)).toBeNull();
   });
 
   it('renders the table row with unknown prices if a region is not selected', () => {
@@ -183,7 +183,7 @@ describe('PlanSelection (table, desktop)', () => {
       expect(getByRole('tooltip')).toBeInTheDocument();
     });
 
-    expect(getByText(LIMITED_AVAILABILITY_TEXT)).toBeVisible();
+    expect(getByText(LIMITED_AVAILABILITY_COPY)).toBeVisible();
   });
 });
 

@@ -2,7 +2,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { extendedTypeFactory } from 'src/factories/types';
-import { LIMITED_AVAILABILITY_TEXT } from 'src/features/components/PlansPanel/constants';
+import { LIMITED_AVAILABILITY_COPY } from 'src/features/components/PlansPanel/constants';
 import { breakpoints } from 'src/foundations/breakpoints';
 import {
   renderWithTheme,
@@ -141,7 +141,7 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
       expect(getByRole('tooltip')).toBeInTheDocument();
     });
 
-    expect(getByText(LIMITED_AVAILABILITY_TEXT)).toBeVisible();
+    expect(getByText(LIMITED_AVAILABILITY_COPY)).toBeVisible();
   });
 });
 

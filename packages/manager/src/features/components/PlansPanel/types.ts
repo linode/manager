@@ -12,11 +12,6 @@ export interface PlanSelectionType extends BaseType {
   transfer?: ExtendedType['transfer'];
 }
 
-export interface PlanSelectionAvailabilityTypes {
-  planBelongsToDisabledClass: boolean;
-  planHasLimitedAvailability: boolean;
-  planIs512Gb: boolean;
-}
 interface ExtendedTypeWithAvailability
   extends ExtendedType,
     PlanSelectionAvailabilityTypes {}
@@ -28,3 +23,19 @@ interface PlanSelectionTypeWithAvailability
 export type TypeWithAvailability =
   | ExtendedTypeWithAvailability
   | PlanSelectionTypeWithAvailability;
+
+export interface PlanSelectionAvailabilityTypes {
+  planBelongsToDisabledClass: boolean;
+  planHasLimitedAvailability: boolean;
+  planIs512Gb: boolean;
+}
+
+export interface DisabledTooltipReasons extends PlanSelectionAvailabilityTypes {
+  planIsTooSmall?: boolean;
+}
+
+export interface DisabledPlanSelectionTooltipProps {
+  disabledReasons: DisabledTooltipReasons;
+  hasMajorityOfPlansDisabled: boolean;
+  wholePanelIsDisabled: boolean | undefined;
+}
