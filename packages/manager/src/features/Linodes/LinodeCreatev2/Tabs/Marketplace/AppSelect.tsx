@@ -1,15 +1,25 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import React, { useState } from 'react';
+import { useController } from 'react-hook-form';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 
+import { AppSelectionCard } from './AppSelectionCard';
 import { categoryOptions } from './utilities';
 
+import type { LinodeCreateFormValues } from '../../utilities';
+
 export const AppSelect = () => {
+  const { field } = useController<LinodeCreateFormValues, 'stackscript_id'>({
+    name: 'stackscript_id',
+  });
+
   const [query, setQuery] = useState('');
   const { data: apps, isLoading, error } = useMarketplaceAppsQuery(true);
 
@@ -40,6 +50,21 @@ export const AppSelect = () => {
             placeholder="Select category"
           />
         </Stack>
+        <Box maxHeight="500px" sx={{ overflowX: 'hidden', overflowY: 'auto' }}>
+          <Grid container spacing={2}>
+            {apps?.map((app) => (
+              <AppSelectionCard
+                checked={field.value === app.id}
+                iconUrl={app.logo_url}
+                id={app.id}
+                key={app.label}
+                label={app.label}
+                onOpenDetailsDrawer={() => alert('details')}
+                onSelect={() => field.onChange(app.id)}
+              />
+            ))}
+          </Grid>
+        </Box>
       </Stack>
     </Paper>
   );
