@@ -167,7 +167,14 @@ export const allowedHTMLTagsFlexible: string[] = [
   'tr',
 ];
 
-export const allowedHTMLAttr = ['href', 'lang', 'title', 'align'];
+export const allowedHTMLAttr = [
+  'href',
+  'lang',
+  'title',
+  'align',
+  'class',
+  'rel',
+];
 
 /**
  * MBps rate for intra DC migrations (AKA Mutations)

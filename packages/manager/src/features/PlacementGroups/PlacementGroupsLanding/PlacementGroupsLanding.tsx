@@ -139,7 +139,6 @@ export const PlacementGroupsLanding = React.memo(() => {
           openCreatePlacementGroupDrawer={handleCreatePlacementGroup}
         />
         <PlacementGroupsCreateDrawer
-          allPlacementGroups={placementGroups.data}
           disabledPlacementGroupCreateButton={isLinodeReadOnly}
           onClose={onClosePlacementGroupDrawer}
           open={isPlacementGroupCreateDrawerOpen}
@@ -279,7 +278,6 @@ export const PlacementGroupsLanding = React.memo(() => {
         pageSize={pagination.pageSize}
       />
       <PlacementGroupsCreateDrawer
-        allPlacementGroups={placementGroups?.data ?? []}
         disabledPlacementGroupCreateButton={isLinodeReadOnly}
         onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupCreateDrawerOpen}

@@ -8,7 +8,7 @@ import {
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
+import { mockGetVPC } from 'support/intercepts/vpc';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 import { getRegionById } from 'support/util/regions';
 import { mockGetVLANs } from 'support/intercepts/vlans';
@@ -38,7 +38,7 @@ import {
 } from '@src/factories';
 import { randomNumber, randomLabel } from 'support/util/random';
 
-import type { Config, Linode, VLAN, VPC, Disk, Region } from '@linode/api-v4';
+import type { Config, Linode, VLAN, Disk, Region } from '@linode/api-v4';
 
 authenticate();
 
@@ -69,7 +69,6 @@ describe('Linode Config', () => {
     },
   ];
   const mockVLANs: VLAN[] = VLANFactory.buildList(2);
-  const mockVPCs: VPC[] = vpcFactory.buildList(5);
 
   before(() => {
     mockConfig.interfaces.splice(2, 1);
@@ -111,7 +110,7 @@ describe('Linode Config', () => {
       cy.findByLabelText('List of Configurations').within(() => {
         cy.get('tr').should('have.length', 2);
         containsVisible(
-          `${linode.id}-test-config – Latest 64 bit (6.2.9-x86_64-linode160)`
+          `${linode.id}-test-config – Latest 64 bit (6.7.9-x86_64-linode163)`
         );
         containsVisible('eth0 – Public Internet');
       });
@@ -135,7 +134,6 @@ describe('Linode Config', () => {
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
-    mockGetVPCs(mockVPCs).as('getVPCs');
     mockGetLinodeDisks(mockLinode.id, mockDisks).as('getDisks');
     mockGetLinodeConfigs(mockLinode.id, []);
     mockGetVPC(mockVPC).as('getVPC');
@@ -146,7 +144,6 @@ describe('Linode Config', () => {
       '@getClientStream',
       '@getFeatureFlags',
       '@getLinode',
-      '@getVPCs',
       '@getDisks',
       '@getVolumes',
     ]);
@@ -289,7 +286,6 @@ describe('Linode Config', () => {
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
-    mockGetVPCs(mockVPCs).as('getVPCs');
     mockGetLinodeDisks(mockLinode.id, mockDisks).as('getDisks');
     mockGetLinodeConfigs(mockLinode.id, [mockConfig]).as('getConfig');
     mockGetVPC(mockVPC).as('getVPC');
@@ -301,7 +297,6 @@ describe('Linode Config', () => {
       '@getFeatureFlags',
       '@getLinode',
       '@getConfig',
-      '@getVPCs',
       '@getDisks',
       '@getVolumes',
     ]);
@@ -472,7 +467,7 @@ describe('Linode Config', () => {
         cy.findByLabelText('List of Configurations').within(() => {
           cy.get('tr').should('have.length', 2);
           containsVisible(
-            `sharable-configuration – Latest 64 bit (6.2.9-x86_64-linode160)`
+            `sharable-configuration – Latest 64 bit (6.7.9-x86_64-linode163)`
           );
           containsVisible('eth0 – Public Internet');
         });

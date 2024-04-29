@@ -11,12 +11,13 @@ import {
   deleteVolume,
   detachVolume,
   getLinodeVolumes,
+  getVolumeTypes,
   getVolumes,
   resizeVolume,
   updateVolume,
 } from '@linode/api-v4';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import { Filter, Params } from '@linode/api-v4/src/types';
+import { Filter, Params, PriceType } from '@linode/api-v4/src/types';
 import {
   useInfiniteQuery,
   useMutation,
@@ -28,7 +29,7 @@ import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
 
 import { accountQueries } from './account/queries';
-import { updateInPaginatedStore } from './base';
+import { queryPresets, updateInPaginatedStore } from './base';
 import { profileQueries } from './profile';
 
 export const queryKey = 'volumes';
@@ -223,3 +224,13 @@ const getAllVolumes = (passedParams: Params = {}, passedFilter: Filter = {}) =>
 
 export const getVolumesForLinode = (volumes: Volume[], linodeId: number) =>
   volumes.filter(({ linode_id }) => linode_id && linode_id === linodeId);
+
+const getAllVolumeTypes = () =>
+  getAll<PriceType>((params) => getVolumeTypes(params))().then(
+    (data) => data.data
+  );
+
+export const useVolumeTypesQuery = () =>
+  useQuery<PriceType[], APIError[]>([`${queryKey}-types`], getAllVolumeTypes, {
+    ...queryPresets.oneTimeFetch,
+  });

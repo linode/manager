@@ -24,10 +24,12 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { Box } from '../Box';
 import { DocsLink } from '../DocsLink/DocsLink';
 import { Link } from '../Link';
+import { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 interface SelectRegionPanelProps {
+  RegionSelectProps?: Partial<RegionSelectProps>;
   currentCapability: Capabilities;
   disabled?: boolean;
   error?: string;
@@ -42,6 +44,7 @@ interface SelectRegionPanelProps {
 
 export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const {
+    RegionSelectProps,
     currentCapability,
     disabled,
     error,
@@ -78,7 +81,8 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     });
 
   const hideEdgeRegions =
-    !flags.gecko ||
+    !flags.gecko2?.enabled ||
+    flags.gecko2?.ga ||
     !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
 
   const showEdgeIconHelperText = Boolean(
@@ -140,6 +144,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         regions={regions ?? []}
         selectedId={selectedId || null}
         showEdgeIconHelperText={showEdgeIconHelperText}
+        {...RegionSelectProps}
       />
       {showClonePriceWarning && (
         <Notice
