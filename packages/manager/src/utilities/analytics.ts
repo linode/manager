@@ -36,6 +36,13 @@ type FormEventType =
   | 'formInput'
   | 'formStepInteraction'
   | 'formSubmit';
+
+type FormPayload =
+  | BasicFormEvent
+  | FormErrorEvent
+  | FormInputEvent
+  | FormStepEvent;
+
 interface BasicFormEvent {
   formName: string;
 }
@@ -52,16 +59,22 @@ interface FormErrorEvent extends BasicFormEvent {
   formError: string;
 }
 
-type FormPayload =
-  | BasicFormEvent
-  | FormErrorEvent
-  | FormInputEvent
-  | FormStepEvent;
+interface FormStepOptions {
+  action: string;
+  category: string;
+  formStepName?: string;
+  label: string;
+}
 
 interface AnalyticsPayload extends Omit<AnalyticsEvent, 'data'> {
   data?: string;
 }
 
+/**
+ * Sends a direct call rule events to Adobe for a Component Click (and optionally, with `data`, Component Details).
+ * This should be used for all custom events other than form events, which should use sendFormEvent.
+ * @param eventPayload - Custom event payload
+ */
 export const sendEvent = (eventPayload: AnalyticsEvent): void => {
   if (!ADOBE_ANALYTICS_URL) {
     return;
@@ -81,29 +94,10 @@ export const sendEvent = (eventPayload: AnalyticsEvent): void => {
 };
 
 /**
- * A Promise that will resolve once Adobe Analytics loads.
- *
- * @throws if Adobe does not load after 5 seconds
+ * Sends a direct call rule event to Adobe for form events.
+ * @param eventPayload - Form event payload dependent on the form event type
+ * @param eventType - Form focus, error, input, step, or submit
  */
-export const waitForAdobeAnalyticsToBeLoaded = () =>
-  new Promise<void>((resolve, reject) => {
-    let attempts = 0;
-    const interval = setInterval(() => {
-      if (window._satellite) {
-        resolve();
-        clearInterval(interval);
-        return;
-      }
-
-      attempts++;
-
-      if (attempts >= 5) {
-        reject('Adobe Analytics did not load after 5 seconds');
-        clearInterval(interval);
-      }
-    }, 1000);
-  });
-
 export const sendFormEvent = (
   eventPayload: FormPayload,
   eventType: FormEventType
@@ -138,6 +132,34 @@ export const sendFormEvent = (
     window._satellite.track(eventType, formEventPayload);
   }
 };
+
+/**
+ * A Promise that will resolve once Adobe Analytics loads.
+ *
+ * @throws if Adobe does not load after 5 seconds
+ */
+export const waitForAdobeAnalyticsToBeLoaded = () =>
+  new Promise<void>((resolve, reject) => {
+    let attempts = 0;
+    const interval = setInterval(() => {
+      if (window._satellite) {
+        resolve();
+        clearInterval(interval);
+        return;
+      }
+
+      attempts++;
+
+      if (attempts >= 5) {
+        reject('Adobe Analytics did not load after 5 seconds');
+        clearInterval(interval);
+      }
+    }, 1000);
+  });
+
+/**
+ * Custom Events
+ */
 
 // LinodeActionMenu.tsx
 export const sendLinodeActionEvent = (): void => {
@@ -604,6 +626,10 @@ export const sendManageGravatarEvent = () => {
   });
 };
 
+/**
+ * Form Events
+ */
+
 // AddNewMenu.tsx
 // LinodesLanding.tsx
 // LinodesLandingEmptyState.tsx
@@ -615,17 +641,15 @@ export const sendLinodeCreateFormStartEvent = (formStartName: string) => {
   sendFormEvent(formPayload, 'formFocus');
 };
 
-interface FormStepOptions {
-  action: string;
-  category: string;
-  formStepName?: string;
-  label: string;
-}
-
+// SelectFirewallPanel.tsx
 // CreateFirewallDrawer.tsx
-// SubnetContent.tsx
 // VPCTopSectionContent.tsx
 // VPCCreateDrawer.tsx
+// VPCPanel.tsx
+// SubnetContent.tsx
+// LinodeCreate.tsx
+// LinodeCreateContainer.tsx
+// SelectRegionPanel.tsx
 export const sendLinodeCreateFormStepEvent = ({
   action,
   category,
@@ -653,14 +677,15 @@ export const sendLinodeCreateFormInputEvent = (
   };
   sendFormEvent(formPayload, 'formInput');
 };
-
-export const sendLinodeCreateFormSubmitEvent = () => {
+// LinodeCreate.tsx
+export const sendLinodeCreateFormSubmitEvent = (formEndName: string) => {
   const formPayload: BasicFormEvent = {
-    formName: 'Linode Create Form - Form Submit',
+    formName: `Linode Create Form - Form End - ${formEndName}`,
   };
   sendFormEvent(formPayload, 'formSubmit');
 };
 
+// LinodeCreate.tsx
 export const sendLinodeCreateFormErrorEvent = (formError: string) => {
   const formPayload: FormErrorEvent = {
     formError,
