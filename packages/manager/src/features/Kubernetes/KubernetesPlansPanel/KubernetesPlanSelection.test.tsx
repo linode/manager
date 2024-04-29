@@ -134,7 +134,7 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
       )
     );
 
-    const button = getByTestId('limited-availability');
+    const button = getByTestId('disabled-plan-tooltip');
     fireEvent.mouseOver(button);
 
     await waitFor(() => {

@@ -176,7 +176,7 @@ describe('PlanSelection (table, desktop)', () => {
       wrapWithTableBody(<PlanSelection {...defaultProps} plan={bigPlanType} />)
     );
 
-    const button = getByTestId('limited-availability');
+    const button = getByTestId('disabled-plan-tooltip');
     fireEvent.mouseOver(button);
 
     await waitFor(() => {

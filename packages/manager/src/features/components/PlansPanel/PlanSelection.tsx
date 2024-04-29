@@ -20,6 +20,7 @@ import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import { DisabledPlanSelectionTooltip } from './DisabledPlanSelectionTooltip';
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
+import { getDisabledPlanReasonCopy } from './utils';
 
 import type { TypeWithAvailability } from './types';
 import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
@@ -92,6 +93,30 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     planHasLimitedAvailability ||
     wholePanelIsDisabled;
 
+  const disabledPlanReasonCopy = getDisabledPlanReasonCopy({
+    planBelongsToDisabledClass,
+    planIsTooSmall,
+    wholePanelIsDisabled,
+  });
+
+  // These are the two exceptions for when the tooltip should be hidden
+  // - The entire panel is disabled (means the plans class isn't available in the selected region. (The user will see a notice about this)
+  // - The majority of plans are disabled - In order to reduce visual clutter, we don't show the tooltip if the majority of plans are disabled (there is also a notice about this)
+  // For both, and accessibility is maintained via ariaDescribedBy so screen readers can still describe why each radio is disabled.
+  const showDisabledTooltip =
+    !wholePanelIsDisabled &&
+    !hasMajorityOfPlansDisabled &&
+    (planBelongsToDisabledClass ||
+      planIs512Gb ||
+      planHasLimitedAvailability ||
+      planIsTooSmall);
+  const showAccessibleDisabledReason =
+    planBelongsToDisabledClass ||
+    planIs512Gb ||
+    planHasLimitedAvailability ||
+    wholePanelIsDisabled ||
+    planIsTooSmall;
+
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
       {/* Displays Table Row for larger screens */}
@@ -105,6 +130,11 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           <StyledRadioCell>
             {!isSamePlan && (
               <FormControlLabel
+                aria-label={`${plan.heading} ${
+                  showAccessibleDisabledReason
+                    ? `- ${disabledPlanReasonCopy}`
+                    : ''
+                }`}
                 control={
                   <Radio
                     checked={
@@ -123,7 +153,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
                     onChange={() => onSelect(plan.id)}
                   />
                 }
-                aria-label={plan.heading}
                 className={'label-visually-hidden'}
                 label={plan.heading}
               />
@@ -134,16 +163,11 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             data-qa-plan-name
           >
             {plan.heading} &nbsp;
-            <DisabledPlanSelectionTooltip
-              disabledReasons={{
-                planBelongsToDisabledClass,
-                planHasLimitedAvailability,
-                planIs512Gb,
-                planIsTooSmall,
-              }}
-              hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
-              wholePanelIsDisabled={wholePanelIsDisabled}
-            />
+            {showDisabledTooltip && (
+              <DisabledPlanSelectionTooltip
+                tooltipCopy={disabledPlanReasonCopy}
+              />
+            )}
             {(isSamePlan || plan.id === selectedLinodePlanType) && (
               <StyledChip
                 aria-label="This is your current plan"

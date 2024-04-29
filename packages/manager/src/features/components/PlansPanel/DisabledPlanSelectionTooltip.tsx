@@ -1,33 +1,17 @@
 import HelpOutline from '@mui/icons-material/HelpOutline';
-import { visuallyHidden } from '@mui/utils';
 import * as React from 'react';
 
 import { IconButton } from 'src/components/IconButton';
 import { Tooltip } from 'src/components/Tooltip';
 
-import { getDisabledPlanReasonCopy } from './utils';
-
-import type { DisabledPlanSelectionTooltipProps } from './types';
+interface DisabledPlanSelectionTooltipProps {
+  tooltipCopy: string;
+}
 
 export const DisabledPlanSelectionTooltip = (
   props: DisabledPlanSelectionTooltipProps
 ) => {
-  const {
-    disabledReasons,
-    hasMajorityOfPlansDisabled,
-    wholePanelIsDisabled,
-  } = props;
-  const { planBelongsToDisabledClass, planIsTooSmall } = disabledReasons;
-  const tooltipCopy = getDisabledPlanReasonCopy({
-    planBelongsToDisabledClass,
-    planIsTooSmall,
-    wholePanelIsDisabled,
-  });
-
-  // If the entire panel is disabled, or if the majority of plans are disabled,
-  // we want to visually hide the tooltip icon.
-  // We keep it in the dom for accessibility purposes.
-  const isVisuallyHidden = wholePanelIsDisabled || hasMajorityOfPlansDisabled;
+  const { tooltipCopy } = props;
 
   return (
     <Tooltip
@@ -42,15 +26,11 @@ export const DisabledPlanSelectionTooltip = (
         top: -2,
       }}
       data-qa-tooltip={tooltipCopy}
-      data-testid="limited-availability"
+      data-testid="disabled-plan-tooltip"
       placement="right"
       title={tooltipCopy}
     >
-      <IconButton
-        disableRipple
-        size="small"
-        sx={isVisuallyHidden ? visuallyHidden : {}}
-      >
+      <IconButton disableRipple size="small">
         <HelpOutline
           sx={{
             height: 16,

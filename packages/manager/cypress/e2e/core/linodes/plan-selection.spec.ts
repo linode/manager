@@ -99,7 +99,7 @@ const k8PlansPanel = '[data-qa-tp="Add Node Pools"]';
 const planSelectionTable = 'List of Linode Plans';
 
 const notices = {
-  limitedAvailability: '[data-testid="limited-availability"]',
+  limitedAvailability: '[data-testid="disabled-plan-tooltip"]',
   unavailable: '[data-testid="notice-error"]',
 };
 
@@ -138,7 +138,7 @@ describe('displays linode plans panel based on availability', () => {
         cy.get('[id="dedicated-2"]').should('be.enabled');
         cy.get('[id="dedicated-3"]').should('be.disabled');
         cy.get('[id="g6-dedicated-64"]').should('be.disabled');
-        cy.findAllByTestId('limited-availability').should('have.length', 2);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 2);
       });
     });
 
@@ -156,7 +156,7 @@ describe('displays linode plans panel based on availability', () => {
         cy.get('[id="shared-1"]').should('be.enabled');
         cy.get('[id="shared-2"]').should('be.enabled');
         cy.get('[id="shared-3"]').should('be.enabled');
-        cy.findAllByTestId('limited-availability').should('have.length', 0);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
       });
     });
 
@@ -173,7 +173,7 @@ describe('displays linode plans panel based on availability', () => {
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
         cy.findAllByRole('row').should('have.length', 2);
         cy.get('[id="highmem-1"]').should('be.disabled');
-        cy.findAllByTestId('limited-availability').should('have.length', 1);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 1);
       });
     });
 
@@ -190,7 +190,7 @@ describe('displays linode plans panel based on availability', () => {
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
         cy.findAllByRole('row').should('have.length', 2);
         cy.get('[id="gpu-1"]').should('be.disabled');
-        cy.findAllByTestId('limited-availability').should('have.length', 0);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
       });
     });
 
@@ -208,7 +208,7 @@ describe('displays linode plans panel based on availability', () => {
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
         cy.findAllByRole('row').should('have.length', 2);
         cy.get('[id="g7-premium-64"]').should('be.disabled');
-        cy.findAllByTestId('limited-availability').should('have.length', 0);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
       });
     });
   });
@@ -267,7 +267,7 @@ describe('displays kubernetes plans panel based on availability', () => {
           cy.get('[data-testid="increment-button"]').should('be.disabled');
           cy.findByRole('button', { name: 'Add' }).should('be.disabled');
         });
-        cy.findAllByTestId('limited-availability').should('have.length', 2);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 2);
       });
     });
 
@@ -294,7 +294,7 @@ describe('displays kubernetes plans panel based on availability', () => {
           'not.have.attr',
           'disabled'
         );
-        cy.findAllByTestId('limited-availability').should('have.length', 0);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
       });
     });
 
@@ -314,7 +314,7 @@ describe('displays kubernetes plans panel based on availability', () => {
           'have.attr',
           'disabled'
         );
-        cy.findAllByTestId('limited-availability').should('have.length', 1);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 1);
       });
     });
 
@@ -335,7 +335,7 @@ describe('displays kubernetes plans panel based on availability', () => {
           'have.attr',
           'disabled'
         );
-        cy.findAllByTestId('limited-availability').should('have.length', 0);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
       });
     });
   });

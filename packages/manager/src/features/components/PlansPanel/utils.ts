@@ -11,7 +11,7 @@ import {
   SMALLER_PLAN_DISABLED_COPY,
 } from './constants';
 import {
-  DisabledPlanSelectionTooltipProps,
+  DisabledTooltipReasons,
   PlanSelectionType,
   TypeWithAvailability,
 } from './types';
@@ -334,9 +334,9 @@ export const getDisabledPlanReasonCopy = ({
   planIsTooSmall,
   wholePanelIsDisabled,
 }: {
-  planBelongsToDisabledClass: DisabledPlanSelectionTooltipProps['disabledReasons']['planBelongsToDisabledClass'];
-  planIsTooSmall: DisabledPlanSelectionTooltipProps['disabledReasons']['planIsTooSmall'];
-  wholePanelIsDisabled: DisabledPlanSelectionTooltipProps['wholePanelIsDisabled'];
+  planBelongsToDisabledClass: DisabledTooltipReasons['planBelongsToDisabledClass'];
+  planIsTooSmall: DisabledTooltipReasons['planIsTooSmall'];
+  wholePanelIsDisabled: DisabledTooltipReasons['wholePanelIsDisabled'];
 }): string => {
   if (wholePanelIsDisabled) {
     return PLAN_NOT_AVAILABLE_IN_REGION_COPY;

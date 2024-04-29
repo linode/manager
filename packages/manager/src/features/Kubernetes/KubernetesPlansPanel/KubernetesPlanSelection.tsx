@@ -120,7 +120,7 @@ export const KubernetesPlanSelection = (
                       alignItems: 'center',
                     }}
                     data-qa-tooltip={LIMITED_AVAILABILITY_COPY}
-                    data-testid="limited-availability"
+                    data-testid="disabled-plan-tooltip"
                     placement="right-start"
                     title={LIMITED_AVAILABILITY_COPY}
                   >

@@ -32,10 +32,5 @@ export interface PlanSelectionAvailabilityTypes {
 
 export interface DisabledTooltipReasons extends PlanSelectionAvailabilityTypes {
   planIsTooSmall?: boolean;
-}
-
-export interface DisabledPlanSelectionTooltipProps {
-  disabledReasons: DisabledTooltipReasons;
-  hasMajorityOfPlansDisabled: boolean;
-  wholePanelIsDisabled: boolean | undefined;
+  wholePanelIsDisabled?: boolean;
 }
