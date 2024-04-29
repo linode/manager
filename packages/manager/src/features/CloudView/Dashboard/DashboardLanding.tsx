@@ -11,13 +11,20 @@ export const DashBoardLanding = () => {
     {} as DashboardProperties
   );
 
+  const updatedDashboard = React.useRef<Dashboard>();
+
   const handleGlobalFilterChange = (globalFilter: FiltersObject) => {
     // set as dashboard filter
-    setDashboardProp({ ...dashboardProp, dashboardFilters: globalFilter });
+    setDashboardProp({
+      ...dashboardProp,
+      dashbaord: updatedDashboard.current!,
+      dashboardFilters: globalFilter,
+    });
   };
 
   const handleDashboardChange = (dashboard: Dashboard) => {
     setDashboardProp({ ...dashboardProp, dashbaord: dashboard });
+    updatedDashboard.current = { ...dashboard };
   };
 
   const saveOrEditDashboard = (dashboard: Dashboard) => {
@@ -36,8 +43,9 @@ export const DashBoardLanding = () => {
     // todo, implement the reset view function
   };
 
-  const dashbaordChange = (dashboard: Dashboard) => {
+  const dashbaordChange = (dashboardObj: Dashboard) => {
     // todo, whenever a change in dashboard happens
+    updatedDashboard.current = { ...dashboardObj };
   };
 
   return (

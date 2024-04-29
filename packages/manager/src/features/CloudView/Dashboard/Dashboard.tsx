@@ -7,6 +7,7 @@ import * as React from 'react';
 import CloudViewIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { useCloudViewJWEtokenQuery } from 'src/queries/cloudview/dashboards';
 import {
   useLinodeResourcesQuery,
@@ -18,7 +19,6 @@ import {
   CloudViewWidget,
   CloudViewWidgetProperties,
 } from '../Widget/CloudViewWidget';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 
 export interface DashboardProperties {
   dashbaord: Dashboard; // this will be done in upcoming sprint
@@ -83,7 +83,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   if (isError) {
     return (
       <Paper style={{ height: '100%' }}>
-        <StyledErrorState title="Failed to get jwe token"/>
+        <StyledErrorState title="Failed to get jwe token" />
       </Paper>
     );
   }
@@ -100,7 +100,15 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   };
 
   const handleWidgetChange = (widget: Widgets) => {
-    widget.color = 'black'; // todo, add functionality here
+    const dashboard = { ...props.dashbaord };
+
+    const index = dashboard.widgets.findIndex(
+      (obj) => obj.label === widget.label
+    );
+
+    dashboard.widgets[index] = { ...widget };
+
+    props.onDashboardChange(dashboard);
   };
 
   const RenderWidgets = () => {

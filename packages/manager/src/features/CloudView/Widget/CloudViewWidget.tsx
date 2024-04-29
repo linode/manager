@@ -148,7 +148,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
           ),
           label: graphData.metric.LINODE_ID
             ? graphData.metric.LINODE_ID
-            : props.widget.metric,
+            : props.widget.label,
         };
 
         // construct a legend row with the dimension
@@ -252,7 +252,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
             suggestedMax={10}
             timezone={timezone}
             title={props.widget.label}
-            unit={props.unit}
+            unit={' ' + props.unit}
           />
         </div>
       </Paper>
