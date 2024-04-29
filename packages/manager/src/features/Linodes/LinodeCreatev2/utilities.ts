@@ -353,9 +353,7 @@ export const resolver: Resolver<LinodeCreateFormValues> = async (
   context,
   options
 ) => {
-  const transformedValues = getLinodeCreatePayload(
-    values
-  ) as LinodeCreateFormValues;
+  const transformedValues = getLinodeCreatePayload(values);
 
   const { errors } = await yupResolver(
     CreateLinodeSchema,

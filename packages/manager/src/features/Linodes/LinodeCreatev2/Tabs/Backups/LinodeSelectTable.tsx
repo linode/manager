@@ -89,7 +89,7 @@ export const LinodeSelectTable = () => {
       <DebouncedSearchTextField
         customValue={{
           onChange: (value) => {
-            if (!value && preselectedLinodeId) {
+            if (preselectedLinodeId) {
               setPreselectedLinodeId(undefined);
             }
             setQuery(value ?? '');
@@ -100,7 +100,6 @@ export const LinodeSelectTable = () => {
         hideLabel
         isSearching={isFetching}
         label="Search"
-        onChange={(e) => setQuery(e.target.value)}
         placeholder="Search"
       />
       {matchesMdUp ? (
