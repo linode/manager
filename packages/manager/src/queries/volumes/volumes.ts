@@ -165,10 +165,15 @@ export const useCreateVolumeMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Volume, APIError[], VolumeRequestPayload>({
     mutationFn: createVolume,
-    onSuccess() {
+    onSuccess(volume) {
       queryClient.invalidateQueries({
         queryKey: volumeQueries.lists.queryKey,
       });
+      if (volume.linode_id) {
+        queryClient.invalidateQueries({
+          queryKey: volumeQueries.linode(volume.linode_id)._ctx.volumes._def,
+        });
+      }
       // If a restricted user creates an entity, we must make sure grants are up to date.
       queryClient.invalidateQueries({
         queryKey: profileQueries.grants.queryKey,
