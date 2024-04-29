@@ -2,6 +2,8 @@ import { DateTime } from 'luxon';
 
 import { isPast } from 'src/utilities/isPast';
 
+import { ExcludedScope } from './CreateAPITokenDrawer';
+
 export type Permission = [string, number];
 
 export const basePerms = [
@@ -54,8 +56,16 @@ export const levelMap = {
   view: 1,
 };
 
-const defaultScopeMap = (perms: typeof basePerms): Record<string, 0> =>
-  perms.reduce((obj, key) => ({ ...obj, [key]: 0 }), {});
+const NO_SCOPE_SELECTION = -1;
+
+const defaultScopeMap = (
+  perms: typeof basePerms,
+  isCreateFlow?: boolean
+): Record<string, -1 | 0> =>
+  perms.reduce(
+    (obj, key) => ({ ...obj, [key]: isCreateFlow ? NO_SCOPE_SELECTION : 0 }),
+    {}
+  );
 
 /**
  * This function accepts scopes strings as given by the API, which have the following format:
@@ -83,7 +93,10 @@ const defaultScopeMap = (perms: typeof basePerms): Record<string, 0> =>
  * Each permission level gives a user access to all lower permission levels.
  */
 const permRegex = new RegExp(/[, ]/);
-export const scopeStringToPermTuples = (scopes: string): Permission[] => {
+export const scopeStringToPermTuples = (
+  scopes: string,
+  isCreateFlow?: boolean
+): Permission[] => {
   if (scopes === '*') {
     return basePerms.map((perm) => [perm, 2] as Permission);
   }
@@ -94,7 +107,7 @@ export const scopeStringToPermTuples = (scopes: string): Permission[] => {
       ...map,
       [perm]: levelMap[level],
     };
-  }, defaultScopeMap(basePerms));
+  }, defaultScopeMap(basePerms, isCreateFlow));
 
   /**
    * So there are deprecated permission types that have been folded into a parent permission. So
@@ -177,13 +190,28 @@ export const permTuplesToScopeString = (scopeTups: Permission[]): string => {
  * returned. Otherwise, `null` is returned.
  *
  * @param scopes - Permission scopes for which to check access levels.
+ * @param excludedScopes - Permission scopes for which to exclude from the access level check. (e.g. they have a different default)
+ * Example: { name: 'vpc', defaultAccessLevel: 0 } would ignore the VPC scope when it's set to None.
  *
  * @returns Access level for the given scopes if they are all the same; `null` otherwise.
  */
-export const allScopesAreTheSame = (scopes: Permission[]) => {
+export const allScopesAreTheSame = (
+  scopes: Permission[],
+  excludedScopes?: ExcludedScope[]
+) => {
   const sample = scopes[0];
+
+  // Filter out any scopes that are set to their own defaults.
+  const filteredScopes = scopes.filter(
+    (scope: Permission) =>
+      !excludedScopes?.find(
+        (excludedScope) =>
+          excludedScope.name === scope[0] &&
+          excludedScope.defaultAccessLevel === scope[1]
+      )
+  );
   const scopeMatches = (scope: Permission) => scope[1] === sample[1];
-  return scopes.slice(1).every(scopeMatches) ? sample[1] : null;
+  return filteredScopes.slice(1).every(scopeMatches) ? sample[1] : null;
 };
 
 /**
@@ -221,4 +249,23 @@ Omit<typeof basePermNameMap, T[number]['name']> => {
   }
 
   return filteredPermNameMap;
+};
+
+/**
+ * Determines whether a selection has been made for every scope, since by default, the scope permissions are set to null.
+ *
+ * @param scopeTuples - The array of scope tuples.
+ * @returns {boolean} True if all scopes have permissions set to none/read_only/read_write, false otherwise.
+ */
+export const hasAccessBeenSelectedForAllScopes = (
+  scopeTuples: Permission[]
+): boolean => {
+  const validAccessLevels = [
+    levelMap['none'],
+    levelMap['read_only'],
+    levelMap['read_write'],
+  ];
+  return scopeTuples.every((scopeTuple) =>
+    validAccessLevels.includes(scopeTuple[1])
+  );
 };

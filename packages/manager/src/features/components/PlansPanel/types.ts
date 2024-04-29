@@ -11,3 +11,15 @@ export interface PlanSelectionType extends BaseType {
   subHeadings: ExtendedType['subHeadings'];
   transfer?: ExtendedType['transfer'];
 }
+
+interface ExtendedTypeWithAvailability extends ExtendedType {
+  isLimitedAvailabilityPlan: boolean;
+}
+
+interface PlanSelectionTypeWithAvailability extends PlanSelectionType {
+  isLimitedAvailabilityPlan: boolean;
+}
+
+export type TypeWithAvailability =
+  | ExtendedTypeWithAvailability
+  | PlanSelectionTypeWithAvailability;

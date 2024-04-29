@@ -1,10 +1,10 @@
 import { accountAvailabilityFactory, regionFactory } from 'src/factories';
 
 import {
-  getRegionOptionAvailability,
   getRegionOptions,
   getSelectedRegionById,
   getSelectedRegionsByIds,
+  isRegionOptionUnavailable,
 } from './RegionSelect.utils';
 
 import type { RegionSelectOption } from './RegionSelect.types';
@@ -38,27 +38,75 @@ const regions: Region[] = [
   }),
 ];
 
+const regionsWithEdge = [
+  ...regions,
+  regionFactory.build({
+    capabilities: ['Linodes'],
+    country: 'us',
+    id: 'us-edge-1',
+    label: 'Gecko Edge Test',
+    site_type: 'edge',
+  }),
+  regionFactory.build({
+    capabilities: ['Linodes'],
+    country: 'us',
+    id: 'us-edge-2',
+    label: 'Gecko Edge Test 2',
+    site_type: 'edge',
+  }),
+];
+
 const expectedRegions: RegionSelectOption[] = [
   {
     data: {
       country: 'us',
       region: 'North America',
     },
+    disabledProps: {
+      disabled: false,
+    },
     label: 'US Location (us-1)',
-    unavailable: false,
+    site_type: 'core',
     value: 'us-1',
   },
   {
     data: { country: 'ca', region: 'North America' },
+    disabledProps: {
+      disabled: false,
+    },
     label: 'CA Location (ca-1)',
-    unavailable: false,
+    site_type: 'core',
     value: 'ca-1',
   },
   {
     data: { country: 'jp', region: 'Asia' },
+    disabledProps: {
+      disabled: false,
+    },
     label: 'JP Location (jp-1)',
-    unavailable: false,
+    site_type: 'core',
     value: 'jp-1',
+  },
+];
+
+const expectedEdgeRegions = [
+  {
+    data: { country: 'us', region: 'North America' },
+    disabledProps: {
+      disabled: false,
+    },
+    label: 'Gecko Edge Test (us-edge-1)',
+    site_type: 'edge',
+    value: 'us-edge-1',
+  },
+  {
+    data: { country: 'us', region: 'North America' },
+    disabledProps: {
+      disabled: false,
+    },
+    label: 'Gecko Edge Test 2 (us-edge-2)',
+    site_type: 'edge',
+    value: 'us-edge-2',
   },
 ];
 
@@ -103,6 +151,84 @@ describe('getRegionOptions', () => {
 
     expect(result).toEqual(expectedRegions);
   });
+
+  it('should filter out edge regions if regionFilter is core', () => {
+    const result: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regionFilter: 'core',
+      regions: regionsWithEdge,
+    });
+
+    expect(result).toEqual(expectedRegions);
+  });
+
+  it('should filter out core regions if regionFilter is edge', () => {
+    const result: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regionFilter: 'edge',
+      regions: regionsWithEdge,
+    });
+
+    expect(result).toEqual(expectedEdgeRegions);
+  });
+
+  it('should not filter out any regions if regionFilter is undefined', () => {
+    const expectedRegionsWithEdge = [
+      ...expectedEdgeRegions,
+      ...expectedRegions,
+    ];
+
+    const result: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regionFilter: undefined,
+      regions: regionsWithEdge,
+    });
+
+    expect(result).toEqual(expectedRegionsWithEdge);
+  });
+
+  it('should have its option disabled if the region is unavailable', () => {
+    const _regions = [
+      ...regions,
+      regionFactory.build({
+        capabilities: ['Linodes'],
+        country: 'us',
+        id: 'ap-south',
+        label: 'US Location 2',
+      }),
+    ];
+
+    const result: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regions: _regions,
+    });
+
+    const unavailableRegion = result.find(
+      (region) => region.value === 'ap-south'
+    );
+
+    expect(unavailableRegion?.disabledProps?.disabled).toBe(true);
+  });
+
+  it('should have its option disabled if `handleDisabledRegion` is passed', () => {
+    const result: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      handleDisabledRegion: (region) => ({
+        ...region,
+        disabled: true,
+      }),
+      regions,
+    });
+
+    const unavailableRegion = result.find((region) => region.value === 'us-1');
+
+    expect(unavailableRegion?.disabledProps?.disabled).toBe(true);
+  });
 });
 
 describe('getSelectedRegionById', () => {
@@ -123,7 +249,7 @@ describe('getSelectedRegionById', () => {
         region: 'North America',
       },
       label: 'US Location (us-1)',
-      unavailable: false,
+      site_type: 'core',
       value: 'us-1',
     };
 
@@ -146,7 +272,7 @@ describe('getSelectedRegionById', () => {
 
 describe('getRegionOptionAvailability', () => {
   it('should return true if the region is not available', () => {
-    const result = getRegionOptionAvailability({
+    const result = isRegionOptionUnavailable({
       accountAvailabilityData,
       currentCapability: 'Linodes',
       region: regionFactory.build({
@@ -158,7 +284,7 @@ describe('getRegionOptionAvailability', () => {
   });
 
   it('should return false if the region is available', () => {
-    const result = getRegionOptionAvailability({
+    const result = isRegionOptionUnavailable({
       accountAvailabilityData,
       currentCapability: 'Linodes',
       region: regionFactory.build({
@@ -188,7 +314,7 @@ describe('getSelectedRegionsByIds', () => {
           region: 'North America',
         },
         label: 'US Location (us-1)',
-        unavailable: false,
+        site_type: 'core',
         value: 'us-1',
       },
       {
@@ -197,7 +323,7 @@ describe('getSelectedRegionsByIds', () => {
           region: 'North America',
         },
         label: 'CA Location (ca-1)',
-        unavailable: false,
+        site_type: 'core',
         value: 'ca-1',
       },
     ];
@@ -222,7 +348,7 @@ describe('getSelectedRegionsByIds', () => {
           region: 'North America',
         },
         label: 'US Location (us-1)',
-        unavailable: false,
+        site_type: 'core',
         value: 'us-1',
       },
     ];

@@ -1,10 +1,8 @@
 import * as React from 'react';
 
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { sortByString } from 'src/utilities/sort-by';
-
-import { SelectedRegionsList } from './SelectedRegionsList';
 
 import type { RegionSelectOption } from 'src/components/RegionSelect/RegionSelect.types';
 
@@ -12,7 +10,6 @@ interface Props {
   disabled?: boolean;
   error?: string;
   name: string;
-  onBlur: (e: any) => void;
   onChange: (value: string[]) => void;
   required?: boolean;
   selectedRegion: string[];
@@ -23,7 +20,7 @@ const sortRegionOptions = (a: RegionSelectOption, b: RegionSelectOption) => {
 };
 
 export const AccessKeyRegions = (props: Props) => {
-  const { disabled, error, onBlur, onChange, required, selectedRegion } = props;
+  const { disabled, error, onChange, required, selectedRegion } = props;
 
   const { data: regions, error: regionsError } = useRegionsQuery();
 
@@ -35,13 +32,11 @@ export const AccessKeyRegions = (props: Props) => {
       handleSelection={(ids) => {
         onChange(ids);
       }}
-      SelectedRegionsList={SelectedRegionsList}
       currentCapability="Object Storage"
       disabled={disabled}
       errorText={errorText}
       isClearable={false}
       label="Regions"
-      onBlur={onBlur}
       placeholder="Select Regions or type to search"
       regions={regions ?? []}
       required={required}

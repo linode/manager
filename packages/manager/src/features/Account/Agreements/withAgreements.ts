@@ -1,9 +1,9 @@
 import { Agreements } from '@linode/api-v4/lib';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { UseQueryResult } from 'react-query';
+import { UseQueryResult } from '@tanstack/react-query';
 
-import { useAccountAgreements } from 'src/queries/accountAgreements';
+import { useAccountAgreements } from 'src/queries/account/agreements';
 
 export interface AgreementsProps {
   agreements: UseQueryResult<Agreements, APIError[]>;

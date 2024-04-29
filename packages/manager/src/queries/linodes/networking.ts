@@ -8,6 +8,7 @@ import {
   IPRange,
   IPRangeInformation,
   IPSharingPayload,
+  Linode,
   LinodeIPsResponse,
   Params,
   allocateIPAddress,
@@ -25,7 +26,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 import { queryKey } from './linodes';
 import { getAllIPv6Ranges, getAllIps } from './requests';
@@ -105,7 +106,11 @@ export const useLinodeShareIPMutation = () => {
   });
 };
 
-export const useAssignAdressesMutation = () => {
+export const useAssignAdressesMutation = ({
+  currentLinodeId,
+}: {
+  currentLinodeId: Linode['id'];
+}) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], IPAssignmentPayload>(assignAddresses, {
     onSuccess(_, variables) {
@@ -118,6 +123,13 @@ export const useAssignAdressesMutation = () => {
         ]);
         queryClient.invalidateQueries([queryKey, 'linode', linode_id, 'ips']);
       }
+      queryClient.invalidateQueries([
+        queryKey,
+        'linode',
+        currentLinodeId,
+        'ips',
+      ]);
+      queryClient.invalidateQueries([queryKey, 'ipv6']);
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.invalidateQueries([queryKey, 'all']);
       queryClient.invalidateQueries([queryKey, 'infinite']);

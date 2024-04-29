@@ -1,6 +1,6 @@
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
-import { oauthClientsEventHandler } from 'src/queries/accountOAuth';
+import { oauthClientsEventHandler } from 'src/queries/account/oauth';
 import { databaseEventsHandler } from 'src/queries/databases';
 import { domainEventsHandler } from 'src/queries/domains';
 import { firewallEventsHandler } from 'src/queries/firewalls';
@@ -14,7 +14,8 @@ import { tokenEventHandler } from 'src/queries/tokens';
 import { volumeEventsHandler } from 'src/queries/volumes';
 
 import type { Event } from '@linode/api-v4';
-import type { QueryClient } from 'react-query';
+import type { QueryClient } from '@tanstack/react-query';
+import { stackScriptEventHandler } from 'src/queries/stackscripts';
 
 export interface EventHandlerData {
   event: Event;
@@ -75,6 +76,10 @@ export const eventHandlers: {
   {
     filter: (event) => event.action.startsWith('disk'),
     handler: diskEventHandler,
+  },
+  {
+    filter: (event) => event.action.startsWith('stackscript'),
+    handler: stackScriptEventHandler,
   },
 ];
 

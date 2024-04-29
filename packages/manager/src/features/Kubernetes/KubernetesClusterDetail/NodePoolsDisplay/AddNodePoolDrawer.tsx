@@ -11,6 +11,7 @@ import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+import { isNumber } from 'src/utilities/isNumber';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { pluralize } from 'src/utilities/pluralize';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
@@ -20,6 +21,7 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
 import { nodeWarning } from '../../kubeUtils';
+import { hasInvalidNodePoolPrice } from './utils';
 
 import type { Region } from '@linode/api-v4';
 
@@ -102,9 +104,11 @@ export const AddNodePoolDrawer = (props: Props) => {
     ?.monthly;
 
   const totalPrice =
-    selectedTypeInfo && pricePerNode
+    selectedTypeInfo && isNumber(pricePerNode)
       ? selectedTypeInfo.count * pricePerNode
       : undefined;
+
+  const hasInvalidPrice = hasInvalidNodePoolPrice(pricePerNode, totalPrice);
 
   React.useEffect(() => {
     if (open) {
@@ -199,7 +203,7 @@ export const AddNodePoolDrawer = (props: Props) => {
             />
           )}
 
-        {selectedTypeInfo && !totalPrice && !pricePerNode && (
+        {selectedTypeInfo && hasInvalidPrice && (
           <Notice
             spacingBottom={16}
             spacingTop={8}
@@ -229,7 +233,7 @@ export const AddNodePoolDrawer = (props: Props) => {
           )}
           <ActionsPanel
             primaryButtonProps={{
-              disabled: !selectedTypeInfo,
+              disabled: !selectedTypeInfo || hasInvalidPrice,
               label: 'Add pool',
               loading: isLoading,
               onClick: handleAdd,

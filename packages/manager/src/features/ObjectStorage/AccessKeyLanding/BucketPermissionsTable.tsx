@@ -8,7 +8,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import { AccessCell } from './AccessCell';
@@ -17,6 +17,7 @@ import {
   StyledClusterCell,
   StyledRadioCell,
   StyledRadioRow,
+  StyledSelectAllRadioRow,
   StyledTableRoot,
 } from './AccessTable.styles';
 
@@ -76,8 +77,9 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
   };
 
   const allScopesEqual = (accessType: AccessType) => {
-    return bucket_access.every(
-      (thisScope) => thisScope.permissions === accessType
+    return (
+      bucket_access.length > 0 &&
+      bucket_access.every((thisScope) => thisScope.permissions === accessType)
     );
   };
 
@@ -86,13 +88,15 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
   return (
     <StyledTableRoot
       aria-label="Object Storage Access Key Permissions"
-      spacingTop={24}
+      spacingTop={16}
     >
       <TableHead>
         <TableRow>
           <TableCell data-qa-perm-region>Region</TableCell>
           <TableCell data-qa-perm-bucket>Bucket</TableCell>
-          <TableCell data-qa-perm-none>None</TableCell>
+          <TableCell data-qa-perm-none sx={{ minWidth: '100px' }}>
+            No Access
+          </TableCell>
           <TableCell data-qa-perm-read sx={{ minWidth: '100px' }}>
             Read Only
           </TableCell>
@@ -103,7 +107,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
       </TableHead>
       <TableBody>
         {mode === 'creating' && (
-          <StyledRadioRow data-qa-row="Select All" disabled={disabled}>
+          <StyledSelectAllRadioRow data-qa-row="Select All" disabled={disabled}>
             <TableCell colSpan={2} padding="checkbox" parentColumn="Region">
               <strong>Select All</strong>
             </TableCell>
@@ -149,7 +153,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
                 value="read-write"
               />
             </TableCell>
-          </StyledRadioRow>
+          </StyledSelectAllRadioRow>
         )}
         {bucket_access.length === 0 ? (
           <TableRowEmpty
@@ -170,7 +174,10 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
                 key={scopeName}
                 mode={mode}
               >
-                <StyledClusterCell padding="checkbox">
+                <StyledClusterCell
+                  padding="checkbox"
+                  sx={{ minWidth: '150px' }}
+                >
                   {regionsLookup[thisScope.region ?? '']?.label}
                 </StyledClusterCell>
                 <StyledBucketCell padding="checkbox">

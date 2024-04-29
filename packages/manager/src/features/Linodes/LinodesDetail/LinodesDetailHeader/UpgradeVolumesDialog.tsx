@@ -1,41 +1,29 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Paper } from 'src/components/Paper';
+import { Notice } from 'src/components/Notice/Notice';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { VolumeUpgradeCopy } from 'src/features/Volumes/UpgradeVolumeDialog';
-import { queryKey } from 'src/queries/accountNotifications';
+import { getUpgradeableVolumeIds } from 'src/features/Volumes/utils';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { useVolumesMigrateMutation } from 'src/queries/volumesMigrations';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { ExtendedLinode } from '../types';
+import type { Linode } from '@linode/api-v4';
 
 interface Props {
-  linode: ExtendedLinode;
+  linode: Linode;
   onClose: () => void;
   open: boolean;
-  upgradeableVolumeIds: number[];
 }
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  notice: {
-    borderLeft: `solid 6px ${theme.color.yellow}`,
-    marginTop: theme.spacing(2),
-    padding: theme.spacing(),
-  },
-}));
-
 export const UpgradeVolumesDialog = (props: Props) => {
-  const { linode, onClose, open, upgradeableVolumeIds } = props;
+  const { linode, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const { classes } = useStyles();
-  const queryClient = useQueryClient();
 
   const {
     error,
@@ -43,29 +31,35 @@ export const UpgradeVolumesDialog = (props: Props) => {
     mutateAsync: migrateVolumes,
   } = useVolumesMigrateMutation();
 
-  const numUpgradeableVolumes = upgradeableVolumeIds.length;
+  const { data: volumesData } = useLinodeVolumesQuery(linode.id);
+  const { data: notifications } = useNotificationsQuery();
+
+  const volumeIdsEligibleForUpgrade = getUpgradeableVolumeIds(
+    volumesData?.data ?? [],
+    notifications ?? []
+  );
+
+  const numUpgradeableVolumes = volumeIdsEligibleForUpgrade.length;
 
   const onSubmit = () => {
-    migrateVolumes(upgradeableVolumeIds).then(() => {
+    migrateVolumes(volumeIdsEligibleForUpgrade).then(() => {
       enqueueSnackbar(
         `Successfully added ${linode.label}\u{2019}s volumes to the migration queue.`,
         { variant: 'success' }
       );
-      // Re-request notifications so the Upgrade Volume banner on the Linode Detail page disappears.
-      queryClient.invalidateQueries(queryKey);
       onClose();
     });
   };
 
   const actions = (
-    <ActionsPanel>
+    <Stack direction="row" justifyContent="flex-end" spacing={2}>
       <Button buttonType="secondary" onClick={onClose}>
         Cancel
       </Button>
       <Button buttonType="primary" loading={isLoading} onClick={onSubmit}>
         Enter Upgrade Queue
       </Button>
-    </ActionsPanel>
+    </Stack>
   );
 
   return (
@@ -80,17 +74,19 @@ export const UpgradeVolumesDialog = (props: Props) => {
       open={open}
       title={`Upgrade Volume${numUpgradeableVolumes === 1 ? '' : 's'}`}
     >
-      <Typography>
+      <Stack spacing={2}>
         <VolumeUpgradeCopy
           isManyVolumes={numUpgradeableVolumes > 1}
           label={linode.label}
           type="linode"
         />
-        <Paper className={classes.notice}>
-          As part of the upgrade process, this Linode may be rebooted and will
-          be returned to its last known state prior to the upgrade.
-        </Paper>
-      </Typography>
+        <Notice variant="warning">
+          <Typography>
+            As part of the upgrade process, this Linode may be rebooted and will
+            be returned to its last known state prior to the upgrade.
+          </Typography>
+        </Notice>
+      </Stack>
     </ConfirmationDialog>
   );
 };

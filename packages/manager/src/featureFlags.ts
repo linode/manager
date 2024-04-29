@@ -5,6 +5,7 @@ import type { NoticeVariant } from 'src/components/Notice/Notice';
 // These flags should correspond with active features flags in LD
 
 export interface TaxDetail {
+  qi_registration?: string;
   tax_id: string;
   tax_name: string;
 }
@@ -37,6 +38,16 @@ interface TaxCollectionBanner {
   regions?: TaxCollectionRegion[];
 }
 
+interface PlacementGroupsFlag {
+  beta: boolean;
+  enabled: boolean;
+}
+
+interface GeckoFlag {
+  enabled: boolean;
+  ga: boolean;
+}
+
 type OneClickApp = Record<string, string>;
 
 export interface Flags {
@@ -44,33 +55,36 @@ export interface Flags {
   aclbFullCreateFlow: boolean;
   apiMaintenance: APIMaintenance;
   databaseBeta: boolean;
-  databaseScaleUp: boolean;
+  databaseResize: boolean;
   databases: boolean;
-  dcGetWell: boolean;
+  disableLargestGbPlans: boolean;
   firewallNodebalancer: boolean;
+  gecko: boolean; // @TODO gecko: delete this after next release
+  gecko2: GeckoFlag;
   ipv6Sharing: boolean;
-  linodeCloneUIChanges: boolean;
+  linodeCloneUiChanges: boolean;
+  linodeCreateRefactor: boolean;
   linodeCreateWithFirewall: boolean;
+  linodeDiskEncryption: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;
   objMultiCluster: boolean;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
   parentChildAccountAccess: boolean;
+  placementGroups: PlacementGroupsFlag;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
   recharts: boolean;
   referralBannerText: ReferralBannerText;
-  regionDropdown: boolean;
   selfServeBetas: boolean;
   soldOutChips: boolean;
+  supportTicketSeverity: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
   taxes: Taxes;
   tpaProviders: Provider[];
-  vmPlacement: boolean;
-  vpc: boolean;
 }
 
 type PromotionalOfferFeature =

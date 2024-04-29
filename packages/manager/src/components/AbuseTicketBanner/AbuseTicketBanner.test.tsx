@@ -1,13 +1,12 @@
 import { render, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import {
   abuseTicketNotificationFactory,
   notificationFactory,
 } from 'src/factories/notification';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { getAbuseTickets } from 'src/store/selectors/getAbuseTicket';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
@@ -18,11 +17,9 @@ const TICKET_TESTID = 'abuse-ticket-link';
 describe('Abuse ticket banner', () => {
   it('should render a banner for an abuse ticket', async () => {
     server.use(
-      rest.get('*/account/notifications', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            makeResourcePage(abuseTicketNotificationFactory.buildList(1))
-          )
+      http.get('*/account/notifications', () => {
+        return HttpResponse.json(
+          makeResourcePage(abuseTicketNotificationFactory.buildList(1))
         );
       })
     );
@@ -35,17 +32,13 @@ describe('Abuse ticket banner', () => {
 
   it('should aggregate multiple abuse tickets', async () => {
     server.use(
-      rest.get('*/account/notifications', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            makeResourcePage(abuseTicketNotificationFactory.buildList(2))
-          )
+      http.get('*/account/notifications', () => {
+        return HttpResponse.json(
+          makeResourcePage(abuseTicketNotificationFactory.buildList(2))
         );
       })
     );
-    const { queryAllByText } = render(
-      wrapWithTheme(<AbuseTicketBanner />, { queryClient: new QueryClient() })
-    );
+    const { queryAllByText } = render(wrapWithTheme(<AbuseTicketBanner />));
 
     await waitFor(() => {
       expect(queryAllByText(/2 open abuse tickets/)).toHaveLength(1);
@@ -55,13 +48,11 @@ describe('Abuse ticket banner', () => {
   it('should link to the ticket if there is a single abuse ticket', async () => {
     const mockAbuseTicket = abuseTicketNotificationFactory.build();
     server.use(
-      rest.get('*/account/notifications', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([mockAbuseTicket])));
+      http.get('*/account/notifications', () => {
+        return HttpResponse.json(makeResourcePage([mockAbuseTicket]));
       })
     );
-    const { getByTestId } = renderWithTheme(<AbuseTicketBanner />, {
-      queryClient: new QueryClient(),
-    });
+    const { getByTestId } = renderWithTheme(<AbuseTicketBanner />);
 
     await waitFor(() => {
       const link = getByTestId(TICKET_TESTID);
@@ -72,13 +63,11 @@ describe('Abuse ticket banner', () => {
   it('should link to the ticket list view if there are multiple tickets', async () => {
     const mockAbuseTickets = abuseTicketNotificationFactory.buildList(2);
     server.use(
-      rest.get('*/account/notifications', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage(mockAbuseTickets)));
+      http.get('*/account/notifications', () => {
+        return HttpResponse.json(makeResourcePage(mockAbuseTickets));
       })
     );
-    const { getByTestId } = renderWithTheme(<AbuseTicketBanner />, {
-      queryClient: new QueryClient(),
-    });
+    const { getByTestId } = renderWithTheme(<AbuseTicketBanner />);
 
     await waitFor(() => {
       const link = getByTestId(TICKET_TESTID);
@@ -88,13 +77,11 @@ describe('Abuse ticket banner', () => {
 
   it('should return null if there are no abuse tickets', () => {
     server.use(
-      rest.get('*/account/notifications', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/account/notifications', () => {
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
-    const { queryByTestId } = renderWithTheme(<AbuseTicketBanner />, {
-      queryClient: new QueryClient(),
-    });
+    const { queryByTestId } = renderWithTheme(<AbuseTicketBanner />);
 
     expect(queryByTestId(TICKET_TESTID)).toBeNull();
   });

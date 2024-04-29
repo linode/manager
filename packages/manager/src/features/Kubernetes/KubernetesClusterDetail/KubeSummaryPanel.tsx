@@ -1,7 +1,7 @@
 import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -11,8 +11,9 @@ import { Button } from 'src/components/Button/Button';
 import { Chip } from 'src/components/Chip';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Paper } from 'src/components/Paper';
-import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
+import { TagCell } from 'src/components/TagCell/TagCell';
 import KubeClusterSpecs from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useKubernetesClusterMutation,
   useKubernetesDashboardQuery,
@@ -121,6 +122,12 @@ export const KubeSummaryPanel = (props: Props) => {
     mutateAsync: resetKubeConfig,
   } = useResetKubeConfigMutation();
 
+  const isClusterReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: cluster.id,
+  });
+
   const [
     resetKubeConfigDialogOpen,
     setResetKubeConfigDialogOpen,
@@ -170,8 +177,8 @@ export const KubeSummaryPanel = (props: Props) => {
               {cluster.control_plane.high_availability && (
                 <Chip
                   label="HA CLUSTER"
-                  outlineColor="green"
                   size="small"
+                  sx={(theme) => ({ borderColor: theme.color.green })}
                   variant="outlined"
                 />
               )}
@@ -197,7 +204,11 @@ export const KubeSummaryPanel = (props: Props) => {
               </Button>
             </Grid>
             <Grid className={classes.tags}>
-              <TagsPanel tags={cluster.tags} updateTags={handleUpdateTags} />
+              <TagCell
+                disabled={isClusterReadOnly}
+                tags={cluster.tags}
+                updateTags={handleUpdateTags}
+              />
             </Grid>
           </Grid>
         </Grid>

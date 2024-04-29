@@ -100,6 +100,15 @@ const addLeftHeader = (
     if (countryTax) {
       addLine(`${countryTax.tax_name}: ${countryTax.tax_id}`);
     }
+    /**
+     * M3-7847 Add Akamai's Japanese QI System ID to Japanese Invoices.
+     * Since LD automatically serves Tax data based on the user's
+     * we can check on qi_registration field to render QI Registration.
+     * */
+    if (countryTax && countryTax.qi_registration) {
+      const line = `QI Registration # ${countryTax.qi_registration}`;
+      addLine(line);
+    }
     if (provincialTax) {
       addLine(`${provincialTax.tax_name}: ${provincialTax.tax_id}`);
     }
@@ -199,7 +208,7 @@ interface PrintInvoiceOptions {
 export const printInvoice = async (
   options: PrintInvoiceOptions
 ): Promise<PdfResult> => {
-  const { account, invoice, items, taxes, timezone, regions } = options;
+  const { account, invoice, items, regions, taxes, timezone } = options;
 
   try {
     const itemsPerPage = 12;

@@ -1,10 +1,14 @@
+import {
+  nodeBalancerTypeFactory,
+  volumeTypeFactory,
+} from 'src/factories/types';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
 import {
   getDCSpecificPrice,
+  getDCSpecificPriceByType,
   renderMonthlyPriceToCorrectDecimalPlace,
 } from './dynamicPricing';
-import { getDynamicVolumePrice } from './dynamicVolumePrice';
 
 describe('getDCSpecificPricingDisplay', () => {
   it('calculates dynamic pricing for a region without an increase', () => {
@@ -32,20 +36,69 @@ describe('getDCSpecificPricingDisplay', () => {
     ).toBe('28.00');
   });
 
-  it('calculates dynamic pricing for a volumes based on size', () => {
-    expect(
-      getDynamicVolumePrice({
-        regionId: 'id-cgk',
-        size: 20,
-      })
-    ).toBe('2.40');
-  });
-
   it('handles default case correctly', () => {
     expect(
       getDCSpecificPrice({
         basePrice: 0,
         regionId: 'invalid-region',
+      })
+    ).toBe(undefined);
+  });
+});
+
+describe('getDCSpecificPricingByType', () => {
+  const mockNodeBalancerType = nodeBalancerTypeFactory.build();
+  const mockVolumeType = volumeTypeFactory.build();
+
+  it('calculates dynamic pricing for a region without an increase', () => {
+    expect(
+      getDCSpecificPriceByType({
+        regionId: 'us-east',
+        type: mockNodeBalancerType,
+      })
+    ).toBe('10.00');
+  });
+
+  it('calculates dynamic pricing for a region with an increase', () => {
+    expect(
+      getDCSpecificPriceByType({
+        regionId: 'id-cgk',
+        type: mockNodeBalancerType,
+      })
+    ).toBe('12.00');
+
+    expect(
+      getDCSpecificPriceByType({
+        regionId: 'br-gru',
+        type: mockNodeBalancerType,
+      })
+    ).toBe('14.00');
+  });
+
+  it('calculates dynamic pricing for a volume based on size', () => {
+    expect(
+      getDCSpecificPriceByType({
+        regionId: 'id-cgk',
+        size: 20,
+        type: mockVolumeType,
+      })
+    ).toBe('2.40');
+  });
+
+  it('handles an invalid price if region is not available', () => {
+    expect(
+      getDCSpecificPriceByType({
+        regionId: 'us-east',
+        type: undefined,
+      })
+    ).toBe(undefined);
+  });
+
+  it('handles an invalid price if type is not available', () => {
+    expect(
+      getDCSpecificPriceByType({
+        regionId: undefined,
+        type: mockNodeBalancerType,
       })
     ).toBe(undefined);
   });

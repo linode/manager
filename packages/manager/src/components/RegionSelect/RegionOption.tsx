@@ -1,96 +1,99 @@
 import { visuallyHidden } from '@mui/utils';
 import React from 'react';
 
+import EdgeRegion from 'src/assets/icons/entityIcons/edge-region.svg';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
-import { Link } from 'src/components/Link';
 import { Tooltip } from 'src/components/Tooltip';
-import { useFlags } from 'src/hooks/useFlags';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 
 import {
   SelectedIcon,
   StyledFlagContainer,
   StyledListItem,
+  sxEdgeIcon,
 } from './RegionSelect.styles';
 import { RegionSelectOption } from './RegionSelect.types';
 
 import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
 type Props = {
+  displayEdgeRegionIcon?: boolean;
   option: RegionSelectOption;
   props: React.HTMLAttributes<HTMLLIElement>;
-  selected: boolean;
+  selected?: boolean;
 };
 
-export const RegionOption = ({ option, props, selected }: Props) => {
-  const flags = useFlags();
-  const isDisabledMenuItem =
-    Boolean(flags.dcGetWell) && Boolean(option.unavailable);
+export const RegionOption = ({
+  displayEdgeRegionIcon,
+  option,
+  props,
+  selected,
+}: Props) => {
+  const { className, onClick } = props;
+  const { data, disabledProps, label, value } = option;
+  const isRegionDisabled = Boolean(disabledProps?.disabled);
+  const isRegionDisabledReason = disabledProps?.reason;
 
   return (
     <Tooltip
       PopperProps={{
-        sx: { '& .MuiTooltip-tooltip': { minWidth: 215 } },
+        sx: {
+          '& .MuiTooltip-tooltip': {
+            minWidth: disabledProps?.tooltipWidth ?? 215,
+          },
+        },
       }}
       title={
-        isDisabledMenuItem ? (
-          <>
-            There may be limited capacity in this region.{' '}
-            <Link to="https://www.linode.com/global-infrastructure/availability">
-              Learn more
-            </Link>
-            .
-          </>
-        ) : (
-          ''
-        )
+        isRegionDisabled && isRegionDisabledReason ? isRegionDisabledReason : ''
       }
-      disableFocusListener={!isDisabledMenuItem}
-      disableHoverListener={!isDisabledMenuItem}
-      disableTouchListener={!isDisabledMenuItem}
+      disableFocusListener={!isRegionDisabled}
+      disableHoverListener={!isRegionDisabled}
+      disableTouchListener={!isRegionDisabled}
       enterDelay={200}
       enterNextDelay={200}
       enterTouchDelay={200}
-      key={option.value}
+      key={value}
     >
       <StyledListItem
         {...props}
-        className={
-          isDisabledMenuItem
-            ? `${props.className} Mui-disabled`
-            : props.className
-        }
         componentsProps={{
           root: {
-            'data-qa-option': option.value,
-            'data-testid': option.value,
+            'data-qa-option': value,
+            'data-testid': value,
           } as ListItemComponentsPropsOverrides,
         }}
         onClick={(e) =>
-          isDisabledMenuItem
-            ? e.preventDefault()
-            : props.onClick
-            ? props.onClick(e)
-            : null
+          isRegionDisabled ? e.preventDefault() : onClick ? onClick(e) : null
         }
         aria-disabled={undefined}
-        data-qa-disabled-item={isDisabledMenuItem}
+        data-qa-disabled-item={isRegionDisabled}
+        className={isRegionDisabled ? `${className} Mui-disabled` : className}
       >
         <>
           <Box alignItems="center" display="flex" flexGrow={1}>
             <StyledFlagContainer>
-              <Flag country={option.data.country} />
+              <Flag country={data.country} />
             </StyledFlagContainer>
-            {option.label}
-            {isDisabledMenuItem && (
+            {label}
+            {displayEdgeRegionIcon && (
               <Box sx={visuallyHidden}>
-                Disabled option - There may be limited capacity in this region.
-                Learn more at
-                https://www.linode.com/global-infrastructure/availability.
+                &nbsp;(This region is an edge region.)
               </Box>
+            )}
+            {isRegionDisabled && isRegionDisabledReason && (
+              <Box sx={visuallyHidden}>{isRegionDisabledReason}</Box>
             )}
           </Box>
           {selected && <SelectedIcon visible={selected} />}
+          {displayEdgeRegionIcon && (
+            <TooltipIcon
+              icon={<EdgeRegion />}
+              status="other"
+              sxTooltipIcon={sxEdgeIcon}
+              text="This region is an edge region."
+            />
+          )}
         </>
       </StyledListItem>
     </Tooltip>

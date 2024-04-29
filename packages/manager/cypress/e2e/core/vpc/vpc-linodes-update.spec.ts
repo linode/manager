@@ -59,6 +59,7 @@ describe('VPC assign/unassign flows', () => {
     const mockSubnet = subnetFactory.build({
       id: randomNumber(2),
       label: randomLabel(),
+      linodes: [],
     });
 
     const mockVPC = vpcFactory.build({
@@ -153,7 +154,7 @@ describe('VPC assign/unassign flows', () => {
         mockGetLinodeConfigs(mockLinode.id, [mockConfig]).as(
           'getLinodeConfigs'
         );
-        cy.findByLabelText('Linodes')
+        cy.findByLabelText('Linode')
           .should('be.visible')
           .click()
           .type(mockLinode.label)

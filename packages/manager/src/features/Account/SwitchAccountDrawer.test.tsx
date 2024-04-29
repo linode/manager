@@ -1,17 +1,16 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { accountUserFactory } from 'src/factories/accountUsers';
-import { rest, server } from 'src/mocks/testServer';
+import { profileFactory } from 'src/factories/profile';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SwitchAccountDrawer } from './SwitchAccountDrawer';
 
 const props = {
-  isProxyUser: false,
   onClose: vi.fn(),
   open: true,
-  username: 'mock-user',
+  userType: undefined,
 };
 
 describe('SwitchAccountDrawer', () => {
@@ -32,13 +31,13 @@ describe('SwitchAccountDrawer', () => {
 
   it('should include a link to switch back to the parent account if the active user is a proxy user', async () => {
     server.use(
-      rest.get('*/account/users/*', (req, res, ctx) => {
-        return res(ctx.json(accountUserFactory.build({ user_type: 'proxy' })));
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ user_type: 'proxy' }));
       })
     );
 
     const { findByLabelText, getByText } = renderWithTheme(
-      <SwitchAccountDrawer {...props} isProxyUser />
+      <SwitchAccountDrawer {...props} userType="proxy" />
     );
 
     expect(

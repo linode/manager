@@ -2,7 +2,7 @@ import { APIWarning } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import { QueryClient, useQueryClient } from 'react-query';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { makeStyles } from 'tss-react/mui';
 
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
@@ -15,8 +15,8 @@ import {
 } from 'src/features/Billing/GooglePayProvider';
 import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 import { useScript } from 'src/hooks/useScript';
-import { useAccount } from 'src/queries/account';
-import { useClientToken } from 'src/queries/accountPayment';
+import { useAccount } from 'src/queries/account/account';
+import { useClientToken } from 'src/queries/account/payment';
 
 import { SetSuccess } from './types';
 

@@ -1,4 +1,4 @@
-import type { mount } from 'cypress/react';
+import type { mount } from 'cypress/react18';
 import { Labelable } from './commands';
 import type { LinodeVisitOptions } from './login.ts';
 
@@ -32,6 +32,36 @@ declare global {
         linodeOptions?: LinodeVisitOptions,
         cypressOptions?: Partial<Cypress.VisitOptions>
       ): Chainable<any>;
+
+      /**
+       * Assigns a random page visit ID to the current page.
+       *
+       * Used to determine whether navigation has occurred later.
+       *
+       * @example
+       * // After initial call to `cy.visit()` or `cy.visitWithLogin()`:
+       * cy.trackPageVisit().as('pageVisit');
+       * // Later in the tests, to assert that navigation has occurred:
+       * cy.expectNewPageVisit('@pageVisit');
+       *
+       * @returns Cypress chainable that yields the random page visit ID.
+       */
+      trackPageVisit(): Chainable<number>;
+
+      /**
+       * Asserts that a browser page visit (e.g. navigation or reload) has occurred.
+       *
+       * @example
+       * // After initial call to `cy.visit()` or `cy.visitWithLogin()`:
+       * cy.trackPageVisit().as('pageVisit');
+       * // Later in the tests, to assert that navigation has occurred:
+       * cy.expectNewPageVisit('@pageVisit');
+       *
+       * @param alias - Alias to the current page load ID.
+       *
+       * @returns Cypress chainable.
+       */
+      expectNewPageVisit(alias: string): Chainable<>;
 
       /**
        * Internal Cypress command to retrieve test state.

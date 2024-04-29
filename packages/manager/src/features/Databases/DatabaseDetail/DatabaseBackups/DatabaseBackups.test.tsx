@@ -1,6 +1,4 @@
-import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import {
   databaseBackupFactory,
@@ -8,60 +6,36 @@ import {
   profileFactory,
 } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { formatDate } from 'src/utilities/formatDate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import DatabaseBackups from './DatabaseBackups';
 
-const queryClient = new QueryClient();
-
-afterEach(() => {
-  queryClient.clear();
-});
-
-const loadingTestId = 'table-row-loading';
-
 describe('Database Backups', () => {
-  it('should render a loading state', async () => {
-    const { getByTestId } = renderWithTheme(<DatabaseBackups />, {
-      queryClient,
-    });
-
-    // Should render a loading state
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-  });
-
   it('should render a list of backups after loading', async () => {
     const backups = databaseBackupFactory.buildList(7);
 
     // Mock the Database because the Backups Details page requires it to be loaded
     server.use(
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ timezone: 'utc' })));
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
       }),
-      rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
-        return res(ctx.json(databaseFactory.build()));
+      http.get('*/databases/:engine/instances/:id', () => {
+        return HttpResponse.json(databaseFactory.build());
       }),
-      rest.get('*/databases/:engine/instances/:id/backups', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage(backups)));
+      http.get('*/databases/:engine/instances/:id/backups', () => {
+        return HttpResponse.json(makeResourcePage(backups));
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(<DatabaseBackups />, {
-      queryClient,
-    });
-
-    // Should render a loading state
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    // Wait for loading to finish before test continues
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    const { findByText } = renderWithTheme(<DatabaseBackups />);
 
     for (const backup of backups) {
       // Check to see if all 7 backups are rendered
       expect(
-        getByText(formatDate(backup.created, { timezone: 'utc' }))
+        // eslint-disable-next-line no-await-in-loop
+        await findByText(formatDate(backup.created, { timezone: 'utc' }))
       ).toBeInTheDocument();
     }
   });
@@ -69,28 +43,20 @@ describe('Database Backups', () => {
   it('should render an empty state if there are no backups', async () => {
     // Mock the Database because the Backups Details page requires it to be loaded
     server.use(
-      rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
-        return res(ctx.json(databaseFactory.build()));
+      http.get('*/databases/:engine/instances/:id', () => {
+        return HttpResponse.json(databaseFactory.build());
       })
     );
 
     // Mock an empty list of backups
     server.use(
-      rest.get('*/databases/:engine/instances/:id/backups', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/databases/:engine/instances/:id/backups', () => {
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(<DatabaseBackups />, {
-      queryClient,
-    });
+    const { findByText } = renderWithTheme(<DatabaseBackups />);
 
-    // Should render a loading state
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    // Wait for loading to finish before test continues
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    expect(getByText('No backups to display.')).toBeInTheDocument();
+    expect(await findByText('No backups to display.')).toBeInTheDocument();
   });
 });

@@ -7,6 +7,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
+import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { MBpsInterDC } from 'src/constants';
@@ -17,7 +18,7 @@ import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
-} from 'src/queries/accountAgreements';
+} from 'src/queries/account/agreements';
 import { isEventRelevantToLinode } from 'src/queries/events/event.helpers';
 import {
   useEventsPollingActions,
@@ -30,7 +31,7 @@ import {
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { sendMigrationInitiatedEvent } from 'src/utilities/analytics';
 import { formatDate } from 'src/utilities/formatDate';
@@ -42,6 +43,8 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { addUsedDiskSpace } from '../LinodesDetail/LinodeStorage/LinodeDisks';
 import { CautionNotice } from './CautionNotice';
 import { ConfigureForm } from './ConfigureForm';
+
+import type { PlacementGroup } from '@linode/api-v4';
 
 interface Props {
   linodeId: number | undefined;
@@ -98,8 +101,13 @@ export const MigrateLinode = React.memo((props: Props) => {
   const [selectedRegion, handleSelectRegion] = React.useState<null | string>(
     null
   );
+  const [
+    placementGroupSelection,
+    setPlacementGroupSelection,
+  ] = React.useState<PlacementGroup | null>();
 
   const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
+
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
     false
   );
@@ -144,6 +152,16 @@ export const MigrateLinode = React.memo((props: Props) => {
       : undefined;
   }, [flags.metadata, linode, regionsData, selectedRegion]);
 
+  const linodeIsInEdgeRegion = getIsEdgeRegion(
+    regionsData ?? [],
+    linode?.region ?? ''
+  );
+
+  const edgeRegionWarning =
+    flags.gecko2?.enabled && linodeIsInEdgeRegion
+      ? 'Edge regions may only be migrated to other edge regions.'
+      : undefined;
+
   if (!linode) {
     return null;
   }
@@ -157,7 +175,12 @@ export const MigrateLinode = React.memo((props: Props) => {
       return;
     }
 
+    const placementGroupPayload = placementGroupSelection?.id
+      ? { id: placementGroupSelection.id }
+      : undefined;
+
     return migrateLinode({
+      placement_group: placementGroupPayload,
       region: selectedRegion,
     }).then(() => {
       checkForNewEvents();
@@ -224,6 +247,7 @@ export const MigrateLinode = React.memo((props: Props) => {
         notifications={notifications}
       /> */}
       <CautionNotice
+        edgeRegionWarning={edgeRegionWarning}
         hasConfirmed={hasConfirmed}
         linodeId={linodeId}
         metadataWarning={metadataMigrateWarning}
@@ -233,6 +257,7 @@ export const MigrateLinode = React.memo((props: Props) => {
       <ConfigureForm
         backupEnabled={linode.backups.enabled}
         currentRegion={region}
+        handlePlacementGroupChange={setPlacementGroupSelection}
         handleSelectRegion={handleSelectRegion}
         linodeType={linode.type}
         selectedRegion={selectedRegion}

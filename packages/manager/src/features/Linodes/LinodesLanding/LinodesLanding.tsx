@@ -12,10 +12,14 @@ import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceTogg
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import {
+  WithFeatureFlagProps,
+  withFeatureFlags,
+} from 'src/containers/flags.container';
+import {
   WithProfileProps,
   withProfile,
 } from 'src/containers/profile.container';
-import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { BackupsCTA } from 'src/features/Backups/BackupsCTA';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import { DialogType } from 'src/features/Linodes/types';
@@ -87,16 +91,25 @@ export interface LinodesLandingProps {
   someLinodesHaveScheduledMaintenance: boolean;
 }
 
-type CombinedProps = LinodesLandingProps & RouteProps & WithProfileProps;
+type CombinedProps = LinodesLandingProps &
+  RouteProps &
+  WithFeatureFlagProps &
+  WithProfileProps;
 
 class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
+      grants,
       linodesData,
       linodesInTransition,
       linodesRequestError,
       linodesRequestLoading,
+      profile,
     } = this.props;
+
+    const isLinodesGrantReadOnly =
+      Boolean(profile.data?.restricted) &&
+      !grants.data?.global?.['add_linodes'];
 
     const params = new URLSearchParams(this.props.location.search);
 
@@ -215,9 +228,17 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                         ) : (
                           <div>
                             <LandingHeader
+                              buttonDataAttrs={{
+                                tooltipText: getRestrictedResourceText({
+                                  action: 'create',
+                                  isSingular: false,
+                                  resourceType: 'Linodes',
+                                }),
+                              }}
                               onButtonClick={() =>
                                 this.props.history.push('/linodes/create')
                               }
+                              disabledCreateButton={isLinodesGrantReadOnly}
                               docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
                               entity="Linode"
                               title="Linodes"
@@ -432,8 +453,8 @@ const sendGroupByAnalytic = (value: boolean) => {
 
 export const enhanced = compose<CombinedProps, LinodesLandingProps>(
   withRouter,
-  withFeatureFlagConsumer,
-  withProfile
+  withProfile,
+  withFeatureFlags
 );
 
 export default enhanced(ListLinodes);

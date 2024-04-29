@@ -1,4 +1,5 @@
-import { User } from '@linode/api-v4';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import AddNewLink from 'src/components/AddNewLink';
@@ -7,98 +8,95 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { Typography } from 'src/components/Typography';
+import { PARENT_USER } from 'src/features/Account/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountUsers } from 'src/queries/accountUsers';
+import { useAccountUsers } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile';
 
 import CreateUserDrawer from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
-import { UserRow } from './UserRow';
 import { UsersLandingProxyTableHead } from './UsersLandingProxyTableHead';
 import { UsersLandingTableBody } from './UsersLandingTableBody';
 import { UsersLandingTableHead } from './UsersLandingTableHead';
 
+import type { Filter } from '@linode/api-v4';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+
 export const UsersLanding = () => {
+  const theme = useTheme();
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
+    false
+  );
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+  const [selectedUsername, setSelectedUsername] = React.useState('');
   const flags = useFlags();
   const { data: profile } = useProfile();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
   const pagination = usePagination(1, 'account-users');
   const order = useOrder();
 
-  const { data: users, error, isLoading, refetch } = useAccountUsers(
-    {
-      page: pagination.page,
-      page_size: pagination.pageSize,
-    },
-    {
-      '+order': order.order,
-      '+order_by': order.orderBy,
-    }
-  );
-
-  const isRestrictedUser = profile?.restricted;
-
   const showProxyUserTable =
     flags.parentChildAccountAccess &&
     (profile?.user_type === 'child' || profile?.user_type === 'proxy');
-  const showChildAccountAccessCol = Boolean(
-    flags.parentChildAccountAccess && profile?.user_type === 'parent'
-  );
-  const numCols = showChildAccountAccessCol ? 6 : 5;
 
-  const { nonProxyUsers, proxyUsers } = users?.data.reduce(
-    (acc: { nonProxyUsers: User[]; proxyUsers: User[] }, user: User) => {
-      if (user.user_type === 'proxy') {
-        acc.proxyUsers.push(user);
-      } else {
-        acc.nonProxyUsers.push(user);
-      }
-      return acc;
-    },
-    { nonProxyUsers: [], proxyUsers: [] }
-  ) ?? { nonProxyUsers: [], proxyUsers: [] };
-
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
-    false
-  );
-
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-  const [selectedUsername, setSelectedUsername] = React.useState('');
-
-  const onDelete = (username: string) => {
-    setIsDeleteDialogOpen(true);
-    setSelectedUsername(username);
+  const usersFilter: Filter = {
+    ['+order']: order.order,
+    ['+order_by']: order.orderBy,
+    ['user_type']: showProxyUserTable ? 'child' : undefined,
   };
 
-  // TODO: Parent/Child - M3-7559 remove this function once feature is live in production.
-  const renderTableContent = () => {
-    if (isLoading) {
-      return (
-        <TableRowLoading
-          columns={numCols}
-          responsive={{ 1: { smDown: true }, 3: { lgDown: true } }}
-          rows={1}
-        />
-      );
-    }
+  // Since this query is disabled for restricted users, use isInitialLoading.
+  const { data: users, error, isInitialLoading, refetch } = useAccountUsers({
+    filters: usersFilter,
+    params: {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+  });
 
-    if (error) {
-      return <TableRowError colSpan={numCols} message={error[0].reason} />;
-    }
+  const isRestrictedUser = profile?.restricted;
 
-    if (!users || users.results === 0) {
-      return <TableRowEmpty colSpan={numCols} />;
-    }
+  // Since this query is disabled for restricted users, use isInitialLoading.
+  const {
+    data: proxyUser,
+    error: proxyUserError,
+    isInitialLoading: isLoadingProxyUser,
+  } = useAccountUsers({
+    enabled:
+      flags.parentChildAccountAccess && showProxyUserTable && !isRestrictedUser,
+    filters: { user_type: 'proxy' },
+  });
 
-    return users.data.map((user) => (
-      <UserRow key={user.username} onDelete={onDelete} user={user} />
-    ));
+  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'child_account_access',
+  });
+
+  const showChildAccountAccessCol = Boolean(
+    flags.parentChildAccountAccess &&
+      profile?.user_type === 'parent' &&
+      !isChildAccountAccessRestricted
+  );
+
+  // Parent/Child accounts include additional "child account access" column.
+  const numCols = matchesLgUp
+    ? showChildAccountAccessCol
+      ? 6
+      : 5
+    : matchesSmDown
+    ? 3
+    : 4;
+
+  // "last login" column omitted for proxy table.
+  const proxyNumCols = matchesLgUp ? 4 : numCols;
+
+  const handleDelete = (username: string) => {
+    setIsDeleteDialogOpen(true);
+    setSelectedUsername(username);
   };
 
   return (
@@ -109,25 +107,26 @@ export const UsersLanding = () => {
           sx={(theme) => ({
             marginBottom: theme.spacing(2),
             marginTop: theme.spacing(3),
+            textTransform: 'capitalize',
             [theme.breakpoints.down('md')]: {
               marginLeft: theme.spacing(1),
             },
           })}
           variant="h3"
         >
-          Business partner settings
+          {PARENT_USER} Settings
         </Typography>
       )}
       {showProxyUserTable && (
-        <Table aria-label="List of Business Partners">
+        <Table aria-label="List of Parent Users">
           <UsersLandingProxyTableHead order={order} />
           <TableBody>
             <UsersLandingTableBody
-              error={error}
-              isLoading={isLoading}
-              numCols={numCols}
-              onDelete={onDelete}
-              users={proxyUsers}
+              error={proxyUserError}
+              isLoading={isLoadingProxyUser}
+              numCols={proxyNumCols}
+              onDelete={handleDelete}
+              users={proxyUser?.data}
             />
           </TableBody>
         </Table>
@@ -150,7 +149,7 @@ export const UsersLanding = () => {
             })}
             variant="h3"
           >
-            User settings
+            User Settings
           </Typography>
         )}
         <AddNewLink
@@ -170,17 +169,13 @@ export const UsersLanding = () => {
           showChildAccountAccessCol={showChildAccountAccessCol}
         />
         <TableBody>
-          {flags.parentChildAccountAccess ? (
-            <UsersLandingTableBody
-              error={error}
-              isLoading={isLoading}
-              numCols={numCols}
-              onDelete={onDelete}
-              users={nonProxyUsers}
-            />
-          ) : (
-            renderTableContent()
-          )}
+          <UsersLandingTableBody
+            error={error}
+            isLoading={isInitialLoading}
+            numCols={numCols}
+            onDelete={handleDelete}
+            users={users?.data}
+          />
         </TableBody>
       </Table>
       <PaginationFooter

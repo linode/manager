@@ -1,32 +1,40 @@
-import { createChildAccountPersonalAccessToken } from '@linode/api-v4';
+import { useSnackbar } from 'notistack';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
+import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
 import {
   isParentTokenValid,
-  setTokenInLocalStorage,
   updateCurrentTokenBasedOnUserType,
 } from 'src/features/Account/utils';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
-import { getStorage } from 'src/utilities/storage';
+import { useRevokePersonalAccessTokenMutation } from 'src/queries/tokens';
+import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics';
+import { getStorage, setStorage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
+import {
+  updateParentTokenInLocalStorage,
+  updateProxyTokenInLocalStorage,
+} from './SwitchAccounts/utils';
 
-import type { APIError, ChildAccountPayload, UserType } from '@linode/api-v4';
+import type { APIError, Token, UserType } from '@linode/api-v4';
 import type { State as AuthState } from 'src/store/authentication';
 
 interface Props {
-  isProxyUser: boolean;
   onClose: () => void;
   open: boolean;
+  proxyToken?: Token;
+  userType: UserType | undefined;
 }
 
 export const SwitchAccountDrawer = (props: Props) => {
-  const { isProxyUser, onClose, open } = props;
+  const { onClose, open, proxyToken, userType } = props;
+  const proxyTokenLabel = proxyToken?.label;
+  const isProxyUser = userType === 'proxy';
 
   const [isParentTokenError, setIsParentTokenError] = React.useState<
     APIError[]
@@ -35,129 +43,80 @@ export const SwitchAccountDrawer = (props: Props) => {
     []
   );
 
-  const currentTokenWithBearer = useCurrentToken() ?? '';
-  const history = useHistory();
-
-  const handleClose = React.useCallback(() => {
-    onClose();
-  }, [onClose]);
-
-  /**
-   * Headers are required for proxy users when obtaining a proxy token.
-   * For 'proxy' userType, use the stored parent token in the request.
-   */
-  const getProxyToken = React.useCallback(
-    async ({
-      euuid,
-      token,
-      userType,
-    }: {
-      euuid: ChildAccountPayload['euuid'];
-      token: string;
-      userType: Omit<UserType, 'child'>;
-    }) => {
-      try {
-        return await createChildAccountPersonalAccessToken({
-          euuid,
-          headers:
-            userType === 'proxy'
-              ? {
-                  Authorization: `Bearer ${token}`,
-                }
-              : undefined,
-        });
-      } catch (error) {
-        setIsProxyTokenError(error as APIError[]);
-        throw error;
-      }
-    },
-    []
+  const { mutateAsync: revokeToken } = useRevokePersonalAccessTokenMutation(
+    proxyToken?.id ?? -1
   );
+  const { enqueueSnackbar } = useSnackbar();
+  const currentTokenWithBearer = useCurrentToken() ?? '';
 
-  // Navigate to the current location, triggering a re-render without a full page reload.
+  const currentParentTokenWithBearer =
+    getStorage('authentication/parent_token/token') ?? '';
+
+  const handleProxyTokenRevocation = React.useCallback(async () => {
+    try {
+      await revokeToken();
+      enqueueSnackbar(`Successfully revoked ${proxyTokenLabel}.`, {
+        variant: 'success',
+      });
+    } catch (error) {
+      enqueueSnackbar(`Failed to revoke ${proxyTokenLabel}.`, {
+        variant: 'error',
+      });
+    }
+  }, [enqueueSnackbar, proxyTokenLabel, revokeToken]);
+
   const refreshPage = React.useCallback(() => {
-    // TODO: Parent/Child: We need to test this against the real API.
-    history.push(history.location.pathname);
-  }, [history]);
+    location.reload();
+  }, []);
 
   const handleSwitchToChildAccount = React.useCallback(
     async ({
       currentTokenWithBearer,
       euuid,
       event,
-      handleClose,
-      isProxyUser,
+      onClose,
+      userType,
     }: {
       currentTokenWithBearer?: AuthState['token'];
       euuid: string;
       event: React.MouseEvent<HTMLElement>;
-      handleClose: (e: React.SyntheticEvent<HTMLElement>) => void;
-      isProxyUser: boolean;
+      onClose: (e: React.SyntheticEvent<HTMLElement>) => void;
+      userType: UserType | undefined;
     }) => {
+      const isProxyUser = userType === 'proxy';
+
+      if (isProxyUser) {
+        // Revoke proxy token before switching accounts.
+        await handleProxyTokenRevocation();
+      } else {
+        // Before switching to a child account, update the parent token in local storage.
+        updateParentTokenInLocalStorage({ currentTokenWithBearer });
+      }
+
       try {
-        // TODO: Parent/Child: FOR MSW ONLY, REMOVE WHEN API IS READY
-        // ================================================================
-        // throw new Error(
-        //   `Account switching failed. Try again.`
-        // );
-        // ================================================================
-
-        // We don't need to worry about this if we're a proxy user.
-        if (!isProxyUser) {
-          const parentToken = {
-            expiry: getStorage('authenication/expire'),
-            scopes: getStorage('authenication/scopes'),
-            token: currentTokenWithBearer ?? '',
-          };
-
-          setTokenInLocalStorage({
-            prefix: 'authentication/parent_token',
-            token: parentToken,
-          });
-        }
-
-        const proxyToken = await getProxyToken({
+        await updateProxyTokenInLocalStorage({
           euuid,
           token: isProxyUser
             ? getStorage('authentication/parent_token/token')
             : currentTokenWithBearer,
           userType: isProxyUser ? 'proxy' : 'parent',
         });
-
-        setTokenInLocalStorage({
-          prefix: 'authentication/proxy_token',
-          token: proxyToken,
-        });
-
-        updateCurrentTokenBasedOnUserType({
-          userType: 'proxy',
-        });
-
-        handleClose(event);
-        refreshPage();
       } catch (error) {
-        setIsProxyTokenError(error as APIError[]);
-
-        // TODO: Parent/Child: FOR MSW ONLY, REMOVE WHEN API IS READY
-        // ================================================================
-        // setIsProxyTokenError([
-        //   {
-        //     field: 'token',
-        //     reason: error.message,
-        //   },
-        // ]);
-        // ================================================================
+        setIsProxyTokenError(error);
+        throw error;
       }
+
+      onClose(event);
+      refreshPage();
     },
-    [getProxyToken, refreshPage]
+    [handleProxyTokenRevocation, refreshPage]
   );
 
-  const handleSwitchToParentAccount = React.useCallback(() => {
-    if (!isParentTokenValid({ isProxyUser })) {
+  const handleSwitchToParentAccount = React.useCallback(async () => {
+    if (!isParentTokenValid()) {
       const expiredTokenError: APIError = {
         field: 'token',
-        reason:
-          'The reseller account token has expired. You must log back into the account manually.',
+        reason: PARENT_USER_SESSION_EXPIRED,
       };
 
       setIsParentTokenError([expiredTokenError]);
@@ -165,12 +124,20 @@ export const SwitchAccountDrawer = (props: Props) => {
       return;
     }
 
+    // Revoke proxy token before switching to parent account.
+    await handleProxyTokenRevocation();
+
     updateCurrentTokenBasedOnUserType({ userType: 'parent' });
-    handleClose();
-  }, [handleClose, isProxyUser]);
+
+    // Reset flag for proxy user to display success toast once.
+    setStorage('proxy_user', 'false');
+
+    onClose();
+    refreshPage();
+  }, [onClose, handleProxyTokenRevocation, refreshPage]);
 
   return (
-    <Drawer onClose={handleClose} open={open} title="Switch Account">
+    <Drawer onClose={onClose} open={open} title="Switch Account">
       {isProxyTokenError.length > 0 && (
         <Notice text={isProxyTokenError[0].reason} variant="error" />
       )}
@@ -187,8 +154,11 @@ export const SwitchAccountDrawer = (props: Props) => {
           <>
             {' or '}
             <StyledLinkButton
+              onClick={() => {
+                sendSwitchToParentAccountEvent();
+                handleSwitchToParentAccount();
+              }}
               aria-label="parent-account-link"
-              onClick={handleSwitchToParentAccount}
             >
               switch back to your account
             </StyledLinkButton>
@@ -197,10 +167,12 @@ export const SwitchAccountDrawer = (props: Props) => {
         .
       </Typography>
       <ChildAccountList
-        currentTokenWithBearer={currentTokenWithBearer}
-        isProxyUser={isProxyUser}
-        onClose={handleClose}
+        currentTokenWithBearer={
+          isProxyUser ? currentParentTokenWithBearer : currentTokenWithBearer
+        }
+        onClose={onClose}
         onSwitchAccount={handleSwitchToChildAccount}
+        userType={userType}
       />
     </Drawer>
   );

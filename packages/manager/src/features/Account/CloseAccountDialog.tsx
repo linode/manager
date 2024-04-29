@@ -29,8 +29,6 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
   );
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [comments, setComments] = React.useState<string>('');
-  const [inputtedUsername, setUsername] = React.useState<string>('');
-  const [canSubmit, setCanSubmit] = React.useState<boolean>(false);
   const { classes } = useStyles();
   const history = useHistory();
   const { data: profile } = useProfile();
@@ -42,25 +40,11 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
        * intentionally not resetting comments
        */
       setErrors(undefined);
-      setUsername('');
-      setCanSubmit(false);
     }
   }, [open]);
 
-  /**
-   * enable the submit button if the user entered their
-   * username correctly
-   */
-  React.useEffect(() => {
-    if (inputtedUsername === profile?.username) {
-      setCanSubmit(true);
-    } else {
-      setCanSubmit(false);
-    }
-  }, [inputtedUsername, profile]);
-
   const inputRef = React.useCallback(
-    (node) => {
+    (node: any) => {
       /**
        * focus on first textfield when modal is opened
        */
@@ -103,7 +87,6 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
         subType: 'CloseAccount',
         type: 'AccountSetting',
       }}
-      disabled={!canSubmit}
       inputRef={inputRef}
       label={`Please enter your Username (${profile.username}) to confirm.`}
       loading={isClosingAccount}
@@ -111,7 +94,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       onClose={closeDialog}
       open={open}
       textFieldStyle={{ maxWidth: '415px' }}
-      title="Are you sure you want to close your Linode account?"
+      title="Are you sure you want to close your cloud computing services account?"
     >
       {errors ? (
         <Notice text={errors ? errors[0].reason : ''} variant="error" />

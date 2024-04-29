@@ -13,23 +13,19 @@ import {
   getNodeBalancerConfigs,
   getNodeBalancerFirewalls,
   getNodeBalancerStats,
+  getNodeBalancerTypes,
   getNodeBalancers,
   updateNodeBalancer,
   updateNodeBalancerConfig,
 } from '@linode/api-v4';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
-import { DateTime } from 'luxon';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
+import { DateTime } from 'luxon';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
@@ -38,12 +34,32 @@ import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
 import { itemInListCreationHandler, itemInListMutationHandler } from './base';
-import { queryKey as PROFILE_QUERY_KEY } from './profile';
+import { profileQueries } from './profile';
+
+import type {
+  APIError,
+  Filter,
+  Params,
+  PriceType,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 
 export const queryKey = 'nodebalancers';
 
 export const NODEBALANCER_STATS_NOT_READY_API_MESSAGE =
   'Stats are unavailable at this time.';
+
+const getAllNodeBalancerTypes = () =>
+  getAll<PriceType>((params) => getNodeBalancerTypes(params))().then(
+    (results) => results.data
+  );
+
+export const typesQueries = createQueryKeys('types', {
+  nodebalancers: {
+    queryFn: getAllNodeBalancerTypes,
+    queryKey: null,
+  },
+});
 
 const getIsTooEarlyForStats = (created?: string) => {
   if (!created) {
@@ -114,7 +130,7 @@ export const useNodebalancerCreateMutation = () => {
         queryClient.invalidateQueries([queryKey]);
         queryClient.setQueryData([queryKey, 'nodebalancer', data.id], data);
         // If a restricted user creates an entity, we must make sure grants are up to date.
-        queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
+        queryClient.invalidateQueries(profileQueries.grants.queryKey);
       },
     }
   );
@@ -131,12 +147,17 @@ export const useNodebalancerConfigCreateMutation = (id: number) => {
   );
 };
 
+interface CreateNodeBalancerConfigWithConfig
+  extends Partial<CreateNodeBalancerConfig> {
+  configId: number;
+}
+
 export const useNodebalancerConfigUpdateMutation = (nodebalancerId: number) => {
   const queryClient = useQueryClient();
   return useMutation<
     NodeBalancerConfig,
     APIError[],
-    Partial<CreateNodeBalancerConfig> & { configId: number }
+    CreateNodeBalancerConfigWithConfig
   >(
     ({ configId, ...data }) =>
       updateNodeBalancerConfig(nodebalancerId, configId, data),
@@ -237,3 +258,9 @@ export const useNodeBalancersFirewallsQuery = (nodebalancerId: number) =>
     () => getNodeBalancerFirewalls(nodebalancerId),
     queryPresets.oneTimeFetch
   );
+
+export const useNodeBalancerTypesQuery = () =>
+  useQuery<PriceType[], APIError[]>({
+    ...queryPresets.oneTimeFetch,
+    ...typesQueries.nodebalancers,
+  });

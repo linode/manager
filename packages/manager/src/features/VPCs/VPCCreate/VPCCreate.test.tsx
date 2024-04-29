@@ -43,7 +43,7 @@ describe('VPC create page', () => {
     expect(createVPCButton).toBeInTheDocument();
     expect(subnetIP[3]).toBeInTheDocument();
     await act(async () => {
-      userEvent.click(createVPCButton);
+      await userEvent.click(createVPCButton);
     });
     const regionError = getByText('Region is required');
     expect(regionError).toBeInTheDocument();
@@ -58,7 +58,7 @@ describe('VPC create page', () => {
     const addSubnet = screen.getByText('Add another Subnet');
     expect(addSubnet).toBeInTheDocument();
     await act(async () => {
-      userEvent.click(addSubnet);
+      await userEvent.click(addSubnet);
     });
 
     const subnetLabels = screen.getAllByText('Subnet Label');
@@ -69,7 +69,7 @@ describe('VPC create page', () => {
     const deleteSubnet = screen.getByTestId('delete-subnet-1');
     expect(deleteSubnet).toBeInTheDocument();
     await act(async () => {
-      userEvent.click(deleteSubnet);
+      await userEvent.click(deleteSubnet);
     });
 
     const subnetLabelAfter = screen.getAllByText('Subnet Label');
@@ -89,7 +89,7 @@ describe('VPC create page', () => {
 
     await act(async () => {
       await userEvent.type(subnetIp, 'bad');
-      userEvent.click(createVPCButton);
+      await userEvent.click(createVPCButton);
     });
 
     const badSubnetIP = screen.getByText(

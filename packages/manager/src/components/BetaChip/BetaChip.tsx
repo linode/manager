@@ -49,10 +49,14 @@ export const BetaChip = (props: BetaChipProps) => {
 const StyledBetaChip = styled(Chip, {
   label: 'StyledBetaChip',
 })<BetaChipProps>(({ theme }) => ({
+  '& .MuiChip-label': {
+    padding: 0,
+  },
   fontFamily: theme.font.bold,
   fontSize: '0.625rem',
   height: 16,
   letterSpacing: '.25px',
-  marginLeft: theme.spacing(),
+  marginLeft: theme.spacing(0.5),
+  padding: theme.spacing(0.5),
   textTransform: 'uppercase',
 }));

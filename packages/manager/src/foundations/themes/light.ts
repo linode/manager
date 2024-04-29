@@ -3,7 +3,7 @@ import { ThemeOptions } from '@mui/material/styles';
 import { breakpoints } from 'src/foundations/breakpoints';
 import { latoWeb } from 'src/foundations/fonts';
 
-const inputMaxWidth = 416;
+export const inputMaxWidth = 416;
 
 export const bg = {
   app: '#f4f5f6',
@@ -272,6 +272,12 @@ export const lightTheme: ThemeOptions = {
           },
           top: 'unset',
         },
+        groupLabel: {
+          fontFamily: latoWeb.bold,
+          fontSize: '1rem',
+          lineHeight: 'unset',
+          padding: '8px',
+        },
         hasPopupIcon: {
           '&.MuiAutocomplete-root': {
             '& .MuiAutocomplete-inputRoot': {
@@ -300,6 +306,7 @@ export const lightTheme: ThemeOptions = {
         },
         noOptions: {
           border: `1px solid ${primaryColors.main}`,
+          borderTop: 0,
         },
         option: {
           '&.Mui-focused, :hover': {
@@ -743,9 +750,13 @@ export const lightTheme: ThemeOptions = {
             color: primaryColors.main,
             fontSize: 18,
           },
-          '&$disabled': {
+          '&.Mui-disabled': {
+            backgroundColor: '#f4f4f4',
             borderColor: '#ccc',
             color: 'rgba(0, 0, 0, 0.75)',
+            input: {
+              cursor: 'not-allowed',
+            },
             opacity: 0.5,
           },
           '&.Mui-error': {

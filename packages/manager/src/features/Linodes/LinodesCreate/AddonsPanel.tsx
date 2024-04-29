@@ -1,4 +1,3 @@
-import { Interface, Linode } from '@linode/api-v4/lib/linodes';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -12,17 +11,15 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { UserDataAccordionProps } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
-import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account';
 import { useImageQuery } from 'src/queries/images';
-import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 
-import { AttachVLAN } from './AttachVLAN';
 import { UserDataAccordion } from './UserDataAccordion/UserDataAccordion';
 import { VLANAccordion } from './VLANAccordion';
+
+import type { Interface, Linode } from '@linode/api-v4/lib/linodes';
+import type { UserDataAccordionProps } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
+import type { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 
 interface UserDataProps extends UserDataAccordionProps {
   showUserData: boolean;
@@ -38,6 +35,7 @@ export interface AddonsPanelProps {
   handleVLANChange: (updatedInterface: Interface) => void;
   ipamAddress: string;
   ipamError?: string;
+  isEdgeRegionSelected?: boolean;
   isPrivateIPChecked: boolean;
   labelError?: string;
   linodesData?: Linode[];
@@ -60,6 +58,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     handleVLANChange,
     ipamAddress,
     ipamError,
+    isEdgeRegionSelected,
     isPrivateIPChecked,
     labelError,
     linodesData,
@@ -73,8 +72,6 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   } = props;
 
   const theme = useTheme();
-  const flags = useFlags();
-  const { data: account } = useAccount();
 
   const { data: image } = useImageQuery(
     selectedImageID ?? '',
@@ -127,12 +124,6 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   // The backups warning is shown when the user checks to enable backups, but they are using a custom image that may not be compatible.
   const showBackupsWarning = checkBackupsWarning();
 
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
-
   // Check whether the source Linode has been allocated a private IP to select/unselect the 'Private IP' checkbox.
   React.useEffect(() => {
     if (selectedLinodeID) {
@@ -153,20 +144,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
 
   return (
     <>
-      {!showVPCs &&
-        showVlans && ( // @TODO VPC: Delete this conditional and AttachVLAN component once VPC is fully rolled out
-          <AttachVLAN
-            handleVLANChange={handleVLANChange}
-            helperText={vlanDisabledReason}
-            ipamAddress={ipamAddress}
-            ipamError={ipamError}
-            labelError={labelError}
-            readOnly={disabled || Boolean(vlanDisabledReason)}
-            region={selectedRegionID}
-            vlanLabel={vlanLabel}
-          />
-        )}
-      {showVPCs && showVlans && (
+      {showVlans && (
         <VLANAccordion
           handleVLANChange={handleVLANChange}
           helperText={vlanDisabledReason}
@@ -192,6 +170,12 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
             <TooltipIcon status="help" text={backupsDisabledReason} />
           )}
         </Typography>
+        {isEdgeRegionSelected && (
+          <Notice
+            text="Backups and Private IP are currently not available for Edge regions."
+            variant="warning"
+          />
+        )}
         {showBackupsWarning && (
           <Notice variant="warning">
             Linodes must have a disk formatted with an ext3 or ext4 file system
@@ -201,12 +185,19 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
         <StyledFormControlLabel
           control={
             <Checkbox
+              checked={
+                (accountBackups && !isEdgeRegionSelected) || props.backups
+              }
               data-qa-check-backups={
                 accountBackups ? 'auto backup enabled' : 'auto backup disabled'
               }
-              checked={accountBackups || props.backups}
+              disabled={
+                accountBackups ||
+                disabled ||
+                isBareMetal ||
+                isEdgeRegionSelected
+              }
               data-testid="backups"
-              disabled={accountBackups || disabled || isBareMetal}
               onChange={changeBackups}
             />
           }
@@ -218,7 +209,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
           }
         />
         <StyledTypography variant="body1">
-          {accountBackups ? (
+          {accountBackups && !isEdgeRegionSelected ? (
             <React.Fragment>
               You have enabled automatic backups for your account. This Linode
               will automatically have backups enabled. To change this setting,{' '}
@@ -239,21 +230,19 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
               checked={isPrivateIPChecked}
               data-qa-check-private-ip
               data-testid="private_ip"
-              disabled={disabled}
+              disabled={disabled || isEdgeRegionSelected}
               onChange={togglePrivateIP}
             />
           }
           label="Private IP"
         />
-        {showVPCs && (
-          <StyledTypography
-            data-testid="private-ip-contextual-copy"
-            variant="body1"
-          >
-            Use Private IP for a backend node to a NodeBalancer. Use VPC instead
-            for private communication between your Linodes.
-          </StyledTypography>
-        )}
+        <StyledTypography
+          data-testid="private-ip-contextual-copy"
+          variant="body1"
+        >
+          Use Private IP for a backend node to a NodeBalancer. Use VPC instead
+          for private communication between your Linodes.
+        </StyledTypography>
       </Paper>
     </>
   );

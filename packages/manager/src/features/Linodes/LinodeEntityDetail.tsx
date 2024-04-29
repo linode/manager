@@ -1,11 +1,15 @@
 import * as React from 'react';
 
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
+import { Notice } from 'src/components/Notice/Notice';
+import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
@@ -27,13 +31,13 @@ interface LinodeEntityDetailProps {
   id: number;
   isSummaryView?: boolean;
   linode: Linode;
-  openTagDrawer: (tags: string[]) => void;
+  openTagDrawer: () => void;
   variant?: TypographyProps['variant'];
 }
 
-export type Props = LinodeEntityDetailProps & {
+export interface Props extends LinodeEntityDetailProps {
   handlers: LinodeHandlers;
-};
+}
 
 export const LinodeEntityDetail = (props: Props) => {
   const { handlers, isSummaryView, linode, openTagDrawer, variant } = props;
@@ -60,9 +64,14 @@ export const LinodeEntityDetail = (props: Props) => {
     configInterfaceWithVPC,
     configs,
     isVPCOnlyLinode,
-    showVPCs,
     vpcLinodeIsAssignedTo,
   } = useVPCConfigInterface(linode.id);
+
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: linode.id,
+  });
 
   const imageVendor =
     images?.find((i) => i.id === linode.image)?.vendor ?? null;
@@ -71,6 +80,8 @@ export const LinodeEntityDetail = (props: Props) => {
 
   const linodeRegionDisplay =
     regions?.find((r) => r.id === linode.region)?.label ?? linode.region;
+
+  const linodeIsInEdgeRegion = getIsEdgeRegion(regions ?? [], linode.region);
 
   let progress;
   let transitionText;
@@ -83,55 +94,66 @@ export const LinodeEntityDetail = (props: Props) => {
   const trimmedIPv6 = linode.ipv6?.replace('/128', '') || null;
 
   return (
-    <EntityDetail
-      body={
-        <LinodeEntityDetailBody
-          configInterfaceWithVPC={configInterfaceWithVPC}
-          displayVPCSection={showVPCs}
-          gbRAM={linode.specs.memory / 1024}
-          gbStorage={linode.specs.disk / 1024}
-          ipv4={linode.ipv4}
-          ipv6={trimmedIPv6}
-          isVPCOnlyLinode={isVPCOnlyLinode}
-          linodeId={linode.id}
-          linodeLabel={linode.label}
-          numCPUs={linode.specs.vcpus}
-          numVolumes={numberOfVolumes}
-          region={linode.region}
-          vpcLinodeIsAssignedTo={vpcLinodeIsAssignedTo}
+    <>
+      {isLinodesGrantReadOnly && (
+        <Notice
+          text={getRestrictedResourceText({
+            resourceType: 'Linodes',
+          })}
+          important
+          variant="warning"
         />
-      }
-      footer={
-        <LinodeEntityDetailFooter
-          linodeCreated={linode.created}
-          linodeId={linode.id}
-          linodeLabel={linode.label}
-          linodePlan={linodePlan}
-          linodeRegionDisplay={linodeRegionDisplay}
-          linodeTags={linode.tags}
-          openTagDrawer={openTagDrawer}
-        />
-      }
-      header={
-        <LinodeEntityDetailHeader
-          backups={linode.backups}
-          configs={configs}
-          enableVPCLogic={showVPCs}
-          handlers={handlers}
-          image={linode.image ?? 'Unknown Image'}
-          imageVendor={imageVendor}
-          isSummaryView={isSummaryView}
-          linodeId={linode.id}
-          linodeLabel={linode.label}
-          linodeRegionDisplay={linodeRegionDisplay}
-          linodeStatus={linode.status}
-          openNotificationMenu={notificationContext.openMenu}
-          progress={progress}
-          transitionText={transitionText}
-          type={type ?? null}
-          variant={variant}
-        />
-      }
-    />
+      )}
+      <EntityDetail
+        body={
+          <LinodeEntityDetailBody
+            configInterfaceWithVPC={configInterfaceWithVPC}
+            gbRAM={linode.specs.memory / 1024}
+            gbStorage={linode.specs.disk / 1024}
+            ipv4={linode.ipv4}
+            ipv6={trimmedIPv6}
+            isVPCOnlyLinode={isVPCOnlyLinode}
+            linodeId={linode.id}
+            linodeIsInEdgeRegion={linodeIsInEdgeRegion}
+            linodeLabel={linode.label}
+            numCPUs={linode.specs.vcpus}
+            numVolumes={numberOfVolumes}
+            region={linode.region}
+            vpcLinodeIsAssignedTo={vpcLinodeIsAssignedTo}
+          />
+        }
+        footer={
+          <LinodeEntityDetailFooter
+            isLinodesGrantReadOnly={isLinodesGrantReadOnly}
+            linodeCreated={linode.created}
+            linodeId={linode.id}
+            linodeLabel={linode.label}
+            linodePlan={linodePlan}
+            linodeRegionDisplay={linodeRegionDisplay}
+            linodeTags={linode.tags}
+            openTagDrawer={openTagDrawer}
+          />
+        }
+        header={
+          <LinodeEntityDetailHeader
+            backups={linode.backups}
+            configs={configs}
+            handlers={handlers}
+            image={linode.image ?? 'Unknown Image'}
+            imageVendor={imageVendor}
+            isSummaryView={isSummaryView}
+            linodeId={linode.id}
+            linodeLabel={linode.label}
+            linodeRegionDisplay={linodeRegionDisplay}
+            linodeStatus={linode.status}
+            openNotificationMenu={notificationContext.openMenu}
+            progress={progress}
+            transitionText={transitionText}
+            type={type ?? null}
+            variant={variant}
+          />
+        }
+      />
+    </>
   );
 };

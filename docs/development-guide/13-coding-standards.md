@@ -15,9 +15,28 @@ If you are using VSCode it is highly recommended to use the ESlint extension. Th
 
 ## React
 
-- When conditionally rendering JSX, use ternaries instead of `&&`.
-  - Example: `condition ? <Component /> : null` instead of `condition && <Component />`
-  - This is to avoid hard-to-catch bugs ([read more](https://kentcdodds.com/blog/use-ternaries-rather-than-and-and-in-jsx)).
+[Several new hooks were introduced with the release of React 18](https://react.dev/blog/2022/03/29/react-v18#new-hooks).
+
+It should be noted that the `useId()` hook is particularly useful for generating unique IDs for accessibility attributes. For this use case, `useId()` is preferred over hardcoding the ID because components may be rendered more than once on a page, but IDs must be unique.
+
+As an example from `DisplayLinodes.tsx`, early in the file we invoke the hook: `const displayViewDescriptionId = React.useId()`
+
+And make use of the unique ID by passing it as the value for a component's `aria-describedby` attribute in the `return` value:
+
+```
+  <StyledToggleButton
+  aria-describedby={displayViewDescriptionId}
+  aria-label="Toggle display"
+  disableRipple
+  isActive={true}
+  onClick={toggleLinodeView}
+  size="large"
+>
+  <GridView />
+</StyledToggleButton>
+```
+
+Per the [docs](https://react.dev/reference/react/useId#usage), the hook should not be used for generating keys in a list.
 
 ## Event Handler Naming Convention
 
@@ -51,7 +70,7 @@ The styles for Cloud Manager are located in three places:
   - The breakpoints can be modified at `/foundations/breakpoints/index.ts`.
 - Component-specific styles may be defined either at the end of the component file or in a dedicated file, named `ComponentName.styles.tsx`. Refer to the guidelines outlined in the "Styles" section of [Component Structure](02-component-structure.md#styles).
 
-## Typesript Unions, Const Enums and Objects
+## Typescript Unions, Const Enums, Objects and Intersections
 In our development process, we often encounter scenarios where we need to handle various messages or descriptions in our application. These messages can range from short, pithy statements to longer, more descriptive texts. To ensure a consistent and maintainable approach, we can use union types for lists of pithy data and const enums or plain old JavaScript objects (POJOs) for longer descriptions.
 
 ### Union Types for Pithy Data
@@ -113,38 +132,29 @@ myFunction(CreateTypes.Backup); // Works
 myFunction('fromBackup'); // Works
 ```
 
-## Adobe Analytics
+### Preferring Interfaces Over Intersections
 
-### Writing a Custom Event
+Much of the time, a simple type alias to an object type acts very similarly to an interface.
 
-Custom events live (mostly) in `src/utilities/analytics.ts`. Try to write and export custom events in this file if possible, and import them in the component(s) where they are used.
+```Typescript
+interface Foo { prop: string }
 
-```tsx
-// Component.tsx {file(s) where the event is called, for quick reference}
-// OtherComponent.tsx
-
-sendDescriptiveNameEvent () => {
-      category: '{Descriptive/Page Name}',
-      action: '{interaction such as Click, Hover, Focus}:{input type such as button, link, toggle, checkbox, text field} e.g. Click:link',
-      label: '{string associated with the event; e.g event label} (optional)',
-      value: '{number associated with the event; e.g. size of a volume} (optional)',
-}
+type Bar = { prop: string };
 ```
 
-When adding a new custom event, coordinating with UX on the event's `category`, `action`, `label`, and `value` props values ensures consistency across our data.
+However, and as soon as you need to compose two or more types, you have the option of extending those types with an interface, or intersecting them in a type alias, and that's when the differences start to matter.
 
-Avoid including pipes (`|`) as delimiters in any of the event properties. They are used in Adobe Analytics to separate fields.
+Interfaces create a single flat object type that detects property conflicts, which are usually important to resolve! Intersections on the other hand just recursively merge properties, and in some cases produce never. Interfaces also display consistently better, whereas type aliases to intersections can't be displayed in part of other intersections. Type relationships between interfaces are also cached, as opposed to intersection types as a whole. A final noteworthy difference is that when checking against a target intersection type, every constituent is checked before checking against the "effective"/"flattened" type.
 
-Avoid creating custom events that collect such as search queries, entity names, or other forms of user input. Custom events can still be fired on these actions with a generic `label` or no label at all.
+For this reason, extending types with interfaces/extends is suggested over creating intersection types.
 
-Examples
+```Typescript
+- type Foo = Bar & Baz & {
+-     someProp: string;
+- }
++ interface Foo extends Bar, Baz {
++     someProp: string;
++ }
+```
 
-- `sendMarketplaceSearchEvent` fires when selecting a category from the dropdown (`label` is predefined) and clicking the search field (a generic `label` is used).
-- `sendBucketCreateEvent` sends the region of the bucket, but does not send the bucket label.
-
-### Locally Testing Page Views & Custom Events and/or Troubleshooting
-
-1. Set the `REACT_APP_ADOBE_ANALYTICS_URL` environment variable in `.env`.
-2. Use the browser tools Network tab, filter requests by "adobe", and check that successful network requests have been made to load the launch script and its extensions.
-3. In the browser console, type `_satellite.setDebug(true)`.
-4. Refresh the page. You should see Adobe debug log output in the console. Each page view change or custom event that fires should be visible in the logs.
+Source: [TypeScript Wiki](https://github.com/microsoft/TypeScript/wiki/Performance#preferring-interfaces-over-intersections)

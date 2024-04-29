@@ -11,6 +11,7 @@ import {
   Region,
   createBucket,
   deleteBucket,
+  deleteBucketWithRegion,
   deleteSSLCert,
   getBucket,
   getBuckets,
@@ -30,19 +31,22 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { getAll } from 'src/utilities/getAll';
 
-import { queryKey as accountSettingsQueryKey } from './accountSettings';
+import { accountQueries } from './account/queries';
 import { queryPresets } from './base';
+
+import type { AtLeastOne } from 'src/utilities/types/typesHelpers';
 
 export interface BucketError {
   /*
-   @TODO OBJ Multicluster: 'region' will become required, and the 'cluster' field will be deprecated
-   once the feature is fully rolled out in production as part of the process of cleaning up the 'objMultiCluster'
-   feature flag.
+   @TODO OBJ Multicluster:'region' will become required, and the
+   'cluster' field will be deprecated once the feature is fully rolled out in production.
+   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
+   remove 'cluster' and retain 'regions'.
   */
   cluster: ObjectStorageCluster;
   error: APIError[];
@@ -53,6 +57,24 @@ interface BucketsResponce {
   buckets: ObjectStorageBucket[];
   errors: BucketError[];
 }
+
+/*
+   @TODO OBJ Multicluster:'region' will become required, and the
+   'cluster' field will be deprecated once the feature is fully rolled out in production.
+   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
+   remove 'cluster' and retain 'regions'.
+  */
+interface UseObjectStorageBucketsBaseOptions {
+  enabled?: boolean;
+  isObjMultiClusterEnabled?: boolean;
+}
+
+// Use the utility type with your options
+type UseObjectStorageBucketsOptions = AtLeastOne<{
+  clusters: ObjectStorageCluster[] | undefined;
+  regions: Region[] | undefined;
+}> &
+  UseObjectStorageBucketsBaseOptions;
 
 export const queryKey = 'object-storage';
 
@@ -69,39 +91,37 @@ export const getAllObjectStorageBuckets = () =>
 
 export const useObjectStorageClusters = (enabled: boolean = true) =>
   useQuery<ObjectStorageCluster[], APIError[]>(
-    `${queryKey}-clusters`,
+    [`${queryKey}-clusters`],
     getAllObjectStorageClusters,
     { ...queryPresets.oneTimeFetch, enabled }
   );
 
-export const useObjectStorageBuckets = (
-  clusters: ObjectStorageCluster[] | undefined,
-  enabled: boolean = true
-) =>
+/*
+   @TODO OBJ Multicluster:'region' will become required, and the
+   'cluster' field will be deprecated once the feature is fully rolled out in production.
+   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
+   remove 'cluster' and retain 'regions'.
+  */
+
+export const useObjectStorageBuckets = ({
+  clusters,
+  enabled = true,
+  isObjMultiClusterEnabled = false,
+  regions,
+}: UseObjectStorageBucketsOptions) =>
   useQuery<BucketsResponce, APIError[]>(
-    `${queryKey}-buckets`,
+    [`${queryKey}-buckets`],
     // Ideally we would use the line below, but if a cluster is down, the buckets on that
     // cluster don't show up in the responce. We choose to fetch buckets per-cluster so
     // we can tell the user which clusters are having issues.
     // getAllObjectStorageBuckets,
-    () => getAllBucketsFromClusters(clusters),
+    () =>
+      isObjMultiClusterEnabled
+        ? getAllBucketsFromRegions(regions)
+        : getAllBucketsFromClusters(clusters),
     {
       ...queryPresets.longLived,
-      enabled: clusters !== undefined && enabled,
-      retry: false,
-    }
-  );
-
-export const useObjectStorageBucketsFromRegions = (
-  regions: Region[] | undefined,
-  enabled: boolean = true
-) =>
-  useQuery<BucketsResponce, APIError[]>(
-    `${queryKey}-buckets-from-regions`,
-    () => getAllBucketsFromRegions(regions),
-    {
-      ...queryPresets.longLived,
-      enabled: regions !== undefined && enabled,
+      enabled: (clusters !== undefined || regions !== undefined) && enabled,
       retry: false,
     }
   );
@@ -120,16 +140,21 @@ export const useCreateBucketMutation = () => {
     APIError[],
     ObjectStorageBucketRequestPayload
   >(createBucket, {
+    onMutate: async () => {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries([`${queryKey}-buckets`]);
+    },
     onSuccess: (newEntity) => {
       // Invalidate account settings because it contains obj information
-      queryClient.invalidateQueries(accountSettingsQueryKey);
+      queryClient.invalidateQueries(accountQueries.settings.queryKey);
       queryClient.setQueryData<BucketsResponce>(
-        `${queryKey}-buckets`,
+        [`${queryKey}-buckets`],
         (oldData) => ({
           buckets: [...(oldData?.buckets || []), newEntity],
           errors: oldData?.errors || [],
         })
       );
+      queryClient.invalidateQueries([`${queryKey}-buckets`]);
     },
   });
 };
@@ -141,7 +166,7 @@ export const useDeleteBucketMutation = () => {
     {
       onSuccess: (_, variables) => {
         queryClient.setQueryData<BucketsResponce>(
-          `${queryKey}-buckets`,
+          [`${queryKey}-buckets`],
           (oldData) => {
             return {
               buckets:
@@ -149,6 +174,39 @@ export const useDeleteBucketMutation = () => {
                   (bucket: ObjectStorageBucket) =>
                     !(
                       bucket.cluster === variables.cluster &&
+                      bucket.label === variables.label
+                    )
+                ) || [],
+              errors: oldData?.errors || [],
+            };
+          }
+        );
+      },
+    }
+  );
+};
+
+/*
+   @TODO OBJ Multicluster: useDeleteBucketWithRegionMutation is a temporary hook,
+   once feature is rolled out we replace it with existing useDeleteBucketMutation
+   by updating it with region instead of cluster.
+  */
+
+export const useDeleteBucketWithRegionMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { label: string; region: string }>(
+    (data) => deleteBucketWithRegion(data),
+    {
+      onSuccess: (_, variables) => {
+        queryClient.setQueryData<BucketsResponce>(
+          [`${queryKey}-buckets`],
+          (oldData) => {
+            return {
+              buckets:
+                oldData?.buckets.filter(
+                  (bucket: ObjectStorageBucket) =>
+                    !(
+                      bucket.region === variables.region &&
                       bucket.label === variables.label
                     )
                 ) || [],
@@ -230,11 +288,11 @@ export const getAllBucketsFromRegions = async (
 
   const data = await Promise.all(promises);
 
-  const bucketsPerCluster = data.filter((item) =>
+  const bucketsPerRegion = data.filter((item) =>
     Array.isArray(item)
   ) as ObjectStorageBucket[][];
 
-  const buckets = bucketsPerCluster.reduce((acc, val) => acc.concat(val), []);
+  const buckets = bucketsPerRegion.reduce((acc, val) => acc.concat(val), []);
 
   const errors = data.filter((item) => !Array.isArray(item)) as BucketError[];
 
@@ -271,7 +329,7 @@ export const updateBucket = async (
 ) => {
   const bucket = await getBucket(cluster, bucketName);
   queryClient.setQueryData<BucketsResponce | undefined>(
-    `${queryKey}-buckets`,
+    [`${queryKey}-buckets`],
     (oldData) => {
       if (oldData === undefined) {
         return undefined;

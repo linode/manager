@@ -7,8 +7,8 @@ import { makeStyles } from 'tss-react/mui';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 
 import { useIsACLBEnabled } from './features/LoadBalancers/utils';
+import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useAccountManagement } from './hooks/useAccountManagement';
-import { useFlags } from './hooks/useFlags';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -59,9 +59,9 @@ export const GoTo = React.memo(() => {
   const { classes } = useStyles();
   const routerHistory = useHistory();
   const { _hasAccountAccess, _isManagedAccount } = useAccountManagement();
-  const flags = useFlags();
 
   const { isACLBEnabled } = useIsACLBEnabled();
+  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
 
   const onClose = () => {
@@ -96,7 +96,6 @@ export const GoTo = React.memo(() => {
       },
       {
         display: 'VPC',
-        hide: !flags.vpc,
         href: '/vpcs',
       },
       {
@@ -115,6 +114,11 @@ export const GoTo = React.memo(() => {
       {
         display: 'Images',
         href: '/images',
+      },
+      {
+        display: 'Placement Groups',
+        hide: !isPlacementGroupsEnabled,
+        href: '/placement-groups',
       },
       {
         display: 'Domains',
@@ -152,7 +156,12 @@ export const GoTo = React.memo(() => {
         href: '/profile/display',
       },
     ],
-    [_hasAccountAccess, _isManagedAccount, isACLBEnabled]
+    [
+      _hasAccountAccess,
+      _isManagedAccount,
+      isACLBEnabled,
+      isPlacementGroupsEnabled,
+    ]
   );
 
   const options: Item[] = React.useMemo(

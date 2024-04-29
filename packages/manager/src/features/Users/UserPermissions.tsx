@@ -3,6 +3,7 @@ import {
   GrantLevel,
   GrantType,
   Grants,
+  User,
   getGrants,
   getUser,
   updateGrants,
@@ -11,10 +12,10 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { Paper } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { WithSnackbarProps, withSnackbar } from 'notistack';
+import { QueryClient } from '@tanstack/react-query';
+import { enqueueSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 import { compose as recompose } from 'recompose';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -33,14 +34,16 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
-import withFlags, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container';
+import {
+  WithFeatureFlagProps,
+  withFeatureFlags,
+} from 'src/containers/flags.container';
 import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
-import { grantTypeMap } from 'src/features/Account/constants';
+import { PARENT_USER, grantTypeMap } from 'src/features/Account/constants';
+import { accountQueries } from 'src/queries/account/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -86,10 +89,7 @@ interface State {
   userType: null | string;
 }
 
-type CombinedProps = Props &
-  WithSnackbarProps &
-  WithQueryClientProps &
-  FeatureFlagConsumerProps;
+type CombinedProps = Props & WithQueryClientProps & WithFeatureFlagProps;
 
 class UserPermissions extends React.Component<CombinedProps, State> {
   componentDidMount() {
@@ -294,14 +294,18 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.setState({
             restricted: user.restricted,
           });
-          this.props.queryClient.invalidateQueries(['account', 'users']);
-        })
-        .then(() => {
+          // refresh the data on /account/users so it is accurate
+          this.props.queryClient.invalidateQueries(
+            accountQueries.users._ctx.paginated._def
+          );
+          // Update the user directly in the cache
+          this.props.queryClient.setQueryData<User>(
+            accountQueries.users._ctx.user(user.username).queryKey,
+            user
+          );
           // unconditionally sets this.state.loadingGrants to false
           this.getUserGrants();
-          // refresh the data on /account/users so it is accurate
-          this.props.queryClient.invalidateQueries('account-users');
-          this.props.enqueueSnackbar('User permissions successfully saved.', {
+          enqueueSnackbar('User permissions successfully saved.', {
             variant: 'success',
           });
         })
@@ -435,8 +439,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             sx={{ margin: 0, width: 'auto' }}
           >
             <StyledHeaderGrid>
-              <Typography data-qa-restrict-access={restricted} variant="h2">
-                {isProxyUser ? 'Business Partner' : 'General'} Permissions
+              <Typography
+                sx={{
+                  textTransform: 'capitalize',
+                }}
+                data-qa-restrict-access={restricted}
+                variant="h2"
+              >
+                {isProxyUser ? PARENT_USER : 'General'} Permissions
               </Typography>
             </StyledHeaderGrid>
             <StyledSubHeaderGrid>
@@ -707,11 +717,15 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           const { tabs } = this.getTabInformation(grantsResponse);
           this.setState({ isSavingGlobal: false, tabs });
 
-          this.props.enqueueSnackbar(
-            'General user permissions successfully saved.',
-            {
-              variant: 'success',
-            }
+          enqueueSnackbar('General user permissions successfully saved.', {
+            variant: 'success',
+          });
+
+          // Update the user's grants directly in the cache
+          this.props.queryClient.setQueriesData<Grants>(
+            accountQueries.users._ctx.user(currentUsername)._ctx.grants
+              .queryKey,
+            grantsResponse
           );
         })
         .catch((errResponse) => {
@@ -762,7 +776,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         if (updateFns.length) {
           this.setState((compose as any)(...updateFns));
         }
-        this.props.enqueueSnackbar(
+        enqueueSnackbar(
           'Entity-specific user permissions successfully saved.',
           {
             variant: 'success',
@@ -813,7 +827,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 }
 
 export default recompose<CombinedProps, Props>(
-  withSnackbar,
   withQueryClient,
-  withFlags
+  withFeatureFlags
 )(UserPermissions);

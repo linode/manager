@@ -86,7 +86,7 @@ interface HelperFunctions {
   getNext: () => void;
 }
 
-export type StateProps = HelperFunctions & State;
+export interface StateProps extends HelperFunctions, State {}
 
 export interface WithStackScriptBaseOptions {
   isSelecting: boolean;
@@ -466,6 +466,9 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
     };
 
     handleSearch = (value: string) => {
+      if (!this.mounted) {
+        return;
+      }
       const { currentFilter } = this.state;
       const { category, history, request } = this.props;
 

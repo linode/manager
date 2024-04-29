@@ -269,6 +269,9 @@ export const darkTheme: ThemeOptions = {
         colorInfo: {
           color: primaryColors.dark,
         },
+        colorWarning: {
+          color: primaryColors.dark,
+        },
         outlined: {
           backgroundColor: 'transparent',
           borderRadius: 1,
@@ -354,7 +357,7 @@ export const darkTheme: ThemeOptions = {
         focused: {},
         input: {
           '&.Mui-disabled': {
-            '-webkit-text-fill-color': 'unset !important',
+            WebkitTextFillColor: 'unset !important',
             borderColor: '#606469',
             color: '#ccc !important',
             opacity: 0.5,
@@ -365,6 +368,7 @@ export const darkTheme: ThemeOptions = {
             color: primaryColors.main,
           },
           '&.Mui-disabled': {
+            backgroundColor: '#444444',
             borderColor: '#606469',
             color: '#ccc !important',
             opacity: 0.5,

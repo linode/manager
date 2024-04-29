@@ -14,11 +14,11 @@
 // ***********************************************************
 
 import * as React from 'react';
-import { mount } from 'cypress/react';
+import { mount } from 'cypress/react18';
 
 import { Provider } from 'react-redux';
-import { Provider as LDProvider } from 'launchdarkly-react-client-sdk/lib/context';
-import { QueryClientProvider } from 'react-query';
+import { LDProvider } from 'launchdarkly-react-client-sdk';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClientFactory } from '@src/queries/base';
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { SnackbarProvider } from 'notistack';
@@ -46,16 +46,17 @@ const mountWithTheme = (
 ) => {
   const queryClient = queryClientFactory();
   const store = storeFactory();
-  const launchDarkly = {
-    flagKeyMap: {},
-    flags,
-  };
 
   return mount(
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <LinodeThemeWrapper theme={theme}>
-          <LDProvider value={launchDarkly}>
+          <LDProvider
+            clientSideID={''}
+            deferInitialization
+            flags={flags}
+            options={{ bootstrap: flags }}
+          >
             <SnackbarProvider>
               <MemoryRouter>{jsx}</MemoryRouter>
             </SnackbarProvider>

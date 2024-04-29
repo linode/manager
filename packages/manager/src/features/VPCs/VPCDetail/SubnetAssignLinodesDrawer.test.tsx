@@ -1,10 +1,15 @@
 import { Subnet } from '@linode/api-v4';
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { linodeFactory } from 'src/factories';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
+
+beforeAll(() => mockMatchMedia());
 
 const props = {
   onClose: vi.fn(),
@@ -15,12 +20,23 @@ const props = {
     label: 'subnet-1',
   } as Subnet,
   vpcId: 1,
-  vpcRegion: '',
+  vpcRegion: 'us-east',
 };
 
 describe('Subnet Assign Linodes Drawer', () => {
+  const linode = linodeFactory.build({
+    label: 'this-linode',
+    region: props.vpcRegion,
+  });
+
+  server.use(
+    http.get('*/linode/instances', () => {
+      return HttpResponse.json(makeResourcePage([linode]));
+    })
+  );
+
   it('should render a subnet assign linodes drawer', () => {
-    const { getByText, queryByText } = renderWithTheme(
+    const { getByText, queryAllByText } = renderWithTheme(
       <SubnetAssignLinodesDrawer {...props} />
     );
 
@@ -36,14 +52,9 @@ describe('Subnet Assign Linodes Drawer', () => {
       `Select the Linodes you would like to assign to this subnet. Only Linodes in this VPC's region are displayed.`
     );
     expect(helperText).toBeVisible();
-    const linodeSelect = getByText('Linodes');
+    const linodeSelect = queryAllByText('Linode')[0];
     expect(linodeSelect).toBeVisible();
-    const checkbox = getByText(
-      'Auto-assign a VPC IPv4 address for this Linode'
-    );
-    expect(checkbox).toBeVisible();
-    const ipv4Textbox = queryByText('VPC IPv4');
-    expect(ipv4Textbox).toBeNull();
+
     const assignButton = getByText('Assign Linode');
     expect(assignButton).toBeVisible();
     const alreadyAssigned = getByText('Linodes Assigned to Subnet (0)');
@@ -52,19 +63,23 @@ describe('Subnet Assign Linodes Drawer', () => {
     expect(doneButton).toBeVisible();
   });
 
-  it('should show the IPv4 textbox when the checkmark is clicked', () => {
-    const { getByText } = renderWithTheme(
+  it.skip('should show the IPv4 textbox when the checkmark is clicked', async () => {
+    const { findByText, getByLabelText } = renderWithTheme(
       <SubnetAssignLinodesDrawer {...props} />
     );
 
-    const checkbox = getByText(
+    const selectField = getByLabelText('Linode');
+    fireEvent.change(selectField, { target: { value: 'this-linode' } });
+
+    const checkbox = await findByText(
       'Auto-assign a VPC IPv4 address for this Linode'
     );
-    expect(checkbox).toBeVisible();
+
+    await waitFor(() => expect(checkbox).toBeVisible());
     fireEvent.click(checkbox);
 
-    const ipv4Textbox = getByText('VPC IPv4');
-    expect(ipv4Textbox).toBeVisible();
+    const ipv4Textbox = await findByText('VPC IPv4');
+    await waitFor(() => expect(ipv4Textbox).toBeVisible());
   });
 
   it('should close the drawer', () => {

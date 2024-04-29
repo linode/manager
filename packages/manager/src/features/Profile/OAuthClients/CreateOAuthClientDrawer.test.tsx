@@ -1,9 +1,9 @@
-import { act, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { oauthClientFactory } from 'src/factories/accountOAuth';
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateOAuthClientDrawer } from './CreateOAuthClientDrawer';
@@ -33,21 +33,17 @@ describe('Create API Token Drawer', () => {
 
     const submit = getByText('Create');
 
-    act(() => {
-      userEvent.click(submit);
-    });
+    await userEvent.click(submit);
 
     await waitFor(() => expect(getByText('Label is required.')).toBeVisible());
   });
   it('Should see secret modal with secret when you type a label and callback url then submit the form successfully', async () => {
     server.use(
-      rest.post('*/account/oauth-clients', (req, res, ctx) => {
-        return res(
-          ctx.json({
-            ...oauthClientFactory.build(),
-            secret: 'omg!',
-          })
-        );
+      http.post('*/account/oauth-clients', () => {
+        return HttpResponse.json({
+          ...oauthClientFactory.build(),
+          secret: 'omg!',
+        });
       })
     );
 
@@ -62,20 +58,18 @@ describe('Create API Token Drawer', () => {
 
     const submit = getByText('Create');
 
-    act(() => {
-      userEvent.type(labelField, 'my-oauth-client');
-      userEvent.type(callbackUrlField, 'http://localhost:3000');
-      userEvent.click(submit);
-    });
+    await userEvent.type(labelField, 'my-oauth-client');
+    await userEvent.type(callbackUrlField, 'http://localhost:3000');
+    await userEvent.click(submit);
 
     await waitFor(() => expect(props.showSecret).toBeCalledWith('omg!'));
   });
-  it('Should close when Cancel is pressed', () => {
+  it('Should close when Cancel is pressed', async () => {
     const { getByText } = renderWithTheme(
       <CreateOAuthClientDrawer {...props} />
     );
     const cancelButton = getByText('Cancel');
-    userEvent.click(cancelButton);
+    await userEvent.click(cancelButton);
     expect(props.onClose).toBeCalled();
   });
 });

@@ -6,11 +6,14 @@ import 'cypress-file-upload';
 import { createBucket } from '@linode/api-v4/lib/object-storage';
 import { objectStorageBucketFactory } from 'src/factories';
 import { authenticate } from 'support/api/authentication';
+import { interceptGetNetworkUtilization } from 'support/intercepts/account';
 import {
   interceptCreateBucket,
   interceptDeleteBucket,
   interceptGetBuckets,
   interceptUploadBucketObjectS3,
+  interceptGetBucketAccess,
+  interceptUpdateBucketAccess,
 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
@@ -120,6 +123,7 @@ describe('object storage end-to-end tests', () => {
     interceptGetBuckets().as('getBuckets');
     interceptCreateBucket().as('createBucket');
     interceptDeleteBucket(bucketLabel, bucketCluster).as('deleteBucket');
+    interceptGetNetworkUtilization().as('getNetworkUtilization');
 
     mockAppendFeatureFlags({
       objMultiCluster: makeFeatureFlagData(false),
@@ -127,9 +131,17 @@ describe('object storage end-to-end tests', () => {
     mockGetFeatureFlagClientstream().as('getClientStream');
 
     cy.visitWithLogin('/object-storage');
-    cy.wait(['@getFeatureFlags', '@getBuckets']);
+    cy.wait(['@getFeatureFlags', '@getBuckets', '@getNetworkUtilization']);
 
-    ui.button.findByTitle('Create Bucket').should('be.visible').click();
+    // Wait for loader to disappear, indicating that all buckets have been loaded.
+    // Mitigates test failures stemming from M3-7833.
+    cy.findByLabelText('Buckets').within(() => {
+      cy.findByLabelText('Content is loading').should('not.exist');
+    });
+
+    ui.entityHeader.find().within(() => {
+      ui.button.findByTitle('Create Bucket').should('be.visible').click();
+    });
 
     ui.drawer
       .findByTitle('Create Bucket')
@@ -145,6 +157,7 @@ describe('object storage end-to-end tests', () => {
       });
 
     cy.wait(['@createBucket', '@getBuckets']);
+    ui.drawer.find().should('not.exist');
 
     // Confirm that bucket is created, initiate deletion.
     cy.findByText(bucketLabel)
@@ -330,8 +343,10 @@ describe('object storage end-to-end tests', () => {
           assertStatusForUrlAtAlias('@bucketObjectUrl', 403);
 
           // Make object public, confirm it can be accessed, then close drawer.
-          cy.findByText('Access Control List (ACL)')
+          cy.findByLabelText('Access Control List (ACL)')
             .should('be.visible')
+            .should('not.have.value', 'Loading access...')
+            .should('have.value', 'Private')
             .click()
             .type('Public Read');
 
@@ -376,5 +391,50 @@ describe('object storage end-to-end tests', () => {
       // Confirm that bucket is empty.
       cy.findByText(emptyBucketMessage).should('be.visible');
     });
+  });
+
+  /*
+   * - Confirms that user can update Bucket access.
+   */
+  it('can update bucket access', () => {
+    const bucketLabel = randomLabel();
+    const bucketCluster = 'us-southeast-1';
+    const bucketAccessPage = `/object-storage/buckets/${bucketCluster}/${bucketLabel}/access`;
+
+    cy.defer(
+      setUpBucket(bucketLabel, bucketCluster),
+      'creating Object Storage bucket'
+    ).then(() => {
+      interceptGetBucketAccess(bucketLabel, bucketCluster).as(
+        'getBucketAccess'
+      );
+      interceptUpdateBucketAccess(bucketLabel, bucketCluster).as(
+        'updateBucketAccess'
+      );
+    });
+
+    // Navigate to new bucket page, upload and delete an object.
+    cy.visitWithLogin(bucketAccessPage);
+
+    cy.wait('@getBucketAccess');
+
+    // Make object public, confirm it can be accessed.
+    cy.findByLabelText('Access Control List (ACL)')
+      .should('be.visible')
+      .should('not.have.value', 'Loading access...')
+      .should('have.value', 'Private')
+      .click()
+      .type('Public Read');
+
+    ui.autocompletePopper
+      .findByTitle('Public Read')
+      .should('be.visible')
+      .click();
+
+    ui.button.findByTitle('Save').should('be.visible').click();
+
+    cy.wait('@updateBucketAccess');
+
+    cy.findByText('Bucket access updated successfully.');
   });
 });

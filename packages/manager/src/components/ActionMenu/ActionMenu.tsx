@@ -157,6 +157,7 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
               padding: '10px 10px 10px 16px',
             }}
             data-qa-action-menu-item={a.title}
+            data-testid={a.title}
             disabled={a.disabled}
             key={idx}
           >

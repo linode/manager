@@ -26,18 +26,19 @@ describe('ResizeNodePoolDrawer', () => {
     await findByText(/linode 1 GB/i);
   });
 
-  it('should display a warning if the user tries to resize a node pool to < 3 nodes', () => {
-    const { getByText } = renderWithTheme(
+  it('should display a warning if the user tries to resize a node pool to < 3 nodes', async () => {
+    const { findByText } = renderWithTheme(
       <ResizeNodePoolDrawer {...props} nodePool={smallPool} />
     );
-    expect(getByText(/minimum of 3 nodes/i));
+    expect(await findByText(/minimum of 3 nodes/i));
   });
 
-  it('should display a warning if the user tries to resize to a smaller node count', () => {
-    const { getByTestId, getByText } = renderWithTheme(
+  it('should display a warning if the user tries to resize to a smaller node count', async () => {
+    const { findByTestId, getByText } = renderWithTheme(
       <ResizeNodePoolDrawer {...props} />
     );
-    const decrement = getByTestId('decrement-button');
+
+    const decrement = await findByTestId('decrement-button');
     fireEvent.click(decrement);
     expect(getByText(/resizing to fewer nodes/i));
   });

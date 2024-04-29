@@ -10,7 +10,12 @@ describe('getRegionsByRegionId', () => {
         country: 'us',
         id: 'us-east',
         label: 'Newark, NJ',
+        placement_group_limits: {
+          maximum_linodes_per_pg: 10,
+          maximum_pgs_per_customer: 5,
+        },
         resolvers: { ipv4: '', ipv6: '' },
+        site_type: 'core',
         status: 'ok',
       },
       {
@@ -18,7 +23,12 @@ describe('getRegionsByRegionId', () => {
         country: 'us',
         id: 'us-southeast',
         label: 'Atlanta, GA',
+        placement_group_limits: {
+          maximum_linodes_per_pg: 10,
+          maximum_pgs_per_customer: 5,
+        },
         resolvers: { ipv4: '', ipv6: '' },
+        site_type: 'core',
         status: 'ok',
       },
     ];
@@ -29,7 +39,12 @@ describe('getRegionsByRegionId', () => {
         country: 'us',
         id: 'us-east',
         label: 'Newark, NJ',
+        placement_group_limits: {
+          maximum_linodes_per_pg: 10,
+          maximum_pgs_per_customer: 5,
+        },
         resolvers: { ipv4: '', ipv6: '' },
+        site_type: 'core',
         status: 'ok',
       },
       'us-southeast': {
@@ -37,7 +52,12 @@ describe('getRegionsByRegionId', () => {
         country: 'us',
         id: 'us-southeast',
         label: 'Atlanta, GA',
+        placement_group_limits: {
+          maximum_linodes_per_pg: 10,
+          maximum_pgs_per_customer: 5,
+        },
         resolvers: { ipv4: '', ipv6: '' },
+        site_type: 'core',
         status: 'ok',
       },
     };

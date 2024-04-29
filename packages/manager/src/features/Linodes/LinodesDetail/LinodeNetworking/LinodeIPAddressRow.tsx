@@ -26,15 +26,13 @@ export interface IPAddressRowHandlers {
   openRemoveIPRangeDialog: (range: IPRange) => void;
 }
 
-interface Props {
+interface LinodeIPAddressRowProps extends IPAddressRowHandlers, IPDisplay {
   isVPCOnlyLinode: boolean;
   linodeId: number;
   readOnly: boolean;
 }
 
-type CombinedProps = IPDisplay & IPAddressRowHandlers & Props;
-
-export const LinodeIPAddressRow = (props: CombinedProps) => {
+export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
   const {
     _ip,
     _range,
@@ -72,7 +70,11 @@ export const LinodeIPAddressRow = (props: CombinedProps) => {
         <CopyTooltip copyableText disabled={isVPCOnlyLinode} text={address} />
         {!isVPCOnlyLinode && <StyledCopyToolTip text={address} />}
       </TableCell>
-      <TableCell data-qa-ip-address parentColumn="Type">
+      <TableCell
+        data-qa-ip-address
+        parentColumn="Type"
+        sx={{ whiteSpace: 'nowrap' }}
+      >
         {type}
       </TableCell>
       <TableCell parentColumn="Default Gateway">{gateway}</TableCell>

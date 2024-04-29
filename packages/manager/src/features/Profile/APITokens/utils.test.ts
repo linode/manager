@@ -1,8 +1,10 @@
 import { DateTime } from 'luxon';
 
+import { ExcludedScope } from './CreateAPITokenDrawer';
 import {
   Permission,
   allScopesAreTheSame,
+  hasAccessBeenSelectedForAllScopes,
   isWayInTheFuture,
   scopeStringToPermTuples,
 } from './utils';
@@ -324,5 +326,109 @@ describe('APIToken utils', () => {
         expect(allScopesAreTheSame(scopes)).toBe(null);
       });
     });
+    it('should return 1 if all scopes, except any exclusions, are 1', () => {
+      const scopes: Permission[] = [
+        ['account', 1],
+        ['child_account', 1],
+        ['databases', 1],
+        ['domains', 1],
+        ['events', 1],
+        ['firewall', 1],
+        ['images', 1],
+        ['ips', 1],
+        ['linodes', 1],
+        ['lke', 1],
+        ['longview', 2],
+        ['nodebalancers', 1],
+        ['object_storage', 1],
+        ['stackscripts', 1],
+        ['volumes', 1],
+        ['vpc', 0],
+      ];
+      const excludedScopeNames: ExcludedScope[] = [
+        {
+          defaultAccessLevel: 0,
+          invalidAccessLevels: [1],
+          name: 'vpc',
+        },
+        {
+          defaultAccessLevel: 2,
+          invalidAccessLevels: [1],
+          name: 'longview',
+        },
+      ];
+      expect(allScopesAreTheSame(scopes, excludedScopeNames)).toBe(1);
+    });
+  });
+});
+
+describe('hasAccessBeenSelectedForAllScopes', () => {
+  const defaultScopes: Permission[] = [
+    ['account', -1],
+    ['child_account', -1],
+    ['databases', -1],
+    ['domains', -1],
+    ['events', -1],
+    ['firewall', -1],
+    ['images', -1],
+    ['ips', -1],
+    ['linodes', -1],
+    ['lke', -1],
+    ['longview', -1],
+    ['nodebalancers', -1],
+    ['object_storage', -1],
+    ['stackscripts', -1],
+    ['volumes', -1],
+    ['vpc', -1],
+  ];
+
+  const missingSelectionScopes: Permission[] = [
+    ['account', -1],
+    ['child_account', -1],
+    ['databases', -1],
+    ['domains', -1],
+    ['events', -1],
+    ['firewall', -1],
+    ['images', -1],
+    ['ips', -1],
+    ['linodes', -1],
+    ['lke', -1],
+    ['longview', -1],
+    ['nodebalancers', -1],
+    ['object_storage', -1],
+    ['stackscripts', -1],
+    ['volumes', -1],
+    ['vpc', 0],
+  ];
+
+  const allSelectedScopes: Permission[] = [
+    ['account', 1],
+    ['child_account', 0],
+    ['databases', 0],
+    ['domains', 0],
+    ['events', 0],
+    ['firewall', 0],
+    ['images', 0],
+    ['ips', 0],
+    ['linodes', 2],
+    ['lke', 0],
+    ['longview', 0],
+    ['nodebalancers', 0],
+    ['object_storage', 0],
+    ['stackscripts', 0],
+    ['volumes', 0],
+    ['vpc', 0],
+  ];
+
+  it('should return false if scopes are all set to a default of no selection', () => {
+    expect(hasAccessBeenSelectedForAllScopes(defaultScopes)).toBe(false);
+  });
+  it('should return false if at least one scope does not have a selection', () => {
+    expect(hasAccessBeenSelectedForAllScopes(missingSelectionScopes)).toBe(
+      false
+    );
+  });
+  it('should return true if all scopes have a valid selection', () => {
+    expect(hasAccessBeenSelectedForAllScopes(allSelectedScopes)).toBe(true);
   });
 });

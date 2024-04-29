@@ -1,7 +1,7 @@
 import { VPC } from '@linode/api-v4/lib';
 import { useMediaQuery } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { HashLink } from 'react-router-hash-link';
 
@@ -35,19 +35,19 @@ interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
 }
 
-export type Props = LinodeEntityDetailProps & {
+export interface Props extends LinodeEntityDetailProps {
   handlers: LinodeHandlers;
-};
+}
 
 export interface BodyProps {
   configInterfaceWithVPC?: Interface;
-  displayVPCSection: boolean;
   gbRAM: number;
   gbStorage: number;
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
   isVPCOnlyLinode: boolean;
   linodeId: number;
+  linodeIsInEdgeRegion: boolean;
   linodeLabel: string;
   numCPUs: number;
   numVolumes: number;
@@ -58,13 +58,13 @@ export interface BodyProps {
 export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const {
     configInterfaceWithVPC,
-    displayVPCSection,
     gbRAM,
     gbStorage,
     ipv4,
     ipv6,
     isVPCOnlyLinode,
     linodeId,
+    linodeIsInEdgeRegion,
     linodeLabel,
     numCPUs,
     numVolumes,
@@ -151,7 +151,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 { heading: 'SSH Access', text: sshLink(ipv4[0]) },
                 {
                   heading: 'LISH Console via SSH',
-                  text: lishLink(username, region, linodeLabel),
+                  text: linodeIsInEdgeRegion
+                    ? 'N/A'
+                    : lishLink(username, region, linodeLabel),
                 },
               ]}
               gridSize={{ lg: 7, xs: 12 }}
@@ -162,7 +164,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           </Grid>
         </Grid>
       </StyledBodyGrid>
-      {displayVPCSection && vpcLinodeIsAssignedTo && (
+      {vpcLinodeIsAssignedTo && (
         <Grid
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,

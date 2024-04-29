@@ -11,6 +11,7 @@ import { TableRow } from 'src/components/TableRow';
 import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import {
   getProgressOrDefault,
   linodeInTransition,
@@ -24,7 +25,6 @@ import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import { IPAddress } from '../IPAddress';
-import { LinodeActionMenu } from '../LinodeActionMenu';
 import { LinodeHandlers } from '../LinodesLanding';
 import { RegionIndicator } from '../RegionIndicator';
 import { getLinodeIconStatus, parseMaintenanceStartTime } from '../utils';
@@ -34,7 +34,9 @@ import {
   StyledMaintenanceTableCell,
 } from './LinodeRow.styles';
 
-type Props = LinodeWithMaintenance & { handlers: LinodeHandlers };
+interface Props extends LinodeWithMaintenance {
+  handlers: LinodeHandlers;
+}
 
 export const LinodeRow = (props: Props) => {
   const {

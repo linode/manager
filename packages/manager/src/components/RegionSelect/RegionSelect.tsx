@@ -1,14 +1,19 @@
+import { Typography } from '@mui/material';
 import * as React from 'react';
 
+import EdgeRegion from 'src/assets/icons/entityIcons/edge-region.svg';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
-import { useFlags } from 'src/hooks/useFlags';
-import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
+import { Link } from 'src/components/Link';
+import { TooltipIcon } from 'src/components/TooltipIcon';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 import { RegionOption } from './RegionOption';
 import {
   StyledAutocompleteContainer,
+  StyledEdgeBox,
   StyledFlagContainer,
+  sxEdgeIcon,
 } from './RegionSelect.styles';
 import { getRegionOptions, getSelectedRegionById } from './RegionSelect.utils';
 
@@ -21,29 +26,34 @@ import type {
  * A specific select for regions.
  *
  * The RegionSelect automatically filters regions based on capability using its `currentCapability` prop. For example, if
- * `currentCapability="VPCs"`, only regions that support VPCs will appear in the RegionSelect dropdown. There is no need to
- * prefilter regions when passing them to the RegionSelect. See the description of `currentCapability` prop for more information.
+ * `currentCapability="VPCs"`, only regions that support VPCs will appear in the RegionSelect dropdown. Edge regions are filtered based on the `regionFilter` prop.
+ * There is no need to pre-filter regions when passing them to the RegionSelect. See the description of `currentCapability` prop for more information.
+ *
+ * We do not display the selected check mark for single selects.
  */
 export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const {
     currentCapability,
     disabled,
     errorText,
+    handleDisabledRegion,
     handleSelection,
     helperText,
     isClearable,
     label,
+    regionFilter,
     regions,
     required,
     selectedId,
+    showEdgeIconHelperText,
+    tooltipText,
     width,
   } = props;
 
-  const flags = useFlags();
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,
-  } = useAccountAvailabilitiesQueryUnpaginated(flags.dcGetWell);
+  } = useAllAccountAvailabilitiesQuery();
 
   const regionFromSelectedId: RegionSelectOption | null =
     getSelectedRegionById({
@@ -69,23 +79,31 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
       // We need to reset the state when create types change
       setSelectedRegion(null);
     }
-  }, [selectedId]);
+  }, [selectedId, regions]);
 
   const options = React.useMemo(
     () =>
       getRegionOptions({
         accountAvailabilityData: accountAvailability,
         currentCapability,
+        handleDisabledRegion,
+        regionFilter,
         regions,
       }),
-    [accountAvailability, currentCapability, regions]
+    [
+      accountAvailability,
+      currentCapability,
+      handleDisabledRegion,
+      regions,
+      regionFilter,
+    ]
   );
 
   return (
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete
         getOptionDisabled={(option: RegionSelectOption) =>
-          Boolean(flags.dcGetWell) && Boolean(option.unavailable)
+          Boolean(option.disabledProps?.disabled)
         }
         isOptionEqualToValue={(
           option: RegionSelectOption,
@@ -100,18 +118,35 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
             handleRegionChange(null);
           }
         }}
-        renderOption={(props, option, { selected }) => {
+        renderOption={(props, option) => {
           return (
             <RegionOption
+              displayEdgeRegionIcon={
+                regionFilter !== 'core' && option.site_type === 'edge'
+              }
               key={option.value}
               option={option}
               props={props}
-              selected={selected}
             />
           );
         }}
+        sx={(theme) => ({
+          [theme.breakpoints.up('md')]: {
+            width: '416px',
+          },
+        })}
         textFieldProps={{
+          ...props.textFieldProps,
           InputProps: {
+            endAdornment: regionFilter !== 'core' &&
+              selectedRegion?.site_type === 'edge' && (
+                <TooltipIcon
+                  icon={<EdgeRegion />}
+                  status="other"
+                  sxTooltipIcon={sxEdgeIcon}
+                  text="This region is an edge region."
+                />
+              ),
             required,
             startAdornment: selectedRegion && (
               <StyledFlagContainer>
@@ -119,7 +154,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
               </StyledFlagContainer>
             ),
           },
-          tooltipText: helperText,
+          tooltipText,
         }}
         autoHighlight
         clearOnBlur
@@ -128,6 +163,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         disabled={disabled}
         errorText={errorText}
         groupBy={(option: RegionSelectOption) => option.data.region}
+        helperText={helperText}
         label={label ?? 'Region'}
         loading={accountAvailabilityLoading}
         loadingText="Loading regions..."
@@ -136,6 +172,22 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         placeholder="Select a Region"
         value={selectedRegion}
       />
+      {showEdgeIconHelperText && ( // @TODO Gecko Beta: Add docs link
+        <StyledEdgeBox>
+          <EdgeRegion />
+          <Typography
+            data-testid="region-select-edge-text"
+            sx={{ alignSelf: 'center', textWrap: 'nowrap' }}
+          >
+            {' '}
+            Indicates an edge region.{' '}
+            <Link aria-label="Learn more about Akamai edge regions" to="#">
+              Learn more
+            </Link>
+            .
+          </Typography>
+        </StyledEdgeBox>
+      )}
     </StyledAutocompleteContainer>
   );
 });

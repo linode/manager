@@ -3,7 +3,7 @@ import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useLoadBalancerServiceTargetDeleteMutation } from 'src/queries/aglb/serviceTargets';
+import { useLoadBalancerServiceTargetDeleteMutation } from 'src/queries/aclb/serviceTargets';
 
 interface Props {
   loadbalancerId: number;
@@ -19,14 +19,25 @@ export const DeleteServiceTargetDialog = (props: Props) => {
     error,
     isLoading,
     mutateAsync,
+    reset,
   } = useLoadBalancerServiceTargetDeleteMutation(
     loadbalancerId,
     serviceTarget?.id ?? -1
   );
 
-  const onDelete = async () => {
-    await mutateAsync();
+  const handleClose = () => {
+    // Clear the error when the dialog closes so that is does not persist
+    reset();
     onClose();
+  };
+
+  const onDelete = async () => {
+    try {
+      await mutateAsync();
+      handleClose();
+    } catch (error) {
+      // Swallow error
+    }
   };
 
   return (
@@ -40,12 +51,12 @@ export const DeleteServiceTargetDialog = (props: Props) => {
           }}
           secondaryButtonProps={{
             label: 'Cancel',
-            onClick: onClose,
+            onClick: handleClose,
           }}
         />
       }
       error={error?.[0]?.reason}
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       title={`Delete Service Target ${serviceTarget?.label}?`}
     >

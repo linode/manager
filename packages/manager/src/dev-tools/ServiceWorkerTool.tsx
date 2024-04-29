@@ -15,7 +15,9 @@ export const ServiceWorkerTool = () => {
     <>
       <span style={{ marginRight: 8 }}>
         <span style={{ marginRight: 8 }}>Mock Service Worker:</span>
-        {isMSWEnabled ? 'Enabled' : 'Disabled'}
+        <span style={{ color: isMSWEnabled ? '#aaff00' : 'white' }}>
+          {isMSWEnabled ? 'Enabled' : 'Disabled'}
+        </span>
       </span>
       <input
         checked={isMSWEnabled}

@@ -11,24 +11,26 @@ import {
   deleteVolume,
   detachVolume,
   getLinodeVolumes,
+  getVolumeTypes,
   getVolumes,
   resizeVolume,
   updateVolume,
 } from '@linode/api-v4';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import { Filter, Params } from '@linode/api-v4/src/types';
+import { Filter, Params, PriceType } from '@linode/api-v4/src/types';
 import {
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 
+import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
 
-import { updateInPaginatedStore } from './base';
-import { queryKey as PROFILE_QUERY_KEY } from './profile';
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
+import { accountQueries } from './account/queries';
+import { queryPresets, updateInPaginatedStore } from './base';
+import { profileQueries } from './profile';
 
 export const queryKey = 'volumes';
 
@@ -78,35 +80,41 @@ export const useLinodeVolumesQuery = (
     { enabled, keepPreviousData: true }
   );
 
+interface ResizeVolumePayloadWithId extends ResizeVolumePayload {
+  volumeId: number;
+}
+
 export const useResizeVolumeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<
-    Volume,
-    APIError[],
-    { volumeId: number } & ResizeVolumePayload
-  >(({ volumeId, ...data }) => resizeVolume(volumeId, data), {
-    onSuccess(volume) {
-      updateInPaginatedStore<Volume>(
-        [queryKey, 'paginated'],
-        volume.id,
-        volume,
-        queryClient
-      );
-    },
-  });
+  return useMutation<Volume, APIError[], ResizeVolumePayloadWithId>(
+    ({ volumeId, ...data }) => resizeVolume(volumeId, data),
+    {
+      onSuccess(volume) {
+        updateInPaginatedStore<Volume>(
+          [queryKey, 'paginated'],
+          volume.id,
+          volume,
+          queryClient
+        );
+      },
+    }
+  );
 };
+
+interface CloneVolumePayloadWithId extends CloneVolumePayload {
+  volumeId: number;
+}
 
 export const useCloneVolumeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<
-    Volume,
-    APIError[],
-    { volumeId: number } & CloneVolumePayload
-  >(({ volumeId, ...data }) => cloneVolume(volumeId, data), {
-    onSuccess() {
-      queryClient.invalidateQueries([queryKey]);
-    },
-  });
+  return useMutation<Volume, APIError[], CloneVolumePayloadWithId>(
+    ({ volumeId, ...data }) => cloneVolume(volumeId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey]);
+      },
+    }
+  );
 };
 
 export const useDeleteVolumeMutation = () => {
@@ -127,51 +135,57 @@ export const useCreateVolumeMutation = () => {
     onSuccess() {
       queryClient.invalidateQueries([queryKey]);
       // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
+      queryClient.invalidateQueries(profileQueries.grants.queryKey);
     },
   });
 };
+
+interface UpdateVolumePayloadWithId extends UpdateVolumeRequest {
+  volumeId: number;
+}
 
 export const useUpdateVolumeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<
-    Volume,
-    APIError[],
-    { volumeId: number } & UpdateVolumeRequest
-  >(({ volumeId, ...data }) => updateVolume(volumeId, data), {
-    onSuccess(volume) {
-      updateInPaginatedStore<Volume>(
-        [queryKey, 'paginated'],
-        volume.id,
-        volume,
-        queryClient
-      );
-      if (volume.linode_id) {
-        queryClient.invalidateQueries([queryKey, 'linode', volume.linode_id]);
-      }
-    },
-  });
+  return useMutation<Volume, APIError[], UpdateVolumePayloadWithId>(
+    ({ volumeId, ...data }) => updateVolume(volumeId, data),
+    {
+      onSuccess(volume) {
+        updateInPaginatedStore<Volume>(
+          [queryKey, 'paginated'],
+          volume.id,
+          volume,
+          queryClient
+        );
+        if (volume.linode_id) {
+          queryClient.invalidateQueries([queryKey, 'linode', volume.linode_id]);
+        }
+      },
+    }
+  );
 };
+
+interface AttachVolumePayloadWithId extends AttachVolumePayload {
+  volumeId: number;
+}
 
 export const useAttachVolumeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<
-    Volume,
-    APIError[],
-    { volumeId: number } & AttachVolumePayload
-  >(({ volumeId, ...data }) => attachVolume(volumeId, data), {
-    onSuccess(volume) {
-      updateInPaginatedStore<Volume>(
-        [queryKey, 'paginated'],
-        volume.id,
-        volume,
-        queryClient
-      );
-      if (volume.linode_id) {
-        queryClient.invalidateQueries([queryKey, 'linode', volume.linode_id]);
-      }
-    },
-  });
+  return useMutation<Volume, APIError[], AttachVolumePayloadWithId>(
+    ({ volumeId, ...data }) => attachVolume(volumeId, data),
+    {
+      onSuccess(volume) {
+        updateInPaginatedStore<Volume>(
+          [queryKey, 'paginated'],
+          volume.id,
+          volume,
+          queryClient
+        );
+        if (volume.linode_id) {
+          queryClient.invalidateQueries([queryKey, 'linode', volume.linode_id]);
+        }
+      },
+    }
+  );
 };
 
 export const useDetachVolumeMutation = () =>
@@ -183,6 +197,15 @@ export const volumeEventsHandler = ({
 }: EventHandlerData) => {
   if (['failed', 'finished', 'notification'].includes(event.status)) {
     queryClient.invalidateQueries([queryKey]);
+  }
+
+  if (
+    event.action === 'volume_migrate' &&
+    (event.status === 'finished' || event.status === 'failed')
+  ) {
+    // if a migration finishes, we want to re-request notifications so that the `volume_migration_imminent`
+    // notification goes away.
+    queryClient.invalidateQueries(accountQueries.notifications.queryKey);
   }
 
   if (event.action === 'volume_clone') {
@@ -201,3 +224,13 @@ const getAllVolumes = (passedParams: Params = {}, passedFilter: Filter = {}) =>
 
 export const getVolumesForLinode = (volumes: Volume[], linodeId: number) =>
   volumes.filter(({ linode_id }) => linode_id && linode_id === linodeId);
+
+const getAllVolumeTypes = () =>
+  getAll<PriceType>((params) => getVolumeTypes(params))().then(
+    (data) => data.data
+  );
+
+export const useVolumeTypesQuery = () =>
+  useQuery<PriceType[], APIError[]>([`${queryKey}-types`], getAllVolumeTypes, {
+    ...queryPresets.oneTimeFetch,
+  });

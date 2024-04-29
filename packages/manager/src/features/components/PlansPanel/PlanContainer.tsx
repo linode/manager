@@ -9,16 +9,12 @@ import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsAvailabilityQuery } from 'src/queries/regions';
-import { ExtendedType } from 'src/utilities/extendType';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 import { PlanSelection } from './PlanSelection';
-import { getIsPlanSoldOut } from './utils';
 
-import type { PlanSelectionType } from './types';
+import type { TypeWithAvailability } from './types';
 import type { Region } from '@linode/api-v4';
 
 const tableCells = [
@@ -38,14 +34,22 @@ const tableCells = [
   },
 ];
 
+type AllDisabledPlans = TypeWithAvailability & {
+  isDisabled512GbPlan: boolean;
+  isLimitedAvailabilityPlan: boolean;
+};
+
 export interface Props {
+  allDisabledPlans: AllDisabledPlans[];
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
+  disabledPlanTypesToolTipText?: string;
+  hasMajorityOfPlansDisabled: boolean;
   isCreate?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
-  plans: PlanSelectionType[];
+  plans: TypeWithAvailability[];
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionId?: Region['id'];
@@ -54,9 +58,12 @@ export interface Props {
 
 export const PlanContainer = (props: Props) => {
   const {
+    allDisabledPlans,
     currentPlanHeading,
-    disabled,
+    disabled: isWholePanelDisabled,
     disabledClasses,
+    disabledPlanTypesToolTipText,
+    hasMajorityOfPlansDisabled,
     isCreate,
     linodeID,
     onSelect,
@@ -67,69 +74,77 @@ export const PlanContainer = (props: Props) => {
     showTransfer,
   } = props;
   const location = useLocation();
-  const flags = useFlags();
-
-  const { data: regionAvailabilities } = useRegionsAvailabilityQuery(
-    selectedRegionId || '',
-    Boolean(flags.soldOutChips) && selectedRegionId !== undefined
-  );
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const shouldShowTransfer =
-    showTransfer && plans.some((plan: ExtendedType) => plan.transfer);
+    showTransfer && plans.some((plan: TypeWithAvailability) => plan.transfer);
 
   // Show the Network throughput column if, for any plan, the api returned data (currently Bare Metal does not)
   const shouldShowNetwork =
-    showTransfer && plans.some((plan: ExtendedType) => plan.network_out);
+    showTransfer &&
+    plans.some((plan: TypeWithAvailability) => plan.network_out);
 
-  // DC Dynamic price logic - DB creation and DB scale up flows are currently out of scope
+  // DC Dynamic price logic - DB creation and DB resize flows are currently out of scope
   const isDatabaseCreateFlow = location.pathname.includes('/databases/create');
-  const isDatabaseScaleUpFlow =
-    location.pathname.match(/\/databases\/.*\/(\d+\/scale-up)/)?.[0] ===
+  const isDatabaseResizeFlow =
+    location.pathname.match(/\/databases\/.*\/(\d+\/resize)/)?.[0] ===
     location.pathname;
   const shouldDisplayNoRegionSelectedMessage =
-    !selectedRegionId && !isDatabaseCreateFlow && !isDatabaseScaleUpFlow;
+    !selectedRegionId && !isDatabaseCreateFlow && !isDatabaseResizeFlow;
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
-      const isPlanSoldOut = getIsPlanSoldOut({
-        plan,
-        regionAvailabilities,
-        selectedRegionId,
-      });
+      const isPlanDisabled = allDisabledPlans.some(
+        (disabledPlan) => disabledPlan.id === plan.id
+      );
+      const currentDisabledPlan = allDisabledPlans.find(
+        (disabledPlan) => disabledPlan.id === plan.id
+      );
+      const currentDisabledPlanStatus = currentDisabledPlan && {
+        isDisabled512GbPlan: currentDisabledPlan.isDisabled512GbPlan,
+        isLimitedAvailabilityPlan:
+          currentDisabledPlan.isLimitedAvailabilityPlan,
+      };
 
       return (
         <PlanSelection
+          hideDisabledHelpIcons={
+            isWholePanelDisabled || hasMajorityOfPlansDisabled
+          }
           currentPlanHeading={currentPlanHeading}
-          disabled={disabled}
           disabledClasses={disabledClasses}
+          disabledStatus={currentDisabledPlanStatus}
+          disabledToolTip={disabledPlanTypesToolTipText}
           idx={id}
           isCreate={isCreate}
-          isPlanSoldOut={disabled ? false : isPlanSoldOut} // no need to add sold out chip if the whole panel is disabled (meaning that the plan isn't available for the selected region)
           key={id}
           linodeID={linodeID}
           onSelect={onSelect}
+          planIsDisabled={isPlanDisabled}
           selectedDiskSize={selectedDiskSize}
           selectedId={selectedId}
           selectedRegionId={selectedRegionId}
           showTransfer={showTransfer}
           type={plan}
+          wholePanelIsDisabled={isWholePanelDisabled}
         />
       );
     });
   }, [
+    allDisabledPlans,
+    disabledPlanTypesToolTipText,
+    hasMajorityOfPlansDisabled,
+    plans,
+    selectedRegionId,
+    isWholePanelDisabled,
     currentPlanHeading,
-    disabled,
     disabledClasses,
     isCreate,
     linodeID,
     onSelect,
-    plans,
     selectedDiskSize,
     selectedId,
-    selectedRegionId,
     showTransfer,
-    regionAvailabilities,
   ]);
 
   return (

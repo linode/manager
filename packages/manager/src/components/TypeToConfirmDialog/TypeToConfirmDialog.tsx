@@ -13,7 +13,12 @@ import {
 import { usePreferences } from 'src/queries/preferences';
 
 interface EntityInfo {
-  action?: 'cancellation' | 'deletion' | 'detachment' | 'restoration';
+  action?:
+    | 'cancellation'
+    | 'deletion'
+    | 'detachment'
+    | 'resizing'
+    | 'restoration';
   name?: string | undefined;
   primaryBtnText: string;
   subType?: 'CloseAccount' | 'Cluster' | 'ObjectStorage';
@@ -25,34 +30,72 @@ interface EntityInfo {
     | 'Linode'
     | 'Load Balancer'
     | 'NodeBalancer'
+    | 'Placement Group'
     | 'Subnet'
     | 'VPC'
     | 'Volume';
 }
 
 interface TypeToConfirmDialogProps {
+  /**
+   * Chidlren are rendered above the TypeToConfirm input
+   */
   children?: React.ReactNode;
+  /**
+   * Props to be allow disabling the input
+   */
+  disableTypeToConfirmInput?: boolean;
+  /**
+   * Props to be allow disabling the submit button
+   */
+  disableTypeToConfirmSubmit?: boolean;
+  /**
+   * The entity being confirmed
+   */
   entity: EntityInfo;
+  /**
+   * Error to be displayed in the dialog
+   */
   errors?: APIError[] | null | undefined;
+  /*
+   * The label for the dialog
+   */
   label: string;
+  /**
+   * The loading state of dialog
+   */
   loading: boolean;
+  /**
+   * The click handler for the primary button
+   */
   onClick: () => void;
+  /**
+   * Optional callback to be executed when the closing animation has completed
+   */
+  onExited?: () => void;
+  /**
+   * The open/closed state of the dialog
+   */
   open: boolean;
 }
 
 type CombinedProps = TypeToConfirmDialogProps &
   ConfirmationDialogProps &
-  Partial<TypeToConfirmProps>;
+  Partial<Omit<TypeToConfirmProps, 'disabled'>>;
 
 export const TypeToConfirmDialog = (props: CombinedProps) => {
   const {
     children,
+    disableTypeToConfirmInput,
+    disableTypeToConfirmSubmit,
     entity,
     errors,
+    inputProps,
     label,
     loading,
     onClick,
     onClose,
+    onExited,
     open,
     textFieldStyle,
     title,
@@ -62,8 +105,10 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
   const [confirmText, setConfirmText] = React.useState('');
 
   const { data: preferences } = usePreferences();
-  const disabled =
-    preferences?.type_to_confirm !== false && confirmText !== entity.name;
+  const isPrimaryButtonDisabled =
+    (preferences?.type_to_confirm !== false && confirmText !== entity.name) ||
+    disableTypeToConfirmSubmit;
+  const isTypeToConfirmInputDisabled = disableTypeToConfirmInput;
 
   React.useEffect(() => {
     if (open) {
@@ -80,7 +125,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     <ActionsPanel
       primaryButtonProps={{
         'data-testid': 'confirm',
-        disabled,
+        disabled: isPrimaryButtonDisabled,
         label: entity.primaryBtnText,
         loading,
         onClick,
@@ -99,6 +144,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
       actions={actions}
       error={errors ? errors[0].reason : undefined}
       onClose={onClose}
+      onExited={onExited}
       open={open}
       title={title}
     >
@@ -118,8 +164,10 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
           setConfirmText(input);
         }}
         data-testid={'dialog-confirm-text-input'}
+        disabled={isTypeToConfirmInputDisabled}
         expand
         hideInstructions={entity.subType === 'CloseAccount'}
+        inputProps={inputProps}
         label={label}
         placeholder={entity.subType === 'CloseAccount' ? 'Username' : ''}
         textFieldStyle={textFieldStyle}

@@ -20,12 +20,12 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
 
-import { queryKey as PROFILE_QUERY_KEY } from './profile';
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
+import { profileQueries } from './profile';
 
 export const queryKey = 'domains';
 
@@ -57,7 +57,7 @@ export const useCreateDomainMutation = () => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.setQueryData([queryKey, 'domain', domain.id], domain);
       // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries([PROFILE_QUERY_KEY, 'grants']);
+      queryClient.invalidateQueries(profileQueries.grants.queryKey);
     },
   });
 };
@@ -98,9 +98,13 @@ export const useDeleteDomainMutation = (id: number) => {
   });
 };
 
+interface UpdateDomainPayloadWithId extends UpdateDomainPayload {
+  id: number;
+}
+
 export const useUpdateDomainMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Domain, APIError[], { id: number } & UpdateDomainPayload>(
+  return useMutation<Domain, APIError[], UpdateDomainPayloadWithId>(
     (data) => {
       const { id, ...rest } = data;
       return updateDomain(id, rest);

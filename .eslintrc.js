@@ -1,5 +1,5 @@
 module.exports = {
   root: true,
   ignorePatterns: ["**/node_modules/", "**/build/"],
-  parser: "@babel/eslint-parser",
+  parser: "@typescript-eslint/parser",
 };

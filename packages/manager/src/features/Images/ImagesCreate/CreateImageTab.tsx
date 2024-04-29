@@ -21,6 +21,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useCreateImageMutation } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -99,6 +100,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const flags = useFlags();
+  const { data: regions } = useRegionsQuery();
 
   const { mutateAsync: createImage } = useCreateImageMutation();
 
@@ -236,6 +238,9 @@ export const CreateImageTab: React.FC<Props> = (props) => {
   const linodeError = hasErrorFor('linode_id');
   const diskError = hasErrorFor('disk_id');
 
+  const linodeIsNotInEdgeRegion = (linodeRegion: string) =>
+    regions?.find((region) => region.id === linodeRegion)?.site_type !== 'edge';
+
   return (
     <Paper className={classes.container}>
       {!canCreateImage ? (
@@ -251,7 +256,9 @@ export const CreateImageTab: React.FC<Props> = (props) => {
 
       <LinodeSelect
         optionsFilter={(linode) =>
-          availableLinodesToImagize?.includes(linode.id) ?? true
+          (linodeIsNotInEdgeRegion(linode.region) &&
+            availableLinodesToImagize?.includes(linode.id)) ??
+          true
         }
         disabled={!canCreateImage}
         errorText={linodeError}

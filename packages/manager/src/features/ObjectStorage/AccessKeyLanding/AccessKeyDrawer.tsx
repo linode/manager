@@ -4,9 +4,10 @@ import {
   ObjectStorageKey,
   ObjectStorageKeyRequest,
   Scope,
+  UpdateObjectStorageKeyRequest,
 } from '@linode/api-v4/lib/object-storage';
 import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
-import { Formik } from 'formik';
+import { Formik, FormikProps } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -16,11 +17,15 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useAccountSettings } from 'src/queries/accountSettings';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccountSettings } from 'src/queries/account/settings';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
@@ -33,7 +38,10 @@ export interface AccessKeyDrawerProps {
   // If the mode is 'editing', we should have an ObjectStorageKey to edit
   objectStorageKey?: ObjectStorageKey;
   onClose: () => void;
-  onSubmit: (values: ObjectStorageKeyRequest, formikProps: any) => void;
+  onSubmit: (
+    values: ObjectStorageKeyRequest | UpdateObjectStorageKeyRequest,
+    formikProps: FormikProps<ObjectStorageKeyRequest>
+  ) => void;
   open: boolean;
 }
 
@@ -78,17 +86,44 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     open,
   } = props;
 
+  const { data: accountSettings } = useAccountSettings();
+  const { account } = useAccountManagement();
+  const flags = useFlags();
+  const { data: regions } = useRegionsQuery();
+
+  const isObjMultiClusterEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
+
+  const regionsSupportingObjectStorage = regions?.filter((region) =>
+    region.capabilities.includes('Object Storage')
+  );
+
   const {
     data: objectStorageClusters,
     isLoading: areClustersLoading,
-  } = useObjectStorageClusters();
+  } = useObjectStorageClusters(!isObjMultiClusterEnabled);
 
+  /*
+   @TODO OBJ Multicluster:'region' will become required, and the
+   'cluster' field will be deprecated once the feature is fully rolled out in production.
+   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
+   remove 'cluster' and retain 'regions'.
+  */
   const {
     data: objectStorageBucketsResponse,
     error: bucketsError,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets(objectStorageClusters);
-  const { data: accountSettings } = useAccountSettings();
+  } = useObjectStorageBuckets({
+    clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
+    enabled: true,
+    isObjMultiClusterEnabled,
+    regions: isObjMultiClusterEnabled
+      ? regionsSupportingObjectStorage
+      : undefined,
+  });
 
   const buckets = objectStorageBucketsResponse?.buckets || [];
 
@@ -120,21 +155,36 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     label: initialLabelValue,
   };
 
-  const handleSubmit = (values: ObjectStorageKeyRequest, formikProps: any) => {
+  const handleSubmit = (
+    values: ObjectStorageKeyRequest,
+    formikProps: FormikProps<ObjectStorageKeyRequest>
+  ) => {
     // If the user hasn't toggled the Limited Access button,
     // don't include any bucket_access information in the payload.
 
     // If any/all values are 'none', don't include them in the response.
-    const access = values.bucket_access ?? [];
-    const payload = limitedAccessChecked
-      ? {
-          ...values,
-          bucket_access: access.filter(
-            (thisAccess) => thisAccess.permissions !== 'none'
-          ),
-        }
-      : { ...values, bucket_access: null };
+    let payload = {};
+    if (
+      mode === 'creating' &&
+      values?.bucket_access !== null &&
+      limitedAccessChecked
+    ) {
+      const access = values?.bucket_access ?? [];
+      payload = {
+        ...values,
+        bucket_access: access.filter(
+          (thisAccess) => thisAccess.permissions !== 'none'
+        ),
+      };
+    } else {
+      payload = { ...values, bucket_access: null };
+    }
 
+    if (mode === 'editing') {
+      payload = {
+        label: values.label,
+      };
+    }
     return onSubmit(payload, formikProps);
   };
 

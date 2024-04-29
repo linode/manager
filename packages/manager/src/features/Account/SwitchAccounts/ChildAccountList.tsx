@@ -1,5 +1,5 @@
 import React from 'react';
-import { useQueryClient } from 'react-query';
+import { Waypoint } from 'react-waypoint';
 
 import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
 import { Box } from 'src/components/Box';
@@ -9,44 +9,47 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
-import {
-  queryKey as accountQueryKey,
-  useChildAccounts,
-} from 'src/queries/account';
+import { useChildAccountsInfiniteQuery } from 'src/queries/account/account';
+
+import type { UserType } from '@linode/api-v4';
 
 interface ChildAccountListProps {
   currentTokenWithBearer: string;
-  isProxyUser: boolean;
   onClose: () => void;
   onSwitchAccount: (props: {
     currentTokenWithBearer: string;
     euuid: string;
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>;
-    handleClose: () => void;
-    isProxyUser: boolean;
+    onClose: () => void;
+    userType: UserType | undefined;
   }) => void;
+  userType: UserType | undefined;
 }
 
 export const ChildAccountList = React.memo(
   ({
     currentTokenWithBearer,
-    isProxyUser,
     onClose,
     onSwitchAccount,
+    userType,
   }: ChildAccountListProps) => {
     const {
-      data: childAccounts,
+      data,
+      fetchNextPage,
+      hasNextPage,
       isError,
+      isFetchingNextPage,
       isLoading,
       refetch: refetchChildAccounts,
-    } = useChildAccounts({
-      headers: isProxyUser
-        ? {
-            Authorization: currentTokenWithBearer,
-          }
-        : undefined,
+    } = useChildAccountsInfiniteQuery({
+      headers:
+        userType === 'proxy'
+          ? {
+              Authorization: currentTokenWithBearer,
+            }
+          : undefined,
     });
-    const queryClient = useQueryClient();
+    const childAccounts = data?.pages.flatMap((page) => page.data);
 
     if (isLoading) {
       return (
@@ -56,7 +59,7 @@ export const ChildAccountList = React.memo(
       );
     }
 
-    if (childAccounts?.results === 0) {
+    if (childAccounts?.length === 0) {
       return (
         <Notice variant="info">There are no indirect customer accounts.</Notice>
       );
@@ -71,18 +74,11 @@ export const ChildAccountList = React.memo(
             Try again or contact support if the issue persists.
           </Typography>
           <Button
-            onClick={() => {
-              queryClient.invalidateQueries([
-                accountQueryKey,
-                'childAccounts',
-                'paginated',
-              ]);
-              refetchChildAccounts();
-            }}
             sx={(theme) => ({
               marginTop: theme.spacing(2),
             })}
             buttonType="primary"
+            onClick={() => refetchChildAccounts()}
           >
             Try again
           </Button>
@@ -90,7 +86,7 @@ export const ChildAccountList = React.memo(
       );
     }
 
-    const renderChildAccounts = childAccounts?.data.map((childAccount, idx) => {
+    const renderChildAccounts = childAccounts?.map((childAccount, idx) => {
       const euuid = childAccount.euuid;
       return (
         <StyledLinkButton
@@ -99,8 +95,8 @@ export const ChildAccountList = React.memo(
               currentTokenWithBearer,
               euuid,
               event,
-              handleClose: onClose,
-              isProxyUser,
+              onClose,
+              userType,
             })
           }
           sx={(theme) => ({
@@ -116,6 +112,8 @@ export const ChildAccountList = React.memo(
     return (
       <Stack alignItems={'flex-start'} data-testid="child-account-list">
         {renderChildAccounts}
+        {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
+        {isFetchingNextPage && <CircleProgress mini />}
       </Stack>
     );
   }

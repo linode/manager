@@ -1,7 +1,9 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
 
-import { kubernetesClusterFactory } from 'src/factories';
+import { kubernetesClusterFactory, regionFactory } from 'src/factories';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { wrapWithTableBody, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { KubernetesClusterRow, Props } from './KubernetesClusterRow';
@@ -23,13 +25,23 @@ describe('ClusterRow component', () => {
     getByTestId('cluster-row');
   });
 
-  it('renders a TableRow with label, and region', () => {
-    const { getByText } = render(
+  it('renders a TableRow with label, and region', async () => {
+    server.use(
+      http.get('*/regions', () => {
+        const regions = regionFactory.buildList(1, {
+          id: 'us-central',
+          label: 'Fake Region, NC',
+        });
+        return HttpResponse.json(makeResourcePage(regions));
+      })
+    );
+
+    const { getByText, findByText } = render(
       wrapWithTableBody(<KubernetesClusterRow {...props} />)
     );
 
     getByText('cluster-0');
-    getByText('Dallas, TX');
+    await findByText('Fake Region, NC');
   });
 
   it('renders HA chip for highly available clusters and hides chip for non-ha clusters', () => {

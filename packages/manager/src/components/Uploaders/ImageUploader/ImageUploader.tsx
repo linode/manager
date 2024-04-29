@@ -1,8 +1,9 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { flushSync } from 'react-dom';
 import { FileRejection, useDropzone } from 'react-dropzone';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -25,7 +26,7 @@ import {
 import { uploadImageFile } from 'src/features/Images/requests';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
-import { queryKey, useUploadImageQuery } from 'src/queries/images';
+import { imageQueries, useUploadImageMutation } from 'src/queries/images';
 import { redirectToLogin } from 'src/session';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { sendImageUploadEvent } from 'src/utilities/analytics';
@@ -85,7 +86,7 @@ export const ImageUploader = React.memo((props: ImageUploaderProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const [uploadToURL, setUploadToURL] = React.useState<string>('');
   const queryClient = useQueryClient();
-  const { mutateAsync: uploadImage } = useUploadImageQuery({
+  const { mutateAsync: uploadImage } = useUploadImageMutation({
     cloud_init: isCloudInit ? isCloudInit : undefined,
     description: description ? description : undefined,
     label,
@@ -216,7 +217,11 @@ export const ImageUploader = React.memo((props: ImageUploaderProps) => {
           variant: 'success',
         });
 
-        dispatchAction(setPendingUpload(false));
+        // React force a render so that `pendingUpload` is false when navigating away
+        // from the upload page.
+        flushSync(() => {
+          dispatchAction(setPendingUpload(false));
+        });
 
         recordImageAnalytics('success', file);
 
@@ -229,7 +234,8 @@ export const ImageUploader = React.memo((props: ImageUploaderProps) => {
             redirectToLogin('/images');
           }, 3000);
         } else {
-          queryClient.invalidateQueries(`${queryKey}-list`);
+          queryClient.invalidateQueries(imageQueries.paginated._def);
+          queryClient.invalidateQueries(imageQueries.all._def);
           history.push('/images');
         }
       };

@@ -14,7 +14,7 @@ import { Community } from './Community';
 import { Help } from './Help';
 import { NotificationMenu } from './NotificationMenu/NotificationMenu';
 import SearchBar from './SearchBar/SearchBar';
-import { TopMenuIcon } from './TopMenuIcon';
+import { TopMenuTooltip } from './TopMenuTooltip';
 import { UserMenu } from './UserMenu';
 
 export interface TopMenuProps {
@@ -64,7 +64,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           variant="dense"
         >
           <Hidden mdDown>
-            <TopMenuIcon key={navHoverText} title={navHoverText}>
+            <TopMenuTooltip title={navHoverText}>
               <IconButton
                 aria-label="open menu"
                 color="inherit"
@@ -74,10 +74,10 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
               >
                 <MenuIcon />
               </IconButton>
-            </TopMenuIcon>
+            </TopMenuTooltip>
           </Hidden>
           <Hidden mdUp>
-            <TopMenuIcon key={navHoverText} title={navHoverText}>
+            <TopMenuTooltip title={navHoverText}>
               <IconButton
                 aria-label="open menu"
                 color="inherit"
@@ -86,7 +86,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
               >
                 <MenuIcon />
               </IconButton>
-            </TopMenuIcon>
+            </TopMenuTooltip>
           </Hidden>
           <AddNewMenu />
           <SearchBar />

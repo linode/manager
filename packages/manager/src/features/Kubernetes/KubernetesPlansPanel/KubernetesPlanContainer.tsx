@@ -9,13 +9,11 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { getIsPlanSoldOut } from 'src/features/components/PlansPanel/utils';
-import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsAvailabilityQuery } from 'src/queries/regions';
-import { ExtendedType } from 'src/utilities/extendType';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { KubernetesPlanSelection } from './KubernetesPlanSelection';
+
+import type { TypeWithAvailability } from 'src/features/components/PlansPanel/types';
 
 const tableCells = [
   { cellName: 'Plan', center: false, noWrap: false, testId: 'plan' },
@@ -27,69 +25,82 @@ const tableCells = [
   { cellName: 'Quantity', center: false, noWrap: false, testId: 'quantity' },
 ];
 
+type AllDisabledPlans = TypeWithAvailability & {
+  isDisabled512GbPlan: boolean;
+  isLimitedAvailabilityPlan: boolean;
+};
+
 export interface KubernetesPlanContainerProps {
-  disabled?: boolean;
+  allDisabledPlans: AllDisabledPlans[];
   getTypeCount: (planId: string) => number;
+  hasMajorityOfPlansDisabled: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
-  plans: ExtendedType[];
+  plans: TypeWithAvailability[];
   selectedId?: string;
   selectedRegionId?: string;
   updatePlanCount: (planId: string, newCount: number) => void;
+  wholePanelIsDisabled: boolean;
 }
 
 export const KubernetesPlanContainer = (
   props: KubernetesPlanContainerProps
 ) => {
   const {
-    disabled,
+    allDisabledPlans,
     getTypeCount,
+    hasMajorityOfPlansDisabled,
     onAdd,
     onSelect,
     plans,
     selectedId,
     selectedRegionId,
     updatePlanCount,
+    wholePanelIsDisabled,
   } = props;
-  const flags = useFlags();
 
-  const { data: regionAvailabilities } = useRegionsAvailabilityQuery(
-    selectedRegionId || '',
-    Boolean(flags.soldOutChips) && selectedRegionId !== undefined
-  );
   const shouldDisplayNoRegionSelectedMessage = !selectedRegionId;
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
-      const isPlanSoldOut = getIsPlanSoldOut({
-        plan,
-        regionAvailabilities,
-        selectedRegionId,
-      });
+      const isPlanDisabled = allDisabledPlans.some(
+        (disabledPlan) => disabledPlan.id === plan.id
+      );
+      const currentDisabledPlan = allDisabledPlans.find(
+        (disabledPlan) => disabledPlan.id === plan.id
+      );
+      const currentDisabledPlanStatus = currentDisabledPlan && {
+        isDisabled512GbPlan: currentDisabledPlan.isDisabled512GbPlan,
+        isLimitedAvailabilityPlan:
+          currentDisabledPlan.isLimitedAvailabilityPlan,
+      };
 
       return (
         <KubernetesPlanSelection
-          disabled={disabled}
+          disabledStatus={currentDisabledPlanStatus}
           getTypeCount={getTypeCount}
+          hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
           idx={id}
-          isPlanSoldOut={disabled ? false : isPlanSoldOut} // no need to add sold out chip if the whole panel is disabled (meaning that the plan isn't available for the selected region)
           key={id}
           onAdd={onAdd}
           onSelect={onSelect}
+          planIsDisabled={isPlanDisabled}
           selectedId={selectedId}
           selectedRegionId={selectedRegionId}
           type={plan}
           updatePlanCount={updatePlanCount}
+          wholePanelIsDisabled={wholePanelIsDisabled}
         />
       );
     });
   }, [
-    disabled,
+    allDisabledPlans,
+    wholePanelIsDisabled,
+    hasMajorityOfPlansDisabled,
     getTypeCount,
     onAdd,
     onSelect,
     plans,
-    regionAvailabilities,
     selectedId,
     selectedRegionId,
     updatePlanCount,

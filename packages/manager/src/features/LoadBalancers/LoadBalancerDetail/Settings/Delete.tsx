@@ -6,7 +6,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
-import { useLoadBalancerQuery } from 'src/queries/aglb/loadbalancers';
+import { useLoadBalancerQuery } from 'src/queries/aclb/loadbalancers';
 
 import { DeleteLoadBalancerDialog } from './LoadBalancerDeleteDialog';
 

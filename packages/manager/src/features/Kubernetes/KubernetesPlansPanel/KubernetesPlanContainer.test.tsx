@@ -9,14 +9,28 @@ import {
   KubernetesPlanContainerProps,
 } from './KubernetesPlanContainer';
 
-const plans = extendedTypeFactory.buildList(2);
+import type { TypeWithAvailability } from 'src/features/components/PlansPanel/types';
+
+const plans: TypeWithAvailability[] = [
+  {
+    ...extendedTypeFactory.build(),
+    isLimitedAvailabilityPlan: false,
+  },
+  {
+    ...extendedTypeFactory.build(),
+    isLimitedAvailabilityPlan: true,
+  },
+];
 
 const props: KubernetesPlanContainerProps = {
+  allDisabledPlans: [],
   getTypeCount: vi.fn(),
+  hasMajorityOfPlansDisabled: false,
   onSelect: vi.fn(),
   plans,
   selectedRegionId: undefined,
   updatePlanCount: vi.fn(),
+  wholePanelIsDisabled: false,
 };
 
 beforeAll(() => mockMatchMedia());

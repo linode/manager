@@ -41,7 +41,9 @@ export type CloneLandingAction =
   | { type: 'clearAll' }
   | { type: 'setSubmitting'; value: boolean };
 
-export type ExtendedConfig = Config & { associatedDisks: Disk[] };
+export interface ExtendedConfig extends Config {
+  associatedDisks: Disk[];
+}
 /**
  * REDUCER
  *
@@ -304,7 +306,7 @@ export const getEstimatedCloneTime = (
     minutes: estimatedTimeInMinutes,
     seconds: estimatedTimeInMinutes > 0 ? 1 : 0, // in case less than 1 min
   });
-  let humanizedEstimate = then.toRelative(now.toObject());
+  let humanizedEstimate = then.toRelative({ base: now });
   const prefixHumanized = 'in ';
   if (humanizedEstimate?.startsWith(prefixHumanized)) {
     humanizedEstimate = humanizedEstimate?.substring(prefixHumanized.length);
