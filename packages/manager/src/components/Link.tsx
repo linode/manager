@@ -1,5 +1,4 @@
 import { sanitizeUrl } from '@braintree/sanitize-url';
-import { omit } from 'lodash';
 import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -10,6 +9,7 @@ import {
   flattenChildrenIntoAriaLabel,
   opensInNewTab,
 } from 'src/utilities/link';
+import { omitProps } from 'src/utilities/omittedProps';
 
 import type { LinkProps as _LinkProps } from 'react-router-dom';
 
@@ -69,78 +69,82 @@ export interface LinkProps extends _LinkProps {
  * - External links provide by default "noopener noreferrer" attributes to prevent security vulnerabilities.
  * - ExternalLink component provides by default "aria-label" attributes to improve accessibility.
  */
-export const Link = (props: LinkProps) => {
-  const {
-    accessibleAriaLabel,
-    children,
-    className,
-    external,
-    forceCopyColor,
-    hideIcon,
-    onClick,
-    to,
-  } = props;
-  const { classes, cx } = useStyles();
-  const sanitizedUrl = () => sanitizeUrl(to);
-  const shouldOpenInNewTab = opensInNewTab(sanitizedUrl());
-  const childrenAsAriaLabel = flattenChildrenIntoAriaLabel(children);
-  const externalNotice = '- link opens in a new tab';
-  const ariaLabel = accessibleAriaLabel
-    ? `${accessibleAriaLabel} ${shouldOpenInNewTab ? externalNotice : ''}`
-    : `${childrenAsAriaLabel} ${shouldOpenInNewTab ? externalNotice : ''}`;
+export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
+  (props, ref) => {
+    const {
+      accessibleAriaLabel,
+      children,
+      className,
+      external,
+      forceCopyColor,
+      hideIcon,
+      onClick,
+      to,
+    } = props;
+    const { classes, cx } = useStyles();
+    const sanitizedUrl = () => sanitizeUrl(to);
+    const shouldOpenInNewTab = opensInNewTab(sanitizedUrl());
+    const childrenAsAriaLabel = flattenChildrenIntoAriaLabel(children);
+    const externalNotice = '- link opens in a new tab';
+    const ariaLabel = accessibleAriaLabel
+      ? `${accessibleAriaLabel} ${shouldOpenInNewTab ? externalNotice : ''}`
+      : `${childrenAsAriaLabel} ${shouldOpenInNewTab ? externalNotice : ''}`;
 
-  if (childrenContainsNoText(children) && !accessibleAriaLabel) {
-    // eslint-disable-next-line no-console
-    console.error(
-      'Link component must have text content to be accessible to screen readers. Please provide an accessibleAriaLabel prop or text content.'
+    if (childrenContainsNoText(children) && !accessibleAriaLabel) {
+      // eslint-disable-next-line no-console
+      console.error(
+        'Link component must have text content to be accessible to screen readers. Please provide an accessibleAriaLabel prop or text content.'
+      );
+    }
+
+    const routerLinkProps = omitProps(props, [
+      'accessibleAriaLabel',
+      'external',
+      'forceCopyColor',
+    ]);
+
+    return shouldOpenInNewTab ? (
+      <a
+        className={cx(
+          classes.root,
+          {
+            [classes.forceCopyColor]: forceCopyColor,
+          },
+          className
+        )}
+        aria-label={ariaLabel}
+        data-testid={external ? 'external-site-link' : 'external-link'}
+        href={sanitizedUrl()}
+        onClick={onClick}
+        ref={ref}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        {children}
+        {external && !hideIcon && (
+          <span
+            className={cx(classes.iconContainer, {
+              [classes.forceCopyColor]: forceCopyColor,
+            })}
+          >
+            <ExternalLinkIcon />
+          </span>
+        )}
+      </a>
+    ) : (
+      <RouterLink
+        aria-label={ariaLabel}
+        data-testid="internal-link"
+        {...routerLinkProps}
+        className={cx(
+          classes.root,
+          {
+            [classes.forceCopyColor]: forceCopyColor,
+          },
+          className
+        )}
+        ref={ref}
+      />
     );
   }
-
-  const routerLinkProps = omit(props, [
-    'accessibleAriaLabel',
-    'external',
-    'forceCopyColor',
-  ]);
-
-  return shouldOpenInNewTab ? (
-    <a
-      className={cx(
-        classes.root,
-        {
-          [classes.forceCopyColor]: forceCopyColor,
-        },
-        className
-      )}
-      aria-label={ariaLabel}
-      data-testid={external ? 'external-site-link' : 'external-link'}
-      href={sanitizedUrl()}
-      onClick={onClick}
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      {children}
-      {external && !hideIcon && (
-        <span
-          className={cx(classes.iconContainer, {
-            [classes.forceCopyColor]: forceCopyColor,
-          })}
-        >
-          <ExternalLinkIcon />
-        </span>
-      )}
-    </a>
-  ) : (
-    <RouterLink
-      aria-label={ariaLabel}
-      data-testid="internal-link"
-      {...routerLinkProps}
-      className={cx(
-        classes.root,
-        {
-          [classes.forceCopyColor]: forceCopyColor,
-        },
-        className
-      )}
-    />
-  );
-};
+);

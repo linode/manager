@@ -4,8 +4,8 @@ import { appTokenFactory } from 'src/factories';
 import { profileFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
 import { basePerms } from './utils';
+import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
 
 import type { UserType } from '@linode/api-v4';
 
@@ -63,7 +63,7 @@ describe('View API Token Drawer', () => {
     }
   });
 
-  it('should show all permissions as none with no scopes', () => {
+  it('should show all permissions as No Access with no scopes', () => {
     // We want to show all perms for this test, even perms specific to Parent/Child accounts.
     queryMocks.useProfile.mockReturnValue({
       data: profileFactory.build({ user_type: 'parent' }),
@@ -81,7 +81,7 @@ describe('View API Token Drawer', () => {
     }
   });
 
-  it('only account has read/write, all others are none', () => {
+  it('only account has read/write, all others are no access', () => {
     // We want to show all perms for this test, even perms specific to Parent/Child accounts.
     queryMocks.useProfile.mockReturnValue({
       data: profileFactory.build({ user_type: 'parent' }),

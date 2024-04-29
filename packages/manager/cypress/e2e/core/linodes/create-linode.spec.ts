@@ -80,6 +80,10 @@ describe('create linode', () => {
 
   /*
    * Region select test.
+   *
+   * TODO: Cypress
+   * Move this to cypress component testing once the setup is complete - see https://github.com/linode/manager/pull/10134
+   *
    * - Confirms that region select dropdown is visible and interactive.
    * - Confirms that region select dropdown is populated with expected regions.
    * - Confirms that region select dropdown is sorted alphabetically by region, with North America first.

@@ -22,6 +22,10 @@ interface Props {
    */
   filter?: Filter;
   /**
+   * Called when the field is blurred
+   */
+  onBlur?: () => void;
+  /**
    * Is called when a VLAN is selected
    */
   onChange?: (label: null | string) => void;
@@ -42,7 +46,7 @@ interface Props {
  * - Allows VLAN creation
  */
 export const VLANSelect = (props: Props) => {
-  const { disabled, errorText, filter, onChange, sx, value } = props;
+  const { disabled, errorText, filter, onBlur, onChange, sx, value } = props;
 
   const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = useState<string>('');
@@ -62,7 +66,7 @@ export const VLANSelect = (props: Props) => {
 
   const vlans = data?.pages.flatMap((page) => page.data) ?? [];
 
-  const newVlanPlacehodler = {
+  const newVlanPlaceholder = {
     cidr_block: '',
     created: '',
     id: 0,
@@ -74,7 +78,7 @@ export const VLANSelect = (props: Props) => {
   const hasVLANWithExactLabel = vlans.some((vlan) => vlan.label === inputValue);
 
   if (!isFetching && inputValue && !hasVLANWithExactLabel) {
-    vlans.push(newVlanPlacehodler);
+    vlans.push(newVlanPlaceholder);
   }
 
   const selectedVLAN = vlans?.find((option) => option.label === value) ?? null;
@@ -94,7 +98,7 @@ export const VLANSelect = (props: Props) => {
         },
       }}
       getOptionLabel={(option) =>
-        option === newVlanPlacehodler ? `Create "${inputValue}"` : option.label
+        option === newVlanPlaceholder ? `Create "${inputValue}"` : option.label
       }
       isOptionEqualToValue={(option1, options2) =>
         option1.label === options2.label
@@ -103,7 +107,7 @@ export const VLANSelect = (props: Props) => {
         if (onChange) {
           onChange(value?.label ?? null);
         }
-        if (value !== newVlanPlacehodler) {
+        if (value !== newVlanPlaceholder) {
           setInputValue('');
         }
       }}
@@ -124,6 +128,7 @@ export const VLANSelect = (props: Props) => {
       label="VLAN"
       loading={isFetching}
       noOptionsText="You have no VLANs in this region. Type to create one."
+      onBlur={onBlur}
       open={open}
       options={vlans}
       placeholder="Create or select a VLAN"

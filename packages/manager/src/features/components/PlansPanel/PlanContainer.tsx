@@ -14,7 +14,7 @@ import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 import { PlanSelection } from './PlanSelection';
 
-import type { PlanSelectionType, TypeWithAvailability } from './types';
+import type { TypeWithAvailability } from './types';
 import type { Region } from '@linode/api-v4';
 
 const tableCells = [
@@ -34,13 +34,18 @@ const tableCells = [
   },
 ];
 
+type AllDisabledPlans = TypeWithAvailability & {
+  isDisabled512GbPlan: boolean;
+  isLimitedAvailabilityPlan: boolean;
+};
+
 export interface Props {
+  allDisabledPlans: AllDisabledPlans[];
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
-  hideDisabledHelpIcons?: boolean;
-  disabledPlanTypes?: PlanSelectionType[];
   disabledPlanTypesToolTipText?: string;
+  hasMajorityOfPlansDisabled: boolean;
   isCreate?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
@@ -53,12 +58,12 @@ export interface Props {
 
 export const PlanContainer = (props: Props) => {
   const {
+    allDisabledPlans,
     currentPlanHeading,
-    disabled,
+    disabled: isWholePanelDisabled,
     disabledClasses,
-    hideDisabledHelpIcons,
-    disabledPlanTypes,
     disabledPlanTypesToolTipText,
+    hasMajorityOfPlansDisabled,
     isCreate,
     linodeID,
     onSelect,
@@ -89,40 +94,51 @@ export const PlanContainer = (props: Props) => {
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
-      const planIsDisabled =
-        disabledPlanTypes?.find((element) => element.id === plan.id) !==
-        undefined;
+      const isPlanDisabled = allDisabledPlans.some(
+        (disabledPlan) => disabledPlan.id === plan.id
+      );
+      const currentDisabledPlan = allDisabledPlans.find(
+        (disabledPlan) => disabledPlan.id === plan.id
+      );
+      const currentDisabledPlanStatus = currentDisabledPlan && {
+        isDisabled512GbPlan: currentDisabledPlan.isDisabled512GbPlan,
+        isLimitedAvailabilityPlan:
+          currentDisabledPlan.isLimitedAvailabilityPlan,
+      };
+
       return (
         <PlanSelection
-          isLimitedAvailabilityPlan={
-            disabled ? false : plan.isLimitedAvailabilityPlan
-          } // No need for tooltip due to all plans being unavailable in region
+          hideDisabledHelpIcons={
+            isWholePanelDisabled || hasMajorityOfPlansDisabled
+          }
           currentPlanHeading={currentPlanHeading}
-          disabled={disabled || planIsDisabled}
           disabledClasses={disabledClasses}
-          hideDisabledHelpIcons={hideDisabledHelpIcons}
+          disabledStatus={currentDisabledPlanStatus}
           disabledToolTip={disabledPlanTypesToolTipText}
           idx={id}
           isCreate={isCreate}
           key={id}
           linodeID={linodeID}
           onSelect={onSelect}
-          planIsDisabled={planIsDisabled}
+          planIsDisabled={isPlanDisabled}
           selectedDiskSize={selectedDiskSize}
           selectedId={selectedId}
           selectedRegionId={selectedRegionId}
           showTransfer={showTransfer}
           type={plan}
+          wholePanelIsDisabled={isWholePanelDisabled}
         />
       );
     });
   }, [
+    allDisabledPlans,
+    disabledPlanTypesToolTipText,
+    hasMajorityOfPlansDisabled,
     plans,
     selectedRegionId,
-    disabled,
+    isWholePanelDisabled,
     currentPlanHeading,
     disabledClasses,
-    hideDisabledHelpIcons,
     isCreate,
     linodeID,
     onSelect,

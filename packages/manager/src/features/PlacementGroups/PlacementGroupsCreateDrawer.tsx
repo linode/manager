@@ -2,6 +2,7 @@ import { createPlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
@@ -11,9 +12,13 @@ import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
-import { useCreatePlacementGroup } from 'src/queries/placementGroups';
+import {
+  useAllPlacementGroupsQuery,
+  useCreatePlacementGroup,
+} from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -30,7 +35,6 @@ export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps
 ) => {
   const {
-    allPlacementGroups,
     disabledPlacementGroupCreateButton,
     onClose,
     onPlacementGroupCreate,
@@ -38,37 +42,24 @@ export const PlacementGroupsCreateDrawer = (
     selectedRegionId,
   } = props;
   const { data: regions } = useRegionsQuery();
+  const { data: allPlacementGroups } = useAllPlacementGroupsQuery();
   const { error, mutateAsync } = useCreatePlacementGroup();
   const { enqueueSnackbar } = useSnackbar();
   const {
     hasFormBeenSubmitted,
     setHasFormBeenSubmitted,
   } = useFormValidateOnChange();
-  const [
-    hasRegionReachedPGCapacity,
-    setHasRegionReachedPGCapacity,
-  ] = React.useState<boolean>(false);
 
-  const selectedRegionFromProps = regions?.find(
-    (r) => r.id === selectedRegionId
-  );
+  const location = useLocation();
+  const displayRegionHeaderText = location.pathname.includes('/linodes/create');
 
   const handleRegionSelect = (region: Region['id']) => {
-    const selectedRegion = regions?.find((r) => r.id === region);
-
     setFieldValue('region', region);
-    setHasRegionReachedPGCapacity(
-      hasRegionReachedPlacementGroupCapacity({
-        allPlacementGroups,
-        region: selectedRegion,
-      })
-    );
   };
 
   const handleResetForm = () => {
     resetForm();
     setHasFormBeenSubmitted(false);
-    setHasRegionReachedPGCapacity(false);
   };
 
   const handleDrawerClose = () => {
@@ -127,6 +118,13 @@ export const PlacementGroupsCreateDrawer = (
 
   const generalError = error?.find((e) => !e.field)?.reason;
 
+  const selectedRegion = React.useMemo(
+    () => regions?.find((region) => region.id == values.region),
+    [regions, values.region]
+  );
+
+  const pgRegionLimitHelperText = `The maximum number of placement groups in this region is: ${selectedRegion?.placement_group_limits?.maximum_pgs_per_customer}`;
+
   return (
     <Drawer
       onClose={handleDrawerClose}
@@ -146,11 +144,11 @@ export const PlacementGroupsCreateDrawer = (
       <form onSubmit={handleSubmit}>
         <Stack spacing={1}>
           {generalError && <Notice text={generalError} variant="error" />}
-          {selectedRegionFromProps && (
+          {selectedRegion && displayRegionHeaderText && (
             <DescriptionList
               items={[
                 {
-                  description: `${selectedRegionFromProps.label} (${selectedRegionFromProps.id})`,
+                  description: `${selectedRegion.label} (${selectedRegion.id})`,
                   title: 'Region',
                 },
               ]}
@@ -176,18 +174,40 @@ export const PlacementGroupsCreateDrawer = (
               disabled={
                 Boolean(selectedRegionId) || disabledPlacementGroupCreateButton
               }
-              errorText={
-                hasRegionReachedPGCapacity
-                  ? 'This region has reached capacity'
-                  : errors.region
-              }
+              handleDisabledRegion={(region) => {
+                const isRegionAtCapacity = hasRegionReachedPlacementGroupCapacity(
+                  {
+                    allPlacementGroups,
+                    region,
+                  }
+                );
+
+                return {
+                  disabled: isRegionAtCapacity,
+                  reason: (
+                    <>
+                      <Typography>
+                        You’ve reached the limit of placement groups you can
+                        create in this region.
+                      </Typography>
+                      <Typography mt={2}>
+                        The maximum number of placement groups in this region
+                        is:{' '}
+                        {region.placement_group_limits.maximum_pgs_per_customer}
+                      </Typography>
+                    </>
+                  ),
+                  tooltipWidth: 300,
+                };
+              }}
               handleSelection={(selection) => {
                 handleRegionSelect(selection);
               }}
               currentCapability="Placement Group"
-              helperText="Only regions supporting Placement Groups are listed."
+              helperText={values.region && pgRegionLimitHelperText}
               regions={regions ?? []}
               selectedId={selectedRegionId ?? values.region}
+              tooltipText="Only regions supporting Placement Groups are listed."
             />
           )}
           <PlacementGroupsAffinityTypeSelect
@@ -210,7 +230,8 @@ export const PlacementGroupsCreateDrawer = (
               'data-testid': 'submit',
               disabled:
                 isSubmitting ||
-                hasRegionReachedPGCapacity ||
+                !values.region ||
+                !values.label ||
                 disabledPlacementGroupCreateButton,
               label: 'Create Placement Group',
               loading: isSubmitting,

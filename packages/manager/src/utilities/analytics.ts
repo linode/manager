@@ -52,6 +52,30 @@ export const sendEvent = (eventPayload: AnalyticsEvent): void => {
   }
 };
 
+/**
+ * A Promise that will resolve once Adobe Analytics loads.
+ *
+ * @throws if Adobe does not load after 5 seconds
+ */
+export const waitForAdobeAnalyticsToBeLoaded = () =>
+  new Promise<void>((resolve, reject) => {
+    let attempts = 0;
+    const interval = setInterval(() => {
+      if (window._satellite) {
+        resolve();
+        clearInterval(interval);
+        return;
+      }
+
+      attempts++;
+
+      if (attempts >= 5) {
+        reject('Adobe Analytics did not load after 5 seconds');
+        clearInterval(interval);
+      }
+    }, 1000);
+  });
+
 // LinodeActionMenu.tsx
 export const sendLinodeActionEvent = (): void => {
   sendEvent({
@@ -496,5 +520,23 @@ export const sendUpdateLinodeLabelEvent = (
     action: 'Click:button',
     category: 'Linode Label',
     label: `Update linode label from ${label}`,
+  });
+};
+
+// GravatarByEmail.tsx
+export const sendHasGravatarEvent = (hasGravatar: boolean) => {
+  sendEvent({
+    action: 'Load',
+    category: 'Gravatar',
+    label: hasGravatar ? 'Has Gravatar' : 'Does not have Gravatar',
+  });
+};
+
+// DisplaySettings.tsx
+export const sendManageGravatarEvent = () => {
+  sendEvent({
+    action: 'Click:link',
+    category: 'Gravatar',
+    label: 'Manage photo',
   });
 };

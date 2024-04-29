@@ -96,6 +96,7 @@ import {
   supportTicketFactory,
   tagFactory,
   volumeFactory,
+  volumeTypeFactory,
   vpcFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
@@ -1161,6 +1162,10 @@ export const handlers = [
     ];
     const volumes = statuses.map((status) => volumeFactory.build({ status }));
     return HttpResponse.json(makeResourcePage(volumes));
+  }),
+  http.get('*/volumes/types', () => {
+    const volumeTypes = volumeTypeFactory.buildList(1);
+    return HttpResponse.json(makeResourcePage(volumeTypes));
   }),
   http.post('*/volumes', () => {
     const volume = volumeFactory.build();

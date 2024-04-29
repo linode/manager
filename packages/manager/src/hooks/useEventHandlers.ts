@@ -15,6 +15,7 @@ import { volumeEventsHandler } from 'src/queries/volumes';
 
 import type { Event } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
+import { stackScriptEventHandler } from 'src/queries/stackscripts';
 
 export interface EventHandlerData {
   event: Event;
@@ -75,6 +76,10 @@ export const eventHandlers: {
   {
     filter: (event) => event.action.startsWith('disk'),
     handler: diskEventHandler,
+  },
+  {
+    filter: (event) => event.action.startsWith('stackscript'),
+    handler: stackScriptEventHandler,
   },
 ];
 

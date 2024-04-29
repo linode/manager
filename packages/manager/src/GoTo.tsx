@@ -7,6 +7,7 @@ import { makeStyles } from 'tss-react/mui';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 
 import { useIsACLBEnabled } from './features/LoadBalancers/utils';
+import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useAccountManagement } from './hooks/useAccountManagement';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
 
@@ -60,6 +61,7 @@ export const GoTo = React.memo(() => {
   const { _hasAccountAccess, _isManagedAccount } = useAccountManagement();
 
   const { isACLBEnabled } = useIsACLBEnabled();
+  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
 
   const onClose = () => {
@@ -114,6 +116,11 @@ export const GoTo = React.memo(() => {
         href: '/images',
       },
       {
+        display: 'Placement Groups',
+        hide: !isPlacementGroupsEnabled,
+        href: '/placement-groups',
+      },
+      {
         display: 'Domains',
         href: '/domains',
       },
@@ -149,7 +156,12 @@ export const GoTo = React.memo(() => {
         href: '/profile/display',
       },
     ],
-    [_hasAccountAccess, _isManagedAccount, isACLBEnabled]
+    [
+      _hasAccountAccess,
+      _isManagedAccount,
+      isACLBEnabled,
+      isPlacementGroupsEnabled,
+    ]
   );
 
   const options: Item[] = React.useMemo(

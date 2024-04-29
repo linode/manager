@@ -12,6 +12,10 @@ import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceTogg
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import {
+  WithFeatureFlagProps,
+  withFeatureFlags,
+} from 'src/containers/flags.container';
+import {
   WithProfileProps,
   withProfile,
 } from 'src/containers/profile.container';
@@ -87,12 +91,12 @@ export interface LinodesLandingProps {
   someLinodesHaveScheduledMaintenance: boolean;
 }
 
-interface ListLinodesProps
-  extends LinodesLandingProps,
-    RouteProps,
-    WithProfileProps {}
+type CombinedProps = LinodesLandingProps &
+  RouteProps &
+  WithFeatureFlagProps &
+  WithProfileProps;
 
-class ListLinodes extends React.Component<ListLinodesProps, State> {
+class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
       grants,
@@ -447,9 +451,10 @@ const sendGroupByAnalytic = (value: boolean) => {
   sendGroupByTagEnabledEvent(eventCategory, value);
 };
 
-export const enhanced = compose<ListLinodesProps, LinodesLandingProps>(
+export const enhanced = compose<CombinedProps, LinodesLandingProps>(
   withRouter,
-  withProfile
+  withProfile,
+  withFeatureFlags
 );
 
 export default enhanced(ListLinodes);

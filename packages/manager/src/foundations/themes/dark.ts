@@ -357,7 +357,7 @@ export const darkTheme: ThemeOptions = {
         focused: {},
         input: {
           '&.Mui-disabled': {
-            '-webkit-text-fill-color': 'unset !important',
+            WebkitTextFillColor: 'unset !important',
             borderColor: '#606469',
             color: '#ccc !important',
             opacity: 0.5,

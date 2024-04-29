@@ -1,5 +1,6 @@
-import { isNumber } from 'lodash';
 import * as React from 'react';
+
+import { isNumber } from 'src/utilities/isNumber';
 
 interface CurrencyFormatterProps {
   /**

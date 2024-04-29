@@ -7,7 +7,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import cloneDeep from 'lodash/cloneDeep';
+import cloneDeep from 'lodash.clonedeep';
 import * as React from 'react';
 import { MapDispatchToProps, connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -474,7 +474,7 @@ export class LinodeCreate extends React.PureComponent<
       (imageIsCloudInitCompatible || linodeIsCloudInitCompatible);
 
     const isEdgeRegionSelected = Boolean(
-      flags.gecko &&
+      flags.gecko2?.enabled &&
         getIsEdgeRegion(regionsData, this.props.selectedRegionID ?? '')
     );
 
@@ -861,10 +861,7 @@ export class LinodeCreate extends React.PureComponent<
       image: this.props.selectedImageID,
       label: this.props.label,
       placement_group:
-        this.props.flags.placementGroups?.enabled &&
-        placement_group_payload.id !== -1
-          ? placement_group_payload
-          : undefined,
+        placement_group_payload.id !== -1 ? placement_group_payload : undefined,
       private_ip: this.props.privateIPEnabled,
       region: this.props.selectedRegionID ?? '',
       root_pass: this.props.password,

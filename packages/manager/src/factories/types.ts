@@ -137,3 +137,25 @@ export const nodeBalancerTypeFactory = Factory.Sync.makeFactory<PriceType>({
   ],
   transfer: 0,
 });
+
+export const volumeTypeFactory = Factory.Sync.makeFactory<PriceType>({
+  id: 'volume',
+  label: 'Volume',
+  price: {
+    hourly: 0.00015,
+    monthly: 0.1,
+  },
+  region_prices: [
+    {
+      hourly: 0.00018,
+      id: 'id-cgk',
+      monthly: 0.12,
+    },
+    {
+      hourly: 0.00021,
+      id: 'br-gru',
+      monthly: 0.14,
+    },
+  ],
+  transfer: 0,
+});

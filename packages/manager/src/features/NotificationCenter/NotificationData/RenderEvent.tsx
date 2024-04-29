@@ -35,7 +35,7 @@ export const RenderEvent = React.memo((props: RenderEventProps) => {
     <div className={unseenEventClass}>
       <HighlightedMarkdown
         sanitizeOptions={{
-          allowedTags: getAllowedHTMLTags('strict'),
+          ALLOWED_TAGS: getAllowedHTMLTags('strict'),
           disallowedTagsMode: 'discard',
         }}
         textOrMarkdown={message}

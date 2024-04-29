@@ -42,7 +42,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
   '.removeDisabledStyles': {
     '& .MuiInput-input': {
-      '-webkit-text-fill-color': 'unset !important',
+      WebkitTextFillColor: 'unset !important',
       borderColor: theme.name === 'light' ? '#ccc' : '#222',
       color:
         theme.name === 'light'
