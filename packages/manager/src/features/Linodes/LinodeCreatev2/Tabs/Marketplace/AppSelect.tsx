@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import React, { useState } from 'react';
+import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -24,8 +24,7 @@ export const AppSelect = () => {
     name: 'stackscript_id',
   });
 
-  const [query, setQuery] = useState('');
-  const { data: apps, isLoading, error } = useMarketplaceAppsQuery(true);
+  const { data: apps, error, isLoading } = useMarketplaceAppsQuery(true);
 
   const renderContent = () => {
     if (isLoading) {
@@ -59,7 +58,6 @@ export const AppSelect = () => {
             }}
             checked={field.value === app.id}
             iconUrl={app.logo_url}
-            id={app.id}
             key={app.label}
             label={app.label}
             onOpenDetailsDrawer={() => alert('details')}

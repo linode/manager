@@ -8,16 +8,31 @@ import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { APP_ROOT } from 'src/constants';
 
 interface Props {
+  /**
+   * Whether or not the app is selected
+   */
   checked: boolean;
+  /**
+   * The path to the app icon
+   * @example "assets/postgresqlmarketplaceocc.svg"
+   */
   iconUrl: string;
-  id: number;
+  /**
+   * The label of the app
+   */
   label: string;
+  /**
+   * A function called when the "info" icon button is pressed
+   */
   onOpenDetailsDrawer: () => void;
+  /**
+   * A function called when the card is clicked
+   */
   onSelect: () => void;
 }
 
 export const AppSelectionCard = (props: Props) => {
-  const { checked, iconUrl, id, label, onOpenDetailsDrawer, onSelect } = props;
+  const { checked, iconUrl, label, onOpenDetailsDrawer, onSelect } = props;
 
   const handleInfoClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -67,8 +82,6 @@ export const AppSelectionCard = (props: Props) => {
       checked={checked}
       heading={displayLabel}
       headingDecoration={headingDecoration}
-      id={`app-${String(id)}`}
-      key={id}
       onClick={onSelect}
       renderIcon={renderIcon}
       renderVariant={renderVariant}

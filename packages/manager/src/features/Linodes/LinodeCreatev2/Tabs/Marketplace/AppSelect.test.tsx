@@ -1,15 +1,18 @@
+import { waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
-import { Marketplace } from './Marketplace';
+import { AppSelect } from './AppSelect';
 import { uniqueCategories } from './utilities';
 
 describe('Marketplace', () => {
   it('should render a header', () => {
     const { getByText } = renderWithThemeAndHookFormContext({
-      component: <Marketplace />,
+      component: <AppSelect />,
     });
 
     const heading = getByText('Select an App');
@@ -20,33 +23,43 @@ describe('Marketplace', () => {
 
   it('should render a search field', () => {
     const { getByPlaceholderText } = renderWithThemeAndHookFormContext({
-      component: <Marketplace />,
+      component: <AppSelect />,
     });
 
     const input = getByPlaceholderText('Search for app name');
 
     expect(input).toBeVisible();
-    expect(input).toBeEnabled();
+    expect(input).toBeDisabled();
   });
 
   it('should render a category select', () => {
     const { getByPlaceholderText } = renderWithThemeAndHookFormContext({
-      component: <Marketplace />,
+      component: <AppSelect />,
     });
 
     const input = getByPlaceholderText('Select category');
 
     expect(input).toBeVisible();
-    expect(input).toBeEnabled();
+    expect(input).toBeDisabled();
   });
 
   it('should allow the user to select a category', async () => {
+    server.use(
+      http.get('*/v4/linode/stackscripts', () => {
+        return HttpResponse.json(makeResourcePage([]));
+      })
+    );
+
     const {
       getByLabelText,
       getByPlaceholderText,
       getByText,
     } = renderWithThemeAndHookFormContext({
-      component: <Marketplace />,
+      component: <AppSelect />,
+    });
+
+    await waitFor(() => {
+      expect(getByPlaceholderText('Select category')).not.toBeDisabled();
     });
 
     const select = getByPlaceholderText('Select category');
