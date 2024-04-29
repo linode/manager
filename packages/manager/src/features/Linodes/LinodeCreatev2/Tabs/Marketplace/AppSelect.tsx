@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import React, { useState } from 'react';
-import { useController } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
@@ -10,12 +10,14 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 
+import { getDefaultUDFData } from '../StackScripts/UserDefinedFields/utilities';
 import { AppSelectionCard } from './AppSelectionCard';
 import { categoryOptions } from './utilities';
 
 import type { LinodeCreateFormValues } from '../../utilities';
 
 export const AppSelect = () => {
+  const { setValue } = useFormContext<LinodeCreateFormValues>();
   const { field } = useController<LinodeCreateFormValues, 'stackscript_id'>({
     name: 'stackscript_id',
   });
@@ -54,13 +56,19 @@ export const AppSelect = () => {
           <Grid container spacing={2}>
             {apps?.map((app) => (
               <AppSelectionCard
+                onSelect={() => {
+                  setValue(
+                    'stackscript_data',
+                    getDefaultUDFData(app.user_defined_fields)
+                  );
+                  field.onChange(app.id);
+                }}
                 checked={field.value === app.id}
                 iconUrl={app.logo_url}
                 id={app.id}
                 key={app.label}
                 label={app.label}
                 onOpenDetailsDrawer={() => alert('details')}
-                onSelect={() => field.onChange(app.id)}
               />
             ))}
           </Grid>

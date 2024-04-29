@@ -27,6 +27,7 @@ const DEFAULT_DISTRIBUTION = 'linode/debian11';
  * This interface is used to type the query params on the Linode Create flow.
  */
 interface LinodeCreateQueryParams {
+  appID: string | undefined;
   backupID: string | undefined;
   imageID: string | undefined;
   linodeID: string | undefined;
@@ -36,6 +37,7 @@ interface LinodeCreateQueryParams {
 }
 
 interface ParsedLinodeCreateQueryParams {
+  appID: number | undefined;
   backupID: number | undefined;
   imageID: string | undefined;
   linodeID: number | undefined;
@@ -89,6 +91,7 @@ const getParsedLinodeCreateQueryParams = (rawParams: {
   [key: string]: string;
 }): ParsedLinodeCreateQueryParams => {
   return {
+    appID: rawParams.appID ? Number(rawParams.appID) : undefined,
     backupID: rawParams.backupID ? Number(rawParams.backupID) : undefined,
     imageID: rawParams.imageID as string | undefined,
     linodeID: rawParams.linodeID ? Number(rawParams.linodeID) : undefined,
@@ -253,8 +256,10 @@ export const defaultValues = async (): Promise<LinodeCreateFormValues> => {
   const queryParams = getQueryParamsFromQueryString(window.location.search);
   const params = getParsedLinodeCreateQueryParams(queryParams);
 
-  const stackscript = params.stackScriptID
-    ? await getStackScript(params.stackScriptID)
+  const stackscriptId = params.stackScriptID ?? params.appID;
+
+  const stackscript = stackscriptId
+    ? await getStackScript(stackscriptId)
     : null;
 
   const linode = params.linodeID ? await getLinode(params.linodeID) : null;
@@ -272,7 +277,7 @@ export const defaultValues = async (): Promise<LinodeCreateFormValues> => {
     stackscript_data: stackscript?.user_defined_fields
       ? getDefaultUDFData(stackscript.user_defined_fields)
       : undefined,
-    stackscript_id: params.stackScriptID,
+    stackscript_id: stackscriptId,
     type: linode?.type ? linode.type : '',
   };
 };
