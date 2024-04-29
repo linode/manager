@@ -1,23 +1,45 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { getStackScript } from '@linode/api-v4';
+import { getLinode, getStackScript } from '@linode/api-v4';
 import { CreateLinodeSchema } from '@linode/validation';
+import { omit } from 'lodash';
 import { useHistory } from 'react-router-dom';
 
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { utoa } from '../LinodesCreate/utilities';
+import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
 import type { LinodeCreateType } from '../LinodesCreate/types';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
-import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
+import type {
+  CreateLinodeRequest,
+  InterfacePayload,
+  Linode,
+} from '@linode/api-v4';
 import type { Resolver } from 'react-hook-form';
+
+/**
+ * This is the ID of the Image of the default distribution.
+ */
+const DEFAULT_DISTRIBUTION = 'linode/debian11';
 
 /**
  * This interface is used to type the query params on the Linode Create flow.
  */
 interface LinodeCreateQueryParams {
+  backupID: string | undefined;
   imageID: string | undefined;
+  linodeID: string | undefined;
   stackScriptID: string | undefined;
+  subtype: StackScriptTabType | undefined;
+  type: LinodeCreateType | undefined;
+}
+
+interface ParsedLinodeCreateQueryParams {
+  backupID: number | undefined;
+  imageID: string | undefined;
+  linodeID: number | undefined;
+  stackScriptID: number | undefined;
   subtype: StackScriptTabType | undefined;
   type: LinodeCreateType | undefined;
 }
@@ -58,16 +80,24 @@ export const useLinodeCreateQueryParams = () => {
     history.push({ search: newParams.toString() });
   };
 
-  const params = {
+  const params = getParsedLinodeCreateQueryParams(rawParams);
+
+  return { params, setParams, updateParams };
+};
+
+const getParsedLinodeCreateQueryParams = (rawParams: {
+  [key: string]: string;
+}): ParsedLinodeCreateQueryParams => {
+  return {
+    backupID: rawParams.backupID ? Number(rawParams.backupID) : undefined,
     imageID: rawParams.imageID as string | undefined,
+    linodeID: rawParams.linodeID ? Number(rawParams.linodeID) : undefined,
     stackScriptID: rawParams.stackScriptID
       ? Number(rawParams.stackScriptID)
       : undefined,
     subtype: rawParams.subtype as StackScriptTabType | undefined,
     type: rawParams.type as LinodeCreateType | undefined,
   };
-
-  return { params, setParams, updateParams };
 };
 
 /**
@@ -106,9 +136,9 @@ export const tabs: LinodeCreateType[] = [
  * @returns final Linode Create payload to be sent to the API
  */
 export const getLinodeCreatePayload = (
-  payload: CreateLinodeRequest
+  formValues: LinodeCreateFormValues
 ): CreateLinodeRequest => {
-  const values = { ...payload };
+  const values = omit(formValues, ['linode']);
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
   }
@@ -197,36 +227,74 @@ const defaultPublicInterface = {
 } as const;
 
 /**
+ * We extend the API's payload type so that we can hold some extra state
+ * in the react-hook-form form.
+ *
+ * For example, we add `linode` so we can store the currently selected Linode
+ * for the Backups and Clone tab.
+ *
+ * For any extra values added to the form, we should make sure `getLinodeCreatePayload`
+ * removes them from the payload before it is sent to the API.
+ */
+export interface LinodeCreateFormValues extends CreateLinodeRequest {
+  /**
+   * The currently selected Linode
+   */
+  linode?: Linode | null;
+}
+
+/**
  * This function initializes the Linode Create flow form
  * when the form mounts.
  *
  * The default values are dependent on the query params present.
  */
-export const defaultValues = async (): Promise<CreateLinodeRequest> => {
+export const defaultValues = async (): Promise<LinodeCreateFormValues> => {
   const queryParams = getQueryParamsFromQueryString(window.location.search);
+  const params = getParsedLinodeCreateQueryParams(queryParams);
 
-  const stackScriptID = queryParams.stackScriptID
-    ? Number(queryParams.stackScriptID)
-    : undefined;
-
-  const stackscript = stackScriptID
-    ? await getStackScript(stackScriptID)
+  const stackscript = params.stackScriptID
+    ? await getStackScript(params.stackScriptID)
     : null;
 
-  const imageID = queryParams.imageID;
+  const linode = params.linodeID ? await getLinode(params.linodeID) : null;
 
   return {
-    image: stackScriptID ? imageID : imageID ?? 'linode/debian11',
+    backup_id: params.backupID,
+    image: getDefaultImageId(params),
     interfaces: [
       defaultVPCInterface,
       defaultVLANInterface,
       defaultPublicInterface,
     ],
-    region: '',
-    stackscript_data: stackscript?.user_defined_fields,
-    stackscript_id: stackScriptID,
-    type: '',
+    linode,
+    region: linode ? linode.region : '',
+    stackscript_data: stackscript?.user_defined_fields
+      ? getDefaultUDFData(stackscript.user_defined_fields)
+      : undefined,
+    stackscript_id: params.stackScriptID,
+    type: linode?.type ? linode.type : '',
   };
+};
+
+const getDefaultImageId = (params: ParsedLinodeCreateQueryParams) => {
+  // You can't have an Image selected when deploying from a backup.
+  if (params.type === 'Backups') {
+    return null;
+  }
+
+  // Always default debian for the distributions tab.
+  if (!params.type || params.type === 'Distributions') {
+    return DEFAULT_DISTRIBUTION;
+  }
+
+  // If the user is deep linked to the Images tab with a preselected image,
+  // default to it.
+  if (params.type === 'Images' && params.imageID) {
+    return params.imageID;
+  }
+
+  return null;
 };
 
 const defaultValuesForImages = {
@@ -240,7 +308,7 @@ const defaultValuesForImages = {
 };
 
 const defaultValuesForDistributions = {
-  image: 'linode/debian11',
+  image: DEFAULT_DISTRIBUTION,
   interfaces: [
     defaultVPCInterface,
     defaultVLANInterface,
@@ -280,7 +348,7 @@ export const defaultValuesMap: Record<LinodeCreateType, CreateLinodeRequest> = {
  * Unfortunately, we have to wrap `yupResolver` so that we can transform the payload
  * using `getLinodeCreatePayload` before validation happens.
  */
-export const resolver: Resolver<CreateLinodeRequest> = async (
+export const resolver: Resolver<LinodeCreateFormValues> = async (
   values,
   context,
   options
