@@ -4,7 +4,9 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
+import { CircularProgress } from 'src/components/CircularProgress';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
@@ -24,6 +26,48 @@ export const AppSelect = () => {
 
   const [query, setQuery] = useState('');
   const { data: apps, isLoading, error } = useMarketplaceAppsQuery(true);
+
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <Box
+          alignItems="center"
+          display="flex"
+          height="100%"
+          justifyContent="center"
+          width="100%"
+        >
+          <CircularProgress />
+        </Box>
+      );
+    }
+
+    if (error) {
+      return <ErrorState errorText={error?.[0].reason} />;
+    }
+
+    return (
+      <Grid container spacing={2}>
+        {apps?.map((app) => (
+          <AppSelectionCard
+            onSelect={() => {
+              setValue(
+                'stackscript_data',
+                getDefaultUDFData(app.user_defined_fields)
+              );
+              field.onChange(app.id);
+            }}
+            checked={field.value === app.id}
+            iconUrl={app.logo_url}
+            id={app.id}
+            key={app.label}
+            label={app.label}
+            onOpenDetailsDrawer={() => alert('details')}
+          />
+        ))}
+      </Grid>
+    );
+  };
 
   return (
     <Paper>
@@ -52,26 +96,8 @@ export const AppSelect = () => {
             placeholder="Select category"
           />
         </Stack>
-        <Box maxHeight="500px" sx={{ overflowX: 'hidden', overflowY: 'auto' }}>
-          <Grid container spacing={2}>
-            {apps?.map((app) => (
-              <AppSelectionCard
-                onSelect={() => {
-                  setValue(
-                    'stackscript_data',
-                    getDefaultUDFData(app.user_defined_fields)
-                  );
-                  field.onChange(app.id);
-                }}
-                checked={field.value === app.id}
-                iconUrl={app.logo_url}
-                id={app.id}
-                key={app.label}
-                label={app.label}
-                onOpenDetailsDrawer={() => alert('details')}
-              />
-            ))}
-          </Grid>
+        <Box height="500px" sx={{ overflowX: 'hidden', overflowY: 'auto' }}>
+          {renderContent()}
         </Box>
       </Stack>
     </Paper>
