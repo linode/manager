@@ -18,6 +18,7 @@ import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
 import { AssignIPRanges } from 'src/features/VPCs/VPCDetail/AssignIPRanges';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllVPCsQuery } from 'src/queries/vpcs/vpcs';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -27,7 +28,6 @@ import { VPCCreateDrawer } from './VPCCreateDrawer';
 
 import type { Item } from 'src/components/EnhancedSelect';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics';
 
 export interface VPCPanelProps {
   additionalIPv4RangesForVPC: ExtendedIP[];
@@ -216,7 +216,17 @@ export const VPCPanel = (props: VPCPanelProps) => {
           {from === 'linodeCreate' &&
             (regionSupportsVPCs ? (
               <StyledLinkButtonBox>
-                <LinkButton onClick={() => setIsVPCCreateDrawerOpen(true)}>
+                <LinkButton
+                  onClick={() => {
+                    setIsVPCCreateDrawerOpen(true);
+                    sendLinodeCreateFormStepEvent({
+                      action: 'click',
+                      category: 'button',
+                      formStepName: 'VPC Panel',
+                      label: 'Create VPC',
+                    });
+                  }}
+                >
                   Create VPC
                 </LinkButton>
               </StyledLinkButtonBox>
