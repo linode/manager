@@ -65,12 +65,7 @@ describe('ImageSelectv2', () => {
 
     await userEvent.click(imageOption);
 
-    expect(onChange).toHaveBeenCalledWith(
-      expect.anything(),
-      image,
-      'selectOption',
-      expect.anything()
-    );
+    expect(onChange).toHaveBeenCalledWith(image);
   });
 
   it('should correctly initialize with a default value', async () => {

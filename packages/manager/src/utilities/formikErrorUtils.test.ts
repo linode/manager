@@ -128,7 +128,7 @@ describe('handleVpcAndConvertSubnetErrors', () => {
 });
 
 describe('getFormikErrorsFromAPIErrors', () => {
-  it('should convert APIError[] to errors in the shape formik expectes', () => {
+  it('should convert APIError[] to errors in the shape formik expects', () => {
     const testCases = [
       {
         apiErrors: [{ field: 'ip', reason: 'Incorrect IP' }],

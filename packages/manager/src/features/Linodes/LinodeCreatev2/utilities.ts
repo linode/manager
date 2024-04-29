@@ -1,3 +1,6 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import { getStackScript } from '@linode/api-v4';
+import { CreateLinodeSchema } from '@linode/validation';
 import { useHistory } from 'react-router-dom';
 
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -5,12 +8,17 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { utoa } from '../LinodesCreate/utilities';
 
 import type { LinodeCreateType } from '../LinodesCreate/types';
+import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
 import type { CreateLinodeRequest, InterfacePayload } from '@linode/api-v4';
+import type { Resolver } from 'react-hook-form';
 
 /**
  * This interface is used to type the query params on the Linode Create flow.
  */
 interface LinodeCreateQueryParams {
+  imageID: string | undefined;
+  stackScriptID: string | undefined;
+  subtype: StackScriptTabType | undefined;
   type: LinodeCreateType | undefined;
 }
 
@@ -24,16 +32,42 @@ export const useLinodeCreateQueryParams = () => {
 
   const rawParams = getQueryParamsFromQueryString(history.location.search);
 
+  /**
+   * Updates query params
+   */
   const updateParams = (params: Partial<LinodeCreateQueryParams>) => {
-    const newParams = new URLSearchParams({ ...rawParams, ...params });
+    const newParams = new URLSearchParams(rawParams);
+
+    for (const key in params) {
+      if (!params[key]) {
+        newParams.delete(key);
+      } else {
+        newParams.set(key, params[key]);
+      }
+    }
+
+    history.push({ search: newParams.toString() });
+  };
+
+  /**
+   * Replaces query params with the provided values
+   */
+  const setParams = (params: Partial<LinodeCreateQueryParams>) => {
+    const newParams = new URLSearchParams(params);
+
     history.push({ search: newParams.toString() });
   };
 
   const params = {
+    imageID: rawParams.imageID as string | undefined,
+    stackScriptID: rawParams.stackScriptID
+      ? Number(rawParams.stackScriptID)
+      : undefined,
+    subtype: rawParams.subtype as StackScriptTabType | undefined,
     type: rawParams.type as LinodeCreateType | undefined,
-  } as LinodeCreateQueryParams;
+  };
 
-  return { params, updateParams };
+  return { params, setParams, updateParams };
 };
 
 /**
@@ -74,74 +108,194 @@ export const tabs: LinodeCreateType[] = [
 export const getLinodeCreatePayload = (
   payload: CreateLinodeRequest
 ): CreateLinodeRequest => {
-  if (payload.metadata?.user_data) {
-    payload.metadata.user_data = utoa(payload.metadata.user_data);
+  const values = { ...payload };
+  if (values.metadata?.user_data) {
+    values.metadata.user_data = utoa(values.metadata.user_data);
   }
 
-  if (!payload.metadata?.user_data) {
-    payload.metadata = undefined;
+  if (!values.metadata?.user_data) {
+    values.metadata = undefined;
   }
 
-  payload.interfaces = getInterfacesPayload(payload.interfaces);
+  if (values.placement_group?.id === undefined) {
+    values.placement_group = undefined;
+  }
 
-  return payload;
+  values.interfaces = getInterfacesPayload(
+    values.interfaces,
+    Boolean(values.private_ip)
+  );
+
+  return values;
 };
 
 /**
- * Performans transformation and ordering on the Linode Create "interfaces" form data.
+ * Transforms and orders the Linode Create "interfaces" form data.
  *
- * We need this so we can put interfaces in the correct order and omit unused iterfaces.
+ * We need this so we can put interfaces in the correct order and omit unused interfaces.
  *
  * @param interfaces raw interfaces from the Linode create flow form
  * @returns a transformed interfaces array in the correct order and with the expected values for the API
  */
 export const getInterfacesPayload = (
-  interfaces: InterfacePayload[] | undefined
+  interfaces: InterfacePayload[] | undefined,
+  hasPrivateIP: boolean | undefined
 ): InterfacePayload[] | undefined => {
   if (!interfaces) {
     return undefined;
   }
 
-  interfaces = interfaces.filter((i) => {
-    if (i.purpose === 'vpc' && !i.vpc_id) {
-      // If no vpc was selected, clear remove it from the interfaces array
-      return false;
-    }
-    if (i.purpose === 'vlan' && !i.label) {
-      // If no VLAN label is specificed, remove it from the interfaces array
-      return false;
-    }
-    return true;
-  });
+  const vpcInterface = interfaces[0];
+  const vlanInterface = interfaces[1];
+  const publicInterface = interfaces[2];
 
-  if (interfaces.length === 1 && interfaces[0].purpose === 'public') {
-    // If there is only 1 interface, and it is the public interface, return undefined.
-    // The API will default to adding a public interface and this makes the payload cleaner.
-    return undefined;
+  const hasVPC = Boolean(vpcInterface.vpc_id);
+  const hasVLAN = Boolean(vlanInterface.label);
+
+  if (hasVPC && hasVLAN && hasPrivateIP) {
+    return [vpcInterface, vlanInterface, publicInterface];
   }
 
-  return interfaces;
+  if (hasVLAN && hasVPC) {
+    return [vpcInterface, vlanInterface];
+  }
+
+  if (hasVPC && hasPrivateIP) {
+    return [vpcInterface, publicInterface];
+  }
+
+  if (hasVLAN) {
+    return [publicInterface, vlanInterface];
+  }
+
+  if (hasVPC) {
+    return [vpcInterface];
+  }
+
+  // If no special case is met, don't send `interfaces` in the Linode
+  // create payload. This will cause the API to default to giving the Linode
+  // public communication.
+  return undefined;
 };
 
-export const defaultValues: CreateLinodeRequest = {
-  image: 'linode/debian11',
+const defaultVPCInterface = {
+  ipam_address: '',
+  label: '',
+  purpose: 'vpc',
+} as const;
+
+const defaultVLANInterface = {
+  ipam_address: '',
+  label: '',
+  purpose: 'vlan',
+} as const;
+
+const defaultPublicInterface = {
+  ipam_address: '',
+  label: '',
+  purpose: 'public',
+} as const;
+
+/**
+ * This function initializes the Linode Create flow form
+ * when the form mounts.
+ *
+ * The default values are dependent on the query params present.
+ */
+export const defaultValues = async (): Promise<CreateLinodeRequest> => {
+  const queryParams = getQueryParamsFromQueryString(window.location.search);
+
+  const stackScriptID = queryParams.stackScriptID
+    ? Number(queryParams.stackScriptID)
+    : undefined;
+
+  const stackscript = stackScriptID
+    ? await getStackScript(stackScriptID)
+    : null;
+
+  const imageID = queryParams.imageID;
+
+  return {
+    image: stackScriptID ? imageID : imageID ?? 'linode/debian11',
+    interfaces: [
+      defaultVPCInterface,
+      defaultVLANInterface,
+      defaultPublicInterface,
+    ],
+    region: '',
+    stackscript_data: stackscript?.user_defined_fields,
+    stackscript_id: stackScriptID,
+    type: '',
+  };
+};
+
+const defaultValuesForImages = {
   interfaces: [
-    {
-      ipam_address: '',
-      label: '',
-      purpose: 'public',
-    },
-    {
-      ipam_address: '',
-      label: '',
-      purpose: 'vlan',
-    },
-    {
-      ipam_address: '',
-      label: '',
-      purpose: 'vpc',
-    },
+    defaultVPCInterface,
+    defaultVLANInterface,
+    defaultPublicInterface,
   ],
   region: '',
   type: '',
+};
+
+const defaultValuesForDistributions = {
+  image: 'linode/debian11',
+  interfaces: [
+    defaultVPCInterface,
+    defaultVLANInterface,
+    defaultPublicInterface,
+  ],
+  region: '',
+  type: '',
+};
+
+const defaultValuesForStackScripts = {
+  image: undefined,
+  interfaces: [
+    defaultVPCInterface,
+    defaultVLANInterface,
+    defaultPublicInterface,
+  ],
+  region: '',
+  stackscript_id: null,
+  type: '',
+};
+
+/**
+ * A map that conatins default values for each Tab of the Linode Create flow.
+ */
+export const defaultValuesMap: Record<LinodeCreateType, CreateLinodeRequest> = {
+  Backups: defaultValuesForImages,
+  'Clone Linode': defaultValuesForImages,
+  Distributions: defaultValuesForDistributions,
+  Images: defaultValuesForImages,
+  'One-Click': defaultValuesForImages,
+  StackScripts: defaultValuesForStackScripts,
+};
+
+/**
+ * Provides dynamic validation to the Linode Create form.
+ *
+ * Unfortunately, we have to wrap `yupResolver` so that we can transform the payload
+ * using `getLinodeCreatePayload` before validation happens.
+ */
+export const resolver: Resolver<CreateLinodeRequest> = async (
+  values,
+  context,
+  options
+) => {
+  const transformedValues = getLinodeCreatePayload(values);
+
+  const { errors } = await yupResolver(
+    CreateLinodeSchema,
+    {},
+    { rawValues: true }
+  )(transformedValues, context, options);
+
+  if (errors) {
+    return { errors, values };
+  }
+
+  return { errors: {}, values };
 };

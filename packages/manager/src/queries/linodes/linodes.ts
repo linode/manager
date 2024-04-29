@@ -5,6 +5,7 @@ import {
   Kernel,
   Linode,
   LinodeCloneData,
+  MigrateLinodeRequest,
   ResizeLinodePayload,
   changeLinodePassword,
   cloneLinode,
@@ -36,6 +37,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { placementGroupQueries } from 'src/queries/placementGroups';
 import { manuallySetVPCConfigInterfacesToActive } from 'src/utilities/configs';
 
 import { accountQueries } from '../account/queries';
@@ -138,12 +140,30 @@ export const useLinodeLishTokenQuery = (id: number) => {
 
 export const useDeleteLinodeMutation = (id: number) => {
   const queryClient = useQueryClient();
+  const linode = queryClient.getQueryData<Linode>([
+    queryKey,
+    'linode',
+    id,
+    'details',
+  ]);
+  const placementGroupId = linode?.placement_group?.id;
+
   return useMutation<{}, APIError[]>(() => deleteLinode(id), {
     onSuccess() {
       queryClient.removeQueries([queryKey, 'linode', id]);
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.invalidateQueries([queryKey, 'all']);
       queryClient.invalidateQueries([queryKey, 'infinite']);
+
+      // If the linode is assigned to a placement group,
+      // we need to invalidate the placement group queries
+      if (placementGroupId) {
+        queryClient.invalidateQueries(
+          placementGroupQueries.placementGroup(placementGroupId).queryKey
+        );
+        queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
+        queryClient.invalidateQueries(placementGroupQueries.paginated._def);
+      }
     },
   });
 };
@@ -166,6 +186,17 @@ export const useCreateLinodeMutation = () => {
         // If a Linode is created with a VLAN, invalidate vlans because
         // they are derived from Linode configs.
         queryClient.invalidateQueries(vlanQueries._def);
+      }
+
+      // If the Linode is assigned to a placement group on creation,
+      // we need to invalidate the placement group queries
+      if (variables.placement_group?.id) {
+        queryClient.invalidateQueries(
+          placementGroupQueries.placementGroup(variables.placement_group.id)
+            .queryKey
+        );
+        queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
+        queryClient.invalidateQueries(placementGroupQueries.paginated._def);
       }
     },
   });
@@ -278,14 +309,23 @@ export const useLinodeChangePasswordMutation = (id: number) =>
 
 export const useLinodeMigrateMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { region: string } | undefined>(
+  return useMutation<{}, APIError[], MigrateLinodeRequest>(
     (data) => scheduleOrQueueMigration(id, data),
     {
-      onSuccess() {
+      onSuccess(id, data) {
         queryClient.invalidateQueries([queryKey, 'paginated']);
         queryClient.invalidateQueries([queryKey, 'all']);
         queryClient.invalidateQueries([queryKey, 'infinite']);
         queryClient.invalidateQueries([queryKey, 'linode', id, 'details']);
+
+        if (data.placement_group?.id) {
+          queryClient.invalidateQueries(
+            placementGroupQueries.placementGroup(data.placement_group.id)
+              .queryKey
+          );
+          queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
+          queryClient.invalidateQueries(placementGroupQueries.paginated._def);
+        }
       },
     }
   );

@@ -1,27 +1,22 @@
+import { IconButton } from '@mui/material';
 import * as React from 'react';
 
 import CommunitySVGIcon from 'src/assets/icons/community_nav.svg';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { LINODE_COMMUNITY_URL } from 'src/constants';
 
-import { StyledTopMenuIconWrapper, TopMenuIcon } from './TopMenuIcon';
+import { TopMenuTooltip, topMenuIconButtonSx } from './TopMenuTooltip';
 
 export const Community = () => {
-  const openInNewTab = (url: string) => {
-    window.open(url, '_blank', 'noopener noreferrer');
-  };
-
   return (
-    <TopMenuIcon title="Linode Cloud Community (opens in new tab)">
-      <StyledLinkButton
-        aria-label="Linode Cloud Community (opens in new tab)"
-        onClick={() => openInNewTab(LINODE_COMMUNITY_URL)}
-        role="link"
+    <TopMenuTooltip title="Linode Cloud Community (opens in new tab)">
+      <IconButton
+        aria-label="Linode Cloud Community - link opens in a new tab"
+        href={LINODE_COMMUNITY_URL}
+        sx={topMenuIconButtonSx}
+        target="_blank"
       >
-        <StyledTopMenuIconWrapper>
-          <CommunitySVGIcon status="community" />
-        </StyledTopMenuIconWrapper>
-      </StyledLinkButton>
-    </TopMenuIcon>
+        <CommunitySVGIcon height="20px" width="20px" />
+      </IconButton>
+    </TopMenuTooltip>
   );
 };

@@ -32,6 +32,7 @@ export const Summary = () => {
     privateIPEnabled,
     placementGroupId,
     vlanLabel,
+    vpcId,
   ] = useWatch({
     control,
     name: [
@@ -44,6 +45,7 @@ export const Summary = () => {
       'private_ip',
       'placement_group.id',
       'interfaces.1.label',
+      'interfaces.0.vpc_id',
     ],
   });
 
@@ -107,6 +109,12 @@ export const Summary = () => {
     },
     {
       item: {
+        title: 'VPC Assigned',
+      },
+      show: Boolean(vpcId),
+    },
+    {
+      item: {
         title: 'Firewall Assigned',
       },
       show: Boolean(firewallId),
@@ -132,8 +140,8 @@ export const Summary = () => {
                 />
               )
             }
-            flexWrap="wrap"
             direction={isSmallScreen ? 'column' : 'row'}
+            flexWrap="wrap"
             gap={1.5}
           >
             {summaryItemsToShow.map(({ item }) => (
