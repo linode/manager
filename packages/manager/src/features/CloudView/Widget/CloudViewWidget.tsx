@@ -12,6 +12,7 @@ import React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { useCloudViewMetricsQuery } from 'src/queries/cloudview/metrics';
 import { useProfile } from 'src/queries/profile';
+import { isToday as _isToday } from 'src/utilities/isToday';
 import { roundTo } from 'src/utilities/roundTo';
 import { getMetrics } from 'src/utilities/statMetrics';
 
@@ -51,19 +52,19 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
 
   const theme = useTheme();
 
-  const getShowToday = () => {
-    if (props.globalFilters) {
-      return (
-        (props.globalFilters?.timeRange.start -
-          props.globalFilters?.timeRange.end) /
-          3600 <=
-        24
-      );
-    } else {
-      // take from widgets itself
-      return false;
-    }
-  };
+  // const getShowToday = () => {
+  //   if (props.globalFilters) {
+  //     return (
+  //       (props.globalFilters?.timeRange.start -
+  //         props.globalFilters?.timeRange.end) /
+  //         3600 <=
+  //       24
+  //     );
+  //   } else {
+  //     // take from widgets itself
+  //     return false;
+  //   }
+  // };
 
   const getCloudViewMetricsRequest = (): CloudViewMetricsRequest => {
     const request = {} as CloudViewMetricsRequest;
@@ -143,8 +144,8 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
           borderColor: color,
           data: seriesDataFormatter(
             graphData.values,
-            graphData.values[0][0],
-            graphData.values[graphData.values.length - 1][0]
+            props.globalFilters?.timeRange.start,
+            props.globalFilters?.timeRange.end
           ),
           label: graphData.metric.LINODE_ID
             ? graphData.metric.LINODE_ID
@@ -241,13 +242,20 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
                   : 'Error while rendering widget'
                 : undefined
             }
+            showToday={_isToday(
+              props.globalFilters?.timeRange.start
+                ? props.globalFilters.timeRange.start
+                : 0,
+              props.globalFilters?.timeRange.end
+                ? props.globalFilters.timeRange.end
+                : 0
+            )}
             ariaLabel={props.ariaLabel ? props.ariaLabel : ''}
             data={data}
             gridSize={props.widget.size}
             legendRows={legendRows}
             loading={isLoading}
             nativeLegend={true}
-            showToday={getShowToday()}
             subtitle={props.unit}
             suggestedMax={10}
             timezone={timezone}
