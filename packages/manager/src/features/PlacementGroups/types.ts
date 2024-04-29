@@ -6,7 +6,6 @@ export interface PlacementGroupsDrawerPropsBase {
 }
 
 export interface PlacementGroupsCreateDrawerProps {
-  allPlacementGroups: PlacementGroup[];
   disabledPlacementGroupCreateButton: boolean;
   onClose: PlacementGroupsDrawerPropsBase['onClose'];
   onPlacementGroupCreate?: (placementGroup: PlacementGroup) => void;

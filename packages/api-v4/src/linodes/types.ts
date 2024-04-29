@@ -363,7 +363,7 @@ export interface CreateLinodeRequest {
    *
    * This field cannot be used when deploying from a Backup or a Private Image.
    */
-  stackscript_id?: number;
+  stackscript_id?: number | null;
   /**
    * A Backup ID from another Linode’s available backups.
    *
@@ -449,6 +449,14 @@ export interface CreateLinodeRequest {
    * An object that assigns this the Linode to a placment group upon creation.
    */
   placement_group?: CreateLinodePlacementGroupPayload;
+}
+
+export interface MigrateLinodeRequest {
+  placement_group?: {
+    id: number;
+    compliant_only?: boolean;
+  };
+  region: string;
 }
 
 export type RescueRequestObject = Pick<

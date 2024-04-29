@@ -15,7 +15,7 @@ import { unsafe_MarkdownIt } from 'src/utilities/markdown';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 import { useColorMode } from 'src/utilities/theme';
 
-import type { IOptions } from 'sanitize-html';
+import type { SanitizeOptions } from 'src/utilities/sanitizeHTML';
 
 hljs.registerLanguage('apache', apache);
 hljs.registerLanguage('bash', bash);
@@ -35,7 +35,7 @@ export type SupportedLanguage =
 export interface HighlightedMarkdownProps {
   className?: string;
   language?: SupportedLanguage;
-  sanitizeOptions?: IOptions;
+  sanitizeOptions?: SanitizeOptions;
   textOrMarkdown: string;
 }
 
@@ -88,8 +88,7 @@ export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
   const unsafe_parsedMarkdown = unsafe_MarkdownIt.render(textOrMarkdown);
 
   const sanitizedHtml = sanitizeHTML({
-    // eslint-disable-next-line xss/no-mixed-html
-    options: sanitizeOptions,
+    sanitizeOptions,
     sanitizingTier: 'flexible',
     text: unsafe_parsedMarkdown,
   });

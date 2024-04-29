@@ -23,7 +23,8 @@ export const Distributions = () => {
       <ImageSelectv2
         disabled={isCreateLinodeRestricted}
         errorText={fieldState.error?.message}
-        onChange={(_, image) => field.onChange(image?.id ?? null)}
+        onBlur={field.onBlur}
+        onChange={(image) => field.onChange(image?.id ?? null)}
         value={field.value}
         variant="public"
       />

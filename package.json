@@ -55,7 +55,6 @@
     "node-fetch": "^2.6.7",
     "ua-parser-js": "^0.7.33",
     "immer": "^9.0.6",
-    "lodash": "^4.17.21",
     "glob-parent": "^5.1.2",
     "hosted-git-info": "^5.0.0",
     "yaml": "^2.3.0",

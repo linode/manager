@@ -97,7 +97,7 @@ describe('PlacementGroupSelect', () => {
       />
     );
 
-    const select = getByPlaceholderText('Select a Placement Group');
+    const select = getByPlaceholderText('None');
     expect(select).toBeEnabled();
 
     fireEvent.focus(select);

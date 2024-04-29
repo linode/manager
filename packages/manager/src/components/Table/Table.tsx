@@ -2,8 +2,9 @@ import {
   default as _Table,
   TableProps as _TableProps,
 } from '@mui/material/Table';
-import { omit } from 'lodash';
 import * as React from 'react';
+
+import { omitProps } from 'src/utilities/omittedProps';
 
 import { StyledTableWrapper } from './Table.styles';
 
@@ -78,7 +79,9 @@ export const Table = (props: TableProps) => {
     ...rest
   } = props;
 
-  const tableProps = omit(rest, [
+  const tableProps = omitProps({ ...props, ...rest }, [
+    'colCount',
+    'rowCount',
     'noBorder',
     'noOverflow',
     'rowHoverState',

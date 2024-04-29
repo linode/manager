@@ -11,6 +11,7 @@ import {
 import type { PlanInformationProps } from './PlanInformation';
 
 const mockProps: PlanInformationProps = {
+  hasDisabledPlans: false,
   hasSelectedRegion: true,
   isSelectedRegionEligibleForPlan: false,
   planType: 'standard',
@@ -37,38 +38,9 @@ describe('PlanInformation', () => {
     renderWithTheme(
       <PlanInformation
         {...mockProps}
+        hasDisabledPlans={true}
         isSelectedRegionEligibleForPlan={true}
         planType="dedicated"
-      />
-    );
-
-    const limitedAvailabilityBanner = screen.getByTestId(
-      limitedAvailabilityBannerTestId
-    );
-    expect(limitedAvailabilityBanner).toBeInTheDocument();
-  });
-
-  it('should inform the user about Premium plans having limited availability when appropriate', () => {
-    renderWithTheme(
-      <PlanInformation
-        {...mockProps}
-        isSelectedRegionEligibleForPlan={true}
-        planType="premium"
-      />
-    );
-
-    const limitedAvailabilityBanner = screen.getByTestId(
-      limitedAvailabilityBannerTestId
-    );
-    expect(limitedAvailabilityBanner).toBeInTheDocument();
-  });
-
-  it('should inform the user about GPU plans having limited availability when appropriate', () => {
-    renderWithTheme(
-      <PlanInformation
-        {...mockProps}
-        isSelectedRegionEligibleForPlan={true}
-        planType="gpu"
       />
     );
 

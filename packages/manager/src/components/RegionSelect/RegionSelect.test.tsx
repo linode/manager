@@ -22,6 +22,7 @@ describe('RegionSelect', () => {
     regions,
     required: false,
     selectedId: '',
+    tooltipText: '',
     width: 100,
   };
 
@@ -38,10 +39,10 @@ describe('RegionSelect', () => {
   });
 
   it('should render a Select component with the correct helper text', () => {
-    const { getByLabelText } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <RegionSelect {...props} helperText="helper text" />
     );
-    expect(getByLabelText('helper text')).toBeInTheDocument();
+    expect(getByText('helper text')).toBeInTheDocument();
   });
 
   it('should render a Select component with the correct error text', () => {

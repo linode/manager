@@ -8,7 +8,6 @@ import { authenticate } from 'support/api/authentication';
 import { fbtVisible, getClick } from 'support/helpers';
 import {
   mockDeleteImage,
-  mockGetAllImages,
   mockGetCustomImages,
   mockUpdateImage,
 } from 'support/intercepts/images';
@@ -249,7 +248,7 @@ describe('machine image', () => {
     cy.wait('@imageUpload').then((xhr) => {
       const imageId = xhr.response?.body.image.id;
       assertProcessing(label, imageId);
-      mockGetAllImages([
+      mockGetCustomImages([
         imageFactory.build({ label, id: imageId, status: 'available' }),
       ]).as('getImages');
       eventIntercept(label, imageId, status);

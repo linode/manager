@@ -1,3 +1,11 @@
+## [2024-04-29] - v0.45.0
+
+
+### Changed:
+
+- Improved VPC `ip_ranges` validation in `LinodeInterfaceSchema` ([#10354](https://github.com/linode/manager/pull/10354))
+- Allow `stackscript_id` to be `null` in `CreateLinodeSchema` ([#10367](https://github.com/linode/manager/pull/10367))
+
 ## [2024-04-15] - v0.44.0
 
 ### Changed:

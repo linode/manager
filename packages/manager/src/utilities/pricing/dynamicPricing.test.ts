@@ -1,4 +1,7 @@
-import { nodeBalancerTypeFactory } from 'src/factories';
+import {
+  nodeBalancerTypeFactory,
+  volumeTypeFactory,
+} from 'src/factories/types';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
 import {
@@ -6,7 +9,6 @@ import {
   getDCSpecificPriceByType,
   renderMonthlyPriceToCorrectDecimalPlace,
 } from './dynamicPricing';
-import { getDynamicVolumePrice } from './dynamicVolumePrice';
 
 describe('getDCSpecificPricingDisplay', () => {
   it('calculates dynamic pricing for a region without an increase', () => {
@@ -34,15 +36,6 @@ describe('getDCSpecificPricingDisplay', () => {
     ).toBe('28.00');
   });
 
-  it('calculates dynamic pricing for a volumes based on size', () => {
-    expect(
-      getDynamicVolumePrice({
-        regionId: 'id-cgk',
-        size: 20,
-      })
-    ).toBe('2.40');
-  });
-
   it('handles default case correctly', () => {
     expect(
       getDCSpecificPrice({
@@ -55,6 +48,7 @@ describe('getDCSpecificPricingDisplay', () => {
 
 describe('getDCSpecificPricingByType', () => {
   const mockNodeBalancerType = nodeBalancerTypeFactory.build();
+  const mockVolumeType = volumeTypeFactory.build();
 
   it('calculates dynamic pricing for a region without an increase', () => {
     expect(
@@ -79,6 +73,16 @@ describe('getDCSpecificPricingByType', () => {
         type: mockNodeBalancerType,
       })
     ).toBe('14.00');
+  });
+
+  it('calculates dynamic pricing for a volume based on size', () => {
+    expect(
+      getDCSpecificPriceByType({
+        regionId: 'id-cgk',
+        size: 20,
+        type: mockVolumeType,
+      })
+    ).toBe('2.40');
   });
 
   it('handles an invalid price if region is not available', () => {

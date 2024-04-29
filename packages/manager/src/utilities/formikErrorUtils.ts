@@ -1,5 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { set } from 'lodash';
+import set from 'lodash.set';
 import { reverse } from 'ramda';
 
 import { getAPIErrorOrDefault } from './errorUtils';

@@ -27,8 +27,11 @@ const mockPlan: PlanSelectionType = planSelectionTypeFactory.build({
 });
 
 const defaultProps: PlanSelectionProps = {
+  disabledStatus: {
+    isDisabled512GbPlan: false,
+    isLimitedAvailabilityPlan: false,
+  },
   idx: 0,
-  isLimitedAvailabilityPlan: false,
   onSelect: () => vi.fn(),
   type: mockPlan,
 };
@@ -175,10 +178,13 @@ describe('PlanSelection (table, desktop)', () => {
       wrapWithTableBody(
         <PlanSelection
           {...defaultProps}
-          isLimitedAvailabilityPlan={true}
+          disabledStatus={{
+            isDisabled512GbPlan: true,
+            isLimitedAvailabilityPlan: false,
+          }}
+          planIsDisabled={true}
           type={bigPlanType}
-        />,
-        { flags: { disableLargestGbPlans: true } }
+        />
       )
     );
 
@@ -272,43 +278,5 @@ describe('PlanSelection (card, mobile)', () => {
     expect(
       container.querySelector('[data-qa-select-card-subheading="subheading-4"]')
     ).toHaveTextContent('40 Gbps In / 2 Gbps Out');
-  });
-
-  it('verifies the presence of a help icon button accompanied by descriptive text for plans marked as "Limited Availability".', async () => {
-    const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <PlanSelection
-        {...defaultProps}
-        isLimitedAvailabilityPlan={true}
-        selectedRegionId={'us-east'}
-      />
-    );
-
-    const selectionCard = getByTestId('selection-card');
-    fireEvent.mouseOver(selectionCard);
-
-    await waitFor(() => {
-      expect(getByRole('tooltip')).toBeInTheDocument();
-    });
-
-    expect(getByText(LIMITED_AVAILABILITY_TEXT)).toBeVisible();
-  });
-
-  it('is disabled for 512 GB plans', () => {
-    const bigPlanType = extendedTypeFactory.build({
-      heading: 'Dedicated 512 GB',
-      label: 'Dedicated 512GB',
-    });
-
-    const { getByTestId } = renderWithTheme(
-      <PlanSelection
-        {...defaultProps}
-        isLimitedAvailabilityPlan={false}
-        type={bigPlanType}
-      />,
-      { flags: { disableLargestGbPlans: true } }
-    );
-
-    const selectionCard = getByTestId('selection-card');
-    expect(selectionCard).toBeDisabled();
   });
 });
