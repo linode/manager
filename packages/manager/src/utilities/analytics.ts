@@ -123,10 +123,7 @@ export const sendFormEvent = (
     ) {
       formEventPayload['stepName'] = eventPayload.stepName.replace(/\|/g, '');
     } else if (eventType === 'formError' && 'formError' in eventPayload) {
-      formEventPayload['inputValue'] = eventPayload.formError.replace(
-        /\|/g,
-        ''
-      );
+      formEventPayload['formError'] = eventPayload.formError.replace(/\|/g, '');
     }
 
     window._satellite.track(eventType, formEventPayload);
@@ -677,6 +674,7 @@ export const sendLinodeCreateFormInputEvent = (
   };
   sendFormEvent(formPayload, 'formInput');
 };
+
 // LinodeCreate.tsx
 export const sendLinodeCreateFormSubmitEvent = (formEndName: string) => {
   const formPayload: BasicFormEvent = {
