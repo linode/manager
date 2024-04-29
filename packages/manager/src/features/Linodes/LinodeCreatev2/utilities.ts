@@ -338,7 +338,7 @@ export const defaultValuesMap: Record<LinodeCreateType, CreateLinodeRequest> = {
   'Clone Linode': defaultValuesForImages,
   Distributions: defaultValuesForDistributions,
   Images: defaultValuesForImages,
-  'One-Click': defaultValuesForImages,
+  'One-Click': defaultValuesForStackScripts,
   StackScripts: defaultValuesForStackScripts,
 };
 
