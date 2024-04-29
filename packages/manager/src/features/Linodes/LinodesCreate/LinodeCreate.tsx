@@ -61,6 +61,7 @@ import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
 import {
   sendApiAwarenessClickEvent,
   sendLinodeCreateFlowDocsClickEvent,
+  sendLinodeCreateFormErrorEvent,
   sendLinodeCreateFormStepEvent,
   sendLinodeCreateFormSubmitEvent,
 } from 'src/utilities/analytics';
@@ -251,10 +252,13 @@ export class LinodeCreate extends React.PureComponent<
   }
 
   componentDidUpdate(prevProps: any) {
+    if (this.props.errors !== prevProps.errors) {
+      this.handleAnalyticsFormError(getErrorMap(errorMap, this.props.errors));
+    }
+
     if (this.props.location.search === prevProps.location.search) {
       return;
     }
-
     // This is for the case where a user is already on the create flow and click the "Marketplace" link in the PrimaryNav.
     // Because it is the same route, the component will not unmount and remount, so we need to manually update the tab state.
     // This fix provides an isolated solution for this specific case.
@@ -815,13 +819,10 @@ export class LinodeCreate extends React.PureComponent<
                 userCannotCreateLinode ||
                 (showGDPRCheckbox && !signedAgreement)
               }
-              onClick={() => {
-                sendLinodeCreateFormSubmitEvent();
-                this.createLinode();
-              }}
               buttonType="primary"
               data-qa-deploy-linode
               loading={formIsSubmitting}
+              onClick={this.createLinode}
             >
               Create Linode
             </StyledCreateButton>
@@ -840,6 +841,7 @@ export class LinodeCreate extends React.PureComponent<
   createLinode = () => {
     const payload = this.getPayload();
     this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
+    sendLinodeCreateFormSubmitEvent('Create Linode');
   };
 
   filterTypes = () => {
@@ -975,6 +977,23 @@ export class LinodeCreate extends React.PureComponent<
     }
 
     return payload;
+  };
+
+  handleAnalyticsFormError = (
+    errorMap: Partial<Record<string, string | undefined>>
+  ) => {
+    if (!errorMap) {
+      return;
+    }
+    if (errorMap.region) {
+      sendLinodeCreateFormErrorEvent('Region not selected');
+    }
+    if (errorMap.type) {
+      sendLinodeCreateFormErrorEvent('Plan not selected');
+    }
+    if (errorMap.root_pass) {
+      sendLinodeCreateFormErrorEvent('Password not created');
+    }
   };
 
   handleClickCreateUsingCommandLine = () => {
