@@ -95,6 +95,8 @@ export const PlanSelection = (props: PlanSelectionProps) => {
 
   const disabledPlanReasonCopy = getDisabledPlanReasonCopy({
     planBelongsToDisabledClass,
+    planHasLimitedAvailability,
+    planIs512Gb,
     planIsTooSmall,
     wholePanelIsDisabled,
   });
@@ -102,7 +104,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   // These are the two exceptions for when the tooltip should be hidden
   // - The entire panel is disabled (means the plans class isn't available in the selected region. (The user will see a notice about this)
   // - The majority of plans are disabled - In order to reduce visual clutter, we don't show the tooltip if the majority of plans are disabled (there is also a notice about this)
-  // For both, and accessibility is maintained via ariaDescribedBy so screen readers can still describe why each radio is disabled.
+  // For both, and accessibility is maintained via aria-label on the radio when disabled, so screen readers can still describe the reason why.
   const showDisabledTooltip =
     !wholePanelIsDisabled &&
     !hasMajorityOfPlansDisabled &&
@@ -110,12 +112,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       planIs512Gb ||
       planHasLimitedAvailability ||
       planIsTooSmall);
-  const showAccessibleDisabledReason =
-    planBelongsToDisabledClass ||
-    planIs512Gb ||
-    planHasLimitedAvailability ||
-    wholePanelIsDisabled ||
-    planIsTooSmall;
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -131,9 +127,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             {!isSamePlan && (
               <FormControlLabel
                 aria-label={`${plan.heading} ${
-                  showAccessibleDisabledReason
-                    ? `- ${disabledPlanReasonCopy}`
-                    : ''
+                  rowIsDisabled ? `- ${disabledPlanReasonCopy}` : ''
                 }`}
                 control={
                   <Radio
@@ -240,21 +234,17 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           }
           subheadings={[
             ...plan.subHeadings,
-            rowIsDisabled ? (
+            planHasLimitedAvailability || planIs512Gb ? (
               <Chip label="Limited Deployment Availability" />
             ) : (
               ''
             ),
           ]}
-          sxTooltip={{
-            // There's no easy way to override the margin or transform due to inline styles and existing specificity rules.
-            transform: 'translate(-10px, 20px) !important',
-          }}
           checked={plan.id === String(selectedId)}
           heading={plan.heading}
           key={plan.id}
           onClick={() => onSelect(plan.id)}
-          // tooltip={rowIsDisabled ? LIMITED_AVAILABILITY_TEXT : ''}
+          tooltip={rowIsDisabled ? disabledPlanReasonCopy : undefined}
         />
       </Hidden>
     </React.Fragment>

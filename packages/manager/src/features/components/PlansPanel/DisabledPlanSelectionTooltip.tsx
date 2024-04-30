@@ -33,8 +33,8 @@ export const DisabledPlanSelectionTooltip = (
       <IconButton disableRipple size="small">
         <HelpOutline
           sx={{
-            height: 16,
-            width: 16,
+            height: 17,
+            width: 17,
           }}
         />
       </IconButton>

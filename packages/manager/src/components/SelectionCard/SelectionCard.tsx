@@ -171,7 +171,7 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
         componentsProps={{
           tooltip: { sx: sxTooltip },
         }}
-        placement="top-end"
+        placement="top"
         title={tooltip}
       >
         {cardGrid}

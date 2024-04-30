@@ -329,14 +329,22 @@ export const extractPlansInformation = ({
   };
 };
 
+/**
+ * A utility function to determine what the disabled plan reason is.
+ * Defaults to the limited availability copy.
+ */
 export const getDisabledPlanReasonCopy = ({
   planBelongsToDisabledClass,
+  planHasLimitedAvailability,
+  planIs512Gb,
   planIsTooSmall,
   wholePanelIsDisabled,
 }: {
   planBelongsToDisabledClass: DisabledTooltipReasons['planBelongsToDisabledClass'];
+  planHasLimitedAvailability: DisabledTooltipReasons['planHasLimitedAvailability'];
+  planIs512Gb: DisabledTooltipReasons['planIs512Gb'];
   planIsTooSmall: DisabledTooltipReasons['planIsTooSmall'];
-  wholePanelIsDisabled: DisabledTooltipReasons['wholePanelIsDisabled'];
+  wholePanelIsDisabled?: DisabledTooltipReasons['wholePanelIsDisabled'];
 }): string => {
   if (wholePanelIsDisabled) {
     return PLAN_NOT_AVAILABLE_IN_REGION_COPY;
@@ -350,5 +358,9 @@ export const getDisabledPlanReasonCopy = ({
     return SMALLER_PLAN_DISABLED_COPY;
   }
 
-  return LIMITED_AVAILABILITY_COPY;
+  if (planHasLimitedAvailability || planIs512Gb) {
+    return LIMITED_AVAILABILITY_COPY;
+  }
+
+  return 'Disabled';
 };

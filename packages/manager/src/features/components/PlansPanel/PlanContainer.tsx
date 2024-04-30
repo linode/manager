@@ -10,6 +10,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
@@ -68,6 +69,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
     wholePanelIsDisabled,
   } = props;
   const location = useLocation();
+  const flags = useFlags();
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const shouldShowTransfer =
@@ -87,25 +89,33 @@ export const PlanContainer = (props: PlanContainerProps) => {
     !selectedRegionId && !isDatabaseCreateFlow && !isDatabaseResizeFlow;
 
   interface PlanSelectionFilterOptionsTable {
-    filter?: (plan: TypeWithAvailability) => boolean;
     header?: string;
+    planFilter?: (plan: TypeWithAvailability) => boolean;
   }
   interface PlanSelectionFilterOptions {
+    flag: boolean;
     planType: LinodeTypeClass;
     tables: PlanSelectionFilterOptionsTable[];
   }
 
-  const planFilters: PlanSelectionFilterOptions[] = [
+  /**
+   * This features allows us to split the GPU plans into two tables.
+   * This can be re-used for other plan types in the future.
+   */
+  const planSplitters: PlanSelectionFilterOptions[] = [
     {
+      flag: Boolean(flags.gpuv2?.plansSplitting),
       planType: 'gpu',
       tables: [
         {
-          filter: (plan: TypeWithAvailability) => plan.label.includes('Ada'),
           header: 'NVIDIA RTX 4000 Ada',
+          planFilter: (plan: TypeWithAvailability) =>
+            plan.label.includes('Ada'),
         },
         {
-          filter: (plan: TypeWithAvailability) => !plan.label.includes('Ada'),
           header: 'NVIDIA Quadro RTXz 6000',
+          planFilter: (plan: TypeWithAvailability) =>
+            !plan.label.includes('Ada'),
         },
       ],
     },
@@ -113,8 +123,8 @@ export const PlanContainer = (props: PlanContainerProps) => {
 
   const renderPlanSelection = React.useCallback(
     (filterOptions?: PlanSelectionFilterOptionsTable) => {
-      const _plans = filterOptions?.filter
-        ? plans.filter(filterOptions.filter)
+      const _plans = filterOptions?.planFilter
+        ? plans.filter(filterOptions.planFilter)
         : plans;
 
       return _plans.map((plan, id) => {
@@ -155,7 +165,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
   );
 
   const PlanSelectionTable = (
-    filterOptions?: PlanSelectionFilterOptionsTable
+    filterOptions?: PlanSelectionFilterOptionsTable & { changeHeader?: boolean }
   ) => (
     <StyledTable aria-label="List of Linode Plans" spacingBottom={16}>
       <TableHead>
@@ -177,7 +187,9 @@ export const PlanContainer = (props: PlanContainerProps) => {
                 key={testId}
                 noWrap={noWrap}
               >
-                {isPlanCell && filterOptions?.header
+                {isPlanCell &&
+                filterOptions?.header &&
+                filterOptions.changeHeader
                   ? filterOptions?.header
                   : cellName}
               </StyledTableCell>
@@ -210,16 +222,23 @@ export const PlanContainer = (props: PlanContainerProps) => {
             variant="info"
           />
         ) : selectedRegionId ? (
-          planFilters.map((filter) =>
-            planType === filter.planType
-              ? filter.tables.map((table) => [
-                  <Grid key={table.header} xs={12}>
-                    <Typography variant="h3">{table.header}</Typography>
-                  </Grid>,
-                  renderPlanSelection({
-                    filter: table.filter,
-                  }),
-                ])
+          planSplitters.map((splitter) =>
+            planType === splitter.planType && splitter.flag
+              ? splitter.tables.map((table) => {
+                  const filteredPlans = table.planFilter
+                    ? plans.filter(table.planFilter)
+                    : plans;
+                  return [
+                    filteredPlans.length > 0 && (
+                      <Grid key={table.header} xs={12}>
+                        <Typography variant="h3">{table.header}</Typography>
+                      </Grid>
+                    ),
+                    renderPlanSelection({
+                      planFilter: table.planFilter,
+                    }),
+                  ];
+                })
               : renderPlanSelection()
           )
         ) : (
@@ -229,15 +248,23 @@ export const PlanContainer = (props: PlanContainerProps) => {
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <Grid xs={12}>
           {selectedRegionId ? (
-            planFilters.map((filter) =>
-              planType === filter.planType ? (
-                filter.tables.map((table, idx) => (
-                  <PlanSelectionTable
-                    filter={table.filter}
-                    header={table.header}
-                    key={`plan-filter-${idx}`}
-                  />
-                ))
+            planSplitters.map((splitter) =>
+              planType === splitter.planType && splitter.flag ? (
+                splitter.tables.map((table, idx) => {
+                  const filteredPlans = table.planFilter
+                    ? plans.filter(table.planFilter)
+                    : plans;
+                  return (
+                    filteredPlans.length > 0 && (
+                      <PlanSelectionTable
+                        changeHeader={splitter.flag}
+                        header={table.header}
+                        key={`plan-filter-${idx}`}
+                        planFilter={table.planFilter}
+                      />
+                    )
+                  );
+                })
               ) : (
                 <PlanSelectionTable key={planType} />
               )

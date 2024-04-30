@@ -6,7 +6,7 @@ export const LIMITED_AVAILABILITY_COPY =
 export const SMALLER_PLAN_DISABLED_COPY =
   'Resizing to smaller plans is not supported';
 export const PLAN_NOT_AVAILABLE_IN_REGION_COPY =
-  "This plan isn't available in this region";
+  "This plan isn't available for the selected region";
 export const PLAN_IS_CURRENTLY_UNAVAILABLE_COPY =
   'This plan is not currently available.';
 
