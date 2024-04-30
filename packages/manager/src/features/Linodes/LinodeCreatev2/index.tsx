@@ -21,12 +21,14 @@ import { Firewall } from './Firewall';
 import { Plan } from './Plan';
 import { Region } from './Region';
 import { Summary } from './Summary';
+import { Backups } from './Tabs/Backups/Backups';
 import { Distributions } from './Tabs/Distributions';
 import { Images } from './Tabs/Images';
 import { Marketplace } from './Tabs/Marketplace/Marketplace';
 import { StackScripts } from './Tabs/StackScripts/StackScripts';
 import { UserData } from './UserData/UserData';
 import {
+  LinodeCreateFormValues,
   defaultValues,
   defaultValuesMap,
   getLinodeCreatePayload,
@@ -38,11 +40,10 @@ import {
 import { VLAN } from './VLAN';
 import { VPC } from './VPC/VPC';
 
-import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreatev2 = () => {
-  const methods = useForm<CreateLinodeRequest>({
+  const methods = useForm<LinodeCreateFormValues>({
     defaultValues,
     mode: 'onBlur',
     resolver,
@@ -52,7 +53,7 @@ export const LinodeCreatev2 = () => {
 
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
 
-  const onSubmit: SubmitHandler<CreateLinodeRequest> = async (values) => {
+  const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
     const payload = getLinodeCreatePayload(values);
     alert(JSON.stringify(payload, null, 2));
     try {
@@ -115,11 +116,13 @@ export const LinodeCreatev2 = () => {
               <SafeTabPanel index={3}>
                 <Images />
               </SafeTabPanel>
-              <SafeTabPanel index={4}>Bckups</SafeTabPanel>
+              <SafeTabPanel index={4}>
+                <Backups />
+              </SafeTabPanel>
               <SafeTabPanel index={5}>Clone Linode</SafeTabPanel>
             </TabPanels>
           </Tabs>
-          <Region />
+          {params.type !== 'Backups' && <Region />}
           <Plan />
           <Details />
           <Access />

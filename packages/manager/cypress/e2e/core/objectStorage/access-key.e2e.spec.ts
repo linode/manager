@@ -120,6 +120,8 @@ describe('object storage access key end-to-end tests', () => {
     const bucketRequest = objectStorageBucketFactory.build({
       label: bucketLabel,
       cluster: bucketCluster,
+      // Default factory sets `cluster` and `region`, but API does not accept `region` yet.
+      region: undefined,
     });
 
     // Create a bucket before creating access key.

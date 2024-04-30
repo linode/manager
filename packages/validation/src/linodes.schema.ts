@@ -274,6 +274,13 @@ const PlacementGroupPayloadSchema = object({
   id: number().notRequired().nullable(true),
 });
 
+const DiskEncryptionSchema = object({
+  disk_encryption: string()
+    .oneOf(['enabled', 'disabled'])
+    .nullable()
+    .notRequired(),
+});
+
 export const CreateLinodeSchema = object({
   type: string().ensure().required('Plan is required.'),
   region: string().ensure().required('Region is required.'),
@@ -309,6 +316,7 @@ export const CreateLinodeSchema = object({
   metadata: MetadataSchema,
   firewall_id: number().nullable().notRequired(),
   placement_group: PlacementGroupPayloadSchema,
+  disk_encryption: DiskEncryptionSchema,
 });
 
 const alerts = object({
@@ -389,6 +397,7 @@ export const RebuildLinodeSchema = object().shape({
   stackscript_data,
   booted: boolean().notRequired(),
   metadata: MetadataSchema,
+  disk_encryption: DiskEncryptionSchema,
 });
 
 export const RebuildLinodeFromStackScriptSchema = RebuildLinodeSchema.shape({
