@@ -6,7 +6,7 @@ import { number, object } from 'yup';
  */
 export const CreateLinodeByCloningSchema = CreateLinodeSchema.concat(
   object({
-    linode: object().required('You must select a Linode to clone from'),
+    linode: object().required('You must select a Linode to clone from.'),
   })
 );
 
@@ -16,5 +16,14 @@ export const CreateLinodeByCloningSchema = CreateLinodeSchema.concat(
 export const CreateLinodeFromBackupSchema = CreateLinodeSchema.concat(
   object({
     backup_id: number().required('You must select a Backup.'),
+  })
+);
+
+/**
+ * Extends the Linode Create schema to make stackscript_id required for the StackScripts tab
+ */
+export const CreateLinodeFromStackScriptSchema = CreateLinodeSchema.concat(
+  object({
+    stackscript_id: number().required('You must select a StackScript.'),
   })
 );
