@@ -102,8 +102,8 @@ export const LinodeSelectTable = () => {
         label="Search"
         placeholder="Search"
       />
-      {matchesMdUp ? (
-        <>
+      <Box>
+        {matchesMdUp ? (
           <Table>
             <TableHead>
               <TableRow>
@@ -142,16 +142,7 @@ export const LinodeSelectTable = () => {
               ))}
             </TableBody>
           </Table>
-          <PaginationFooter
-            count={data?.results ?? 0}
-            handlePageChange={pagination.handlePageChange}
-            handleSizeChange={pagination.handlePageSizeChange}
-            page={pagination.page}
-            pageSize={pagination.pageSize}
-          />
-        </>
-      ) : (
-        <Box>
+        ) : (
           <Grid container spacing={2}>
             {data?.data.map((linode) => (
               <SelectLinodeCard
@@ -165,8 +156,15 @@ export const LinodeSelectTable = () => {
               <Typography padding={1}>No results</Typography>
             )}
           </Grid>
-        </Box>
-      )}
+        )}
+        <PaginationFooter
+          count={data?.results ?? 0}
+          handlePageChange={pagination.handlePageChange}
+          handleSizeChange={pagination.handlePageSizeChange}
+          page={pagination.page}
+          pageSize={pagination.pageSize}
+        />
+      </Box>
     </Stack>
   );
 };

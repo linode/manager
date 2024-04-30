@@ -22,6 +22,7 @@ import { Plan } from './Plan';
 import { Region } from './Region';
 import { Summary } from './Summary';
 import { Backups } from './Tabs/Backups/Backups';
+import { Clone } from './Tabs/Clone/Clone';
 import { Distributions } from './Tabs/Distributions';
 import { Images } from './Tabs/Images';
 import { Marketplace } from './Tabs/Marketplace/Marketplace';
@@ -41,7 +42,6 @@ import { VLAN } from './VLAN';
 import { VPC } from './VPC/VPC';
 
 import type { SubmitHandler } from 'react-hook-form';
-import { Clone } from './Tabs/Clone/Clone';
 
 export const LinodeCreatev2 = () => {
   const methods = useForm<LinodeCreateFormValues>({
@@ -128,10 +128,10 @@ export const LinodeCreatev2 = () => {
           {params.type !== 'Backups' && <Region />}
           <Plan />
           <Details />
-          <Access />
+          {params.type !== 'Clone Linode' && <Access />}
           <VPC />
           <Firewall />
-          <VLAN />
+          {params.type !== 'Clone Linode' && <VLAN />}
           <UserData />
           <Addons />
           <Summary />
