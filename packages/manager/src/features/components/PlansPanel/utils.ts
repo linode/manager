@@ -331,7 +331,7 @@ export const extractPlansInformation = ({
 
 /**
  * A utility function to determine what the disabled plan reason is.
- * Defaults to the limited availability copy.
+ * Defaults to the currently unavailable copy.
  */
 export const getDisabledPlanReasonCopy = ({
   planBelongsToDisabledClass,
@@ -362,5 +362,5 @@ export const getDisabledPlanReasonCopy = ({
     return LIMITED_AVAILABILITY_COPY;
   }
 
-  return 'Disabled';
+  return PLAN_IS_CURRENTLY_UNAVAILABLE_COPY;
 };

@@ -5,36 +5,15 @@ import { useLocation } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
 import { Notice } from 'src/components/Notice/Notice';
-import { TableBody } from 'src/components/TableBody';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
-import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 import { PlanSelection } from './PlanSelection';
+import { PlanSelectionTable } from './PlanSelectionTable';
 
 import type { TypeWithAvailability } from './types';
 import type { Region } from '@linode/api-v4';
-
-const tableCells = [
-  { cellName: '', center: false, noWrap: false, testId: '' },
-  { cellName: 'Plan', center: false, noWrap: false, testId: 'plan' },
-  { cellName: 'Monthly', center: false, noWrap: false, testId: 'monthly' },
-  { cellName: 'Hourly', center: false, noWrap: false, testId: 'hourly' },
-  { cellName: 'RAM', center: true, noWrap: false, testId: 'ram' },
-  { cellName: 'CPUs', center: true, noWrap: false, testId: 'cpu' },
-  { cellName: 'Storage', center: true, noWrap: false, testId: 'storage' },
-  { cellName: 'Transfer', center: true, noWrap: false, testId: 'transfer' },
-  {
-    cellName: 'Network In / Out',
-    center: true,
-    noWrap: true,
-    testId: 'network',
-  },
-];
 
 export interface PlanContainerProps {
   allDisabledPlans: TypeWithAvailability[];
@@ -88,23 +67,23 @@ export const PlanContainer = (props: PlanContainerProps) => {
   const shouldDisplayNoRegionSelectedMessage =
     !selectedRegionId && !isDatabaseCreateFlow && !isDatabaseResizeFlow;
 
-  interface PlanSelectionFilterOptionsTable {
+  interface PlanSelectionDividerTable {
     header?: string;
     planFilter?: (plan: TypeWithAvailability) => boolean;
   }
-  interface PlanSelectionFilterOptions {
+  interface PlanSelectionDividers {
     flag: boolean;
     planType: LinodeTypeClass;
-    tables: PlanSelectionFilterOptionsTable[];
+    tables: PlanSelectionDividerTable[];
   }
 
   /**
-   * This features allows us to split the GPU plans into two tables.
+   * This features allows us to divide the GPU plans into two separate tables.
    * This can be re-used for other plan types in the future.
    */
-  const planSplitters: PlanSelectionFilterOptions[] = [
+  const planSelectionDividers: PlanSelectionDividers[] = [
     {
-      flag: Boolean(flags.gpuv2?.plansSplitting),
+      flag: Boolean(flags.gpuv2?.planDivider),
       planType: 'gpu',
       tables: [
         {
@@ -113,7 +92,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
             plan.label.includes('Ada'),
         },
         {
-          header: 'NVIDIA Quadro RTXz 6000',
+          header: 'NVIDIA Quadro RTX 6000',
           planFilter: (plan: TypeWithAvailability) =>
             !plan.label.includes('Ada'),
         },
@@ -122,7 +101,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
   ];
 
   const renderPlanSelection = React.useCallback(
-    (filterOptions?: PlanSelectionFilterOptionsTable) => {
+    (filterOptions?: PlanSelectionDividerTable) => {
       const _plans = filterOptions?.planFilter
         ? plans.filter(filterOptions.planFilter)
         : plans;
@@ -164,52 +143,6 @@ export const PlanContainer = (props: PlanContainerProps) => {
     ]
   );
 
-  const PlanSelectionTable = (
-    filterOptions?: PlanSelectionFilterOptionsTable & { changeHeader?: boolean }
-  ) => (
-    <StyledTable aria-label="List of Linode Plans" spacingBottom={16}>
-      <TableHead>
-        <TableRow>
-          {tableCells.map(({ cellName, center, noWrap, testId }) => {
-            const isPlanCell = cellName === 'Plan';
-            const attributeValue = `${testId}-header`;
-            if (
-              (!shouldShowTransfer && testId === 'transfer') ||
-              (!shouldShowNetwork && testId === 'network')
-            ) {
-              return null;
-            }
-            return (
-              <StyledTableCell
-                center={center}
-                data-qa={attributeValue}
-                isPlanCell={isPlanCell}
-                key={testId}
-                noWrap={noWrap}
-              >
-                {isPlanCell &&
-                filterOptions?.header &&
-                filterOptions.changeHeader
-                  ? filterOptions?.header
-                  : cellName}
-              </StyledTableCell>
-            );
-          })}
-        </TableRow>
-      </TableHead>
-      <TableBody role="radiogroup">
-        {shouldDisplayNoRegionSelectedMessage ? (
-          <TableRowEmpty
-            colSpan={9}
-            message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
-          />
-        ) : (
-          renderPlanSelection(filterOptions)
-        )}
-      </TableBody>
-    </StyledTable>
-  );
-
   return (
     <Grid container spacing={2}>
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
@@ -221,10 +154,11 @@ export const PlanContainer = (props: PlanContainerProps) => {
             text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
             variant="info"
           />
-        ) : selectedRegionId ? (
-          planSplitters.map((splitter) =>
-            planType === splitter.planType && splitter.flag
-              ? splitter.tables.map((table) => {
+        ) : (
+          planSelectionDividers.map((planSelectionDivider) =>
+            planType === planSelectionDivider.planType &&
+            planSelectionDivider.flag
+              ? planSelectionDivider.tables.map((table) => {
                   const filteredPlans = table.planFilter
                     ? plans.filter(table.planFilter)
                     : plans;
@@ -241,36 +175,51 @@ export const PlanContainer = (props: PlanContainerProps) => {
                 })
               : renderPlanSelection()
           )
-        ) : (
-          renderPlanSelection()
         )}
       </Hidden>
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <Grid xs={12}>
-          {selectedRegionId ? (
-            planSplitters.map((splitter) =>
-              planType === splitter.planType && splitter.flag ? (
-                splitter.tables.map((table, idx) => {
-                  const filteredPlans = table.planFilter
-                    ? plans.filter(table.planFilter)
-                    : plans;
-                  return (
-                    filteredPlans.length > 0 && (
-                      <PlanSelectionTable
-                        changeHeader={splitter.flag}
-                        header={table.header}
-                        key={`plan-filter-${idx}`}
-                        planFilter={table.planFilter}
-                      />
-                    )
-                  );
-                })
-              ) : (
-                <PlanSelectionTable key={planType} />
-              )
+          {planSelectionDividers.map((planSelectionDivider) =>
+            planType === planSelectionDivider.planType &&
+            planSelectionDivider.flag ? (
+              planSelectionDivider.tables.map((table, idx) => {
+                const filteredPlans = table.planFilter
+                  ? plans.filter(table.planFilter)
+                  : plans;
+                return (
+                  filteredPlans.length > 0 && (
+                    <PlanSelectionTable
+                      filterOptions={{
+                        header: table.header,
+                      }}
+                      renderPlanSelection={() =>
+                        renderPlanSelection({
+                          header: table.header,
+                          planFilter: table.planFilter,
+                        })
+                      }
+                      shouldDisplayNoRegionSelectedMessage={
+                        shouldDisplayNoRegionSelectedMessage
+                      }
+                      key={`plan-filter-${idx}`}
+                      planFilter={table.planFilter}
+                      shouldShowNetwork={shouldShowNetwork}
+                      shouldShowTransfer={shouldShowTransfer}
+                    />
+                  )
+                );
+              })
+            ) : (
+              <PlanSelectionTable
+                shouldDisplayNoRegionSelectedMessage={
+                  shouldDisplayNoRegionSelectedMessage
+                }
+                key={planType}
+                renderPlanSelection={renderPlanSelection}
+                shouldShowNetwork={shouldShowNetwork}
+                shouldShowTransfer={shouldShowTransfer}
+              />
             )
-          ) : (
-            <PlanSelectionTable />
           )}
         </Grid>
       </Hidden>

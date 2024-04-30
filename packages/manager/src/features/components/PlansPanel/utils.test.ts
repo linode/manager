@@ -2,9 +2,11 @@ import { extendedTypes } from 'src/__data__/ExtendedType';
 import { regionAvailabilityFactory } from 'src/factories';
 import { planSelectionTypeFactory, typeFactory } from 'src/factories/types';
 
+import { PLAN_IS_CURRENTLY_UNAVAILABLE_COPY } from './constants';
 import {
   determineInitialPlanCategoryTab,
   extractPlansInformation,
+  getDisabledPlanReasonCopy,
   getIsLimitedAvailability,
   getPlanSelectionsByPlanType,
   planTypeOrder,
@@ -375,5 +377,13 @@ describe('extractPlansInformation', () => {
         planIs512Gb: false,
       },
     ]);
+  });
+
+  describe('getDisabledPlanReasonCopy', () => {
+    it('should always return the default copy', () => {
+      const result = getDisabledPlanReasonCopy({} as any);
+
+      expect(result).toBe(PLAN_IS_CURRENTLY_UNAVAILABLE_COPY);
+    });
   });
 });

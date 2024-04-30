@@ -49,7 +49,7 @@ interface GeckoFlag {
 }
 
 interface gpuV2 {
-  plansSplitting: boolean;
+  planDivider: boolean;
 }
 
 type OneClickApp = Record<string, string>;

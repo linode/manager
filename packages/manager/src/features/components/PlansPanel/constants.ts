@@ -8,7 +8,7 @@ export const SMALLER_PLAN_DISABLED_COPY =
 export const PLAN_NOT_AVAILABLE_IN_REGION_COPY =
   "This plan isn't available for the selected region";
 export const PLAN_IS_CURRENTLY_UNAVAILABLE_COPY =
-  'This plan is not currently available.';
+  'This plan is currently unavailable.';
 
 export const LIMITED_AVAILABILITY_LINK =
   'https://www.linode.com/global-infrastructure/availability/';
