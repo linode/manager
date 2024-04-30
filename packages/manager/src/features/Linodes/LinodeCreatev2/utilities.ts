@@ -3,7 +3,7 @@ import { getLinode, getStackScript } from '@linode/api-v4';
 import { CreateLinodeSchema } from '@linode/validation';
 import { omit } from 'lodash';
 import { useHistory } from 'react-router-dom';
-import { object } from 'yup';
+import { number, object } from 'yup';
 
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
@@ -359,7 +359,7 @@ export const resolver: Resolver<LinodeCreateFormValues> = async (
   const { errors } = await yupResolver(
     CreateLinodeSchema,
     {},
-    { rawValues: true }
+    { mode: 'async', rawValues: true }
   )(transformedValues, context, options);
 
   if (errors) {
@@ -375,6 +375,12 @@ const CloneSchema = CreateLinodeSchema.concat(
   })
 );
 
+const BackupSchema = CreateLinodeSchema.concat(
+  object({
+    backup_id: number().required('You must select a Backup.'),
+  })
+);
+
 export const cloneResolver: Resolver<LinodeCreateFormValues> = async (
   values,
   context,
@@ -382,7 +388,11 @@ export const cloneResolver: Resolver<LinodeCreateFormValues> = async (
 ) => {
   const transformedValues = getLinodeCreatePayload(values);
 
-  const { errors } = await yupResolver(CloneSchema, {}, { rawValues: true })(
+  const { errors } = await yupResolver(
+    CloneSchema,
+    {},
+    { mode: 'async', rawValues: true }
+  )(
     {
       linode: values.linode ?? undefined,
       ...transformedValues,
@@ -396,4 +406,36 @@ export const cloneResolver: Resolver<LinodeCreateFormValues> = async (
   }
 
   return { errors: {}, values };
+};
+
+export const backupResolver: Resolver<LinodeCreateFormValues> = async (
+  values,
+  context,
+  options
+) => {
+  const transformedValues = getLinodeCreatePayload(values);
+
+  const { errors } = await yupResolver(
+    BackupSchema,
+    {},
+    { mode: 'async', rawValues: true }
+  )(transformedValues, context, options);
+
+  if (errors) {
+    return { errors, values };
+  }
+
+  return { errors: {}, values };
+};
+
+export const linodeCreateResolvers: Record<
+  LinodeCreateType,
+  Resolver<LinodeCreateFormValues>
+> = {
+  Backups: backupResolver,
+  'Clone Linode': cloneResolver,
+  Distributions: resolver,
+  Images: resolver,
+  'One-Click': resolver,
+  StackScripts: resolver,
 };

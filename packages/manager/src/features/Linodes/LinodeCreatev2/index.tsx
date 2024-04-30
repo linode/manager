@@ -33,12 +33,11 @@ import { StackScripts } from './Tabs/StackScripts/StackScripts';
 import { UserData } from './UserData/UserData';
 import {
   LinodeCreateFormValues,
-  cloneResolver,
   defaultValues,
   defaultValuesMap,
   getLinodeCreatePayload,
   getTabIndex,
-  resolver,
+  linodeCreateResolvers,
   tabs,
   useLinodeCreateQueryParams,
 } from './utilities';
@@ -53,7 +52,7 @@ export const LinodeCreatev2 = () => {
   const methods = useForm<LinodeCreateFormValues>({
     defaultValues,
     mode: 'onBlur',
-    resolver: params.type === 'Clone Linode' ? cloneResolver : resolver,
+    resolver: linodeCreateResolvers[params.type ?? 'Distributions'],
   });
 
   const history = useHistory();
