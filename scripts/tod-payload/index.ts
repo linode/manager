@@ -28,13 +28,21 @@ const main = async (junitPath: string) => {
   const resolvedJunitPath = resolve(junitPath);
 
   // Create an array of absolute file paths to JUnit XML report files.
-  const junitFiles = (await fs.readdir(resolvedJunitPath))
-    .filter((dirItem: string) => {
-      return dirItem.endsWith('.xml')
-    })
-    .map((dirItem: string) => {
-      return resolve(resolvedJunitPath, dirItem);
-    });
+  // Account for cases where `resolvedJunitPath` is a path to a directory
+  // or a path to an individual JUnit file.
+  const junitFiles = await (async () => {
+    const stats = await fs.lstat(resolvedJunitPath);
+    if (stats.isDirectory()) {
+      return (await fs.readdir(resolvedJunitPath))
+        .filter((dirItem: string) => {
+          return dirItem.endsWith('.xml')
+        })
+        .map((dirItem: string) => {
+          return resolve(resolvedJunitPath, dirItem);
+        });
+    }
+    return [resolvedJunitPath];
+  })();
 
   // Read all of the JUnit files.
   const junitContents = await Promise.all(junitFiles.map((junitFile) => {
