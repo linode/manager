@@ -33,6 +33,7 @@ import { StackScripts } from './Tabs/StackScripts/StackScripts';
 import { UserData } from './UserData/UserData';
 import {
   LinodeCreateFormValues,
+  cloneResolver,
   defaultValues,
   defaultValuesMap,
   getLinodeCreatePayload,
@@ -47,18 +48,18 @@ import { VPC } from './VPC/VPC';
 import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreatev2 = () => {
+  const { params, setParams } = useLinodeCreateQueryParams();
+
   const methods = useForm<LinodeCreateFormValues>({
     defaultValues,
     mode: 'onBlur',
-    resolver,
+    resolver: params.type === 'Clone Linode' ? cloneResolver : resolver,
   });
 
   const history = useHistory();
 
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
-
-  const { params, setParams } = useLinodeCreateQueryParams();
 
   const currentTabIndex = getTabIndex(params.type);
 
@@ -71,12 +72,6 @@ export const LinodeCreatev2 = () => {
   };
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
-    if (params.type === 'Clone Linode' && !values.linode) {
-      return methods.setError('linode', {
-        message: 'You must select a Linode to clone from.',
-      });
-    }
-
     const payload = getLinodeCreatePayload(values);
     alert(JSON.stringify(payload, null, 2));
     try {

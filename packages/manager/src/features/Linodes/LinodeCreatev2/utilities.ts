@@ -17,6 +17,7 @@ import type {
   Linode,
 } from '@linode/api-v4';
 import type { Resolver } from 'react-hook-form';
+import { number, object } from 'yup';
 
 /**
  * This is the ID of the Image of the default distribution.
@@ -360,6 +361,38 @@ export const resolver: Resolver<LinodeCreateFormValues> = async (
     {},
     { rawValues: true }
   )(transformedValues, context, options);
+
+  if (errors) {
+    return { errors, values };
+  }
+
+  return { errors: {}, values };
+};
+
+const CloneSchema = CreateLinodeSchema.concat(
+  object({
+    linode: object().required(),
+  })
+);
+
+/**
+ * Provides dynamic validation to the Linode Create form.
+ *
+ * Unfortunately, we have to wrap `yupResolver` so that we can transform the payload
+ * using `getLinodeCreatePayload` before validation happens.
+ */
+export const cloneResolver: Resolver<LinodeCreateFormValues> = async (
+  values,
+  context,
+  options
+) => {
+  const transformedValues = getLinodeCreatePayload(values);
+
+  const { errors } = await yupResolver(CloneSchema, {}, { rawValues: true })(
+    transformedValues,
+    context,
+    options
+  );
 
   if (errors) {
     return { errors, values };
