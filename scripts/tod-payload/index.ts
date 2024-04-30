@@ -18,7 +18,6 @@ program
   .option('-t, --appTeam <str>', 'Application team name')
   .option('-f, --fail', 'Treat payload as failure')
   .option('-t, --tag <str>', 'Optional tag for run')
-  .option('-o, --output <str>', 'Optional path to output TOD payload file')
 
   .action((junitPath: string) => {
     return main(junitPath);
@@ -61,16 +60,6 @@ const main = async (junitPath: string) => {
       return btoa(junitContent);
     }),
   });
-
-  const outputPath = program.opts()['output'];
-  if (outputPath) {
-    try {
-      await fs.writeFile(outputPath, payload);
-    }
-    catch (e: unknown) {
-      console.warn(`Failed to output payload to ${outputPath}`);
-    }
-  }
 
   console.log(payload);
 };
