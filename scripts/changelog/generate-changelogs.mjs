@@ -70,17 +70,6 @@ try {
             default: today,
           },
         ]);
-        const { semverBump } = await inquirer.prompt([
-          {
-            type: "list",
-            prefix: `📦 Semver bump for ${chalk.red(
-              `@linode/${linodePackage}`
-            )}`,
-            name: "semverBump",
-            message: "\nChoose the type of version bump:",
-            choices: ["patch", "minor", "major"],
-          },
-        ]);
 
         try {
           files.forEach((file) => {
@@ -113,8 +102,7 @@ try {
           });
         }
 
-        const newSemver = incrementSemver(currentSemver, semverBump);
-        const changelogContent = initiateChangelogEntry(releaseDate, newSemver);
+        const changelogContent = initiateChangelogEntry(releaseDate, currentSemver);
         // Generate the final changelog content
         populateChangelogEntry(changesetEntries, changelogContent);
 
