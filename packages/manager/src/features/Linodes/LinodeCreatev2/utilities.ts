@@ -2,6 +2,7 @@ import { getLinode, getStackScript } from '@linode/api-v4';
 import { omit } from 'lodash';
 import { useHistory } from 'react-router-dom';
 
+import { privateIPRegex } from 'src/utilities/ipUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { utoa } from '../LinodesCreate/utilities';
@@ -256,6 +257,9 @@ export const defaultValues = async (): Promise<LinodeCreateFormValues> => {
 
   const linode = params.linodeID ? await getLinode(params.linodeID) : null;
 
+  const privateIp =
+    linode?.ipv4.some((ipv4) => privateIPRegex.test(ipv4)) ?? false;
+
   return {
     backup_id: params.backupID,
     image: getDefaultImageId(params),
@@ -265,6 +269,7 @@ export const defaultValues = async (): Promise<LinodeCreateFormValues> => {
       defaultPublicInterface,
     ],
     linode,
+    private_ip: privateIp,
     region: linode ? linode.region : '',
     stackscript_data: stackscript?.user_defined_fields
       ? getDefaultUDFData(stackscript.user_defined_fields)

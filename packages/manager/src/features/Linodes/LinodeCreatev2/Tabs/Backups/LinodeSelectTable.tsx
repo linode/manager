@@ -22,6 +22,7 @@ import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDra
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
+import { privateIPRegex } from 'src/utilities/ipUtils';
 import { isNumeric } from 'src/utilities/stringUtils';
 
 import {
@@ -87,10 +88,12 @@ export const LinodeSelectTable = (props: Props) => {
   );
 
   const handleSelect = (linode: Linode) => {
+    const hasPrivateIP = linode.ipv4.some((ipv4) => privateIPRegex.test(ipv4));
+    setValue('private_ip', hasPrivateIP);
     setValue('backup_id', null);
-    setValue('region', linode.region);
+    setValue('region', linode.region, { shouldValidate: true });
     if (linode.type) {
-      setValue('type', linode.type);
+      setValue('type', linode.type, { shouldValidate: true });
     }
     field.onChange(linode);
   };
