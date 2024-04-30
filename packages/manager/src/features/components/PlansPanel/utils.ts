@@ -51,7 +51,7 @@ export const getPlanSelectionsByPlanType = <
   T extends { class: LinodeTypeClass }
 >(
   types: T[]
-): PlansByType<T> => {
+): Partial<PlansByType<T>> => {
   const plansByType: PlansByType<T> = planTypeOrder.reduce((acc, key) => {
     acc[key] = [];
     return acc;
