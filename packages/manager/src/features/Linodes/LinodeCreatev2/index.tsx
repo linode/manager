@@ -71,6 +71,12 @@ export const LinodeCreatev2 = () => {
   };
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
+    if (params.type === 'Clone Linode' && !values.linode) {
+      return methods.setError('linode', {
+        message: 'You must select a Linode to clone from.',
+      });
+    }
+
     const payload = getLinodeCreatePayload(values);
     alert(JSON.stringify(payload, null, 2));
     try {
@@ -93,8 +99,6 @@ export const LinodeCreatev2 = () => {
       }
     }
   };
-  
-  console.log(methods.formState.errors)
 
   return (
     <FormProvider {...methods}>
