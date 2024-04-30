@@ -53,7 +53,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
 
   return (
     <StyledTable
-      aria-label={`List of ${filterOptions?.header} Plans`}
+      aria-label={`List of ${filterOptions?.header ?? 'Linode'} Plans`}
       spacingBottom={16}
     >
       <TableHead>

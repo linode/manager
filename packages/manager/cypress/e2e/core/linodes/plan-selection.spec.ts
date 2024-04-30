@@ -342,22 +342,28 @@ describe('displays kubernetes plans panel based on availability', () => {
       });
     });
   });
+});
 
-  it.only('Should render divided tables when GPU divider enabled', () => {
+describe('displays specific linode plans for GPU', () => {
+  before(() => {
+    mockGetRegions(mockRegions).as('getRegions');
+    mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
+    mockGetRegionAvailability(mockRegions[0].id, mockRegionAvailability).as(
+      'getRegionAvailability'
+    );
     mockAppendFeatureFlags({
       placementGroups: makeFeatureFlagData<Flags['gpuv2']>({
         planDivider: true,
       }),
     });
     mockGetFeatureFlagClientstream();
+  });
 
+  it('Should render divided tables when GPU divider enabled', () => {
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getRegions', '@getLinodeTypes']);
 
     ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
-
-    cy.wait(['@getRegionAvailability']);
 
     // GPU tab
     // Should display two separate tables
