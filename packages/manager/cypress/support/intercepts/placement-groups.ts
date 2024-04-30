@@ -16,6 +16,6 @@ export const mockGetPlacementGroups = (
   return cy.intercept(
     'GET',
     apiMatcher('placement/groups*'),
-    paginateResponse([])
+    paginateResponse(placementGroups)
   );
 };
