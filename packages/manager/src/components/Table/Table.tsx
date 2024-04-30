@@ -81,6 +81,7 @@ export const Table = (props: TableProps) => {
 
   const tableProps = omitProps({ ...props, ...rest }, [
     'colCount',
+    'className',
     'rowCount',
     'noBorder',
     'noOverflow',
