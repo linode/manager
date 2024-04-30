@@ -39,6 +39,14 @@ export const StyledRadioRow = styled(TableRow, {
     }),
 }));
 
+export const StyledSelectAllRadioRow = styled(StyledRadioRow, {
+  label: 'StyledSelectAllRadioRow',
+})(({ theme }) => ({
+  '& td ': {
+    borderBottom: `2px solid ${theme.color.grey2}`,
+  },
+}));
+
 export const StyledRadioCell = styled(TableCell, {
   label: 'StyledRadioCell',
 })(() => ({

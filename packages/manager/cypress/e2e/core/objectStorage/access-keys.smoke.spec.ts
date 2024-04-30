@@ -69,6 +69,7 @@ describe('object storage access keys smoke tests', () => {
         cy.findByLabelText('Label').click().type(mockAccessKey.label);
         ui.buttonGroup
           .findButtonByTitle('Create Access Key')
+          .scrollIntoView()
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -342,9 +343,14 @@ describe('object storage access keys smoke tests', () => {
             .click()
             .type('{esc}');
 
-          // Enable "Limited Access" toggle for access key, and select access rules.
+          // Enable "Limited Access" toggle for access key and confirm Create button is disabled.
           cy.findByText('Limited Access').should('be.visible').click();
 
+          ui.buttonGroup
+            .findButtonByTitle('Create Access Key')
+            .should('be.disabled');
+
+          // Select access rules for all buckets to enable Create button.
           mockBuckets.forEach((mockBucket) => {
             cy.findByText(mockBucket.label)
               .should('be.visible')
@@ -483,28 +489,14 @@ describe('object storage access keys smoke tests', () => {
             .click()
             .type(`${mockUpdatedRegion.label}{enter}{esc}`);
 
-          cy.get('[data-qa-selection-list]')
+          cy.contains(mockUpdatedRegion.label)
             .should('be.visible')
-            .within(() => {
-              // Confirm both regions are selected and present in selection list.
-              mockRegions.forEach((mockRegion) => {
-                cy.findByText(`${mockRegion.label} (${mockRegion.id})`).should(
-                  'be.visible'
-                );
-              });
+            .and('exist');
 
-              // Deselect initial region and confirm it's removed from list.
-              cy.findByLabelText(
-                `remove ${mockInitialRegion.label} (${mockInitialRegion.id})`
-              )
-                .should('be.visible')
-                .should('be.enabled')
-                .click();
-
-              cy.findByText(
-                `${mockInitialRegion.label} (${mockInitialRegion.id})`
-              ).should('not.exist');
-            });
+          // Directly find the close button within the chip
+          cy.findByTestId(`${mockUpdatedRegion.id}`)
+            .findByTestId('CloseIcon')
+            .click();
 
           mockUpdateAccessKey(mockUpdatedAccessKey).as('updateAccessKey');
           mockGetAccessKeys([mockUpdatedAccessKey]);

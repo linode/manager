@@ -12,9 +12,13 @@ import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
-import { useCreatePlacementGroup } from 'src/queries/placementGroups';
+import {
+  useAllPlacementGroupsQuery,
+  useCreatePlacementGroup,
+} from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -31,7 +35,6 @@ export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps
 ) => {
   const {
-    allPlacementGroups,
     disabledPlacementGroupCreateButton,
     onClose,
     onPlacementGroupCreate,
@@ -39,6 +42,7 @@ export const PlacementGroupsCreateDrawer = (
     selectedRegionId,
   } = props;
   const { data: regions } = useRegionsQuery();
+  const { data: allPlacementGroups } = useAllPlacementGroupsQuery();
   const { error, mutateAsync } = useCreatePlacementGroup();
   const { enqueueSnackbar } = useSnackbar();
   const {
@@ -120,10 +124,6 @@ export const PlacementGroupsCreateDrawer = (
   );
 
   const pgRegionLimitHelperText = `The maximum number of placement groups in this region is: ${selectedRegion?.placement_group_limits?.maximum_pgs_per_customer}`;
-  const isRegionAtCapacity = hasRegionReachedPlacementGroupCapacity({
-    allPlacementGroups,
-    region: selectedRegion,
-  });
 
   return (
     <Drawer
@@ -174,11 +174,32 @@ export const PlacementGroupsCreateDrawer = (
               disabled={
                 Boolean(selectedRegionId) || disabledPlacementGroupCreateButton
               }
-              errorText={
-                isRegionAtCapacity
-                  ? 'This region has reached capacity'
-                  : errors.region
-              }
+              handleDisabledRegion={(region) => {
+                const isRegionAtCapacity = hasRegionReachedPlacementGroupCapacity(
+                  {
+                    allPlacementGroups,
+                    region,
+                  }
+                );
+
+                return {
+                  disabled: isRegionAtCapacity,
+                  reason: (
+                    <>
+                      <Typography>
+                        You’ve reached the limit of placement groups you can
+                        create in this region.
+                      </Typography>
+                      <Typography mt={2}>
+                        The maximum number of placement groups in this region
+                        is:{' '}
+                        {region.placement_group_limits.maximum_pgs_per_customer}
+                      </Typography>
+                    </>
+                  ),
+                  tooltipWidth: 300,
+                };
+              }}
               handleSelection={(selection) => {
                 handleRegionSelect(selection);
               }}
@@ -209,7 +230,8 @@ export const PlacementGroupsCreateDrawer = (
               'data-testid': 'submit',
               disabled:
                 isSubmitting ||
-                isRegionAtCapacity ||
+                !values.region ||
+                !values.label ||
                 disabledPlacementGroupCreateButton,
               label: 'Create Placement Group',
               loading: isSubmitting,

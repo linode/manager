@@ -64,6 +64,7 @@ export interface Flags {
   ipv6Sharing: boolean;
   linodeCreateRefactor: boolean;
   linodeCreateWithFirewall: boolean;
+  linodeDiskEncryption: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;
   objMultiCluster: boolean;

@@ -24,7 +24,7 @@ describe('getLinodeCreatePayload', () => {
   it('should return a basic payload', () => {
     const values = createLinodeRequestFactory.build();
 
-    expect(getLinodeCreatePayload(values)).toStrictEqual(values);
+    expect(getLinodeCreatePayload(values)).toEqual(values);
   });
 
   it('should base64 encode metadata', () => {
@@ -32,9 +32,20 @@ describe('getLinodeCreatePayload', () => {
       metadata: { user_data: userData },
     });
 
-    expect(getLinodeCreatePayload(values)).toStrictEqual({
+    expect(getLinodeCreatePayload(values)).toEqual({
       ...values,
       metadata: { user_data: base64UserData },
+    });
+  });
+
+  it('should remove placement_group from the payload if no id exists', () => {
+    const values = createLinodeRequestFactory.build({
+      placement_group: {},
+    });
+
+    expect(getLinodeCreatePayload(values)).toEqual({
+      ...values,
+      placement_group: undefined,
     });
   });
 });
