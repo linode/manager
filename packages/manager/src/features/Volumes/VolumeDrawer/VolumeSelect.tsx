@@ -2,7 +2,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import * as React from 'react';
 
 import { TextField } from 'src/components/TextField';
-import { useInfiniteVolumesQuery } from 'src/queries/volumes';
+import { useInfiniteVolumesQuery } from 'src/queries/volumes/volumes';
 
 interface Props {
   disabled?: boolean;
