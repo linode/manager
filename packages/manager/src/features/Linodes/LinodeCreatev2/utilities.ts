@@ -1,9 +1,6 @@
-import { yupResolver } from '@hookform/resolvers/yup';
 import { getLinode, getStackScript } from '@linode/api-v4';
-import { CreateLinodeSchema } from '@linode/validation';
 import { omit } from 'lodash';
 import { useHistory } from 'react-router-dom';
-import { number, object } from 'yup';
 
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
@@ -17,7 +14,6 @@ import type {
   InterfacePayload,
   Linode,
 } from '@linode/api-v4';
-import type { Resolver } from 'react-hook-form';
 
 /**
  * This is the ID of the Image of the default distribution.
@@ -341,101 +337,4 @@ export const defaultValuesMap: Record<LinodeCreateType, CreateLinodeRequest> = {
   Images: defaultValuesForImages,
   'One-Click': defaultValuesForImages,
   StackScripts: defaultValuesForStackScripts,
-};
-
-/**
- * Provides dynamic validation to the Linode Create form.
- *
- * Unfortunately, we have to wrap `yupResolver` so that we can transform the payload
- * using `getLinodeCreatePayload` before validation happens.
- */
-export const resolver: Resolver<LinodeCreateFormValues> = async (
-  values,
-  context,
-  options
-) => {
-  const transformedValues = getLinodeCreatePayload(values);
-
-  const { errors } = await yupResolver(
-    CreateLinodeSchema,
-    {},
-    { mode: 'async', rawValues: true }
-  )(transformedValues, context, options);
-
-  if (errors) {
-    return { errors, values };
-  }
-
-  return { errors: {}, values };
-};
-
-const CloneSchema = CreateLinodeSchema.concat(
-  object({
-    linode: object().required('You must select a Linode to clone from'),
-  })
-);
-
-const BackupSchema = CreateLinodeSchema.concat(
-  object({
-    backup_id: number().required('You must select a Backup.'),
-  })
-);
-
-export const cloneResolver: Resolver<LinodeCreateFormValues> = async (
-  values,
-  context,
-  options
-) => {
-  const transformedValues = getLinodeCreatePayload(values);
-
-  const { errors } = await yupResolver(
-    CloneSchema,
-    {},
-    { mode: 'async', rawValues: true }
-  )(
-    {
-      linode: values.linode ?? undefined,
-      ...transformedValues,
-    },
-    context,
-    options
-  );
-
-  if (errors) {
-    return { errors, values };
-  }
-
-  return { errors: {}, values };
-};
-
-export const backupResolver: Resolver<LinodeCreateFormValues> = async (
-  values,
-  context,
-  options
-) => {
-  const transformedValues = getLinodeCreatePayload(values);
-
-  const { errors } = await yupResolver(
-    BackupSchema,
-    {},
-    { mode: 'async', rawValues: true }
-  )(transformedValues, context, options);
-
-  if (errors) {
-    return { errors, values };
-  }
-
-  return { errors: {}, values };
-};
-
-export const linodeCreateResolvers: Record<
-  LinodeCreateType,
-  Resolver<LinodeCreateFormValues>
-> = {
-  Backups: backupResolver,
-  'Clone Linode': cloneResolver,
-  Distributions: resolver,
-  Images: resolver,
-  'One-Click': resolver,
-  StackScripts: resolver,
 };

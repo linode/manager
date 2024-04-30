@@ -23,6 +23,7 @@ import { Error } from './Error';
 import { Firewall } from './Firewall';
 import { Plan } from './Plan';
 import { Region } from './Region';
+import { linodeCreateResolvers } from './resolvers';
 import { Summary } from './Summary';
 import { Backups } from './Tabs/Backups/Backups';
 import { Clone } from './Tabs/Clone/Clone';
@@ -37,7 +38,6 @@ import {
   defaultValuesMap,
   getLinodeCreatePayload,
   getTabIndex,
-  linodeCreateResolvers,
   tabs,
   useLinodeCreateQueryParams,
 } from './utilities';
