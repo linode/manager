@@ -18,6 +18,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { SelectLinodeCard } from 'src/features/Linodes/LinodesCreate/SelectLinodePanel/SelectLinodeCard';
+import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
@@ -32,7 +33,16 @@ import { LinodeSelectTableRow } from './LinodeSelectTableRow';
 import type { Linode } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
-export const LinodeSelectTable = () => {
+interface Props {
+  /**
+   * Adds an extra column that will dispay a "power off" option when the row is selected
+   */
+  enablePowerOff?: boolean;
+}
+
+export const LinodeSelectTable = (props: Props) => {
+  const { enablePowerOff } = props;
+
   const matchesMdUp = useMediaQuery((theme: Theme) =>
     theme.breakpoints.up('md')
   );
@@ -51,6 +61,7 @@ export const LinodeSelectTable = () => {
   );
 
   const [query, setQuery] = useState(linode?.label ?? '');
+  const [linodeToPowerOff, setLinodeToPowerOff] = useState<Linode>();
 
   const pagination = usePagination();
   const order = useOrder();
@@ -83,6 +94,8 @@ export const LinodeSelectTable = () => {
     }
     field.onChange(linode);
   };
+
+  const columns = enablePowerOff ? 6 : 5;
 
   return (
     <Stack pt={1} spacing={2}>
@@ -126,14 +139,22 @@ export const LinodeSelectTable = () => {
                 >
                   Region
                 </TableSortCell>
+                {enablePowerOff && <TableCell></TableCell>}
               </TableRow>
             </TableHead>
             <TableBody>
-              {isLoading && <TableRowLoading columns={5} rows={10} />}
-              {error && <TableRowError colSpan={5} message={error[0].reason} />}
-              {data?.results === 0 && <TableRowEmpty colSpan={5} />}
+              {isLoading && <TableRowLoading columns={columns} rows={10} />}
+              {error && (
+                <TableRowError colSpan={columns} message={error[0].reason} />
+              )}
+              {data?.results === 0 && <TableRowEmpty colSpan={columns} />}
               {data?.data.map((linode) => (
                 <LinodeSelectTableRow
+                  onPowerOff={
+                    enablePowerOff
+                      ? () => setLinodeToPowerOff(linode)
+                      : undefined
+                  }
                   key={linode.id}
                   linode={linode}
                   onSelect={() => handleSelect(linode)}
@@ -165,6 +186,14 @@ export const LinodeSelectTable = () => {
           pageSize={pagination.pageSize}
         />
       </Box>
+      {enablePowerOff && (
+        <PowerActionsDialog
+          action={'Power Off'}
+          isOpen={Boolean(linodeToPowerOff)}
+          linodeId={linodeToPowerOff?.id}
+          onClose={() => setLinodeToPowerOff(undefined)}
+        />
+      )}
     </Stack>
   );
 };

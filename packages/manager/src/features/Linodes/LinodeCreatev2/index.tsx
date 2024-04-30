@@ -10,7 +10,10 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { useCreateLinodeMutation } from 'src/queries/linodes/linodes';
+import {
+  useCloneLinodeMutation,
+  useCreateLinodeMutation,
+} from 'src/queries/linodes/linodes';
 
 import { Access } from './Access';
 import { Actions } from './Actions';
@@ -53,24 +56,7 @@ export const LinodeCreatev2 = () => {
   const history = useHistory();
 
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
-
-  const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
-    const payload = getLinodeCreatePayload(values);
-    alert(JSON.stringify(payload, null, 2));
-    try {
-      const linode = await createLinode(payload);
-
-      history.push(`/linodes/${linode.id}`);
-    } catch (errors) {
-      for (const error of errors) {
-        if (error.field) {
-          methods.setError(error.field, { message: error.reason });
-        } else {
-          methods.setError('root', { message: error.reason });
-        }
-      }
-    }
-  };
+  const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
 
   const { params, setParams } = useLinodeCreateQueryParams();
 
@@ -83,6 +69,32 @@ export const LinodeCreatev2 = () => {
     // Reset the form values
     methods.reset(defaultValuesMap[newTab]);
   };
+
+  const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
+    const payload = getLinodeCreatePayload(values);
+    alert(JSON.stringify(payload, null, 2));
+    try {
+      const linode =
+        params.type === 'Clone Linode'
+          ? await cloneLinode({
+              sourceLinodeId: values.linode?.id ?? -1,
+              ...payload,
+            })
+          : await createLinode(payload);
+
+      history.push(`/linodes/${linode.id}`);
+    } catch (errors) {
+      for (const error of errors) {
+        if (error.field) {
+          methods.setError(error.field, { message: error.reason });
+        } else {
+          methods.setError('root', { message: error.reason });
+        }
+      }
+    }
+  };
+  
+  console.log(methods.formState.errors)
 
   return (
     <FormProvider {...methods}>

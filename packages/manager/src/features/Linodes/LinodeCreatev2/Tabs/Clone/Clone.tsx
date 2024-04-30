@@ -13,7 +13,7 @@ export const Clone = () => {
       <Stack spacing={1}>
         <Typography variant="h2">Select Linode to Clone From</Typography>
         <CloneWarning />
-        <LinodeSelectTable />
+        <LinodeSelectTable enablePowerOff />
       </Stack>
     </Paper>
   );

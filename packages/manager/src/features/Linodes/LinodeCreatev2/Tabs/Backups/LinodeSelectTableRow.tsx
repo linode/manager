@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Radio } from 'src/components/Radio/Radio';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
@@ -16,12 +17,13 @@ import type { Linode } from '@linode/api-v4';
 
 interface Props {
   linode: Linode;
+  onPowerOff?: () => void;
   onSelect: () => void;
   selected: boolean;
 }
 
 export const LinodeSelectTableRow = (props: Props) => {
-  const { linode, onSelect, selected } = props;
+  const { linode, onPowerOff, onSelect, selected } = props;
 
   const { data: image } = useImageQuery(
     linode.image ?? '',
@@ -47,13 +49,20 @@ export const LinodeSelectTableRow = (props: Props) => {
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={getLinodeIconStatus(linode.status)} />
-        {capitalize(linode.status)}
+        {capitalize(linode.status.replace('_', ' '))}
       </TableCell>
       <TableCell>{image?.label ?? linode.image}</TableCell>
       <TableCell>
         {type?.label ? formatStorageUnits(type.label) : linode.type}
       </TableCell>
       <TableCell>{region?.label ?? linode.region}</TableCell>
+      {onPowerOff && (
+        <TableCell actionCell>
+          {selected && linode.status !== 'offline' && (
+            <InlineMenuAction actionText="Power Off" onClick={onPowerOff} />
+          )}
+        </TableCell>
+      )}
     </TableRow>
   );
 };
