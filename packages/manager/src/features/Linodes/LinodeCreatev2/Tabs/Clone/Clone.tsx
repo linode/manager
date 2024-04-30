@@ -19,10 +19,10 @@ export const Clone = () => {
     <Paper>
       <Stack spacing={1}>
         <Typography variant="h2">Select Linode to Clone From</Typography>
-        <CloneWarning />
         {errors.linode?.message && (
           <Notice text={errors.linode.message} variant="error" />
         )}
+        <CloneWarning />
         <LinodeSelectTable enablePowerOff />
       </Stack>
     </Paper>
