@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React, { useState } from 'react';
-import { useController, useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -48,10 +48,10 @@ export const LinodeSelectTable = (props: Props) => {
     theme.breakpoints.up('md')
   );
 
-  const { setValue } = useFormContext<LinodeCreateFormValues>();
-  const linode = useWatch<LinodeCreateFormValues, 'linode'>({ name: 'linode' });
+  const { control, reset } = useFormContext<LinodeCreateFormValues>();
 
-  const { field } = useController<LinodeCreateFormValues, 'linode'>({
+  const selectedLinode = useWatch<LinodeCreateFormValues>({
+    control,
     name: 'linode',
   });
 
@@ -61,7 +61,7 @@ export const LinodeSelectTable = (props: Props) => {
     params.linodeID
   );
 
-  const [query, setQuery] = useState(linode?.label ?? '');
+  const [query, setQuery] = useState(selectedLinode?.label ?? '');
   const [linodeToPowerOff, setLinodeToPowerOff] = useState<Linode>();
 
   const pagination = usePagination();
@@ -89,13 +89,14 @@ export const LinodeSelectTable = (props: Props) => {
 
   const handleSelect = (linode: Linode) => {
     const hasPrivateIP = linode.ipv4.some((ipv4) => privateIPRegex.test(ipv4));
-    setValue('private_ip', hasPrivateIP);
-    setValue('backup_id', null);
-    setValue('region', linode.region, { shouldValidate: true });
-    if (linode.type) {
-      setValue('type', linode.type, { shouldValidate: true });
-    }
-    field.onChange(linode);
+    reset((prev) => ({
+      ...prev,
+      backup_id: null,
+      linode,
+      private_ip: hasPrivateIP,
+      region: linode.region,
+      type: linode.type ?? '',
+    }));
   };
 
   const columns = enablePowerOff ? 6 : 5;
@@ -110,7 +111,7 @@ export const LinodeSelectTable = (props: Props) => {
             }
             setQuery(value ?? '');
           },
-          value: preselectedLinodeId ? linode?.label ?? '' : query,
+          value: preselectedLinodeId ? selectedLinode?.label ?? '' : query,
         }}
         clearable
         hideLabel
@@ -161,7 +162,7 @@ export const LinodeSelectTable = (props: Props) => {
                   key={linode.id}
                   linode={linode}
                   onSelect={() => handleSelect(linode)}
-                  selected={linode.id === field.value?.id}
+                  selected={linode.id === selectedLinode?.id}
                 />
               ))}
             </TableBody>
@@ -173,7 +174,7 @@ export const LinodeSelectTable = (props: Props) => {
                 handleSelection={() => handleSelect(linode)}
                 key={linode.id}
                 linode={linode}
-                selected={linode.id === field.value?.id}
+                selected={linode.id === selectedLinode?.id}
               />
             ))}
             {data?.results === 0 && (
