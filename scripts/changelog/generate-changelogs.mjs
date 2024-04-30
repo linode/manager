@@ -59,7 +59,7 @@ try {
             )}`,
             name: "releaseDate",
             message:
-              "\nEnter the release date (YYYY-MM-DD, press enter to select today's date:",
+              "\nEnter the release date (YYYY-MM-DD), press enter to select today's date:",
             validate: (input) => {
               if (!input.match(/^\d{4}-\d{2}-\d{2}$/)) {
                 return "Please enter a valid date in the format YYYY-MM-DD.";
@@ -156,7 +156,7 @@ try {
         }
 
         // Delete the changeset files for each package
-        deleteChangesets(linodePackage);
+        await deleteChangesets(linodePackage);
       }
     } catch (error) {
       logger.error({
