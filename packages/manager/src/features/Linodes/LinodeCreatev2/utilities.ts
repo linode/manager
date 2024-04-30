@@ -383,7 +383,10 @@ export const cloneResolver: Resolver<LinodeCreateFormValues> = async (
   const transformedValues = getLinodeCreatePayload(values);
 
   const { errors } = await yupResolver(CloneSchema, {}, { rawValues: true })(
-    transformedValues,
+    {
+      linode: values.linode ?? undefined,
+      ...transformedValues,
+    },
     context,
     options
   );

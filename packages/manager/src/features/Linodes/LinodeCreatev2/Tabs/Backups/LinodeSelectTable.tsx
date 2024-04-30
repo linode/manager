@@ -188,7 +188,7 @@ export const LinodeSelectTable = (props: Props) => {
       </Box>
       {enablePowerOff && (
         <PowerActionsDialog
-          action={'Power Off'}
+          action="Power Off"
           isOpen={Boolean(linodeToPowerOff)}
           linodeId={linodeToPowerOff?.id}
           onClose={() => setLinodeToPowerOff(undefined)}
