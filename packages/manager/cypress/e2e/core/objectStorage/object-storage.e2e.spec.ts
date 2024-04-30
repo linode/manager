@@ -53,7 +53,14 @@ const getNonEmptyBucketMessage = (bucketLabel: string) => {
  * @returns Promise that resolves to created Bucket.
  */
 const setUpBucket = (label: string, cluster: string) => {
-  return createBucket(objectStorageBucketFactory.build({ label, cluster }));
+  return createBucket(
+    objectStorageBucketFactory.build({
+      label,
+      cluster,
+      // Default factory sets `region`, but API does not accept it yet.
+      region: undefined,
+    })
+  );
 };
 
 /**

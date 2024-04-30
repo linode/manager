@@ -3,6 +3,7 @@ import * as Factory from 'factory.ts';
 
 export const linodeDiskFactory = Factory.Sync.makeFactory<Disk>({
   created: '2018-01-01',
+  disk_encryption: 'enabled',
   filesystem: 'raw',
   id: Factory.each((id) => id),
   label: Factory.each((id) => `disk-${id}`),

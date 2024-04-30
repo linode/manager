@@ -1,3 +1,18 @@
+## [2024-04-29] - v0.115.0
+
+
+### Added:
+
+- New endpoint for `volumes/types` ([#10376](https://github.com/linode/manager/pull/10376))
+
+### Changed:
+
+- Allow `stackscript_id` to be `null` in `CreateLinodeRequest` ([#10367](https://github.com/linode/manager/pull/10367))
+
+### Upcoming Features:
+
+- Add interface for linode migrate flow with placement groups ([#10339](https://github.com/linode/manager/pull/10339))
+
 ## [2024-04-15] - v0.114.0
 
 ### Added:
