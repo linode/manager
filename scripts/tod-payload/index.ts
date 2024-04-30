@@ -17,6 +17,7 @@ program
   .option('-v, --appVersion <str>', 'Application version')
   .option('-t, --appTeam <str>', 'Application team name')
   .option('-f, --fail', 'Treat payload as failure')
+  .option('-t, --tag <str>', 'Optional tag for run')
   .option('-o, --output <str>', 'Optional path to output TOD payload file')
 
   .action((junitPath: string) => {
@@ -47,6 +48,7 @@ const main = async (junitPath: string) => {
     semanticVersion: program.opts()['appVersion'],
     buildUrl: program.opts()['appBuildUrl'],
     pass: !program.opts()['fail'],
+    tag: !!program.opts()['tag'] ? program.opts()['tag'] : undefined,
     xunitResults: junitContents.map((junitContent) => {
       return btoa(junitContent);
     }),
