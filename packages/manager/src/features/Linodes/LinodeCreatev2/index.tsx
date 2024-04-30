@@ -41,6 +41,7 @@ import { VLAN } from './VLAN';
 import { VPC } from './VPC/VPC';
 
 import type { SubmitHandler } from 'react-hook-form';
+import { Clone } from './Tabs/Clone/Clone';
 
 export const LinodeCreatev2 = () => {
   const methods = useForm<LinodeCreateFormValues>({
@@ -119,7 +120,9 @@ export const LinodeCreatev2 = () => {
               <SafeTabPanel index={4}>
                 <Backups />
               </SafeTabPanel>
-              <SafeTabPanel index={5}>Clone Linode</SafeTabPanel>
+              <SafeTabPanel index={5}>
+                <Clone />
+              </SafeTabPanel>
             </TabPanels>
           </Tabs>
           {params.type !== 'Backups' && <Region />}
