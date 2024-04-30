@@ -131,6 +131,7 @@ describe('volumes', () => {
       id: randomNumber(),
     });
     const newVolume = volumeFactory.build({
+      linode_id: mockLinode.id,
       label: randomLabel(),
     });
 

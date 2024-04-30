@@ -49,7 +49,7 @@ import {
 } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { vlanQueries } from 'src/queries/vlans';
-import { useAllVolumesQuery } from 'src/queries/volumes';
+import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { vpcQueries } from 'src/queries/vpcs/vpcs';
 import {
   DevicesAsStrings,
