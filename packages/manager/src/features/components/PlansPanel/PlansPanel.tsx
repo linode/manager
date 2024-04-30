@@ -44,7 +44,7 @@ export interface PlansPanelProps {
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionID?: string;
-  showTransfer?: boolean;
+  showLimits?: boolean;
   tabDisabledMessage?: string;
   tabbedPanelInnerClass?: string;
   types: PlanSelectionType[];
@@ -69,7 +69,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     selectedDiskSize,
     selectedId,
     selectedRegionID,
-    showTransfer,
+    showLimits,
     types,
   } = props;
 
@@ -189,7 +189,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
               selectedDiskSize={selectedDiskSize}
               selectedId={selectedId}
               selectedRegionId={selectedRegionID}
-              showTransfer={showTransfer}
+              showLimits={showLimits}
             />
           </>
         );

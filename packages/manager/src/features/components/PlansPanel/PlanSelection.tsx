@@ -48,6 +48,7 @@ export interface PlanSelectionProps {
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionId?: Region['id'];
+  showNetwork?: boolean;
   showTransfer?: boolean;
   type: PlanSelectionType;
   wholePanelIsDisabled?: boolean;
@@ -95,6 +96,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     selectedDiskSize,
     selectedId,
     selectedRegionId,
+    showNetwork,
     showTransfer,
     type,
     wholePanelIsDisabled,
@@ -278,11 +280,17 @@ export const PlanSelection = (props: PlanSelectionProps) => {
               {type.transfer ? <>{type.transfer / 1000} TB</> : ''}
             </TableCell>
           ) : null}
-          {type.network_out ? (
+          {showNetwork ? (
             <TableCell center data-qa-network noWrap>
-              {LINODE_NETWORK_IN} Gbps{' '}
-              <span style={{ color: '#9DA4A6' }}>/</span>{' '}
-              {type.network_out / 1000} Gbps
+              {type.network_out ? (
+                <>
+                  {LINODE_NETWORK_IN} Gbps{' '}
+                  <span style={{ color: '#9DA4A6' }}>/</span>{' '}
+                  {type.network_out / 1000} Gbps
+                </>
+              ) : (
+                ''
+              )}
             </TableCell>
           ) : null}
         </TableRow>
