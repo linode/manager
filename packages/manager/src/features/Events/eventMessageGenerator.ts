@@ -717,18 +717,18 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) =>
       `Linode ${e.secondary_entity?.label} has been assigned to Placement Group ${e.entity?.label}.`,
   },
-  placement_group_created: {
+  placement_group_create: {
     notification: (e) =>
       `Placement Group ${e.entity?.label} has been successfully created.`,
   },
-  placement_group_deleted: {
+  placement_group_delete: {
     notification: (e) => `Placement Group ${e.entity?.label} has been deleted.`,
   },
-  placement_group_unassigned: {
+  placement_group_unassign: {
     notification: (e) =>
       `Linode ${e.secondary_entity?.label} has been unassigned from Placement Group ${e.entity?.label}.`,
   },
-  placement_group_updated: {
+  placement_group_update: {
     notification: (e) => `Placement Group ${e.entity?.label} has been updated.`,
   },
   profile_update: {
