@@ -25,6 +25,17 @@ export const tabList = {
     tabTitle: string,
     options?: SelectorMatcherOptions
   ): Cypress.Chainable => {
-    return cy.get('[data-reach-tab-list]').findByText(tabTitle, options);
+    return cy.get(`[data-qa-tab="${tabTitle}"]`);
+  },
+
+  /**
+   * Finds a tab panel within a tab list by its title.
+   *
+   * @param tabTitle - Title of tab for which to find panel.
+   *
+   * @returns Cypress chainable.
+   */
+  findTabPanelByTitle: (tabTitle: string): Cypress.Chainable => {
+    return cy.get(`[data-qa-tab-panel="${tabTitle}"]`);
   },
 };

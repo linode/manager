@@ -124,7 +124,7 @@ export const Summary = () => {
   const summaryItemsToShow = summaryItems.filter((item) => item.show);
 
   return (
-    <Paper>
+    <Paper data-qa-linode-create-summary>
       <Stack spacing={2}>
         <Typography variant="h2">Summary {label}</Typography>
         {summaryItemsToShow.length === 0 ? (
