@@ -196,8 +196,8 @@ const StyledGrid = styled(Grid, {
       cursor: 'pointer',
     }),
   ...(props.disabled && {
-    '& > div': {
-      opacity: 0.4,
+    '& .cardSubheadingItem, & .cardSubheadingTitle': {
+      opacity: 0.3,
     },
     cursor: 'not-allowed',
   }),

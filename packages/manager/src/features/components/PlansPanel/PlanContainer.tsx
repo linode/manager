@@ -126,7 +126,6 @@ export const PlanContainer = (props: PlanContainerProps) => {
         );
       });
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       allDisabledPlans,
       hasMajorityOfPlansDisabled,
