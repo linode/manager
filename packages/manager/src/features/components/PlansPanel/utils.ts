@@ -34,7 +34,6 @@ export const planTypeOrder: (
   'gpu',
   'metal',
   'premium',
-  'edge',
 ];
 
 /**
