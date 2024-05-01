@@ -26,7 +26,7 @@ import {
 } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
-import { useAllVolumesQuery } from 'src/queries/volumes';
+import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

@@ -9,7 +9,7 @@ import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import { useVolumeTypesQuery } from 'src/queries/volumes';
+import { useVolumeTypesQuery } from 'src/queries/volumes/volumes';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 
