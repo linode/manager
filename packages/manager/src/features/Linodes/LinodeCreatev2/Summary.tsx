@@ -15,6 +15,7 @@ import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/d
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
+import { extendType } from 'src/utilities/extendType';
 
 export const Summary = () => {
   const theme = useTheme();
@@ -78,7 +79,7 @@ export const Summary = () => {
     {
       item: {
         details: `$${price?.monthly}/month`,
-        title: type?.label,
+        title: type && extendType(type).formattedLabel,
       },
       show: Boolean(type),
     },
