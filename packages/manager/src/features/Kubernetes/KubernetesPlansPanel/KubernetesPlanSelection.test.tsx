@@ -30,7 +30,7 @@ const PlanWithAvailability: PlanWithAvailability = {
   ...extendedTypeFactory.build(),
   planBelongsToDisabledClass: false,
   planHasLimitedAvailability: false,
-  planIs512Gb: false,
+  planIsDisabled512Gb: false,
 };
 
 const props: KubernetesPlanSelectionProps = {
@@ -125,7 +125,7 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
       }),
       planBelongsToDisabledClass: false,
       planHasLimitedAvailability: true,
-      planIs512Gb: false,
+      planIsDisabled512Gb: false,
     };
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(

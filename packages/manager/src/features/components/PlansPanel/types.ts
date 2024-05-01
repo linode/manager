@@ -27,7 +27,7 @@ export type PlanWithAvailability =
 export interface PlanSelectionAvailabilityTypes {
   planBelongsToDisabledClass: boolean;
   planHasLimitedAvailability: boolean;
-  planIs512Gb: boolean;
+  planIsDisabled512Gb: boolean;
 }
 
 export interface DisabledTooltipReasons extends PlanSelectionAvailabilityTypes {

@@ -60,7 +60,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   const {
     planBelongsToDisabledClass,
     planHasLimitedAvailability,
-    planIs512Gb,
+    planIsDisabled512Gb,
   } = plan;
 
   const diskSize = selectedDiskSize ? selectedDiskSize : 0;
@@ -89,14 +89,14 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     isSamePlan ||
     planIsTooSmall ||
     planBelongsToDisabledClass ||
-    planIs512Gb ||
+    planIsDisabled512Gb ||
     planHasLimitedAvailability ||
     wholePanelIsDisabled;
 
   const disabledPlanReasonCopy = getDisabledPlanReasonCopy({
     planBelongsToDisabledClass,
     planHasLimitedAvailability,
-    planIs512Gb,
+    planIsDisabled512Gb,
     planIsTooSmall,
     wholePanelIsDisabled,
   });
@@ -109,7 +109,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     !wholePanelIsDisabled &&
     !hasMajorityOfPlansDisabled &&
     (planBelongsToDisabledClass ||
-      planIs512Gb ||
+      planIsDisabled512Gb ||
       planHasLimitedAvailability ||
       planIsTooSmall);
 
@@ -234,7 +234,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           }
           subheadings={[
             ...plan.subHeadings,
-            planHasLimitedAvailability || planIs512Gb ? (
+            planHasLimitedAvailability || planIsDisabled512Gb ? (
               <Chip label="Limited Deployment Availability" />
             ) : (
               ''

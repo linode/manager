@@ -275,8 +275,11 @@ export const extractPlansInformation = ({
 }: ExtractPlansInformationProps) => {
   const plansForThisLinodeTypeClass: PlanWithAvailability[] = plans.map(
     (plan) => {
-      const planIs512Gb =
-        plan.label.includes('512GB') && Boolean(disableLargestGbPlansFlag);
+      const planIsDisabled512Gb =
+        plan.label.includes('512GB') &&
+        Boolean(disableLargestGbPlansFlag) &&
+        // new Ada GPU plans are actually available
+        plan.class !== 'gpu';
       const planHasLimitedAvailability = getIsLimitedAvailability({
         plan,
         regionAvailabilities,
@@ -290,7 +293,7 @@ export const extractPlansInformation = ({
         ...plan,
         planBelongsToDisabledClass,
         planHasLimitedAvailability,
-        planIs512Gb,
+        planIsDisabled512Gb,
       };
     }
   );
@@ -299,7 +302,7 @@ export const extractPlansInformation = ({
     const {
       planBelongsToDisabledClass,
       planHasLimitedAvailability,
-      planIs512Gb,
+      planIsDisabled512Gb,
     } = plan;
 
     // Determine if the plan should be disabled due to
@@ -309,7 +312,7 @@ export const extractPlansInformation = ({
     if (
       planBelongsToDisabledClass ||
       planHasLimitedAvailability ||
-      planIs512Gb
+      planIsDisabled512Gb
     ) {
       return [...acc, plan];
     }
@@ -336,13 +339,13 @@ export const extractPlansInformation = ({
 export const getDisabledPlanReasonCopy = ({
   planBelongsToDisabledClass,
   planHasLimitedAvailability,
-  planIs512Gb,
+  planIsDisabled512Gb,
   planIsTooSmall,
   wholePanelIsDisabled,
 }: {
   planBelongsToDisabledClass: DisabledTooltipReasons['planBelongsToDisabledClass'];
   planHasLimitedAvailability: DisabledTooltipReasons['planHasLimitedAvailability'];
-  planIs512Gb: DisabledTooltipReasons['planIs512Gb'];
+  planIsDisabled512Gb: DisabledTooltipReasons['planIsDisabled512Gb'];
   planIsTooSmall: DisabledTooltipReasons['planIsTooSmall'];
   wholePanelIsDisabled?: DisabledTooltipReasons['wholePanelIsDisabled'];
 }): string => {
@@ -358,7 +361,7 @@ export const getDisabledPlanReasonCopy = ({
     return SMALLER_PLAN_DISABLED_COPY;
   }
 
-  if (planHasLimitedAvailability || planIs512Gb) {
+  if (planHasLimitedAvailability || planIsDisabled512Gb) {
     return LIMITED_AVAILABILITY_COPY;
   }
 

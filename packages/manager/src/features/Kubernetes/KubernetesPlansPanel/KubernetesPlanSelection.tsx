@@ -54,11 +54,11 @@ export const KubernetesPlanSelection = (
   const {
     planBelongsToDisabledClass,
     planHasLimitedAvailability,
-    planIs512Gb,
+    planIsDisabled512Gb,
   } = plan;
 
   const rowIsDisabled =
-    wholePanelIsDisabled || planHasLimitedAvailability || planIs512Gb;
+    wholePanelIsDisabled || planHasLimitedAvailability || planIsDisabled512Gb;
   const count = getTypeCount(plan.id);
   const price: PriceObject | undefined = getLinodeRegionPrice(
     plan,
@@ -68,7 +68,7 @@ export const KubernetesPlanSelection = (
   const disabledPlanReasonCopy = getDisabledPlanReasonCopy({
     planBelongsToDisabledClass,
     planHasLimitedAvailability,
-    planIs512Gb,
+    planIsDisabled512Gb,
     planIsTooSmall: false,
     wholePanelIsDisabled,
   });
@@ -80,7 +80,9 @@ export const KubernetesPlanSelection = (
   const showDisabledTooltip =
     !wholePanelIsDisabled &&
     !hasMajorityOfPlansDisabled &&
-    (planBelongsToDisabledClass || planIs512Gb || planHasLimitedAvailability);
+    (planBelongsToDisabledClass ||
+      planIsDisabled512Gb ||
+      planHasLimitedAvailability);
 
   // We don't want flat-rate pricing or network information for LKE so we select only the second type element.
   const subHeadings = [
@@ -197,7 +199,7 @@ export const KubernetesPlanSelection = (
         <SelectionCard
           subheadings={[
             ...subHeadings,
-            planHasLimitedAvailability || planIs512Gb ? (
+            planHasLimitedAvailability || planIsDisabled512Gb ? (
               <Chip label="Limited Deployment Availability" />
             ) : (
               ''

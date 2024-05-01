@@ -254,7 +254,7 @@ describe('extractPlansInformation', () => {
         ...{
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
-          planIs512Gb: false,
+          planIsDisabled512Gb: false,
         },
       },
     ]);
@@ -265,19 +265,19 @@ describe('extractPlansInformation', () => {
         ...g6Standard1,
         planBelongsToDisabledClass: false,
         planHasLimitedAvailability: true,
-        planIs512Gb: false,
+        planIsDisabled512Gb: false,
       },
       {
         ...g7Standard1,
         planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
-        planIs512Gb: false,
+        planIsDisabled512Gb: false,
       },
       {
         ...g6Nanode1,
         planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
-        planIs512Gb: false,
+        planIsDisabled512Gb: false,
       },
     ]);
   });
@@ -307,7 +307,7 @@ describe('extractPlansInformation', () => {
         ...{
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
-          planIs512Gb: false,
+          planIsDisabled512Gb: false,
         },
       },
       {
@@ -315,7 +315,7 @@ describe('extractPlansInformation', () => {
         ...{
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
-          planIs512Gb: false,
+          planIsDisabled512Gb: false,
         },
       },
     ]);
@@ -327,7 +327,7 @@ describe('extractPlansInformation', () => {
         ...{
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
-          planIs512Gb: false,
+          planIsDisabled512Gb: false,
         },
       },
       {
@@ -335,7 +335,7 @@ describe('extractPlansInformation', () => {
         ...{
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
-          planIs512Gb: false,
+          planIsDisabled512Gb: false,
         },
       },
     ]);
@@ -368,13 +368,13 @@ describe('extractPlansInformation', () => {
         ...g6Standard1,
         planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
-        planIs512Gb: false,
+        planIsDisabled512Gb: false,
       },
       {
         ...g6Nanode1,
         planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
-        planIs512Gb: false,
+        planIsDisabled512Gb: false,
       },
     ]);
   });
