@@ -7,7 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 const mockParentChildAuthentication = {
   createToken: vi.fn(),
-  revokeToken: vi.fn(),
+  revokeToken: vi.fn(() => Promise.resolve()), // Ensure it returns a resolved promise
   updateCurrentToken: vi.fn(),
   validateParentToken: vi.fn().mockReturnValue(false),
 };
@@ -61,9 +61,8 @@ describe('SessionExpirationDialog', () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(getByText('Continue Working'));
-
     await act(async () => {
+      fireEvent.click(getByText('Continue Working'));
       await Promise.resolve();
     });
 
@@ -85,6 +84,7 @@ describe('SessionExpirationDialog', () => {
 
     await act(async () => {
       fireEvent.click(getByText('Log Out'));
+      await Promise.resolve();
     });
 
     expect(mockHistory.push).toHaveBeenCalledWith('/logout');

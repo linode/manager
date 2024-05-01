@@ -42,10 +42,17 @@ export const useParentChildAuthentication = () => {
 
   const revokeToken = useCallback(async (): Promise<void> => {
     const tokens = await getPersonalAccessTokens();
+
+    // No tokens available for revocation.
+    if (!tokens?.data?.length) {
+      return;
+    }
+
     const pendingRevocationToken = getPersonalAccessTokenForRevocation(
-      tokens?.data,
+      tokens.data,
       currentTokenWithBearer
     );
+
     if (pendingRevocationToken) {
       await deletePersonalAccessToken(pendingRevocationToken.id);
     }
