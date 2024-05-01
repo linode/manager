@@ -12,6 +12,7 @@ import type { PlacementGroup, Region } from '@linode/api-v4';
 import type { SxProps } from '@mui/system';
 
 export interface PlacementGroupsSelectProps {
+  clearOnBlur?: boolean;
   clearable?: boolean;
   defaultValue?: PlacementGroup;
   disabled?: boolean;
@@ -30,6 +31,7 @@ export interface PlacementGroupsSelectProps {
 
 export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const {
+    clearOnBlur,
     clearable = true,
     defaultValue,
     disabled,
@@ -99,7 +101,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
           />
         );
       }}
-      clearOnBlur={false}
+      clearOnBlur={clearOnBlur}
       data-testid="placement-groups-select"
       defaultValue={defaultValue}
       disableClearable={!clearable}
