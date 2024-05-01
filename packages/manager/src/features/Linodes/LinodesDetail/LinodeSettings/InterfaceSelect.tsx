@@ -385,29 +385,33 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
   return (
     <Grid container>
       {fromAddonsPanel ? null : (
-        <Grid xs={isSmallBp ? 12 : 6}>
-          {errors.primaryError && (
-            <Notice text={errors.primaryError} variant="error" />
-          )}
-          <Select
-            options={
-              // Do not display "None" as an option for eth0 (must be Public Internet, VLAN, or VPC).
-              slotNumber > 0
-                ? purposeOptions
-                : purposeOptions.filter(
-                    (thisPurposeOption) => thisPurposeOption.value !== 'none'
-                  )
-            }
-            value={purposeOptions.find(
-              (thisOption) => thisOption.value === purpose
+        <>
+          <Grid width={'100%'}>
+            {errors.primaryError && (
+              <Notice text={errors.primaryError} variant="error" />
             )}
-            disabled={readOnly}
-            isClearable={false}
-            label={`eth${slotNumber}`}
-            onChange={handlePurposeChange}
-          />
-          {unavailableInRegionHelperTextJSX}
-        </Grid>
+          </Grid>
+          <Grid xs={isSmallBp ? 12 : 6}>
+            <Select
+              options={
+                // Do not display "None" as an option for eth0 (must be Public Internet, VLAN, or VPC).
+                slotNumber > 0
+                  ? purposeOptions
+                  : purposeOptions.filter(
+                      (thisPurposeOption) => thisPurposeOption.value !== 'none'
+                    )
+              }
+              value={purposeOptions.find(
+                (thisOption) => thisOption.value === purpose
+              )}
+              disabled={readOnly}
+              isClearable={false}
+              label={`eth${slotNumber}`}
+              onChange={handlePurposeChange}
+            />
+            {unavailableInRegionHelperTextJSX}
+          </Grid>
+        </>
       )}
       {purpose === 'vlan' &&
         regionHasVLANs !== false &&
