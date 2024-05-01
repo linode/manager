@@ -1,3 +1,9 @@
+/**
+ * @file Integration tests and end-to-end tests for legacy Linode Create flow.
+ */
+// TODO Delete this test file when `linodeCreateRefactor` feature flag is retired.
+// Move out any tests (e.g. region select test) that aren't covered by new tests.
+
 import {
   containsVisible,
   fbtClick,
