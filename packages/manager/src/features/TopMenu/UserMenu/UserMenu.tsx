@@ -217,7 +217,7 @@ export const UserMenu = React.memo(() => {
             isProxyUser ? (
               <GravatarForProxy />
             ) : (
-              <GravatarByEmail email={profile?.email ?? ''} />
+              <GravatarByEmail captureAnalytics email={profile?.email ?? ''} />
             )
           }
           sx={(theme) => ({

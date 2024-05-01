@@ -1,27 +1,22 @@
+import {
+  deletePersonalAccessToken,
+  getPersonalAccessTokens,
+} from '@linode/api-v4';
 import { useCallback } from 'react';
 
+import { getPersonalAccessTokenForRevocation } from 'src/features/Account/SwitchAccounts/utils';
 import {
   isParentTokenValid,
   updateCurrentTokenBasedOnUserType,
 } from 'src/features/Account/SwitchAccounts/utils';
+import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { useCreateChildAccountPersonalAccessTokenMutation } from 'src/queries/account/account';
-import { useRevokePersonalAccessTokenMutation } from 'src/queries/tokens';
 import { getStorage } from 'src/utilities/storage';
 
 import type { Token, UserType } from '@linode/api-v4';
 
-interface useAuthenticationProps {
-  tokenIdToRevoke: number;
-}
-
-export const useParentChildAuthentication = ({
-  tokenIdToRevoke,
-}: useAuthenticationProps) => {
-  const {
-    error: revokeTokenError,
-    isLoading: revokeTokenLoading,
-    mutateAsync: revokeAccessToken,
-  } = useRevokePersonalAccessTokenMutation(tokenIdToRevoke);
+export const useParentChildAuthentication = () => {
+  const currentTokenWithBearer = useCurrentToken() ?? '';
 
   const {
     error: createTokenError,
@@ -45,9 +40,16 @@ export const useParentChildAuthentication = ({
     [createProxyToken]
   );
 
-  const revokeToken = useCallback(async (): Promise<{}> => {
-    return revokeAccessToken();
-  }, [revokeAccessToken]);
+  const revokeToken = useCallback(async (): Promise<void> => {
+    const tokens = await getPersonalAccessTokens();
+    const pendingRevocationToken = getPersonalAccessTokenForRevocation(
+      tokens?.data,
+      currentTokenWithBearer
+    );
+    if (pendingRevocationToken) {
+      await deletePersonalAccessToken(pendingRevocationToken.id);
+    }
+  }, [currentTokenWithBearer]);
 
   const updateCurrentToken = useCallback(
     ({ userType }: { userType: Extract<UserType, 'parent' | 'proxy'> }) => {
@@ -65,8 +67,6 @@ export const useParentChildAuthentication = ({
     createTokenError,
     createTokenLoading,
     revokeToken,
-    revokeTokenError,
-    revokeTokenLoading,
     updateCurrentToken,
     validateParentToken,
   };

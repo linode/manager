@@ -27,6 +27,11 @@ export interface DataCenterPricingByTypeOptions {
    */
   regionId: Region['id'] | undefined;
   /**
+   * Optionally allows price to be calculated by a factor of entity size.
+   * @example 20 (GB) for a volume
+   */
+  size?: number;
+  /**
    * The type data from a product's /types endpoint.
    */
   type: PriceType | undefined;
@@ -81,7 +86,8 @@ export const getDCSpecificPrice = ({
 /**
  * This function is used to calculate the dynamic pricing for a given entity, based on potential region increased costs.
  * @example
- * const price = getDCSpecificPrice({
+ * const price = getDCSpecificPriceByType({
+ *   size: 20,
  *   type: volumeType, // From the volumes/types endpoint
  *   regionId: 'us-east',
  * });
@@ -89,6 +95,7 @@ export const getDCSpecificPrice = ({
  */
 export const getDCSpecificPriceByType = ({
   regionId,
+  size,
   type,
 }: DataCenterPricingByTypeOptions): string | undefined => {
   if (!regionId || !type) {
@@ -100,6 +107,11 @@ export const getDCSpecificPriceByType = ({
     type.region_prices.find((region_price: RegionPrice) => {
       return region_price.id === regionId;
     })?.monthly ?? type.price.monthly;
+
+  // If pricing is determined by size of the entity
+  if (size && price) {
+    return (size * price).toFixed(2);
+  }
 
   return price?.toFixed(2) ?? undefined;
 };

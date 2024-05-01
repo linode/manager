@@ -1,6 +1,4 @@
-import { AFFINITY_TYPES } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -11,6 +9,7 @@ import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 import { PlacementGroupSelectOption } from './PlacementGroupSelectOption';
 
 import type { PlacementGroup, Region } from '@linode/api-v4';
+import type { SxProps } from '@mui/system';
 
 export interface PlacementGroupsSelectProps {
   clearable?: boolean;
@@ -71,9 +70,6 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     return null;
   }
 
-  const formatLabel = (placementGroup: PlacementGroup) =>
-    `${placementGroup.label} (${AFFINITY_TYPES[placementGroup.affinity_type]})`;
-
   const placementGroupsOptions: PlacementGroup[] = placementGroups.filter(
     (placementGroup) => placementGroup.region === selectedRegion?.id
   );
@@ -96,7 +92,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
           <PlacementGroupSelectOption
             disabled={isDisabledPlacementGroup(option, selectedRegion)}
             key={option.id}
-            label={formatLabel(option)}
+            label={option.label}
             props={props}
             selected={selected}
             value={option}
@@ -109,13 +105,13 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       disableClearable={!clearable}
       disabled={Boolean(!selectedRegion?.id) || disabled}
       errorText={errorText}
-      getOptionLabel={formatLabel}
+      getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
       id={id}
       label={label}
       loading={isLoading || loading}
       onBlur={onBlur}
       options={placementGroupsOptions ?? []}
-      placeholder="Select a Placement Group"
+      placeholder="None"
       sx={sx}
       value={selection}
       {...textFieldProps}

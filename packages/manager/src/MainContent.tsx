@@ -10,8 +10,8 @@ import { Box } from 'src/components/Box';
 import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import { NotFound } from 'src/components/NotFound';
-import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
+import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
 import { Footer } from 'src/features/Footer';
@@ -34,6 +34,7 @@ import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
 import { FlagSet } from './featureFlags';
 import { useIsACLBEnabled } from './features/LoadBalancers/utils';
+import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -232,6 +233,7 @@ export const MainContent = () => {
     (checkRestrictedUser && !enginesLoading && !enginesError);
 
   const { isACLBEnabled } = useIsACLBEnabled();
+  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
   const defaultRoot = _isManagedAccount ? '/managed' : '/linodes';
 
@@ -344,10 +346,12 @@ export const MainContent = () => {
                         <React.Suspense fallback={<SuspenseLoader />}>
                           <Switch>
                             <Route component={LinodesRoutes} path="/linodes" />
-                            <Route
-                              component={PlacementGroups}
-                              path="/placement-groups"
-                            />
+                            {isPlacementGroupsEnabled && (
+                              <Route
+                                component={PlacementGroups}
+                                path="/placement-groups"
+                              />
+                            )}
                             <Route component={Volumes} path="/volumes" />
                             <Redirect path="/volumes*" to="/volumes" />
                             {isACLBEnabled && (

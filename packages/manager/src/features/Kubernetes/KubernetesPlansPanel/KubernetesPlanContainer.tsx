@@ -25,55 +25,78 @@ const tableCells = [
   { cellName: 'Quantity', center: false, noWrap: false, testId: 'quantity' },
 ];
 
+type AllDisabledPlans = TypeWithAvailability & {
+  isDisabled512GbPlan: boolean;
+  isLimitedAvailabilityPlan: boolean;
+};
+
 export interface KubernetesPlanContainerProps {
-  disabled?: boolean;
+  allDisabledPlans: AllDisabledPlans[];
   getTypeCount: (planId: string) => number;
+  hasMajorityOfPlansDisabled: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
   plans: TypeWithAvailability[];
   selectedId?: string;
   selectedRegionId?: string;
   updatePlanCount: (planId: string, newCount: number) => void;
+  wholePanelIsDisabled: boolean;
 }
 
 export const KubernetesPlanContainer = (
   props: KubernetesPlanContainerProps
 ) => {
   const {
-    disabled,
+    allDisabledPlans,
     getTypeCount,
+    hasMajorityOfPlansDisabled,
     onAdd,
     onSelect,
     plans,
     selectedId,
     selectedRegionId,
     updatePlanCount,
+    wholePanelIsDisabled,
   } = props;
 
   const shouldDisplayNoRegionSelectedMessage = !selectedRegionId;
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
+      const isPlanDisabled = allDisabledPlans.some(
+        (disabledPlan) => disabledPlan.id === plan.id
+      );
+      const currentDisabledPlan = allDisabledPlans.find(
+        (disabledPlan) => disabledPlan.id === plan.id
+      );
+      const currentDisabledPlanStatus = currentDisabledPlan && {
+        isDisabled512GbPlan: currentDisabledPlan.isDisabled512GbPlan,
+        isLimitedAvailabilityPlan:
+          currentDisabledPlan.isLimitedAvailabilityPlan,
+      };
+
       return (
         <KubernetesPlanSelection
-          isLimitedAvailabilityPlan={
-            disabled ? false : plan.isLimitedAvailabilityPlan
-          } // No need for tooltip due to all plans being unavailable in region
-          disabled={disabled}
+          disabledStatus={currentDisabledPlanStatus}
           getTypeCount={getTypeCount}
+          hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
           idx={id}
           key={id}
           onAdd={onAdd}
           onSelect={onSelect}
+          planIsDisabled={isPlanDisabled}
           selectedId={selectedId}
           selectedRegionId={selectedRegionId}
           type={plan}
           updatePlanCount={updatePlanCount}
+          wholePanelIsDisabled={wholePanelIsDisabled}
         />
       );
     });
   }, [
-    disabled,
+    allDisabledPlans,
+    wholePanelIsDisabled,
+    hasMajorityOfPlansDisabled,
     getTypeCount,
     onAdd,
     onSelect,

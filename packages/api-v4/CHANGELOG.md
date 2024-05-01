@@ -1,3 +1,29 @@
+## [2024-04-29] - v0.115.0
+
+
+### Added:
+
+- New endpoint for `volumes/types` ([#10376](https://github.com/linode/manager/pull/10376))
+
+### Changed:
+
+- Allow `stackscript_id` to be `null` in `CreateLinodeRequest` ([#10367](https://github.com/linode/manager/pull/10367))
+
+### Upcoming Features:
+
+- Add interface for linode migrate flow with placement groups ([#10339](https://github.com/linode/manager/pull/10339))
+
+## [2024-04-15] - v0.114.0
+
+### Added:
+
+- New endpoint and type for `nodebalancers/types` ([#10265](https://github.com/linode/manager/pull/10265))
+- Severity fields to support ticket endpoints and new account capability ([#10317](https://github.com/linode/manager/pull/10317))
+
+### Upcoming Features:
+
+- Modify Region Placement Groups Limits types ([#10343](https://github.com/linode/manager/pull/10343))
+
 ## [2024-04-01] - v0.113.0
 
 ### Added:
@@ -15,7 +41,6 @@
 - Update `axios` to resolve `follow-redirects` CVE-2024-28849 ([#10291](https://github.com/linode/manager/pull/10291))
 
 ## [2024-03-18] - v0.112.0
-
 
 ### Changed:
 

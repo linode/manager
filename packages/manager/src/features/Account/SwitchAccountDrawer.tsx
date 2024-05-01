@@ -1,19 +1,13 @@
 import React from 'react';
 
-import { Box } from 'src/components/Box';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
-import {
-  getPersonalAccessTokenForRevocation,
-  setTokenInLocalStorage,
-} from 'src/features/Account/SwitchAccounts/utils';
+import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
-import { usePersonalAccessTokensQuery } from 'src/queries/tokens';
 import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
@@ -29,7 +23,7 @@ interface Props {
   userType: UserType | undefined;
 }
 
-interface handleSwitchToChildAccountProps {
+interface HandleSwitchToChildAccountProps {
   currentTokenWithBearer?: AuthState['token'];
   euuid: string;
   event: React.MouseEvent<HTMLElement>;
@@ -37,7 +31,8 @@ interface handleSwitchToChildAccountProps {
   userType: UserType | undefined;
 }
 
-export const SwitchAccountDrawer = ({ onClose, open, userType }: Props) => {
+export const SwitchAccountDrawer = (props: Props) => {
+  const { onClose, open, userType } = props;
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [isParentTokenError, setIsParentTokenError] = React.useState<
     APIError[]
@@ -46,26 +41,15 @@ export const SwitchAccountDrawer = ({ onClose, open, userType }: Props) => {
   const isProxyUser = userType === 'proxy';
   const currentParentTokenWithBearer =
     getStorage('authentication/parent_token/token') ?? '';
-
-  const { data: personalAccessTokens } = usePersonalAccessTokensQuery();
-
   const currentTokenWithBearer = useCurrentToken() ?? '';
-
-  const pendingRevocationToken = getPersonalAccessTokenForRevocation(
-    personalAccessTokens?.data,
-    currentTokenWithBearer
-  );
 
   const {
     createToken,
     createTokenError,
-    createTokenLoading,
     revokeToken,
     updateCurrentToken,
     validateParentToken,
-  } = useParentChildAuthentication({
-    tokenIdToRevoke: pendingRevocationToken?.id ?? -1,
-  });
+  } = useParentChildAuthentication();
 
   const createTokenErrorReason = createTokenError?.[0]?.reason;
 
@@ -76,7 +60,7 @@ export const SwitchAccountDrawer = ({ onClose, open, userType }: Props) => {
       event,
       onClose,
       userType,
-    }: handleSwitchToChildAccountProps) => {
+    }: HandleSwitchToChildAccountProps) => {
       const isProxyUser = userType === 'proxy';
 
       try {
@@ -170,21 +154,15 @@ export const SwitchAccountDrawer = ({ onClose, open, userType }: Props) => {
         )}
         .
       </Typography>
-      {createTokenLoading && (
-        <Box display="flex" justifyContent="center">
-          <CircleProgress mini size={70} />
-        </Box>
-      )}
-      {!createTokenLoading && (
-        <ChildAccountList
-          currentTokenWithBearer={
-            isProxyUser ? currentParentTokenWithBearer : currentTokenWithBearer
-          }
-          onClose={onClose}
-          onSwitchAccount={handleSwitchToChildAccount}
-          userType={userType}
-        />
-      )}
+      <ChildAccountList
+        currentTokenWithBearer={
+          isProxyUser ? currentParentTokenWithBearer : currentTokenWithBearer
+        }
+        isLoading={isSubmitting}
+        onClose={onClose}
+        onSwitchAccount={handleSwitchToChildAccount}
+        userType={userType}
+      />
     </Drawer>
   );
 };

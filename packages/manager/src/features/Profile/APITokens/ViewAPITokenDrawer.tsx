@@ -53,8 +53,8 @@ export const ViewAPITokenDrawer = (props: Props) => {
         <TableHead>
           <TableRow>
             <TableCell data-qa-perm-access>Access</TableCell>
-            <TableCell data-qa-perm-none style={{ textAlign: 'center' }}>
-              None
+            <TableCell data-qa-perm-no-access style={{ textAlign: 'center' }}>
+              No Access
             </TableCell>
             <TableCell data-qa-perm-read noWrap style={{ textAlign: 'center' }}>
               Read Only
@@ -81,7 +81,10 @@ export const ViewAPITokenDrawer = (props: Props) => {
                 <StyledAccessCell padding="checkbox" parentColumn="Access">
                   {basePermNameMap[scopeTup[0]]}
                 </StyledAccessCell>
-                <StyledPermissionsCell padding="checkbox" parentColumn="None">
+                <StyledPermissionsCell
+                  padding="checkbox"
+                  parentColumn="No Access"
+                >
                   <AccessCell
                     active={scopeTup[1] === 0}
                     disabled={false}

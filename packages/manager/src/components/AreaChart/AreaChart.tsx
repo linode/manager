@@ -21,7 +21,11 @@ import { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 import { Paper } from 'src/components/Paper';
 import { StyledBottomLegend } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/TablesPanel';
 
-import { tooltipLabelFormatter, tooltipValueFormatter } from './utils';
+import {
+  humanizeLargeData,
+  tooltipLabelFormatter,
+  tooltipValueFormatter,
+} from './utils';
 
 interface AreaProps {
   color: string;
@@ -44,16 +48,6 @@ interface AreaChartProps {
   unit: string;
   xAxis: XAxisProps;
 }
-
-const humanizeLargeData = (value: number) => {
-  if (value >= 1000000) {
-    return value / 1000000 + 'M';
-  }
-  if (value >= 1000) {
-    return value / 1000 + 'K';
-  }
-  return `${value}`;
-};
 
 export const AreaChart = (props: AreaChartProps) => {
   const {

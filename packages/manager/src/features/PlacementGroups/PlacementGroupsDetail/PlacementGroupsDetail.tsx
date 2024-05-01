@@ -9,7 +9,6 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { Notice } from 'src/components/Notice/Notice';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import {
@@ -19,11 +18,11 @@ import {
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
+import { PLACEMENT_GROUPS_DOCS_LINK } from '../constants';
 import { PlacementGroupsLinodes } from './PlacementGroupsLinodes/PlacementGroupsLinodes';
 import { PlacementGroupsSummary } from './PlacementGroupsSummary/PlacementGroupsSummary';
 
 export const PlacementGroupsDetail = () => {
-  const flags = useFlags();
   const { id } = useParams<{ id: string }>();
   const placementGroupId = +id;
 
@@ -31,10 +30,7 @@ export const PlacementGroupsDetail = () => {
     data: placementGroup,
     error: placementGroupError,
     isLoading,
-  } = usePlacementGroupQuery(
-    placementGroupId,
-    Boolean(flags.placementGroups?.enabled)
-  );
+  } = usePlacementGroupQuery(placementGroupId);
   const { data: linodes, isFetching: isFetchingLinodes } = useAllLinodesQuery(
     {},
     {
@@ -114,7 +110,7 @@ export const PlacementGroupsDetail = () => {
         }}
         disabledBreadcrumbEditButton={isLinodeReadOnly}
         docsLabel="Docs"
-        docsLink="TODO VM_Placement: add doc link"
+        docsLink={PLACEMENT_GROUPS_DOCS_LINK}
         title="Placement Group Detail"
       />
       {isLinodeReadOnly && (

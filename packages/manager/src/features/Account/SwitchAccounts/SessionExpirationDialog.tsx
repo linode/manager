@@ -6,14 +6,9 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Typography } from 'src/components/Typography';
 import { sessionExpirationContext as _sessionExpirationContext } from 'src/context/sessionExpirationContext';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
-import {
-  getPersonalAccessTokenForRevocation,
-  setTokenInLocalStorage,
-} from 'src/features/Account/SwitchAccounts/utils';
-import { useCurrentToken } from 'src/hooks/useAuthentication';
+import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
 import { useInterval } from 'src/hooks/useInterval';
 import { useAccount } from 'src/queries/account/account';
-import { usePersonalAccessTokensQuery } from 'src/queries/tokens';
 import { parseAPIDate } from 'src/utilities/date';
 import { pluralize } from 'src/utilities/pluralize';
 import { getStorage, setStorage } from 'src/utilities/storage';
@@ -37,17 +32,9 @@ export const SessionExpirationDialog = React.memo(
       seconds: 0,
     });
     const [logoutLoading, setLogoutLoading] = React.useState(false);
-
-    const { data: personalAccessTokens } = usePersonalAccessTokensQuery();
     const history = useHistory();
     const { data: account } = useAccount();
-    const currentTokenWithBearer = useCurrentToken() ?? '';
-
     const euuid = account?.euuid ?? '';
-    const pendingRevocationToken = getPersonalAccessTokenForRevocation(
-      personalAccessTokens?.data,
-      currentTokenWithBearer
-    );
 
     const {
       createToken,
@@ -56,9 +43,7 @@ export const SessionExpirationDialog = React.memo(
       revokeToken,
       updateCurrentToken,
       validateParentToken,
-    } = useParentChildAuthentication({
-      tokenIdToRevoke: pendingRevocationToken?.id ?? -1,
-    });
+    } = useParentChildAuthentication();
 
     const createTokenErrorReason = createTokenError?.[0]?.reason;
 
@@ -200,8 +185,9 @@ export const SessionExpirationDialog = React.memo(
       >
         <Typography>
           Your session will expire in{' '}
-          {pluralize('minute', 'minutes', formattedTimeRemaining)}. Do you want
-          to continue working?
+          {pluralize('minute', 'minutes', formattedTimeRemaining)}. Logging out
+          will return you to your active parent account or the login screen.
+          Would you like to continue working?
         </Typography>
       </ConfirmationDialog>
     );

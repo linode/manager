@@ -1,7 +1,11 @@
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+import {
+  generateUpdatePayload,
+  hasAccessBeenSelectedForAllBuckets,
+  hasLabelOrRegionsChanged,
+} from './utils';
 
-import { FormState } from './OMC_AccessKeyDrawer';
-import { generateUpdatePayload, hasLabelOrRegionsChanged } from './utils';
+import type { DisplayedAccessKeyScope, FormState } from './OMC_AccessKeyDrawer';
+import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 
 describe('generateUpdatePayload', () => {
   const initialValues: FormState = {
@@ -94,5 +98,44 @@ describe('hasLabelOrRegionsChanged', () => {
         initialValues
       )
     ).toBe(true);
+  });
+});
+
+describe('hasAccessBeenSelectedForAllBuckets', () => {
+  const bucketWithoutAccessSelected: DisplayedAccessKeyScope = {
+    bucket_name: 'obj-bucket-1',
+    cluster: 'us-lax-1',
+    permissions: null,
+    region: 'us-lax',
+  };
+
+  const bucketWithAccessSelected: DisplayedAccessKeyScope = {
+    bucket_name: 'obj-bucket-1',
+    cluster: 'us-lax-1',
+    permissions: 'read_only',
+    region: 'us-lax',
+  };
+
+  it('returns false if any buckets have permission set to null', () => {
+    const bucket_access = [
+      bucketWithAccessSelected,
+      bucketWithoutAccessSelected,
+    ];
+    expect(hasAccessBeenSelectedForAllBuckets(bucket_access)).toBe(false);
+  });
+
+  it('returns true if all buckets have permission set to a value other than null', () => {
+    const bucket_access = [bucketWithAccessSelected, bucketWithAccessSelected];
+    expect(hasAccessBeenSelectedForAllBuckets(bucket_access)).toBe(true);
+  });
+
+  it('returns true if buckets are null', () => {
+    const bucket_access = null;
+    expect(hasAccessBeenSelectedForAllBuckets(bucket_access)).toBe(true);
+  });
+
+  it('returns true if there are no buckets', () => {
+    const bucket_access: DisplayedAccessKeyScope[] = [];
+    expect(hasAccessBeenSelectedForAllBuckets(bucket_access)).toBe(true);
   });
 });
