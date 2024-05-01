@@ -4,95 +4,7 @@ import { createDomain } from 'support/api/domains';
 import { fbtClick, getClick } from 'support/helpers';
 import { interceptCreateDomainRecord } from 'support/intercepts/domains';
 import { cleanUp } from 'support/util/cleanup';
-import {
-  randomDomainName,
-  randomIp,
-  randomLabel,
-  randomString,
-} from 'support/util/random';
-
-const createRecords = () => [
-  {
-    name: 'Add an A/AAAA Record',
-    tableAriaLabel: 'List of Domains A/AAAA Record',
-    fields: [
-      {
-        name: '[data-qa-target="Hostname"]',
-        value: randomLabel(),
-        skipCheck: false,
-      },
-      {
-        name: '[data-qa-target="IP Address"]',
-        value: `${randomIp()}`,
-        skipCheck: false,
-      },
-    ],
-  },
-  {
-    name: 'Add a CNAME Record',
-    tableAriaLabel: 'List of Domains CNAME Record',
-    fields: [
-      {
-        name: '[data-qa-target="Hostname"]',
-        value: randomLabel(),
-        skipCheck: false,
-      },
-      {
-        name: '[data-qa-target="Alias to"]',
-        value: `${randomLabel()}.net`,
-        skipCheck: false,
-      },
-    ],
-  },
-  {
-    name: 'Add a TXT Record',
-    tableAriaLabel: 'List of Domains TXT Record',
-    fields: [
-      {
-        name: '[data-qa-target="Hostname"]',
-        value: randomLabel(),
-        skipCheck: false,
-      },
-      {
-        name: '[data-qa-target="Value"]',
-        value: `${randomLabel()}=${randomString()}`,
-        skipCheck: false,
-      },
-    ],
-  },
-  {
-    name: 'Add an SRV Record',
-    tableAriaLabel: 'List of Domains SRV Record',
-    fields: [
-      {
-        name: '[data-qa-target="Service"]',
-        value: randomLabel(),
-        skipCheck: true,
-      },
-      {
-        name: '[data-qa-target="Target"]',
-        value: randomLabel(),
-        approximate: true,
-      },
-    ],
-  },
-  {
-    name: 'Add a CAA Record',
-    tableAriaLabel: 'List of Domains CAA Record',
-    fields: [
-      {
-        name: '[data-qa-target="Name"]',
-        value: randomLabel(),
-        skipCheck: false,
-      },
-      {
-        name: '[data-qa-target="Value"]',
-        value: randomDomainName(),
-        skipCheck: false,
-      },
-    ],
-  },
-];
+import { createDomainRecords } from 'support/constants/domains';
 
 authenticate();
 describe('Creates Domains record with Form', () => {
@@ -100,7 +12,7 @@ describe('Creates Domains record with Form', () => {
     cleanUp('domains');
   });
 
-  createRecords().forEach((rec) => {
+  createDomainRecords().forEach((rec) => {
     return it(rec.name, () => {
       createDomain().then((domain) => {
         // intercept create api record request
