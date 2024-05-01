@@ -56,7 +56,7 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
 
   const onUnassign = async () => {
     await unassignLinodes(payload);
-    const toastMessage = 'Linode successfully unassigned';
+    const toastMessage = `Linode ${selectedLinode?.label} successfully unassigned.`;
     enqueueSnackbar(toastMessage, {
       variant: 'success',
     });

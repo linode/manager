@@ -117,7 +117,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
 
     try {
       await assignLinodes(payload);
-      const toastMessage = 'Linode successfully assigned';
+      const toastMessage = `Linode ${selectedLinode.label} successfully assigned.`;
       enqueueSnackbar(toastMessage, {
         variant: 'success',
       });
@@ -125,7 +125,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
     } catch (errorResponse) {
       const error = getErrorStringOrDefault(
         errorResponse,
-        'An error occurred while adding the Linode to the group'
+        'An error occurred while adding the Linode to the group.'
       );
       setGeneralError(error);
       enqueueSnackbar(error, { variant: 'error' });
