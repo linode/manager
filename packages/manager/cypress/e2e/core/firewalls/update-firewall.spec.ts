@@ -398,7 +398,7 @@ describe('update firewall', () => {
   });
 
   /*
-   * - Confirms that firewall's label can be updated on landing page'.
+   * - Confirms that firewall's label can be updated on landing page.
    */
   it("updates a firewall's label", () => {
     const region = chooseRegion();
