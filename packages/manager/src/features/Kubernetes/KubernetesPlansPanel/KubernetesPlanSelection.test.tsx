@@ -15,7 +15,7 @@ import {
   KubernetesPlanSelectionProps,
 } from './KubernetesPlanSelection';
 
-import type { TypeWithAvailability } from 'src/features/components/PlansPanel/types';
+import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 
 const planHeader = 'Dedicated 20 GB';
 const baseHourlyPrice = '$0.015';
@@ -26,7 +26,7 @@ const ram = '16 GB';
 const cpu = '8';
 const storage = '1024 GB';
 
-const typeWithAvailability: TypeWithAvailability = {
+const PlanWithAvailability: PlanWithAvailability = {
   ...extendedTypeFactory.build(),
   planBelongsToDisabledClass: false,
   planHasLimitedAvailability: false,
@@ -39,7 +39,7 @@ const props: KubernetesPlanSelectionProps = {
   idx: 0,
   onAdd: vi.fn(),
   onSelect: vi.fn(),
-  plan: typeWithAvailability,
+  plan: PlanWithAvailability,
   selectedRegionId: 'us-east',
   updatePlanCount: vi.fn(),
   wholePanelIsDisabled: false,
@@ -118,7 +118,7 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
   });
 
   it('shows limited availability messaging for 512 GB plans', async () => {
-    const bigPlanType: TypeWithAvailability = {
+    const bigPlanType: PlanWithAvailability = {
       ...extendedTypeFactory.build({
         heading: 'Dedicated 512 GB',
         label: 'Dedicated 512GB',

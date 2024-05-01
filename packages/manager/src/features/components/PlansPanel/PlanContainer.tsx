@@ -12,18 +12,18 @@ import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing
 import { PlanSelection } from './PlanSelection';
 import { PlanSelectionTable } from './PlanSelectionTable';
 
-import type { TypeWithAvailability } from './types';
+import type { PlanWithAvailability } from './types';
 import type { Region } from '@linode/api-v4';
 
 export interface PlanContainerProps {
-  allDisabledPlans: TypeWithAvailability[];
+  allDisabledPlans: PlanWithAvailability[];
   currentPlanHeading?: string;
   hasMajorityOfPlansDisabled: boolean;
   isCreate?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   planType?: LinodeTypeClass;
-  plans: TypeWithAvailability[];
+  plans: PlanWithAvailability[];
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionId?: Region['id'];
@@ -52,12 +52,12 @@ export const PlanContainer = (props: PlanContainerProps) => {
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const shouldShowTransfer =
-    showTransfer && plans.some((plan: TypeWithAvailability) => plan.transfer);
+    showTransfer && plans.some((plan: PlanWithAvailability) => plan.transfer);
 
   // Show the Network throughput column if, for any plan, the api returned data (currently Bare Metal does not)
   const shouldShowNetwork =
     showTransfer &&
-    plans.some((plan: TypeWithAvailability) => plan.network_out);
+    plans.some((plan: PlanWithAvailability) => plan.network_out);
 
   // DC Dynamic price logic - DB creation and DB resize flows are currently out of scope
   const isDatabaseCreateFlow = location.pathname.includes('/databases/create');
@@ -69,7 +69,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
 
   interface PlanSelectionDividerTable {
     header?: string;
-    planFilter?: (plan: TypeWithAvailability) => boolean;
+    planFilter?: (plan: PlanWithAvailability) => boolean;
   }
   interface PlanSelectionDividers {
     flag: boolean;
@@ -88,12 +88,12 @@ export const PlanContainer = (props: PlanContainerProps) => {
       tables: [
         {
           header: 'NVIDIA RTX 4000 Ada',
-          planFilter: (plan: TypeWithAvailability) =>
+          planFilter: (plan: PlanWithAvailability) =>
             plan.label.includes('Ada'),
         },
         {
           header: 'NVIDIA Quadro RTX 6000',
-          planFilter: (plan: TypeWithAvailability) =>
+          planFilter: (plan: PlanWithAvailability) =>
             !plan.label.includes('Ada'),
         },
       ],

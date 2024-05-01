@@ -13,7 +13,7 @@ import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing
 
 import { KubernetesPlanSelection } from './KubernetesPlanSelection';
 
-import type { TypeWithAvailability } from 'src/features/components/PlansPanel/types';
+import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 
 const tableCells = [
   { cellName: 'Plan', center: false, noWrap: false, testId: 'plan' },
@@ -26,12 +26,12 @@ const tableCells = [
 ];
 
 export interface KubernetesPlanContainerProps {
-  allDisabledPlans: TypeWithAvailability[];
+  allDisabledPlans: PlanWithAvailability[];
   getTypeCount: (planId: string) => number;
   hasMajorityOfPlansDisabled: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
-  plans: TypeWithAvailability[];
+  plans: PlanWithAvailability[];
   selectedId?: string;
   selectedRegionId?: string;
   updatePlanCount: (planId: string, newCount: number) => void;

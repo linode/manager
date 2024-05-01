@@ -7,16 +7,16 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
-import { TypeWithAvailability } from './types';
+import { PlanWithAvailability } from './types';
 
 interface PlanSelectionFilterOptionsTable {
   header?: string;
-  planFilter?: (plan: TypeWithAvailability) => boolean;
+  planFilter?: (plan: PlanWithAvailability) => boolean;
 }
 
 interface PlanSelectionTableProps {
   filterOptions?: PlanSelectionFilterOptionsTable;
-  planFilter?: (plan: TypeWithAvailability) => boolean;
+  planFilter?: (plan: PlanWithAvailability) => boolean;
   renderPlanSelection: (
     filterOptions?: PlanSelectionFilterOptionsTable | undefined
   ) => React.JSX.Element[];

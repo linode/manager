@@ -14,9 +14,9 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { PlanSelection } from './PlanSelection';
 
 import type { PlanSelectionProps } from './PlanSelection';
-import type { TypeWithAvailability } from './types';
+import type { PlanWithAvailability } from './types';
 
-const mockPlan: TypeWithAvailability = planSelectionTypeFactory.build({
+const mockPlan: PlanWithAvailability = planSelectionTypeFactory.build({
   heading: 'Dedicated 20 GB',
   subHeadings: [
     '$10/mo ($0.015/hr)',

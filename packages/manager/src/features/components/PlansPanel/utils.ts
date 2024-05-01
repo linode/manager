@@ -13,7 +13,7 @@ import {
 import {
   DisabledTooltipReasons,
   PlanSelectionType,
-  TypeWithAvailability,
+  PlanWithAvailability,
 } from './types';
 
 import type {
@@ -273,7 +273,7 @@ export const extractPlansInformation = ({
   regionAvailabilities,
   selectedRegionId,
 }: ExtractPlansInformationProps) => {
-  const plansForThisLinodeTypeClass: TypeWithAvailability[] = plans.map(
+  const plansForThisLinodeTypeClass: PlanWithAvailability[] = plans.map(
     (plan) => {
       const planIs512Gb =
         plan.label.includes('512GB') && Boolean(disableLargestGbPlansFlag);

@@ -9,9 +9,9 @@ import {
   KubernetesPlanContainerProps,
 } from './KubernetesPlanContainer';
 
-import type { TypeWithAvailability } from 'src/features/components/PlansPanel/types';
+import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 
-const plans: TypeWithAvailability[] = planSelectionTypeFactory.buildList(2);
+const plans: PlanWithAvailability[] = planSelectionTypeFactory.buildList(2);
 
 const props: KubernetesPlanContainerProps = {
   allDisabledPlans: [],

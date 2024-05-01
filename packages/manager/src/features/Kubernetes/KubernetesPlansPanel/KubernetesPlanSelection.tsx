@@ -22,7 +22,7 @@ import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/d
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
-import type { TypeWithAvailability } from 'src/features/components/PlansPanel/types';
+import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 
 export interface KubernetesPlanSelectionProps {
   getTypeCount: (planId: string) => number;
@@ -30,7 +30,7 @@ export interface KubernetesPlanSelectionProps {
   idx: number;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
-  plan: TypeWithAvailability;
+  plan: PlanWithAvailability;
   selectedId?: string;
   selectedRegionId?: Region['id'];
   updatePlanCount: (planId: string, newCount: number) => void;

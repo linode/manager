@@ -4,7 +4,7 @@ import type { LinodeType } from '@linode/api-v4/lib/linodes/types';
 import type { PriceType } from '@linode/api-v4/src/types';
 import type {
   PlanSelectionAvailabilityTypes,
-  TypeWithAvailability,
+  PlanWithAvailability,
 } from 'src/features/components/PlansPanel/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
@@ -57,7 +57,7 @@ export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
   vcpus: 8,
 });
 
-export const planSelectionTypeFactory = Factory.Sync.makeFactory<TypeWithAvailability>(
+export const planSelectionTypeFactory = Factory.Sync.makeFactory<PlanWithAvailability>(
   {
     class: typeFactory.build().class,
     disk: typeFactory.build().disk,

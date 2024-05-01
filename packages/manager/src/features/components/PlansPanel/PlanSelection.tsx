@@ -22,7 +22,7 @@ import { DisabledPlanSelectionTooltip } from './DisabledPlanSelectionTooltip';
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
 import { getDisabledPlanReasonCopy } from './utils';
 
-import type { TypeWithAvailability } from './types';
+import type { PlanWithAvailability } from './types';
 import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
 
 export interface PlanSelectionProps {
@@ -34,7 +34,7 @@ export interface PlanSelectionProps {
   isCreate?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
-  plan: TypeWithAvailability;
+  plan: PlanWithAvailability;
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionId?: Region['id'];
