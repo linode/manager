@@ -39,7 +39,7 @@ import { getAll } from 'src/utilities/getAll';
 import { queryPresets } from './base';
 import { profileQueries } from './profile';
 
-const kubernetesQueries = createQueryKeys('kubernetes', {
+export const kubernetesQueries = createQueryKeys('kubernetes', {
   cluster: (id: number) => ({
     contextQueries: {
       dashboard: {
