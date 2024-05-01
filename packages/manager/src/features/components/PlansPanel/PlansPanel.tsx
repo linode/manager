@@ -96,7 +96,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     getIsEdgeRegion(regionsData ?? [], selectedRegionID ?? '');
 
   const getDedicatedEdgePlanType = () => {
-    const edgePlans = types.filter((type) => type.class == 'edge');
+    const edgePlans = types.filter((type) => type.class === 'edge');
     if (edgePlans.length) {
       return edgePlans;
     }
