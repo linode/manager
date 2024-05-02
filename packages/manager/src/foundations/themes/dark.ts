@@ -26,7 +26,7 @@ export const customDarkModeOptions = {
     bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
     bgPaper: Color.Neutrals[100],
     lightBlue1: Color.Neutrals.Black,
-    lightBlue2: Color.Brand[60],
+    lightBlue2: Color.Brand[100],
     main: Color.Neutrals[100],
     mainContentBanner: Color.Neutrals[100],
     offWhite: Color.Neutrals[90],
