@@ -212,7 +212,7 @@ export const PlacementGroupsCreateDrawer = (
               helperText={values.region && pgRegionLimitHelperText}
               regions={regions ?? []}
               selectedId={selectedRegionId ?? values.region}
-              tooltipText="Only regions supporting Placement Groups are listed."
+              tooltipText="Only Linode data center regions that support placement groups are listed."
             />
           )}
           <PlacementGroupsAffinityTypeSelect

@@ -47,9 +47,9 @@ export const PlacementGroupsAffinityTypeEnforcementRadioGroup = (
         <FormControlLabel
           label={
             <Typography>
-              <strong>Strict.</strong> You cannot assign a Linode to your
-              placement group if it will violate the policy of your selected
-              Affinity Type (best practice).
+              <strong>Strict.</strong> You can’t assign Linodes if the preferred
+              container defined by your Affinity Type lacks capacity or is
+              unavailable (best practice).
             </Typography>
           }
           control={<Radio />}
@@ -59,9 +59,9 @@ export const PlacementGroupsAffinityTypeEnforcementRadioGroup = (
         <FormControlLabel
           label={
             <Typography>
-              <strong>Flexible.</strong> You can assign a Linode to your
-              placement group, even if it violates the policy of your selected
-              Affinity Type.
+              <strong>Flexible.</strong> You can assign Linodes, even if they’re
+              not in the preferred container defined by your Affinity Type, but
+              your placement group will be non-compliant.
             </Typography>
           }
           control={<Radio />}
