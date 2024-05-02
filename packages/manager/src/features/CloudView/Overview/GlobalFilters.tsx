@@ -15,7 +15,7 @@ import { CloudViewIntervalSelect } from '../shared/IntervalSelect';
 import { CloudViewRegionSelect } from '../shared/RegionSelect';
 import { CloudViewMultiResourceSelect } from '../shared/ResourceMultiSelect';
 import { CloudViewResourceTypes } from '../shared/ResourceSelect';
-import { CloudViewTimeRangeSelect } from '../shared/TimeRangeSelect';
+import { CloudPulseTimeRangeSelect } from '../shared/TimeRangeSelect';
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
@@ -176,7 +176,7 @@ const StyledCloudViewResourceSelect = styled(CloudViewMultiResourceSelect, {
   width: 230,
 });
 
-const StyledCloudViewTimeRangeSelect = styled(CloudViewTimeRangeSelect, {
+const StyledCloudViewTimeRangeSelect = styled(CloudPulseTimeRangeSelect, {
   label: 'StyledCloudViewTimeRangeSelect',
 })({
   width: 140,

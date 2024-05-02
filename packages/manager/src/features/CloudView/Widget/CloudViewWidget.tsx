@@ -149,7 +149,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
           ),
           label: graphData.metric.LINODE_ID
             ? graphData.metric.LINODE_ID
-            : props.widget.label,
+            : props.widget.label + ' (' + props.widget.unit + ')',
         };
 
         // construct a legend row with the dimension
@@ -157,11 +157,11 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
           data: getMetrics(dimension.data as number[][]),
           format: (value: number) => tooltipValueFormatter(value, widget.unit),
           legendColor: color,
-          legendTitle: props.widget.metric,
+          legendTitle: dimension.label,
         };
         legendRowsData.push(legendRow);
         dimensions.push(dimension);
-        index = index + 3;
+        index = index + 1;
       });
 
       // chart dimensions
@@ -257,7 +257,6 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
             loading={isLoading}
             nativeLegend={true}
             subtitle={props.unit}
-            suggestedMax={10}
             timezone={timezone}
             title={props.widget.label}
             unit={' ' + props.unit}

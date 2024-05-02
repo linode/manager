@@ -19,10 +19,10 @@ export const CloudViewTabs = React.memo((props: Props) => {
       routeName: `${props.match.url}/dashboards`,
       title: 'Dashboards',
     },
-    {
-      routeName: `${props.match.url}/namespaces`,
-      title: 'Namespaces',
-    },
+    // {
+    //   routeName: `${props.match.url}/namespaces`,
+    //   title: 'Namespaces',
+    // },
   ];
 
   const matches = (p: string) => {
@@ -54,9 +54,9 @@ export const CloudViewTabs = React.memo((props: Props) => {
             <SafeTabPanel index={0}>
               <DashBoardLanding />
             </SafeTabPanel>
-            <SafeTabPanel index={1}>
+            {/* <SafeTabPanel index={1}>
               <Namespaces />
-            </SafeTabPanel>
+            </SafeTabPanel> */}
           </TabPanels>
         </React.Suspense>
       </StyledTabs>

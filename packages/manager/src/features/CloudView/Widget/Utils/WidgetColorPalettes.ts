@@ -1,5 +1,6 @@
 export const RED = [
   '#ee2c2c80',
+  '#ff633d80',
   '#F27E7E80',
   '#EA7C7280',
   '#E2796580',
@@ -13,6 +14,10 @@ export const RED = [
 ];
 
 export const GREEN = [
+  '#10a21d80',
+  '#31ce3e80',
+  '#d9b0d980',
+  '#ffdc7d80',
   '#7EF29D80',
   '#72E39E80',
   '#65D3A080',
@@ -40,6 +45,7 @@ export const BLUE = [
 ];
 
 export const YELLOW = [
+  '#ffb34d80',
   '#F2EE7E80',
   '#E6E67280',
   '#DBDE6580',
