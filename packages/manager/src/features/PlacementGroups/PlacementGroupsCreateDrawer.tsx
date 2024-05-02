@@ -78,7 +78,7 @@ export const PlacementGroupsCreateDrawer = (
     try {
       const response = await mutateAsync(values);
 
-      enqueueSnackbar(`Placement Group ${values.label} successfully created`, {
+      enqueueSnackbar(`Placement Group ${values.label} successfully created.`, {
         variant: 'success',
       });
 

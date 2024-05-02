@@ -708,27 +708,31 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   payment_submitted: {
     notification: (e) => `A payment was successfully submitted.`,
   },
-  // This event action denotes when a Placement Group has been selected during the Linode Create flow.
+  // This event action captures Linode assignment to a Placement Group from Linode Create flow and from PlacementGroupAssignLinodeDrawer.
   placement_group_assign: {
-    notification: (e) => `Placement Group successfully assigned.`,
-  },
-  // This event action denotes an existing Linode instance has been assigned to an existing Placement Group.
-  placement_group_assigned: {
     notification: (e) =>
       `Linode ${e.secondary_entity?.label} has been assigned to Placement Group ${e.entity?.label}.`,
   },
-  placement_group_created: {
+  placement_group_became_compliant: {
+    notification: (e) =>
+      `Placement Group ${e.entity?.label} has become compliant.`,
+  },
+  placement_group_became_non_compliant: {
+    notification: (e) =>
+      `Placement Group ${e.entity?.label} has become non-compliant.`,
+  },
+  placement_group_create: {
     notification: (e) =>
       `Placement Group ${e.entity?.label} has been successfully created.`,
   },
-  placement_group_deleted: {
+  placement_group_delete: {
     notification: (e) => `Placement Group ${e.entity?.label} has been deleted.`,
   },
-  placement_group_unassigned: {
+  placement_group_unassign: {
     notification: (e) =>
       `Linode ${e.secondary_entity?.label} has been unassigned from Placement Group ${e.entity?.label}.`,
   },
-  placement_group_updated: {
+  placement_group_update: {
     notification: (e) => `Placement Group ${e.entity?.label} has been updated.`,
   },
   profile_update: {

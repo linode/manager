@@ -85,7 +85,7 @@ export const PlacementGroupsEditDrawer = (
     try {
       const response = await mutateAsync(values);
 
-      enqueueSnackbar(`Placement Group ${values.label} successfully updated`, {
+      enqueueSnackbar(`Placement Group ${values.label} successfully updated.`, {
         variant: 'success',
       });
 
