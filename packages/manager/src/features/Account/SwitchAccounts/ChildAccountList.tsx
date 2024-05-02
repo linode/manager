@@ -65,7 +65,7 @@ export const ChildAccountList = React.memo(
       );
     }
 
-    if (childAccounts?.length === 0 || !childAccounts) {
+    if (childAccounts?.length === 0) {
       return (
         <Notice variant="info">There are no indirect customer accounts.</Notice>
       );
