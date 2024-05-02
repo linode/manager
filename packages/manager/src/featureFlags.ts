@@ -62,9 +62,9 @@ export interface Flags {
   gecko: boolean; // @TODO gecko: delete this after next release
   gecko2: GeckoFlag;
   ipv6Sharing: boolean;
-  linodeCloneUiChanges: boolean;
   linodeCreateRefactor: boolean;
   linodeCreateWithFirewall: boolean;
+  linodeDiskEncryption: boolean;
   mainContentBanner: MainContentBanner;
   metadata: boolean;
   objMultiCluster: boolean;

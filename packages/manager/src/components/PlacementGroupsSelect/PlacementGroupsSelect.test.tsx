@@ -97,15 +97,15 @@ describe('PlacementGroupSelect', () => {
       />
     );
 
-    const select = getByPlaceholderText('Select a Placement Group');
+    const select = getByPlaceholderText('None');
     expect(select).toBeEnabled();
 
     fireEvent.focus(select);
     fireEvent.change(select, {
-      target: { value: 'my-placement-group (Affinity)' },
+      target: { value: 'my-placement-group' },
     });
 
-    const selectedRegionOption = getByText('my-placement-group (Affinity)');
+    const selectedRegionOption = getByText('my-placement-group');
     fireEvent.click(selectedRegionOption);
 
     expect(

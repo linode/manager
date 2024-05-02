@@ -6,7 +6,7 @@ import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 
-import type { Disk, Linode, LinodeType, Volume } from '@linode/api-v4';
+import type { Disk, Linode, LinodeType, Kernel, Volume } from '@linode/api-v4';
 import { makeErrorResponse } from 'support/util/errors';
 
 /**
@@ -372,5 +372,41 @@ export const mockMigrateLinode = (
     'POST',
     apiMatcher(`linode/instances/${linodeId}/migrate`),
     {}
+  );
+};
+
+/**
+ * Intercepts GET request to fetch Linode kernels and mocks response.
+ *
+ * @param mockKernels - Array of Kernel objects with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLinodeKernels = (
+  mockKernels: Kernel[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('linode/kernels*'),
+    paginateResponse(mockKernels)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch a Linode kernel and mocks response.
+ *
+ * @param kernelId - ID of Kernel for which to mock response.
+ * @param mockKernel - Kernel object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLinodeKernel = (
+  kernelId: string,
+  mockKernel: Kernel
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/kernels/${kernelId}`),
+    makeResponse(mockKernel)
   );
 };

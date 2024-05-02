@@ -96,6 +96,7 @@ import {
   supportTicketFactory,
   tagFactory,
   volumeFactory,
+  volumeTypeFactory,
   vpcFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
@@ -1162,6 +1163,10 @@ export const handlers = [
     const volumes = statuses.map((status) => volumeFactory.build({ status }));
     return HttpResponse.json(makeResourcePage(volumes));
   }),
+  http.get('*/volumes/types', () => {
+    const volumeTypes = volumeTypeFactory.buildList(1);
+    return HttpResponse.json(makeResourcePage(volumeTypes));
+  }),
   http.post('*/volumes', () => {
     const volume = volumeFactory.build();
     return HttpResponse.json(volume);
@@ -1604,14 +1609,14 @@ export const handlers = [
         status: 'notification',
       });
       const placementGroupCreateEvent = eventFactory.buildList(1, {
-        action: 'placement_group_created',
+        action: 'placement_group_create',
         entity: { id: 999, label: 'PG-1', type: 'placement_group' },
         message: 'Placement Group successfully created.',
         percent_complete: 100,
         status: 'notification',
       });
       const placementGroupAssignedEvent = eventFactory.buildList(1, {
-        action: 'placement_group_assigned',
+        action: 'placement_group_assign',
         entity: { id: 990, label: 'PG-2', type: 'placement_group' },
         message: 'Placement Group successfully assigned.',
         percent_complete: 100,

@@ -3,10 +3,14 @@ import {
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { mockGetPlacementGroups } from 'support/intercepts/vm-placement';
+import { mockGetPlacementGroups } from 'support/intercepts/placement-groups';
 import { ui } from 'support/ui';
+import { accountFactory } from 'src/factories';
 
 import type { Flags } from 'src/featureFlags';
+import { mockGetAccount } from 'support/intercepts/account';
+
+const mockAccount = accountFactory.build();
 
 describe('VM Placement landing page', () => {
   // Mock the VM Placement Groups feature flag to be enabled for each test in this block.
@@ -18,6 +22,7 @@ describe('VM Placement landing page', () => {
       }),
     });
     mockGetFeatureFlagClientstream();
+    mockGetAccount(mockAccount).as('getAccount');
   });
 
   /**
@@ -34,7 +39,7 @@ describe('VM Placement landing page', () => {
     });
 
     ui.button
-      .findByTitle('Create Placement Groups')
+      .findByTitle('Create Placement Group')
       .should('be.visible')
       .should('be.enabled')
       .click();

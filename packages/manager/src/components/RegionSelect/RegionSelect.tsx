@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import * as React from 'react';
 
-import EdgeServer from 'src/assets/icons/entityIcons/edge-server.svg';
+import EdgeRegion from 'src/assets/icons/entityIcons/edge-region.svg';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
@@ -26,7 +26,7 @@ import type {
  * A specific select for regions.
  *
  * The RegionSelect automatically filters regions based on capability using its `currentCapability` prop. For example, if
- * `currentCapability="VPCs"`, only regions that support VPCs will appear in the RegionSelect dropdown. Edge regions are filtered based on the `hideEdgeServers` prop.
+ * `currentCapability="VPCs"`, only regions that support VPCs will appear in the RegionSelect dropdown. Edge regions are filtered based on the `regionFilter` prop.
  * There is no need to pre-filter regions when passing them to the RegionSelect. See the description of `currentCapability` prop for more information.
  *
  * We do not display the selected check mark for single selects.
@@ -36,6 +36,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     currentCapability,
     disabled,
     errorText,
+    handleDisabledRegion,
     handleSelection,
     helperText,
     isClearable,
@@ -85,15 +86,25 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
       getRegionOptions({
         accountAvailabilityData: accountAvailability,
         currentCapability,
+        handleDisabledRegion,
         regionFilter,
         regions,
       }),
-    [accountAvailability, currentCapability, regions, regionFilter]
+    [
+      accountAvailability,
+      currentCapability,
+      handleDisabledRegion,
+      regions,
+      regionFilter,
+    ]
   );
 
   return (
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete
+        getOptionDisabled={(option: RegionSelectOption) =>
+          Boolean(option.disabledProps?.disabled)
+        }
         isOptionEqualToValue={(
           option: RegionSelectOption,
           { value }: RegionSelectOption
@@ -110,7 +121,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         renderOption={(props, option) => {
           return (
             <RegionOption
-              displayEdgeServerIcon={
+              displayEdgeRegionIcon={
                 regionFilter !== 'core' && option.site_type === 'edge'
               }
               key={option.value}
@@ -125,14 +136,15 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           },
         })}
         textFieldProps={{
+          ...props.textFieldProps,
           InputProps: {
             endAdornment: regionFilter !== 'core' &&
               selectedRegion?.site_type === 'edge' && (
                 <TooltipIcon
-                  icon={<EdgeServer />}
+                  icon={<EdgeRegion />}
                   status="other"
                   sxTooltipIcon={sxEdgeIcon}
-                  text="This region is an Edge server."
+                  text="This region is an edge region."
                 />
               ),
             required,
@@ -150,7 +162,6 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         disableClearable={!isClearable}
         disabled={disabled}
         errorText={errorText}
-        getOptionDisabled={(option: RegionSelectOption) => option.unavailable}
         groupBy={(option: RegionSelectOption) => option.data.region}
         helperText={helperText}
         label={label ?? 'Region'}
@@ -163,14 +174,14 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
       />
       {showEdgeIconHelperText && ( // @TODO Gecko Beta: Add docs link
         <StyledEdgeBox>
-          <EdgeServer />
+          <EdgeRegion />
           <Typography
             data-testid="region-select-edge-text"
             sx={{ alignSelf: 'center', textWrap: 'nowrap' }}
           >
             {' '}
-            Indicates an Edge server region.{' '}
-            <Link aria-label="Learn more about Akamai Edge servers" to="#">
+            Indicates an edge region.{' '}
+            <Link aria-label="Learn more about Akamai edge regions" to="#">
               Learn more
             </Link>
             .

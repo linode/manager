@@ -393,7 +393,11 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         disabled: {},
         focused: {},
-        input: {},
+        input: {
+          '&.Mui-disabled': {
+            WebkitTextFillColor: 'unset !important',
+          },
+        },
         root: {
           '& svg': {
             color: Select.Default.Icon,

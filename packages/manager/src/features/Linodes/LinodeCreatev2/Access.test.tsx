@@ -10,16 +10,20 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 import { Access } from './Access';
 
 describe('Access', () => {
-  it('should render a root password input', async () => {
-    const { findByLabelText } = renderWithThemeAndHookFormContext({
-      component: <Access />,
-    });
+  it(
+    'should render a root password input',
+    async () => {
+      const { findByLabelText } = renderWithThemeAndHookFormContext({
+        component: <Access />,
+      });
 
-    const rootPasswordInput = await findByLabelText('Root Password');
+      const rootPasswordInput = await findByLabelText('Root Password');
 
-    expect(rootPasswordInput).toBeVisible();
-    expect(rootPasswordInput).toBeEnabled();
-  });
+      expect(rootPasswordInput).toBeVisible();
+      expect(rootPasswordInput).toBeEnabled();
+    },
+    { timeout: 5_000 }
+  );
 
   it('should render a SSH Keys heading', async () => {
     const { getAllByText } = renderWithThemeAndHookFormContext({

@@ -1,8 +1,8 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -28,6 +28,7 @@ import { usePlacementGroupsQuery } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { PLACEMENT_GROUPS_DOCS_LINK } from '../constants';
 import { PlacementGroupsCreateDrawer } from '../PlacementGroupsCreateDrawer';
 import { PlacementGroupsDeleteModal } from '../PlacementGroupsDeleteModal';
 import { PlacementGroupsEditDrawer } from '../PlacementGroupsEditDrawer';
@@ -139,7 +140,6 @@ export const PlacementGroupsLanding = React.memo(() => {
           openCreatePlacementGroupDrawer={handleCreatePlacementGroup}
         />
         <PlacementGroupsCreateDrawer
-          allPlacementGroups={placementGroups.data}
           disabledPlacementGroupCreateButton={isLinodeReadOnly}
           onClose={onClosePlacementGroupDrawer}
           open={isPlacementGroupCreateDrawerOpen}
@@ -171,7 +171,7 @@ export const PlacementGroupsLanding = React.memo(() => {
         }}
         breadcrumbProps={{ pathname: '/placement-groups' }}
         disabledCreateButton={isLinodeReadOnly}
-        docsLink={'TODO VM_Placement: add doc link'}
+        docsLink={PLACEMENT_GROUPS_DOCS_LINK}
         entity="Placement Group"
         onButtonClick={handleCreatePlacementGroup}
         title="Placement Groups"
@@ -195,9 +195,9 @@ export const PlacementGroupsLanding = React.memo(() => {
         }}
         debounceTime={250}
         hideLabel
-        label="Filter"
+        label="Search"
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Filter"
+        placeholder="Search Placement Groups"
         sx={{ mb: 4 }}
         value={query}
       />
@@ -279,7 +279,6 @@ export const PlacementGroupsLanding = React.memo(() => {
         pageSize={pagination.pageSize}
       />
       <PlacementGroupsCreateDrawer
-        allPlacementGroups={placementGroups?.data ?? []}
         disabledPlacementGroupCreateButton={isLinodeReadOnly}
         onClose={onClosePlacementGroupDrawer}
         open={isPlacementGroupCreateDrawerOpen}

@@ -23,7 +23,7 @@ export const PlacementGroupsLandingEmptyState = ({
     <ResourcesSection
       buttonProps={[
         {
-          children: 'Create Placement Groups',
+          children: 'Create Placement Group',
           disabled: disabledCreateButton,
           onClick: () => {
             sendEvent({

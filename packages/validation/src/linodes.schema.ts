@@ -173,7 +173,9 @@ export const LinodeInterfaceSchema = object().shape({
   primary: boolean().notRequired(),
   subnet_id: number().when('purpose', {
     is: 'vpc',
-    then: number().required('Subnet is required.'),
+    then: number()
+      .transform((value) => (isNaN(value) ? undefined : value))
+      .required('Subnet is required.'),
     otherwise: number().test({
       name: testnameDisallowedBasedOnPurpose('VPC'),
       message: testmessageDisallowedBasedOnPurpose('vpc', 'subnet_id'),
@@ -272,15 +274,22 @@ const PlacementGroupPayloadSchema = object({
   id: number().notRequired().nullable(true),
 });
 
+const DiskEncryptionSchema = object({
+  disk_encryption: string()
+    .oneOf(['enabled', 'disabled'])
+    .nullable()
+    .notRequired(),
+});
+
 export const CreateLinodeSchema = object({
   type: string().ensure().required('Plan is required.'),
   region: string().ensure().required('Region is required.'),
-  stackscript_id: number().notRequired(),
+  stackscript_id: number().nullable().notRequired(),
   backup_id: number().notRequired(),
   swap_size: number().notRequired(),
   image: string().when('stackscript_id', {
     is: (value?: number) => value !== undefined,
-    then: string().required('Image is required.'),
+    then: string().ensure().required('Image is required.'),
     otherwise: string().nullable().notRequired(),
   }),
   authorized_keys: array().of(string()).notRequired(),
@@ -307,6 +316,7 @@ export const CreateLinodeSchema = object({
   metadata: MetadataSchema,
   firewall_id: number().nullable().notRequired(),
   placement_group: PlacementGroupPayloadSchema,
+  disk_encryption: DiskEncryptionSchema,
 });
 
 const alerts = object({
@@ -387,6 +397,7 @@ export const RebuildLinodeSchema = object().shape({
   stackscript_data,
   booted: boolean().notRequired(),
   metadata: MetadataSchema,
+  disk_encryption: DiskEncryptionSchema,
 });
 
 export const RebuildLinodeFromStackScriptSchema = RebuildLinodeSchema.shape({

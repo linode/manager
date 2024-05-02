@@ -9,6 +9,10 @@ import type { TooltipProps } from '@mui/material/Tooltip';
 import type { TypographyProps } from 'src/components/Typography';
 
 export interface TextTooltipProps {
+  /**
+   * Props to pass to the Popper component
+   */
+  PopperProps?: TooltipProps['PopperProps'];
   /** The text to hover on to display the tooltip */
   displayText: string;
   /** If true, the tooltip will not have a min-width of 375px
@@ -36,6 +40,7 @@ export interface TextTooltipProps {
  */
 export const TextTooltip = (props: TextTooltipProps) => {
   const {
+    PopperProps,
     displayText,
     minWidth,
     placement,
@@ -47,7 +52,9 @@ export const TextTooltip = (props: TextTooltipProps) => {
   return (
     <StyledRootTooltip
       PopperProps={{
+        ...PopperProps,
         sx: {
+          ...PopperProps?.sx,
           '& > div': {
             minWidth: minWidth ? minWidth : 375,
           },

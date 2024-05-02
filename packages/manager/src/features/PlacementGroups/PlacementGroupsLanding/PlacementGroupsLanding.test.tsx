@@ -89,8 +89,21 @@ describe('PlacementGroupsLanding', () => {
 
     expect(
       getByText(
-        'Control the physical placement or distribution of virtual machines (VMs) instances within a data center or availability zone.'
+        'Control the physical placement or distribution of Linode instances within a data center or availability zone.'
       )
     ).toBeInTheDocument();
+  });
+
+  it('should render placement group Getting Started Guides on landing page with empty state', () => {
+    queryMocks.usePlacementGroupsQuery.mockReturnValue({
+      data: {
+        data: [],
+        results: 0,
+      },
+    });
+
+    const { getByText } = renderWithTheme(<PlacementGroupsLanding />);
+
+    expect(getByText('Getting Started Guides')).toBeInTheDocument();
   });
 });
