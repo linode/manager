@@ -58,6 +58,8 @@ export const linodeCreatePage = {
   /**
    * Select the given Linode plan.
    *
+   * Assumes that plans are displayed in a table.
+   *
    * @param planTabTitle - Title of tab where desired plan is located.
    * @param planTitle - Title of desired plan.
    */
@@ -67,6 +69,25 @@ export const linodeCreatePage = {
       cy.findByLabelText(planTitle, { selector: 'tr' })
         .should('be.visible')
         .click();
+    });
+  },
+
+  /**
+   * Select the given Linode plan selection card.
+   *
+   * Useful for testing Linode create page against mobile viewports.
+   *
+   * Assumes that plans are displayed as selection cards.
+   */
+  selectPlanCard: (planTabTitle: string, planTitle: string) => {
+    ui.tabList.findTabByTitle(planTabTitle).click();
+    ui.tabList.findTabPanelByTitle(planTabTitle).within(() => {
+      cy.findByText(planTitle)
+        .should('be.visible')
+        .as('selectionCard')
+        .scrollIntoView();
+
+      cy.get('@selectionCard').click();
     });
   },
 };
