@@ -110,7 +110,9 @@ describe('Placement Group deletion', () => {
 
     // Confirm that UI updates to reflect deleted Placement Group.
     cy.wait(['@deletePlacementGroup', '@getPlacementGroups']);
-    ui.toast.assertMessage('Placement Group successfully deleted.');
+    ui.toast.assertMessage(
+      `Placement Group ${mockPlacementGroup.label} successfully deleted.`
+    );
     cy.findByText(emptyStateMessage).should('be.visible');
   });
 
@@ -245,7 +247,9 @@ describe('Placement Group deletion', () => {
       });
 
     cy.wait(['@deletePlacementGroup', '@getPlacementGroups']);
-    ui.toast.assertMessage('Placement Group successfully deleted.');
+    ui.toast.assertMessage(
+      `Placement Group ${mockPlacementGroup.label} successfully deleted.`
+    );
 
     // Confirm that deleted Placement Group has been removed from list and that
     // other Placement Group remains.
