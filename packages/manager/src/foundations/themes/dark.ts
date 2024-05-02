@@ -365,7 +365,7 @@ export const darkTheme: ThemeOptions = {
     MuiFormHelperText: {
       styleOverrides: {
         root: {
-          '&$error': {
+          '&[class*="error"]': {
             color: Select.Error.HintText,
           },
           color: Color.Neutrals[40],
