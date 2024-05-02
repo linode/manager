@@ -17,7 +17,9 @@ interface Props {
   value: boolean;
 }
 
-export const PlacementGroupsAffinityEnforcementRadioGroup = (props: Props) => {
+export const PlacementGroupsAffinityTypeEnforcementRadioGroup = (
+  props: Props
+) => {
   const {
     disabledPlacementGroupCreateButton,
     handleChange,
@@ -27,18 +29,18 @@ export const PlacementGroupsAffinityEnforcementRadioGroup = (props: Props) => {
   return (
     <Box sx={{ pt: 2 }}>
       <Notice
-        text="Once you create a placement group, you cannot change its Affinity Enforcement setting."
+        text="Once you create a placement group, you cannot change its Affinity Type Enforcement setting."
         variant="warning"
       />
-      <FormLabel htmlFor="affinity-enforcement-radio-group">
-        Affinity Enforcement
+      <FormLabel htmlFor="affinity-type-enforcement-radio-group">
+        Affinity Type Enforcement
       </FormLabel>
       <RadioGroup
         onChange={(event) => {
           handleChange(event);
           setFieldValue('is_strict', event.target.value === 'true');
         }}
-        id="affinity-enforcement-radio-group"
+        id="affinity-type-enforcement-radio-group"
         name="is_strict"
         value={value}
       >

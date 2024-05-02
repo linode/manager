@@ -128,7 +128,7 @@ describe('getLinodesFromAllPlacementGroups', () => {
   });
 });
 
-describe('getAffinityEnforcement', () => {
+describe('getAffinityTypeEnforcement', () => {
   it('returns "Strict" if `is_strict` is true', () => {
     expect(getAffinityTypeEnforcement(true)).toBe('Strict');
   });
