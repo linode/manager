@@ -5,9 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import CloudViewIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { useCloudViewJWEtokenQuery } from 'src/queries/cloudview/dashboards';
 import {
   useLinodeResourcesQuery,

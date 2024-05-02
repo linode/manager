@@ -32,7 +32,7 @@ export type Labels =
   | 'Past 30 Days'
   | 'Past 30 Minutes';
 
-export const CloudViewTimeRangeSelect = React.memo((props: Props) => {
+export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
   const { defaultValue, handleStatsChange, ...restOfSelectProps } = props;
 
   /*
