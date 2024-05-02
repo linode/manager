@@ -30,7 +30,6 @@ export const StyledTableWrapper = styled('div', {
         borderLeft: `1px solid ${theme.borderColors.borderTable}`,
         borderRight: `1px solid ${theme.borderColors.borderTable}`,
         borderTop: `2px solid ${theme.borderColors.borderTable}`,
-        color: theme.textColors.tableHeader,
         fontFamily: theme.font.bold,
         padding: '10px 15px',
       },

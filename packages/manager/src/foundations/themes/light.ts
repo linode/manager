@@ -1,8 +1,10 @@
 import {
+  Action,
   Border,
   Button,
   Color,
   Interaction,
+  Select,
 } from '@linode/design-language-system';
 import { ThemeOptions } from '@mui/material/styles';
 
@@ -71,7 +73,8 @@ export const color = {
 
 export const textColors = {
   headlineStatic: Color.Neutrals[100],
-  linkActiveLight: Color.Brand[80],
+  linkActiveLight: Action.Primary.Default,
+  linkHover: Action.Primary.Hover,
   tableHeader: Color.Neutrals[60],
   tableStatic: Color.Neutrals[70],
   textAccessTable: Color.Neutrals[70],
@@ -113,12 +116,12 @@ const iconCircleHoverEffect = {
 const genericLinkStyle = {
   '&:hover': {
     backgroundColor: 'transparent',
-    color: primaryColors.main,
+    color: Action.Primary.Hover,
     textDecoration: 'underline',
   },
   background: 'none',
   border: 'none',
-  color: textColors.linkActiveLight,
+  color: Action.Primary.Default,
   cursor: 'pointer',
   font: 'inherit',
   minWidth: 0,
@@ -681,7 +684,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&$error': {
-            color: Color.Red[70],
+            color: Select.Error.HintText,
           },
           fontSize: '0.875rem',
           lineHeight: 1.25,
@@ -823,7 +826,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         input: {
           '&::placeholder': {
-            opacity: 0.42,
+            opacity: 1,
           },
           height: 'auto',
         },
@@ -1274,9 +1277,6 @@ export const lightTheme: ThemeOptions = {
           transform: 'rotate(180deg)',
         },
         root: {
-          '&.Mui-active': {
-            color: textColors.tableHeader,
-          },
           '&:focus': {
             outline: `1px dotted ${Color.Neutrals[60]}`,
           },

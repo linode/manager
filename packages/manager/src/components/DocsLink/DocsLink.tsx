@@ -50,12 +50,9 @@ export const DocsLink = (props: DocsLinkProps) => {
 const StyledDocsLink = styled(Link, {
   label: 'StyledDocsLink',
 })(({ theme }) => ({
+  ...theme.applyLinkStyles,
   '& svg': {
     marginRight: theme.spacing(),
-  },
-  '&:hover': {
-    color: theme.textColors.linkActiveLight,
-    textDecoration: 'underline',
   },
   alignItems: 'center',
   display: 'flex',

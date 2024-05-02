@@ -67,10 +67,13 @@ export const TextTooltip = (props: TextTooltipProps) => {
 const StyledRootTooltip = styled(Tooltip, {
   label: 'StyledRootTooltip',
 })(({ theme }) => ({
+  '&:hover': {
+    color: theme.textColors.linkHover,
+  },
   borderRadius: 4,
-  color: theme.palette.primary.main,
+  color: theme.textColors.linkActiveLight,
   cursor: 'pointer',
   position: 'relative',
-  textDecoration: `underline dotted ${theme.palette.primary.main}`,
+  textDecoration: `underline dotted ${theme.textColors.linkActiveLight}`,
   textUnderlineOffset: 4,
 }));
