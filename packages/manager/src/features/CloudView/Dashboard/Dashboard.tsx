@@ -66,7 +66,6 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   );
 
   React.useEffect(() => {
-    console.log()
     // set as dashboard filter
     setCloudViewGraphProperties({
       ...cloudViewGraphProperties,
