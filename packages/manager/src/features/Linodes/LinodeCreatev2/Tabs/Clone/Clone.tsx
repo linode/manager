@@ -7,7 +7,7 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 
 import { LinodeCreateFormValues } from '../../utilities';
-import { LinodeSelectTable } from '../Backups/LinodeSelectTable';
+import { LinodeSelectTable } from '../../shared/LinodeSelectTable';
 import { CloneWarning } from './CloneWarning';
 
 export const Clone = () => {

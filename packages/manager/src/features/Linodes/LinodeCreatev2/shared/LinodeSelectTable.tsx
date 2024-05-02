@@ -28,7 +28,7 @@ import { isNumeric } from 'src/utilities/stringUtils';
 import {
   LinodeCreateFormValues,
   useLinodeCreateQueryParams,
-} from '../../utilities';
+} from '../utilities';
 import { LinodeSelectTableRow } from './LinodeSelectTableRow';
 
 import type { Linode } from '@linode/api-v4';
