@@ -27,7 +27,7 @@ describe('MainContentBanner', () => {
     expect(getByText('Linode is now Akamai 🤯')).toBeVisible();
   });
 
-  it('should render a link feature flags', () => {
+  it('should render a link from feature flags', () => {
     const { getByText } = renderWithTheme(<MainContentBanner />, {
       flags: { mainContentBanner },
     });
