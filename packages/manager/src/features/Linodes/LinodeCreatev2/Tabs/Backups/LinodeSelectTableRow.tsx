@@ -59,7 +59,11 @@ export const LinodeSelectTableRow = (props: Props) => {
       {onPowerOff && (
         <TableCell actionCell>
           {selected && linode.status !== 'offline' && (
-            <InlineMenuAction actionText="Power Off" onClick={onPowerOff} />
+            <InlineMenuAction
+              actionText="Power Off"
+              buttonHeight={43}
+              onClick={onPowerOff}
+            />
           )}
         </TableCell>
       )}

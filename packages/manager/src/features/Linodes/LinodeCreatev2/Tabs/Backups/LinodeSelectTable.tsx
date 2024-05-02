@@ -143,7 +143,7 @@ export const LinodeSelectTable = (props: Props) => {
                 >
                   Region
                 </TableSortCell>
-                {enablePowerOff && <TableCell></TableCell>}
+                {enablePowerOff && <TableCell sx={{ minWidth: 100 }} />}
               </TableRow>
             </TableHead>
             <TableBody>
