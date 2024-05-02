@@ -239,7 +239,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
               display: 'flex',
               float: 'right',
               justifyContent: 'flex-end',
-              alignItems: 'center',
+              alignItems: 'start',
               width: '70%',
             }}
           >

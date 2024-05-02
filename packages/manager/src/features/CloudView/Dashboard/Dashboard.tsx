@@ -18,7 +18,6 @@ import {
 } from '../Widget/CloudViewWidget';
 import { useGetCloudViewMetricDefinitionsByServiceType } from 'src/queries/cloudview/services';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Paper } from '@mui/material';
 
 export interface DashboardProperties {
@@ -67,6 +66,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   );
 
   React.useEffect(() => {
+    console.log()
     // set as dashboard filter
     setCloudViewGraphProperties({
       ...cloudViewGraphProperties,
@@ -115,7 +115,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   };
 
   const handleWidgetChange = (widget: Widgets) => {
-    const dashboard = { ...props.dashbaord };
+    const dashboard = { ...props.dashboard };
 
     const index = dashboard.widgets.findIndex(
       (obj) => obj.label === widget.label

@@ -128,7 +128,7 @@ export const DashBoardLanding = () => {
     // set as dashboard filter
     setDashboardProp({
       ...dashboardProp,
-      dashbaord: updatedDashboard.current!,
+      dashboard: updatedDashboard.current!,
       dashboardFilters: { ...dashbboardPropRef.current.dashboardFilters },
     });
 
@@ -208,7 +208,7 @@ export const DashBoardLanding = () => {
     // todo, implement the reset view function
   };
 
-  const dashbaordChange = (dashboardObj: Dashboard) => {
+  const dashboardChange = (dashboardObj: Dashboard) => {
     // todo, whenever a change in dashboard happens
     updatedDashboard.current = { ...dashboardObj };
 
@@ -263,7 +263,7 @@ export const DashBoardLanding = () => {
       </Paper>
       <CloudPulseDashboard
         {...dashboardProp}
-        onDashboardChange={dashbaordChange}
+        onDashboardChange={dashboardChange}
       />
     </>
   );
