@@ -25,7 +25,10 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { PlacementGroupsAffinityEnforcementRadioGroup } from './PlacementGroupsAffinityEnforcementRadioGroup';
 import { PlacementGroupsAffinityTypeSelect } from './PlacementGroupsAffinityTypeSelect';
-import { hasRegionReachedPlacementGroupCapacity } from './utils';
+import {
+  getMaxPGsPerCustomer,
+  hasRegionReachedPlacementGroupCapacity,
+} from './utils';
 
 import type { PlacementGroupsCreateDrawerProps } from './types';
 import type { CreatePlacementGroupPayload, Region } from '@linode/api-v4';
@@ -123,7 +126,9 @@ export const PlacementGroupsCreateDrawer = (
     [regions, values.region]
   );
 
-  const pgRegionLimitHelperText = `The maximum number of placement groups in this region is: ${selectedRegion?.placement_group_limits?.maximum_pgs_per_customer}`;
+  const pgRegionLimitHelperText = `The maximum number of placement groups in this region is: ${getMaxPGsPerCustomer(
+    selectedRegion
+  )}`;
 
   return (
     <Drawer
@@ -192,8 +197,7 @@ export const PlacementGroupsCreateDrawer = (
                       </Typography>
                       <Typography mt={2}>
                         The maximum number of placement groups in this region
-                        is:{' '}
-                        {region.placement_group_limits.maximum_pgs_per_customer}
+                        is: {getMaxPGsPerCustomer(region)}
                       </Typography>
                     </>
                   ),
