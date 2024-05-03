@@ -204,11 +204,6 @@ export const DatabaseResize = ({ database }: Props) => {
   const currentPlan = displayTypes?.find((type) => type.id === database.type);
 
   const currentPlanDisk = currentPlan ? currentPlan.disk : 0;
-  const disabledPlans = displayTypes?.filter((type) =>
-    type.class === 'dedicated'
-      ? type.disk < currentPlanDisk
-      : type.disk <= currentPlanDisk
-  );
 
   if (typesLoading) {
     return <CircleProgress />;
@@ -227,10 +222,11 @@ export const DatabaseResize = ({ database }: Props) => {
       </Paper>
       <Paper sx={{ marginTop: 2 }}>
         <StyledPlansPanel
+          disableSmallerPlans={{
+            selectedDiskSize: currentPlanDisk,
+          }}
           currentPlanHeading={currentPlan?.heading}
           data-qa-select-plan
-          disabledPlanTypes={disabledPlans}
-          disabledPlanTypesToolTipText="Resizing to smaller plans is not supported."
           header="Choose a Plan"
           onSelect={(selected: string) => setPlanSelected(selected)}
           selectedId={planSelected}

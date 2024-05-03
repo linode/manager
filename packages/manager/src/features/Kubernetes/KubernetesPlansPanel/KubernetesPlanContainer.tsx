@@ -13,7 +13,7 @@ import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing
 
 import { KubernetesPlanSelection } from './KubernetesPlanSelection';
 
-import type { TypeWithAvailability } from 'src/features/components/PlansPanel/types';
+import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 
 const tableCells = [
   { cellName: 'Plan', center: false, noWrap: false, testId: 'plan' },
@@ -25,18 +25,13 @@ const tableCells = [
   { cellName: 'Quantity', center: false, noWrap: false, testId: 'quantity' },
 ];
 
-type AllDisabledPlans = TypeWithAvailability & {
-  isDisabled512GbPlan: boolean;
-  isLimitedAvailabilityPlan: boolean;
-};
-
 export interface KubernetesPlanContainerProps {
-  allDisabledPlans: AllDisabledPlans[];
+  allDisabledPlans: PlanWithAvailability[];
   getTypeCount: (planId: string) => number;
   hasMajorityOfPlansDisabled: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
-  plans: TypeWithAvailability[];
+  plans: PlanWithAvailability[];
   selectedId?: string;
   selectedRegionId?: string;
   updatePlanCount: (planId: string, newCount: number) => void;
@@ -47,7 +42,6 @@ export const KubernetesPlanContainer = (
   props: KubernetesPlanContainerProps
 ) => {
   const {
-    allDisabledPlans,
     getTypeCount,
     hasMajorityOfPlansDisabled,
     onAdd,
@@ -63,38 +57,23 @@ export const KubernetesPlanContainer = (
 
   const renderPlanSelection = React.useCallback(() => {
     return plans.map((plan, id) => {
-      const isPlanDisabled = allDisabledPlans.some(
-        (disabledPlan) => disabledPlan.id === plan.id
-      );
-      const currentDisabledPlan = allDisabledPlans.find(
-        (disabledPlan) => disabledPlan.id === plan.id
-      );
-      const currentDisabledPlanStatus = currentDisabledPlan && {
-        isDisabled512GbPlan: currentDisabledPlan.isDisabled512GbPlan,
-        isLimitedAvailabilityPlan:
-          currentDisabledPlan.isLimitedAvailabilityPlan,
-      };
-
       return (
         <KubernetesPlanSelection
-          disabledStatus={currentDisabledPlanStatus}
           getTypeCount={getTypeCount}
           hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
           idx={id}
           key={id}
           onAdd={onAdd}
           onSelect={onSelect}
-          planIsDisabled={isPlanDisabled}
+          plan={plan}
           selectedId={selectedId}
           selectedRegionId={selectedRegionId}
-          type={plan}
           updatePlanCount={updatePlanCount}
           wholePanelIsDisabled={wholePanelIsDisabled}
         />
       );
     });
   }, [
-    allDisabledPlans,
     wholePanelIsDisabled,
     hasMajorityOfPlansDisabled,
     getTypeCount,
