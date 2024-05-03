@@ -2,15 +2,15 @@ import React from 'react';
 
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
-import { LinodeSelect } from './LinodeSelect';
+import { Clone } from './Clone';
 
-describe('LinodeSelect', () => {
+describe('Clone', () => {
   it('should render a heading', () => {
     const { getByText } = renderWithThemeAndHookFormContext({
-      component: <LinodeSelect />,
+      component: <Clone />,
     });
 
-    const heading = getByText('Select Linode');
+    const heading = getByText('Select Linode to Clone From');
 
     expect(heading).toBeVisible();
     expect(heading.tagName).toBe('H2');
