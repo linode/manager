@@ -1,5 +1,4 @@
 import { useTheme } from '@mui/material/styles';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
@@ -34,7 +33,7 @@ export const NetworkGraph = React.memo((props: GraphProps) => {
   );
 
   const networkData = React.useMemo(
-    () => sumNetwork(pathOr({}, ['Interface'], data.Network)),
+    () => sumNetwork(data.Network?.Interface ?? {}),
     [data.Network]
   );
 

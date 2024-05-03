@@ -6,15 +6,21 @@ import { Paper } from 'src/components/Paper';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
+import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
+import { useLinodeCreateQueryParams } from '../utilities';
 import { PlacementGroupPanel } from './PlacementGroupPanel';
 
 export const Details = () => {
   const { control } = useFormContext<CreateLinodeRequest>();
-  const flags = useFlags();
+  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
-  const showPlacementGroups = Boolean(flags.placementGroups?.enabled);
+  const { params } = useLinodeCreateQueryParams();
+
+  const isCreateLinodeRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_linodes',
+  });
 
   return (
     <Paper>
@@ -22,8 +28,11 @@ export const Details = () => {
       <Controller
         render={({ field, fieldState }) => (
           <TextField
+            disabled={isCreateLinodeRestricted}
             errorText={fieldState.error?.message}
+            inputRef={field.ref}
             label="Linode Label"
+            onBlur={field.onBlur}
             onChange={field.onChange}
             value={field.value ?? ''}
           />
@@ -31,20 +40,23 @@ export const Details = () => {
         control={control}
         name="label"
       />
-      <Controller
-        render={({ field, fieldState }) => (
-          <TagsInput
-            value={
-              field.value?.map((tag) => ({ label: tag, value: tag })) ?? []
-            }
-            onChange={(item) => field.onChange(item.map((i) => i.value))}
-            tagError={fieldState.error?.message}
-          />
-        )}
-        control={control}
-        name="tags"
-      />
-      {showPlacementGroups && <PlacementGroupPanel />}
+      {params.type !== 'Clone Linode' && (
+        <Controller
+          render={({ field, fieldState }) => (
+            <TagsInput
+              value={
+                field.value?.map((tag) => ({ label: tag, value: tag })) ?? []
+              }
+              disabled={isCreateLinodeRestricted}
+              onChange={(item) => field.onChange(item.map((i) => i.value))}
+              tagError={fieldState.error?.message}
+            />
+          )}
+          control={control}
+          name="tags"
+        />
+      )}
+      {isPlacementGroupsEnabled && <PlacementGroupPanel />}
     </Paper>
   );
 };

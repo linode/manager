@@ -1,18 +1,18 @@
-import { AFFINITY_TYPES } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { TextFieldProps } from 'src/components/TextField';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
-import { useUnpaginatedPlacementGroupsQuery } from 'src/queries/placementGroups';
+import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 
 import { PlacementGroupSelectOption } from './PlacementGroupSelectOption';
 
 import type { PlacementGroup, Region } from '@linode/api-v4';
+import type { SxProps } from '@mui/system';
 
 export interface PlacementGroupsSelectProps {
+  clearOnBlur?: boolean;
   clearable?: boolean;
   defaultValue?: PlacementGroup;
   disabled?: boolean;
@@ -31,6 +31,7 @@ export interface PlacementGroupsSelectProps {
 
 export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const {
+    clearOnBlur,
     clearable = true,
     defaultValue,
     disabled,
@@ -51,7 +52,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     data: placementGroups,
     error,
     isLoading,
-  } = useUnpaginatedPlacementGroupsQuery(Boolean(selectedRegion?.id));
+  } = useAllPlacementGroupsQuery(Boolean(selectedRegion?.id));
 
   const isDisabledPlacementGroup = (
     selectedPlacementGroup: PlacementGroup,
@@ -70,9 +71,6 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   if (!placementGroups) {
     return null;
   }
-
-  const formatLabel = (placementGroup: PlacementGroup) =>
-    `${placementGroup.label} (${AFFINITY_TYPES[placementGroup.affinity_type]})`;
 
   const placementGroupsOptions: PlacementGroup[] = placementGroups.filter(
     (placementGroup) => placementGroup.region === selectedRegion?.id
@@ -96,26 +94,26 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
           <PlacementGroupSelectOption
             disabled={isDisabledPlacementGroup(option, selectedRegion)}
             key={option.id}
-            label={formatLabel(option)}
+            label={option.label}
             props={props}
             selected={selected}
             value={option}
           />
         );
       }}
-      clearOnBlur={false}
+      clearOnBlur={clearOnBlur}
       data-testid="placement-groups-select"
       defaultValue={defaultValue}
       disableClearable={!clearable}
       disabled={Boolean(!selectedRegion?.id) || disabled}
       errorText={errorText}
-      getOptionLabel={formatLabel}
+      getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
       id={id}
       label={label}
       loading={isLoading || loading}
       onBlur={onBlur}
       options={placementGroupsOptions ?? []}
-      placeholder="Select a Placement Group"
+      placeholder="None"
       sx={sx}
       value={selection}
       {...textFieldProps}

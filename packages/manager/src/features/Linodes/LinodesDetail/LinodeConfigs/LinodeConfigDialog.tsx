@@ -4,13 +4,13 @@ import {
   LinodeConfigCreationData,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
@@ -48,9 +48,9 @@ import {
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { queryKey as vlansQueryKey } from 'src/queries/vlans';
-import { useAllVolumesQuery } from 'src/queries/volumes';
-import { vpcQueryKey } from 'src/queries/vpcs';
+import { vlanQueries } from 'src/queries/vlans';
+import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
+import { vpcQueries } from 'src/queries/vpcs/vpcs';
 import {
   DevicesAsStrings,
   createDevicesFromStrings,
@@ -393,16 +393,18 @@ export const LinodeConfigDialog = (props: Props) => {
           (thisInterface) => thisInterface.purpose === 'vlan'
         )
       ) {
-        queryClient.invalidateQueries([vlansQueryKey]);
+        queryClient.invalidateQueries(vlanQueries._def);
       }
 
       // Ensure VPC query data is up-to-date
-      if (
-        configData.interfaces?.some(
-          (thisInterface) => thisInterface.purpose === 'vpc'
-        )
-      ) {
-        queryClient.invalidateQueries([vpcQueryKey]);
+      const vpcId = configData.interfaces?.find(
+        (thisInterface) => thisInterface.purpose === 'vpc'
+      )?.vpc_id;
+
+      if (vpcId) {
+        queryClient.invalidateQueries(vpcQueries.all.queryKey);
+        queryClient.invalidateQueries(vpcQueries.paginated._def);
+        queryClient.invalidateQueries(vpcQueries.vpc(vpcId).queryKey);
       }
 
       enqueueSnackbar(
@@ -452,9 +454,6 @@ export const LinodeConfigDialog = (props: Props) => {
 
   React.useEffect(() => {
     if (open) {
-      // Ensure VLANs are fresh.
-      queryClient.invalidateQueries([vlansQueryKey]);
-
       /**
        * If config is defined, we're editing. Set the state
        * to the values of the config.

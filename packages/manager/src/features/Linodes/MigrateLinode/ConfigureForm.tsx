@@ -1,12 +1,14 @@
 import * as React from 'react';
 
-import EdgeServer from 'src/assets/icons/entityIcons/edge-server.svg';
+import EdgeRegion from 'src/assets/icons/entityIcons/edge-region.svg';
 import { Flag } from 'src/components/Flag';
 import { Notice } from 'src/components/Notice/Notice';
+import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { sxEdgeIcon } from 'src/components/RegionSelect/RegionSelect.styles';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
@@ -28,12 +30,13 @@ import {
 import { MigrationPricing } from './MigrationPricing';
 
 import type { MigrationPricingProps } from './MigrationPricing';
-import type { Linode, PriceObject } from '@linode/api-v4';
+import type { Linode, PlacementGroup, PriceObject } from '@linode/api-v4';
 
 interface Props {
   backupEnabled: Linode['backups']['enabled'];
   currentRegion: string;
   errorText?: string;
+  handlePlacementGroupChange: (selected: PlacementGroup | null) => void;
   handleSelectRegion: (id: string) => void;
   helperText?: string;
   linodeType: Linode['type'];
@@ -47,6 +50,7 @@ export const ConfigureForm = React.memo((props: Props) => {
     backupEnabled,
     currentRegion,
     errorText,
+    handlePlacementGroupChange,
     handleSelectRegion,
     helperText,
     linodeType,
@@ -54,15 +58,51 @@ export const ConfigureForm = React.memo((props: Props) => {
   } = props;
 
   const flags = useFlags();
+  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { data: regions } = useRegionsQuery();
+
   const { data: currentLinodeType } = useTypeQuery(
     linodeType || '',
     Boolean(linodeType)
   );
+
+  const [
+    selectedPlacementGroup,
+    setSelectedPlacementGroup,
+  ] = React.useState<PlacementGroup | null>(null);
+
+  React.useEffect(() => {
+    handlePlacementGroupSelection(null);
+  }, [selectedRegion]);
+
   const currentActualRegion = regions?.find((r) => r.id === currentRegion);
+
+  const newRegion = regions?.find(
+    (thisRegion) => thisRegion.id === selectedRegion
+  );
+
+  const placementGroupSelectLabel = selectedRegion
+    ? `Placement Groups in ${newRegion?.label} (${newRegion?.id}) (optional)`
+    : 'Placement Group';
+
+  const hasRegionPlacementGroupCapability = Boolean(
+    newRegion?.capabilities.includes('Placement Group')
+  );
+
+  const isPlacementGroupSelectDisabled =
+    !newRegion || !hasRegionPlacementGroupCapability;
+
+  const handlePlacementGroupSelection = (
+    placementGroup: PlacementGroup | null
+  ) => {
+    setSelectedPlacementGroup(placementGroup);
+    handlePlacementGroupChange(placementGroup);
+  };
+
   const country =
     regions?.find((thisRegion) => thisRegion.id == currentRegion)?.country ??
     'us';
+
   const shouldDisplayPriceComparison = Boolean(
     selectedRegion &&
       isLinodeTypeDifferentPriceInSelectedRegion({
@@ -118,10 +158,10 @@ export const ConfigureForm = React.memo((props: Props) => {
             }`}</Typography>
             {linodeIsInEdgeRegion && (
               <TooltipIcon
-                icon={<EdgeServer />}
+                icon={<EdgeRegion />}
                 status="other"
                 sxTooltipIcon={sxEdgeIcon}
-                text="This region is an Edge server."
+                text="This region is an edge region."
               />
             )}
           </StyledDiv>
@@ -131,9 +171,11 @@ export const ConfigureForm = React.memo((props: Props) => {
             />
           )}
         </StyledMigrationBox>
-
         <StyledMigrationBox>
           <RegionSelect
+            regionFilter={
+              flags.gecko2?.enabled && linodeIsInEdgeRegion ? 'edge' : 'core'
+            }
             regions={
               regions?.filter(
                 (eachRegion) => eachRegion.id !== currentRegion
@@ -146,12 +188,29 @@ export const ConfigureForm = React.memo((props: Props) => {
             errorText={errorText}
             handleSelection={handleSelectRegion}
             label="New Region"
-            regionFilter={flags.gecko && linodeIsInEdgeRegion ? 'edge' : 'core'}
             selectedId={selectedRegion}
           />
           {shouldDisplayPriceComparison && selectedRegion && (
             <MigrationPricing
               {...panelPrice(selectedRegion, selectedRegionPrice, 'new')}
+            />
+          )}
+          {isPlacementGroupsEnabled && (
+            <PlacementGroupsSelect
+              handlePlacementGroupChange={(placementGroup) => {
+                handlePlacementGroupSelection(placementGroup);
+              }}
+              textFieldProps={{
+                tooltipText: hasRegionPlacementGroupCapability
+                  ? ''
+                  : 'Placement Groups are not available in this region.',
+              }}
+              disabled={isPlacementGroupSelectDisabled}
+              key={selectedRegion}
+              label={placementGroupSelectLabel}
+              noOptionsMessage="There are no Placement Groups in this region."
+              selectedPlacementGroup={selectedPlacementGroup}
+              selectedRegion={newRegion}
             />
           )}
         </StyledMigrationBox>

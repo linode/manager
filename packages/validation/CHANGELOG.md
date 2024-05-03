@@ -1,3 +1,25 @@
+## [2024-04-29] - v0.45.0
+
+
+### Changed:
+
+- Improved VPC `ip_ranges` validation in `LinodeInterfaceSchema` ([#10354](https://github.com/linode/manager/pull/10354))
+- Allow `stackscript_id` to be `null` in `CreateLinodeSchema` ([#10367](https://github.com/linode/manager/pull/10367))
+
+## [2024-04-15] - v0.44.0
+
+### Changed:
+
+- Update Regions error message in `updateObjectStorageKeysSchema` ([#10329](https://github.com/linode/manager/pull/10329))
+
+## [2024-04-01] - v0.43.0
+
+### Changed:
+
+- Make `image` nullable in `CreateLinodeSchema` ([#10281](https://github.com/linode/manager/pull/10281))
+- Enforce that the `certificates` array is empty for `http` and `tcp` configurations ([#10311](https://github.com/linode/manager/pull/10311))
+- Allow `firewall_id` to be `null` in `CreateLinodeSchema` ([#10319](https://github.com/linode/manager/pull/10319))
+
 ## [2024-03-18] - v0.42.0
 
 

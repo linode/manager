@@ -20,21 +20,20 @@ const props: PlacementGroupsSelectProps = {
 };
 
 const queryMocks = vi.hoisted(() => ({
-  useUnpaginatedPlacementGroupsQuery: vi.fn().mockReturnValue({}),
+  useAllPlacementGroupsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/placementGroups', async () => {
   const actual = await vi.importActual('src/queries/placementGroups');
   return {
     ...actual,
-    useUnpaginatedPlacementGroupsQuery:
-      queryMocks.useUnpaginatedPlacementGroupsQuery,
+    useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
   };
 });
 
 describe('PlacementGroupSelect', () => {
   beforeEach(() => {
-    queryMocks.useUnpaginatedPlacementGroupsQuery.mockReturnValue({
+    queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
           affinity_type: 'affinity:local',
@@ -67,7 +66,7 @@ describe('PlacementGroupSelect', () => {
   });
 
   it('should have a disabled option if the region has reached its placement group capacity', async () => {
-    queryMocks.useUnpaginatedPlacementGroupsQuery.mockReturnValue({
+    queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
           affinity_type: 'affinity:local',
@@ -91,20 +90,22 @@ describe('PlacementGroupSelect', () => {
         selectedRegion={regionFactory.build({
           capabilities: ['Placement Group'],
           id: 'ca-central',
-          maximum_vms_per_pg: 1,
+          placement_group_limits: {
+            maximum_linodes_per_pg: 1,
+          },
         })}
       />
     );
 
-    const select = getByPlaceholderText('Select a Placement Group');
+    const select = getByPlaceholderText('None');
     expect(select).toBeEnabled();
 
     fireEvent.focus(select);
     fireEvent.change(select, {
-      target: { value: 'my-placement-group (Affinity)' },
+      target: { value: 'my-placement-group' },
     });
 
-    const selectedRegionOption = getByText('my-placement-group (Affinity)');
+    const selectedRegionOption = getByText('my-placement-group');
     fireEvent.click(selectedRegionOption);
 
     expect(

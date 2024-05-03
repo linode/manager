@@ -15,21 +15,23 @@ import { PlanContainer } from './PlanContainer';
 import { PlanInformation } from './PlanInformation';
 import {
   determineInitialPlanCategoryTab,
-  getIsLimitedAvailability,
+  extractPlansInformation,
   getPlanSelectionsByPlanType,
-  isMajorityLimitedAvailabilityPlans,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
 } from './utils';
 
-import type { PlanSelectionType, TypeWithAvailability } from './types';
+import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
-interface Props {
+export interface PlansPanelProps {
   className?: string;
   copy?: string;
   currentPlanHeading?: string;
+  disableSmallerPlans?: {
+    selectedDiskSize?: number;
+  };
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
   disabledTabs?: string[];
@@ -40,23 +42,22 @@ interface Props {
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   regionsData?: Region[];
-  selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionID?: string;
   showTransfer?: boolean;
   tabDisabledMessage?: string;
   tabbedPanelInnerClass?: string;
   types: PlanSelectionType[];
-  disabledPlanTypes?: PlanSelectionType[];
-  disabledPlanTypesToolTipText?: string;
 }
 
-export const PlansPanel = (props: Props) => {
+export const PlansPanel = (props: PlansPanelProps) => {
   const {
     className,
     copy,
     currentPlanHeading,
+    disableSmallerPlans,
     disabled,
+    disabledClasses,
     docsLink,
     error,
     header,
@@ -68,8 +69,6 @@ export const PlansPanel = (props: Props) => {
     selectedRegionID,
     showTransfer,
     types,
-    disabledPlanTypes,
-    disabledPlanTypesToolTipText,
   } = props;
 
   const flags = useFlags();
@@ -87,7 +86,7 @@ export const PlansPanel = (props: Props) => {
   );
 
   const hideEdgeRegions =
-    !flags.gecko ||
+    !flags.gecko2?.enabled ||
     !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
 
   const showEdgePlanTable =
@@ -132,23 +131,19 @@ export const PlansPanel = (props: Props) => {
   });
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
-    const _plansForThisLinodeTypeClass: PlanSelectionType[] = plans[plan];
-    const plansForThisLinodeTypeClass: TypeWithAvailability[] = _plansForThisLinodeTypeClass.map(
-      (plan) => {
-        return {
-          ...plan,
-          isLimitedAvailabilityPlan: getIsLimitedAvailability({
-            plan,
-            regionAvailabilities,
-            selectedRegionId: selectedRegionID,
-          }),
-        };
-      }
-    );
-
-    const mostClassPlansAreLimitedAvailability = isMajorityLimitedAvailabilityPlans(
-      plansForThisLinodeTypeClass
-    );
+    const plansMap: PlanSelectionType[] = plans[plan];
+    const {
+      allDisabledPlans,
+      hasDisabledPlans,
+      hasMajorityOfPlansDisabled,
+      plansForThisLinodeTypeClass,
+    } = extractPlansInformation({
+      disableLargestGbPlansFlag: flags.disableLargestGbPlans,
+      disabledClasses,
+      plans: plansMap,
+      regionAvailabilities,
+      selectedRegionId: selectedRegionID,
+    });
 
     return {
       disabled: props.disabledTabs ? props.disabledTabs?.includes(plan) : false,
@@ -162,10 +157,8 @@ export const PlansPanel = (props: Props) => {
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                 plan
               )}
-              mostClassPlansAreLimitedAvailability={
-                mostClassPlansAreLimitedAvailability
-              }
-              disabledClasses={props.disabledClasses}
+              disabledClasses={disabledClasses}
+              hasDisabledPlans={hasDisabledPlans}
               hasSelectedRegion={hasSelectedRegion}
               planType={plan}
               regionsData={regionsData || []}
@@ -177,23 +170,19 @@ export const PlansPanel = (props: Props) => {
               />
             )}
             <PlanContainer
-              hideDisabledHelpIcons={
-                mostClassPlansAreLimitedAvailability &&
-                flags.disableLargestGbPlans
-              } // Making it conditional on the flag avoids scenario w/ flag off where all plans on a tab could be disabled with no explanation
+              allDisabledPlans={allDisabledPlans}
               currentPlanHeading={currentPlanHeading}
-              disabled={disabled || isPlanPanelDisabled(plan)}
-              disabledClasses={props.disabledClasses}
+              hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
               isCreate={isCreate}
               linodeID={linodeID}
               onSelect={onSelect}
+              planType={plan}
               plans={plansForThisLinodeTypeClass}
-              selectedDiskSize={props.selectedDiskSize}
+              selectedDiskSize={disableSmallerPlans?.selectedDiskSize}
               selectedId={selectedId}
               selectedRegionId={selectedRegionID}
               showTransfer={showTransfer}
-              disabledPlanTypes={disabledPlanTypes}
-              disabledPlanTypesToolTipText={disabledPlanTypesToolTipText}
+              wholePanelIsDisabled={disabled || isPlanPanelDisabled(plan)}
             />
           </>
         );

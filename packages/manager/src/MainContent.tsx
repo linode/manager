@@ -1,6 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { isEmpty } from 'ramda';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
@@ -11,6 +10,7 @@ import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import { NotFound } from 'src/components/NotFound';
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
+import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
 import { Footer } from 'src/features/Footer';
@@ -24,14 +24,13 @@ import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useDatabaseEnginesQuery } from 'src/queries/databases';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
-import { ManagerPreferences } from 'src/types/ManagerPreferences';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
-import { FlagSet } from './featureFlags';
 import { useIsACLBEnabled } from './features/LoadBalancers/utils';
+import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -75,7 +74,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   content: {
     flex: 1,
     [theme.breakpoints.up('md')]: {
-      marginLeft: 190,
+      marginLeft: SIDEBAR_WIDTH,
     },
     transition: 'margin-left .1s linear',
   },
@@ -208,8 +207,6 @@ export const MainContent = () => {
 
   const username = profile?.username || '';
 
-  const [bannerDismissed, setBannerDismissed] = React.useState<boolean>(false);
-
   const checkRestrictedUser = !Boolean(flags.databases) && !!accountError;
   const {
     error: enginesError,
@@ -225,16 +222,9 @@ export const MainContent = () => {
     (checkRestrictedUser && !enginesLoading && !enginesError);
 
   const { isACLBEnabled } = useIsACLBEnabled();
+  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
   const defaultRoot = _isManagedAccount ? '/managed' : '/linodes';
-
-  const shouldDisplayMainContentBanner =
-    !bannerDismissed &&
-    checkFlagsForMainContentBanner(flags) &&
-    !checkPreferencesForBannerDismissal(
-      preferences ?? {},
-      flags?.mainContentBanner?.key
-    );
 
   /**
    * this is the case where the user has successfully completed signup
@@ -289,128 +279,96 @@ export const MainContent = () => {
     });
   };
 
-  /**
-   * otherwise just show the rest of the app.
-   */
   return (
     <div className={classes.appFrame}>
       <SwitchAccountSessionProvider value={switchAccountSessionContextValue}>
         <ComplianceUpdateProvider value={complianceUpdateContextValue}>
           <NotificationProvider value={contextValue}>
-            <>
-              {shouldDisplayMainContentBanner ? (
-                <MainContentBanner
-                  bannerKey={flags.mainContentBanner?.key ?? ''}
-                  bannerText={flags.mainContentBanner?.text ?? ''}
-                  linkText={flags.mainContentBanner?.link?.text ?? ''}
-                  onClose={() => setBannerDismissed(true)}
-                  url={flags.mainContentBanner?.link?.url ?? ''}
-                />
-              ) : null}
-              <SideMenu
-                closeMenu={() => toggleMenu(false)}
-                collapse={desktopMenuIsOpen || false}
-                open={menuIsOpen}
+            <SideMenu
+              closeMenu={() => toggleMenu(false)}
+              collapse={desktopMenuIsOpen || false}
+              open={menuIsOpen}
+            />
+            <div
+              className={cx(classes.content, {
+                [classes.fullWidthContent]:
+                  desktopMenuIsOpen ||
+                  (desktopMenuIsOpen && desktopMenuIsOpen === true),
+              })}
+            >
+              <MainContentBanner />
+              <TopMenu
+                desktopMenuToggle={desktopMenuToggle}
+                isSideMenuOpen={!desktopMenuIsOpen}
+                openSideMenu={() => toggleMenu(true)}
+                username={username}
               />
-              <div
-                className={cx(classes.content, {
-                  [classes.fullWidthContent]:
-                    desktopMenuIsOpen ||
-                    (desktopMenuIsOpen && desktopMenuIsOpen === true),
-                })}
+              <main
+                className={classes.cmrWrapper}
+                id="main-content"
+                role="main"
               >
-                <TopMenu
-                  desktopMenuToggle={desktopMenuToggle}
-                  isSideMenuOpen={!desktopMenuIsOpen}
-                  openSideMenu={() => toggleMenu(true)}
-                  username={username}
-                />
-                <main
-                  className={classes.cmrWrapper}
-                  id="main-content"
-                  role="main"
-                >
-                  <Grid className={classes.grid} container spacing={0}>
-                    <Grid className={cx(classes.switchWrapper, 'p0')}>
-                      <GlobalNotifications />
-                      <React.Suspense fallback={<SuspenseLoader />}>
-                        <Switch>
-                          <Route component={LinodesRoutes} path="/linodes" />
+                <Grid className={classes.grid} container spacing={0}>
+                  <Grid className={cx(classes.switchWrapper, 'p0')}>
+                    <GlobalNotifications />
+                    <React.Suspense fallback={<SuspenseLoader />}>
+                      <Switch>
+                        <Route component={LinodesRoutes} path="/linodes" />
+                        {isPlacementGroupsEnabled && (
                           <Route
                             component={PlacementGroups}
                             path="/placement-groups"
                           />
-                          <Route component={Volumes} path="/volumes" />
-                          <Redirect path="/volumes*" to="/volumes" />
-                          {isACLBEnabled && (
-                            <Route
-                              component={LoadBalancers}
-                              path="/loadbalancer*"
-                            />
-                          )}
+                        )}
+                        <Route component={Volumes} path="/volumes" />
+                        <Redirect path="/volumes*" to="/volumes" />
+                        {isACLBEnabled && (
                           <Route
-                            component={NodeBalancers}
-                            path="/nodebalancers"
+                            component={LoadBalancers}
+                            path="/loadbalancer*"
                           />
-                          <Route component={Domains} path="/domains" />
-                          <Route component={Managed} path="/managed" />
-                          <Route component={Longview} path="/longview" />
-                          <Route component={Images} path="/images" />
-                          <Route
-                            component={StackScripts}
-                            path="/stackscripts"
-                          />
-                          <Route
-                            component={ObjectStorage}
-                            path="/object-storage"
-                          />
-                          <Route component={Kubernetes} path="/kubernetes" />
-                          <Route component={Account} path="/account" />
-                          <Route component={Profile} path="/profile" />
-                          <Route component={Help} path="/support" />
-                          <Route component={SearchLanding} path="/search" />
-                          <Route component={EventsLanding} path="/events" />
-                          <Route component={Firewalls} path="/firewalls" />
-                          {showDatabases && (
-                            <Route component={Databases} path="/databases" />
-                          )}
-                          {flags.selfServeBetas && (
-                            <Route component={BetaRoutes} path="/betas" />
-                          )}
-                          <Route component={VPC} path="/vpcs" />
-                          <Redirect exact from="/" to={defaultRoot} />
-                          {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
-                          <Redirect from="/dashboard" to={defaultRoot} />
-                          <Route component={NotFound} />
-                        </Switch>
-                      </React.Suspense>
-                    </Grid>
+                        )}
+                        <Route
+                          component={NodeBalancers}
+                          path="/nodebalancers"
+                        />
+                        <Route component={Domains} path="/domains" />
+                        <Route component={Managed} path="/managed" />
+                        <Route component={Longview} path="/longview" />
+                        <Route component={Images} path="/images" />
+                        <Route component={StackScripts} path="/stackscripts" />
+                        <Route
+                          component={ObjectStorage}
+                          path="/object-storage"
+                        />
+                        <Route component={Kubernetes} path="/kubernetes" />
+                        <Route component={Account} path="/account" />
+                        <Route component={Profile} path="/profile" />
+                        <Route component={Help} path="/support" />
+                        <Route component={SearchLanding} path="/search" />
+                        <Route component={EventsLanding} path="/events" />
+                        <Route component={Firewalls} path="/firewalls" />
+                        {showDatabases && (
+                          <Route component={Databases} path="/databases" />
+                        )}
+                        {flags.selfServeBetas && (
+                          <Route component={BetaRoutes} path="/betas" />
+                        )}
+                        <Route component={VPC} path="/vpcs" />
+                        <Redirect exact from="/" to={defaultRoot} />
+                        {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
+                        <Redirect from="/dashboard" to={defaultRoot} />
+                        <Route component={NotFound} />
+                      </Switch>
+                    </React.Suspense>
                   </Grid>
-                </main>
-              </div>
-            </>
+                </Grid>
+              </main>
+            </div>
           </NotificationProvider>
           <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
         </ComplianceUpdateProvider>
       </SwitchAccountSessionProvider>
     </div>
   );
-};
-
-// =============================================================================
-// Utilities
-// =============================================================================
-export const checkFlagsForMainContentBanner = (flags: FlagSet) => {
-  return Boolean(
-    flags.mainContentBanner &&
-      !isEmpty(flags.mainContentBanner) &&
-      flags.mainContentBanner.key
-  );
-};
-
-export const checkPreferencesForBannerDismissal = (
-  preferences: ManagerPreferences,
-  key = 'defaultKey'
-) => {
-  return Boolean(preferences?.main_content_banner_dismissal?.[key]);
 };

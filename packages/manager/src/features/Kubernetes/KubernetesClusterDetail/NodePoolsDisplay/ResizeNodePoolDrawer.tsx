@@ -12,6 +12,7 @@ import { Typography } from 'src/components/Typography';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
+import { isNumber } from 'src/utilities/isNumber';
 import { pluralize } from 'src/utilities/pluralize';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
@@ -20,7 +21,6 @@ import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { nodeWarning } from '../../kubeUtils';
 import { hasInvalidNodePoolPrice } from './utils';
-import { isNumber } from 'lodash';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   helperText: {

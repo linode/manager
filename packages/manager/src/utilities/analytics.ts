@@ -10,19 +10,28 @@ declare global {
 type DTMSatellite = {
   track: (
     eventName: string,
-    eventPayload: AnalyticsEvent | PageViewEvent
+    eventPayload: AnalyticsPayload | PageViewPayload
   ) => void;
 };
 
-interface PageViewEvent {
+interface PageViewPayload {
   url: string;
+}
+
+export interface CustomAnalyticsData {
+  isLinodePoweredOff?: boolean;
 }
 
 interface AnalyticsEvent {
   action: string;
   category: string;
+  data?: CustomAnalyticsData;
   label?: string;
   value?: number;
+}
+
+interface AnalyticsPayload extends Omit<AnalyticsEvent, 'data'> {
+  data?: string;
 }
 
 export const sendEvent = (eventPayload: AnalyticsEvent): void => {
@@ -36,11 +45,36 @@ export const sendEvent = (eventPayload: AnalyticsEvent): void => {
     window._satellite.track('custom event', {
       action: eventPayload.action.replace(/\|/g, ''),
       category: eventPayload.category.replace(/\|/g, ''),
+      data: eventPayload.data ? JSON.stringify(eventPayload.data) : undefined,
       label: eventPayload.label?.replace(/\|/g, ''),
       value: eventPayload.value,
     });
   }
 };
+
+/**
+ * A Promise that will resolve once Adobe Analytics loads.
+ *
+ * @throws if Adobe does not load after 5 seconds
+ */
+export const waitForAdobeAnalyticsToBeLoaded = () =>
+  new Promise<void>((resolve, reject) => {
+    let attempts = 0;
+    const interval = setInterval(() => {
+      if (window._satellite) {
+        resolve();
+        clearInterval(interval);
+        return;
+      }
+
+      attempts++;
+
+      if (attempts >= 5) {
+        reject('Adobe Analytics did not load after 5 seconds');
+        clearInterval(interval);
+      }
+    }, 1000);
+  });
 
 // LinodeActionMenu.tsx
 export const sendLinodeActionEvent = (): void => {
@@ -150,11 +184,13 @@ export const sendCreateNodeBalancerEvent = (eventLabel: string): void => {
 // LinodeCreateContainer.tsx
 export const sendCreateLinodeEvent = (
   eventAction: string,
-  eventLabel: string
+  eventLabel: string,
+  eventData?: CustomAnalyticsData
 ): void => {
   sendEvent({
     action: eventAction,
     category: 'Create Linode',
+    data: eventData,
     label: eventLabel,
   });
 };
@@ -484,5 +520,23 @@ export const sendUpdateLinodeLabelEvent = (
     action: 'Click:button',
     category: 'Linode Label',
     label: `Update linode label from ${label}`,
+  });
+};
+
+// GravatarByEmail.tsx
+export const sendHasGravatarEvent = (hasGravatar: boolean) => {
+  sendEvent({
+    action: 'Load',
+    category: 'Gravatar',
+    label: hasGravatar ? 'Has Gravatar' : 'Does not have Gravatar',
+  });
+};
+
+// DisplaySettings.tsx
+export const sendManageGravatarEvent = () => {
+  sendEvent({
+    action: 'Click:link',
+    category: 'Gravatar',
+    label: 'Manage photo',
   });
 };

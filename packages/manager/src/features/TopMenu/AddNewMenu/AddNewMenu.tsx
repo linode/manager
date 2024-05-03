@@ -21,11 +21,13 @@ import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import LoadBalancerIcon from 'src/assets/icons/entityIcons/loadbalancer.svg';
 import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
+import PlacementGroupsIcon from 'src/assets/icons/entityIcons/placement-groups.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import VPCIcon from 'src/assets/icons/entityIcons/vpc.svg';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
+import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 import { useDatabaseEnginesQuery } from 'src/queries/databases';
@@ -62,6 +64,7 @@ export const AddNewMenu = () => {
     (checkRestrictedUser && !enginesLoading && !enginesError);
 
   const { isACLBEnabled } = useIsACLBEnabled();
+  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -109,6 +112,13 @@ export const AddNewMenu = () => {
       entity: 'Firewall',
       icon: FirewallIcon,
       link: '/firewalls/create',
+    },
+    {
+      description: "Control your Linodes' physical placement",
+      entity: 'Placement Groups',
+      hide: !isPlacementGroupsEnabled,
+      icon: PlacementGroupsIcon,
+      link: '/placement-groups/create',
     },
     {
       description: 'Manage your DNS records',

@@ -80,7 +80,7 @@ export const FromLinodeContent = (props: CombinedProps) => {
       (linode) => !getIsEdgeRegion(regionsData, linode.region) // Hide linodes that are in an edge region
     );
 
-  const filteredLinodes = flags.gecko
+  const filteredLinodes = flags.gecko2?.enabled
     ? filterEdgeLinodes(linodesData)
     : linodesData;
 
@@ -107,11 +107,7 @@ export const FromLinodeContent = (props: CombinedProps) => {
           <SelectLinodePanel
             notices={[
               'This newly created Linode will be created with the same password and SSH Keys (if any) as the original Linode.',
-              ...(flags.linodeCloneUiChanges
-                ? [
-                    'To help avoid data corruption during the cloning process, we recommend powering off your Compute Instance prior to cloning.',
-                  ]
-                : []),
+              'To help avoid data corruption during the cloning process, we recommend powering off your Compute Instance prior to cloning.',
             ]}
             data-qa-linode-panel
             disabled={userCannotCreateLinode}

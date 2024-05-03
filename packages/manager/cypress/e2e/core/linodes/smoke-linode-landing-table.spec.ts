@@ -122,7 +122,7 @@ describe('linode landing checks', () => {
       // Cypress cannot work with other tabs and windows, so we can't test
       // that this takes the user to the expected place since it has no `href`
       // attribute.
-      cy.findByLabelText('Linode Cloud Community (opens in new tab)')
+      cy.findByLabelText('Linode Cloud Community - link opens in a new tab')
         .should('be.visible')
         .should('be.enabled');
 

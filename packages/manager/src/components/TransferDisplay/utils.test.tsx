@@ -20,7 +20,7 @@ const mockRegions = [
   regionWithDynamicPricingFactory.build(),
 ];
 
-vi.mock('src/queries/regions', () => ({
+vi.mock('src/queries/regions/regions', () => ({
   useRegionsQuery: vi.fn(() => mockRegions),
 }));
 

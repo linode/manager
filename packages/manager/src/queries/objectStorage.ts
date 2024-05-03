@@ -39,11 +39,14 @@ import { getAll } from 'src/utilities/getAll';
 import { accountQueries } from './account/queries';
 import { queryPresets } from './base';
 
+import type { AtLeastOne } from 'src/utilities/types/typesHelpers';
+
 export interface BucketError {
   /*
-   @TODO OBJ Multicluster: 'region' will become required, and the 'cluster' field will be deprecated
-   once the feature is fully rolled out in production as part of the process of cleaning up the 'objMultiCluster'
-   feature flag.
+   @TODO OBJ Multicluster:'region' will become required, and the
+   'cluster' field will be deprecated once the feature is fully rolled out in production.
+   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
+   remove 'cluster' and retain 'regions'.
   */
   cluster: ObjectStorageCluster;
   error: APIError[];
@@ -54,6 +57,24 @@ interface BucketsResponce {
   buckets: ObjectStorageBucket[];
   errors: BucketError[];
 }
+
+/*
+   @TODO OBJ Multicluster:'region' will become required, and the
+   'cluster' field will be deprecated once the feature is fully rolled out in production.
+   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
+   remove 'cluster' and retain 'regions'.
+  */
+interface UseObjectStorageBucketsBaseOptions {
+  enabled?: boolean;
+  isObjMultiClusterEnabled?: boolean;
+}
+
+// Use the utility type with your options
+type UseObjectStorageBucketsOptions = AtLeastOne<{
+  clusters: ObjectStorageCluster[] | undefined;
+  regions: Region[] | undefined;
+}> &
+  UseObjectStorageBucketsBaseOptions;
 
 export const queryKey = 'object-storage';
 
@@ -75,34 +96,32 @@ export const useObjectStorageClusters = (enabled: boolean = true) =>
     { ...queryPresets.oneTimeFetch, enabled }
   );
 
-export const useObjectStorageBuckets = (
-  clusters: ObjectStorageCluster[] | undefined,
-  enabled: boolean = true
-) =>
+/*
+   @TODO OBJ Multicluster:'region' will become required, and the
+   'cluster' field will be deprecated once the feature is fully rolled out in production.
+   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
+   remove 'cluster' and retain 'regions'.
+  */
+
+export const useObjectStorageBuckets = ({
+  clusters,
+  enabled = true,
+  isObjMultiClusterEnabled = false,
+  regions,
+}: UseObjectStorageBucketsOptions) =>
   useQuery<BucketsResponce, APIError[]>(
     [`${queryKey}-buckets`],
     // Ideally we would use the line below, but if a cluster is down, the buckets on that
     // cluster don't show up in the responce. We choose to fetch buckets per-cluster so
     // we can tell the user which clusters are having issues.
     // getAllObjectStorageBuckets,
-    () => getAllBucketsFromClusters(clusters),
+    () =>
+      isObjMultiClusterEnabled
+        ? getAllBucketsFromRegions(regions)
+        : getAllBucketsFromClusters(clusters),
     {
       ...queryPresets.longLived,
-      enabled: clusters !== undefined && enabled,
-      retry: false,
-    }
-  );
-
-export const useObjectStorageBucketsFromRegions = (
-  regions: Region[] | undefined,
-  enabled: boolean = true
-) =>
-  useQuery<BucketsResponce, APIError[]>(
-    [`${queryKey}-buckets`],
-    () => getAllBucketsFromRegions(regions),
-    {
-      ...queryPresets.longLived,
-      enabled: regions !== undefined && enabled,
+      enabled: (clusters !== undefined || regions !== undefined) && enabled,
       retry: false,
     }
   );
@@ -121,6 +140,10 @@ export const useCreateBucketMutation = () => {
     APIError[],
     ObjectStorageBucketRequestPayload
   >(createBucket, {
+    onMutate: async () => {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries([`${queryKey}-buckets`]);
+    },
     onSuccess: (newEntity) => {
       // Invalidate account settings because it contains obj information
       queryClient.invalidateQueries(accountQueries.settings.queryKey);
@@ -131,6 +154,7 @@ export const useCreateBucketMutation = () => {
           errors: oldData?.errors || [],
         })
       );
+      queryClient.invalidateQueries([`${queryKey}-buckets`]);
     },
   });
 };

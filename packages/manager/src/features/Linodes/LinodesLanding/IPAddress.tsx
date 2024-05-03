@@ -1,10 +1,10 @@
-import { tail } from 'lodash';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
 import { PublicIpsUnassignedTooltip } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
 import { privateIPRegex } from 'src/utilities/ipUtils';
+import { tail } from 'src/utilities/tail';
 
 import {
   StyledCopyTooltip,

@@ -11,7 +11,7 @@ import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
-import { useLinodeVolumesQuery } from 'src/queries/volumes';
+import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 import { LinodeEntityDetailBody } from './LinodeEntityDetailBody';
@@ -31,7 +31,7 @@ interface LinodeEntityDetailProps {
   id: number;
   isSummaryView?: boolean;
   linode: Linode;
-  openTagDrawer: (tags: string[]) => void;
+  openTagDrawer: () => void;
   variant?: TypographyProps['variant'];
 }
 

@@ -46,6 +46,11 @@ export const requestBody = (data: Partial<CreateLinodeRequest>) => {
   return linodeRequest({ label, ...defaultLinodeRequestBody, ...data });
 };
 
+/**
+ * Deprecated. Use `createTestLinode()` with `cy.defer()` instead.
+ *
+ * @deprecated
+ */
 export const createLinode = (data = {}) => {
   return requestBody(data).then((resp) => {
     apiCheckErrors(resp);

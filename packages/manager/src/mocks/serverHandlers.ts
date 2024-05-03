@@ -70,6 +70,7 @@ import {
   nodeBalancerConfigFactory,
   nodeBalancerConfigNodeFactory,
   nodeBalancerFactory,
+  nodeBalancerTypeFactory,
   nodePoolFactory,
   notificationFactory,
   objectStorageBucketFactory,
@@ -95,6 +96,7 @@ import {
   supportTicketFactory,
   tagFactory,
   volumeFactory,
+  volumeTypeFactory,
   vpcFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
@@ -893,6 +895,10 @@ export const handlers = [
     const nodeBalancers = nodeBalancerFactory.buildList(1);
     return HttpResponse.json(makeResourcePage(nodeBalancers));
   }),
+  http.get('*/v4/nodebalancers/types', () => {
+    const nodeBalancerTypes = nodeBalancerTypeFactory.buildList(1);
+    return HttpResponse.json(makeResourcePage(nodeBalancerTypes));
+  }),
   http.get('*/v4/nodebalancers/:nodeBalancerID', ({ params }) => {
     const nodeBalancer = nodeBalancerFactory.build({
       id: Number(params.nodeBalancerID),
@@ -1156,6 +1162,10 @@ export const handlers = [
     ];
     const volumes = statuses.map((status) => volumeFactory.build({ status }));
     return HttpResponse.json(makeResourcePage(volumes));
+  }),
+  http.get('*/volumes/types', () => {
+    const volumeTypes = volumeTypeFactory.buildList(1);
+    return HttpResponse.json(makeResourcePage(volumeTypes));
   }),
   http.post('*/volumes', () => {
     const volume = volumeFactory.build();
@@ -1599,14 +1609,14 @@ export const handlers = [
         status: 'notification',
       });
       const placementGroupCreateEvent = eventFactory.buildList(1, {
-        action: 'placement_group_created',
+        action: 'placement_group_create',
         entity: { id: 999, label: 'PG-1', type: 'placement_group' },
         message: 'Placement Group successfully created.',
         percent_complete: 100,
         status: 'notification',
       });
       const placementGroupAssignedEvent = eventFactory.buildList(1, {
-        action: 'placement_group_assigned',
+        action: 'placement_group_assign',
         entity: { id: 990, label: 'PG-2', type: 'placement_group' },
         message: 'Placement Group successfully assigned.',
         percent_complete: 100,
@@ -1634,9 +1644,12 @@ export const handlers = [
       once: true,
     }
   ),
-  // // HERE
+
   http.get('*/support/tickets', () => {
-    const tickets = supportTicketFactory.buildList(15, { status: 'open' });
+    const tickets = supportTicketFactory.buildList(15, {
+      severity: 1,
+      status: 'open',
+    });
     return HttpResponse.json(makeResourcePage(tickets));
   }),
   http.get('*/support/tickets/999', () => {
@@ -1649,6 +1662,7 @@ export const handlers = [
   http.get('*/support/tickets/:ticketId', ({ params }) => {
     const ticket = supportTicketFactory.build({
       id: Number(params.ticketId),
+      severity: 1,
     });
     return HttpResponse.json(ticket);
   }),

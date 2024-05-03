@@ -21,15 +21,16 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclb', label: 'ACLB' },
   { flag: 'aclbFullCreateFlow', label: 'ACLB Full Create Flow' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
-  { flag: 'linodeCloneUiChanges', label: 'Linode Clone UI Changes' },
-  { flag: 'gecko', label: 'Gecko' },
-  { flag: 'parentChildAccountAccess', label: 'Parent/Child Account' },
-  { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'firewallNodebalancer', label: 'Firewall NodeBalancer' },
-  { flag: 'recharts', label: 'Recharts' },
-  { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
-  { flag: 'placementGroups', label: 'Placement Groups' },
+  { flag: 'gecko2', label: 'Gecko' },
   { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },
+  { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
+  { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
+  { flag: 'parentChildAccountAccess', label: 'Parent/Child Account' },
+  { flag: 'placementGroups', label: 'Placement Groups' },
+  { flag: 'recharts', label: 'Recharts' },
+  { flag: 'selfServeBetas', label: 'Self Serve Betas' },
+  { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
 ];
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {
@@ -50,9 +51,9 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
   ) => {
     const currentFlag = flags[flag];
     const updatedValue =
-      typeof currentFlag === 'boolean'
-        ? e.target.checked
-        : { ...currentFlag, enabled: e.target.checked }; // If current flag is an object, update 'enabled' key
+      typeof currentFlag == 'object' && 'enabled' in currentFlag
+        ? { ...currentFlag, enabled: e.target.checked } // If current flag is an object, update 'enabled' key
+        : e.target.checked;
     const updatedFlags = {
       ...getStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY),
       [flag]: updatedValue,

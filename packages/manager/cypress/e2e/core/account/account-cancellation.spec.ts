@@ -9,6 +9,15 @@ import {
   mockCancelAccount,
   mockCancelAccountError,
 } from 'support/intercepts/account';
+import {
+  cancellationDataLossWarning,
+  cancellationPaymentErrorMessage,
+} from 'support/constants/account';
+import {
+  CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+  PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+  PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+} from 'src/features/Account/constants';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import {
@@ -23,29 +32,6 @@ import {
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
-
-// Data loss warning which is displayed in the account cancellation dialog.
-const cancellationDataLossWarning =
-  'Please note this is an extremely destructive action. Closing your account \
-means that all services Linodes, Volumes, DNS Records, etc will be lost and \
-may not be able be restored.';
-
-// Error message that appears when a payment failure occurs upon cancellation attempt.
-const cancellationPaymentErrorMessage =
-  'We were unable to charge your credit card for services rendered. \
-We cannot cancel this account until the balance has been paid.';
-
-// Tooltip message that appears when a child account tries to close the account.
-const contactParentUserTooltipsMessage =
-  'Contact your parent user to close your account.';
-
-// Tooltip message that appears when a child account tries to close the account.
-const contactCustomerSupportTooltipsMessage =
-  'Contact customer support to close this account.';
-
-// Tooltip message that appears when a parent account with one and more child accounts tries to close the account.
-const removeChildAccountTooltipsMessage =
-  'Remove child accounts before closing the account.';
 
 describe('Account cancellation', () => {
   /*
@@ -93,7 +79,9 @@ describe('Account cancellation', () => {
       });
 
     ui.dialog
-      .findByTitle('Are you sure you want to close your Linode account?')
+      .findByTitle(
+        'Are you sure you want to close your cloud computing services account?'
+      )
       .should('be.visible')
       .within(() => {
         cy.findByText(cancellationDataLossWarning, { exact: false }).should(
@@ -193,7 +181,9 @@ describe('Account cancellation', () => {
 
     // Fill out cancellation dialog and attempt submission.
     ui.dialog
-      .findByTitle('Are you sure you want to close your Linode account?')
+      .findByTitle(
+        'Are you sure you want to close your cloud computing services account?'
+      )
       .should('be.visible')
       .within(() => {
         cy.findByLabelText(
@@ -246,7 +236,7 @@ describe('Parent/Child account cancellation', () => {
           .trigger('mouseover');
         // Click the button first, then confirm the tooltip is shown.
         ui.tooltip
-          .findByText(contactParentUserTooltipsMessage)
+          .findByText(CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT)
           .should('be.visible');
       });
   });
@@ -254,7 +244,7 @@ describe('Parent/Child account cancellation', () => {
   /**
    * Confirms that a proxy account cannot close the account
    */
-  it('disables a proxy account to close the account', () => {
+  it('disables "Close Account" button for proxy users', () => {
     const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
       username: 'proxy-user',
@@ -280,7 +270,7 @@ describe('Parent/Child account cancellation', () => {
           .trigger('mouseover');
         // Click the button first, then confirm the tooltip is shown.
         ui.tooltip
-          .findByText(contactCustomerSupportTooltipsMessage)
+          .findByText(PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT)
           .should('be.visible');
       });
   });
@@ -288,7 +278,7 @@ describe('Parent/Child account cancellation', () => {
   /**
    * Confirms that a parent account with one or more active child accounts cannot close the account
    */
-  it('disables a parent account with one or more active child accounts to close the account', () => {
+  it('disables "Close Account" button for parent users', () => {
     const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
       username: 'parent-user',
@@ -314,7 +304,7 @@ describe('Parent/Child account cancellation', () => {
           .trigger('mouseover');
         // Click the button first, then confirm the tooltip is shown.
         ui.tooltip
-          .findByText(removeChildAccountTooltipsMessage)
+          .findByText(PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT)
           .should('be.visible');
       });
   });
@@ -326,7 +316,7 @@ describe('Parent/Child account cancellation', () => {
     const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
       username: 'default-user',
-      restricted: true,
+      restricted: false,
       user_type: 'default',
     });
     const mockCancellationResponse: CancelAccount = {
@@ -367,7 +357,9 @@ describe('Parent/Child account cancellation', () => {
       });
 
     ui.dialog
-      .findByTitle('Are you sure you want to close your Linode account?')
+      .findByTitle(
+        'Are you sure you want to close your cloud computing services account?'
+      )
       .should('be.visible')
       .within(() => {
         cy.findByText(cancellationDataLossWarning, { exact: false }).should(

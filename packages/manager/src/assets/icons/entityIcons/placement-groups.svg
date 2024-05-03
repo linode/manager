@@ -1,6 +1,5 @@
-
-<svg width="191" height="101" viewBox="0 0 191 101" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" clip-rule="evenodd" d="M89.1251 5.9424C89.1251 2.97058 92.2815 0.00309818 95.4379 -2.59723e-07C98.594 -0.00309846 101.75 2.97058 101.75 5.94248C101.75 39.849 101.75 25.9407 101.75 95.0589C101.75 98.3401 98.924 101 95.4379 101C91.9518 101 89.1257 98.3401 89.1257 95.0589C89.1257 25.9407 89.1248 54.7022 89.1251 5.9424Z" />
-  <path fill-rule="evenodd" clip-rule="evenodd" d="M38.625 6.3125L71.4257 25.25V63.125L38.625 82.0625L5.82429 63.125V25.25L38.625 6.3125Z" />
-  <path fill-rule="evenodd" clip-rule="evenodd" d="M152.25 6.3125L185.051 25.25V63.125L152.25 82.0625L119.449 63.125V25.25L152.25 6.3125Z" />
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M4.8 6.32L9.6 9.32V14.12L4.8 17.12L0 14.12V9.32L4.8 6.32Z" fill="currentColor"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M19.2 6.32L24 9.32V14.12L19.2 17.12L14.4 14.12V9.32L19.2 6.32Z" fill="currentColor"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M12 5C12.3976 5 12.72 5.32236 12.72 5.72L12.72 17.72C12.72 18.1176 12.3976 18.44 12 18.44C11.6024 18.44 11.28 18.1176 11.28 17.72V5.72C11.28 5.32236 11.6024 5 12 5Z" fill="currentColor"/>
 </svg>

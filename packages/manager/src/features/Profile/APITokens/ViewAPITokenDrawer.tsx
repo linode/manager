@@ -16,11 +16,7 @@ import {
   StyledPermissionsCell,
   StyledPermsTable,
 } from './APITokenDrawer.styles';
-import {
-  basePermNameMap as _basePermNameMap,
-  filterPermsNameMap,
-  scopeStringToPermTuples,
-} from './utils';
+import { basePermNameMap, scopeStringToPermTuples } from './utils';
 
 interface Props {
   onClose: () => void;
@@ -39,39 +35,13 @@ export const ViewAPITokenDrawer = (props: Props) => {
     globalGrantType: 'child_account_access',
   });
 
-  const hasParentChildAccountAccess = Boolean(flags.parentChildAccountAccess);
-
-  // @TODO: Parent/Child - once in GA, remove _basePermNameMap logic and references.
-  // Just use the basePermNameMap import directly w/o any manipulation.
-  const basePermNameMap = filterPermsNameMap(_basePermNameMap, [
-    {
-      name: 'child_account',
-      shouldBeIncluded: hasParentChildAccountAccess,
-    },
-  ]);
-
   const allPermissions = scopeStringToPermTuples(token?.scopes ?? '');
 
-  /**
-   * A parent user with child_account_access can issue a PAT with child_account scope.
-   * If access is later revoked, we'll still display this scope for existing PATs, but not for new ones.
-   * */
-  const hideChildAccountAccessScope = allPermissions.some(
-    (scope) =>
-      scope[0] === 'child_account' &&
-      scope[1] === 0 &&
-      isChildAccountAccessRestricted
-  );
-
-  // Filter permissions for all users except parent user accounts.
-  const showFilteredPermissions =
-    !flags.parentChildAccountAccess ||
+  // Visually hide the "Child Account Access" permission even though it's still part of the base perms.
+  const hideChildAccountAccessScope =
     profile?.user_type !== 'parent' ||
-    hideChildAccountAccessScope;
-
-  const filteredPermissions = allPermissions.filter(
-    (scopeTup) => basePermNameMap[scopeTup[0]] !== 'Child Account Access'
-  );
+    isChildAccountAccessRestricted ||
+    !flags.parentChildAccountAccess;
 
   return (
     <Drawer onClose={onClose} open={open} title={token?.label ?? 'Token'}>
@@ -83,8 +53,8 @@ export const ViewAPITokenDrawer = (props: Props) => {
         <TableHead>
           <TableRow>
             <TableCell data-qa-perm-access>Access</TableCell>
-            <TableCell data-qa-perm-none style={{ textAlign: 'center' }}>
-              None
+            <TableCell data-qa-perm-no-access style={{ textAlign: 'center' }}>
+              No Access
             </TableCell>
             <TableCell data-qa-perm-read noWrap style={{ textAlign: 'center' }}>
               Read Only
@@ -95,56 +65,61 @@ export const ViewAPITokenDrawer = (props: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {(showFilteredPermissions ? filteredPermissions : allPermissions).map(
-            (scopeTup) => {
-              if (!basePermNameMap[scopeTup[0]]) {
-                return null;
-              }
-              return (
-                <TableRow
-                  data-qa-row={basePermNameMap[scopeTup[0]]}
-                  key={scopeTup[0]}
-                >
-                  <StyledAccessCell padding="checkbox" parentColumn="Access">
-                    {basePermNameMap[scopeTup[0]]}
-                  </StyledAccessCell>
-                  <StyledPermissionsCell padding="checkbox" parentColumn="None">
-                    <AccessCell
-                      active={scopeTup[1] === 0}
-                      disabled={false}
-                      onChange={() => null}
-                      scope="0"
-                      scopeDisplay={scopeTup[0]}
-                      viewOnly={true}
-                    />
-                  </StyledPermissionsCell>
-                  <StyledPermissionsCell
-                    padding="checkbox"
-                    parentColumn="Read Only"
-                  >
-                    <AccessCell
-                      active={scopeTup[1] === 1}
-                      disabled={false}
-                      onChange={() => null}
-                      scope="1"
-                      scopeDisplay={scopeTup[0]}
-                      viewOnly={true}
-                    />
-                  </StyledPermissionsCell>
-                  <TableCell padding="checkbox" parentColumn="Read/Write">
-                    <AccessCell
-                      active={scopeTup[1] === 2}
-                      disabled={false}
-                      onChange={() => null}
-                      scope="2"
-                      scopeDisplay={scopeTup[0]}
-                      viewOnly={true}
-                    />
-                  </TableCell>
-                </TableRow>
-              );
+          {allPermissions.map((scopeTup) => {
+            if (
+              !basePermNameMap[scopeTup[0]] ||
+              (hideChildAccountAccessScope &&
+                basePermNameMap[scopeTup[0]] === 'Child Account Access')
+            ) {
+              return null;
             }
-          )}
+            return (
+              <TableRow
+                data-qa-row={basePermNameMap[scopeTup[0]]}
+                key={scopeTup[0]}
+              >
+                <StyledAccessCell padding="checkbox" parentColumn="Access">
+                  {basePermNameMap[scopeTup[0]]}
+                </StyledAccessCell>
+                <StyledPermissionsCell
+                  padding="checkbox"
+                  parentColumn="No Access"
+                >
+                  <AccessCell
+                    active={scopeTup[1] === 0}
+                    disabled={false}
+                    onChange={() => null}
+                    scope="0"
+                    scopeDisplay={scopeTup[0]}
+                    viewOnly={true}
+                  />
+                </StyledPermissionsCell>
+                <StyledPermissionsCell
+                  padding="checkbox"
+                  parentColumn="Read Only"
+                >
+                  <AccessCell
+                    active={scopeTup[1] === 1}
+                    disabled={false}
+                    onChange={() => null}
+                    scope="1"
+                    scopeDisplay={scopeTup[0]}
+                    viewOnly={true}
+                  />
+                </StyledPermissionsCell>
+                <TableCell padding="checkbox" parentColumn="Read/Write">
+                  <AccessCell
+                    active={scopeTup[1] === 2}
+                    disabled={false}
+                    onChange={() => null}
+                    scope="2"
+                    scopeDisplay={scopeTup[0]}
+                    viewOnly={true}
+                  />
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </StyledPermsTable>
     </Drawer>
