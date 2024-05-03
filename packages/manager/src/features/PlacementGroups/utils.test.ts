@@ -10,6 +10,7 @@ import {
   affinityTypeOptions,
   getAffinityTypeEnforcement,
   getLinodesFromAllPlacementGroups,
+  getMaxPGsPerCustomer,
   getPlacementGroupLinodes,
   hasPlacementGroupReachedCapacity,
   hasRegionReachedPlacementGroupCapacity,
@@ -278,5 +279,31 @@ describe('useIsPlacementGroupsEnabled', () => {
     expect(result.current).toStrictEqual({
       isPlacementGroupsEnabled: false,
     });
+  });
+});
+
+describe('getMaxPGsPerCustomer', () => {
+  it('returns the maximum number of Placement Groups per region a customer is allowed to create', () => {
+    const region = regionFactory.build({
+      placement_group_limits: {
+        maximum_pgs_per_customer: 5,
+      },
+    });
+
+    expect(getMaxPGsPerCustomer(region)).toBe(5);
+  });
+
+  it('returns "unlimited" if the limit is `null`', () => {
+    const region = regionFactory.build({
+      placement_group_limits: {
+        maximum_pgs_per_customer: null,
+      },
+    });
+
+    expect(getMaxPGsPerCustomer(region)).toBe('unlimited');
+  });
+
+  it('returns undefined if the region is not provided', () => {
+    expect(getMaxPGsPerCustomer(undefined)).toBeUndefined();
   });
 });

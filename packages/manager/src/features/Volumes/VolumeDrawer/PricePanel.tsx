@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import { useVolumeTypesQuery } from 'src/queries/volumes';
+import { useVolumeTypesQuery } from 'src/queries/volumes/volumes';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 interface Props {
   currentSize: number;

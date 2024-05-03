@@ -14,7 +14,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useVolumesQuery } from 'src/queries/volumes';
+import { useVolumesQuery } from 'src/queries/volumes/volumes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { AttachVolumeDrawer } from './AttachVolumeDrawer';

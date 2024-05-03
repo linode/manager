@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React, { useState } from 'react';
-import { useController, useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -18,29 +18,40 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { SelectLinodeCard } from 'src/features/Linodes/LinodesCreate/SelectLinodePanel/SelectLinodeCard';
+import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
+import { privateIPRegex } from 'src/utilities/ipUtils';
 import { isNumeric } from 'src/utilities/stringUtils';
 
 import {
   LinodeCreateFormValues,
   useLinodeCreateQueryParams,
-} from '../../utilities';
+} from '../utilities';
 import { LinodeSelectTableRow } from './LinodeSelectTableRow';
 
 import type { Linode } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
-export const LinodeSelectTable = () => {
+interface Props {
+  /**
+   * Adds an extra column that will dispay a "power off" option when the row is selected
+   */
+  enablePowerOff?: boolean;
+}
+
+export const LinodeSelectTable = (props: Props) => {
+  const { enablePowerOff } = props;
+
   const matchesMdUp = useMediaQuery((theme: Theme) =>
     theme.breakpoints.up('md')
   );
 
-  const { setValue } = useFormContext<LinodeCreateFormValues>();
-  const linode = useWatch<LinodeCreateFormValues, 'linode'>({ name: 'linode' });
+  const { control, reset } = useFormContext<LinodeCreateFormValues>();
 
-  const { field } = useController<LinodeCreateFormValues, 'linode'>({
+  const selectedLinode = useWatch<LinodeCreateFormValues>({
+    control,
     name: 'linode',
   });
 
@@ -50,7 +61,8 @@ export const LinodeSelectTable = () => {
     params.linodeID
   );
 
-  const [query, setQuery] = useState(linode?.label ?? '');
+  const [query, setQuery] = useState(selectedLinode?.label ?? '');
+  const [linodeToPowerOff, setLinodeToPowerOff] = useState<Linode>();
 
   const pagination = usePagination();
   const order = useOrder();
@@ -76,13 +88,18 @@ export const LinodeSelectTable = () => {
   );
 
   const handleSelect = (linode: Linode) => {
-    setValue('backup_id', null);
-    setValue('region', linode.region);
-    if (linode.type) {
-      setValue('type', linode.type);
-    }
-    field.onChange(linode);
+    const hasPrivateIP = linode.ipv4.some((ipv4) => privateIPRegex.test(ipv4));
+    reset((prev) => ({
+      ...prev,
+      backup_id: null,
+      linode,
+      private_ip: hasPrivateIP,
+      region: linode.region,
+      type: linode.type ?? '',
+    }));
   };
+
+  const columns = enablePowerOff ? 6 : 5;
 
   return (
     <Stack pt={1} spacing={2}>
@@ -94,7 +111,7 @@ export const LinodeSelectTable = () => {
             }
             setQuery(value ?? '');
           },
-          value: preselectedLinodeId ? linode?.label ?? '' : query,
+          value: preselectedLinodeId ? selectedLinode?.label ?? '' : query,
         }}
         clearable
         hideLabel
@@ -102,8 +119,8 @@ export const LinodeSelectTable = () => {
         label="Search"
         placeholder="Search"
       />
-      {matchesMdUp ? (
-        <>
+      <Box>
+        {matchesMdUp ? (
           <Table>
             <TableHead>
               <TableRow>
@@ -126,46 +143,60 @@ export const LinodeSelectTable = () => {
                 >
                   Region
                 </TableSortCell>
+                {enablePowerOff && <TableCell sx={{ minWidth: 100 }} />}
               </TableRow>
             </TableHead>
             <TableBody>
-              {isLoading && <TableRowLoading columns={5} rows={10} />}
-              {error && <TableRowError colSpan={5} message={error[0].reason} />}
-              {data?.results === 0 && <TableRowEmpty colSpan={5} />}
+              {isLoading && <TableRowLoading columns={columns} rows={10} />}
+              {error && (
+                <TableRowError colSpan={columns} message={error[0].reason} />
+              )}
+              {data?.results === 0 && <TableRowEmpty colSpan={columns} />}
               {data?.data.map((linode) => (
                 <LinodeSelectTableRow
+                  onPowerOff={
+                    enablePowerOff
+                      ? () => setLinodeToPowerOff(linode)
+                      : undefined
+                  }
                   key={linode.id}
                   linode={linode}
                   onSelect={() => handleSelect(linode)}
-                  selected={linode.id === field.value?.id}
+                  selected={linode.id === selectedLinode?.id}
                 />
               ))}
             </TableBody>
           </Table>
-          <PaginationFooter
-            count={data?.results ?? 0}
-            handlePageChange={pagination.handlePageChange}
-            handleSizeChange={pagination.handlePageSizeChange}
-            page={pagination.page}
-            pageSize={pagination.pageSize}
-          />
-        </>
-      ) : (
-        <Box>
+        ) : (
           <Grid container spacing={2}>
             {data?.data.map((linode) => (
               <SelectLinodeCard
                 handleSelection={() => handleSelect(linode)}
                 key={linode.id}
                 linode={linode}
-                selected={linode.id === field.value?.id}
+                selected={linode.id === selectedLinode?.id}
               />
             ))}
             {data?.results === 0 && (
               <Typography padding={1}>No results</Typography>
             )}
           </Grid>
-        </Box>
+        )}
+        <PaginationFooter
+          count={data?.results ?? 0}
+          handlePageChange={pagination.handlePageChange}
+          handleSizeChange={pagination.handlePageSizeChange}
+          page={pagination.page}
+          pageSize={pagination.pageSize}
+        />
+      </Box>
+      {enablePowerOff && (
+        <PowerActionsDialog
+          action="Power Off"
+          isOpen={Boolean(linodeToPowerOff)}
+          linodeId={linodeToPowerOff?.id}
+          onClose={() => setLinodeToPowerOff(undefined)}
+        />
       )}
     </Stack>
   );

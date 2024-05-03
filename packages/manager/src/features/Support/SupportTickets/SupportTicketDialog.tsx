@@ -27,7 +27,7 @@ import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
-import { useAllVolumesQuery } from 'src/queries/volumes';
+import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import {
   getAPIErrorOrDefault,
   getErrorMap,
