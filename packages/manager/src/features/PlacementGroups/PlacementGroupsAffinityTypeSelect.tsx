@@ -35,7 +35,7 @@ export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
             title={
               isDisabledMenuItem ? (
                 <Typography>
-                  Only supporting Anti-affinity host placement groups for Beta.{' '}
+                  Currently, only Anti-affinity placement groups are supported.{' '}
                   <Link to={PLACEMENT_GROUPS_DOCS_LINK}>Learn more</Link>.
                 </Typography>
               ) : (
@@ -80,8 +80,6 @@ export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
             performance. Linodes in a placement group that use Anti-affinity are
             in separate fault domains, but still in the same data center. Use
             this to support a high-availability model.
-            <br />
-            <Link to={PLACEMENT_GROUPS_DOCS_LINK}>Learn more.</Link>
           </Typography>
         ),
       }}

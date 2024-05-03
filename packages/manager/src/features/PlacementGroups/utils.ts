@@ -4,7 +4,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 
 import type {
-  AffinityEnforcement,
+  AffinityTypeEnforcement,
   CreatePlacementGroupPayload,
   Linode,
   PlacementGroup,
@@ -12,11 +12,11 @@ import type {
 } from '@linode/api-v4';
 
 /**
- * Helper to get the affinity enforcement readable string.
+ * Helper to get the affinity type enforcement readable string.
  */
 export const getAffinityTypeEnforcement = (
   is_strict: boolean
-): AffinityEnforcement => {
+): AffinityTypeEnforcement => {
   return is_strict ? 'Strict' : 'Flexible';
 };
 
