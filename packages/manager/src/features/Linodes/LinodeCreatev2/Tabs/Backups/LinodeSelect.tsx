@@ -5,7 +5,7 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 
 import { BackupsWarning } from './BackupsWarning';
-import { LinodeSelectTable } from './LinodeSelectTable';
+import { LinodeSelectTable } from '../../shared/LinodeSelectTable';
 
 export const LinodeSelect = () => {
   return (
