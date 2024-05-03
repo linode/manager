@@ -23,6 +23,7 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
+import { MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION } from './constants';
 import { PlacementGroupsAffinityEnforcementRadioGroup } from './PlacementGroupsAffinityEnforcementRadioGroup';
 import { PlacementGroupsAffinityTypeSelect } from './PlacementGroupsAffinityTypeSelect';
 import {
@@ -126,7 +127,7 @@ export const PlacementGroupsCreateDrawer = (
     [regions, values.region]
   );
 
-  const pgRegionLimitHelperText = `The maximum number of placement groups in this region is: ${getMaxPGsPerCustomer(
+  const pgRegionLimitHelperText = `${MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION} ${getMaxPGsPerCustomer(
     selectedRegion
   )}`;
 
@@ -196,8 +197,8 @@ export const PlacementGroupsCreateDrawer = (
                         create in this region.
                       </Typography>
                       <Typography mt={2}>
-                        The maximum number of placement groups in this region
-                        is: {getMaxPGsPerCustomer(region)}
+                        {MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION}{' '}
+                        {getMaxPGsPerCustomer(region)}
                       </Typography>
                     </>
                   ),
