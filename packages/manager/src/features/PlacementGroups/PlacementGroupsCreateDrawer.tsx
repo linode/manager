@@ -23,9 +23,13 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
+import { MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION } from './constants';
 import { PlacementGroupsAffinityEnforcementRadioGroup } from './PlacementGroupsAffinityEnforcementRadioGroup';
 import { PlacementGroupsAffinityTypeSelect } from './PlacementGroupsAffinityTypeSelect';
-import { hasRegionReachedPlacementGroupCapacity } from './utils';
+import {
+  getMaxPGsPerCustomer,
+  hasRegionReachedPlacementGroupCapacity,
+} from './utils';
 
 import type { PlacementGroupsCreateDrawerProps } from './types';
 import type { CreatePlacementGroupPayload, Region } from '@linode/api-v4';
@@ -123,7 +127,9 @@ export const PlacementGroupsCreateDrawer = (
     [regions, values.region]
   );
 
-  const pgRegionLimitHelperText = `The maximum number of placement groups in this region is: ${selectedRegion?.placement_group_limits?.maximum_pgs_per_customer}`;
+  const pgRegionLimitHelperText = `${MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION} ${getMaxPGsPerCustomer(
+    selectedRegion
+  )}`;
 
   return (
     <Drawer
@@ -191,9 +197,8 @@ export const PlacementGroupsCreateDrawer = (
                         create in this region.
                       </Typography>
                       <Typography mt={2}>
-                        The maximum number of placement groups in this region
-                        is:{' '}
-                        {region.placement_group_limits.maximum_pgs_per_customer}
+                        {MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION}{' '}
+                        {getMaxPGsPerCustomer(region)}
                       </Typography>
                     </>
                   ),
