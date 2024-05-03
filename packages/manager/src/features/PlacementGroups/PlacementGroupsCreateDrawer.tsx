@@ -24,7 +24,7 @@ import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION } from './constants';
-import { PlacementGroupsAffinityEnforcementRadioGroup } from './PlacementGroupsAffinityEnforcementRadioGroup';
+import { PlacementGroupsAffinityTypeEnforcementRadioGroup } from './PlacementGroupsAffinityEnforcementRadioGroup';
 import { PlacementGroupsAffinityTypeSelect } from './PlacementGroupsAffinityTypeSelect';
 import {
   getMaxPGsPerCustomer,
@@ -212,7 +212,7 @@ export const PlacementGroupsCreateDrawer = (
               helperText={values.region && pgRegionLimitHelperText}
               regions={regions ?? []}
               selectedId={selectedRegionId ?? values.region}
-              tooltipText="Only regions supporting Placement Groups are listed."
+              tooltipText="Only Linode data center regions that support placement groups are listed."
             />
           )}
           <PlacementGroupsAffinityTypeSelect
@@ -222,7 +222,7 @@ export const PlacementGroupsCreateDrawer = (
             error={errors.affinity_type}
             setFieldValue={setFieldValue}
           />
-          <PlacementGroupsAffinityEnforcementRadioGroup
+          <PlacementGroupsAffinityTypeEnforcementRadioGroup
             disabledPlacementGroupCreateButton={
               disabledPlacementGroupCreateButton
             }
