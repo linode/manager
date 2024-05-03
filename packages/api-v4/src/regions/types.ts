@@ -32,7 +32,7 @@ export interface Region {
   country: Country;
   capabilities: Capabilities[];
   placement_group_limits: {
-    maximum_pgs_per_customer: number;
+    maximum_pgs_per_customer: number | null; // This value can be unlimited for some customers, for which the API returns the `null` value.
     maximum_linodes_per_pg: number;
   };
   status: RegionStatus;
