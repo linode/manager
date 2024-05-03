@@ -6,12 +6,16 @@ import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { useStackScriptQuery } from 'src/queries/stackscripts';
 
+import { useLinodeCreateQueryParams } from '../../utilities';
+
 import type { CreateLinodeRequest, Image } from '@linode/api-v4';
 
 export const StackScriptImages = () => {
   const stackscriptId = useWatch<CreateLinodeRequest, 'stackscript_id'>({
     name: 'stackscript_id',
   });
+
+  const { params } = useLinodeCreateQueryParams();
 
   const hasStackScriptSelected =
     stackscriptId !== null && stackscriptId !== undefined;
@@ -30,7 +34,9 @@ export const StackScriptImages = () => {
     : undefined;
 
   const helperText = !hasStackScriptSelected
-    ? 'Select a StackScript to see compatible Images.'
+    ? `Select ${
+        params.type === 'One-Click' ? 'an app' : 'a StackScript'
+      } to see compatible Images.`
     : undefined;
 
   return (
