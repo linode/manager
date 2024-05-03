@@ -86,7 +86,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
       <TableBody role="radiogroup">
         {shouldDisplayNoRegionSelectedMessage ? (
           <TableRowEmpty
-            colSpan={9}
+            colSpan={tableCells.length}
             message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
           />
         ) : (
