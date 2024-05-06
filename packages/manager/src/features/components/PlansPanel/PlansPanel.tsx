@@ -96,6 +96,12 @@ export const PlansPanel = (props: PlansPanelProps) => {
     getIsEdgeRegion(regionsData ?? [], selectedRegionID ?? '');
 
   const getDedicatedEdgePlanType = () => {
+    const edgePlans = types.filter((type) => type.class === 'edge');
+    if (edgePlans.length) {
+      return edgePlans;
+    }
+
+    // @TODO Remove fallback once edge plans are activated
     // 256GB and 512GB plans will not be supported for Edge
     const plansUpTo128GB = _plans.dedicated.filter(
       (planType) =>
