@@ -84,7 +84,8 @@ export const ImageSelectv2 = (props: Props) => {
             <DistributionIcon
               distribution={value.vendor}
               fontSize="1.8em"
-              pr={1}
+              pl={1}
+              pr={2}
             />
           ),
         },
