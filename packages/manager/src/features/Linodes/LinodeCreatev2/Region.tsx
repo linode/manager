@@ -19,6 +19,7 @@ export const Region = () => {
     <SelectRegionPanel
       RegionSelectProps={{
         textFieldProps: {
+          onBlur: field.onBlur,
           inputRef: field.ref,
         },
       }}
