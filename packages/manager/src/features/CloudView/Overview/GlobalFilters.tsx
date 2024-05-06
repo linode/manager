@@ -99,7 +99,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   };
 
   const handleDashboardChange = (dashboard: Dashboard | undefined) => {
-    console.log('Selected Dashboard: ', dashboard);
     setDashboard(dashboard);
     setService(dashboard?.service_type);
   };

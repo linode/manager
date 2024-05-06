@@ -14,7 +14,10 @@ export const AggregateFunctionComponent = (
   let default_agg_unavailable = false;
 
   //if default aggregate func not available in available_aggregate_function
-  if (props.available_aggregate_func.indexOf(default_aggregate_func) < 0) {
+  if (
+    default_aggregate_func &&
+    props.available_aggregate_func.indexOf(default_aggregate_func) < 0
+  ) {
     default_agg_unavailable = true;
     if (props.available_aggregate_func.length > 0) {
       default_aggregate_func = props.available_aggregate_func[0];
@@ -37,28 +40,31 @@ export const AggregateFunctionComponent = (
     <div
       style={{
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
       }}
     >
-    <Autocomplete
-      onChange={(_: any, selectedAggregateFunc: any) => {
-        props.onAggregateFuncChange(selectedAggregateFunc.label);
-      }}
-      defaultValue={default_aggregate_func}
-      disableClearable
-      fullWidth={false}
-      label=""
+      <Autocomplete
+        onChange={(_: any, selectedAggregateFunc: any) => {
+          props.onAggregateFuncChange(selectedAggregateFunc.label);
+        }}
+        defaultValue={default_aggregate_func}
+        disableClearable
+        fullWidth={false}
+        label=""
         isOptionEqualToValue={(option, value) => {
           if (value.label) {
-          return option.label === value.label;
-        }
+            return option.label === value.label;
+          }
           return option.label === value;
-      }}
-      noMarginTop={true}
-      options={available_aggregate_func}
-    />
-      {default_agg_unavailable && <p style={{color: "rgb(210 165 28)", fontSize: "smaller"}}>Invalid agg function '{props.default_aggregate_func}'</p>}
+        }}
+        noMarginTop={true}
+        options={available_aggregate_func}
+      />
+      {default_agg_unavailable && (
+        <p style={{ color: 'rgb(210 165 28)', fontSize: 'smaller' }}>
+          Invalid agg function '{props.default_aggregate_func}'
+        </p>
+      )}
     </div>
-
   );
 };

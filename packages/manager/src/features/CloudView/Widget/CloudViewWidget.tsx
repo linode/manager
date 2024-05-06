@@ -49,7 +49,10 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
 
   const [error, setError] = React.useState<boolean>(false);
 
-  const [selectedAggregatedFunction, setSelectedAggregatedFunction] = React.useState<string>(props.widget?.aggregate_function);
+  const [
+    selectedAggregatedFunction,
+    setSelectedAggregatedFunction,
+  ] = React.useState<string>(props.widget?.aggregate_function);
 
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget }); // any change in agg_functions, step, group_by, will be published to dashboard component for save
 
@@ -101,8 +104,8 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     return props.widget.serviceType
       ? props.widget.serviceType!
       : props.globalFilters
-        ? props.globalFilters.serviceType
-        : '';
+      ? props.globalFilters.serviceType
+      : '';
   };
 
   const {
@@ -210,7 +213,6 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
         return newWidget;
       });
       setSelectedAggregatedFunction(aggregateValue);
-
     }
   };
 
@@ -255,7 +257,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
             <AggregateFunctionComponent
               default_aggregate_func={selectedAggregatedFunction}
               available_aggregate_func={
-                props.availableMetrics.available_aggregate_functions
+                props.availableMetrics?.available_aggregate_functions
               }
               onAggregateFuncChange={handleAggregateFunctionChange}
             />
