@@ -27,13 +27,12 @@ export interface PlanContainerProps {
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionId?: Region['id'];
-  showTransfer?: boolean;
+  showLimits?: boolean;
   wholePanelIsDisabled?: boolean;
 }
 
 export const PlanContainer = (props: PlanContainerProps) => {
   const {
-    allDisabledPlans,
     currentPlanHeading,
     hasMajorityOfPlansDisabled,
     isCreate,
@@ -44,20 +43,19 @@ export const PlanContainer = (props: PlanContainerProps) => {
     selectedDiskSize,
     selectedId,
     selectedRegionId,
-    showTransfer,
+    showLimits,
     wholePanelIsDisabled,
   } = props;
   const location = useLocation();
   const flags = useFlags();
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
-  const shouldShowTransfer =
-    showTransfer && plans.some((plan: PlanWithAvailability) => plan.transfer);
+  const showTransfer =
+    showLimits && plans.some((plan: PlanWithAvailability) => plan.transfer);
 
   // Show the Network throughput column if, for any plan, the api returned data (currently Bare Metal does not)
-  const shouldShowNetwork =
-    showTransfer &&
-    plans.some((plan: PlanWithAvailability) => plan.network_out);
+  const showNetwork =
+    showLimits && plans.some((plan: PlanWithAvailability) => plan.network_out);
 
   // DC Dynamic price logic - DB creation and DB resize flows are currently out of scope
   const isDatabaseCreateFlow = location.pathname.includes('/databases/create');
@@ -120,6 +118,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
             selectedDiskSize={selectedDiskSize}
             selectedId={selectedId}
             selectedRegionId={selectedRegionId}
+            showNetwork={showNetwork}
             showTransfer={showTransfer}
             wholePanelIsDisabled={wholePanelIsDisabled}
           />
@@ -127,18 +126,17 @@ export const PlanContainer = (props: PlanContainerProps) => {
       });
     },
     [
-      allDisabledPlans,
-      hasMajorityOfPlansDisabled,
       plans,
-      selectedRegionId,
-      wholePanelIsDisabled,
       currentPlanHeading,
+      hasMajorityOfPlansDisabled,
       isCreate,
       linodeID,
       onSelect,
       selectedDiskSize,
       selectedId,
+      selectedRegionId,
       showTransfer,
+      wholePanelIsDisabled,
     ]
   );
 
@@ -202,8 +200,8 @@ export const PlanContainer = (props: PlanContainerProps) => {
                       }
                       key={`plan-filter-${idx}`}
                       planFilter={table.planFilter}
-                      shouldShowNetwork={shouldShowNetwork}
-                      shouldShowTransfer={shouldShowTransfer}
+                      showNetwork={showNetwork}
+                      showTransfer={showTransfer}
                     />
                   )
                 );
@@ -215,8 +213,8 @@ export const PlanContainer = (props: PlanContainerProps) => {
                 }
                 key={planType}
                 renderPlanSelection={renderPlanSelection}
-                shouldShowNetwork={shouldShowNetwork}
-                shouldShowTransfer={shouldShowTransfer}
+                showNetwork={showNetwork}
+                showTransfer={showTransfer}
               />
             )
           )}
