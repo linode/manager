@@ -38,6 +38,7 @@ export interface PlanSelectionProps {
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionId?: Region['id'];
+  showNetwork?: boolean;
   showTransfer?: boolean;
   wholePanelIsDisabled?: boolean;
 }
@@ -54,6 +55,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     selectedDiskSize,
     selectedId,
     selectedRegionId,
+    showNetwork,
     showTransfer,
     wholePanelIsDisabled,
   } = props;
@@ -67,8 +69,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   const planIsTooSmall = diskSize > plan.disk;
   const isSamePlan = plan.heading === currentPlanHeading;
   const isGPU = plan.class === 'gpu';
-  const shouldShowTransfer = showTransfer && plan.transfer;
-  const shouldShowNetwork = showTransfer && plan.network_out;
 
   const { data: linode } = useLinodeQuery(
     linodeID ?? -1,
@@ -198,16 +198,22 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           <TableCell center data-qa-storage noWrap>
             {convertMegabytesTo(plan.disk, true)}
           </TableCell>
-          {shouldShowTransfer && plan.transfer ? (
+          {showTransfer ? (
             <TableCell center data-qa-transfer>
-              {plan.transfer / 1000} TB
+              {plan.transfer ? <>{plan.transfer / 1000} TB</> : ''}
             </TableCell>
           ) : null}
-          {shouldShowNetwork && plan.network_out ? (
+          {showNetwork ? (
             <TableCell center data-qa-network noWrap>
-              {LINODE_NETWORK_IN} Gbps{' '}
-              <span style={{ color: '#9DA4A6' }}>/</span>{' '}
-              {plan.network_out / 1000} Gbps
+              {plan.network_out ? (
+                <>
+                  {LINODE_NETWORK_IN} Gbps{' '}
+                  <span style={{ color: '#9DA4A6' }}>/</span>{' '}
+                  {plan.network_out / 1000} Gbps
+                </>
+              ) : (
+                ''
+              )}
             </TableCell>
           ) : null}
         </TableRow>
