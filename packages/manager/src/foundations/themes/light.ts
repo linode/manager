@@ -627,7 +627,7 @@ export const lightTheme: ThemeOptions = {
     MuiDivider: {
       styleOverrides: {
         root: {
-          borderColor: 'rgba(0, 0, 0, 0.12)',
+          borderColor: borderColors.divider,
           marginBottom: spacing,
           marginTop: spacing,
         },

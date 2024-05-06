@@ -334,6 +334,13 @@ export const darkTheme: ThemeOptions = {
         },
       },
     },
+    MuiDivider: {
+      styleOverrides: {
+        root: {
+          borderColor: customDarkModeOptions.borderColors.divider,
+        },
+      },
+    },
     MuiDrawer: {
       styleOverrides: {
         paper: {
