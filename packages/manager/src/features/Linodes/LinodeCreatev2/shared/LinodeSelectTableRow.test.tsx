@@ -143,4 +143,41 @@ describe('LinodeSelectTableRow', () => {
 
     await findByText(type.label);
   });
+
+  it('should render a power off button if the Linode is powered on, a onPowerOff function is passed, and the row is selected', async () => {
+    const linode = linodeFactory.build({ status: 'running' });
+
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: wrapWithTableBody(
+        <LinodeSelectTableRow
+          linode={linode}
+          onPowerOff={vi.fn()}
+          onSelect={vi.fn()}
+          selected
+        />
+      ),
+    });
+
+    expect(getByText('Power Off')).toBeEnabled();
+  });
+
+  it('should call onPowerOff when "Power Off" is clicked', async () => {
+    const linode = linodeFactory.build({ status: 'running' });
+    const onPowerOff = vi.fn();
+
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: wrapWithTableBody(
+        <LinodeSelectTableRow
+          linode={linode}
+          onPowerOff={onPowerOff}
+          onSelect={vi.fn()}
+          selected
+        />
+      ),
+    });
+
+    await userEvent.click(getByText('Power Off'));
+
+    expect(onPowerOff).toHaveBeenCalled();
+  });
 });

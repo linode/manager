@@ -66,6 +66,19 @@ describe('Linode Create Details', () => {
     ).toBeNull();
   });
 
+  it('does not render the tag select when cloning', () => {
+    const { queryByText } = renderWithThemeAndHookFormContext({
+      component: <Details />,
+      options: {
+        MemoryRouter: {
+          initialEntries: ['/linodes/create?type=Clone+Linode'],
+        },
+      },
+    });
+
+    expect(queryByText('Tags')).toBeNull();
+  });
+
   it('should disable the label and tag TextFields if the user does not have permission to create a linode', async () => {
     server.use(
       http.get('*/v4/profile', () => {

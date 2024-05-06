@@ -48,7 +48,7 @@ export const regions: Region[] = [
     label: 'Toronto, CA',
     placement_group_limits: {
       maximum_linodes_per_pg: 1,
-      maximum_pgs_per_customer: 5,
+      maximum_pgs_per_customer: null,
     },
     resolvers: {
       ipv4:
