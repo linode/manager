@@ -1,5 +1,5 @@
 import { API_ROOT } from '../constants';
-import Request, { setMethod, setURL } from '../request';
+import Request, { setHeaders, setMethod, setURL } from '../request';
 import { MetricDefinitions, MonitorServiceType, ServiceTypes } from './types';
 import { ResourcePage as Page } from 'src/types';
 
@@ -23,8 +23,15 @@ export const getMonitorServiceTypeInformationByServiceType = (
     setMethod('GET')
   );
 
-export const getMetricDefinitionsByServiceType = (serviceType: string) =>
-  Request<Page<MetricDefinitions>>(
-    setURL(`${API_ROOT}/monitor/services/${serviceType}/metricDefinitions`),
-    setMethod('GET')
+export const getMetricDefinitionsByServiceType = (serviceType: string) => {
+  return Request<Page<MetricDefinitions>>(
+    // setURL(`${API_ROOT}/monitor/services/${serviceType}/metricDefinitions`),
+    setURL(
+      `http://blr-lhv95n.bangalore.corp.akamai.com:9000/v4/monitor/services/${serviceType}/metric-definitions`
+    ),
+    setMethod('GET'),
+    setHeaders({
+      Authorization: 'Bearer vagrant',
+    })
   );
+};

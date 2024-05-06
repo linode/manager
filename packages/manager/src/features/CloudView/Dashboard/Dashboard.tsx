@@ -1,4 +1,9 @@
-import { AvailableMetrics, Dashboard, GetJWETokenPayload, Widgets } from '@linode/api-v4';
+import {
+  AvailableMetrics,
+  Dashboard,
+  GetJWETokenPayload,
+  Widgets,
+} from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
@@ -50,7 +55,11 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     props?.dashboard?.service_type === 'aclb'
   ));
 
-  const { data: jweToken, isError: isJweTokenError, isSuccess } = useCloudViewJWEtokenQuery(
+  const {
+    data: jweToken,
+    isError: isJweTokenError,
+    isSuccess,
+  } = useCloudViewJWEtokenQuery(
     props?.dashboard?.service_type,
     getResourceIDsPayload(),
     resourceOptions[props?.dashboard?.service_type] ? true : false
@@ -98,7 +107,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     return <CircleProgress />;
   }
 
-  if (isMetricDefinitionError) {
+  if (props.dashboard?.service_type && isMetricDefinitionError) {
     return <ErrorState errorText={'Error loading metric definitions'} />;
   }
 
@@ -139,22 +148,22 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
           <Grid columnSpacing={1.5} container rowSpacing={0} spacing={2}>
             {props.dashboard.widgets.map((element, index) => {
               if (element) {
-                let availMetrics = metricDefinitions.available_metrics.find(
-              (availMetrics: AvailableMetrics) =>
-                element.label === availMetrics.label
-            );
+                let availMetrics = metricDefinitions?.data.find(
+                  (availMetrics: AvailableMetrics) =>
+                    element.label === availMetrics.label
+                );
 
-            if (!availMetrics) {
-              availMetrics = {} as AvailableMetrics;
-              availMetrics.available_aggregate_functions = [];
-            }
-            return (
+                if (!availMetrics) {
+                  availMetrics = {} as AvailableMetrics;
+                  availMetrics.available_aggregate_functions = [];
+                }
+                return (
                   <CloudViewWidget
                     key={index}
                     {...getCloudViewGraphProperties(element)}
                     authToken={jweToken?.token}
                     availableMetrics={availMetrics}
-                handleWidgetChange={handleWidgetChange}
+                    handleWidgetChange={handleWidgetChange}
                     useColorIndex={colorIndex++} // todo, remove the color index
                   />
                 );
