@@ -1,10 +1,4 @@
-import { createChildAccountPersonalAccessToken } from '@linode/api-v4';
-
-import {
-  setTokenInLocalStorage,
-  updateCurrentTokenBasedOnUserType,
-} from 'src/features/Account/utils';
-import { getStorage } from 'src/utilities/storage';
+import { getStorage, setStorage } from 'src/utilities/storage';
 
 import type { Token, UserType } from '@linode/api-v4';
 import type { State as AuthState } from 'src/store/authentication';
@@ -45,33 +39,79 @@ export const updateParentTokenInLocalStorage = ({
 };
 
 /**
- * Headers are required for proxy users when obtaining a proxy token.
- * For 'proxy' userType, use the stored parent token in the request.
+ * Determine whether the tokens used for switchable accounts are still valid.
  */
-export const updateProxyTokenInLocalStorage = async ({
-  euuid,
-  token,
-  userType,
-}: ProxyTokenCreationParams) => {
-  const proxyToken = await createChildAccountPersonalAccessToken({
-    euuid,
-    headers:
-      userType === 'proxy'
-        ? {
-            Authorization: token,
-          }
-        : undefined,
-  });
+export const isParentTokenValid = (): boolean => {
+  const now = new Date().toISOString();
 
-  setTokenInLocalStorage({
-    prefix: 'authentication/proxy_token',
-    token: {
-      ...proxyToken,
-      token: `Bearer ${proxyToken.token}`,
-    },
-  });
-
-  updateCurrentTokenBasedOnUserType({
-    userType: 'proxy',
-  });
+  // From a proxy user, check whether parent token is still valid before switching.
+  if (
+    now >
+    new Date(getStorage('authentication/parent_token/expire')).toISOString()
+  ) {
+    return false;
+  }
+  return true;
 };
+
+/**
+ * Set token information in the local storage.
+ * This allows us to store a token for later use, such as switching between parent and proxy accounts.
+ */
+export const setTokenInLocalStorage = ({
+  prefix,
+  token = { expiry: '', scopes: '', token: '' },
+}: {
+  prefix: string;
+  token?: Pick<Token, 'expiry' | 'scopes' | 'token'>;
+}) => {
+  const { expiry, scopes, token: tokenValue } = token;
+
+  if (!tokenValue || !expiry) {
+    return;
+  }
+
+  setStorage(`${prefix}/token`, tokenValue);
+  setStorage(`${prefix}/expire`, expiry);
+  setStorage(`${prefix}/scopes`, scopes);
+};
+
+/**
+ * Set the active token in the local storage.
+ */
+export const updateCurrentTokenBasedOnUserType = ({
+  userType,
+}: {
+  userType: 'parent' | 'proxy';
+}) => {
+  const storageKeyPrefix = `authentication/${userType}_token`;
+
+  const userToken = getStorage(`${storageKeyPrefix}/token`);
+  const userScope = getStorage(`${storageKeyPrefix}/scopes`);
+  const userExpiry = getStorage(`${storageKeyPrefix}/expire`);
+
+  if (userToken) {
+    setStorage('authentication/token', userToken);
+    setStorage('authentication/scopes', userScope);
+    setStorage('authentication/expire', userExpiry);
+  }
+};
+
+/**
+ * Finds a personal access token stored locally for revocation,
+ * typically used when switching between accounts. Searching local storage
+ * for the token is necessary because the token is not persisted in state.
+ */
+export function getPersonalAccessTokenForRevocation(
+  tokens: Token[] | undefined,
+  currentTokenWithBearer: string
+): Token | undefined {
+  if (!tokens) {
+    return;
+  }
+  return tokens.find(
+    (token) =>
+      token.token &&
+      currentTokenWithBearer.replace('Bearer ', '').startsWith(token.token)
+  );
+}
