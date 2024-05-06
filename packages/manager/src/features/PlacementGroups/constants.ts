@@ -16,6 +16,9 @@ You may want to group Linodes closer together to help improve performance, or fu
 export const PLACEMENT_GROUP_HAS_NO_CAPACITY =
   'This placement group has reached the maximum Linode capacity.';
 
+export const MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION =
+  'Maximum placement groups in region:';
+
 // Links
 export const PLACEMENT_GROUPS_DOCS_LINK =
   'https://www.linode.com/docs/products/compute/compute-instances/guides/placement-groups/';

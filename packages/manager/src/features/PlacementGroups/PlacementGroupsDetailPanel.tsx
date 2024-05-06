@@ -127,6 +127,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
             tooltipPosition: 'right',
             tooltipText: PLACEMENT_GROUP_SELECT_TOOLTIP_COPY,
           }}
+          clearOnBlur={true}
           disabled={isPlacementGroupSelectDisabled}
           label={placementGroupSelectLabel}
           noOptionsMessage="There are no Placement Groups in this region."

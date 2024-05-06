@@ -23,7 +23,6 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
   { flag: 'firewallNodebalancer', label: 'Firewall NodeBalancer' },
   { flag: 'gecko2', label: 'Gecko' },
-  { flag: 'linodeCloneUiChanges', label: 'Linode Clone UI Changes' },
   { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
