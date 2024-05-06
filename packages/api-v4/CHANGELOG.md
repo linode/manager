@@ -1,3 +1,10 @@
+## [2024-05-06] - v0.115.1
+
+
+### Added:
+
+- 'edge' Linode type class ([#10441](https://github.com/linode/manager/pull/10441))
+
 ## [2024-04-29] - v0.115.0
 
 
