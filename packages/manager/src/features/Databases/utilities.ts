@@ -4,11 +4,14 @@ import { useDatabaseEnginesQuery } from 'src/queries/databases';
 /**
  * A hook to determine if Databases should be visible to the user.
  *
+ * Because DBaaS is end of sale, we treat is differently than other products.
+ * It should only be visible to customers with the account capability.
+ *
  * For unrestricted users, databases will show when
  * The user has the `Managed Databases` account capability.
  *
  * For users who don't have permission to load /v4/account
- * (which is restricted users with no billing access),
+ * (which is restricted users without acount read access),
  * we must check if they can load Database Engines as a workaround.
  * If these users can successfully fetch database engines, we will
  * show databases.
