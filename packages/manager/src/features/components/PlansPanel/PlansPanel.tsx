@@ -44,7 +44,7 @@ export interface PlansPanelProps {
   regionsData?: Region[];
   selectedId?: string;
   selectedRegionID?: string;
-  showTransfer?: boolean;
+  showLimits?: boolean;
   tabDisabledMessage?: string;
   tabbedPanelInnerClass?: string;
   types: PlanSelectionType[];
@@ -67,7 +67,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     regionsData,
     selectedId,
     selectedRegionID,
-    showTransfer,
+    showLimits,
     types,
   } = props;
 
@@ -94,8 +94,14 @@ export const PlansPanel = (props: PlansPanelProps) => {
     getIsEdgeRegion(regionsData ?? [], selectedRegionID ?? '');
 
   const getDedicatedEdgePlanType = () => {
+    const edgePlans = types.filter((type) => type.class === 'edge');
+    if (edgePlans.length) {
+      return edgePlans;
+    }
+
+    // @TODO Remove fallback once edge plans are activated
     // 256GB and 512GB plans will not be supported for Edge
-    const plansUpTo128GB = _plans.dedicated.filter(
+    const plansUpTo128GB = (_plans.dedicated ?? []).filter(
       (planType) =>
         !['Dedicated 256 GB', 'Dedicated 512 GB'].includes(
           planType.formattedLabel
@@ -114,7 +120,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
     });
   };
 
-  // @TODO Gecko: Get plan data from API when it's available instead of hardcoding
   const plans = showEdgePlanTable
     ? {
         dedicated: getDedicatedEdgePlanType(),
@@ -181,7 +186,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
               selectedDiskSize={disableSmallerPlans?.selectedDiskSize}
               selectedId={selectedId}
               selectedRegionId={selectedRegionID}
-              showTransfer={showTransfer}
+              showLimits={showLimits}
               wholePanelIsDisabled={disabled || isPlanPanelDisabled(plan)}
             />
           </>

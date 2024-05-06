@@ -644,7 +644,7 @@ export class LinodeCreate extends React.PureComponent<
               regionsData={regionsData!}
               selectedId={this.props.selectedTypeID}
               selectedRegionID={selectedRegionID}
-              showTransfer
+              showLimits
               types={this.filterTypes()}
             />
           </Stack>

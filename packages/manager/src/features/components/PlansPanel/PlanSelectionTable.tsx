@@ -21,8 +21,8 @@ interface PlanSelectionTableProps {
     filterOptions?: PlanSelectionFilterOptionsTable | undefined
   ) => React.JSX.Element[];
   shouldDisplayNoRegionSelectedMessage: boolean;
-  shouldShowNetwork?: boolean;
-  shouldShowTransfer?: boolean;
+  showNetwork?: boolean;
+  showTransfer?: boolean;
 }
 
 const tableCells = [
@@ -47,8 +47,8 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
     filterOptions,
     renderPlanSelection,
     shouldDisplayNoRegionSelectedMessage,
-    shouldShowNetwork,
-    shouldShowTransfer,
+    showNetwork: shouldShowNetwork,
+    showTransfer: shouldShowTransfer,
   } = props;
 
   return (
