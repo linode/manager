@@ -19,7 +19,7 @@ import { useDatabaseEnginesQuery } from 'src/queries/databases';
 export const useIsDatabasesEnabled = () => {
   const { data: account } = useAccount();
 
-  // If the flag is off AND we don't have permission to GET /v4/account,
+  // If we don't have permission to GET /v4/account,
   // we need to try fetching Database engines to know if the user has databases enabled.
   const checkRestrictedUser = !account;
 
