@@ -8,6 +8,11 @@ import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getIsLinodeCreateTypeEdgeSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
+import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
+import { Tab } from 'src/components/Tabs/Tab';
+import { TabList } from 'src/components/Tabs/TabList';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/constants';
 import { useFlags } from 'src/hooks/useFlags';
@@ -85,6 +90,8 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     flags.gecko2?.ga ||
     !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
 
+  const isGeckoGA = flags.gecko2?.enabled && flags.gecko2.ga;
+
   const showEdgeIconHelperText = Boolean(
     !hideEdgeRegions &&
       currentCapability &&
@@ -119,9 +126,11 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           label={DOCS_LINK_LABEL_DC_PRICING}
         />
       </Box>
-      <RegionHelperText
-        onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
-      />
+      {!isGeckoGA && (
+        <RegionHelperText
+          onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
+        />
+      )}
       {showCrossDataCenterCloneWarning ? (
         <Notice
           dataTestId="cross-data-center-notice"
@@ -134,18 +143,67 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           </Typography>
         </Notice>
       ) : null}
-      <RegionSelect
-        currentCapability={currentCapability}
-        disabled={disabled}
-        errorText={error}
-        handleSelection={handleSelection}
-        helperText={helperText}
-        regionFilter={hideEdgeRegions ? 'core' : undefined}
-        regions={regions ?? []}
-        selectedId={selectedId || null}
-        showEdgeIconHelperText={showEdgeIconHelperText}
-        {...RegionSelectProps}
-      />
+      {isGeckoGA ? (
+        <Tabs>
+          <TabList>
+            <Tab>Core</Tab>
+            <Tab>Edge</Tab>
+          </TabList>
+          <TabPanels>
+            <SafeTabPanel index={0}>
+              <Box marginTop={2}>
+                <RegionHelperText
+                  onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
+                />
+              </Box>
+              <RegionSelect
+                currentCapability={currentCapability}
+                disabled={disabled}
+                errorText={error}
+                handleSelection={handleSelection}
+                helperText={helperText}
+                regionFilter="core"
+                regions={regions ?? []}
+                selectedId={selectedId || null}
+                showEdgeIconHelperText={showEdgeIconHelperText}
+                {...RegionSelectProps}
+              />
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
+              <Box marginTop={2}>
+                <RegionHelperText
+                  onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
+                />
+              </Box>
+              <RegionSelect
+                currentCapability={currentCapability}
+                disabled={disabled}
+                errorText={error}
+                handleSelection={handleSelection}
+                helperText={helperText}
+                regionFilter="edge"
+                regions={regions ?? []}
+                selectedId={selectedId || null}
+                showEdgeIconHelperText={showEdgeIconHelperText}
+                {...RegionSelectProps}
+              />
+            </SafeTabPanel>
+          </TabPanels>
+        </Tabs>
+      ) : (
+        <RegionSelect
+          currentCapability={currentCapability}
+          disabled={disabled}
+          errorText={error}
+          handleSelection={handleSelection}
+          helperText={helperText}
+          regionFilter={hideEdgeRegions ? 'core' : undefined}
+          regions={regions ?? []}
+          selectedId={selectedId || null}
+          showEdgeIconHelperText={showEdgeIconHelperText}
+          {...RegionSelectProps}
+        />
+      )}
       {showClonePriceWarning && (
         <Notice
           dataTestId="different-price-structure-notice"
