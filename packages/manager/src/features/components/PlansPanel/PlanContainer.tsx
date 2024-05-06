@@ -53,7 +53,7 @@ export interface Props {
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionId?: Region['id'];
-  showTransfer?: boolean;
+  showLimits?: boolean;
 }
 
 export const PlanContainer = (props: Props) => {
@@ -71,18 +71,17 @@ export const PlanContainer = (props: Props) => {
     selectedDiskSize,
     selectedId,
     selectedRegionId,
-    showTransfer,
+    showLimits,
   } = props;
   const location = useLocation();
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
-  const shouldShowTransfer =
-    showTransfer && plans.some((plan: TypeWithAvailability) => plan.transfer);
+  const showTransfer =
+    showLimits && plans.some((plan: TypeWithAvailability) => plan.transfer);
 
   // Show the Network throughput column if, for any plan, the api returned data (currently Bare Metal does not)
-  const shouldShowNetwork =
-    showTransfer &&
-    plans.some((plan: TypeWithAvailability) => plan.network_out);
+  const showNetwork =
+    showLimits && plans.some((plan: TypeWithAvailability) => plan.network_out);
 
   // DC Dynamic price logic - DB creation and DB resize flows are currently out of scope
   const isDatabaseCreateFlow = location.pathname.includes('/databases/create');
@@ -124,6 +123,7 @@ export const PlanContainer = (props: Props) => {
           selectedDiskSize={selectedDiskSize}
           selectedId={selectedId}
           selectedRegionId={selectedRegionId}
+          showNetwork={showNetwork}
           showTransfer={showTransfer}
           type={plan}
           wholePanelIsDisabled={isWholePanelDisabled}
@@ -131,19 +131,20 @@ export const PlanContainer = (props: Props) => {
       );
     });
   }, [
-    allDisabledPlans,
-    disabledPlanTypesToolTipText,
-    hasMajorityOfPlansDisabled,
     plans,
-    selectedRegionId,
+    allDisabledPlans,
     isWholePanelDisabled,
+    hasMajorityOfPlansDisabled,
     currentPlanHeading,
     disabledClasses,
+    disabledPlanTypesToolTipText,
     isCreate,
     linodeID,
     onSelect,
     selectedDiskSize,
     selectedId,
+    selectedRegionId,
+    showNetwork,
     showTransfer,
   ]);
 
@@ -170,8 +171,8 @@ export const PlanContainer = (props: Props) => {
                 {tableCells.map(({ cellName, center, noWrap, testId }) => {
                   const attributeValue = `${testId}-header`;
                   if (
-                    (!shouldShowTransfer && testId === 'transfer') ||
-                    (!shouldShowNetwork && testId === 'network')
+                    (!showTransfer && testId === 'transfer') ||
+                    (!showNetwork && testId === 'network')
                   ) {
                     return null;
                   }

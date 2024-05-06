@@ -45,7 +45,7 @@ export const Plan = () => {
       regionsData={regions} // @todo move this query deeper if possible
       selectedId={field.value}
       selectedRegionID={regionId}
-      showTransfer
+      showLimits
       types={types?.map(extendType) ?? []} // @todo don't extend type
     />
   );
