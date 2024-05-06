@@ -28,6 +28,7 @@ const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 export const getRegionOptions = ({
   accountAvailabilityData,
   currentCapability,
+  flags,
   handleDisabledRegion,
   regionFilter,
   regions,
@@ -71,8 +72,13 @@ export const getRegionOptions = ({
           };
 
       const getLabel = () => {
-        const [city, country] = region.label.split(', ');
-        return `${country}, ${city}`;
+        // Display regions sorted by Country first
+        if (flags?.gecko2?.enabled && flags.gecko2.ga) {
+          const [city, country] = region.label.split(', ');
+          return `${country}, ${city}`;
+        }
+
+        return `${region.label} (${region.id})`;
       };
 
       return {
@@ -81,7 +87,7 @@ export const getRegionOptions = ({
           region: group,
         },
         disabledProps,
-        label: `${getLabel()} (${region.id})`,
+        label: getLabel(),
         site_type: region.site_type,
         value: region.id,
       };
@@ -109,7 +115,18 @@ export const getRegionOptions = ({
         return 1;
       }
 
-      // // Then we group by label
+      // Then we group by country
+      if (flags?.gecko2?.enabled && !flags.gecko2.ga) {
+        // Display regions as normal for Gecko Beta
+        if (region1.data.country < region2.data.country) {
+          return 1;
+        }
+        if (region1.data.country > region2.data.country) {
+          return -1;
+        }
+      }
+
+      // Then we group by label
       if (region1.label < region2.label) {
         return -1;
       }

@@ -6,6 +6,7 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
 import { TooltipIcon } from 'src/components/TooltipIcon';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 import { RegionOption } from './RegionOption';
@@ -50,6 +51,8 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     width,
   } = props;
 
+  const flags = useFlags();
+
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,
@@ -86,16 +89,19 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
       getRegionOptions({
         accountAvailabilityData: accountAvailability,
         currentCapability,
+        flags,
         handleDisabledRegion,
         regionFilter,
         regions,
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       accountAvailability,
       currentCapability,
       handleDisabledRegion,
       regions,
       regionFilter,
+      flags.gecko2,
     ]
   );
 
@@ -124,6 +130,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
               displayEdgeRegionIcon={
                 regionFilter !== 'core' && option.site_type === 'edge'
               }
+              flags={flags}
               key={option.value}
               option={option}
               props={props}

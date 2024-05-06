@@ -6,6 +6,7 @@ import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
 import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
+import { FlagSet } from 'src/featureFlags';
 
 import {
   SelectedIcon,
@@ -19,6 +20,7 @@ import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
 type Props = {
   displayEdgeRegionIcon?: boolean;
+  flags?: FlagSet;
   option: RegionSelectOption;
   props: React.HTMLAttributes<HTMLLIElement>;
   selected?: boolean;
@@ -26,6 +28,7 @@ type Props = {
 
 export const RegionOption = ({
   displayEdgeRegionIcon,
+  flags,
   option,
   props,
   selected,
@@ -34,6 +37,7 @@ export const RegionOption = ({
   const { data, disabledProps, label, value } = option;
   const isRegionDisabled = Boolean(disabledProps?.disabled);
   const isRegionDisabledReason = disabledProps?.reason;
+  const isGeckoGA = flags?.gecko2?.enabled && flags.gecko2.ga;
 
   return (
     <Tooltip
@@ -74,7 +78,7 @@ export const RegionOption = ({
             <StyledFlagContainer>
               <Flag country={data.country} />
             </StyledFlagContainer>
-            {label.substring(0, label.indexOf(`(${value})`))}
+            {label}
             {displayEdgeRegionIcon && (
               <Box sx={visuallyHidden}>
                 &nbsp;(This region is an edge region.)
@@ -84,7 +88,7 @@ export const RegionOption = ({
               <Box sx={visuallyHidden}>{isRegionDisabledReason}</Box>
             )}
           </Box>
-          {`(${value})`}
+          {isGeckoGA && `(${value})`}
           {selected && <SelectedIcon visible={selected} />}
           {displayEdgeRegionIcon && (
             <TooltipIcon

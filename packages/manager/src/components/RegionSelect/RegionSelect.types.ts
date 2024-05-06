@@ -23,6 +23,7 @@ export interface RegionSelectOption {
   site_type: RegionSite;
   value: string;
 }
+import { FlagSet } from 'src/featureFlags';
 
 export interface RegionSelectProps
   extends Omit<
@@ -84,6 +85,7 @@ export interface RegionOptionAvailability {
 }
 
 export interface GetRegionOptions extends RegionOptionAvailability {
+  flags?: FlagSet;
   regionFilter?: RegionSite;
   regions: Region[];
 }
