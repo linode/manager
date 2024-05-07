@@ -48,13 +48,17 @@ interface GeckoFlag {
   ga: boolean;
 }
 
+interface CloudPulseFlag {
+  enabled: boolean;
+}
+
 type OneClickApp = Record<string, string>;
 
 export interface Flags {
   aclb: boolean;
   aclbFullCreateFlow: boolean;
   apiMaintenance: APIMaintenance;
-  cloudView: boolean;
+  cloudPulse: CloudPulseFlag;
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;

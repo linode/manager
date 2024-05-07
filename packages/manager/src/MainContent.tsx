@@ -244,8 +244,7 @@ export const MainContent = () => {
       preferences ?? {},
       flags?.mainContentBanner?.key
     );
-
-  const showCloudPulse = Boolean(flags.cloudView);
+  const showCloudPulse = Boolean(flags.cloudPulse?.enabled);
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,
