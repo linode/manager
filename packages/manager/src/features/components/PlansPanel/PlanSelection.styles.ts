@@ -7,8 +7,10 @@ export const StyledChip = styled(Chip, { label: 'StyledChip' })(
   ({ theme }) => ({
     backgroundColor: theme.color.green,
     color: '#fff',
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(),
+    position: 'relative',
     textTransform: 'uppercase',
+    top: -1,
   })
 );
 

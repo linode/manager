@@ -39,7 +39,7 @@ describe('PlacementGroupsCreateDrawer', () => {
     expect(getByLabelText('Label')).toBeEnabled();
     expect(getByLabelText('Region')).toBeEnabled();
     expect(getByLabelText('Affinity Type')).toBeEnabled();
-    expect(getByText('Affinity Enforcement')).toBeInTheDocument();
+    expect(getByText('Affinity Type Enforcement')).toBeInTheDocument();
 
     const radioInputs = getAllByRole('radio');
     expect(radioInputs).toHaveLength(2);

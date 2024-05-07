@@ -117,7 +117,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
 
     try {
       await assignLinodes(payload);
-      const toastMessage = 'Linode successfully assigned';
+      const toastMessage = `Linode ${selectedLinode.label} successfully assigned.`;
       enqueueSnackbar(toastMessage, {
         variant: 'success',
       });
@@ -125,7 +125,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
     } catch (errorResponse) {
       const error = getErrorStringOrDefault(
         errorResponse,
-        'An error occurred while adding the Linode to the group'
+        'An error occurred while adding the Linode to the group.'
       );
       setGeneralError(error);
       enqueueSnackbar(error, { variant: 'error' });
@@ -181,7 +181,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
               placement="right"
               status="help"
               sxTooltipIcon={{ position: 'relative', top: 4 }}
-              text="Only displaying Linodes that aren’t assigned to a Placement Group"
+              text="Only displaying Linodes that aren’t assigned to a Placement Group."
             />
           </Box>
           <ActionsPanel
