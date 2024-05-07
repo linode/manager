@@ -20,6 +20,8 @@ import {
 } from 'support/constants/databases';
 import { accountFactory } from '@src/factories';
 import { contains } from 'ramda';
+import { data } from 'cypress/types/jquery';
+// import { DatabaseType } from '@linode/api-v4/lib/databases/types';
 
 /**
  * Resizes a current database cluster to a larger plan size.
@@ -40,7 +42,10 @@ const resizeDatabase = (initialLabel: string) => {
     .findByTitle(`Resize Database Cluster ${initialLabel}?`)
     .should('be.visible')
     .within(() => {
-      ui.buttonGroup.findButtonByTitle('Resize Cluster').should('be.visible').click();
+      ui.buttonGroup
+        .findButtonByTitle('Resize Cluster')
+        .should('be.visible')
+        .click();
     });
 };
 
@@ -64,6 +69,7 @@ describe('Resizing existing clusters', () => {
             label: initialLabel,
             region: configuration.region.id,
             engine: configuration.dbType,
+            cluster_size: 3,
             status: 'active',
             allow_list: [allowedIp],
           });
@@ -81,7 +87,6 @@ describe('Resizing existing clusters', () => {
           mockGetDatabaseCredentials(
             database.id,
             database.engine,
-
             initialPassword
           ).as('getCredentials');
 
@@ -109,35 +114,114 @@ describe('Resizing existing clusters', () => {
           //   });
           // });
           let nodeTypeClass = '';
-          if (configuration.linodeType.includes('standard')) {
-            nodeTypeClass = 'standard';
-          } else {
-            nodeTypeClass = 'dedicated';
-          }
+          // if (configuration.linodeType.includes('dedicated')) {
+          //   nodeTypeClass = 'dedicated';
+          // } else {
+          //   nodeTypeClass = 'standard';
+          // }
 
-          // Find the plan name of smaller size than current plan using `nodeType` and check if it's disabled,
-          mockDatabaseNodeTypes
-            .filter(
-              (nodeType) =>
-                nodeType.class === nodeTypeClass &&
-                nodeType.memory < databaseType.memory
-            )
-            .forEach((nodeType) => {
-              cy.get('[aria-label="List of Linode Plans"]')
-                .should('be.visible')
-                .each(() => {
-                  cy.contains(nodeType.label)
-                    .should('be.visible')
-                    .closest('tr')
-                    .should('have.attr', 'aria-disabled');
+          ['Dedicated CPU', 'Shared CPU'].forEach((tabTitle) => {
+            // Click on the tab we want.
+            ui.button.findByTitle(tabTitle).should('be.visible').click();
+
+            if (tabTitle == 'Dedicated CPU') {
+              nodeTypeClass = 'dedicated';
+            } else {
+              nodeTypeClass = 'standard';
+            }
+
+            mockDatabaseNodeTypes
+              .filter(
+                (nodeType) =>
+                  nodeType.class === nodeTypeClass &&
+                  nodeType.memory < databaseType.memory
+              )
+              .forEach((nodeType) => {
+                cy.get('[aria-label="List of Linode Plans"]')
+                  .should('be.visible')
+                  .each(() => {
+                    cy.contains(nodeType.label).should('be.visible');
+                    cy.get(`[id="${nodeType.id}"]`).should('be.disabled');
+                    // .closest('tr')
+                    // .should('have.attr', 'aria-disabled');
+                  });
+              });
+
+            //// Find the larger plans name using `nodeType` and check radio button is enabled to select
+            mockDatabaseNodeTypes
+              .filter(
+                (nodeType) =>
+                  nodeType.class === nodeTypeClass &&
+                  nodeType.memory > databaseType.memory
+              )
+              .forEach((nodeType) => {
+                cy.get('[aria-label="List of Linode Plans"]')
+                  .should('be.visible')
+                  .each(() => {
+                    // cy.contains(nodeType.label).should('be.visible').closest('tr').should('have.attr', 'aria-checked');
+                    cy.get(`[id="${nodeType.id}"]`)
+                      .should('be.enabled')
+                      .click();
+                    // Find the plan name using `nodeType` and check if it's enabled/disabled,
+                    // similar to before.
+                    //   cy.get('[data-qa-monthly]').then(monthly=>{
+                    //     const monthlyPrice = monthly.text()
+                    //     cy.wrap(monthlyPrice).as('monthlyValue')
+                    // })
+                  });
+                const desiredPlanPrice = nodeType.engines[
+                  configuration.dbType
+                ].find((dbClusterSizeObj: { quantity: number }) => {
+                  return dbClusterSizeObj.quantity === database.cluster_size;
+                })?.price;
+                if (!desiredPlanPrice) {
+                  throw new Error('Unable to find mock plan type');
+                }
+                //cy.get('[data-testid="summary"]').should('contain',nodeType.label)
+                cy.get('[data-testid="summary"]').within(() => {
+                  cy.contains(`${nodeType.label}`).should('be.visible');
+                  cy.contains(`$${desiredPlanPrice.monthly}/month`).should(
+                    'be.visible'
+                  );
+                  cy.contains(`$${desiredPlanPrice.hourly}/hour`).should(
+                    'be.visible'
+                  );
                 });
-            });
+              });
+
+            // Check the plans for the type we want.
+            // ...
+          });
+          // // Find the plan name of smaller size than current plan using `nodeType` and check if it's disabled,
+          // mockDatabaseNodeTypes
+          //   .filter(
+          //     (nodeType) =>
+          //       nodeType.class === nodeTypeClass &&
+          //       nodeType.memory < databaseType.memory
+          //   )
+          //   .forEach((nodeType) => {
+          //     cy.get('[aria-label="List of Linode Plans"]')
+          //       .should('be.visible')
+          //       .each(() => {
+          //         cy.contains(nodeType.label)
+          //           .should('be.visible')
+          //           .closest('tr')
+          //           .should('have.attr', 'aria-disabled');
+          //       });
+          //   });
           // Find the current plan name using `nodeType` and check if it has current tag displaying in UI and radio button disabled,
+          if (configuration.linodeType.includes('dedicated')) {
+            nodeTypeClass = 'dedicated';
+            ui.button.findByTitle('Dedicated CPU').should('be.visible').click();
+          } else {
+            nodeTypeClass = 'standard';
+            ui.button.findByTitle('Shared CPU').should('be.visible').click();
+          }
           mockDatabaseNodeTypes
             .filter(
               (nodeType) =>
-                nodeType.class === nodeTypeClass &&
-                nodeType.memory == databaseType.memory
+                // nodeType.class === nodeTypeClass &&
+                nodeType.id === database.type
             )
             .forEach((nodeType) => {
               cy.get('[aria-label="List of Linode Plans"]')
@@ -149,29 +233,77 @@ describe('Resizing existing clusters', () => {
                     .should('contain', nodeType.label)
                     .should('contain', 'Current Plan');
                   //  cy.contains(nodeType.label).should('be.disabled');
-                  // Find the plan name using `nodeType` and check if it's enabled/disabled,
-                  // similar to before.
                 });
-            });
-          mockDatabaseNodeTypes
-            .filter(
-              (nodeType) =>
-                nodeType.class === nodeTypeClass &&
-                nodeType.memory > databaseType.memory
-            )
-            .forEach((nodeType) => {
-              cy.get('[aria-label="List of Linode Plans"]')
-                .should('be.visible')
-                .each(() => {
-                  // cy.contains(nodeType.label).should('be.visible').closest('tr').should('have.attr', 'aria-checked');
-                  cy.get(`[id="${nodeType.id}"]`).should('be.enabled').click();
-                  // Find the plan name using `nodeType` and check if it's enabled/disabled,
-                  // similar to before.
-                });
-                cy.get('[data-testid="summary"]').should('contain',nodeType.label)
             });
 
-          
+          //  //// Find the larger plans name using `nodeType` and check radio button is enabled to select
+          //   mockDatabaseNodeTypes
+          //     .filter(
+          //       (nodeType) =>
+          //         nodeType.class === nodeTypeClass &&
+          //         nodeType.memory > databaseType.memory
+          //     )
+          //     .forEach((nodeType) => {
+          //       cy.get('[aria-label="List of Linode Plans"]')
+          //         .should('be.visible')
+          //         .each(() => {
+          //           // cy.contains(nodeType.label).should('be.visible').closest('tr').should('have.attr', 'aria-checked');
+          //           cy.get(`[id="${nodeType.id}"]`).should('be.enabled').click();
+          //           // Find the plan name using `nodeType` and check if it's enabled/disabled,
+          //           // similar to before.
+          //         //   cy.get('[data-qa-monthly]').then(monthly=>{
+          //         //     const monthlyPrice = monthly.text()
+          //         //     cy.wrap(monthlyPrice).as('monthlyValue')
+          //         // })
+          //         });
+          //         const desiredPlanPrice = nodeType.engines[configuration.dbType].find((dbClusterSizeObj: { quantity: number; }) => {
+          //             return dbClusterSizeObj.quantity === database.cluster_size
+          //           })?.price;
+          //           if (!desiredPlanPrice) {
+          //                 throw new Error('Unable to find mock plan type');
+          //               }
+          //         //cy.get('[data-testid="summary"]').should('contain',nodeType.label)
+          //         cy.get('[data-testid="summary"]').within(() => {
+          //             cy.contains(`${nodeType.label}`).should('be.visible');
+          //             cy.contains(`$${desiredPlanPrice.monthly}/month`).should('be.visible');
+          //             cy.contains(`$${desiredPlanPrice.hourly}/hour`).should('be.visible');
+          //           });
+          //     });
+
+          // Array of plan types which should be enabled during resize flow.
+          //   const enabledPlanTypes = mockDatabaseNodeTypes
+          //     .filter(
+          //       (nodeType) =>
+          //         nodeType.class === nodeTypeClass &&
+          //         nodeType.memory > databaseType.memory
+          //     );
+
+          // The plan type that will be selected by the user before resizing.
+          // It can be any of the enabled types.
+          //   const desiredPlanType=enabledPlanTypes[enabledPlanTypes.length-1];
+          //   const desiredPlanPrice = desiredPlanType.engines[configuration.dbType].find((dbClusterSizeObj: { quantity: number; }) => {
+          //     return dbClusterSizeObj.quantity === database.cluster_size
+          //   })?.price;
+
+          //   if (!desiredPlanPrice) {
+          //     throw new Error('Unable to find mock plan type');
+          //   }
+
+          //   cy.get('[data-testid="summary"]').within(() => {
+          //     cy.contains(`${desiredPlanType.label}`).should('be.visible');
+          //     cy.contains(`$${desiredPlanPrice.monthly}/month`).should('be.visible');
+          //     cy.contains(`$${desiredPlanPrice.hourly}/hour`).should('be.visible');
+          //   });
+
+          const largePlan = mockDatabaseNodeTypes.filter(
+            (nodeType) =>
+              nodeType.class === nodeTypeClass &&
+              nodeType.memory > databaseType.memory
+          );
+          // if (!databaseType) {
+          //   throw new Error(`Unknown database type ${database.type}`);
+          // }
+          cy.get(`[id="${largePlan[0].id}"]`).click();
 
           mockResize(database.id, database.engine, {
             ...database,
@@ -200,6 +332,7 @@ describe('Resizing existing clusters', () => {
                 label: initialLabel,
                 region: configuration.region.id,
                 engine: configuration.dbType,
+                cluster_size: 3,
                 //engine: 'mysql',
                 status: dbstatus,
                 allow_list: [allowedIp],
