@@ -22,6 +22,23 @@ export const mockGetPlacementGroups = (
 };
 
 /**
+ * Intercepts GET request to fetch a Placement Group and mocks response.
+ *
+ * @param placementGroup - Placement Group to intercept and mock.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetPlacementGroup = (
+  placementGroup: PlacementGroup
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`placement/groups/${placementGroup.id}`),
+    makeResponse(placementGroup)
+  );
+};
+
+/**
  * Intercepts DELETE request to delete Placement Group and mocks response.
  *
  * @param placementGroupId - ID of Placement Group for which to intercept delete request.
