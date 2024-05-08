@@ -285,7 +285,8 @@ describe('extractPlansInformation', () => {
   it('should return correct information when all plans are disabled', () => {
     const result = extractPlansInformation({
       disableLargestGbPlansFlag: false,
-      plans: [g6Standard1, g6Nanode1],
+      disabledSmallerPlans: [g7Standard1],
+      plans: [g6Standard1, g6Nanode1, g7Standard1],
       regionAvailabilities: [
         regionAvailabilityFactory.build({
           available: false,
@@ -295,6 +296,11 @@ describe('extractPlansInformation', () => {
         regionAvailabilityFactory.build({
           available: false,
           plan: 'g6-nanode-1',
+          region: 'us-east',
+        }),
+        regionAvailabilityFactory.build({
+          available: true,
+          plan: 'g7-standard-1',
           region: 'us-east',
         }),
       ],
@@ -308,6 +314,7 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
           planIsDisabled512Gb: false,
+          planIsTooSmall: false,
         },
       },
       {
@@ -316,6 +323,16 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
           planIsDisabled512Gb: false,
+          planIsTooSmall: false,
+        },
+      },
+      {
+        ...g7Standard1,
+        ...{
+          planBelongsToDisabledClass: false,
+          planHasLimitedAvailability: false,
+          planIsDisabled512Gb: false,
+          planIsTooSmall: true,
         },
       },
     ]);
@@ -328,6 +345,7 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
           planIsDisabled512Gb: false,
+          planIsTooSmall: false,
         },
       },
       {
@@ -336,6 +354,16 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
           planIsDisabled512Gb: false,
+          planIsTooSmall: false,
+        },
+      },
+      {
+        ...g7Standard1,
+        ...{
+          planBelongsToDisabledClass: false,
+          planHasLimitedAvailability: false,
+          planIsDisabled512Gb: false,
+          planIsTooSmall: true,
         },
       },
     ]);
@@ -344,6 +372,7 @@ describe('extractPlansInformation', () => {
   it('should return correct information when no plans are disabled', () => {
     const result = extractPlansInformation({
       disableLargestGbPlansFlag: false,
+      disabledSmallerPlans: [],
       plans: [g6Standard1, g6Nanode1],
       regionAvailabilities: [
         regionAvailabilityFactory.build({
@@ -369,12 +398,14 @@ describe('extractPlansInformation', () => {
         planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
         planIsDisabled512Gb: false,
+        planIsTooSmall: false,
       },
       {
         ...g6Nanode1,
         planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
         planIsDisabled512Gb: false,
+        planIsTooSmall: false,
       },
     ]);
   });
