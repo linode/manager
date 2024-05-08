@@ -20,6 +20,7 @@ export * from './featureFlags';
 export * from './firewalls';
 export * from './grants';
 export * from './images';
+export * from './kernels';
 export * from './kubernetesCluster';
 export * from './linodeConfigInterfaceFactory';
 export * from './linodeConfigs';

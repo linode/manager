@@ -30,7 +30,7 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import {
   useCreateVolumeMutation,
   useVolumeTypesQuery,
-} from 'src/queries/volumes';
+} from 'src/queries/volumes/volumes';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {

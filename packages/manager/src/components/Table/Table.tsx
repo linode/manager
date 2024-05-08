@@ -4,8 +4,6 @@ import {
 } from '@mui/material/Table';
 import * as React from 'react';
 
-import { omitProps } from 'src/utilities/omittedProps';
-
 import { StyledTableWrapper } from './Table.styles';
 
 export interface TableProps extends _TableProps {
@@ -79,16 +77,6 @@ export const Table = (props: TableProps) => {
     ...rest
   } = props;
 
-  const tableProps = omitProps({ ...props, ...rest }, [
-    'colCount',
-    'rowCount',
-    'noBorder',
-    'noOverflow',
-    'rowHoverState',
-    'spacingBottom',
-    'spacingTop',
-  ]);
-
   return (
     <StyledTableWrapper
       className={className}
@@ -100,7 +88,7 @@ export const Table = (props: TableProps) => {
     >
       <_Table
         className={tableClass}
-        {...tableProps}
+        {...rest}
         aria-colcount={colCount}
         aria-rowcount={rowCount}
         role="table"
