@@ -21,15 +21,15 @@ import { useAllVPCsQuery } from 'src/queries/vpcs/vpcs';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { REGION_CAVEAT_HELPER_TEXT } from './constants';
+import { LinodeCreateType } from './types';
 import { VPCCreateDrawer } from './VPCCreateDrawer';
 
 import type { Item } from 'src/components/EnhancedSelect';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
-import { LinodeCreateType } from './types';
 
 export interface VPCPanelProps {
   additionalIPv4RangesForVPC: ExtendedIP[];
@@ -193,6 +193,15 @@ export const VPCPanel = (props: VPCPanelProps) => {
           <Select
             onChange={(selectedVPC: Item<number, string>) => {
               handleSelectVPC(selectedVPC.value);
+              sendLinodeCreateFormStepEvent({
+                action: 'click',
+                category: 'select',
+                createType:
+                  (params.type as LinodeCreateType) ?? 'Distributions',
+                formStepName: 'VPC Panel',
+                label: 'Assign VPC',
+                version: 'v1',
+              });
             }}
             textFieldProps={{
               tooltipText: REGION_CAVEAT_HELPER_TEXT,
