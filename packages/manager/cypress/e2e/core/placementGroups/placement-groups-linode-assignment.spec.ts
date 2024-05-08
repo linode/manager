@@ -183,6 +183,180 @@ describe('Placement Groups Linode assignment', () => {
   });
 
   /*
+   * - Confirms Placement Group non-compliant Linode assignment UI flow using mock API data.
+   * - Confirms that non-compliant Linode is assigned to the Placement Group.
+   * - Confirms that UI automatically updates and shows a warning indicating the non-compliance status.
+   * - Confirms that non-compliance status is indicated on the Placement Group landing page.
+   */
+  it('can assign non-compliant Linode with weak enforcement', () => {
+    const mockPlacementGroupRegion = chooseRegion({ regions: mockRegions });
+    const mockLinode = linodeFactory.build({
+      id: randomNumber(10000, 99999),
+      label: randomLabel(),
+      region: mockPlacementGroupRegion.id,
+      status: 'running',
+    });
+
+    const mockPlacementGroup = placementGroupFactory.build({
+      label: randomLabel(),
+      members: [],
+      region: mockPlacementGroupRegion.id,
+      is_compliant: true,
+      is_strict: false,
+    });
+
+    const mockPlacementGroupAfterAssignment = {
+      ...mockPlacementGroup,
+      members: [
+        {
+          linode_id: mockLinode.id,
+          is_compliant: false,
+        },
+      ],
+      is_compliant: false,
+    };
+
+    const complianceWarning = `Placement Group ${mockPlacementGroup.label} is non-compliant. We are working to resolve compliance issues so that you can continue assigning Linodes to this Placement Group.`;
+
+    mockGetRegions(mockRegions);
+    mockGetLinodes([mockLinode]);
+    mockGetLinodeDetails(mockLinode.id, mockLinode);
+    mockGetPlacementGroups([mockPlacementGroup]);
+    mockGetPlacementGroup(mockPlacementGroup).as('getPlacementGroup');
+    mockAssignPlacementGroupLinodes(
+      mockPlacementGroup.id,
+      mockPlacementGroupAfterAssignment
+    ).as('assignLinode');
+
+    cy.visitWithLogin(`/placement-groups/${mockPlacementGroup.id}`);
+    cy.wait('@getPlacementGroup');
+
+    // Confirm that weak affinity enforcement type is indicated on page, then
+    // initiate Linode assignment.
+    cy.findByText('Flexible');
+
+    ui.button
+      .findByTitle('Assign Linode to Placement Group')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // Select Linode and click "Assign Linode" button.
+    mockGetPlacementGroups([mockPlacementGroupAfterAssignment]);
+    mockGetPlacementGroup(mockPlacementGroupAfterAssignment).as(
+      'getPlacementGroup'
+    );
+    ui.drawer
+      .findByTitle(
+        `Assign Linodes to Placement Group ${mockPlacementGroup.label}`
+      )
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText(
+          `Linodes in ${mockPlacementGroupRegion.label} (${mockPlacementGroupRegion.id})`
+        ).type(mockLinode.label);
+
+        ui.select.findItemByText(mockLinode.label).should('be.visible').click();
+
+        ui.button
+          .findByTitle('Assign Linode')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Confirm that Linode is displayed and that compliance warning appears.
+    cy.wait('@assignLinode');
+    ui.toast.assertMessage(`Linode ${mockLinode.label} successfully assigned.`);
+    cy.contains(complianceWarning).should('be.visible');
+    cy.findByText(mockLinode.label).should('be.visible');
+
+    // Navigate back to Placement Group landing page and confirm that compliance
+    // indicator is displayed beneath the Placement Group.
+    ui.entityHeader.find().within(() => {
+      cy.findByText('Placement Groups').click();
+    });
+
+    cy.url().should('endWith', '/placement-groups');
+    cy.findByText(mockPlacementGroup.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        cy.findByText('Non-compliant').should('be.visible');
+      });
+  });
+
+  /**
+   * - Confirms UI flow when attempting to assign non-compliant Linode using mock API data.
+   * - Confirms graceful error handling when Placement Group enforcement is strict.
+   */
+  it('cannot assign non-compliant Linode with strict enforcement', () => {
+    const mockPlacementGroupRegion = chooseRegion({ regions: mockRegions });
+    const mockLinode = linodeFactory.build({
+      id: randomNumber(10000, 99999),
+      label: randomLabel(),
+      region: mockPlacementGroupRegion.id,
+      status: 'running',
+    });
+
+    const mockPlacementGroup = placementGroupFactory.build({
+      label: randomLabel(),
+      members: [],
+      region: mockPlacementGroupRegion.id,
+      is_compliant: true,
+      is_strict: true,
+    });
+
+    const complianceErrorMessage = `Assignment would break Placement Group's compliance, non compliant Linode IDs: [${mockLinode.id}]`;
+
+    mockGetRegions(mockRegions);
+    mockGetLinodes([mockLinode]);
+    mockGetPlacementGroups([mockPlacementGroup]);
+    mockGetPlacementGroup(mockPlacementGroup).as('getPlacementGroup');
+    mockAssignPlacementGroupLinodesError(
+      mockPlacementGroup.id,
+      complianceErrorMessage,
+      400
+    ).as('assignLinode');
+
+    cy.visitWithLogin(`/placement-groups/${mockPlacementGroup.id}`);
+    cy.wait('@getPlacementGroup');
+
+    // Confirm that weak affinity enforcement type is indicated on page, then
+    // initiate Linode assignment.
+    cy.findByText('Strict');
+
+    ui.button
+      .findByTitle('Assign Linode to Placement Group')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // Select Linode and click "Assign Linode" button, then confirm that
+    // API error message is displayed in the drawer.
+    ui.drawer
+      .findByTitle(
+        `Assign Linodes to Placement Group ${mockPlacementGroup.label}`
+      )
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText(
+          `Linodes in ${mockPlacementGroupRegion.label} (${mockPlacementGroupRegion.id})`
+        ).type(mockLinode.label);
+
+        ui.select.findItemByText(mockLinode.label).should('be.visible').click();
+
+        ui.button
+          .findByTitle('Assign Linode')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        cy.findByText(complianceErrorMessage).should('be.visible');
+      });
+  });
+
+  /*
    * - Confirms Placement Group Linode unassign UI flow using mock API data.
    * - Confirms that attached Linodes are listed on Placement Group details page.
    * - Confirms that Cloud handles API errors gracefully upon failed unassignment.
