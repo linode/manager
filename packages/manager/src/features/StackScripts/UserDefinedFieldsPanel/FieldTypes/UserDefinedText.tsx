@@ -8,7 +8,7 @@ import { TextField } from 'src/components/TextField';
 import { omittedProps } from 'src/utilities/omittedProps';
 
 interface Props {
-  error?: string;
+  error?: JSX.Element;
   field: UserDefinedField;
   isOptional: boolean;
   isPassword?: boolean;

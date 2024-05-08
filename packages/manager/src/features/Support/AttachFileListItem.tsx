@@ -1,12 +1,13 @@
 import Close from '@mui/icons-material/Close';
 import CloudUpload from '@mui/icons-material/CloudUpload';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { InputAdornment } from 'src/components/InputAdornment';
 import { LinearProgress } from 'src/components/LinearProgress';
+import { RenderError } from 'src/components/RenderError';
 import { TextField } from 'src/components/TextField';
 
 import { FileAttachment } from './index';
@@ -51,9 +52,6 @@ export const AttachFileListItem = (props: Props) => {
     return null;
   }
 
-  const err =
-    file.errors && file.errors.length ? file.errors[0].reason : undefined;
-
   return (
     <Grid container spacing={2}>
       <Grid>
@@ -76,10 +74,14 @@ export const AttachFileListItem = (props: Props) => {
               </InputAdornment>
             ),
           }}
+          errorText={
+            file.errors?.length ? (
+              <RenderError error={file.errors[0]} />
+            ) : undefined
+          }
           aria-label="Disabled Text Field"
           className={classes.attachmentField}
           data-testid="attached-file"
-          errorText={err}
           hideLabel
           label="File Attached"
           value={file.name}

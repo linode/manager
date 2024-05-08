@@ -10,6 +10,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { RenderError } from 'src/components/RenderError';
 import { Stack } from 'src/components/Stack';
 import { useProfile } from 'src/queries/profile';
 import {
@@ -54,8 +55,8 @@ export const SupportTicketDetail = () => {
     return <CircleProgress />;
   }
 
-  if (error) {
-    return <ErrorState errorText={error?.[0].reason} />;
+  if (error?.length) {
+    return <ErrorState errorText={<RenderError error={error[0]} />} />;
   }
 
   if (!ticket) {
@@ -126,8 +127,8 @@ export const SupportTicketDetail = () => {
             />
           ))}
           {repliesLoading && <CircleProgress mini />}
-          {repliesError ? (
-            <ErrorState errorText={repliesError?.[0].reason} />
+          {repliesError && repliesError.length > 0 ? (
+            <ErrorState errorText={<RenderError error={repliesError[0]} />} />
           ) : null}
           {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
           <TicketAttachmentList attachments={ticket.attachments} />

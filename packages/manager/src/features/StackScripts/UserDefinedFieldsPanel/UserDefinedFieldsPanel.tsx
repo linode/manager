@@ -7,14 +7,15 @@ import { Link } from 'react-router-dom';
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
+import { RenderError } from 'src/components/RenderError';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
 import { Typography } from 'src/components/Typography';
 import {
   getIsUDFHeader,
   getIsUDFMultiSelect,
-  getIsUDFSingleSelect,
   getIsUDFPasswordField,
+  getIsUDFSingleSelect,
   separateUDFsByRequiredStatus,
 } from 'src/features/Linodes/LinodeCreatev2/Tabs/StackScripts/UserDefinedFields/utilities';
 
@@ -40,10 +41,22 @@ const renderField = (
   udf_data: any,
   handleChange: Props['handleChange'],
   field: UserDefinedField,
-  error?: string
+  error?: APIError
 ) => {
   // if the 'default' key is returned from the API, the field is optional
   const isOptional = field.hasOwnProperty('default');
+
+  const renderedError = error && (
+    <RenderError
+      matchers={[
+        {
+          condition: () => true,
+          element: (e) => e.reason.replace('the UDF', ''),
+        },
+      ]}
+      error={error}
+    />
+  );
 
   if (getIsUDFHeader(field)) {
     return (
@@ -58,7 +71,7 @@ const renderField = (
     return (
       <Grid key={field.name} lg={5} xs={12}>
         <UserDefinedMultiSelect
-          error={error}
+          error={renderedError}
           field={field}
           isOptional={isOptional}
           key={field.name}
@@ -73,7 +86,7 @@ const renderField = (
     return (
       <Grid key={field.name} lg={5} xs={12}>
         <UserDefinedSelect
-          error={error}
+          error={renderedError}
           field={field}
           isOptional={isOptional}
           key={field.name}
@@ -97,7 +110,7 @@ const renderField = (
               </>
             ) : undefined
           }
-          error={error}
+          error={renderedError}
           field={field}
           isOptional={isOptional}
           isPassword={true}
@@ -131,7 +144,7 @@ const renderField = (
   return (
     <Grid key={field.name} lg={5} xs={12}>
       <UserDefinedText
-        error={error}
+        error={renderedError}
         field={field}
         isOptional={isOptional}
         placeholder={field.example}
@@ -210,8 +223,12 @@ const UserDefinedFieldsPanel = (props: Props) => {
 
       {/* Required Fields */}
       {requiredUDFs.map((field: UserDefinedField) => {
-        const error = getError(field, errors);
-        return renderField(udf_data, handleChange, field, error);
+        return renderField(
+          udf_data,
+          handleChange,
+          field,
+          errors?.find((error) => error.field == field.name)
+        );
       })}
       {/* Optional Fields */}
       {optionalUDFs.length !== 0 && (
@@ -226,8 +243,12 @@ const UserDefinedFieldsPanel = (props: Props) => {
             </Typography>
             <div>
               {optionalUDFs.map((field: UserDefinedField) => {
-                const error = getError(field, errors);
-                return renderField(udf_data, handleChange, field, error);
+                return renderField(
+                  udf_data,
+                  handleChange,
+                  field,
+                  errors?.find((error) => error.field == field.name)
+                );
               })}
             </div>
           </>
@@ -235,14 +256,6 @@ const UserDefinedFieldsPanel = (props: Props) => {
       )}
     </StyledPaper>
   );
-};
-
-const getError = (field: UserDefinedField, errors?: APIError[]) => {
-  if (!errors) {
-    return;
-  }
-  const error = errors.find((thisError) => thisError.field === field.name);
-  return error ? error.reason.replace('the UDF', '') : undefined;
 };
 
 export default RenderGuard(UserDefinedFieldsPanel);

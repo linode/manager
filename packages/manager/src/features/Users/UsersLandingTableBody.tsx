@@ -1,6 +1,7 @@
 import { APIError, User } from '@linode/api-v4';
 import React from 'react';
 
+import { RenderError } from 'src/components/RenderError';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
@@ -22,8 +23,13 @@ export const UsersLandingTableBody = (props: Props) => {
     return <TableRowLoading columns={numCols} rows={1} />;
   }
 
-  if (error) {
-    return <TableRowError colSpan={numCols} message={error[0].reason} />;
+  if (error && error.length > 0) {
+    return (
+      <TableRowError
+        colSpan={numCols}
+        message={<RenderError error={error[0]} />}
+      />
+    );
   }
 
   if (!users || users.length === 0) {

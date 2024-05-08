@@ -11,6 +11,7 @@ import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
+import { RenderError } from 'src/components/RenderError';
 import { SUBNET_UNASSIGN_LINODES_WARNING } from 'src/features/VPCs/constants';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
@@ -289,7 +290,9 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           />
         )}
         {unassignLinodesErrors.length > 0 && (
-          <Notice text={unassignLinodesErrors[0].reason} variant="error" />
+          <Notice variant="error">
+            <RenderError error={unassignLinodesErrors[0]} />
+          </Notice>
         )}
         <Notice
           spacingBottom={singleLinodeToBeUnassigned ? 0 : 16}
@@ -306,12 +309,16 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           <Stack>
             {!singleLinodeToBeUnassigned && (
               <Autocomplete
+                errorText={
+                  linodesError ? (
+                    <RenderError error={linodesError[0]} />
+                  ) : undefined
+                }
                 onChange={(_, value) => {
                   setSelectedLinodes(value);
                   getConfigWithVPCInterface(value);
                 }}
                 disabled={userCannotUnassignLinodes}
-                errorText={linodesError ? linodesError[0].reason : undefined}
                 label="Linodes"
                 multiple
                 options={linodeOptionsToUnassign}

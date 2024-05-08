@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { RenderError } from 'src/components/RenderError';
 import { useAccountUserDeleteMutation } from 'src/queries/account/users';
 
 interface Props {
@@ -19,9 +20,9 @@ export const UserDeleteConfirmationDialog = (props: Props) => {
 
   const {
     error,
+    isLoading,
     mutateAsync: deleteUser,
     reset,
-    isLoading,
   } = useAccountUserDeleteMutation(username);
 
   const onClose = () => {
@@ -56,7 +57,9 @@ export const UserDeleteConfirmationDialog = (props: Props) => {
           style={{ padding: 0 }}
         />
       }
-      error={error?.[0].reason}
+      error={
+        error && error.length > 0 ? <RenderError error={error[0]} /> : undefined
+      }
       onClose={onClose}
       open={open}
       title="Confirm Deletion"

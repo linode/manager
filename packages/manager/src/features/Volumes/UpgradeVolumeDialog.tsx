@@ -4,6 +4,7 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
+import { RenderError } from 'src/components/RenderError';
 import { Typography } from 'src/components/Typography';
 import { useVolumesMigrateMutation } from 'src/queries/volumes/volumes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -81,9 +82,11 @@ export const UpgradeVolumeDialog = (props: Props) => {
   return (
     <ConfirmationDialog
       error={
-        error
-          ? getAPIErrorOrDefault(error, 'Unable to migrate volume.')[0].reason
-          : undefined
+        error ? (
+          <RenderError
+            error={getAPIErrorOrDefault(error, 'Unable to migrate volume.')[0]}
+          />
+        ) : undefined
       }
       actions={actions}
       onClose={onClose}
