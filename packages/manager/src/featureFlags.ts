@@ -57,8 +57,8 @@ type OneClickApp = Record<string, string>;
 export interface Flags {
   aclb: boolean;
   aclbFullCreateFlow: boolean;
+  aclp: CloudPulseFlag;
   apiMaintenance: APIMaintenance;
-  cloudPulse: CloudPulseFlag;
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;
