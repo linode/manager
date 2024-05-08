@@ -29,7 +29,6 @@ import { Divider } from 'src/components/Divider';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
-import { sendLinodeCreateFormStartEvent } from 'src/utilities/analytics';
 
 interface LinkProps {
   attr?: { [key: string]: boolean };
@@ -55,22 +54,6 @@ export const AddNewMenu = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleAnalyticsFormEvent = (entity: string) => {
-    if (entity === 'Linode') {
-      sendLinodeCreateFormStartEvent(
-        'Global Header Linode Create',
-        'Distributions',
-        'v1'
-      );
-    } else if (entity === 'Marketplace') {
-      sendLinodeCreateFormStartEvent(
-        'Global Header Marketplace Create',
-        'One-Click',
-        'v1'
-      );
-    }
   };
 
   const links: LinkProps[] = [
@@ -200,10 +183,6 @@ export const AddNewMenu = () => {
             !link.hide && [
               i !== 0 && <Divider spacingBottom={0} spacingTop={0} />,
               <MenuItem
-                onClick={() => {
-                  handleAnalyticsFormEvent(link.entity);
-                  handleClose();
-                }}
                 sx={{
                   '&:hover': {
                     // This MUI Menu gets special colors compared
@@ -214,6 +193,7 @@ export const AddNewMenu = () => {
                 }}
                 component={Link}
                 key={link.entity}
+                onClick={handleClose}
                 to={link.link}
                 {...link.attr}
                 style={{

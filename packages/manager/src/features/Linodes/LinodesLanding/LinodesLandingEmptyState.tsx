@@ -9,10 +9,7 @@ import { ResourcesMoreLink } from 'src/components/EmptyLandingPageResources/Reso
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import {
-  sendEvent,
-  sendLinodeCreateFormStartEvent,
-} from 'src/utilities/analytics';
+import { sendEvent } from 'src/utilities/analytics';
 import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
 
 import { AppsSection } from './AppsSection';
@@ -65,11 +62,6 @@ export const LinodesLandingEmptyState = () => {
               category: linkAnalyticsEvent.category,
               label: 'Create Linode',
             });
-            sendLinodeCreateFormStartEvent(
-              'Empty State Create',
-              'Distributions',
-              'v1'
-            );
           },
           tooltipText: getRestrictedResourceText({
             action: 'create',
