@@ -172,7 +172,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     ) ||
     (checkRestrictedUser && !enginesLoading && !enginesError);
 
-  const showCloudPulse = Boolean(flags.cloudView);
+  const showCloudPulse = Boolean(flags.aclp?.enabled);
   const { isACLBEnabled } = useIsACLBEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
@@ -336,6 +336,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       isACLBEnabled,
       isPlacementGroupsEnabled,
       flags.placementGroups,
+      showCloudPulse,
     ]
   );
 

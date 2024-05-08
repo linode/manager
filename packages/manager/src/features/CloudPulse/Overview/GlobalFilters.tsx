@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-// import { Dashboard, TimeDuration, TimeGranularity } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
@@ -28,26 +26,28 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   });
 
   const [selectedRegion, setRegion] = React.useState<string>();
-
-  const triggerGlobalFilterChange = () => {
-    const globalFilters = {} as FiltersObject;
-    globalFilters.region = selectedRegion!;
-    globalFilters.timeRange = time;
-    props.handleAnyFilterChange(globalFilters);
-  };
-
   React.useEffect(() => {
+    const triggerGlobalFilterChange = () => {
+      const globalFilters: FiltersObject = {
+        interval: '',
+        region: '',
+        resource: [],
+        timeRange: time,
+      };
+      if (selectedRegion) {
+        globalFilters.region = selectedRegion;
+      }
+      props.handleAnyFilterChange(globalFilters);
+    };
     triggerGlobalFilterChange();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time, selectedRegion]); // if anything changes, emit an event to parent component
 
   const handleTimeRangeChange = (start: number, end: number) => {
-    console.log('TimeRange: ', start, end);
     setTimeBox({ end, start });
   };
 
   const handleRegionChange = (region: string | undefined) => {
-    console.log('Region: ', region);
     setRegion(region);
   };
 

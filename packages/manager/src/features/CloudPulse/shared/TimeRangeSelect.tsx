@@ -14,11 +14,11 @@ interface Props
   handleStatsChange?: (start: number, end: number) => void;
 }
 
-const _PAST_7_DAYS = 'Past 7 Days';
-const _PAST_12_HOURS = 'Past 12 Hours';
-const _PAST_24_HOURS = 'Past 24 Hours';
-const _PAST_30_DAYS = 'Past 30 Days';
-const _PAST_30_MINUTES = 'Past 30 Minutes';
+const PAST_7_DAYS = 'Past 7 Days';
+const PAST_12_HOURS = 'Past 12 Hours';
+const PAST_24_HOURS = 'Past 24 Hours';
+const PAST_30_DAYS = 'Past 30 Days';
+const PAST_30_MINUTES = 'Past 30 Minutes';
 export type Labels =
   | 'Past 7 Days'
   | 'Past 12 Hours'
@@ -42,7 +42,7 @@ export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
     is a valid time window.
   */
   const [selectedTimeRange, setTimeRange] = React.useState<Labels>(
-    _PAST_30_MINUTES
+    PAST_30_MINUTES
   );
 
   /*
@@ -97,28 +97,28 @@ export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
 export const generateSelectOptions = (): Item<Labels, Labels>[] => {
   const baseOptions: Item<Labels, Labels>[] = [
     {
-      label: _PAST_30_MINUTES,
-      value: _PAST_30_MINUTES,
+      label: PAST_30_MINUTES,
+      value: PAST_30_MINUTES,
     },
     {
-      label: _PAST_12_HOURS,
-      value: _PAST_12_HOURS,
+      label: PAST_12_HOURS,
+      value: PAST_12_HOURS,
     },
   ];
 
   return [
     ...baseOptions,
     {
-      label: _PAST_24_HOURS,
-      value: _PAST_24_HOURS,
+      label: PAST_24_HOURS,
+      value: PAST_24_HOURS,
     },
     {
-      label: _PAST_7_DAYS,
-      value: _PAST_7_DAYS,
+      label: PAST_7_DAYS,
+      value: PAST_7_DAYS,
     },
     {
-      label: _PAST_30_DAYS,
-      value: _PAST_30_DAYS,
+      label: PAST_30_DAYS,
+      value: PAST_30_DAYS,
     },
   ];
 };
@@ -129,13 +129,13 @@ export const generateSelectOptions = (): Item<Labels, Labels>[] => {
  */
 export const generateStartTime = (modifier: Labels, nowInSeconds: number) => {
   switch (modifier) {
-    case _PAST_30_MINUTES:
+    case PAST_30_MINUTES:
       return nowInSeconds - 30 * 60;
-    case _PAST_12_HOURS:
+    case PAST_12_HOURS:
       return nowInSeconds - 12 * 60 * 60;
-    case _PAST_24_HOURS:
+    case PAST_24_HOURS:
       return nowInSeconds - 24 * 60 * 60;
-    case _PAST_7_DAYS:
+    case PAST_7_DAYS:
       return nowInSeconds - 7 * 24 * 60 * 60;
     default:
       return nowInSeconds - 30 * 24 * 60 * 60;
