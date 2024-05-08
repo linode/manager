@@ -62,11 +62,18 @@ interface FormErrorEvent extends BasicFormEvent {
   formError: string;
 }
 
+// To be used with form step events for consistent event formatting.
 interface FormStepOptions {
   action: string;
   category: string;
   formStepName?: string;
   label: string;
+}
+
+interface LinodeCreateFormStepOptions extends FormStepOptions {
+  createType: LinodeCreateType;
+  // Used to distinguish between the Linode Create pre and post-refactor.
+  version: LinodeCreateFlowVersion;
 }
 
 interface AnalyticsPayload extends Omit<AnalyticsEvent, 'data'> {
@@ -654,13 +661,6 @@ export const sendLinodeCreateFormStartEvent = (
 // LinodeCreate.tsx
 // LinodeCreateContainer.tsx
 // SelectRegionPanel.tsx
-
-interface LinodeCreateFormStepOptions extends FormStepOptions {
-  createType: LinodeCreateType;
-  // Used to distinguish between the Linode Create pre and post-refactor.
-  version: LinodeCreateFlowVersion;
-}
-
 export const sendLinodeCreateFormStepEvent = ({
   action,
   category,
