@@ -5,22 +5,18 @@ import * as React from 'react';
 import { number, object } from 'yup';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
 import { FormControl } from 'src/components/FormControl';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { Notice } from 'src/components/Notice/Notice';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useGrants } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes/volumes';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
-interface ConfigOption {
-  label: string;
-  value: string;
-}
+import { ConfigSelect } from './VolumeDrawer/ConfigSelect';
+
 interface Props {
   onClose: () => void;
   open: boolean;
@@ -44,10 +40,6 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
   const { checkForNewEvents } = useEventsPollingActions();
 
   const { data: grants } = useGrants();
-  const [selectedOption, setSelectedOption] = React.useState<ConfigOption>({
-    label: '',
-    value: '',
-  });
 
   const { error, mutateAsync: attachVolume } = useAttachVolumeMutation();
 
@@ -70,34 +62,12 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
     validationSchema: AttachVolumeValidationSchema,
   });
 
-  const { data, isLoading: configsLoading } = useAllLinodeConfigsQuery(
-    formik.values.linode_id,
-    formik.values.linode_id !== -1
-  );
-
-  const configs = data ?? [];
-
-  const configChoices = configs.map((config) => {
-    return { label: config.label, value: `${config.id}` };
-  });
-
-  React.useEffect(() => {
-    if (configs.length === 1) {
-      formik.setFieldValue('config_id', configs[0].id);
-      setSelectedOption({ label: configs[0].label, value: `${configs[0].id}` });
-    }
-  }, [configs]);
-
   const reset = () => {
     formik.resetForm();
   };
 
   const handleClose = () => {
     reset();
-    setSelectedOption({
-      label: '',
-      value: '',
-    });
     props.onClose();
   };
 
@@ -153,30 +123,20 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
         )}
         {/* Config Selection */}
         <FormControl fullWidth>
-          <Autocomplete
-            errorText={
+          <ConfigSelect
+            error={
               formik.touched.config_id && formik.errors.config_id
                 ? formik.errors.config_id
                 : configError
             }
-            isOptionEqualToValue={(option, value) =>
-              option.value === value.value
-            }
-            onChange={(_, selected) => {
-              if (selected) {
-                formik.setFieldValue('config_id', Number(selected.value));
-              }
+            onChange={(id: number) => {
+              formik.setFieldValue('config_id', +id);
             }}
-            placeholder={
-              configsLoading ? 'Loading Config...' : 'Select a Config'
-            }
-            disableClearable
             disabled={isReadOnly || formik.values.linode_id === -1}
-            id="config_id"
-            label="Config"
-            loading={configsLoading}
-            options={!configsLoading ? configChoices : []}
-            value={selectedOption}
+            linodeId={formik.values.linode_id}
+            name="configId"
+            onBlur={() => null}
+            value={formik.values.config_id}
           />
         </FormControl>
         <ActionsPanel
