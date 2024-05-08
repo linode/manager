@@ -693,9 +693,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     if (!currentUsername || !(grants && grants[type])) {
       return this.setState({
         errors: [
-          {
+          ({
             reason: `Can\'t set ${type} permissions at this time. Please try again later`,
-          },
+          } as unknown) as APIError,
         ],
       });
     }
@@ -749,11 +749,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { grants } = this.state;
     if (!currentUsername || !grants) {
       return this.setState({
-        errors: [
+        errors: ([
           {
             reason: `Can\'t set entity-specific permissions at this time. Please try again later`,
           },
-        ],
+        ] as unknown) as APIError[],
         isSavingEntity: false,
       });
     }

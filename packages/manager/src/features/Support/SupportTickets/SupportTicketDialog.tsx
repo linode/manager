@@ -437,10 +437,10 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       ticketType === 'smtp' ? formatDescription(smtpFields) : description;
     if (!['general', 'none'].includes(entityType) && !entityID) {
       setErrors([
-        {
+        ({
           field: 'input',
           reason: `Please select a ${entityIdToNameMap[entityType]}.`,
-        },
+        } as unknown) as APIError,
       ]);
       return;
     }
