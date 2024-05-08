@@ -83,7 +83,8 @@ export const ImageSelectv2 = (props: Props) => {
           startAdornment: value && (
             <DistributionIcon
               distribution={value.vendor}
-              fontSize="1.8em"
+              fontSize="24px"
+              height="24px"
               pl={1}
               pr={2}
             />
