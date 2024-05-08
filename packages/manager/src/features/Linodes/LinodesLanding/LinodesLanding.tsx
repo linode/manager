@@ -235,9 +235,9 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                                   resourceType: 'Linodes',
                                 }),
                               }}
-                              onButtonClick={() => {
-                                this.props.history.push('/linodes/create');
-                              }}
+                              onButtonClick={() =>
+                                this.props.history.push('/linodes/create')
+                              }
                               disabledCreateButton={isLinodesGrantReadOnly}
                               docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
                               entity="Linode"
