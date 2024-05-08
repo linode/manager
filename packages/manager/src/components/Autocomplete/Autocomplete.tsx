@@ -26,7 +26,7 @@ export interface EnhancedAutocompleteProps<
     'renderInput'
   > {
   /** Provides a hint with error styling to assist users. */
-  errorText?: string;
+  errorText?: JSX.Element | string;
   /** Provides a hint with normal styling to assist users. */
   helperText?: string;
   /** A required label for the Autocomplete to ensure accessibility. */

@@ -90,7 +90,7 @@ interface BaseProps {
   /**
    * When defined, makes the input show an error state with the defined text
    */
-  errorText?: string;
+  errorText?: JSX.Element | string;
   /**
    * Makes the TextField use 100% of the available width
    * @default false

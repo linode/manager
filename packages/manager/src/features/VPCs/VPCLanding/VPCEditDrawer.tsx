@@ -7,6 +7,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { RenderError } from 'src/components/RenderError';
 import { TextField } from 'src/components/TextField';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -117,9 +118,12 @@ export const VPCEditDrawer = (props: Props) => {
         />
         {regionsData && (
           <RegionSelect
+            errorText={
+              (regionsError && <RenderError error={regionsError[0]} />) ||
+              undefined
+            }
             currentCapability="VPCs"
             disabled // the Region field will not be editable during beta
-            errorText={(regionsError && regionsError[0].reason) || undefined}
             handleSelection={() => null}
             helperText={REGION_HELPER_TEXT}
             regions={regionsData}
