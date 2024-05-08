@@ -1,3 +1,5 @@
+import { APIError } from '@linode/api-v4';
+
 import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
 
 import { getAPIErrorOrDefault, getErrorStringOrDefault } from './errorUtils';
@@ -14,7 +16,7 @@ describe('Error handling utilities', () => {
     it('should override a default error', () => {
       expect(
         getAPIErrorOrDefault(
-          [{ reason: DEFAULT_ERROR_MESSAGE }],
+          [({ reason: DEFAULT_ERROR_MESSAGE } as unknown) as APIError],
           'New error message'
         )
       ).toEqual([{ reason: 'New error message' }]);
@@ -23,8 +25,12 @@ describe('Error handling utilities', () => {
 
   describe('getErrorStringOrDefault', () => {
     it('should return the reason for the first error in the APIError array', () => {
-      expect(getErrorStringOrDefault(error)).toMatch('a reason');
-      expect(getErrorStringOrDefault(multiError)).toMatch('reason 1');
+      expect(getErrorStringOrDefault((error as unknown) as APIError[])).toMatch(
+        'a reason'
+      );
+      expect(
+        getErrorStringOrDefault((multiError as unknown) as APIError[])
+      ).toMatch('reason 1');
     });
 
     it('should return the given default string if the error object is empty', () => {

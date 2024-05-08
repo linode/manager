@@ -6,6 +6,7 @@ import Axios, {
 } from 'axios';
 import { ValidationError, AnySchema } from 'yup';
 import { APIError, Filter, Params } from './types';
+import { TestAPI } from 'vitest';
 
 interface RequestConfig extends AxiosRequestConfig {
   validationErrors?: APIError[];
@@ -141,7 +142,7 @@ const mapYupToLinodeAPIError = ({
   message,
   path,
 }: ValidationError): APIError => ({
-  reason: message,
+  reason: (message as unknown) as TestAPI,
   ...(path && { field: path }),
 });
 

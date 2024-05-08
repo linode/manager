@@ -41,9 +41,9 @@ export const handleError = (
   }
 
   const status: number = error.response?.status ?? 0;
-  const errors: APIError[] = error.response?.data?.errors ?? [
-    { reason: DEFAULT_ERROR_MESSAGE },
-  ];
+  const errors: APIError[] =
+    error.response?.data?.errors ??
+    (([{ reason: DEFAULT_ERROR_MESSAGE }] as unknown) as APIError[]);
 
   const apiInMaintenanceMode = !!error.response?.headers['x-maintenance-mode'];
 
@@ -58,7 +58,9 @@ export const handleError = (
   const interceptedErrors = interceptErrors(errors, [
     {
       condition: (e) =>
-        !!e.reason.match(/account must be activated/i) && status === 403,
+        !!((e.reason as unknown) as string).match(
+          /account must be activated/i
+        ) && status === 403,
       effect: () => {
         if (store && !store.getState().globalErrors.account_unactivated) {
           store.dispatch(

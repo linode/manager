@@ -35,18 +35,18 @@ const baseErrorWithJson = {
 
 const error400: AxiosError<LinodeError> = {
   ...baseErrorWithJson,
-  response: {
+  response: ({
     ...mockAxiosError.response,
     status: 400,
-  },
+  } as unknown) as AxiosResponse<LinodeError>,
 };
 
 const error401: AxiosError<LinodeError> = {
   ...baseErrorWithJson,
-  response: {
+  response: ({
     ...mockAxiosError.response,
     status: 401,
-  },
+  } as unknown) as AxiosResponse<LinodeError>,
 };
 
 describe('Expiring Tokens', () => {
