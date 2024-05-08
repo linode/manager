@@ -93,7 +93,8 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     isError: isMetricDefinitionError,
     isLoading,
   } = useGetCloudViewMetricDefinitionsByServiceType(
-    props.dashboard?.service_type
+    props.dashboard?.service_type,
+    props.dashboard?.service_type!== undefined
   );
 
   if (isJweTokenError) {
@@ -103,7 +104,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       </Paper>
     );
   }
-  if (isLoading) {
+  if (props.dashboard?.service_type && isLoading) {
     return <CircleProgress />;
   }
 
