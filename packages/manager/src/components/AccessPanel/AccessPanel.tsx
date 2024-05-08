@@ -5,11 +5,6 @@ import { makeStyles } from 'tss-react/mui';
 import { Paper } from 'src/components/Paper';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
-import {
-  DISK_ENCRYPTION_GENERAL_DESCRIPTION,
-  DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY,
-} from '../DiskEncryption/constants';
-import { DiskEncryption } from '../DiskEncryption/DiskEncryption';
 import { Divider } from '../Divider';
 import UserSSHKeyPanel from './UserSSHKeyPanel';
 
@@ -115,14 +110,6 @@ export const AccessPanel = (props: Props) => {
           />
         </>
       ) : null}
-      <>
-        <Divider spacingBottom={20} spacingTop={24} />
-        <DiskEncryption
-          descriptionCopy={DISK_ENCRYPTION_GENERAL_DESCRIPTION}
-          disabled={true}
-          disabledReason={DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY}
-        />
-      </>
     </Paper>
   );
 };
