@@ -178,7 +178,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, metricsList]);
 
-  if (isLoading || (status == 'success' && data.length == 0)) {
+  if (isLoading) {
     return (
       <Grid xs={widget.size}>
         <Paper style={{ height: '98%', width: '100%' }}>
