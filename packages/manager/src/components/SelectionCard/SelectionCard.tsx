@@ -171,7 +171,7 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
         componentsProps={{
           tooltip: { sx: sxTooltip },
         }}
-        placement="top-end"
+        placement="top"
         title={tooltip}
       >
         {cardGrid}
@@ -196,8 +196,8 @@ const StyledGrid = styled(Grid, {
       cursor: 'pointer',
     }),
   ...(props.disabled && {
-    '& > div': {
-      opacity: 0.4,
+    '& .cardSubheadingItem, & .cardSubheadingTitle': {
+      opacity: 0.3,
     },
     cursor: 'not-allowed',
   }),

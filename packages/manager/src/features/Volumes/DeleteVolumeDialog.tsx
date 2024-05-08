@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useDeleteVolumeMutation } from 'src/queries/volumes';
+import { useDeleteVolumeMutation } from 'src/queries/volumes/volumes';
 
 interface Props {
   onClose: () => void;

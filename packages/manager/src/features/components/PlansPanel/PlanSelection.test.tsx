@@ -5,7 +5,7 @@ import {
   extendedTypeFactory,
   planSelectionTypeFactory,
 } from 'src/factories/types';
-import { LIMITED_AVAILABILITY_TEXT } from 'src/features/components/PlansPanel/constants';
+import { LIMITED_AVAILABILITY_COPY } from 'src/features/components/PlansPanel/constants';
 import { breakpoints } from 'src/foundations/breakpoints';
 import { resizeScreenSize } from 'src/utilities/testHelpers';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
@@ -14,9 +14,9 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { PlanSelection } from './PlanSelection';
 
 import type { PlanSelectionProps } from './PlanSelection';
-import type { PlanSelectionType } from './types';
+import type { PlanWithAvailability } from './types';
 
-const mockPlan: PlanSelectionType = planSelectionTypeFactory.build({
+const mockPlan: PlanWithAvailability = planSelectionTypeFactory.build({
   heading: 'Dedicated 20 GB',
   subHeadings: [
     '$10/mo ($0.015/hr)',
@@ -27,13 +27,10 @@ const mockPlan: PlanSelectionType = planSelectionTypeFactory.build({
 });
 
 const defaultProps: PlanSelectionProps = {
-  disabledStatus: {
-    isDisabled512GbPlan: false,
-    isLimitedAvailabilityPlan: false,
-  },
+  hasMajorityOfPlansDisabled: false,
   idx: 0,
   onSelect: () => vi.fn(),
-  type: mockPlan,
+  plan: mockPlan,
 };
 
 describe('PlanSelection (table, desktop)', () => {
@@ -67,7 +64,7 @@ describe('PlanSelection (table, desktop)', () => {
     expect(container.querySelector('[data-qa-storage]')).toHaveTextContent(
       '1024 GB'
     );
-    expect(queryByLabelText(LIMITED_AVAILABILITY_TEXT)).toBeNull();
+    expect(queryByLabelText(LIMITED_AVAILABILITY_COPY)).toBeNull();
   });
 
   it('renders the table row with unknown prices if a region is not selected', () => {
@@ -129,7 +126,7 @@ describe('PlanSelection (table, desktop)', () => {
   it('should not display an error message for $0 regions', () => {
     const propsWithRegionZeroPrice = {
       ...defaultProps,
-      type: planSelectionTypeFactory.build({
+      plan: planSelectionTypeFactory.build({
         heading: 'Dedicated 20 GB',
         region_prices: [
           {
@@ -172,30 +169,21 @@ describe('PlanSelection (table, desktop)', () => {
     const bigPlanType = extendedTypeFactory.build({
       heading: 'Dedicated 512 GB',
       label: 'Dedicated 512GB',
+      planHasLimitedAvailability: true,
     });
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
-      wrapWithTableBody(
-        <PlanSelection
-          {...defaultProps}
-          disabledStatus={{
-            isDisabled512GbPlan: true,
-            isLimitedAvailabilityPlan: false,
-          }}
-          planIsDisabled={true}
-          type={bigPlanType}
-        />
-      )
+      wrapWithTableBody(<PlanSelection {...defaultProps} plan={bigPlanType} />)
     );
 
-    const button = getByTestId('limited-availability');
+    const button = getByTestId('disabled-plan-tooltip');
     fireEvent.mouseOver(button);
 
     await waitFor(() => {
       expect(getByRole('tooltip')).toBeInTheDocument();
     });
 
-    expect(getByText(LIMITED_AVAILABILITY_TEXT)).toBeVisible();
+    expect(getByText(LIMITED_AVAILABILITY_COPY)).toBeVisible();
   });
 });
 

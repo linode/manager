@@ -22,6 +22,7 @@ import {
 import { useLinodeCreateQueryParams } from '../../utilities';
 import { StackScriptDetailsDialog } from './StackScriptDetailsDialog';
 import { StackScriptSelectionRow } from './StackScriptSelectionRow';
+import { getDefaultUDFData } from './UserDefinedFields/utilities';
 import {
   accountStackScriptFilter,
   communityStackScriptFilter,
@@ -29,7 +30,6 @@ import {
 
 import type { StackScriptTabType } from './utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
-import { getDefaultUDFData } from './UserDefinedFields/utilities';
 
 interface Props {
   type: StackScriptTabType;
@@ -108,6 +108,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
           <Button
             onClick={() => {
               field.onChange(null);
+              setValue('image', null);
               updateParams({ stackScriptID: undefined });
             }}
           >

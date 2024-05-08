@@ -4,6 +4,68 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-04-29] - v1.118.0
+
+
+### Added:
+
+- April Marketplace apps and SVGs ([#10382](https://github.com/linode/manager/pull/10382))
+
+### Changed:
+
+- Improve the UX of Access Token & Access Key drawers ([#10338](https://github.com/linode/manager/pull/10338))
+- RegionSelect disabled option API updates ([#10373](https://github.com/linode/manager/pull/10373))
+- Dynamic pricing with `volumes/types` endpoint ([#10376](https://github.com/linode/manager/pull/10376))
+- Top Menu clean up and refactor ([#10383](https://github.com/linode/manager/pull/10383))
+- PlanSelection availability updates and consolidation ([#10387](https://github.com/linode/manager/pull/10387))
+- Shift wording from 'limited availability' to 'limited deployment availability' ([#10394](https://github.com/linode/manager/pull/10394))
+- Gecko Beta copy updates ([#10400](https://github.com/linode/manager/pull/10400))
+
+### Fixed:
+
+- Charts Y-axis values are trimmed when scale is increased ([#10330](https://github.com/linode/manager/pull/10330))
+- Chrome bug related to outdated CSS vendor prefixes ([#10380](https://github.com/linode/manager/pull/10380))
+- Clickable disabled smaller plans in Resizing Tab ([#10381](https://github.com/linode/manager/pull/10381))
+- New OBJ Buckets do not appear when created before initial fetch completes ([#10388](https://github.com/linode/manager/pull/10388))
+
+### Removed:
+
+- Deprecated Marketplace apps ([#10382](https://github.com/linode/manager/pull/10382))
+
+### Tech Stories:
+
+- Refactor and streamline VPC queries ([#10322](https://github.com/linode/manager/pull/10322))
+- Update documentation on Adobe Analytics to cover data property ([#10365](https://github.com/linode/manager/pull/10365))
+- Add isFeatureEnabledV2 to check for feature flag AND account capability ([#10371](https://github.com/linode/manager/pull/10371))
+- Replace sanitize-html with dompurify ([#10378](https://github.com/linode/manager/pull/10378))
+- Remove lodash (global import) as a package dependency ([#10386](https://github.com/linode/manager/pull/10386))
+- Add Gravatar Analytics ([#10389](https://github.com/linode/manager/pull/10389))
+
+### Tests:
+
+- Add tests for Parent/Child Users & Grants page ([#10240](https://github.com/linode/manager/pull/10240))
+- Add new Cypress tests for Longview landing page ([#10321](https://github.com/linode/manager/pull/10321))
+- Add VM Placement Group landing page empty state UI test ([#10350](https://github.com/linode/manager/pull/10350))
+- Fix `machine-image-upload.spec.ts` e2e test flake  ([#10370](https://github.com/linode/manager/pull/10370))
+- Update latest kernel version to fix `linode-config.spec.ts` ([#10391](https://github.com/linode/manager/pull/10391))
+- Fix hanging account switching test ([#10396](https://github.com/linode/manager/pull/10396))
+
+### Upcoming Features:
+
+- Add Placement Groups to Linode Migrate flow ([#10339](https://github.com/linode/manager/pull/10339))
+- Add text copy for Placement Group region limits in PlacementGroupsCreateDrawer ([#10355](https://github.com/linode/manager/pull/10355))
+- Invalidate Placement Group queries on Linode create & delete mutations ([#10366](https://github.com/linode/manager/pull/10366))
+- Update the Placement Groups SVG icon ([#10379](https://github.com/linode/manager/pull/10379))
+- Fix & Improve Placement Groups feature restriction ([#10372](https://github.com/linode/manager/pull/10372))
+- Linode Create Refactor:
+   - VPC (#10354)
+   - StackScripts (#10367)
+   - Validation (#10374)
+   - User Defined Fields ([#10395](https://github.com/linode/manager/pull/10395))
+- Update gecko feature flag to object ([#10363](https://github.com/linode/manager/pull/10363))
+- Show the selected regions as chips in the AccessKeyDrawer ([#10375](https://github.com/linode/manager/pull/10375))
+- Add feature flag for Linode Disk Encryption (LDE) ([#10402](https://github.com/linode/manager/pull/10402))
+
 ## [2024-04-15] - v1.117.0
 
 ### Added:
