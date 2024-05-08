@@ -2,6 +2,7 @@ import { UNKNOWN_PRICE } from './constants';
 
 import type { PriceType, Region, RegionPriceObject } from '@linode/api-v4';
 
+type TimePeriod = 'hourly' | 'monthly';
 export interface RegionPrice extends RegionPriceObject {
   id: string;
 }
@@ -31,6 +32,10 @@ export interface DataCenterPricingByTypeOptions {
    * @example 20 (GB) for a volume
    */
   size?: number;
+  /**
+   * The time period for which to find pricing data for (hourly or monthly).
+   */
+  timePeriod?: TimePeriod;
   /**
    * The type data from a product's /types endpoint.
    */
@@ -96,6 +101,7 @@ export const getDCSpecificPrice = ({
 export const getDCSpecificPriceByType = ({
   regionId,
   size,
+  timePeriod = 'monthly',
   type,
 }: DataCenterPricingByTypeOptions): string | undefined => {
   if (!regionId || !type) {
@@ -106,7 +112,7 @@ export const getDCSpecificPriceByType = ({
   const price =
     type.region_prices.find((region_price: RegionPrice) => {
       return region_price.id === regionId;
-    })?.monthly ?? type.price.monthly;
+    })?.[timePeriod] ?? type.price?.[timePeriod];
 
   // If pricing is determined by size of the entity
   if (size && price) {

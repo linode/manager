@@ -4,8 +4,12 @@ import React from 'react';
 
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
+import { useObjectStorageTypesQuery } from 'src/queries/objectStorage';
 import { OBJ_STORAGE_PRICE } from 'src/utilities/pricing/constants';
-import { objectStoragePriceIncreaseMap } from 'src/utilities/pricing/dynamicPricing';
+import {
+  getDCSpecificPriceByType,
+  objectStoragePriceIncreaseMap,
+} from 'src/utilities/pricing/dynamicPricing';
 
 interface Props {
   regionId: Region['id'];
@@ -18,6 +22,11 @@ export const GLOBAL_TRANSFER_POOL_TOOLTIP_TEXT =
 
 export const OveragePricing = (props: Props) => {
   const { regionId } = props;
+
+  const { data: types /*, isError, isLoading*/ } = useObjectStorageTypesQuery();
+
+  const overageType = types?.find((type) => type.id.includes('overage'));
+
   const isDcSpecificPricingRegion = objectStoragePriceIncreaseMap.hasOwnProperty(
     regionId
   );
@@ -28,9 +37,14 @@ export const OveragePricing = (props: Props) => {
         For this region, additional storage costs{' '}
         <strong>
           $
-          {isDcSpecificPricingRegion
+          {/* {isDcSpecificPricingRegion
             ? objectStoragePriceIncreaseMap[regionId].storage_overage
-            : OBJ_STORAGE_PRICE.storage_overage}{' '}
+            : OBJ_STORAGE_PRICE.storage_overage}{' '} */}
+          {getDCSpecificPriceByType({
+            regionId,
+            timePeriod: 'hourly',
+            type: overageType,
+          })}{' '}
           per GB
         </strong>
         .
@@ -42,6 +56,11 @@ export const OveragePricing = (props: Props) => {
           {isDcSpecificPricingRegion
             ? objectStoragePriceIncreaseMap[regionId].transfer_overage
             : OBJ_STORAGE_PRICE.transfer_overage}{' '}
+          {/* {getDCSpecificPriceByType({
+            regionId,
+            timePeriod: 'hourly',
+            type: overageType,
+          })}{' '} */}
           per GB
         </strong>{' '}
         if it exceeds{' '}
