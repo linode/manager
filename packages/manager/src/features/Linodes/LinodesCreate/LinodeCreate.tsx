@@ -278,8 +278,6 @@ export class LinodeCreate extends React.PureComponent<
   render() {
     const { selectedTab, stackScriptSelectedTab } = this.state;
 
-    const queryParams = getQueryParamsFromQueryString(location.search);
-
     const {
       accountBackupsEnabled,
       errors,
@@ -640,7 +638,7 @@ export class LinodeCreate extends React.PureComponent<
                       action: 'click',
                       category: 'link',
                       createType:
-                        (queryParams.type as LinodeCreateType) ??
+                        (this.tabs[selectedTab].title as LinodeCreateType) ??
                         'Distributions',
                       label: 'Choosing a Plan',
                       version: 'v1',
@@ -734,7 +732,7 @@ export class LinodeCreate extends React.PureComponent<
                         action: 'click',
                         category: 'link',
                         createType:
-                          (queryParams.type as LinodeCreateType) ??
+                          (this.tabs[selectedTab].title as LinodeCreateType) ??
                           'Distributions',
                         formStepName: 'Firewall Panel',
                         label: 'Learn more',
@@ -850,12 +848,13 @@ export class LinodeCreate extends React.PureComponent<
 
   createLinode = () => {
     const payload = this.getPayload();
-    const queryParams = getQueryParamsFromQueryString(location.search);
+    const { selectedTab } = this.state;
+    const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
 
     this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
     sendLinodeCreateFormSubmitEvent(
       'Create Linode',
-      (queryParams.type as LinodeCreateType) ?? 'Distributions',
+      selectedTabName ?? 'Distributions',
       'v1'
     );
   };
@@ -998,7 +997,8 @@ export class LinodeCreate extends React.PureComponent<
   handleAnalyticsFormError = (
     errorMap: Partial<Record<string, string | undefined>>
   ) => {
-    const queryParams = getQueryParamsFromQueryString(location.search);
+    const { selectedTab } = this.state;
+    const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
 
     if (!errorMap) {
       return;
@@ -1006,21 +1006,21 @@ export class LinodeCreate extends React.PureComponent<
     if (errorMap.region) {
       sendLinodeCreateFormErrorEvent(
         'Region not selected',
-        (queryParams.type as LinodeCreateType) ?? 'Distributions',
+        selectedTabName ?? 'Distributions',
         'v1'
       );
     }
     if (errorMap.type) {
       sendLinodeCreateFormErrorEvent(
         'Plan not selected',
-        (queryParams.type as LinodeCreateType) ?? 'Distributions',
+        selectedTabName ?? 'Distributions',
         'v1'
       );
     }
     if (errorMap.root_pass) {
       sendLinodeCreateFormErrorEvent(
         'Password not created',
-        (queryParams.type as LinodeCreateType) ?? 'Distributions',
+        selectedTabName ?? 'Distributions',
         'v1'
       );
     }
@@ -1051,6 +1051,8 @@ export class LinodeCreate extends React.PureComponent<
   };
 
   handleTabChange = (index: number) => {
+    const prevTabIndex = this.state.selectedTab;
+
     this.props.resetCreationState();
 
     /** set the tab in redux state */
@@ -1062,6 +1064,20 @@ export class LinodeCreate extends React.PureComponent<
       planKey: v4(),
       selectedTab: index,
     });
+
+    // Do not fire the form event if a user is not switching to a different tab.
+    // Prevents a double-firing on Marketplace because we manually handle the tab change.
+    if (prevTabIndex !== index) {
+      sendLinodeCreateFormStepEvent({
+        action: 'click',
+        category: 'tab',
+        createType:
+          (this.tabs[prevTabIndex].title as LinodeCreateType) ??
+          'Distributions',
+        label: `${this.tabs[index].title} Tab`,
+        version: 'v1',
+      });
+    }
   };
 
   mounted: boolean = false;
