@@ -1,14 +1,18 @@
 import { APIError } from '@linode/api-v4';
 import React from 'react';
 
+import { supportErrorMatcher } from './SupportError';
 import { Typography } from './Typography';
 
 export interface RenderErrorProps {
   error: APIError;
-  matchers: ErrorMatcher[];
+  matchers?: ErrorMatcher[];
 }
 
-export const RenderError = ({ error, matchers }: RenderErrorProps) => {
+export const RenderError = ({
+  error,
+  matchers = defaultMatchers,
+}: RenderErrorProps) => {
   const firstMatch = matchers.find((matcher) => matcher.condition(error));
   return firstMatch !== undefined ? (
     typeof firstMatch.element == 'function' ? (
@@ -25,3 +29,5 @@ export interface ErrorMatcher {
   condition: (e: APIError) => boolean;
   element: ((e: APIError) => JSX.Element) | JSX.Element;
 }
+
+export const defaultMatchers = [supportErrorMatcher];

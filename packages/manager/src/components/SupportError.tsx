@@ -6,17 +6,18 @@ import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
 import { capitalize } from 'src/utilities/capitalize';
 
+import { ErrorMatcher } from './RenderError';
+
 interface Props {
-  errors: APIError[];
+  error: APIError;
 }
+
+const supportTextRegex = new RegExp(/(open a support ticket|contact Support)/i);
 
 export const SupportError = (props: Props) => {
   const theme = useTheme();
-  const { errors } = props;
-  const supportTextRegex = new RegExp(
-    /(open a support ticket|contact Support)/i
-  );
-  const errorMsg = errors[0].reason.split(supportTextRegex);
+  const { error } = props;
+  const errorMsg = error.reason.split(supportTextRegex);
 
   return (
     <Typography
@@ -45,4 +46,9 @@ export const SupportError = (props: Props) => {
       })}
     </Typography>
   );
+};
+
+export const supportErrorMatcher: ErrorMatcher = {
+  condition: (e) => !!e.reason.match(supportTextRegex),
+  element: (e) => <SupportError error={e} />,
 };
