@@ -44,7 +44,7 @@ export interface PlansPanelProps {
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionID?: string;
-  showTransfer?: boolean;
+  showLimits?: boolean;
   tabDisabledMessage?: string;
   tabbedPanelInnerClass?: string;
   types: PlanSelectionType[];
@@ -69,7 +69,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     selectedDiskSize,
     selectedId,
     selectedRegionID,
-    showTransfer,
+    showLimits,
     types,
   } = props;
 
@@ -96,6 +96,12 @@ export const PlansPanel = (props: PlansPanelProps) => {
     getIsEdgeRegion(regionsData ?? [], selectedRegionID ?? '');
 
   const getDedicatedEdgePlanType = () => {
+    const edgePlans = types.filter((type) => type.class === 'edge');
+    if (edgePlans.length) {
+      return edgePlans;
+    }
+
+    // @TODO Remove fallback once edge plans are activated
     // 256GB and 512GB plans will not be supported for Edge
     const plansUpTo128GB = _plans.dedicated.filter(
       (planType) =>
@@ -185,7 +191,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
               selectedDiskSize={selectedDiskSize}
               selectedId={selectedId}
               selectedRegionId={selectedRegionID}
-              showTransfer={showTransfer}
+              showLimits={showLimits}
             />
           </>
         );

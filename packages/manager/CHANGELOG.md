@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-05-06] - v1.118.1
+
+
+### Upcoming Features:
+
+- Use 'edge'-class plans in edge regions ([#10441](https://github.com/linode/manager/pull/10441))
+
 ## [2024-04-29] - v1.118.0
 
 
