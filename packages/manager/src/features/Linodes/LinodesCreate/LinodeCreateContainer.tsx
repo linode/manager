@@ -78,7 +78,13 @@ import { validatePassword } from 'src/utilities/validatePassword';
 
 import { deriveDefaultLabel } from './deriveDefaultLabel';
 import LinodeCreate from './LinodeCreate';
-import { HandleSubmit, Info, LinodeCreateValidation, TypeInfo } from './types';
+import {
+  HandleSubmit,
+  Info,
+  LinodeCreateType,
+  LinodeCreateValidation,
+  TypeInfo,
+} from './types';
 
 import type {
   CreateLinodeRequest,
@@ -268,7 +274,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
               sendLinodeCreateFormStepEvent({
                 action: 'click',
                 category: 'link',
+                createType:
+                  (this.params.type as LinodeCreateType) ?? 'Distributions',
                 label: 'Getting Started',
+                version: 'v1',
               });
             }}
             docsLabel="Getting Started"

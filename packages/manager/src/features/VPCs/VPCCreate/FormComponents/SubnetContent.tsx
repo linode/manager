@@ -4,7 +4,9 @@ import { useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { SubnetFieldState } from 'src/utilities/subnets';
 
 import { VPC_CREATE_FORM_SUBNET_HELPER_TEXT } from '../../constants';
@@ -27,6 +29,7 @@ export const SubnetContent = (props: Props) => {
 
   const location = useLocation();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
+  const queryParams = getQueryParamsFromQueryString(location.search);
 
   return (
     <>
@@ -41,8 +44,11 @@ export const SubnetContent = (props: Props) => {
             sendLinodeCreateFormStepEvent({
               action: 'click',
               category: 'link',
+              createType:
+                (queryParams.type as LinodeCreateType) ?? 'Distributions',
               formStepName: 'VPC Subnets',
               label: 'Learn more',
+              version: 'v1',
             })
           }
           to="https://www.linode.com/docs/products/networking/vpc/guides/subnets/"

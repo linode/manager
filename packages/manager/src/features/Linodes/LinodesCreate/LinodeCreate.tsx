@@ -278,6 +278,8 @@ export class LinodeCreate extends React.PureComponent<
   render() {
     const { selectedTab, stackScriptSelectedTab } = this.state;
 
+    const queryParams = getQueryParamsFromQueryString(location.search);
+
     const {
       accountBackupsEnabled,
       errors,
@@ -637,7 +639,11 @@ export class LinodeCreate extends React.PureComponent<
                     sendLinodeCreateFormStepEvent({
                       action: 'click',
                       category: 'link',
+                      createType:
+                        (queryParams.type as LinodeCreateType) ??
+                        'Distributions',
                       label: 'Choosing a Plan',
+                      version: 'v1',
                     });
                   }}
                   href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
@@ -727,8 +733,12 @@ export class LinodeCreate extends React.PureComponent<
                       sendLinodeCreateFormStepEvent({
                         action: 'click',
                         category: 'link',
+                        createType:
+                          (queryParams.type as LinodeCreateType) ??
+                          'Distributions',
                         formStepName: 'Firewall Panel',
                         label: 'Learn more',
+                        version: 'v1',
                       })
                     }
                     to={FIREWALL_GET_STARTED_LINK}
@@ -840,8 +850,14 @@ export class LinodeCreate extends React.PureComponent<
 
   createLinode = () => {
     const payload = this.getPayload();
+    const queryParams = getQueryParamsFromQueryString(location.search);
+
     this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
-    sendLinodeCreateFormSubmitEvent('Create Linode');
+    sendLinodeCreateFormSubmitEvent(
+      'Create Linode',
+      (queryParams.type as LinodeCreateType) ?? 'Distributions',
+      'v1'
+    );
   };
 
   filterTypes = () => {
@@ -982,17 +998,31 @@ export class LinodeCreate extends React.PureComponent<
   handleAnalyticsFormError = (
     errorMap: Partial<Record<string, string | undefined>>
   ) => {
+    const queryParams = getQueryParamsFromQueryString(location.search);
+
     if (!errorMap) {
       return;
     }
     if (errorMap.region) {
-      sendLinodeCreateFormErrorEvent('Region not selected');
+      sendLinodeCreateFormErrorEvent(
+        'Region not selected',
+        (queryParams.type as LinodeCreateType) ?? 'Distributions',
+        'v1'
+      );
     }
     if (errorMap.type) {
-      sendLinodeCreateFormErrorEvent('Plan not selected');
+      sendLinodeCreateFormErrorEvent(
+        'Plan not selected',
+        (queryParams.type as LinodeCreateType) ?? 'Distributions',
+        'v1'
+      );
     }
     if (errorMap.root_pass) {
-      sendLinodeCreateFormErrorEvent('Password not created');
+      sendLinodeCreateFormErrorEvent(
+        'Password not created',
+        (queryParams.type as LinodeCreateType) ?? 'Distributions',
+        'v1'
+      );
     }
   };
 

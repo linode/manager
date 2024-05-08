@@ -28,6 +28,8 @@ import { VPCCreateDrawer } from './VPCCreateDrawer';
 
 import type { Item } from 'src/components/EnhancedSelect';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
+import { LinodeCreateType } from './types';
 
 export interface VPCPanelProps {
   additionalIPv4RangesForVPC: ExtendedIP[];
@@ -93,6 +95,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
   );
 
   const { data: vpcsData, error, isLoading } = useAllVPCsQuery();
+  const params = getQueryParamsFromQueryString(location.search);
 
   React.useEffect(() => {
     if (subnetError || vpcIPv4Error) {
@@ -149,8 +152,10 @@ export const VPCPanel = (props: VPCPanelProps) => {
             sendLinodeCreateFormStepEvent({
               action: 'click',
               category: 'link',
+              createType: (params.type as LinodeCreateType) ?? 'Distributions',
               formStepName: 'VPC Panel',
               label: 'Learn more',
+              version: 'v1',
             })
           }
           to="https://www.linode.com/docs/products/networking/vpc/guides/assign-services/"
@@ -222,8 +227,11 @@ export const VPCPanel = (props: VPCPanelProps) => {
                     sendLinodeCreateFormStepEvent({
                       action: 'click',
                       category: 'button',
+                      createType:
+                        (params.type as LinodeCreateType) ?? 'Distributions',
                       formStepName: 'VPC Panel',
                       label: 'Create VPC',
+                      version: 'v1',
                     });
                   }}
                 >

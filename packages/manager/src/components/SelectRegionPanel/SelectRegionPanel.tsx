@@ -64,7 +64,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const { data: regions } = useRegionsQuery();
 
   const isCloning = /clone/i.test(params.type);
-  const isFromLinodeCreate = location.pathname.includes('/linodes/create'); // TODO: confirm whether we need to check params - are we collecting on distros only?
+  const isFromLinodeCreate = location.pathname.includes('/linodes/create');
 
   const { data: type } = useTypeQuery(
     selectedLinodeTypeId ?? '',
@@ -124,7 +124,9 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
             sendLinodeCreateFormStepEvent({
               action: 'click',
               category: 'link',
+              createType: (params.type as LinodeCreateType) ?? 'Distributions',
               label: DOCS_LINK_LABEL_DC_PRICING,
+              version: 'v1',
             })
           }
           href="https://www.linode.com/pricing"

@@ -21,12 +21,13 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
+import { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useCreateFirewall } from 'src/queries/firewalls';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
+import { useCreateFirewall } from 'src/queries/firewalls';
 import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
@@ -38,6 +39,7 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import {
   LINODE_CREATE_FLOW_TEXT,
@@ -82,6 +84,7 @@ export const CreateFirewallDrawer = React.memo(
 
     const location = useLocation();
     const isFromLinodeCreate = location.pathname.includes('/linodes/create');
+    const queryParams = getQueryParamsFromQueryString(location.search);
 
     const {
       errors,
@@ -250,8 +253,11 @@ export const CreateFirewallDrawer = React.memo(
           sendLinodeCreateFormStepEvent({
             action: 'click',
             category: 'link',
+            createType:
+              (queryParams.type as LinodeCreateType) ?? 'Distributions',
             formStepName: 'Create Firewall Drawer',
             label: 'Learn more',
+            version: 'v1',
           })
         }
         to={FIREWALL_LIMITS_CONSIDERATIONS_LINK}
@@ -369,8 +375,11 @@ export const CreateFirewallDrawer = React.memo(
                 sendLinodeCreateFormStepEvent({
                   action: 'click',
                   category: 'button',
+                  createType:
+                    (queryParams.type as LinodeCreateType) ?? 'Distributions',
                   formStepName: 'Create Firewall Drawer',
                   label: 'Create Firewall',
+                  version: 'v1',
                 }),
               type: 'submit',
             }}

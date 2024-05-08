@@ -8,8 +8,10 @@ import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
+import { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 import { useFirewallsQuery } from 'src/queries/firewalls';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { Autocomplete } from '../Autocomplete/Autocomplete';
 import { LinkButton } from '../LinkButton';
@@ -34,6 +36,7 @@ export const SelectFirewallPanel = (props: Props) => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const location = useLocation();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
+  const params = getQueryParamsFromQueryString(location.search);
 
   const handleCreateFirewallClick = () => {
     setIsDrawerOpen(true);
@@ -41,8 +44,10 @@ export const SelectFirewallPanel = (props: Props) => {
       sendLinodeCreateFormStepEvent({
         action: 'click',
         category: 'button',
+        createType: (params.type as LinodeCreateType) ?? 'Distributions',
         formStepName: 'Firewall Panel',
         label: 'Create Firewall',
+        version: 'v1',
       });
     }
   };

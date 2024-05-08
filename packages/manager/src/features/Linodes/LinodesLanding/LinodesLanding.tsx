@@ -239,7 +239,9 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                               onButtonClick={() => {
                                 this.props.history.push('/linodes/create');
                                 sendLinodeCreateFormStartEvent(
-                                  'Filled State Create'
+                                  'Filled State Create',
+                                  'Distributions',
+                                  'v1'
                                 );
                               }}
                               disabledCreateButton={isLinodesGrantReadOnly}

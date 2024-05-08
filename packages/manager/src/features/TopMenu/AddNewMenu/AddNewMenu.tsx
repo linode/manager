@@ -77,9 +77,17 @@ export const AddNewMenu = () => {
 
   const handleAnalyticsFormEvent = (entity: string) => {
     if (entity === 'Linode') {
-      sendLinodeCreateFormStartEvent('Global Header Linode Create');
+      sendLinodeCreateFormStartEvent(
+        'Global Header Linode Create',
+        'Distributions',
+        'v1'
+      );
     } else if (entity === 'Marketplace') {
-      sendLinodeCreateFormStartEvent('Global Header Marketplace Create');
+      sendLinodeCreateFormStartEvent(
+        'Global Header Marketplace Create',
+        'One-Click',
+        'v1'
+      );
     }
   };
 
