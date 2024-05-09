@@ -72,7 +72,7 @@ export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
       bucket_name: thisBucket.label,
       cluster: thisBucket.cluster,
       permissions: 'none' as AccessType,
-      region: thisBucket.region ?? '',
+      region: thisBucket.region ?? null,
     }))
     .sort(sortByCluster);
 

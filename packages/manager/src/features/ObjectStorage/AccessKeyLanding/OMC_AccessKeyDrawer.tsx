@@ -97,7 +97,7 @@ export const getDefaultScopes = (
       bucket_name: thisBucket.label,
       cluster: thisBucket.cluster,
       permissions: null,
-      region: thisBucket.region,
+      region: thisBucket.region ?? null,
     }))
     .sort(sortByRegion(regionLookup));
 

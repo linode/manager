@@ -51,6 +51,8 @@ interface TableProps {
 export const AccessTable = React.memo((props: TableProps) => {
   const { bucket_access, checked, mode, updateScopes } = props;
 
+  // console.log(bucket_access);
+
   if (!bucket_access) {
     return null;
   }

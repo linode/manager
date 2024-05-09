@@ -19,13 +19,12 @@ export interface Scope {
   bucket_name: string;
   permissions: AccessType;
   cluster: string;
-  region?: string; // @TODO OBJ Multicluster: Remove optional indicator when API changes get released to prod
+  region: string | null;
 }
 
 export interface ScopeRequest extends Omit<Scope, 'cluster'> {
-  // @TODO OBJ Multicluster: Omit 'region' as well when API changes get released to prod
   cluster?: string;
-  region?: string;
+  region: string | null;
 }
 
 export interface ObjectStorageKeyRequest {
