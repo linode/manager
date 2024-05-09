@@ -12,7 +12,6 @@ import type { PlacementGroup, Region } from '@linode/api-v4';
 import type { SxProps } from '@mui/system';
 
 export interface PlacementGroupsSelectProps {
-  clearable?: boolean;
   defaultValue?: PlacementGroup;
   disabled?: boolean;
   handlePlacementGroupChange: (selected: PlacementGroup) => void;
@@ -20,7 +19,6 @@ export interface PlacementGroupsSelectProps {
   label: string;
   loading?: boolean;
   noOptionsMessage?: string;
-  onBlur?: (e: React.FocusEvent) => void;
   selectedPlacementGroupId: number | undefined;
   /**
    * We want the full region object here so we can check if the selected Placement Group is at capacity.
@@ -32,14 +30,12 @@ export interface PlacementGroupsSelectProps {
 
 export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const {
-    clearable = true,
     defaultValue,
     disabled,
     handlePlacementGroupChange,
     id,
     label,
     noOptionsMessage,
-    onBlur,
     selectedPlacementGroupId,
     selectedRegion,
     sx,
@@ -106,14 +102,12 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       clearOnBlur={true}
       data-testid="placement-groups-select"
       defaultValue={defaultValue}
-      disableClearable={!clearable}
       disabled={Boolean(!selectedRegion?.id) || disabled}
       errorText={error?.[0]?.reason}
       getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
       id={id}
       label={label}
       loading={isFetching}
-      onBlur={onBlur}
       options={placementGroupsOptions ?? []}
       placeholder="None"
       sx={sx}

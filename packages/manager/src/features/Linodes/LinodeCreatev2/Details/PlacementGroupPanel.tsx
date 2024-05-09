@@ -17,6 +17,7 @@ export const PlacementGroupPanel = () => {
       handlePlacementGroupChange={(placementGroup) =>
         field.onChange(placementGroup.id)
       }
+      selectedPlacementGroupId={field.value}
       selectedRegionId={regionId}
     />
   );
