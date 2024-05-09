@@ -13,9 +13,9 @@ import type { PlacementGroup } from '@linode/api-v4';
 
 interface DetailsPanelProps {
   error?: string;
-  handlePlacementGroupChange: (selected: PlacementGroup) => void;
+  handlePlacementGroupChange: (selected: PlacementGroup | null) => void;
   labelFieldProps?: TextFieldProps;
-  selectedPlacementGroupId?: number;
+  selectedPlacementGroupId: null | number;
   selectedRegionId?: string;
   tagsInputProps?: TagsInputProps;
 }

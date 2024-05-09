@@ -14,12 +14,12 @@ import type { SxProps } from '@mui/system';
 export interface PlacementGroupsSelectProps {
   defaultValue?: PlacementGroup;
   disabled?: boolean;
-  handlePlacementGroupChange: (selected: PlacementGroup) => void;
+  handlePlacementGroupChange: (selected: PlacementGroup | null) => void;
   id?: string;
   label: string;
   loading?: boolean;
   noOptionsMessage?: string;
-  selectedPlacementGroupId: number | undefined;
+  selectedPlacementGroupId: null | number;
   /**
    * We want the full region object here so we can check if the selected Placement Group is at capacity.
    */
@@ -84,8 +84,8 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       noOptionsText={
         noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
       }
-      onChange={(_, selectedOption: PlacementGroup) => {
-        handlePlacementGroupChange(selectedOption);
+      onChange={(_, selectedOption) => {
+        handlePlacementGroupChange(selectedOption ?? null);
       }}
       renderOption={(props, option, { selected }) => {
         return (

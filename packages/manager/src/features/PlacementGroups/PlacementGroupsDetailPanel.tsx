@@ -20,8 +20,8 @@ import { StyledDetailPanelFormattedRegionList } from './PlacementGroups.styles';
 import type { PlacementGroup } from '@linode/api-v4';
 
 interface Props {
-  handlePlacementGroupChange: (selected: PlacementGroup) => void;
-  selectedPlacementGroupId?: number;
+  handlePlacementGroupChange: (selected: PlacementGroup | null) => void;
+  selectedPlacementGroupId: null | number;
   selectedRegionId?: string;
 }
 

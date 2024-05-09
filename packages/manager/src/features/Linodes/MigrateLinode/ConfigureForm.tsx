@@ -209,7 +209,7 @@ export const ConfigureForm = React.memo((props: Props) => {
               key={selectedRegion}
               label={placementGroupSelectLabel}
               noOptionsMessage="There are no Placement Groups in this region."
-              selectedPlacementGroupId={selectedPlacementGroup?.id}
+              selectedPlacementGroupId={selectedPlacementGroup?.id ?? null}
               selectedRegion={newRegion}
             />
           )}
