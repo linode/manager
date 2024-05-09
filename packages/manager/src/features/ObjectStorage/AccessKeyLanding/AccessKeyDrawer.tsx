@@ -57,10 +57,12 @@ interface FormState {
  * sorted by cluster.
  */
 export const sortByCluster = (a: Scope, b: Scope) => {
-  if (a.cluster > b.cluster) {
+  const clusterA = a.cluster ?? '';
+  const clusterB = b.cluster ?? '';
+  if (clusterA > clusterB) {
     return 1;
   }
-  if (a.cluster < b.cluster) {
+  if (clusterA < clusterB) {
     return -1;
   }
   return 0;
@@ -72,7 +74,6 @@ export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
       bucket_name: thisBucket.label,
       cluster: thisBucket.cluster,
       permissions: 'none' as AccessType,
-      region: thisBucket.region ?? '',
     }))
     .sort(sortByCluster);
 

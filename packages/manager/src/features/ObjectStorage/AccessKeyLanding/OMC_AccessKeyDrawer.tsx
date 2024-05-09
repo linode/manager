@@ -95,7 +95,6 @@ export const getDefaultScopes = (
   buckets
     .map((thisBucket) => ({
       bucket_name: thisBucket.label,
-      cluster: thisBucket.cluster,
       permissions: null,
       region: thisBucket.region,
     }))
