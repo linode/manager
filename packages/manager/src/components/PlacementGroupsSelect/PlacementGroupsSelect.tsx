@@ -16,14 +16,13 @@ export interface PlacementGroupsSelectProps {
   clearable?: boolean;
   defaultValue?: PlacementGroup;
   disabled?: boolean;
-  errorText?: string;
   handlePlacementGroupChange: (selected: PlacementGroup) => void;
   id?: string;
   label: string;
   loading?: boolean;
   noOptionsMessage?: string;
   onBlur?: (e: React.FocusEvent) => void;
-  selectedPlacementGroup: PlacementGroup | null;
+  selectedPlacementGroupId: number | undefined;
   selectedRegion?: Region;
   sx?: SxProps;
   textFieldProps?: Partial<TextFieldProps>;
@@ -35,14 +34,13 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     clearable = true,
     defaultValue,
     disabled,
-    errorText,
     handlePlacementGroupChange,
     id,
     label,
     loading,
     noOptionsMessage,
     onBlur,
-    selectedPlacementGroup,
+    selectedPlacementGroupId,
     selectedRegion,
     sx,
     ...textFieldProps
@@ -68,17 +66,15 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     });
   };
 
-  if (!placementGroups) {
-    return null;
-  }
-
-  const placementGroupsOptions: PlacementGroup[] = placementGroups.filter(
+  const placementGroupsOptions:
+    | PlacementGroup[]
+    | undefined = placementGroups?.filter(
     (placementGroup) => placementGroup.region === selectedRegion?.id
   );
 
   const selection =
-    placementGroupsOptions.find(
-      (placementGroup) => placementGroup.id === selectedPlacementGroup?.id
+    placementGroupsOptions?.find(
+      (placementGroup) => placementGroup.id === selectedPlacementGroupId
     ) ?? null;
 
   return (
@@ -106,7 +102,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       defaultValue={defaultValue}
       disableClearable={!clearable}
       disabled={Boolean(!selectedRegion?.id) || disabled}
-      errorText={errorText}
+      errorText={error?.[0]?.reason}
       getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
       id={id}
       label={label}

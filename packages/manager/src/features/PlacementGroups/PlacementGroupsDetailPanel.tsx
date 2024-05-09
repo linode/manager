@@ -21,12 +21,17 @@ import type { PlacementGroup } from '@linode/api-v4';
 
 interface Props {
   handlePlacementGroupChange: (selected: PlacementGroup) => void;
+  selectedPlacementGroupId?: number;
   selectedRegionId?: string;
 }
 
 export const PlacementGroupsDetailPanel = (props: Props) => {
   const theme = useTheme();
-  const { handlePlacementGroupChange, selectedRegionId } = props;
+  const {
+    handlePlacementGroupChange,
+    selectedPlacementGroupId,
+    selectedRegionId,
+  } = props;
   const { data: allPlacementGroups } = useAllPlacementGroupsQuery();
   const { data: regions } = useRegionsQuery();
 
@@ -34,11 +39,6 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
     isCreatePlacementGroupDrawerOpen,
     setIsCreatePlacementGroupDrawerOpen,
   ] = React.useState(false);
-
-  const [
-    selectedPlacementGroup,
-    setSelectedPlacementGroup,
-  ] = React.useState<PlacementGroup | null>(null);
 
   const selectedRegion = regions?.find(
     (thisRegion) => thisRegion.id === selectedRegionId
@@ -52,13 +52,8 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
     globalGrantType: 'add_linodes',
   });
 
-  const handlePlacementGroupSelection = (placementGroup: PlacementGroup) => {
-    setSelectedPlacementGroup(placementGroup);
-    handlePlacementGroupChange(placementGroup);
-  };
-
   const handlePlacementGroupCreated = (placementGroup: PlacementGroup) => {
-    handlePlacementGroupSelection(placementGroup);
+    handlePlacementGroupChange(placementGroup);
   };
 
   const allRegionsWithPlacementGroupCapability = regions?.filter((region) =>
@@ -116,9 +111,6 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
       )}
       <Box>
         <PlacementGroupsSelect
-          handlePlacementGroupChange={(placementGroup) => {
-            handlePlacementGroupSelection(placementGroup);
-          }}
           sx={{
             mb: 1,
             width: '100%',
@@ -129,9 +121,10 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
           }}
           clearOnBlur={true}
           disabled={isPlacementGroupSelectDisabled}
+          handlePlacementGroupChange={handlePlacementGroupChange}
           label={placementGroupSelectLabel}
           noOptionsMessage="There are no Placement Groups in this region."
-          selectedPlacementGroup={selectedPlacementGroup}
+          selectedPlacementGroupId={selectedPlacementGroupId}
           selectedRegion={selectedRegion}
         />
         {selectedRegion && hasRegionPlacementGroupCapability && (

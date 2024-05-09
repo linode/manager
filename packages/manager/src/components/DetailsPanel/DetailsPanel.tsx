@@ -15,6 +15,7 @@ interface DetailsPanelProps {
   error?: string;
   handlePlacementGroupChange: (selected: PlacementGroup) => void;
   labelFieldProps?: TextFieldProps;
+  selectedPlacementGroupId?: number;
   selectedRegionId?: string;
   tagsInputProps?: TagsInputProps;
 }
@@ -24,6 +25,7 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
     error,
     handlePlacementGroupChange,
     labelFieldProps,
+    selectedPlacementGroupId,
     selectedRegionId,
     tagsInputProps,
   } = props;
@@ -62,6 +64,7 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
       {isPlacementGroupsEnabled && (
         <PlacementGroupsDetailPanel
           handlePlacementGroupChange={handlePlacementGroupChange}
+          selectedPlacementGroupId={selectedPlacementGroupId}
           selectedRegionId={selectedRegionId}
         />
       )}

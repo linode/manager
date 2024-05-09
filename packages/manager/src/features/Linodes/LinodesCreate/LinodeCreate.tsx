@@ -664,6 +664,7 @@ export class LinodeCreate extends React.PureComponent<
             data-qa-details-panel
             error={hasErrorFor.placement_group}
             handlePlacementGroupChange={handlePlacementGroupChange}
+            selectedPlacementGroupId={this.props.placementGroupSelection?.id}
             selectedRegionId={selectedRegionID}
           />
           {/* Hide for backups and clone */}
