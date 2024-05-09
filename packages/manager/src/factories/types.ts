@@ -70,6 +70,7 @@ export const planSelectionTypeFactory = Factory.Sync.makeFactory<PlanWithAvailab
     planBelongsToDisabledClass: false,
     planHasLimitedAvailability: false,
     planIsDisabled512Gb: false,
+    planIsTooSmall: false,
     price: typeFactory.build().price,
     region_prices: typeFactory.build().region_prices,
     subHeadings: [
@@ -119,6 +120,7 @@ export const extendedTypeFactory = Factory.Sync.makeFactory<
   planBelongsToDisabledClass: false,
   planHasLimitedAvailability: false,
   planIsDisabled512Gb: false,
+  planIsTooSmall: false,
   price: typeFactory.build().price,
   region_prices: typeFactory.build().region_prices,
   subHeadings: ['$10/mo ($0.015/hr)', '8 CPU, 1024 GB Storage, 16 GB RAM'],

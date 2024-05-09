@@ -58,7 +58,7 @@ export const getPlanSelectionsByPlanType = <
   T extends { class: LinodeTypeClass }
 >(
   types: T[]
-): PlansByType<T> => {
+): Partial<PlansByType<T>> => {
   const plansByType: PlansByType<T> = planTypeOrder.reduce((acc, key) => {
     acc[key] = [];
     return acc;
@@ -249,6 +249,7 @@ export const replaceOrAppendPlaceholder512GbPlans = (
 interface ExtractPlansInformationProps {
   disableLargestGbPlansFlag: Flags['disableLargestGbPlans'] | undefined;
   disabledClasses?: LinodeTypeClass[];
+  disabledSmallerPlans?: PlanSelectionType[];
   plans: PlanSelectionType[];
   regionAvailabilities: RegionAvailability[] | undefined;
   selectedRegionId: Region['id'] | undefined;
@@ -269,6 +270,7 @@ interface ExtractPlansInformationProps {
 export const extractPlansInformation = ({
   disableLargestGbPlansFlag,
   disabledClasses,
+  disabledSmallerPlans,
   plans,
   regionAvailabilities,
   selectedRegionId,
@@ -288,12 +290,18 @@ export const extractPlansInformation = ({
       const planBelongsToDisabledClass = Boolean(
         disabledClasses?.includes(plan.class)
       );
+      const planIsTooSmall = Boolean(
+        disabledSmallerPlans?.find(
+          (disabledPlan) => disabledPlan.id === plan.id
+        )
+      );
 
       return {
         ...plan,
         planBelongsToDisabledClass,
         planHasLimitedAvailability,
         planIsDisabled512Gb,
+        planIsTooSmall,
       };
     }
   );
@@ -303,6 +311,7 @@ export const extractPlansInformation = ({
       planBelongsToDisabledClass,
       planHasLimitedAvailability,
       planIsDisabled512Gb,
+      planIsTooSmall,
     } = plan;
 
     // Determine if the plan should be disabled due to
@@ -312,7 +321,8 @@ export const extractPlansInformation = ({
     if (
       planBelongsToDisabledClass ||
       planHasLimitedAvailability ||
-      planIsDisabled512Gb
+      planIsDisabled512Gb ||
+      planIsTooSmall
     ) {
       return [...acc, plan];
     }

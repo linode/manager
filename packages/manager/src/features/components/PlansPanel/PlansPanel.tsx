@@ -29,11 +29,9 @@ export interface PlansPanelProps {
   className?: string;
   copy?: string;
   currentPlanHeading?: string;
-  disableSmallerPlans?: {
-    selectedDiskSize?: number;
-  };
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
+  disabledSmallerPlans?: PlanSelectionType[];
   disabledTabs?: string[];
   docsLink?: JSX.Element;
   error?: string;
@@ -44,7 +42,7 @@ export interface PlansPanelProps {
   regionsData?: Region[];
   selectedId?: string;
   selectedRegionID?: string;
-  showTransfer?: boolean;
+  showLimits?: boolean;
   tabDisabledMessage?: string;
   tabbedPanelInnerClass?: string;
   types: PlanSelectionType[];
@@ -55,9 +53,9 @@ export const PlansPanel = (props: PlansPanelProps) => {
     className,
     copy,
     currentPlanHeading,
-    disableSmallerPlans,
     disabled,
     disabledClasses,
+    disabledSmallerPlans,
     docsLink,
     error,
     header,
@@ -67,7 +65,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     regionsData,
     selectedId,
     selectedRegionID,
-    showTransfer,
+    showLimits,
     types,
   } = props;
 
@@ -94,8 +92,16 @@ export const PlansPanel = (props: PlansPanelProps) => {
     getIsDistributedRegion(regionsData ?? [], selectedRegionID ?? '');
 
   const getDedicatedDistributedRegionPlanType = () => {
-    // 256GB and 512GB plans will not be supported for Distributed regions.
-    const plansUpTo128GB = _plans.dedicated.filter(
+    const distributedRegionPlans = types.filter(
+      (type) => type.class === 'distributed'
+    );
+    if (distributedRegionPlans.length) {
+      return distributedRegionPlans;
+    }
+
+    // @TODO Remove fallback once distributed region plans are activated
+    // 256GB and 512GB plans will not be supported for distributed regions
+    const plansUpTo128GB = (_plans.dedicated ?? []).filter(
       (planType) =>
         !['Dedicated 256 GB', 'Dedicated 512 GB'].includes(
           planType.formattedLabel
@@ -114,7 +120,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
     });
   };
 
-  // @TODO Gecko: Get plan data from API when it's available instead of hardcoding
   const plans = showDistributedRegionPlanTable
     ? {
         dedicated: getDedicatedDistributedRegionPlanType(),
@@ -140,6 +145,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     } = extractPlansInformation({
       disableLargestGbPlansFlag: flags.disableLargestGbPlans,
       disabledClasses,
+      disabledSmallerPlans,
       plans: plansMap,
       regionAvailabilities,
       selectedRegionId: selectedRegionID,
@@ -178,10 +184,9 @@ export const PlansPanel = (props: PlansPanelProps) => {
               onSelect={onSelect}
               planType={plan}
               plans={plansForThisLinodeTypeClass}
-              selectedDiskSize={disableSmallerPlans?.selectedDiskSize}
               selectedId={selectedId}
               selectedRegionId={selectedRegionID}
-              showTransfer={showTransfer}
+              showLimits={showLimits}
               wholePanelIsDisabled={disabled || isPlanPanelDisabled(plan)}
             />
           </>
