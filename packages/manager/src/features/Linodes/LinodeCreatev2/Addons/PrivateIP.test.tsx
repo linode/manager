@@ -37,8 +37,8 @@ describe('Linode Create V2 Private IP Add-on', () => {
     expect(checkbox).toBeChecked();
   });
 
-  it('should be disabled if an edge region is selected', async () => {
-    const region = regionFactory.build({ site_type: 'edge' });
+  it('should be disabled if an distributed region is selected', async () => {
+    const region = regionFactory.build({ site_type: 'distributed' });
 
     server.use(
       http.get('*/v4/regions', () => {

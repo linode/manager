@@ -268,25 +268,25 @@ describe('AddonsPanel', () => {
     expect(getByText(/\$3.57/)).toBeInTheDocument();
   });
 
-  it('should render a warning notice if isEdgeRegionSelected is true and disable backups and private ip checkbox', () => {
-    const propsWithEdgeRegionSelected = {
+  it('should render a warning notice if isDistributedRegionSelected is true and disable backups and private ip checkbox', () => {
+    const propsWithDistributedRegionSelected = {
       ...props,
-      isEdgeRegionSelected: true,
+      isDistributedRegionSelected: true,
     };
     const { getByTestId } = renderWithTheme(
-      <AddonsPanel {...propsWithEdgeRegionSelected} />
+      <AddonsPanel {...propsWithDistributedRegionSelected} />
     );
     expect(getByTestId('notice-warning')).toBeInTheDocument();
     expect(getByTestId('private_ip')).toHaveAttribute('aria-disabled', 'true');
     expect(getByTestId('backups')).toHaveAttribute('aria-disabled', 'true');
   });
-  it('should not render a warning notice if isEdgeRegionSelected is false', () => {
-    const propsWithEdgeRegionNotSelected = {
+  it('should not render a warning notice if isDistributedRegionSelected is false', () => {
+    const propsWithDistributedRegionNotSelected = {
       ...props,
-      isEdgeRegionSelected: false,
+      isDistributedRegionSelected: false,
     };
     const { queryByTestId } = renderWithTheme(
-      <AddonsPanel {...propsWithEdgeRegionNotSelected} />
+      <AddonsPanel {...propsWithDistributedRegionNotSelected} />
     );
     expect(queryByTestId('notice-warning')).not.toBeInTheDocument();
   });

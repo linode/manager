@@ -47,7 +47,7 @@ export interface BodyProps {
   ipv6: Linode['ipv6'];
   isVPCOnlyLinode: boolean;
   linodeId: number;
-  linodeIsInEdgeRegion: boolean;
+  linodeIsInDistributedRegion: boolean;
   linodeLabel: string;
   numCPUs: number;
   numVolumes: number;
@@ -64,7 +64,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     ipv6,
     isVPCOnlyLinode,
     linodeId,
-    linodeIsInEdgeRegion,
+    linodeIsInDistributedRegion,
     linodeLabel,
     numCPUs,
     numVolumes,
@@ -151,7 +151,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 { heading: 'SSH Access', text: sshLink(ipv4[0]) },
                 {
                   heading: 'LISH Console via SSH',
-                  text: linodeIsInEdgeRegion
+                  text: linodeIsInDistributedRegion
                     ? 'N/A'
                     : lishLink(username, region, linodeLabel),
                 },

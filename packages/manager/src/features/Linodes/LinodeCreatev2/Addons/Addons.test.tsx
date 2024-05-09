@@ -19,8 +19,8 @@ describe('Linode Create v2 Addons', () => {
     expect(heading.tagName).toBe('H2');
   });
 
-  it('renders a warning if an edge region is selected', async () => {
-    const region = regionFactory.build({ site_type: 'edge' });
+  it('renders a warning if an distributed region is selected', async () => {
+    const region = regionFactory.build({ site_type: 'distributed' });
 
     server.use(
       http.get('*/v4/regions', () => {
@@ -34,7 +34,7 @@ describe('Linode Create v2 Addons', () => {
     });
 
     await findByText(
-      'Backups and Private IP are currently not available for Edge regions.'
+      'Backups and Private IP are currently not available for Distributed regions.'
     );
   });
 });

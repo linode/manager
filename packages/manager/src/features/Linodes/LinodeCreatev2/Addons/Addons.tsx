@@ -23,15 +23,16 @@ export const Addons = () => {
     [regions, regionId]
   );
 
-  const isEdgeRegionSelected = selectedRegion?.site_type === 'edge';
+  const isDistributedRegionSelected =
+    selectedRegion?.site_type === 'distributed';
 
   return (
     <Paper>
       <Stack spacing={2}>
         <Typography variant="h2">Add-ons</Typography>
-        {isEdgeRegionSelected && (
+        {isDistributedRegionSelected && (
           <Notice
-            text="Backups and Private IP are currently not available for Edge regions."
+            text="Backups and Private IP are currently not available for Distributed regions."
             variant="warning"
           />
         )}

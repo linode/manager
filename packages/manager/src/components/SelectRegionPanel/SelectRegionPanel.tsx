@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { getIsLinodeCreateTypeEdgeSupported } from 'src/components/RegionSelect/RegionSelect.utils';
+import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/constants';
@@ -80,17 +80,17 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       type,
     });
 
-  const hideEdgeRegions =
+  const hideDistributedRegions =
     !flags.gecko2?.enabled ||
     flags.gecko2?.ga ||
-    !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
+    !isDistributedRegionSupported(params.type as LinodeCreateType);
 
-  const showEdgeIconHelperText = Boolean(
-    !hideEdgeRegions &&
+  const showDistributedRegionIconHelperText = Boolean(
+    !hideDistributedRegions &&
       currentCapability &&
       regions?.find(
         (region) =>
-          region.site_type === 'edge' &&
+          region.site_type === 'distributed' &&
           region.capabilities.includes(currentCapability)
       )
   );
@@ -140,10 +140,12 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         errorText={error}
         handleSelection={handleSelection}
         helperText={helperText}
-        regionFilter={hideEdgeRegions ? 'core' : undefined}
+        regionFilter={hideDistributedRegions ? 'core' : undefined}
         regions={regions ?? []}
         selectedId={selectedId || null}
-        showEdgeIconHelperText={showEdgeIconHelperText}
+        showDistributedRegionIconHelperText={
+          showDistributedRegionIconHelperText
+        }
         {...RegionSelectProps}
       />
       {showClonePriceWarning && (

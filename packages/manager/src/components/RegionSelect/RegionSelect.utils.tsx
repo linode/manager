@@ -11,7 +11,7 @@ import type {
   GetSelectedRegionById,
   GetSelectedRegionsByIdsArgs,
   RegionSelectOption,
-  SupportedEdgeTypes,
+  SupportedDistributedRegionTypes,
 } from './RegionSelect.types';
 import type { AccountAvailability, Region } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
@@ -201,29 +201,28 @@ export const getSelectedRegionsByIds = ({
 };
 
 /**
- * Util to determine whether a create type has support for edge regions.
+ * Util to determine whether a create type has support for distributed regions.
  *
- * @returns a boolean indicating whether or not the create type is edge supported.
+ * @returns a boolean indicating whether or not the create type is distributed region supported.
  */
-export const getIsLinodeCreateTypeEdgeSupported = (
-  createType: LinodeCreateType
-) => {
-  const supportedEdgeTypes: SupportedEdgeTypes[] = [
+export const isDistributedRegionSupported = (createType: LinodeCreateType) => {
+  const supportedDistributedRegionTypes: SupportedDistributedRegionTypes[] = [
     'Distributions',
     'StackScripts',
   ];
   return (
-    supportedEdgeTypes.includes(createType as SupportedEdgeTypes) ||
-    typeof createType === 'undefined' // /linodes/create route
+    supportedDistributedRegionTypes.includes(
+      createType as SupportedDistributedRegionTypes
+    ) || typeof createType === 'undefined' // /linodes/create route
   );
 };
 
 /**
- * Util to determine whether a selected region is an edge region.
+ * Util to determine whether a selected region is an distributed region.
  *
- * @returns a boolean indicating whether or not the selected region is an edge region.
+ * @returns a boolean indicating whether or not the selected region is an distributed region.
  */
-export const getIsEdgeRegion = (
+export const getIsDistributedRegion = (
   regionsData: Region[],
   selectedRegion: string
 ) => {
@@ -231,6 +230,6 @@ export const getIsEdgeRegion = (
     regionsData.find(
       (region) =>
         region.id === selectedRegion || region.label === selectedRegion
-    )?.site_type === 'edge'
+    )?.site_type === 'distributed'
   );
 };

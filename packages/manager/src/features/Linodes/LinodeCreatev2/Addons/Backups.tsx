@@ -45,17 +45,18 @@ export const Backups = () => {
 
   const isAccountBackupsEnabled = accountSettings?.backups_enabled ?? false;
 
-  const isEdgeRegionSelected = selectedRegion?.site_type === 'edge';
+  const isDistributedRegionSelected =
+    selectedRegion?.site_type === 'distributed';
 
   return (
     <FormControlLabel
       checked={getBackupsEnabledValue({
         accountBackupsEnabled: isAccountBackupsEnabled,
-        isEdgeRegion: isEdgeRegionSelected,
+        isDistributedRegion: isDistributedRegionSelected,
         value: field.value,
       })}
       disabled={
-        isEdgeRegionSelected ||
+        isDistributedRegionSelected ||
         isLinodeCreateRestricted ||
         isAccountBackupsEnabled
       }

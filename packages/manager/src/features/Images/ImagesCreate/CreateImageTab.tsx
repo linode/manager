@@ -238,8 +238,9 @@ export const CreateImageTab: React.FC<Props> = (props) => {
   const linodeError = hasErrorFor('linode_id');
   const diskError = hasErrorFor('disk_id');
 
-  const linodeIsNotInEdgeRegion = (linodeRegion: string) =>
-    regions?.find((region) => region.id === linodeRegion)?.site_type !== 'edge';
+  const linodeIsNotInDistributedRegion = (linodeRegion: string) =>
+    regions?.find((region) => region.id === linodeRegion)?.site_type !==
+    'distributed';
 
   return (
     <Paper className={classes.container}>
@@ -256,7 +257,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
 
       <LinodeSelect
         optionsFilter={(linode) =>
-          (linodeIsNotInEdgeRegion(linode.region) &&
+          (linodeIsNotInDistributedRegion(linode.region) &&
             availableLinodesToImagize?.includes(linode.id)) ??
           true
         }

@@ -5,21 +5,21 @@ describe('getBackupsEnabledValue', () => {
     expect(
       getBackupsEnabledValue({
         accountBackupsEnabled: true,
-        isEdgeRegion: false,
+        isDistributedRegion: false,
         value: false,
       })
     ).toBe(true);
     expect(
       getBackupsEnabledValue({
         accountBackupsEnabled: true,
-        isEdgeRegion: false,
+        isDistributedRegion: false,
         value: true,
       })
     ).toBe(true);
     expect(
       getBackupsEnabledValue({
         accountBackupsEnabled: true,
-        isEdgeRegion: false,
+        isDistributedRegion: false,
         value: undefined,
       })
     ).toBe(true);
@@ -29,14 +29,14 @@ describe('getBackupsEnabledValue', () => {
     expect(
       getBackupsEnabledValue({
         accountBackupsEnabled: false,
-        isEdgeRegion: false,
+        isDistributedRegion: false,
         value: true,
       })
     ).toBe(true);
     expect(
       getBackupsEnabledValue({
         accountBackupsEnabled: false,
-        isEdgeRegion: false,
+        isDistributedRegion: false,
         value: false,
       })
     ).toBe(false);
@@ -46,7 +46,7 @@ describe('getBackupsEnabledValue', () => {
     expect(
       getBackupsEnabledValue({
         accountBackupsEnabled: false,
-        isEdgeRegion: false,
+        isDistributedRegion: false,
         value: undefined,
       })
     ).toBe(false);
@@ -56,31 +56,31 @@ describe('getBackupsEnabledValue', () => {
     expect(
       getBackupsEnabledValue({
         accountBackupsEnabled: undefined,
-        isEdgeRegion: false,
+        isDistributedRegion: false,
         value: false,
       })
     ).toBe(false);
     expect(
       getBackupsEnabledValue({
         accountBackupsEnabled: undefined,
-        isEdgeRegion: false,
+        isDistributedRegion: false,
         value: true,
       })
     ).toBe(true);
   });
 
-  it('should always return false if an edge region is selected becuase edge regions do not support backups', () => {
+  it('should always return false if an distributed region is selected becuase distributed regions do not support backups', () => {
     expect(
       getBackupsEnabledValue({
         accountBackupsEnabled: undefined,
-        isEdgeRegion: true,
+        isDistributedRegion: true,
         value: true,
       })
     ).toBe(false);
     expect(
       getBackupsEnabledValue({
         accountBackupsEnabled: undefined,
-        isEdgeRegion: true,
+        isDistributedRegion: true,
         value: false,
       })
     ).toBe(false);

@@ -28,7 +28,8 @@ export const PrivateIP = () => {
     [regions, regionId]
   );
 
-  const isEdgeRegionSelected = selectedRegion?.site_type === 'edge';
+  const isDistributedRegionSelected =
+    selectedRegion?.site_type === 'distributed';
 
   return (
     <FormControlLabel
@@ -43,7 +44,7 @@ export const PrivateIP = () => {
       }
       checked={field.value ?? false}
       control={<Checkbox />}
-      disabled={isEdgeRegionSelected || isLinodeCreateRestricted}
+      disabled={isDistributedRegionSelected || isLinodeCreateRestricted}
       onChange={field.onChange}
     />
   );
