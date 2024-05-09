@@ -44,7 +44,7 @@ export const Actions = () => {
       <ApiAwarenessModal
         isOpen={isAPIAwarenessModalOpen}
         onClose={() => setIsAPIAwarenessModalOpen(false)}
-        payLoad={getLinodeCreatePayload(getValues())}
+        payLoad={getLinodeCreatePayload(structuredClone(getValues()))}
       />
     </Box>
   );
