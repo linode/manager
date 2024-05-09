@@ -44,6 +44,10 @@ export interface NoticeProps extends Grid2Props {
    */
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   /**
+   * A ref passed to the root element.
+   */
+  rootRef?: React.Ref<HTMLDivElement>;
+  /**
    * The amount of spacing to apply to the bottom of the error.
    */
   spacingBottom?: 0 | 4 | 8 | 12 | 16 | 20 | 24 | 32;
@@ -97,6 +101,7 @@ export const Notice = (props: NoticeProps) => {
     errorGroup,
     important,
     onClick,
+    rootRef,
     spacingBottom,
     spacingLeft,
     spacingTop,
@@ -187,7 +192,9 @@ export const Notice = (props: NoticeProps) => {
         sx,
       })}
       {...dataAttributes}
+      ref={rootRef}
       role="alert"
+      tabIndex={0}
     >
       {important &&
         ((variantMap.success && (

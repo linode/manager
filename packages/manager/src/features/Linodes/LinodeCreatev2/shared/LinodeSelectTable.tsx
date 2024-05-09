@@ -1,10 +1,11 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React, { useState } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useController } from 'react-hook-form';
 
 import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Stack } from 'src/components/Stack';
 import { Table } from 'src/components/Table';
@@ -50,7 +51,7 @@ export const LinodeSelectTable = (props: Props) => {
 
   const { control, reset } = useFormContext<LinodeCreateFormValues>();
 
-  const selectedLinode = useWatch<LinodeCreateFormValues>({
+  const { field, fieldState } = useController<LinodeCreateFormValues, 'linode'>({
     control,
     name: 'linode',
   });
@@ -61,7 +62,7 @@ export const LinodeSelectTable = (props: Props) => {
     params.linodeID
   );
 
-  const [query, setQuery] = useState(selectedLinode?.label ?? '');
+  const [query, setQuery] = useState(field.value?.label ?? '');
   const [linodeToPowerOff, setLinodeToPowerOff] = useState<Linode>();
 
   const pagination = usePagination();
@@ -103,6 +104,9 @@ export const LinodeSelectTable = (props: Props) => {
 
   return (
     <Stack pt={1} spacing={2}>
+      {fieldState.error?.message && (
+        <Notice text={fieldState.error?.message} variant="error" rootRef={field.ref} />
+      )}
       <DebouncedSearchTextField
         customValue={{
           onChange: (value) => {
@@ -111,7 +115,7 @@ export const LinodeSelectTable = (props: Props) => {
             }
             setQuery(value ?? '');
           },
-          value: preselectedLinodeId ? selectedLinode?.label ?? '' : query,
+          value: preselectedLinodeId ? field.value?.label ?? '' : query,
         }}
         clearable
         hideLabel
@@ -162,7 +166,7 @@ export const LinodeSelectTable = (props: Props) => {
                   key={linode.id}
                   linode={linode}
                   onSelect={() => handleSelect(linode)}
-                  selected={linode.id === selectedLinode?.id}
+                  selected={linode.id === field.value?.id}
                 />
               ))}
             </TableBody>
@@ -174,7 +178,7 @@ export const LinodeSelectTable = (props: Props) => {
                 handleSelection={() => handleSelect(linode)}
                 key={linode.id}
                 linode={linode}
-                selected={linode.id === selectedLinode?.id}
+                selected={linode.id === field.value?.id}
               />
             ))}
             {data?.results === 0 && (

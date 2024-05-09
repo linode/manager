@@ -35,6 +35,7 @@ export interface PlansPanelProps {
   disabledTabs?: string[];
   docsLink?: JSX.Element;
   error?: string;
+  errorRef?: React.Ref<HTMLDivElement>;
   header?: string;
   isCreate?: boolean;
   linodeID?: number | undefined;
@@ -58,6 +59,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     disabledSmallerPlans,
     docsLink,
     error,
+    errorRef,
     header,
     isCreate,
     linodeID,
@@ -222,6 +224,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
       data-qa-select-plan
       docsLink={docsLink}
       error={error}
+      errorRef={errorRef}
       header={header || 'Linode Plan'}
       initTab={initialTab >= 0 ? initialTab : 0}
       innerClass={props.tabbedPanelInnerClass}

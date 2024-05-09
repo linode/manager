@@ -18,7 +18,7 @@ import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const StackScriptSelection = () => {
   const { params, updateParams } = useLinodeCreateQueryParams();
-  const { formState, reset } = useFormContext<CreateLinodeRequest>();
+  const { formState, register, reset } = useFormContext<CreateLinodeRequest>();
 
   const onTabChange = (index: number) => {
     // Update the "subtype" query param. (This switches between "Community" and "Account" tabs).
@@ -31,14 +31,18 @@ export const StackScriptSelection = () => {
       stackscript_id: null,
     }));
   };
+
+  const error = formState.errors.stackscript_id?.message;
+
   return (
     <Paper>
       <Typography variant="h2">Create From:</Typography>
-      {formState.errors.stackscript_id && (
+      {error && (
         <Notice
+          rootRef={register('stackscript_id').ref}
           spacingBottom={0}
           spacingTop={8}
-          text={formState.errors.stackscript_id.message}
+          text={error}
           variant="error"
         />
       )}
