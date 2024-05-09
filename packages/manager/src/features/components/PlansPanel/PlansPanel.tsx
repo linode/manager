@@ -29,11 +29,9 @@ export interface PlansPanelProps {
   className?: string;
   copy?: string;
   currentPlanHeading?: string;
-  disableSmallerPlans?: {
-    selectedDiskSize?: number;
-  };
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
+  disabledSmallerPlans?: PlanSelectionType[];
   disabledTabs?: string[];
   docsLink?: JSX.Element;
   error?: string;
@@ -55,9 +53,9 @@ export const PlansPanel = (props: PlansPanelProps) => {
     className,
     copy,
     currentPlanHeading,
-    disableSmallerPlans,
     disabled,
     disabledClasses,
+    disabledSmallerPlans,
     docsLink,
     error,
     header,
@@ -145,6 +143,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     } = extractPlansInformation({
       disableLargestGbPlansFlag: flags.disableLargestGbPlans,
       disabledClasses,
+      disabledSmallerPlans,
       plans: plansMap,
       regionAvailabilities,
       selectedRegionId: selectedRegionID,
@@ -183,7 +182,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
               onSelect={onSelect}
               planType={plan}
               plans={plansForThisLinodeTypeClass}
-              selectedDiskSize={disableSmallerPlans?.selectedDiskSize}
               selectedId={selectedId}
               selectedRegionId={selectedRegionID}
               showLimits={showLimits}

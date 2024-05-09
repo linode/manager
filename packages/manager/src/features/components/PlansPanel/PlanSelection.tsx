@@ -35,7 +35,6 @@ export interface PlanSelectionProps {
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   plan: PlanWithAvailability;
-  selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionId?: Region['id'];
   showNetwork?: boolean;
@@ -52,7 +51,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     linodeID,
     onSelect,
     plan,
-    selectedDiskSize,
     selectedId,
     selectedRegionId,
     showNetwork,
@@ -63,10 +61,9 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     planBelongsToDisabledClass,
     planHasLimitedAvailability,
     planIsDisabled512Gb,
+    planIsTooSmall,
   } = plan;
 
-  const diskSize = selectedDiskSize ? selectedDiskSize : 0;
-  const planIsTooSmall = diskSize > plan.disk;
   const isSamePlan = plan.heading === currentPlanHeading;
   const isGPU = plan.class === 'gpu';
 
@@ -134,11 +131,9 @@ export const PlanSelection = (props: PlanSelectionProps) => {
                     checked={
                       !wholePanelIsDisabled &&
                       !rowIsDisabled &&
-                      !planIsTooSmall &&
                       plan.id === String(selectedId)
                     }
                     disabled={
-                      planIsTooSmall ||
                       wholePanelIsDisabled ||
                       rowIsDisabled ||
                       planBelongsToDisabledClass
@@ -223,7 +218,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
         <SelectionCard
           disabled={
-            planIsTooSmall ||
             isSamePlan ||
             wholePanelIsDisabled ||
             rowIsDisabled ||
