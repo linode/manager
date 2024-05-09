@@ -15,7 +15,7 @@ export const PlacementGroupPanel = () => {
   return (
     <PlacementGroupsDetailPanel
       handlePlacementGroupChange={(placementGroup) =>
-        field.onChange(placementGroup.id)
+        field.onChange(placementGroup?.id)
       }
       selectedPlacementGroupId={field.value}
       selectedRegionId={regionId}
