@@ -32,7 +32,12 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
     selectedPlacementGroupId,
     selectedRegionId,
   } = props;
-  const { data: allPlacementGroups } = useAllPlacementGroupsQuery();
+  const { data: allPlacementGroupsInRegion } = useAllPlacementGroupsQuery({
+    enabled: Boolean(selectedRegionId),
+    filter: {
+      region: selectedRegionId,
+    },
+  });
   const { data: regions } = useRegionsQuery();
 
   const [
@@ -119,7 +124,6 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
             tooltipPosition: 'right',
             tooltipText: PLACEMENT_GROUP_SELECT_TOOLTIP_COPY,
           }}
-          clearOnBlur={true}
           disabled={isPlacementGroupSelectDisabled}
           handlePlacementGroupChange={handlePlacementGroupChange}
           label={placementGroupSelectLabel}
@@ -130,7 +134,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
         {selectedRegion && hasRegionPlacementGroupCapability && (
           <Button
             disabled={hasRegionReachedPlacementGroupCapacity({
-              allPlacementGroups,
+              allPlacementGroups: allPlacementGroupsInRegion,
               region: selectedRegion,
             })}
             sx={(theme) => ({

@@ -12,7 +12,6 @@ import type { PlacementGroup, Region } from '@linode/api-v4';
 import type { SxProps } from '@mui/system';
 
 export interface PlacementGroupsSelectProps {
-  clearOnBlur?: boolean;
   clearable?: boolean;
   defaultValue?: PlacementGroup;
   disabled?: boolean;
@@ -23,21 +22,22 @@ export interface PlacementGroupsSelectProps {
   noOptionsMessage?: string;
   onBlur?: (e: React.FocusEvent) => void;
   selectedPlacementGroupId: number | undefined;
-  selectedRegion?: Region;
+  /**
+   * We want the full region object here so we can check if the selected Placement Group is at capacity.
+   */
+  selectedRegion: Region | undefined;
   sx?: SxProps;
   textFieldProps?: Partial<TextFieldProps>;
 }
 
 export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const {
-    clearOnBlur,
     clearable = true,
     defaultValue,
     disabled,
     handlePlacementGroupChange,
     id,
     label,
-    loading,
     noOptionsMessage,
     onBlur,
     selectedPlacementGroupId,
@@ -49,8 +49,14 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const {
     data: placementGroups,
     error,
+    isFetching,
     isLoading,
-  } = useAllPlacementGroupsQuery(Boolean(selectedRegion?.id));
+  } = useAllPlacementGroupsQuery({
+    enabled: Boolean(selectedRegion?.id),
+    filter: {
+      region: selectedRegion?.id,
+    },
+  });
 
   const isDisabledPlacementGroup = (
     selectedPlacementGroup: PlacementGroup,
@@ -97,7 +103,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
           />
         );
       }}
-      clearOnBlur={clearOnBlur}
+      clearOnBlur={true}
       data-testid="placement-groups-select"
       defaultValue={defaultValue}
       disableClearable={!clearable}
@@ -106,7 +112,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
       id={id}
       label={label}
-      loading={isLoading || loading}
+      loading={isFetching}
       onBlur={onBlur}
       options={placementGroupsOptions ?? []}
       placeholder="None"
