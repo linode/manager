@@ -2,10 +2,14 @@ import { Region } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
+import { CircularProgress } from 'src/components/CircularProgress';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 import { useObjectStorageTypesQuery } from 'src/queries/objectStorage';
-import { OBJ_STORAGE_PRICE } from 'src/utilities/pricing/constants';
+import {
+  OBJ_STORAGE_PRICE,
+  UNKNOWN_PRICE,
+} from 'src/utilities/pricing/constants';
 import {
   getDCSpecificPriceByType,
   objectStoragePriceIncreaseMap,
@@ -23,9 +27,15 @@ export const GLOBAL_TRANSFER_POOL_TOOLTIP_TEXT =
 export const OveragePricing = (props: Props) => {
   const { regionId } = props;
 
-  const { data: types /*, isError, isLoading*/ } = useObjectStorageTypesQuery();
+  const { data: types, isError, isLoading } = useObjectStorageTypesQuery();
 
   const overageType = types?.find((type) => type.id.includes('overage'));
+
+  const storageOveragePrice = getDCSpecificPriceByType({
+    interval: 'hourly',
+    regionId,
+    type: overageType,
+  });
 
   const isDcSpecificPricingRegion = objectStoragePriceIncreaseMap.hasOwnProperty(
     regionId
@@ -33,22 +43,21 @@ export const OveragePricing = (props: Props) => {
 
   return (
     <>
-      <StyledTypography>
-        For this region, additional storage costs{' '}
-        <strong>
-          $
-          {/* {isDcSpecificPricingRegion
-            ? objectStoragePriceIncreaseMap[regionId].storage_overage
-            : OBJ_STORAGE_PRICE.storage_overage}{' '} */}
-          {getDCSpecificPriceByType({
-            regionId,
-            timePeriod: 'hourly',
-            type: overageType,
-          })}{' '}
-          per GB
-        </strong>
-        .
-      </StyledTypography>
+      {isLoading ? (
+        <CircularProgress size={16} sx={{ marginTop: 2 }} />
+      ) : (
+        <StyledTypography>
+          For this region, additional storage costs{' '}
+          <strong>
+            $
+            {storageOveragePrice && !isError
+              ? storageOveragePrice
+              : UNKNOWN_PRICE}{' '}
+            per GB
+          </strong>
+          .
+        </StyledTypography>
+      )}
       <StyledTypography>
         Outbound transfer will cost{' '}
         <strong>

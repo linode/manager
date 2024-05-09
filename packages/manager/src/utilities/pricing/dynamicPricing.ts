@@ -2,7 +2,6 @@ import { UNKNOWN_PRICE } from './constants';
 
 import type { PriceType, Region, RegionPriceObject } from '@linode/api-v4';
 
-type TimePeriod = 'hourly' | 'monthly';
 export interface RegionPrice extends RegionPriceObject {
   id: string;
 }
@@ -23,6 +22,11 @@ export interface DataCenterPricingOptions {
 
 export interface DataCenterPricingByTypeOptions {
   /**
+   * The time period for which to find pricing data for (hourly or monthly).
+   *  @default monthly
+   */
+  interval?: 'hourly' | 'monthly';
+  /**
    * The `id` of the region we intended to get the price for.
    * @example us-east
    */
@@ -32,10 +36,6 @@ export interface DataCenterPricingByTypeOptions {
    * @example 20 (GB) for a volume
    */
   size?: number;
-  /**
-   * The time period for which to find pricing data for (hourly or monthly).
-   */
-  timePeriod?: TimePeriod;
   /**
    * The type data from a product's /types endpoint.
    */
@@ -99,27 +99,26 @@ export const getDCSpecificPrice = ({
  * @returns a data center specific price or undefined if this cannot be calculated
  */
 export const getDCSpecificPriceByType = ({
+  interval = 'monthly',
   regionId,
   size,
-  timePeriod = 'monthly',
   type,
 }: DataCenterPricingByTypeOptions): string | undefined => {
   if (!regionId || !type) {
     return undefined;
   }
-
   // Apply the DC-specific price if it exists; otherwise, use the base price.
   const price =
     type.region_prices.find((region_price: RegionPrice) => {
       return region_price.id === regionId;
-    })?.[timePeriod] ?? type.price?.[timePeriod];
+    })?.[interval] ?? type.price?.[interval];
 
   // If pricing is determined by size of the entity
   if (size && price) {
     return (size * price).toFixed(2);
   }
 
-  return price?.toFixed(2) ?? undefined;
+  return price?.toFixed(interval === 'hourly' ? 3 : 2) ?? undefined;
 };
 
 export const renderMonthlyPriceToCorrectDecimalPlace = (
