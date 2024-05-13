@@ -139,7 +139,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
         </Grid>
         <Grid sx={{ marginLeft: 3, width: 450 }}>
           <StyledCloudViewResourceSelect
-            disabled={!selectedService}
+            disabled={!selectedService || !selectedRegion}
             handleResourceChange={handleResourceChange}
             region={selectedRegion}
             resourceType={selectedService}

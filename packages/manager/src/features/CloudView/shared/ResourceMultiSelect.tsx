@@ -40,9 +40,7 @@ export const CloudViewMultiResourceSelect = (
         ? filterResourcesByRegion(resourceOptions[props.resourceType]?.data)
         : [];
     }
-    return props.resourceType && resourceOptions[props.resourceType]
-      ? resourceOptions[props.resourceType]?.data
-      : [];
+    return [];
   };
 
   ({ data: resourceOptions['linode'] } = useLinodeResourcesQuery(
