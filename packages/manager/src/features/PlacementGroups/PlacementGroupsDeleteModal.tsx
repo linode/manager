@@ -71,7 +71,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
 
     await unassignLinodes(payload);
 
-    enqueueSnackbar('Linode successfully unassigned', {
+    enqueueSnackbar(`Linode ${linode.label} successfully unassigned.`, {
       variant: 'success',
     });
   };
@@ -79,9 +79,12 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
   const onDelete = async () => {
     await deletePlacementGroup();
 
-    enqueueSnackbar('Placement Group successfully deleted.', {
-      variant: 'success',
-    });
+    enqueueSnackbar(
+      `Placement Group ${selectedPlacementGroup?.label} successfully deleted.`,
+      {
+        variant: 'success',
+      }
+    );
     onClose();
   };
 

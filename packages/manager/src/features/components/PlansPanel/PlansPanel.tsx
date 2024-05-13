@@ -31,8 +31,7 @@ export interface PlansPanelProps {
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
-  disabledPlanTypes?: PlanSelectionType[];
-  disabledPlanTypesToolTipText?: string;
+  disabledSmallerPlans?: PlanSelectionType[];
   disabledTabs?: string[];
   docsLink?: JSX.Element;
   error?: string;
@@ -41,7 +40,6 @@ export interface PlansPanelProps {
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   regionsData?: Region[];
-  selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionID?: string;
   showLimits?: boolean;
@@ -57,8 +55,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     currentPlanHeading,
     disabled,
     disabledClasses,
-    disabledPlanTypes,
-    disabledPlanTypesToolTipText,
+    disabledSmallerPlans,
     docsLink,
     error,
     header,
@@ -66,7 +63,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
     linodeID,
     onSelect,
     regionsData,
-    selectedDiskSize,
     selectedId,
     selectedRegionID,
     showLimits,
@@ -103,7 +99,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
 
     // @TODO Remove fallback once edge plans are activated
     // 256GB and 512GB plans will not be supported for Edge
-    const plansUpTo128GB = _plans.dedicated.filter(
+    const plansUpTo128GB = (_plans.dedicated ?? []).filter(
       (planType) =>
         !['Dedicated 256 GB', 'Dedicated 512 GB'].includes(
           planType.formattedLabel
@@ -122,7 +118,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
     });
   };
 
-  // @TODO Gecko: Get plan data from API when it's available instead of hardcoding
   const plans = showEdgePlanTable
     ? {
         dedicated: getDedicatedEdgePlanType(),
@@ -146,8 +141,9 @@ export const PlansPanel = (props: PlansPanelProps) => {
       hasMajorityOfPlansDisabled,
       plansForThisLinodeTypeClass,
     } = extractPlansInformation({
-      disableLargestGbPlans: flags.disableLargestGbPlans,
-      disabledPlanTypes,
+      disableLargestGbPlansFlag: flags.disableLargestGbPlans,
+      disabledClasses,
+      disabledSmallerPlans,
       plans: plansMap,
       regionAvailabilities,
       selectedRegionId: selectedRegionID,
@@ -180,18 +176,16 @@ export const PlansPanel = (props: PlansPanelProps) => {
             <PlanContainer
               allDisabledPlans={allDisabledPlans}
               currentPlanHeading={currentPlanHeading}
-              disabled={disabled || isPlanPanelDisabled(plan)}
-              disabledClasses={disabledClasses}
-              disabledPlanTypesToolTipText={disabledPlanTypesToolTipText}
               hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
               isCreate={isCreate}
               linodeID={linodeID}
               onSelect={onSelect}
+              planType={plan}
               plans={plansForThisLinodeTypeClass}
-              selectedDiskSize={selectedDiskSize}
               selectedId={selectedId}
               selectedRegionId={selectedRegionID}
               showLimits={showLimits}
+              wholePanelIsDisabled={disabled || isPlanPanelDisabled(plan)}
             />
           </>
         );

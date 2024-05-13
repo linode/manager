@@ -83,4 +83,20 @@ describe('ImageSelectv2', () => {
 
     await findByDisplayValue(image.label);
   });
+
+  it('should render a distro icon for the selected Image', async () => {
+    const image = imageFactory.build();
+
+    server.use(
+      http.get('*/v4/images', () => {
+        return HttpResponse.json(makeResourcePage([image]));
+      })
+    );
+
+    const { findByTestId } = renderWithTheme(
+      <ImageSelectv2 value={image.id} />
+    );
+
+    await findByTestId('distro-icon');
+  });
 });

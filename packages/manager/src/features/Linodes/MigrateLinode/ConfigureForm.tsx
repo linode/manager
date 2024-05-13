@@ -8,6 +8,7 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { sxEdgeIcon } from 'src/components/RegionSelect/RegionSelect.styles';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
@@ -57,7 +58,7 @@ export const ConfigureForm = React.memo((props: Props) => {
   } = props;
 
   const flags = useFlags();
-  const showPlacementGroups = Boolean(flags.placementGroups?.enabled);
+  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { data: regions } = useRegionsQuery();
 
   const { data: currentLinodeType } = useTypeQuery(
@@ -194,7 +195,7 @@ export const ConfigureForm = React.memo((props: Props) => {
               {...panelPrice(selectedRegion, selectedRegionPrice, 'new')}
             />
           )}
-          {showPlacementGroups && (
+          {isPlacementGroupsEnabled && (
             <PlacementGroupsSelect
               handlePlacementGroupChange={(placementGroup) => {
                 handlePlacementGroupSelection(placementGroup);
