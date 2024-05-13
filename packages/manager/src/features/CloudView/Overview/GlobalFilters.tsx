@@ -136,7 +136,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
                 ? props.filterPreferences.resources
                 : []
             }
-            disabled={!props.globalFilters.serviceType}
+            disabled={!props.globalFilters.serviceType || !selectedRegion}
             handleResourceChange={handleResourceChange}
             region={props.globalFilters.region}
             resourceType={props.globalFilters.serviceType}
