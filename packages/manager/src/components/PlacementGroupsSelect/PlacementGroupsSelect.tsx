@@ -90,14 +90,8 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     });
   };
 
-  const placementGroupsOptions:
-    | PlacementGroup[]
-    | undefined = placementGroups?.filter(
-    (placementGroup) => placementGroup.region === selectedRegion?.id
-  );
-
   const selection =
-    placementGroupsOptions?.find(
+    placementGroups?.find(
       (placementGroup) => placementGroup.id === selectedPlacementGroupId
     ) ?? null;
 
@@ -128,7 +122,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
       label={label}
       loading={isFetching}
-      options={placementGroupsOptions ?? []}
+      options={placementGroups ?? []}
       placeholder="None"
       sx={sx}
       value={selection}
