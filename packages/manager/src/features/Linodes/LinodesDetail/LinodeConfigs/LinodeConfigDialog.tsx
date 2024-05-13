@@ -62,7 +62,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { ExtendedIP } from 'src/utilities/ipUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import {
   ExtendedInterface,
@@ -245,6 +245,7 @@ const deviceCounterDefault = 1;
 const finnixDiskID = 25669;
 
 export const LinodeConfigDialog = (props: Props) => {
+  const formContainerRef = React.useRef<HTMLDivElement>(null);
   const { config, isReadOnly, linodeId, onClose, open } = props;
 
   const { data: linode } = useLinodeQuery(linodeId, open);
@@ -449,7 +450,7 @@ export const LinodeConfigDialog = (props: Props) => {
         error,
         'An unexpected error occurred.'
       );
-      scrollErrorIntoView('linode-config-dialog');
+      scrollErrorIntoViewV2(formContainerRef);
     };
 
     /** Editing */
@@ -687,7 +688,7 @@ export const LinodeConfigDialog = (props: Props) => {
       open={open}
       title={`${config ? 'Edit' : 'Add'} Configuration`}
     >
-      <Grid container direction="row">
+      <Grid container direction="row" ref={formContainerRef}>
         <DialogContent errors={kernelsError} loading={kernelsLoading}>
           <React.Fragment>
             {generalError && (
