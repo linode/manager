@@ -28,6 +28,21 @@ describe('Create Firewall Drawer', () => {
     expect(title).toBeVisible();
   });
 
+  it('should render radio buttons for default inbound/outbound policies', () => {
+    renderWithTheme(<CreateFirewallDrawer {...props} />);
+    const withinInboundPolicy = within(
+      screen.getByTestId('default-inbound-policy')
+    );
+    expect(withinInboundPolicy.getByText('Accept')).toBeVisible();
+    expect(withinInboundPolicy.getByText('Drop')).toBeVisible();
+
+    const withinOutboundPolicy = within(
+      screen.getByTestId('default-inbound-policy')
+    );
+    expect(withinOutboundPolicy.getByText('Accept')).toBeVisible();
+    expect(withinOutboundPolicy.getByText('Drop')).toBeVisible();
+  });
+
   it('should validate the form on submit', async () => {
     renderWithTheme(<CreateFirewallDrawer {...props} />);
     await userEvent.type(screen.getByLabelText('Label (required)'), 'a');

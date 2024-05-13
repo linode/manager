@@ -16,17 +16,22 @@ import { useLocation } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { Radio } from 'src/components/Radio/Radio';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
-import { useAllFirewallsQuery } from 'src/queries/firewalls';
-import { useCreateFirewall } from 'src/queries/firewalls';
+import {
+  queryKey as firewallQueryKey,
+  useAllFirewallsQuery,
+  useCreateFirewall,
+} from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
 import { useGrants } from 'src/queries/profile';
@@ -64,7 +69,7 @@ const initialValues: CreateFirewallPayload = {
   },
   label: '',
   rules: {
-    inbound_policy: 'ACCEPT',
+    inbound_policy: 'DROP',
     outbound_policy: 'ACCEPT',
   },
 };
@@ -188,6 +193,20 @@ export const CreateFirewallDrawer = React.memo(
       }
     }, [open, resetForm]);
 
+    const handleInboundPolicyChange = React.useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>, value: 'ACCEPT' | 'DROP') => {
+        setFieldValue('rules.inbound_policy', value);
+      },
+      [setFieldValue]
+    );
+
+    const handleOutboundPolicyChange = React.useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>, value: 'ACCEPT' | 'DROP') => {
+        setFieldValue('rules.outbound_policy', value);
+      },
+      [setFieldValue]
+    );
+
     const userCannotAddFirewall =
       _isRestrictedUser && !_hasGrant('add_firewalls');
 
@@ -288,6 +307,45 @@ export const CreateFirewallDrawer = React.memo(
             required
             value={values.label}
           />
+
+          <Typography style={{ marginTop: 16 }}>
+            <strong>Default Inbound Policy</strong>
+          </Typography>
+          <RadioGroup
+            aria-label="action"
+            data-testid="default-inbound-policy"
+            name="action"
+            onChange={handleInboundPolicyChange}
+            row
+            value={values.rules.inbound_policy}
+          >
+            <FormControlLabel
+              control={<Radio />}
+              label="Accept"
+              value="ACCEPT"
+            />
+            <FormControlLabel control={<Radio />} label="Drop" value="DROP" />
+          </RadioGroup>
+
+          <Typography style={{ marginTop: 16 }}>
+            <strong>Default Outbound Policy</strong>
+          </Typography>
+          <RadioGroup
+            aria-label="action"
+            data-testid="default-outbound-policy"
+            name="action"
+            onChange={handleOutboundPolicyChange}
+            row
+            value={values.rules.outbound_policy}
+          >
+            <FormControlLabel
+              control={<Radio />}
+              label="Accept"
+              value="ACCEPT"
+            />
+            <FormControlLabel control={<Radio />} label="Drop" value="DROP" />
+          </RadioGroup>
+
           <Box>
             <Typography
               sx={(theme) => ({
