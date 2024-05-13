@@ -238,9 +238,10 @@ export const CreateImageTab: React.FC<Props> = (props) => {
   const linodeError = hasErrorFor('linode_id');
   const diskError = hasErrorFor('disk_id');
 
-  const linodeIsNotInDistributedRegion = (linodeRegion: string) =>
-    regions?.find((region) => region.id === linodeRegion)?.site_type !==
-    'distributed';
+  const linodeIsNotInDistributedRegion = (linodeRegion: string) => {
+    const region = regions?.find((region) => region.id === linodeRegion);
+    return region?.site_type !== 'distributed' && region?.site_type !== 'edge';
+  };
 
   return (
     <Paper className={classes.container}>

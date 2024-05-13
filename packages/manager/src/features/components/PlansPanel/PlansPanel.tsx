@@ -93,7 +93,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
 
   const getDedicatedDistributedRegionPlanType = () => {
     const distributedRegionPlans = types.filter(
-      (type) => type.class === 'distributed'
+      (type) => type.class === 'distributed' || type.class === 'edge'
     );
     if (distributedRegionPlans.length) {
       return distributedRegionPlans;

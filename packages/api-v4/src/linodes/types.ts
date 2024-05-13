@@ -333,6 +333,7 @@ export type LinodeTypeClass =
   | 'metal'
   | 'prodedicated'
   | 'premium'
+  | 'edge'
   | 'distributed';
 
 export interface IPAllocationRequest {
