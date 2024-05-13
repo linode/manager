@@ -1,10 +1,9 @@
 /**
  * This utility is the version 2 of the scrollErrorIntoView utility.
+ * It should be the preferred utility in formik forms.
  * It uses a MutationObserver to solve the issue of the form not always being
  * fully rendered when the scrollErrorIntoView function is called, resulting in
- * the error not being scrolled into view.
- *
- * It should be the preferred utility in formik forms.
+ * some instances in the error not being scrolled into view.
  *
  * If there are multiple form errors, the first one will be scrolled into view.
  *
