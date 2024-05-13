@@ -7,7 +7,7 @@ import { TableRow } from 'src/components/TableRow';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useLinodeKernelQuery } from 'src/queries/linodes/linodes';
-import { useLinodeVolumesQuery } from 'src/queries/volumes';
+import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
 
 import { InterfaceListItem } from './InterfaceListItem';
 import { ConfigActionMenu } from './LinodeConfigActionMenu';

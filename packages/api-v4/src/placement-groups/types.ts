@@ -6,7 +6,7 @@ export const AFFINITY_TYPES = {
 } as const;
 
 export type AffinityType = keyof typeof AFFINITY_TYPES;
-export type AffinityEnforcement = 'Strict' | 'Flexible';
+export type AffinityTypeEnforcement = 'Strict' | 'Flexible';
 
 export interface PlacementGroup {
   id: number;

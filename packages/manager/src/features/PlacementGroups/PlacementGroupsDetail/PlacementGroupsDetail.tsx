@@ -18,6 +18,7 @@ import {
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
+import { PLACEMENT_GROUPS_DOCS_LINK } from '../constants';
 import { PlacementGroupsLinodes } from './PlacementGroupsLinodes/PlacementGroupsLinodes';
 import { PlacementGroupsSummary } from './PlacementGroupsSummary/PlacementGroupsSummary';
 
@@ -109,7 +110,7 @@ export const PlacementGroupsDetail = () => {
         }}
         disabledBreadcrumbEditButton={isLinodeReadOnly}
         docsLabel="Docs"
-        docsLink="TODO VM_Placement: add doc link"
+        docsLink={PLACEMENT_GROUPS_DOCS_LINK}
         title="Placement Group Detail"
       />
       {isLinodeReadOnly && (

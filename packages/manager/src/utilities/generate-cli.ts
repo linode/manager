@@ -3,6 +3,8 @@ import {
   UserData,
 } from '@linode/api-v4/lib/linodes/types';
 
+import type { PlacementGroup } from '@linode/api-v4';
+
 // Credit: https://github.com/xxorax/node-shell-escape
 function escapeStringForCLI(s: string): string {
   if (/[^A-Za-z0-9_\/:=-]/.test(s)) {
@@ -78,6 +80,7 @@ const dataEntriesReduce = (acc: string[], [key, value]: JSONFieldToArray) => {
   if (value === undefined || value === null) {
     return acc;
   }
+
   if (Array.isArray(value)) {
     if (value.length === 0) {
       return acc;
@@ -89,6 +92,12 @@ const dataEntriesReduce = (acc: string[], [key, value]: JSONFieldToArray) => {
   if (key === 'metadata') {
     const userData = value as UserData;
     acc.push(`  --${key}.user_data="${userData.user_data}"`);
+  } else if (key === 'placement_group') {
+    const placementGroup = value as PlacementGroup;
+    acc.push(`  --${key}.id ${placementGroup.id}`);
+    {
+      /* TODO VM_Placement: Add logic to include the `compliant_only` argument */
+    }
   } else if (typeof value === 'object') {
     const valueAsString = convertObjectToCLIArg(value);
     acc.push(`  --${key} ${valueAsString}`);
@@ -98,6 +107,7 @@ const dataEntriesReduce = (acc: string[], [key, value]: JSONFieldToArray) => {
   } else {
     acc.push(`  --${key} ${value}`);
   }
+
   return acc;
 };
 

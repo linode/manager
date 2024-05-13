@@ -131,7 +131,7 @@ describe('OneClick Apps (OCA)', () => {
       description: 'Minecraft OCA',
       ordinal: 10,
       logo_url: 'assets/Minecraft.svg',
-      images: ['linode/debian11', 'linode/ubuntu20.04'],
+      images: ['linode/debian11', 'linode/ubuntu22.04'],
       deployments_total: 18854,
       deployments_active: 412,
       is_public: true,
@@ -161,7 +161,7 @@ describe('OneClick Apps (OCA)', () => {
 
     const firstName = randomLabel();
     const password = randomString(16);
-    const image = 'linode/ubuntu20.04';
+    const image = 'linode/ubuntu22.04';
     const rootPassword = randomString(16);
     const region = chooseRegion();
     const linodeLabel = randomLabel();

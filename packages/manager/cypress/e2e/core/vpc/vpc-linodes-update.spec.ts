@@ -59,6 +59,7 @@ describe('VPC assign/unassign flows', () => {
     const mockSubnet = subnetFactory.build({
       id: randomNumber(2),
       label: randomLabel(),
+      linodes: [],
     });
 
     const mockVPC = vpcFactory.build({

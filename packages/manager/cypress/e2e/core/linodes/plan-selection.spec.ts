@@ -1,6 +1,5 @@
 // TODO: Cypress
 // Move this to cypress component testing once the setup is complete - see https://github.com/linode/manager/pull/10134
-import { fbtClick } from 'support/helpers';
 import { ui } from 'support/ui';
 import {
   regionFactory,
@@ -13,6 +12,13 @@ import {
   mockGetRegionAvailability,
 } from 'support/intercepts/regions';
 import { mockGetLinodeTypes } from 'support/intercepts/linodes';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
+
+import type { Flags } from 'src/featureFlags';
 
 const mockRegions = [
   regionFactory.build({
@@ -72,6 +78,11 @@ const mockGPUType = [
     label: 'gpu-1',
     class: 'gpu',
   }),
+  linodeTypeFactory.build({
+    id: 'gpu-2',
+    label: 'gpu-2 Ada',
+    class: 'gpu',
+  }),
 ];
 
 const mockLinodeTypes = [
@@ -99,7 +110,7 @@ const k8PlansPanel = '[data-qa-tp="Add Node Pools"]';
 const planSelectionTable = 'List of Linode Plans';
 
 const notices = {
-  limitedAvailability: '[data-testid="limited-availability"]',
+  limitedAvailability: '[data-testid="disabled-plan-tooltip"]',
   unavailable: '[data-testid="notice-error"]',
 };
 
@@ -136,9 +147,12 @@ describe('displays linode plans panel based on availability', () => {
         cy.findAllByRole('row').should('have.length', 5);
         cy.get('[id="dedicated-1"]').should('be.enabled');
         cy.get('[id="dedicated-2"]').should('be.enabled');
+        cy.get(
+          '[aria-label="dedicated-3 - This plan has limited deployment availability."]'
+        );
         cy.get('[id="dedicated-3"]').should('be.disabled');
         cy.get('[id="g6-dedicated-64"]').should('be.disabled');
-        cy.findAllByTestId('limited-availability').should('have.length', 2);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 2);
       });
     });
 
@@ -147,7 +161,7 @@ describe('displays linode plans panel based on availability', () => {
     // Should contain 3 plans (4 rows including the header row)
     // Should have 0 disabled plan
     // Should have no tooltip for the disabled plan
-    fbtClick('Shared CPU');
+    cy.findByText('Shared CPU').click();
     cy.get(linodePlansPanel).within(() => {
       cy.findAllByRole('alert').should('have.length', 0);
 
@@ -156,7 +170,7 @@ describe('displays linode plans panel based on availability', () => {
         cy.get('[id="shared-1"]').should('be.enabled');
         cy.get('[id="shared-2"]').should('be.enabled');
         cy.get('[id="shared-3"]').should('be.enabled');
-        cy.findAllByTestId('limited-availability').should('have.length', 0);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
       });
     });
 
@@ -165,7 +179,7 @@ describe('displays linode plans panel based on availability', () => {
     // Should contain 1 plan (2 rows including the header row)
     // Should have one disabled plan
     // Should have tooltip for the disabled plan (more than half disabled plans in the panel, but only one plan)
-    fbtClick('High Memory');
+    cy.findByText('High Memory').click();
     cy.get(linodePlansPanel).within(() => {
       cy.findAllByRole('alert').should('have.length', 1);
       cy.get(notices.limitedAvailability).should('be.visible');
@@ -173,24 +187,7 @@ describe('displays linode plans panel based on availability', () => {
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
         cy.findAllByRole('row').should('have.length', 2);
         cy.get('[id="highmem-1"]').should('be.disabled');
-        cy.findAllByTestId('limited-availability').should('have.length', 1);
-      });
-    });
-
-    // GPU tab
-    // Should have the unavailable notice
-    // Should contain 1 plan (2 rows including the header row)
-    // Should have its panel disabled
-    // Should not have tooltip for the disabled plan (not needed on disabled panels)
-    fbtClick('GPU');
-    cy.get(linodePlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 1);
-      cy.get(notices.unavailable).should('be.visible');
-
-      cy.findByRole('table', { name: planSelectionTable }).within(() => {
-        cy.findAllByRole('row').should('have.length', 2);
-        cy.get('[id="gpu-1"]').should('be.disabled');
-        cy.findAllByTestId('limited-availability').should('have.length', 0);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 1);
       });
     });
 
@@ -200,7 +197,7 @@ describe('displays linode plans panel based on availability', () => {
     // Should contain 1 plan (2 rows including the header row)
     // Should have its whole panel disabled
     // Should not have tooltip for the disabled plan (not needed on disabled panels)
-    fbtClick('Premium CPU');
+    cy.findByText('Premium CPU').click();
     cy.get(linodePlansPanel).within(() => {
       cy.findAllByRole('alert').should('have.length', 1);
       cy.get(notices.unavailable).should('be.visible');
@@ -208,7 +205,7 @@ describe('displays linode plans panel based on availability', () => {
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
         cy.findAllByRole('row').should('have.length', 2);
         cy.get('[id="g7-premium-64"]').should('be.disabled');
-        cy.findAllByTestId('limited-availability').should('have.length', 0);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
       });
     });
   });
@@ -265,9 +262,15 @@ describe('displays kubernetes plans panel based on availability', () => {
         cy.get('[data-qa-plan-row="dedicated-3"]').within(() => {
           cy.get('[data-testid="decrement-button"]').should('be.disabled');
           cy.get('[data-testid="increment-button"]').should('be.disabled');
-          cy.findByRole('button', { name: 'Add' }).should('be.disabled');
+          cy.get('[data-testid="Button"]')
+            .should(
+              'have.attr',
+              'aria-label',
+              'This plan has limited deployment availability.'
+            )
+            .should('be.disabled');
         });
-        cy.findAllByTestId('limited-availability').should('have.length', 2);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 2);
       });
     });
 
@@ -276,7 +279,7 @@ describe('displays kubernetes plans panel based on availability', () => {
     // Should contain 3 plans (4 rows including the header row)
     // Should have 1 disabled plan
     // Should have tooltip for the disabled plan (not more than half disabled plans in the panel)
-    fbtClick('Shared CPU');
+    cy.findByText('Shared CPU').click();
     cy.get(k8PlansPanel).within(() => {
       cy.findAllByRole('alert').should('have.length', 0);
 
@@ -294,7 +297,7 @@ describe('displays kubernetes plans panel based on availability', () => {
           'not.have.attr',
           'disabled'
         );
-        cy.findAllByTestId('limited-availability').should('have.length', 0);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
       });
     });
 
@@ -303,7 +306,7 @@ describe('displays kubernetes plans panel based on availability', () => {
     // Should contain 1 plan (2 rows including the header row)
     // Should have one disabled plan
     // Should have tooltip for the disabled plan (more than half disabled plans in the panel, but only one plan)
-    fbtClick('High Memory');
+    cy.findByText('High Memory').click();
     cy.get(k8PlansPanel).within(() => {
       cy.findAllByRole('alert').should('have.length', 1);
       cy.get(notices.limitedAvailability).should('be.visible');
@@ -314,7 +317,7 @@ describe('displays kubernetes plans panel based on availability', () => {
           'have.attr',
           'disabled'
         );
-        cy.findAllByTestId('limited-availability').should('have.length', 1);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 1);
       });
     });
 
@@ -324,7 +327,7 @@ describe('displays kubernetes plans panel based on availability', () => {
     // Should contain 1 plan (2 rows including the header row)
     // Should have its whole panel disabled
     // Should not have tooltip for the disabled plan (not needed on disabled panels)
-    fbtClick('Premium CPU');
+    cy.findByText('Premium CPU').click();
     cy.get(k8PlansPanel).within(() => {
       cy.findAllByRole('alert').should('have.length', 1);
       cy.get(notices.unavailable).should('be.visible');
@@ -335,7 +338,54 @@ describe('displays kubernetes plans panel based on availability', () => {
           'have.attr',
           'disabled'
         );
-        cy.findAllByTestId('limited-availability').should('have.length', 0);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
+      });
+    });
+  });
+});
+
+describe('displays specific linode plans for GPU', () => {
+  before(() => {
+    mockGetRegions(mockRegions).as('getRegions');
+    mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
+    mockGetRegionAvailability(mockRegions[0].id, mockRegionAvailability).as(
+      'getRegionAvailability'
+    );
+    mockAppendFeatureFlags({
+      placementGroups: makeFeatureFlagData<Flags['gpuv2']>({
+        planDivider: true,
+      }),
+    });
+    mockGetFeatureFlagClientstream();
+  });
+
+  it('Should render divided tables when GPU divider enabled', () => {
+    cy.visitWithLogin('/linodes/create');
+
+    ui.regionSelect.find().click();
+    ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+
+    // GPU tab
+    // Should display two separate tables
+    cy.findByText('GPU').click();
+    cy.get(linodePlansPanel).within(() => {
+      cy.findAllByRole('alert').should('have.length', 1);
+      cy.get(notices.unavailable).should('be.visible');
+
+      cy.findByRole('table', {
+        name: 'List of NVIDIA RTX 4000 Ada Plans',
+      }).within(() => {
+        cy.findByText('NVIDIA RTX 4000 Ada').should('be.visible');
+        cy.findAllByRole('row').should('have.length', 2);
+        cy.get('[id="gpu-2"]').should('be.disabled');
+      });
+
+      cy.findByRole('table', {
+        name: 'List of NVIDIA Quadro RTX 6000 Plans',
+      }).within(() => {
+        cy.findByText('NVIDIA Quadro RTX 6000').should('be.visible');
+        cy.findAllByRole('row').should('have.length', 2);
+        cy.get('[id="gpu-1"]').should('be.disabled');
       });
     });
   });

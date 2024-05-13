@@ -6,6 +6,7 @@ import { ListItem } from 'src/components/ListItem';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 
+import { PLACEMENT_GROUPS_DOCS_LINK } from './constants';
 import { affinityTypeOptions } from './utils';
 
 import type { FormikHelpers } from 'formik';
@@ -34,8 +35,8 @@ export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
             title={
               isDisabledMenuItem ? (
                 <Typography>
-                  Only supporting Anti-affinity host placement groups for Beta.{' '}
-                  <Link to="TODO VM_Placement: update link">Learn more</Link>.
+                  Currently, only Anti-affinity placement groups are supported.{' '}
+                  <Link to={PLACEMENT_GROUPS_DOCS_LINK}>Learn more</Link>.
                 </Typography>
               ) : (
                 ''
@@ -74,12 +75,11 @@ export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
       textFieldProps={{
         tooltipText: (
           <Typography>
-            Linodes in a placement group that use ‘Affinity’ always exist on the
-            same host. This can help with performance. Linodes in a placement
-            group that use ‘Anti-affinity: Host’ are never on the same host. Use
+            Linodes in a placement group that use Affinity are physically closer
+            together, possibly on the same hardware. This can help with
+            performance. Linodes in a placement group that use Anti-affinity are
+            in separate fault domains, but still in the same data center. Use
             this to support a high-availability model.
-            <br />
-            <Link to="TODO VM_Placement: update link">Learn more.</Link>
           </Typography>
         ),
       }}

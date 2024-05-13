@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
@@ -15,6 +15,7 @@ import type { UserType } from '@linode/api-v4';
 
 interface ChildAccountListProps {
   currentTokenWithBearer: string;
+  isLoading?: boolean;
   onClose: () => void;
   onSwitchAccount: (props: {
     currentTokenWithBearer: string;
@@ -29,17 +30,22 @@ interface ChildAccountListProps {
 export const ChildAccountList = React.memo(
   ({
     currentTokenWithBearer,
+    isLoading,
     onClose,
     onSwitchAccount,
     userType,
   }: ChildAccountListProps) => {
+    const [
+      isSwitchingChildAccounts,
+      setIsSwitchingChildAccounts,
+    ] = useState<boolean>(false);
     const {
       data,
       fetchNextPage,
       hasNextPage,
       isError,
       isFetchingNextPage,
-      isLoading,
+      isInitialLoading,
       refetch: refetchChildAccounts,
     } = useChildAccountsInfiniteQuery({
       headers:
@@ -51,7 +57,7 @@ export const ChildAccountList = React.memo(
     });
     const childAccounts = data?.pages.flatMap((page) => page.data);
 
-    if (isLoading) {
+    if (isInitialLoading) {
       return (
         <Box display="flex" justifyContent="center">
           <CircleProgress mini size={70} />
@@ -90,18 +96,20 @@ export const ChildAccountList = React.memo(
       const euuid = childAccount.euuid;
       return (
         <StyledLinkButton
-          onClick={(event) =>
+          onClick={(event) => {
+            setIsSwitchingChildAccounts(true);
             onSwitchAccount({
               currentTokenWithBearer,
               euuid,
               event,
               onClose,
               userType,
-            })
-          }
+            });
+          }}
           sx={(theme) => ({
             marginBottom: theme.spacing(2),
           })}
+          disabled={isSwitchingChildAccounts}
           key={`child-account-link-button-${idx}`}
         >
           {childAccount.company}
@@ -111,7 +119,12 @@ export const ChildAccountList = React.memo(
 
     return (
       <Stack alignItems={'flex-start'} data-testid="child-account-list">
-        {renderChildAccounts}
+        {(isSwitchingChildAccounts || isLoading) && (
+          <Box display="flex" justifyContent="center" width={'100%'}>
+            <CircleProgress mini size={70} />
+          </Box>
+        )}
+        {!isSwitchingChildAccounts && !isLoading && renderChildAccounts}
         {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
         {isFetchingNextPage && <CircleProgress mini />}
       </Stack>

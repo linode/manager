@@ -15,7 +15,7 @@ import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   useCreateVolumeMutation,
   useVolumeTypesQuery,
-} from 'src/queries/volumes';
+} from 'src/queries/volumes/volumes';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
