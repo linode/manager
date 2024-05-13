@@ -331,6 +331,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   return (
     <Grid
+      sx={(theme) => ({
+        borderRight: `1px solid ${theme.borderColors.dividerDark}`,
+      })}
       alignItems="flex-start"
       className={classes.menuGrid}
       component="nav"
@@ -387,6 +390,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 spacingTop={
                   _isManagedAccount ? (idx === 0 ? 0 : 11) : idx === 1 ? 0 : 11
                 }
+                sx={(theme) => ({
+                  borderColor: theme.borderColors.dividerDark,
+                })}
                 className={classes.divider}
                 spacingBottom={11}
               />

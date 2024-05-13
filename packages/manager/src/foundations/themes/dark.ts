@@ -21,7 +21,7 @@ const primaryColors = {
 
 export const customDarkModeOptions = {
   bg: {
-    app: Color.Neutrals[90],
+    app: Color.Neutrals[100],
     bgAccessRow: Color.Neutrals[80],
     bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
     bgPaper: Color.Neutrals[100],
@@ -35,9 +35,9 @@ export const customDarkModeOptions = {
     white: Color.Neutrals[100],
   },
   borderColors: {
-    borderTable: Color.Neutrals[90],
+    borderTable: Color.Neutrals[80],
     borderTypography: Color.Neutrals[80],
-    divider: Color.Neutrals.Black,
+    divider: Color.Neutrals[80],
   },
   color: {
     black: Color.Neutrals.White,
@@ -344,6 +344,7 @@ export const darkTheme: ThemeOptions = {
     MuiDrawer: {
       styleOverrides: {
         paper: {
+          border: 0,
           boxShadow: `0 0 5px ${Color.Neutrals[100]}`,
         },
       },
@@ -351,6 +352,7 @@ export const darkTheme: ThemeOptions = {
     MuiFormControl: {
       styleOverrides: {
         root: {
+          // Component.Checkbox.Checked.Disabled
           '&.copy > div': {
             backgroundColor: Color.Neutrals[100],
           },
@@ -484,11 +486,13 @@ export const darkTheme: ThemeOptions = {
     MuiPaper: {
       styleOverrides: {
         outlined: {
-          border: '1px solid rgba(0, 0, 0, 0.2)',
+          // TODO: We can remove this variant since they will always have a border
+          backgroundColor: Color.Neutrals[90],
         },
         root: {
-          backgroundColor: Color.Neutrals[100],
+          backgroundColor: Color.Neutrals[90],
           backgroundImage: 'none', // I have no idea why MUI defaults to setting a background image...
+          border: `1px solid ${Color.Neutrals[80]}`,
         },
       },
     },
@@ -577,6 +581,15 @@ export const darkTheme: ThemeOptions = {
         },
       },
     },
+    MuiTable: {
+      styleOverrides: {
+        root: {
+          border: `1px solid ${customDarkModeOptions.borderColors.borderTable}`,
+          borderBottom: 0,
+          borderTop: 0,
+        },
+      },
+    },
     MuiTableCell: {
       styleOverrides: {
         head: {
@@ -610,14 +623,13 @@ export const darkTheme: ThemeOptions = {
         },
         root: {
           '&:before': {
-            borderLeftColor: Color.Neutrals[100],
+            borderLeftColor: Color.Neutrals[90],
           },
           '&:hover, &:focus': {
-            '&$hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.1)',
-            },
+            backgroundColor: Color.Neutrals[80],
           },
-          backgroundColor: Color.Neutrals[100],
+          backgroundColor: Color.Neutrals[90],
+          border: `1px solid ${Color.Neutrals[50]}`,
         },
       },
     },
@@ -684,6 +696,46 @@ export const darkTheme: ThemeOptions = {
     purple: `rgb(217, 176, 217)`,
     red: `rgb(255, 99, 60)`,
     yellow: `rgb(255, 220, 125)`,
+  },
+  inputStyles: {
+    default: {
+      backgroundColor: Select.Default.Background,
+      borderColor: Select.Default.Border,
+      color: Select.Default.Text,
+    },
+    disabled: {
+      '& svg': {
+        color: Select.Disabled.Icon,
+      },
+      backgroundColor: Select.Disabled.Background,
+      borderColor: Select.Disabled.Border,
+      color: Select.Disabled.Text,
+    },
+    error: {
+      '& svg': {
+        color: Select.Error.Icon,
+      },
+      backgroundColor: Select.Error.Background,
+      borderColor: Select.Error.Border,
+      color: Select.Error.Text,
+    },
+    focused: {
+      '& svg': {
+        color: Select.Focus.Icon,
+      },
+      backgroundColor: Select.Focus.Background,
+      borderColor: Select.Focus.Border,
+      boxShadow: `0 0 2px 1px ${Color.Neutrals[100]}`,
+      color: Select.Focus.Text,
+    },
+    hover: {
+      '& svg': {
+        color: Select.Hover.Icon,
+      },
+      backgroundColor: Select.Hover.Background,
+      borderColor: Select.Hover.Border,
+      color: Select.Hover.Text,
+    },
   },
   name: 'dark',
   palette: {

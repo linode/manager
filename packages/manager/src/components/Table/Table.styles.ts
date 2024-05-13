@@ -26,10 +26,9 @@ export const StyledTableWrapper = styled('div', {
           borderRight: 'none',
         },
         backgroundColor: theme.bg.tableHeader,
-        borderBottom: `2px solid ${theme.borderColors.borderTable}`,
-        borderLeft: `1px solid ${theme.borderColors.borderTable}`,
+        borderBottom: `1px solid ${theme.borderColors.borderTable}`,
         borderRight: `1px solid ${theme.borderColors.borderTable}`,
-        borderTop: `2px solid ${theme.borderColors.borderTable}`,
+        borderTop: `1px solid ${theme.borderColors.borderTable}`,
         fontFamily: theme.font.bold,
         padding: '10px 15px',
       },
@@ -40,13 +39,6 @@ export const StyledTableWrapper = styled('div', {
   ...(props.noBorder && {
     '& thead th': {
       border: 0,
-    },
-  }),
-  ...(props.rowHoverState && {
-    '& tbody tr': {
-      '&:hover': {
-        backgroundColor: theme.bg.lightBlue1,
-      },
     },
   }),
 }));

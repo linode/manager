@@ -84,6 +84,7 @@ export const borderColors = {
   borderTable: Color.Neutrals[5],
   borderTypography: Color.Neutrals[30],
   divider: Color.Neutrals[30],
+  dividerDark: Color.Neutrals[80],
 } as const;
 
 const iconCircleAnimation = {
@@ -205,6 +206,9 @@ export const lightTheme: ThemeOptions = {
             paddingBottom: 12,
             paddingLeft: 16,
           },
+          '&:before': {
+            display: 'none',
+          },
           flexBasis: '100%',
           width: '100%',
         },
@@ -257,6 +261,10 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         colorDefault: {
           backgroundColor: 'inherit',
+        },
+        root: {
+          borderLeft: 0,
+          borderTop: 0,
         },
       },
     },
@@ -1207,7 +1215,10 @@ export const lightTheme: ThemeOptions = {
     MuiTable: {
       styleOverrides: {
         root: {
+          border: `1px solid ${borderColors.borderTable}`,
+          borderBottom: 0,
           borderCollapse: 'initial',
+          borderTop: 0,
         },
       },
     },
@@ -1248,12 +1259,7 @@ export const lightTheme: ThemeOptions = {
         },
         root: {
           '&:hover, &:focus': {
-            '&$hover': {
-              backgroundColor: Color.Neutrals[5],
-              [breakpoints.up('md')]: {
-                boxShadow: `inset 5px 0 0 ${primaryColors.main}`,
-              },
-            },
+            backgroundColor: Color.Neutrals[5],
           },
           backfaceVisibility: 'hidden',
           backgroundColor: primaryColors.white,
@@ -1461,6 +1467,46 @@ export const lightTheme: ThemeOptions = {
       writing: `rgba(32, 131, 75, ${graphTransparency})`,
     },
     yellow: `rgba(255, 220, 125, ${graphTransparency})`,
+  },
+  inputStyles: {
+    default: {
+      backgroundColor: Select.Default.Background,
+      border: `1px solid ${Select.Default.Border}`,
+      color: Select.Default.Text,
+    },
+    disabled: {
+      '& svg': {
+        color: Select.Disabled.Icon,
+      },
+      backgroundColor: Select.Disabled.Background,
+      border: `1px solid ${Select.Disabled.Border}`,
+      color: Select.Disabled.Text,
+    },
+    error: {
+      '& svg': {
+        color: Select.Error.Icon,
+      },
+      backgroundColor: Select.Error.Background,
+      border: `1px solid ${Select.Error.Border}`,
+      color: Select.Error.Text,
+    },
+    focused: {
+      '& svg': {
+        color: Select.Focus.Icon,
+      },
+      backgroundColor: Select.Focus.Background,
+      border: `1px solid ${Select.Focus.Border}`,
+      boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
+      color: Select.Focus.Text,
+    },
+    hover: {
+      '& svg': {
+        color: Select.Hover.Icon,
+      },
+      backgroundColor: Select.Hover.Background,
+      border: `1px solid ${Select.Hover.Border}`,
+      color: Select.Hover.Text,
+    },
   },
   name: 'light', // @todo remove this because we leverage pallete.mode now
   palette: {
