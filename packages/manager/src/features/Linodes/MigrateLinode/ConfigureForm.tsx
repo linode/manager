@@ -144,7 +144,8 @@ export const ConfigureForm = React.memo((props: Props) => {
   );
 
   const linodeIsInDistributedRegion =
-    currentActualRegion?.site_type === 'distributed';
+    currentActualRegion?.site_type === 'distributed' ||
+    currentActualRegion?.site_type === 'edge';
 
   return (
     <StyledPaper>

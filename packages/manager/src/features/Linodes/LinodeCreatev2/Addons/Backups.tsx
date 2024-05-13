@@ -46,7 +46,8 @@ export const Backups = () => {
   const isAccountBackupsEnabled = accountSettings?.backups_enabled ?? false;
 
   const isDistributedRegionSelected =
-    selectedRegion?.site_type === 'distributed';
+    selectedRegion?.site_type === 'distributed' ||
+    selectedRegion?.site_type === 'edge';
 
   return (
     <FormControlLabel

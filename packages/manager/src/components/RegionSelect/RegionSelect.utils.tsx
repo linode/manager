@@ -226,10 +226,8 @@ export const getIsDistributedRegion = (
   regionsData: Region[],
   selectedRegion: string
 ) => {
-  return (
-    regionsData.find(
-      (region) =>
-        region.id === selectedRegion || region.label === selectedRegion
-    )?.site_type === 'distributed'
+  const region = regionsData.find(
+    (region) => region.id === selectedRegion || region.label === selectedRegion
   );
+  return region?.site_type === 'distributed' || region?.site_type === 'edge';
 };

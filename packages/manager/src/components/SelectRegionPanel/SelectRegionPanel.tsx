@@ -90,7 +90,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       currentCapability &&
       regions?.find(
         (region) =>
-          region.site_type === 'distributed' &&
+          (region.site_type === 'distributed' || region.site_type === 'edge') &&
           region.capabilities.includes(currentCapability)
       )
   );

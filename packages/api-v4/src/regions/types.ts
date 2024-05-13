@@ -24,7 +24,7 @@ export interface DNSResolvers {
 
 export type RegionStatus = 'ok' | 'outage';
 
-export type RegionSite = 'core' | 'distributed';
+export type RegionSite = 'core' | 'distributed' | 'edge';
 
 export interface Region {
   id: string;

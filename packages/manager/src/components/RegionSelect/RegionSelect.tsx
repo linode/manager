@@ -122,7 +122,9 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           return (
             <RegionOption
               displayDistributedRegionIcon={
-                regionFilter !== 'core' && option.site_type === 'distributed'
+                regionFilter !== 'core' &&
+                (option.site_type === 'distributed' ||
+                  option.site_type === 'edge')
               }
               key={option.value}
               option={option}
@@ -139,7 +141,8 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           ...props.textFieldProps,
           InputProps: {
             endAdornment: regionFilter !== 'core' &&
-              selectedRegion?.site_type === 'distributed' && (
+              (selectedRegion?.site_type === 'distributed' ||
+                selectedRegion?.site_type === 'edge') && (
                 <TooltipIcon
                   icon={<DistributedRegion />}
                   status="other"
