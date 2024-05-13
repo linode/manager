@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import * as React from 'react';
+import { aR } from 'vitest/dist/reporters-1evA5lom';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import {
@@ -8,6 +9,7 @@ import {
 } from 'src/queries/cloudview/resources';
 
 interface CloudViewResourceSelectProps {
+  defaultValue?: any[];
   disabled: boolean;
   handleResourceChange: (resource: any) => void;
   region: string | undefined;
@@ -18,6 +20,62 @@ export const CloudViewMultiResourceSelect = (
   props: CloudViewResourceSelectProps
 ) => {
   const resourceOptions: any = {};
+
+  const getResourceList = () => {
+    if (props.region && props.resourceType) {
+      return props.resourceType && resourceOptions[props.resourceType]
+        ? filterResourcesByRegion(resourceOptions[props.resourceType]?.data)
+        : [];
+    }
+    return [];
+  };
+
+  const getSelectedResource = () => {
+    // let arraysEqual = true;
+    // if (
+    //   selectedResource &&
+    //   props.defaultValue &&
+    //   resourceOptions[props.resourceType!]
+    // ) {
+    //   const selectedIds = selectedResource.map((obj: any) => obj.id);
+    //   const notPresents = [];
+
+    //   for (let i = 0; i < props.defaultValue.length; i++) {
+    //     if (!selectedIds.includes(props.defaultValue[i])) {
+    //       arraysEqual = false;
+    //       notPresents.push(
+    //         getResourceList().find(
+    //           (obj: any) =>
+    //             props.defaultValue && obj.id == props.defaultValue[i]
+    //         )
+    //       );
+    //     }
+    //   }
+
+    //   if (!arraysEqual) {
+    //     const selects = [...selectedResource];
+    //     notPresents.forEach((obj) => selects.push(obj));
+    //     setResource(selects);
+    //     return selects;
+    //   }
+
+    // }
+
+    if (selectedResource && selectedResource.length > 0) {
+      return selectedResource;
+    } else {
+      const resourcesObj = getResourceList().filter(
+        (obj: any) => props.defaultValue && props.defaultValue?.includes(obj.id)
+      );
+
+      if (resourcesObj && resourcesObj.length > 0) {
+        setResource(resourcesObj);
+        return resourcesObj;
+      }
+    }
+
+    return selectedResource;
+  };
 
   const [selectedResource, setResource] = React.useState<any>([]);
   const [resourceInputValue, setResourceInputValue] = React.useState('');
@@ -32,17 +90,6 @@ export const CloudViewMultiResourceSelect = (
         return false;
       }
     });
-  };
-
-  const getResourceList = () => {
-    if (props.region) {
-      return props.resourceType && resourceOptions[props.resourceType]
-        ? filterResourcesByRegion(resourceOptions[props.resourceType]?.data)
-        : [];
-    }
-    return props.resourceType && resourceOptions[props.resourceType]
-      ? resourceOptions[props.resourceType]?.data
-      : [];
   };
 
   ({ data: resourceOptions['linode'] } = useLinodeResourcesQuery(
@@ -64,6 +111,14 @@ export const CloudViewMultiResourceSelect = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.region, props.resourceType]);
 
+  if (
+    props.disabled ||
+    !resourceOptions[props.resourceType!] ||
+    !props.region
+  ) {
+    return <></>;
+  }
+
   return (
     <Autocomplete
       onChange={(_: any, resource: any) => {
@@ -74,6 +129,7 @@ export const CloudViewMultiResourceSelect = (
       }}
       autoHighlight
       clearOnBlur
+      defaultValue={selectedResource}
       disabled={props.disabled}
       inputValue={resourceInputValue}
       isOptionEqualToValue={(option, value) => option.label === value.label}
@@ -82,7 +138,7 @@ export const CloudViewMultiResourceSelect = (
       multiple
       options={getResourceList()}
       placeholder="Select a resource"
-      value={selectedResource}
+      value={getSelectedResource()}
     />
   );
 };

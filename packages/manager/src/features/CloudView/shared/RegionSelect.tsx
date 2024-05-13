@@ -5,6 +5,7 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useRegionsQuery } from 'src/queries/regions';
 
 export interface CloudViewRegionSelectProps {
+  defaultValue?: string;
   handleRegionChange: (region: string | undefined) => void;
 }
 
@@ -18,6 +19,15 @@ export const CloudViewRegionSelect = React.memo(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedRegion]);
 
+    const getPrefferedRegion = () => {
+      if (!selectedRegion && props.defaultValue) {
+        setRegion(props.defaultValue);
+        return props.defaultValue ? props.defaultValue : null;
+      }
+
+      return selectedRegion;
+    };
+
     return (
       <RegionSelect
         handleSelection={(value) => {
@@ -29,7 +39,7 @@ export const CloudViewRegionSelect = React.memo(
         label=""
         noMarginTop
         regions={regions ? regions : []}
-        selectedId={null}
+        selectedId={getPrefferedRegion()}
       />
     );
   }

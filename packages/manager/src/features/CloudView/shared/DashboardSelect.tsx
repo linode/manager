@@ -8,6 +8,7 @@ import { Typography } from 'src/components/Typography';
 import { useCloudViewDashboardsQuery } from 'src/queries/cloudview/dashboards';
 
 export interface CloudViewDashbboardSelectProps {
+  defaultValue?: number;
   handleDashboardChange: (dashboard: Dashboard | undefined) => void;
 }
 
@@ -37,6 +38,22 @@ export const CloudViewDashboardSelect = React.memo(
       );
     };
 
+    const getPrefferedBoard = () => {
+      if (!selectedDashboard && dashboardsList?.data && props.defaultValue) {
+        const match = dashboardsList?.data.find(
+          (obj) => obj.id == props.defaultValue
+        );
+        setDashboard(match);
+        return match;
+      }
+
+      return selectedDashboard;
+    };
+
+    if (!dashboardsList) {
+      return <></>
+    }
+
     return (
       <Autocomplete
         onChange={(_: any, dashboard: Dashboard) => {
@@ -62,6 +79,7 @@ export const CloudViewDashboardSelect = React.memo(
 
         clearOnBlur
         data-testid="cloudview-dashboard-select"
+        defaultValue={getPrefferedBoard()}
         errorText={errorText}
         fullWidth
         groupBy={(option: Dashboard) => option.service_type}

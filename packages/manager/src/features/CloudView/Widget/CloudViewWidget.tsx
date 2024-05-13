@@ -7,15 +7,18 @@ import {
 import { Paper } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { size } from 'lodash';
 import React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { useCloudViewMetricsQuery } from 'src/queries/cloudview/metrics';
+import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useProfile } from 'src/queries/profile';
 import { isToday as _isToday } from 'src/utilities/isToday';
 import { roundTo } from 'src/utilities/roundTo';
 import { getMetrics } from 'src/utilities/statMetrics';
 
+import { AclpWidget } from '../Models/CloudPulsePreferences';
 import { FiltersObject } from '../Models/GlobalFilterProperties';
 import { CloudViewLineGraph } from './CloudViewLineGraph';
 import { ZoomIcon } from './Components/Zoomer';
@@ -51,6 +54,10 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget }); // any change in agg_functions, step, group_by, will be published to dashboard component for save
 
   const theme = useTheme();
+
+  const { data: preferences, refetch: refetchPreferences } = usePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
+  const [queryRunner, setQueryRunner] = React.useState<boolean>(true);
 
   // const getShowToday = () => {
   //   if (props.globalFilters) {
@@ -91,6 +98,18 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     return request;
   };
 
+  const handlPrefChange = (item: AclpWidget[]) => {
+    refetchPreferences()
+      .then(({ data: response }) => response ?? Promise.reject())
+      .then((response) => {
+        updatePreferences({
+          ...response,
+          aclpWidgetPreference: item,
+        });
+      })
+      .catch(); // swallow the error, it's nbd if the choice isn't saved
+  };
+
   const tooltipValueFormatter = (value: number, unit: string) =>
     `${roundTo(value)} ${unit}`;
 
@@ -102,21 +121,63 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
       : '';
   };
 
-  const {
-    data: metricsList,
-    isLoading,
-    status,
-  } = useCloudViewMetricsQuery(
+  const { data: metricsList, isLoading, status } = useCloudViewMetricsQuery(
     getServiceType()!,
     getCloudViewMetricsRequest(),
     props,
-    [widget.aggregate_function, widget.group_by, widget.time_granularity]
+    widget.aggregate_function +
+      '_' +
+      widget.group_by +
+      '_' +
+      widget.time_granularity +
+      '_' +
+      widget.metric + '_' + widget.label,
+    true
   ); // fetch the metrics on any property change
 
   React.useEffect(() => {
     // on any change in the widget object, just publish the changes to parent component using a callback function
-    props.handleWidgetChange(widget);
+    if (props.widget.size != widget.size) {
+      props.handleWidgetChange(widget);
+    }
+    // if (preferences && preferences.aclpWidgetPreference) {
+    //   const matchIndex = preferences.aclpWidgetPreference.findIndex(
+    //     (obj: AclpWidget) => obj.label == widget.label
+    //   );
+    //   if (matchIndex > -1) {
+    //     const widgets = [...preferences.aclpWidgetPreference];
+    //     widgets[matchIndex] = { label: widget.label, size: widget.size };
+    //     handlPrefChange(widgets);
+    //   } else {
+    //     const widgets = [...preferences.aclpWidgetPreference];
+    //     widgets.push({ label: widget.label, size: widget.size });
+    //     handlPrefChange(widgets);
+    //   }
+    // } else {
+    //   const aclpPreferences: AclpWidget[] = [];
+    //   aclpPreferences.push({ label: widget.label, size: widget.size });
+    //   handlPrefChange(aclpPreferences);
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // if (preferences && preferences.aclpWidgetPreference) {
+    //   const matchIndex = preferences.aclpWidgetPreference.findIndex(
+    //     (obj: AclpWidget) => obj.label == widget.label
+    //   );
+    //   if (matchIndex > -1) {
+    //     const widgets = [...preferences.aclpWidgetPreference];
+    //     widgets[matchIndex] = { label: widget.label, size: widget.size };
+    //     handlPrefChange(widgets);
+    //   } else {
+    //     const widgets = [...preferences.aclpWidgetPreference];
+    //     widgets.push({ label: widget.label, size: widget.size });
+    //     handlPrefChange(widgets);
+    //   }
+    // } else {
+    //   const aclpPreferences: AclpWidget[] = [];
+    //   aclpPreferences.push({ label: widget.label, size: widget.size });
+    //   handlPrefChange(aclpPreferences);
+    // }
   }, [widget]);
 
   /**
@@ -225,6 +286,24 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     marginTop: '10px',
   });
 
+  const getWidgetSize = () => {
+    if (preferences && preferences.aclpWidgetPreference) {
+      const match = preferences.aclpWidgetPreference.find(
+        (obj: any) => obj.label == widget.label
+      );
+
+      if (match) {
+        return match.size;
+      }
+    }
+
+    return widget.size;
+  };
+
+  if (!preferences) {
+    return <></>;
+  }
+
   return (
     <Grid xs={widget.size}>
       <Paper style={{ height: '98%', width: '100%' }}>
@@ -252,7 +331,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
             )}
             ariaLabel={props.ariaLabel ? props.ariaLabel : ''}
             data={data}
-            gridSize={props.widget.size}
+            gridSize={widget.size}
             legendRows={legendRows}
             loading={isLoading}
             nativeLegend={true}

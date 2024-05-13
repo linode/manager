@@ -3,6 +3,7 @@ import { Dashboard, TimeDuration, TimeGranularity } from '@linode/api-v4';
 import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { fileURLToPath } from 'url';
 
 import { WithStartAndEnd } from 'src/features/Longview/request.types';
 
@@ -18,111 +19,91 @@ import { CloudViewResourceTypes } from '../shared/ResourceSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/TimeRangeSelect';
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
-  const [time, setTimeBox] = React.useState<WithStartAndEnd>({
-    end: 0,
-    start: 0,
-  });
-
-  const [selectedInterval, setInterval] = React.useState<string>();
-
-  const [apiGranularity, setApiGranularity] = React.useState<TimeGranularity>();
-
-  const [apiTimeDuration, setApiTimeDuration] = React.useState<TimeDuration>();
-
-  const [selectedRegion, setRegion] = React.useState<string>();
-
-  const [selectedResourceId, setResourceId] = React.useState<any>();
-
-  const [selectedDashboard, setDashboard] = React.useState<
-    Dashboard | undefined
-  >();
-
-  const [
-    selectedService,
-    setService,
-  ] = React.useState<CloudViewResourceTypes>();
-
-  const emitGlobalFilterChange = () => {
-    const globalFilters = {} as FiltersObject;
-    globalFilters.region = selectedRegion!;
-    globalFilters.interval = selectedInterval!;
-    globalFilters.resource = selectedResourceId;
-    globalFilters.serviceType = selectedService!;
-    globalFilters.timeRange = time;
-    globalFilters.step = apiGranularity;
-    globalFilters.duration = apiTimeDuration;
-    props.handleAnyFilterChange(globalFilters);
+  const emitGlobalFilterChange = (
+    updatedFilters: FiltersObject,
+    changedFilter: string
+  ) => {
+    props.handleAnyFilterChange(updatedFilters, changedFilter);
   };
-
-  React.useEffect(() => {
-    emitGlobalFilterChange();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    time,
-    selectedRegion,
-    selectedResourceId,
-    selectedService,
-    apiGranularity,
-  ]); // if anything changes, emit an event to parent component
-
-  React.useEffect(() => {
-    props.handleDashboardChange(selectedDashboard!);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDashboard]); // if anything changes, emit an event to parent component
 
   const handleTimeRangeChange = (
     start: number,
     end: number,
-    timeDuration?: TimeDuration
+    timeDuration?: TimeDuration,
+    timeRangeLabel?: string
   ) => {
     console.log('TimeRange: ', start, end);
-    setTimeBox({ end, start });
-    if (timeDuration) {
-      setApiTimeDuration(timeDuration);
+
+    if (start > 0 && end > 0) {
+      const filterObj = { ...props.globalFilters };
+      filterObj.timeRange = { end, start };
+      filterObj.duration = timeDuration;
+      filterObj.durationLabel = timeRangeLabel!;
+      emitGlobalFilterChange(filterObj, 'timeduration');
     }
   };
 
   const handleIntervalChange = (interval: string | undefined) => {
     console.log('Interval: ', interval);
-    setInterval(interval);
-    convertIntervalToGranularity(interval);
+
+    if (interval) {
+      const filterObj = { ...props.globalFilters };
+      filterObj.interval = interval;
+      filterObj.step = getIntervalToGranularity(interval);
+      emitGlobalFilterChange(filterObj, 'timestep');
+    }
   };
 
   const handleRegionChange = (region: string | undefined) => {
     console.log('Region: ', region);
-    setRegion(region);
+
+    if (region) {
+      emitGlobalFilterChange({ ...props.globalFilters, region }, 'region');
+    }
   };
 
   const handleResourceChange = (resourceId: any[]) => {
     console.log('Resource ID: ', resourceId);
-    setResourceId(resourceId.map((obj) => obj.id));
+    if (resourceId && resourceId.length > 0) {
+      emitGlobalFilterChange(
+        {
+          ...props.globalFilters,
+          resource: resourceId.map((obj) => obj.id),
+        },
+        'resource'
+      );
+    }
   };
 
   const handleDashboardChange = (dashboard: Dashboard | undefined) => {
     console.log('Selected Dashboard: ', dashboard);
-    setDashboard(dashboard);
-    setService(dashboard?.service_type);
+
+    if (dashboard) {
+      props.handleDashboardChange(dashboard);
+    }
   };
 
-  const convertIntervalToGranularity = (interval: string | undefined) => {
+  const getIntervalToGranularity = (interval: string | undefined) => {
     if (interval == undefined) {
-      return;
+      return undefined!;
     }
     if (interval == '1m' || interval == '1minute') {
-      setApiGranularity({ unit: 'min', value: 1 });
+      return { unit: 'min', value: 1 };
     }
 
     if (interval == '5minute') {
-      setApiGranularity({ unit: 'min', value: 5 });
+      return { unit: 'min', value: 5 };
     }
 
     if (interval == '2hour') {
-      setApiGranularity({ unit: 'hr', value: 2 });
+      return { unit: 'hr', value: 2 };
     }
 
     if (interval == '1day') {
-      setApiGranularity({ unit: 'day', value: 1 });
+      return { unit: 'day', value: 1 };
     }
+
+    return undefined!;
   };
 
   return (
@@ -130,30 +111,54 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       <StyledGrid xs={12}>
         <Grid sx={{ width: 300 }}>
           <CloudViewDashboardSelect
+            defaultValue={
+              props.filterPreferences && props.filterPreferences.dashboardId
+                ? props.filterPreferences.dashboardId
+                : undefined
+            }
             handleDashboardChange={handleDashboardChange}
           />
         </Grid>
         <Grid sx={{ marginLeft: 2, width: 200 }}>
           <StyledCloudViewRegionSelect
+            defaultValue={
+              props.filterPreferences
+                ? props.filterPreferences.region
+                : undefined
+            }
             handleRegionChange={handleRegionChange}
           />
         </Grid>
         <Grid sx={{ marginLeft: 3, width: 450 }}>
           <StyledCloudViewResourceSelect
-            disabled={!selectedService}
+            defaultValue={
+              props.filterPreferences && props.filterPreferences.resources
+                ? props.filterPreferences.resources
+                : []
+            }
+            disabled={!props.globalFilters.serviceType}
             handleResourceChange={handleResourceChange}
-            region={selectedRegion}
-            resourceType={selectedService}
+            region={props.globalFilters.region}
+            resourceType={props.globalFilters.serviceType}
           />
         </Grid>
         <Grid sx={{ marginLeft: 5 }}>
           <StyledCloudViewIntervalSelect
+            defaultValue={
+              props.filterPreferences && props.filterPreferences.interval
+                ? props.filterPreferences.interval
+                : undefined
+            }
             handleIntervalChange={handleIntervalChange}
           />
         </Grid>
         <Grid sx={{ marginLeft: 12, width: 250 }}>
           <StyledCloudViewTimeRangeSelect
-            defaultValue={'Past 30 Minutes'}
+            defaultValue={
+              props.filterPreferences && props.filterPreferences.timeDuration
+                ? props.filterPreferences.timeDuration
+                : 'Past 30 Minutes'
+            }
             handleStatsChange={handleTimeRangeChange}
             hideLabel
             label="Select Time Range"

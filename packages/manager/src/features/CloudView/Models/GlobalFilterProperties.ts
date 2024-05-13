@@ -3,12 +3,18 @@ import { Dashboard, TimeDuration, TimeGranularity } from '@linode/api-v4';
 import { WithStartAndEnd } from 'src/features/Longview/request.types';
 
 export interface GlobalFilterProperties {
-  handleAnyFilterChange(filters: FiltersObject): undefined | void;
+  filterPreferences?: any;
+  globalFilters: FiltersObject;
+  handleAnyFilterChange(
+    filters: FiltersObject,
+    changedFilter: string
+  ): undefined | void;
   handleDashboardChange(dashboard: Dashboard): undefined | void;
 }
 
 export interface FiltersObject {
   duration?: TimeDuration;
+  durationLabel: string;
   interval: string;
   region: string;
   resource: string[];

@@ -15,7 +15,8 @@ interface Props
   handleStatsChange?: (
     start: number,
     end: number,
-    timeDuration: TimeDuration
+    timeDuration: TimeDuration,
+    timeRangeLabel: string
   ) => void;
 }
 
@@ -33,6 +34,30 @@ export type Labels =
   | 'Past 30 Minutes';
 
 export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
+  const getTimeDurationFromTimeRange = (label: string) => {
+    if (label == _PAST_30_MINUTES) {
+      return { unit: 'min', value: 30 };
+    }
+
+    if (label == _PAST_24_HOURS) {
+      return { unit: 'hr', value: 24 };
+    }
+
+    if (label == _PAST_12_HOURS) {
+      return { unit: 'hr', value: 12 };
+    }
+
+    if (label == _PAST_7_DAYS) {
+      return { unit: 'day', value: 7 };
+    }
+
+    if (label == _PAST_30_DAYS) {
+      return { unit: 'day', value: 30 };
+    }
+
+    return { unit: 'min', value: 30 };
+  };
+
   const { defaultValue, handleStatsChange, ...restOfSelectProps } = props;
 
   /*
@@ -48,14 +73,17 @@ export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
     is a valid time window.
   */
   const [selectedTimeRange, setTimeRange] = React.useState<Labels>(
-    'Past 30 Minutes'
+    props.defaultValue ?? 'Past 30 Minutes'
   );
 
-  const [apiTimeDuration, setApiTimeDuration] = React.useState<TimeDuration>({
-    unit: 'min',
-    value: 30,
-  });
-
+  const [apiTimeDuration, setApiTimeDuration] = React.useState<TimeDuration>(
+    props.defaultValue
+      ? getTimeDurationFromTimeRange(props.defaultValue)
+      : {
+          unit: 'min',
+          value: 30,
+        }
+  );
   /*
     Why division by 1000?
 
@@ -70,10 +98,11 @@ export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
     // (in most cases the consumer has passed defaultValue={'last 30 minutes'}
     // but the calcs to turn that into start/end numbers live here)
     if (!!handleStatsChange) {
-      handleStatsChange(        
+      handleStatsChange(
         Math.round(generateStartTime(selectedTimeRange, nowInSeconds)),
         Math.round(nowInSeconds),
-        apiTimeDuration
+        apiTimeDuration,
+        selectedTimeRange
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -111,6 +140,7 @@ export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
   return (
     <Select
       {...restOfSelectProps}
+      defaultValue={props.defaultValue ? props.defaultValue : undefined!}
       isClearable={false}
       isSearchable={false}
       onChange={handleChange}
