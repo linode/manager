@@ -683,7 +683,7 @@ export const regions: Region[] = [
   {
     capabilities: ['Linodes'],
     country: 'us',
-    id: 'us-distributed-1',
+    id: 'us-den-10',
     label: 'Gecko Distributed Region Test',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
@@ -701,7 +701,7 @@ export const regions: Region[] = [
   {
     capabilities: ['Linodes'],
     country: 'us',
-    id: 'us-distributed-2',
+    id: 'us-den-11',
     label: 'Gecko Distributed Region Test 2',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,

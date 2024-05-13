@@ -680,7 +680,7 @@ export const handlers = [
     const linodeInDistributedRegion = linodeFactory.build({
       image: 'distributed-region-test-image',
       label: 'Gecko Distributed Region Test',
-      region: 'us-distributed-1',
+      region: 'us-den-10',
     });
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
@@ -770,7 +770,7 @@ export const handlers = [
         backups: { enabled: false },
         id,
         label: 'Gecko Distributed Region Test',
-        region: 'us-distributed-1',
+        region: 'us-den-10',
       })
     );
   }),

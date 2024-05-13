@@ -43,14 +43,14 @@ const distributedRegions = [
   regionFactory.build({
     capabilities: ['Linodes'],
     country: 'us',
-    id: 'us-distributed-1',
+    id: 'us-den-10',
     label: 'Gecko Distributed Region Test',
     site_type: 'distributed',
   }),
   regionFactory.build({
     capabilities: ['Linodes'],
     country: 'us',
-    id: 'us-distributed-2',
+    id: 'us-den-11',
     label: 'Gecko Distributed Region Test 2',
     site_type: 'distributed',
   }),
@@ -95,18 +95,18 @@ const expectedDistributedRegions = [
     disabledProps: {
       disabled: false,
     },
-    label: 'Gecko Distributed Region Test (us-distributed-1)',
+    label: 'Gecko Distributed Region Test (us-den-10)',
     site_type: 'distributed',
-    value: 'us-distributed-1',
+    value: 'us-den-10',
   },
   {
     data: { country: 'us', region: 'North America' },
     disabledProps: {
       disabled: false,
     },
-    label: 'Gecko Distributed Region Test 2 (us-distributed-2)',
+    label: 'Gecko Distributed Region Test 2 (us-den-11)',
     site_type: 'distributed',
-    value: 'us-distributed-2',
+    value: 'us-den-11',
   },
 ];
 

@@ -129,7 +129,7 @@ describe('LinodeActionMenu', () => {
     it('should disable the clone action if the Linode is in an distributed region', async () => {
       const propsWithDistributedRegion = {
         ...props,
-        linodeRegion: 'us-distributed-1',
+        linodeRegion: 'us-den-10',
       };
 
       const { getByLabelText, getByTestId } = renderWithTheme(
