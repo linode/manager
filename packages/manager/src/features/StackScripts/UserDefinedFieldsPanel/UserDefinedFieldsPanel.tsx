@@ -10,7 +10,13 @@ import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
 import { Typography } from 'src/components/Typography';
-import { getIsUDFHeader, getIsUDFMultiSelect, getIsUDFSingleSelect, getIsUDFPasswordField, separateUDFsByRequiredStatus } from 'src/features/Linodes/LinodeCreatev2/Tabs/StackScripts/UserDefinedFields/utilities';
+import {
+  getIsUDFHeader,
+  getIsUDFMultiSelect,
+  getIsUDFSingleSelect,
+  getIsUDFPasswordField,
+  separateUDFsByRequiredStatus,
+} from 'src/features/Linodes/LinodeCreatev2/Tabs/StackScripts/UserDefinedFields/utilities';
 
 import { AppInfo } from '../../Linodes/LinodesCreate/AppInfo';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';

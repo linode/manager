@@ -66,10 +66,8 @@ export const useChildAccountsInfiniteQuery = (options: RequestOptions) => {
   });
 };
 
-export const useCreateChildAccountPersonalAccessTokenMutation = ({
-  euuid,
-  headers,
-}: ChildAccountPayload) =>
-  useMutation<Token, APIError[], ChildAccountPayload>(() =>
-    createChildAccountPersonalAccessToken({ euuid, headers })
+export const useCreateChildAccountPersonalAccessTokenMutation = () =>
+  useMutation<Token, APIError[], ChildAccountPayload>(
+    ({ euuid, headers }: ChildAccountPayload) =>
+      createChildAccountPersonalAccessToken({ euuid, headers })
   );

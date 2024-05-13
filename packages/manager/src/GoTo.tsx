@@ -10,6 +10,7 @@ import { useIsACLBEnabled } from './features/LoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useAccountManagement } from './hooks/useAccountManagement';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
+import { useIsDatabasesEnabled } from './features/Databases/utilities';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   input: {
@@ -62,6 +63,7 @@ export const GoTo = React.memo(() => {
 
   const { isACLBEnabled } = useIsACLBEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
+  const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
 
   const onClose = () => {
@@ -119,6 +121,11 @@ export const GoTo = React.memo(() => {
         display: 'Placement Groups',
         hide: !isPlacementGroupsEnabled,
         href: '/placement-groups',
+      },
+      {
+        display: 'Databases',
+        hide: !isDatabasesEnabled,
+        href: '/databases',
       },
       {
         display: 'Domains',

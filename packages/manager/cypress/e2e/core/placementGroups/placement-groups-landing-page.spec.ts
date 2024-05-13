@@ -3,7 +3,7 @@ import {
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { mockGetPlacementGroups } from 'support/intercepts/vm-placement';
+import { mockGetPlacementGroups } from 'support/intercepts/placement-groups';
 import { ui } from 'support/ui';
 import { accountFactory } from 'src/factories';
 
@@ -39,7 +39,7 @@ describe('VM Placement landing page', () => {
     });
 
     ui.button
-      .findByTitle('Create Placement Groups')
+      .findByTitle('Create Placement Group')
       .should('be.visible')
       .should('be.enabled')
       .click();
