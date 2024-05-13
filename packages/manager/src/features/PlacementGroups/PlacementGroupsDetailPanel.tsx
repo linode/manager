@@ -100,13 +100,17 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
                 fontFamily: theme.font.bold,
               }}
               tooltipText={
-                <StyledDetailPanelFormattedRegionList>
-                  {allRegionsWithPlacementGroupCapability?.map((region) => (
-                    <ListItem key={region.id}>
-                      {region.label} ({region.id})
-                    </ListItem>
-                  ))}
-                </StyledDetailPanelFormattedRegionList>
+                allRegionsWithPlacementGroupCapability?.length ? (
+                  <StyledDetailPanelFormattedRegionList>
+                    {allRegionsWithPlacementGroupCapability?.map((region) => (
+                      <ListItem key={region.id}>
+                        {region.label} ({region.id})
+                      </ListItem>
+                    ))}
+                  </StyledDetailPanelFormattedRegionList>
+                ) : (
+                  'No regions currently support Placement Groups.'
+                )
               }
               displayText="regions"
               minWidth={225}
