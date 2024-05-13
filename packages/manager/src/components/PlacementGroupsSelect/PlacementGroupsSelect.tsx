@@ -12,28 +12,49 @@ import type { PlacementGroup, Region } from '@linode/api-v4';
 import type { SxProps } from '@mui/system';
 
 export interface PlacementGroupsSelectProps {
-  defaultValue?: PlacementGroup;
+  /**
+   * If true, the component will be disabled.
+   */
   disabled?: boolean;
+  /**
+   * A callback to execute when the selected Placement Group changes.
+   * The selection is handled by a parent component.
+   */
   handlePlacementGroupChange: (selected: PlacementGroup | null) => void;
-  id?: string;
+  /**
+   * The label for the TextField component.
+   */
   label: string;
+  /**
+   * If true, the component will display a loading spinner. (usually when fetching data)
+   */
   loading?: boolean;
+  /**
+   * The message to display when there are no options available.
+   */
   noOptionsMessage?: string;
+  /**
+   * The ID of the selected Placement Group.
+   */
   selectedPlacementGroupId: null | number;
   /**
-   * We want the full region object here so we can check if the selected Placement Group is at capacity.
+   * We want to pass the full region object here so we can check if the selected Placement Group is at capacity.
    */
   selectedRegion: Region | undefined;
+  /**
+   * Any additional styles to apply to the root element.
+   */
   sx?: SxProps;
+  /**
+   * Any additional props to pass to the TextField component.
+   */
   textFieldProps?: Partial<TextFieldProps>;
 }
 
 export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const {
-    defaultValue,
     disabled,
     handlePlacementGroupChange,
-    id,
     label,
     noOptionsMessage,
     selectedPlacementGroupId,
@@ -49,6 +70,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     isLoading,
   } = useAllPlacementGroupsQuery({
     enabled: Boolean(selectedRegion?.id),
+    // Placement Group selection is always dependent on a selected region.
     filter: {
       region: selectedRegion?.id,
     },
@@ -101,11 +123,9 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       }}
       clearOnBlur={true}
       data-testid="placement-groups-select"
-      defaultValue={defaultValue}
       disabled={Boolean(!selectedRegion?.id) || disabled}
       errorText={error?.[0]?.reason}
       getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
-      id={id}
       label={label}
       loading={isFetching}
       options={placementGroupsOptions ?? []}

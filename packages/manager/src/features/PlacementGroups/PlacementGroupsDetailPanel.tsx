@@ -8,6 +8,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
+import { NO_PLACEMENT_GROUPS_In_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
 import { PlacementGroupsCreateDrawer } from 'src/features/PlacementGroups/PlacementGroupsCreateDrawer';
 import { hasRegionReachedPlacementGroupCapacity } from 'src/features/PlacementGroups/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -127,7 +128,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
           disabled={isPlacementGroupSelectDisabled}
           handlePlacementGroupChange={handlePlacementGroupChange}
           label={placementGroupSelectLabel}
-          noOptionsMessage="There are no Placement Groups in this region."
+          noOptionsMessage={NO_PLACEMENT_GROUPS_In_SELECTED_REGION_MESSAGE}
           selectedPlacementGroupId={selectedPlacementGroupId}
           selectedRegion={selectedRegion}
         />
