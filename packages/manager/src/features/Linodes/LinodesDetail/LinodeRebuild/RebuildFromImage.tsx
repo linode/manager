@@ -245,10 +245,12 @@ export const RebuildFromImage = (props: Props) => {
                 authorizedUsers={values.authorized_users}
                 data-qa-access-panel
                 disabled={disabled}
+                diskEncryptionEnabled={false}
                 error={errors.root_pass}
                 handleChange={(input) => setFieldValue('root_pass', input)}
                 password={values.root_pass}
                 passwordHelperText={passwordHelperText}
+                toggleDiskEncryptionEnabled={() => null}
               />
               {shouldDisplayUserDataAccordion ? (
                 <>

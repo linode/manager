@@ -11,6 +11,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import { useImageQuery } from 'src/queries/images';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 
@@ -20,6 +21,8 @@ import { VLANAccordion } from './VLANAccordion';
 import type { Interface, Linode } from '@linode/api-v4/lib/linodes';
 import type { UserDataAccordionProps } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import type { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
+import { useMediaQuery } from '@mui/material';
+import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/DiskEncryption/constants';
 
 interface UserDataProps extends UserDataAccordionProps {
   showUserData: boolean;
@@ -32,6 +35,7 @@ export interface AddonsPanelProps {
   changeBackups: () => void;
   createType: CreateTypes;
   disabled?: boolean;
+  diskEncryptionEnabled: boolean;
   handleVLANChange: (updatedInterface: Interface) => void;
   ipamAddress: string;
   ipamError?: string;
@@ -55,6 +59,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     changeBackups,
     createType,
     disabled,
+    diskEncryptionEnabled,
     handleVLANChange,
     ipamAddress,
     ipamError,
@@ -72,6 +77,10 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   } = props;
 
   const theme = useTheme();
+
+  const flags = useFlags();
+
+  const matchesMdUp = useMediaQuery(theme.breakpoints.up('md'));
 
   const { data: image } = useImageQuery(
     selectedImageID ?? '',
@@ -142,6 +151,9 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     }
   }, [selectedLinodeID]);
 
+  const isBackupsBoxChecked =
+    (accountBackups && !isEdgeRegionSelected) || props.backups;
+
   return (
     <>
       {showVlans && (
@@ -185,9 +197,6 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
         <StyledFormControlLabel
           control={
             <Checkbox
-              checked={
-                (accountBackups && !isEdgeRegionSelected) || props.backups
-              }
               data-qa-check-backups={
                 accountBackups ? 'auto backup enabled' : 'auto backup disabled'
               }
@@ -197,6 +206,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
                 isBareMetal ||
                 isEdgeRegionSelected
               }
+              checked={isBackupsBoxChecked}
               data-testid="backups"
               onChange={changeBackups}
             />
@@ -208,6 +218,18 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
             </Box>
           }
         />
+        {flags.linodeDiskEncryption &&
+          diskEncryptionEnabled &&
+          isBackupsBoxChecked && (
+            <Notice
+              typeProps={{
+                style: { fontSize: '0.875rem' },
+              }}
+              spacingLeft={matchesMdUp ? 52 : 36} // Numbers derived from paddingLeft on StyledTypography (+2 to achieve alignment)
+              text={DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY}
+              variant="warning"
+            />
+          )}
         <StyledTypography variant="body1">
           {accountBackups && !isEdgeRegionSelected ? (
             <React.Fragment>

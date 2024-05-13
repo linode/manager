@@ -1,6 +1,7 @@
 import { PlacementGroup } from '@linode/api-v4';
 import {
   CreateLinodePlacementGroupPayload,
+  EncryptionStatus,
   InterfacePayload,
   PriceObject,
   restoreBackup,
@@ -112,6 +113,7 @@ export interface LinodeCreateProps {
   autoassignIPv4WithinVPC: boolean;
   checkValidation: LinodeCreateValidation;
   createType: CreateTypes;
+  diskEncryptionEnabled: boolean;
   firewallId?: number;
   handleAgreementChange: () => void;
   handleFirewallChange: (firewallId: number) => void;
@@ -141,6 +143,7 @@ export interface LinodeCreateProps {
   toggleAssignPublicIPv4Address: () => void;
   toggleAutoassignIPv4WithinVPCEnabled: () => void;
   toggleBackupsEnabled: () => void;
+  toggleDiskEncryptionEnabled: () => void;
   togglePrivateIPEnabled: () => void;
   typeDisplayInfo: TypeInfo;
   updateDiskSize: (size: number) => void;
@@ -354,6 +357,12 @@ export class LinodeCreate extends React.PureComponent<
       selectedRegionID ?? ''
     );
 
+    const regionSupportsDiskEncryption = doesRegionSupportFeature(
+      this.props.selectedRegionID ?? '',
+      this.props.regionsData,
+      'Disk Encryption'
+    );
+
     if (typeDisplayInfo) {
       const typeDisplayInfoCopy = cloneDeep(typeDisplayInfo);
 
@@ -409,6 +418,12 @@ export class LinodeCreate extends React.PureComponent<
       displaySections.push(
         renderBackupsDisplaySection(accountBackupsEnabled, backupsMonthlyPrice)
       );
+    }
+
+    if (regionSupportsDiskEncryption && this.props.diskEncryptionEnabled) {
+      displaySections.push({
+        title: 'Encrypted',
+      });
     }
 
     if (this.props.vlanLabel) {
@@ -674,12 +689,17 @@ export class LinodeCreate extends React.PureComponent<
                   ? 'You must select an image to set a root password'
                   : ''
               }
+              toggleDiskEncryptionEnabled={
+                this.props.toggleDiskEncryptionEnabled
+              }
               authorizedUsers={this.props.authorized_users}
               data-qa-access-panel
               disabled={!this.props.selectedImageID || userCannotCreateLinode}
+              diskEncryptionEnabled={this.props.diskEncryptionEnabled}
               error={hasErrorFor.root_pass}
               handleChange={this.props.updatePassword}
               password={this.props.password}
+              selectedRegion={this.props.selectedRegionID}
               setAuthorizedUsers={this.props.setAuthorizedUsers}
             />
           )}
@@ -721,6 +741,9 @@ export class LinodeCreate extends React.PureComponent<
             />
           )}
           <AddonsPanel
+            diskEncryptionEnabled={
+              regionSupportsDiskEncryption && this.props.diskEncryptionEnabled
+            }
             userData={{
               createType: this.props.createType,
               onChange: updateUserData,
@@ -844,6 +867,17 @@ export class LinodeCreate extends React.PureComponent<
       'VPCs'
     );
 
+    const regionSupportsDiskEncryption = doesRegionSupportFeature(
+      this.props.selectedRegionID ?? '',
+      this.props.regionsData,
+      'Disk Encryption'
+    );
+
+    const diskEncryptionPayload: EncryptionStatus = this.props
+      .diskEncryptionEnabled
+      ? 'enabled'
+      : 'disabled';
+
     const placement_group_payload: CreateLinodePlacementGroupPayload = {
       id: this.props.placementGroupSelection?.id ?? -1,
     };
@@ -856,6 +890,9 @@ export class LinodeCreate extends React.PureComponent<
       backup_id: this.props.selectedBackupID,
       backups_enabled: this.props.backupsEnabled,
       booted: true,
+      disk_encryption: regionSupportsDiskEncryption
+        ? diskEncryptionPayload
+        : undefined,
       firewall_id:
         this.props.firewallId !== -1 ? this.props.firewallId : undefined,
       image: this.props.selectedImageID,
