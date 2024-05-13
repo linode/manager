@@ -183,7 +183,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
             sx={{ alignSelf: 'center', textWrap: 'nowrap' }}
           >
             {' '}
-            Indicates an distributed region.{' '}
+            Indicates a distributed region.{' '}
             <Link
               aria-label="Learn more about Akamai distributed regions"
               to="#"
