@@ -49,7 +49,7 @@ import {
 } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { vlanQueries } from 'src/queries/vlans';
-import { useAllVolumesQuery } from 'src/queries/volumes';
+import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { vpcQueries } from 'src/queries/vpcs/vpcs';
 import {
   DevicesAsStrings,
@@ -213,7 +213,18 @@ const interfacesToPayload = (
     return [];
   }
 
-  if (equals(interfaces, defaultInterfaceList)) {
+  const filteredInterfaces = interfaces.filter(
+    (thisInterface) => thisInterface.purpose !== 'none'
+  );
+
+  if (
+    equals(
+      filteredInterfaces,
+      defaultInterfaceList.filter(
+        (thisInterface) => thisInterface.purpose !== 'none'
+      )
+    )
+  ) {
     // In this case, where eth0 is set to public interface
     // and no other interfaces are specified, the API prefers
     // to receive an empty array.
@@ -224,9 +235,7 @@ const interfacesToPayload = (
     interfaces[primaryInterfaceIndex].primary = true;
   }
 
-  return interfaces.filter(
-    (thisInterface) => thisInterface.purpose !== 'none'
-  ) as Interface[];
+  return filteredInterfaces as Interface[];
 };
 
 const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];

@@ -12,7 +12,7 @@ import { useGrants } from 'src/queries/profile';
 import {
   useResizeVolumeMutation,
   useVolumeTypesQuery,
-} from 'src/queries/volumes';
+} from 'src/queries/volumes/volumes';
 import {
   handleFieldErrors,
   handleGeneralErrors,

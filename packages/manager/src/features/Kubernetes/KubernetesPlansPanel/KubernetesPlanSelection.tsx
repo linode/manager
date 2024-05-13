@@ -1,6 +1,5 @@
 import { PriceObject } from '@linode/api-v4';
 import { Region } from '@linode/api-v4/lib/regions';
-import HelpOutline from '@mui/icons-material/HelpOutline';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
@@ -10,12 +9,11 @@ import { Button } from 'src/components/Button/Button';
 import { Chip } from 'src/components/Chip';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { Hidden } from 'src/components/Hidden';
-import { IconButton } from 'src/components/IconButton';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Tooltip } from 'src/components/Tooltip';
-import { LIMITED_AVAILABILITY_TEXT } from 'src/features/components/PlansPanel/constants';
+import { DisabledPlanSelectionTooltip } from 'src/features/components/PlansPanel/DisabledPlanSelectionTooltip';
+import { getDisabledPlanReasonCopy } from 'src/features/components/PlansPanel/utils';
 import {
   PRICE_ERROR_TOOLTIP_TEXT,
   UNKNOWN_PRICE,
@@ -24,74 +22,90 @@ import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/d
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
-import type { TypeWithAvailability } from 'src/features/components/PlansPanel/types';
+import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 
 export interface KubernetesPlanSelectionProps {
-  disabledStatus:
-    | {
-        isDisabled512GbPlan: boolean;
-        isLimitedAvailabilityPlan: boolean;
-      }
-    | undefined;
   getTypeCount: (planId: string) => number;
   hasMajorityOfPlansDisabled: boolean;
   idx: number;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
-  planIsDisabled: boolean;
+  plan: PlanWithAvailability;
   selectedId?: string;
   selectedRegionId?: Region['id'];
-  type: TypeWithAvailability;
   updatePlanCount: (planId: string, newCount: number) => void;
   wholePanelIsDisabled: boolean;
 }
-
 export const KubernetesPlanSelection = (
   props: KubernetesPlanSelectionProps
 ) => {
   const {
-    disabledStatus,
     getTypeCount,
     hasMajorityOfPlansDisabled,
     idx,
     onAdd,
     onSelect,
-    planIsDisabled,
+    plan,
     selectedId,
     selectedRegionId,
-    type,
     updatePlanCount,
     wholePanelIsDisabled,
   } = props;
+  const {
+    planBelongsToDisabledClass,
+    planHasLimitedAvailability,
+    planIsDisabled512Gb,
+  } = plan;
 
-  const isDisabled = planIsDisabled || wholePanelIsDisabled;
-  const count = getTypeCount(type.id);
+  const rowIsDisabled =
+    wholePanelIsDisabled || planHasLimitedAvailability || planIsDisabled512Gb;
+  const count = getTypeCount(plan.id);
   const price: PriceObject | undefined = getLinodeRegionPrice(
-    type,
+    plan,
     selectedRegionId
   );
+
+  const disabledPlanReasonCopy = getDisabledPlanReasonCopy({
+    planBelongsToDisabledClass,
+    planHasLimitedAvailability,
+    planIsDisabled512Gb,
+    // So far, planIsTooSmall only applies to DbaaS plans (resize)
+    planIsTooSmall: false,
+    wholePanelIsDisabled,
+  });
+
+  // These are the two exceptions for when the tooltip should be hidden
+  // - The entire panel is disabled (means the plans class isn't available in the selected region. (The user will see a notice about this)
+  // - The majority of plans are disabled - In order to reduce visual clutter, we don't show the tooltip if the majority of plans are disabled (there is also a notice about this)
+  // For both, and accessibility is maintained via aria-label on the add button when disabled, so screen readers can still describe the reason why.
+  const showDisabledTooltip =
+    !wholePanelIsDisabled &&
+    !hasMajorityOfPlansDisabled &&
+    (planBelongsToDisabledClass ||
+      planIsDisabled512Gb ||
+      planHasLimitedAvailability);
 
   // We don't want flat-rate pricing or network information for LKE so we select only the second type element.
   const subHeadings = [
     `$${renderMonthlyPriceToCorrectDecimalPlace(price?.monthly)}/mo ($${
       price?.hourly
     }/hr)`,
-    type.subHeadings[1],
+    plan.subHeadings[1],
   ];
 
   const renderVariant = () => (
     <Grid xs={12}>
       <StyledInputOuter>
         <EnhancedNumberInput
-          disabled={isDisabled}
-          setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
+          disabled={rowIsDisabled}
+          setValue={(newCount: number) => updatePlanCount(plan.id, newCount)}
           value={count}
         />
         {onAdd && (
           <Button
             buttonType="primary"
-            disabled={count < 1 || isDisabled}
-            onClick={() => onAdd(type.id, count)}
+            disabled={count < 1 || rowIsDisabled}
+            onClick={() => onAdd(plan.id, count)}
             sx={{ marginLeft: '10px', minWidth: '85px' }}
           >
             Add
@@ -105,46 +119,19 @@ export const KubernetesPlanSelection = (
       {/* Displays Table Row for larger screens */}
       <Hidden mdDown>
         <TableRow
-          data-qa-plan-row={type.formattedLabel}
-          disabled={isDisabled}
-          key={type.id}
+          className={rowIsDisabled ? 'disabled-row' : ''}
+          data-qa-plan-row={plan.formattedLabel}
+          disabled={rowIsDisabled}
+          key={plan.id}
         >
           <TableCell data-qa-plan-name>
             <Box alignItems="center">
-              {type.heading} &nbsp;
-              {isDisabled &&
-                !wholePanelIsDisabled &&
-                !hasMajorityOfPlansDisabled &&
-                (Boolean(disabledStatus?.isDisabled512GbPlan) ||
-                  Boolean(disabledStatus?.isLimitedAvailabilityPlan)) && (
-                  <Tooltip
-                    PopperProps={{
-                      sx: {
-                        '& .MuiTooltip-tooltip': {
-                          minWidth: 225,
-                        },
-                      },
-                    }}
-                    sx={{
-                      alignItems: 'center',
-                    }}
-                    data-qa-tooltip={LIMITED_AVAILABILITY_TEXT}
-                    data-testid="limited-availability"
-                    placement="right-start"
-                    title={LIMITED_AVAILABILITY_TEXT}
-                  >
-                    <IconButton disableRipple size="small">
-                      <HelpOutline
-                        sx={{
-                          height: 18,
-                          position: 'relative',
-                          top: -2,
-                          width: 18,
-                        }}
-                      />
-                    </IconButton>
-                  </Tooltip>
-                )}
+              {plan.heading} &nbsp;
+              {showDisabledTooltip && (
+                <DisabledPlanSelectionTooltip
+                  tooltipCopy={disabledPlanReasonCopy}
+                />
+              )}
             </Box>
           </TableCell>
           <TableCell
@@ -162,13 +149,13 @@ export const KubernetesPlanSelection = (
             ${price?.hourly ?? UNKNOWN_PRICE}
           </TableCell>
           <TableCell center data-qa-ram>
-            {convertMegabytesTo(type.memory, true)}
+            {convertMegabytesTo(plan.memory, true)}
           </TableCell>
           <TableCell center data-qa-cpu>
-            {type.vcpus}
+            {plan.vcpus}
           </TableCell>
           <TableCell center data-qa-storage>
-            {convertMegabytesTo(type.disk, true)}
+            {convertMegabytesTo(plan.disk, true)}
           </TableCell>
           <TableCell>
             <StyledInputOuter>
@@ -177,23 +164,28 @@ export const KubernetesPlanSelection = (
                   // When on the add pool flow, we only want the current input to be active,
                   // unless we've just landed on the form, all the inputs are empty,
                   // or there was a pricing data error.
-                  (!onAdd && Boolean(selectedId) && type.id !== selectedId) ||
-                  isDisabled ||
+                  (!onAdd && Boolean(selectedId) && plan.id !== selectedId) ||
+                  rowIsDisabled ||
                   typeof price?.hourly !== 'number'
                 }
                 setValue={(newCount: number) =>
-                  updatePlanCount(type.id, newCount)
+                  updatePlanCount(plan.id, newCount)
                 }
-                inputLabel={`edit-quantity-${type.id}`}
+                inputLabel={`edit-quantity-${plan.id}`}
                 value={count}
               />
               {onAdd && (
                 <Button
+                  aria-label={
+                    rowIsDisabled ? disabledPlanReasonCopy : undefined
+                  }
                   disabled={
-                    count < 1 || isDisabled || typeof price?.hourly !== 'number'
+                    count < 1 ||
+                    rowIsDisabled ||
+                    typeof price?.hourly !== 'number'
                   }
                   buttonType="primary"
-                  onClick={() => onAdd(type.id, count)}
+                  onClick={() => onAdd(plan.id, count)}
                   sx={{ marginLeft: '10px', minWidth: '85px' }}
                 >
                   Add
@@ -208,15 +200,19 @@ export const KubernetesPlanSelection = (
         <SelectionCard
           subheadings={[
             ...subHeadings,
-            isDisabled ? <Chip label="Limited Deployment Availability" /> : '',
+            planHasLimitedAvailability || planIsDisabled512Gb ? (
+              <Chip label="Limited Deployment Availability" />
+            ) : (
+              ''
+            ),
           ]}
-          checked={type.id === String(selectedId)}
-          disabled={isDisabled}
-          heading={type.heading}
-          key={type.id}
-          onClick={() => onSelect(type.id)}
+          checked={plan.id === String(selectedId)}
+          disabled={rowIsDisabled}
+          heading={plan.heading}
+          key={plan.id}
+          onClick={() => onSelect(plan.id)}
           renderVariant={renderVariant}
-          tooltip={isDisabled ? LIMITED_AVAILABILITY_TEXT : undefined}
+          tooltip={rowIsDisabled ? disabledPlanReasonCopy : undefined}
         />
       </Hidden>
     </React.Fragment>

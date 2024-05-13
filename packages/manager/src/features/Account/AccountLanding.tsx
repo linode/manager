@@ -12,10 +12,9 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
-import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
+import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { usePendingRevocationToken } from 'src/hooks/usePendingRevocationToken';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
 import { useProfile } from 'src/queries/profile';
@@ -56,10 +55,6 @@ const AccountLanding = () => {
   const flags = useFlags();
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
   const sessionContext = React.useContext(switchAccountSessionContext);
-  const {
-    getPendingRevocationToken,
-    pendingRevocationToken,
-  } = usePendingRevocationToken();
 
   const isAkamaiAccount = account?.billing_source === 'akamai';
   const isProxyUser = profile?.user_type === 'proxy';
@@ -76,7 +71,7 @@ const AccountLanding = () => {
     globalGrantType: 'child_account_access',
   });
 
-  const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
+  const { isParentTokenExpired } = useIsParentTokenExpired({ isProxyUser });
 
   const tabs = [
     {
@@ -116,10 +111,6 @@ const AccountLanding = () => {
       return sessionContext.updateState({
         isOpen: true,
       });
-    }
-
-    if (isProxyUser) {
-      getPendingRevocationToken();
     }
 
     setIsDrawerOpen(true);
@@ -223,7 +214,6 @@ const AccountLanding = () => {
       <SwitchAccountDrawer
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
-        proxyToken={pendingRevocationToken}
         userType={profile?.user_type}
       />
     </React.Fragment>

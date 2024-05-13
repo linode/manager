@@ -59,7 +59,7 @@ try {
             )}`,
             name: "releaseDate",
             message:
-              "\nEnter the release date (YYYY-MM-DD, press enter to select today's date:",
+              "\nEnter the release date (YYYY-MM-DD), press enter to select today's date:",
             validate: (input) => {
               if (!input.match(/^\d{4}-\d{2}-\d{2}$/)) {
                 return "Please enter a valid date in the format YYYY-MM-DD.";
@@ -68,17 +68,6 @@ try {
               return true;
             },
             default: today,
-          },
-        ]);
-        const { semverBump } = await inquirer.prompt([
-          {
-            type: "list",
-            prefix: `📦 Semver bump for ${chalk.red(
-              `@linode/${linodePackage}`
-            )}`,
-            name: "semverBump",
-            message: "\nChoose the type of version bump:",
-            choices: ["patch", "minor", "major"],
           },
         ]);
 
@@ -113,8 +102,7 @@ try {
           });
         }
 
-        const newSemver = incrementSemver(currentSemver, semverBump);
-        const changelogContent = initiateChangelogEntry(releaseDate, newSemver);
+        const changelogContent = initiateChangelogEntry(releaseDate, currentSemver);
         // Generate the final changelog content
         populateChangelogEntry(changesetEntries, changelogContent);
 
@@ -156,7 +144,7 @@ try {
         }
 
         // Delete the changeset files for each package
-        deleteChangesets(linodePackage);
+        await deleteChangesets(linodePackage);
       }
     } catch (error) {
       logger.error({

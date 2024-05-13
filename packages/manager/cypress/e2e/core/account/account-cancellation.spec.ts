@@ -79,7 +79,9 @@ describe('Account cancellation', () => {
       });
 
     ui.dialog
-      .findByTitle('Are you sure you want to close your Linode account?')
+      .findByTitle(
+        'Are you sure you want to close your cloud computing services account?'
+      )
       .should('be.visible')
       .within(() => {
         cy.findByText(cancellationDataLossWarning, { exact: false }).should(
@@ -179,7 +181,9 @@ describe('Account cancellation', () => {
 
     // Fill out cancellation dialog and attempt submission.
     ui.dialog
-      .findByTitle('Are you sure you want to close your Linode account?')
+      .findByTitle(
+        'Are you sure you want to close your cloud computing services account?'
+      )
       .should('be.visible')
       .within(() => {
         cy.findByLabelText(
@@ -353,7 +357,9 @@ describe('Parent/Child account cancellation', () => {
       });
 
     ui.dialog
-      .findByTitle('Are you sure you want to close your Linode account?')
+      .findByTitle(
+        'Are you sure you want to close your cloud computing services account?'
+      )
       .should('be.visible')
       .within(() => {
         cy.findByText(cancellationDataLossWarning, { exact: false }).should(

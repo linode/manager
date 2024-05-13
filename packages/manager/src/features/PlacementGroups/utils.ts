@@ -4,7 +4,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 
 import type {
-  AffinityEnforcement,
+  AffinityTypeEnforcement,
   CreatePlacementGroupPayload,
   Linode,
   PlacementGroup,
@@ -12,11 +12,11 @@ import type {
 } from '@linode/api-v4';
 
 /**
- * Helper to get the affinity enforcement readable string.
+ * Helper to get the affinity type enforcement readable string.
  */
 export const getAffinityTypeEnforcement = (
   is_strict: boolean
-): AffinityEnforcement => {
+): AffinityTypeEnforcement => {
   return is_strict ? 'Strict' : 'Flexible';
 };
 
@@ -84,6 +84,10 @@ export const hasRegionReachedPlacementGroupCapacity = ({
     (pg) => pg.region === region.id
   );
 
+  if (maximum_pgs_per_customer === null) {
+    return false;
+  }
+
   return (
     placementGroupsInRegion.length >= maximum_pgs_per_customer ||
     maximum_pgs_per_customer === 0
@@ -147,4 +151,24 @@ export const useIsPlacementGroupsEnabled = (): {
   );
 
   return { isPlacementGroupsEnabled };
+};
+
+/**
+ * Helper to get the maximum number of Placement Groups per region a customer is allowed to create.
+ * When the limit is `null` (no limit), we show "unlimited" in the UI.
+ *
+ * @param region
+ * @returns {number | 'unlimited' | undefined} - The maximum number of Placement Groups per region a customer is allowed to create.
+ */
+export const getMaxPGsPerCustomer = (
+  region: Region | undefined
+): 'unlimited' | number | undefined => {
+  if (!region) {
+    return;
+  }
+
+  const maxPgsPerCustomer =
+    region.placement_group_limits.maximum_pgs_per_customer;
+
+  return maxPgsPerCustomer === null ? 'unlimited' : maxPgsPerCustomer;
 };

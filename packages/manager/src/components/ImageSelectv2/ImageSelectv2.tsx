@@ -3,6 +3,7 @@ import React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useAllImagesQuery } from 'src/queries/images';
 
+import { DistributionIcon } from '../DistributionIcon';
 import { ImageOptionv2 } from './ImageOptionv2';
 import {
   getAPIFilterForImageSelect,
@@ -77,6 +78,19 @@ export const ImageSelectv2 = (props: Props) => {
           listItemProps={props}
         />
       )}
+      textFieldProps={{
+        InputProps: {
+          startAdornment: value && (
+            <DistributionIcon
+              distribution={value.vendor}
+              fontSize="24px"
+              height="24px"
+              pl={1}
+              pr={2}
+            />
+          ),
+        },
+      }}
       clearOnBlur
       groupBy={(option) => option.vendor ?? 'My Images'}
       label="Images"

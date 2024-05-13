@@ -107,8 +107,14 @@ const PlansAvailabilityNoticeMessage = (
           {formattedPlanType} Plans are not currently available in this
           region.&nbsp;
           <StyledTextTooltip
+            tooltipText={
+              regionList.length > 0 ? (
+                <FormattedRegionList />
+              ) : (
+                'There are no regions available for this plan.'
+              )
+            }
             displayText="See global availability"
-            tooltipText={<FormattedRegionList />}
           />
           .
         </StyledNoticeTypography>

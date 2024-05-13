@@ -46,7 +46,9 @@ describe('Linode Create Details', () => {
 
     await waitFor(() => {
       expect(
-        getByText('Select a region above to see available Placement Groups.')
+        getByText(
+          'Select a Region for your Linode to see existing placement groups.'
+        )
       ).toBeVisible();
     });
   });
@@ -62,6 +64,19 @@ describe('Linode Create Details', () => {
     expect(
       queryByText('Select a region above to see available Placement Groups.')
     ).toBeNull();
+  });
+
+  it('does not render the tag select when cloning', () => {
+    const { queryByText } = renderWithThemeAndHookFormContext({
+      component: <Details />,
+      options: {
+        MemoryRouter: {
+          initialEntries: ['/linodes/create?type=Clone+Linode'],
+        },
+      },
+    });
+
+    expect(queryByText('Tags')).toBeNull();
   });
 
   it('should disable the label and tag TextFields if the user does not have permission to create a linode', async () => {

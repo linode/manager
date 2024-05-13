@@ -10,7 +10,10 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
-import { PLACEMENT_GROUP_TOOLTIP_TEXT } from '../../constants';
+import {
+  PLACEMENT_GROUP_TOOLTIP_TEXT,
+  PLACEMENT_GROUPS_DOCS_LINK,
+} from '../../constants';
 import { getAffinityTypeEnforcement } from '../../utils';
 
 import type { PlacementGroup, Region } from '@linode/api-v4';
@@ -31,11 +34,10 @@ export const PlacementGroupsSummary = (props: Props) => {
         <Notice spacingBottom={20} spacingTop={24} variant="warning">
           <Typography fontFamily={theme.font.bold}>
             {`Placement Group ${placementGroup.label} is non-compliant. We are working to resolve compliance issues so that you can continue assigning Linodes to this Placement Group. `}
-            {/* TODO VM_Placement: Get link location */}
             <Link
               className="secondaryLink"
               data-testid="pg-non-compliant-notice-link"
-              to={'#'}
+              to={PLACEMENT_GROUPS_DOCS_LINK}
             >
               Learn more
             </Link>

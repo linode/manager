@@ -5,6 +5,8 @@ import type { PlacementGroupPayload } from '../placement-groups/types';
 
 export type Hypervisor = 'kvm' | 'zen';
 
+export type EncryptionStatus = 'enabled' | 'disabled';
+
 export interface LinodeSpecs {
   disk: number;
   memory: number;
@@ -18,6 +20,7 @@ export interface Linode {
   alerts: LinodeAlerts;
   backups: LinodeBackups;
   created: string;
+  disk_encryption?: EncryptionStatus; // @TODO LDE: Remove optionality once LDE is fully rolled out
   region: string;
   image: string | null;
   group: string;
@@ -267,6 +270,7 @@ export interface Disk {
   filesystem: Filesystem;
   created: string;
   updated: string;
+  disk_encryption?: EncryptionStatus; // @TODO LDE: remove optionality once LDE is fully rolled out
 }
 
 export type DiskStatus = 'ready' | 'not ready' | 'deleting';
@@ -374,7 +378,7 @@ export interface CreateLinodeRequest {
    *
    * This field and the image field are mutually exclusive.
    */
-  backup_id?: number;
+  backup_id?: number | null;
   /**
    * When deploying from an Image, this field is optional, otherwise it is ignored.
    * This is used to set the swap disk size for the newly-created Linode.
@@ -447,9 +451,14 @@ export interface CreateLinodeRequest {
    */
   firewall_id?: number | null;
   /**
-   * An object that assigns this the Linode to a placment group upon creation.
+   * An object that assigns this the Linode to a placement group upon creation.
    */
   placement_group?: CreateLinodePlacementGroupPayload;
+  /**
+   * A property with a string literal type indicating whether the Linode is encrypted or unencrypted.
+   * @default 'enabled' (if the region supports LDE)
+   */
+  disk_encryption?: EncryptionStatus;
 }
 
 export interface MigrateLinodeRequest {
@@ -485,6 +494,7 @@ export interface RebuildRequest {
   stackscript_id?: number;
   stackscript_data?: any;
   booted?: boolean;
+  disk_encryption?: EncryptionStatus;
 }
 
 export interface LinodeDiskCreationData {
