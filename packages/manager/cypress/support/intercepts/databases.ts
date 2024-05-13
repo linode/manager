@@ -6,7 +6,6 @@ import type {
   Database,
   DatabaseCredentials,
   DatabaseEngine,
-  DatabasePriceObject,
   DatabaseType,
 } from '@linode/api-v4';
 import { makeErrorResponse } from 'support/util/errors';
