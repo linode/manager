@@ -45,6 +45,7 @@ export interface NoticeProps extends Grid2Props {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   /**
    * A ref passed to the root element.
+   * This can be useful for scrolling errors into view using react-hook-form.
    */
   rootRef?: React.Ref<HTMLDivElement>;
   /**
