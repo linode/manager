@@ -10,12 +10,10 @@ import { PlacementGroupsSelect } from './PlacementGroupsSelect';
 import type { PlacementGroupsSelectProps } from './PlacementGroupsSelect';
 
 const props: PlacementGroupsSelectProps = {
-  errorText: '',
   handlePlacementGroupChange: vi.fn(),
-  id: '',
   label: 'Placement Groups in Atlanta, GA (us-southeast)',
   noOptionsMessage: '',
-  selectedPlacementGroup: null,
+  selectedPlacementGroupId: null,
   selectedRegion: regionFactory.build({ id: 'us-southeast' }),
 };
 

@@ -26,6 +26,7 @@ describe('Tags list', () => {
           value: ['tag1', 'tag2'].map((tag) => ({ label: tag, value: tag })),
         }}
         handlePlacementGroupChange={handlePlacementGroupChange}
+        selectedPlacementGroupId={null}
       />
     );
 
@@ -53,6 +54,7 @@ describe('Tags list', () => {
           })),
         }}
         handlePlacementGroupChange={handlePlacementGroupChange}
+        selectedPlacementGroupId={null}
       />
     );
 
@@ -69,6 +71,7 @@ describe('Tags list', () => {
           value: '',
         }}
         handlePlacementGroupChange={handlePlacementGroupChange}
+        selectedPlacementGroupId={null}
       />
     );
     expect(queryByLabelText(TAG_LABEL)).not.toBeInTheDocument();
