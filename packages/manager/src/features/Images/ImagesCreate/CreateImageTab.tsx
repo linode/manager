@@ -110,22 +110,29 @@ export const CreateImageTab = () => {
           )}
           <Stack spacing={1}>
             <LinodeSelect
+              getOptionDisabled={
+                grants
+                  ? (linode) =>
+                      grants.linode.some(
+                        (grant) =>
+                          grant.id === linode.id &&
+                          grant.permissions === 'read_only'
+                      )
+                  : undefined
+              }
+              helperText={
+                grants?.linode.some(
+                  (grant) => grant.permissions === 'read_only'
+                )
+                  ? 'You can only create Images from Linodes you have read/write access to.'
+                  : undefined
+              }
               onSelectionChange={(linode) => {
                 setSelectedLinodeId(linode?.id ?? null);
                 if (linode === null) {
                   resetField('disk_id');
                 }
               }}
-              optionsFilter={
-                grants
-                  ? (linode) =>
-                      grants.linode.some(
-                        (grant) =>
-                          grant.id === linode.id &&
-                          grant.permissions === 'read_write'
-                      )
-                  : undefined
-              }
               disabled={isImageCreateRestricted}
               noMarginTop
               required
