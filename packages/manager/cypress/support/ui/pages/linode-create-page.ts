@@ -66,7 +66,8 @@ export const linodeCreatePage = {
   selectPlan: (planTabTitle: string, planTitle: string) => {
     ui.tabList.findTabByTitle(planTabTitle).click();
     ui.tabList.findTabPanelByTitle(planTabTitle).within(() => {
-      cy.findByLabelText(planTitle, { selector: 'tr' })
+      cy.get(`[data-qa-plan-row="${planTitle}"]`)
+        .closest('tr')
         .should('be.visible')
         .click();
     });
