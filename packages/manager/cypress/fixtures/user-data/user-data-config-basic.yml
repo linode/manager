@@ -1,0 +1,14 @@
+#cloud-config
+
+# Sample cloud-init config data file.
+# See also: https://cloudinit.readthedocs.io/en/latest/explanation/format.html
+#
+# This config specifies a group will be created named 'foo-group', and that
+# a user will be created named 'foo' whose primary group is 'foo-group'.
+
+groups:
+  - foo-group
+
+users:
+  - name: foo
+    primary_group: foo-group
