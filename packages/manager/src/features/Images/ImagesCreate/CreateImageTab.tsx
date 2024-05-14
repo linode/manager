@@ -134,10 +134,13 @@ export const CreateImageTab = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <Autocomplete
+                  disabled={
+                    isImageCreateRestricted || selectedLinodeId === null
+                  }
                   errorText={
                     fieldState.error?.message ?? disksError?.[0].reason
                   }
-                  noOptionsText={
+                  helperText={
                     selectedLinodeId === null
                       ? 'Select a Linode to see available disks'
                       : undefined
@@ -146,7 +149,6 @@ export const CreateImageTab = () => {
                     inputRef: field.ref,
                   }}
                   clearOnBlur
-                  disabled={isImageCreateRestricted}
                   label="Disk"
                   loading={disksLoading}
                   noMarginTop
