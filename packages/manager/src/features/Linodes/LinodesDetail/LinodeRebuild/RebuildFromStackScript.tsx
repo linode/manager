@@ -307,12 +307,10 @@ export const RebuildFromStackScript = (props: Props) => {
                 }
                 authorizedUsers={values.authorized_users}
                 data-qa-access-panel
-                diskEncryptionEnabled={false}
                 error={errors.root_pass}
                 handleChange={(value) => setFieldValue('root_pass', value)}
                 password={values.root_pass}
                 passwordHelperText={passwordHelperText}
-                toggleDiskEncryptionEnabled={() => null}
               />
               <Grid
                 sx={(theme) => ({

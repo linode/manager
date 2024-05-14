@@ -63,12 +63,10 @@ export const ImageAndPassword = (props: Props) => {
         }
         authorizedUsers={authorizedUsers}
         disabled={disabled}
-        diskEncryptionEnabled={false}
         error={passwordError}
         handleChange={onPasswordChange}
         password={password || ''}
         setAuthorizedUsers={setAuthorizedUsers}
-        toggleDiskEncryptionEnabled={() => null}
       />
     </React.Fragment>
   );

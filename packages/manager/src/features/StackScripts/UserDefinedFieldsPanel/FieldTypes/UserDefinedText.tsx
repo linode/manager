@@ -53,7 +53,6 @@ class UserDefinedText extends React.Component<Props, {}> {
     return (
       <StyledAccessPanel
         disabledReason={tooltip}
-        diskEncryptionEnabled={false}
         error={error}
         handleChange={this.handleUpdatePassword}
         hideStrengthLabel
@@ -62,7 +61,6 @@ class UserDefinedText extends React.Component<Props, {}> {
         password={this.props.value}
         placeholder={placeholder}
         required={!isOptional}
-        toggleDiskEncryptionEnabled={() => null}
         tooltipInteractive={tooltipInteractive}
       />
     );

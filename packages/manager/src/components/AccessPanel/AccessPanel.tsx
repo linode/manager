@@ -40,7 +40,8 @@ interface Props {
   className?: string;
   disabled?: boolean;
   disabledReason?: JSX.Element | string;
-  diskEncryptionEnabled: boolean;
+  diskEncryptionEnabled?: boolean;
+  displayDiskEncryption?: boolean;
   error?: string;
   handleChange: (value: string) => void;
   heading?: string;
@@ -54,7 +55,7 @@ interface Props {
   selectedRegion?: string;
   setAuthorizedUsers?: (usernames: string[]) => void;
   small?: boolean;
-  toggleDiskEncryptionEnabled: () => void;
+  toggleDiskEncryptionEnabled?: () => void;
   tooltipInteractive?: boolean;
 }
 
@@ -65,6 +66,7 @@ export const AccessPanel = (props: Props) => {
     disabled,
     disabledReason,
     diskEncryptionEnabled,
+    displayDiskEncryption,
     error,
     handleChange: _handleChange,
     hideStrengthLabel,
@@ -96,6 +98,29 @@ export const AccessPanel = (props: Props) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     _handleChange(e.target.value);
+
+  /**
+   * Display the "Disk Encryption" section if:
+   * 1) the feature is enabled
+   * 2) "displayDiskEncryption" is explicitly passed -- <AccessPanel />
+   * gets used in several places, but we don't want to display Disk Encryption in all
+   * 3) toggleDiskEncryptionEnabled is defined
+   */
+  const diskEncryptionJSX =
+    isDiskEncryptionFeatureEnabled &&
+    displayDiskEncryption &&
+    toggleDiskEncryptionEnabled !== undefined ? (
+      <>
+        <Divider spacingBottom={20} spacingTop={24} />
+        <DiskEncryption
+          descriptionCopy={DISK_ENCRYPTION_GENERAL_DESCRIPTION}
+          disabled={!regionSupportsDiskEncryption}
+          disabledReason={DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY}
+          isEncryptDiskChecked={diskEncryptionEnabled ?? false}
+          toggleDiskEncryptionEnabled={toggleDiskEncryptionEnabled}
+        />
+      </>
+    ) : null;
 
   return (
     <Paper
@@ -145,18 +170,7 @@ export const AccessPanel = (props: Props) => {
           />
         </>
       ) : null}
-      {isDiskEncryptionFeatureEnabled && (
-        <>
-          <Divider spacingBottom={20} spacingTop={24} />
-          <DiskEncryption
-            descriptionCopy={DISK_ENCRYPTION_GENERAL_DESCRIPTION}
-            disabled={!regionSupportsDiskEncryption}
-            disabledReason={DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY}
-            isEncryptDiskChecked={diskEncryptionEnabled}
-            toggleDiskEncryptionEnabled={toggleDiskEncryptionEnabled}
-          />
-        </>
-      )}
+      {diskEncryptionJSX}
     </Paper>
   );
 };

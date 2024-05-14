@@ -420,7 +420,11 @@ export class LinodeCreate extends React.PureComponent<
       );
     }
 
-    if (regionSupportsDiskEncryption && this.props.diskEncryptionEnabled) {
+    if (
+      flags.linodeDiskEncryption &&
+      regionSupportsDiskEncryption &&
+      this.props.diskEncryptionEnabled
+    ) {
       displaySections.push({
         title: 'Encrypted',
       });
@@ -696,6 +700,7 @@ export class LinodeCreate extends React.PureComponent<
               data-qa-access-panel
               disabled={!this.props.selectedImageID || userCannotCreateLinode}
               diskEncryptionEnabled={this.props.diskEncryptionEnabled}
+              displayDiskEncryption
               error={hasErrorFor.root_pass}
               handleChange={this.props.updatePassword}
               password={this.props.password}
