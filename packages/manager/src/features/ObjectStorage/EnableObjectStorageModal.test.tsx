@@ -1,6 +1,7 @@
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 
+import { objectStorageTypeFactory } from 'src/factories';
 import { OBJ_STORAGE_PRICE } from 'src/utilities/pricing/constants';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
@@ -23,7 +24,26 @@ const props: EnableObjectStorageProps = {
   open: true,
 };
 
+const queryMocks = vi.hoisted(() => ({
+  useObjectStorageTypes: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/queries/objectStorage', async () => {
+  const actual = await vi.importActual('src/queries/objectStorage');
+  return {
+    ...actual,
+    useObjectStorageTypesQuery: queryMocks.useObjectStorageTypes,
+  };
+});
+
 describe('EnableObjectStorageModal', () => {
+  beforeEach(() => {
+    const mockObjectStorageTypes = objectStorageTypeFactory.build();
+    queryMocks.useObjectStorageTypes.mockReturnValue({
+      data: mockObjectStorageTypes,
+    });
+  });
+
   it('includes a header', () => {
     const { getAllByText } = render(
       wrapWithTheme(<EnableObjectStorageModal {...props} />)
