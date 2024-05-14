@@ -93,8 +93,8 @@ export const SelectFirewallPanel = (props: Props) => {
               category: 'select',
               createType:
                 (queryParams.type as LinodeCreateType) ?? 'Distributions',
-              formStepName: 'VPC Panel',
-              label: 'Assign VPC',
+              formStepName: 'Firewall Panel',
+              label: 'Assign Firewall',
               version: 'v1',
             });
           }}
