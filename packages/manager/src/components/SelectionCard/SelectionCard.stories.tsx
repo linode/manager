@@ -47,12 +47,18 @@ export const Default: StoryObj<SelectionCardProps> = {
 const meta: Meta<SelectionCardProps> = {
   argTypes: {
     renderIcon: {
-      control: { type: 'select' },
-      options: iconOptions,
+      control: {
+        type: 'select',
+      },
+      mapping: iconOptions,
+      options: Object.keys(iconOptions),
     },
     renderVariant: {
-      control: { type: 'select' },
-      options: variantOptions,
+      control: {
+        type: 'select',
+      },
+      mapping: variantOptions,
+      options: Object.keys(variantOptions),
     },
   },
   args: {
