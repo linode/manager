@@ -75,11 +75,13 @@ export const createImage = (
 export const updateImage = (
   imageId: string,
   label?: string,
-  description?: string
+  description?: string,
+  tags?: string[]
 ) => {
   const data = {
     ...(label && { label }),
     ...(description && { description }),
+    ...(tags && { tags }),
   };
 
   return Request<Image>(
