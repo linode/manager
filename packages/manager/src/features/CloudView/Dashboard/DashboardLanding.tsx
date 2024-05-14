@@ -99,6 +99,9 @@ export const DashBoardLanding = () => {
     if (changedFilter == 'resource') {
       dashbboardPropRef.current.dashboardFilters.resource =
         globalFilter.resource;
+      aclpConf.dashboardId = dashbboardPropRef.current.dashbaord
+        ? dashbboardPropRef.current.dashbaord.id
+        : undefined!;
       aclpConf.resources = globalFilter.resource;
     }
 
@@ -122,9 +125,23 @@ export const DashBoardLanding = () => {
 
   const handleDashboardChange = (dashboard: Dashboard) => {
     console.log('triggered');
-    const dashbaordProps = { ...dashboardProp };
-    dashbaordProps.dashbaord = dashboard;
-    dashbaordProps.dashboardFilters.serviceType = dashboard.service_type;
+
+    if (!dashboard) {
+      dashbboardPropRef.current.dashbaord = undefined!;
+      dashbboardPropRef.current.dashboardFilters.serviceType = undefined!;
+      updatedDashboard.current = undefined!;
+      setDashboardProp({ ...dashbboardPropRef.current });
+      let aclpConf: AclpConfig = {} as AclpConfig;
+
+      if (preferences && preferences.aclpPreference) {
+        aclpConf = { ...preferences.aclpPreference };
+      }
+
+      aclpConf.dashboardId = undefined!;
+
+      handlPrefChange(aclpConf);
+      return;
+    }
 
     if (!dashbboardPropRef || !dashbboardPropRef.current) {
       dashbboardPropRef.current = getInitDashboardProps();

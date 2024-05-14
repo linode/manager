@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import { aR } from 'vitest/dist/reporters-1evA5lom';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import Select from 'src/components/EnhancedSelect/Select';
 import {
   useLinodeResourcesQuery,
   useLoadBalancerResourcesQuery,
@@ -11,7 +11,7 @@ import {
 interface CloudViewResourceSelectProps {
   defaultValue?: any[];
   disabled: boolean;
-  handleResourceChange: (resource: any) => void;
+  handleResourceChange: (resource: any, reason: string) => void;
   region: string | undefined;
   resourceType: string | undefined;
 }
@@ -20,6 +20,8 @@ export const CloudViewMultiResourceSelect = (
   props: CloudViewResourceSelectProps
 ) => {
   const resourceOptions: any = {};
+
+  const [reason, setReason] = React.useState<string>('default');
 
   const getResourceList = () => {
     if (props.region && props.resourceType) {
@@ -31,39 +33,9 @@ export const CloudViewMultiResourceSelect = (
   };
 
   const getSelectedResource = () => {
-    // let arraysEqual = true;
-    // if (
-    //   selectedResource &&
-    //   props.defaultValue &&
-    //   resourceOptions[props.resourceType!]
-    // ) {
-    //   const selectedIds = selectedResource.map((obj: any) => obj.id);
-    //   const notPresents = [];
-
-    //   for (let i = 0; i < props.defaultValue.length; i++) {
-    //     if (!selectedIds.includes(props.defaultValue[i])) {
-    //       arraysEqual = false;
-    //       notPresents.push(
-    //         getResourceList().find(
-    //           (obj: any) =>
-    //             props.defaultValue && obj.id == props.defaultValue[i]
-    //         )
-    //       );
-    //     }
-    //   }
-
-    //   if (!arraysEqual) {
-    //     const selects = [...selectedResource];
-    //     notPresents.forEach((obj) => selects.push(obj));
-    //     setResource(selects);
-    //     return selects;
-    //   }
-
-    // }
-
     if (selectedResource && selectedResource.length > 0) {
       return selectedResource;
-    } else {
+    } else if (reason != 'clear') {
       const resourcesObj = getResourceList().filter(
         (obj: any) => props.defaultValue && props.defaultValue?.includes(obj.id)
       );
@@ -100,14 +72,14 @@ export const CloudViewMultiResourceSelect = (
   ));
 
   React.useEffect(() => {
-    props.handleResourceChange(selectedResource);
+    props.handleResourceChange(selectedResource, reason);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedResource]);
 
   React.useEffect(() => {
     setResource([]);
     setResourceInputValue('');
-    props.handleResourceChange([]);
+    props.handleResourceChange([], 'clear');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.region, props.resourceType]);
 
@@ -116,7 +88,14 @@ export const CloudViewMultiResourceSelect = (
     !resourceOptions[props.resourceType!] ||
     !props.region
   ) {
-    return <></>;
+    return (
+      <Select
+        isClearable={true}
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        onChange={() => {}}
+        placeholder="Select Resources"
+      />
+    );
   }
 
   return (
@@ -124,7 +103,8 @@ export const CloudViewMultiResourceSelect = (
       onChange={(_: any, resource: any) => {
         setResource(resource);
       }}
-      onInputChange={(event, newInputValue) => {
+      onInputChange={(event, newInputValue, reason) => {
+        setReason(reason);
         setResourceInputValue(newInputValue);
       }}
       autoHighlight

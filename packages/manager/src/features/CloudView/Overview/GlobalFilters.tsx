@@ -62,9 +62,9 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     }
   };
 
-  const handleResourceChange = (resourceId: any[]) => {
+  const handleResourceChange = (resourceId: any[], reason: string) => {
     console.log('Resource ID: ', resourceId);
-    if (resourceId && resourceId.length > 0) {
+    if ((resourceId && resourceId.length > 0) || reason == 'clear') {
       emitGlobalFilterChange(
         {
           ...props.globalFilters,
@@ -75,11 +75,14 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     }
   };
 
-  const handleDashboardChange = (dashboard: Dashboard | undefined) => {
+  const handleDashboardChange = (
+    dashboard: Dashboard | undefined,
+    isClear: boolean
+  ) => {
     console.log('Selected Dashboard: ', dashboard);
 
-    if (dashboard) {
-      props.handleDashboardChange(dashboard);
+    if (dashboard || (!dashboard && !isClear)) {
+      props.handleDashboardChange(dashboard!);
     }
   };
 

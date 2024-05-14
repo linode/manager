@@ -4,12 +4,16 @@ import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
+import Select from 'src/components/EnhancedSelect/Select';
 import { Typography } from 'src/components/Typography';
 import { useCloudViewDashboardsQuery } from 'src/queries/cloudview/dashboards';
 
 export interface CloudViewDashbboardSelectProps {
   defaultValue?: number;
-  handleDashboardChange: (dashboard: Dashboard | undefined) => void;
+  handleDashboardChange: (
+    dashboard: Dashboard | undefined,
+    isClear: boolean
+  ) => void;
 }
 
 export const CloudViewDashboardSelect = React.memo(
@@ -20,6 +24,10 @@ export const CloudViewDashboardSelect = React.memo(
       isLoading,
     } = useCloudViewDashboardsQuery();
 
+    const [defaultSet, setDefaultSet] = React.useState<boolean>(
+      props.defaultValue ? false : true
+    );
+
     const errorText: string = error ? 'Error loading dashboards' : '';
 
     const [selectedDashboard, setDashboard] = React.useState<
@@ -27,7 +35,7 @@ export const CloudViewDashboardSelect = React.memo(
     >();
 
     React.useEffect(() => {
-      props.handleDashboardChange(selectedDashboard);
+      props.handleDashboardChange(selectedDashboard, !defaultSet);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedDashboard]);
 
@@ -39,11 +47,17 @@ export const CloudViewDashboardSelect = React.memo(
     };
 
     const getPrefferedBoard = () => {
-      if (!selectedDashboard && dashboardsList?.data && props.defaultValue) {
+      if (
+        !selectedDashboard &&
+        dashboardsList?.data &&
+        props.defaultValue &&
+        !defaultSet
+      ) {
         const match = dashboardsList?.data.find(
           (obj) => obj.id == props.defaultValue
         );
         setDashboard(match);
+        setDefaultSet(true);
         return match;
       }
 
@@ -51,7 +65,14 @@ export const CloudViewDashboardSelect = React.memo(
     };
 
     if (!dashboardsList) {
-      return <></>
+      return (
+        <Select
+          isClearable={true}
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          onChange={() => {}}
+          placeholder="Select Dashboard"
+        />
+      );
     }
 
     return (
