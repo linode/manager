@@ -13,10 +13,8 @@ import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCre
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
-import {
-  sendLinodeCreateDocsEvent,
-  sendLinodeCreateFormStepEvent,
-} from 'src/utilities/analytics';
+import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import {
   DIFFERENT_PRICE_STRUCTURE_WARNING,
   DOCS_LINK_LABEL_DC_PRICING,

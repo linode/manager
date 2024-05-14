@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { SubnetFieldState } from 'src/utilities/subnets';
 

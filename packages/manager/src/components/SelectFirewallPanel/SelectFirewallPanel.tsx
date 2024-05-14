@@ -10,7 +10,7 @@ import { Typography } from 'src/components/Typography';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 import { useFirewallsQuery } from 'src/queries/firewalls';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { Autocomplete } from '../Autocomplete/Autocomplete';

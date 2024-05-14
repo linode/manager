@@ -10,7 +10,7 @@ import { CannotCreateVPCNotice } from 'src/features/VPCs/VPCCreate/FormComponent
 import { SubnetContent } from 'src/features/VPCs/VPCCreate/FormComponents/SubnetContent';
 import { VPCTopSectionContent } from 'src/features/VPCs/VPCCreate/FormComponents/VPCTopSectionContent';
 import { useCreateVPC } from 'src/hooks/useCreateVPC';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { LinodeCreateType } from './types';

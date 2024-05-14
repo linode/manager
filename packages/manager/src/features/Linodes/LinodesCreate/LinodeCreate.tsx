@@ -61,10 +61,12 @@ import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
 import {
   sendApiAwarenessClickEvent,
   sendLinodeCreateFlowDocsClickEvent,
+} from 'src/utilities/analytics/customEventAnalytics';
+import {
   sendLinodeCreateFormErrorEvent,
   sendLinodeCreateFormStepEvent,
   sendLinodeCreateFormSubmitEvent,
-} from 'src/utilities/analytics';
+} from 'src/utilities/analytics/formEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';

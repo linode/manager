@@ -8,7 +8,7 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
 import { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 import { CreateVPCFieldState } from 'src/hooks/useCreateVPC';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { VPC_CREATE_FORM_VPC_HELPER_TEXT } from '../../constants';
