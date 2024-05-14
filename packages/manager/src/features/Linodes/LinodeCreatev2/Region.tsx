@@ -20,6 +20,7 @@ export const Region = () => {
       RegionSelectProps={{
         textFieldProps: {
           inputRef: field.ref,
+          onBlur: field.onBlur,
         },
       }}
       currentCapability="Linodes"

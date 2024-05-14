@@ -10,7 +10,6 @@ const defaultProps: ApiAwarenessModalProps = {
   isOpen: false,
   onClose: vi.fn(),
   payLoad: { region: '', type: '' },
-  route: '',
 };
 
 const renderComponent = (overrideProps?: Partial<ApiAwarenessModalProps>) => {

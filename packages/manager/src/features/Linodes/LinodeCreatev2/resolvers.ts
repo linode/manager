@@ -17,7 +17,7 @@ export const resolver: Resolver<LinodeCreateFormValues> = async (
   context,
   options
 ) => {
-  const transformedValues = getLinodeCreatePayload(values);
+  const transformedValues = getLinodeCreatePayload(structuredClone(values));
 
   const { errors } = await yupResolver(
     CreateLinodeSchema,
@@ -37,7 +37,7 @@ export const stackscriptResolver: Resolver<LinodeCreateFormValues> = async (
   context,
   options
 ) => {
-  const transformedValues = getLinodeCreatePayload(values);
+  const transformedValues = getLinodeCreatePayload(structuredClone(values));
 
   const { errors } = await yupResolver(
     CreateLinodeFromStackScriptSchema,
@@ -57,7 +57,7 @@ export const cloneResolver: Resolver<LinodeCreateFormValues> = async (
   context,
   options
 ) => {
-  const transformedValues = getLinodeCreatePayload(values);
+  const transformedValues = getLinodeCreatePayload(structuredClone(values));
 
   const { errors } = await yupResolver(
     CreateLinodeByCloningSchema,
@@ -84,7 +84,7 @@ export const backupResolver: Resolver<LinodeCreateFormValues> = async (
   context,
   options
 ) => {
-  const transformedValues = getLinodeCreatePayload(values);
+  const transformedValues = getLinodeCreatePayload(structuredClone(values));
 
   const { errors } = await yupResolver(
     CreateLinodeFromBackupSchema,

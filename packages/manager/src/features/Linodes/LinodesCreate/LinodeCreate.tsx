@@ -806,7 +806,6 @@ export class LinodeCreate extends React.PureComponent<
               isOpen={showApiAwarenessModal}
               onClose={handleShowApiAwarenessModal}
               payLoad={this.getPayload()}
-              route={this.props.match.url}
             />
           </StyledButtonGroupBox>
         </Grid>
