@@ -64,8 +64,8 @@ export const linodeCreatePage = {
    * @param planTitle - Title of desired plan.
    */
   selectPlan: (planTabTitle: string, planTitle: string) => {
-    ui.tabList.findTabByTitle(planTabTitle).click();
-    ui.tabList.findTabPanelByTitle(planTabTitle).within(() => {
+    cy.get('[data-qa-tp="Linode Plan"]').within(() => {
+      ui.tabList.findTabByTitle(planTabTitle).click();
       cy.get(`[data-qa-plan-row="${planTitle}"]`)
         .closest('tr')
         .should('be.visible')
@@ -81,8 +81,8 @@ export const linodeCreatePage = {
    * Assumes that plans are displayed as selection cards.
    */
   selectPlanCard: (planTabTitle: string, planTitle: string) => {
-    ui.tabList.findTabByTitle(planTabTitle).click();
-    ui.tabList.findTabPanelByTitle(planTabTitle).within(() => {
+    cy.get('[data-qa-tp="Linode Plan"]').within(() => {
+      ui.tabList.findTabByTitle(planTabTitle).click();
       cy.findByText(planTitle)
         .should('be.visible')
         .as('selectionCard')

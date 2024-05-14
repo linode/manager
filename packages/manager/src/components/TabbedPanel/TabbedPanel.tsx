@@ -101,7 +101,6 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
           <StyledTabList>
             {tabs.map((tab, idx) => (
               <StyledTab
-                data-qa-tab={tab.title}
                 disabled={tab.disabled}
                 key={`tabs-${tab.title}-${idx}`}
               >
@@ -118,10 +117,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
           </StyledTabList>
           <TabPanels>
             {tabs.map((tab, idx) => (
-              <TabPanel
-                key={`tabs-panel-${tab.title}-${idx}`}
-                data-qa-tab-panel={tab.title}
-              >
+              <TabPanel key={`tabs-panel-${tab.title}-${idx}`}>
                 {tab.render(rest.children)}
               </TabPanel>
             ))}
