@@ -19,7 +19,7 @@ describe('Create Linode with user data', () => {
 
   /*
    * - Confirms UI flow to create a Linode with cloud-init user data specified.
-   * - (TEMPORARILY DISABLED) Confirms that outgoing API request contains expected user data payload.
+   * - Confirms that outgoing API request contains expected user data payload.
    */
   it('can specify user data during Linode Create flow', () => {
     const linodeRegion = chooseRegion({
@@ -62,10 +62,10 @@ describe('Create Linode with user data', () => {
         .click();
 
       cy.wait('@createLinode').then((xhr) => {
-        // TODO Restore assertions to confirm user data payload.
-        // May be fixed after PR #10442 is merged.
-        // const requestPayload = xhr.request.body;
-        // expect(requestPayload['metadata']['user_data']).to.equal(btoa(userDataContents));
+        const requestPayload = xhr.request.body;
+        expect(requestPayload['metadata']['user_data']).to.equal(
+          btoa(userDataContents)
+        );
       });
     });
   });
