@@ -23,3 +23,20 @@ export const mockGetNodeBalancers = (
     paginateResponse(nodeBalancers)
   );
 };
+
+/**
+ * Intercepts POST request to mock nodeBalancer data.
+ *
+ * @param nodeBalancers - an array of mock nodeBalancer objects
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateNodeBalancers = (
+  nodeBalancers: NodeBalancer[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('nodebalancers'),
+    paginateResponse(nodeBalancers)
+  );
+};

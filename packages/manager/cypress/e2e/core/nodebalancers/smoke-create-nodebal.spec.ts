@@ -25,6 +25,7 @@ const deployNodeBalancer = () => {
 };
 
 import { nodeBalancerFactory } from 'src/factories';
+import { mockCreateNodeBalancers } from 'support/intercepts/nodebalancers';
 
 const createNodeBalancerWithUI = (
   nodeBal: NodeBalancer,
@@ -93,9 +94,8 @@ describe('create NodeBalancer', () => {
         ipv4: linode.ipv4[1],
       });
       // catch request
-      cy.intercept('POST', apiMatcher('nodebalancers')).as(
-        'createNodeBalancer'
-      );
+      mockCreateNodeBalancers([nodeBal]).as('createNodeBalancer');
+
       createNodeBalancerWithUI(nodeBal);
       cy.wait('@createNodeBalancer')
         .its('response.statusCode')
@@ -110,15 +110,15 @@ describe('create NodeBalancer', () => {
   it('displays API errors for NodeBalancer Create form fields', () => {
     const region = chooseRegion();
     createLinode({ region: region.id }).then((linode) => {
-      // catch request
-      cy.intercept('POST', apiMatcher('nodebalancers')).as(
-        'createNodeBalancer'
-      );
       const nodeBal = nodeBalancerFactory.build({
         label: `${randomLabel()}-^`,
         ipv4: linode.ipv4[1],
         region: region.id,
       });
+
+      // catch request
+      mockCreateNodeBalancers([nodeBal]).as('createNodeBalancer');
+
       createNodeBalancerWithUI(nodeBal);
       fbtVisible(`Label can't contain special characters or spaces.`);
       getVisible('[id="nodebalancer-label"]')
@@ -154,9 +154,7 @@ describe('create NodeBalancer', () => {
       });
 
       // catch request
-      cy.intercept('POST', apiMatcher('nodebalancers')).as(
-        'createNodeBalancer'
-      );
+      mockCreateNodeBalancers([nodeBal]).as('createNodeBalancer');
 
       createNodeBalancerWithUI(nodeBal, true);
     });
