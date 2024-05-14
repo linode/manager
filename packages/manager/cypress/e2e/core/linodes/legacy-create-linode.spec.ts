@@ -2,7 +2,7 @@
  * @file Integration tests and end-to-end tests for legacy Linode Create flow.
  */
 // TODO Delete this test file when `linodeCreateRefactor` feature flag is retired.
-// Move out any tests (e.g. region select test) that aren't covered by new tests.
+// Move out any tests (e.g. region select test) for flows that aren't covered by new tests in the meantime.
 
 import {
   containsVisible,
@@ -82,6 +82,13 @@ authenticate();
 describe('create linode', () => {
   before(() => {
     cleanUp('linodes');
+  });
+
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeCreateRefactor: makeFeatureFlagData(false),
+    });
+    mockGetFeatureFlagClientstream();
   });
 
   /*
