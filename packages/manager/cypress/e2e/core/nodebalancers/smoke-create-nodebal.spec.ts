@@ -7,7 +7,7 @@ import {
   getClick,
   getVisible,
 } from 'support/helpers';
-import { apiMatcher } from 'support/util/intercepts';
+
 import { randomLabel } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import {
@@ -25,7 +25,7 @@ const deployNodeBalancer = () => {
 };
 
 import { nodeBalancerFactory } from 'src/factories';
-import { mockCreateNodeBalancers } from 'support/intercepts/nodebalancers';
+import { interceptCreateNodeBalancers } from 'support/intercepts/nodebalancers';
 
 const createNodeBalancerWithUI = (
   nodeBal: NodeBalancer,
@@ -94,7 +94,7 @@ describe('create NodeBalancer', () => {
         ipv4: linode.ipv4[1],
       });
       // catch request
-      mockCreateNodeBalancers([nodeBal]).as('createNodeBalancer');
+      interceptCreateNodeBalancers().as('createNodeBalancer');
 
       createNodeBalancerWithUI(nodeBal);
       cy.wait('@createNodeBalancer')
@@ -117,7 +117,7 @@ describe('create NodeBalancer', () => {
       });
 
       // catch request
-      mockCreateNodeBalancers([nodeBal]).as('createNodeBalancer');
+      interceptCreateNodeBalancers().as('createNodeBalancer');
 
       createNodeBalancerWithUI(nodeBal);
       fbtVisible(`Label can't contain special characters or spaces.`);
@@ -154,7 +154,7 @@ describe('create NodeBalancer', () => {
       });
 
       // catch request
-      mockCreateNodeBalancers([nodeBal]).as('createNodeBalancer');
+      interceptCreateNodeBalancers().as('createNodeBalancer');
 
       createNodeBalancerWithUI(nodeBal, true);
     });
