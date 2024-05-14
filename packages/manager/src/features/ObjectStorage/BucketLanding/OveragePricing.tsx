@@ -32,6 +32,7 @@ export const OveragePricing = (props: Props) => {
   const overageType = types?.find((type) => type.id.includes('overage'));
 
   const storageOveragePrice = getDCSpecificPriceByType({
+    decimalPrecision: 3,
     interval: 'hourly',
     regionId,
     type: overageType,

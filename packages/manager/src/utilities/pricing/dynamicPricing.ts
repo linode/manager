@@ -22,6 +22,11 @@ export interface DataCenterPricingOptions {
 
 export interface DataCenterPricingByTypeOptions {
   /**
+   * The number of decimal places to return for the price.
+   *  @default 2
+   */
+  decimalPrecision?: number;
+  /**
    * The time period for which to find pricing data for (hourly or monthly).
    *  @default monthly
    */
@@ -99,6 +104,7 @@ export const getDCSpecificPrice = ({
  * @returns a data center specific price or undefined if this cannot be calculated
  */
 export const getDCSpecificPriceByType = ({
+  decimalPrecision = 2,
   interval = 'monthly',
   regionId,
   size,
@@ -115,10 +121,10 @@ export const getDCSpecificPriceByType = ({
 
   // If pricing is determined by size of the entity
   if (size && price) {
-    return (size * price).toFixed(2);
+    return (size * price).toFixed(decimalPrecision);
   }
 
-  return price?.toFixed(interval === 'hourly' ? 3 : 2) ?? undefined;
+  return price?.toFixed(decimalPrecision) ?? undefined;
 };
 
 export const renderMonthlyPriceToCorrectDecimalPlace = (

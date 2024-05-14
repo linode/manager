@@ -37,10 +37,11 @@ export const EnableObjectStorageModal = React.memo(
 
     const price = regionId
       ? getDCSpecificPriceByType({
+          decimalPrecision: 0,
           regionId,
           type: objectStorageType,
         })
-      : objectStorageType?.price.monthly?.toFixed(2);
+      : objectStorageType?.price.monthly;
 
     return (
       <ConfirmationDialog
