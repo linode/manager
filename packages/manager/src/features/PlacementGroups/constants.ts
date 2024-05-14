@@ -22,6 +22,9 @@ export const MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION =
 export const NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE =
   'There are no placement groups in this region.';
 
+export const NO_REGIONS_SUPPORT_PLACEMENT_GROUPS_MESSAGE =
+  'No regions currently support Placement Groups.';
+
 // Links
 export const PLACEMENT_GROUPS_DOCS_LINK =
   'https://www.linode.com/docs/products/compute/compute-instances/guides/placement-groups/';

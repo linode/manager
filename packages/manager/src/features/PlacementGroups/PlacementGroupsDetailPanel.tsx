@@ -15,7 +15,10 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
-import { PLACEMENT_GROUP_SELECT_TOOLTIP_COPY } from './constants';
+import {
+  NO_REGIONS_SUPPORT_PLACEMENT_GROUPS_MESSAGE,
+  PLACEMENT_GROUP_SELECT_TOOLTIP_COPY,
+} from './constants';
 import { StyledDetailPanelFormattedRegionList } from './PlacementGroups.styles';
 
 import type { PlacementGroup } from '@linode/api-v4';
@@ -109,7 +112,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
                     ))}
                   </StyledDetailPanelFormattedRegionList>
                 ) : (
-                  'No regions currently support Placement Groups.'
+                  NO_REGIONS_SUPPORT_PLACEMENT_GROUPS_MESSAGE
                 )
               }
               displayText="regions"
