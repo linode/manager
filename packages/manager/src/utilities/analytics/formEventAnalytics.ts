@@ -1,6 +1,6 @@
-import { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import { sendFormEvent } from './utils';
 
-import {
+import type {
   BasicFormEvent,
   FormErrorEvent,
   FormInputEvent,
@@ -8,7 +8,7 @@ import {
   LinodeCreateFlowVersion,
   LinodeCreateFormStepOptions,
 } from './types';
-import { sendFormEvent } from './utils';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 /**
  * Form Events

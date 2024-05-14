@@ -6,13 +6,14 @@ import { useLocation } from 'react-router-dom';
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
-import { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 import { CreateVPCFieldState } from 'src/hooks/useCreateVPC';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { VPC_CREATE_FORM_VPC_HELPER_TEXT } from '../../constants';
 import { StyledBodyTypography } from './VPCCreateForm.styles';
+
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 interface Props {
   disabled?: boolean;

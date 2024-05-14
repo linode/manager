@@ -13,7 +13,7 @@ import { useCreateVPC } from 'src/hooks/useCreateVPC';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import { LinodeCreateType } from './types';
+import type { LinodeCreateType } from './types';
 
 interface Props {
   handleSelectVPC: (vpcId: number) => void;

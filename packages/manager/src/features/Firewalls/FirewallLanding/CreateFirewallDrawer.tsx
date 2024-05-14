@@ -21,14 +21,13 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
-import { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
+import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useCreateFirewall } from 'src/queries/firewalls';
-import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
 import { useGrants } from 'src/queries/profile';
@@ -45,6 +44,8 @@ import {
   LINODE_CREATE_FLOW_TEXT,
   NODEBALANCER_CREATE_FLOW_TEXT,
 } from './constants';
+
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';

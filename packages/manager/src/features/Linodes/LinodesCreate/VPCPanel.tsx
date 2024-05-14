@@ -25,9 +25,9 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { REGION_CAVEAT_HELPER_TEXT } from './constants';
-import { LinodeCreateType } from './types';
 import { VPCCreateDrawer } from './VPCCreateDrawer';
 
+import type { LinodeCreateType } from './types';
 import type { Item } from 'src/components/EnhancedSelect';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
