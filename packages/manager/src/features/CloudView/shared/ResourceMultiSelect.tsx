@@ -77,6 +77,9 @@ export const CloudViewMultiResourceSelect = (
   }, [selectedResource]);
 
   React.useEffect(() => {
+    if (!selectedResource || selectedResource.length == 0) {
+      return;
+    }
     setResource([]);
     setResourceInputValue('');
     props.handleResourceChange([], 'clear');
