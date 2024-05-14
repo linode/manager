@@ -12,37 +12,52 @@ import type { PlacementGroup, Region } from '@linode/api-v4';
 import type { SxProps } from '@mui/system';
 
 export interface PlacementGroupsSelectProps {
-  clearOnBlur?: boolean;
-  clearable?: boolean;
-  defaultValue?: PlacementGroup;
+  /**
+   * If true, the component will be disabled.
+   */
   disabled?: boolean;
-  errorText?: string;
-  handlePlacementGroupChange: (selected: PlacementGroup) => void;
-  id?: string;
+  /**
+   * A callback to execute when the selected Placement Group changes.
+   * The selection is handled by a parent component.
+   */
+  handlePlacementGroupChange: (selected: PlacementGroup | null) => void;
+  /**
+   * The label for the TextField component.
+   */
   label: string;
+  /**
+   * If true, the component will display a loading spinner. (usually when fetching data)
+   */
   loading?: boolean;
+  /**
+   * The message to display when there are no options available.
+   */
   noOptionsMessage?: string;
-  onBlur?: (e: React.FocusEvent) => void;
-  selectedPlacementGroup: PlacementGroup | null;
-  selectedRegion?: Region;
+  /**
+   * The ID of the selected Placement Group.
+   */
+  selectedPlacementGroupId: null | number;
+  /**
+   * We want to pass the full region object here so we can check if the selected Placement Group is at capacity.
+   */
+  selectedRegion: Region | undefined;
+  /**
+   * Any additional styles to apply to the root element.
+   */
   sx?: SxProps;
+  /**
+   * Any additional props to pass to the TextField component.
+   */
   textFieldProps?: Partial<TextFieldProps>;
 }
 
 export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const {
-    clearOnBlur,
-    clearable = true,
-    defaultValue,
     disabled,
-    errorText,
     handlePlacementGroupChange,
-    id,
     label,
-    loading,
     noOptionsMessage,
-    onBlur,
-    selectedPlacementGroup,
+    selectedPlacementGroupId,
     selectedRegion,
     sx,
     ...textFieldProps
@@ -51,8 +66,15 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const {
     data: placementGroups,
     error,
+    isFetching,
     isLoading,
-  } = useAllPlacementGroupsQuery(Boolean(selectedRegion?.id));
+  } = useAllPlacementGroupsQuery({
+    enabled: Boolean(selectedRegion?.id),
+    // Placement Group selection is always dependent on a selected region.
+    filter: {
+      region: selectedRegion?.id,
+    },
+  });
 
   const isDisabledPlacementGroup = (
     selectedPlacementGroup: PlacementGroup,
@@ -68,17 +90,9 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
     });
   };
 
-  if (!placementGroups) {
-    return null;
-  }
-
-  const placementGroupsOptions: PlacementGroup[] = placementGroups.filter(
-    (placementGroup) => placementGroup.region === selectedRegion?.id
-  );
-
   const selection =
-    placementGroupsOptions.find(
-      (placementGroup) => placementGroup.id === selectedPlacementGroup?.id
+    placementGroups?.find(
+      (placementGroup) => placementGroup.id === selectedPlacementGroupId
     ) ?? null;
 
   return (
@@ -86,8 +100,8 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       noOptionsText={
         noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
       }
-      onChange={(_, selectedOption: PlacementGroup) => {
-        handlePlacementGroupChange(selectedOption);
+      onChange={(_, selectedOption) => {
+        handlePlacementGroupChange(selectedOption ?? null);
       }}
       renderOption={(props, option, { selected }) => {
         return (
@@ -101,18 +115,14 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
           />
         );
       }}
-      clearOnBlur={clearOnBlur}
+      clearOnBlur={true}
       data-testid="placement-groups-select"
-      defaultValue={defaultValue}
-      disableClearable={!clearable}
       disabled={Boolean(!selectedRegion?.id) || disabled}
-      errorText={errorText}
+      errorText={error?.[0]?.reason}
       getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
-      id={id}
       label={label}
-      loading={isLoading || loading}
-      onBlur={onBlur}
-      options={placementGroupsOptions ?? []}
+      loading={isFetching}
+      options={placementGroups ?? []}
       placeholder="None"
       sx={sx}
       value={selection}
