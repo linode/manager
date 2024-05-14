@@ -48,7 +48,7 @@ interface GeckoFlag {
   ga: boolean;
 }
 
-interface CloudPulseFlag {
+interface AclpFlag {
   beta: boolean;
   enabled: boolean;
 }
@@ -58,7 +58,7 @@ type OneClickApp = Record<string, string>;
 export interface Flags {
   aclb: boolean;
   aclbFullCreateFlow: boolean;
-  aclp: CloudPulseFlag;
+  aclp: AclpFlag;
   apiMaintenance: APIMaintenance;
   databaseBeta: boolean;
   databaseResize: boolean;
