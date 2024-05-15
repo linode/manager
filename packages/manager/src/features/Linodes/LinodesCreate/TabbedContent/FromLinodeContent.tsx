@@ -77,7 +77,7 @@ export const FromLinodeContent = (props: CombinedProps) => {
 
   const filterDistributedRegionsLinodes = (linodes: Linode[]) =>
     linodes.filter(
-      (linode) => !getIsDistributedRegion(regionsData, linode.region) // Hide linodes that are in an distributed region
+      (linode) => !getIsDistributedRegion(regionsData, linode.region) // Hide linodes that are in a distributed region
     );
 
   const filteredLinodes = flags.gecko2?.enabled
