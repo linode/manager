@@ -17,9 +17,8 @@ export const logTestTagInfo: CypressPlugin = (_on, config) => {
     const rules = getQueryRules(query);
 
     if (rules.length) {
-      console.info(`Running tests that satisfy tag query '${query}'.`);
       console.info(
-        'Running tests that satisfy all of the following tag rules:'
+        `Running tests that satisfy all of the following tag rules for query '${query}':`
       );
 
       console.table(

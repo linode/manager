@@ -70,11 +70,6 @@ export const addTag = (...tags: TestTag[]) => {
       ...tags,
     ]);
   }
-  // const test = cy.state('test');
-  // if (test) {
-  //   testTagMap.set(test.id, removeDuplicates([...testTagMap[test.id] || [], ...tags]));
-  //   console.log(`Set tag for ${test.id} to ${removeDuplicates(tags).join(' ')}`);
-  // }
 };
 
 /**
@@ -127,7 +122,8 @@ export const getHumanReadableQueryRules = (query: string) => {
     const queryOperation = queryRule[0];
     const queryOperands = queryRule.slice(1).split(',');
 
-    const operationName = queryOperation === '+' ? 'HAS' : 'DOES NOT HAVE';
+    const operationName =
+      queryOperation === '+' ? `HAS TAG` : `DOES NOT HAVE TAG`;
     const tagNames = queryOperands.join(' OR ');
 
     return `${operationName} ${tagNames}`;
