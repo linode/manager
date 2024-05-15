@@ -188,7 +188,7 @@ export const AddIPDrawer = (props: Props) => {
           {linodeIsInDistributedRegion && (
             <Notice
               sx={{ fontSize: 15 }}
-              text="Private IP is currently not available for Distributed regions."
+              text="Private IP is currently not available for distributed regions."
               variant="warning"
             />
           )}
