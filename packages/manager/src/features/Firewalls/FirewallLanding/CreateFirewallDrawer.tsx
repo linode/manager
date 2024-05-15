@@ -308,7 +308,7 @@ export const CreateFirewallDrawer = React.memo(
             value={values.label}
           />
 
-          <Typography style={{ marginTop: 16 }}>
+          <Typography style={{ marginTop: 24 }}>
             <strong>Default Inbound Policy</strong>
           </Typography>
           <RadioGroup
