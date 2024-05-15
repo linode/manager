@@ -147,7 +147,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
                   icon={<DistributedRegion />}
                   status="other"
                   sxTooltipIcon={sxDistributedRegionIcon}
-                  text="This region is an distributed region."
+                  text="This region is a distributed region."
                 />
               ),
             required,
