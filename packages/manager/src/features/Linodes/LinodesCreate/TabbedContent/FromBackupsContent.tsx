@@ -83,7 +83,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       linodes.filter(
         (linode) =>
           linode.backups.enabled &&
-          !getIsDistributedRegion(regionsData, linode.region) // Hide linodes that are in an distributed region
+          !getIsDistributedRegion(regionsData, linode.region) // Hide linodes that are in a distributed region
       );
 
     return (
