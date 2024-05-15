@@ -131,6 +131,7 @@ describe('create linode', () => {
   });
 
   it('creates a nanode', () => {
+    cy.tag('method:e2e', 'feat:linodes');
     const rootpass = randomString(32);
     const linodeLabel = randomLabel();
     // intercept request
@@ -153,6 +154,7 @@ describe('create linode', () => {
   });
 
   it('creates a linode via CLI', () => {
+    cy.tag('method:e2e', 'feat:linodes');
     const linodeLabel = randomLabel();
     const linodePass = randomString(32);
     const linodeRegion = chooseRegion();
@@ -228,6 +230,7 @@ describe('create linode', () => {
    * - Confirms that backups pricing is correct when selecting a region with a different price structure.
    */
   it('shows DC-specific pricing information during create flow', () => {
+    cy.tag('method:mock', 'feat:linodes');
     const rootpass = randomString(32);
     const linodeLabel = randomLabel();
     const initialRegion = getRegionById('us-west');
@@ -334,6 +337,7 @@ describe('create linode', () => {
   });
 
   it("prevents a VPC from being assigned in a region that doesn't support VPCs during the Linode Create flow", () => {
+    cy.tag('method:mock', 'feat:linodes');
     const region: Region = getRegionById('us-southeast');
     const mockNoVPCRegion = regionFactory.build({
       id: region.id,
@@ -376,6 +380,7 @@ describe('create linode', () => {
   });
 
   it('assigns a VPC to the linode during create flow', () => {
+    cy.tag('method:mock', 'feat:linodes');
     const rootpass = randomString(32);
     const linodeLabel = randomLabel();
     const region: Region = getRegionById('us-southeast');
