@@ -86,7 +86,11 @@ export const LinodeCreatev2 = () => {
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
-          methods.setError(error.field, { message: error.reason });
+          methods.setError(
+            error.field,
+            { message: error.reason },
+            { shouldFocus: true }
+          );
         } else {
           methods.setError('root', { message: error.reason });
         }
