@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React, { useState } from 'react';
-import { useFormContext, useController } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 
 import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -51,10 +51,12 @@ export const LinodeSelectTable = (props: Props) => {
 
   const { control, reset } = useFormContext<LinodeCreateFormValues>();
 
-  const { field, fieldState } = useController<LinodeCreateFormValues, 'linode'>({
-    control,
-    name: 'linode',
-  });
+  const { field, fieldState } = useController<LinodeCreateFormValues, 'linode'>(
+    {
+      control,
+      name: 'linode',
+    }
+  );
 
   const { params } = useLinodeCreateQueryParams();
 
@@ -105,7 +107,7 @@ export const LinodeSelectTable = (props: Props) => {
   return (
     <Stack pt={1} spacing={2}>
       {fieldState.error?.message && (
-        <Notice text={fieldState.error?.message} variant="error" rootRef={field.ref} />
+        <Notice text={fieldState.error?.message} variant="error" />
       )}
       <DebouncedSearchTextField
         customValue={{

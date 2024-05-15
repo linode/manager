@@ -90,11 +90,7 @@ export const BackupSelect = () => {
       <Stack spacing={2}>
         <Typography variant="h2">Select Backup</Typography>
         {fieldState.error?.message && (
-          <Notice
-            rootRef={field.ref}
-            text={fieldState.error.message}
-            variant="error"
-          />
+          <Notice text={fieldState.error.message} variant="error" />
         )}
         {renderContent()}
       </Stack>

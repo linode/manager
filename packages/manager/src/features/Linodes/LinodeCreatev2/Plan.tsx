@@ -41,7 +41,6 @@ export const Plan = () => {
       data-qa-select-plan
       disabled={isLinodeCreateRestricted}
       error={fieldState.error?.message}
-      errorRef={field.ref}
       isCreate
       linodeID={linode?.id}
       onSelect={field.onChange}

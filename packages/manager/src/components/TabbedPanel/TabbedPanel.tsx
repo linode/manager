@@ -27,7 +27,6 @@ interface TabbedPanelProps {
   copy?: string;
   docsLink?: JSX.Element;
   error?: JSX.Element | string;
-  errorRef?: React.Ref<HTMLDivElement>;
   handleTabChange?: () => void;
   header: string;
   initTab?: number;
@@ -45,7 +44,6 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
     copy,
     docsLink,
     error,
-    errorRef,
     handleTabChange,
     header,
     initTab,
@@ -94,12 +92,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
           {docsLink}
         </Box>
         {error && (
-          <Notice
-            rootRef={errorRef}
-            spacingBottom={0}
-            spacingTop={12}
-            variant="error"
-          >
+          <Notice spacingBottom={0} spacingTop={12} variant="error">
             {error}
           </Notice>
         )}

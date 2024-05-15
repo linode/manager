@@ -23,7 +23,8 @@ export const Actions = () => {
   });
 
   const onOpenAPIAwareness = async () => {
-    if (await trigger(undefined, { shouldFocus: true })) {
+    if (await trigger()) {
+      // If validation is successful, we open the dialog.
       setIsAPIAwarenessModalOpen(true);
     }
   };
