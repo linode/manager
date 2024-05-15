@@ -203,7 +203,7 @@ export const getSelectedRegionsByIds = ({
 /**
  * Util to determine whether a create type has support for distributed regions.
  *
- * @returns a boolean indicating whether or not the create type is distributed region supported.
+ * @returns a boolean indicating whether or not the create type supports distributed regions.
  */
 export const isDistributedRegionSupported = (createType: LinodeCreateType) => {
   const supportedDistributedRegionTypes: SupportedDistributedRegionTypes[] = [
