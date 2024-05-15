@@ -2,6 +2,7 @@ import { Dashboard } from '@linode/api-v4';
 import { Paper } from '@mui/material';
 import * as React from 'react';
 
+import { CircleProgress } from 'src/components/CircleProgress';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
 import { AclpConfig } from '../Models/CloudPulsePreferences';
@@ -48,9 +49,13 @@ export const DashBoardLanding = () => {
     getInitDashboardProps()
   );
 
+  // since dashboard prop is mutable and savable
   const dashbboardPropRef = React.useRef<DashboardProperties>(
     getInitDashboardProps()
   );
+
+  // since preference is mutable and savable
+  const preferenceRef = React.useRef<any>();
 
   const { data: preferences, refetch: refetchPreferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
@@ -77,29 +82,27 @@ export const DashBoardLanding = () => {
       dashbboardPropRef.current = getInitDashboardProps();
     }
 
-    let aclpConf: AclpConfig = {} as AclpConfig;
-
-    if (preferences && preferences.aclpPreference) {
-      aclpConf = { ...preferences.aclpPreference };
-    }
-
     if (changedFilter == 'timeduration') {
       dashbboardPropRef.current.dashboardFilters.duration =
         globalFilter.duration;
       dashbboardPropRef.current.dashboardFilters.timeRange =
         globalFilter.timeRange;
-      aclpConf.timeDuration = globalFilter.durationLabel;
+      preferenceRef.current.aclpPreference.timeDuration =
+        globalFilter.durationLabel;
     }
 
     if (
       changedFilter == 'region' &&
       dashbboardPropRef.current.dashboardFilters.region != globalFilter.region
     ) {
-      console.log('region', globalFilter.region);
       dashbboardPropRef.current.dashboardFilters.region = globalFilter.region;
-      aclpConf.region = globalFilter.region;
-      if (preferences && preferences.aclpPreference.region != aclpConf.region) {
-        aclpConf.resources = [];
+      preferenceRef.current.aclpPreference.region = globalFilter.region;
+      if (
+        preferences &&
+        preferences.aclpPreference.region !=
+          preferenceRef.current.aclpPreference.region
+      ) {
+        preferenceRef.current.aclpPreference.resources = [];
         dashbboardPropRef.current.dashboardFilters.resource = [];
       }
     }
@@ -107,18 +110,20 @@ export const DashBoardLanding = () => {
     if (changedFilter == 'resource') {
       dashbboardPropRef.current.dashboardFilters.resource =
         globalFilter.resource;
-      aclpConf.dashboardId = dashbboardPropRef.current.dashbaord
+      preferenceRef.current.aclpPreference.dashboardId = dashbboardPropRef
+        .current.dashbaord
         ? dashbboardPropRef.current.dashbaord.id
         : undefined!;
-      aclpConf.region = dashbboardPropRef.current.dashboardFilters.region;
-      aclpConf.resources = globalFilter.resource;
+      preferenceRef.current.aclpPreference.region =
+        dashbboardPropRef.current.dashboardFilters.region;
+      preferenceRef.current.aclpPreference.resources = globalFilter.resource;
     }
 
     if (changedFilter == 'timestep') {
       dashbboardPropRef.current.dashboardFilters.interval =
         globalFilter.interval;
       dashbboardPropRef.current.dashboardFilters.step = globalFilter.step;
-      aclpConf.interval = globalFilter.interval;
+      preferenceRef.current.aclpPreference.interval = globalFilter.interval;
     }
     // set as dashboard filter
     setDashboardProp({
@@ -127,29 +132,20 @@ export const DashBoardLanding = () => {
       dashboardFilters: { ...dashbboardPropRef.current.dashboardFilters },
     });
 
-    handlPrefChange(aclpConf);
-
-    console.log('triggered');
+    handlPrefChange(preferenceRef.current.aclpPreference);
   };
 
   const handleDashboardChange = (dashboard: Dashboard) => {
-    console.log('triggered');
-
     if (!dashboard) {
       dashbboardPropRef.current.dashbaord = undefined!;
       dashbboardPropRef.current.dashboardFilters.serviceType = undefined!;
       updatedDashboard.current = undefined!;
       setDashboardProp({ ...dashbboardPropRef.current });
-      let aclpConf: AclpConfig = {} as AclpConfig;
 
-      if (preferences && preferences.aclpPreference) {
-        aclpConf = { ...preferences.aclpPreference };
-      }
+      preferenceRef.current.aclpPreference.dashboardId = undefined!;
+      preferenceRef.current.aclpPreference.resources = [];
 
-      aclpConf.dashboardId = undefined!;
-      aclpConf.resources = [];
-
-      handlPrefChange(aclpConf);
+      handlPrefChange(preferenceRef.current.aclpPreference);
       return;
     }
 
@@ -179,25 +175,20 @@ export const DashBoardLanding = () => {
     setDashboardProp({ ...dashbboardPropRef.current });
     updatedDashboard.current = { ...dashboard };
 
-    let aclpConf: AclpConfig = {} as AclpConfig;
-
-    if (preferences && preferences.aclpPreference) {
-      aclpConf = { ...preferences.aclpPreference };
-    }
-
     if (dashboard && dashboard.id) {
-      aclpConf.dashboardId = dashboard.id;
+      preferenceRef.current.aclpPreference.dashboardId = dashboard.id;
 
       if (
         preferences &&
-        preferences.aclpPreference.dashboardId != aclpConf.dashboardId
+        preferences.aclpPreference.dashboardId !=
+          preferenceRef.current.aclpPreference.dashboardId
       ) {
-        aclpConf.resources = [];
+        preferenceRef.current.aclpPreference.resources = [];
         dashbboardPropRef.current.dashboardFilters.resource = [];
       }
     }
 
-    handlPrefChange(aclpConf);
+    handlPrefChange(preferenceRef.current.aclpPreference);
   };
 
   const saveOrEditDashboard = (dashboard: Dashboard) => {
@@ -220,25 +211,24 @@ export const DashBoardLanding = () => {
     // todo, whenever a change in dashboard happens
     updatedDashboard.current = { ...dashboardObj };
 
-    let aclpConf: AclpConfig = {} as AclpConfig;
-
-    if (preferences && preferences.aclpPreference) {
-      aclpConf = { ...preferences.aclpPreference };
-    }
-
     if (dashboardObj.widgets) {
-      aclpConf.widgets = dashboardObj.widgets.map((obj) => {
-        return { label: obj.label, size: obj.size };
-      });
+      preferenceRef.current.aclpPreference.widgets = dashboardObj.widgets.map(
+        (obj) => {
+          return { label: obj.label, size: obj.size };
+        }
+      );
       // call preferences
-      handlPrefChange(aclpConf);
+      handlPrefChange(preferenceRef.current.aclpPreference);
     }
   };
 
   if (!preferences) {
-    return <></>;
+    return <CircleProgress></CircleProgress>;
+  } else {
+    if (!preferenceRef || !preferenceRef.current) {
+      preferenceRef.current = preferences;
+    }
   }
-
   return (
     <>
       <Paper>

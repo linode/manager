@@ -67,6 +67,7 @@ export const CloudViewDashboardSelect = React.memo(
     if (!dashboardsList) {
       return (
         <Select
+          disabled={true}
           isClearable={true}
           // eslint-disable-next-line @typescript-eslint/no-empty-function
           onChange={() => {}}

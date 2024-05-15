@@ -1,22 +1,17 @@
 /* eslint-disable no-console */
-import { Dashboard, TimeDuration, TimeGranularity } from '@linode/api-v4';
-import { styled, useTheme } from '@mui/material/styles';
+import { Dashboard, TimeDuration } from '@linode/api-v4';
+import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { fileURLToPath } from 'url';
-
-import { WithStartAndEnd } from 'src/features/Longview/request.types';
 
 import {
   FiltersObject,
   GlobalFilterProperties,
 } from '../Models/GlobalFilterProperties';
-import { CustomCloudViewMultiResourceSelect } from '../shared/CustomResourceMultiSelect';
 import { CloudViewDashboardSelect } from '../shared/DashboardSelect';
 import { CloudViewIntervalSelect } from '../shared/IntervalSelect';
 import { CloudViewRegionSelect } from '../shared/RegionSelect';
 import { CloudViewMultiResourceSelect } from '../shared/ResourceMultiSelect';
-import { CloudViewResourceTypes } from '../shared/ResourceSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/TimeRangeSelect';
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
@@ -135,19 +130,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           />
         </Grid>
         <Grid sx={{ marginLeft: 3, width: 450 }}>
-          <CustomCloudViewMultiResourceSelect
-            defaultValue={
-              props.filterPreferences && props.filterPreferences.resources
-                ? props.filterPreferences.resources
-                : []
-            }
-            disabled={!props.globalFilters.serviceType}
-            handleResourceChange={handleResourceChange}
-            region={props.globalFilters.region}
-            resourceType={props.globalFilters.serviceType}
-          ></CustomCloudViewMultiResourceSelect>
-        </Grid>
-        {/* <Grid sx={{ marginLeft: 3, width: 450 }}>
           <StyledCloudViewResourceSelect
             defaultValue={
               props.filterPreferences && props.filterPreferences.resources
@@ -159,7 +141,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             region={props.globalFilters.region}
             resourceType={props.globalFilters.serviceType}
           />
-        </Grid> */}
+        </Grid>
         <Grid sx={{ marginLeft: 5 }}>
           <StyledCloudViewIntervalSelect
             defaultValue={
