@@ -16,12 +16,12 @@ interface CloudViewResourceSelectProps {
   resourceType: string | undefined;
 }
 
-export const CloudViewMultiResourceSelect = (
+export const CustomCloudViewMultiResourceSelect = (
   props: CloudViewResourceSelectProps
 ) => {
   const resourceOptions: any = {};
 
-  const reasonRef = React.useRef<string>('default');
+  const isSet = React.useRef(false);
 
   const getResourceList = () => {
     if (props.region && props.resourceType) {
@@ -32,25 +32,18 @@ export const CloudViewMultiResourceSelect = (
     return [];
   };
 
-  const getSelectedResource = () => {
-    if (selectedResource && selectedResource.length > 0) {
-      return selectedResource;
-    } else if (reasonRef.current != 'clear') {
-      const resourcesObj = getResourceList().filter(
-        (obj: any) => props.defaultValue && props.defaultValue?.includes(obj.id)
-      );
+  const getSelectedResources = () => {
+    const selectedResource = getResourceList().filter(
+      (obj) => props.defaultValue && props.defaultValue?.includes(obj.id)
+    );
 
-      if (resourcesObj && resourcesObj.length > 0) {
-        setResource(resourcesObj);
-        return resourcesObj;
-      }
+    if (!isSet.current) {
+      props.handleResourceChange(selectedResource, 'default');
     }
+    isSet.current = true;
 
     return selectedResource;
   };
-
-  const [selectedResource, setResource] = React.useState<any>([]);
-  const [resourceInputValue, setResourceInputValue] = React.useState('');
 
   const filterResourcesByRegion = (resourcesList: any[]) => {
     return resourcesList?.filter((resource: any) => {
@@ -71,21 +64,6 @@ export const CloudViewMultiResourceSelect = (
     props.resourceType === 'aclb'
   ));
 
-  React.useEffect(() => {
-    props.handleResourceChange(selectedResource, reasonRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedResource]);
-
-  React.useEffect(() => {
-    if (!selectedResource || selectedResource.length == 0) {
-      return;
-    }
-    setResource([]);
-    setResourceInputValue('');
-    props.handleResourceChange([], 'clear');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.region, props.resourceType]);
-
   if (
     props.disabled ||
     !resourceOptions[props.resourceType!] ||
@@ -104,25 +82,18 @@ export const CloudViewMultiResourceSelect = (
   return (
     <Autocomplete
       onChange={(_: any, resource: any, reason) => {
-        console.log(reason)
-        setResource(resource);
-      }}
-      onInputChange={(event, newInputValue, reason) => {
-        reasonRef.current = reason;
-        setResourceInputValue(newInputValue);
+        props.handleResourceChange(resource, reason);
       }}
       autoHighlight
       clearOnBlur
-      defaultValue={selectedResource}
       disabled={props.disabled}
-      inputValue={resourceInputValue}
       isOptionEqualToValue={(option, value) => option.label === value.label}
       label=""
       limitTags={2}
       multiple
       options={getResourceList()}
-      placeholder="Select a resource"
-      value={getSelectedResource()}
+      placeholder="Select a resources"
+      value={getSelectedResources()}
     />
   );
 };

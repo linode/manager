@@ -91,9 +91,17 @@ export const DashBoardLanding = () => {
       aclpConf.timeDuration = globalFilter.durationLabel;
     }
 
-    if (changedFilter == 'region') {
+    if (
+      changedFilter == 'region' &&
+      dashbboardPropRef.current.dashboardFilters.region != globalFilter.region
+    ) {
+      console.log('region', globalFilter.region);
       dashbboardPropRef.current.dashboardFilters.region = globalFilter.region;
       aclpConf.region = globalFilter.region;
+      if (preferences && preferences.aclpPreference.region != aclpConf.region) {
+        aclpConf.resources = [];
+        dashbboardPropRef.current.dashboardFilters.resource = [];
+      }
     }
 
     if (changedFilter == 'resource') {
@@ -102,6 +110,7 @@ export const DashBoardLanding = () => {
       aclpConf.dashboardId = dashbboardPropRef.current.dashbaord
         ? dashbboardPropRef.current.dashbaord.id
         : undefined!;
+      aclpConf.region = dashbboardPropRef.current.dashboardFilters.region;
       aclpConf.resources = globalFilter.resource;
     }
 
@@ -138,6 +147,7 @@ export const DashBoardLanding = () => {
       }
 
       aclpConf.dashboardId = undefined!;
+      aclpConf.resources = [];
 
       handlPrefChange(aclpConf);
       return;
@@ -177,6 +187,14 @@ export const DashBoardLanding = () => {
 
     if (dashboard && dashboard.id) {
       aclpConf.dashboardId = dashboard.id;
+
+      if (
+        preferences &&
+        preferences.aclpPreference.dashboardId != aclpConf.dashboardId
+      ) {
+        aclpConf.resources = [];
+        dashbboardPropRef.current.dashboardFilters.resource = [];
+      }
     }
 
     handlPrefChange(aclpConf);

@@ -11,6 +11,7 @@ import {
   FiltersObject,
   GlobalFilterProperties,
 } from '../Models/GlobalFilterProperties';
+import { CustomCloudViewMultiResourceSelect } from '../shared/CustomResourceMultiSelect';
 import { CloudViewDashboardSelect } from '../shared/DashboardSelect';
 import { CloudViewIntervalSelect } from '../shared/IntervalSelect';
 import { CloudViewRegionSelect } from '../shared/RegionSelect';
@@ -64,6 +65,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
 
   const handleResourceChange = (resourceId: any[], reason: string) => {
     console.log('Resource ID: ', resourceId);
+    console.log('resourcereason', reason);
     if ((resourceId && resourceId.length > 0) || reason == 'clear') {
       emitGlobalFilterChange(
         {
@@ -133,6 +135,19 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           />
         </Grid>
         <Grid sx={{ marginLeft: 3, width: 450 }}>
+          <CustomCloudViewMultiResourceSelect
+            defaultValue={
+              props.filterPreferences && props.filterPreferences.resources
+                ? props.filterPreferences.resources
+                : []
+            }
+            disabled={!props.globalFilters.serviceType}
+            handleResourceChange={handleResourceChange}
+            region={props.globalFilters.region}
+            resourceType={props.globalFilters.serviceType}
+          ></CustomCloudViewMultiResourceSelect>
+        </Grid>
+        {/* <Grid sx={{ marginLeft: 3, width: 450 }}>
           <StyledCloudViewResourceSelect
             defaultValue={
               props.filterPreferences && props.filterPreferences.resources
@@ -144,7 +159,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             region={props.globalFilters.region}
             resourceType={props.globalFilters.serviceType}
           />
-        </Grid>
+        </Grid> */}
         <Grid sx={{ marginLeft: 5 }}>
           <StyledCloudViewIntervalSelect
             defaultValue={
