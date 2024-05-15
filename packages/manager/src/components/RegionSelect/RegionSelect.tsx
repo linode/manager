@@ -128,7 +128,10 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           return (
             <RegionOption
               displayEdgeRegionIcon={
-                regionFilter !== 'core' && option.site_type === 'edge'
+                regionFilter !== 'core' &&
+                option.site_type === 'edge' &&
+                flags.gecko2?.enabled &&
+                !flags.gecko2.ga
               }
               flags={flags}
               key={option.value}
