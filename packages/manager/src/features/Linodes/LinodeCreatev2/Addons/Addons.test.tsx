@@ -34,7 +34,7 @@ describe('Linode Create v2 Addons', () => {
     });
 
     await findByText(
-      'Backups and Private IP are currently not available for Distributed regions.'
+      'Backups and Private IP are currently not available for distributed regions.'
     );
   });
 });
