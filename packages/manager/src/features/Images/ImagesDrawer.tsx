@@ -1,6 +1,4 @@
-import { Disk, getLinodeDisks } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { equals } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -23,30 +21,25 @@ export interface Props {
   changeLinode: (linodeId: number) => void;
   changeTags: (tags: string[]) => void;
   description?: string;
-  // Only used from LinodeDisks to pre-populate the selected Disk
-  disks?: Disk[];
   imageId?: string;
   label?: string;
   mode: DrawerMode;
   onClose: () => void;
-  open: boolean;
-  selectedDisk: null | string;
+  open?: boolean;
   selectedLinode: null | number;
   tags?: string[];
 }
 
 type CombinedProps = Props;
 
-export type DrawerMode = 'closed' | 'edit' | 'restore';
+export type DrawerMode = 'edit' | 'restore';
 
 const titleMap: Record<DrawerMode, string> = {
-  closed: '',
   edit: 'Edit Image',
   restore: 'Restore from Image',
 };
 
 const buttonTextMap: Record<DrawerMode, string> = {
-  closed: '',
   edit: 'Save Changes',
   restore: 'Restore Image',
 };
@@ -73,77 +66,16 @@ export const ImagesDrawer = (props: CombinedProps) => {
     permissionedLinodes: availableLinodes,
   } = useImageAndLinodeGrantCheck();
 
-  const [mounted, setMounted] = React.useState<boolean>(false);
   const [notice, setNotice] = React.useState(undefined);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
-  const [disks, setDisks] = React.useState<Disk[]>([]);
-
   const { mutateAsync: updateImage } = useUpdateImageMutation();
-
-  React.useEffect(() => {
-    setMounted(true);
-
-    if (props.disks) {
-      // for the 'imagizing' mode
-      setDisks(props.disks);
-    }
-
-    return () => {
-      setMounted(false);
-    };
-  }, [props.disks]);
-
-  React.useEffect(() => {
-    if (!selectedLinode) {
-      setDisks([]);
-    }
-
-    if (selectedLinode) {
-      getLinodeDisks(selectedLinode)
-        .then((response) => {
-          if (!mounted) {
-            return;
-          }
-
-          const filteredDisks = response.data.filter(
-            (disk) => disk.filesystem !== 'swap'
-          );
-          if (!equals(disks, filteredDisks)) {
-            setDisks(filteredDisks);
-          }
-        })
-        .catch((_) => {
-          if (!mounted) {
-            return;
-          }
-
-          if (mounted) {
-            setErrors([
-              {
-                field: 'disk_id',
-                reason: 'Could not retrieve disks for this Linode.',
-              },
-            ]);
-          }
-        });
-    }
-  }, [selectedLinode]);
 
   const handleLinodeChange = (linodeID: number) => {
     // Clear any errors
     setErrors(undefined);
     changeLinode(linodeID);
-  };
-
-  const close = () => {
-    onClose();
-    if (mounted) {
-      setErrors(undefined);
-      setNotice(undefined);
-      setSubmitting(false);
-    }
   };
 
   const safeDescription = description ? description : ' ';
@@ -161,18 +93,8 @@ export const ImagesDrawer = (props: CombinedProps) => {
         }
 
         updateImage({ description: safeDescription, imageId, label, tags })
-          .then(() => {
-            if (!mounted) {
-              return;
-            }
-
-            close();
-          })
+          .then(onClose)
           .catch((errorResponse: APIError[]) => {
-            if (!mounted) {
-              return;
-            }
-
             setSubmitting(false);
             setErrors(
               getAPIErrorOrDefault(errorResponse, 'Unable to edit Image')

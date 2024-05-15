@@ -66,7 +66,6 @@ interface ImageDrawerState {
   label?: string;
   mode: DrawerMode;
   open: boolean;
-  selectedDisk: null | string;
   selectedLinode?: number;
   tags?: string[];
 }
@@ -87,7 +86,6 @@ const defaultDrawerState: ImageDrawerState = {
   label: '',
   mode: 'edit',
   open: false,
-  selectedDisk: null,
   tags: [],
 };
 
@@ -304,7 +302,6 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
       label,
       mode: 'edit',
       open: true,
-      selectedDisk: null,
       tags,
     });
   };
@@ -314,7 +311,6 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
       imageID,
       mode: 'restore',
       open: true,
-      selectedDisk: null,
     });
   };
 
@@ -403,7 +399,6 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
         mode={drawer.mode}
         onClose={closeImageDrawer}
         open={drawer.open}
-        selectedDisk={drawer.selectedDisk}
         selectedLinode={drawer.selectedLinode || null}
         tags={drawer.tags}
       />

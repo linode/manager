@@ -101,7 +101,7 @@ export const LinodeSelect = (
     value,
   } = props;
 
-  const { data, error, isLoading } = useAllLinodesQuery({}, filter);
+  const { data, error, isLoading } = useAllLinodesQuery({}, filter, !options);
 
   const [inputValue, setInputValue] = React.useState('');
 
