@@ -220,7 +220,7 @@ export const isDistributedRegionSupported = (createType: LinodeCreateType) => {
 /**
  * Util to determine whether a selected region is a distributed region.
  *
- * @returns a boolean indicating whether or not the selected region is an distributed region.
+ * @returns a boolean indicating whether or not the selected region is a distributed region.
  */
 export const getIsDistributedRegion = (
   regionsData: Region[],
