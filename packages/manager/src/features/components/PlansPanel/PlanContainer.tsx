@@ -132,6 +132,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
       onSelect,
       selectedId,
       selectedRegionId,
+      showNetwork,
       showTransfer,
       wholePanelIsDisabled,
     ]

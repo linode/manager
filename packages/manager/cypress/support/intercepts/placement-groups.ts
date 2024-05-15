@@ -39,7 +39,7 @@ export const mockGetPlacementGroup = (
   );
 };
 
-/*
+/**
  * Intercept POST request to create a Placement Group and mocks response.
  *
  * @param placementGroup - Placement group object with which to mock response.
