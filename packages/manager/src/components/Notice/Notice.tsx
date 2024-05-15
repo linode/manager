@@ -188,7 +188,6 @@ export const Notice = (props: NoticeProps) => {
       })}
       {...dataAttributes}
       role="alert"
-      tabIndex={0}
     >
       {important &&
         ((variantMap.success && (
