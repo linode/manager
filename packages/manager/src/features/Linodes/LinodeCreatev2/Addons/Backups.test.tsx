@@ -64,7 +64,7 @@ describe('Linode Create V2 Backups Addon', () => {
     expect(checkbox).toBeChecked();
   });
 
-  it('should be disabled if an distributed region is selected', async () => {
+  it('should be disabled if a distributed region is selected', async () => {
     const region = regionFactory.build({ site_type: 'distributed' });
 
     server.use(
