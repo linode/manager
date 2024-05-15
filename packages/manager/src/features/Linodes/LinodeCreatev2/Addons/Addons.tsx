@@ -33,7 +33,7 @@ export const Addons = () => {
         <Typography variant="h2">Add-ons</Typography>
         {isDistributedRegionSelected && (
           <Notice
-            text="Backups and Private IP are currently not available for Distributed regions."
+            text="Backups and Private IP are currently not available for distributed regions."
             variant="warning"
           />
         )}
