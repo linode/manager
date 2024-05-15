@@ -14,6 +14,7 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
+import { SupportLink } from 'src/components/SupportLink';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
@@ -109,6 +110,23 @@ export const CreateImageTab = () => {
             />
           )}
           <Stack spacing={1}>
+            <Typography variant="h2">Select Linode & Disk</Typography>
+            <Typography sx={{ maxWidth: { md: '80%', sm: '100%' } }}>
+              By default, Linode images are limited to 6144 MB of data per disk.
+              Ensure your content doesn't exceed this limit, or{' '}
+              <SupportLink
+                entity={
+                  selectedLinodeId !== null
+                    ? { id: selectedLinodeId, type: 'linode_id' }
+                    : undefined
+                }
+                text="open a support ticket"
+                title="Request to increase Image size limit when capturing from Linode disk"
+              />{' '}
+              to request a higher limit. Additionally, images can't be created
+              from a raw disk or a disk that's formatted using a custom file
+              system.
+            </Typography>
             <LinodeSelect
               getOptionDisabled={
                 grants
@@ -180,6 +198,7 @@ export const CreateImageTab = () => {
         </Paper>
         <Paper>
           <Stack spacing={1}>
+            <Typography variant="h2">Image Details</Typography>
             <Controller
               render={({ field, fieldState }) => (
                 <TextField
@@ -254,6 +273,11 @@ export const CreateImageTab = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <TextField
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value === '' ? undefined : e.target.value
+                    )
+                  }
                   disabled={isImageCreateRestricted}
                   errorText={fieldState.error?.message}
                   inputRef={field.ref}
@@ -261,7 +285,6 @@ export const CreateImageTab = () => {
                   multiline
                   noMarginTop
                   onBlur={field.onBlur}
-                  onChange={field.onChange}
                   rows={1}
                   value={field.value ?? ''}
                 />
