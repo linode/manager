@@ -69,7 +69,7 @@ describe('getBackupsEnabledValue', () => {
     ).toBe(true);
   });
 
-  it('should always return false if an distributed region is selected becuase distributed regions do not support backups', () => {
+  it('should always return false if a distributed region is selected because distributed regions do not support backups', () => {
     expect(
       getBackupsEnabledValue({
         accountBackupsEnabled: undefined,
