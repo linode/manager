@@ -332,7 +332,8 @@ export type LinodeTypeClass =
   | 'gpu'
   | 'metal'
   | 'prodedicated'
-  | 'premium';
+  | 'premium'
+  | 'edge';
 
 export interface IPAllocationRequest {
   type: 'ipv4';

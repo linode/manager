@@ -1,3 +1,12 @@
+## [2024-05-13] - v0.46.0
+
+
+### Changed:
+
+- Include disk_encryption in CreateLinodeSchema and RebuildLinodeSchema ([#10413](https://github.com/linode/manager/pull/10413))
+- Allow `backup_id` to be nullable in `CreateLinodeSchema` ([#10421](https://github.com/linode/manager/pull/10421))
+
+
 ## [2024-04-29] - v0.45.0
 
 
