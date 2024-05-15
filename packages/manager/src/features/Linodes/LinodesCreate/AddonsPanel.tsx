@@ -172,7 +172,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
         </Typography>
         {isDistributedRegionSelected && (
           <Notice
-            text="Backups and Private IP are currently not available for Distributed regions."
+            text="Backups and Private IP are currently not available for distributed regions."
             variant="warning"
           />
         )}
