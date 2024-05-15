@@ -25,6 +25,8 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+
 const useStyles = makeStyles()((theme: Theme) => ({
   buttonGroup: {
     marginBottom: theme.spacing(2),
@@ -238,11 +240,6 @@ export const CreateImageTab: React.FC<Props> = (props) => {
   const linodeError = hasErrorFor('linode_id');
   const diskError = hasErrorFor('disk_id');
 
-  const linodeIsNotInDistributedRegion = (linodeRegion: string) => {
-    const region = regions?.find((region) => region.id === linodeRegion);
-    return region?.site_type !== 'distributed' && region?.site_type !== 'edge';
-  };
-
   return (
     <Paper className={classes.container}>
       {!canCreateImage ? (
@@ -258,7 +255,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
 
       <LinodeSelect
         optionsFilter={(linode) =>
-          (linodeIsNotInDistributedRegion(linode.region) &&
+          (getIsDistributedRegion(regions ?? [], linode.region ?? '') &&
             availableLinodesToImagize?.includes(linode.id)) ??
           true
         }
