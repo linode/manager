@@ -1,6 +1,5 @@
 import { Event, EventAction } from '@linode/api-v4';
 import { eventFactory } from '@src/factories/events';
-
 import { RecPartial } from 'factory.ts';
 import { containsClick, getClick } from 'support/helpers';
 import { mockGetEvents } from 'support/intercepts/events';
