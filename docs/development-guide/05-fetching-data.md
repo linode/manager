@@ -244,6 +244,38 @@ console.log(errorMap);
 }
 ```
 
+#### Scrolling to errors
+
+For deep forms, we provide a utility that will scroll to the first error encountered within a defined container.
+It can be a notice (API error) or a Formik field error. In order to implement this often needed functionality (the user can be unaware of an error that isn't in the viewport), we must declare a form (or form container) via ref, then pass it to the `scrollErrorIntoViewV2` util (works both for class & functional components).
+
+Note: the legacy `scrollErrorIntoView` is deprecated in favor of `scrollErrorIntoViewV2`.
+
+```js
+import * as React from 'react';
+
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
+
+export const MyComponent = () => {
+  const formContainerRef = React.useRef<HTMLFormElement>(null);
+
+  const handleSubmit = () => {
+    try {
+      // form submission logic
+    } catch {
+      scrollErrorIntoViewV2(formContainerRef);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} ref={formContainerRef}>
+      {/* form fields */}
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
+```
+
 ### Toast / Event Message Punctuation
 **Best practice:**
 - If a message is a sentence or a sentence fragment with a subject and a verb, add punctuation. Otherwise, leave punctuation off.
