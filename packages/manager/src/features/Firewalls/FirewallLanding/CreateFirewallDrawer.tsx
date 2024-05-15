@@ -312,9 +312,8 @@ export const CreateFirewallDrawer = React.memo(
             <strong>Default Inbound Policy</strong>
           </Typography>
           <RadioGroup
-            aria-label="action"
+            aria-label="default inbound policy "
             data-testid="default-inbound-policy"
-            name="action"
             onChange={handleInboundPolicyChange}
             row
             value={values.rules.inbound_policy}
@@ -331,9 +330,8 @@ export const CreateFirewallDrawer = React.memo(
             <strong>Default Outbound Policy</strong>
           </Typography>
           <RadioGroup
-            aria-label="action"
+            aria-label="default outbound policy"
             data-testid="default-outbound-policy"
-            name="action"
             onChange={handleOutboundPolicyChange}
             row
             value={values.rules.outbound_policy}
