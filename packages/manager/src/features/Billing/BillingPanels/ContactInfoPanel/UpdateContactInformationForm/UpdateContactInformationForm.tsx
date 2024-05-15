@@ -149,7 +149,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
 
   if (formik.values.country === 'US') {
     filteredRegionResults = regionResults.filter(
-      (region) => !excludedUSRegions.includes(region[0])
+      (region) => !excludedUSRegions.includes(region.label)
     );
 
     filteredRegionResults.push({
