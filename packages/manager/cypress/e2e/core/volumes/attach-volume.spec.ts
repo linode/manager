@@ -68,12 +68,10 @@ describe('volume attach and detach flows', () => {
       root_pass: randomString(32),
     });
 
-    const entityPromise = Promise.all([
-      createVolume(volumeRequest),
-      createLinode(linodeRequest),
-    ]);
+    const entityPromiseGenerator = () =>
+      Promise.all([createVolume(volumeRequest), createLinode(linodeRequest)]);
 
-    cy.defer(entityPromise, 'creating Volume and Linode').then(
+    cy.defer(entityPromiseGenerator, 'creating Volume and Linode').then(
       ([volume, linode]: [Volume, Linode]) => {
         interceptAttachVolume(volume.id).as('attachVolume');
         interceptGetLinodeConfigs(linode.id).as('getLinodeConfigs');

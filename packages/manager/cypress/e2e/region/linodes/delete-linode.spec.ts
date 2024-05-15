@@ -32,7 +32,7 @@ describeRegions('Delete Linodes', (region: Region) => {
 
     // Create a Linode before navigating to its details page to delete it.
     cy.defer(
-      createLinode(linodeCreatePayload),
+      () => createLinode(linodeCreatePayload),
       `creating Linode in ${region.label}`
     ).then((linode: Linode) => {
       interceptGetLinodeDetails(linode.id).as('getLinode');

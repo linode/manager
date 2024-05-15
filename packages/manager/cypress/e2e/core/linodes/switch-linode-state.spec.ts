@@ -17,7 +17,7 @@ describe('switch linode state', () => {
    * - Does not wait for Linode to finish being shut down before succeeding.
    */
   it('powers off a linode from landing page', () => {
-    cy.defer(createTestLinode()).then((linode: Linode) => {
+    cy.defer(createTestLinode).then((linode: Linode) => {
       cy.visitWithLogin('/linodes');
       cy.get(`[data-qa-linode="${linode.label}"]`)
         .should('be.visible')
@@ -58,7 +58,7 @@ describe('switch linode state', () => {
    * - Waits for Linode to fully shut down before succeeding.
    */
   it('powers off a linode from details page', () => {
-    cy.defer(createTestLinode()).then((linode: Linode) => {
+    cy.defer(createTestLinode).then((linode: Linode) => {
       cy.visitWithLogin(`/linodes/${linode.id}`);
       cy.contains('RUNNING').should('be.visible');
       cy.findByText(linode.label).should('be.visible');
@@ -86,39 +86,41 @@ describe('switch linode state', () => {
    * - Waits for Linode to finish booting up before succeeding.
    */
   it('powers on a linode from landing page', () => {
-    cy.defer(createTestLinode({ booted: false })).then((linode: Linode) => {
-      cy.visitWithLogin('/linodes');
-      cy.get(`[data-qa-linode="${linode.label}"]`)
-        .should('be.visible')
-        .within(() => {
-          cy.contains('Offline').should('be.visible');
-        });
+    cy.defer(() => createTestLinode({ booted: false })).then(
+      (linode: Linode) => {
+        cy.visitWithLogin('/linodes');
+        cy.get(`[data-qa-linode="${linode.label}"]`)
+          .should('be.visible')
+          .within(() => {
+            cy.contains('Offline').should('be.visible');
+          });
 
-      ui.actionMenu
-        .findByTitle(`Action menu for Linode ${linode.label}`)
-        .should('be.visible')
-        .click();
+        ui.actionMenu
+          .findByTitle(`Action menu for Linode ${linode.label}`)
+          .should('be.visible')
+          .click();
 
-      ui.actionMenuItem.findByTitle('Power On').should('be.visible').click();
+        ui.actionMenuItem.findByTitle('Power On').should('be.visible').click();
 
-      ui.dialog
-        .findByTitle(`Power On Linode ${linode.label}?`)
-        .should('be.visible')
-        .within(() => {
-          ui.button
-            .findByTitle('Power On Linode')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
+        ui.dialog
+          .findByTitle(`Power On Linode ${linode.label}?`)
+          .should('be.visible')
+          .within(() => {
+            ui.button
+              .findByTitle('Power On Linode')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
 
-      cy.get(`[data-qa-linode="${linode.label}"]`)
-        .should('be.visible')
-        .within(() => {
-          cy.contains('Booting').should('be.visible');
-          cy.contains('Running', { timeout: 300000 }).should('be.visible');
-        });
-    });
+        cy.get(`[data-qa-linode="${linode.label}"]`)
+          .should('be.visible')
+          .within(() => {
+            cy.contains('Booting').should('be.visible');
+            cy.contains('Running', { timeout: 300000 }).should('be.visible');
+          });
+      }
+    );
   });
 
   /*
@@ -128,25 +130,27 @@ describe('switch linode state', () => {
    * - Does not wait for Linode to finish booting up before succeeding.
    */
   it('powers on a linode from details page', () => {
-    cy.defer(createTestLinode({ booted: false })).then((linode: Linode) => {
-      cy.visitWithLogin(`/linodes/${linode.id}`);
-      cy.contains('OFFLINE').should('be.visible');
-      cy.findByText(linode.label).should('be.visible');
+    cy.defer(() => createTestLinode({ booted: false })).then(
+      (linode: Linode) => {
+        cy.visitWithLogin(`/linodes/${linode.id}`);
+        cy.contains('OFFLINE').should('be.visible');
+        cy.findByText(linode.label).should('be.visible');
 
-      cy.findByText('Power On').should('be.visible').click();
-      ui.dialog
-        .findByTitle(`Power On Linode ${linode.label}?`)
-        .should('be.visible')
-        .within(() => {
-          ui.button
-            .findByTitle('Power On Linode')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
+        cy.findByText('Power On').should('be.visible').click();
+        ui.dialog
+          .findByTitle(`Power On Linode ${linode.label}?`)
+          .should('be.visible')
+          .within(() => {
+            ui.button
+              .findByTitle('Power On Linode')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
 
-      cy.contains('BOOTING').should('be.visible');
-    });
+        cy.contains('BOOTING').should('be.visible');
+      }
+    );
   });
 
   /*
@@ -156,7 +160,7 @@ describe('switch linode state', () => {
    * - Does not wait for Linode to finish rebooting before succeeding.
    */
   it('reboots a linode from landing page', () => {
-    cy.defer(createTestLinode()).then((linode: Linode) => {
+    cy.defer(createTestLinode).then((linode: Linode) => {
       cy.visitWithLogin('/linodes');
       cy.get(`[data-qa-linode="${linode.label}"]`)
         .should('be.visible')
@@ -197,7 +201,7 @@ describe('switch linode state', () => {
    * - Waits for Linode to finish rebooting before succeeding.
    */
   it('reboots a linode from details page', () => {
-    cy.defer(createTestLinode()).then((linode: Linode) => {
+    cy.defer(createTestLinode).then((linode: Linode) => {
       cy.visitWithLogin(`/linodes/${linode.id}`);
       cy.contains('RUNNING').should('be.visible');
       cy.findByText(linode.label).should('be.visible');

@@ -307,7 +307,7 @@ describe('Create stackscripts', () => {
     interceptGetStackScripts().as('getStackScripts');
     interceptCreateLinode().as('createLinode');
 
-    cy.defer(createLinodeAndImage(), {
+    cy.defer(createLinodeAndImage, {
       label: 'creating Linode and Image',
       timeout: 360000,
     }).then((privateImage) => {

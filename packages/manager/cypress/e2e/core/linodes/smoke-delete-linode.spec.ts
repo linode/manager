@@ -72,7 +72,7 @@ describe('delete linode', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
     });
-    cy.defer(createLinode(linodeCreatePayload)).then((linode) => {
+    cy.defer(() => createLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
       cy.intercept('DELETE', apiMatcher('linode/instances/*')).as(
         'deleteLinode'
@@ -121,7 +121,7 @@ describe('delete linode', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
     });
-    cy.defer(createLinode(linodeCreatePayload)).then((linode) => {
+    cy.defer(() => createLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
       cy.intercept('DELETE', apiMatcher('linode/instances/*')).as(
         'deleteLinode'
@@ -174,7 +174,7 @@ describe('delete linode', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
     });
-    cy.defer(createLinode(linodeCreatePayload)).then((linode) => {
+    cy.defer(() => createLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
       cy.intercept('DELETE', apiMatcher('linode/instances/*')).as(
         'deleteLinode'
@@ -238,7 +238,7 @@ describe('delete linode', () => {
     }).as('getAccountSettings');
 
     cy.intercept('DELETE', apiMatcher('linode/instances/*')).as('deleteLinode');
-    cy.defer(createTwoLinodes()).then(([linodeA, linodeB]) => {
+    cy.defer(createTwoLinodes).then(([linodeA, linodeB]) => {
       cy.visitWithLogin('/linodes', { preferenceOverrides });
       cy.wait('@getAccountSettings');
       getVisible('[data-qa-header="Linodes"]');

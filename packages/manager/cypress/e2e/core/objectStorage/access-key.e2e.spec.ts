@@ -126,7 +126,7 @@ describe('object storage access key end-to-end tests', () => {
 
     // Create a bucket before creating access key.
     cy.defer(
-      createBucket(bucketRequest),
+      () => createBucket(bucketRequest),
       'creating Object Storage bucket'
     ).then(() => {
       const keyLabel = randomLabel();

@@ -80,7 +80,7 @@ describe('Linode Config management', () => {
 
       // Fetch Linode kernel data from the API.
       // We'll use this data in the tests to confirm that config labels are rendered correctly.
-      cy.defer(fetchAllKernels(), 'Fetching Linode kernels...').then(
+      cy.defer(fetchAllKernels, 'Fetching Linode kernels...').then(
         (fetchedKernels) => {
           kernels = fetchedKernels;
         }
@@ -95,7 +95,7 @@ describe('Linode Config management', () => {
      */
     it('Creates a config', () => {
       // Wait for Linode to be created for kernel data to be retrieved.
-      cy.defer(createTestLinode(), 'Creating Linode').then((linode: Linode) => {
+      cy.defer(createTestLinode, 'Creating Linode').then((linode: Linode) => {
         interceptCreateLinodeConfigs(linode.id).as('postLinodeConfigs');
         interceptGetLinodeConfigs(linode.id).as('getLinodeConfigs');
 
@@ -103,16 +103,18 @@ describe('Linode Config management', () => {
 
         // Confirm that initial config is listed in Linode configurations table.
         cy.wait('@getLinodeConfigs');
-        cy.defer(fetchLinodeConfigs(linode.id)).then((configs: Config[]) => {
-          cy.findByLabelText('List of Configurations').within(() => {
-            configs.forEach((config) => {
-              const kernel = findKernelById(kernels, config.kernel);
-              cy.findByText(`${config.label} – ${kernel.label}`).should(
-                'be.visible'
-              );
+        cy.defer(() => fetchLinodeConfigs(linode.id)).then(
+          (configs: Config[]) => {
+            cy.findByLabelText('List of Configurations').within(() => {
+              configs.forEach((config) => {
+                const kernel = findKernelById(kernels, config.kernel);
+                cy.findByText(`${config.label} – ${kernel.label}`).should(
+                  'be.visible'
+                );
+              });
             });
-          });
-        });
+          }
+        );
 
         // Add new configuration.
         cy.findByText('Add Configuration').click();
@@ -136,19 +138,23 @@ describe('Linode Config management', () => {
 
         // Confirm that new config and existing config are both listed.
         cy.wait('@getLinodeConfigs');
-        cy.defer(fetchLinodeConfigs(linode.id)).then((configs: Config[]) => {
-          cy.findByLabelText('List of Configurations').within(() => {
-            configs.forEach((config) => {
-              const kernel = findKernelById(kernels, config.kernel);
-              cy.findByText(`${config.label} – ${kernel.label}`)
-                .should('be.visible')
-                .closest('tr')
-                .within(() => {
-                  cy.findByText('eth0 – Public Internet').should('be.visible');
-                });
+        cy.defer(() => fetchLinodeConfigs(linode.id)).then(
+          (configs: Config[]) => {
+            cy.findByLabelText('List of Configurations').within(() => {
+              configs.forEach((config) => {
+                const kernel = findKernelById(kernels, config.kernel);
+                cy.findByText(`${config.label} – ${kernel.label}`)
+                  .should('be.visible')
+                  .closest('tr')
+                  .within(() => {
+                    cy.findByText('eth0 – Public Internet').should(
+                      'be.visible'
+                    );
+                  });
+              });
             });
-          });
-        });
+          }
+        );
       });
     });
 
@@ -174,7 +180,7 @@ describe('Linode Config management', () => {
 
       // Create a Linode and wait for its Config to be fetched before proceeding.
       cy.defer(
-        createLinodeAndGetConfig({ interfaces }, { waitForDisks: true }),
+        () => createLinodeAndGetConfig({ interfaces }, { waitForDisks: true }),
         'creating a linode and getting its config'
       ).then(([linode, config]: [Linode, Config]) => {
         // Get kernel info for config.
@@ -234,7 +240,7 @@ describe('Linode Config management', () => {
      */
     it('Boots a config', () => {
       cy.defer(
-        createLinodeAndGetConfig(null, { waitForBoot: true }),
+        () => createLinodeAndGetConfig(null, { waitForBoot: true }),
         'Creating and booting test Linode'
       ).then(([linode, config]: [Linode, Config]) => {
         const kernel = findKernelById(kernels, config.kernel);
@@ -288,7 +294,7 @@ describe('Linode Config management', () => {
 
       // Create clone and source destination Linodes, then proceed with clone flow.
       cy.defer(
-        createCloneTestLinodes(),
+        createCloneTestLinodes,
         'Waiting for 2 Linodes to be created'
       ).then(([sourceLinode, destLinode]: [Linode, Linode]) => {
         const kernel = findKernelById(kernels, 'linode/latest-64bit');
@@ -367,7 +373,7 @@ describe('Linode Config management', () => {
      */
     it('Deletes a config', () => {
       cy.defer(
-        createLinodeAndGetConfig(),
+        createLinodeAndGetConfig,
         'creating a linode and getting its config'
       ).then(([linode, config]: [Linode, Config]) => {
         // Get kernel info for config to be deleted.

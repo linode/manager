@@ -57,7 +57,7 @@ describe('Capture Machine Images', () => {
     });
 
     cy.defer(
-      createAndBootLinode(linodePayload),
+      () => createAndBootLinode(linodePayload),
       'creating and booting Linode'
     ).then(([linode, disk]: [Linode, Disk]) => {
       cy.visitWithLogin('/images/create/disk');

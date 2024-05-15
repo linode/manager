@@ -144,7 +144,7 @@ describe('Migrate Linode With Firewall', () => {
     interceptGetFirewalls().as('getFirewalls');
 
     // Create a Linode, then navigate to the Firewalls landing page.
-    cy.defer(createLinode(linodePayload)).then((linode: Linode) => {
+    cy.defer(() => createLinode(linodePayload)).then((linode: Linode) => {
       interceptMigrateLinode(linode.id).as('migrateLinode');
       cy.visitWithLogin('/firewalls');
       cy.wait('@getFirewalls');

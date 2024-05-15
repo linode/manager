@@ -117,7 +117,7 @@ describe('rebuild linode', () => {
       region: chooseRegion().id,
     });
 
-    cy.defer(createLinode(linodeCreatePayload), 'creating Linode').then(
+    cy.defer(() => createLinode(linodeCreatePayload), 'creating Linode').then(
       (linode: Linode) => {
         interceptRebuildLinode(linode.id).as('linodeRebuild');
 
@@ -171,7 +171,7 @@ describe('rebuild linode', () => {
       region: chooseRegion().id,
     });
 
-    cy.defer(createLinode(linodeCreatePayload), 'creating Linode').then(
+    cy.defer(() => createLinode(linodeCreatePayload), 'creating Linode').then(
       (linode: Linode) => {
         interceptRebuildLinode(linode.id).as('linodeRebuild');
         interceptGetStackScripts().as('getStackScripts');
@@ -250,7 +250,7 @@ describe('rebuild linode', () => {
     };
 
     cy.defer(
-      createStackScriptAndLinode(stackScriptRequest, linodeRequest),
+      () => createStackScriptAndLinode(stackScriptRequest, linodeRequest),
       'creating stackScript and linode'
     ).then(([stackScript, linode]) => {
       interceptRebuildLinode(linode.id).as('linodeRebuild');

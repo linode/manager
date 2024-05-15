@@ -196,7 +196,7 @@ describe('update firewall', () => {
     });
 
     cy.defer(
-      createLinodeAndFirewall(linodeRequest, firewallRequest),
+      () => createLinodeAndFirewall(linodeRequest, firewallRequest),
       'creating Linode and firewall'
     ).then(([linode, firewall]) => {
       cy.visitWithLogin('/firewalls');
@@ -324,7 +324,7 @@ describe('update firewall', () => {
     });
 
     cy.defer(
-      createLinodeAndFirewall(linodeRequest, firewallRequest),
+      () => createLinodeAndFirewall(linodeRequest, firewallRequest),
       'creating Linode and firewall'
     ).then(([_linode, firewall]) => {
       cy.visitWithLogin('/firewalls');
@@ -420,7 +420,7 @@ describe('update firewall', () => {
     const newFirewallLabel = randomLabel();
 
     cy.defer(
-      createLinodeAndFirewall(linodeRequest, firewallRequest),
+      () => createLinodeAndFirewall(linodeRequest, firewallRequest),
       'creating Linode and firewall'
     ).then(([_linode, firewall]) => {
       cy.visitWithLogin('/firewalls');

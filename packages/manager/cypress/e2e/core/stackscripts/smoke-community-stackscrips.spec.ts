@@ -103,7 +103,7 @@ describe('Community Stackscripts integration tests', () => {
     cy.get('[data-qa-stackscript-empty-msg="true"]').should('not.exist');
     cy.findByText('Automate deployment scripts').should('not.exist');
 
-    cy.defer(getProfile(), 'getting profile').then((profile: Profile) => {
+    cy.defer(getProfile, 'getting profile').then((profile: Profile) => {
       const dateFormatOptionsLanding = {
         timezone: profile.timezone,
         displayTime: false,

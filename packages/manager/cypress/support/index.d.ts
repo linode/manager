@@ -22,7 +22,7 @@ declare global {
        * @example cy.defer(new Promise('value')).then((val) => {...})
        */
       defer<T>(
-        promise: Promise<T>,
+        promiseGenerator: () => Promise<T>,
         labelOrOptions?:
           | Partial<Cypress.Loggable & Cypress.Timeoutable & Labelable>
           | string

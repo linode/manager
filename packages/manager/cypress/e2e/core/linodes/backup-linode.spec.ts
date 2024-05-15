@@ -53,7 +53,7 @@ describe('linode backups', () => {
       booted: false,
     });
 
-    cy.defer(createLinode(createLinodeRequest), 'creating Linode').then(
+    cy.defer(() => createLinode(createLinodeRequest), 'creating Linode').then(
       (linode: Linode) => {
         interceptGetLinode(linode.id).as('getLinode');
         interceptEnableLinodeBackups(linode.id).as('enableBackups');
@@ -116,7 +116,7 @@ describe('linode backups', () => {
 
     const snapshotName = randomLabel();
 
-    cy.defer(createLinode(createLinodeRequest), 'creating Linode').then(
+    cy.defer(() => createLinode(createLinodeRequest), 'creating Linode').then(
       (linode: Linode) => {
         interceptGetLinode(linode.id).as('getLinode');
         interceptCreateLinodeSnapshot(linode.id).as('createSnapshot');
