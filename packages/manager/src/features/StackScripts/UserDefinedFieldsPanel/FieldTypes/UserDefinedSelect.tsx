@@ -9,7 +9,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 
 interface Props {
-  error?: string;
+  error?: JSX.Element;
   field: UserDefinedField;
   isOptional: boolean;
   updateFormState: (key: string, value: any) => void;
@@ -34,7 +34,11 @@ export const UserDefinedSelect = (props: Props) => {
   if (oneof.length > 4) {
     return (
       <div>
-        {error && <Notice spacingTop={8} text={error} variant="error" />}
+        {error && (
+          <Notice spacingTop={8} variant="error">
+            {error}
+          </Notice>
+        )}
         <Autocomplete
           disableClearable
           label={field.label}
@@ -47,7 +51,11 @@ export const UserDefinedSelect = (props: Props) => {
   }
   return (
     <StyledRootDiv>
-      {error && <Notice spacingTop={8} text={error} variant="error" />}
+      {error && (
+        <Notice spacingTop={8} variant="error">
+          {error}
+        </Notice>
+      )}
       <StyledInputLabel>
         {field.label}
         {!isOptional && '*'}

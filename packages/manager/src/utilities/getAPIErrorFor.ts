@@ -24,6 +24,9 @@ export const getAPIErrorFor = (
   }
 
   return err.field && errorMap[err.field]
-    ? err.reason.replace(err.field, errorMap[err.field])
-    : err.reason;
+    ? ((err.reason as unknown) as string).replace(
+        err.field,
+        errorMap[err.field]
+      )
+    : ((err.reason as unknown) as string);
 };

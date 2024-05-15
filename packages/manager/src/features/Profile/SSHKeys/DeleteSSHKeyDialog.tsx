@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { RenderError } from 'src/components/RenderError';
 import { Typography } from 'src/components/Typography';
 import { useDeleteSSHKeyMutation } from 'src/queries/profile';
 
@@ -37,7 +38,7 @@ const DeleteSSHKeyDialog = ({ id, label, onClose, open }: Props) => {
           }}
         />
       }
-      error={error?.[0].reason}
+      error={error?.length ? <RenderError error={error[0]} /> : undefined}
       onClose={onClose}
       open={open}
       title="Delete SSH Key"

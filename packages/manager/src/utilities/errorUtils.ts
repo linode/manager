@@ -37,14 +37,16 @@ export const getAPIErrorOrDefault = (
     ? [{ field, reason: defaultError }]
     : [{ reason: defaultError }];
 
-  return isDefaultError(errorResponse) ? _defaultError : errorResponse;
+  return ((isDefaultError(errorResponse)
+    ? _defaultError
+    : errorResponse) as unknown) as APIError[];
 };
 
 const isDefaultError = (errorResponse: APIError[]) => {
   return (
     errorResponse &&
     errorResponse.length === 1 &&
-    errorResponse[0].reason === DEFAULT_ERROR_MESSAGE
+    ((errorResponse[0].reason as unknown) as string) === DEFAULT_ERROR_MESSAGE
   );
 };
 

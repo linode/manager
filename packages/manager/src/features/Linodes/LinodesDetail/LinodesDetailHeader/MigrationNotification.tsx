@@ -5,8 +5,11 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { migrateErrorMatcher } from 'src/components/MigrateError';
 import { Notice } from 'src/components/Notice/Notice';
+import { RenderError } from 'src/components/RenderError';
 import { Typography } from 'src/components/Typography';
 import { useDialog } from 'src/hooks/useDialog';
 import { useProfile } from 'src/queries/profile';
@@ -14,7 +17,6 @@ import { capitalize } from 'src/utilities/capitalize';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
 interface Props {
   linodeID: number;
@@ -64,7 +66,7 @@ export const MigrationNotification = React.memo((props: Props) => {
             ? 'An error occurred entering the migration queue.'
             : 'An error occurred scheduling your migration.';
 
-        handleError(errorMessage);
+        handleError([{ reason: errorMessage }]);
       });
   };
 
@@ -123,8 +125,15 @@ export const MigrationNotification = React.memo((props: Props) => {
         </Typography>
       </Notice>
       <ConfirmationDialog
+        error={
+          dialog.errors?.length ? (
+            <RenderError
+              error={dialog.errors[0]}
+              matchers={[migrateErrorMatcher]}
+            />
+          ) : undefined
+        }
         actions={actions}
-        error={dialog.error}
         onClose={() => closeDialog()}
         open={dialog.isOpen}
         title="Confirm Migration"

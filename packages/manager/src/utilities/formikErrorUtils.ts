@@ -75,12 +75,12 @@ export const handleAPIErrors = (
        */
       const key = error.field.split('.')[error.field.split('.').length - 1];
       if (key) {
-        setFieldError(key, error.reason);
+        setFieldError(key, (error.reason as unknown) as string);
       }
     } else {
       // Put any general API errors into a <Notice />
       if (setError) {
-        setError(error.reason);
+        setError((error.reason as unknown) as string);
       }
     }
   });

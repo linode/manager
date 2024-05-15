@@ -14,6 +14,7 @@ import {
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
+import { RenderError } from 'src/components/RenderError';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
@@ -36,7 +37,7 @@ export const UserDetail = () => {
 
   const queryClient = useQueryClient();
 
-  const [error, setError] = React.useState<string | undefined>();
+  const [error, setError] = React.useState<APIError>();
   const [username, setUsername] = React.useState<string>('');
   const [createdUsername, setCreatedUsername] = React.useState<
     string | undefined
@@ -85,7 +86,6 @@ export const UserDetail = () => {
       .catch((errorResponse) => {
         setError(
           getAPIErrorOrDefault(errorResponse, 'Error loading user data.')[0]
-            .reason
         );
       });
 
@@ -209,7 +209,7 @@ export const UserDetail = () => {
     return (
       <React.Fragment>
         <LandingHeader title={username || ''} />
-        <ErrorState errorText={error} />
+        <ErrorState errorText={<RenderError error={error} />} />
       </React.Fragment>
     );
   }

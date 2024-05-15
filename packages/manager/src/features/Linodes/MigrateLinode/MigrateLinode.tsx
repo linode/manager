@@ -6,8 +6,10 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
+import { migrateErrorMatcher } from 'src/components/MigrateError';
 import { Notice } from 'src/components/Notice/Notice';
 import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { RenderError } from 'src/components/RenderError';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { MBpsInterDC } from 'src/constants';
@@ -234,7 +236,11 @@ export const MigrateLinode = React.memo((props: Props) => {
       open={open}
       title={`Migrate Linode ${linode.label ?? ''} to another region`}
     >
-      {error && <Notice text={error?.[0].reason} variant="error" />}
+      {error && (
+        <Notice variant="error">
+          <RenderError error={error[0]} matchers={[migrateErrorMatcher]} />
+        </Notice>
+      )}
       <Typography sx={{ marginTop: theme.spacing(2) }} variant="h2">
         {newLabel}
       </Typography>

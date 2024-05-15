@@ -3,6 +3,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
+import { RenderError } from 'src/components/RenderError';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
 import { useEventsPollingActions } from 'src/queries/events/events';
@@ -61,7 +62,11 @@ export const DetachVolumeDialog = (props: Props) => {
       title={`Detach Volume ${volume?.label}?`}
       typographyStyle={{ marginTop: '10px' }}
     >
-      {error && <Notice text={error?.[0].reason} variant="error" />}
+      {error && error?.length > 0 && (
+        <Notice variant="error">
+          <RenderError error={error[0]} />
+        </Notice>
+      )}
       {!poweredOff && linode !== undefined && (
         <Typography
           sx={(theme) => ({

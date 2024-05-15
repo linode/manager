@@ -129,8 +129,7 @@ export const MonitorTable = () => {
       })
       .catch((err) => {
         handleError(
-          getAPIErrorOrDefault(err, 'Error deleting this Service Monitor.')[0]
-            .reason
+          getAPIErrorOrDefault(err, 'Error deleting this Service Monitor.')
         );
       });
   };
@@ -260,7 +259,7 @@ export const MonitorTable = () => {
       </OrderBy>
       <DeletionDialog
         entity="monitor"
-        error={dialog.error}
+        error={dialog.errors?.[0]?.reason}
         label={dialog.entityLabel || ''}
         loading={dialog.isLoading}
         onClose={closeDialog}

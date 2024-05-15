@@ -1,8 +1,9 @@
+import { TestAPI } from 'vitest';
 import type { PriceObject, RegionPriceObject } from './linodes/types';
 
 export interface APIError {
   field?: string;
-  reason: string;
+  reason: TestAPI;
 }
 
 export interface APIWarning {

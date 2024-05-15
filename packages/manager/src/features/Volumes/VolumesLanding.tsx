@@ -6,6 +6,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { RenderError } from 'src/components/RenderError';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -122,7 +123,11 @@ export const VolumesLanding = () => {
     return (
       <ErrorState
         errorText={
-          getAPIErrorOrDefault(error, 'Error loading your volumes.')[0].reason
+          <RenderError
+            error={
+              getAPIErrorOrDefault(error, 'Error loading your volumes.')[0]
+            }
+          />
         }
       />
     );

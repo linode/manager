@@ -14,6 +14,7 @@ import { FormHelperText } from 'src/components/FormHelperText';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
+import { RenderError } from 'src/components/RenderError';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
@@ -535,12 +536,9 @@ export const SubnetAssignLinodesDrawer = (
       </form>
       {unassignLinodesErrors
         ? unassignLinodesErrors.map((apiError: APIError) => (
-            <Notice
-              key={apiError.reason}
-              spacingBottom={8}
-              text={apiError.reason}
-              variant="error"
-            />
+            <Notice key={apiError.reason} spacingBottom={8} variant="error">
+              <RenderError error={apiError} />
+            </Notice>
           ))
         : null}
       <RemovableSelectionsListTable

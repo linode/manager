@@ -31,7 +31,7 @@ interface Props {
   className?: string;
   disabled?: boolean;
   disabledReason?: JSX.Element | string;
-  error?: string;
+  error?: JSX.Element;
   handleChange: (value: string) => void;
   heading?: string;
   hideStrengthLabel?: boolean;

@@ -23,14 +23,14 @@ import {
 } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import ContactDrawer from './ContactsDrawer';
-import ContactTableContact from './ContactsTableContent';
 import { ManagedContactGroup, Mode } from './common';
 import {
-  StyledWrapperGrid,
-  StyledTypography,
   StyledHeaderGrid,
+  StyledTypography,
+  StyledWrapperGrid,
 } from './Contacts.styles';
+import ContactDrawer from './ContactsDrawer';
+import ContactTableContact from './ContactsTableContent';
 
 const Contacts = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -70,9 +70,7 @@ const Contacts = () => {
         });
       })
       .catch((e) =>
-        handleError(
-          getAPIErrorOrDefault(e, 'Error deleting this contact.')[0].reason
-        )
+        handleError(getAPIErrorOrDefault(e, 'Error deleting this contact.'))
       );
   };
 
@@ -212,7 +210,7 @@ const Contacts = () => {
       </OrderBy>
       <DeletionDialog
         entity="contact"
-        error={dialog.error}
+        error={dialog.errors?.[0]?.reason}
         label={dialog.entityLabel || ''}
         loading={dialog.isLoading}
         onClose={closeDialog}

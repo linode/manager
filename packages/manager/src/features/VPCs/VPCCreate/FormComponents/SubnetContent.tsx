@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { RenderError } from 'src/components/RenderError';
 import { SubnetFieldState } from 'src/utilities/subnets';
 
 import { VPC_CREATE_FORM_SUBNET_HELPER_TEXT } from '../../constants';
@@ -37,12 +38,9 @@ export const SubnetContent = (props: Props) => {
       </StyledBodyTypography>
       {subnetErrors
         ? subnetErrors.map((apiError: APIError) => (
-            <Notice
-              key={apiError.reason}
-              spacingBottom={8}
-              text={apiError.reason}
-              variant="error"
-            />
+            <Notice key={apiError.reason} spacingBottom={8} variant="error">
+              <RenderError error={apiError} />
+            </Notice>
           ))
         : null}
       <MultipleSubnetInput
