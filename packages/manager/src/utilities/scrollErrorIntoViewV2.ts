@@ -23,7 +23,7 @@ export const scrollErrorIntoViewV2 = (
         formContainerRef.current
       ) {
         const errorElement = formContainerRef.current.querySelector(
-          '[class^="error-for-scroll"]'
+          '[class*="error-for-scroll"]'
         );
         if (errorElement) {
           errorElement.scrollIntoView({
