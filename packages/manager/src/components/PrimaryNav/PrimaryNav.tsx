@@ -296,7 +296,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           hide: !showCloudPulse,
           href: '/monitor/cloudpulse',
           icon: <CloudPulse />,
-          isBeta: false,
+          isBeta: flags.aclp?.beta,
         },
         {
           attr: { 'data-qa-one-click-nav-btn': true },
