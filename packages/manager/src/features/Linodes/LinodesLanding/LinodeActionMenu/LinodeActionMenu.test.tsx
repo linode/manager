@@ -126,7 +126,7 @@ describe('LinodeActionMenu', () => {
       );
     });
 
-    it('should disable the clone action if the Linode is in an distributed region', async () => {
+    it('should disable the clone action if the Linode is in a distributed region', async () => {
       const propsWithDistributedRegion = {
         ...props,
         linodeRegion: 'us-den-10',
