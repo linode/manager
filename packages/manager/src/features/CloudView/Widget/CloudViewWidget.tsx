@@ -88,8 +88,8 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     return props.widget.serviceType
       ? props.widget.serviceType!
       : props.globalFilters
-      ? props.globalFilters.serviceType
-      : '';
+        ? props.globalFilters.serviceType
+        : '';
   };
 
   const { data: metricsList, isLoading, status } = useCloudViewMetricsQuery(
@@ -245,13 +245,15 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
               width: '70%',
             }}
           >
-            <AggregateFunctionComponent
-              default_aggregate_func={selectedAggregatedFunction}
-              available_aggregate_func={
-                props.availableMetrics?.available_aggregate_functions
-              }
-              onAggregateFuncChange={handleAggregateFunctionChange}
-            />
+            { (props.availableMetrics?.available_aggregate_functions && props.availableMetrics.available_aggregate_functions.length > 0)
+              &&
+              <AggregateFunctionComponent
+                default_aggregate_func={selectedAggregatedFunction}
+                available_aggregate_func={
+                  props.availableMetrics?.available_aggregate_functions
+                }
+                onAggregateFuncChange={handleAggregateFunctionChange}
+              />}
             <StyledZoomIcon
               handleZoomToggle={handleZoomToggle}
               zoomIn={widget.size == 12 ? true : false}
