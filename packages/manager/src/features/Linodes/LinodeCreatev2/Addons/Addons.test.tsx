@@ -19,7 +19,7 @@ describe('Linode Create v2 Addons', () => {
     expect(heading.tagName).toBe('H2');
   });
 
-  it('renders a warning if an distributed region is selected', async () => {
+  it('renders a warning if a distributed region is selected', async () => {
     const region = regionFactory.build({ site_type: 'distributed' });
 
     server.use(
