@@ -27,8 +27,6 @@ export const mockGetNodeBalancers = (
 /**
  * Intercepts POST request to intercept nodeBalancer data.
  *
- * @param
- *
  * @returns Cypress chainable.
  */
 export const interceptCreateNodeBalancers = (): Cypress.Chainable<null> => {
