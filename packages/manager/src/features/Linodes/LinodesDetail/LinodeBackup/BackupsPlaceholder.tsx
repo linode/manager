@@ -53,7 +53,7 @@ export const BackupsPlaceholder = React.memo((props: Props) => {
             disabled: disabled || linodeIsInDistributedRegion,
             onClick: () => setDialogOpen(true),
             tooltipText: linodeIsInDistributedRegion
-              ? 'Backups are currently not available for Distributed regions.'
+              ? 'Backups are currently not available for distributed regions.'
               : undefined,
           },
         ]}
