@@ -688,7 +688,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
         e.entity?.label ? ` ${e.entity.label}` : ''
       } has been created.`,
   },
-  lke_pool_recyle: {
+  lke_pool_delete: {
+    notification: (e) =>
+      `A Node Pool for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been deleted.`,
+  },
+  lke_pool_recycle: {
     notification: (e) =>
       `A Node Pool for Kubernetes Cluster${
         e.entity?.label ? ` ${e.entity.label}` : ''
