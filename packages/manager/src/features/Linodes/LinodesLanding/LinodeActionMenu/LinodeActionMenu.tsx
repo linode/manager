@@ -87,7 +87,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   );
 
   const distributedRegionTooltipText =
-    'Cloning is currently not supported for Distributed region instances.';
+    'Cloning is currently not supported for distributed region instances.';
 
   const actionConfigs: ActionConfig[] = [
     {
