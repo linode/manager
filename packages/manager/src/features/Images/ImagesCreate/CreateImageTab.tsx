@@ -180,6 +180,7 @@ export const CreateImageTab = () => {
                   onBlur={field.onBlur}
                   onChange={(e, disk) => field.onChange(disk?.id ?? null)}
                   options={disks?.filter((d) => d.filesystem !== 'swap') ?? []}
+                  placeholder="Select a Disk"
                   value={selectedDisk}
                 />
               )}
