@@ -101,7 +101,7 @@ export const LinodeCreatev2 = () => {
     if (!isEmpty(form.formState.errors)) {
       scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
-  }, [form.formState.errors]);
+  }, [form.formState]);
 
   return (
     <FormProvider {...form}>

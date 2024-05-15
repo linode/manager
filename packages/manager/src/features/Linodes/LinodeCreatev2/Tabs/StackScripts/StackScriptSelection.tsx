@@ -26,9 +26,9 @@ export const StackScriptSelection = () => {
     // Reset the selected image, the selected StackScript, and the StackScript data when changing tabs.
     reset((prev) => ({
       ...prev,
-      image: null,
-      stackscript_data: null,
-      stackscript_id: null,
+      image: undefined,
+      stackscript_data: undefined,
+      stackscript_id: undefined,
     }));
   };
 
