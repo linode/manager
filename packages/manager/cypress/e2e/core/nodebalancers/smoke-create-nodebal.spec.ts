@@ -25,7 +25,7 @@ const deployNodeBalancer = () => {
 };
 
 import { nodeBalancerFactory } from 'src/factories';
-import { interceptCreateNodeBalancers } from 'support/intercepts/nodebalancers';
+import { interceptCreateNodeBalancer } from 'support/intercepts/nodebalancers';
 
 const createNodeBalancerWithUI = (
   nodeBal: NodeBalancer,
@@ -94,7 +94,7 @@ describe('create NodeBalancer', () => {
         ipv4: linode.ipv4[1],
       });
       // catch request
-      interceptCreateNodeBalancers().as('createNodeBalancer');
+      interceptCreateNodeBalancer().as('createNodeBalancer');
 
       createNodeBalancerWithUI(nodeBal);
       cy.wait('@createNodeBalancer')
@@ -117,7 +117,7 @@ describe('create NodeBalancer', () => {
       });
 
       // catch request
-      interceptCreateNodeBalancers().as('createNodeBalancer');
+      interceptCreateNodeBalancer().as('createNodeBalancer');
 
       createNodeBalancerWithUI(nodeBal);
       fbtVisible(`Label can't contain special characters or spaces.`);
@@ -154,7 +154,7 @@ describe('create NodeBalancer', () => {
       });
 
       // catch request
-      interceptCreateNodeBalancers().as('createNodeBalancer');
+      interceptCreateNodeBalancer().as('createNodeBalancer');
 
       createNodeBalancerWithUI(nodeBal, true);
     });
