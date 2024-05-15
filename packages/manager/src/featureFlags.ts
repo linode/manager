@@ -49,6 +49,7 @@ interface GeckoFlag {
 }
 
 interface AclpFlag {
+  beta: boolean;
   enabled: boolean;
 }
 
