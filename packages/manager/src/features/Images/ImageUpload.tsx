@@ -1,14 +1,14 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
+import { useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
+import { LinkButton } from 'src/components/LinkButton';
 import { LinodeCLIModal } from 'src/components/LinodeCLIModal/LinodeCLIModal';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
@@ -35,80 +35,26 @@ import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { wrapInQuotes } from 'src/utilities/stringUtils';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
+import type { ImageUploadPayload } from '@linode/api-v4';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  browseFilesButton: {
-    marginLeft: '1rem',
-  },
-  cliModalButton: {
-    ...theme.applyLinkStyles,
-    fontFamily: theme.font.bold,
-  },
-  cloudInitCheckboxWrapper: {
-    marginLeft: '3px',
-    marginTop: theme.spacing(2),
-  },
-  container: {
-    '& .MuiFormHelperText-root': {
-      marginBottom: theme.spacing(2),
+export const ImageUpload = () => {
+  const { location } = useHistory<{
+    imageDescription: string;
+    imageLabel?: string;
+  }>();
+
+  const form = useForm<ImageUploadPayload>({
+    defaultValues: {
+      label: location.state.imageLabel,
+      description: location.state.imageDescription,
     },
-    minWidth: '100%',
-    paddingBottom: theme.spacing(),
-    paddingTop: theme.spacing(2),
-  },
-  helperText: {
-    marginTop: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-    width: '90%',
-  },
-}));
-
-const cloudInitTooltipMessage = (
-  <Typography>
-    Only check this box if your Custom Image is compatible with cloud-init, or
-    has cloud-init installed, and the config has been changed to use our data
-    service.{' '}
-    <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata-cloud-config/">
-      Learn how.
-    </Link>
-  </Typography>
-);
-
-const imageSizeLimitsMessage = (
-  <Typography>
-    Image files must be raw disk images (.img) compressed using gzip (.gz). The
-    maximum file size is 5 GB (compressed) and maximum image size is 6 GB
-    (uncompressed).
-  </Typography>
-);
-
-export interface Props {
-  changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  changeIsCloudInit: () => void;
-  changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  description: string;
-  isCloudInit: boolean;
-  label: string;
-}
-
-export const ImageUpload: React.FC<Props> = (props) => {
-  const {
-    changeDescription,
-    changeIsCloudInit,
-    changeLabel,
-    description,
-    isCloudInit,
-    label,
-  } = props;
+  });
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
-  const { classes } = useStyles();
   const regions = useRegionsQuery().data ?? [];
   const dispatch: Dispatch = useDispatch();
   const { push } = useHistory();
@@ -226,105 +172,103 @@ export const ImageUpload: React.FC<Props> = (props) => {
           );
         }}
       </Prompt>
-
-      <Paper className={classes.container}>
+      <Paper>
         {errorMap.none ? <Notice text={errorMap.none} variant="error" /> : null}
-        {!canCreateImage ? (
+        {!canCreateImage && (
           <Notice
             text="You don't have permissions to create a new Image. Please contact an account administrator for details."
             variant="error"
           />
-        ) : null}
-
-        <div style={{ width: '100%' }}>
-          <TextField
-            disabled={!canCreateImage}
-            errorText={errorMap.label}
-            label="Label"
-            onChange={changeLabel}
-            required
-            value={label}
+        )}
+        <TextField
+          disabled={!canCreateImage}
+          errorText={errorMap.label}
+          label="Label"
+          onChange={changeLabel}
+          required
+          value={label}
+        />
+        <TextField
+          disabled={!canCreateImage}
+          errorText={errorMap.description}
+          label="Description"
+          multiline
+          onChange={changeDescription}
+          rows={1}
+          value={description}
+        />
+        {flags.metadata && (
+          <Checkbox
+            toolTipText={
+              <Typography>
+                Only check this box if your Custom Image is compatible with
+                cloud-init, or has cloud-init installed, and the config has been
+                changed to use our data service.{' '}
+                <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata-cloud-config/">
+                  Learn how.
+                </Link>
+              </Typography>
+            }
+            checked={isCloudInit}
+            onChange={changeIsCloudInit}
+            text="This image is cloud-init compatible"
+            toolTipInteractive
           />
-
-          <TextField
-            disabled={!canCreateImage}
-            errorText={errorMap.description}
-            label="Description"
-            multiline
-            onChange={changeDescription}
-            rows={1}
-            value={description}
-          />
-          {flags.metadata && (
-            <div className={classes.cloudInitCheckboxWrapper}>
-              <Checkbox
-                checked={isCloudInit}
-                onChange={changeIsCloudInit}
-                text="This image is cloud-init compatible"
-                toolTipInteractive
-                toolTipText={cloudInitTooltipMessage}
-              />
-            </div>
-          )}
-          <RegionSelect
-            helperText="For fastest initial upload, select the region that is geographically
+        )}
+        <RegionSelect
+          helperText="For fastest initial upload, select the region that is geographically
             closest to you. Once uploaded you will be able to deploy the image
             to other regions."
-            currentCapability={undefined}
-            disabled={!canCreateImage}
-            errorText={errorMap.region}
-            handleSelection={setRegion}
-            label="Region"
-            regionFilter="core" // Images service will not be supported for Gecko Beta
-            regions={regions}
-            required
-            selectedId={region}
+          currentCapability={undefined}
+          disabled={!canCreateImage}
+          errorText={errorMap.region}
+          handleSelection={setRegion}
+          label="Region"
+          regionFilter="core" // Images service will not be supported for Gecko Beta
+          regions={regions}
+          required
+          selectedId={region}
+        />
+        {showGDPRCheckbox && (
+          <EUAgreementCheckbox
+            centerCheckbox
+            checked={hasSignedAgreement}
+            onChange={(e) => setHasSignedAgreement(e.target.checked)}
           />
-          {showGDPRCheckbox ? (
-            <EUAgreementCheckbox
-              centerCheckbox
-              checked={hasSignedAgreement}
-              className={classes.helperText}
-              onChange={(e) => setHasSignedAgreement(e.target.checked)}
-            />
-          ) : null}
-          <Notice
-            spacingTop={24}
-            sx={{ fontSize: '0.875rem' }}
-            variant="warning"
-          >
-            {imageSizeLimitsMessage}
-          </Notice>
-          <Typography className={classes.helperText}>
-            Custom Images are billed at $0.10/GB per month based on the
-            uncompressed image size.
+        )}
+        <Notice spacingTop={24} sx={{ fontSize: '0.875rem' }} variant="warning">
+          <Typography>
+            Image files must be raw disk images (.img) compressed using gzip
+            (.gz). The maximum file size is 5 GB (compressed) and maximum image
+            size is 6 GB (uncompressed).
           </Typography>
-          <ImageUploader
-            apiError={errorMap.none} // Any errors that aren't related to 'label', 'description', or 'region' fields
-            description={description}
-            dropzoneDisabled={uploadingDisabled}
-            isCloudInit={isCloudInit}
-            label={label}
-            onSuccess={onSuccess}
-            region={region}
-            setCancelFn={setCancelFn}
-            setErrors={setErrors}
-          />
-          <Typography sx={{ paddingBottom: 1, paddingTop: 2 }}>
-            Or, upload an image using the{' '}
-            <button
-              className={classes.cliModalButton}
-              onClick={() => setLinodeCLIModalOpen(true)}
-            >
-              Linode CLI
-            </button>
-            . For more information, please see{' '}
-            <Link to="https://www.linode.com/docs/guides/linode-cli">
-              our guide on using the Linode CLI
-            </Link>
-            .
-          </Typography>
-        </div>
+        </Notice>
+        <Typography>
+          Custom Images are billed at $0.10/GB per month based on the
+          uncompressed image size.
+        </Typography>
+        <ImageUploader
+          apiError={errorMap.none} // Any errors that aren't related to 'label', 'description', or 'region' fields
+          description={description}
+          dropzoneDisabled={uploadingDisabled}
+          isCloudInit={isCloudInit}
+          label={label}
+          onSuccess={onSuccess}
+          region={region}
+          setCancelFn={setCancelFn}
+          setErrors={setErrors}
+        />
+        <Typography sx={{ paddingBottom: 1, paddingTop: 2 }}>
+          Or, upload an image using the{' '}
+          <LinkButton onClick={() => setLinodeCLIModalOpen(true)}>
+            Linode CLI
+          </LinkButton>
+          . For more information, please see{' '}
+          <Link to="https://www.linode.com/docs/guides/linode-cli">
+            our guide on using the Linode CLI
+          </Link>
+          .
+        </Typography>
       </Paper>
       <LinodeCLIModal
         analyticsKey="Image Upload"
@@ -335,8 +279,6 @@ export const ImageUpload: React.FC<Props> = (props) => {
     </>
   );
 };
-
-export default ImageUpload;
 
 const formatForCLI = (value: string, fallback: string) => {
   return value ? wrapInQuotes(value) : `[${fallback.toUpperCase()}]`;
