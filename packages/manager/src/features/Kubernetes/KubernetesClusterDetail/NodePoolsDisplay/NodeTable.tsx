@@ -2,6 +2,10 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import VerticalDivider from 'src/assets/icons/divider-vertical.svg';
+import Lock from 'src/assets/icons/lock.svg';
+import Unlock from 'src/assets/icons/unlock.svg';
+import { Box } from 'src/components/Box';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -12,6 +16,7 @@ import { TableFooter } from 'src/components/TableFooter';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { LinodeWithMaintenance } from 'src/utilities/linodes';
@@ -33,17 +38,38 @@ export interface Props {
 
 export const NodeTable = React.memo((props: Props) => {
   const {
-    // encryptionStatus,
+    encryptionStatus,
     nodes,
     openRecycleNodeDialog,
     poolId,
     typeLabel,
   } = props;
 
-  // const flags = useFlags();
   const { data: linodes, error, isLoading } = useAllLinodesQuery();
+  const {
+    isDiskEncryptionFeatureEnabled,
+  } = useIsDiskEncryptionFeatureEnabled();
 
   const rowData = nodes.map((thisNode) => nodeToRow(thisNode, linodes ?? []));
+
+  const encryptedStatusJSX =
+    encryptionStatus === 'enabled' ? (
+      <>
+        <StyledVerticalDivider />
+        <Lock />
+        <StyledTypography>Encrypted</StyledTypography>
+      </>
+    ) : encryptionStatus === 'disabled' ? (
+      <>
+        <StyledVerticalDivider />
+        <Unlock />
+        <StyledTypography>Not Encrypted</StyledTypography>
+        <TooltipIcon
+          status="help"
+          text="To enable disk encryption, delete the node pool and create a new node pool. New node pools are always encrypted."
+        />
+      </>
+    ) : null;
 
   return (
     <OrderBy data={rowData} order={'asc'} orderBy={'label'}>
@@ -127,7 +153,19 @@ export const NodeTable = React.memo((props: Props) => {
                 <TableFooter>
                   <TableRow>
                     <TableCell colSpan={4}>
-                      <Typography>Pool ID {poolId}</Typography>
+                      {isDiskEncryptionFeatureEnabled &&
+                      encryptionStatus !== undefined ? (
+                        <Box
+                          alignItems="center"
+                          display="flex"
+                          flexDirection="row"
+                        >
+                          <Typography>Pool ID {poolId}</Typography>
+                          {encryptedStatusJSX}
+                        </Box>
+                      ) : (
+                        <Typography>Pool ID {poolId}</Typography>
+                      )}
                     </TableCell>
                   </TableRow>
                 </TableFooter>
@@ -169,12 +207,6 @@ export const nodeToRow = (
   };
 };
 
-export const StyledEncryptionDiv = styled('div', {
-  label: 'StyledEncryptionDiv',
-})(({ theme }) => ({
-  paddingLeft: theme.spacing(),
-}));
-
 export const StyledVerticalDivider = styled(VerticalDivider, {
   label: 'StyledVerticalDivider',
 })(({ theme }) => ({
@@ -184,5 +216,5 @@ export const StyledVerticalDivider = styled(VerticalDivider, {
 export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
 })(({ theme }) => ({
-  margin: `0 ${theme.spacing()}`,
+  margin: `0 0 0 ${theme.spacing()}`,
 }));
