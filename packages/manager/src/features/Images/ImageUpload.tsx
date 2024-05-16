@@ -1,6 +1,5 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -16,7 +15,6 @@ import { Prompt } from 'src/components/Prompt/Prompt';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { ImageUploader } from 'src/components/Uploaders/ImageUploader/ImageUploader';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { useFlags } from 'src/hooks/useFlags';
@@ -30,26 +28,31 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
 import { setPendingUpload } from 'src/store/pendingUpload';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
-import { wrapInQuotes } from 'src/utilities/stringUtils';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
 
 import type { ImageUploadPayload } from '@linode/api-v4';
+import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
 
 export const ImageUpload = () => {
-  const { location } = useHistory<{
-    imageDescription: string;
-    imageLabel?: string;
-  }>();
+  const { location } = useHistory<
+    | {
+        imageDescription: string;
+        imageLabel?: string;
+      }
+    | undefined
+  >();
 
   const form = useForm<ImageUploadPayload>({
     defaultValues: {
-      description: location.state.imageDescription,
-      label: location.state.imageLabel,
+      description: location.state?.imageDescription,
+      label: location.state?.imageLabel,
     },
   });
+
+  const selectedRegionId = form.watch('region');
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -65,8 +68,6 @@ export const ImageUpload = () => {
     false
   );
 
-  const [region, setRegion] = React.useState<string>('');
-  const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [linodeCLIModalOpen, setLinodeCLIModalOpen] = React.useState<boolean>(
     false
   );
@@ -75,7 +76,7 @@ export const ImageUpload = () => {
     agreements,
     profile,
     regions,
-    selectedRegionId: region,
+    selectedRegionId,
   });
 
   //  This holds a "cancel function" from the Axios instance that handles image
@@ -127,20 +128,10 @@ export const ImageUpload = () => {
   };
 
   const uploadingDisabled =
-    !label ||
-    !region ||
-    !canCreateImage ||
-    (showGDPRCheckbox && !hasSignedAgreement);
-
-  const errorMap = getErrorMap(['label', 'description', 'region'], errors);
-
-  const cliLabel = formatForCLI(label, 'label');
-  const cliDescription = formatForCLI(description, 'description');
-  const cliRegion = formatForCLI(region, 'region');
-  const linodeCLICommand = `linode-cli image-upload --label ${cliLabel} --description ${cliDescription} --region ${cliRegion} FILE`;
+    !canCreateImage || (showGDPRCheckbox && !hasSignedAgreement);
 
   return (
-    <>
+    <FormProvider {...form}>
       <Prompt
         confirmWhenLeaving={true}
         onConfirm={onConfirm}
@@ -174,61 +165,85 @@ export const ImageUpload = () => {
         }}
       </Prompt>
       <Paper>
-        {errorMap.none ? <Notice text={errorMap.none} variant="error" /> : null}
+        {form.formState.errors.root?.message && (
+          <Notice text={form.formState.errors.root.message} variant="error" />
+        )}
         {!canCreateImage && (
           <Notice
             text="You don't have permissions to create a new Image. Please contact an account administrator for details."
             variant="error"
           />
         )}
-        <TextField
-          disabled={!canCreateImage}
-          errorText={errorMap.label}
-          label="Label"
-          onChange={changeLabel}
-          required
-          value={label}
+        <Controller
+          render={({ field, fieldState }) => (
+            <TextField
+              disabled={!canCreateImage}
+              errorText={fieldState.error?.message}
+              label="Label"
+              onChange={field.onChange}
+              required
+              value={field.value ?? ''}
+            />
+          )}
+          control={form.control}
+          name="label"
         />
-        <TextField
-          disabled={!canCreateImage}
-          errorText={errorMap.description}
-          label="Description"
-          multiline
-          onChange={changeDescription}
-          rows={1}
-          value={description}
+        <Controller
+          render={({ field, fieldState }) => (
+            <TextField
+              disabled={!canCreateImage}
+              errorText={fieldState.error?.message}
+              label="Description"
+              multiline
+              onChange={field.onChange}
+              rows={1}
+              value={field.value ?? ''}
+            />
+          )}
+          control={form.control}
+          name="description"
         />
         {flags.metadata && (
-          <Checkbox
-            toolTipText={
-              <Typography>
-                Only check this box if your Custom Image is compatible with
-                cloud-init, or has cloud-init installed, and the config has been
-                changed to use our data service.{' '}
-                <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata-cloud-config/">
-                  Learn how.
-                </Link>
-              </Typography>
-            }
-            checked={isCloudInit}
-            onChange={changeIsCloudInit}
-            text="This image is cloud-init compatible"
-            toolTipInteractive
+          <Controller
+            render={({ field }) => (
+              <Checkbox
+                toolTipText={
+                  <Typography>
+                    Only check this box if your Custom Image is compatible with
+                    cloud-init, or has cloud-init installed, and the config has
+                    been changed to use our data service.{' '}
+                    <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata-cloud-config/">
+                      Learn how.
+                    </Link>
+                  </Typography>
+                }
+                checked={field.value ?? false}
+                onChange={field.onChange}
+                text="This image is cloud-init compatible"
+                toolTipInteractive
+              />
+            )}
+            control={form.control}
+            name="cloud_init"
           />
         )}
-        <RegionSelect
-          helperText="For fastest initial upload, select the region that is geographically
-            closest to you. Once uploaded you will be able to deploy the image
-            to other regions."
-          currentCapability={undefined}
-          disabled={!canCreateImage}
-          errorText={errorMap.region}
-          handleSelection={setRegion}
-          label="Region"
-          regionFilter="core" // Images service will not be supported for Gecko Beta
-          regions={regions}
-          required
-          selectedId={region}
+        <Controller
+          render={({ field, fieldState }) => (
+            <RegionSelect
+              currentCapability={undefined}
+              disabled={!canCreateImage}
+              errorText={fieldState.error?.message}
+              handleSelection={field.onChange}
+              helperText="For fastest initial upload, select the region that is geographically closest to you. Once uploaded you will be able to deploy the image to other regions."
+              label="Region"
+              regionFilter="core" // Images service will not be supported for Gecko Beta
+              regions={regions}
+              required
+              selectedId={field.value ?? null}
+            />
+          )}
+          control={form.control}
+          name="region"
         />
         {showGDPRCheckbox && (
           <EUAgreementCheckbox
@@ -248,7 +263,7 @@ export const ImageUpload = () => {
           Custom Images are billed at $0.10/GB per month based on the
           uncompressed image size.
         </Typography>
-        <ImageUploader
+        {/* <ImageUploader
           apiError={errorMap.none} // Any errors that aren't related to 'label', 'description', or 'region' fields
           description={description}
           dropzoneDisabled={uploadingDisabled}
@@ -258,7 +273,7 @@ export const ImageUpload = () => {
           region={region}
           setCancelFn={setCancelFn}
           setErrors={setErrors}
-        />
+        /> */}
         <Typography sx={{ paddingBottom: 1, paddingTop: 2 }}>
           Or, upload an image using the{' '}
           <LinkButton onClick={() => setLinodeCLIModalOpen(true)}>
@@ -271,16 +286,14 @@ export const ImageUpload = () => {
           .
         </Typography>
       </Paper>
+      <Box>
+        <Button>Upload Image</Button>
+        </Box>
       <LinodeCLIModal
         analyticsKey="Image Upload"
-        command={linodeCLICommand}
         isOpen={linodeCLIModalOpen}
         onClose={() => setLinodeCLIModalOpen(false)}
       />
-    </>
+    </FormProvider>
   );
-};
-
-const formatForCLI = (value: string, fallback: string) => {
-  return value ? wrapInQuotes(value) : `[${fallback.toUpperCase()}]`;
 };

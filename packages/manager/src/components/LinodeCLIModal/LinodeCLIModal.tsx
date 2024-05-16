@@ -1,20 +1,33 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { sendCLIClickEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { wrapInQuotes } from 'src/utilities/stringUtils';
+
+import type { ImageUploadPayload } from '@linode/api-v4';
 
 export interface ImageUploadSuccessDialogProps {
   analyticsKey?: string;
-  command: string;
   isOpen: boolean;
   onClose: () => void;
 }
 
 export const LinodeCLIModal = React.memo(
   (props: ImageUploadSuccessDialogProps) => {
-    const { analyticsKey, command, isOpen, onClose } = props;
+    const { analyticsKey, isOpen, onClose } = props;
+
+    const form = useFormContext<ImageUploadPayload>();
+
+    const { label, description, region } = form.getValues();
+
+    const cliLabel = formatForCLI(label, 'label');
+    const cliDescription = formatForCLI(description ?? '', 'description');
+    const cliRegion = formatForCLI(region, 'region');
+
+    const command = `linode-cli image-upload --label ${cliLabel} --description ${cliDescription} --region ${cliRegion} FILE`;
 
     return (
       <StyledLinodeCLIModal
@@ -83,3 +96,7 @@ const StyledCopyTooltip = styled(CopyTooltip, {
   },
   display: 'flex',
 }));
+
+const formatForCLI = (value: string, fallback: string) => {
+  return value ? wrapInQuotes(value) : `[${fallback.toUpperCase()}]`;
+};
