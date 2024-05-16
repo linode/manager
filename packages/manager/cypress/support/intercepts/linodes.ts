@@ -410,3 +410,18 @@ export const mockGetLinodeKernel = (
     makeResponse(mockKernel)
   );
 };
+
+/* Intercepts POST request to get a Linode Resize.
+ *
+ * @param linodeId - ID of Linode to fetch.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptLinodeResize = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/resize`)
+  );
+};
