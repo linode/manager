@@ -53,10 +53,9 @@ describeComponent('RegionSelect', (theme) => {
         );
 
         // Focus text field by clicking "Region" label.
-        cy.findByText('Region')
-          .should('be.visible')
-          .click()
-          .type(region.label[0]);
+        cy.findByText('Region').should('be.visible').click();
+
+        cy.focused().type(region.label[0]);
 
         ui.autocompletePopper
           .findByTitle(`${region.label} (${region.id})`)
@@ -97,12 +96,15 @@ describeComponent('RegionSelect', (theme) => {
     it('can dismiss autocomplete popper by clicking away', () => {
       const region = regionFactory.build({ capabilities: ['Object Storage'] });
       cy.mountWithTheme(
-        <RegionSelect
-          regions={[region]}
-          currentCapability="Object Storage"
-          selectedId={null}
-          handleSelection={() => {}}
-        />,
+        <>
+          <span id="other-element">Other Element</span>
+          <RegionSelect
+            regions={[region]}
+            currentCapability="Object Storage"
+            selectedId={null}
+            handleSelection={() => {}}
+          />
+        </>,
         theme
       );
 
@@ -116,7 +118,7 @@ describeComponent('RegionSelect', (theme) => {
         .findByTitle(`${region.label} (${region.id})`)
         .should('be.visible');
 
-      cy.get('[data-cy-root]').click();
+      cy.get('#other-element').click();
       cy.get('[data-qa-autocomplete-popper]').should('not.exist');
     });
 
@@ -140,10 +142,9 @@ describeComponent('RegionSelect', (theme) => {
 
         cy.get('input').should('have.attr', 'placeholder', 'Select a Region');
 
-        cy.findByText('Region')
-          .should('be.visible')
-          .click()
-          .type(regionToSelect.label[0]);
+        cy.findByText('Region').should('be.visible').click();
+
+        cy.focused().type(regionToSelect.label[0]);
 
         ui.autocompletePopper
           .findByTitle(`${regionToSelect.label} (${regionToSelect.id})`)
@@ -178,10 +179,9 @@ describeComponent('RegionSelect', (theme) => {
           `${regionToPreselect.label} (${regionToPreselect.id})`
         );
 
-        cy.findByText('Region')
-          .should('be.visible')
-          .click()
-          .type(regionToSelect.label[0]);
+        cy.findByText('Region').should('be.visible').click();
+
+        cy.focused().type(regionToSelect.label[0]);
 
         ui.autocompletePopper
           .findByTitle(`${regionToSelect.label} (${regionToSelect.id})`)
@@ -244,8 +244,14 @@ describeComponent('RegionSelect', (theme) => {
         cy.findByText(
           `${regionWithoutAvailability.label} (${regionWithoutAvailability.id})`
         )
-          .scrollIntoView()
-          .should('be.visible')
+          .as('regionItem')
+          .scrollIntoView();
+
+        cy.get('@regionItem').should('be.visible');
+
+        cy.findByText(
+          `${regionWithoutAvailability.label} (${regionWithoutAvailability.id})`
+        )
           .closest('li')
           .should('have.attr', 'data-qa-disabled-item', 'true');
       });
