@@ -149,7 +149,9 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           ...props.textFieldProps,
           InputProps: {
             endAdornment: regionFilter !== 'core' &&
-              selectedRegion?.site_type === 'edge' && (
+              selectedRegion?.site_type === 'edge' &&
+              flags.gecko2?.enabled &&
+              !flags.gecko2.ga && (
                 <TooltipIcon
                   icon={<EdgeRegion />}
                   status="other"
