@@ -18,7 +18,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
 import { useProfile } from 'src/queries/profile';
-import { sendSwitchAccountEvent } from 'src/utilities/analytics';
+import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import AccountLogins from './AccountLogins';
 import { SwitchAccountButton } from './SwitchAccountButton';

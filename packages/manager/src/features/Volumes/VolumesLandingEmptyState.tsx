@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendEvent } from 'src/utilities/analytics/utils';
 
 import { StyledVolumeIcon } from './VolumesLandingEmptyState.styles';
 import {
@@ -11,7 +12,6 @@ import {
   linkAnalyticsEvent,
   youtubeLinkData,
 } from './VolumesLandingEmptyStateData';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 export const VolumesLandingEmptyState = () => {
   const { push } = useHistory();

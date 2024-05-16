@@ -56,7 +56,7 @@ describe('PrimaryNav', () => {
 
   it('should show Databases menu item if the user has the account capability', async () => {
     const account = accountFactory.build({
-      capabilities: ["Managed Databases"],
+      capabilities: ['Managed Databases'],
     });
 
     server.use(
