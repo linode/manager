@@ -1,6 +1,7 @@
-import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import VerticalDivider from 'src/assets/icons/divider-vertical.svg';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -19,8 +20,11 @@ import { NodeRow as _NodeRow } from './NodeRow';
 import { StyledTable } from './NodeTable.styles';
 
 import type { NodeRow } from './NodeRow';
+import type { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
+import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
 
 export interface Props {
+  encryptionStatus?: EncryptionStatus;
   nodes: PoolNodeResponse[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
@@ -28,8 +32,15 @@ export interface Props {
 }
 
 export const NodeTable = React.memo((props: Props) => {
-  const { nodes, openRecycleNodeDialog, poolId, typeLabel } = props;
+  const {
+    // encryptionStatus,
+    nodes,
+    openRecycleNodeDialog,
+    poolId,
+    typeLabel,
+  } = props;
 
+  // const flags = useFlags();
   const { data: linodes, error, isLoading } = useAllLinodesQuery();
 
   const rowData = nodes.map((thisNode) => nodeToRow(thisNode, linodes ?? []));
@@ -157,3 +168,21 @@ export const nodeToRow = (
     nodeStatus: node.status,
   };
 };
+
+export const StyledEncryptionDiv = styled('div', {
+  label: 'StyledEncryptionDiv',
+})(({ theme }) => ({
+  paddingLeft: theme.spacing(),
+}));
+
+export const StyledVerticalDivider = styled(VerticalDivider, {
+  label: 'StyledVerticalDivider',
+})(({ theme }) => ({
+  margin: `0 ${theme.spacing(2)}`,
+}));
+
+export const StyledTypography = styled(Typography, {
+  label: 'StyledTypography',
+})(({ theme }) => ({
+  margin: `0 ${theme.spacing()}`,
+}));
