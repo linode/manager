@@ -1,4 +1,4 @@
-import { boolean, number, object, string } from 'yup';
+import { array, boolean, number, object, string } from 'yup';
 
 const labelSchema = string()
   .max(50, 'Length must be 50 characters or less.')
@@ -35,4 +35,5 @@ export const updateImageSchema = object().shape({
   description: string()
     .notRequired()
     .max(65000, 'Length must be 65000 characters or less.'),
+  tags: array(string()).notRequired(),
 });
