@@ -36,10 +36,7 @@ describe('SelectFirewallPanel', () => {
         handleFirewallChange={vi.fn()}
         helperText={<span>Testing</span>}
         selectedFirewallId={-1}
-      />,
-      {
-        flags: { firewallNodebalancer: true },
-      }
+      />
     );
 
     const createFirewallLink = wrapper.getByText('Create Firewall');
@@ -60,10 +57,7 @@ describe('SelectFirewallPanel', () => {
         handleFirewallChange={vi.fn()}
         helperText={<span>Testing</span>}
         selectedFirewallId={-1}
-      />,
-      {
-        flags: { firewallNodebalancer: true },
-      }
+      />
     );
 
     const createFirewallLink = wrapper.getByText('Create Firewall');

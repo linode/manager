@@ -1,8 +1,7 @@
 import { Notification } from '@linode/api-v4';
 import { notificationFactory } from '@src/factories/notification';
-import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { getClick } from 'support/helpers';
-import { apiMatcher } from 'support/util/intercepts';
+import { mockGetNotifications } from 'support/intercepts/events';
 
 const notifications: Notification[] = [
   notificationFactory.build({
@@ -21,11 +20,7 @@ const notifications: Notification[] = [
 
 describe('verify notification types and icons', () => {
   it(`notifications`, () => {
-    cy.intercept('GET', apiMatcher('account/notifications*'), (req) => {
-      req.reply((res) => {
-        res.send(makeResourcePage(notifications));
-      });
-    }).as('mockNotifications');
+    mockGetNotifications(notifications).as('mockNotifications');
     cy.visitWithLogin('/linodes');
     cy.wait('@mockNotifications');
     getClick('button[aria-label="Notifications"]');
