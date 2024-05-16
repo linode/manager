@@ -23,6 +23,8 @@ export const CloudViewMultiResourceSelect = (
 
   const defaultCalls = React.useRef(false);
 
+  const selectedResources = React.useRef<any>([]);
+
   const getResourceList = () => {
     if (props.region && props.resourceType) {
       return props.resourceType && resourceOptions[props.resourceType]
@@ -33,17 +35,19 @@ export const CloudViewMultiResourceSelect = (
   };
 
   const getSelectedResources = () => {
-    const selectedResource = getResourceList().filter(
-      (obj) => props.defaultValue && props.defaultValue?.includes(obj.id)
+    const selectedResourceObj = getResourceList().filter(
+      (obj) =>
+        (props.defaultValue && props.defaultValue?.includes(obj.id)) ||
+        (selectedResources.current && selectedResources.current.includes(obj))
     );
 
     if (!defaultCalls.current) {
-      props.handleResourceChange(selectedResource, 'default');
+      props.handleResourceChange(selectedResourceObj, 'default');
     }
 
     defaultCalls.current = true;
 
-    return selectedResource;
+    return selectedResourceObj;
   };
 
   const filterResourcesByRegion = (resourcesList: any[]) => {
@@ -84,6 +88,7 @@ export const CloudViewMultiResourceSelect = (
   return (
     <Autocomplete
       onChange={(_: any, resource: any, reason) => {
+        selectedResources.current = resource;
         props.handleResourceChange(resource, reason);
       }}
       autoHighlight
