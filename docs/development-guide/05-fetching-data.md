@@ -246,8 +246,8 @@ console.log(errorMap);
 
 #### Scrolling to errors
 
-For deep forms, we provide a utility that will scroll to the first error encountered within a defined container.
-It can be a notice (API error) or a Formik field error. In order to implement this often needed functionality (the user can be unaware of an error that isn't in the viewport), we must declare a form (or form container) via ref, then pass it to the `scrollErrorIntoViewV2` util (works both for class & functional components).
+For deep forms, we provide a utility that will scroll to the first error encountered within a defined container. We do this to improve error visibility, because the user can be unaware of an error that isn't in the viewport. 
+An error can be a notice (API error) or a Formik field error. In order to implement this often needed functionality, we must declare a form or form container via ref, then pass it to the `scrollErrorIntoViewV2` util (works both for class & functional components).
 
 Note: the legacy `scrollErrorIntoView` is deprecated in favor of `scrollErrorIntoViewV2`.
 
