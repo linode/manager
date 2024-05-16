@@ -95,10 +95,12 @@ export const ImagesDrawer = (props: CombinedProps) => {
         updateImage({ description: safeDescription, imageId, label, tags })
           .then(onClose)
           .catch((errorResponse: APIError[]) => {
-            setSubmitting(false);
             setErrors(
               getAPIErrorOrDefault(errorResponse, 'Unable to edit Image')
             );
+          })
+          .finally(() => {
+            setSubmitting(false);
           });
         return;
 
@@ -209,7 +211,7 @@ export const ImagesDrawer = (props: CombinedProps) => {
           'data-testid': 'cancel',
           disabled: !canCreateImage,
           label: 'Cancel',
-          onClick: close,
+          onClick: onClose,
         }}
         style={{ marginTop: 16 }}
       />
