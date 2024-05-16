@@ -276,6 +276,7 @@ export class LinodeCreate extends React.PureComponent<
     const { selectedTab, stackScriptSelectedTab } = this.state;
 
     const {
+      account,
       accountBackupsEnabled,
       errors,
       flags,
@@ -339,6 +340,13 @@ export class LinodeCreate extends React.PureComponent<
     const hasBackups = Boolean(
       this.props.backupsEnabled || accountBackupsEnabled
     );
+
+    const hasDiskEncryptionAccountCapability = account.data?.capabilities?.includes(
+      'Disk Encryption'
+    );
+
+    const isDiskEncryptionFeatureEnabled =
+      flags.linodeDiskEncryption && hasDiskEncryptionAccountCapability;
 
     const displaySections = [];
     if (imageDisplayInfo) {
@@ -421,7 +429,7 @@ export class LinodeCreate extends React.PureComponent<
     }
 
     if (
-      flags.linodeDiskEncryption &&
+      isDiskEncryptionFeatureEnabled &&
       regionSupportsDiskEncryption &&
       this.props.diskEncryptionEnabled
     ) {
@@ -880,6 +888,14 @@ export class LinodeCreate extends React.PureComponent<
       'Disk Encryption'
     );
 
+    const hasDiskEncryptionAccountCapability = this.props.account.data?.capabilities?.includes(
+      'Disk Encryption'
+    );
+
+    const isDiskEncryptionFeatureEnabled =
+      this.props.flags.linodeDiskEncryption &&
+      hasDiskEncryptionAccountCapability;
+
     const diskEncryptionPayload: EncryptionStatus = this.props
       .diskEncryptionEnabled
       ? 'enabled'
@@ -897,9 +913,10 @@ export class LinodeCreate extends React.PureComponent<
       backup_id: this.props.selectedBackupID,
       backups_enabled: this.props.backupsEnabled,
       booted: true,
-      disk_encryption: regionSupportsDiskEncryption
-        ? diskEncryptionPayload
-        : undefined,
+      disk_encryption:
+        isDiskEncryptionFeatureEnabled && regionSupportsDiskEncryption
+          ? diskEncryptionPayload
+          : undefined,
       firewall_id:
         this.props.firewallId !== -1 ? this.props.firewallId : undefined,
       image: this.props.selectedImageID,
