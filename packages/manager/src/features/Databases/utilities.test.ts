@@ -51,7 +51,7 @@ describe('useIsDatabasesEnabled', () => {
       }),
       http.get('*/v4beta/databases/engines', () => {
         return HttpResponse.json(makeResourcePage([]));
-      }),
+      })
     );
 
     const { result } = renderHook(() => useIsDatabasesEnabled(), {
