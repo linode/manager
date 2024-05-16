@@ -5,7 +5,7 @@ import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
-import { AclpConfig } from '../Models/CloudPulsePreferences';
+import { AclpConfig, AclpWidget } from '../Models/CloudPulsePreferences';
 import { FiltersObject } from '../Models/GlobalFilterProperties';
 import { GlobalFilters } from '../Overview/GlobalFilters';
 import { CloudPulseDashboard, DashboardProperties } from './Dashboard';
@@ -144,6 +144,7 @@ export const DashBoardLanding = () => {
 
       preferenceRef.current.aclpPreference.dashboardId = undefined!;
       preferenceRef.current.aclpPreference.resources = [];
+      preferenceRef.current.aclpPreference.region = '';
 
       handlPrefChange(preferenceRef.current.aclpPreference);
       return;
@@ -226,7 +227,15 @@ export const DashBoardLanding = () => {
     return <CircleProgress></CircleProgress>;
   } else {
     if (!preferenceRef || !preferenceRef.current) {
-      preferenceRef.current = preferences;
+      preferenceRef.current = { ...preferences };
+
+      if (!preferenceRef.current.aclpPreference) {
+        preferenceRef.current.aclpPreference = {} as AclpConfig;
+      } else {
+        preferenceRef.current.aclpPreference = {
+          ...preferences.aclpPreference,
+        };
+      }
     }
   }
   return (

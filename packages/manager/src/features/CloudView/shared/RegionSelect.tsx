@@ -5,6 +5,7 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useRegionsQuery } from 'src/queries/regions';
 
 export interface CloudViewRegionSelectProps {
+  dashboardId: number;
   defaultValue?: string;
   handleRegionChange: (region: string | undefined) => void;
 }
@@ -12,26 +13,20 @@ export interface CloudViewRegionSelectProps {
 export const CloudViewRegionSelect = React.memo(
   (props: CloudViewRegionSelectProps) => {
     const { data: regions } = useRegionsQuery();
-    const [selectedRegion, setRegion] = React.useState<string>();
-
-    React.useEffect(() => {
-      props.handleRegionChange(selectedRegion);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedRegion]);
+    const defaultCalls = React.useRef(false);
 
     const getPrefferedRegion = () => {
-      if (!selectedRegion && props.defaultValue) {
-        setRegion(props.defaultValue);
-        return props.defaultValue ? props.defaultValue : null;
+      if (!defaultCalls.current) {
+        defaultCalls.current = true;
+        props.handleRegionChange(props.defaultValue);
       }
-
-      return selectedRegion;
+      return props.defaultValue;
     };
 
     return (
       <RegionSelect
         handleSelection={(value) => {
-          setRegion(value);
+          props.handleRegionChange(value);
         }}
         currentCapability={undefined}
         fullWidth
@@ -39,7 +34,7 @@ export const CloudViewRegionSelect = React.memo(
         label=""
         noMarginTop
         regions={regions ? regions : []}
-        selectedId={getPrefferedRegion()}
+        selectedId={getPrefferedRegion()!}
       />
     );
   }

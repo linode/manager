@@ -20,18 +20,18 @@ interface Props
   ) => void;
 }
 
-const _PAST_7_DAYS = 'Past 7 Days';
-const _PAST_12_HOURS = 'Past 12 Hours';
-const _PAST_24_HOURS = 'Past 24 Hours';
-const _PAST_30_DAYS = 'Past 30 Days';
-const _PAST_30_MINUTES = 'Past 30 Minutes';
+const _PAST_7_DAYS = 'Last 7 Days';
+const _PAST_12_HOURS = 'Last 12 Hours';
+const _PAST_24_HOURS = 'Last 24 Hours';
+const _PAST_30_DAYS = 'Last 30 Days';
+const _PAST_30_MINUTES = 'Last 30 Minutes';
 
 export type Labels =
-  | 'Past 7 Days'
-  | 'Past 12 Hours'
-  | 'Past 24 Hours'
-  | 'Past 30 Days'
-  | 'Past 30 Minutes';
+  | 'Last 7 Days'
+  | 'Last 12 Hours'
+  | 'Last 24 Hours'
+  | 'Last 30 Days'
+  | 'Last 30 Minutes';
 
 export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
   const getTimeDurationFromTimeRange = (label: string) => {
@@ -73,7 +73,7 @@ export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
     is a valid time window.
   */
   const [selectedTimeRange, setTimeRange] = React.useState<Labels>(
-    props.defaultValue ?? 'Past 30 Minutes'
+    props.defaultValue ?? 'Last 30 Minutes'
   );
 
   const [apiTimeDuration, setApiTimeDuration] = React.useState<TimeDuration>(
@@ -162,28 +162,28 @@ export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
 export const generateSelectOptions = (): Item<Labels, Labels>[] => {
   const baseOptions: Item<Labels, Labels>[] = [
     {
-      label: 'Past 30 Minutes',
-      value: 'Past 30 Minutes',
+      label: 'Last 30 Minutes',
+      value: 'Last 30 Minutes',
     },
     {
-      label: 'Past 12 Hours',
-      value: 'Past 12 Hours',
+      label: 'Last 12 Hours',
+      value: 'Last 12 Hours',
     },
   ];
 
   return [
     ...baseOptions,
     {
-      label: 'Past 24 Hours',
-      value: 'Past 24 Hours',
+      label: 'Last 24 Hours',
+      value: 'Last 24 Hours',
     },
     {
-      label: 'Past 7 Days',
-      value: 'Past 7 Days',
+      label: 'Last 7 Days',
+      value: 'Last 7 Days',
     },
     {
-      label: 'Past 30 Days',
-      value: 'Past 30 Days',
+      label: 'Last 30 Days',
+      value: 'Last 30 Days',
     },
   ];
 };
@@ -194,13 +194,13 @@ export const generateSelectOptions = (): Item<Labels, Labels>[] => {
  */
 export const generateStartTime = (modifier: Labels, nowInSeconds: number) => {
   switch (modifier) {
-    case 'Past 30 Minutes':
+    case 'Last 30 Minutes':
       return nowInSeconds - 30 * 60;
-    case 'Past 12 Hours':
+    case 'Last 12 Hours':
       return nowInSeconds - 12 * 60 * 60;
-    case 'Past 24 Hours':
+    case 'Last 24 Hours':
       return nowInSeconds - 24 * 60 * 60;
-    case 'Past 7 Days':
+    case 'Last 7 Days':
       return nowInSeconds - 7 * 24 * 60 * 60;
     default:
       return nowInSeconds - 30 * 24 * 60 * 60;

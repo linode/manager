@@ -69,6 +69,10 @@ export const CloudViewMultiResourceSelect = (
     props.resourceType === 'aclb'
   ));
 
+  React.useEffect(() => {
+    selectedResources.current = [];
+  }, [props.resourceType, props.region])
+
   if (
     props.disabled ||
     !resourceOptions[props.resourceType!] ||
