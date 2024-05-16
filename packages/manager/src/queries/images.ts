@@ -121,9 +121,9 @@ export const useAllImagesQuery = (
     enabled,
   });
 
-export const useUploadImageMutation = (payload: ImageUploadPayload) =>
-  useMutation<UploadImageResponse, APIError[]>({
-    mutationFn: () => uploadImage(payload),
+export const useUploadImageMutation = () =>
+  useMutation<UploadImageResponse, APIError[], ImageUploadPayload>({
+    mutationFn: uploadImage,
   });
 
 export const imageEventsHandler = ({
