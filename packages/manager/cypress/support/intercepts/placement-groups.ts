@@ -103,12 +103,13 @@ export const mockUnassignPlacementGroupLinodes = (
  * @returns Cypress chainable.
  */
 export const mockDeletePlacementGroupError = (
+  placementGroupId: number,
   errorMessage: string = 'An error has occurred',
   errorCode: number = 500
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    apiMatcher('placement/groups*'),
+    apiMatcher(`placement/groups/${placementGroupId}`),
     makeErrorResponse(errorMessage, errorCode)
   );
 };

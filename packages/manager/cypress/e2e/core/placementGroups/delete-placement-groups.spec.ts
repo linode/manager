@@ -79,10 +79,6 @@ describe('Placement Group deletion', () => {
     cy.visitWithLogin('/placement-groups');
     cy.wait('@getPlacementGroups');
 
-    // Click "Delete" button next to the mock Placement Group, mock an HTTP 500 error and confirm UI displays the message.
-    mockDeletePlacementGroupError(DeletePlacementGroupErrorMessage).as(
-      'deletePlacementGroup'
-    );
     cy.findByText(mockPlacementGroup.label)
       .should('be.visible')
       .closest('tr')
@@ -94,8 +90,32 @@ describe('Placement Group deletion', () => {
           .click();
       });
 
-    cy.wait('@deletePlacementGroup');
-    cy.findByText(DeletePlacementGroupErrorMessage).should('be.visible');
+    mockDeletePlacementGroupError(
+      mockPlacementGroup.id,
+      DeletePlacementGroupErrorMessage
+    ).as('deletePlacementGroupError');
+
+    ui.dialog
+      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Placement Group').type(mockPlacementGroup.label);
+
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        cy.wait('@deletePlacementGroupError');
+        cy.findByText(DeletePlacementGroupErrorMessage).should('be.visible');
+
+        ui.button
+          .findByTitle('Cancel')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
 
     // Click "Delete" button next to the mock Placement Group,
     // mock a successful response and confirm that Cloud
