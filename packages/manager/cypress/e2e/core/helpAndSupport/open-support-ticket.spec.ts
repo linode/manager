@@ -8,7 +8,6 @@ import {
 } from 'support/helpers';
 import 'cypress-file-upload';
 import { interceptGetProfile } from 'support/intercepts/profile';
-import { apiMatcher } from 'support/util/intercepts';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
@@ -23,6 +22,7 @@ import {
 } from 'support/util/random';
 import { supportTicketFactory } from 'src/factories';
 import {
+  mockAttachSupportTicketFile,
   mockCreateSupportTicket,
   mockGetSupportTicket,
   mockGetSupportTickets,
@@ -58,7 +58,7 @@ describe('help & support', () => {
 
     cy.wait('@getProfile').then((xhr) => {
       const user = xhr.response?.body['username'];
-      const mockTicketData = {
+      const mockTicketData = supportTicketFactory.build({
         attachments: [image],
         closable: false,
         closed: null,
@@ -71,32 +71,13 @@ describe('help & support', () => {
         summary: 'cy-test ticket',
         updated: ts.toISOString(),
         updated_by: user,
-      };
+      });
+
       // intercept create ticket request, stub response.
-      cy.intercept('POST', apiMatcher('support/tickets'), mockTicketData).as(
-        'createTicket'
-      );
-      // stub incoming response
-      cy.intercept(
-        'GET',
-        apiMatcher(`support/tickets/${ticketId}`),
-        mockTicketData
-      ).as('getTicket');
-      // intercept create support ticket request, stub response with 200
-      cy.intercept(
-        'POST',
-        apiMatcher(`support/tickets/${ticketId}/attachments`),
-        (req) => {
-          req.reply(200);
-        }
-      ).as('attachmentPost');
-      // stub incoming response
-      cy.intercept(apiMatcher(`support/tickets/${ticketId}/replies*`), {
-        data: [],
-        page: 1,
-        pages: 1,
-        results: 0,
-      }).as('getReplies');
+      mockCreateSupportTicket(mockTicketData).as('createTicket');
+      mockGetSupportTicket(mockTicketData).as('getTicket');
+      mockGetSupportTicketReplies(ticketId, []).as('getReplies');
+      mockAttachSupportTicketFile(ticketId).as('attachmentPost');
 
       containsClick('Open New Ticket');
       cy.get('input[placeholder="Enter a title for your ticket."]')
