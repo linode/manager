@@ -1,3 +1,4 @@
+import { useMediaQuery } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -5,13 +6,14 @@ import { Link } from 'react-router-dom';
 import { Box } from 'src/components/Box';
 import { Checkbox } from 'src/components/Checkbox';
 import { Currency } from 'src/components/Currency';
+import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/DiskEncryption/constants';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
 import { Divider } from 'src/components/Divider';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
 import { useImageQuery } from 'src/queries/images';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 
@@ -21,8 +23,6 @@ import { VLANAccordion } from './VLANAccordion';
 import type { Interface, Linode } from '@linode/api-v4/lib/linodes';
 import type { UserDataAccordionProps } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import type { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
-import { useMediaQuery } from '@mui/material';
-import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/DiskEncryption/constants';
 
 interface UserDataProps extends UserDataAccordionProps {
   showUserData: boolean;
@@ -78,7 +78,9 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
 
   const theme = useTheme();
 
-  const flags = useFlags();
+  const {
+    isDiskEncryptionFeatureEnabled,
+  } = useIsDiskEncryptionFeatureEnabled();
 
   const matchesMdUp = useMediaQuery(theme.breakpoints.up('md'));
 
@@ -218,7 +220,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
             </Box>
           }
         />
-        {flags.linodeDiskEncryption &&
+        {isDiskEncryptionFeatureEnabled &&
           diskEncryptionEnabled &&
           isBackupsBoxChecked && (
             <Notice
