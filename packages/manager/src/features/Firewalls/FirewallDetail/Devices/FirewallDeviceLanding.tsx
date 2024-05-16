@@ -43,7 +43,7 @@ export const FirewallDeviceLanding = React.memo(
     const routeMatch = useRouteMatch();
     const location = useLocation();
 
-    const helperText = `Assign one or more services to this firewall. You can add serivces later if you want to customize your rules first.`;
+    const helperText = "Assign one or more services to this firewall. You can add services later if you want to customize your rules first.";
 
     React.useEffect(() => {
       if (location.pathname.endsWith('add')) {
