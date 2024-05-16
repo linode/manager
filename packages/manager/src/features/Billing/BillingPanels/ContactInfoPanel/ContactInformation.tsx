@@ -1,6 +1,6 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
-import countryData from 'country-region-data';
+import Grid from '@mui/material/Unstable_Grid2';
+import { allCountries } from 'country-region-data';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
@@ -113,10 +113,23 @@ const ContactInformation = (props: Props) => {
     }
   }, [editContactDrawerOpen, history.location.state]);
 
-  // Finding the country from the countryData JSON
-  const countryName = countryData?.find(
-    (_country) => _country.countryShortCode === country
-  )?.countryName;
+  /**
+   * Finding the country from the countryData JSON
+   * `country-region-data` mapping:
+   *
+   * COUNTRY
+   * - country[0] is the readable name of the country (e.g. "United States")
+   * - country[1] is the ISO 3166-1 alpha-2 code of the country (e.g. "US")
+   * - country[2] is an array of regions for the country
+   *
+   * REGION
+   * - region[0] is the readable name of the region (e.g. "Alabama")
+   * - region[1] is the ISO 3166-2 code of the region (e.g. "AL")
+   */
+  const countryName = allCountries?.find((_country) => {
+    const countryCode = _country[1];
+    return countryCode === country;
+  })?.[0];
 
   const sxGrid = {
     flex: 1,
