@@ -85,7 +85,7 @@ export const PlacementGroupsEditDrawer = (
     try {
       const response = await mutateAsync(values);
 
-      enqueueSnackbar(`Placement Group ${values.label} successfully updated`, {
+      enqueueSnackbar(`Placement Group ${values.label} successfully updated.`, {
         variant: 'success',
       });
 
@@ -143,13 +143,13 @@ export const PlacementGroupsEditDrawer = (
               },
               {
                 description: AFFINITY_TYPES[placementGroup.affinity_type],
-                title: 'Affinity',
+                title: 'Affinity Type',
               },
               {
                 description: getAffinityTypeEnforcement(
                   placementGroup.is_strict
                 ),
-                title: 'Affinity Enforcement',
+                title: 'Affinity Type Enforcement',
               },
             ]}
             sx={{

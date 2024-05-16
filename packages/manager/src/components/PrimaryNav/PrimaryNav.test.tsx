@@ -54,22 +54,22 @@ describe('PrimaryNav', () => {
     expect(getByTestId(queryString).getAttribute('aria-current')).toBe('false');
   });
 
-  it('should show Databases menu item when feature flag is off but user has Managed Databases', () => {
-    const { getByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags: { databases: false },
-      queryClient,
+  it('should show Databases menu item if the user has the account capability', async () => {
+    const account = accountFactory.build({
+      capabilities: ["Managed Databases"],
     });
 
-    expect(getByTestId('menu-item-Databases')).toBeInTheDocument();
-  });
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
 
-  it('should show databases menu when feature is on', () => {
-    const { getByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags: { databases: true },
-      queryClient,
-    });
+    const { findByText } = renderWithTheme(<PrimaryNav {...props} />);
 
-    expect(getByTestId('menu-item-Databases')).toBeInTheDocument();
+    const databaseNavItem = await findByText('Databases');
+
+    expect(databaseNavItem).toBeVisible();
   });
 
   it('should show ACLB if the feature flag is on, but there is not an account capability', async () => {

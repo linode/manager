@@ -4,6 +4,131 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-05-13] - v1.119.0
+
+
+### Changed:
+
+- Update Account Closure Dialog Wording ([#10406](https://github.com/linode/manager/pull/10406))
+- Implement GPUv2 plan divider & cleanup/consolidate plan selection components ([#10407](https://github.com/linode/manager/pull/10407)) [#10450](https://github.com/linode/manager/pull/10450)
+
+### Fixed:
+
+- Object ACL select field enabled in loading state ([#10412](https://github.com/linode/manager/pull/10412))
+- Modification of Linode config 'interfaces' array on no changes ([#10423](https://github.com/linode/manager/pull/10423))
+- Table component props forwarding ([#10424](https://github.com/linode/manager/pull/10424))
+
+### Tech Stories:
+
+- Remove `linodeCloneUiChanges` feature flag and clean up usages ([#10385](https://github.com/linode/manager/pull/10385))
+- Query Key Factory for Volumes ([#10414](https://github.com/linode/manager/pull/10414))
+- Query Key Factory for Kubernetes ([#10428](https://github.com/linode/manager/pull/10428))
+- Clean up Main Content Banner ([#10430](https://github.com/linode/manager/pull/10430))
+- Clean up Database feature flagging logic ([#10435](https://github.com/linode/manager/pull/10435))
+
+### Tests:
+
+- Add Cypress test coverage for Firewall renaming ([#10384](https://github.com/linode/manager/pull/10384))
+- Add Cypress test for Domain cloning ([#10403](https://github.com/linode/manager/pull/10403))
+- Fix VPC subnet Linode assignment integration test failures ([#10405](https://github.com/linode/manager/pull/10405))
+- Fix access key test failure when user has many OBJ buckets ([#10405](https://github.com/linode/manager/pull/10405))
+- Refactor Linode config end-to-end tests ([#10405](https://github.com/linode/manager/pull/10405))
+- Fix failing OBJ E2E tests following API release ([#10417](https://github.com/linode/manager/pull/10417))
+- Add Cypress tests for Placement Group deletion flows ([#10425](https://github.com/linode/manager/pull/10425))
+- Add Placement Group create flow UI test ([#10445](https://github.com/linode/manager/pull/10445))
+- Fix One-Click App test by using Ubuntu 22.04 image ([#10447](https://github.com/linode/manager/pull/10447))
+
+### Upcoming Features:
+
+- Add dialog to refresh proxy tokens as time expires ([#10361](https://github.com/linode/manager/pull/10361))
+- Update Placement Groups text copy ([#10399](https://github.com/linode/manager/pull/10399))
+- Linode Create Refactor:
+   - Marketplace - Part 1 ([#10401](https://github.com/linode/manager/pull/10401))
+   - Backups (#10404)
+   - Marketplace - Part 2 (#10419)
+   - Cloning ([#10421](https://github.com/linode/manager/pull/10421))
+- Update Placement Group Table Row linodes tooltip and SelectPlacementGroup option label ([#10408](https://github.com/linode/manager/pull/10408))
+- Add content to the ResourcesSection of the PG landing page in empty state ([#10411](https://github.com/linode/manager/pull/10411))
+- Use 'edge'-class plans in edge regions ([#10415](https://github.com/linode/manager/pull/10415))
+- Add disk_encryption to several factories for mocked data ([#10418](https://github.com/linode/manager/pull/10418))
+- Fix Placement Group action event formatting ([#10420](https://github.com/linode/manager/pull/10420))
+- Replace remaining feature flag implementation with `useIsPlacementGroupsEnabled` utility function ([#10431](https://github.com/linode/manager/pull/10431))
+- Update Placement Groups final copy ([#10434](https://github.com/linode/manager/pull/10434))
+- Add support for Placement Groups in Linode CLI tool ([#10438](https://github.com/linode/manager/pull/10438))
+- Set PlacementGroupSelect clearOnBlur to true ([#10427](https://github.com/linode/manager/pull/10427))
+- Update Placement Groups maximum_pgs_per_customer UI (#10433)
+- Add DiskEncryption component ([#10439](https://github.com/linode/manager/pull/10439))
+
+
+## [2024-05-06] - v1.118.1
+
+
+### Upcoming Features:
+
+- Use 'edge'-class plans in edge regions ([#10441](https://github.com/linode/manager/pull/10441))
+
+## [2024-04-29] - v1.118.0
+
+
+### Added:
+
+- April Marketplace apps and SVGs ([#10382](https://github.com/linode/manager/pull/10382))
+
+### Changed:
+
+- Improve the UX of Access Token & Access Key drawers ([#10338](https://github.com/linode/manager/pull/10338))
+- RegionSelect disabled option API updates ([#10373](https://github.com/linode/manager/pull/10373))
+- Dynamic pricing with `volumes/types` endpoint ([#10376](https://github.com/linode/manager/pull/10376))
+- Top Menu clean up and refactor ([#10383](https://github.com/linode/manager/pull/10383))
+- PlanSelection availability updates and consolidation ([#10387](https://github.com/linode/manager/pull/10387))
+- Shift wording from 'limited availability' to 'limited deployment availability' ([#10394](https://github.com/linode/manager/pull/10394))
+- Gecko Beta copy updates ([#10400](https://github.com/linode/manager/pull/10400))
+
+### Fixed:
+
+- Charts Y-axis values are trimmed when scale is increased ([#10330](https://github.com/linode/manager/pull/10330))
+- Chrome bug related to outdated CSS vendor prefixes ([#10380](https://github.com/linode/manager/pull/10380))
+- Clickable disabled smaller plans in Resizing Tab ([#10381](https://github.com/linode/manager/pull/10381))
+- New OBJ Buckets do not appear when created before initial fetch completes ([#10388](https://github.com/linode/manager/pull/10388))
+
+### Removed:
+
+- Deprecated Marketplace apps ([#10382](https://github.com/linode/manager/pull/10382))
+
+### Tech Stories:
+
+- Refactor and streamline VPC queries ([#10322](https://github.com/linode/manager/pull/10322))
+- Update documentation on Adobe Analytics to cover data property ([#10365](https://github.com/linode/manager/pull/10365))
+- Add isFeatureEnabledV2 to check for feature flag AND account capability ([#10371](https://github.com/linode/manager/pull/10371))
+- Replace sanitize-html with dompurify ([#10378](https://github.com/linode/manager/pull/10378))
+- Remove lodash (global import) as a package dependency ([#10386](https://github.com/linode/manager/pull/10386))
+- Add Gravatar Analytics ([#10389](https://github.com/linode/manager/pull/10389))
+
+### Tests:
+
+- Add tests for Parent/Child Users & Grants page ([#10240](https://github.com/linode/manager/pull/10240))
+- Add new Cypress tests for Longview landing page ([#10321](https://github.com/linode/manager/pull/10321))
+- Add VM Placement Group landing page empty state UI test ([#10350](https://github.com/linode/manager/pull/10350))
+- Fix `machine-image-upload.spec.ts` e2e test flake  ([#10370](https://github.com/linode/manager/pull/10370))
+- Update latest kernel version to fix `linode-config.spec.ts` ([#10391](https://github.com/linode/manager/pull/10391))
+- Fix hanging account switching test ([#10396](https://github.com/linode/manager/pull/10396))
+
+### Upcoming Features:
+
+- Add Placement Groups to Linode Migrate flow ([#10339](https://github.com/linode/manager/pull/10339))
+- Add text copy for Placement Group region limits in PlacementGroupsCreateDrawer ([#10355](https://github.com/linode/manager/pull/10355))
+- Invalidate Placement Group queries on Linode create & delete mutations ([#10366](https://github.com/linode/manager/pull/10366))
+- Update the Placement Groups SVG icon ([#10379](https://github.com/linode/manager/pull/10379))
+- Fix & Improve Placement Groups feature restriction ([#10372](https://github.com/linode/manager/pull/10372))
+- Linode Create Refactor:
+   - VPC (#10354)
+   - StackScripts (#10367)
+   - Validation (#10374)
+   - User Defined Fields ([#10395](https://github.com/linode/manager/pull/10395))
+- Update gecko feature flag to object ([#10363](https://github.com/linode/manager/pull/10363))
+- Show the selected regions as chips in the AccessKeyDrawer ([#10375](https://github.com/linode/manager/pull/10375))
+- Add feature flag for Linode Disk Encryption (LDE) ([#10402](https://github.com/linode/manager/pull/10402))
+
 ## [2024-04-15] - v1.117.0
 
 ### Added:

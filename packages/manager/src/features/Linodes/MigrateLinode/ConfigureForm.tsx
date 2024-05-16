@@ -8,6 +8,8 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { sxEdgeIcon } from 'src/components/RegionSelect/RegionSelect.styles';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
+import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
@@ -57,7 +59,7 @@ export const ConfigureForm = React.memo((props: Props) => {
   } = props;
 
   const flags = useFlags();
-  const showPlacementGroups = Boolean(flags.placementGroups?.enabled);
+  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { data: regions } = useRegionsQuery();
 
   const { data: currentLinodeType } = useTypeQuery(
@@ -194,7 +196,7 @@ export const ConfigureForm = React.memo((props: Props) => {
               {...panelPrice(selectedRegion, selectedRegionPrice, 'new')}
             />
           )}
-          {showPlacementGroups && (
+          {isPlacementGroupsEnabled && (
             <PlacementGroupsSelect
               handlePlacementGroupChange={(placementGroup) => {
                 handlePlacementGroupSelection(placementGroup);
@@ -207,8 +209,8 @@ export const ConfigureForm = React.memo((props: Props) => {
               disabled={isPlacementGroupSelectDisabled}
               key={selectedRegion}
               label={placementGroupSelectLabel}
-              noOptionsMessage="There are no Placement Groups in this region."
-              selectedPlacementGroup={selectedPlacementGroup}
+              noOptionsMessage={NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE}
+              selectedPlacementGroupId={selectedPlacementGroup?.id ?? null}
               selectedRegion={newRegion}
             />
           )}

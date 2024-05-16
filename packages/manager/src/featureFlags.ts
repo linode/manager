@@ -48,6 +48,10 @@ interface GeckoFlag {
   ga: boolean;
 }
 
+interface gpuV2 {
+  planDivider: boolean;
+}
+
 type OneClickApp = Record<string, string>;
 
 export interface Flags {
@@ -58,11 +62,10 @@ export interface Flags {
   databaseResize: boolean;
   databases: boolean;
   disableLargestGbPlans: boolean;
-  firewallNodebalancer: boolean;
   gecko: boolean; // @TODO gecko: delete this after next release
   gecko2: GeckoFlag;
+  gpuv2: gpuV2;
   ipv6Sharing: boolean;
-  linodeCloneUiChanges: boolean;
   linodeCreateRefactor: boolean;
   linodeCreateWithFirewall: boolean;
   linodeDiskEncryption: boolean;

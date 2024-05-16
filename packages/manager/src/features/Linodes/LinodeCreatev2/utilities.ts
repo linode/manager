@@ -1,9 +1,8 @@
-import { yupResolver } from '@hookform/resolvers/yup';
 import { getLinode, getStackScript } from '@linode/api-v4';
-import { CreateLinodeSchema } from '@linode/validation';
 import { omit } from 'lodash';
 import { useHistory } from 'react-router-dom';
 
+import { privateIPRegex } from 'src/utilities/ipUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { utoa } from '../LinodesCreate/utilities';
@@ -16,7 +15,6 @@ import type {
   InterfacePayload,
   Linode,
 } from '@linode/api-v4';
-import type { Resolver } from 'react-hook-form';
 
 /**
  * This is the ID of the Image of the default distribution.
@@ -27,6 +25,7 @@ const DEFAULT_DISTRIBUTION = 'linode/debian11';
  * This interface is used to type the query params on the Linode Create flow.
  */
 interface LinodeCreateQueryParams {
+  appID: string | undefined;
   backupID: string | undefined;
   imageID: string | undefined;
   linodeID: string | undefined;
@@ -36,6 +35,7 @@ interface LinodeCreateQueryParams {
 }
 
 interface ParsedLinodeCreateQueryParams {
+  appID: number | undefined;
   backupID: number | undefined;
   imageID: string | undefined;
   linodeID: number | undefined;
@@ -89,6 +89,7 @@ const getParsedLinodeCreateQueryParams = (rawParams: {
   [key: string]: string;
 }): ParsedLinodeCreateQueryParams => {
   return {
+    appID: rawParams.appID ? Number(rawParams.appID) : undefined,
     backupID: rawParams.backupID ? Number(rawParams.backupID) : undefined,
     imageID: rawParams.imageID as string | undefined,
     linodeID: rawParams.linodeID ? Number(rawParams.linodeID) : undefined,
@@ -253,11 +254,16 @@ export const defaultValues = async (): Promise<LinodeCreateFormValues> => {
   const queryParams = getQueryParamsFromQueryString(window.location.search);
   const params = getParsedLinodeCreateQueryParams(queryParams);
 
-  const stackscript = params.stackScriptID
-    ? await getStackScript(params.stackScriptID)
+  const stackscriptId = params.stackScriptID ?? params.appID;
+
+  const stackscript = stackscriptId
+    ? await getStackScript(stackscriptId)
     : null;
 
   const linode = params.linodeID ? await getLinode(params.linodeID) : null;
+
+  const privateIp =
+    linode?.ipv4.some((ipv4) => privateIPRegex.test(ipv4)) ?? false;
 
   return {
     backup_id: params.backupID,
@@ -268,11 +274,12 @@ export const defaultValues = async (): Promise<LinodeCreateFormValues> => {
       defaultPublicInterface,
     ],
     linode,
+    private_ip: privateIp,
     region: linode ? linode.region : '',
     stackscript_data: stackscript?.user_defined_fields
       ? getDefaultUDFData(stackscript.user_defined_fields)
       : undefined,
-    stackscript_id: params.stackScriptID,
+    stackscript_id: stackscriptId,
     type: linode?.type ? linode.type : '',
   };
 };
@@ -338,32 +345,6 @@ export const defaultValuesMap: Record<LinodeCreateType, CreateLinodeRequest> = {
   'Clone Linode': defaultValuesForImages,
   Distributions: defaultValuesForDistributions,
   Images: defaultValuesForImages,
-  'One-Click': defaultValuesForImages,
+  'One-Click': defaultValuesForStackScripts,
   StackScripts: defaultValuesForStackScripts,
-};
-
-/**
- * Provides dynamic validation to the Linode Create form.
- *
- * Unfortunately, we have to wrap `yupResolver` so that we can transform the payload
- * using `getLinodeCreatePayload` before validation happens.
- */
-export const resolver: Resolver<LinodeCreateFormValues> = async (
-  values,
-  context,
-  options
-) => {
-  const transformedValues = getLinodeCreatePayload(values);
-
-  const { errors } = await yupResolver(
-    CreateLinodeSchema,
-    {},
-    { rawValues: true }
-  )(transformedValues, context, options);
-
-  if (errors) {
-    return { errors, values };
-  }
-
-  return { errors: {}, values };
 };
