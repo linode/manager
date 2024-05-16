@@ -45,6 +45,7 @@ interface SelectRegionPanelProps {
    * Include a `selectedLinodeTypeId` so we can tell if the region selection will have an affect on price
    */
   selectedLinodeTypeId?: string;
+  updateTypeID?: (key: string) => void;
 }
 
 export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
@@ -57,6 +58,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     helperText,
     selectedId,
     selectedLinodeTypeId,
+    updateTypeID,
   } = props;
 
   const flags = useFlags();
@@ -105,6 +107,14 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   if (regions?.length === 0) {
     return null;
   }
+
+  const handleRegionSelection = (regionId: string) => {
+    handleSelection(regionId);
+    // Reset plan selection on region change to prevent creation of an edge plan in a core region and vice versa
+    if (updateTypeID) {
+      updateTypeID('');
+    }
+  };
 
   return (
     <Paper
@@ -160,7 +170,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
                 currentCapability={currentCapability}
                 disabled={disabled}
                 errorText={error}
-                handleSelection={handleSelection}
+                handleSelection={handleRegionSelection}
                 helperText={helperText}
                 regionFilter="core"
                 regions={regions ?? []}
@@ -179,7 +189,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
                 currentCapability={currentCapability}
                 disabled={disabled}
                 errorText={error}
-                handleSelection={handleSelection}
+                handleSelection={handleRegionSelection}
                 helperText={helperText}
                 regionFilter="edge"
                 regions={regions ?? []}

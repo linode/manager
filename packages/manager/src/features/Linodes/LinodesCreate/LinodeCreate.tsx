@@ -621,6 +621,7 @@ export class LinodeCreate extends React.PureComponent<
                 helperText={this.props.regionHelperText}
                 selectedId={this.props.selectedRegionID}
                 selectedLinodeTypeId={this.props.selectedTypeID}
+                updateTypeID={this.props.updateTypeID}
               />
             )}
             <PlansPanel
