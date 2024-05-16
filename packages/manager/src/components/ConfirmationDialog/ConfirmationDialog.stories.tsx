@@ -9,9 +9,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 const meta: Meta<typeof ConfirmationDialog> = {
   argTypes: {
     actions: {
-      control: {
-        type: 'jsx',
-      },
       description:
         'Items that get rendered in the footer of the Dialog. Typicaly you put an `<ActionsPanel />` with `<Button />`s in it.',
     },
