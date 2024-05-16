@@ -6,7 +6,6 @@ import { Paper } from 'src/components/Paper';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography } from 'src/components/Typography';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
-import { useFlags } from 'src/hooks/useFlags';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import {
@@ -18,7 +17,6 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 export const SummaryPanel = () => {
-  const flags = useFlags();
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
   const id = Number(nodeBalancerId);
   const { data: nodebalancer } = useNodeBalancerQuery(id);
@@ -102,7 +100,7 @@ export const SummaryPanel = () => {
           </StyledSection>
         </StyledSummarySection>
       </StyledSummarySectionWrapper>
-      {displayFirewallLink && flags.firewallNodebalancer && (
+      {displayFirewallLink && (
         <StyledSummarySection>
           <StyledTitle data-qa-title variant="h3">
             Firewall

@@ -21,7 +21,6 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclb', label: 'ACLB' },
   { flag: 'aclbFullCreateFlow', label: 'ACLB Full Create Flow' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
-  { flag: 'firewallNodebalancer', label: 'Firewall NodeBalancer' },
   { flag: 'gecko2', label: 'Gecko' },
   { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
