@@ -13,6 +13,7 @@ import {
   mockDeletePlacementGroup,
   mockGetPlacementGroups,
   mockUnassignPlacementGroupLinodes,
+  mockDeletePlacementGroupError,
 } from 'support/intercepts/placement-groups';
 import {
   accountFactory,
@@ -42,6 +43,8 @@ const unassignWarning =
 const emptyStateMessage =
   'Control the physical placement or distribution of Linode instances within a data center or availability zone.';
 
+const DeletePlacementGroupErrorMessage = 'An unknown error has occurred.';
+
 describe('Placement Group deletion', () => {
   beforeEach(() => {
     // TODO Remove feature flag mocks when `placementGroups` flag is retired.
@@ -61,7 +64,7 @@ describe('Placement Group deletion', () => {
    * - Confirms that UI automatically updates to reflect deleted Placement Group.
    * - Confirms that landing page reverts to its empty state when last Placement Group is deleted.
    */
-  it('can delete without Linodes assigned', () => {
+  it.only('can delete without Linodes assigned', () => {
     const mockPlacementGroupRegion = chooseRegion();
     const mockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
@@ -76,7 +79,10 @@ describe('Placement Group deletion', () => {
     cy.visitWithLogin('/placement-groups');
     cy.wait('@getPlacementGroups');
 
-    // Click "Delete" button next to the mock Placement Group.
+    // Click "Delete" button next to the mock Placement Group, mock an HTTP 500 error and confirm UI displays the message.
+    mockDeletePlacementGroupError(DeletePlacementGroupErrorMessage).as(
+      'deletePlacementGroup'
+    );
     cy.findByText(mockPlacementGroup.label)
       .should('be.visible')
       .closest('tr')
@@ -88,7 +94,23 @@ describe('Placement Group deletion', () => {
           .click();
       });
 
+    cy.wait('@deletePlacementGroup');
+    cy.findByText(DeletePlacementGroupErrorMessage).should('be.visible');
+
+    // Click "Delete" button next to the mock Placement Group,
+    // mock a successful response and confirm that Cloud
     mockDeletePlacementGroup(mockPlacementGroup.id).as('deletePlacementGroup');
+    cy.findByText(mockPlacementGroup.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
     mockGetPlacementGroups([]).as('getPlacementGroups');
 
     // Confirm deletion warning appears, complete Type-to-Confirm, and submit confirmation.
