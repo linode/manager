@@ -6,7 +6,9 @@ import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const CreateImageTab = React.lazy(() => import('./CreateImageTab'));
-const ImageUpload = React.lazy(() => import('../ImageUpload'));
+const ImageUpload = React.lazy(() =>
+  import('../ImageUpload').then((module) => ({ default: module.ImageUpload }))
+);
 
 export const ImageCreate = () => {
   const { url } = useRouteMatch();
@@ -46,16 +48,7 @@ export const ImageCreate = () => {
       title: 'Capture Image',
     },
     {
-      render: (
-        <ImageUpload
-          changeDescription={handleSetDescription}
-          changeIsCloudInit={() => setIsCloudInit(!isCloudInit)}
-          changeLabel={handleSetLabel}
-          description={description}
-          isCloudInit={isCloudInit}
-          label={label}
-        />
-      ),
+      render: <ImageUpload />,
       routeName: `${url}/upload`,
       title: 'Upload Image',
     },

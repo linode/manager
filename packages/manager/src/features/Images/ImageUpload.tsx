@@ -1,8 +1,8 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
@@ -35,6 +35,7 @@ import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { wrapInQuotes } from 'src/utilities/stringUtils';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
+
 import type { ImageUploadPayload } from '@linode/api-v4';
 
 export const ImageUpload = () => {
@@ -45,8 +46,8 @@ export const ImageUpload = () => {
 
   const form = useForm<ImageUploadPayload>({
     defaultValues: {
-      label: location.state.imageLabel,
       description: location.state.imageDescription,
+      label: location.state.imageLabel,
     },
   });
 
