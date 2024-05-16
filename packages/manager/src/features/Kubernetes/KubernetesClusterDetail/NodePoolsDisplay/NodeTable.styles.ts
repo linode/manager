@@ -19,7 +19,6 @@ export const StyledTableRow = styled(TableRow, {
     opacity: 1,
   },
   marginLeft: 4,
-  top: 1,
 }));
 
 export const StyledTable = styled(Table, {
