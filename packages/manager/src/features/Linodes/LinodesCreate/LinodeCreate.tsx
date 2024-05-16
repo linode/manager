@@ -118,7 +118,7 @@ export interface LinodeCreateProps {
   handleAgreementChange: () => void;
   handleFirewallChange: (firewallId: number) => void;
   handleIPv4RangesForVPC: (ranges: ExtendedIP[]) => void;
-  handlePlacementGroupChange: (placementGroup: PlacementGroup) => void;
+  handlePlacementGroupChange: (placementGroup: PlacementGroup | null) => void;
   handleShowApiAwarenessModal: () => void;
   handleSubmitForm: HandleSubmit;
   handleSubnetChange: (subnetId: number) => void;
@@ -675,6 +675,9 @@ export class LinodeCreate extends React.PureComponent<
               onChange: (e) => updateLabel(e.target.value),
               value: label || '',
             }}
+            selectedPlacementGroupId={
+              this.props.placementGroupSelection?.id ?? null
+            }
             tagsInputProps={
               this.props.createType !== 'fromLinode'
                 ? tagsInputProps
@@ -834,7 +837,6 @@ export class LinodeCreate extends React.PureComponent<
               isOpen={showApiAwarenessModal}
               onClose={handleShowApiAwarenessModal}
               payLoad={this.getPayload()}
-              route={this.props.match.url}
             />
           </StyledButtonGroupBox>
         </Grid>

@@ -7,6 +7,7 @@ import { PlacementGroupsDetailPanel } from './PlacementGroupsDetailPanel';
 
 const defaultProps = {
   handlePlacementGroupChange: vi.fn(),
+  selectedPlacementGroupId: null,
 };
 
 const queryMocks = vi.hoisted(() => ({

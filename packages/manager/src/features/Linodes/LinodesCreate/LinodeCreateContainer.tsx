@@ -295,6 +295,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             imageDisplayInfo={this.getImageInfo()}
             ipamAddress={this.state.vlanIPAMAddress}
             label={this.generateLabel()}
+            placementGroupSelection={this.state.placementGroupSelection}
             regionDisplayInfo={this.getRegionInfo()}
             regionsData={regionsData}
             resetCreationState={this.clearCreationState}
