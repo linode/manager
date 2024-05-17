@@ -99,8 +99,8 @@ const PlansAvailabilityNoticeMessage = (
   if (hasSelectedRegion && !isSelectedRegionEligibleForPlan) {
     return (
       <Notice
-        bypassValidation={true}
         dataTestId={`${planType}-notice-error`}
+        disableScrollToError={true}
         variant="error"
       >
         <StyledNoticeTypography>

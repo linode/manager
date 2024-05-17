@@ -6,6 +6,7 @@ import Error from 'src/assets/icons/alert.svg';
 import Check from 'src/assets/icons/check.svg';
 import Warning from 'src/assets/icons/warning.svg';
 import { Typography, TypographyProps } from 'src/components/Typography';
+import { useScrollErrorIntoView } from 'src/hooks/useScrollErrorIntoView';
 
 import { useStyles } from './Notice.styles';
 
@@ -18,12 +19,6 @@ export type NoticeVariant =
 
 export interface NoticeProps extends Grid2Props {
   /**
-   * If true, the error will be treated as "static" and will not be included in the error group.
-   * This will essentially disable the scroll to error behavior.
-   * **Note:** This only applies to notice variants of "error".
-   */
-  bypassValidation?: boolean;
-  /**
    * Additional classes to be applied to the root element.
    */
   className?: string;
@@ -32,9 +27,12 @@ export interface NoticeProps extends Grid2Props {
    */
   dataTestId?: string;
   /**
-   * The error group this error belongs to. This is used to scroll to the error when the user clicks on the error.
+   * Error notices usually indicate an API error, appear above the form or field, and are automatically scrolled into view when the form is submitted.
+   * In order to bypass this behavior, set this prop to true.
+   *
+   * This only applies to notice variants of "error".
    */
-  errorGroup?: string;
+  disableScrollToError?: boolean;
   /**
    * If true, an icon will be displayed to the left of the error, reflecting the variant of the error.
    */
@@ -90,11 +88,10 @@ export interface NoticeProps extends Grid2Props {
  */
 export const Notice = (props: NoticeProps) => {
   const {
-    bypassValidation = false,
     children,
     className,
     dataTestId,
-    errorGroup,
+    disableScrollToError = false,
     important,
     onClick,
     spacingBottom,
@@ -105,7 +102,10 @@ export const Notice = (props: NoticeProps) => {
     typeProps,
     variant,
   } = props;
-
+  const noticeRef = useScrollErrorIntoView<HTMLDivElement>(
+    variant === 'error',
+    disableScrollToError
+  );
   const { classes, cx } = useStyles();
 
   const innerText = text ? (
@@ -143,12 +143,6 @@ export const Notice = (props: NoticeProps) => {
       children
     );
 
-  const errorScrollClassName = bypassValidation
-    ? ''
-    : errorGroup
-    ? `error-for-scroll-${errorGroup}`
-    : `error-for-scroll`;
-
   const dataAttributes = !variantMap.error
     ? {
         'data-qa-notice': true,
@@ -172,7 +166,6 @@ export const Notice = (props: NoticeProps) => {
         [classes.successList]: variantMap.success,
         [classes.warning]: variantMap.warning,
         [classes.warningList]: variantMap.warning,
-        [errorScrollClassName]: variantMap.error,
         notice: true,
         ...(className && { [className]: true }),
       })}
@@ -187,6 +180,7 @@ export const Notice = (props: NoticeProps) => {
         sx,
       })}
       {...dataAttributes}
+      ref={noticeRef}
       role="alert"
     >
       {important &&

@@ -68,12 +68,6 @@ describe('Notice Component', () => {
     expect(icon).toBeInTheDocument();
   });
 
-  it('handles bypassValidation prop', () => {
-    const { container } = renderWithTheme(<Notice bypassValidation />);
-
-    expect(container.firstChild).not.toHaveClass('error-for-scroll');
-  });
-
   it('applies spacing props', () => {
     const { container } = renderWithTheme(
       <Notice spacingBottom={8} spacingLeft={4} spacingTop={4} />

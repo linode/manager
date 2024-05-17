@@ -14,14 +14,9 @@ describe('ProductNotification', () => {
       text: 'This is a critical notification',
     };
 
-    const { container, getByText } = renderWithTheme(
-      <ProductNotification {...props} />
-    );
+    const { getByText } = renderWithTheme(<ProductNotification {...props} />);
 
     const noticeElement = getByText('This is a critical notification');
     expect(noticeElement).toBeInTheDocument();
-    const noticeRoot = container.firstChild;
-
-    expect(noticeRoot).toHaveClass('error-for-scroll');
   });
 });

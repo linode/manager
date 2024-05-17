@@ -88,12 +88,7 @@ export const ResizeDiskDrawer = (props: Props) => {
     <Drawer onClose={onClose} open={open} title={`Resize ${disk?.label}`}>
       <form onSubmit={formik.handleSubmit}>
         {formik.status && (
-          <Notice
-            errorGroup="linode-disk-drawer"
-            spacingBottom={8}
-            text={formik.status}
-            variant="error"
-          />
+          <Notice spacingBottom={8} text={formik.status} variant="error" />
         )}
         <FormHelperText>
           The size of a Linode Compute Instance&rsquo;s disk can be increased or

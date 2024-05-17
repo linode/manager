@@ -62,7 +62,6 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { ExtendedIP } from 'src/utilities/ipUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import {
   ExtendedInterface,
@@ -449,7 +448,6 @@ export const LinodeConfigDialog = (props: Props) => {
         error,
         'An unexpected error occurred.'
       );
-      scrollErrorIntoView('linode-config-dialog');
     };
 
     /** Editing */
@@ -692,12 +690,7 @@ export const LinodeConfigDialog = (props: Props) => {
           <React.Fragment>
             {generalError && (
               <Grid>
-                <Notice
-                  errorGroup="linode-config-dialog"
-                  spacingBottom={0}
-                  text={generalError}
-                  variant="error"
-                />
+                <Notice spacingBottom={0} text={generalError} variant="error" />
               </Grid>
             )}
             <Grid xs={12}>

@@ -46,7 +46,6 @@ import { PARENT_USER, grantTypeMap } from 'src/features/Account/constants';
 import { accountQueries } from 'src/queries/account/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import {
   StyledCircleProgress,
@@ -232,7 +231,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               'Unknown error occurred while fetching user permissions. Try again later.'
             ),
           });
-          scrollErrorIntoView();
         });
     }
   };
@@ -255,7 +253,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             'Unknown error occurred while fetching user permissions. Try again later.'
           ),
         });
-        scrollErrorIntoView();
       }
     }
   };
@@ -736,7 +733,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             ),
             isSavingGlobal: false,
           });
-          scrollErrorIntoView();
         });
     }
 
@@ -794,7 +790,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           ),
           isSavingEntity: false,
         });
-        scrollErrorIntoView();
       });
   };
 

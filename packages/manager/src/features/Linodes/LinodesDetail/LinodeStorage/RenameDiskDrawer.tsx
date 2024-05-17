@@ -60,12 +60,7 @@ export const RenameDiskDrawer = (props: Props) => {
     <Drawer onClose={onClose} open={open} title="Rename Disk">
       <form onSubmit={formik.handleSubmit}>
         {formik.status && (
-          <Notice
-            errorGroup="linode-disk-drawer"
-            spacingBottom={8}
-            text={formik.status}
-            variant="error"
-          />
+          <Notice spacingBottom={8} text={formik.status} variant="error" />
         )}
         <TextField
           data-qa-label

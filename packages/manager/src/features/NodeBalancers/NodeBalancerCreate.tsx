@@ -52,7 +52,6 @@ import {
   getDCSpecificPriceByType,
   renderMonthlyPriceToCorrectDecimalPlace,
 } from 'src/utilities/pricing/dynamicPricing';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
 import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
@@ -275,7 +274,6 @@ const NodeBalancerCreate = () => {
 
     // Apply the error updater functions with a compose
     setNodeBalancerFields((compose as any)(...setFns));
-    scrollErrorIntoView();
   };
 
   const onCreate = () => {
@@ -308,8 +306,6 @@ const NodeBalancerCreate = () => {
             ...(e.field && { field: e.field.replace(/(\[|\]\.)/g, '_') }),
           }))
         );
-
-        scrollErrorIntoView();
       });
   };
 
