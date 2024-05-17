@@ -56,6 +56,7 @@ export const DashBoardLanding = () => {
 
   // since preference is mutable and savable
   const preferenceRef = React.useRef<any>();
+  const lastChanged = React.useRef<string>('');
 
   const { data: preferences, refetch: refetchPreferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
@@ -125,6 +126,8 @@ export const DashBoardLanding = () => {
       dashbboardPropRef.current.dashboardFilters.step = globalFilter.step;
       preferenceRef.current.aclpPreference.interval = globalFilter.interval;
     }
+
+    lastChanged.current = 'filter';
     // set as dashboard filter
     setDashboardProp({
       ...dashboardProp,
@@ -173,6 +176,8 @@ export const DashBoardLanding = () => {
     dashbboardPropRef.current.dashboardFilters.serviceType =
       dashboard.service_type;
 
+    lastChanged.current = 'filter';
+
     setDashboardProp({ ...dashbboardPropRef.current });
     updatedDashboard.current = { ...dashboard };
 
@@ -211,6 +216,7 @@ export const DashBoardLanding = () => {
   const dashbaordChange = (dashboardObj: Dashboard) => {
     // todo, whenever a change in dashboard happens
     updatedDashboard.current = { ...dashboardObj };
+    lastChanged.current = 'dashboard';
 
     if (dashboardObj.widgets) {
       preferenceRef.current.aclpPreference.widgets = dashboardObj.widgets.map(
@@ -262,9 +268,9 @@ export const DashBoardLanding = () => {
         </div>
       </Paper>
       <CloudPulseDashboard
-        {...dashboardProp}
-        onDashboardChange={dashbaordChange}
-      />
+          {...dashboardProp}
+          onDashboardChange={dashbaordChange}
+        />
     </>
   );
 };

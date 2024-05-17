@@ -5,7 +5,6 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useRegionsQuery } from 'src/queries/regions';
 
 export interface CloudViewRegionSelectProps {
-  dashboardId: number;
   defaultValue?: string;
   handleRegionChange: (region: string | undefined) => void;
 }

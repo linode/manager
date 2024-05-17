@@ -26,7 +26,7 @@ export interface DashboardProperties {
   onDashboardChange: (dashboard: Dashboard) => void;
 }
 
-export const CloudPulseDashboard = (props: DashboardProperties) => {
+export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
   const resourceOptions: any = {};
 
   // returns a list of resource IDs to be passed as part of getJWEToken call
@@ -154,7 +154,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
         <Paper>
           <StyledPlaceholder
             subtitle="No visualizations are available at this moment.
-        Create Dashboards to list here."
+        Select Dashboards to list here."
             icon={CloudViewIcon}
             title=""
           />
@@ -170,4 +170,4 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   });
 
   return <RenderWidgets />;
-};
+});
