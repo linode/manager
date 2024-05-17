@@ -41,10 +41,11 @@ import {
 } from 'src/queries/images';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
+import { EditImageDrawer } from './EditImageDrawer';
 import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
-import { DrawerMode, ImagesDrawer } from './ImagesDrawer';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
+import { RebuildImageDrawer } from './RebuildImageDrawer';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   imageTable: {
@@ -60,14 +61,18 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-interface ImageDrawerState {
+interface EditImageDrawerState {
   description?: string;
   imageID?: string;
   label?: string;
-  mode: DrawerMode;
+  open: boolean;
+  tags?: string[];
+}
+
+interface RebuildImageDrawerState {
+  imageID?: string;
   open: boolean;
   selectedLinode?: number;
-  tags?: string[];
 }
 
 interface ImageDialogState {
@@ -79,16 +84,6 @@ interface ImageDialogState {
   submitting: boolean;
 }
 
-interface ImagesLandingProps extends ImageDrawerState, ImageDialogState {}
-
-const defaultDrawerState: ImageDrawerState = {
-  description: '',
-  label: '',
-  mode: 'edit',
-  open: false,
-  tags: [],
-};
-
 const defaultDialogState = {
   error: undefined,
   image: '',
@@ -97,7 +92,7 @@ const defaultDialogState = {
   submitting: false,
 };
 
-export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
+export const ImagesLanding = () => {
   const { classes } = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -202,9 +197,17 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
     imageEvents
   );
 
-  const [drawer, setDrawer] = React.useState<ImageDrawerState>(
-    defaultDrawerState
-  );
+  const [
+    editDrawerState,
+    setEditDrawerState,
+  ] = React.useState<EditImageDrawerState>({ open: false });
+
+  const [
+    rebuildDrawerState,
+    setRebuildDrawerState,
+  ] = React.useState<RebuildImageDrawerState>({
+    open: false,
+  });
 
   const [dialog, setDialogState] = React.useState<ImageDialogState>(
     defaultDialogState
@@ -295,24 +298,20 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
     description: string,
     imageID: string,
     tags: string[]
-  ) => {
-    setDrawer({
+  ) =>
+    setEditDrawerState({
       description,
       imageID,
       label,
-      mode: 'edit',
       open: true,
       tags,
     });
-  };
 
-  const openForRestore = (imageID: string) => {
-    setDrawer({
+  const openForRestore = (imageID: string) =>
+    setRebuildDrawerState({
       imageID,
-      mode: 'restore',
       open: true,
     });
-  };
 
   const deployNewLinode = (imageID: string) => {
     history.push({
@@ -323,24 +322,16 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
   };
 
   const changeSelectedLinode = (linodeId: null | number) => {
-    setDrawer((prevDrawerState) => ({
+    setRebuildDrawerState((prevDrawerState) => ({
       ...prevDrawerState,
-      selectedDisk: null,
       selectedLinode: linodeId ?? undefined,
-    }));
-  };
-
-  const changeSelectedDisk = (disk: null | string) => {
-    setDrawer((prevDrawerState) => ({
-      ...prevDrawerState,
-      selectedDisk: disk,
     }));
   };
 
   const setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
-    setDrawer((prevDrawerState) => ({
+    setEditDrawerState((prevDrawerState) => ({
       ...prevDrawerState,
       label: value,
     }));
@@ -348,14 +339,14 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
 
   const setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setDrawer((prevDrawerState) => ({
+    setEditDrawerState((prevDrawerState) => ({
       ...prevDrawerState,
       description: value,
     }));
   };
 
   const setTags = (tags: string[]) =>
-    setDrawer((prevDrawerState) => ({
+    setEditDrawerState((prevDrawerState) => ({
       ...prevDrawerState,
       tags,
     }));
@@ -378,31 +369,18 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
     );
   };
 
-  const closeImageDrawer = () => {
-    setDrawer((prevDrawerState) => ({
+  const closeEditImageDrawer = () => {
+    setEditDrawerState((prevDrawerState) => ({
       ...prevDrawerState,
       open: false,
     }));
   };
 
-  const renderImageDrawer = () => {
-    return (
-      <ImagesDrawer
-        changeDescription={setDescription}
-        changeDisk={changeSelectedDisk}
-        changeLabel={setLabel}
-        changeLinode={changeSelectedLinode}
-        changeTags={setTags}
-        description={drawer.description}
-        imageId={drawer.imageID}
-        label={drawer.label}
-        mode={drawer.mode}
-        onClose={closeImageDrawer}
-        open={drawer.open}
-        selectedLinode={drawer.selectedLinode || null}
-        tags={drawer.tags}
-      />
-    );
+  const closeRebuildImageDrawer = () => {
+    setRebuildDrawerState((prevDrawerState) => ({
+      ...prevDrawerState,
+      open: false,
+    }));
   };
 
   const handlers: ImageHandlers = {
@@ -600,7 +578,18 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
           pageSize={paginationForAutomaticImages.pageSize}
         />
       </Paper>
-      {renderImageDrawer()}
+      <EditImageDrawer
+        {...editDrawerState}
+        changeDescription={setDescription}
+        changeLabel={setLabel}
+        changeTags={setTags}
+        onClose={closeEditImageDrawer}
+      />
+      <RebuildImageDrawer
+        {...rebuildDrawerState}
+        changeLinode={changeSelectedLinode}
+        onClose={closeRebuildImageDrawer}
+      />
       <ConfirmationDialog
         title={
           dialogAction === 'cancel'

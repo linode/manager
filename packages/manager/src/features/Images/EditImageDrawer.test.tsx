@@ -1,31 +1,28 @@
 import { fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { linodeFactory } from 'src/factories';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ImagesDrawer, Props } from './ImagesDrawer';
+import { EditImageDrawer } from './EditImageDrawer';
 
-const props: Props = {
+const props = {
   changeDescription: vi.fn(),
   changeDisk: vi.fn(),
   changeLabel: vi.fn(),
   changeLinode: vi.fn(),
   changeTags: vi.fn(),
-  mode: 'edit',
+  description: 'Example description',
+  imageID: '0',
+  label: 'Test Image',
   onClose: vi.fn(),
   open: true,
   selectedLinode: null,
+  tags: [],
 };
 
-describe('ImagesDrawer edit mode', () => {
+describe('EditImageDrawer', () => {
   it('should render', async () => {
-    const { getByText } = renderWithTheme(
-      <ImagesDrawer {...props} mode="edit" />
-    );
+    const { getByText } = renderWithTheme(<EditImageDrawer {...props} />);
 
     // Verify title renders
     getByText('Edit Image');
@@ -33,7 +30,7 @@ describe('ImagesDrawer edit mode', () => {
 
   it('should allow editing image details', async () => {
     const { getByLabelText, getByText } = renderWithTheme(
-      <ImagesDrawer {...props} mode="edit" />
+      <EditImageDrawer {...props} />
     );
 
     fireEvent.change(getByLabelText('Label'), {
@@ -64,34 +61,5 @@ describe('ImagesDrawer edit mode', () => {
     );
 
     expect(props.changeTags).toBeCalledWith(['new-tag']);
-  });
-});
-
-describe('ImagesDrawer restore mode', () => {
-  it('should render', async () => {
-    const { getByText } = renderWithTheme(
-      <ImagesDrawer {...props} mode="restore" />
-    );
-
-    // Verify title renders
-    getByText('Restore from Image');
-  });
-
-  it('should allow editing image details', async () => {
-    const { findByText, getByRole, getByText } = renderWithTheme(
-      <ImagesDrawer {...props} mode="restore" />
-    );
-
-    server.use(
-      http.get('*/linode/instances', () => {
-        return HttpResponse.json(makeResourcePage(linodeFactory.buildList(5)));
-      })
-    );
-
-    await userEvent.click(getByRole('combobox'));
-    await userEvent.click(await findByText('linode-1'));
-    await userEvent.click(getByText('Restore Image'));
-
-    expect(props.changeLinode).toBeCalledWith(1);
   });
 });
