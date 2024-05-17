@@ -112,28 +112,11 @@ describe('Placement Group deletion', () => {
 
         cy.wait('@deletePlacementGroupError');
         cy.findByText(PlacementGroupErrorMessage).should('be.visible');
-
-        ui.button
-          .findByTitle('Cancel')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
       });
 
     // Click "Delete" button next to the mock Placement Group,
     // mock a successful response and confirm that Cloud
     mockDeletePlacementGroup(mockPlacementGroup.id).as('deletePlacementGroup');
-    cy.findByText(mockPlacementGroup.label)
-      .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        ui.button
-          .findByTitle('Delete')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
     mockGetPlacementGroups([]).as('getPlacementGroups');
 
     // Confirm deletion warning appears, complete Type-to-Confirm, and submit confirmation.
@@ -143,8 +126,6 @@ describe('Placement Group deletion', () => {
       .within(() => {
         cy.findByText(deletionWarning).should('be.visible');
         cy.findByText(unassignWarning).should('not.exist');
-
-        cy.findByLabelText('Placement Group').type(mockPlacementGroup.label);
 
         ui.button
           .findByTitle('Delete')
@@ -168,7 +149,7 @@ describe('Placement Group deletion', () => {
    * - Confirms that UI automatically updates to reflect unassigned Linodes during deletion.
    * - Confirms that UI automatically updates to reflect deleted Placement Group.
    */
-  it.only('can delete with Linodes assigned', () => {
+  it('can delete with Linodes assigned', () => {
     const mockPlacementGroupRegion = chooseRegion();
 
     // Linodes that are assigned to the Placement Group being deleted.
