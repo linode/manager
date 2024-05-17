@@ -29,7 +29,9 @@ export const OveragePricing = (props: Props) => {
 
   const { data: types, isError, isLoading } = useObjectStorageTypesQuery();
 
-  const overageType = types?.find((type) => type.id.includes('overage'));
+  const overageType = types?.find(
+    (type) => type.id === 'objectstorage-overage'
+  );
 
   const storageOveragePrice = getDCSpecificPriceByType({
     decimalPrecision: 3,
@@ -42,23 +44,22 @@ export const OveragePricing = (props: Props) => {
     regionId
   );
 
-  return (
+  return isLoading ? (
+    <CircularProgress size={16} sx={{ marginTop: 2 }} />
+  ) : (
     <>
-      {isLoading ? (
-        <CircularProgress size={16} sx={{ marginTop: 2 }} />
-      ) : (
-        <StyledTypography>
-          For this region, additional storage costs{' '}
-          <strong>
-            $
-            {storageOveragePrice && !isError
-              ? storageOveragePrice
-              : UNKNOWN_PRICE}{' '}
-            per GB
-          </strong>
-          .
-        </StyledTypography>
-      )}
+      <StyledTypography>
+        For this region, additional storage costs{' '}
+        <strong>
+          $
+          {storageOveragePrice && !isError
+            ? storageOveragePrice
+            : UNKNOWN_PRICE}{' '}
+          per GB
+        </strong>
+        .
+      </StyledTypography>
+
       <StyledTypography>
         Outbound transfer will cost{' '}
         <strong>
@@ -66,11 +67,6 @@ export const OveragePricing = (props: Props) => {
           {isDcSpecificPricingRegion
             ? objectStoragePriceIncreaseMap[regionId].transfer_overage
             : OBJ_STORAGE_PRICE.transfer_overage}{' '}
-          {/* {getDCSpecificPriceByType({
-            regionId,
-            timePeriod: 'hourly',
-            type: overageType,
-          })}{' '} */}
           per GB
         </strong>{' '}
         if it exceeds{' '}
