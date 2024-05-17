@@ -40,6 +40,10 @@ export interface TagsInputProps {
    */
   name?: string;
   /**
+   * Removes the default top margin
+   */
+  noMarginTop?: boolean;
+  /**
    * Callback fired when the value changes.
    */
   onChange: (selected: Item[]) => void;
@@ -60,6 +64,7 @@ export const TagsInput = (props: TagsInputProps) => {
     label,
     menuPlacement,
     name,
+    noMarginTop,
     onChange,
     tagError,
     value,
@@ -132,6 +137,7 @@ export const TagsInput = (props: TagsInputProps) => {
       label={label || 'Add Tags'}
       menuPlacement={menuPlacement}
       name={name}
+      noMarginTop={noMarginTop}
       noOptionsMessage={getEmptyMessage}
       onChange={onChange}
       onCreateOption={createTag}

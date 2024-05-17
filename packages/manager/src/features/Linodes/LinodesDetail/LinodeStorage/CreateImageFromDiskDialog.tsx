@@ -34,7 +34,7 @@ export const CreateImageFromDiskDialog = (props: Props) => {
 
   const onCreate = async () => {
     await createImage({
-      diskID: disk?.id ?? -1,
+      disk_id: disk?.id ?? -1,
     });
     enqueueSnackbar('Image scheduled for creation.', {
       variant: 'info',

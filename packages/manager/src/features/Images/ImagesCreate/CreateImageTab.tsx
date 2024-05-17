@@ -1,355 +1,330 @@
-import { Disk, Linode, getLinodeDisks } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { CreateImagePayload } from '@linode/api-v4';
+import { createImageSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
-import { equals } from 'ramda';
 import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
+import { Stack } from 'src/components/Stack';
+import { SupportLink } from 'src/components/SupportLink';
+import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { DiskSelect } from 'src/features/Linodes/DiskSelect/DiskSelect';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useFlags } from 'src/hooks/useFlags';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useCreateImageMutation } from 'src/queries/images';
-import { useGrants, useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
+import { useGrants } from 'src/queries/profile';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  buttonGroup: {
-    marginBottom: theme.spacing(2),
-    marginTop: theme.spacing(3),
-    [theme.breakpoints.down('sm')]: {
-      justifyContent: 'flex-end',
-    },
-  },
-  cloudInitCheckboxWrapper: {
-    marginLeft: 3,
-    marginTop: theme.spacing(2),
-  },
-  container: {
-    '& .MuiFormHelperText-root': {
-      marginBottom: theme.spacing(2),
-    },
-    padding: theme.spacing(3),
-    paddingBottom: theme.spacing(),
-    paddingTop: theme.spacing(2),
-  },
-  diskAndPrice: {
-    '& > div': {
-      width: 415,
-    },
-  },
-  helperText: {
-    marginBottom: theme.spacing(),
-    marginTop: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-    width: '80%',
-  },
-  rawDiskWarning: {
-    maxWidth: 600,
-    width: '100%',
-  },
-}));
+export const CreateImageTab = () => {
+  const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
+    null
+  );
 
-const cloudInitTooltipMessage = (
-  <Typography>
-    Many Linode supported distributions are compatible with cloud-init by
-    default, or you may have installed cloud-init.{' '}
-    <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata/">
-      Learn more.
-    </Link>
-  </Typography>
-);
-
-export interface Props {
-  changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  changeIsCloudInit: () => void;
-  changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  description?: string;
-  isCloudInit?: boolean;
-  label?: string;
-}
-
-export const CreateImageTab: React.FC<Props> = (props) => {
   const {
-    changeDescription,
-    changeIsCloudInit,
-    changeLabel,
-    description,
-    isCloudInit,
-    label,
-  } = props;
+    control,
+    formState,
+    handleSubmit,
+    resetField,
+    setError,
+    watch,
+  } = useForm<CreateImagePayload>({
+    mode: 'onBlur',
+    resolver: yupResolver(createImageSchema),
+  });
 
-  const { classes } = useStyles();
+  const flags = useFlags();
+
   const { enqueueSnackbar } = useSnackbar();
   const { push } = useHistory();
-
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
-  const flags = useFlags();
-  const { data: regions } = useRegionsQuery();
 
   const { mutateAsync: createImage } = useCreateImageMutation();
 
   const { checkForNewEvents } = useEventsPollingActions();
 
-  const [selectedLinode, setSelectedLinode] = React.useState<Linode>();
-  const [selectedDisk, setSelectedDisk] = React.useState<null | string>('');
-  const [disks, setDisks] = React.useState<Disk[]>([]);
-  const [notice, setNotice] = React.useState<string | undefined>();
-  const [errors, setErrors] = React.useState<APIError[] | undefined>();
-  const [submitting, setSubmitting] = React.useState<boolean>(false);
+  const { data: grants } = useGrants();
 
-  const canCreateImage =
-    Boolean(!profile?.restricted) || Boolean(grants?.global?.add_images);
+  const isImageCreateRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_images',
+  });
 
-  const availableLinodesToImagize = profile?.restricted
-    ? grants?.linode
-        .filter((thisGrant) => thisGrant.permissions === 'read_write')
-        .map((thisGrant) => thisGrant.id) ?? []
-    : null;
+  const onSubmit = handleSubmit(async (values) => {
+    try {
+      await createImage(values);
 
-  React.useEffect(() => {
-    if (!selectedLinode) {
-      return;
-    }
-    setSelectedDisk('');
+      checkForNewEvents();
 
-    getLinodeDisks(selectedLinode.id)
-      .then((response) => {
-        const filteredDisks = response.data.filter(
-          (disk) => disk.filesystem !== 'swap'
-        );
-
-        if (!equals(disks, filteredDisks)) {
-          setDisks(filteredDisks);
+      enqueueSnackbar('Image scheduled for creation.', {
+        variant: 'info',
+      });
+      push('/images');
+    } catch (errors) {
+      for (const error of errors) {
+        if (error.field) {
+          setError(error.field, { message: error.reason });
+        } else {
+          setError('root', { message: error.reason });
         }
-      })
-      .catch((_) => {
-        setErrors([
-          {
-            field: 'disk_id',
-            reason: 'Could not retrieve disks for this Linode.',
-          },
-        ]);
-      });
-  }, [selectedLinode]);
-
-  const handleLinodeChange = (linode: Linode | null) => {
-    if (linode !== null) {
-      // Clear any errors
-      setErrors(undefined);
+      }
     }
-    setSelectedLinode(linode ?? undefined);
-  };
+  });
 
-  const handleDiskChange = (diskID: null | string) => {
-    // Clear any errors
-    setErrors(undefined);
-    setSelectedDisk(diskID);
-  };
+  const {
+    data: disks,
+    error: disksError,
+    isFetching: disksLoading,
+  } = useAllLinodeDisksQuery(selectedLinodeId ?? -1, selectedLinodeId !== null);
 
-  const onSubmit = () => {
-    setErrors(undefined);
-    setNotice(undefined);
-    setSubmitting(true);
+  const selectedDiskId = watch('disk_id');
+  const selectedDisk =
+    disks?.find((disk) => disk.id === selectedDiskId) ?? null;
 
-    const safeDescription = description ?? '';
-    createImage({
-      cloud_init: isCloudInit ? isCloudInit : undefined,
-      description: safeDescription,
-      diskID: Number(selectedDisk),
-      label,
-    })
-      .then((_) => {
-        checkForNewEvents();
-
-        setSubmitting(false);
-
-        enqueueSnackbar('Image scheduled for creation.', {
-          variant: 'info',
-        });
-
-        push('/images');
-      })
-      .catch((errorResponse) => {
-        setSubmitting(false);
-        setErrors(
-          getAPIErrorOrDefault(
-            errorResponse,
-            'There was an error creating the image.'
-          )
-        );
-      });
-  };
-
-  const checkRequirements = () => {
-    // When creating an image, disable the submit button until a Linode and
-    // disk are selected.
-    const isDiskSelected = Boolean(selectedDisk);
-
-    return !(isDiskSelected && selectedLinode);
-  };
-
-  const requirementsMet = checkRequirements();
-
-  const selectedDiskData: Disk | undefined = disks.find(
-    (d) => `${d.id}` === selectedDisk
-  );
-
-  const isRawDisk = selectedDiskData?.filesystem === 'raw';
-  const rawDiskWarning = (
-    <Notice
-      className={classes.rawDiskWarning}
-      spacingBottom={32}
-      spacingTop={16}
-      text={rawDiskWarningText}
-      variant="warning"
-    />
-  );
-
-  const hasErrorFor = getAPIErrorFor(
-    {
-      disk_id: 'Disk',
-      label: 'Label',
-      linode_id: 'Linode',
-      region: 'Region',
-      size: 'Size',
-    },
-    errors
-  );
-
-  const labelError = hasErrorFor('label');
-  const descriptionError = hasErrorFor('description');
-  const generalError = hasErrorFor('none');
-  const linodeError = hasErrorFor('linode_id');
-  const diskError = hasErrorFor('disk_id');
-
-  const linodeIsNotInEdgeRegion = (linodeRegion: string) =>
-    regions?.find((region) => region.id === linodeRegion)?.site_type !== 'edge';
+  const isRawDisk = selectedDisk?.filesystem === 'raw';
 
   return (
-    <Paper className={classes.container}>
-      {!canCreateImage ? (
-        <Notice
-          text="You don't have permissions to create a new Image. Please contact an account administrator for details."
-          variant="error"
-        />
-      ) : null}
-      {generalError ? (
-        <Notice data-qa-notice text={generalError} variant="error" />
-      ) : null}
-      {notice ? <Notice data-qa-notice text={notice} variant="info" /> : null}
-
-      <LinodeSelect
-        optionsFilter={(linode) =>
-          (linodeIsNotInEdgeRegion(linode.region) &&
-            availableLinodesToImagize?.includes(linode.id)) ??
-          true
-        }
-        disabled={!canCreateImage}
-        errorText={linodeError}
-        onSelectionChange={(linode) => handleLinodeChange(linode)}
-        required
-        value={selectedLinode?.id || null}
-      />
-
-      <Box
-        alignItems="flex-end"
-        className={classes.diskAndPrice}
-        display="flex"
-      >
-        <DiskSelect
-          data-qa-disk-select
-          disabled={!canCreateImage}
-          diskError={diskError}
-          disks={disks}
-          handleChange={handleDiskChange}
-          required
-          selectedDisk={selectedDisk}
-          updateFor={[disks, selectedDisk, diskError, classes]}
-        />
-      </Box>
-      {isRawDisk ? rawDiskWarning : null}
-      {flags.metadata && (
-        <Box className={classes.cloudInitCheckboxWrapper}>
-          <Checkbox
-            checked={isCloudInit}
-            onChange={changeIsCloudInit}
-            text="This image is cloud-init compatible"
-            toolTipInteractive
-            toolTipText={cloudInitTooltipMessage}
-          />
-        </Box>
-      )}
-      <>
-        <TextField
-          data-qa-image-label
-          disabled={!canCreateImage}
-          error={Boolean(labelError)}
-          errorText={labelError}
-          label="Label"
-          onChange={changeLabel}
-          value={label}
-        />
-        <TextField
-          data-qa-image-description
-          disabled={!canCreateImage}
-          error={Boolean(descriptionError)}
-          errorText={descriptionError}
-          label="Description"
-          multiline
-          onChange={changeDescription}
-          rows={1}
-          value={description}
-        />
-      </>
-      <Typography className={classes.helperText} variant="body1">
-        Custom Images are billed at $0.10/GB per month.{' '}
-        <Link to="https://www.linode.com/docs/products/tools/images/guides/capture-an-image/">
-          Learn more about requirements and considerations.{' '}
-        </Link>
-        For information about how to check and clean a Linux system&rsquo;s disk
-        space,{' '}
-        <Link to="https://www.linode.com/docs/guides/check-and-clean-linux-disk-space/">
-          read this guide.
-        </Link>
-      </Typography>
-      <Box
-        alignItems="center"
-        className={classes.buttonGroup}
-        display="flex"
-        flexWrap="wrap"
-        justifyContent="flex-end"
-      >
-        <Button
-          buttonType="primary"
-          data-qa-submit
-          disabled={requirementsMet || !canCreateImage}
-          loading={submitting}
-          onClick={onSubmit}
+    <form onSubmit={onSubmit}>
+      <Stack spacing={2}>
+        <Paper>
+          {isImageCreateRestricted && (
+            <Notice
+              text="You don't have permissions to create a new Image. Please contact an account administrator for details."
+              variant="error"
+            />
+          )}
+          {formState.errors.root?.message && (
+            <Notice
+              spacingBottom={8}
+              text={formState.errors.root.message}
+              variant="error"
+            />
+          )}
+          <Stack spacing={1}>
+            <Typography variant="h2">Select Linode & Disk</Typography>
+            <Typography sx={{ maxWidth: { md: '80%', sm: '100%' } }}>
+              By default, Linode images are limited to 6144 MB of data per disk.
+              Ensure your content doesn't exceed this limit, or{' '}
+              <SupportLink
+                entity={
+                  selectedLinodeId !== null
+                    ? { id: selectedLinodeId, type: 'linode_id' }
+                    : undefined
+                }
+                text="open a support ticket"
+                title="Request to increase Image size limit when capturing from Linode disk"
+              />{' '}
+              to request a higher limit. Additionally, images can't be created
+              from a raw disk or a disk that's formatted using a custom file
+              system.
+            </Typography>
+            <LinodeSelect
+              getOptionDisabled={
+                grants
+                  ? (linode) =>
+                      grants.linode.some(
+                        (grant) =>
+                          grant.id === linode.id &&
+                          grant.permissions === 'read_only'
+                      )
+                  : undefined
+              }
+              helperText={
+                grants?.linode.some(
+                  (grant) => grant.permissions === 'read_only'
+                )
+                  ? 'You can only create Images from Linodes you have read/write access to.'
+                  : undefined
+              }
+              onSelectionChange={(linode) => {
+                setSelectedLinodeId(linode?.id ?? null);
+                if (linode === null) {
+                  resetField('disk_id');
+                }
+              }}
+              disabled={isImageCreateRestricted}
+              noMarginTop
+              required
+              value={selectedLinodeId}
+            />
+            <Controller
+              render={({ field, fieldState }) => (
+                <Autocomplete
+                  disabled={
+                    isImageCreateRestricted || selectedLinodeId === null
+                  }
+                  errorText={
+                    fieldState.error?.message ?? disksError?.[0].reason
+                  }
+                  helperText={
+                    selectedLinodeId === null
+                      ? 'Select a Linode to see available disks'
+                      : undefined
+                  }
+                  textFieldProps={{
+                    inputRef: field.ref,
+                  }}
+                  clearOnBlur
+                  label="Disk"
+                  loading={disksLoading}
+                  noMarginTop
+                  onBlur={field.onBlur}
+                  onChange={(e, disk) => field.onChange(disk?.id ?? null)}
+                  options={disks?.filter((d) => d.filesystem !== 'swap') ?? []}
+                  placeholder="Select a Disk"
+                  value={selectedDisk}
+                />
+              )}
+              control={control}
+              name="disk_id"
+            />
+            {isRawDisk && (
+              <Notice
+                spacingBottom={32}
+                spacingTop={16}
+                text="Using a raw disk may fail, as Linode Images cannot be created from disks formatted with custom filesystems."
+                variant="warning"
+              />
+            )}
+          </Stack>
+        </Paper>
+        <Paper>
+          <Stack spacing={1}>
+            <Typography variant="h2">Image Details</Typography>
+            <Controller
+              render={({ field, fieldState }) => (
+                <TextField
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value === '' ? undefined : e.target.value
+                    )
+                  }
+                  disabled={isImageCreateRestricted}
+                  errorText={fieldState.error?.message}
+                  inputRef={field.ref}
+                  label="Label"
+                  noMarginTop
+                  onBlur={field.onBlur}
+                  value={field.value ?? ''}
+                />
+              )}
+              control={control}
+              name="label"
+            />
+            {flags.metadata && (
+              <Controller
+                render={({ field }) => (
+                  <Checkbox
+                    text={
+                      <>
+                        This image is cloud-init compatible
+                        <TooltipIcon
+                          text={
+                            <Typography>
+                              Many Linode supported distributions are compatible
+                              with cloud-init by default, or you may have
+                              installed cloud-init.{' '}
+                              <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata/">
+                                Learn more.
+                              </Link>
+                            </Typography>
+                          }
+                          interactive
+                          status="help"
+                        />
+                      </>
+                    }
+                    checked={field.value ?? false}
+                    disabled={isImageCreateRestricted}
+                    onChange={field.onChange}
+                    sx={{ ml: -1 }}
+                  />
+                )}
+                control={control}
+                name="cloud_init"
+              />
+            )}
+            <Controller
+              render={({ field, fieldState }) => (
+                <TagsInput
+                  onChange={(items) =>
+                    field.onChange(items.map((item) => item.value))
+                  }
+                  value={
+                    field.value?.map((tag) => ({ label: tag, value: tag })) ??
+                    []
+                  }
+                  disabled={isImageCreateRestricted}
+                  noMarginTop
+                  tagError={fieldState.error?.message}
+                />
+              )}
+              control={control}
+              name="tags"
+            />
+            <Controller
+              render={({ field, fieldState }) => (
+                <TextField
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value === '' ? undefined : e.target.value
+                    )
+                  }
+                  disabled={isImageCreateRestricted}
+                  errorText={fieldState.error?.message}
+                  inputRef={field.ref}
+                  label="Description"
+                  multiline
+                  noMarginTop
+                  onBlur={field.onBlur}
+                  rows={1}
+                  value={field.value ?? ''}
+                />
+              )}
+              control={control}
+              name="description"
+            />
+            <Typography
+              sx={{ maxWidth: { md: '80%', sm: '100%' } }}
+              variant="body1"
+            >
+              Custom Images are billed at $0.10/GB per month.{' '}
+              <Link to="https://www.linode.com/docs/products/tools/images/guides/capture-an-image/">
+                Learn more about requirements and considerations.{' '}
+              </Link>
+              For information about how to check and clean a Linux
+              system&rsquo;s disk space,{' '}
+              <Link to="https://www.linode.com/docs/guides/check-and-clean-linux-disk-space/">
+                read this guide.
+              </Link>
+            </Typography>
+          </Stack>
+        </Paper>
+        <Box
+          alignItems="center"
+          display="flex"
+          flexWrap="wrap"
+          justifyContent="flex-end"
         >
-          Create Image
-        </Button>
-      </Box>
-    </Paper>
+          <Button
+            buttonType="primary"
+            disabled={isImageCreateRestricted}
+            loading={formState.isSubmitting}
+            type="submit"
+          >
+            Create Image
+          </Button>
+        </Box>
+      </Stack>
+    </form>
   );
 };
-
-export default CreateImageTab;
-
-const rawDiskWarningText =
-  'Using a raw disk may fail, as Linode Images cannot be created from disks formatted with custom filesystems.';
