@@ -14,6 +14,7 @@ import {
   mockGetPlacementGroups,
   mockUnassignPlacementGroupLinodes,
   mockDeletePlacementGroupError,
+  mockUnassignPlacementGroupError,
 } from 'support/intercepts/placement-groups';
 import {
   accountFactory,
@@ -43,7 +44,8 @@ const unassignWarning =
 const emptyStateMessage =
   'Control the physical placement or distribution of Linode instances within a data center or availability zone.';
 
-const DeletePlacementGroupErrorMessage = 'An unknown error has occurred.';
+// Error message that when an unexpected error occurs.
+const PlacementGroupErrorMessage = 'An unknown error has occurred.';
 
 describe('Placement Group deletion', () => {
   beforeEach(() => {
@@ -64,7 +66,7 @@ describe('Placement Group deletion', () => {
    * - Confirms that UI automatically updates to reflect deleted Placement Group.
    * - Confirms that landing page reverts to its empty state when last Placement Group is deleted.
    */
-  it.only('can delete without Linodes assigned', () => {
+  it('can delete without Linodes assigned', () => {
     const mockPlacementGroupRegion = chooseRegion();
     const mockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
@@ -90,9 +92,10 @@ describe('Placement Group deletion', () => {
           .click();
       });
 
+    // Click "Delete" button next to the mock Placement Group, mock an HTTP 500 error and confirm UI displays the message.
     mockDeletePlacementGroupError(
       mockPlacementGroup.id,
-      DeletePlacementGroupErrorMessage
+      PlacementGroupErrorMessage
     ).as('deletePlacementGroupError');
 
     ui.dialog
@@ -108,7 +111,7 @@ describe('Placement Group deletion', () => {
           .click();
 
         cy.wait('@deletePlacementGroupError');
-        cy.findByText(DeletePlacementGroupErrorMessage).should('be.visible');
+        cy.findByText(PlacementGroupErrorMessage).should('be.visible');
 
         ui.button
           .findByTitle('Cancel')
@@ -165,7 +168,7 @@ describe('Placement Group deletion', () => {
    * - Confirms that UI automatically updates to reflect unassigned Linodes during deletion.
    * - Confirms that UI automatically updates to reflect deleted Placement Group.
    */
-  it('can delete with Linodes assigned', () => {
+  it.only('can delete with Linodes assigned', () => {
     const mockPlacementGroupRegion = chooseRegion();
 
     // Linodes that are assigned to the Placement Group being deleted.
@@ -216,6 +219,36 @@ describe('Placement Group deletion', () => {
           .should('be.visible')
           .should('be.enabled')
           .click();
+      });
+
+    // Click "Delete" button next to the mock Placement Group, mock an HTTP 500 error and confirm UI displays the message.
+    mockUnassignPlacementGroupError(
+      mockPlacementGroup.id,
+      PlacementGroupErrorMessage
+    ).as('UnassignPlacementGroupError');
+
+    ui.dialog
+      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.get('[data-qa-selection-list]').within(() => {
+          // Select the first Linode to unassign
+          const mockLinodeToUnassign = mockPlacementGroupLinodes[0];
+
+          cy.findByText(mockLinodeToUnassign.label)
+            .should('be.visible')
+            .closest('li')
+            .within(() => {
+              ui.button
+                .findByTitle('Unassign')
+                .should('be.visible')
+                .should('be.enabled')
+                .click();
+            });
+        });
+
+        cy.wait('@UnassignPlacementGroupError');
+        cy.findByText(PlacementGroupErrorMessage).should('be.visible');
       });
 
     // Confirm deletion warning appears and that form cannot be submitted
