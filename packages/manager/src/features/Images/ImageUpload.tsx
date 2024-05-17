@@ -76,6 +76,7 @@ export const ImageUpload = () => {
       description: location.state?.imageDescription,
       label: location.state?.imageLabel,
     },
+    mode: 'onBlur',
     resolver: yupResolver(ImageUploadSchema),
   });
 
@@ -182,7 +183,7 @@ export const ImageUpload = () => {
       <form onSubmit={onSubmit}>
         <Stack spacing={2}>
           <Paper>
-            <Typography mb={1} variant="h2">
+            <Typography mb={1.5} variant="h2">
               Image Details
             </Typography>
             {form.formState.errors.root?.message && (
@@ -204,6 +205,7 @@ export const ImageUpload = () => {
                   errorText={fieldState.error?.message}
                   label="Label"
                   noMarginTop
+                  onBlur={field.onBlur}
                   onChange={field.onChange}
                   value={field.value ?? ''}
                 />
@@ -241,6 +243,9 @@ export const ImageUpload = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <RegionSelect
+                  textFieldProps={{
+                    onBlur: field.onBlur,
+                  }}
                   currentCapability={undefined}
                   disabled={isImageCreateRestricted}
                   errorText={fieldState.error?.message}
@@ -255,7 +260,23 @@ export const ImageUpload = () => {
               control={form.control}
               name="region"
             />
-            <TagsInput onChange={() => null} value={[]} />
+            <Controller
+              render={({ field, fieldState }) => (
+                <TagsInput
+                  onChange={(items) =>
+                    field.onChange(items.map((item) => item.value))
+                  }
+                  value={
+                    field.value?.map((tag) => ({ label: tag, value: tag })) ??
+                    []
+                  }
+                  disabled={isImageCreateRestricted}
+                  tagError={fieldState.error?.message}
+                />
+              )}
+              control={form.control}
+              name="tags"
+            />
             <Controller
               render={({ field, fieldState }) => (
                 <TextField
@@ -263,6 +284,7 @@ export const ImageUpload = () => {
                   errorText={fieldState.error?.message}
                   label="Description"
                   multiline
+                  onBlur={field.onBlur}
                   onChange={field.onChange}
                   rows={1}
                   value={field.value ?? ''}
