@@ -36,10 +36,10 @@ export const ImageUploader = React.memo((props: Props) => {
     isDragActive,
   } = useDropzone({
     accept: ['application/x-gzip', 'application/gzip'], // Uploaded files must be compressed using gzip.
-    disabled: isUploading,
     maxFiles: 1,
     maxSize: MAX_FILE_SIZE_IN_BYTES,
     ...dropzoneProps,
+    disabled: dropzoneProps.disabled || isUploading,
   });
 
   return (

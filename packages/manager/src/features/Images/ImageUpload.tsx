@@ -85,6 +85,10 @@ export const ImageUpload = () => {
     try {
       const { image, upload_to } = await createImage(createPayload);
 
+      // Invalidate images because a new Image has been created.
+      queryClient.invalidateQueries(imageQueries.paginated._def);
+      queryClient.invalidateQueries(imageQueries.all._def);
+
       // Let the entire app know that there's a pending upload via Redux.
       // High-level components like AuthenticationWrapper need to know
       // this, so the user isn't redirected to Login if the token expires.
@@ -116,9 +120,6 @@ export const ImageUpload = () => {
         );
 
         recordImageAnalytics('success', file);
-
-        queryClient.invalidateQueries(imageQueries.paginated._def);
-        queryClient.invalidateQueries(imageQueries.all._def);
 
         // Force a re-render so that `hasPendingUpload` is false when navigating away
         // from the upload page. We need this to make the <Prompt /> work as expected.
