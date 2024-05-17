@@ -153,7 +153,8 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           </Typography>
         </Notice>
       ) : null}
-      {isGeckoGA ? (
+      {isGeckoGA &&
+      getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType) ? (
         <Tabs>
           <TabList>
             <Tab>Core</Tab>
