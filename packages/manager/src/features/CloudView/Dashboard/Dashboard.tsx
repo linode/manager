@@ -24,6 +24,7 @@ import {
 import { useGetCloudViewMetricDefinitionsByServiceType } from 'src/queries/cloudview/services';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Paper } from '@mui/material';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 export interface DashboardProperties {
   dashboard: Dashboard; // this will be done in upcoming sprint
@@ -35,7 +36,6 @@ export interface DashboardProperties {
 
 export const CloudPulseDashboard = (props: DashboardProperties) => {
   const resourceOptions: any = {};
-
   // returns a list of resource IDs to be passed as part of getJWEToken call
   const getResourceIDsPayload = () => {
     const jweTokenPayload: GetJWETokenPayload = {
@@ -154,10 +154,6 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
                     element.label === availMetrics.label
                 );
 
-                if (!availMetrics) {
-                  availMetrics = {} as AvailableMetrics;
-                  availMetrics.available_aggregate_functions = [];
-                }
                 return (
                   <CloudViewWidget
                     key={index}

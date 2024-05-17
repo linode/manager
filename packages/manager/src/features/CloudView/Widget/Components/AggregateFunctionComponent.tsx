@@ -10,21 +10,6 @@ export interface AggregateFunctionProperties {
 export const AggregateFunctionComponent = (
   props: AggregateFunctionProperties
 ) => {
-  let default_aggregate_func = props.default_aggregate_func;
-  let default_agg_unavailable = false;
-
-  //if default aggregate func not available in available_aggregate_function
-  if (
-    default_aggregate_func &&
-    props.available_aggregate_func.indexOf(default_aggregate_func) < 0
-  ) {
-    default_agg_unavailable = true;
-    if (props.available_aggregate_func.length > 0) {
-      default_aggregate_func = props.available_aggregate_func[0];
-    } else {
-      default_aggregate_func = '';
-    }
-  }
 
   //Convert list of available_aggregate_fun into a proper response structure accepted by Autocomplete component
   const available_aggregate_func = props.available_aggregate_func.map(
@@ -35,6 +20,15 @@ export const AggregateFunctionComponent = (
       };
     }
   );
+  
+  let default_aggregate_func = available_aggregate_func.find(obj => obj.label === props.default_aggregate_func);
+  let default_agg_unavailable = false;
+
+  //if default aggregate func not available in available_aggregate_function
+  if(!default_aggregate_func){
+    default_agg_unavailable = true;
+    default_aggregate_func = available_aggregate_func[0];
+  }
 
   return (
     <div
@@ -52,10 +46,7 @@ export const AggregateFunctionComponent = (
         fullWidth={false}
         label=""
         isOptionEqualToValue={(option, value) => {
-          if (value.label) {
-            return option.label === value.label;
-          }
-          return option.label === value;
+          return option.label == value.label;
         }}
         noMarginTop={true}
         options={available_aggregate_func}

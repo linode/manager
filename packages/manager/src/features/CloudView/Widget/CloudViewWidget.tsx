@@ -31,7 +31,7 @@ export interface CloudViewWidgetProperties {
   globalFilters?: FiltersObject; // this is dashboard level global filters, its also optional
   // any change in the current widget, call and pass this function and handle in parent component
   handleWidgetChange: (widget: Widgets) => void;
-  availableMetrics: AvailableMetrics;
+  availableMetrics: AvailableMetrics | undefined;
 
   unit: string; // this should come from dashboard, which maintains map for service types in a separate API call
   useColorIndex?: number;
@@ -110,7 +110,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
 
   React.useEffect(() => {
     // on any change in the widget object, just publish the changes to parent component using a callback function
-    if (props.widget.size != widget.size) {
+    if (props.widget.size != widget.size || props.widget.aggregate_function !== widget.aggregate_function) {
       props.handleWidgetChange(widget);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -230,7 +230,6 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     marginLeft: '10px',
     marginTop: '10px',
   });
-
   return (
     <Grid xs={widget.size}>
       <Paper style={{ height: '98%', width: '100%' }}>
