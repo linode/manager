@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { uploadImageSchema } from '@linode/validation';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -37,6 +38,7 @@ import { setPendingUpload } from 'src/store/pendingUpload';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
+import { uploadImageFile } from './requests';
 
 import type { ImageUploadPayload } from '@linode/api-v4';
 
@@ -51,13 +53,14 @@ const ImageUploadSchema = uploadImageSchema.shape({
 export const ImageUpload = () => {
   const { location } = useHistory<
     | {
-        imageDescription: string;
+        imageDescription?: string;
         imageLabel?: string;
       }
     | undefined
   >();
 
   const { mutateAsync: createImage } = useUploadImageMutation();
+  const { enqueueSnackbar } = useSnackbar();
 
   const form = useForm<ImageUploadFormData>({
     defaultValues: {
@@ -67,9 +70,24 @@ export const ImageUpload = () => {
     resolver: yupResolver(ImageUploadSchema),
   });
 
-  const onSubmit = async (values: ImageUploadPayload) => {
+  const onSubmit = form.handleSubmit(async (values) => {
+    const { file, ...createPayload } = values;
     try {
-      const { upload_to } = await createImage(values);
+      const { upload_to } = await createImage(createPayload);
+      enqueueSnackbar('Image creation successful, upload will begin');
+
+      try {
+        const { cancel, request } = uploadImageFile(upload_to, file, (e) =>
+          setUploadProgress(e.progress ?? 0)
+        );
+
+        cancelRef.current = cancel;
+
+        await request();
+
+        enqueueSnackbar('Upload successfull');
+        push('/images');
+      } catch (error) {}
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
@@ -79,7 +97,7 @@ export const ImageUpload = () => {
         }
       }
     }
-  };
+  });
 
   const selectedRegionId = form.watch('region');
 
@@ -93,10 +111,11 @@ export const ImageUpload = () => {
   const { push } = useHistory();
   const flags = useFlags();
 
+  const [uploadProgress, setUploadProgress] = React.useState(0);
+  const cancelRef = React.useRef<(() => void) | null>(null);
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
     false
   );
-
   const [linodeCLIModalOpen, setLinodeCLIModalOpen] = React.useState<boolean>(
     false
   );
@@ -107,10 +126,6 @@ export const ImageUpload = () => {
     regions,
     selectedRegionId,
   });
-
-  //  This holds a "cancel function" from the Axios instance that handles image
-  // uploads. Calling this function will cancel the HTTP request.
-  const [cancelFn, setCancelFn] = React.useState<(() => void) | null>(null);
 
   // Whether or not there is an upload pending. This is stored in Redux since
   // high-level components like AuthenticationWrapper need to read it.
@@ -127,8 +142,8 @@ export const ImageUpload = () => {
   // will show the upload progress in the lower part of the screen. For now we
   // box the user on this page so we can handle token expiry (semi)-gracefully.
   const onConfirm = (nextLocation: string) => {
-    if (cancelFn) {
-      cancelFn();
+    if (cancelRef.current) {
+      cancelRef.current();
     }
 
     dispatch(setPendingUpload(false));
@@ -150,7 +165,7 @@ export const ImageUpload = () => {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={onSubmit}>
         <Stack spacing={2}>
           <Paper>
             {form.formState.errors.root?.message && (
@@ -271,6 +286,7 @@ export const ImageUpload = () => {
               control={form.control}
               name="file"
             />
+            {uploadProgress}
             <Typography sx={{ paddingTop: 2 }}>
               Or, upload an image using the{' '}
               <LinkButton onClick={() => setLinodeCLIModalOpen(true)}>
