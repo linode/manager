@@ -3,7 +3,7 @@ import { uploadImageSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { mixed } from 'yup';
 
@@ -25,15 +25,15 @@ import { Typography } from 'src/components/Typography';
 import { ImageUploader } from 'src/components/Uploaders/ImageUploader/ImageUploader';
 import { Dispatch } from 'src/hooks/types';
 import { useFlags } from 'src/hooks/useFlags';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
 import { useUploadImageMutation } from 'src/queries/images';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { ApplicationState } from 'src/store';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 
@@ -60,6 +60,19 @@ export const ImageUpload = () => {
     | undefined
   >();
 
+  const dispatch = useDispatch<Dispatch>();
+  const { push } = useHistory();
+  const flags = useFlags();
+
+  const [uploadProgress, setUploadProgress] = useState<AxiosProgressEvent>();
+  const cancelRef = React.useRef<(() => void) | null>(null);
+  const [hasSignedAgreement, setHasSignedAgreement] = useState<boolean>(false);
+  const [linodeCLIModalOpen, setLinodeCLIModalOpen] = useState<boolean>(false);
+
+  const { data: profile } = useProfile();
+  const { data: agreements } = useAccountAgreements();
+  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
+  const { data: regions } = useRegionsQuery();
   const { mutateAsync: createImage } = useUploadImageMutation();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -88,6 +101,12 @@ export const ImageUpload = () => {
 
         await request();
 
+        if (hasSignedAgreement) {
+          updateAccountAgreements({
+            eu_model: true,
+            privacy_policy: true,
+          }).catch(reportAgreementSigningError);
+        }
         enqueueSnackbar('Upload successfull');
         push('/images');
       } catch (error) {}
@@ -104,21 +123,6 @@ export const ImageUpload = () => {
 
   const selectedRegionId = form.watch('region');
 
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
-  const { data: agreements } = useAccountAgreements();
-  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
-
-  const regions = useRegionsQuery().data ?? [];
-  const dispatch: Dispatch = useDispatch();
-  const { push } = useHistory();
-  const flags = useFlags();
-
-  const [uploadProgress, setUploadProgress] = useState<AxiosProgressEvent>();
-  const cancelRef = React.useRef<(() => void) | null>(null);
-  const [hasSignedAgreement, setHasSignedAgreement] = useState<boolean>(false);
-  const [linodeCLIModalOpen, setLinodeCLIModalOpen] = useState<boolean>(false);
-
   const { showGDPRCheckbox } = getGDPRDetails({
     agreements,
     profile,
@@ -126,14 +130,9 @@ export const ImageUpload = () => {
     selectedRegionId,
   });
 
-  // Whether or not there is an upload pending. This is stored in Redux since
-  // high-level components like AuthenticationWrapper need to read it.
-  const pendingUpload = useSelector<ApplicationState, boolean>(
-    (state) => state.pendingUpload
-  );
-
-  const canCreateImage =
-    Boolean(!profile?.restricted) || Boolean(grants?.global?.add_images);
+  const isImageCreateRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_images',
+  });
 
   // Called after a user confirms they want to navigate to another part of
   // Cloud during a pending upload. When we have refresh tokens this won't be
@@ -150,18 +149,6 @@ export const ImageUpload = () => {
     push(nextLocation);
   };
 
-  const onSuccess = () => {
-    if (hasSignedAgreement) {
-      updateAccountAgreements({
-        eu_model: true,
-        privacy_policy: true,
-      }).catch(reportAgreementSigningError);
-    }
-  };
-
-  const uploadingDisabled =
-    !canCreateImage || (showGDPRCheckbox && !hasSignedAgreement);
-
   return (
     <FormProvider {...form}>
       <form onSubmit={onSubmit}>
@@ -173,7 +160,7 @@ export const ImageUpload = () => {
                 variant="error"
               />
             )}
-            {!canCreateImage && (
+            {isImageCreateRestricted && (
               <Notice
                 text="You don't have permissions to create a new Image. Please contact an account administrator for details."
                 variant="error"
@@ -182,7 +169,7 @@ export const ImageUpload = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <TextField
-                  disabled={!canCreateImage}
+                  disabled={isImageCreateRestricted}
                   errorText={fieldState.error?.message}
                   label="Label"
                   noMarginTop
@@ -196,7 +183,7 @@ export const ImageUpload = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <TextField
-                  disabled={!canCreateImage}
+                  disabled={isImageCreateRestricted}
                   errorText={fieldState.error?.message}
                   label="Description"
                   multiline
@@ -223,6 +210,7 @@ export const ImageUpload = () => {
                       </Typography>
                     }
                     checked={field.value ?? false}
+                    disabled={isImageCreateRestricted}
                     onChange={field.onChange}
                     text="This image is cloud-init compatible"
                     toolTipInteractive
@@ -236,13 +224,13 @@ export const ImageUpload = () => {
               render={({ field, fieldState }) => (
                 <RegionSelect
                   currentCapability={undefined}
-                  disabled={!canCreateImage}
+                  disabled={isImageCreateRestricted}
                   errorText={fieldState.error?.message}
                   handleSelection={field.onChange}
                   helperText="For fastest initial upload, select the region that is geographically closest to you. Once uploaded you will be able to deploy the image to other regions."
                   label="Region"
                   regionFilter="core" // Images service will not be supported for Gecko Beta
-                  regions={regions}
+                  regions={regions ?? []}
                   selectedId={field.value ?? null}
                 />
               )}
@@ -289,7 +277,8 @@ export const ImageUpload = () => {
                         message: fileRejections[0].errors[0].message,
                       });
                     }}
-                    disabled={form.formState.isSubmitting}
+                    disabled={isImageCreateRestricted}
+                    isUploading={form.formState.isSubmitting}
                     progress={uploadProgress}
                   />
                 </>
@@ -309,8 +298,17 @@ export const ImageUpload = () => {
               .
             </Typography>
           </Paper>
-          <Box display="flex" justifyContent="flex-end">
+          <Box display="flex" gap={2} justifyContent="flex-end">
+            {form.formState.isSubmitting && (
+              <Button onClick={() => cancelRef.current?.()}>
+                Cancel Upload
+              </Button>
+            )}
             <Button
+              disabled={
+                isImageCreateRestricted ||
+                (showGDPRCheckbox && !hasSignedAgreement)
+              }
               buttonType="primary"
               loading={form.formState.isSubmitting}
               type="submit"
@@ -328,7 +326,7 @@ export const ImageUpload = () => {
       <Prompt
         confirmWhenLeaving={true}
         onConfirm={onConfirm}
-        when={pendingUpload}
+        when={form.formState.isSubmitting}
       >
         {({ handleCancel, handleConfirm, isModalOpen }) => {
           return (

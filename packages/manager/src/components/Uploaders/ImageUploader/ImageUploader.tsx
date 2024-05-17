@@ -6,6 +6,7 @@ import { DropzoneProps, useDropzone } from 'react-dropzone';
 import { BarPercent } from 'src/components/BarPercent';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/reducer';
 import { readableBytes } from 'src/utilities/unitConversions';
@@ -13,6 +14,10 @@ import { readableBytes } from 'src/utilities/unitConversions';
 import type { AxiosProgressEvent } from 'axios';
 
 interface Props extends Partial<DropzoneProps> {
+  /**
+   * Whether or not the upload is in progress.
+   */
+  isUploading: boolean;
   /**
    * The progress of the image upload.
    */
@@ -23,7 +28,7 @@ interface Props extends Partial<DropzoneProps> {
  * This component enables users to attach and upload images from a device.
  */
 export const ImageUploader = React.memo((props: Props) => {
-  const { progress, ...dropzoneProps } = props;
+  const { isUploading, progress, ...dropzoneProps } = props;
   const {
     acceptedFiles,
     getInputProps,
@@ -31,6 +36,7 @@ export const ImageUploader = React.memo((props: Props) => {
     isDragActive,
   } = useDropzone({
     accept: ['application/x-gzip', 'application/gzip'], // Uploaded files must be compressed using gzip.
+    disabled: isUploading,
     maxFiles: 1,
     maxSize: MAX_FILE_SIZE_IN_BYTES,
     ...dropzoneProps,
@@ -51,15 +57,29 @@ export const ImageUploader = React.memo((props: Props) => {
           </Typography>
         ))}
       </Box>
-      {progress && (
-        <>
-          <BarPercent max={1} rounded value={progress.progress ?? 0} />
-          <Typography>
-            {readableBytes(progress.rate ?? 0).formatted}/s {Duration.fromObject({ seconds: progress.estimated }).toHuman()}
-          </Typography>
-        </>
+      {isUploading && (
+        <Stack gap={1}>
+          <Box width="100%">
+            <BarPercent max={1} rounded value={progress?.progress ?? 0} />
+          </Box>
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+          >
+            <Typography>
+              {readableBytes(progress?.rate ?? 0).formatted}/s{' '}
+            </Typography>
+            <Typography>
+              {Duration.fromObject({ seconds: progress?.estimated }).toHuman({
+                maximumFractionDigits: 0,
+              })}{' '}
+              remaining
+            </Typography>
+          </Box>
+        </Stack>
       )}
-      {!dropzoneProps.disabled && (
+      {!isUploading && (
         <Box display="flex" justifyContent="center">
           <Button buttonType="primary">Browse Files</Button>
         </Box>
@@ -76,10 +96,8 @@ const Dropzone = styled('div')<{ active: boolean }>(({ active, theme }) => ({
   flexDirection: 'column',
   gap: 16,
   justifyContent: 'center',
-  paddingBottom: 32,
-  paddingTop: 32,
-  paddingLeft: 16,
-  paddingRight: 16,
+  minHeight: 150,
+  padding: 16,
   ...(active && {
     backgroundColor: theme.palette.background.default,
     borderColor: theme.palette.primary.main,
