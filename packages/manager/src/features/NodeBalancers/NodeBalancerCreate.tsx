@@ -19,18 +19,25 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { SelectFirewallPanel } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
-import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
+import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
+import { Stack } from 'src/components/Stack';
 import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import {
+  StyledDocsLinkContainer,
+  StyledRegionSelectStack,
+} from 'src/features/Kubernetes/CreateCluster/CreateCluster.styles';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
@@ -48,6 +55,7 @@ import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
+import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
 import {
   getDCSpecificPriceByType,
@@ -510,14 +518,29 @@ const NodeBalancerCreate = () => {
           onChange={tagsChange}
           tagError={hasErrorFor('tags')}
         />
+        <StyledRegionSelectStack sx={{ marginTop: 1 }}>
+          <Stack>
+            <RegionSelect
+              textFieldProps={{
+                helperText: <RegionHelperText mb={2} />,
+                helperTextPosition: 'top',
+              }}
+              currentCapability="NodeBalancers"
+              errorText={hasErrorFor('region')}
+              handleSelection={regionChange}
+              regions={regions ?? []}
+              selectedId={nodeBalancerFields.region ?? ''}
+            />
+            <RegionHelperText sx={{ marginTop: 1 }} />
+          </Stack>
+          <StyledDocsLinkContainer>
+            <DocsLink
+              href="https://www.linode.com/pricing"
+              label={DOCS_LINK_LABEL_DC_PRICING}
+            />
+          </StyledDocsLinkContainer>
+        </StyledRegionSelectStack>
       </Paper>
-      <SelectRegionPanel
-        currentCapability="NodeBalancers"
-        disabled={isRestricted}
-        error={hasErrorFor('region')}
-        handleSelection={regionChange}
-        selectedId={nodeBalancerFields.region}
-      />
       {flags.firewallNodebalancer && (
         <SelectFirewallPanel
           handleFirewallChange={(firewallId: number) => {
