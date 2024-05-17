@@ -81,7 +81,9 @@ export const ImageUploader = React.memo((props: Props) => {
       )}
       {!isUploading && (
         <Box display="flex" justifyContent="center">
-          <Button buttonType="primary">Browse Files</Button>
+          <Button buttonType="primary" disabled={dropzoneProps.disabled}>
+            Browse Files
+          </Button>
         </Box>
       )}
     </Dropzone>
