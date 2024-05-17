@@ -322,6 +322,7 @@ describe('Placement Group deletion', () => {
    * - Confirms that landing page reverts to its empty state when last Placement Group is deleted.
    * - Confirms that user can close and reopen the dialog when unexpected error happens.
    */
+  // TODO: Unskip this after https://jira.linode.com/browse/M3-8112 is resolved
   it.skip('can delete without Linodes assigned when unexpected error show up and reopen the dialog', () => {
     const mockPlacementGroupRegion = chooseRegion();
     const mockPlacementGroup = placementGroupFactory.build({
@@ -421,6 +422,7 @@ describe('Placement Group deletion', () => {
    * - Confirms that user is prompted to unassign Linodes before being able to proceed with deletion.
    * - Confirms that user can close and reopen the dialog when unexpected error happens.
    */
+  // TODO: Unskip this after https://jira.linode.com/browse/M3-8112 is resolved
   it.skip('can unassign Linode when unexpected error show up and reopen the dialog', () => {
     const mockPlacementGroupRegion = chooseRegion();
 
