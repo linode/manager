@@ -27,9 +27,11 @@ export const EnableObjectStorageModal = React.memo(
   (props: EnableObjectStorageProps) => {
     const { handleSubmit, onClose, open, regionId } = props;
 
-    const { data: types, isError, isLoading } = useObjectStorageTypesQuery();
+    const { data: types, isError, isLoading } = useObjectStorageTypesQuery(
+      Boolean(regionId)
+    );
 
-    const isInvalidPrice = !types || isError;
+    const isInvalidPrice = Boolean(regionId) && (!types || isError);
 
     const objectStorageType = types?.find(
       (type) => type.id === 'objectstorage'
