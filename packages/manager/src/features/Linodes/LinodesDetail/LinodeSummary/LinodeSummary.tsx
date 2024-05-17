@@ -174,7 +174,6 @@ const LinodeSummary: React.FC<Props> = (props) => {
     };
     const timeData: DiskIOTimeData[] = [];
 
-    // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
     for (let i = 0; i < data.io.length; i++) {
       timeData.push({
         'I/O Rate': data.io[i][1],

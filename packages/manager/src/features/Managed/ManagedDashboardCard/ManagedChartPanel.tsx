@@ -72,7 +72,6 @@ const createTabs = (
     });
   }
 
-  // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
   return [
     {
       render: () => {

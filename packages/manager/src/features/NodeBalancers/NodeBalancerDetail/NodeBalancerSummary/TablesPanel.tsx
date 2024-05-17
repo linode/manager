@@ -132,7 +132,6 @@ export const TablesPanel = () => {
     const trafficOut = stats?.data.traffic.out ?? [];
     const timeData = [];
 
-    // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
     if (trafficIn) {
       for (let i = 0; i < trafficIn.length; i++) {
         timeData.push({
