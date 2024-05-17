@@ -1,12 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { uploadImageSchema } from '@linode/validation';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
+import { flushSync } from 'react-dom';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { mixed } from 'yup';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
@@ -27,6 +26,7 @@ import { Typography } from 'src/components/Typography';
 import { ImageUploader } from 'src/components/Uploaders/ImageUploader/ImageUploader';
 import { Dispatch } from 'src/hooks/types';
 import { useFlags } from 'src/hooks/useFlags';
+import { usePendingUpload } from 'src/hooks/usePendingUpload';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   reportAgreementSigningError,
@@ -41,29 +41,20 @@ import { setPendingUpload } from 'src/store/pendingUpload';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
+import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
+import {
+  ImageUploadFormData,
+  ImageUploadNavigationState,
+} from './ImageUpload.utils';
 import { uploadImageFile } from './requests';
 
-import type { ImageUploadPayload } from '@linode/api-v4';
 import type { AxiosError, AxiosProgressEvent } from 'axios';
 
-interface ImageUploadFormData extends ImageUploadPayload {
-  file: File;
-}
-
-const ImageUploadSchema = uploadImageSchema.shape({
-  file: mixed().required('Image is required.'),
-});
-
 export const ImageUpload = () => {
-  const { location } = useHistory<
-    | {
-        imageDescription?: string;
-        imageLabel?: string;
-      }
-    | undefined
-  >();
+  const { location } = useHistory<ImageUploadNavigationState | undefined>();
 
   const dispatch = useDispatch<Dispatch>();
+  const hasPendingUpload = usePendingUpload();
   const { push } = useHistory();
   const flags = useFlags();
 
@@ -93,7 +84,13 @@ export const ImageUpload = () => {
 
     try {
       const { image, upload_to } = await createImage(createPayload);
-      enqueueSnackbar('Image creation successful, upload will begin');
+
+      // Let the entire app know that there's a pending upload via Redux.
+      // High-level components like AuthenticationWrapper need to know
+      // this, so the user isn't redirected to Login if the token expires.
+      dispatch(setPendingUpload(true));
+
+      recordImageAnalytics('start', file);
 
       try {
         const { cancel, request } = uploadImageFile(
@@ -118,13 +115,24 @@ export const ImageUpload = () => {
           { variant: 'success' }
         );
 
+        recordImageAnalytics('success', file);
+
         queryClient.invalidateQueries(imageQueries.paginated._def);
         queryClient.invalidateQueries(imageQueries.all._def);
+
+        // Force a re-render so that `hasPendingUpload` is false when navigating away
+        // from the upload page. We need this to make the <Prompt /> work as expected.
+        flushSync(() => {
+          dispatch(setPendingUpload(false));
+        });
 
         push('/images');
       } catch (error) {
         // Handle an Axios error for the actual image upload
         form.setError('root', { message: (error as AxiosError).message });
+        // Update Redux to show we have no upload in progress
+        dispatch(setPendingUpload(false));
+        recordImageAnalytics('fail', file);
       }
     } catch (errors) {
       // Handle API errors from the POST /v4/images/upload
@@ -135,6 +143,8 @@ export const ImageUpload = () => {
           form.setError('root', { message: error.reason });
         }
       }
+      // Update Redux to show we have no upload in progress
+      dispatch(setPendingUpload(false));
     }
   });
 
@@ -325,11 +335,6 @@ export const ImageUpload = () => {
             </Typography>
           </Paper>
           <Box display="flex" gap={2} justifyContent="flex-end">
-            {form.formState.isSubmitting && (
-              <Button onClick={() => cancelRef.current?.()}>
-                Cancel Upload
-              </Button>
-            )}
             <Button
               disabled={
                 isImageCreateRestricted ||
@@ -352,7 +357,7 @@ export const ImageUpload = () => {
       <Prompt
         confirmWhenLeaving={true}
         onConfirm={onConfirm}
-        when={form.formState.isSubmitting}
+        when={hasPendingUpload}
       >
         {({ handleCancel, handleConfirm, isModalOpen }) => {
           return (
