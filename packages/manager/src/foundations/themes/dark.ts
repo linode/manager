@@ -488,6 +488,9 @@ export const darkTheme: ThemeOptions = {
         outlined: {
           // TODO: We can remove this variant since they will always have a border
           backgroundColor: Color.Neutrals[90],
+          outlined: {
+            border: `1px solid ${Color.Neutrals[30]}`,
+          },
         },
         root: {
           backgroundColor: Color.Neutrals[90],
