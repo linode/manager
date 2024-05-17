@@ -66,7 +66,7 @@ describe('Placement Group deletion', () => {
    * - Confirms that UI automatically updates to reflect deleted Placement Group.
    * - Confirms that landing page reverts to its empty state when last Placement Group is deleted.
    */
-  it('can delete without Linodes assigned', () => {
+  it('can delete without Linodes assigned when unexpected error show up and retry', () => {
     const mockPlacementGroupRegion = chooseRegion();
     const mockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
@@ -311,5 +311,101 @@ describe('Placement Group deletion', () => {
     // other Placement Group remains.
     cy.findByText(mockPlacementGroup.label).should('not.exist');
     cy.findByText(secondMockPlacementGroup.label).should('be.visible');
+  });
+
+  /*
+   * - Confirms UI flow for Placement Group deletion from landing page using mock API data.
+   * - Confirms that user is not warned or prompted to unassign Linodes when none are assigned.
+   * - Confirms that UI automatically updates to reflect deleted Placement Group.
+   * - Confirms that landing page reverts to its empty state when last Placement Group is deleted.
+   */
+  it.only('can delete with Linodes assigned when unexpected error show up and reopen the dialog', () => {
+    const mockPlacementGroupRegion = chooseRegion();
+    const mockPlacementGroup = placementGroupFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      members: [],
+      region: mockPlacementGroupRegion.id,
+      is_compliant: true,
+    });
+
+    mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
+
+    cy.visitWithLogin('/placement-groups');
+    cy.wait('@getPlacementGroups');
+
+    cy.findByText(mockPlacementGroup.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Click "Delete" button next to the mock Placement Group, mock an HTTP 500 error and confirm UI displays the message.
+    mockDeletePlacementGroupError(
+      mockPlacementGroup.id,
+      PlacementGroupErrorMessage
+    ).as('deletePlacementGroupError');
+
+    // The dialog can be closed after an unexpect error show up
+    ui.dialog
+      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Placement Group').type(mockPlacementGroup.label);
+
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        cy.wait('@deletePlacementGroupError');
+        cy.findByText(PlacementGroupErrorMessage).should('be.visible');
+
+        ui.button
+          .findByTitle('Cancel')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+    cy.findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`).should(
+      'not.exist'
+    );
+
+    // Click "Delete" button next to the mock Placement Group,
+    // mock a successful response and confirm that Cloud
+    mockDeletePlacementGroup(mockPlacementGroup.id).as('deletePlacementGroup');
+
+    cy.findByText(mockPlacementGroup.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    mockGetPlacementGroups([]).as('getPlacementGroups');
+
+    // Confirm deletion warning appears, complete Type-to-Confirm, and submit confirmation.
+    ui.dialog
+      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Placement Group').type(mockPlacementGroup.label);
+
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
   });
 });
