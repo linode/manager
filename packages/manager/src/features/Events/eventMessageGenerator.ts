@@ -616,6 +616,90 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
         e.entity?.label ? ` ${e.entity.label}` : ''
       }.`,
   },
+  lke_node_recycle: {
+    notification: (e) =>
+      `The node for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been recycled.`,
+  },
+  lke_cluster_create: {
+    notification: (e) =>
+      `Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been created.`,
+  },
+  lke_cluster_update: {
+    notification: (e) =>
+      `Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been updated.`,
+  },
+  lke_cluster_delete: {
+    notification: (e) =>
+      `Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been deleted.`,
+  },
+  lke_cluster_regenerate: {
+    notification: (e) =>
+      `Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been regenerated.`,
+  },
+  lke_cluster_recycle: {
+    notification: (e) =>
+      `Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been recycled.`,
+  },
+  lke_control_plane_acl_create: {
+    notification: (e) =>
+      `The IP ACL for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been created.`,
+  },
+  lke_control_plane_acl_update: {
+    notification: (e) =>
+      `The IP ACL for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been updated.`,
+  },
+  lke_control_plane_acl_delete: {
+    notification: (e) =>
+      `The IP ACL for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been disabled.`,
+  },
+  lke_kubeconfig_regenerate: {
+    notification: (e) =>
+      `The kubeconfig for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been regenerated.`,
+  },
+  lke_token_rotate: {
+    notification: (e) =>
+      `The token for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been rotated.`,
+  },
+  lke_pool_create: {
+    notification: (e) =>
+      `A Node Pool for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been created.`,
+  },
+  lke_pool_delete: {
+    notification: (e) =>
+      `A Node Pool for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been deleted.`,
+  },
+  lke_pool_recycle: {
+    notification: (e) =>
+      `A Node Pool for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been recycled.`,
+  },
   longviewclient_create: {
     notification: (e) => `Longview Client ${e.entity!.label} has been created.`,
   },
