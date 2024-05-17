@@ -54,6 +54,10 @@ vi.mock('highlight.js/lib/highlight', () => ({
   },
 }));
 
+vi.mock('src/hooks/useScrollErrorIntoView', () => ({
+  useScrollErrorIntoView: vi.fn(),
+}));
+
 /**
  ***************************************
  *  Custom matchers & matchers overrides
