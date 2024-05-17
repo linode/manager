@@ -77,7 +77,7 @@ import {
   objectStorageClusterFactory,
   objectStorageKeyFactory,
   objectStorageTypeFactory,
-  objectStorageTypeOverageFactory,
+  objectStorageOverageTypeFactory,
   paymentFactory,
   paymentMethodFactory,
   placementGroupFactory,
@@ -928,7 +928,7 @@ export const handlers = [
   http.get('*/v4/object-storage/types', () => {
     const objectStorageTypes = [
       objectStorageTypeFactory.build(),
-      objectStorageTypeOverageFactory.build(),
+      objectStorageOverageTypeFactory.build(),
     ];
     return HttpResponse.json(makeResourcePage(objectStorageTypes));
   }),

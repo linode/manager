@@ -2,10 +2,13 @@ import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import {
+  objectStorageOverageTypeFactory,
   objectStorageTypeFactory,
-  objectStorageTypeOverageFactory,
 } from 'src/factories';
-import { OBJ_STORAGE_PRICE } from 'src/utilities/pricing/constants';
+import {
+  OBJ_STORAGE_PRICE,
+  UNKNOWN_PRICE,
+} from 'src/utilities/pricing/constants';
 import { objectStoragePriceIncreaseMap } from 'src/utilities/pricing/dynamicPricing';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -17,7 +20,7 @@ import {
 
 const mockObjectStorageTypes = [
   objectStorageTypeFactory.build(),
-  objectStorageTypeOverageFactory.build(),
+  objectStorageOverageTypeFactory.build(),
 ];
 
 const queryMocks = vi.hoisted(() => ({
@@ -109,7 +112,7 @@ describe('OveragePricing', async () => {
       <OveragePricing regionId="us-east" />
     );
 
-    expect(getAllByText('$--.-- per GB')).toHaveLength(1);
+    expect(getAllByText(`$${UNKNOWN_PRICE} per GB`)).toHaveLength(1);
   });
 
   it('Renders placeholder unknown pricing when prices are undefined', async () => {
@@ -121,6 +124,6 @@ describe('OveragePricing', async () => {
       <OveragePricing regionId="us-east" />
     );
 
-    expect(getAllByText('$--.-- per GB')).toHaveLength(1);
+    expect(getAllByText(`$${UNKNOWN_PRICE} per GB`)).toHaveLength(1);
   });
 });

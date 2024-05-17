@@ -195,7 +195,7 @@ export const objectStorageTypeFactory = Factory.Sync.makeFactory<PriceType>({
   transfer: 1000,
 });
 
-export const objectStorageTypeOverageFactory = Factory.Sync.makeFactory<PriceType>(
+export const objectStorageOverageTypeFactory = Factory.Sync.makeFactory<PriceType>(
   {
     id: 'objectstorage-overage',
     label: 'Object Storage Overage',
