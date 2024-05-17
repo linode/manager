@@ -35,11 +35,13 @@ describe('Create Firewall Drawer', () => {
     );
     expect(withinInboundPolicy.getByText('Accept')).toBeVisible();
     expect(withinInboundPolicy.getByText('Drop')).toBeVisible();
+    expect(withinInboundPolicy.getByLabelText('Drop')).toBeChecked();
 
     const withinOutboundPolicy = within(
-      screen.getByTestId('default-inbound-policy')
+      screen.getByTestId('default-outbound-policy')
     );
     expect(withinOutboundPolicy.getByText('Accept')).toBeVisible();
+    expect(withinOutboundPolicy.getByLabelText('Accept')).toBeChecked();
     expect(withinOutboundPolicy.getByText('Drop')).toBeVisible();
   });
 
