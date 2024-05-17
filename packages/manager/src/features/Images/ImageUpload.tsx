@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { uploadImageSchema } from '@linode/validation';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -20,6 +21,7 @@ import { Paper } from 'src/components/Paper';
 import { Prompt } from 'src/components/Prompt/Prompt';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Stack } from 'src/components/Stack';
+import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { ImageUploader } from 'src/components/Uploaders/ImageUploader/ImageUploader';
@@ -32,6 +34,7 @@ import {
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
 import { useUploadImageMutation } from 'src/queries/images';
+import { imageQueries } from 'src/queries/images';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { setPendingUpload } from 'src/store/pendingUpload';
@@ -41,7 +44,7 @@ import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
 import { uploadImageFile } from './requests';
 
 import type { ImageUploadPayload } from '@linode/api-v4';
-import type { AxiosProgressEvent } from 'axios';
+import type { AxiosError, AxiosProgressEvent } from 'axios';
 
 interface ImageUploadFormData extends ImageUploadPayload {
   file: File;
@@ -69,6 +72,7 @@ export const ImageUpload = () => {
   const [hasSignedAgreement, setHasSignedAgreement] = useState<boolean>(false);
   const [linodeCLIModalOpen, setLinodeCLIModalOpen] = useState<boolean>(false);
 
+  const queryClient = useQueryClient();
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
@@ -86,8 +90,9 @@ export const ImageUpload = () => {
 
   const onSubmit = form.handleSubmit(async (values) => {
     const { file, ...createPayload } = values;
+
     try {
-      const { upload_to } = await createImage(createPayload);
+      const { image, upload_to } = await createImage(createPayload);
       enqueueSnackbar('Image creation successful, upload will begin');
 
       try {
@@ -107,10 +112,22 @@ export const ImageUpload = () => {
             privacy_policy: true,
           }).catch(reportAgreementSigningError);
         }
-        enqueueSnackbar('Upload successfull');
+
+        enqueueSnackbar(
+          `Image ${image.label} uploaded successfully. It is being processed and will be available shortly.`,
+          { variant: 'success' }
+        );
+
+        queryClient.invalidateQueries(imageQueries.paginated._def);
+        queryClient.invalidateQueries(imageQueries.all._def);
+
         push('/images');
-      } catch (error) {}
+      } catch (error) {
+        // Handle an Axios error for the actual image upload
+        form.setError('root', { message: (error as AxiosError).message });
+      }
     } catch (errors) {
+      // Handle API errors from the POST /v4/images/upload
       for (const error of errors) {
         if (error.field) {
           form.setError(error.field, { message: error.reason });
@@ -154,6 +171,9 @@ export const ImageUpload = () => {
       <form onSubmit={onSubmit}>
         <Stack spacing={2}>
           <Paper>
+            <Typography mb={1} variant="h2">
+              Image Details
+            </Typography>
             {form.formState.errors.root?.message && (
               <Notice
                 text={form.formState.errors.root.message}
@@ -180,45 +200,32 @@ export const ImageUpload = () => {
               control={form.control}
               name="label"
             />
-            <Controller
-              render={({ field, fieldState }) => (
-                <TextField
-                  disabled={isImageCreateRestricted}
-                  errorText={fieldState.error?.message}
-                  label="Description"
-                  multiline
-                  onChange={field.onChange}
-                  rows={1}
-                  value={field.value ?? ''}
-                />
-              )}
-              control={form.control}
-              name="description"
-            />
             {flags.metadata && (
-              <Controller
-                render={({ field }) => (
-                  <Checkbox
-                    toolTipText={
-                      <Typography>
-                        Only check this box if your Custom Image is compatible
-                        with cloud-init, or has cloud-init installed, and the
-                        config has been changed to use our data service.{' '}
-                        <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata-cloud-config/">
-                          Learn how.
-                        </Link>
-                      </Typography>
-                    }
-                    checked={field.value ?? false}
-                    disabled={isImageCreateRestricted}
-                    onChange={field.onChange}
-                    text="This image is cloud-init compatible"
-                    toolTipInteractive
-                  />
-                )}
-                control={form.control}
-                name="cloud_init"
-              />
+              <Box pl={0.25} pt={2}>
+                <Controller
+                  render={({ field }) => (
+                    <Checkbox
+                      toolTipText={
+                        <Typography>
+                          Only check this box if your Custom Image is compatible
+                          with cloud-init, or has cloud-init installed, and the
+                          config has been changed to use our data service.{' '}
+                          <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata-cloud-config/">
+                            Learn how.
+                          </Link>
+                        </Typography>
+                      }
+                      checked={field.value ?? false}
+                      disabled={isImageCreateRestricted}
+                      onChange={field.onChange}
+                      text="This image is cloud-init compatible"
+                      toolTipInteractive
+                    />
+                  )}
+                  control={form.control}
+                  name="cloud_init"
+                />
+              </Box>
             )}
             <Controller
               render={({ field, fieldState }) => (
@@ -237,6 +244,22 @@ export const ImageUpload = () => {
               control={form.control}
               name="region"
             />
+            <TagsInput onChange={() => null} value={[]} />
+            <Controller
+              render={({ field, fieldState }) => (
+                <TextField
+                  disabled={isImageCreateRestricted}
+                  errorText={fieldState.error?.message}
+                  label="Description"
+                  multiline
+                  onChange={field.onChange}
+                  rows={1}
+                  value={field.value ?? ''}
+                />
+              )}
+              control={form.control}
+              name="description"
+            />
             {showGDPRCheckbox && (
               <EUAgreementCheckbox
                 centerCheckbox
@@ -246,6 +269,9 @@ export const ImageUpload = () => {
             )}
           </Paper>
           <Paper>
+            <Typography mb={1} variant="h2">
+              Image Upload
+            </Typography>
             <Notice
               spacingBottom={0}
               sx={{ fontSize: '0.875rem' }}
