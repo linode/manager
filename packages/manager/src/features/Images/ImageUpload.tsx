@@ -48,7 +48,7 @@ interface ImageUploadFormData extends ImageUploadPayload {
 }
 
 const ImageUploadSchema = uploadImageSchema.shape({
-  file: mixed().required('You must pick an Image to upload.'),
+  file: mixed().required('Image is required.'),
 });
 
 export const ImageUpload = () => {
@@ -280,12 +280,16 @@ export const ImageUpload = () => {
                     <Notice text={fieldState.error.message} variant="error" />
                   )}
                   <ImageUploader
-                    onDropRejected={(fileRejections) =>
+                    onDropAccepted={(files) => {
+                      form.setError('file', {});
+                      field.onChange(files[0]);
+                    }}
+                    onDropRejected={(fileRejections) => {
                       form.setError('file', {
                         message: fileRejections[0].errors[0].message,
-                      })
-                    }
-                    onDrop={(files) => field.onChange(files[0])}
+                      });
+                    }}
+                    disabled={form.formState.isSubmitting}
                     progress={uploadProgress}
                   />
                 </>
