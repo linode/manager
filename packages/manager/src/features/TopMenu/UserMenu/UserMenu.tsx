@@ -20,16 +20,16 @@ import { Typography } from 'src/components/Typography';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
-import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
+import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 import { useFlags } from 'src/hooks/useFlags';
-import { usePendingRevocationToken } from 'src/hooks/usePendingRevocationToken';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { sendSwitchAccountEvent } from 'src/utilities/analytics';
+import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
 import { getCompanyNameOrEmail } from './utils';
+
 interface MenuLink {
   display: string;
   hide?: boolean;
@@ -59,10 +59,6 @@ export const UserMenu = React.memo(() => {
     null
   );
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
-  const {
-    getPendingRevocationToken,
-    pendingRevocationToken,
-  } = usePendingRevocationToken();
 
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
@@ -94,7 +90,7 @@ export const UserMenu = React.memo(() => {
     profile,
   });
 
-  const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
+  const { isParentTokenExpired } = useIsParentTokenExpired({ isProxyUser });
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
   const proxyHeaders =
@@ -124,9 +120,9 @@ export const UserMenu = React.memo(() => {
 
   React.useEffect(() => {
     // Run after we've switched to a proxy user.
-    if (isProxyUser && !getStorage('proxy_user')) {
+    if (isProxyUser && !getStorage('is_proxy_user')) {
       // Flag for proxy user to display success toast once.
-      setStorage('proxy_user', 'true');
+      setStorage('is_proxy_user', 'true');
 
       enqueueSnackbar(`Account switched to ${companyNameOrEmail}.`, {
         variant: 'success',
@@ -205,10 +201,6 @@ export const UserMenu = React.memo(() => {
       });
     }
 
-    if (isProxyUser) {
-      getPendingRevocationToken();
-    }
-
     setIsDrawerOpen(true);
   };
 
@@ -225,7 +217,7 @@ export const UserMenu = React.memo(() => {
             isProxyUser ? (
               <GravatarForProxy />
             ) : (
-              <GravatarByEmail email={profile?.email ?? ''} />
+              <GravatarByEmail captureAnalytics email={profile?.email ?? ''} />
             )
           }
           sx={(theme) => ({
@@ -347,7 +339,6 @@ export const UserMenu = React.memo(() => {
       <SwitchAccountDrawer
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
-        proxyToken={pendingRevocationToken}
         userType={profile?.user_type}
       />
     </>

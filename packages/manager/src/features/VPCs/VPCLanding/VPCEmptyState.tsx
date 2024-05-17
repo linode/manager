@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import VPC from 'src/assets/icons/entityIcons/vpc.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { gettingStartedGuides } from 'src/features/VPCs/VPCLanding/VPCLandingEmptyStateData';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendEvent } from 'src/utilities/analytics/utils';
 
 import { headers, linkAnalyticsEvent } from './VPCEmptyStateData';
 

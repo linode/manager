@@ -1,3 +1,20 @@
+## [2024-05-13] - v0.46.0
+
+
+### Changed:
+
+- Include disk_encryption in CreateLinodeSchema and RebuildLinodeSchema ([#10413](https://github.com/linode/manager/pull/10413))
+- Allow `backup_id` to be nullable in `CreateLinodeSchema` ([#10421](https://github.com/linode/manager/pull/10421))
+
+
+## [2024-04-29] - v0.45.0
+
+
+### Changed:
+
+- Improved VPC `ip_ranges` validation in `LinodeInterfaceSchema` ([#10354](https://github.com/linode/manager/pull/10354))
+- Allow `stackscript_id` to be `null` in `CreateLinodeSchema` ([#10367](https://github.com/linode/manager/pull/10367))
+
 ## [2024-04-15] - v0.44.0
 
 ### Changed:

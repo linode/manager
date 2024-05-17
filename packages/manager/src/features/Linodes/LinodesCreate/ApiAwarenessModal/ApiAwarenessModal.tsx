@@ -1,6 +1,6 @@
 import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
-import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import React, { useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -9,14 +9,15 @@ import { Dialog } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
+import { Tab } from 'src/components/Tabs/Tab';
+import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { sendApiAwarenessClickEvent } from 'src/utilities/analytics';
-import { generateCurlCommand } from 'src/utilities/generate-cURL';
+import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { generateCLICommand } from 'src/utilities/generate-cli';
+import { generateCurlCommand } from 'src/utilities/generate-cURL';
 
 import { CodeBlock } from '../CodeBlock/CodeBlock';
 
@@ -24,11 +25,10 @@ export interface ApiAwarenessModalProps {
   isOpen: boolean;
   onClose: () => void;
   payLoad: CreateLinodeRequest;
-  route: string;
 }
 
 export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
-  const { isOpen, onClose, payLoad, route } = props;
+  const { isOpen, onClose, payLoad } = props;
 
   const theme = useTheme();
   const history = useHistory();
@@ -52,12 +52,10 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
 
   const tabs = [
     {
-      routeName: route,
       title: 'cURL',
       type: 'API',
     },
     {
-      routeName: route,
       title: 'Linode CLI',
       type: 'CLI',
     },
@@ -94,7 +92,10 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
         the Cloud Manager create form.
       </Typography>
       <StyledTabs defaultIndex={0} onChange={handleTabChange}>
-        <TabLinkList tabs={tabs} />
+        <TabList>
+          <Tab>cURL</Tab>
+          <Tab>Linode CLI</Tab>
+        </TabList>
         <TabPanels>
           <SafeTabPanel index={0}>
             <Typography sx={{ marginTop: theme.spacing(2) }} variant="body1">

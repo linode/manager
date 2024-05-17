@@ -1,5 +1,4 @@
 import { Theme } from '@mui/material/styles';
-import snakeCase from 'lodash/snakeCase';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -58,4 +57,16 @@ export const CopyableAndDownloadableTextField = (props: Props) => {
       disabled
     />
   );
+};
+
+const snakeCase = (str: string | undefined): string => {
+  if (!str) {
+    return '';
+  }
+
+  return str
+    .replace(/\W+/g, ' ')
+    .split(/ |\B(?=[A-Z])/)
+    .map((word) => word.toLowerCase())
+    .join('_');
 };

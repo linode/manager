@@ -7,7 +7,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import cloneDeep from 'lodash/cloneDeep';
+import cloneDeep from 'lodash.clonedeep';
 import * as React from 'react';
 import { MapDispatchToProps, connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -61,7 +61,12 @@ import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
 import {
   sendApiAwarenessClickEvent,
   sendLinodeCreateFlowDocsClickEvent,
-} from 'src/utilities/analytics';
+} from 'src/utilities/analytics/customEventAnalytics';
+import {
+  sendLinodeCreateFormErrorEvent,
+  sendLinodeCreateFormStepEvent,
+  sendLinodeCreateFormSubmitEvent,
+} from 'src/utilities/analytics/formEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
@@ -116,7 +121,7 @@ export interface LinodeCreateProps {
   handleAgreementChange: () => void;
   handleFirewallChange: (firewallId: number) => void;
   handleIPv4RangesForVPC: (ranges: ExtendedIP[]) => void;
-  handlePlacementGroupChange: (placementGroup: PlacementGroup) => void;
+  handlePlacementGroupChange: (placementGroup: PlacementGroup | null) => void;
   handleShowApiAwarenessModal: () => void;
   handleSubmitForm: HandleSubmit;
   handleSubnetChange: (subnetId: number) => void;
@@ -249,10 +254,13 @@ export class LinodeCreate extends React.PureComponent<
   }
 
   componentDidUpdate(prevProps: any) {
+    if (this.props.errors !== prevProps.errors) {
+      this.handleAnalyticsFormError(getErrorMap(errorMap, this.props.errors));
+    }
+
     if (this.props.location.search === prevProps.location.search) {
       return;
     }
-
     // This is for the case where a user is already on the create flow and click the "Marketplace" link in the PrimaryNav.
     // Because it is the same route, the component will not unmount and remount, so we need to manually update the tab state.
     // This fix provides an isolated solution for this specific case.
@@ -628,6 +636,15 @@ export class LinodeCreate extends React.PureComponent<
                 <DocsLink
                   onClick={() => {
                     sendLinodeCreateFlowDocsClickEvent('Choosing a Plan');
+                    sendLinodeCreateFormStepEvent({
+                      action: 'click',
+                      category: 'link',
+                      createType:
+                        (this.tabs[selectedTab].title as LinodeCreateType) ??
+                        'Distributions',
+                      label: 'Choosing a Plan',
+                      version: 'v1',
+                    });
                   }}
                   href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
                   label="Choosing a Plan"
@@ -644,7 +661,7 @@ export class LinodeCreate extends React.PureComponent<
               regionsData={regionsData!}
               selectedId={this.props.selectedTypeID}
               selectedRegionID={selectedRegionID}
-              showTransfer
+              showLimits
               types={this.filterTypes()}
             />
           </Stack>
@@ -656,6 +673,9 @@ export class LinodeCreate extends React.PureComponent<
               onChange: (e) => updateLabel(e.target.value),
               value: label || '',
             }}
+            selectedPlacementGroupId={
+              this.props.placementGroupSelection?.id ?? null
+            }
             tagsInputProps={
               this.props.createType !== 'fromLinode'
                 ? tagsInputProps
@@ -711,7 +731,24 @@ export class LinodeCreate extends React.PureComponent<
                 <Typography>
                   Assign an existing Firewall to this Linode to control inbound
                   and outbound network traffic.{' '}
-                  <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
+                  <Link
+                    onClick={() =>
+                      sendLinodeCreateFormStepEvent({
+                        action: 'click',
+                        category: 'link',
+                        createType:
+                          (this.tabs[selectedTab].title as LinodeCreateType) ??
+                          'Distributions',
+                        formStepName: 'Firewall Panel',
+                        label: 'Learn more',
+                        version: 'v1',
+                      })
+                    }
+                    to={FIREWALL_GET_STARTED_LINK}
+                  >
+                    Learn more
+                  </Link>
+                  .
                 </Typography>
               }
               disabled={userCannotCreateLinode}
@@ -806,7 +843,6 @@ export class LinodeCreate extends React.PureComponent<
               isOpen={showApiAwarenessModal}
               onClose={handleShowApiAwarenessModal}
               payLoad={this.getPayload()}
-              route={this.props.match.url}
             />
           </StyledButtonGroupBox>
         </Grid>
@@ -816,7 +852,15 @@ export class LinodeCreate extends React.PureComponent<
 
   createLinode = () => {
     const payload = this.getPayload();
+    const { selectedTab } = this.state;
+    const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
+
     this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
+    sendLinodeCreateFormSubmitEvent(
+      'Create Linode',
+      selectedTabName ?? 'Distributions',
+      'v1'
+    );
   };
 
   filterTypes = () => {
@@ -954,6 +998,38 @@ export class LinodeCreate extends React.PureComponent<
     return payload;
   };
 
+  handleAnalyticsFormError = (
+    errorMap: Partial<Record<string, string | undefined>>
+  ) => {
+    const { selectedTab } = this.state;
+    const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
+
+    if (!errorMap) {
+      return;
+    }
+    if (errorMap.region) {
+      sendLinodeCreateFormErrorEvent(
+        'Region not selected',
+        selectedTabName ?? 'Distributions',
+        'v1'
+      );
+    }
+    if (errorMap.type) {
+      sendLinodeCreateFormErrorEvent(
+        'Plan not selected',
+        selectedTabName ?? 'Distributions',
+        'v1'
+      );
+    }
+    if (errorMap.root_pass) {
+      sendLinodeCreateFormErrorEvent(
+        'Password not created',
+        selectedTabName ?? 'Distributions',
+        'v1'
+      );
+    }
+  };
+
   handleClickCreateUsingCommandLine = () => {
     const payload = {
       authorized_users: this.props.authorized_users,
@@ -979,6 +1055,8 @@ export class LinodeCreate extends React.PureComponent<
   };
 
   handleTabChange = (index: number) => {
+    const prevTabIndex = this.state.selectedTab;
+
     this.props.resetCreationState();
 
     /** set the tab in redux state */
@@ -990,6 +1068,20 @@ export class LinodeCreate extends React.PureComponent<
       planKey: v4(),
       selectedTab: index,
     });
+
+    // Do not fire the form event if a user is not switching to a different tab.
+    // Prevents a double-firing on Marketplace because we manually handle the tab change.
+    if (prevTabIndex !== index) {
+      sendLinodeCreateFormStepEvent({
+        action: 'click',
+        category: 'tab',
+        createType:
+          (this.tabs[prevTabIndex].title as LinodeCreateType) ??
+          'Distributions',
+        label: `${this.tabs[index].title} Tab`,
+        version: 'v1',
+      });
+    }
   };
 
   mounted: boolean = false;

@@ -5,13 +5,13 @@ import {
   Firewall,
   FirewallDeviceEntityType,
 } from '@linode/api-v4/lib/firewalls';
-import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
+import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
@@ -24,23 +24,27 @@ import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
+import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
+import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useCreateFirewall } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
 import { useGrants } from 'src/queries/profile';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
-import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import {
   LINODE_CREATE_FLOW_TEXT,
   NODEBALANCER_CREATE_FLOW_TEXT,
 } from './constants';
+
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
@@ -68,7 +72,6 @@ const initialValues: CreateFirewallPayload = {
 export const CreateFirewallDrawer = React.memo(
   (props: CreateFirewallDrawerProps) => {
     // TODO: NBFW - We'll eventually want to check the read_write firewall grant here too, but it doesn't exist yet.
-    const flags = useFlags();
     const { createFlow, onClose, onFirewallCreated, open } = props;
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { data: grants } = useGrants();
@@ -77,6 +80,10 @@ export const CreateFirewallDrawer = React.memo(
 
     const { enqueueSnackbar } = useSnackbar();
     const queryClient = useQueryClient();
+
+    const location = useLocation();
+    const isFromLinodeCreate = location.pathname.includes('/linodes/create');
+    const queryParams = getQueryParamsFromQueryString(location.search);
 
     const {
       errors,
@@ -172,10 +179,8 @@ export const CreateFirewallDrawer = React.memo(
       validationSchema: CreateFirewallSchema,
     });
 
-    const entityName = flags.firewallNodebalancer ? 'services' : 'Linodes';
-
-    const FirewallLabelText = `Assign ${entityName} to the Firewall`;
-    const FirewallHelperText = `Assign one or more ${entityName} to this firewall. You can add ${entityName} later if you want to customize your rules first.`;
+    const FirewallLabelText = `Assign services to the Firewall`;
+    const FirewallHelperText = `Assign one or more services to this firewall. You can add services later if you want to customize your rules first.`;
 
     React.useEffect(() => {
       if (open) {
@@ -201,45 +206,49 @@ export const CreateFirewallDrawer = React.memo(
         ? READ_ONLY_DEVICES_HIDDEN_MESSAGE
         : undefined;
 
-    const [linodeOptionsFilter, nodebalancerOptionsFilter] = (() => {
-      // When `firewallNodebalancer` feature flag is disabled, no filtering
-      // occurs. In this case, pass filter callbacks that always returns `true`.
-      if (!flags.firewallNodebalancer) {
-        return [() => true, () => true];
-      }
+    const assignedServices = data?.map((firewall) => firewall.entities).flat();
 
-      const assignedServices = data
-        ?.map((firewall) => firewall.entities)
-        .flat();
+    const assignedLinodes = assignedServices?.filter(
+      (service) => service.type === 'linode'
+    );
+    const assignedNodeBalancers = assignedServices?.filter(
+      (service) => service.type === 'nodebalancer'
+    );
 
-      const assignedLinodes = assignedServices?.filter(
-        (service) => service.type === 'linode'
+    const linodeOptionsFilter = (linode: Linode) => {
+      return (
+        !readOnlyLinodeIds.includes(linode.id) &&
+        !assignedLinodes?.some((service) => service.id === linode.id)
       );
-      const assignedNodeBalancers = assignedServices?.filter(
-        (service) => service.type === 'nodebalancer'
+    };
+
+    const nodebalancerOptionsFilter = (nodebalancer: NodeBalancer) => {
+      return (
+        !readOnlyNodebalancerIds.includes(nodebalancer.id) &&
+        !assignedNodeBalancers?.some(
+          (service) => service.id === nodebalancer.id
+        )
       );
-
-      const linodeOptionsFilter = (linode: Linode) => {
-        return (
-          !readOnlyLinodeIds.includes(linode.id) &&
-          !assignedLinodes?.some((service) => service.id === linode.id)
-        );
-      };
-
-      const nodebalancerOptionsFilter = (nodebalancer: NodeBalancer) => {
-        return (
-          !readOnlyNodebalancerIds.includes(nodebalancer.id) &&
-          !assignedNodeBalancers?.some(
-            (service) => service.id === nodebalancer.id
-          )
-        );
-      };
-
-      return [linodeOptionsFilter, nodebalancerOptionsFilter];
-    })();
+    };
 
     const learnMoreLink = (
-      <Link to={FIREWALL_LIMITS_CONSIDERATIONS_LINK}>Learn more</Link>
+      <Link
+        onClick={() =>
+          isFromLinodeCreate &&
+          sendLinodeCreateFormStepEvent({
+            action: 'click',
+            category: 'link',
+            createType:
+              (queryParams.type as LinodeCreateType) ?? 'Distributions',
+            formStepName: 'Create Firewall Drawer',
+            label: 'Learn more',
+            version: 'v1',
+          })
+        }
+        to={FIREWALL_LIMITS_CONSIDERATIONS_LINK}
+      >
+        Learn more
+      </Link>
     );
 
     const generalError =
@@ -292,17 +301,15 @@ export const CreateFirewallDrawer = React.memo(
               {FirewallHelperText}
               {deviceSelectGuidance ? ` ${deviceSelectGuidance}` : null}
             </Typography>
-            {flags.firewallNodebalancer && (
-              <Typography
-                sx={(theme) => ({
-                  margin: `${theme.spacing(2)} ${theme.spacing(0)}`,
-                })}
-              >
-                {NODEBALANCER_HELPER_TEXT}
-                <br />
-                {learnMoreLink}.
-              </Typography>
-            )}
+            <Typography
+              sx={(theme) => ({
+                margin: `${theme.spacing(2)} ${theme.spacing(0)}`,
+              })}
+            >
+              {NODEBALANCER_HELPER_TEXT}
+              <br />
+              {learnMoreLink}.
+            </Typography>
           </Box>
           <LinodeSelect
             label={
@@ -320,32 +327,41 @@ export const CreateFirewallDrawer = React.memo(
             optionsFilter={linodeOptionsFilter}
             value={values.devices?.linodes ?? null}
           />
-          {flags.firewallNodebalancer && (
-            <NodeBalancerSelect
-              label={
-                createFlow === 'nodebalancer'
-                  ? NODEBALANCER_CREATE_FLOW_TEXT
-                  : 'NodeBalancers'
-              }
-              onSelectionChange={(nodebalancers) => {
-                setFieldValue(
-                  'devices.nodebalancers',
-                  nodebalancers.map((nodebalancer) => nodebalancer.id)
-                );
-              }}
-              errorText={errors['devices.nodebalancers']}
-              helperText={deviceSelectGuidance}
-              multiple
-              optionsFilter={nodebalancerOptionsFilter}
-              value={values.devices?.nodebalancers ?? null}
-            />
-          )}
+          <NodeBalancerSelect
+            label={
+              createFlow === 'nodebalancer'
+                ? NODEBALANCER_CREATE_FLOW_TEXT
+                : 'NodeBalancers'
+            }
+            onSelectionChange={(nodebalancers) => {
+              setFieldValue(
+                'devices.nodebalancers',
+                nodebalancers.map((nodebalancer) => nodebalancer.id)
+              );
+            }}
+            errorText={errors['devices.nodebalancers']}
+            helperText={deviceSelectGuidance}
+            multiple
+            optionsFilter={nodebalancerOptionsFilter}
+            value={values.devices?.nodebalancers ?? null}
+          />
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
               disabled: userCannotAddFirewall,
               label: 'Create Firewall',
               loading: isSubmitting,
+              onClick: () =>
+                isFromLinodeCreate &&
+                sendLinodeCreateFormStepEvent({
+                  action: 'click',
+                  category: 'button',
+                  createType:
+                    (queryParams.type as LinodeCreateType) ?? 'Distributions',
+                  formStepName: 'Create Firewall Drawer',
+                  label: 'Create Firewall',
+                  version: 'v1',
+                }),
               type: 'submit',
             }}
             secondaryButtonProps={{

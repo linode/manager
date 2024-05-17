@@ -1,18 +1,14 @@
-import HelpOutline from '@mui/icons-material/HelpOutline';
 import * as React from 'react';
 
 import { Chip } from 'src/components/Chip';
 import { Currency } from 'src/components/Currency';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Hidden } from 'src/components/Hidden';
-import { IconButton } from 'src/components/IconButton';
 import { Radio } from 'src/components/Radio/Radio';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
-import { Tooltip } from 'src/components/Tooltip';
-import { TooltipIcon } from 'src/components/TooltipIcon';
+import { TableRow } from 'src/components/TableRow';
 import { LINODE_NETWORK_IN } from 'src/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import {
   PRICE_ERROR_TOOLTIP_TEXT,
@@ -22,100 +18,54 @@ import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/d
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
-import { LIMITED_AVAILABILITY_TEXT } from './constants';
+import { DisabledPlanSelectionTooltip } from './DisabledPlanSelectionTooltip';
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
-import { StyledDisabledTableRow } from './PlansPanel.styles';
+import { getDisabledPlanReasonCopy } from './utils';
 
-import type { PlanSelectionType } from './types';
+import type { PlanWithAvailability } from './types';
 import type { LinodeTypeClass, PriceObject, Region } from '@linode/api-v4';
 
 export interface PlanSelectionProps {
   currentPlanHeading?: string;
-  disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
-  disabledToolTip?: string;
+  hasMajorityOfPlansDisabled: boolean;
   header?: string;
-  hideDisabledHelpIcons?: boolean;
   idx: number;
   isCreate?: boolean;
-  isLimitedAvailabilityPlan: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
-  planIsDisabled?: boolean;
-  selectedDiskSize?: number;
+  plan: PlanWithAvailability;
   selectedId?: string;
   selectedRegionId?: Region['id'];
+  showNetwork?: boolean;
   showTransfer?: boolean;
-  type: PlanSelectionType;
+  wholePanelIsDisabled?: boolean;
 }
-
-const getDisabledClass = (
-  typeClass: LinodeTypeClass,
-  disabledClasses: LinodeTypeClass[]
-) => {
-  return disabledClasses.includes(typeClass);
-};
-
-const getToolTip = ({
-  disabledToolTip,
-  planIsDisabled,
-  sizeTooSmall,
-}: {
-  disabledToolTip?: string;
-  planIsDisabled?: boolean;
-  sizeTooSmall: boolean;
-}) => {
-  if (planIsDisabled) {
-    return disabledToolTip;
-  }
-  if (sizeTooSmall) {
-    return 'This plan is too small for the selected image.';
-  }
-  return undefined;
-};
 
 export const PlanSelection = (props: PlanSelectionProps) => {
   const {
     currentPlanHeading,
-    disabled,
-    disabledClasses,
-    disabledToolTip,
-    hideDisabledHelpIcons,
+    hasMajorityOfPlansDisabled,
     idx,
     isCreate,
-    isLimitedAvailabilityPlan,
     linodeID,
     onSelect,
-    planIsDisabled,
-    selectedDiskSize,
+    plan,
     selectedId,
     selectedRegionId,
+    showNetwork,
     showTransfer,
-    type,
+    wholePanelIsDisabled,
   } = props;
+  const {
+    planBelongsToDisabledClass,
+    planHasLimitedAvailability,
+    planIsDisabled512Gb,
+    planIsTooSmall,
+  } = plan;
 
-  const flags = useFlags();
-
-  // Determine if the plan should be disabled solely due to being a 512GB plan
-  const disabled512GbPlan =
-    type.label.includes('512GB') &&
-    Boolean(flags.disableLargestGbPlans) &&
-    !disabled;
-
-  const isDisabled = isLimitedAvailabilityPlan || disabled512GbPlan;
-
-  const diskSize = selectedDiskSize ? selectedDiskSize : 0;
-  const planTooSmall = diskSize > type.disk;
-  const isSamePlan = type.heading === currentPlanHeading;
-  const tooltip = getToolTip({
-    disabledToolTip,
-    planIsDisabled,
-    sizeTooSmall: planTooSmall,
-  });
-  const isGPU = type.class === 'gpu';
-  const isDisabledClass = getDisabledClass(type.class, disabledClasses ?? []);
-  const shouldShowTransfer = showTransfer && type.transfer;
-  const shouldShowNetwork = showTransfer && type.network_out;
+  const isSamePlan = plan.heading === currentPlanHeading;
+  const isGPU = plan.class === 'gpu';
 
   const { data: linode } = useLinodeQuery(
     linodeID ?? -1,
@@ -123,100 +73,95 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   );
   const selectedLinodePlanType = linode?.type;
 
-  const rowAriaLabel =
-    type && type.formattedLabel && isSamePlan
-      ? `${type.formattedLabel} this is your current plan`
-      : planTooSmall
-      ? `${type.formattedLabel} this plan is too small for resize`
-      : type.formattedLabel;
-
   // DC Dynamic price logic - DB creation and DB resize flows are currently out of scope
   const isDatabaseFlow = location.pathname.includes('/databases');
   const price: PriceObject | undefined = !isDatabaseFlow
-    ? getLinodeRegionPrice(type, selectedRegionId)
-    : type.price;
-  type.subHeadings[0] = `$${renderMonthlyPriceToCorrectDecimalPlace(
+    ? getLinodeRegionPrice(plan, selectedRegionId)
+    : plan.price;
+  plan.subHeadings[0] = `$${renderMonthlyPriceToCorrectDecimalPlace(
     price?.monthly
   )}/mo ($${price?.hourly ?? UNKNOWN_PRICE}/hr)`;
 
-  const rowAriaDisabled =
-    isSamePlan || planTooSmall || isDisabledClass || planIsDisabled;
+  const rowIsDisabled =
+    isSamePlan ||
+    planIsTooSmall ||
+    planBelongsToDisabledClass ||
+    planIsDisabled512Gb ||
+    planHasLimitedAvailability ||
+    wholePanelIsDisabled;
+
+  const disabledPlanReasonCopy = getDisabledPlanReasonCopy({
+    planBelongsToDisabledClass,
+    planHasLimitedAvailability,
+    planIsDisabled512Gb,
+    planIsTooSmall,
+    wholePanelIsDisabled,
+  });
+
+  // These are the two exceptions for when the tooltip should be hidden
+  // - The entire panel is disabled (means the plans class isn't available in the selected region. (The user will see a notice about this)
+  // - The majority of plans are disabled - In order to reduce visual clutter, we don't show the tooltip if the majority of plans are disabled (there is also a notice about this)
+  // For both, and accessibility is maintained via aria-label on the radio when disabled, so screen readers can still describe the reason why.
+  const showDisabledTooltip =
+    !wholePanelIsDisabled &&
+    !hasMajorityOfPlansDisabled &&
+    (planBelongsToDisabledClass ||
+      planIsDisabled512Gb ||
+      planHasLimitedAvailability ||
+      planIsTooSmall);
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
       {/* Displays Table Row for larger screens */}
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
-        <StyledDisabledTableRow
-          onClick={() =>
-            !isSamePlan && !isDisabled && !isDisabledClass && !planTooSmall
-              ? onSelect(type.id)
-              : undefined
-          }
-          aria-disabled={rowAriaDisabled}
-          aria-label={rowAriaLabel}
-          data-qa-plan-row={type.formattedLabel}
-          disabled={rowAriaDisabled}
-          key={type.id}
+        <TableRow
+          className={rowIsDisabled ? 'disabled-row' : ''}
+          data-qa-plan-row={plan.formattedLabel}
+          key={plan.id}
+          onClick={() => (!rowIsDisabled ? onSelect(plan.id) : undefined)}
         >
           <StyledRadioCell>
             {!isSamePlan && (
               <FormControlLabel
+                aria-label={`${plan.heading} ${
+                  rowIsDisabled ? `- ${disabledPlanReasonCopy}` : ''
+                }`}
                 control={
                   <Radio
                     checked={
-                      !disabled &&
-                      !isDisabled &&
-                      !planTooSmall &&
-                      type.id === String(selectedId)
+                      !wholePanelIsDisabled &&
+                      !rowIsDisabled &&
+                      plan.id === String(selectedId)
                     }
                     disabled={
-                      planTooSmall || disabled || isDisabled || isDisabledClass
+                      wholePanelIsDisabled ||
+                      rowIsDisabled ||
+                      planBelongsToDisabledClass
                     }
-                    id={type.id}
-                    onChange={() => onSelect(type.id)}
+                    id={plan.id}
+                    onChange={() => onSelect(plan.id)}
                   />
                 }
-                aria-label={type.heading}
                 className={'label-visually-hidden'}
-                label={type.heading}
+                label={plan.heading}
               />
             )}
           </StyledRadioCell>
-          <TableCell data-qa-plan-name>
-            {type.heading} &nbsp;
-            {isDisabled && !hideDisabledHelpIcons && (
-              <Tooltip
-                data-qa-tooltip={LIMITED_AVAILABILITY_TEXT}
-                data-testid="limited-availability"
-                placement="right-start"
-                title={LIMITED_AVAILABILITY_TEXT}
-              >
-                <IconButton disableRipple size="small">
-                  <HelpOutline
-                    sx={{
-                      height: 16,
-                      width: 16,
-                    }}
-                  />
-                </IconButton>
-              </Tooltip>
+          <TableCell
+            className={rowIsDisabled ? 'hasTooltip' : ''}
+            data-qa-plan-name
+          >
+            {plan.heading} &nbsp;
+            {showDisabledTooltip && (
+              <DisabledPlanSelectionTooltip
+                tooltipCopy={disabledPlanReasonCopy}
+              />
             )}
-            {(isSamePlan || type.id === selectedLinodePlanType) && (
+            {(isSamePlan || plan.id === selectedLinodePlanType) && (
               <StyledChip
                 aria-label="This is your current plan"
                 data-qa-current-plan
                 label="Current Plan"
-              />
-            )}
-            {tooltip && (
-              <TooltipIcon
-                sxTooltipIcon={{
-                  paddingBottom: '0px !important',
-                  paddingTop: '0px !important',
-                }}
-                status="help"
-                text={tooltip}
-                tooltipPosition="right-end"
               />
             )}
           </TableCell>
@@ -240,41 +185,46 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             )}
           </TableCell>
           <TableCell center data-qa-ram noWrap>
-            {convertMegabytesTo(type.memory, true)}
+            {convertMegabytesTo(plan.memory, true)}
           </TableCell>
           <TableCell center data-qa-cpu>
-            {type.vcpus}
+            {plan.vcpus}
           </TableCell>
           <TableCell center data-qa-storage noWrap>
-            {convertMegabytesTo(type.disk, true)}
+            {convertMegabytesTo(plan.disk, true)}
           </TableCell>
-          {shouldShowTransfer && type.transfer ? (
+          {showTransfer ? (
             <TableCell center data-qa-transfer>
-              {type.transfer / 1000} TB
+              {plan.transfer ? <>{plan.transfer / 1000} TB</> : ''}
             </TableCell>
           ) : null}
-          {shouldShowNetwork && type.network_out ? (
+          {showNetwork ? (
             <TableCell center data-qa-network noWrap>
-              {LINODE_NETWORK_IN} Gbps{' '}
-              <span style={{ color: '#9DA4A6' }}>/</span>{' '}
-              {type.network_out / 1000} Gbps
+              {plan.network_out ? (
+                <>
+                  {LINODE_NETWORK_IN} Gbps{' '}
+                  <span style={{ color: '#9DA4A6' }}>/</span>{' '}
+                  {plan.network_out / 1000} Gbps
+                </>
+              ) : (
+                ''
+              )}
             </TableCell>
           ) : null}
-        </StyledDisabledTableRow>
+        </TableRow>
       </Hidden>
 
       {/* Displays SelectionCard for small screens */}
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
         <SelectionCard
           disabled={
-            planTooSmall ||
             isSamePlan ||
-            disabled ||
-            isDisabled ||
-            isDisabledClass
+            wholePanelIsDisabled ||
+            rowIsDisabled ||
+            planBelongsToDisabledClass
           }
           headingDecoration={
-            isSamePlan || type.id === selectedLinodePlanType ? (
+            isSamePlan || plan.id === selectedLinodePlanType ? (
               <StyledChip
                 aria-label="This is your current plan"
                 data-qa-current-plan
@@ -283,18 +233,18 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             ) : undefined
           }
           subheadings={[
-            ...type.subHeadings,
-            isDisabled ? <Chip label="Limited Availability" /> : '',
+            ...plan.subHeadings,
+            planHasLimitedAvailability || planIsDisabled512Gb ? (
+              <Chip label="Limited Deployment Availability" />
+            ) : (
+              ''
+            ),
           ]}
-          sxTooltip={{
-            // There's no easy way to override the margin or transform due to inline styles and existing specificity rules.
-            transform: 'translate(-10px, 20px) !important',
-          }}
-          checked={type.id === String(selectedId)}
-          heading={type.heading}
-          key={type.id}
-          onClick={() => onSelect(type.id)}
-          tooltip={isDisabled ? LIMITED_AVAILABILITY_TEXT : tooltip}
+          checked={plan.id === String(selectedId)}
+          heading={plan.heading}
+          key={plan.id}
+          onClick={() => onSelect(plan.id)}
+          tooltip={rowIsDisabled ? disabledPlanReasonCopy : undefined}
         />
       </Hidden>
     </React.Fragment>
