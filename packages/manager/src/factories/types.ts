@@ -173,28 +173,29 @@ export const volumeTypeFactory = Factory.Sync.makeFactory<PriceType>({
   transfer: 0,
 });
 
-export const objectStorageTypeFactory = Factory.Sync.makeFactory<PriceType[]>([
-  {
-    id: 'objectstorage',
-    label: 'Object Storage',
-    price: {
+export const objectStorageTypeFactory = Factory.Sync.makeFactory<PriceType>({
+  id: 'objectstorage',
+  label: 'Object Storage',
+  price: {
+    hourly: 0.0075,
+    monthly: 5.0,
+  },
+  region_prices: [
+    {
       hourly: 0.0075,
+      id: 'id-cgk',
       monthly: 5.0,
     },
-    region_prices: [
-      {
-        hourly: 0.0075,
-        id: 'id-cgk',
-        monthly: 5.0,
-      },
-      {
-        hourly: 0.0075,
-        id: 'br-gru',
-        monthly: 5.0,
-      },
-    ],
-    transfer: 1000,
-  },
+    {
+      hourly: 0.0075,
+      id: 'br-gru',
+      monthly: 5.0,
+    },
+  ],
+  transfer: 1000,
+});
+
+export const objectStorageTypeOverageFactory = Factory.Sync.makeFactory<PriceType>(
   {
     id: 'objectstorage-overage',
     label: 'Object Storage Overage',
@@ -215,5 +216,5 @@ export const objectStorageTypeFactory = Factory.Sync.makeFactory<PriceType[]>([
       },
     ],
     transfer: 0,
-  },
-]);
+  }
+);
