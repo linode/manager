@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { uploadImageSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
-import * as React from 'react';
+import React, { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -41,6 +41,7 @@ import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
 import { uploadImageFile } from './requests';
 
 import type { ImageUploadPayload } from '@linode/api-v4';
+import type { AxiosProgressEvent } from 'axios';
 
 interface ImageUploadFormData extends ImageUploadPayload {
   file: File;
@@ -77,8 +78,10 @@ export const ImageUpload = () => {
       enqueueSnackbar('Image creation successful, upload will begin');
 
       try {
-        const { cancel, request } = uploadImageFile(upload_to, file, (e) =>
-          setUploadProgress(e.progress ?? 0)
+        const { cancel, request } = uploadImageFile(
+          upload_to,
+          file,
+          setUploadProgress
         );
 
         cancelRef.current = cancel;
@@ -111,14 +114,10 @@ export const ImageUpload = () => {
   const { push } = useHistory();
   const flags = useFlags();
 
-  const [uploadProgress, setUploadProgress] = React.useState(0);
+  const [uploadProgress, setUploadProgress] = useState<AxiosProgressEvent>();
   const cancelRef = React.useRef<(() => void) | null>(null);
-  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
-    false
-  );
-  const [linodeCLIModalOpen, setLinodeCLIModalOpen] = React.useState<boolean>(
-    false
-  );
+  const [hasSignedAgreement, setHasSignedAgreement] = useState<boolean>(false);
+  const [linodeCLIModalOpen, setLinodeCLIModalOpen] = useState<boolean>(false);
 
   const { showGDPRCheckbox } = getGDPRDetails({
     agreements,
@@ -280,13 +279,20 @@ export const ImageUpload = () => {
                   {fieldState.error?.message && (
                     <Notice text={fieldState.error.message} variant="error" />
                   )}
-                  <ImageUploader onDrop={(files) => field.onChange(files[0])} />
+                  <ImageUploader
+                    onDropRejected={(fileRejections) =>
+                      form.setError('file', {
+                        message: fileRejections[0].errors[0].message,
+                      })
+                    }
+                    onDrop={(files) => field.onChange(files[0])}
+                    progress={uploadProgress}
+                  />
                 </>
               )}
               control={form.control}
               name="file"
             />
-            {uploadProgress}
             <Typography sx={{ paddingTop: 2 }}>
               Or, upload an image using the{' '}
               <LinkButton onClick={() => setLinodeCLIModalOpen(true)}>
