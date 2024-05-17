@@ -17,7 +17,6 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import {
   STATS_NOT_READY_API_MESSAGE,
@@ -55,7 +54,6 @@ const LinodeSummary: React.FC<Props> = (props) => {
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
   const theme = useTheme();
-  const flags = useFlags();
 
   const { data: profile } = useProfile();
   const timezone = profile?.timezone || DateTime.local().zoneName;
