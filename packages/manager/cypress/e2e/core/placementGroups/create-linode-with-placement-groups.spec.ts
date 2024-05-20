@@ -20,6 +20,7 @@ import {
   mockGetPlacementGroups,
 } from 'support/intercepts/placement-groups';
 import { randomString } from 'support/util/random';
+import { CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE } from 'src/features/PlacementGroups/constants';
 
 import type { Region } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
@@ -124,9 +125,6 @@ describe('Linode create flow with Placement Group', () => {
       is_compliant: true,
     });
 
-    const affinityTypeMessage =
-      'Once you create a placement group, you cannot change its Affinity Type Enforcement setting.';
-
     mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
     mockCreatePlacementGroup(mockPlacementGroup).as('createPlacementGroup');
 
@@ -139,7 +137,9 @@ describe('Linode create flow with Placement Group', () => {
         // - An Affinity Type Enforcement message
         // - a disabled "Create Placement Group" button.
         cy.findByText('Newark, NJ (us-east)').should('be.visible');
-        cy.findByText(affinityTypeMessage).should('be.visible');
+        cy.findByText(CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE).should(
+          'be.visible'
+        );
         ui.buttonGroup
           .findButtonByTitle('Create Placement Group')
           .should('be.disabled');
