@@ -79,7 +79,6 @@ export interface Flags {
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
-  recharts: boolean;
   referralBannerText: ReferralBannerText;
   selfServeBetas: boolean;
   soldOutChips: boolean;
