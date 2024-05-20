@@ -46,7 +46,7 @@ describe('OveragePricing', async () => {
     const { getByText } = renderWithTheme(
       <OveragePricing regionId="us-east" />
     );
-    getByText(`$${mockObjectStorageTypes[1].price.hourly?.toFixed(3)} per GB`, {
+    getByText(`$${mockObjectStorageTypes[1].price.hourly?.toFixed(2)} per GB`, {
       exact: false,
     });
     getByText(`$${OBJ_STORAGE_PRICE.transfer_overage} per GB`, {

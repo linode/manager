@@ -53,7 +53,7 @@ export const OveragePricing = (props: Props) => {
         <strong>
           $
           {storageOveragePrice && !isError
-            ? storageOveragePrice
+            ? parseFloat(storageOveragePrice)
             : UNKNOWN_PRICE}{' '}
           per GB
         </strong>
