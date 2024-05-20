@@ -20,6 +20,9 @@ import { categoryOptions } from './utilities';
 import type { LinodeCreateFormValues } from '../../utilities';
 
 interface Props {
+  /**
+   * Opens the Marketplace App details drawer for the given app
+   */
   onOpenDetailsDrawer: (stackscriptId: number) => void;
 }
 
