@@ -349,6 +349,7 @@ export const ImageUpload = () => {
                           message = fileRejections[0].errors[0].message;
                       }
                       form.setError('file', { message });
+                      form.resetField('file', { keepError: true });
                     }}
                     disabled={isImageCreateRestricted}
                     isUploading={form.formState.isSubmitting}
