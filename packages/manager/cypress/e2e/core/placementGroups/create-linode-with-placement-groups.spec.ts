@@ -49,6 +49,9 @@ describe('Linode create flow with Placement Group', () => {
         beta: true,
         enabled: true,
       }),
+      linodeCreateRefactor: makeFeatureFlagData<Flags['linodeCreateRefactor']>(
+        false
+      ),
     });
     mockGetFeatureFlagClientstream();
   });
