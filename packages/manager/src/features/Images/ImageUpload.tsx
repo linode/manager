@@ -24,6 +24,7 @@ import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { ImageUploader } from 'src/components/Uploaders/ImageUploader/ImageUploader';
+import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/reducer';
 import { Dispatch } from 'src/hooks/types';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePendingUpload } from 'src/hooks/usePendingUpload';
@@ -33,12 +34,13 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
-import { useUploadImageMutation } from 'src/queries/images';
 import { imageQueries } from 'src/queries/images';
+import { useUploadImageMutation } from 'src/queries/images';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
+import { readableBytes } from 'src/utilities/unitConversions';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
 import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
@@ -332,9 +334,21 @@ export const ImageUpload = () => {
                       field.onChange(files[0]);
                     }}
                     onDropRejected={(fileRejections) => {
-                      form.setError('file', {
-                        message: fileRejections[0].errors[0].message,
-                      });
+                      let message = '';
+                      switch (fileRejections[0].errors[0].code) {
+                        case 'file-invalid-type':
+                          message =
+                            'Only raw disk images (.img) compressed using gzip (.gz) can be uploaded.';
+                          break;
+                        case 'file-too-large':
+                          message = `Max file size (${
+                            readableBytes(MAX_FILE_SIZE_IN_BYTES).formatted
+                          }) exceeded`;
+                          break;
+                        default:
+                          message = fileRejections[0].errors[0].message;
+                      }
+                      form.setError('file', { message });
                     }}
                     disabled={isImageCreateRestricted}
                     isUploading={form.formState.isSubmitting}
