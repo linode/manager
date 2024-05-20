@@ -2,7 +2,6 @@ import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
-import { authenticate } from 'support/api/authentication';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -12,7 +11,6 @@ import {
 } from 'src/factories';
 import { regionFactory } from 'src/factories';
 import { ui } from 'support/ui/';
-import { cleanUp } from 'support/util/cleanup';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
 import {
@@ -41,10 +39,8 @@ const mockRegions: Region[] = [
   }),
 ];
 
-authenticate();
 describe('Linode create flow with Placement Group', () => {
   beforeEach(() => {
-    cleanUp('linodes');
     mockGetAccount(mockAccount);
     mockGetRegions(mockRegions).as('getRegions');
     // TODO Remove feature flag mocks when `placementGroups` flag is retired.
