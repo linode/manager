@@ -18,13 +18,16 @@ import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
 import { AssignIPRanges } from 'src/features/VPCs/VPCDetail/AssignIPRanges';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllVPCsQuery } from 'src/queries/vpcs/vpcs';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { REGION_CAVEAT_HELPER_TEXT } from './constants';
 import { VPCCreateDrawer } from './VPCCreateDrawer';
 
+import type { LinodeCreateType } from './types';
 import type { Item } from 'src/components/EnhancedSelect';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
@@ -92,6 +95,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
   );
 
   const { data: vpcsData, error, isLoading } = useAllVPCsQuery();
+  const params = getQueryParamsFromQueryString(location.search);
 
   React.useEffect(() => {
     if (subnetError || vpcIPv4Error) {
@@ -142,7 +146,20 @@ export const VPCPanel = (props: VPCPanelProps) => {
     return (
       <>
         {copy}{' '}
-        <Link to="https://www.linode.com/docs/products/networking/vpc/guides/assign-services/">
+        <Link
+          onClick={() =>
+            fromLinodeCreate &&
+            sendLinodeCreateFormStepEvent({
+              action: 'click',
+              category: 'link',
+              createType: (params.type as LinodeCreateType) ?? 'Distributions',
+              formStepName: 'VPC Panel',
+              label: 'Learn more',
+              version: 'v1',
+            })
+          }
+          to="https://www.linode.com/docs/products/networking/vpc/guides/assign-services/"
+        >
           Learn more
         </Link>
         .
@@ -176,6 +193,15 @@ export const VPCPanel = (props: VPCPanelProps) => {
           <Select
             onChange={(selectedVPC: Item<number, string>) => {
               handleSelectVPC(selectedVPC.value);
+              sendLinodeCreateFormStepEvent({
+                action: 'click',
+                category: 'select',
+                createType:
+                  (params.type as LinodeCreateType) ?? 'Distributions',
+                formStepName: 'VPC Panel',
+                label: 'Assign VPC',
+                version: 'v1',
+              });
             }}
             textFieldProps={{
               tooltipText: REGION_CAVEAT_HELPER_TEXT,
@@ -204,7 +230,20 @@ export const VPCPanel = (props: VPCPanelProps) => {
           {from === 'linodeCreate' &&
             (regionSupportsVPCs ? (
               <StyledLinkButtonBox>
-                <LinkButton onClick={() => setIsVPCCreateDrawerOpen(true)}>
+                <LinkButton
+                  onClick={() => {
+                    setIsVPCCreateDrawerOpen(true);
+                    sendLinodeCreateFormStepEvent({
+                      action: 'click',
+                      category: 'button',
+                      createType:
+                        (params.type as LinodeCreateType) ?? 'Distributions',
+                      formStepName: 'VPC Panel',
+                      label: 'Create VPC',
+                      version: 'v1',
+                    });
+                  }}
+                >
                   Create VPC
                 </LinkButton>
               </StyledLinkButtonBox>

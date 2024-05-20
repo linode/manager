@@ -60,7 +60,7 @@ import { MapState } from 'src/store/types';
 import {
   sendCreateLinodeEvent,
   sendLinodeCreateFlowDocsClickEvent,
-} from 'src/utilities/analytics';
+} from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { isEURegion } from 'src/utilities/formatRegion';
@@ -77,7 +77,13 @@ import { validatePassword } from 'src/utilities/validatePassword';
 
 import { deriveDefaultLabel } from './deriveDefaultLabel';
 import LinodeCreate from './LinodeCreate';
-import { HandleSubmit, Info, LinodeCreateValidation, TypeInfo } from './types';
+import {
+  HandleSubmit,
+  Info,
+  LinodeCreateType,
+  LinodeCreateValidation,
+  TypeInfo,
+} from './types';
 
 import type {
   CreateLinodeRequest,
@@ -86,6 +92,7 @@ import type {
   LinodeTypeClass,
   PriceObject,
 } from '@linode/api-v4/lib/linodes';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -262,9 +269,17 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         <ProductInformationBanner bannerLocation="LinodeCreate" />
         <Grid className="m0" container spacing={0}>
           <LandingHeader
-            onDocsClick={() =>
-              sendLinodeCreateFlowDocsClickEvent('Getting Started')
-            }
+            onDocsClick={() => {
+              sendLinodeCreateFlowDocsClickEvent('Getting Started');
+              sendLinodeCreateFormStepEvent({
+                action: 'click',
+                category: 'link',
+                createType:
+                  (this.params.type as LinodeCreateType) ?? 'Distributions',
+                label: 'Getting Started',
+                version: 'v1',
+              });
+            }}
             docsLabel="Getting Started"
             docsLink="https://www.linode.com/docs/guides/platform/get-started/"
             title="Create"
