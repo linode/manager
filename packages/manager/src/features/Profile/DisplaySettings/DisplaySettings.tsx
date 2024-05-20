@@ -17,7 +17,7 @@ import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
-import { sendManageGravatarEvent } from 'src/utilities/analytics';
+import { sendManageGravatarEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { TimezoneForm } from './TimezoneForm';
 

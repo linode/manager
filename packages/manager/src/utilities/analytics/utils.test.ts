@@ -1,7 +1,5 @@
-import {
-  generateTimeOfDay,
-  waitForAdobeAnalyticsToBeLoaded,
-} from './analytics';
+import { generateTimeOfDay } from './customEventAnalytics';
+import { waitForAdobeAnalyticsToBeLoaded } from './utils';
 
 describe('Utility Functions', () => {
   it('should generate human-readable time of day', () => {
