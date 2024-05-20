@@ -37,11 +37,7 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
   ];
 
   return (
-    <TableRow
-      ariaLabel={`VPC ${label}`}
-      data-qa-vpc-id={id}
-      key={`vpc-row-${id}`}
-    >
+    <TableRow data-qa-vpc-id={id} key={`vpc-row-${id}`}>
       <TableCell>
         <Link to={`/vpcs/${id}`}>{label}</Link>
       </TableCell>
