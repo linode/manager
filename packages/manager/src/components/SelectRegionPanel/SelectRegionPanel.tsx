@@ -7,12 +7,8 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getIsLinodeCreateTypeEdgeSupported } from 'src/components/RegionSelect/RegionSelect.utils';
+import { TwoStepRegionSelect } from 'src/components/RegionSelect/TwoStepRegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { Tab } from 'src/components/Tabs/Tab';
-import { TabList } from 'src/components/Tabs/TabList';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/constants';
 import { useFlags } from 'src/hooks/useFlags';
@@ -33,7 +29,7 @@ import { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
-interface SelectRegionPanelProps {
+export interface SelectRegionPanelProps {
   RegionSelectProps?: Partial<RegionSelectProps>;
   currentCapability: Capabilities;
   disabled?: boolean;
@@ -89,7 +85,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
 
   const hideEdgeRegions =
     !flags.gecko2?.enabled ||
-    flags.gecko2?.ga ||
     !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
 
   const isGeckoGA = flags.gecko2?.enabled && flags.gecko2.ga;
@@ -155,52 +150,18 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       ) : null}
       {isGeckoGA &&
       getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType) ? (
-        <Tabs>
-          <TabList>
-            <Tab>Core</Tab>
-            <Tab>Edge</Tab>
-          </TabList>
-          <TabPanels>
-            <SafeTabPanel index={0}>
-              <Box marginTop={2}>
-                <RegionHelperText
-                  onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
-                />
-              </Box>
-              <RegionSelect
-                currentCapability={currentCapability}
-                disabled={disabled}
-                errorText={error}
-                handleSelection={handleRegionSelection}
-                helperText={helperText}
-                regionFilter="core"
-                regions={regions ?? []}
-                selectedId={selectedId || null}
-                showEdgeIconHelperText={showEdgeIconHelperText}
-                {...RegionSelectProps}
-              />
-            </SafeTabPanel>
-            <SafeTabPanel index={1}>
-              <Box marginTop={2}>
-                <RegionHelperText
-                  onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
-                />
-              </Box>
-              <RegionSelect
-                currentCapability={currentCapability}
-                disabled={disabled}
-                errorText={error}
-                handleSelection={handleRegionSelection}
-                helperText={helperText}
-                regionFilter="edge"
-                regions={regions ?? []}
-                selectedId={selectedId || null}
-                showEdgeIconHelperText={showEdgeIconHelperText}
-                {...RegionSelectProps}
-              />
-            </SafeTabPanel>
-          </TabPanels>
-        </Tabs>
+        <TwoStepRegionSelect
+          currentCapability={currentCapability}
+          disabled={disabled}
+          errorText={error}
+          handleSelection={handleRegionSelection}
+          helperText={helperText}
+          regionFilter={hideEdgeRegions ? 'core' : undefined}
+          regions={regions ?? []}
+          selectedId={selectedId}
+          showEdgeIconHelperText={showEdgeIconHelperText}
+          {...RegionSelectProps}
+        />
       ) : (
         <RegionSelect
           currentCapability={currentCapability}
