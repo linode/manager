@@ -74,8 +74,8 @@ export const getRegionOptions = ({
       const getLabel = () => {
         // Display regions sorted by Country first
         if (flags?.gecko2?.enabled && flags.gecko2.ga) {
-          const [city, country] = region.label.split(', ');
-          return `${country}, ${city}`;
+          const [city] = region.label.split(', ');
+          return `${region.country.toUpperCase()}, ${city}`;
         }
 
         return `${region.label} (${region.id})`;
