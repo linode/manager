@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
-import { sendLinodeDiskEvent } from 'src/utilities/analytics';
+import { sendLinodeDiskEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 export const getLabel = (event: Event) => event.entity?.label ?? '';
 export const getSecondaryLabel = (event: Event) =>

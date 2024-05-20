@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Box } from 'src/components/Box';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendEvent } from 'src/utilities/analytics/utils';
 
 interface Props {
   diskId?: number;
