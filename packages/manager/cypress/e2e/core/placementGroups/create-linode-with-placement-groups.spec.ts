@@ -184,6 +184,11 @@ describe('Linode create flow with Placement Group', () => {
       },
     });
 
+    // Confirm the Placement group assignment is accounted for in the summary.
+    cy.get('[data-qa-summary="true"]').within(() => {
+      cy.findByText('Assigned to Placement Group').should('be.visible');
+    });
+
     // Type in a label, password and submit the form.
     mockCreateLinode(mockLinode).as('createLinode');
     cy.get('#linode-label').clear().type('linode-with-placement-group');
