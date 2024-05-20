@@ -11,10 +11,11 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useChildAccountsInfiniteQuery } from 'src/queries/account/account';
 
-import type { UserType } from '@linode/api-v4';
+import type { Filter, UserType } from '@linode/api-v4';
 
 interface ChildAccountListProps {
   currentTokenWithBearer: string;
+  filter?: Filter;
   isLoading?: boolean;
   onClose: () => void;
   onSwitchAccount: (props: {
@@ -30,6 +31,7 @@ interface ChildAccountListProps {
 export const ChildAccountList = React.memo(
   ({
     currentTokenWithBearer,
+    filter,
     isLoading,
     onClose,
     onSwitchAccount,
@@ -48,6 +50,7 @@ export const ChildAccountList = React.memo(
       isInitialLoading,
       refetch: refetchChildAccounts,
     } = useChildAccountsInfiniteQuery({
+      filter: filter ?? undefined,
       headers:
         userType === 'proxy'
           ? {
@@ -67,7 +70,10 @@ export const ChildAccountList = React.memo(
 
     if (childAccounts?.length === 0) {
       return (
-        <Notice variant="info">There are no indirect customer accounts.</Notice>
+        <Notice variant="info">
+          There are no indirect customer accounts{' '}
+          {filter !== undefined ? 'that match this query' : undefined}.
+        </Notice>
       );
     }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
@@ -37,6 +38,11 @@ export const SwitchAccountDrawer = (props: Props) => {
   const [isParentTokenError, setIsParentTokenError] = React.useState<
     APIError[]
   >([]);
+  const filter = {};
+  const [query, setQuery] = React.useState<string>('');
+  if (query) {
+    filter['company'] = { '+contains': query };
+  }
 
   const isProxyUser = userType === 'proxy';
   const currentParentTokenWithBearer =
@@ -154,10 +160,20 @@ export const SwitchAccountDrawer = (props: Props) => {
         )}
         .
       </Typography>
+      <DebouncedSearchTextField
+        debounceTime={250}
+        hideLabel
+        label="Search"
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search"
+        sx={{ marginBottom: 2 }}
+        value={query}
+      />
       <ChildAccountList
         currentTokenWithBearer={
           isProxyUser ? currentParentTokenWithBearer : currentTokenWithBearer
         }
+        filter={filter}
         isLoading={isSubmitting}
         onClose={onClose}
         onSwitchAccount={handleSwitchToChildAccount}
