@@ -68,7 +68,7 @@ export const ImageUploader = React.memo((props: Props) => {
             justifyContent="space-between"
           >
             <Typography>
-              {readableBytes(progress?.rate ?? 0).formatted}/s{' '}
+              {readableBytes(progress?.rate ?? 0, { base10: true }).formatted}/s{' '}
             </Typography>
             <Typography>
               {Duration.fromObject({ seconds: progress?.estimated }).toHuman({

@@ -119,10 +119,20 @@ export const useAllImagesQuery = (
     enabled,
   });
 
-export const useUploadImageMutation = () =>
-  useMutation<UploadImageResponse, APIError[], ImageUploadPayload>({
+export const useUploadImageMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<UploadImageResponse, APIError[], ImageUploadPayload>({
     mutationFn: uploadImage,
+    onSuccess(data) {
+      queryClient.invalidateQueries(imageQueries.paginated._def);
+      queryClient.invalidateQueries(imageQueries.all._def);
+      queryClient.setQueryData<Image>(
+        imageQueries.image(data.image.id).queryKey,
+        data.image
+      );
+    },
   });
+};
 
 export const imageEventsHandler = ({
   event,

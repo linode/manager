@@ -34,7 +34,6 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
-import { imageQueries } from 'src/queries/images';
 import { useUploadImageMutation } from 'src/queries/images';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -87,10 +86,6 @@ export const ImageUpload = () => {
 
     try {
       const { image, upload_to } = await createImage(createPayload);
-
-      // Invalidate images because a new Image has been created.
-      queryClient.invalidateQueries(imageQueries.paginated._def);
-      queryClient.invalidateQueries(imageQueries.all._def);
 
       // Let the entire app know that there's a pending upload via Redux.
       // High-level components like AuthenticationWrapper need to know
