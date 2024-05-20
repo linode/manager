@@ -8,6 +8,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
+import { REBUILD_LINODE_IMAGE_PARAM_NAME } from '../Linodes/LinodesDetail/LinodeRebuild/RebuildFromImage';
 import { useImageAndLinodeGrantCheck } from './utils';
 
 interface Props {
@@ -54,7 +55,9 @@ export const RebuildImageDrawer = (props: Props) => {
     close();
     history.push({
       pathname: `/linodes/${selectedLinode}/rebuild`,
-      search: new URLSearchParams({ selectedImageId: imageID }).toString(),
+      search: new URLSearchParams({
+        [REBUILD_LINODE_IMAGE_PARAM_NAME]: imageID,
+      }).toString(),
     });
   };
 
