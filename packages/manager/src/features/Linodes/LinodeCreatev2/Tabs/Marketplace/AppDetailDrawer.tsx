@@ -1,6 +1,6 @@
 import Close from '@mui/icons-material/Close';
-import IconButton from '@mui/material/IconButton';
 import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -10,7 +10,6 @@ import { Button } from 'src/components/Button/Button';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
-import { useFlags } from 'src/hooks/useFlags';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -55,13 +54,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
       width: 480,
     },
   },
-  wrapAppName: {
-    maxWidth: 'fit-content',
-    minWidth: 170,
-  },
-  wrapLogo: {
-    marginLeft: `-${theme.spacing(3)}`,
-  },
 }));
 
 interface Props {
@@ -73,7 +65,6 @@ interface Props {
 export const AppDetailDrawerv2 = (props: Props) => {
   const { onClose, open, stackScriptId } = props;
   const { classes } = useStyles();
-  const { oneClickAppsDocsOverride } = useFlags();
 
   const selectedApp = stackScriptId ? oneClickApps[stackScriptId] : null;
 
@@ -145,7 +136,7 @@ export const AppDetailDrawerv2 = (props: Props) => {
                 variant="body1"
               />
             </Box>
-            {selectedApp.website ? (
+            {selectedApp.website && (
               <Box>
                 <Typography variant="h3">Website</Typography>
                 <Link
@@ -156,15 +147,12 @@ export const AppDetailDrawerv2 = (props: Props) => {
                   {selectedApp.website}
                 </Link>
               </Box>
-            ) : null}
-            {selectedApp.related_guides ? (
+            )}
+            {selectedApp.related_guides && (
               <Box>
                 <Typography variant="h3">Guides</Typography>
                 <Box display="flex" flexDirection="column" style={{ gap: 6 }}>
-                  {(
-                    oneClickAppsDocsOverride?.[selectedApp.name] ??
-                    selectedApp.related_guides
-                  ).map((link, idx) => (
+                  {selectedApp.related_guides.map((link, idx) => (
                     <Link
                       className={classes.link}
                       key={`${selectedApp.name}-guide-${idx}`}
@@ -178,8 +166,8 @@ export const AppDetailDrawerv2 = (props: Props) => {
                   ))}
                 </Box>
               </Box>
-            ) : null}
-            {selectedApp.tips ? (
+            )}
+            {selectedApp.tips && (
               <Box>
                 <Typography variant="h3">Tips</Typography>
                 <Box display="flex" flexDirection="column" style={{ gap: 6 }}>
@@ -193,7 +181,7 @@ export const AppDetailDrawerv2 = (props: Props) => {
                   ))}
                 </Box>
               </Box>
-            ) : null}
+            )}
           </Box>
         </>
       ) : (
