@@ -75,7 +75,6 @@ export interface Flags {
   objMultiCluster: boolean;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
-  parentChildAccountAccess: boolean;
   placementGroups: PlacementGroupsFlag;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;

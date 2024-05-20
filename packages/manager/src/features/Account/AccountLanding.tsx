@@ -14,7 +14,6 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
 import { useProfile } from 'src/queries/profile';
@@ -52,7 +51,6 @@ const AccountLanding = () => {
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
 
-  const flags = useFlags();
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
   const sessionContext = React.useContext(switchAccountSessionContext);
 
@@ -143,8 +141,7 @@ const AccountLanding = () => {
 
   const isBillingTabSelected = location.pathname.match(/billing/);
   const canSwitchBetweenParentOrProxyAccount =
-    flags.parentChildAccountAccess &&
-    ((!isChildAccountAccessRestricted && isParentUser) || isProxyUser);
+    (!isChildAccountAccessRestricted && isParentUser) || isProxyUser;
 
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
