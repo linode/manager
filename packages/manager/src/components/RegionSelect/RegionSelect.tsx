@@ -76,13 +76,9 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   };
 
   React.useEffect(() => {
-    if (selectedId) {
-      setSelectedRegion(regionFromSelectedId);
-    } else {
-      // We need to reset the state when create types change
-      setSelectedRegion(null);
-    }
-  }, [selectedId, regions]);
+    // We need to reset the state when create types change
+    setSelectedRegion(null);
+  }, [regions]);
 
   const options = React.useMemo(
     () =>
