@@ -2,7 +2,6 @@ import { Params, PriceType, ResourcePage } from 'src/types';
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL } from '../request';
 
-// TODO: decide the best place to put this.
 /**
  * getObjectStorageTypes
  *

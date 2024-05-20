@@ -921,10 +921,6 @@ export const handlers = [
     ];
     return HttpResponse.json(makeResourcePage(configs));
   }),
-  http.get('*/v4/nodebalancers/types', () => {
-    const nodeBalancerTypes = nodeBalancerTypeFactory.buildList(1);
-    return HttpResponse.json(makeResourcePage(nodeBalancerTypes));
-  }),
   http.get('*/v4/object-storage/types', () => {
     const objectStorageTypes = [
       objectStorageTypeFactory.build(),

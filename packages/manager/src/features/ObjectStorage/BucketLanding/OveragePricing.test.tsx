@@ -103,7 +103,7 @@ describe('OveragePricing', async () => {
     expect(getByRole('progressbar')).toBeVisible();
   });
 
-  it('Renders placeholder unknown pricing when there is an error', async () => {
+  it('Renders placeholder unknown pricing when there is an error', () => {
     queryMocks.useObjectStorageTypesQuery.mockReturnValue({
       isError: true,
     });
@@ -115,7 +115,7 @@ describe('OveragePricing', async () => {
     expect(getAllByText(`$${UNKNOWN_PRICE} per GB`)).toHaveLength(1);
   });
 
-  it('Renders placeholder unknown pricing when prices are undefined', async () => {
+  it('Renders placeholder unknown pricing when prices are undefined', () => {
     queryMocks.useObjectStorageTypesQuery.mockReturnValue({
       data: undefined,
     });
