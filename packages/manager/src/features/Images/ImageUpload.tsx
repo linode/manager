@@ -1,5 +1,4 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
@@ -64,7 +63,6 @@ export const ImageUpload = () => {
   const [hasSignedAgreement, setHasSignedAgreement] = useState<boolean>(false);
   const [linodeCLIModalOpen, setLinodeCLIModalOpen] = useState<boolean>(false);
 
-  const queryClient = useQueryClient();
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
