@@ -1,5 +1,5 @@
 import { isEmpty } from '@linode/api-v4';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
@@ -97,10 +97,16 @@ export const LinodeCreatev2 = () => {
     }
   };
 
+  const previousSubmitCount = useRef<number>(0);
+
   useEffect(() => {
-    if (!isEmpty(form.formState.errors)) {
+    if (
+      !isEmpty(form.formState.errors) &&
+      form.formState.submitCount > previousSubmitCount.current
+    ) {
       scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
+    previousSubmitCount.current = form.formState.submitCount;
   }, [form.formState]);
 
   return (
