@@ -33,7 +33,9 @@ export const AppSelect = (props: Props) => {
     name: 'stackscript_id',
   });
 
-  const { data: apps, error, isLoading } = useMarketplaceAppsQuery(true);
+  const { data: stackscripts, error, isLoading } = useMarketplaceAppsQuery(
+    true
+  );
 
   const renderContent = () => {
     if (isLoading) {
@@ -56,24 +58,27 @@ export const AppSelect = (props: Props) => {
 
     return (
       <Grid container spacing={2}>
-        {apps
-          ?.filter((app) => oneClickApps[app.id])
-          .map((app) => (
+        {stackscripts?.map((stackscript) => {
+          if (!oneClickApps[stackscript.id]) {
+            return null;
+          }
+          return (
             <AppSelectionCard
               onSelect={() => {
                 setValue(
                   'stackscript_data',
-                  getDefaultUDFData(app.user_defined_fields)
+                  getDefaultUDFData(stackscript.user_defined_fields)
                 );
-                field.onChange(app.id);
+                field.onChange(stackscript.id);
               }}
-              checked={field.value === app.id}
-              iconUrl={`/assets/${oneClickApps[app.id].logo_url}`}
-              key={app.label}
-              label={app.label}
-              onOpenDetailsDrawer={() => onOpenDetailsDrawer(app.id)}
+              checked={field.value === stackscript.id}
+              iconUrl={`/assets/${oneClickApps[stackscript.id].logo_url}`}
+              key={stackscript.id}
+              label={stackscript.label}
+              onOpenDetailsDrawer={() => onOpenDetailsDrawer(stackscript.id)}
             />
-          ))}
+          );
+        })}
       </Grid>
     );
   };
