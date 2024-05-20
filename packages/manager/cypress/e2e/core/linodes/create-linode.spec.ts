@@ -19,6 +19,7 @@ import {
   VLANFactory,
   LinodeConfigInterfaceFactory,
   LinodeConfigInterfaceFactoryWithVPC,
+  accountFactory,
 } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
@@ -44,8 +45,13 @@ import {
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
+import {
+  checkboxTestId,
+  headerTestId,
+} from 'src/components/DiskEncryption/DiskEncryption';
 
 import type { Config, VLAN, Disk, Region } from '@linode/api-v4';
+import { mockGetAccount } from 'support/intercepts/account';
 
 const mockRegions: Region[] = [
   regionFactory.build({
@@ -510,5 +516,78 @@ describe('create linode', () => {
       containsVisible('eth0 – Public Internet');
       containsVisible(`eth2 – VPC: ${mockVPC.label}`);
     });
+  });
+
+  it('should not have a "Disk Encryption" section visible if the feature flag is off and user does not have capability', () => {
+    // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
+    mockAppendFeatureFlags({
+      linodeDiskEncryption: makeFeatureFlagData(false),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    // Mock account response
+    const mockAccount = accountFactory.build({
+      capabilities: ['Linodes'],
+    });
+
+    mockGetAccount(mockAccount).as('getAccount');
+
+    // intercept request
+    cy.visitWithLogin('/linodes/create');
+    cy.wait(['@getFeatureFlags', '@getClientStream', '@getAccount']);
+
+    // Check if section is visible
+    cy.get(`[data-testid=${headerTestId}]`).should('not.exist');
+  });
+
+  it('should have a "Disk Encryption" section visible if feature flag is on and user has the capability', () => {
+    // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
+    mockAppendFeatureFlags({
+      linodeDiskEncryption: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    // Mock account response
+    const mockAccount = accountFactory.build({
+      capabilities: ['Linodes', 'Disk Encryption'],
+    });
+
+    mockGetAccount(mockAccount).as('getAccount');
+
+    // intercept request
+    cy.visitWithLogin('/linodes/create');
+    cy.wait(['@getFeatureFlags', '@getClientStream', '@getAccount']);
+
+    // Check if section is visible
+    cy.get(`[data-testid="${headerTestId}"]`).should('exist');
+
+    // "Encrypt Disk" checkbox should be disabled if a region that does not support LDE is selected
+    const regionNotSupportingDiskEncryption = regionFactory.build({
+      capabilities: ['Linodes'],
+      country: 'uk',
+      id: 'eu-west',
+      label: 'London, UK',
+    });
+
+    ui.regionSelect.find().click();
+    ui.regionSelect
+      .findItemByRegionLabel(regionNotSupportingDiskEncryption.label)
+      .click();
+
+    cy.get(`[data-testid="${checkboxTestId}"]`).should('be.disabled');
+
+    // "Encrypt Disk" checkbox should be enabled if a region supporting LDE is selected
+    const regionSupportingDiskEncryption = regionFactory.build({
+      capabilities: ['Linodes', 'Disk Encryption'],
+      id: 'us-east',
+      label: 'Newark, NJ',
+    });
+
+    ui.regionSelect.find().click();
+    ui.regionSelect
+      .findItemByRegionLabel(regionSupportingDiskEncryption.label)
+      .click();
+
+    cy.get(`[data-testid="${checkboxTestId}"]`).should('be.enabled');
   });
 });
