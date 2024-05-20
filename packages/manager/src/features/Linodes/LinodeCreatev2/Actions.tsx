@@ -5,6 +5,7 @@ import { useFormContext } from 'react-hook-form';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { ApiAwarenessModal } from '../LinodesCreate/ApiAwarenessModal/ApiAwarenessModal';
 import { getLinodeCreatePayload } from './utilities';
@@ -26,6 +27,8 @@ export const Actions = () => {
     if (await trigger()) {
       // If validation is successful, we open the dialog.
       setIsAPIAwarenessModalOpen(true);
+    } else {
+      scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
   };
 
