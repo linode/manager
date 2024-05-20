@@ -1,3 +1,7 @@
+/**
+ * ONLY USED IN THE LINE GRAPH COMPONENT (Longview)
+ * Delete when LineGraph is sunsetted
+ */
 import { visuallyHidden } from '@mui/utils';
 import { DateTime } from 'luxon';
 import * as React from 'react';
