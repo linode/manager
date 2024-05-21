@@ -43,29 +43,6 @@ yarn workspace linode-manager run test:debug
 
 Test execution will stop at the debugger statement, and you will be able to use Chrome's normal debugger to step through the tests (open `chrome://inspect/#devices` in Chrome).
 
-### Visual debugging
-
-Using `vite-preview`, you can view a preview of the tested component in the browser.
-
-First, add the following lines to your test:
-
-```
-import { debug } from 'vitest-preview';
-
-// Inside your tests
-describe('my test', () => {
-  render(<MyComponent />);
-  debug(); // 👈 Add this line
-}
-```
-
-Start the `vitest-preview` server:
-```
-yarn vitest-preview
-```
-
-Finally, run the test to view the component in the browser.
-
 ### React Testing Library
 
 This library provides a set of tools to render React components from within the Vitest environment. The library's philosophy is that components should be tested as closely as possible to how they are used.
