@@ -23,10 +23,8 @@ export const GlobalNotifications = () => {
   const { data: profile } = useProfile();
   const sessionContext = React.useContext(switchAccountSessionContext);
   const sessionExpirationContext = React.useContext(_sessionExpirationContext);
-  const isChildUser =
-    Boolean(flags.parentChildAccountAccess) && profile?.user_type === 'child';
-  const isProxyUser =
-    Boolean(flags.parentChildAccountAccess) && profile?.user_type === 'proxy';
+  const isChildUser = profile?.user_type === 'child';
+  const isProxyUser = profile?.user_type === 'proxy';
   const { data: securityQuestions } = useSecurityQuestions({
     enabled: isChildUser,
   });

@@ -15,11 +15,6 @@ import {
 } from 'support/intercepts/profile';
 import { randomLabel, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
 
 describe('Personal access tokens', () => {
@@ -278,24 +273,13 @@ describe('Personal access tokens', () => {
     });
     const proxyUserProfile = profileFactory.build({ user_type: 'proxy' });
 
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     mockGetProfile(proxyUserProfile);
     mockGetPersonalAccessTokens([proxyToken]).as('getTokens');
     mockGetAppTokens([]).as('getAppTokens');
     mockRevokePersonalAccessToken(proxyToken.id).as('revokeToken');
 
     cy.visitWithLogin('/profile/tokens');
-    cy.wait([
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getTokens',
-      '@getAppTokens',
-    ]);
+    cy.wait(['@getTokens', '@getAppTokens']);
 
     // Find token in list, confirm "Rename" is disabled and tooltip displays.
     cy.findByText(proxyToken.label)

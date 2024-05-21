@@ -7,13 +7,8 @@ import {
   mockGetUsers,
 } from 'support/intercepts/account';
 import { mockGetSecurityQuestions } from 'support/intercepts/profile';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 import { mockGetProfile } from 'support/intercepts/profile';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { verificationBannerNotice } from 'support/constants/user';
 
 describe('User verification banner', () => {
@@ -45,12 +40,6 @@ describe('User verification banner', () => {
     const mockUserGrants = grantsFactory.build({
       global: { account_access: 'read_write' },
     });
-
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream();
 
     mockGetUsers([mockRestrictedProxyUser]);
     mockGetUser(mockChildUser);
@@ -128,12 +117,6 @@ describe('User verification banner', () => {
     mockSecurityQuestions.security_questions[2].response =
       mockSecurityQuestionAnswers[2];
 
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     mockGetUsers([mockRestrictedProxyUser]).as('getUsers');
     mockGetUser(mockChildUser);
     mockGetUserGrants(mockChildUser.username, mockUserGrants);
@@ -210,12 +193,6 @@ describe('User verification banner', () => {
       mockSecurityQuestionAnswers[1];
     mockSecurityQuestions.security_questions[2].response =
       mockSecurityQuestionAnswers[2];
-
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     mockGetUsers([mockRestrictedProxyUser]).as('getUsers');
     mockGetUser(mockChildUser);

@@ -11,15 +11,10 @@ import {
   mockDeleteUser,
 } from 'support/intercepts/account';
 import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import {
   mockGetProfile,
   mockGetProfileGrants,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
 import { PARENT_USER } from 'src/features/Account/constants';
 
@@ -64,12 +59,6 @@ const initTestUsers = (profile: Profile, enableChildAccountAccess: boolean) => {
   const mockProfileGrants = grantsFactory.build({
     global: { child_account_access: enableChildAccountAccess },
   });
-
-  // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-  mockAppendFeatureFlags({
-    parentChildAccountAccess: makeFeatureFlagData(true),
-  }).as('getFeatureFlags');
-  mockGetFeatureFlagClientstream().as('getClientStream');
 
   // Initially mock user with unrestricted account access.
   mockGetUsers(mockUsers).as('getUsers');
@@ -228,12 +217,6 @@ describe('Users landing page', () => {
       restricted: false,
     });
 
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     // Initially mock user with unrestricted account access.
     mockGetUsers([mockUser]).as('getUsers');
     mockGetUser(mockUser);
@@ -275,12 +258,6 @@ describe('Users landing page', () => {
     const mockUserGrants = grantsFactory.build({
       global: { account_access: 'read_write' },
     });
-
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     mockGetUsers([mockRestrictedProxyUser]).as('getUsers');
     mockGetUser(mockChildUser);
@@ -466,12 +443,6 @@ describe('Users landing page', () => {
       restricted: true,
     });
 
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     mockGetUsers([mockUser]).as('getUsers');
     mockGetUser(mockUser);
     mockGetUserGrantsUnrestrictedAccess(mockUser.username);
@@ -565,7 +536,6 @@ describe('Users landing page', () => {
       expect(intercept.request.body['restricted']).to.equal(newUser.restricted);
     });
     cy.wait('@getUsers');
-    cy.wait(['@getClientStream', '@getFeatureFlags']);
 
     // the new user is displayed in the user list
     cy.findByText(newUser.username).should('be.visible');
@@ -586,12 +556,6 @@ describe('Users landing page', () => {
       email: `${username}@test.com`,
       restricted: false,
     });
-
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     mockGetUsers([mockUser, additionalUser]).as('getUsers');
     mockGetUser(mockUser);

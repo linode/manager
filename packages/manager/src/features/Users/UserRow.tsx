@@ -10,7 +10,6 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAccountUserGrants } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile';
 import { capitalize } from 'src/utilities/capitalize';
@@ -25,15 +24,11 @@ interface Props {
 }
 
 export const UserRow = ({ onDelete, user }: Props) => {
-  const flags = useFlags();
   const { data: grants } = useAccountUserGrants(user.username);
   const { data: profile } = useProfile();
 
-  const isProxyUser = Boolean(
-    flags.parentChildAccountAccess && user.user_type === 'proxy'
-  );
-  const showChildAccountAccessCol =
-    flags.parentChildAccountAccess && profile?.user_type === 'parent';
+  const isProxyUser = Boolean(user.user_type === 'proxy');
+  const showChildAccountAccessCol = profile?.user_type === 'parent';
 
   return (
     <TableRow data-qa-table-row={user.username} key={user.username}>

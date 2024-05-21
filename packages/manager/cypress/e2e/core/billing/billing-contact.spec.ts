@@ -2,16 +2,6 @@ import { mockGetAccount, mockUpdateAccount } from 'support/intercepts/account';
 import { accountFactory } from 'src/factories/account';
 import type { Account } from '@linode/api-v4';
 import { ui } from 'support/ui';
-import { profileFactory } from '@src/factories';
-
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-
-import { mockGetProfile } from 'support/intercepts/profile';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { randomLabel } from 'support/util/random';
 
 /* eslint-disable sonarjs/no-duplicate-string */
 const accountData = accountFactory.build({
@@ -159,34 +149,5 @@ describe('Billing Contact', () => {
     cy.get('[data-qa-contact-summary]').within(() => {
       checkAccountContactDisplay(newAccountData);
     });
-  });
-});
-
-describe('Parent/Child feature disabled', () => {
-  beforeEach(() => {
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(false),
-    });
-    mockGetFeatureFlagClientstream();
-  });
-
-  it('disables company name for Parent users', () => {
-    const mockProfile = profileFactory.build({
-      username: randomLabel(),
-      restricted: false,
-      user_type: 'parent',
-    });
-
-    mockGetProfile(mockProfile);
-    cy.visitWithLogin('/account/billing/edit');
-
-    ui.drawer
-      .findByTitle('Edit Billing Contact Info')
-      .should('be.visible')
-      .within(() => {
-        cy.findByLabelText('Company Name')
-          .should('be.visible')
-          .should('be.disabled');
-      });
   });
 });
