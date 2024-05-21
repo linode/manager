@@ -18,7 +18,7 @@ import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
 import { AssignIPRanges } from 'src/features/VPCs/VPCDetail/AssignIPRanges';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllVPCsQuery } from 'src/queries/vpcs/vpcs';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -149,11 +149,11 @@ export const VPCPanel = (props: VPCPanelProps) => {
         <Link
           onClick={() =>
             fromLinodeCreate &&
-            sendLinodeCreateFormStepEvent({
+            sendLinodeCreateFormInputEvent({
               action: 'click',
               category: 'link',
               createType: (params.type as LinodeCreateType) ?? 'Distributions',
-              formStepName: 'VPC Panel',
+              formInputName: 'VPC Panel',
               label: 'Learn more',
               version: 'v1',
             })
@@ -193,12 +193,12 @@ export const VPCPanel = (props: VPCPanelProps) => {
           <Select
             onChange={(selectedVPC: Item<number, string>) => {
               handleSelectVPC(selectedVPC.value);
-              sendLinodeCreateFormStepEvent({
+              sendLinodeCreateFormInputEvent({
                 action: 'click',
                 category: 'select',
                 createType:
                   (params.type as LinodeCreateType) ?? 'Distributions',
-                formStepName: 'VPC Panel',
+                formInputName: 'VPC Panel',
                 label: 'Assign VPC',
                 version: 'v1',
               });
@@ -233,12 +233,12 @@ export const VPCPanel = (props: VPCPanelProps) => {
                 <LinkButton
                   onClick={() => {
                     setIsVPCCreateDrawerOpen(true);
-                    sendLinodeCreateFormStepEvent({
+                    sendLinodeCreateFormInputEvent({
                       action: 'click',
                       category: 'button',
                       createType:
                         (params.type as LinodeCreateType) ?? 'Distributions',
-                      formStepName: 'VPC Panel',
+                      formInputName: 'VPC Panel',
                       label: 'Create VPC',
                       version: 'v1',
                     });

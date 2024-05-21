@@ -14,7 +14,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import {
   DIFFERENT_PRICE_STRUCTURE_WARNING,
   DOCS_LINK_LABEL_DC_PRICING,
@@ -119,7 +119,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         <DocsLink
           onClick={() =>
             isFromLinodeCreate &&
-            sendLinodeCreateFormStepEvent({
+            sendLinodeCreateFormInputEvent({
               action: 'click',
               category: 'link',
               createType: (params.type as LinodeCreateType) ?? 'Distributions',

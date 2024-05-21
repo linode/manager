@@ -95,6 +95,7 @@ import {
   withAccount,
   WithAccountProps,
 } from 'src/containers/account.container';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -276,7 +277,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           <LandingHeader
             onDocsClick={() => {
               sendLinodeCreateFlowDocsClickEvent('Getting Started');
-              sendLinodeCreateFormStepEvent({
+              sendLinodeCreateFormInputEvent({
                 action: 'click',
                 category: 'link',
                 createType:

@@ -9,7 +9,7 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { useFirewallsQuery } from 'src/queries/firewalls';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { Autocomplete } from '../Autocomplete/Autocomplete';
@@ -42,11 +42,11 @@ export const SelectFirewallPanel = (props: Props) => {
   const handleCreateFirewallClick = () => {
     setIsDrawerOpen(true);
     if (isFromLinodeCreate) {
-      sendLinodeCreateFormStepEvent({
+      sendLinodeCreateFormInputEvent({
         action: 'click',
         category: 'button',
         createType: (queryParams.type as LinodeCreateType) ?? 'Distributions',
-        formStepName: 'Firewall Panel',
+        formInputName: 'Firewall Panel',
         label: 'Create Firewall',
         version: 'v1',
       });
@@ -88,12 +88,12 @@ export const SelectFirewallPanel = (props: Props) => {
         <Autocomplete
           onChange={(_, selection) => {
             handleFirewallChange(selection?.value ?? -1);
-            sendLinodeCreateFormStepEvent({
+            sendLinodeCreateFormInputEvent({
               action: 'click',
               category: 'select',
               createType:
                 (queryParams.type as LinodeCreateType) ?? 'Distributions',
-              formStepName: 'Firewall Panel',
+              formInputName: 'Firewall Panel',
               label: 'Assign Firewall',
               version: 'v1',
             });

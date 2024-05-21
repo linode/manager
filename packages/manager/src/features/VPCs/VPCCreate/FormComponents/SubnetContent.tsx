@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { SubnetFieldState } from 'src/utilities/subnets';
 
@@ -42,12 +42,12 @@ export const SubnetContent = (props: Props) => {
         <Link
           onClick={() =>
             isFromLinodeCreate &&
-            sendLinodeCreateFormStepEvent({
+            sendLinodeCreateFormInputEvent({
               action: 'click',
               category: 'link',
               createType:
                 (queryParams.type as LinodeCreateType) ?? 'Distributions',
-              formStepName: 'VPC Subnets',
+              formInputName: 'VPC Subnets',
               label: 'Learn more',
               version: 'v1',
             })

@@ -62,7 +62,7 @@ import {
 } from 'src/utilities/analytics/customEventAnalytics';
 import {
   sendLinodeCreateFormErrorEvent,
-  sendLinodeCreateFormStepEvent,
+  sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormSubmitEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
@@ -663,7 +663,7 @@ export class LinodeCreate extends React.PureComponent<
                 <DocsLink
                   onClick={() => {
                     sendLinodeCreateFlowDocsClickEvent('Choosing a Plan');
-                    sendLinodeCreateFormStepEvent({
+                    sendLinodeCreateFormInputEvent({
                       action: 'click',
                       category: 'link',
                       createType:
@@ -766,13 +766,13 @@ export class LinodeCreate extends React.PureComponent<
                   and outbound network traffic.{' '}
                   <Link
                     onClick={() =>
-                      sendLinodeCreateFormStepEvent({
+                      sendLinodeCreateFormInputEvent({
                         action: 'click',
                         category: 'link',
                         createType:
                           (this.tabs[selectedTab].title as LinodeCreateType) ??
                           'Distributions',
-                        formStepName: 'Firewall Panel',
+                        formInputName: 'Firewall Panel',
                         label: 'Learn more',
                         version: 'v1',
                       })
@@ -1143,7 +1143,7 @@ export class LinodeCreate extends React.PureComponent<
     // Do not fire the form event if a user is not switching to a different tab.
     // Prevents a double-firing on Marketplace because we manually handle the tab change.
     if (prevTabIndex !== index) {
-      sendLinodeCreateFormStepEvent({
+      sendLinodeCreateFormInputEvent({
         action: 'click',
         category: 'tab',
         createType:

@@ -21,7 +21,7 @@ import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelec
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useAllFirewallsQuery, useCreateFirewall } from 'src/queries/firewalls';
 import { useGrants } from 'src/queries/profile/profile';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { sendLinodeCreateFormStepEvent, sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -221,12 +221,12 @@ export const CreateFirewallDrawer = React.memo(
       <Link
         onClick={() =>
           isFromLinodeCreate &&
-          sendLinodeCreateFormStepEvent({
+          sendLinodeCreateFormInputEvent({
             action: 'click',
             category: 'link',
             createType:
               (queryParams.type as LinodeCreateType) ?? 'Distributions',
-            formStepName: 'Create Firewall Drawer',
+            formInputName: 'Create Firewall Drawer',
             label: 'Learn more',
             version: 'v1',
           })
@@ -377,12 +377,10 @@ export const CreateFirewallDrawer = React.memo(
               onClick: () =>
                 isFromLinodeCreate &&
                 sendLinodeCreateFormStepEvent({
-                  action: 'click',
-                  category: 'button',
+                  paperName: 'Create Firewall',
                   createType:
                     (queryParams.type as LinodeCreateType) ?? 'Distributions',
-                  formStepName: 'Create Firewall Drawer',
-                  label: 'Create Firewall',
+                  labelName: 'Create Firewall',
                   version: 'v1',
                 }),
               type: 'submit',

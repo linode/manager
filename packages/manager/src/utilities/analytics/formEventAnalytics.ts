@@ -6,6 +6,7 @@ import type {
   FormInputEvent,
   FormStepEvent,
   LinodeCreateFlowVersion,
+  LinodeCreateFormInputOptions,
   LinodeCreateFormStepOptions,
 } from './types';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
@@ -38,36 +39,35 @@ export const sendLinodeCreateFormStartEvent = (
 // LinodeCreate.tsx
 // LinodeCreateContainer.tsx
 // SelectRegionPanel.tsx
-export const sendLinodeCreateFormStepEvent = ({
+export const sendLinodeCreateFormInputEvent = ({
   action,
   category,
   createType,
-  formStepName,
+  formInputName,
   label,
+  version,
+}: LinodeCreateFormInputOptions) => {
+  const formPayload: FormInputEvent = {
+    formName: `Linode Create from ${createType} Form ${version} - Form Step${
+      formInputName ? ` - ${formInputName}` : ''
+    }`,
+    inputValue: `${label} - ${action}:${category}`,
+  };
+  sendFormEvent(formPayload, 'formInput');
+};
+
+export const sendLinodeCreateFormStepEvent = ({
+  createType,
+  paperName,
+  labelName,
   version,
 }: LinodeCreateFormStepOptions) => {
   const formPayload: FormStepEvent = {
-    formName: `Linode Create from ${createType} Form ${version} - Form Step${
-      formStepName ? ` - ${formStepName}` : ''
-    }`,
-    stepName: `${label} - ${action}:${category}`,
+    formName: `Linode Create from ${createType} ${version}`,
+    // Form Name - Paper Name - Label Name
+    stepName: `Linode Create from ${createType} ${version} - ${paperName} - ${labelName}`,
   };
   sendFormEvent(formPayload, 'formStepInteraction');
-};
-
-export const sendLinodeCreateFormInputEvent = (
-  formInputName: string,
-  formInputValue: string,
-  createType: LinodeCreateType,
-  version: LinodeCreateFlowVersion
-) => {
-  const formPayload: FormInputEvent = {
-    formName: `Linode Create from ${createType} Form ${version} - Form Input${
-      formInputName ? ` - ${formInputName}` : ''
-    }`,
-    inputValue: formInputValue,
-  };
-  sendFormEvent(formPayload, 'formInput');
 };
 
 // LinodeCreate.tsx
