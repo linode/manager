@@ -63,6 +63,7 @@ export type AccountCapability =
   | 'Akamai Cloud Load Balancer'
   | 'Block Storage'
   | 'Cloud Firewall'
+  | 'Disk Encryption'
   | 'Kubernetes'
   | 'Linodes'
   | 'LKE HA Control Planes'

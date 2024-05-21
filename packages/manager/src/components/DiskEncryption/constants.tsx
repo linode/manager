@@ -16,3 +16,6 @@ export const DISK_ENCRYPTION_DESCRIPTION_NODE_POOL_REBUILD_CAVEAT =
 
 export const DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY =
   'Disk encryption is not available in the selected region.';
+
+export const DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY =
+  'Virtual Machine Backups are not encrypted.';

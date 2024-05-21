@@ -106,6 +106,7 @@ interface State {
   backupsEnabled: boolean;
   customLabel?: string;
   disabledClasses?: LinodeTypeClass[];
+  diskEncryptionEnabled?: boolean;
   errors?: APIError[];
   formIsSubmitting: boolean;
   password: string;
@@ -156,6 +157,7 @@ const defaultState: State = {
   backupsEnabled: false,
   customLabel: undefined,
   disabledClasses: [],
+  diskEncryptionEnabled: true,
   errors: undefined,
   formIsSubmitting: false,
   password: '',
@@ -292,6 +294,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             }
             autoassignIPv4WithinVPC={this.state.autoassignIPv4WithinVPCEnabled}
             checkValidation={this.checkValidation}
+            diskEncryptionEnabled={this.state.diskEncryptionEnabled ?? false}
             firewallId={this.state.selectedfirewallId}
             handleAgreementChange={this.handleAgreementChange}
             handleFirewallChange={this.handleFirewallChange}
@@ -318,6 +321,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             setSelectedVPC={this.handleVPCChange}
             toggleAssignPublicIPv4Address={this.toggleAssignPublicIPv4Address}
             toggleBackupsEnabled={this.toggleBackupsEnabled}
+            toggleDiskEncryptionEnabled={this.toggleDiskEncryptionEnabled}
             togglePrivateIPEnabled={this.togglePrivateIPEnabled}
             typeDisplayInfo={this.getTypeInfo()}
             typesData={extendedTypeData}
@@ -937,6 +941,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   toggleBackupsEnabled = () =>
     this.setState({ backupsEnabled: !this.state.backupsEnabled });
+
+  toggleDiskEncryptionEnabled = () => {
+    this.setState({ diskEncryptionEnabled: !this.state.diskEncryptionEnabled });
+  };
 
   togglePrivateIPEnabled = () =>
     this.setState({ privateIPEnabled: !this.state.privateIPEnabled });
