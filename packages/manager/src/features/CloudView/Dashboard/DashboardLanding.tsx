@@ -112,8 +112,8 @@ export const DashBoardLanding = () => {
       dashbboardPropRef.current.dashboardFilters.resource =
         globalFilter.resource;
       preferenceRef.current.aclpPreference.dashboardId = dashbboardPropRef
-        .current.dashbaord
-        ? dashbboardPropRef.current.dashbaord.id
+        .current.dashboardId
+        ? dashbboardPropRef.current.dashboardId
         : undefined!;
       preferenceRef.current.aclpPreference.region =
         dashbboardPropRef.current.dashboardFilters.region;
@@ -131,8 +131,10 @@ export const DashBoardLanding = () => {
     // set as dashboard filter
     setDashboardProp({
       ...dashboardProp,
-      dashbaord: updatedDashboard.current!,
       dashboardFilters: { ...dashbboardPropRef.current.dashboardFilters },
+      dashboardId: updatedDashboard.current
+        ? updatedDashboard.current.id
+        : undefined!,
     });
 
     handlPrefChange(preferenceRef.current.aclpPreference);
@@ -140,7 +142,7 @@ export const DashBoardLanding = () => {
 
   const handleDashboardChange = (dashboard: Dashboard) => {
     if (!dashboard) {
-      dashbboardPropRef.current.dashbaord = undefined!;
+      dashbboardPropRef.current.dashboardId = undefined!;
       dashbboardPropRef.current.dashboardFilters.serviceType = undefined!;
       updatedDashboard.current = undefined!;
       setDashboardProp({ ...dashbboardPropRef.current });
@@ -172,7 +174,7 @@ export const DashBoardLanding = () => {
         }
       }
     }
-    dashbboardPropRef.current.dashbaord = dashboard;
+    dashbboardPropRef.current.dashboardId = dashboard.id;
     dashbboardPropRef.current.dashboardFilters.serviceType =
       dashboard.service_type;
 
@@ -268,9 +270,10 @@ export const DashBoardLanding = () => {
         </div>
       </Paper>
       <CloudPulseDashboard
-          {...dashboardProp}
-          onDashboardChange={dashbaordChange}
-        />
+        {...dashboardProp}
+        onDashboardChange={dashbaordChange}
+        widgetPreferences={preferenceRef.current.aclpPreference.widgets}
+      />
     </>
   );
 };
