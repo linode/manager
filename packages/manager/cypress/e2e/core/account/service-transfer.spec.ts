@@ -2,7 +2,6 @@
  * @file Tests for service transfer functionality between accounts.
  */
 
-import { createLinode } from '@linode/api-v4/lib/linodes';
 import { getProfile } from '@linode/api-v4/lib/profile';
 import { EntityTransfer, Linode, Profile } from '@linode/api-v4';
 import { entityTransferFactory } from 'src/factories/entityTransfers';
@@ -19,6 +18,7 @@ import {
 } from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
+import { createTestLinode } from 'support/util/linodes';
 import { pollLinodeStatus } from 'support/util/polling';
 import { randomLabel, randomUuid } from 'support/util/random';
 import { visitUrlWithManagedEnabled } from 'support/api/managed';
@@ -249,9 +249,10 @@ describe('Account service transfers', () => {
       const payload = createLinodeRequestFactory.build({
         label: randomLabel(),
         region: chooseRegion().id,
+        booted: true,
       });
 
-      const linode: Linode = await createLinode(payload);
+      const linode: Linode = await createTestLinode(payload);
       await pollLinodeStatus(linode.id, 'running', {
         initialDelay: 15000,
       });

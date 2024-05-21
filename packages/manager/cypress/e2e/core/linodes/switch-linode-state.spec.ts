@@ -17,7 +17,7 @@ describe('switch linode state', () => {
    * - Does not wait for Linode to finish being shut down before succeeding.
    */
   it('powers off a linode from landing page', () => {
-    cy.defer(createTestLinode()).then((linode: Linode) => {
+    cy.defer(createTestLinode({ booted: true })).then((linode: Linode) => {
       cy.visitWithLogin('/linodes');
       cy.get(`[data-qa-linode="${linode.label}"]`)
         .should('be.visible')
@@ -58,7 +58,7 @@ describe('switch linode state', () => {
    * - Waits for Linode to fully shut down before succeeding.
    */
   it('powers off a linode from details page', () => {
-    cy.defer(createTestLinode()).then((linode: Linode) => {
+    cy.defer(createTestLinode({ booted: true })).then((linode: Linode) => {
       cy.visitWithLogin(`/linodes/${linode.id}`);
       cy.contains('RUNNING').should('be.visible');
       cy.findByText(linode.label).should('be.visible');
@@ -156,7 +156,7 @@ describe('switch linode state', () => {
    * - Does not wait for Linode to finish rebooting before succeeding.
    */
   it('reboots a linode from landing page', () => {
-    cy.defer(createTestLinode()).then((linode: Linode) => {
+    cy.defer(createTestLinode({ booted: true })).then((linode: Linode) => {
       cy.visitWithLogin('/linodes');
       cy.get(`[data-qa-linode="${linode.label}"]`)
         .should('be.visible')
@@ -197,7 +197,7 @@ describe('switch linode state', () => {
    * - Waits for Linode to finish rebooting before succeeding.
    */
   it('reboots a linode from details page', () => {
-    cy.defer(createTestLinode()).then((linode: Linode) => {
+    cy.defer(createTestLinode({ booted: true })).then((linode: Linode) => {
       cy.visitWithLogin(`/linodes/${linode.id}`);
       cy.contains('RUNNING').should('be.visible');
       cy.findByText(linode.label).should('be.visible');

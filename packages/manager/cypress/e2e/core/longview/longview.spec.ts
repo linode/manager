@@ -18,7 +18,7 @@ import {
 } from 'support/intercepts/longview';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { createAndBootLinode } from 'support/util/linodes';
+import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomString } from 'support/util/random';
 
 // Timeout if Linode creation and boot takes longer than 1 and a half minutes.
@@ -122,9 +122,10 @@ describe('longview', () => {
 
     const createLinodeAndClient = async () => {
       return Promise.all([
-        createAndBootLinode({
+        createTestLinode({
           root_pass: linodePassword,
           type: 'g6-standard-1',
+          booted: true,
         }),
         createLongviewClient(randomLabel()),
       ]);
