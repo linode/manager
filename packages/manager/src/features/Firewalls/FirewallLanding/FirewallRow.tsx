@@ -22,10 +22,7 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
   const count = getCountOfRules(rules);
 
   return (
-    <TableRow
-      ariaLabel={`Firewall ${label}`}
-      data-testid={`firewall-row-${id}`}
-    >
+    <TableRow data-testid={`firewall-row-${id}`}>
       <TableCell>
         <Link tabIndex={0} to={`/firewalls/${id}`}>
           {label}

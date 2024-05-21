@@ -93,7 +93,6 @@ export const LinodeRow = (props: Props) => {
 
   return (
     <TableRow
-      ariaLabel={label}
       data-qa-linode={label}
       data-qa-loading
       key={id}

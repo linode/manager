@@ -36,7 +36,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
     flags.parentChildAccountAccess && profile?.user_type === 'parent';
 
   return (
-    <TableRow ariaLabel={`User ${user.username}`} key={user.username}>
+    <TableRow data-qa-table-row={user.username} key={user.username}>
       <TableCell>
         <Stack alignItems="center" direction="row" spacing={1.5}>
           <GravatarByEmail email={user.email} />

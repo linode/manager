@@ -9,6 +9,7 @@ import { Typography } from 'src/components/Typography';
 import { ExtendedIssue } from 'src/queries/managed/types';
 
 import ActionMenu from './MonitorActionMenu';
+import { statusIconMap, statusTextMap } from './monitorMaps';
 import {
   StyledGrid,
   StyledLink,
@@ -16,7 +17,6 @@ import {
   StyledTableRow,
   StyledTypography,
 } from './MonitorRow.styles';
-import { statusIconMap, statusTextMap } from './monitorMaps';
 
 interface MonitorRowProps {
   issues: ExtendedIssue[];
@@ -45,7 +45,6 @@ export const MonitorRow = (props: MonitorRowProps) => {
 
   return (
     <StyledTableRow
-      ariaLabel={`Monitor ${monitor.label}`}
       data-qa-monitor-cell={monitor.id}
       data-testid={'monitor-row'}
       key={monitor.id}
