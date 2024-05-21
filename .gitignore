@@ -142,6 +142,3 @@ packages/manager/bundle_analyzer_report.html
 
 # vitepress
 docs/.vitepress/cache
-
-# vitest-preview
-.vitest-preview
