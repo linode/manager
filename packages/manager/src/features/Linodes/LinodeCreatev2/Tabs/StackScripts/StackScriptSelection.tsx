@@ -26,21 +26,19 @@ export const StackScriptSelection = () => {
     // Reset the selected image, the selected StackScript, and the StackScript data when changing tabs.
     reset((prev) => ({
       ...prev,
-      image: null,
-      stackscript_data: null,
-      stackscript_id: null,
+      image: undefined,
+      stackscript_data: undefined,
+      stackscript_id: undefined,
     }));
   };
+
+  const error = formState.errors.stackscript_id?.message;
+
   return (
     <Paper>
       <Typography variant="h2">Create From:</Typography>
-      {formState.errors.stackscript_id && (
-        <Notice
-          spacingBottom={0}
-          spacingTop={8}
-          text={formState.errors.stackscript_id.message}
-          variant="error"
-        />
+      {error && (
+        <Notice spacingBottom={0} spacingTop={8} text={error} variant="error" />
       )}
       <Tabs
         index={getStackScriptTabIndex(params.subtype)}
