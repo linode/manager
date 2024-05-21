@@ -142,7 +142,7 @@ export interface MonitorServiceType {
 }
 
 export interface MetricDefinitions {
-  available_metrics: AvailableMetrics[];
+  data: AvailableMetrics[];
 }
 
 export interface AvailableMetrics {
@@ -151,12 +151,13 @@ export interface AvailableMetrics {
   metric_type: string;
   unit: string;
   scrape_interval: string;
-  available_aggregate_functions: AvailableAggregateFunctions[];
+  available_aggregate_functions: Array<string>;
+  dimensions: Dimension[];
 }
 
-export interface AvailableAggregateFunctions {
+export interface Dimension {
   label: string;
-  dim_label: string;
+  dimension_label: string;
   values: string[];
 }
 

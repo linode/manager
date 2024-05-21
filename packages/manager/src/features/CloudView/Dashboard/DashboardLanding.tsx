@@ -56,7 +56,6 @@ export const DashBoardLanding = () => {
 
   // since preference is mutable and savable
   const preferenceRef = React.useRef<any>();
-  const lastChanged = React.useRef<string>('');
 
   const { data: preferences, refetch: refetchPreferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
@@ -101,7 +100,7 @@ export const DashBoardLanding = () => {
       if (
         preferences &&
         preferences.aclpPreference.region !=
-          preferenceRef.current.aclpPreference.region
+        preferenceRef.current.aclpPreference.region
       ) {
         preferenceRef.current.aclpPreference.resources = [];
         dashbboardPropRef.current.dashboardFilters.resource = [];
@@ -112,8 +111,8 @@ export const DashBoardLanding = () => {
       dashbboardPropRef.current.dashboardFilters.resource =
         globalFilter.resource;
       preferenceRef.current.aclpPreference.dashboardId = dashbboardPropRef
-        .current.dashbaord
-        ? dashbboardPropRef.current.dashbaord.id
+        .current.dashboard
+        ? dashbboardPropRef.current.dashboard.id
         : undefined!;
       preferenceRef.current.aclpPreference.region =
         dashbboardPropRef.current.dashboardFilters.region;
@@ -126,12 +125,10 @@ export const DashBoardLanding = () => {
       dashbboardPropRef.current.dashboardFilters.step = globalFilter.step;
       preferenceRef.current.aclpPreference.interval = globalFilter.interval;
     }
-
-    lastChanged.current = 'filter';
     // set as dashboard filter
     setDashboardProp({
       ...dashboardProp,
-      dashbaord: updatedDashboard.current!,
+      dashboard: updatedDashboard.current!,
       dashboardFilters: { ...dashbboardPropRef.current.dashboardFilters },
     });
 
@@ -140,7 +137,7 @@ export const DashBoardLanding = () => {
 
   const handleDashboardChange = (dashboard: Dashboard) => {
     if (!dashboard) {
-      dashbboardPropRef.current.dashbaord = undefined!;
+      dashbboardPropRef.current.dashboard = undefined!;
       dashbboardPropRef.current.dashboardFilters.serviceType = undefined!;
       updatedDashboard.current = undefined!;
       setDashboardProp({ ...dashbboardPropRef.current });
@@ -167,16 +164,15 @@ export const DashBoardLanding = () => {
           ) {
             dashboard.widgets[i].size =
               preferences.aclpPreference.widgets[j].size;
+            dashboard.widgets[i].aggregate_function = preferences.aclpPreference.widgets[j].aggregateFunction;
             break;
           }
         }
       }
     }
-    dashbboardPropRef.current.dashbaord = dashboard;
+    dashbboardPropRef.current.dashboard = dashboard;
     dashbboardPropRef.current.dashboardFilters.serviceType =
       dashboard.service_type;
-
-    lastChanged.current = 'filter';
 
     setDashboardProp({ ...dashbboardPropRef.current });
     updatedDashboard.current = { ...dashboard };
@@ -187,7 +183,7 @@ export const DashBoardLanding = () => {
       if (
         preferences &&
         preferences.aclpPreference.dashboardId !=
-          preferenceRef.current.aclpPreference.dashboardId
+        preferenceRef.current.aclpPreference.dashboardId
       ) {
         preferenceRef.current.aclpPreference.resources = [];
         dashbboardPropRef.current.dashboardFilters.resource = [];
@@ -213,15 +209,14 @@ export const DashBoardLanding = () => {
     // todo, implement the reset view function
   };
 
-  const dashbaordChange = (dashboardObj: Dashboard) => {
+  const dashboardChange = (dashboardObj: Dashboard) => {
     // todo, whenever a change in dashboard happens
     updatedDashboard.current = { ...dashboardObj };
-    lastChanged.current = 'dashboard';
 
     if (dashboardObj.widgets) {
       preferenceRef.current.aclpPreference.widgets = dashboardObj.widgets.map(
         (obj) => {
-          return { label: obj.label, size: obj.size };
+          return { label: obj.label, size: obj.size, aggregateFunction: obj.aggregate_function };
         }
       );
       // call preferences
@@ -267,10 +262,16 @@ export const DashBoardLanding = () => {
           </div>
         </div>
       </Paper>
+      {dashboardProp.dashboardFilters.serviceType &&
+      dashboardProp.dashboardFilters.region &&
+      dashboardProp.dashboardFilters.resource &&
+      dashboardProp.dashboardFilters.resource.length > 0 &&
+      dashboardProp.dashboardFilters.timeRange &&
+      dashboardProp.dashboardFilters.step &&
       <CloudPulseDashboard
-          {...dashboardProp}
-          onDashboardChange={dashbaordChange}
-        />
+        {...dashboardProp}
+        onDashboardChange={dashboardChange}
+      />}
     </>
   );
 };

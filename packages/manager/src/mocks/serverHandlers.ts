@@ -1423,7 +1423,7 @@ export const handlers = [
             type: 'g6-standard-1',
             updated: '2020-01-01',
             watchdog_enabled: true,
-          }
+          },
         ])
       )
     );
