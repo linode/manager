@@ -137,6 +137,7 @@ export const ImageUpload = () => {
         if (error.field) {
           form.setError(error.field, { message: error.reason });
         } else {
+          window.scrollTo({ top: 0 });
           form.setError('root', { message: error.reason });
         }
       }
@@ -196,8 +197,11 @@ export const ImageUpload = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <TextField
-                  disabled={isImageCreateRestricted}
+                  disabled={
+                    isImageCreateRestricted || form.formState.isSubmitting
+                  }
                   errorText={fieldState.error?.message}
+                  inputRef={field.ref}
                   label="Label"
                   noMarginTop
                   onBlur={field.onBlur}
@@ -213,6 +217,9 @@ export const ImageUpload = () => {
                 <Controller
                   render={({ field }) => (
                     <Checkbox
+                      disabled={
+                        isImageCreateRestricted || form.formState.isSubmitting
+                      }
                       toolTipText={
                         <Typography>
                           Only check this box if your Custom Image is compatible
@@ -224,7 +231,6 @@ export const ImageUpload = () => {
                         </Typography>
                       }
                       checked={field.value ?? false}
-                      disabled={isImageCreateRestricted}
                       onChange={field.onChange}
                       text="This image is cloud-init compatible"
                       toolTipInteractive
@@ -238,11 +244,14 @@ export const ImageUpload = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <RegionSelect
+                  disabled={
+                    isImageCreateRestricted || form.formState.isSubmitting
+                  }
                   textFieldProps={{
+                    inputRef: field.ref,
                     onBlur: field.onBlur,
                   }}
                   currentCapability={undefined}
-                  disabled={isImageCreateRestricted}
                   errorText={fieldState.error?.message}
                   handleSelection={field.onChange}
                   helperText="For fastest initial upload, select the region that is geographically closest to you. Once uploaded you will be able to deploy the image to other regions."
@@ -258,6 +267,9 @@ export const ImageUpload = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <TagsInput
+                  disabled={
+                    isImageCreateRestricted || form.formState.isSubmitting
+                  }
                   onChange={(items) =>
                     field.onChange(items.map((item) => item.value))
                   }
@@ -265,7 +277,6 @@ export const ImageUpload = () => {
                     field.value?.map((tag) => ({ label: tag, value: tag })) ??
                     []
                   }
-                  disabled={isImageCreateRestricted}
                   tagError={fieldState.error?.message}
                 />
               )}
@@ -275,7 +286,9 @@ export const ImageUpload = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <TextField
-                  disabled={isImageCreateRestricted}
+                  disabled={
+                    isImageCreateRestricted || form.formState.isSubmitting
+                  }
                   errorText={fieldState.error?.message}
                   label="Description"
                   multiline
@@ -393,7 +406,7 @@ export const ImageUpload = () => {
         {({ handleCancel, handleConfirm, isModalOpen }) => {
           return (
             <ConfirmationDialog
-              actions={() => (
+              actions={
                 <ActionsPanel
                   primaryButtonProps={{
                     label: 'Leave Page',
@@ -404,7 +417,7 @@ export const ImageUpload = () => {
                     onClick: handleCancel,
                   }}
                 />
-              )}
+              }
               onClose={handleCancel}
               open={isModalOpen}
               title="Leave this page?"
