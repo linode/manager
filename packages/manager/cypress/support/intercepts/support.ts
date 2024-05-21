@@ -26,6 +26,21 @@ export const mockCreateSupportTicket = (
 };
 
 /**
+ * Interepts request to attach file to support ticket and mocks response.
+ *
+ * @param ticketId - Support ticket ID for which to intercept request.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockAttachSupportTicketFile = (ticketId: number) => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`support/tickets/${ticketId}/attachments`),
+    {}
+  );
+};
+
+/**
  * Intercepts request to fetch a support ticket and mocks response.
  *
  * @param ticket - Support ticket object with which to mock response.

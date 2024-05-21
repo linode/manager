@@ -86,7 +86,7 @@ const TrustedDevices = () => {
 
     return data?.data.map((device) => {
       return (
-        <TableRow ariaLabel={`Device ${device.id}`} key={device.id}>
+        <TableRow key={device.id}>
           <TableCell>{device.user_agent}</TableCell>
           <TableCell>{device.last_remote_addr}</TableCell>
           <TableCell>

@@ -60,7 +60,7 @@ import { MapState } from 'src/store/types';
 import {
   sendCreateLinodeEvent,
   sendLinodeCreateFlowDocsClickEvent,
-} from 'src/utilities/analytics';
+} from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { isEURegion } from 'src/utilities/formatRegion';
@@ -72,12 +72,17 @@ import { ExtendedIP } from 'src/utilities/ipUtils';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
 
 import { deriveDefaultLabel } from './deriveDefaultLabel';
 import LinodeCreate from './LinodeCreate';
-import { HandleSubmit, Info, LinodeCreateValidation, TypeInfo } from './types';
+import {
+  HandleSubmit,
+  Info,
+  LinodeCreateType,
+  LinodeCreateValidation,
+  TypeInfo,
+} from './types';
 
 import type {
   CreateLinodeRequest,
@@ -86,6 +91,7 @@ import type {
   LinodeTypeClass,
   PriceObject,
 } from '@linode/api-v4/lib/linodes';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -264,9 +270,17 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         <ProductInformationBanner bannerLocation="LinodeCreate" />
         <Grid className="m0" container spacing={0}>
           <LandingHeader
-            onDocsClick={() =>
-              sendLinodeCreateFlowDocsClickEvent('Getting Started')
-            }
+            onDocsClick={() => {
+              sendLinodeCreateFlowDocsClickEvent('Getting Started');
+              sendLinodeCreateFormStepEvent({
+                action: 'click',
+                category: 'link',
+                createType:
+                  (this.params.type as LinodeCreateType) ?? 'Distributions',
+                label: 'Getting Started',
+                version: 'v1',
+              });
+            }}
             docsLabel="Getting Started"
             docsLink="https://www.linode.com/docs/guides/platform/get-started/"
             title="Create"
@@ -339,13 +353,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       this.setState({ errors: undefined, showApiAwarenessModal: true });
     } catch (error) {
       const processedErrors = convertYupToLinodeErrors(error);
-      this.setState(
-        () => ({
-          errors: getAPIErrorOrDefault(processedErrors),
-          formIsSubmitting: false,
-        }),
-        () => scrollErrorIntoView()
-      );
+      this.setState(() => ({
+        errors: getAPIErrorOrDefault(processedErrors),
+        formIsSubmitting: false,
+      }));
     }
   };
 
@@ -727,19 +738,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (payload.root_pass) {
       const passwordError = validatePassword(payload.root_pass);
       if (passwordError) {
-        this.setState(
-          {
-            errors: [
-              {
-                field: 'root_pass',
-                reason: passwordError,
-              },
-            ],
-          },
-          () => {
-            scrollErrorIntoView();
-          }
-        );
+        this.setState({
+          errors: [
+            {
+              field: 'root_pass',
+              reason: passwordError,
+            },
+          ],
+        });
         return;
       }
     }
@@ -752,24 +758,19 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         )!,
       });
       if (error) {
-        this.setState(
-          {
-            errors: [
-              {
-                field: 'placement_group',
-                reason: `${this.state.placementGroupSelection?.label} (${
-                  this.state.placementGroupSelection?.affinity_type ===
-                  'affinity:local'
-                    ? 'Affinity'
-                    : 'Anti-affinity'
-                }) doesn't have any capacity for this Linode.`,
-              },
-            ],
-          },
-          () => {
-            scrollErrorIntoView();
-          }
-        );
+        this.setState({
+          errors: [
+            {
+              field: 'placement_group',
+              reason: `${this.state.placementGroupSelection?.label} (${
+                this.state.placementGroupSelection?.affinity_type ===
+                'affinity:local'
+                  ? 'Affinity'
+                  : 'Anti-affinity'
+              }) doesn't have any capacity for this Linode.`,
+            },
+          ],
+        });
         return;
       }
     }
@@ -788,17 +789,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       // Situation: 'Auto-assign a VPC IPv4 address for this Linode in the VPC' checkbox
       // unchecked but a valid VPC IPv4 not provided
       if (!this.state.autoassignIPv4WithinVPCEnabled && !validVPCIPv4) {
-        return this.setState(
-          () => ({
-            errors: [
-              {
-                field: 'ipv4.vpc',
-                reason: 'Must be a valid IPv4 address, e.g. 192.168.2.0',
-              },
-            ],
-          }),
-          () => scrollErrorIntoView()
-        );
+        return this.setState(() => ({
+          errors: [
+            {
+              field: 'ipv4.vpc',
+              reason: 'Must be a valid IPv4 address, e.g. 192.168.2.0',
+            },
+          ],
+        }));
       }
     }
 
@@ -808,58 +806,44 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * if create, run create action
      */
     if (createType === 'fromLinode' && !linodeID) {
-      return this.setState(
-        () => ({
-          errors: [
-            {
-              field: 'linode_id',
-              reason: 'You must select a Linode to clone from',
-            },
-          ],
-        }),
-        () => scrollErrorIntoView()
-      );
+      return this.setState(() => ({
+        errors: [
+          {
+            field: 'linode_id',
+            reason: 'You must select a Linode to clone from',
+          },
+        ],
+      }));
     }
 
     if (createType === 'fromBackup' && !this.state.selectedBackupID) {
       /* a backup selection is also required */
-      this.setState(
-        {
-          errors: [{ field: 'backup_id', reason: 'You must select a Backup.' }],
-        },
-        () => {
-          scrollErrorIntoView();
-        }
-      );
+      this.setState({
+        errors: [{ field: 'backup_id', reason: 'You must select a Backup.' }],
+      });
       return;
     }
 
     if (createType === 'fromStackScript' && !this.state.selectedStackScriptID) {
-      return this.setState(
-        () => ({
-          errors: [
-            {
-              field: 'stackscript_id',
-              reason: 'You must select a StackScript.',
-            },
-          ],
-        }),
-        () => scrollErrorIntoView()
-      );
+      return this.setState(() => ({
+        errors: [
+          {
+            field: 'stackscript_id',
+            reason: 'You must select a StackScript.',
+          },
+        ],
+      }));
     }
 
     if (createType === 'fromApp' && !this.state.selectedStackScriptID) {
-      return this.setState(
-        () => ({
-          errors: [
-            {
-              field: 'stackscript_id',
-              reason: 'You must select a Marketplace App.',
-            },
-          ],
-        }),
-        () => scrollErrorIntoView()
-      );
+      return this.setState(() => ({
+        errors: [
+          {
+            field: 'stackscript_id',
+            reason: 'You must select a Marketplace App.',
+          },
+        ],
+      }));
     }
 
     const request =
@@ -927,13 +911,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         this.props.history.push(`/linodes/${response.id}`);
       })
       .catch((error) => {
-        this.setState(
-          () => ({
-            errors: getAPIErrorOrDefault(error),
-            formIsSubmitting: false,
-          }),
-          () => scrollErrorIntoView()
-        );
+        this.setState(() => ({
+          errors: getAPIErrorOrDefault(error),
+          formIsSubmitting: false,
+        }));
       });
   };
 
