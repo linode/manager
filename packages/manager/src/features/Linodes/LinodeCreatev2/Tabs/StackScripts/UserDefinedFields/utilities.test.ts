@@ -46,6 +46,7 @@ describe('getDefaultUDFData', () => {
     ];
 
     expect(getDefaultUDFData(udfs)).toStrictEqual({
+      password: '',
       username: 'admin',
     });
   });

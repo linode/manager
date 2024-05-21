@@ -30,7 +30,7 @@ export const NodeBalancerTableRow = (props: Props) => {
     0;
 
   return (
-    <TableRow ariaLabel={label} key={id}>
+    <TableRow key={id}>
       <TableCell>
         <Link tabIndex={0} to={`/nodebalancers/${id}`}>
           {label}
