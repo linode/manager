@@ -62,7 +62,6 @@ export interface Flags {
   databaseResize: boolean;
   databases: boolean;
   disableLargestGbPlans: boolean;
-  firewallNodebalancer: boolean;
   gecko: boolean; // @TODO gecko: delete this after next release
   gecko2: GeckoFlag;
   gpuv2: gpuV2;
@@ -80,7 +79,6 @@ export interface Flags {
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
-  recharts: boolean;
   referralBannerText: ReferralBannerText;
   selfServeBetas: boolean;
   soldOutChips: boolean;

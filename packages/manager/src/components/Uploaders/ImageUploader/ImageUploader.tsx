@@ -29,7 +29,7 @@ import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { imageQueries, useUploadImageMutation } from 'src/queries/images';
 import { redirectToLogin } from 'src/session';
 import { setPendingUpload } from 'src/store/pendingUpload';
-import { sendImageUploadEvent } from 'src/utilities/analytics';
+import { sendImageUploadEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 interface ImageUploaderProps {

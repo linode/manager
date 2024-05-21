@@ -6,7 +6,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Typography } from 'src/components/Typography';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useLinodeBackupsCancelMutation } from 'src/queries/linodes/backups';
-import { sendBackupsDisabledEvent } from 'src/utilities/analytics';
+import { sendBackupsDisabledEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 interface Props {
   isOpen: boolean;

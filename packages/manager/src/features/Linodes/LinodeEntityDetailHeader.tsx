@@ -18,7 +18,7 @@ import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/L
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
-import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics';
+import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
 import { StyledLink } from './LinodeEntityDetail.styles';

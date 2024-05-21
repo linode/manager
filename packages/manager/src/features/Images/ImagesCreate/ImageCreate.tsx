@@ -5,7 +5,11 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
-const CreateImageTab = React.lazy(() => import('./CreateImageTab'));
+const CreateImageTab = React.lazy(() =>
+  import('./CreateImageTab').then((module) => ({
+    default: module.CreateImageTab,
+  }))
+);
 const ImageUpload = React.lazy(() => import('../ImageUpload'));
 
 export const ImageCreate = () => {
@@ -32,16 +36,7 @@ export const ImageCreate = () => {
 
   const tabs: NavTab[] = [
     {
-      render: (
-        <CreateImageTab
-          changeDescription={handleSetDescription}
-          changeIsCloudInit={() => setIsCloudInit(!isCloudInit)}
-          changeLabel={handleSetLabel}
-          description={description}
-          isCloudInit={isCloudInit}
-          label={label}
-        />
-      ),
+      render: <CreateImageTab />,
       routeName: `${url}/disk`,
       title: 'Capture Image',
     },

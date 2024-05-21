@@ -247,6 +247,19 @@ export const mockDeleteLinodes = (
 };
 
 /**
+ * Intercepts DELETE request to delete linode.
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptDeleteLinode = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept('DELETE', apiMatcher(`linode/instances/${linodeId}`));
+};
+
+/**
  * Intercepts GET request to fetch Linode types and mocks the response.
  *
  * @param types - Linode types with which to mock response.
@@ -408,5 +421,20 @@ export const mockGetLinodeKernel = (
     'GET',
     apiMatcher(`linode/kernels/${kernelId}`),
     makeResponse(mockKernel)
+  );
+};
+
+/* Intercepts POST request to get a Linode Resize.
+ *
+ * @param linodeId - ID of Linode to fetch.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptLinodeResize = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/resize`)
   );
 };

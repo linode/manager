@@ -14,7 +14,7 @@ import {
   mockGetPlacementGroups,
   mockUnassignPlacementGroupLinodes,
   mockDeletePlacementGroupError,
-  mockUnassignPlacementGroupError,
+  mockUnassignPlacementGroupLinodesError,
 } from 'support/intercepts/placement-groups';
 import {
   accountFactory,
@@ -205,7 +205,7 @@ describe('Placement Group deletion', () => {
       });
 
     // Click "Delete" button next to the mock Placement Group, mock an HTTP 500 error and confirm UI displays the message.
-    mockUnassignPlacementGroupError(
+    mockUnassignPlacementGroupLinodesError(
       mockPlacementGroup.id,
       PlacementGroupErrorMessage
     ).as('UnassignPlacementGroupError');
@@ -477,7 +477,7 @@ describe('Placement Group deletion', () => {
       });
 
     // Click "Delete" button next to the mock Placement Group, mock an HTTP 500 error and confirm UI displays the message.
-    mockUnassignPlacementGroupError(
+    mockUnassignPlacementGroupLinodesError(
       mockPlacementGroup.id,
       PlacementGroupErrorMessage
     ).as('UnassignPlacementGroupError');
