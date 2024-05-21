@@ -3,6 +3,7 @@ import { paginateResponse } from 'support/util/paginate';
 
 import type { PlacementGroup } from '@linode/api-v4';
 import { makeResponse } from 'support/util/response';
+import { makeErrorResponse } from 'support/util/errors';
 
 /**
  * Intercepts GET request to fetch Placement Groups and mocks response.
@@ -18,6 +19,23 @@ export const mockGetPlacementGroups = (
     'GET',
     apiMatcher('placement/groups*'),
     paginateResponse(placementGroups)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch a Placement Group and mocks response.
+ *
+ * @param placementGroup - Placement Group to intercept and mock.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetPlacementGroup = (
+  placementGroup: PlacementGroup
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`placement/groups/${placementGroup.id}`),
+    makeResponse(placementGroup)
   );
 };
 
@@ -56,7 +74,48 @@ export const mockDeletePlacementGroup = (
 };
 
 /**
- * Intercepts POST request to unassign Linode from Placement Group and mocks response.
+ * Intercepts POST request to assign Linodes to Placement Group and mocks response.
+ *
+ * @param placementGroupId - ID of Placement Group for which to intercept assign request.
+ * @param placementGroup - Placement Group object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockAssignPlacementGroupLinodes = (
+  placementGroupId: number,
+  placementGroup: PlacementGroup
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`placement/groups/${placementGroupId}/assign`),
+    makeResponse(placementGroup)
+  );
+};
+
+/**
+ * Intercepts POST request to assign Linodes to Placement Group and mocks an HTTP error response.
+ *
+ * By default, a 500 response is mocked.
+ *
+ * @param errorMessage - Optional error message with which to mock response.
+ * @param errorCode - Optional error code with which to mock response. Default is `500`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockAssignPlacementGroupLinodesError = (
+  placementGroupId: number,
+  errorMessage: string = 'An error has occurred',
+  errorCode: number = 500
+) => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`placement/groups/${placementGroupId}/assign`),
+    makeErrorResponse(errorMessage, errorCode)
+  );
+};
+
+/**
+ * Intercepts POST request to unassign Linodes from Placement Group and mocks response.
  *
  * @param placementGroupId - ID of Placement Group for which to intercept unassign request.
  * @param placementGroup - Placement Group object with which to mock response.
@@ -71,5 +130,27 @@ export const mockUnassignPlacementGroupLinodes = (
     'POST',
     apiMatcher(`placement/groups/${placementGroupId}/unassign`),
     makeResponse(placementGroup)
+  );
+};
+
+/**
+ * Intercepts POST request to unassign Linodes from Placement Groups and mocks an HTTP error response.
+ *
+ * By default, a 500 response is mocked.
+ *
+ * @param errorMessage - Optional error message with which to mock response.
+ * @param errorCode - Optional error code with which to mock response. Default is `500`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUnassignPlacementGroupLinodesError = (
+  placementGroupId: number,
+  errorMessage: string = 'An error has occurred',
+  errorCode: number = 500
+) => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`placement/groups/${placementGroupId}/unassign`),
+    makeErrorResponse(errorMessage, errorCode)
   );
 };

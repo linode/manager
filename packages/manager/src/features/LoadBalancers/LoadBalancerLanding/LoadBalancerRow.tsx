@@ -25,10 +25,7 @@ export const LoadBalancerRow = ({ handlers, loadBalancer }: Props) => {
   const { hostname, id, label, regions } = loadBalancer;
 
   return (
-    <TableRow
-      ariaLabel={`Load Balancer ${label}`}
-      key={`loadbalancer-row-${id}`}
-    >
+    <TableRow key={`loadbalancer-row-${id}`}>
       <TableCell>
         <Link to={`/loadbalancers/${id}`}>{label}</Link>
       </TableCell>

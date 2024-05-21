@@ -142,11 +142,7 @@ export const APITokenTable = (props: Props) => {
 
   const renderRows = (tokens: Token[]) => {
     return tokens.map((token: Token) => (
-      <TableRow
-        ariaLabel={token.label}
-        data-qa-table-row={token.label}
-        key={token.id}
-      >
+      <TableRow data-qa-table-row={token.label} key={token.id}>
         <TableCell data-qa-token-label>{token.label}</TableCell>
         <TableCell>
           <Typography data-qa-token-created variant="body1">
