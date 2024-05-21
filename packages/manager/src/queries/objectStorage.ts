@@ -419,11 +419,9 @@ const getAllObjectStorageTypes = () =>
   );
 
 export const useObjectStorageTypesQuery = (enabled = true) =>
-  useQuery<PriceType[], APIError[]>(
-    [`${queryKey}-types`],
-    getAllObjectStorageTypes,
-    {
-      ...queryPresets.oneTimeFetch,
-      enabled,
-    }
-  );
+  useQuery<PriceType[], APIError[]>({
+    queryFn: getAllObjectStorageTypes,
+    queryKey: [queryKey, 'types'],
+    ...queryPresets.oneTimeFetch,
+    enabled,
+  });

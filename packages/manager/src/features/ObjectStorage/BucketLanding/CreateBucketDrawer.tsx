@@ -27,11 +27,11 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendCreateBucketEvent } from 'src/utilities/analytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import ClusterSelect from './ClusterSelect';
 import { OveragePricing } from './OveragePricing';
-import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
 interface Props {
   isOpen: boolean;
@@ -80,7 +80,7 @@ export const CreateBucketDrawer = (props: Props) => {
     data: types,
     isError: isErrorTypes,
     isLoading: isLoadingTypes,
-  } = useObjectStorageTypesQuery();
+  } = useObjectStorageTypesQuery(isOpen);
 
   const isInvalidPrice = !types || isErrorTypes;
 
