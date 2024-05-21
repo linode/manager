@@ -1,6 +1,5 @@
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
-
 import type { PlacementGroup } from '@linode/api-v4';
 import { makeResponse } from 'support/util/response';
 import { makeErrorResponse } from 'support/util/errors';
