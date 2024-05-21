@@ -37,7 +37,8 @@ describe('Cloud View Graph Widget', () => {
 
   it('renders a line graph with required widgets', () => {
     let widget = {} as Widgets;
-    let metricDefinitions = {} as MetricDefinitions;
+    let metricDefinitions = { data: [{}] } as MetricDefinitions;
+    metricDefinitions.data[0].available_aggregate_functions = [];
 
     const handleWidgetChange = (widgetParam: Widgets) => {
       // dummy
@@ -80,9 +81,11 @@ describe('Cloud View Graph Widget', () => {
         globalFilters={dashboardFilters}
         errorLabel={errorLabel}
         handleWidgetChange={handleWidgetChange}
-        metricDefinition={metricDefinitions}
+        availableMetrics={metricDefinitions.data[0]}
         unit={'%'}
-        widget={widget} authToken={''}      />
+        widget={widget}
+        authToken={''}
+      />
     );
 
     expect(getByTestId('ZoomOutMapIcon')).toBeInTheDocument();
@@ -96,7 +99,8 @@ describe('Cloud View Graph Widget', () => {
 
   it('renders a circle progress if metrics API is still loading', () => {
     let widget = {} as Widgets;
-    let metricDefinitions = {} as MetricDefinitions;
+    let metricDefinitions = { data: [{}] } as MetricDefinitions;
+    metricDefinitions.data[0].available_aggregate_functions = [];
 
     const handleWidgetChange = (widgetParam: Widgets) => {
       // dummy
@@ -139,9 +143,11 @@ describe('Cloud View Graph Widget', () => {
         globalFilters={dashboardFilters}
         errorLabel={errorLabel}
         handleWidgetChange={handleWidgetChange}
-        metricDefinition={metricDefinitions}
+        availableMetrics={metricDefinitions.data[0]}
         unit={'%'}
-        widget={widget} authToken={''}      />
+        widget={widget}
+        authToken={''}
+      />
     );
 
     expect(getByTestId(circleProgress)).toBeInTheDocument();
@@ -153,7 +159,7 @@ describe('Cloud View Graph Widget', () => {
 
   it('renders a error state progress if metrics API response is error', () => {
     let widget = {} as Widgets;
-    let metricDefinitions = {} as MetricDefinitions;
+    let metricDefinitions = { data: [] } as MetricDefinitions;
 
     const handleWidgetChange = (widgetParam: Widgets) => {
       // dummy
@@ -187,9 +193,11 @@ describe('Cloud View Graph Widget', () => {
         globalFilters={dashboardFilters}
         errorLabel={errorLabel}
         handleWidgetChange={handleWidgetChange}
-        metricDefinition={metricDefinitions}
+        availableMetrics={metricDefinitions.data[0]}
         unit={'%'}
-        widget={widget} authToken={''}      />
+        widget={widget}
+        authToken={''}
+      />
     );
 
     expect(getByTestId('ErrorOutlineIcon')).toBeInTheDocument();
@@ -198,7 +206,8 @@ describe('Cloud View Graph Widget', () => {
   }),
     it('renders a error state progress if metrics API response is error with default error message', () => {
       let widget = {} as Widgets;
-      let metricDefinitions = {} as MetricDefinitions;
+      let metricDefinitions = { data: [{}] } as MetricDefinitions;
+      metricDefinitions.data[0].available_aggregate_functions = [];
 
       const handleWidgetChange = (widgetParam: Widgets) => {
         // dummy
@@ -231,9 +240,11 @@ describe('Cloud View Graph Widget', () => {
           ariaLabel={'Test'}
           globalFilters={dashboardFilters}
           handleWidgetChange={handleWidgetChange}
-          metricDefinition={metricDefinitions}
+          availableMetrics={metricDefinitions.data[0]}
           unit={'%'}
-          widget={widget} authToken={''}        />
+          widget={widget}
+          authToken={''}
+        />
       );
 
       expect(getByTestId('ErrorOutlineIcon')).toBeInTheDocument();

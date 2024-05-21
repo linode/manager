@@ -1,7 +1,7 @@
 import {
+  AvailableMetrics,
   CloudViewMetricsRequest,
   Filters,
-  MetricDefinitions,
   Widgets,
 } from '@linode/api-v4';
 import { Paper } from '@mui/material';
@@ -20,6 +20,7 @@ import { FiltersObject } from '../Models/GlobalFilterProperties';
 import { CloudViewLineGraph } from './CloudViewLineGraph';
 import { ZoomIcon } from './Components/Zoomer';
 import { seriesDataFormatter } from './Formatters/CloudViewFormatter';
+import { AggregateFunctionComponent } from './Components/AggregateFunctionComponent';
 import { COLOR_MAP } from './Utils/WidgetColorPalettes';
 
 export interface CloudViewWidgetProperties {
@@ -30,7 +31,7 @@ export interface CloudViewWidgetProperties {
   globalFilters?: FiltersObject; // this is dashboard level global filters, its also optional
   // any change in the current widget, call and pass this function and handle in parent component
   handleWidgetChange: (widget: Widgets) => void;
-  metricDefinition: MetricDefinitions;
+  availableMetrics: AvailableMetrics | undefined;
 
   unit: string; // this should come from dashboard, which maintains map for service types in a separate API call
   useColorIndex?: number;
@@ -47,6 +48,11 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
   const [legendRows, setLegendRows] = React.useState<any[]>([]);
 
   const [error, setError] = React.useState<boolean>(false);
+
+  const [
+    selectedAggregatedFunction,
+    setSelectedAggregatedFunction,
+  ] = React.useState<string>(props.widget?.aggregate_function);
 
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget }); // any change in agg_functions, step, group_by, will be published to dashboard component for save
 
@@ -82,8 +88,8 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     return props.widget.serviceType
       ? props.widget.serviceType!
       : props.globalFilters
-      ? props.globalFilters.serviceType
-      : '';
+        ? props.globalFilters.serviceType
+        : '';
   };
 
   const { data: metricsList, isLoading, status } = useCloudViewMetricsQuery(
@@ -104,7 +110,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
 
   React.useEffect(() => {
     // on any change in the widget object, just publish the changes to parent component using a callback function
-    if (props.widget.size != widget.size) {
+    if (props.widget.size != widget.size || props.widget.aggregate_function !== widget.aggregate_function) {
       props.handleWidgetChange(widget);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -188,7 +194,17 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
   };
 
   const handleAggregateFunctionChange = (aggregateValue: string) => {
-    // todo, add implementation once component is ready
+    if (aggregateValue !== selectedAggregatedFunction) {
+      setWidget((currentWidget) => {
+        const newWidget = {
+          ...currentWidget,
+          aggregate_function: aggregateValue,
+        };
+
+        return newWidget;
+      });
+      setSelectedAggregatedFunction(aggregateValue);
+    }
   };
 
   const handleFilterChange = (widgetFilter: Filters[]) => {
@@ -211,20 +227,37 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     label: 'StyledZoomIcon',
   })({
     display: 'inline-block',
-    float: 'right',
     marginLeft: '10px',
     marginTop: '10px',
   });
-
   return (
     <Grid xs={widget.size}>
       <Paper style={{ height: '98%', width: '100%' }}>
         {/* add further components like group by resource, aggregate_function, step here , for sample added zoom icon here*/}
         <div className={widget.metric} style={{ margin: '1%' }}>
-          <StyledZoomIcon
-            handleZoomToggle={handleZoomToggle}
-            zoomIn={widget.size == 12 ? true : false}
-          />
+          <div
+            style={{
+              display: 'flex',
+              float: 'right',
+              justifyContent: 'flex-end',
+              alignItems: 'start',
+              width: '70%',
+            }}
+          >
+            { (props.availableMetrics?.available_aggregate_functions && props.availableMetrics.available_aggregate_functions.length > 0)
+              &&
+              <AggregateFunctionComponent
+                default_aggregate_func={selectedAggregatedFunction}
+                available_aggregate_func={
+                  props.availableMetrics?.available_aggregate_functions
+                }
+                onAggregateFuncChange={handleAggregateFunctionChange}
+              />}
+            <StyledZoomIcon
+              handleZoomToggle={handleZoomToggle}
+              zoomIn={widget.size == 12 ? true : false}
+            />
+          </div>
           <CloudViewLineGraph // rename where we have cloudview to cloudpulse
             error={
               error

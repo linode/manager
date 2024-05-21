@@ -33,13 +33,14 @@ export const useGetCloudViewServicesByServiceType = (serviceType: string) => {
 };
 
 export const useGetCloudViewMetricDefinitionsByServiceType = (
-  serviceType: string
+  serviceType: string,
+  enabled: boolean
 ) => {
   return useQuery<MetricDefinitions, APIError[]>(
     [queryKey, serviceTypeKey, serviceType],
     () => getMetricDefinitionsByServiceType(serviceType),
     {
-      enabled: true,
+      enabled: enabled,
     }
   );
 };

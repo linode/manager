@@ -1,5 +1,9 @@
-import { Dashboard, GetJWETokenPayload, Widgets } from '@linode/api-v4';
-import { Paper } from '@mui/material';
+import {
+  AvailableMetrics,
+  Dashboard,
+  GetJWETokenPayload,
+  Widgets,
+} from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
@@ -17,9 +21,13 @@ import {
   CloudViewWidget,
   CloudViewWidgetProperties,
 } from '../Widget/CloudViewWidget';
+import { useGetCloudViewMetricDefinitionsByServiceType } from 'src/queries/cloudview/services';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { Paper } from '@mui/material';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 export interface DashboardProperties {
-  dashbaord: Dashboard; // this will be done in upcoming sprint
+  dashboard: Dashboard; // this will be done in upcoming sprint
   dashboardFilters: FiltersObject;
 
   // on any change in dashboard
@@ -28,30 +36,33 @@ export interface DashboardProperties {
 
 export const CloudPulseDashboard = (props: DashboardProperties) => {
   const resourceOptions: any = {};
-
   // returns a list of resource IDs to be passed as part of getJWEToken call
   const getResourceIDsPayload = () => {
     const jweTokenPayload: GetJWETokenPayload = {
       resource_id: [],
     };
     jweTokenPayload.resource_id = resourceOptions[
-      props?.dashbaord?.service_type
+      props?.dashboard?.service_type
     ]?.data?.map((resource: any) => resource.id);
     return jweTokenPayload;
   };
 
   ({ data: resourceOptions['linode'] } = useLinodeResourcesQuery(
-    props?.dashbaord?.service_type === 'linode'
+    props?.dashboard?.service_type === 'linode'
   ));
 
   ({ data: resourceOptions['aclb'] } = useLoadBalancerResourcesQuery(
-    props?.dashbaord?.service_type === 'aclb'
+    props?.dashboard?.service_type === 'aclb'
   ));
 
-  const { data: jweToken, isError, isSuccess } = useCloudViewJWEtokenQuery(
-    props?.dashbaord?.service_type,
+  const {
+    data: jweToken,
+    isError: isJweTokenError,
+    isSuccess,
+  } = useCloudViewJWEtokenQuery(
+    props?.dashboard?.service_type,
     getResourceIDsPayload(),
-    resourceOptions[props?.dashbaord?.service_type] ? true : false
+    resourceOptions[props?.dashboard?.service_type] ? true : false
   );
 
   // todo define a proper properties class
@@ -77,13 +88,28 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   })({
     height: '100%',
   });
+  const {
+    data: metricDefinitions,
+    isError: isMetricDefinitionError,
+    isLoading,
+  } = useGetCloudViewMetricDefinitionsByServiceType(
+    props.dashboard?.service_type,
+    props.dashboard?.service_type!== undefined
+  );
 
-  if (isError) {
+  if (isJweTokenError) {
     return (
       <Paper style={{ height: '100%' }}>
         <StyledErrorState title="Failed to get jwe token" />
       </Paper>
     );
+  }
+  if (props.dashboard?.service_type && isLoading) {
+    return <CircleProgress />;
+  }
+
+  if (props.dashboard?.service_type && isMetricDefinitionError) {
+    return <ErrorState errorText={'Error loading metric definitions'} />;
   }
 
   const getCloudViewGraphProperties = (widget: Widgets) => {
@@ -98,7 +124,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   };
 
   const handleWidgetChange = (widget: Widgets) => {
-    const dashboard = { ...props.dashbaord };
+    const dashboard = { ...props.dashboard };
 
     const index = dashboard.widgets.findIndex(
       (obj) => obj.label === widget.label
@@ -111,9 +137,9 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
 
   const RenderWidgets = () => {
     let colorIndex = 0;
-    if (props.dashbaord != undefined) {
+    if (props.dashboard != undefined) {
       if (
-        props.dashbaord?.service_type &&
+        props.dashboard?.service_type &&
         cloudViewGraphProperties.globalFilters?.region &&
         cloudViewGraphProperties.globalFilters?.resource &&
         cloudViewGraphProperties.globalFilters?.resource.length > 0 &&
@@ -121,13 +147,19 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       ) {
         return (
           <Grid columnSpacing={1.5} container rowSpacing={0} spacing={2}>
-            {props.dashbaord.widgets.map((element, index) => {
-              if (element && element != undefined) {
+            {props.dashboard.widgets.map((element, index) => {
+              if (element) {
+                let availMetrics = metricDefinitions?.data.find(
+                  (availMetrics: AvailableMetrics) =>
+                    element.label === availMetrics.label
+                );
+
                 return (
                   <CloudViewWidget
                     key={index}
                     {...getCloudViewGraphProperties(element)}
                     authToken={jweToken?.token}
+                    availableMetrics={availMetrics}
                     handleWidgetChange={handleWidgetChange}
                     useColorIndex={colorIndex++} // todo, remove the color index
                   />
