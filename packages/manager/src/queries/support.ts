@@ -7,6 +7,8 @@ import {
   getTicket,
   getTicketReplies,
   getTickets,
+  createSupportTicket,
+  TicketRequest,
 } from '@linode/api-v4/lib/support';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
@@ -51,6 +53,21 @@ export const useSupportTicketsQuery = (params: Params, filter: Filter) =>
 
 export const useSupportTicketQuery = (id: number) =>
   useQuery<SupportTicket, APIError[]>(supportQueries.ticket(id));
+
+export const useCreateSupportTicketMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<SupportTicket, APIError[], TicketRequest>({
+    mutationFn: createSupportTicket,
+    onSuccess(ticket) {
+      queryClient.invalidateQueries({ queryKey: supportQueries.tickets._def });
+      queryClient.setQueryData<SupportTicket>(
+        supportQueries.ticket(ticket.id).queryKey,
+        ticket
+      );
+    },
+  });
+};
 
 export const useInfiniteSupportTicketRepliesQuery = (id: number) =>
   useInfiniteQuery<ResourcePage<SupportReply>, APIError[]>({
