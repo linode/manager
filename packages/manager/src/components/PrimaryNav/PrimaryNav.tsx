@@ -331,9 +331,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   return (
     <Grid
-      sx={(theme) => ({
-        borderRight: `1px solid ${theme.borderColors.dividerDark}`,
-      })}
       alignItems="flex-start"
       className={classes.menuGrid}
       component="nav"

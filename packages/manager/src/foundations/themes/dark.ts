@@ -22,6 +22,7 @@ const primaryColors = {
 export const customDarkModeOptions = {
   bg: {
     app: Color.Neutrals[100],
+    appBar: Color.Neutrals.Black,
     bgAccessRow: Color.Neutrals[80],
     bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
     bgPaper: Color.Neutrals[100],
@@ -155,6 +156,9 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         colorDefault: {
           backgroundColor: 'transparent',
+        },
+        root: {
+          backgroundColor: Color.Neutrals.Black,
         },
       },
     },
@@ -489,7 +493,7 @@ export const darkTheme: ThemeOptions = {
           // TODO: We can remove this variant since they will always have a border
           backgroundColor: Color.Neutrals[90],
           outlined: {
-            border: `1px solid ${Color.Neutrals[30]}`,
+            border: `1px solid ${Color.Neutrals[80]}`,
           },
         },
         root: {

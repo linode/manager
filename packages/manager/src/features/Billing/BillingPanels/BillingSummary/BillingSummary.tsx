@@ -162,7 +162,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
     <>
       <Grid container margin={0} spacing={2} xs={12}>
         <Grid {...gridDimensions} sm={6}>
-          <BillingPaper>
+          <BillingPaper variant="outlined">
             <Typography variant="h3">Account Balance</Typography>
             <Divider />
             <Box
@@ -207,7 +207,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
         </Grid>
         {promotions && promotions?.length > 0 ? (
           <Grid md={4} sm={6} xs={12}>
-            <BillingPaper>
+            <BillingPaper variant="outlined">
               <Typography variant="h3">Promotions</Typography>
 
               <Divider />
@@ -223,7 +223,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
           </Grid>
         ) : null}
         <Grid {...gridDimensions}>
-          <BillingPaper>
+          <BillingPaper variant="outlined">
             <Box alignItems="center" display="flex">
               <Typography variant="h3">Accrued Charges</Typography>
               <TooltipIcon

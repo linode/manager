@@ -15,6 +15,7 @@ export const inputMaxWidth = 416;
 
 export const bg = {
   app: Color.Neutrals[5],
+  appBar: 'transparent',
   bgAccessRow: Color.Neutrals[5],
   bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
   bgPaper: Color.Neutrals.White,
@@ -263,8 +264,11 @@ export const lightTheme: ThemeOptions = {
           backgroundColor: 'inherit',
         },
         root: {
+          backgroundColor: bg.bgPaper,
           borderLeft: 0,
           borderTop: 0,
+          color: primaryColors.text,
+          position: 'relative',
         },
       },
     },
@@ -1471,7 +1475,7 @@ export const lightTheme: ThemeOptions = {
   inputStyles: {
     default: {
       backgroundColor: Select.Default.Background,
-      border: `1px solid ${Select.Default.Border}`,
+      border: `1px solid ${Color.Neutrals[40]}`, // TODO: This should convert to token in future
       color: Select.Default.Text,
     },
     disabled: {
@@ -1504,7 +1508,7 @@ export const lightTheme: ThemeOptions = {
         color: Select.Hover.Icon,
       },
       backgroundColor: Select.Hover.Background,
-      border: `1px solid ${Select.Hover.Border}`,
+      border: `1px solid ${Color.Neutrals[40]}`, // TODO: This should convert to token in future
       color: Select.Hover.Text,
     },
   },

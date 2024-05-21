@@ -46,13 +46,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           </Typography>
         </Box>
       )}
-      <AppBar
-        sx={(theme) => ({
-          backgroundColor: theme.bg.bgPaper,
-          color: theme.palette.text.primary,
-          position: 'relative',
-        })}
-      >
+      <AppBar>
         <Toolbar
           sx={(theme) => ({
             '&.MuiToolbar-root': {

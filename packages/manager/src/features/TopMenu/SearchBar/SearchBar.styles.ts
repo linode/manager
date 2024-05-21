@@ -68,6 +68,9 @@ export const StyledSearchBarWrapperDiv = styled('div', {
   },
   '&.active': {
     ...theme.inputStyles.focused,
+    '&:hover': {
+      ...theme.inputStyles.focused,
+    },
   },
   '&:hover': {
     ...theme.inputStyles.hover,
