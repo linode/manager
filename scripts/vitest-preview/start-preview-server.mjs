@@ -31,8 +31,6 @@ fs.writeFileSync(path.join(CACHE_FOLDER, "index.html"), emptyHtml);
 async function createServer() {
   const app = express();
   const vite = await createServer$1({
-    optimizeDeps: {
-    },
     server: {
       middlewareMode: true,
     },
