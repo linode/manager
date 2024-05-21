@@ -56,7 +56,7 @@ import { debug } from 'vitest-preview';
 describe('my test', () => {
   render(<MyComponent />);
   debug(); // 👈 Add this line
-}
+});
 ```
 
 Start the `vitest-preview` server:

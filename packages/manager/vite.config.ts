@@ -10,11 +10,6 @@ export default defineConfig({
     outDir: 'build',
   },
   envPrefix: 'REACT_APP_',
-  optimizeDeps: {
-    esbuildOptions: {
-      target: 'es5',
-    },
-  },
   plugins: [react(), svgr({ exportAsDefault: true })],
   resolve: {
     alias: {
@@ -39,7 +34,6 @@ export default defineConfig({
         'src/**/*.utils.{js,jsx,ts,tsx}',
       ],
     },
-    css: true,
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/testSetup.ts',

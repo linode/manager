@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" class="dark h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vitest Preview Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="h-full bg-slate-200">
+    <div class="p-10 m-auto">
+      No previews found.<br />
+      Please add following lines to your test: <br />
+      <br />
+      <div class="bg-slate-400 p-4 w-fit rounded">
+        <code>
+          import { debug } from 'vitest-preview';
+          <br />
+          <br />
+          // Inside your tests
+          <br />
+          describe('my test', () => {
+          <br />
+          &nbsp;&nbsp;render(&#60;MyComponent /&#62;);
+          <br />
+          &nbsp;&nbsp;debug(); // 👈 Add this line
+          <br />
+          });
+        </code>
+      </div>
+      <br />
+      Then rerun your tests.
+    </div>
+  </body>
+</html>

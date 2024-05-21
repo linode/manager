@@ -94,7 +94,7 @@
     "precommit": "lint-staged && yarn typecheck",
     "test": "vitest run",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
-    "vitest-preview": "vitest-preview",
+    "vitest-preview": "node ../../scripts/vitest-preview/start-preview-server.mjs",
     "storybook": "storybook dev -p 6006",
     "storybook-static": "storybook build -c .storybook -o .out",
     "build-storybook": "storybook build",
