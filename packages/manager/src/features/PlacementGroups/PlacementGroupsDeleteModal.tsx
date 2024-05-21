@@ -45,10 +45,12 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     error: deletePlacementError,
     isLoading: deletePlacementLoading,
     mutateAsync: deletePlacementGroup,
+    reset: resetDeletePlacementGroup,
   } = useDeletePlacementGroup(selectedPlacementGroup?.id ?? -1);
   const {
     error: unassignLinodeError,
     mutateAsync: unassignLinodes,
+    reset: resetUnassignLinodes,
   } = useUnassignLinodesFromPlacementGroup(selectedPlacementGroup?.id ?? -1);
   const [assignedLinodes, setAssignedLinodes] = React.useState<
     Linode[] | undefined
@@ -85,6 +87,12 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
         variant: 'success',
       }
     );
+    handleClose();
+  };
+
+  const handleClose = () => {
+    resetDeletePlacementGroup();
+    resetUnassignLinodes();
     onClose();
   };
 
@@ -108,7 +116,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
             width: 500,
           },
         }}
-        onClose={onClose}
+        onClose={handleClose}
         open={open}
         title="Delete Placement Group"
       >
@@ -130,7 +138,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
       label="Placement Group"
       loading={deletePlacementLoading}
       onClick={onDelete}
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       title={`Delete Placement Group ${selectedPlacementGroup.label}`}
     >
