@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
@@ -17,6 +18,37 @@ interface TwoStepRegionSelectProps
   selectedId?: null | string;
 }
 
+const GEOGRAPHICAL_AREA_OPTIONS = [
+  {
+    label: 'All',
+    value: 'all',
+  },
+  {
+    label: 'North America',
+    value: 'NA',
+  },
+  {
+    label: 'Africa',
+    value: 'AF',
+  },
+  {
+    label: 'Asia',
+    value: 'AS',
+  },
+  {
+    label: 'Europe',
+    value: 'EU',
+  },
+  {
+    label: 'Oceania',
+    value: 'OC',
+  },
+  {
+    label: 'South America',
+    value: 'SA',
+  },
+];
+
 export const TwoStepRegionSelect = React.memo(
   (props: TwoStepRegionSelectProps) => {
     const {
@@ -29,6 +61,8 @@ export const TwoStepRegionSelect = React.memo(
       regions,
       selectedId,
     } = props;
+
+    const [regionFilter, setRegionFilter] = React.useState<string>('edge');
 
     return (
       <Tabs>
@@ -57,18 +91,23 @@ export const TwoStepRegionSelect = React.memo(
             />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
-            <Box marginTop={2}>
-              <RegionHelperText
-                onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
-              />
-            </Box>
+            <Autocomplete
+              onChange={(_, selectedOption) => {
+                if (selectedOption?.value) {
+                  setRegionFilter(`edge-${selectedOption?.value}`);
+                }
+              }}
+              defaultValue={GEOGRAPHICAL_AREA_OPTIONS[0]}
+              label="Geographical Area"
+              options={GEOGRAPHICAL_AREA_OPTIONS}
+            />
             <RegionSelect
               currentCapability={currentCapability}
               disabled={disabled}
               errorText={error}
               handleSelection={handleSelection}
               helperText={helperText}
-              regionFilter="edge"
+              regionFilter={regionFilter}
               regions={regions ?? []}
               selectedId={selectedId || null}
               showEdgeIconHelperText={false}

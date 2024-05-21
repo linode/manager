@@ -40,9 +40,15 @@ export const getRegionOptions = ({
     : regions;
 
   const filteredRegionsByCapabilityAndSiteType = regionFilter
-    ? filteredRegionsByCapability.filter(
-        (region) => region.site_type === regionFilter
-      )
+    ? filteredRegionsByCapability.filter((region) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const [_, edgeContinentCode] = regionFilter.split('edge-');
+        if (edgeContinentCode && edgeContinentCode !== 'all') {
+          const group = getRegionCountryGroup(region);
+          return CONTINENT_CODE_TO_CONTINENT[edgeContinentCode] === group;
+        }
+        return regionFilter.includes(region.site_type);
+      })
     : filteredRegionsByCapability;
 
   const isRegionUnavailable = (region: Region) =>
