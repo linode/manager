@@ -305,7 +305,10 @@ export const LinodeConfigDialog = (props: Props) => {
   const { resetForm, setFieldValue, values, ...formik } = useFormik({
     initialValues: defaultFieldsValues,
     onSubmit: (values) => onSubmit(values),
-    validate: (values) => onValidate(values),
+    validate: (values) => {
+      onValidate(values);
+      scrollErrorIntoViewV2(formContainerRef);
+    },
     validateOnChange: false,
     validateOnMount: false,
   });
@@ -450,7 +453,6 @@ export const LinodeConfigDialog = (props: Props) => {
         error,
         'An unexpected error occurred.'
       );
-      scrollErrorIntoViewV2(formContainerRef);
     };
 
     /** Editing */

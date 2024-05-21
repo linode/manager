@@ -6,6 +6,7 @@ import {
   restoreBackup,
 } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
+import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import cloneDeep from 'lodash.clonedeep';
 import * as React from 'react';
@@ -76,6 +77,7 @@ import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { SelectFirewallPanel } from '../../../components/SelectFirewallPanel/SelectFirewallPanel';
 import { AddonsPanel } from './AddonsPanel';
@@ -194,6 +196,7 @@ type CombinedProps = AllFormStateAndHandlers &
   WithTypesProps;
 
 interface State {
+  hasError: boolean;
   numberOfNodes: number;
   planKey: string;
   selectedTab: number;
@@ -238,6 +241,7 @@ export class LinodeCreate extends React.PureComponent<
     }
 
     this.state = {
+      hasError: false,
       numberOfNodes: 0,
       planKey: v4(),
       selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0,
@@ -487,7 +491,7 @@ export class LinodeCreate extends React.PureComponent<
     );
 
     return (
-      <StyledForm>
+      <StyledForm ref={this.createLinodeFormRef}>
         <Grid className="py0">
           {hasErrorFor.none && !!showGeneralError && (
             <Notice spacingTop={8} text={hasErrorFor.none} variant="error" />
@@ -855,6 +859,16 @@ export class LinodeCreate extends React.PureComponent<
     const { selectedTab } = this.state;
     const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
 
+    try {
+      CreateLinodeSchema.validateSync(payload, {
+        abortEarly: true,
+      });
+      this.setState({ hasError: false });
+    } catch (e) {
+      this.setState({ hasError: true }, () => {
+        scrollErrorIntoViewV2(this.createLinodeFormRef);
+      });
+    }
     this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
     sendLinodeCreateFormSubmitEvent(
       'Create Linode',
@@ -862,6 +876,8 @@ export class LinodeCreate extends React.PureComponent<
       'v1'
     );
   };
+
+  createLinodeFormRef = React.createRef<HTMLFormElement>();
 
   filterTypes = () => {
     const { createType, typesData } = this.props;
