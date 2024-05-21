@@ -3,9 +3,14 @@
  */
 
 /**
- * Tag to use to identify test entities, resources, etc.
+ * Tag to identify test entities, resources, etc.
  */
 export const entityTag = 'cy-test';
+
+/**
+ * Tag to identify resources that tests depend on.
+ */
+export const dependencyTag = 'cy-dep';
 
 /**
  * Prefix for entity names and labels that will be created by Cypress tests.
@@ -16,3 +21,11 @@ export const entityTag = 'cy-test';
  * clean-up purposes.
  */
 export const entityPrefix = `${entityTag}-`;
+
+/**
+ * Prefix for entity names and labels that will be created by Cypress tests.
+ *
+ * Dependency entities may be relied upon by multiple tests and have different
+ * clean up behavior.
+ */
+export const dependencyPrefix = `${dependencyTag}-`;
