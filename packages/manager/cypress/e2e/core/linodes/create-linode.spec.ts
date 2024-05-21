@@ -552,7 +552,18 @@ describe('create linode', () => {
       capabilities: ['Linodes', 'Disk Encryption'],
     });
 
+    const mockRegion = regionFactory.build({
+      capabilities: ['Linodes', 'Disk Encryption'],
+    });
+
+    const mockRegionWithoutDiskEncryption = regionFactory.build({
+      capabilities: ['Linodes'],
+    });
+
+    const mockRegions = [mockRegion, mockRegionWithoutDiskEncryption];
+
     mockGetAccount(mockAccount).as('getAccount');
+    mockGetRegions(mockRegions);
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
@@ -562,31 +573,17 @@ describe('create linode', () => {
     cy.get(`[data-testid="${headerTestId}"]`).should('exist');
 
     // "Encrypt Disk" checkbox should be disabled if a region that does not support LDE is selected
-    const regionNotSupportingDiskEncryption = regionFactory.build({
-      capabilities: ['Linodes'],
-      country: 'uk',
-      id: 'eu-west',
-      label: 'London, UK',
-    });
-
     ui.regionSelect.find().click();
-    ui.regionSelect
-      .findItemByRegionLabel(regionNotSupportingDiskEncryption.label)
+    ui.select
+      .findItemByText(
+        `${mockRegionWithoutDiskEncryption.label} (${mockRegionWithoutDiskEncryption.id})`
+      )
       .click();
 
     cy.get(`[data-testid="${checkboxTestId}"]`).should('be.disabled');
 
-    // "Encrypt Disk" checkbox should be enabled if a region supporting LDE is selected
-    const regionSupportingDiskEncryption = regionFactory.build({
-      capabilities: ['Linodes', 'Disk Encryption'],
-      id: 'us-east',
-      label: 'Newark, NJ',
-    });
-
     ui.regionSelect.find().click();
-    ui.regionSelect
-      .findItemByRegionLabel(regionSupportingDiskEncryption.label)
-      .click();
+    ui.select.findItemByText(`${mockRegion.label} (${mockRegion.id})`).click();
 
     cy.get(`[data-testid="${checkboxTestId}"]`).should('be.enabled');
   });
