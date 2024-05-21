@@ -51,6 +51,7 @@ export const createTestLinode = async (
       label: randomLabel(),
       image: 'linode/debian11',
       region: chooseRegion().id,
+      booted: false,
     }),
     ...(createRequestPayload || {}),
   };
