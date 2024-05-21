@@ -11,6 +11,7 @@ const mockLinodes = linodeFactory.buildList(3);
 const mockKubeNodes = kubeLinodeFactory.buildList(3);
 
 const props: Props = {
+  encryptionStatus: 'enabled',
   nodes: mockKubeNodes,
   openRecycleNodeDialog: vi.fn(),
   poolId: 1,

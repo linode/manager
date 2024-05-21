@@ -17,7 +17,7 @@ import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
 
 interface Props {
   autoscaler: AutoscaleSettings;
-  encryptionStatus?: EncryptionStatus;
+  encryptionStatus: EncryptionStatus | undefined;
   handleClickResize: (poolId: number) => void;
   isOnlyNodePool: boolean;
   nodes: PoolNodeResponse[];

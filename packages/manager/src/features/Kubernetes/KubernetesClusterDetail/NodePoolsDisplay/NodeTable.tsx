@@ -29,7 +29,7 @@ import type { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
 import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
 
 export interface Props {
-  encryptionStatus?: EncryptionStatus;
+  encryptionStatus: EncryptionStatus | undefined;
   nodes: PoolNodeResponse[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
