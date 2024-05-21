@@ -3,7 +3,7 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 export interface AggregateFunctionProperties {
   available_aggregate_func: Array<string>;
-  default_aggregate_func: string;
+  default_aggregate_func?: string | undefined;
   onAggregateFuncChange: any;
 }
 
@@ -12,7 +12,7 @@ export const AggregateFunctionComponent = (
 ) => {
 
   //Convert list of available_aggregate_fun into a proper response structure accepted by Autocomplete component
-  const available_aggregate_func = props.available_aggregate_func.map(
+  const available_aggregate_func = props.available_aggregate_func?.map(
     (aggregate_func) => {
       return {
         label: aggregate_func,
@@ -25,7 +25,7 @@ export const AggregateFunctionComponent = (
   let default_agg_unavailable = false;
 
   //if default aggregate func not available in available_aggregate_function
-  if(!default_aggregate_func){
+  if(props.default_aggregate_func && props.default_aggregate_func.length > 0 && !default_aggregate_func){
     default_agg_unavailable = true;
     default_aggregate_func = available_aggregate_func[0];
   }
