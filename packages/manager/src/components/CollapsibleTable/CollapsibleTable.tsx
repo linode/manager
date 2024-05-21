@@ -27,7 +27,9 @@ export const CollapsibleTable = (props: Props) => {
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
-        <TableHead data-qa-table-row="vpc-subnets">{TableRowHead}</TableHead>
+        <TableHead data-qa-table-row="collapsible-table-headers-row">
+          {TableRowHead}
+        </TableHead>
         <TableBody>
           {TableItems.length === 0 && TableRowEmpty}
           {TableItems.map((item) => {

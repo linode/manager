@@ -192,7 +192,7 @@ describe('VPC assign/unassign flows', () => {
           .click();
       });
 
-    cy.get('[data-qa-table-row="vpc-subnets"]')
+    cy.get('[data-qa-table-row="collapsible-table-headers-row"]')
       .siblings('tbody')
       .within(() => {
         // after assigning Linode(s) to a VPC, VPC page increases number in 'Linodes' column
