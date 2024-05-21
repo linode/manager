@@ -12,40 +12,47 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 
+import { RegionFilterValues } from './RegionSelect.types';
+
 interface TwoStepRegionSelectProps
   extends Omit<SelectRegionPanelProps, 'selectedId'> {
   regions: any;
   selectedId?: null | string;
 }
 
-const GEOGRAPHICAL_AREA_OPTIONS = [
+interface GeographicalAreaOption {
+  label: string;
+  value: RegionFilterValues;
+}
+
+const GEOGRAPHICAL_AREA_OPTIONS: GeographicalAreaOption[] = [
   {
     label: 'All',
-    value: 'all',
+    value: 'edge-ALL',
   },
   {
     label: 'North America',
-    value: 'NA',
+    value: 'edge-NA',
   },
   {
     label: 'Africa',
-    value: 'AF',
+    value: 'edge-AF',
   },
   {
     label: 'Asia',
-    value: 'AS',
+    value: 'edge-AS',
   },
   {
     label: 'Europe',
-    value: 'EU',
+    value: 'edge-EU',
   },
   {
     label: 'Oceania',
-    value: 'OC',
+    value: 'edge-OC',
   },
   {
     label: 'South America',
-    value: 'SA',
+    value: 'edge-SA',
   },
 ];
 
@@ -62,7 +69,9 @@ export const TwoStepRegionSelect = React.memo(
       selectedId,
     } = props;
 
-    const [regionFilter, setRegionFilter] = React.useState<string>('edge');
+    const [regionFilter, setRegionFilter] = React.useState<RegionFilterValues>(
+      'edge'
+    );
 
     return (
       <Tabs>
@@ -94,7 +103,7 @@ export const TwoStepRegionSelect = React.memo(
             <Autocomplete
               onChange={(_, selectedOption) => {
                 if (selectedOption?.value) {
-                  setRegionFilter(`edge-${selectedOption?.value}`);
+                  setRegionFilter(selectedOption.value);
                 }
               }}
               defaultValue={GEOGRAPHICAL_AREA_OPTIONS[0]}

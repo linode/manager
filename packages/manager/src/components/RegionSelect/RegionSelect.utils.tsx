@@ -43,7 +43,7 @@ export const getRegionOptions = ({
     ? filteredRegionsByCapability.filter((region) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const [_, edgeContinentCode] = regionFilter.split('edge-');
-        if (edgeContinentCode && edgeContinentCode !== 'all') {
+        if (edgeContinentCode && edgeContinentCode !== 'ALL') {
           const group = getRegionCountryGroup(region);
           return CONTINENT_CODE_TO_CONTINENT[edgeContinentCode] === group;
         }

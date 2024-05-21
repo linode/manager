@@ -23,6 +23,17 @@ export interface RegionSelectOption {
   site_type: RegionSite;
   value: string;
 }
+
+export type RegionFilterValues =
+  | 'edge-AF'
+  | 'edge-ALL'
+  | 'edge-AS'
+  | 'edge-EU'
+  | 'edge-NA'
+  | 'edge-OC'
+  | 'edge-SA'
+  | RegionSite;
+
 import { FlagSet } from 'src/featureFlags';
 
 export interface RegionSelectProps
@@ -45,7 +56,7 @@ export interface RegionSelectProps
   helperText?: string;
   isClearable?: boolean;
   label?: string;
-  regionFilter?: RegionSite;
+  regionFilter?: RegionFilterValues;
   regions: Region[];
   required?: boolean;
   selectedId: null | string;
@@ -86,7 +97,7 @@ export interface RegionOptionAvailability {
 
 export interface GetRegionOptions extends RegionOptionAvailability {
   flags?: FlagSet;
-  regionFilter?: RegionSite;
+  regionFilter?: RegionFilterValues;
   regions: Region[];
 }
 
