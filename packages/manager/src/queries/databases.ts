@@ -12,7 +12,18 @@ import {
   restoreWithBackup,
   updateDatabase,
 } from '@linode/api-v4/lib/databases';
-import {
+import { createQueryKeys } from '@lukemorales/query-key-factory';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { EventHandlerData } from 'src/hooks/useEventHandlers';
+import { getAll } from 'src/utilities/getAll';
+import { getEngineFromDatabaseEntityURL } from 'src/utilities/getEventsActionLink';
+
+import { queryPresets } from './base';
+import { profileQueries } from './profile';
+
+import type {
+  APIError,
   CreateDatabasePayload,
   Database,
   DatabaseBackup,
@@ -21,124 +32,11 @@ import {
   DatabaseInstance,
   DatabaseType,
   Engine,
-  UpdateDatabasePayload,
-  UpdateDatabaseResponse,
-} from '@linode/api-v4/lib/databases/types';
-import {
-  APIError,
   Filter,
   Params,
   ResourcePage,
-} from '@linode/api-v4/lib/types';
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
-
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
-import { getAll } from 'src/utilities/getAll';
-
-import { queryPresets, updateInPaginatedStore } from './base';
-import { profileQueries } from './profile';
-
-export const queryKey = 'databases';
-
-export const useDatabaseQuery = (engine: Engine, id: number) =>
-  useQuery<Database, APIError[]>(
-    [queryKey, id],
-    () => getEngineDatabase(engine, id),
-    // @TODO Consider removing polling
-    // The refetchInterval will poll the API for this Database. We will do this
-    // to ensure we have up to date information. We do this polling because the events
-    // API does not provide us every feature we need currently.
-    { refetchInterval: 20000 }
-  );
-
-export const useDatabasesQuery = (params: Params, filter: Filter) =>
-  useQuery<ResourcePage<DatabaseInstance>, APIError[]>(
-    [`${queryKey}-list`, params, filter],
-    () => getDatabases(params, filter),
-    // @TODO Consider removing polling
-    { keepPreviousData: true, refetchInterval: 20000 }
-  );
-
-export const useAllDatabasesQuery = (enabled: boolean = true) =>
-  useQuery<DatabaseInstance[], APIError[]>(
-    [`${queryKey}-all-list`],
-    getAllDatabases,
-    { enabled }
-  );
-
-export const useDatabaseMutation = (engine: Engine, id: number) => {
-  const queryClient = useQueryClient();
-  return useMutation<UpdateDatabaseResponse, APIError[], UpdateDatabasePayload>(
-    (data) => updateDatabase(engine, id, data),
-    {
-      onSuccess: (data) => {
-        queryClient.setQueryData<Database | undefined>(
-          [queryKey, Number(id)],
-          (oldEntity) => {
-            if (oldEntity === undefined) {
-              return undefined;
-            }
-
-            if (oldEntity.label !== data.label) {
-              updateInPaginatedStore<Database>(
-                [`${queryKey}-list`],
-                id,
-                {
-                  label: data.label,
-                },
-                queryClient
-              );
-            }
-
-            return { ...oldEntity, ...data };
-          }
-        );
-      },
-    }
-  );
-};
-
-export const useCreateDatabaseMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation<Database, APIError[], CreateDatabasePayload>(
-    (data) => createDatabase(data.engine?.split('/')[0] as Engine, data),
-    {
-      onSuccess: (data) => {
-        // Invalidate useDatabasesQuery to show include the new database.
-        // We choose to refetch insted of manually mutate the cache because it
-        // is API paginated.
-        queryClient.invalidateQueries([`${queryKey}-list`]);
-        // Add database to the cache
-        queryClient.setQueryData([queryKey, data.id], data);
-        // If a restricted user creates an entity, we must make sure grants are up to date.
-        queryClient.invalidateQueries(profileQueries.grants.queryKey);
-      },
-    }
-  );
-};
-
-export const useDeleteDatabaseMutation = (engine: Engine, id: number) => {
-  const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteDatabase(engine, id), {
-    onSuccess: () => {
-      // Invalidate useDatabasesQuery to remove the deleted database.
-      // We choose to refetch insted of manually mutate the cache because it
-      // is API paginated.
-      queryClient.invalidateQueries([`${queryKey}-list`]);
-    },
-  });
-};
-
-export const useDatabaseBackupsQuery = (engine: Engine, id: number) =>
-  useQuery<ResourcePage<DatabaseBackup>, APIError[]>(
-    [`${queryKey}-backups`, id],
-    () => getDatabaseBackups(engine, id)
-  );
+  UpdateDatabasePayload,
+} from '@linode/api-v4';
 
 export const getAllDatabases = () =>
   getAll<DatabaseInstance>((params) => getDatabases(params))().then(
@@ -150,46 +48,163 @@ export const getAllDatabaseEngines = () =>
     (data) => data.data
   );
 
-export const useDatabaseEnginesQuery = (enabled: boolean = false) =>
-  useQuery<DatabaseEngine[], APIError[]>(
-    [`${queryKey}-versions`],
-    getAllDatabaseEngines,
-    { enabled }
-  );
-
 export const getAllDatabaseTypes = () =>
   getAll<DatabaseType>((params) => getDatabaseTypes(params))().then(
     (data) => data.data
   );
 
-export const useDatabaseTypesQuery = () =>
-  useQuery<DatabaseType[], APIError[]>(
-    [`${queryKey}-types`],
-    getAllDatabaseTypes
+const databaseQueries = createQueryKeys('databases', {
+  database: (engine: Engine, id: number) => ({
+    contextQueries: {
+      backups: {
+        queryFn: () => getDatabaseBackups(engine, id),
+        queryKey: null,
+      },
+      credentials: {
+        queryFn: () => getDatabaseCredentials(engine, id),
+        queryKey: null,
+      },
+    },
+    queryFn: () => getEngineDatabase(engine, id),
+    queryKey: [engine, id],
+  }),
+  engines: {
+    queryFn: getAllDatabaseEngines,
+    queryKey: null,
+  },
+  lists: {
+    contextQueries: {
+      all: {
+        queryFn: getAllDatabases,
+        queryKey: null,
+      },
+      paginated: (params: Params, filter: Filter) => ({
+        queryFn: () => getDatabases(params, filter),
+        queryKey: [params, filter],
+      }),
+    },
+    queryKey: null,
+  },
+  types: {
+    queryFn: getAllDatabaseTypes,
+    queryKey: null,
+  },
+});
+
+export const useDatabaseQuery = (engine: Engine, id: number) =>
+  useQuery<Database, APIError[]>({
+    ...databaseQueries.database(engine, id),
+    // @TODO Consider removing polling
+    // The refetchInterval will poll the API for this Database. We will do this
+    // to ensure we have up to date information. We do this polling because the events
+    // API does not provide us every feature we need currently.
+    refetchInterval: 20000,
+  });
+
+export const useDatabasesQuery = (params: Params, filter: Filter) =>
+  useQuery<ResourcePage<DatabaseInstance>, APIError[]>({
+    ...databaseQueries.lists._ctx.paginated(params, filter),
+    keepPreviousData: true,
+    // @TODO Consider removing polling
+    refetchInterval: 20000,
+  });
+
+export const useAllDatabasesQuery = (enabled: boolean = true) =>
+  useQuery<DatabaseInstance[], APIError[]>({
+    ...databaseQueries.lists._ctx.all,
+    enabled,
+  });
+
+export const useDatabaseMutation = (engine: Engine, id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<Database, APIError[], UpdateDatabasePayload>({
+    mutationFn: (data) => updateDatabase(engine, id, data),
+    onSuccess(database) {
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.lists.queryKey,
+      });
+      queryClient.setQueryData<Database>(
+        databaseQueries.database(engine, id).queryKey,
+        database
+      );
+    },
+  });
+};
+
+export const useCreateDatabaseMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Database, APIError[], CreateDatabasePayload>({
+    mutationFn: (data) =>
+      createDatabase(data.engine?.split('/')[0] as Engine, data),
+    onSuccess(database) {
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.lists.queryKey,
+      });
+      queryClient.setQueryData<Database>(
+        databaseQueries.database(database.engine, database.id).queryKey,
+        database
+      );
+      // If a restricted user creates an entity, we must make sure grants are up to date.
+      queryClient.invalidateQueries(profileQueries.grants.queryKey);
+    },
+  });
+};
+
+export const useDeleteDatabaseMutation = (engine: Engine, id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deleteDatabase(engine, id),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.lists.queryKey,
+      });
+      queryClient.removeQueries({
+        queryKey: databaseQueries.database(engine, id).queryKey,
+      });
+    },
+  });
+};
+
+export const useDatabaseBackupsQuery = (engine: Engine, id: number) =>
+  useQuery<ResourcePage<DatabaseBackup>, APIError[]>(
+    databaseQueries.database(engine, id)._ctx.backups
   );
+
+export const useDatabaseEnginesQuery = (enabled: boolean = false) =>
+  useQuery<DatabaseEngine[], APIError[]>({
+    ...databaseQueries.engines,
+    enabled,
+  });
+
+export const useDatabaseTypesQuery = () =>
+  useQuery<DatabaseType[], APIError[]>(databaseQueries.types);
 
 export const useDatabaseCredentialsQuery = (
   engine: Engine,
   id: number,
   enabled: boolean = false
 ) =>
-  useQuery<DatabaseCredentials, APIError[]>(
-    [queryKey, 'credentials', id],
-    () => getDatabaseCredentials(engine, id),
-    { ...queryPresets.oneTimeFetch, enabled }
-  );
+  useQuery<DatabaseCredentials, APIError[]>({
+    ...databaseQueries.database(engine, id)._ctx.credentials,
+    ...queryPresets.oneTimeFetch,
+    enabled,
+  });
 
 export const useDatabaseCredentialsMutation = (engine: Engine, id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(
-    () => resetDatabaseCredentials(engine, id),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([queryKey, 'credentials', id]);
-        queryClient.removeQueries([queryKey, 'credentials', id]);
-      },
-    }
-  );
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => resetDatabaseCredentials(engine, id),
+    onSuccess() {
+      queryClient.removeQueries({
+        queryKey: databaseQueries.database(engine, id)._ctx.credentials
+          .queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.database(engine, id)._ctx.credentials
+          .queryKey,
+      });
+    },
+  });
 };
 
 export const useRestoreFromBackupMutation = (
@@ -198,85 +213,51 @@ export const useRestoreFromBackupMutation = (
   backupId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(
-    () => restoreWithBackup(engine, databaseId, backupId),
-    {
-      onSuccess: () =>
-        updateStoreForDatabase(
-          databaseId,
-          { status: 'restoring' },
-          queryClient
-        ),
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => restoreWithBackup(engine, databaseId, backupId),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.lists.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.database(engine, databaseId).queryKey,
+      });
+    },
+  });
+};
+
+export const databaseEventsHandler = ({
+  event,
+  queryClient,
+}: EventHandlerData) => {
+  if (['failed', 'finished', 'notification'].includes(event.status)) {
+    queryClient.invalidateQueries({ queryKey: databaseQueries.lists.queryKey });
+
+    /**
+     * This is what a Database event entity looks like:
+     *
+     * "entity": {
+     *   "label": "my-db-staging",
+     *   "id": 2959,
+     *   "type": "database",
+     *   "url": "/v4/databases/postgresql/instances/2959"
+     * },
+     */
+    if (event.entity) {
+      const engine = getEngineFromDatabaseEntityURL(event.entity.url);
+
+      if (!engine) {
+        // eslint-disable-next-line no-console
+        return console.warn(
+          'Unable to get DBaaS engine from entity URL in event',
+          event.id
+        );
+      }
+
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.database(engine as Engine, event.entity.id)
+          .queryKey,
+      });
     }
-  );
-};
-
-export const databaseEventsHandler = (event: EventHandlerData) => {
-  const {
-    event: { action, entity, status },
-    queryClient,
-  } = event;
-
-  switch (action) {
-    case 'database_create':
-      switch (status) {
-        case 'failed':
-        case 'finished':
-          // Database status will change from `provisioning` to `active` (or `failed`) and
-          // the host fields will populate. We need to refetch to get the hostnames.
-          queryClient.invalidateQueries([queryKey, entity!.id]);
-          queryClient.invalidateQueries([`${queryKey}-list`]);
-        case 'notification':
-          // In this case, the API let us know the user initialized a Database create event.
-          // We use this logic for the case a user created a Database from outside Cloud Manager,
-          // they would expect to see their database populate without a refresh.
-          const storedDatabase = queryClient.getQueryData<Database>([
-            queryKey,
-            entity!.id,
-          ]);
-          if (!storedDatabase) {
-            queryClient.invalidateQueries([`${queryKey}-list`]);
-          }
-        case 'scheduled':
-        case 'started':
-          return;
-      }
-  }
-};
-
-interface DatabaseData extends Partial<Database>, Partial<DatabaseInstance> {}
-
-const updateStoreForDatabase = (
-  id: number,
-  data: DatabaseData,
-  queryClient: QueryClient
-) => {
-  updateDatabaseStore(id, data, queryClient);
-  updateInPaginatedStore<Database>([`${queryKey}-list`], id, data, queryClient);
-};
-
-const updateDatabaseStore = (
-  id: number,
-  newData: Partial<Database>,
-  queryClient: QueryClient
-) => {
-  const previousValue = queryClient.getQueryData([queryKey, id]);
-
-  // This previous value check makes sure we don't set the Database store to undefined.
-  // This is an odd edge case.
-  if (previousValue) {
-    queryClient.setQueryData<Database | undefined>(
-      [queryKey, id],
-      (oldData) => {
-        if (oldData === undefined) {
-          return undefined;
-        }
-
-        return {
-          ...oldData,
-          ...newData,
-        };
-      }
-    );
   }
 };

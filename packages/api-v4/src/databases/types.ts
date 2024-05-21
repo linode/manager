@@ -183,7 +183,3 @@ export interface UpdateDatabasePayload {
   type?: string;
 }
 
-export interface UpdateDatabaseResponse {
-  label: string;
-  allow_list: string[];
-}
