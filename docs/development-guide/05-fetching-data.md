@@ -251,7 +251,72 @@ An error can be a notice (API error) or a Formik field error. In order to implem
 
 Note: the legacy `scrollErrorIntoView` is deprecated in favor of `scrollErrorIntoViewV2`.
 
-```js
+Since Cloud Manager uses different ways of handling forms and validation, the `scrollErrorIntoViewV2` util should be implemented using the following patterns to ensure consistency.
+
+##### Formik
+```Typescript
+import * as React from 'react';
+
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
+
+export const MyComponent = () => {
+  const formContainerRef = React.useRef<HTMLFormElement>(null);
+
+  const {
+    values,
+    // other handlers
+  } = useFormik({
+    initialValues: {},
+    onSubmit: mySubmitFormHandler,
+    validate: () => {
+      scrollErrorIntoViewV2(formRef);
+    },
+    validationSchema: myValidationSchema,
+  });
+
+  return (
+    <form onSubmit={handleSubmit} ref={formContainerRef}>
+      <Error />
+      {/* form fields */}
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
+```
+
+##### React Hook Forms
+```Typescript
+import * as React from 'react';
+
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
+
+export const MyComponent = () => {
+  const formContainerRef = React.useRef<HTMLFormElement>(null);
+
+  const methods = useForm<LinodeCreateFormValues>({
+    defaultValues,
+    mode: 'onBlur',
+    resolver: myResolvers,
+    // other methods
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <form
+        onSubmit={methods.handleSubmit(onSubmit, () => scrollErrorIntoViewV2(formRef))}
+        ref={formContainerRef}
+      >
+        <Error />
+        {/* form fields */}
+        <button type="submit">Submit</button>
+      </form>
+    </>
+  );
+};
+```
+
+##### Uncontrolled forms
+```Typescript
 import * as React from 'react';
 
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
@@ -269,6 +334,7 @@ export const MyComponent = () => {
 
   return (
     <form onSubmit={handleSubmit} ref={formContainerRef}>
+      <Error />
       {/* form fields */}
       <button type="submit">Submit</button>
     </form>
