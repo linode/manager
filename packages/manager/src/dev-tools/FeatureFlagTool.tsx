@@ -25,7 +25,6 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
-  { flag: 'parentChildAccountAccess', label: 'Parent/Child Account' },
   { flag: 'placementGroups', label: 'Placement Groups' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
