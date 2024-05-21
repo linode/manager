@@ -125,7 +125,7 @@ export const oneClickApps: OCA[] = [
       start: '00C7D4',
     },
     description: `Apache Kafka supports a wide range of applications from log aggregation to real-time analytics. Kafka provides a foundation for building data pipelines, event-driven architectures, or stream processing applications.`,
-    logo_url: 'apachekafka.svg',
+    logo_url: 'kafka.svg',
     name: 'Apache Kafka Cluster',
     related_guides: [
       {
