@@ -25,10 +25,15 @@ export const AggregateFunctionComponent = (
   let default_agg_unavailable = false;
 
   //if default aggregate func not available in available_aggregate_function
-  if(props.default_aggregate_func && props.default_aggregate_func.length > 0 && !default_aggregate_func){
-    default_agg_unavailable = true;
+  if(!default_aggregate_func){
     default_aggregate_func = available_aggregate_func[0];
+
+    if(props.default_aggregate_func && props.default_aggregate_func.length > 0){
+      default_agg_unavailable = true;
+
+    }
   }
+
 
   return (
     <div
