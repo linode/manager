@@ -2,19 +2,19 @@
  * @file Linode Create end-to-end tests.
  */
 
-import { authenticate } from 'support/api/authentication';
-import { interceptCreateLinode } from 'support/intercepts/linodes';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { ui } from 'support/ui';
 import { chooseRegion } from 'support/util/regions';
 import { randomLabel, randomString } from 'support/util/random';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import { cleanUp } from 'support/util/cleanup';
 import { linodeCreatePage } from 'support/ui/pages';
+import { authenticate } from 'support/api/authentication';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { interceptCreateLinode } from 'support/intercepts/linodes';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 
 authenticate();
 describe('Create Linode', () => {

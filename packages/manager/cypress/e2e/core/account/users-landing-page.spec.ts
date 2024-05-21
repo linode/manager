@@ -114,7 +114,7 @@ describe('Users landing page', () => {
     // Confirm that "Child account access" column is present
     cy.findByText('Child Account Access').should('be.visible');
     mockUsers.forEach((user) => {
-      cy.get(`[aria-label="User ${user.username}"]`)
+      cy.get(`[data-qa-table-row="${user.username}"]`)
         .should('be.visible')
         .within(() => {
           if (
