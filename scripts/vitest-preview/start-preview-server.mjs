@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+
+// Adapted from vitest-preview
+// https://github.com/nvh95/vitest-preview/blob/main/packages/vitest-preview/src/node/previewServer.ts
+
 import fs from 'fs';
 import path from 'path';
 import express from 'express';
