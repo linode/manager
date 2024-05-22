@@ -17,7 +17,6 @@ import { TextField } from 'src/components/TextField';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { VPC_READ_ONLY_TOOLTIP } from 'src/features/VPCs/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useProfile } from 'src/queries/profile';
 import { useCreatePersonalAccessTokenMutation } from 'src/queries/tokens';
@@ -93,8 +92,6 @@ interface Props {
 export const CreateAPITokenDrawer = (props: Props) => {
   const expiryTups = genExpiryTups();
   const { onClose, open, showSecret } = props;
-
-  const flags = useFlags();
 
   const initialValues = {
     expiry: expiryTups[0][1],
@@ -204,9 +201,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
 
   // Visually hide the "Child Account Access" permission even though it's still part of the base perms.
   const hideChildAccountAccessScope =
-    profile?.user_type !== 'parent' ||
-    isChildAccountAccessRestricted ||
-    !flags.parentChildAccountAccess;
+    profile?.user_type !== 'parent' || isChildAccountAccessRestricted;
 
   return (
     <Drawer onClose={onClose} open={open} title="Add Personal Access Token">

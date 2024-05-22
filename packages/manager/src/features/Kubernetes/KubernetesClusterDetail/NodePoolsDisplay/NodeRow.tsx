@@ -70,7 +70,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
   const displayIP = ip ?? '';
 
   return (
-    <StyledTableRow ariaLabel={label} data-qa-node-row={nodeId}>
+    <StyledTableRow data-qa-node-row={nodeId}>
       <TableCell>
         <Grid alignItems="center" container wrap="nowrap">
           <Grid>
