@@ -7,7 +7,10 @@ import {
   isRegionOptionUnavailable,
 } from './RegionSelect.utils';
 
-import type { RegionSelectOption } from './RegionSelect.types';
+import type {
+  RegionFilterValue,
+  RegionSelectOption,
+} from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
 
 const accountAvailabilityData = [
@@ -49,8 +52,8 @@ const regionsWithEdge = [
   }),
   regionFactory.build({
     capabilities: ['Linodes'],
-    country: 'us',
-    id: 'us-edge-2',
+    country: 'de',
+    id: 'eu-edge-2',
     label: 'Gecko Edge Test 2',
     site_type: 'edge',
   }),
@@ -100,13 +103,13 @@ const expectedEdgeRegions = [
     value: 'us-edge-1',
   },
   {
-    data: { country: 'us', region: 'North America' },
+    data: { country: 'de', region: 'Europe' },
     disabledProps: {
       disabled: false,
     },
-    label: 'Gecko Edge Test 2 (us-edge-2)',
+    label: 'Gecko Edge Test 2 (eu-edge-2)',
     site_type: 'edge',
-    value: 'us-edge-2',
+    value: 'eu-edge-2',
   },
 ];
 
@@ -174,12 +177,42 @@ describe('getRegionOptions', () => {
     expect(result).toEqual(expectedEdgeRegions);
   });
 
+  it('should filter out edge regions by continent if the regionFilter includes continent', () => {
+    const resultNA: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regionFilter: 'edge-NA' as RegionFilterValue,
+      regions: regionsWithEdge,
+    });
+    const resultEU: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regionFilter: 'edge-EU' as RegionFilterValue,
+      regions: regionsWithEdge,
+    });
+
+    expect(resultNA).toEqual([expectedEdgeRegions[0]]);
+    expect(resultEU).toEqual([expectedEdgeRegions[1]]);
+  });
+
+  it('should not filter out edge regions by continent if the regionFilter includes all', () => {
+    const resultAll: RegionSelectOption[] = getRegionOptions({
+      accountAvailabilityData,
+      currentCapability: 'Linodes',
+      regionFilter: 'edge-ALL' as RegionFilterValue,
+      regions: regionsWithEdge,
+    });
+
+    expect(resultAll).toEqual(expectedEdgeRegions);
+  });
+
   it('should not filter out any regions if regionFilter is undefined', () => {
     const expectedRegionsWithEdge = [
       expectedRegions[0],
-      ...expectedEdgeRegions,
+      expectedEdgeRegions[0],
       expectedRegions[1],
       expectedRegions[2],
+      expectedEdgeRegions[1],
     ];
 
     const result: RegionSelectOption[] = getRegionOptions({
