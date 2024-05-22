@@ -1,13 +1,10 @@
 import { account } from './event.factories/account';
-import { withTypography } from './utils';
 
 import type { Event, EventAction, EventStatus } from '@linode/api-v4';
 
-type EventMessage = { [S in EventStatus]?: JSX.Element | string };
+type EventMessage = { [S in EventStatus]?: (e: Event) => JSX.Element | string };
 
-export type PartialEventMap = (
-  e: Event
-) => {
+export type PartialEventMap = {
   [K in EventAction]?: EventMessage;
 };
 
@@ -15,6 +12,19 @@ export type EventMap = {
   [K in EventAction]?: EventMessage;
 };
 
-export const events: (e: Event) => EventMap = withTypography((e: Event) => ({
-  ...account(e),
-}));
+export const events: EventMap = {
+  ...account,
+};
+
+export const factorEventMessage = (e: Event): EventMessage => {
+  const action = events[e.action];
+
+  // console.log(action)
+
+  if (!action) {
+    // send sentry event
+    return {};
+  }
+
+  return action;
+};
