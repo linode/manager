@@ -1,16 +1,24 @@
-import { Dashboard, GetJWETokenPayload, Widgets } from '@linode/api-v4';
+import {
+  AvailableMetrics,
+  Dashboard,
+  GetJWETokenPayload,
+  Widgets,
+} from '@linode/api-v4';
 import { Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import CloudViewIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import {
   useCloudViewDashboardByIdQuery,
   useCloudViewJWEtokenQuery,
 } from 'src/queries/cloudview/dashboards';
 import { useResourcesQuery } from 'src/queries/cloudview/resources';
+import { useGetCloudViewMetricDefinitionsByServiceType } from 'src/queries/cloudview/services';
 
 import { AclpWidget } from '../Models/CloudPulsePreferences';
 import { FiltersObject } from '../Models/GlobalFilterProperties';
@@ -49,11 +57,17 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   } = useCloudViewDashboardByIdQuery(props.dashboardId!);
 
   const { data: resources } = useResourcesQuery(
-    dashboard ? dashboard.service_type : undefined!,
-    dashboard && dashboard.service_type ? true : false
+    dashboard && dashboard.service_type ? true : false,
+    {},
+    {},
+    dashboard ? dashboard.service_type : undefined!
   );
 
-  const { data: jweToken, isError, isSuccess } = useCloudViewJWEtokenQuery(
+  const {
+    data: jweToken,
+    isError: isJweTokenError,
+    isSuccess,
+  } = useCloudViewJWEtokenQuery(
     dashboard ? dashboard.service_type! : undefined!,
     getResourceIDsPayload(),
     resources ? true : false
@@ -83,13 +97,28 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   })({
     height: '100%',
   });
+  const {
+    data: metricDefinitions,
+    isError: isMetricDefinitionError,
+    isLoading,
+  } = useGetCloudViewMetricDefinitionsByServiceType(
+    dashboard? dashboard!.service_type: undefined!,
+    dashboard && dashboard!.service_type !== undefined ? true : false
+  );
 
-  if (isError) {
+  if (isJweTokenError) {
     return (
       <Paper style={{ height: '100%' }}>
         <StyledErrorState title="Failed to get jwe token" />
       </Paper>
     );
+  }
+  if (dashboard && dashboard.service_type && isLoading) {
+    return <CircleProgress />;
+  }
+
+  if (dashboard && dashboard.service_type && isMetricDefinitionError) {
+    return <ErrorState errorText={'Error loading metric definitions'} />;
   }
 
   const getCloudViewGraphProperties = (widget: Widgets) => {
@@ -140,27 +169,32 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   };
 
   const RenderWidgets = () => {
-    let colorIndex = 0;
     if (dashboard != undefined) {
-      dashboardRef.current = { ...dashboard };
       if (
-        dashboard?.service_type &&
+        dashboard.service_type &&
         cloudViewGraphProperties.globalFilters?.region &&
         cloudViewGraphProperties.globalFilters?.resource &&
         cloudViewGraphProperties.globalFilters?.resource.length > 0 &&
-        jweToken?.token
+        jweToken?.token &&
+        resources?.data
       ) {
         return (
           <Grid columnSpacing={1.5} container rowSpacing={0} spacing={2}>
             {dashboard.widgets.map((element, index) => {
-              if (element && element != undefined) {
+              if (element) {
+                const availMetrics = metricDefinitions?.data.find(
+                  (availMetrics: AvailableMetrics) =>
+                    element.label === availMetrics.label
+                );
+
                 return (
                   <CloudViewWidget
                     key={index}
                     {...getCloudViewGraphProperties(element)}
                     authToken={jweToken?.token}
+                    availableMetrics={availMetrics}
                     handleWidgetChange={handleWidgetChange}
-                    useColorIndex={colorIndex++} // todo, remove the color index
+                    resources={resources.data}
                   />
                 );
               } else {
@@ -170,26 +204,13 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
           </Grid>
         );
       } else {
-        return (
-          <Paper>
-            <StyledPlaceholder
-              icon={CloudViewIcon}
-              subtitle="Select Service Type, Region and Resource to visualize metrics"
-              title=""
-            />
-          </Paper>
+        return renderPlaceHolder(
+          'Select Service Type, Region and Resource to visualize metrics'
         );
       }
     } else {
-      return (
-        <Paper>
-          <StyledPlaceholder
-            subtitle="No visualizations are available at this moment.
-        Create Dashboards to list here."
-            icon={CloudViewIcon}
-            title=""
-          />
-        </Paper>
+      return renderPlaceHolder(
+        'No visualizations are available at this moment. Create Dashboards to list here.'
       );
     }
   };
@@ -199,6 +220,14 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   })({
     flex: 'auto',
   });
+
+  const renderPlaceHolder = (subtitle: string) => {
+    return (
+      <Paper>
+        <StyledPlaceholder icon={CloudViewIcon} subtitle={subtitle} title="" />
+      </Paper>
+    );
+  };
 
   return (
     <>

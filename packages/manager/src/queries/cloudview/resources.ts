@@ -39,17 +39,29 @@ export const useLinodeResourcesQuery = (
 };
 
 export const useResourcesQuery = (
-  resourceType: string,
-  runQuery: boolean,
+  enabled: boolean,
+  params: Params = {},
+  filter: Filter = {},
+  serviceType: string
+) => {
+  return useQuery<ResourcePage<any>, APIError[]>(
+    [QUERY_KEY, 'paginated', params, filter],
+    callAppropriateServicesForResources(serviceType, params, filter),
+    { ...queryPresets.longLived, enabled, keepPreviousData: true }
+  );
+};
+
+const callAppropriateServicesForResources = (
+  serviceType: string,
   params: Params = {},
   filter: Filter = {}
 ) => {
-  return useQuery<ResourcePage<Linode | Loadbalancer>, APIError[]>(
-    [QUERY_KEY, 'paginated', params, filter],
-    () =>
-      resourceType == 'linode'
-        ? getLinodes(params, filter)
-        : getLoadbalancers(params, filter),
-    { ...queryPresets.longLived, enabled: runQuery, keepPreviousData: true }
-  );
+  switch (serviceType) {
+    case 'linode':
+      return () => getLinodes(params, filter);
+    case 'aclb':
+      return () => getLoadbalancers(params, filter);
+    default:
+      return () => getLinodes(params, filter);
+  }
 };

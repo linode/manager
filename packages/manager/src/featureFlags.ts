@@ -47,6 +47,7 @@ type OneClickApp = Record<string, string>;
 export interface Flags {
   aclb: boolean;
   aclbFullCreateFlow: boolean;
+  aclpResourceTypeMap: CloudPulseResourceTypeMap[];
   apiMaintenance: APIMaintenance;
   cloudView: boolean;
   databaseBeta: boolean;
@@ -100,6 +101,11 @@ export interface PromotionalOffer {
   footnote: string;
   logo: string;
   name: string;
+}
+
+export interface CloudPulseResourceTypeMap {
+  metricKey: string;
+  serviceName: string;
 }
 
 /**

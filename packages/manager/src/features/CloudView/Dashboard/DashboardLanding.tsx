@@ -56,7 +56,6 @@ export const DashBoardLanding = () => {
 
   // since preference is mutable and savable
   const preferenceRef = React.useRef<any>();
-  const lastChanged = React.useRef<string>('');
 
   const { data: preferences, refetch: refetchPreferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
@@ -126,8 +125,6 @@ export const DashBoardLanding = () => {
       dashbboardPropRef.current.dashboardFilters.step = globalFilter.step;
       preferenceRef.current.aclpPreference.interval = globalFilter.interval;
     }
-
-    lastChanged.current = 'filter';
     // set as dashboard filter
     setDashboardProp({
       ...dashboardProp,
@@ -168,7 +165,11 @@ export const DashBoardLanding = () => {
             dashboard.widgets[i].label
           ) {
             dashboard.widgets[i].size =
-              preferences.aclpPreference.widgets[j].size;
+              preferences.aclpPreference.widgets[j].size ??
+              dashboard.widgets[i].size;
+            dashboard.widgets[i].aggregate_function =
+              preferences.aclpPreference.widgets[j].aggregateFunction ??
+              dashboard.widgets[i].aggregate_function;
             break;
           }
         }
@@ -177,8 +178,6 @@ export const DashBoardLanding = () => {
     dashbboardPropRef.current.dashboardId = dashboard.id;
     dashbboardPropRef.current.dashboardFilters.serviceType =
       dashboard.service_type;
-
-    lastChanged.current = 'filter';
 
     setDashboardProp({ ...dashbboardPropRef.current });
     updatedDashboard.current = { ...dashboard };
@@ -215,15 +214,18 @@ export const DashBoardLanding = () => {
     // todo, implement the reset view function
   };
 
-  const dashbaordChange = (dashboardObj: Dashboard) => {
+  const dashboardChange = (dashboardObj: Dashboard) => {
     // todo, whenever a change in dashboard happens
     updatedDashboard.current = { ...dashboardObj };
-    lastChanged.current = 'dashboard';
 
     if (dashboardObj.widgets) {
       preferenceRef.current.aclpPreference.widgets = dashboardObj.widgets.map(
         (obj) => {
-          return { label: obj.label, size: obj.size };
+          return {
+            aggregateFunction: obj.aggregate_function,
+            label: obj.label,
+            size: obj.size,
+          };
         }
       );
       // call preferences
@@ -269,11 +271,18 @@ export const DashBoardLanding = () => {
           </div>
         </div>
       </Paper>
-      <CloudPulseDashboard
-        {...dashboardProp}
-        onDashboardChange={dashbaordChange}
-        widgetPreferences={preferenceRef.current.aclpPreference.widgets}
-      />
+      {dashboardProp.dashboardFilters.serviceType &&
+        dashboardProp.dashboardFilters.region &&
+        dashboardProp.dashboardFilters.resource &&
+        dashboardProp.dashboardFilters.resource.length > 0 &&
+        dashboardProp.dashboardFilters.timeRange &&
+        dashboardProp.dashboardFilters.step && (
+          <CloudPulseDashboard
+            {...dashboardProp}
+            onDashboardChange={dashboardChange}
+            widgetPreferences={preferenceRef.current.aclpPreference.widgets}
+          />
+        )}
     </>
   );
 };

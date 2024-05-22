@@ -7,6 +7,7 @@ export interface AclpConfig {
   widgets: {
     label: string;
     size: number;
+    aggregateFunction: string;
   }[];
 }
 

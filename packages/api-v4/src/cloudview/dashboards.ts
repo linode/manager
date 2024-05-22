@@ -29,7 +29,7 @@ export const getDashboards = () =>
 export const getJWEToken = (data: GetJWETokenPayload, serviceType: string) =>
   Request<JWEToken>(
     setURL(
-      `http://blr-lhv95n.bangalore.corp.akamai.com:9000/v4/monitor/service/${encodeURIComponent(
+      `http://blr-lhv95n.bangalore.corp.akamai.com:9000/v4/monitor/services/${encodeURIComponent(
         serviceType
       )}/token`
     ),
