@@ -112,12 +112,6 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         onChange={(_, selectedOption: RegionSelectOption) => {
           handleRegionChange(selectedOption);
         }}
-        onKeyDown={(e) => {
-          if (e.key !== 'Tab') {
-            setSelectedRegion(null);
-            handleRegionChange(null);
-          }
-        }}
         renderOption={(props, option) => {
           return (
             <RegionOption
