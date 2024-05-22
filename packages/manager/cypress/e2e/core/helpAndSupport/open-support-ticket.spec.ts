@@ -75,7 +75,6 @@ describe('help & support', () => {
 
       // intercept create ticket request, stub response.
       mockCreateSupportTicket(mockTicketData).as('createTicket');
-      mockGetSupportTicket(mockTicketData).as('getTicket');
       mockGetSupportTicketReplies(ticketId, []).as('getReplies');
       mockAttachSupportTicketFile(ticketId).as('attachmentPost');
 
@@ -94,7 +93,6 @@ describe('help & support', () => {
       cy.wait('@createTicket').its('response.statusCode').should('eq', 200);
       cy.wait('@attachmentPost').its('response.statusCode').should('eq', 200);
       cy.wait('@getReplies').its('response.statusCode').should('eq', 200);
-      cy.wait('@getTicket').its('response.statusCode').should('eq', 200);
 
       containsVisible(`#${ticketId}: ${ticketLabel}`);
       containsVisible(ticketDescription);
