@@ -47,10 +47,7 @@ describe('Edit Contact Information', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <ContactInformation {...props} profile={queryMocks.useProfile().data} />,
-      {
-        flags: { parentChildAccountAccess: true },
-      }
+      <ContactInformation {...props} profile={queryMocks.useProfile().data} />
     );
 
     expect(getByTestId(EDIT_BUTTON_ID)).toHaveAttribute(
