@@ -21,4 +21,5 @@ export interface FiltersObject {
   serviceType?: string;
   step?: TimeGranularity;
   timeRange: WithStartAndEnd;
+  timestamp: number | undefined;
 }

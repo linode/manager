@@ -42,7 +42,8 @@ export interface CloudViewWidgetProperties {
 
   unit: string; // this should come from dashboard, which maintains map for service types in a separate API call
   useColorIndex?: number;
-  widget: Widgets; // this comes from dashboard, has inbuilt metrics, agg_func,group_by,filters,gridsize etc , also helpful in publishing any changes
+  widget: Widgets;
+  timestamp: number; // this comes from dashboard, has inbuilt metrics, agg_func,group_by,filters,gridsize etc , also helpful in publishing any changes
 }
 
 export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
@@ -134,7 +135,9 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
       '_' +
       widget.metric +
       '_' +
-      widget.label,
+      widget.label +
+      '_' +
+      props.globalFilters?.timestamp ?? "",
     true
   ); // fetch the metrics on any property change
 
