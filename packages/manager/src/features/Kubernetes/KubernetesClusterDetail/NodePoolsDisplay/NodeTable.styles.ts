@@ -1,8 +1,10 @@
 import { styled } from '@mui/material/styles';
 
+import VerticalDivider from 'src/assets/icons/divider-vertical.svg';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Table } from 'src/components/Table';
 import { TableRow } from 'src/components/TableRow';
+import { Typography } from 'src/components/Typography';
 
 export const StyledTableRow = styled(TableRow, {
   label: 'TableRow',
@@ -38,4 +40,16 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
   },
   marginLeft: 4,
   top: 1,
+}));
+
+export const StyledVerticalDivider = styled(VerticalDivider, {
+  label: 'StyledVerticalDivider',
+})(({ theme }) => ({
+  margin: `0 ${theme.spacing(2)}`,
+}));
+
+export const StyledTypography = styled(Typography, {
+  label: 'StyledTypography',
+})(({ theme }) => ({
+  margin: `0 0 0 ${theme.spacing()}`,
 }));
