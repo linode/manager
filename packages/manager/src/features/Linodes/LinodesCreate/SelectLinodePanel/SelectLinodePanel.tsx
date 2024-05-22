@@ -26,7 +26,7 @@ interface Props {
   handleSelection: (id: number, type: null | string, diskSize?: number) => void;
   header?: string;
   linodes: Linode[];
-  notices?: string[];
+  notices?: (JSX.Element | string)[];
   selectedLinodeID?: number;
   showPowerActions?: boolean;
 }
