@@ -37,6 +37,12 @@ describe('Cloud View Graph Widget', () => {
 
   it('renders a line graph with required widgets', () => {
     let widget = {} as Widgets;
+    widget.color = 'red';
+    widget.size = 6;
+    widget.label = 'CPU Utilisation';
+    widget.service_type = 'linode';
+    widget.unit = '%';
+    widget.metric = 'system_cpu_utilisation';
     let metricDefinitions = { data: [{}] } as MetricDefinitions;
     metricDefinitions.data[0].available_aggregate_functions = [];
 
@@ -63,7 +69,7 @@ describe('Cloud View Graph Widget', () => {
       endTime: dashboardFilters.timeRange.end,
       startTime: dashboardFilters.timeRange.start,
       step: {
-        unit: 'minute',
+        unit: 'min',
         value: '5',
       },
     };
@@ -78,13 +84,14 @@ describe('Cloud View Graph Widget', () => {
     const { getByTestId } = renderWithTheme(
       <CloudViewWidget
         ariaLabel={'Test'}
-        globalFilters={dashboardFilters}
-        errorLabel={errorLabel}
-        handleWidgetChange={handleWidgetChange}
+        authToken={''}
         availableMetrics={metricDefinitions.data[0]}
+        errorLabel={errorLabel}
+        globalFilters={dashboardFilters}
+        handleWidgetChange={handleWidgetChange}
+        resources={['test', 'hunter']}
         unit={'%'}
         widget={widget}
-        authToken={''}
       />
     );
 
@@ -140,13 +147,14 @@ describe('Cloud View Graph Widget', () => {
     const { getByTestId } = renderWithTheme(
       <CloudViewWidget
         ariaLabel={'Test'}
-        globalFilters={dashboardFilters}
-        errorLabel={errorLabel}
-        handleWidgetChange={handleWidgetChange}
+        authToken={''}
         availableMetrics={metricDefinitions.data[0]}
+        errorLabel={errorLabel}
+        globalFilters={dashboardFilters}
+        handleWidgetChange={handleWidgetChange}
+        resources={['test', 'hunter']}
         unit={'%'}
         widget={widget}
-        authToken={''}
       />
     );
 
@@ -190,13 +198,14 @@ describe('Cloud View Graph Widget', () => {
     const { getByTestId, getByText } = renderWithTheme(
       <CloudViewWidget
         ariaLabel={'Test'}
-        globalFilters={dashboardFilters}
-        errorLabel={errorLabel}
-        handleWidgetChange={handleWidgetChange}
+        authToken={''}
         availableMetrics={metricDefinitions.data[0]}
+        errorLabel={errorLabel}
+        globalFilters={dashboardFilters}
+        handleWidgetChange={handleWidgetChange}
+        resources={['test', 'hunter']}
         unit={'%'}
         widget={widget}
-        authToken={''}
       />
     );
 
@@ -238,12 +247,13 @@ describe('Cloud View Graph Widget', () => {
       const { getByTestId, getByText } = renderWithTheme(
         <CloudViewWidget
           ariaLabel={'Test'}
+          authToken={''}
+          availableMetrics={metricDefinitions.data[0]}
           globalFilters={dashboardFilters}
           handleWidgetChange={handleWidgetChange}
-          availableMetrics={metricDefinitions.data[0]}
+          resources={['test', 'hunter']}
           unit={'%'}
           widget={widget}
-          authToken={''}
         />
       );
 

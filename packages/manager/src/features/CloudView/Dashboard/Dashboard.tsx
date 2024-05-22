@@ -4,34 +4,34 @@ import {
   GetJWETokenPayload,
   Widgets,
 } from '@linode/api-v4';
+import { Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import CloudViewIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useCloudViewJWEtokenQuery } from 'src/queries/cloudview/dashboards';
 import {
   useLinodeResourcesQuery,
   useLoadBalancerResourcesQuery,
 } from 'src/queries/cloudview/resources';
+import { useGetCloudViewMetricDefinitionsByServiceType } from 'src/queries/cloudview/services';
 
 import { FiltersObject } from '../Models/GlobalFilterProperties';
 import {
   CloudViewWidget,
   CloudViewWidgetProperties,
 } from '../Widget/CloudViewWidget';
-import { useGetCloudViewMetricDefinitionsByServiceType } from 'src/queries/cloudview/services';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Paper } from '@mui/material';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 export interface DashboardProperties {
   dashboard: Dashboard; // this will be done in upcoming sprint
   dashboardFilters: FiltersObject;
 
   // on any change in dashboard
-  onDashboardChange: (dashboard: Dashboard) => void;
+  onDashboardChange?: (dashboard: Dashboard) => void;
 }
 
 export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
@@ -94,7 +94,7 @@ export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
     isLoading,
   } = useGetCloudViewMetricDefinitionsByServiceType(
     props.dashboard?.service_type,
-    props.dashboard?.service_type!== undefined
+    props.dashboard?.service_type !== undefined
   );
 
   if (isJweTokenError) {
@@ -124,6 +124,11 @@ export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
   };
 
   const handleWidgetChange = (widget: Widgets) => {
+    if (!props.onDashboardChange) {
+      // service owners might not use this, so undefined check is needed here
+      return;
+    }
+
     const dashboard = { ...props.dashboard };
 
     const index = dashboard.widgets.findIndex(
@@ -136,20 +141,20 @@ export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
   };
 
   const RenderWidgets = () => {
-    let colorIndex = 0;
     if (props.dashboard != undefined) {
       if (
         props.dashboard?.service_type &&
         cloudViewGraphProperties.globalFilters?.region &&
         cloudViewGraphProperties.globalFilters?.resource &&
         cloudViewGraphProperties.globalFilters?.resource.length > 0 &&
-        jweToken?.token
+        jweToken?.token &&
+        resourceOptions[props.dashboard.service_type].data
       ) {
         return (
           <Grid columnSpacing={1.5} container rowSpacing={0} spacing={2}>
             {props.dashboard.widgets.map((element, index) => {
               if (element) {
-                let availMetrics = metricDefinitions?.data.find(
+                const availMetrics = metricDefinitions?.data.find(
                   (availMetrics: AvailableMetrics) =>
                     element.label === availMetrics.label
                 );
@@ -158,10 +163,12 @@ export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
                   <CloudViewWidget
                     key={index}
                     {...getCloudViewGraphProperties(element)}
+                    resources={
+                      resourceOptions[props.dashboard.service_type].data
+                    }
                     authToken={jweToken?.token}
                     availableMetrics={availMetrics}
                     handleWidgetChange={handleWidgetChange}
-                    useColorIndex={colorIndex++} // todo, remove the color index
                   />
                 );
               } else {
@@ -171,26 +178,13 @@ export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
           </Grid>
         );
       } else {
-        return (
-          <Paper>
-            <StyledPlaceholder
-              icon={CloudViewIcon}
-              subtitle="Select Service Type, Region and Resource to visualize metrics"
-              title=""
-            />
-          </Paper>
+        return renderPlaceHolder(
+          'Select Service Type, Region and Resource to visualize metrics'
         );
       }
     } else {
-      return (
-        <Paper>
-          <StyledPlaceholder
-            subtitle="No visualizations are available at this moment.
-        Select Dashboards to list here."
-            icon={CloudViewIcon}
-            title=""
-          />
-        </Paper>
+      return renderPlaceHolder(
+        'No visualizations are available at this moment. Create Dashboards to list here.'
       );
     }
   };
@@ -200,6 +194,14 @@ export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
   })({
     flex: 'auto',
   });
+
+  const renderPlaceHolder = (subtitle: string) => {
+    return (
+      <Paper>
+        <StyledPlaceholder icon={CloudViewIcon} subtitle={subtitle} title="" />
+      </Paper>
+    );
+  };
 
   return <RenderWidgets />;
 });
