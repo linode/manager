@@ -1,17 +1,19 @@
 import { KubernetesCluster } from '@linode/api-v4';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { Typography } from 'src/components/Typography';
-import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
+import {
+  useAllKubernetesNodePoolQuery,
+  useKubernetesTypesQuery,
+} from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
-import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
-import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
+import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { getTotalClusterPrice } from 'src/utilities/pricing/kubernetes';
 
 import { getTotalClusterMemoryCPUAndStorage } from '../kubeUtils';
@@ -51,6 +53,7 @@ export const KubeClusterSpecs = (props: Props) => {
   const { cluster } = props;
   const { classes } = useStyles();
   const { data: regions } = useRegionsQuery();
+  const { data: kubernetesTypes } = useKubernetesTypesQuery();
 
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
 
@@ -67,9 +70,9 @@ export const KubeClusterSpecs = (props: Props) => {
   const displayRegion = region?.label ?? cluster.region;
 
   const dcSpecificPrice = cluster.control_plane.high_availability
-    ? getDCSpecificPrice({
-        basePrice: LKE_HA_PRICE,
+    ? getDCSpecificPriceByType({
         regionId: region?.id,
+        type: kubernetesTypes?.[1],
       })
     : undefined;
 
@@ -116,5 +119,3 @@ export const KubeClusterSpecs = (props: Props) => {
     </Grid>
   );
 };
-
-export default KubeClusterSpecs;

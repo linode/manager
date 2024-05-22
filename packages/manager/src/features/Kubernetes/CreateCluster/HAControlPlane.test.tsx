@@ -1,13 +1,12 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { HAControlPlane, HAControlPlaneProps } from './HAControlPlane';
 
 const props: HAControlPlaneProps = {
-  highAvailabilityPrice: LKE_HA_PRICE,
+  highAvailabilityPrice: 60,
   setHighAvailability: vi.fn(),
 };
 

@@ -12,7 +12,7 @@ import { Chip } from 'src/components/Chip';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Paper } from 'src/components/Paper';
 import { TagCell } from 'src/components/TagCell/TagCell';
-import KubeClusterSpecs from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
+import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useKubernetesClusterMutation,
@@ -100,7 +100,7 @@ interface Props {
   cluster: KubernetesCluster;
 }
 
-export const KubeSummaryPanel = (props: Props) => {
+export const KubeSummaryPanel = React.memo((props: Props) => {
   const { cluster } = props;
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -258,6 +258,4 @@ export const KubeSummaryPanel = (props: Props) => {
       </ConfirmationDialog>
     </>
   );
-};
-
-export default React.memo(KubeSummaryPanel);
+});

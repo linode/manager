@@ -15,7 +15,7 @@ import {
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import KubeSummaryPanel from './KubeSummaryPanel';
+import { KubeSummaryPanel } from './KubeSummaryPanel';
 import { NodePoolsDisplay } from './NodePoolsDisplay/NodePoolsDisplay';
 import { UpgradeKubernetesClusterToHADialog } from './UpgradeClusterDialog';
 import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
@@ -127,5 +127,3 @@ export const KubernetesClusterDetail = () => {
     </>
   );
 };
-
-export default KubernetesClusterDetail;

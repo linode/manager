@@ -16,6 +16,7 @@ import {
   getKubernetesClusterDashboard,
   getKubernetesClusterEndpoints,
   getKubernetesClusters,
+  getKubernetesTypes,
   getKubernetesVersions,
   getNodePools,
   recycleAllNodes,
@@ -25,12 +26,6 @@ import {
   updateKubernetesCluster,
   updateNodePool,
 } from '@linode/api-v4';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -38,6 +33,14 @@ import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
 import { profileQueries } from './profile';
+
+import type {
+  APIError,
+  Filter,
+  Params,
+  PriceType,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 
 export const kubernetesQueries = createQueryKeys('kubernetes', {
   cluster: (id: number) => ({
@@ -312,3 +315,22 @@ const getAllAPIEndpointsForCluster = (clusterId: number) =>
   getAll<KubernetesEndpointResponse>((params, filters) =>
     getKubernetesClusterEndpoints(clusterId, params, filters)
   )().then((data) => data.data);
+
+// DC Pricing Queries
+const getAllKubernetesTypes = () =>
+  getAll<PriceType>((params) => getKubernetesTypes(params))().then(
+    (results) => results.data
+  );
+
+export const typesQueries = createQueryKeys('types', {
+  clusters: {
+    queryFn: getAllKubernetesTypes,
+    queryKey: null,
+  },
+});
+
+export const useKubernetesTypesQuery = () =>
+  useQuery<PriceType[], APIError[]>({
+    ...queryPresets.oneTimeFetch,
+    ...typesQueries.clusters,
+  });

@@ -34,6 +34,7 @@ import {
 } from 'src/queries/account/agreements';
 import {
   useCreateKubernetesClusterMutation,
+  useKubernetesTypesQuery,
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -42,11 +43,8 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
-import {
-  DOCS_LINK_LABEL_DC_PRICING,
-  LKE_HA_PRICE,
-} from 'src/utilities/pricing/constants';
-import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
+import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
+import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
@@ -75,6 +73,7 @@ export const CreateCluster = () => {
   const history = useHistory();
   const { data: account } = useAccount();
   const { showHighAvailability } = getKubeHighAvailability(account);
+  const { data: types } = useKubernetesTypesQuery();
 
   const {
     data: allTypes,
@@ -164,14 +163,11 @@ export const CreateCluster = () => {
     setLabel(newLabel ? newLabel : undefined);
   };
 
-  /**
-   * @param regionId - region selection or null if no selection made
-   * @returns dynamically calculated high availability price by region
-   */
   const getHighAvailabilityPrice = (regionId: Region['id'] | null) => {
     const dcSpecificPrice = regionId
-      ? getDCSpecificPrice({ basePrice: LKE_HA_PRICE, regionId })
+      ? getDCSpecificPriceByType({ regionId, type: types?.[1] })
       : undefined;
+
     return dcSpecificPrice ? parseFloat(dcSpecificPrice) : undefined;
   };
 

@@ -1,7 +1,8 @@
+import { Region } from '@linode/api-v4';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
@@ -12,9 +13,11 @@ import {
   localStorageWarning,
   nodesDeletionWarning,
 } from 'src/features/Kubernetes/kubeUtils';
-import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
-import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
-import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
+import {
+  useKubernetesClusterMutation,
+  useKubernetesTypesQuery,
+} from 'src/queries/kubernetes';
+import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 
 import { HACopy } from '../CreateCluster/HAControlPlane';
 
@@ -52,6 +55,7 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
   const [error, setError] = React.useState<string | undefined>();
   const [submitting, setSubmitting] = React.useState(false);
   const { classes } = useStyles();
+  const { data: types } = useKubernetesTypesQuery();
 
   const onUpgrade = () => {
     setSubmitting(true);
@@ -68,6 +72,14 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
         setSubmitting(false);
         setError(e[0].reason);
       });
+  };
+
+  const getHighAvailabilityPrice = (regionId: Region['id'] | null) => {
+    const dcSpecificPrice = regionId
+      ? getDCSpecificPriceByType({ regionId, type: types?.[1] })
+      : undefined;
+
+    return dcSpecificPrice ? parseFloat(dcSpecificPrice) : undefined;
   };
 
   const actions = (
@@ -98,11 +110,7 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
       <HACopy />
       <Typography style={{ marginBottom: 8, marginTop: 12 }} variant="body1">
         For this region, pricing for the HA control plane is $
-        {getDCSpecificPrice({
-          basePrice: LKE_HA_PRICE,
-          regionId: regionID,
-        })}{' '}
-        per month per cluster.
+        {getHighAvailabilityPrice(regionID)} per month per cluster.
       </Typography>
       <Notice spacingBottom={16} spacingTop={16} variant="warning">
         <Typography className={classes.noticeHeader} variant="h3">

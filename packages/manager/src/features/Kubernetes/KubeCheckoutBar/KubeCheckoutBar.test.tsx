@@ -3,10 +3,7 @@ import * as React from 'react';
 
 import { regionFactory } from 'src/factories';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
-import {
-  LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
-  LKE_HA_PRICE,
-} from 'src/utilities/pricing/constants';
+import { LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE } from 'src/utilities/pricing/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import KubeCheckoutBar, { Props } from './KubeCheckoutBar';
@@ -17,7 +14,7 @@ const props: Props = {
   createCluster: vi.fn(),
   hasAgreed: false,
   highAvailability: false,
-  highAvailabilityPrice: LKE_HA_PRICE,
+  highAvailabilityPrice: 60,
   pools,
   region: 'us-east',
   regionsData: regionFactory.buildList(1),
