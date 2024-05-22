@@ -12,7 +12,7 @@ import { uniqueCategories } from './utilities';
 describe('Marketplace', () => {
   it('should render a header', () => {
     const { getByText } = renderWithThemeAndHookFormContext({
-      component: <AppSelect />,
+      component: <AppSelect onOpenDetailsDrawer={vi.fn()} />,
     });
 
     const heading = getByText('Select an App');
@@ -23,7 +23,7 @@ describe('Marketplace', () => {
 
   it('should render a search field', () => {
     const { getByPlaceholderText } = renderWithThemeAndHookFormContext({
-      component: <AppSelect />,
+      component: <AppSelect onOpenDetailsDrawer={vi.fn()} />,
     });
 
     const input = getByPlaceholderText('Search for app name');
@@ -34,7 +34,7 @@ describe('Marketplace', () => {
 
   it('should render a category select', () => {
     const { getByPlaceholderText } = renderWithThemeAndHookFormContext({
-      component: <AppSelect />,
+      component: <AppSelect onOpenDetailsDrawer={vi.fn()} />,
     });
 
     const input = getByPlaceholderText('Select category');
@@ -55,7 +55,7 @@ describe('Marketplace', () => {
       getByPlaceholderText,
       getByText,
     } = renderWithThemeAndHookFormContext({
-      component: <AppSelect />,
+      component: <AppSelect onOpenDetailsDrawer={vi.fn()} />,
     });
 
     await waitFor(() => {

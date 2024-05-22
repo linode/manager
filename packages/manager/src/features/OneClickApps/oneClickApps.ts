@@ -2,6 +2,9 @@ import { oneClickAppFactory } from 'src/factories/stackscripts';
 
 import type { OCA } from './types';
 
+/**
+ * @deprecated See oneClickAppsv2.ts
+ */
 export const oneClickApps: OCA[] = [
   {
     alt_description: 'Free open source control panel with a mobile app.',
