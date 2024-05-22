@@ -51,11 +51,7 @@ export const databaseQueries = createQueryKeys('databases', {
     queryFn: () => getEngineDatabase(engine, id),
     queryKey: [engine, id],
   }),
-  engines: {
-    queryFn: getAllDatabaseEngines,
-    queryKey: null,
-  },
-  lists: {
+  databases: {
     contextQueries: {
       all: {
         queryFn: getAllDatabases,
@@ -66,6 +62,10 @@ export const databaseQueries = createQueryKeys('databases', {
         queryKey: [params, filter],
       }),
     },
+    queryKey: null,
+  },
+  engines: {
+    queryFn: getAllDatabaseEngines,
     queryKey: null,
   },
   types: {
@@ -86,7 +86,7 @@ export const useDatabaseQuery = (engine: Engine, id: number) =>
 
 export const useDatabasesQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<DatabaseInstance>, APIError[]>({
-    ...databaseQueries.lists._ctx.paginated(params, filter),
+    ...databaseQueries.databases._ctx.paginated(params, filter),
     keepPreviousData: true,
     // @TODO Consider removing polling
     refetchInterval: 20000,
@@ -94,7 +94,7 @@ export const useDatabasesQuery = (params: Params, filter: Filter) =>
 
 export const useAllDatabasesQuery = (enabled: boolean = true) =>
   useQuery<DatabaseInstance[], APIError[]>({
-    ...databaseQueries.lists._ctx.all,
+    ...databaseQueries.databases._ctx.all,
     enabled,
   });
 
@@ -104,7 +104,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) => {
     mutationFn: (data) => updateDatabase(engine, id, data),
     onSuccess(database) {
       queryClient.invalidateQueries({
-        queryKey: databaseQueries.lists.queryKey,
+        queryKey: databaseQueries.databases.queryKey,
       });
       queryClient.setQueryData<Database>(
         databaseQueries.database(engine, id).queryKey,
@@ -121,7 +121,7 @@ export const useCreateDatabaseMutation = () => {
       createDatabase(data.engine?.split('/')[0] as Engine, data),
     onSuccess(database) {
       queryClient.invalidateQueries({
-        queryKey: databaseQueries.lists.queryKey,
+        queryKey: databaseQueries.databases.queryKey,
       });
       queryClient.setQueryData<Database>(
         databaseQueries.database(database.engine, database.id).queryKey,
@@ -139,7 +139,7 @@ export const useDeleteDatabaseMutation = (engine: Engine, id: number) => {
     mutationFn: () => deleteDatabase(engine, id),
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: databaseQueries.lists.queryKey,
+        queryKey: databaseQueries.databases.queryKey,
       });
       queryClient.removeQueries({
         queryKey: databaseQueries.database(engine, id).queryKey,
@@ -200,7 +200,7 @@ export const useRestoreFromBackupMutation = (
     mutationFn: () => restoreWithBackup(engine, databaseId, backupId),
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: databaseQueries.lists.queryKey,
+        queryKey: databaseQueries.databases.queryKey,
       });
       queryClient.invalidateQueries({
         queryKey: databaseQueries.database(engine, databaseId).queryKey,

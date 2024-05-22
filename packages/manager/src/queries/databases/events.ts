@@ -10,7 +10,9 @@ export const databaseEventsHandler = ({
   queryClient,
 }: EventHandlerData) => {
   if (['failed', 'finished', 'notification'].includes(event.status)) {
-    queryClient.invalidateQueries({ queryKey: databaseQueries.lists.queryKey });
+    queryClient.invalidateQueries({
+      queryKey: databaseQueries.databases.queryKey,
+    });
 
     /**
      * This is what a Database event entity looks like:
