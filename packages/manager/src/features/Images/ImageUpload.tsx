@@ -41,11 +41,12 @@ import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
-import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
+import { getRestrictedResourceText } from '../Account/utils';
 import {
   ImageUploadFormData,
   ImageUploadNavigationState,
 } from './ImageUpload.utils';
+import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
 import { uploadImageFile } from './requests';
 
 import type { AxiosError, AxiosProgressEvent } from 'axios';
@@ -190,7 +191,11 @@ export const ImageUpload = () => {
             )}
             {isImageCreateRestricted && (
               <Notice
-                text="You don't have permissions to create a new Image. Please contact an account administrator for details."
+                text={getRestrictedResourceText({
+                  action: 'create',
+                  isSingular: false,
+                  resourceType: 'Images',
+                })}
                 variant="error"
               />
             )}
@@ -254,7 +259,7 @@ export const ImageUpload = () => {
                   currentCapability={undefined}
                   errorText={fieldState.error?.message}
                   handleSelection={field.onChange}
-                  helperText="For fastest initial upload, select the region that is geographically closest to you. Once uploaded you will be able to deploy the image to other regions."
+                  helperText="For fastest initial upload, select the region that is geographically closest to you. Once uploaded, you will be able to deploy the image to other regions."
                   label="Region"
                   regionFilter="core" // Images service will not be supported for Gecko Beta
                   regions={regions ?? []}
@@ -313,6 +318,12 @@ export const ImageUpload = () => {
             <Typography mb={1} variant="h2">
               Image Upload
             </Typography>
+            {form.formState.errors.file?.message && (
+              <Notice
+                text={form.formState.errors.file.message}
+                variant="error"
+              />
+            )}
             <Notice
               spacingBottom={0}
               sx={{ fontSize: '0.875rem' }}
@@ -329,39 +340,34 @@ export const ImageUpload = () => {
               uncompressed image size.
             </Typography>
             <Controller
-              render={({ field, fieldState }) => (
-                <>
-                  {fieldState.error?.message && (
-                    <Notice text={fieldState.error.message} variant="error" />
-                  )}
-                  <ImageUploader
-                    onDropAccepted={(files) => {
-                      form.setError('file', {});
-                      field.onChange(files[0]);
-                    }}
-                    onDropRejected={(fileRejections) => {
-                      let message = '';
-                      switch (fileRejections[0].errors[0].code) {
-                        case 'file-invalid-type':
-                          message =
-                            'Only raw disk images (.img) compressed using gzip (.gz) can be uploaded.';
-                          break;
-                        case 'file-too-large':
-                          message = `Max file size (${
-                            readableBytes(MAX_FILE_SIZE_IN_BYTES).formatted
-                          }) exceeded`;
-                          break;
-                        default:
-                          message = fileRejections[0].errors[0].message;
-                      }
-                      form.setError('file', { message });
-                      form.resetField('file', { keepError: true });
-                    }}
-                    disabled={isImageCreateRestricted}
-                    isUploading={form.formState.isSubmitting}
-                    progress={uploadProgress}
-                  />
-                </>
+              render={({ field }) => (
+                <ImageUploader
+                  onDropAccepted={(files) => {
+                    form.setError('file', {});
+                    field.onChange(files[0]);
+                  }}
+                  onDropRejected={(fileRejections) => {
+                    let message = '';
+                    switch (fileRejections[0].errors[0].code) {
+                      case 'file-invalid-type':
+                        message =
+                          'Only raw disk images (.img) compressed using gzip (.gz) can be uploaded.';
+                        break;
+                      case 'file-too-large':
+                        message = `Max file size (${
+                          readableBytes(MAX_FILE_SIZE_IN_BYTES).formatted
+                        }) exceeded`;
+                        break;
+                      default:
+                        message = fileRejections[0].errors[0].message;
+                    }
+                    form.setError('file', { message });
+                    form.resetField('file', { keepError: true });
+                  }}
+                  disabled={isImageCreateRestricted}
+                  isUploading={form.formState.isSubmitting}
+                  progress={uploadProgress}
+                />
               )}
               control={form.control}
               name="file"

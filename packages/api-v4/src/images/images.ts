@@ -12,7 +12,7 @@ import Request, {
   setXFilter,
 } from '../request';
 import { Filter, Params, ResourcePage as Page } from '../types';
-import {
+import type {
   CreateImagePayload,
   Image,
   ImageUploadPayload,

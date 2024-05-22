@@ -15,7 +15,7 @@ export const recordImageAnalytics = (
 };
 
 /**
- * We extend the image upload payload to conatin the file
+ * We extend the image upload payload to contain the file
  * so we can use react-hook-form to manage all of the form state.
  */
 export interface ImageUploadFormData extends ImageUploadPayload {
@@ -23,7 +23,7 @@ export interface ImageUploadFormData extends ImageUploadPayload {
 }
 
 /**
- * We extend the image upload schema to conatin the file
+ * We extend the image upload schema to contain the file
  * so we can use react-hook-form to validate all of the
  * form state at once.
  */
