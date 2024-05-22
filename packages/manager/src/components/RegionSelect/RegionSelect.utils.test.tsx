@@ -58,6 +58,15 @@ const regionsWithEdge = [
 
 const expectedRegions: RegionSelectOption[] = [
   {
+    data: { country: 'ca', region: 'North America' },
+    disabledProps: {
+      disabled: false,
+    },
+    label: 'CA Location (ca-1)',
+    site_type: 'core',
+    value: 'ca-1',
+  },
+  {
     data: {
       country: 'us',
       region: 'North America',
@@ -68,15 +77,6 @@ const expectedRegions: RegionSelectOption[] = [
     label: 'US Location (us-1)',
     site_type: 'core',
     value: 'us-1',
-  },
-  {
-    data: { country: 'ca', region: 'North America' },
-    disabledProps: {
-      disabled: false,
-    },
-    label: 'CA Location (ca-1)',
-    site_type: 'core',
-    value: 'ca-1',
   },
   {
     data: { country: 'jp', region: 'Asia' },
@@ -176,8 +176,10 @@ describe('getRegionOptions', () => {
 
   it('should not filter out any regions if regionFilter is undefined', () => {
     const expectedRegionsWithEdge = [
+      expectedRegions[0],
       ...expectedEdgeRegions,
-      ...expectedRegions,
+      expectedRegions[1],
+      expectedRegions[2],
     ];
 
     const result: RegionSelectOption[] = getRegionOptions({
