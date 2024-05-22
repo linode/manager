@@ -41,8 +41,8 @@ export const getRegionOptions = ({
 
   const filteredRegionsByCapabilityAndSiteType = regionFilter
     ? filteredRegionsByCapability.filter((region) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const [_, edgeContinentCode] = regionFilter.split('edge-');
+        const [, edgeContinentCode] = regionFilter.split('edge-');
+        // Filter edge regions by geographical area
         if (edgeContinentCode && edgeContinentCode !== 'ALL') {
           const group = getRegionCountryGroup(region);
           return CONTINENT_CODE_TO_CONTINENT[edgeContinentCode] === group;

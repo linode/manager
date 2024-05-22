@@ -24,7 +24,7 @@ export interface RegionSelectOption {
   value: string;
 }
 
-export type RegionFilterValues =
+export type RegionFilterValue =
   | 'edge-AF'
   | 'edge-ALL'
   | 'edge-AS'
@@ -56,7 +56,7 @@ export interface RegionSelectProps
   helperText?: string;
   isClearable?: boolean;
   label?: string;
-  regionFilter?: RegionFilterValues;
+  regionFilter?: RegionFilterValue;
   regions: Region[];
   required?: boolean;
   selectedId: null | string;
@@ -97,7 +97,7 @@ export interface RegionOptionAvailability {
 
 export interface GetRegionOptions extends RegionOptionAvailability {
   flags?: FlagSet;
-  regionFilter?: RegionFilterValues;
+  regionFilter?: RegionFilterValue;
   regions: Region[];
 }
 

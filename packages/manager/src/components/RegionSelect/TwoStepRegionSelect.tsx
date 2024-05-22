@@ -12,7 +12,7 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
 
-import { RegionFilterValues } from './RegionSelect.types';
+import { RegionFilterValue } from './RegionSelect.types';
 
 interface TwoStepRegionSelectProps
   extends Omit<SelectRegionPanelProps, 'selectedId'> {
@@ -22,7 +22,7 @@ interface TwoStepRegionSelectProps
 
 interface GeographicalAreaOption {
   label: string;
-  value: RegionFilterValues;
+  value: RegionFilterValue;
 }
 
 const GEOGRAPHICAL_AREA_OPTIONS: GeographicalAreaOption[] = [
@@ -69,7 +69,7 @@ export const TwoStepRegionSelect = React.memo(
       selectedId,
     } = props;
 
-    const [regionFilter, setRegionFilter] = React.useState<RegionFilterValues>(
+    const [regionFilter, setRegionFilter] = React.useState<RegionFilterValue>(
       'edge'
     );
 
