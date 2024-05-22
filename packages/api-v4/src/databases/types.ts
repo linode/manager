@@ -61,6 +61,8 @@ export interface SSLFields {
   ca_certificate: string;
 }
 
+type MemberType = 'primary' | 'failover';
+
 // DatabaseInstance is the interface for the shape of data returned by the /databases/instances endpoint.
 export interface DatabaseInstance {
   id: number;
@@ -75,6 +77,10 @@ export interface DatabaseInstance {
   created: string;
   instance_uri: string;
   hosts: DatabaseHosts;
+  /**
+   * A key/value object where the key is an IP address and the value is a member type.
+   */
+  members: Record<string, MemberType>;
 }
 
 export type ClusterSize = 1 | 3;
@@ -139,6 +145,10 @@ export interface BaseDatabase {
    * It may not be defined.
    */
   used_disk_size_gb?: number;
+  /**
+   * A key/value object where the key is an IP address and the value is a member type.
+   */
+  members: Record<string, MemberType>;
 }
 
 export interface MySQLDatabase extends BaseDatabase {
@@ -182,4 +192,3 @@ export interface UpdateDatabasePayload {
   updates?: UpdatesSchedule;
   type?: string;
 }
-
