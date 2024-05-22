@@ -33,7 +33,7 @@ export interface CloudViewWidgetProperties {
   // we can try renaming this CloudViewWidget
   ariaLabel?: string;
   authToken: string;
-  availableMetrics: AvailableMetrics | undefined;
+availableMetrics: AvailableMetrics | undefined;
   errorLabel?: string; // error label can come from dashboard
   globalFilters?: FiltersObject; // this is dashboard level global filters, its also optional
   // any change in the current widget, call and pass this function and handle in parent component
@@ -42,8 +42,7 @@ export interface CloudViewWidgetProperties {
 
   unit: string; // this should come from dashboard, which maintains map for service types in a separate API call
   useColorIndex?: number;
-  widget: Widgets;
-  timestamp: number; // this comes from dashboard, has inbuilt metrics, agg_func,group_by,filters,gridsize etc , also helpful in publishing any changes
+  widget: Widgets; // this comes from dashboard, has inbuilt metrics, agg_func,group_by,filters,gridsize etc , also helpful in publishing any changes
 }
 
 export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
@@ -100,8 +99,8 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     return props.widget.service_type
       ? props.widget.service_type!
       : props.globalFilters
-      ? props.globalFilters.serviceType
-      : '';
+        ? props.globalFilters.serviceType
+        : '';
   };
 
   const getLabelName = (metric: any, serviceType: string) => {
@@ -176,7 +175,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
           return;
         }
         const color = colors[index];
-        const startEnd = convertTimeDurationToStartAndEndTimeRange(
+const startEnd = convertTimeDurationToStartAndEndTimeRange(
           props.globalFilters!.duration!
         );
         const dimension = {
@@ -200,7 +199,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
         legendRowsData.push(legendRow);
         dimensions.push(dimension);
         index = index + 1;
-        setToday(_isToday(startEnd.start, startEnd.end));
+setToday(_isToday(startEnd.start, startEnd.end));
       });
 
       // chart dimensions
@@ -277,23 +276,23 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
         <div className={widget.metric} style={{ margin: '1%' }}>
           <div
             style={{
-              alignItems: 'start',
+alignItems: 'start',
               display: 'flex',
               float: 'right',
               justifyContent: 'flex-end',
-              width: '70%',
+                            width: '70%',
             }}
           >
             {props.availableMetrics?.available_aggregate_functions &&
               props.availableMetrics.available_aggregate_functions.length >
                 0 && (
-                <AggregateFunctionComponent
-                  available_aggregate_func={
-                    props.availableMetrics?.available_aggregate_functions
-                  }
-                  default_aggregate_func={selectedAggregatedFunction}
-                  onAggregateFuncChange={handleAggregateFunctionChange}
-                />
+              <AggregateFunctionComponent
+                                available_aggregate_func={
+                  props.availableMetrics?.available_aggregate_functions
+                }
+default_aggregate_func={selectedAggregatedFunction}
+                onAggregateFuncChange={handleAggregateFunctionChange}
+              />
               )}
             <StyledZoomIcon
               handleZoomToggle={handleZoomToggle}
@@ -308,13 +307,13 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
                   : 'Error while rendering widget'
                 : undefined
             }
-            ariaLabel={props.ariaLabel ? props.ariaLabel : ''}
+                        ariaLabel={props.ariaLabel ? props.ariaLabel : ''}
             data={data}
             gridSize={widget.size}
             legendRows={legendRows}
             loading={isLoading}
             nativeLegend={true}
-            showToday={today}
+showToday={today}
             subtitle={props.unit}
             timezone={timezone}
             title={props.widget.label}
