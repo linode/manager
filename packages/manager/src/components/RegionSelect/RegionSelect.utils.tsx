@@ -45,7 +45,10 @@ export const getRegionOptions = ({
         // Filter edge regions by geographical area
         if (edgeContinentCode && edgeContinentCode !== 'ALL') {
           const group = getRegionCountryGroup(region);
-          return CONTINENT_CODE_TO_CONTINENT[edgeContinentCode] === group;
+          return (
+            region.site_type === 'edge' &&
+            CONTINENT_CODE_TO_CONTINENT[edgeContinentCode] === group
+          );
         }
         return regionFilter.includes(region.site_type);
       })
