@@ -8,6 +8,7 @@ import { RenderLinodeProps } from './SelectLinodePanel';
 
 export const SelectLinodeCards = ({
   disabled,
+  handlePowerOff,
   handleSelection,
   orderBy: { data: linodes },
   selectedLinodeId,
@@ -20,6 +21,7 @@ export const SelectLinodeCards = ({
             handleSelection(linode.id, linode.type, linode.specs.disk)
           }
           disabled={disabled}
+          handlePowerOff={() => handlePowerOff(linode.id)}
           key={linode.id}
           linode={linode}
           selected={linode.id == selectedLinodeId}

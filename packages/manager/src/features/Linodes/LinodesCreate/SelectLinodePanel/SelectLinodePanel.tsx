@@ -15,11 +15,11 @@ import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
+import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { PowerActionsDialog } from '../../PowerActionsDialogOrDrawer';
 import { SelectLinodeCards } from './SelectLinodeCards';
 import { SelectLinodeTable } from './SelectLinodeTable';
-import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 interface Props {
   disabled?: boolean;

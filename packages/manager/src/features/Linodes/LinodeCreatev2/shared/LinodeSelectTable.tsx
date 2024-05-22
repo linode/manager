@@ -34,6 +34,7 @@ import { LinodeSelectTableRow } from './LinodeSelectTableRow';
 
 import type { Linode } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
+import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 interface Props {
   /**
@@ -100,6 +101,11 @@ export const LinodeSelectTable = (props: Props) => {
       region: linode.region,
       type: linode.type ?? '',
     }));
+  };
+
+  const handlePowerOff = (linode: Linode) => {
+    setLinodeToPowerOff(linode);
+    sendLinodePowerOffEvent('Clone Linode');
   };
 
   const columns = enablePowerOff ? 6 : 5;
@@ -177,6 +183,7 @@ export const LinodeSelectTable = (props: Props) => {
           <Grid container spacing={2}>
             {data?.data.map((linode) => (
               <SelectLinodeCard
+                handlePowerOff={() => handlePowerOff(linode)}
                 handleSelection={() => handleSelect(linode)}
                 key={linode.id}
                 linode={linode}
