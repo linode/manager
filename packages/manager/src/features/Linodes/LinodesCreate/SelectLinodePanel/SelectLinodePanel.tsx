@@ -19,6 +19,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { PowerActionsDialog } from '../../PowerActionsDialogOrDrawer';
 import { SelectLinodeCards } from './SelectLinodeCards';
 import { SelectLinodeTable } from './SelectLinodeTable';
+import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 interface Props {
   disabled?: boolean;
@@ -155,9 +156,10 @@ export const SelectLinodePanel = (props: Props) => {
                 />
                 <StyledBox>
                   <SelectComponent
-                    handlePowerOff={(linodeId) =>
-                      setPowerOffLinode({ linodeId })
-                    }
+                    handlePowerOff={(linodeId) => {
+                      setPowerOffLinode({ linodeId });
+                      sendLinodePowerOffEvent('Clone Linode');
+                    }}
                     orderBy={{
                       data: linodesData,
                       handleOrderChange,
