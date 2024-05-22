@@ -163,8 +163,8 @@ export const DashBoardLanding = () => {
             dashboard.widgets[i].label
           ) {
             dashboard.widgets[i].size =
-              preferences.aclpPreference.widgets[j].size;
-            dashboard.widgets[i].aggregate_function = preferences.aclpPreference.widgets[j].aggregateFunction;
+              preferences.aclpPreference.widgets[j].size ?? dashboard.widgets[i].size;
+            dashboard.widgets[i].aggregate_function = preferences.aclpPreference.widgets[j].aggregateFunction ?? dashboard.widgets[i].aggregate_function;
             break;
           }
         }
