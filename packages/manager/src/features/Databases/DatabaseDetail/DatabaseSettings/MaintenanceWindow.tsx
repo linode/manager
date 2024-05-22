@@ -17,7 +17,7 @@ import { Typography } from 'src/components/Typography';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { RadioGroup } from 'src/components/RadioGroup';
-import { useDatabaseMutation } from 'src/queries/databases';
+import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 // import { updateDatabaseSchema } from '@linode/validation/src/databases.schema';
 

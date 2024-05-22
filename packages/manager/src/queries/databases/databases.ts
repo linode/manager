@@ -1,11 +1,8 @@
-/* eslint-disable sonarjs/no-small-switch */
 import {
   createDatabase,
   deleteDatabase,
   getDatabaseBackups,
   getDatabaseCredentials,
-  getDatabaseEngines,
-  getDatabaseTypes,
   getDatabases,
   getEngineDatabase,
   resetDatabaseCredentials,
@@ -15,12 +12,13 @@ import {
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
-import { getAll } from 'src/utilities/getAll';
-import { getEngineFromDatabaseEntityURL } from 'src/utilities/getEventsActionLink';
-
-import { queryPresets } from './base';
-import { profileQueries } from './profile';
+import { queryPresets } from '../base';
+import { profileQueries } from '../profile';
+import {
+  getAllDatabaseEngines,
+  getAllDatabaseTypes,
+  getAllDatabases,
+} from './requests';
 
 import type {
   APIError,
@@ -38,22 +36,7 @@ import type {
   UpdateDatabasePayload,
 } from '@linode/api-v4';
 
-export const getAllDatabases = () =>
-  getAll<DatabaseInstance>((params) => getDatabases(params))().then(
-    (data) => data.data
-  );
-
-export const getAllDatabaseEngines = () =>
-  getAll<DatabaseEngine>((params) => getDatabaseEngines(params))().then(
-    (data) => data.data
-  );
-
-export const getAllDatabaseTypes = () =>
-  getAll<DatabaseType>((params) => getDatabaseTypes(params))().then(
-    (data) => data.data
-  );
-
-const databaseQueries = createQueryKeys('databases', {
+export const databaseQueries = createQueryKeys('databases', {
   database: (engine: Engine, id: number) => ({
     contextQueries: {
       backups: {
@@ -224,40 +207,4 @@ export const useRestoreFromBackupMutation = (
       });
     },
   });
-};
-
-export const databaseEventsHandler = ({
-  event,
-  queryClient,
-}: EventHandlerData) => {
-  if (['failed', 'finished', 'notification'].includes(event.status)) {
-    queryClient.invalidateQueries({ queryKey: databaseQueries.lists.queryKey });
-
-    /**
-     * This is what a Database event entity looks like:
-     *
-     * "entity": {
-     *   "label": "my-db-staging",
-     *   "id": 2959,
-     *   "type": "database",
-     *   "url": "/v4/databases/postgresql/instances/2959"
-     * },
-     */
-    if (event.entity) {
-      const engine = getEngineFromDatabaseEntityURL(event.entity.url);
-
-      if (!engine) {
-        // eslint-disable-next-line no-console
-        return console.warn(
-          'Unable to get DBaaS engine from entity URL in event',
-          event.id
-        );
-      }
-
-      queryClient.invalidateQueries({
-        queryKey: databaseQueries.database(engine as Engine, event.entity.id)
-          .queryKey,
-      });
-    }
-  }
 };
