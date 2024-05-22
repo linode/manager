@@ -471,6 +471,7 @@ export const sendManageGravatarEvent = () => {
 };
 
 // SelectLinodePanel.tsx
+// LinodeSelectTable.tsx
 export const sendLinodePowerOffEvent = (category: string) => {
   sendEvent({
     action: 'Click:button',
