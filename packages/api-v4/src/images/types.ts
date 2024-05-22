@@ -59,6 +59,8 @@ export interface CreateImagePayload extends BaseImagePayload {
   disk_id: number;
 }
 
+export type UpdateImagePayload = Omit<BaseImagePayload, 'cloud_init'>;
+
 export interface ImageUploadPayload extends BaseImagePayload {
   label: string;
   region: string;
