@@ -12,7 +12,12 @@ import Request, {
   setXFilter,
 } from '../request';
 import { Filter, Params, ResourcePage as Page } from '../types';
-import { CreateImagePayload, Image, ImageUploadPayload, UploadImageResponse } from './types';
+import {
+  CreateImagePayload,
+  Image,
+  ImageUploadPayload,
+  UploadImageResponse,
+} from './types';
 
 /**
  * Get information about a single Image.
