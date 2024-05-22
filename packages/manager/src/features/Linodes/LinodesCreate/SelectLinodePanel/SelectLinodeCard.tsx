@@ -22,6 +22,7 @@ interface Props {
   handleSelection: () => void;
   linode: Linode;
   selected?: boolean;
+  showPowerActions: boolean;
 }
 
 export const SelectLinodeCard = ({
@@ -30,6 +31,7 @@ export const SelectLinodeCard = ({
   handleSelection,
   linode,
   selected,
+  showPowerActions,
 }: Props) => {
   const { data: regions } = useRegionsQuery();
 
@@ -67,7 +69,7 @@ export const SelectLinodeCard = ({
           />
           {capitalizeAllWords(linode.status.replace('_', ' '))}
         </Stack>
-        {linode?.status === 'running' && selected && (
+        {showPowerActions && linode?.status === 'running' && selected && (
           <Button buttonType="outlined" onClick={handlePowerOff}>
             Power Off
           </Button>

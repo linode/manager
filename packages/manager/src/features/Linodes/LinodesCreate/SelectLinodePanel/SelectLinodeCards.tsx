@@ -10,6 +10,7 @@ export const SelectLinodeCards = ({
   disabled,
   handlePowerOff,
   handleSelection,
+  showPowerActions,
   orderBy: { data: linodes },
   selectedLinodeId,
 }: RenderLinodeProps) => (
@@ -25,6 +26,7 @@ export const SelectLinodeCards = ({
           key={linode.id}
           linode={linode}
           selected={linode.id == selectedLinodeId}
+          showPowerActions={showPowerActions}
         />
       ))
     ) : (

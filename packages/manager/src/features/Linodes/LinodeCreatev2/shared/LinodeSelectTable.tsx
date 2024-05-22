@@ -23,6 +23,7 @@ import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDra
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
+import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 import { isNumeric } from 'src/utilities/stringUtils';
 
@@ -34,11 +35,11 @@ import { LinodeSelectTableRow } from './LinodeSelectTableRow';
 
 import type { Linode } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
-import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 interface Props {
   /**
-   * Adds an extra column that will dispay a "power off" option when the row is selected
+   * In desktop view, adds an extra column that will display a "power off" option when the row is selected.
+   * In mobile view, allows the "power off" button to display when the card is selected.
    */
   enablePowerOff?: boolean;
 }
@@ -188,6 +189,7 @@ export const LinodeSelectTable = (props: Props) => {
                 key={linode.id}
                 linode={linode}
                 selected={linode.id === field.value?.id}
+                showPowerActions={Boolean(enablePowerOff)}
               />
             ))}
             {data?.results === 0 && (
