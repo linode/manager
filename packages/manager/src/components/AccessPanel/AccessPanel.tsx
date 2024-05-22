@@ -56,7 +56,6 @@ interface Props {
   setAuthorizedUsers?: (usernames: string[]) => void;
   small?: boolean;
   toggleDiskEncryptionEnabled?: () => void;
-  tooltipInteractive?: boolean;
 }
 
 export const AccessPanel = (props: Props) => {
@@ -79,7 +78,6 @@ export const AccessPanel = (props: Props) => {
     selectedRegion,
     setAuthorizedUsers,
     toggleDiskEncryptionEnabled,
-    tooltipInteractive,
   } = props;
 
   const { classes, cx } = useStyles();
@@ -156,7 +154,6 @@ export const AccessPanel = (props: Props) => {
           onChange={handleChange}
           placeholder={placeholder || 'Enter a password.'}
           required={required}
-          tooltipInteractive={tooltipInteractive}
           value={password || ''}
         />
       </React.Suspense>

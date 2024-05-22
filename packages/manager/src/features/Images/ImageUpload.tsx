@@ -238,7 +238,6 @@ export const ImageUpload = () => {
                       checked={field.value ?? false}
                       onChange={field.onChange}
                       text="This image is cloud-init compatible"
-                      toolTipInteractive
                     />
                   )}
                   control={form.control}
@@ -320,15 +319,12 @@ export const ImageUpload = () => {
             </Typography>
             {form.formState.errors.file?.message && (
               <Notice
+                spacingBottom={12}
                 text={form.formState.errors.file.message}
                 variant="error"
               />
             )}
-            <Notice
-              spacingBottom={0}
-              sx={{ fontSize: '0.875rem' }}
-              variant="warning"
-            >
+            <Notice spacingBottom={0} variant="warning">
               <Typography>
                 Image files must be raw disk images (.img) compressed using gzip
                 (.gz). The maximum file size is 5 GB (compressed) and maximum
