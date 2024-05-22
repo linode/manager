@@ -35,7 +35,7 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
 
   const { field } = useController<CreateLinodeRequest>({
     control,
-    name: `stackscript_data.${userDefinedField.name}` as const,
+    name: `stackscript_data.${userDefinedField.name}`,
   });
 
   const error = formState.errors?.[userDefinedField.name]?.message?.replace(
@@ -84,9 +84,7 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
       .oneof!.split(',')
       .map((option) => ({ label: option }));
 
-    const value = options.find((option) => option.label === field.value) ?? {
-      label: userDefinedField.default ?? '',
-    };
+    const value = options.find((option) => option.label === field.value);
 
     if (options.length > 4) {
       return (
