@@ -48,6 +48,7 @@ export interface Widgets {
   y_label: string;
   filters: Filters[];
   serviceType: string;
+  service_type: string;
   resource_id: string[];
   time_granularity: TimeGranularity;
   time_duration: TimeDuration;
