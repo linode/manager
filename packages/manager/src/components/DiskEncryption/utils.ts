@@ -1,9 +1,3 @@
-import * as React from 'react';
-
-import Lock from 'src/assets/icons/lock.svg';
-import Unlock from 'src/assets/icons/unlock.svg';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { StyledTypography } from 'src/features/Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable.styles';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 
@@ -35,18 +29,3 @@ export const useIsDiskEncryptionFeatureEnabled = (): {
 
   return { isDiskEncryptionFeatureEnabled };
 };
-
-export const EncryptedIndicator = (
-  <>
-    <Lock />
-    <StyledTypography>Encrypted</StyledTypography>
-  </>
-);
-
-export const getNotEncryptedIndicatorJSX = (tooltipText: string) => (
-  <>
-    <Unlock />
-    <StyledTypography>Not Encrypted</StyledTypography>
-    <TooltipIcon status="help" text={tooltipText} />
-  </>
-);

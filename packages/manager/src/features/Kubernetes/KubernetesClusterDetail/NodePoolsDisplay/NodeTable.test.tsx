@@ -27,9 +27,9 @@ describe('NodeTable', () => {
     };
   });
 
-  vi.mock('src/components/DiskEncryption/utils.tsx', async () => {
+  vi.mock('src/components/DiskEncryption/utils.ts', async () => {
     const actual = await vi.importActual<any>(
-      'src/components/DiskEncryption/utils.tsx'
+      'src/components/DiskEncryption/utils.ts'
     );
     return {
       ...actual,
