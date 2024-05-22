@@ -269,7 +269,6 @@ export const MaintenanceWindow = (props: Props) => {
                       your timezone settings.
                     </Typography>
                   }
-                  interactive
                   status="help"
                 />
               </div>

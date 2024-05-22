@@ -60,7 +60,7 @@ import {
   ipFieldPlaceholder,
   validateIPs,
 } from 'src/utilities/ipUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 
@@ -213,6 +213,7 @@ const DatabaseCreate = () => {
     isLoading: typesLoading,
   } = useDatabaseTypesQuery();
 
+  const formRef = React.useRef<HTMLFormElement>(null);
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
   const [nodePricing, setNodePricing] = React.useState<NodePricing>();
@@ -316,7 +317,10 @@ const DatabaseCreate = () => {
       type: '',
     },
     onSubmit: submitForm,
-    validate: handleIPValidation,
+    validate: () => {
+      handleIPValidation();
+      scrollErrorIntoViewV2(formRef);
+    },
     validateOnChange: false,
     validationSchema: createDatabaseSchema,
   });
@@ -350,12 +354,6 @@ const DatabaseCreate = () => {
       };
     });
   }, [dbtypes, selectedEngine]);
-
-  React.useEffect(() => {
-    if (errors || createError) {
-      scrollErrorIntoView();
-    }
-  }, [errors, createError]);
 
   const labelToolTip = (
     <div className={classes.labelToolTipCtn}>
@@ -444,7 +442,7 @@ const DatabaseCreate = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} ref={formRef}>
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

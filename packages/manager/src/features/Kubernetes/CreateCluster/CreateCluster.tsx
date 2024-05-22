@@ -228,7 +228,6 @@ export const CreateCluster = () => {
                 regions={regionsData}
                 selectedId={selectedId}
               />
-              <RegionHelperText sx={{ marginTop: 1 }} />
             </Stack>
             <StyledDocsLinkContainer>
               <DocsLink

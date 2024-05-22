@@ -55,10 +55,7 @@ export const PlacementGroupsRow = React.memo(
     ];
 
     return (
-      <TableRow
-        ariaLabel={`Placement Group ${label}`}
-        data-testid={`placement-group-${id}`}
-      >
+      <TableRow data-testid={`placement-group-${id}`}>
         <TableCell>
           <Link
             data-testid={`link-to-placement-group-${id}`}

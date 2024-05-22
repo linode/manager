@@ -45,6 +45,7 @@
     "coverage": "yarn workspace linode-manager coverage",
     "coverage:summary": "yarn workspace linode-manager coverage:summary",
     "junit:summary": "ts-node scripts/junit-summary/index.ts",
+    "generate-tod": "ts-node scripts/tod-payload/index.ts",
     "docs": "bunx vitepress@1.0.0-rc.44 dev docs"
   },
   "resolutions": {

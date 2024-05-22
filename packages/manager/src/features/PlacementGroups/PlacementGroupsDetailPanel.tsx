@@ -106,7 +106,10 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
                 allRegionsWithPlacementGroupCapability?.length ? (
                   <StyledDetailPanelFormattedRegionList>
                     {allRegionsWithPlacementGroupCapability?.map((region) => (
-                      <ListItem key={region.id}>
+                      <ListItem
+                        data-testid={`supported-pg-region-${region.id}`}
+                        key={region.id}
+                      >
                         {region.label} ({region.id})
                       </ListItem>
                     ))}
@@ -115,6 +118,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
                   NO_REGIONS_SUPPORT_PLACEMENT_GROUPS_MESSAGE
                 )
               }
+              dataQaTooltip="Regions that support placement groups"
               displayText="regions"
               minWidth={225}
             />{' '}

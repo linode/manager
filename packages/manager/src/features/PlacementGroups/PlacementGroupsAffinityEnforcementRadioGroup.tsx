@@ -8,6 +8,8 @@ import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
 
+import { CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE } from './constants';
+
 import type { FormikHelpers } from 'formik';
 
 interface Props {
@@ -29,7 +31,7 @@ export const PlacementGroupsAffinityTypeEnforcementRadioGroup = (
   return (
     <Box sx={{ pt: 2 }}>
       <Notice
-        text="Once you create a placement group, you cannot change its Affinity Type Enforcement setting."
+        text={CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE}
         variant="warning"
       />
       <FormLabel htmlFor="affinity-type-enforcement-radio-group">
