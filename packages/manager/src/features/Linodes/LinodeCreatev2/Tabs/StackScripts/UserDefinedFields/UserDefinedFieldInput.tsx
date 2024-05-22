@@ -35,7 +35,7 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
 
   const { field } = useController<CreateLinodeRequest>({
     control,
-    name: `stackscript_data.${userDefinedField.name}`,
+    name: `stackscript_data.${userDefinedField.name}` as const,
   });
 
   const error = formState.errors?.[userDefinedField.name]?.message?.replace(
@@ -57,8 +57,15 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
       .manyof!.split(',')
       .map((option) => ({ label: option }));
 
+    const value = options.filter((option) =>
+      field.value?.split(',').includes(option.label)
+    );
+
     return (
       <Autocomplete
+        onChange={(e, options) => {
+          field.onChange(options.map((option) => option.label).join(','));
+        }}
         textFieldProps={{
           required: isRequired,
         }}
@@ -66,9 +73,8 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
         label={userDefinedField.label}
         multiple
         noMarginTop
-        onChange={(e, options) => field.onChange(options.join(','))}
         options={options}
-        value={field.value?.split(',') ?? []}
+        value={value}
       />
     );
   }
@@ -78,6 +84,10 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
       .oneof!.split(',')
       .map((option) => ({ label: option }));
 
+    const value = options.find((option) => option.label === field.value) ?? {
+      label: userDefinedField.default ?? '',
+    };
+
     if (options.length > 4) {
       return (
         <Autocomplete
@@ -86,9 +96,9 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
           }}
           disableClearable
           label={userDefinedField.label}
-          onChange={(_, option) => field.onChange(option.label)}
+          onChange={(_, option) => field.onChange(option?.label ?? '')}
           options={options}
-          value={options.find((option) => option.label === field.value)}
+          value={value}
         />
       );
     }
