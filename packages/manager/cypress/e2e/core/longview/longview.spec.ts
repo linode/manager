@@ -4,7 +4,6 @@ import { longviewResponseFactory, longviewClientFactory } from 'src/factories';
 import { LongviewResponse } from 'src/features/Longview/request.types';
 import { authenticate } from 'support/api/authentication';
 import {
-  longviewInstallTimeout,
   longviewStatusTimeout,
   longviewEmptyStateMessage,
   longviewAddClientButtonText,
@@ -33,31 +32,6 @@ const linodeCreateTimeout = 90000;
  */
 const getInstallCommand = (installCode: string): string => {
   return `curl -s https://lv.linode.com/${installCode} | sudo bash`;
-};
-
-/**
- * Installs Longview on a Linode.
- *
- * @param linodeIp - IP of Linode on which to install Longview.
- * @param linodePass - Root password of Linode on which to install Longview.
- * @param installCommand - Longview installation command.
- *
- * @returns Cypress chainable.
- */
-const installLongview = (
-  linodeIp: string,
-  linodePass: string,
-  installCommand: string
-) => {
-  return cy.exec('./cypress/support/scripts/longview/install-longview.sh', {
-    failOnNonZeroExit: true,
-    timeout: longviewInstallTimeout,
-    env: {
-      LINODEIP: linodeIp,
-      LINODEPASSWORD: linodePass,
-      CURLCOMMAND: installCommand,
-    },
-  });
 };
 
 /**
@@ -135,7 +109,6 @@ describe('longview', () => {
       label: 'Creating Linode and Longview Client...',
       timeout: linodeCreateTimeout,
     }).then(([linode, client]: [Linode, LongviewClient]) => {
-      const linodeIp = linode.ipv4[0];
       const installCommand = getInstallCommand(client.install_code);
 
       interceptGetLongviewClients().as('getLongviewClients');
@@ -153,15 +126,6 @@ describe('longview', () => {
           cy.contains(installCommand).should('be.visible');
           cy.findByText('Waiting for data...');
         });
-
-      // Install Longview on Linode by SSHing into machine and executing cURL command.
-      installLongview(linodeIp, linodePassword, installCommand).then(
-        (output) => {
-          // TODO Output this to a log file.
-          console.log(output.stdout);
-          console.log(output.stderr);
-        }
-      );
 
       // Wait for Longview to begin serving data and confirm that Cloud Manager
       // UI updates accordingly.
