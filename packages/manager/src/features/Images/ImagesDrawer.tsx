@@ -93,6 +93,7 @@ export const ImagesDrawer = (props: CombinedProps) => {
         }
 
         updateImage({ description: safeDescription, imageId, label, tags })
+          .then(() => Promise.reject([{ reason: 'Unable to edit Image' }]))
           .then(onClose)
           .catch((errorResponse: APIError[]) => {
             setErrors(
@@ -137,7 +138,14 @@ export const ImagesDrawer = (props: CombinedProps) => {
   const tagsError = hasErrorFor('tags');
 
   return (
-    <Drawer onClose={onClose} open={open} title={titleMap[mode]}>
+    <Drawer
+      onTransitionEnter={() => {
+        setErrors(undefined);
+      }}
+      onClose={onClose}
+      open={open}
+      title={titleMap[mode]}
+    >
       {!canCreateImage ? (
         <Notice
           text="You don't have permissions to create a new Image. Please contact an account administrator for details."
@@ -150,7 +158,7 @@ export const ImagesDrawer = (props: CombinedProps) => {
 
       {notice && <Notice data-qa-notice text={notice} variant="info" />}
 
-      {mode == 'restore' && (
+      {mode === 'restore' && (
         <LinodeSelect
           onSelectionChange={(linode) => {
             if (linode !== null) {
@@ -167,7 +175,7 @@ export const ImagesDrawer = (props: CombinedProps) => {
         />
       )}
 
-      {mode == 'edit' && (
+      {mode === 'edit' && (
         <>
           <TextField
             data-qa-image-label
@@ -202,7 +210,7 @@ export const ImagesDrawer = (props: CombinedProps) => {
       <ActionsPanel
         primaryButtonProps={{
           'data-testid': 'submit',
-          disabled: (mode == 'restore' && !selectedLinode) || !canCreateImage,
+          disabled: (mode === 'restore' && !selectedLinode) || !canCreateImage,
           label: buttonTextMap[mode] ?? 'Submit',
           loading: submitting,
           onClick: onSubmit,
