@@ -13,7 +13,6 @@ import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
-import { LinodeCLIModal } from 'src/components/LinodeCLIModal/LinodeCLIModal';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Prompt } from 'src/components/Prompt/Prompt';
@@ -50,6 +49,7 @@ import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
 import { uploadImageFile } from './requests';
 
 import type { AxiosError, AxiosProgressEvent } from 'axios';
+import { ImageUploadCLIDialog } from './ImageUploadCLIDialog';
 
 export const ImageUpload = () => {
   const { location } = useHistory<ImageUploadNavigationState | undefined>();
@@ -399,8 +399,7 @@ export const ImageUpload = () => {
           </Box>
         </Stack>
       </form>
-      <LinodeCLIModal
-        analyticsKey="Image Upload"
+      <ImageUploadCLIDialog
         isOpen={linodeCLIModalOpen}
         onClose={() => setLinodeCLIModalOpen(false)}
       />
