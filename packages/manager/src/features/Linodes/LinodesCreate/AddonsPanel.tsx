@@ -1,3 +1,4 @@
+import { useMediaQuery } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -5,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { Box } from 'src/components/Box';
 import { Checkbox } from 'src/components/Checkbox';
 import { Currency } from 'src/components/Currency';
+import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/DiskEncryption/constants';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
 import { Divider } from 'src/components/Divider';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
@@ -32,6 +35,7 @@ export interface AddonsPanelProps {
   changeBackups: () => void;
   createType: CreateTypes;
   disabled?: boolean;
+  diskEncryptionEnabled: boolean;
   handleVLANChange: (updatedInterface: Interface) => void;
   ipamAddress: string;
   ipamError?: string;
@@ -55,6 +59,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     changeBackups,
     createType,
     disabled,
+    diskEncryptionEnabled,
     handleVLANChange,
     ipamAddress,
     ipamError,
@@ -72,6 +77,12 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   } = props;
 
   const theme = useTheme();
+
+  const {
+    isDiskEncryptionFeatureEnabled,
+  } = useIsDiskEncryptionFeatureEnabled();
+
+  const matchesMdUp = useMediaQuery(theme.breakpoints.up('md'));
 
   const { data: image } = useImageQuery(
     selectedImageID ?? '',
@@ -142,6 +153,9 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     }
   }, [selectedLinodeID]);
 
+  const isBackupsBoxChecked =
+    (accountBackups && !isEdgeRegionSelected) || props.backups;
+
   return (
     <>
       {showVlans && (
@@ -185,9 +199,6 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
         <StyledFormControlLabel
           control={
             <Checkbox
-              checked={
-                (accountBackups && !isEdgeRegionSelected) || props.backups
-              }
               data-qa-check-backups={
                 accountBackups ? 'auto backup enabled' : 'auto backup disabled'
               }
@@ -197,6 +208,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
                 isBareMetal ||
                 isEdgeRegionSelected
               }
+              checked={isBackupsBoxChecked}
               data-testid="backups"
               onChange={changeBackups}
             />
@@ -208,6 +220,18 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
             </Box>
           }
         />
+        {isDiskEncryptionFeatureEnabled &&
+          diskEncryptionEnabled &&
+          isBackupsBoxChecked && (
+            <Notice
+              typeProps={{
+                style: { fontSize: '0.875rem' },
+              }}
+              spacingLeft={matchesMdUp ? 52 : 36} // Numbers derived from paddingLeft on StyledTypography (+2 to achieve alignment)
+              text={DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY}
+              variant="warning"
+            />
+          )}
         <StyledTypography variant="body1">
           {accountBackups && !isEdgeRegionSelected ? (
             <React.Fragment>

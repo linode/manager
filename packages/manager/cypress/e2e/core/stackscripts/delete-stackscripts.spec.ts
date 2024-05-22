@@ -23,7 +23,7 @@ describe('Delete stackscripts', () => {
     cy.wait('@getStackScripts');
 
     // Do nothing when cancelling
-    cy.get(`[aria-label="${stackScripts[0].label}"]`)
+    cy.get(`[data-qa-table-row="${stackScripts[0].label}"]`)
       .closest('tr')
       .within(() => {
         ui.actionMenu
@@ -47,7 +47,7 @@ describe('Delete stackscripts', () => {
       });
 
     // The StackScript is deleted successfully.
-    cy.get(`[aria-label="${stackScripts[0].label}"]`)
+    cy.get(`[data-qa-table-row="${stackScripts[0].label}"]`)
       .closest('tr')
       .within(() => {
         ui.actionMenu
@@ -73,7 +73,7 @@ describe('Delete stackscripts', () => {
     cy.findByText(stackScripts[0].label).should('not.exist');
 
     // The "Automate Deployment with StackScripts!" welcome page appears when no StackScript exists.
-    cy.get(`[aria-label="${stackScripts[1].label}"]`)
+    cy.get(`[data-qa-table-row="${stackScripts[1].label}"]`)
       .closest('tr')
       .within(() => {
         ui.actionMenu
