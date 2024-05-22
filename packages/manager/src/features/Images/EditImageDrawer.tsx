@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { APIError, UpdateImagePayload } from '@linode/api-v4';
+import { APIError, Image, UpdateImagePayload } from '@linode/api-v4';
 import { updateImageSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -9,31 +9,26 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
-import { useImageQuery, useUpdateImageMutation } from 'src/queries/images';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
+import { useUpdateImageMutation } from 'src/queries/images';
 
 import { useImageAndLinodeGrantCheck } from './utils';
 
 interface Props {
-  imageID?: string;
+  image?: Image;
   onClose: () => void;
   open: boolean;
 }
 export const EditImageDrawer = (props: Props) => {
-  const { imageID, onClose, open } = props;
+  const { image, onClose, open } = props;
 
   const { canCreateImage } = useImageAndLinodeGrantCheck();
-
-  const { data: image } = useImageQuery(imageID ?? '', !!imageID && open);
 
   const {
     control,
     formState,
     handleSubmit,
-    resetField,
+    reset,
     setError,
-    watch,
   } = useForm<UpdateImagePayload>({
     mode: 'onBlur',
     resolver: yupResolver(updateImageSchema),
@@ -46,26 +41,35 @@ export const EditImageDrawer = (props: Props) => {
 
   const { mutateAsync: updateImage } = useUpdateImageMutation();
 
-  // const onSubmit = () => {
-  //   if (!imageID) {
-  //     return;
-  //   }
+  const onSubmit = handleSubmit((values) => {
+    if (!image) {
+      return;
+    }
 
-  //   setErrors(undefined);
-  //   setSubmitting(true);
-
-  //   updateImage({ description: safeDescription, imageId: imageID, label, tags })
-  //     .then(onClose)
-  //     .catch((errorResponse: APIError[]) => {
-  //       setErrors(getAPIErrorOrDefault(errorResponse, 'Unable to edit Image'));
-  //     })
-  //     .finally(() => {
-  //       setSubmitting(false);
-  //     });
-  // };
+    updateImage({ imageId: image.id, ...values })
+      .then(onClose)
+      .catch((errors: APIError[]) => {
+        for (const error of errors) {
+          if (
+            (error.field && error.field === 'label') ||
+            error.field == 'description' ||
+            error.field == 'tags'
+          ) {
+            setError(error.field, { message: error.reason });
+          } else {
+            setError('root', { message: error.reason });
+          }
+        }
+      });
+  });
 
   return (
-    <Drawer onClose={onClose} open={open} title="Edit Image">
+    <Drawer
+      onClose={onClose}
+      onTransitionEnter={reset}
+      open={open}
+      title="Edit Image"
+    >
       {!canCreateImage ? (
         <Notice
           text="You don't have permissions to create a new Image. Please contact an account administrator for details."
@@ -86,6 +90,8 @@ export const EditImageDrawer = (props: Props) => {
           <TextField
             data-qa-image-label
             disabled={!canCreateImage}
+            error={Boolean(fieldState.error)}
+            errorText={fieldState.error?.message}
             label="Label"
             onChange={(e) => field.onChange(e.target.value)}
             value={field.value}
@@ -129,12 +135,12 @@ export const EditImageDrawer = (props: Props) => {
         name="tags"
       />
 
-      {/* <ActionsPanel
+      <ActionsPanel
         primaryButtonProps={{
           'data-testid': 'submit',
           disabled: !canCreateImage,
           label: 'Save Changes',
-          loading: submitting,
+          loading: formState.isSubmitting,
           onClick: onSubmit,
         }}
         secondaryButtonProps={{
@@ -144,7 +150,7 @@ export const EditImageDrawer = (props: Props) => {
           onClick: onClose,
         }}
         style={{ marginTop: 16 }}
-      /> */}
+      />
     </Drawer>
   );
 };

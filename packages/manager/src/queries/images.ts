@@ -83,7 +83,7 @@ export const useUpdateImageMutation = () => {
     { description?: string; imageId: string; label?: string; tags?: string[] }
   >({
     mutationFn: ({ description, imageId, label, tags }) =>
-      updateImage(imageId, label, description, tags),
+      updateImage(imageId, { description, label, tags }),
     onSuccess(image) {
       queryClient.invalidateQueries(imageQueries.paginated._def);
       queryClient.setQueryData<Image>(

@@ -2,7 +2,6 @@ import { Event, Image, ImageStatus } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
-import produce from 'immer';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -28,7 +27,6 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { listToItemsByID } from 'src/queries/base';
 import {
   isEventImageUpload,
   isEventInProgressDiskImagize,
@@ -42,7 +40,7 @@ import {
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { EditImageDrawer } from './EditImageDrawer';
-import ImageRow, { ImageWithEvent } from './ImageRow';
+import ImageRow from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
@@ -60,20 +58,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     marginTop: theme.spacing(),
   },
 }));
-
-interface EditImageDrawerState {
-  description?: string;
-  imageID?: string;
-  label?: string;
-  open: boolean;
-  tags?: string[];
-}
-
-interface RebuildImageDrawerState {
-  imageID?: string;
-  open: boolean;
-  selectedLinode?: number;
-}
 
 interface ImageDialogState {
   error?: string;
@@ -186,28 +170,24 @@ export const ImagesLanding = () => {
     ) ?? [];
 
   // Private images with the associated events tied in.
-  const manualImagesData = getImagesWithEvents(
+  const manualImagesEvents = getEventsForImages(
     manualImages?.data ?? [],
     imageEvents
   );
 
   // Automatic images with the associated events tied in.
-  const automaticImagesData = getImagesWithEvents(
+  const automaticImagesEvents = getEventsForImages(
     automaticImages?.data ?? [],
     imageEvents
   );
 
-  const [
-    editDrawerState,
-    setEditDrawerState,
-  ] = React.useState<EditImageDrawerState>({ open: false });
+  const [selectedImage, setSelectedImage] = React.useState<Image>();
 
-  const [
-    rebuildDrawerState,
-    setRebuildDrawerState,
-  ] = React.useState<RebuildImageDrawerState>({
-    open: false,
-  });
+  const [editDrawerOpen, setEditDrawerOpen] = React.useState<boolean>(false);
+
+  const [rebuildDrawerOpen, setRebuildDrawerOpen] = React.useState<boolean>(
+    false
+  );
 
   const [dialog, setDialogState] = React.useState<ImageDialogState>(
     defaultDialogState
@@ -293,25 +273,15 @@ export const ImagesLanding = () => {
     queryClient.invalidateQueries(imageQueries.paginated._def);
   };
 
-  const openForEdit = (
-    label: string,
-    description: string,
-    imageID: string,
-    tags: string[]
-  ) =>
-    setEditDrawerState({
-      description,
-      imageID,
-      label,
-      open: true,
-      tags,
-    });
+  const openForEdit = (image: Image) => {
+    setSelectedImage(image);
+    setEditDrawerOpen(true);
+  };
 
-  const openForRestore = (imageID: string) =>
-    setRebuildDrawerState({
-      imageID,
-      open: true,
-    });
+  const openForRestore = (image: Image) => {
+    setSelectedImage(image);
+    setRebuildDrawerOpen(true);
+  };
 
   const deployNewLinode = (imageID: string) => {
     history.push({
@@ -320,36 +290,6 @@ export const ImagesLanding = () => {
       state: { selectedImageId: imageID },
     });
   };
-
-  const changeSelectedLinode = (linodeId: null | number) => {
-    setRebuildDrawerState((prevDrawerState) => ({
-      ...prevDrawerState,
-      selectedLinode: linodeId ?? undefined,
-    }));
-  };
-
-  const setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-
-    setEditDrawerState((prevDrawerState) => ({
-      ...prevDrawerState,
-      label: value,
-    }));
-  };
-
-  const setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setEditDrawerState((prevDrawerState) => ({
-      ...prevDrawerState,
-      description: value,
-    }));
-  };
-
-  const setTags = (tags: string[]) =>
-    setEditDrawerState((prevDrawerState) => ({
-      ...prevDrawerState,
-      tags,
-    }));
 
   const getActions = () => {
     return (
@@ -367,20 +307,6 @@ export const ImagesLanding = () => {
         }}
       />
     );
-  };
-
-  const closeEditImageDrawer = () => {
-    setEditDrawerState((prevDrawerState) => ({
-      ...prevDrawerState,
-      open: false,
-    }));
-  };
-
-  const closeRebuildImageDrawer = () => {
-    setRebuildDrawerState((prevDrawerState) => ({
-      ...prevDrawerState,
-      open: false,
-    }));
   };
 
   const handlers: ImageHandlers = {
@@ -423,10 +349,7 @@ export const ImagesLanding = () => {
   }
 
   /** Empty States */
-  if (
-    (!manualImagesData || manualImagesData.length === 0) &&
-    (!automaticImagesData || automaticImagesData.length === 0)
-  ) {
+  if (!manualImages.data.length && !automaticImages.data.length) {
     return renderEmpty();
   }
 
@@ -491,12 +414,13 @@ export const ImagesLanding = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {manualImagesData.length > 0
-              ? manualImagesData.map((manualImage) => (
+            {manualImages.data.length > 0
+              ? manualImages.data.map((manualImage) => (
                   <ImageRow
+                    event={manualImagesEvents[manualImage.id]}
+                    handlers={handlers}
+                    image={manualImage}
                     key={manualImage.id}
-                    {...manualImage}
-                    {...handlers}
                   />
                 ))
               : noManualImages}
@@ -558,12 +482,13 @@ export const ImagesLanding = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {automaticImagesData.length > 0
-              ? automaticImagesData.map((automaticImage) => (
+            {automaticImages.data.length > 0
+              ? automaticImages.data.map((automaticImage) => (
                   <ImageRow
+                    event={automaticImagesEvents[automaticImage.id]}
+                    handlers={handlers}
+                    image={automaticImage}
                     key={automaticImage.id}
-                    {...automaticImage}
-                    {...handlers}
                   />
                 ))
               : noAutomaticImages}
@@ -579,16 +504,14 @@ export const ImagesLanding = () => {
         />
       </Paper>
       <EditImageDrawer
-        {...editDrawerState}
-        changeDescription={setDescription}
-        changeLabel={setLabel}
-        changeTags={setTags}
-        onClose={closeEditImageDrawer}
+        image={selectedImage}
+        onClose={() => setEditDrawerOpen(false)}
+        open={editDrawerOpen}
       />
       <RebuildImageDrawer
-        {...rebuildDrawerState}
-        changeLinode={changeSelectedLinode}
-        onClose={closeRebuildImageDrawer}
+        image={selectedImage}
+        onClose={() => setRebuildDrawerOpen(false)}
+        open={rebuildDrawerOpen}
       />
       <ConfirmationDialog
         title={
@@ -609,26 +532,15 @@ export const ImagesLanding = () => {
 
 export default ImagesLanding;
 
-const getImagesWithEvents = (images: Image[], events: Event[]) => {
-  const itemsById = listToItemsByID(images ?? []);
-  return Object.values(itemsById).reduce(
-    (accum, thisImage: Image) =>
-      produce(accum, (draft: any) => {
-        if (!thisImage.is_public) {
-          // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
-          const matchingEvent = events.find(
-            (thisEvent) =>
-              `private/${thisEvent.secondary_entity?.id}` === thisImage.id ||
-              (`private/${thisEvent.entity?.id}` === thisImage.id &&
-                thisEvent.status === 'failed')
-          );
-          if (matchingEvent) {
-            draft.push({ ...thisImage, event: matchingEvent });
-          } else {
-            draft.push(thisImage);
-          }
-        }
-      }),
-    []
-  ) as ImageWithEvent[];
-};
+const getEventsForImages = (images: Image[], events: Event[]) =>
+  Object.fromEntries(
+    images.map(({ id: imageId }) => [
+      imageId,
+      events.find(
+        (thisEvent) =>
+          `private/${thisEvent.secondary_entity?.id}` === imageId ||
+          (`private/${thisEvent.entity?.id}` === imageId &&
+            thisEvent.status === 'failed')
+      ),
+    ])
+  );
