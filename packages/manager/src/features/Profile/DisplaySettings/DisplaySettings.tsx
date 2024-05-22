@@ -103,7 +103,6 @@ export const DisplaySettings = () => {
                     marginTop: '-2px',
                     padding: 0,
                   }}
-                  interactive
                   status="help"
                   text={tooltipIconText}
                 />

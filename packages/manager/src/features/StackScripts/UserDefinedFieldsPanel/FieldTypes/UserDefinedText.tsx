@@ -14,7 +14,6 @@ interface Props {
   isPassword?: boolean;
   placeholder?: string;
   tooltip?: JSX.Element;
-  tooltipInteractive?: boolean;
   updateFormState: (key: string, value: any) => void;
   value: string;
 }
@@ -41,14 +40,7 @@ class UserDefinedText extends React.Component<Props, {}> {
   };
 
   renderPasswordField = () => {
-    const {
-      error,
-      field,
-      isOptional,
-      placeholder,
-      tooltip,
-      tooltipInteractive,
-    } = this.props;
+    const { error, field, isOptional, placeholder, tooltip } = this.props;
 
     return (
       <StyledAccessPanel
@@ -61,7 +53,6 @@ class UserDefinedText extends React.Component<Props, {}> {
         password={this.props.value}
         placeholder={placeholder}
         required={!isOptional}
-        tooltipInteractive={tooltipInteractive}
       />
     );
   };

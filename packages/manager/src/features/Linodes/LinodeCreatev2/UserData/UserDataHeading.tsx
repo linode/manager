@@ -41,7 +41,6 @@ export const UserDataHeading = () => {
               .
             </>
           }
-          interactive
           status="help"
           sxTooltipIcon={{ p: 0 }}
         />

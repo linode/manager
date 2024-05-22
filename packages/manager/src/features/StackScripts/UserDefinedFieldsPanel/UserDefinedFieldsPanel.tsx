@@ -102,7 +102,6 @@ const renderField = (
           isOptional={isOptional}
           isPassword={true}
           placeholder={isTokenPassword ? 'Enter your token' : field.example}
-          tooltipInteractive={isTokenPassword}
           updateFor={[field.label, udf_data[field.name], error]}
           updateFormState={handleChange}
           /**

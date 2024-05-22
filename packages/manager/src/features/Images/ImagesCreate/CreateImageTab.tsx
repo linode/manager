@@ -238,7 +238,6 @@ export const CreateImageTab = () => {
                               </Link>
                             </Typography>
                           }
-                          interactive
                           status="help"
                         />
                       </>

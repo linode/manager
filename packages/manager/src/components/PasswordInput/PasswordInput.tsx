@@ -19,7 +19,6 @@ const PasswordInput = (props: Props) => {
     hideStrengthLabel,
     hideValidation,
     required,
-    tooltipInteractive,
     value,
     ...rest
   } = props;
@@ -33,7 +32,6 @@ const PasswordInput = (props: Props) => {
           {...rest}
           fullWidth
           required={required}
-          tooltipInteractive={tooltipInteractive}
           tooltipText={disabledReason}
           value={value}
         />

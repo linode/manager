@@ -148,7 +148,6 @@ export const SubnetLinodeRow = (props: Props) => {
           </Typography>
         }
         icon={<StyledWarningIcon />}
-        interactive
         status="other"
         sxTooltipIcon={{ paddingLeft: 0 }}
       />
