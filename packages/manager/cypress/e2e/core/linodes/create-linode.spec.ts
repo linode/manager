@@ -167,14 +167,12 @@ describe('create linode', () => {
     cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');
 
     // confirm that LISH Console via SSH section is correct
-    // Find the "LISH Console via SSH" text
     cy.contains('LISH Console via SSH')
       .should('be.visible')
       .next() // Navigate to the next element which should be the value
       .invoke('text') // Get the text of the next element
       .then((text) => {
-        // Perform actions with the value or assert it
-        // Example assertion (replace 'expected-value' with the actual expected value)
+        // Example assertion (ssh -t <Linode account username>@lish-<Linode region>.linode.com <Linode label>)
         expect(text).equal(
           `ssh -t ${username}@lish-${region.id}.linode.com ${linodeLabel}`
         );
