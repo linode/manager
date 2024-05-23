@@ -70,7 +70,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   } = useCloudViewJWEtokenQuery(
     dashboard ? dashboard.service_type! : undefined!,
     getResourceIDsPayload(),
-    resources ? true : false
+    resources && dashboard ? true : false
   );
   // todo define a proper properties class
 
