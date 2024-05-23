@@ -138,11 +138,13 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       for (const pref of props.widgetPreferences) {
         if (pref.label == widgetObj.label) {
           widgetObj.size = pref.size;
+          widgetObj.aggregate_function = pref.aggregateFunction;
 
           // update ref
           dashboardRef.current?.widgets.forEach((obj) => {
             if (obj.label == widgetObj.label) {
               obj.size = widgetObj.size;
+              obj.aggregate_function = widgetObj.aggregate_function;
             }
           });
 
@@ -178,6 +180,9 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
         jweToken?.token &&
         resources?.data
       ) {
+
+        // maintain a copy
+        dashboardRef.current = dashboard;
         return (
           <Grid columnSpacing={1.5} container rowSpacing={0} spacing={2}>
             {dashboard.widgets.map((element, index) => {

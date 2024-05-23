@@ -71,10 +71,12 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     const request = {} as CloudViewMetricsRequest;
     request.aggregate_function = widget.aggregate_function;
     request.group_by = widget.group_by;
-    if (props.globalFilters) {
-      request.resource_id = props.globalFilters.resource!;
+    if (props.globalFilters && props.globalFilters.resource) {
+      request.resource_id = props.globalFilters.resource.map((obj) =>
+        parseInt(obj, 10)
+      );
     } else {
-      request.resource_id = widget.resource_id;
+      request.resource_id = widget.resource_id.map((obj) => parseInt(obj, 10));
     }
     request.metric = widget.metric!;
     request.time_duration = props.globalFilters
@@ -181,8 +183,8 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
           borderColor: color,
           data: seriesDataFormatter(
             graphData.values,
-            props.globalFilters?.timeRange.start,
-            props.globalFilters?.timeRange.end
+            graphData.values[0][0],
+            graphData.values[graphData.values.length - 1][0]
           ),
           label: getLabelName(graphData.metric, getServiceType()!),
         };
