@@ -169,7 +169,10 @@ export const LinodeSelectTable = (props: Props) => {
                 <LinodeSelectTableRow
                   onPowerOff={
                     enablePowerOff
-                      ? () => setLinodeToPowerOff(linode)
+                      ? () => {
+                          setLinodeToPowerOff(linode);
+                          sendLinodePowerOffEvent('Clone Linode');
+                        }
                       : undefined
                   }
                   key={linode.id}
