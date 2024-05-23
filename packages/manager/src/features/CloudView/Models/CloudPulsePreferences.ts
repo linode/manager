@@ -5,13 +5,14 @@ export interface AclpConfig {
   resources: string[];
   timeDuration: string;
   widgets: {
+    aggregateFunction: string;
     label: string;
     size: number;
-    aggregateFunction: string;
   }[];
 }
 
 export interface AclpWidget {
-    label: string;
-    size: number;
+  aggregateFunction: string;
+  label: string;
+  size: number;
 }

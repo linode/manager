@@ -33,7 +33,7 @@ export interface CloudViewWidgetProperties {
   // we can try renaming this CloudViewWidget
   ariaLabel?: string;
   authToken: string;
-availableMetrics: AvailableMetrics | undefined;
+  availableMetrics: AvailableMetrics | undefined;
   errorLabel?: string; // error label can come from dashboard
   globalFilters?: FiltersObject; // this is dashboard level global filters, its also optional
   // any change in the current widget, call and pass this function and handle in parent component
@@ -71,10 +71,12 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     const request = {} as CloudViewMetricsRequest;
     request.aggregate_function = widget.aggregate_function;
     request.group_by = widget.group_by;
-    if (props.globalFilters) {
-      request.resource_id = props.globalFilters.resource!;
+    if (props.globalFilters && props.globalFilters.resource) {
+      request.resource_id = props.globalFilters.resource.map((obj) =>
+        parseInt(obj, 10)
+      );
     } else {
-      request.resource_id = widget.resource_id;
+      request.resource_id = widget.resource_id.map((obj) => parseInt(obj, 10));
     }
     request.metric = widget.metric!;
     request.time_duration = props.globalFilters
@@ -99,8 +101,8 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     return props.widget.service_type
       ? props.widget.service_type!
       : props.globalFilters
-        ? props.globalFilters.serviceType
-        : '';
+      ? props.globalFilters.serviceType
+      : '';
   };
 
   const getLabelName = (metric: any, serviceType: string) => {
@@ -136,7 +138,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
       '_' +
       widget.label +
       '_' +
-      props.globalFilters?.timestamp ?? "",
+      props.globalFilters?.timestamp ?? '',
     true
   ); // fetch the metrics on any property change
 
@@ -175,7 +177,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
           return;
         }
         const color = colors[index];
-const startEnd = convertTimeDurationToStartAndEndTimeRange(
+        const startEnd = convertTimeDurationToStartAndEndTimeRange(
           props.globalFilters!.duration!
         );
         const dimension = {
@@ -183,8 +185,12 @@ const startEnd = convertTimeDurationToStartAndEndTimeRange(
           borderColor: color,
           data: seriesDataFormatter(
             graphData.values,
-            props.globalFilters?.timeRange.start,
-            props.globalFilters?.timeRange.end
+            props.globalFilters?.timeRange
+              ? props.globalFilters?.timeRange.start
+              : graphData.values[0][0],
+            props.globalFilters?.timeRange
+              ? props.globalFilters?.timeRange.end
+              : graphData.values[graphData.values.length - 1][0]
           ),
           label: getLabelName(graphData.metric, getServiceType()!),
         };
@@ -199,7 +205,7 @@ const startEnd = convertTimeDurationToStartAndEndTimeRange(
         legendRowsData.push(legendRow);
         dimensions.push(dimension);
         index = index + 1;
-setToday(_isToday(startEnd.start, startEnd.end));
+        setToday(_isToday(startEnd.start, startEnd.end));
       });
 
       // chart dimensions
@@ -276,23 +282,23 @@ setToday(_isToday(startEnd.start, startEnd.end));
         <div className={widget.metric} style={{ margin: '1%' }}>
           <div
             style={{
-alignItems: 'start',
+              alignItems: 'start',
               display: 'flex',
               float: 'right',
               justifyContent: 'flex-end',
-                            width: '70%',
+              width: '70%',
             }}
           >
             {props.availableMetrics?.available_aggregate_functions &&
               props.availableMetrics.available_aggregate_functions.length >
                 0 && (
-              <AggregateFunctionComponent
-                                available_aggregate_func={
-                  props.availableMetrics?.available_aggregate_functions
-                }
-default_aggregate_func={selectedAggregatedFunction}
-                onAggregateFuncChange={handleAggregateFunctionChange}
-              />
+                <AggregateFunctionComponent
+                  available_aggregate_func={
+                    props.availableMetrics?.available_aggregate_functions
+                  }
+                  default_aggregate_func={selectedAggregatedFunction}
+                  onAggregateFuncChange={handleAggregateFunctionChange}
+                />
               )}
             <StyledZoomIcon
               handleZoomToggle={handleZoomToggle}
@@ -307,13 +313,13 @@ default_aggregate_func={selectedAggregatedFunction}
                   : 'Error while rendering widget'
                 : undefined
             }
-                        ariaLabel={props.ariaLabel ? props.ariaLabel : ''}
+            ariaLabel={props.ariaLabel ? props.ariaLabel : ''}
             data={data}
             gridSize={widget.size}
             legendRows={legendRows}
             loading={isLoading}
             nativeLegend={true}
-showToday={today}
+            showToday={today}
             subtitle={props.unit}
             timezone={timezone}
             title={props.widget.label}

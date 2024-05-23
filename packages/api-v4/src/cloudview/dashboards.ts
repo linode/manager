@@ -7,9 +7,12 @@ import { Dashboard, JWEToken, GetJWETokenPayload } from './types';
 export const getDashboardById = (dashboardId?: number) =>
   Request<Dashboard>(
     setURL(
-      `${API_ROOT}/monitor/dashboards/${encodeURIComponent(dashboardId!)}`
+      `http://blr-lhv95n.bangalore.corp.akamai.com:9000/v4/monitor/dashboards/${encodeURIComponent(dashboardId!)}`
     ),
-    setMethod('GET')
+    setMethod('GET'),
+    setHeaders({
+      Authorization: 'Bearer vagrant',
+    })
   );
 
 export const getDashboards = () =>

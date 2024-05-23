@@ -13,13 +13,14 @@ import CloudViewIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import { useCloudViewJWEtokenQuery } from 'src/queries/cloudview/dashboards';
 import {
-  useLinodeResourcesQuery,
-  useLoadBalancerResourcesQuery,
-} from 'src/queries/cloudview/resources';
+  useCloudViewDashboardByIdQuery,
+  useCloudViewJWEtokenQuery,
+} from 'src/queries/cloudview/dashboards';
+import { useResourcesQuery } from 'src/queries/cloudview/resources';
 import { useGetCloudViewMetricDefinitionsByServiceType } from 'src/queries/cloudview/services';
 
+import { AclpWidget } from '../Models/CloudPulsePreferences';
 import { FiltersObject } from '../Models/GlobalFilterProperties';
 import {
   CloudViewWidget,
@@ -27,44 +28,50 @@ import {
 } from '../Widget/CloudViewWidget';
 
 export interface DashboardProperties {
-  dashboard: Dashboard; // this will be done in upcoming sprint
   dashboardFilters: FiltersObject;
-
+  dashboardId: number; // need to pass the dashboardId
   // on any change in dashboard
   onDashboardChange?: (dashboard: Dashboard) => void;
+
+  widgetPreferences?: AclpWidget[]; // this is optional
 }
 
-export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
-  const resourceOptions: any = {};
+export const CloudPulseDashboard = (props: DashboardProperties) => {
+  // const resourceOptions: any = {};
+
   // returns a list of resource IDs to be passed as part of getJWEToken call
   const getResourceIDsPayload = () => {
     const jweTokenPayload: GetJWETokenPayload = {
       resource_id: [],
     };
-    jweTokenPayload.resource_id = resourceOptions[
-      props?.dashboard?.service_type
-    ]?.data?.map((resource: any) => resource.id);
+    jweTokenPayload.resource_id = resources
+      ? resources.data?.map((resource: any) => resource.id)
+      : undefined!;
     return jweTokenPayload;
   };
 
-  ({ data: resourceOptions['linode'] } = useLinodeResourcesQuery(
-    props?.dashboard?.service_type === 'linode'
-  ));
+  const {
+    data: dashboard,
+    isError: isDashboardFetchError,
+    isSuccess: isDashboardSuccess,
+  } = useCloudViewDashboardByIdQuery(props.dashboardId!);
 
-  ({ data: resourceOptions['aclb'] } = useLoadBalancerResourcesQuery(
-    props?.dashboard?.service_type === 'aclb'
-  ));
+  const { data: resources } = useResourcesQuery(
+    dashboard && dashboard.service_type ? true : false,
+    {},
+    {},
+    dashboard ? dashboard.service_type : undefined!
+  );
 
   const {
     data: jweToken,
     isError: isJweTokenError,
     isSuccess,
   } = useCloudViewJWEtokenQuery(
-    props?.dashboard?.service_type,
+    dashboard ? dashboard.service_type! : undefined!,
     getResourceIDsPayload(),
-    resourceOptions[props?.dashboard?.service_type] ? true : false
+    resources && dashboard ? true : false
   );
-
   // todo define a proper properties class
 
   const [
@@ -73,6 +80,8 @@ export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
   ] = React.useState<CloudViewWidgetProperties>(
     {} as CloudViewWidgetProperties
   );
+
+  const dashboardRef = React.useRef(dashboard);
 
   React.useEffect(() => {
     // set as dashboard filter
@@ -93,8 +102,8 @@ export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
     isError: isMetricDefinitionError,
     isLoading,
   } = useGetCloudViewMetricDefinitionsByServiceType(
-    props.dashboard?.service_type,
-    props.dashboard?.service_type !== undefined
+    dashboard? dashboard!.service_type: undefined!,
+    dashboard && dashboard!.service_type !== undefined ? true : false
   );
 
   if (isJweTokenError) {
@@ -104,17 +113,18 @@ export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
       </Paper>
     );
   }
-  if (props.dashboard?.service_type && isLoading) {
+  if (dashboard && dashboard.service_type && isLoading) {
     return <CircleProgress />;
   }
 
-  if (props.dashboard?.service_type && isMetricDefinitionError) {
+  if (dashboard && dashboard.service_type && isMetricDefinitionError) {
     return <ErrorState errorText={'Error loading metric definitions'} />;
   }
 
   const getCloudViewGraphProperties = (widget: Widgets) => {
     const graphProp: CloudViewWidgetProperties = {} as CloudViewWidgetProperties;
     graphProp.widget = { ...widget };
+    setPrefferedWidgetPlan(graphProp.widget);
     graphProp.globalFilters = props.dashboardFilters;
     graphProp.unit = widget.unit ? widget.unit : '%';
     graphProp.ariaLabel = widget.label;
@@ -123,36 +133,59 @@ export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
     return graphProp;
   };
 
-  const handleWidgetChange = (widget: Widgets) => {
-    if (!props.onDashboardChange) {
-      // service owners might not use this, so undefined check is needed here
-      return;
+  const setPrefferedWidgetPlan = (widgetObj: Widgets) => {
+    if (props.widgetPreferences && props.widgetPreferences.length > 0) {
+      for (const pref of props.widgetPreferences) {
+        if (pref.label == widgetObj.label) {
+          widgetObj.size = pref.size;
+          widgetObj.aggregate_function = pref.aggregateFunction;
+
+          // update ref
+          dashboardRef.current?.widgets.forEach((obj) => {
+            if (obj.label == widgetObj.label) {
+              obj.size = widgetObj.size;
+              obj.aggregate_function = widgetObj.aggregate_function;
+            }
+          });
+
+          break;
+        }
+      }
     }
+  };
 
-    const dashboard = { ...props.dashboard };
+  const handleWidgetChange = (widget: Widgets) => {
+    if (dashboard && props.onDashboardChange) {
+      const dashboardObj = { ...dashboardRef.current } as Dashboard;
 
-    const index = dashboard.widgets.findIndex(
-      (obj) => obj.label === widget.label
-    );
+      if (dashboardObj) {
+        const index = dashboardObj.widgets!.findIndex(
+          (obj) => obj.label === widget.label
+        );
 
-    dashboard.widgets[index] = { ...widget };
+        dashboardObj.widgets![index] = { ...widget };
 
-    props.onDashboardChange(dashboard);
+        props.onDashboardChange({ ...dashboardObj });
+      }
+    }
   };
 
   const RenderWidgets = () => {
-    if (props.dashboard != undefined) {
+    if (dashboard != undefined) {
       if (
-        props.dashboard?.service_type &&
+        dashboard.service_type &&
         cloudViewGraphProperties.globalFilters?.region &&
         cloudViewGraphProperties.globalFilters?.resource &&
         cloudViewGraphProperties.globalFilters?.resource.length > 0 &&
         jweToken?.token &&
-        resourceOptions[props.dashboard.service_type].data
+        resources?.data
       ) {
+
+        // maintain a copy
+        dashboardRef.current = dashboard;
         return (
           <Grid columnSpacing={1.5} container rowSpacing={0} spacing={2}>
-            {props.dashboard.widgets.map((element, index) => {
+            {dashboard.widgets.map((element, index) => {
               if (element) {
                 const availMetrics = metricDefinitions?.data.find(
                   (availMetrics: AvailableMetrics) =>
@@ -163,12 +196,10 @@ export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
                   <CloudViewWidget
                     key={index}
                     {...getCloudViewGraphProperties(element)}
-                    resources={
-                      resourceOptions[props.dashboard.service_type].data
-                    }
                     authToken={jweToken?.token}
                     availableMetrics={availMetrics}
                     handleWidgetChange={handleWidgetChange}
+                    resources={resources.data}
                   />
                 );
               } else {
@@ -203,5 +234,9 @@ export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
     );
   };
 
-  return <RenderWidgets />;
-});
+  return (
+    <>
+      <RenderWidgets />;
+    </>
+  );
+};

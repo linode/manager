@@ -20,6 +20,6 @@ export interface FiltersObject {
   resource: string[];
   serviceType?: string;
   step?: TimeGranularity;
-  timeRange: WithStartAndEnd;
-  timestamp: number | undefined;
+  timeRange?: WithStartAndEnd;
+  timestamp?: number | undefined;
 }

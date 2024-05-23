@@ -100,7 +100,7 @@ export const DashBoardLanding = () => {
       if (
         preferences &&
         preferences.aclpPreference.region !=
-        preferenceRef.current.aclpPreference.region
+          preferenceRef.current.aclpPreference.region
       ) {
         preferenceRef.current.aclpPreference.resources = [];
         dashboardPropRef.current.dashboardFilters.resource = [];
@@ -111,29 +111,32 @@ export const DashBoardLanding = () => {
       dashboardPropRef.current.dashboardFilters.resource =
         globalFilter.resource;
       preferenceRef.current.aclpPreference.dashboardId = dashboardPropRef
-        .current.dashboard
-        ? dashboardPropRef.current.dashboard.id
+        .current.dashboardId
+        ? dashboardPropRef.current.dashboardId
         : undefined!;
       preferenceRef.current.aclpPreference.region =
         dashboardPropRef.current.dashboardFilters.region;
       preferenceRef.current.aclpPreference.resources = globalFilter.resource;
     }
 
-    if (changedFilter ==='timestep') {
+    if (changedFilter === 'timestep') {
       dashboardPropRef.current.dashboardFilters.interval =
         globalFilter.interval;
       dashboardPropRef.current.dashboardFilters.step = globalFilter.step;
       preferenceRef.current.aclpPreference.interval = globalFilter.interval;
     }
 
-    if (changedFilter === 'refresh'){
-        dashboardPropRef.current.dashboardFilters.timestamp = globalFilter.timestamp
+    if (changedFilter === 'refresh') {
+      dashboardPropRef.current.dashboardFilters.timestamp =
+        globalFilter.timestamp;
     }
     // set as dashboard filter
     setDashboardProp({
       ...dashboardProp,
-      dashboard: updatedDashboard.current!,
       dashboardFilters: { ...dashboardPropRef.current.dashboardFilters },
+      dashboardId: updatedDashboard.current
+        ? updatedDashboard.current.id
+        : undefined!,
     });
 
     handlPrefChange(preferenceRef.current.aclpPreference);
@@ -141,7 +144,7 @@ export const DashBoardLanding = () => {
 
   const handleDashboardChange = (dashboard: Dashboard) => {
     if (!dashboard) {
-      dashboardPropRef.current.dashboard = undefined!;
+      dashboardPropRef.current.dashboardId = undefined!;
       dashboardPropRef.current.dashboardFilters.serviceType = undefined!;
       updatedDashboard.current = undefined!;
       setDashboardProp({ ...dashboardPropRef.current });
@@ -167,14 +170,17 @@ export const DashBoardLanding = () => {
             dashboard.widgets[i].label
           ) {
             dashboard.widgets[i].size =
-              preferences.aclpPreference.widgets[j].size ?? dashboard.widgets[i].size;
-            dashboard.widgets[i].aggregate_function = preferences.aclpPreference.widgets[j].aggregateFunction ?? dashboard.widgets[i].aggregate_function;
+              preferences.aclpPreference.widgets[j].size ??
+              dashboard.widgets[i].size;
+            dashboard.widgets[i].aggregate_function =
+              preferences.aclpPreference.widgets[j].aggregateFunction ??
+              dashboard.widgets[i].aggregate_function;
             break;
           }
         }
       }
     }
-    dashboardPropRef.current.dashboard = dashboard;
+    dashboardPropRef.current.dashboardId = dashboard.id;
     dashboardPropRef.current.dashboardFilters.serviceType =
       dashboard.service_type;
 
@@ -187,7 +193,7 @@ export const DashBoardLanding = () => {
       if (
         preferences &&
         preferences.aclpPreference.dashboardId !=
-        preferenceRef.current.aclpPreference.dashboardId
+          preferenceRef.current.aclpPreference.dashboardId
       ) {
         preferenceRef.current.aclpPreference.resources = [];
         dashboardPropRef.current.dashboardFilters.resource = [];
@@ -220,7 +226,11 @@ export const DashBoardLanding = () => {
     if (dashboardObj.widgets) {
       preferenceRef.current.aclpPreference.widgets = dashboardObj.widgets.map(
         (obj) => {
-          return { label: obj.label, size: obj.size, aggregateFunction: obj.aggregate_function };
+          return {
+            aggregateFunction: obj.aggregate_function,
+            label: obj.label,
+            size: obj.size,
+          };
         }
       );
       // call preferences
@@ -267,15 +277,17 @@ export const DashBoardLanding = () => {
         </div>
       </Paper>
       {dashboardProp.dashboardFilters.serviceType &&
-      dashboardProp.dashboardFilters.region &&
-      dashboardProp.dashboardFilters.resource &&
-      dashboardProp.dashboardFilters.resource.length > 0 &&
-      dashboardProp.dashboardFilters.timeRange &&
-      dashboardProp.dashboardFilters.step &&
-      <CloudPulseDashboard
-        {...dashboardProp}
-        onDashboardChange={dashboardChange}
-      />}
+        dashboardProp.dashboardFilters.region &&
+        dashboardProp.dashboardFilters.resource &&
+        dashboardProp.dashboardFilters.resource.length > 0 &&
+        dashboardProp.dashboardFilters.timeRange &&
+        dashboardProp.dashboardFilters.step && (
+          <CloudPulseDashboard
+            {...dashboardProp}
+            onDashboardChange={dashboardChange}
+            widgetPreferences={preferenceRef.current.aclpPreference.widgets}
+          />
+        )}
     </>
   );
 };
