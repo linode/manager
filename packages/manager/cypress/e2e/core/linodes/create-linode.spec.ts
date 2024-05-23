@@ -84,7 +84,6 @@ authenticate();
 describe('create linode', () => {
   before(() => {
     cleanUp('linodes');
-    interceptGetProfile().as('getProfile');
   });
 
   /*
@@ -143,6 +142,8 @@ describe('create linode', () => {
     const rootpass = randomString(32);
     const linodeLabel = randomLabel();
     const region = chooseRegion();
+
+    interceptGetProfile().as('getProfile');
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
