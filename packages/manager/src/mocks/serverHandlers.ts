@@ -76,6 +76,8 @@ import {
   objectStorageBucketFactory,
   objectStorageClusterFactory,
   objectStorageKeyFactory,
+  objectStorageTypeFactory,
+  objectStorageOverageTypeFactory,
   paymentFactory,
   paymentMethodFactory,
   placementGroupFactory,
@@ -923,6 +925,13 @@ export const handlers = [
       nodeBalancerConfigNodeFactory.build({ status: 'unknown' }),
     ];
     return HttpResponse.json(makeResourcePage(configs));
+  }),
+  http.get('*/v4/object-storage/types', () => {
+    const objectStorageTypes = [
+      objectStorageTypeFactory.build(),
+      objectStorageOverageTypeFactory.build(),
+    ];
+    return HttpResponse.json(makeResourcePage(objectStorageTypes));
   }),
   http.get('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);

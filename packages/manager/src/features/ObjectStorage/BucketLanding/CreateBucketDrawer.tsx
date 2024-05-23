@@ -19,6 +19,7 @@ import {
   useCreateBucketMutation,
   useObjectStorageBuckets,
   useObjectStorageClusters,
+  useObjectStorageTypesQuery,
 } from 'src/queries/objectStorage';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -26,6 +27,7 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendCreateBucketEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import ClusterSelect from './ClusterSelect';
@@ -73,6 +75,14 @@ export const CreateBucketDrawer = (props: Props) => {
       ? regionsSupportingObjectStorage
       : undefined,
   });
+
+  const {
+    data: types,
+    isError: isErrorTypes,
+    isLoading: isLoadingTypes,
+  } = useObjectStorageTypesQuery(isOpen);
+
+  const isInvalidPrice = !types || isErrorTypes;
 
   const {
     error,
@@ -199,9 +209,15 @@ export const CreateBucketDrawer = (props: Props) => {
             'data-testid': 'create-bucket-button',
             disabled:
               !formik.values.cluster ||
-              (showGDPRCheckbox && !hasSignedAgreement),
+              (showGDPRCheckbox && !hasSignedAgreement) ||
+              isErrorTypes,
             label: 'Create Bucket',
-            loading: isLoading,
+            loading:
+              isLoading || Boolean(clusterRegion?.[0]?.id && isLoadingTypes),
+            tooltipText:
+              !isLoadingTypes && isInvalidPrice
+                ? PRICES_RELOAD_ERROR_NOTICE_TEXT
+                : '',
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
