@@ -58,7 +58,9 @@ export const ChildAccountList = React.memo(
             }
           : undefined,
     });
-    const childAccounts = data?.pages.flatMap((page) => page.data);
+    const childAccounts = data?.pages
+      .flatMap((page) => page.data)
+      .sort((a, b) => a.company.localeCompare(b.company));
 
     if (isInitialLoading) {
       return (
