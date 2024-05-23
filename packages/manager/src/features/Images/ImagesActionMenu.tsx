@@ -8,7 +8,12 @@ export interface Handlers {
   onCancelFailed?: (imageID: string) => void;
   onDelete?: (label: string, imageID: string, status?: ImageStatus) => void;
   onDeploy?: (imageID: string) => void;
-  onEdit?: (label: string, description: string, imageID: string) => void;
+  onEdit?: (
+    label: string,
+    description: string,
+    imageID: string,
+    tags: string[]
+  ) => void;
   onRestore?: (imageID: string) => void;
   onRetry?: (
     imageID: string,
@@ -23,6 +28,7 @@ interface Props extends Handlers {
   id: string;
   label: string;
   status?: ImageStatus;
+  tags: string[];
 }
 
 export const ImagesActionMenu = (props: Props) => {
@@ -38,6 +44,7 @@ export const ImagesActionMenu = (props: Props) => {
     onRestore,
     onRetry,
     status,
+    tags,
   } = props;
 
   const actions: Action[] = React.useMemo(() => {
@@ -47,24 +54,18 @@ export const ImagesActionMenu = (props: Props) => {
     return isFailed
       ? [
           {
-            onClick: () => {
-              onRetry?.(id, label, description);
-            },
+            onClick: () => onRetry?.(id, label, description),
             title: 'Retry',
           },
           {
-            onClick: () => {
-              onCancelFailed?.(id);
-            },
+            onClick: () => onCancelFailed?.(id),
             title: 'Cancel',
           },
         ]
       : [
           {
             disabled: isDisabled,
-            onClick: () => {
-              onEdit?.(label, description ?? ' ', id);
-            },
+            onClick: () => onEdit?.(label, description ?? ' ', id, tags),
             title: 'Edit',
             tooltip: isDisabled
               ? 'Image is not yet available for use.'
@@ -72,9 +73,7 @@ export const ImagesActionMenu = (props: Props) => {
           },
           {
             disabled: isDisabled,
-            onClick: () => {
-              onDeploy?.(id);
-            },
+            onClick: () => onDeploy?.(id),
             title: 'Deploy to New Linode',
             tooltip: isDisabled
               ? 'Image is not yet available for use.'
@@ -82,18 +81,14 @@ export const ImagesActionMenu = (props: Props) => {
           },
           {
             disabled: isDisabled,
-            onClick: () => {
-              onRestore?.(id);
-            },
+            onClick: () => onRestore?.(id),
             title: 'Rebuild an Existing Linode',
             tooltip: isDisabled
               ? 'Image is not yet available for use.'
               : undefined,
           },
           {
-            onClick: () => {
-              onDelete?.(label, id, status);
-            },
+            onClick: () => onDelete?.(label, id, status),
             title: isAvailable ? 'Delete' : 'Cancel Upload',
           },
         ];
@@ -109,6 +104,7 @@ export const ImagesActionMenu = (props: Props) => {
     onRetry,
     onCancelFailed,
     event,
+    tags,
   ]);
 
   return (

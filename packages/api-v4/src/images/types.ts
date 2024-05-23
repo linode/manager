@@ -22,6 +22,7 @@ export interface Image {
   expiry: null | string;
   status: ImageStatus;
   capabilities: ImageCapabilities[];
+  tags: string[];
 }
 
 export interface UploadImageResponse {

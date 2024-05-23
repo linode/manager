@@ -14,6 +14,7 @@ export const imageFactory = Factory.Sync.makeFactory<Image>({
   label: Factory.each((i) => `image-${i}`),
   size: 1500,
   status: 'available',
+  tags: [],
   type: 'manual',
   updated: new Date().toISOString(),
   vendor: null,

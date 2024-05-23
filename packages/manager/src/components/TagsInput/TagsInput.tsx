@@ -1,7 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { useQueryClient } from '@tanstack/react-query';
 import { concat } from 'ramda';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
 import Select, {
   Item,
@@ -46,7 +46,7 @@ export interface TagsInputProps {
   /**
    * Callback fired when the value changes.
    */
-  onChange: (selected: Item[]) => void;
+  onChange: (selected: Item<string, string>[]) => void;
   /**
    * An error to display beneath the input.
    */
@@ -54,7 +54,7 @@ export interface TagsInputProps {
   /**
    * The value of the input.
    */
-  value: Item[];
+  value: Item<string, string>[];
 }
 
 export const TagsInput = (props: TagsInputProps) => {
