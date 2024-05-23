@@ -17,10 +17,6 @@ interface Props {
   open?: boolean;
 }
 
-interface RebuildImageFormState {
-  linodeId: number;
-}
-
 export const RebuildImageDrawer = (props: Props) => {
   const { image, onClose, open } = props;
 
@@ -30,9 +26,19 @@ export const RebuildImageDrawer = (props: Props) => {
     permissionedLinodes: availableLinodes,
   } = useImageAndLinodeGrantCheck();
 
-  const { control, formState, handleSubmit } = useForm<RebuildImageFormState>({
+  const { control, formState, handleSubmit, reset } = useForm<{
+    linodeId: number;
+  }>({
+    defaultValues: { linodeId: undefined },
     mode: 'onBlur',
   });
+
+  React.useEffect(() => {
+    if (open) {
+      reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   const onSubmit = handleSubmit((values) => {
     if (!image) {
@@ -74,7 +80,7 @@ export const RebuildImageDrawer = (props: Props) => {
             optionsFilter={(linode) =>
               availableLinodes ? availableLinodes.includes(linode.id) : true
             }
-            clearable={false}
+            clearable={true}
             disabled={!canCreateImage}
             errorText={fieldState.error?.message}
             value={field.value}
@@ -82,19 +88,19 @@ export const RebuildImageDrawer = (props: Props) => {
         )}
         control={control}
         name="linodeId"
+        rules={{ required: true }}
       />
 
       <ActionsPanel
         primaryButtonProps={{
           'data-testid': 'submit',
-          disabled: !formState.isValid || !canCreateImage,
+          disabled: !formState.isValid,
           label: 'Restore Image',
           loading: formState.isSubmitting,
           onClick: onSubmit,
         }}
         secondaryButtonProps={{
           'data-testid': 'cancel',
-          disabled: !canCreateImage,
           label: 'Cancel',
           onClick: onClose,
         }}

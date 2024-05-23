@@ -23,6 +23,12 @@ export const EditImageDrawer = (props: Props) => {
 
   const { canCreateImage } = useImageAndLinodeGrantCheck();
 
+  const defaultValues = {
+    description: image?.description ?? undefined,
+    label: image?.label,
+    tags: image?.tags,
+  };
+
   const {
     control,
     formState,
@@ -30,16 +36,20 @@ export const EditImageDrawer = (props: Props) => {
     reset,
     setError,
   } = useForm<UpdateImagePayload>({
+    defaultValues,
     mode: 'onBlur',
     resolver: yupResolver(updateImageSchema),
-    values: {
-      description: image?.description ?? undefined,
-      label: image?.label,
-      tags: image?.tags,
-    },
+    values: defaultValues,
   });
 
   const { mutateAsync: updateImage } = useUpdateImageMutation();
+
+  React.useEffect(() => {
+    if (open) {
+      reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   const onSubmit = handleSubmit((values) => {
     if (!image) {
@@ -64,12 +74,7 @@ export const EditImageDrawer = (props: Props) => {
   });
 
   return (
-    <Drawer
-      onClose={onClose}
-      onTransitionEnter={reset}
-      open={open}
-      title="Edit Image"
-    >
+    <Drawer onClose={onClose} open={open} title="Edit Image">
       {!canCreateImage ? (
         <Notice
           text="You don't have permissions to create a new Image. Please contact an account administrator for details."
@@ -138,7 +143,7 @@ export const EditImageDrawer = (props: Props) => {
       <ActionsPanel
         primaryButtonProps={{
           'data-testid': 'submit',
-          disabled: !canCreateImage,
+          disabled: !canCreateImage || !formState.isDirty,
           label: 'Save Changes',
           loading: formState.isSubmitting,
           onClick: onSubmit,
