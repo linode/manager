@@ -136,7 +136,9 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
       '_' +
       widget.metric +
       '_' +
-      widget.label,
+      widget.label +
+      '_' +
+      props.globalFilters?.timestamp ?? '',
     true
   ); // fetch the metrics on any property change
 
@@ -183,8 +185,12 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
           borderColor: color,
           data: seriesDataFormatter(
             graphData.values,
-            graphData.values[0][0],
-            graphData.values[graphData.values.length - 1][0]
+            props.globalFilters?.timeRange
+              ? props.globalFilters?.timeRange.start
+              : graphData.values[0][0],
+            props.globalFilters?.timeRange
+              ? props.globalFilters?.timeRange.end
+              : graphData.values[graphData.values.length - 1][0]
           ),
           label: getLabelName(graphData.metric, getServiceType()!),
         };

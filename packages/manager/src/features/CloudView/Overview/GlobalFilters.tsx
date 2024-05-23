@@ -13,6 +13,7 @@ import { CloudViewIntervalSelect } from '../shared/IntervalSelect';
 import { CloudViewRegionSelect } from '../shared/RegionSelect';
 import { CloudViewMultiResourceSelect } from '../shared/ResourceMultiSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/TimeRangeSelect';
+import Reload from 'src/assets/icons/reload.svg';
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const emitGlobalFilterChange = (
@@ -83,6 +84,17 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     }
   };
 
+  const handleGlobalRefresh = () => {
+    emitGlobalFilterChange(
+      {
+        ...props.globalFilters,
+        timestamp : Date.now()
+      },
+      'refresh'
+    );
+  }
+
+
   const getIntervalToGranularity = (interval: string | undefined) => {
     if (interval == undefined) {
       return undefined!;
@@ -152,7 +164,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             handleIntervalChange={handleIntervalChange}
           />
         </Grid>
-        <Grid sx={{ marginLeft: 12, width: 250 }}>
+        <Grid sx={{ marginLeft: 13, width: 250 }}>
           <StyledCloudViewTimeRangeSelect
             defaultValue={
               props.filterPreferences && props.filterPreferences.timeDuration
@@ -163,6 +175,9 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             hideLabel
             label="Select Time Range"
           />
+        </Grid>
+        <Grid sx={{ marginLeft: -4, marginRight: 3}}>
+            <StyledReload onClick={handleGlobalRefresh}/>
         </Grid>
       </StyledGrid>
     </Grid>
@@ -207,3 +222,15 @@ const itemSpacing = {
   boxSizing: 'border-box',
   margin: '0',
 };
+
+const StyledReload = styled(Reload, { label: 'StyledReload' })(({ theme }) => ({
+  height: '27px',
+  width: '27px',
+  '&:hover': {
+    cursor: 'pointer'
+  },
+  '&:active':{
+    color: 'green'
+  }
+}))
+
