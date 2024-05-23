@@ -74,6 +74,8 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
         multiple
         noMarginTop
         options={options}
+        // If options are selected, hide the placeholder
+        placeholder={value.length > 0 ? ' ' : undefined}
         value={value}
       />
     );
