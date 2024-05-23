@@ -58,6 +58,7 @@ export const ChildAccountList = React.memo(
             }
           : undefined,
     });
+    // Sort the list of child accounts alphabetically.
     const childAccounts = data?.pages
       .flatMap((page) => page.data)
       .sort((a, b) => a.company.localeCompare(b.company));

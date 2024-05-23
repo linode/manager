@@ -1357,8 +1357,7 @@ export const handlers = [
     const childAccounts = [
       accountFactory.build({ company: 'z-company-2' }),
       accountFactory.build({ company: 'z-company' }),
-      accountFactory.build({ company: 'b-company' }),
-      ...accountFactory.buildList(50),
+      ...accountFactory.buildList(100),
     ];
     return HttpResponse.json({
       data: childAccounts.slice(
