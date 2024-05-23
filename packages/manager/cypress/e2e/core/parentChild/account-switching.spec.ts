@@ -230,6 +230,68 @@ describe('Parent/Child account switching', () => {
     });
 
     /*
+     * - Confirms search functionality in the account switching drawer.
+     */
+    it('can search child accounts', () => {
+      mockGetProfile(mockParentProfile);
+      mockGetAccount(mockParentAccount);
+      mockGetChildAccounts([mockChildAccount, mockAlternateChildAccount]);
+      mockGetUser(mockParentUser);
+
+      cy.visitWithLogin('/');
+      cy.trackPageVisit().as('pageVisit');
+
+      // Confirm that Parent account username and company name are shown in user
+      // menu button, then click the button.
+      assertUserMenuButton(
+        mockParentProfile.username,
+        mockParentAccount.company
+      ).click();
+
+      // Click "Switch Account" button in user menu.
+      ui.userMenu
+        .find()
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Switch Account')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Confirm search functionality.
+      ui.drawer
+        .findByTitle('Switch Account')
+        .should('be.visible')
+        .within(() => {
+          // Confirm all child accounts are displayed when drawer loads.
+          cy.findByText(mockChildAccount.company).should('be.visible');
+          cy.findByText(mockAlternateChildAccount.company).should('be.visible');
+
+          // Confirm no results message.
+          cy.findByPlaceholderText('Search').click().type('Fake Name');
+          mockGetChildAccounts([]).as('getEmptySearchResults');
+          cy.wait('@getEmptySearchResults');
+          cy.contains(mockChildAccount.company).should('not.exist');
+          cy.findByText(
+            'There are no indirect customer accounts that match this query.'
+          ).should('be.visible');
+
+          // Confirm filtering by company name displays only one search result.
+          cy.findByPlaceholderText('Search')
+            .click()
+            .clear()
+            .type(mockChildAccount.company);
+          mockGetChildAccounts([mockChildAccount]).as('getSearchResults');
+          cy.wait('@getSearchResults');
+
+          cy.findByText(mockChildAccount.company).should('be.visible');
+          cy.contains(mockAlternateChildAccount.company).should('not.exist');
+        });
+    });
+
+    /*
      * - Confirms that Parent account user can switch to Child account using the user menu.
      * - Confirms that Parent account information is initially displayed in user menu button.
      * - Confirms that Child account information is displayed in user menu button after switch.
