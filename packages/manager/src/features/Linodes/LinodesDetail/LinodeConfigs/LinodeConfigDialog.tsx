@@ -959,7 +959,6 @@ export const LinodeConfigDialog = (props: Props) => {
                     paddingBottom: 0,
                     paddingTop: 0,
                   }}
-                  interactive
                   status="help"
                   sx={{ tooltip: { maxWidth: 350 } }}
                   text={networkInterfacesHelperText}
@@ -1126,7 +1125,6 @@ export const LinodeConfigDialog = (props: Props) => {
                         }
                         checked={values.helpers.network}
                         disabled={isReadOnly}
-                        interactive={true}
                         onChange={formik.handleChange}
                       />
                     }
