@@ -12,7 +12,6 @@ import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
-import { LinkButton } from 'src/components/LinkButton';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Prompt } from 'src/components/Prompt/Prompt';
@@ -41,15 +40,15 @@ import { readableBytes } from 'src/utilities/unitConversions';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from '../Account/utils';
+import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
 import {
   ImageUploadFormData,
   ImageUploadNavigationState,
 } from './ImageUpload.utils';
-import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
+import { ImageUploadCLIDialog } from './ImageUploadCLIDialog';
 import { uploadImageFile } from './requests';
 
 import type { AxiosError, AxiosProgressEvent } from 'axios';
-import { ImageUploadCLIDialog } from './ImageUploadCLIDialog';
 
 export const ImageUpload = () => {
   const { location } = useHistory<ImageUploadNavigationState | undefined>();
@@ -368,19 +367,14 @@ export const ImageUpload = () => {
               control={form.control}
               name="file"
             />
-            <Typography sx={{ paddingTop: 2 }}>
-              Or, upload an image using the{' '}
-              <LinkButton onClick={() => setLinodeCLIModalOpen(true)}>
-                Linode CLI
-              </LinkButton>
-              . For more information, please see{' '}
-              <Link to="https://www.linode.com/docs/guides/linode-cli">
-                our guide on using the Linode CLI
-              </Link>
-              .
-            </Typography>
           </Paper>
-          <Box display="flex" gap={2} justifyContent="flex-end">
+          <Box display="flex" gap={1} justifyContent="flex-end">
+            <Button
+              buttonType="outlined"
+              onClick={() => setLinodeCLIModalOpen(true)}
+            >
+              Upload Using Command Line
+            </Button>
             <Button
               disabled={
                 isImageCreateRestricted ||
