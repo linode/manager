@@ -75,6 +75,28 @@ describe('getDCSpecificPricingByType', () => {
     ).toBe('14.00');
   });
 
+  it('calculates dynamic pricing for a region without an increase on an hourly interval to the specified decimal', () => {
+    expect(
+      getDCSpecificPriceByType({
+        decimalPrecision: 3,
+        interval: 'hourly',
+        regionId: 'us-east',
+        type: mockNodeBalancerType,
+      })
+    ).toBe('0.015');
+  });
+
+  it('calculates dynamic pricing for a region with an increase on an hourly interval to the specified decimal', () => {
+    expect(
+      getDCSpecificPriceByType({
+        decimalPrecision: 3,
+        interval: 'hourly',
+        regionId: 'id-cgk',
+        type: mockNodeBalancerType,
+      })
+    ).toBe('0.018');
+  });
+
   it('calculates dynamic pricing for a volume based on size', () => {
     expect(
       getDCSpecificPriceByType({
