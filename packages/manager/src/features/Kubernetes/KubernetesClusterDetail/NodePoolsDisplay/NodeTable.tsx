@@ -1,6 +1,10 @@
-import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
 import * as React from 'react';
 
+import Lock from 'src/assets/icons/lock.svg';
+import Unlock from 'src/assets/icons/unlock.svg';
+import { Box } from 'src/components/Box';
+import { DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY } from 'src/components/DiskEncryption/constants';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -11,26 +15,45 @@ import { TableFooter } from 'src/components/TableFooter';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import { NodeRow as _NodeRow } from './NodeRow';
-import { StyledTable } from './NodeTable.styles';
+import {
+  StyledTable,
+  StyledTypography,
+  StyledVerticalDivider,
+} from './NodeTable.styles';
 
 import type { NodeRow } from './NodeRow';
+import type { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
+import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
 
 export interface Props {
+  encryptionStatus: EncryptionStatus | undefined;
   nodes: PoolNodeResponse[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
   typeLabel: string;
 }
 
+export const encryptionStatusTestId = 'encryption-status-fragment';
+
 export const NodeTable = React.memo((props: Props) => {
-  const { nodes, openRecycleNodeDialog, poolId, typeLabel } = props;
+  const {
+    encryptionStatus,
+    nodes,
+    openRecycleNodeDialog,
+    poolId,
+    typeLabel,
+  } = props;
 
   const { data: linodes, error, isLoading } = useAllLinodesQuery();
+  const {
+    isDiskEncryptionFeatureEnabled,
+  } = useIsDiskEncryptionFeatureEnabled();
 
   const rowData = nodes.map((thisNode) => nodeToRow(thisNode, linodes ?? []));
 
@@ -116,7 +139,26 @@ export const NodeTable = React.memo((props: Props) => {
                 <TableFooter>
                   <TableRow>
                     <TableCell colSpan={4}>
-                      <Typography>Pool ID {poolId}</Typography>
+                      {isDiskEncryptionFeatureEnabled &&
+                      encryptionStatus !== undefined ? (
+                        <Box
+                          alignItems="center"
+                          data-testid={encryptionStatusTestId}
+                          display="flex"
+                          flexDirection="row"
+                        >
+                          <Typography>Pool ID {poolId}</Typography>
+                          <StyledVerticalDivider />
+                          <EncryptedStatus
+                            tooltipText={
+                              DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY
+                            }
+                            encryptionStatus={encryptionStatus}
+                          />
+                        </Box>
+                      ) : (
+                        <Typography>Pool ID {poolId}</Typography>
+                      )}
                     </TableCell>
                   </TableRow>
                 </TableFooter>
@@ -156,4 +198,25 @@ export const nodeToRow = (
     nodeId: node.id,
     nodeStatus: node.status,
   };
+};
+
+export const EncryptedStatus = ({
+  encryptionStatus,
+  tooltipText,
+}: {
+  encryptionStatus: EncryptionStatus;
+  tooltipText: string | undefined;
+}) => {
+  return encryptionStatus === 'enabled' ? (
+    <>
+      <Lock />
+      <StyledTypography>Encrypted</StyledTypography>
+    </>
+  ) : encryptionStatus === 'disabled' ? (
+    <>
+      <Unlock />
+      <StyledTypography>Not Encrypted</StyledTypography>
+      {tooltipText ? <TooltipIcon status="help" text={tooltipText} /> : null}
+    </>
+  ) : null;
 };

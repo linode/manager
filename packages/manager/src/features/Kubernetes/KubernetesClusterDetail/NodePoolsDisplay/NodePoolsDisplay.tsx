@@ -1,14 +1,14 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import Grid from '@mui/material/Unstable_Grid2';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
+import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
@@ -18,7 +18,7 @@ import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
 import { AddNodePoolDrawer } from './AddNodePoolDrawer';
 import { AutoscalePoolDialog } from './AutoscalePoolDialog';
 import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
-import NodePool from './NodePool';
+import { NodePool } from './NodePool';
 import { RecycleNodeDialog } from './RecycleNodeDialog';
 import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
 
@@ -152,7 +152,7 @@ export const NodePoolsDisplay = (props: Props) => {
           <Grid container direction="column">
             <Grid xs={12}>
               {_pools?.map((thisPool) => {
-                const { id, nodes } = thisPool;
+                const { disk_encryption, id, nodes } = thisPool;
 
                 const thisPoolType = types?.find(
                   (thisType) => thisType.id === thisPool.type
@@ -181,6 +181,7 @@ export const NodePoolsDisplay = (props: Props) => {
                         setIsRecycleNodeOpen(true);
                       }}
                       autoscaler={thisPool.autoscaler}
+                      encryptionStatus={disk_encryption}
                       handleClickResize={handleOpenResizeDrawer}
                       isOnlyNodePool={pools?.length === 1}
                       nodes={nodes ?? []}
