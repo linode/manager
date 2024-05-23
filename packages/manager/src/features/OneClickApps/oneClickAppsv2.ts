@@ -2500,4 +2500,26 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'Open source data streaming.',
     website: 'https://kafka.apache.org/',
   },
+  1350845: {
+    alt_description:
+      'Lineraly scalable, fault tolerant, open source NoSQL distributed database.',
+    alt_name: 'NoSQL database cluster',
+    categories: ['Databases'],
+    colors: {
+      end: '1486B1',
+      start: '85A355',
+    },
+    description: `Distributed, masterless, replicating NoSQL database cluster.`,
+    logo_url: 'cassandra.svg',
+    name: 'Apache Cassandra Cluster',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/apache-cassandra-cluster/',
+        title: 'Deploy Apache Cassandra Cluster through the Linode Marketplace',
+      },
+    ],
+    summary: 'Open source NoSQL database cluster.',
+    website: 'https://cassandra.apache.org/doc/latest/',
+  },
 };
