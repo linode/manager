@@ -388,6 +388,7 @@ export type EventAction =
   | 'stackscript_update'
   | 'subnet_create'
   | 'subnet_delete'
+  | 'tax_id_invalid'
   | 'subnet_update'
   | 'tfa_disabled'
   | 'tfa_enabled'

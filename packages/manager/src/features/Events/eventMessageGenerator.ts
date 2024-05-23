@@ -608,6 +608,60 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     started: (e) =>
       `Linode ${e.entity?.label ?? ''} is being booted (Lish initiated boot).`,
   },
+  lke_cluster_create: {
+    notification: (e) =>
+      `Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been created.`,
+  },
+  lke_cluster_delete: {
+    notification: (e) =>
+      `Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been deleted.`,
+  },
+  lke_cluster_recycle: {
+    notification: (e) =>
+      `Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been recycled.`,
+  },
+  lke_cluster_regenerate: {
+    notification: (e) =>
+      `Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been regenerated.`,
+  },
+  lke_cluster_update: {
+    notification: (e) =>
+      `Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been updated.`,
+  },
+  lke_control_plane_acl_create: {
+    notification: (e) =>
+      `The IP ACL for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been created.`,
+  },
+  lke_control_plane_acl_delete: {
+    notification: (e) =>
+      `The IP ACL for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been disabled.`,
+  },
+  lke_control_plane_acl_update: {
+    notification: (e) =>
+      `The IP ACL for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been updated.`,
+  },
+  lke_kubeconfig_regenerate: {
+    notification: (e) =>
+      `The kubeconfig for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been regenerated.`,
+  },
   lke_node_create: {
     // This event is a special case; a notification means the node creation failed.
     // The entity is the node pool, but entity.label contains the cluster's label.
@@ -621,66 +675,6 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       `The node for Kubernetes Cluster${
         e.entity?.label ? ` ${e.entity.label}` : ''
       } has been recycled.`,
-  },
-  lke_cluster_create: {
-    notification: (e) =>
-      `Kubernetes Cluster${
-        e.entity?.label ? ` ${e.entity.label}` : ''
-      } has been created.`,
-  },
-  lke_cluster_update: {
-    notification: (e) =>
-      `Kubernetes Cluster${
-        e.entity?.label ? ` ${e.entity.label}` : ''
-      } has been updated.`,
-  },
-  lke_cluster_delete: {
-    notification: (e) =>
-      `Kubernetes Cluster${
-        e.entity?.label ? ` ${e.entity.label}` : ''
-      } has been deleted.`,
-  },
-  lke_cluster_regenerate: {
-    notification: (e) =>
-      `Kubernetes Cluster${
-        e.entity?.label ? ` ${e.entity.label}` : ''
-      } has been regenerated.`,
-  },
-  lke_cluster_recycle: {
-    notification: (e) =>
-      `Kubernetes Cluster${
-        e.entity?.label ? ` ${e.entity.label}` : ''
-      } has been recycled.`,
-  },
-  lke_control_plane_acl_create: {
-    notification: (e) =>
-      `The IP ACL for Kubernetes Cluster${
-        e.entity?.label ? ` ${e.entity.label}` : ''
-      } has been created.`,
-  },
-  lke_control_plane_acl_update: {
-    notification: (e) =>
-      `The IP ACL for Kubernetes Cluster${
-        e.entity?.label ? ` ${e.entity.label}` : ''
-      } has been updated.`,
-  },
-  lke_control_plane_acl_delete: {
-    notification: (e) =>
-      `The IP ACL for Kubernetes Cluster${
-        e.entity?.label ? ` ${e.entity.label}` : ''
-      } has been disabled.`,
-  },
-  lke_kubeconfig_regenerate: {
-    notification: (e) =>
-      `The kubeconfig for Kubernetes Cluster${
-        e.entity?.label ? ` ${e.entity.label}` : ''
-      } has been regenerated.`,
-  },
-  lke_token_rotate: {
-    notification: (e) =>
-      `The token for Kubernetes Cluster${
-        e.entity?.label ? ` ${e.entity.label}` : ''
-      } has been rotated.`,
   },
   lke_pool_create: {
     notification: (e) =>
@@ -699,6 +693,12 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       `A Node Pool for Kubernetes Cluster${
         e.entity?.label ? ` ${e.entity.label}` : ''
       } has been recycled.`,
+  },
+  lke_token_rotate: {
+    notification: (e) =>
+      `The token for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been rotated.`,
   },
   longviewclient_create: {
     notification: (e) => `Longview Client ${e.entity!.label} has been created.`,
@@ -860,6 +860,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   tag_delete: {
     notification: (e) => `Tag ${e.entity!.label} has been deleted.`,
+  },
+  tax_id_invalid: {
+    notification: (e) => `Tax Identification Number format is invalid.`,
   },
   tfa_disabled: {
     notification: (e) => `Two-factor authentication has been disabled.`,
