@@ -22,6 +22,7 @@ export const useCloudViewMetricsQuery = (
     {
       enabled: !!enabled,
       refetchInterval: 60000,
+      retry: 0,
     }
   );
 };

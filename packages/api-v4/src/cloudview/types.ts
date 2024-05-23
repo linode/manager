@@ -48,6 +48,7 @@ export interface Widgets {
   y_label: string;
   filters: Filters[];
   serviceType: string;
+  service_type: string;
   resource_id: string[];
   time_granularity: TimeGranularity;
   time_duration: TimeDuration;
@@ -70,7 +71,7 @@ export interface CloudViewMetricsRequest {
   counter: number;
   startTime: number;
   endTime: number;
-  resource_id: string[];
+  resource_id: number[];
 }
 
 export interface CloudViewMetricsResponse {

@@ -50,7 +50,7 @@ export const DashBoardLanding = () => {
   );
 
   // since dashboard prop is mutable and savable
-  const dashbboardPropRef = React.useRef<DashboardProperties>(
+  const dashboardPropRef = React.useRef<DashboardProperties>(
     getInitDashboardProps()
   );
 
@@ -78,58 +78,65 @@ export const DashBoardLanding = () => {
     globalFilter: FiltersObject,
     changedFilter: string
   ) => {
-    if (!dashbboardPropRef || !dashbboardPropRef.current) {
-      dashbboardPropRef.current = getInitDashboardProps();
+    if (!dashboardPropRef || !dashboardPropRef.current) {
+      dashboardPropRef.current = getInitDashboardProps();
     }
 
-    if (changedFilter == 'timeduration') {
-      dashbboardPropRef.current.dashboardFilters.duration =
+    if (changedFilter === 'timeduration') {
+      dashboardPropRef.current.dashboardFilters.duration =
         globalFilter.duration;
-      dashbboardPropRef.current.dashboardFilters.timeRange =
+      dashboardPropRef.current.dashboardFilters.timeRange =
         globalFilter.timeRange;
       preferenceRef.current.aclpPreference.timeDuration =
         globalFilter.durationLabel;
     }
 
     if (
-      changedFilter == 'region' &&
-      dashbboardPropRef.current.dashboardFilters.region != globalFilter.region
+      changedFilter === 'region' &&
+      dashboardPropRef.current.dashboardFilters.region != globalFilter.region
     ) {
-      dashbboardPropRef.current.dashboardFilters.region = globalFilter.region;
+      dashboardPropRef.current.dashboardFilters.region = globalFilter.region;
       preferenceRef.current.aclpPreference.region = globalFilter.region;
       if (
         preferences &&
         preferences.aclpPreference.region !=
-        preferenceRef.current.aclpPreference.region
+          preferenceRef.current.aclpPreference.region
       ) {
         preferenceRef.current.aclpPreference.resources = [];
-        dashbboardPropRef.current.dashboardFilters.resource = [];
+        dashboardPropRef.current.dashboardFilters.resource = [];
       }
     }
 
-    if (changedFilter == 'resource') {
-      dashbboardPropRef.current.dashboardFilters.resource =
+    if (changedFilter === 'resource') {
+      dashboardPropRef.current.dashboardFilters.resource =
         globalFilter.resource;
-      preferenceRef.current.aclpPreference.dashboardId = dashbboardPropRef
-        .current.dashboard
-        ? dashbboardPropRef.current.dashboard.id
+      preferenceRef.current.aclpPreference.dashboardId = dashboardPropRef
+        .current.dashboardId
+        ? dashboardPropRef.current.dashboardId
         : undefined!;
       preferenceRef.current.aclpPreference.region =
-        dashbboardPropRef.current.dashboardFilters.region;
+        dashboardPropRef.current.dashboardFilters.region;
       preferenceRef.current.aclpPreference.resources = globalFilter.resource;
     }
 
-    if (changedFilter == 'timestep') {
-      dashbboardPropRef.current.dashboardFilters.interval =
+    if (changedFilter === 'timestep') {
+      dashboardPropRef.current.dashboardFilters.interval =
         globalFilter.interval;
-      dashbboardPropRef.current.dashboardFilters.step = globalFilter.step;
+      dashboardPropRef.current.dashboardFilters.step = globalFilter.step;
       preferenceRef.current.aclpPreference.interval = globalFilter.interval;
+    }
+
+    if (changedFilter === 'refresh') {
+      dashboardPropRef.current.dashboardFilters.timestamp =
+        globalFilter.timestamp;
     }
     // set as dashboard filter
     setDashboardProp({
       ...dashboardProp,
-      dashboard: updatedDashboard.current!,
-      dashboardFilters: { ...dashbboardPropRef.current.dashboardFilters },
+      dashboardFilters: { ...dashboardPropRef.current.dashboardFilters },
+      dashboardId: updatedDashboard.current
+        ? updatedDashboard.current.id
+        : undefined!,
     });
 
     handlPrefChange(preferenceRef.current.aclpPreference);
@@ -137,10 +144,10 @@ export const DashBoardLanding = () => {
 
   const handleDashboardChange = (dashboard: Dashboard) => {
     if (!dashboard) {
-      dashbboardPropRef.current.dashboard = undefined!;
-      dashbboardPropRef.current.dashboardFilters.serviceType = undefined!;
+      dashboardPropRef.current.dashboardId = undefined!;
+      dashboardPropRef.current.dashboardFilters.serviceType = undefined!;
       updatedDashboard.current = undefined!;
-      setDashboardProp({ ...dashbboardPropRef.current });
+      setDashboardProp({ ...dashboardPropRef.current });
 
       preferenceRef.current.aclpPreference.dashboardId = undefined!;
       preferenceRef.current.aclpPreference.resources = [];
@@ -150,8 +157,8 @@ export const DashBoardLanding = () => {
       return;
     }
 
-    if (!dashbboardPropRef || !dashbboardPropRef.current) {
-      dashbboardPropRef.current = getInitDashboardProps();
+    if (!dashboardPropRef || !dashboardPropRef.current) {
+      dashboardPropRef.current = getInitDashboardProps();
     }
 
     // update prefs if any
@@ -163,18 +170,21 @@ export const DashBoardLanding = () => {
             dashboard.widgets[i].label
           ) {
             dashboard.widgets[i].size =
-              preferences.aclpPreference.widgets[j].size ?? dashboard.widgets[i].size;
-            dashboard.widgets[i].aggregate_function = preferences.aclpPreference.widgets[j].aggregateFunction ?? dashboard.widgets[i].aggregate_function;
+              preferences.aclpPreference.widgets[j].size ??
+              dashboard.widgets[i].size;
+            dashboard.widgets[i].aggregate_function =
+              preferences.aclpPreference.widgets[j].aggregateFunction ??
+              dashboard.widgets[i].aggregate_function;
             break;
           }
         }
       }
     }
-    dashbboardPropRef.current.dashboard = dashboard;
-    dashbboardPropRef.current.dashboardFilters.serviceType =
+    dashboardPropRef.current.dashboardId = dashboard.id;
+    dashboardPropRef.current.dashboardFilters.serviceType =
       dashboard.service_type;
 
-    setDashboardProp({ ...dashbboardPropRef.current });
+    setDashboardProp({ ...dashboardPropRef.current });
     updatedDashboard.current = { ...dashboard };
 
     if (dashboard && dashboard.id) {
@@ -183,10 +193,10 @@ export const DashBoardLanding = () => {
       if (
         preferences &&
         preferences.aclpPreference.dashboardId !=
-        preferenceRef.current.aclpPreference.dashboardId
+          preferenceRef.current.aclpPreference.dashboardId
       ) {
         preferenceRef.current.aclpPreference.resources = [];
-        dashbboardPropRef.current.dashboardFilters.resource = [];
+        dashboardPropRef.current.dashboardFilters.resource = [];
       }
     }
 
@@ -216,7 +226,11 @@ export const DashBoardLanding = () => {
     if (dashboardObj.widgets) {
       preferenceRef.current.aclpPreference.widgets = dashboardObj.widgets.map(
         (obj) => {
-          return { label: obj.label, size: obj.size, aggregateFunction: obj.aggregate_function };
+          return {
+            aggregateFunction: obj.aggregate_function,
+            label: obj.label,
+            size: obj.size,
+          };
         }
       );
       // call preferences
@@ -263,15 +277,17 @@ export const DashBoardLanding = () => {
         </div>
       </Paper>
       {dashboardProp.dashboardFilters.serviceType &&
-      dashboardProp.dashboardFilters.region &&
-      dashboardProp.dashboardFilters.resource &&
-      dashboardProp.dashboardFilters.resource.length > 0 &&
-      dashboardProp.dashboardFilters.timeRange &&
-      dashboardProp.dashboardFilters.step &&
-      <CloudPulseDashboard
-        {...dashboardProp}
-        onDashboardChange={dashboardChange}
-      />}
+        dashboardProp.dashboardFilters.region &&
+        dashboardProp.dashboardFilters.resource &&
+        dashboardProp.dashboardFilters.resource.length > 0 &&
+        dashboardProp.dashboardFilters.timeRange &&
+        dashboardProp.dashboardFilters.step && (
+          <CloudPulseDashboard
+            {...dashboardProp}
+            onDashboardChange={dashboardChange}
+            widgetPreferences={preferenceRef.current.aclpPreference.widgets}
+          />
+        )}
     </>
   );
 };

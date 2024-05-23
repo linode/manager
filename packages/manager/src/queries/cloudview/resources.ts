@@ -37,3 +37,31 @@ export const useLinodeResourcesQuery = (
     { ...queryPresets.longLived, enabled: runQuery, keepPreviousData: true }
   );
 };
+
+export const useResourcesQuery = (
+  enabled: boolean,
+  params: Params = {},
+  filter: Filter = {},
+  serviceType: string
+) => {
+  return useQuery<ResourcePage<any>, APIError[]>(
+    [QUERY_KEY, 'paginated', params, filter],
+    callAppropriateServicesForResources(serviceType, params, filter),
+    { ...queryPresets.longLived, enabled, keepPreviousData: true }
+  );
+};
+
+const callAppropriateServicesForResources = (
+  serviceType: string,
+  params: Params = {},
+  filter: Filter = {}
+) => {
+  switch (serviceType) {
+    case 'linode':
+      return () => getLinodes(params, filter);
+    case 'aclb':
+      return () => getLoadbalancers(params, filter);
+    default:
+      return () => getLinodes(params, filter);
+  }
+};
