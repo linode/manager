@@ -11,8 +11,8 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import {
+import type { Filter, Params, ResourcePage as Page } from '../types';
+import type {
   CreateImagePayload,
   Image,
   ImageUploadPayload,

@@ -54,7 +54,6 @@ export const AssignIPRanges = (props: Props) => {
               marginLeft: theme.spacing(0.5),
               padding: theme.spacing(0.5),
             }}
-            interactive
             status="help"
             text={IPv4RangesDescriptionJSX}
           />
