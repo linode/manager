@@ -139,7 +139,7 @@ describe('create linode', () => {
     expect(cy.get('[data-testid="table-row-empty"]').should('not.exist'));
   });
 
-  it.only('creates a nanode', () => {
+  it('creates a nanode', () => {
     const rootpass = randomString(32);
     const linodeLabel = randomLabel();
     const region = chooseRegion();
