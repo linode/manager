@@ -6,7 +6,6 @@ import {
   getVisible,
 } from 'support/helpers';
 import { ui } from 'support/ui';
-import { apiMatcher } from 'support/util/intercepts';
 import { randomString, randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { getRegionById } from 'support/util/regions';
@@ -38,6 +37,7 @@ import {
   mockGetLinodeTypes,
   mockGetLinodeDisks,
   mockGetLinodeVolumes,
+  interceptCreateLinode,
 } from 'support/intercepts/linodes';
 import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
 import {
@@ -49,7 +49,7 @@ import {
   checkboxTestId,
   headerTestId,
 } from 'src/components/DiskEncryption/DiskEncryption';
-
+import { interceptGetProfile } from 'support/intercepts/profile';
 import type { Config, VLAN, Disk, Region } from '@linode/api-v4';
 import { mockGetAccount } from 'support/intercepts/account';
 
@@ -78,10 +78,13 @@ const mockRegions: Region[] = [
   }),
 ];
 
+let username: string;
+
 authenticate();
 describe('create linode', () => {
   before(() => {
     cleanUp('linodes');
+    interceptGetProfile().as('getProfile');
   });
 
   /*
@@ -136,26 +139,46 @@ describe('create linode', () => {
     expect(cy.get('[data-testid="table-row-empty"]').should('not.exist'));
   });
 
-  it('creates a nanode', () => {
+  it.only('creates a nanode', () => {
     const rootpass = randomString(32);
     const linodeLabel = randomLabel();
+    const region = chooseRegion();
+
     // intercept request
     cy.visitWithLogin('/linodes/create');
     cy.get('[data-qa-deploy-linode]');
-    cy.intercept('POST', apiMatcher('linode/instances')).as('linodeCreated');
+    interceptCreateLinode().as('linodeCreated');
+
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(chooseRegion().label).click();
+    ui.regionSelect.findItemByRegionLabel(region.label).click();
     fbtClick('Shared CPU');
     getClick('[id="g6-nanode-1"]');
     getClick('#linode-label').clear().type(linodeLabel);
     cy.get('#root-password').type(rootpass);
     getClick('[data-qa-deploy-linode]');
     cy.wait('@linodeCreated').its('response.statusCode').should('eq', 200);
+    cy.wait('@getProfile').then((xhr) => {
+      username = xhr.response?.body.username;
+    });
     ui.toast.assertMessage(`Your Linode ${linodeLabel} is being created.`);
     containsVisible('PROVISIONING');
     fbtVisible(linodeLabel);
     cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');
+
+    // confirm that LISH Console via SSH section is correct
+    // Find the "LISH Console via SSH" text
+    cy.contains('LISH Console via SSH')
+      .should('be.visible')
+      .next() // Navigate to the next element which should be the value
+      .invoke('text') // Get the text of the next element
+      .then((text) => {
+        // Perform actions with the value or assert it
+        // Example assertion (replace 'expected-value' with the actual expected value)
+        expect(text).equal(
+          `ssh -t ${username}@lish-${region.id}.linode.com ${linodeLabel}`
+        );
+      });
   });
 
   it('creates a linode via CLI', () => {
