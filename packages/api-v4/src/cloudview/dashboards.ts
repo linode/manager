@@ -1,5 +1,4 @@
 import { ResourcePage } from 'src/types';
-import { API_ROOT } from '../constants';
 
 import Request, { setMethod, setURL, setData, setHeaders } from '../request';
 import { Dashboard, JWEToken, GetJWETokenPayload } from './types';
