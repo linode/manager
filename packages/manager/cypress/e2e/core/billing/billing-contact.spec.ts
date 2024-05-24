@@ -12,7 +12,7 @@ import {
 import { mockGetProfile } from 'support/intercepts/profile';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
-
+import { TAX_ID_HELPER_TEXT } from 'src/features/Billing/constants';
 /* eslint-disable sonarjs/no-duplicate-string */
 const accountData = accountFactory.build({
   company: 'company_name',
@@ -73,7 +73,14 @@ const checkAccountContactDisplay = (accountInfo: Account) => {
 };
 
 describe('Billing Contact', () => {
-  it('Edit Contact Info', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      taxId: makeFeatureFlagData(true),
+    });
+    mockGetFeatureFlagClientstream();
+  });
+
+  it.only('Edit Contact Info', () => {
     // mock the user's account data and confirm that it is displayed correctly upon page load
     mockGetAccount(accountData).as('getAccount');
     cy.visitWithLogin('/account/billing');
@@ -134,6 +141,8 @@ describe('Billing Contact', () => {
           .click()
           .clear()
           .type(newAccountData['phone']);
+        cy.get('[data-qa-contact-country]').click().type('Afghanistan{enter}');
+        cy.findByText(TAX_ID_HELPER_TEXT).should('be.visible');
         cy.get('[data-qa-contact-country]')
           .click()
           .type('United States{enter}');
@@ -146,6 +155,7 @@ describe('Billing Contact', () => {
           .click()
           .clear()
           .type(newAccountData['tax_id']);
+        cy.findByText(TAX_ID_HELPER_TEXT).should('not.exist');
         cy.get('[data-qa-save-contact-info="true"]')
           .click()
           .then(() => {
