@@ -48,6 +48,7 @@ export const ChildAccountList = React.memo(
       isError,
       isFetchingNextPage,
       isInitialLoading,
+      isRefetching,
       refetch: refetchChildAccounts,
     } = useChildAccountsInfiniteQuery({
       filter,
@@ -63,7 +64,12 @@ export const ChildAccountList = React.memo(
       .flatMap((page) => page.data)
       .sort((a, b) => a.company.localeCompare(b.company));
 
-    if (isInitialLoading) {
+    if (
+      isInitialLoading ||
+      isLoading ||
+      isSwitchingChildAccounts ||
+      isRefetching
+    ) {
       return (
         <Box display="flex" justifyContent="center">
           <CircleProgress mini size={70} />
@@ -128,11 +134,6 @@ export const ChildAccountList = React.memo(
 
     return (
       <Stack alignItems={'flex-start'} data-testid="child-account-list">
-        {(isSwitchingChildAccounts || isLoading) && (
-          <Box display="flex" justifyContent="center" width={'100%'}>
-            <CircleProgress mini size={70} />
-          </Box>
-        )}
         {!isSwitchingChildAccounts && !isLoading && renderChildAccounts}
         {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
         {isFetchingNextPage && <CircleProgress mini />}
