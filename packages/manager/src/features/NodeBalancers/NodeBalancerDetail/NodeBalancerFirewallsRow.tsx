@@ -39,11 +39,7 @@ export const NodeBalancerFirewallsRow = (props: Props) => {
   const count = getCountOfRules(rules);
 
   return (
-    <TableRow
-      ariaLabel={`Firewall ${label}`}
-      data-qa-linode-firewall-row
-      key={`firewall-${firewallID}`}
-    >
+    <TableRow data-qa-linode-firewall-row key={`firewall-${firewallID}`}>
       <TableCell data-qa-firewall-label>
         <Link tabIndex={0} to={`/firewalls/${firewallID}`}>
           {label}

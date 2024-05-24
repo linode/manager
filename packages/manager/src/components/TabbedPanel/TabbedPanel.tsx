@@ -22,8 +22,8 @@ export interface Tab {
 }
 
 interface TabbedPanelProps {
-  [index: string]: any;
   bodyClass?: string;
+  children?: React.ReactNode;
   copy?: string;
   docsLink?: JSX.Element;
   error?: JSX.Element | string;

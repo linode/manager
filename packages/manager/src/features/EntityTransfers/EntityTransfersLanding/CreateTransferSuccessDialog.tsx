@@ -11,7 +11,7 @@ import { Typography } from 'src/components/Typography';
 import {
   sendEntityTransferCopyDraftEmailEvent,
   sendEntityTransferCopyTokenEvent,
-} from 'src/utilities/analytics';
+} from 'src/utilities/analytics/customEventAnalytics';
 import { parseAPIDate } from 'src/utilities/date';
 import { pluralize } from 'src/utilities/pluralize';
 

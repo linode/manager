@@ -14,10 +14,7 @@ export const FirewallDeviceRow = React.memo(
     const { deviceEntityID, deviceID, deviceLabel, deviceType } = props;
 
     return (
-      <TableRow
-        ariaLabel={`Device ${deviceLabel}`}
-        data-testid={`firewall-device-row-${deviceID}`}
-      >
+      <TableRow data-testid={`firewall-device-row-${deviceID}`}>
         <TableCell>
           <Link
             tabIndex={0}

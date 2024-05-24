@@ -15,7 +15,7 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { sendApiAwarenessClickEvent } from 'src/utilities/analytics';
+import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { generateCLICommand } from 'src/utilities/generate-cli';
 import { generateCurlCommand } from 'src/utilities/generate-cURL';
 

@@ -21,10 +21,6 @@ import {
   mockGetUser,
 } from 'support/intercepts/account';
 import { mockGetEvents, mockGetNotifications } from 'support/intercepts/events';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { mockAllApiRequests } from 'support/intercepts/general';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
@@ -33,7 +29,6 @@ import {
 } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { assertLocalStorageValue } from 'support/util/local-storage';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { grantsFactory } from '@src/factories/grants';
@@ -156,14 +151,6 @@ describe('Parent/Child account switching', () => {
    * Tests to confirm that Parent account users can switch to Child accounts as expected.
    */
   describe('From Parent to Child', () => {
-    beforeEach(() => {
-      // @TODO M3-7554, M3-7559: Remove feature flag mocks after feature launch and clean-up.
-      mockAppendFeatureFlags({
-        parentChildAccountAccess: makeFeatureFlagData(true),
-      });
-      mockGetFeatureFlagClientstream();
-    });
-
     /*
      * - Confirms that Parent account user can switch to Child account from Account Billing page.
      * - Confirms that Child account information is displayed in user menu button after switch.
@@ -326,13 +313,6 @@ describe('Parent/Child account switching', () => {
    * Tests to confirm that Parent account users can switch back from Child accounts as expected.
    */
   describe('From Child to Parent', () => {
-    beforeEach(() => {
-      mockAppendFeatureFlags({
-        parentChildAccountAccess: makeFeatureFlagData(true),
-      });
-      mockGetFeatureFlagClientstream();
-    });
-
     /*
      * - Confirms that a Child account Proxy user can switch back to a Parent account from Billing page.
      * - Confirms that Parent account information is displayed in user menu button after switch.

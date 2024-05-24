@@ -1,6 +1,7 @@
 import { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
 import { Paper } from 'src/components/Paper';
@@ -8,9 +9,13 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { useFirewallsQuery } from 'src/queries/firewalls';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { Autocomplete } from '../Autocomplete/Autocomplete';
 import { LinkButton } from '../LinkButton';
+
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 interface Props {
   disabled?: boolean;
@@ -30,9 +35,22 @@ export const SelectFirewallPanel = (props: Props) => {
   } = props;
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const location = useLocation();
+  const isFromLinodeCreate = location.pathname.includes('/linodes/create');
+  const queryParams = getQueryParamsFromQueryString(location.search);
 
   const handleCreateFirewallClick = () => {
     setIsDrawerOpen(true);
+    if (isFromLinodeCreate) {
+      sendLinodeCreateFormStepEvent({
+        action: 'click',
+        category: 'button',
+        createType: (queryParams.type as LinodeCreateType) ?? 'Distributions',
+        formStepName: 'Firewall Panel',
+        label: 'Create Firewall',
+        version: 'v1',
+      });
+    }
   };
 
   const handleFirewallCreated = (firewall: Firewall) => {
@@ -70,6 +88,15 @@ export const SelectFirewallPanel = (props: Props) => {
         <Autocomplete
           onChange={(_, selection) => {
             handleFirewallChange(selection?.value ?? -1);
+            sendLinodeCreateFormStepEvent({
+              action: 'click',
+              category: 'select',
+              createType:
+                (queryParams.type as LinodeCreateType) ?? 'Distributions',
+              formStepName: 'Firewall Panel',
+              label: 'Assign Firewall',
+              version: 'v1',
+            });
           }}
           disabled={disabled}
           errorText={error?.[0].reason}

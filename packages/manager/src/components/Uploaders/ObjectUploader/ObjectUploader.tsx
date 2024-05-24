@@ -8,7 +8,7 @@ import { debounce } from 'throttle-debounce';
 
 import { Button } from 'src/components/Button/Button';
 import { updateBucket } from 'src/queries/objectStorage';
-import { sendObjectsQueuedForUploadEvent } from 'src/utilities/analytics';
+import { sendObjectsQueuedForUploadEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { uploadObject } from '../../../features/ObjectStorage/requests';

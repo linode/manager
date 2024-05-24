@@ -92,7 +92,6 @@ export const VPC = () => {
                     : undefined
                 }
                 textFieldProps={{
-                  inputRef: field.ref,
                   sx: (theme) => ({
                     [theme.breakpoints.up('sm')]: { minWidth: inputMaxWidth },
                   }),
@@ -103,6 +102,7 @@ export const VPC = () => {
                 filter={{ region: regionId }}
                 label="Assign VPC"
                 noMarginTop
+                onBlur={field.onBlur}
                 onChange={(e, vpc) => field.onChange(vpc?.id ?? null)}
                 placeholder="None"
                 value={field.value ?? null}
@@ -126,9 +126,6 @@ export const VPC = () => {
                     getOptionLabel={(subnet) =>
                       `${subnet.label} (${subnet.ipv4})`
                     }
-                    textFieldProps={{
-                      inputRef: field.ref,
-                    }}
                     value={
                       selectedVPC?.subnets.find(
                         (subnet) => subnet.id === field.value
@@ -189,7 +186,6 @@ export const VPC = () => {
                             <TextField
                               containerProps={{ sx: { mb: 1, mt: 1 } }}
                               errorText={fieldState.error?.message}
-                              inputRef={field.ref}
                               label="VPC IPv4"
                               noMarginTop
                               onBlur={field.onBlur}

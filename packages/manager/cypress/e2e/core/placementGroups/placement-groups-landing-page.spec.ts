@@ -137,8 +137,9 @@ describe('VM Placement landing page', () => {
     );
   });
 
+  // TODO Re-evaluate whether this test is possible/necessary.
   /**
    * - Confirms that Cloud responds to compliance events and updates status on landing page.
    */
-  it.skip('updates Placement Group compliance status on event');
+  // it.skip('updates Placement Group compliance status on event');
 });

@@ -109,6 +109,9 @@ export const getLinkForEvent = (action: EventAction, entity: Entity | null) => {
     case 'placement_group':
       return `/placement-groups/${id}`;
 
+    case 'lkecluster':
+      return `/kubernetes/clusters/${id}`;
+
     default:
       return;
   }

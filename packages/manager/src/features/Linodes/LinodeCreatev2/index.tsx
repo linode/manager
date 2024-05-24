@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
@@ -14,6 +14,7 @@ import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
 } from 'src/queries/linodes/linodes';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { Access } from './Access';
 import { Actions } from './Actions';
@@ -48,11 +49,13 @@ import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreatev2 = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const methods = useForm<LinodeCreateFormValues>({
+  const form = useForm<LinodeCreateFormValues>({
     defaultValues,
     mode: 'onBlur',
     resolver: linodeCreateResolvers[params.type ?? 'Distributions'],
+    shouldFocusError: false, // We handle this ourselves with `scrollErrorIntoView`
   });
 
   const history = useHistory();
@@ -67,12 +70,12 @@ export const LinodeCreatev2 = () => {
     // Update tab "type" query param. (This changes the selected tab)
     setParams({ type: newTab });
     // Reset the form values
-    methods.reset(defaultValuesMap[newTab]);
+    form.reset(defaultValuesMap[newTab]);
   };
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
     const payload = getLinodeCreatePayload(values);
-    alert(JSON.stringify(payload, null, 2));
+
     try {
       const linode =
         params.type === 'Clone Linode'
@@ -86,23 +89,28 @@ export const LinodeCreatev2 = () => {
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
-          methods.setError(error.field, { message: error.reason });
+          form.setError(error.field, { message: error.reason });
         } else {
-          methods.setError('root', { message: error.reason });
+          form.setError('root', { message: error.reason });
         }
       }
     }
   };
 
   return (
-    <FormProvider {...methods}>
+    <FormProvider {...form}>
       <DocumentTitleSegment segment="Create a Linode" />
       <LandingHeader
         docsLabel="Getting Started"
         docsLink="https://www.linode.com/docs/guides/platform/get-started/"
         title="Create"
       />
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit, () =>
+          scrollErrorIntoViewV2(formRef)
+        )}
+        ref={formRef}
+      >
         <Error />
         <Stack gap={3}>
           <Tabs index={currentTabIndex} onChange={onTabChange}>

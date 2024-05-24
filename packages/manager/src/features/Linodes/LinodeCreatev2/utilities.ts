@@ -333,7 +333,7 @@ const defaultValuesForStackScripts = {
     defaultPublicInterface,
   ],
   region: '',
-  stackscript_id: null,
+  stackscript_id: undefined,
   type: '',
 };
 
