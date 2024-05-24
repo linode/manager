@@ -16,8 +16,8 @@ export const database: PartialEventMap = {
   database_create: {
     failed: (e) => (
       <>
-        Database <EventMessageLink entity={e.entity} /> could not be{' '}
-        <strong>created</strong>.
+        Database <EventMessageLink entity={e.entity} /> could{' '}
+        <strong>not</strong> be <strong>created</strong>.
       </>
     ),
     finished: (e) => (
@@ -72,8 +72,8 @@ export const database: PartialEventMap = {
   database_failed: {
     notification: (e) => (
       <>
-        Database <EventMessageLink entity={e.entity} /> failed to{' '}
-        <strong>update</strong>.
+        Database <EventMessageLink entity={e.entity} /> could{' '}
+        <strong>not</strong> be <strong>updated</strong>.
       </>
     ),
   },
@@ -95,8 +95,8 @@ export const database: PartialEventMap = {
   database_resize: {
     failed: (e) => (
       <>
-        Database <EventMessageLink entity={e.entity} /> could not be{' '}
-        <strong>resized</strong>.
+        Database <EventMessageLink entity={e.entity} /> could{' '}
+        <strong>not</strong> be <strong>resized</strong>.
       </>
     ),
     finished: (e) => (
@@ -129,8 +129,8 @@ export const database: PartialEventMap = {
   database_scale: {
     failed: (e) => (
       <>
-        Database <EventMessageLink entity={e.entity} /> could not be{' '}
-        <strong>resized</strong>.
+        Database <EventMessageLink entity={e.entity} /> could{' '}
+        <strong>not</strong> be <strong>resized</strong>.
       </>
     ),
     finished: (e) => (
@@ -163,8 +163,8 @@ export const database: PartialEventMap = {
   database_update_failed: {
     notification: (e) => (
       <>
-        Database <EventMessageLink entity={e.entity} /> failed to{' '}
-        <strong>update</strong>.
+        Database <EventMessageLink entity={e.entity} /> could{' '}
+        <strong>not</strong> be <strong>updated</strong>.
       </>
     ),
   },

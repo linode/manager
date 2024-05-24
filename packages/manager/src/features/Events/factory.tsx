@@ -8,6 +8,7 @@ import {
   community,
   creditCard,
   database,
+  disk,
   placementGroup,
 } from './factories';
 
@@ -56,5 +57,6 @@ export const events: CompleteEventMap = {
   ...withTypography(community),
   ...withTypography(creditCard),
   ...withTypography(database),
+  ...withTypography(disk),
   ...withTypography(placementGroup),
 };
