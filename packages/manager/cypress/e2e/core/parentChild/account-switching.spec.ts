@@ -355,7 +355,7 @@ describe('Parent/Child account switching', () => {
 
           cy.contains(mockChildAccount.company).should('not.exist');
           cy.findByText(
-            'There are no indirect customer accounts that match this query.'
+            'There are no child accounts that match this query.'
           ).should('be.visible');
 
           // Confirm filtering by company name displays only one search result.
@@ -369,7 +369,7 @@ describe('Parent/Child account switching', () => {
           cy.findByText(mockChildAccount.company).should('be.visible');
           cy.contains(mockAlternateChildAccount.company).should('not.exist');
           cy.contains(
-            'There are no indirect customer accounts that match this query.'
+            'There are no child accounts that match this query.'
           ).should('not.exist');
         });
     });
@@ -444,9 +444,7 @@ describe('Parent/Child account switching', () => {
         .findByTitle('Switch Account')
         .should('be.visible')
         .within(() => {
-          cy.findByText('There are no indirect customer accounts.').should(
-            'be.visible'
-          );
+          cy.findByText('There are no child accounts.').should('be.visible');
           cy.findByText('switch back to your account')
             .should('be.visible')
             .click();

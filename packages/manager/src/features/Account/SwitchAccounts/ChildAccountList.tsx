@@ -80,7 +80,7 @@ export const ChildAccountList = React.memo(
     if (childAccounts?.length === 0) {
       return (
         <Notice variant="info">
-          There are no indirect customer accounts
+          There are no child accounts
           {filter ? ' that match this query' : undefined}.
         </Notice>
       );
