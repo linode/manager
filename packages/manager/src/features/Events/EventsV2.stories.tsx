@@ -8,12 +8,9 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { eventFactory } from 'src/factories/events';
-import { events, factorEventMessage } from 'src/features/Events/events.factory';
-import { unsafe_MarkdownIt } from 'src/utilities/markdown';
+import { events } from 'src/features/Events/events.factory';
 
-import { EVENT_ACTIONS, EVENT_STATUSES } from './constants';
-
-import type { CreatorsForStatus } from './eventMessageGenerator';
+import type { CompleteEventMap } from './events.factory';
 import type { Event } from '@linode/api-v4/lib/account';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -31,11 +28,11 @@ const event: Event = eventFactory.build({
   username: '{Username}',
 });
 
-const renderEventMessages = (events: any) => {
+const renderEventMessages = (events: CompleteEventMap) => {
   return (
     <div>
       {Object.entries(events).map(([eventKey, statuses]) => (
-        <div key={eventKey ?? ''}>
+        <div key={eventKey}>
           <Typography sx={{ marginBottom: 1, marginTop: 2 }} variant="h3">
             {eventKey}
           </Typography>
@@ -47,37 +44,16 @@ const renderEventMessages = (events: any) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* {Object.keys(statuses).map((status, key) => {
-                const messageCreator = statuses[status];
-
-                const message = messageCreator(event);
+              {Object.keys(statuses).map((status, key) => {
+                const message = statuses[status](event);
 
                 return (
                   <TableRow key={`status-${key}`}>
                     <TableCell>
-                      <Chip label={status} />{' '}
+                      <Chip label={status} />
                     </TableCell>
                     <TableCell>
-                      <Typography
-                        dangerouslySetInnerHTML={{
-                          // eslint-disable-next-line xss/no-mixed-html
-                          __html: message,
-                        }}
-                      />
-                    </TableCell>
-                  </TableRow>
-                );
-              })} */}
-              {Object.keys(statuses as any).map((status, key) => {
-                return (
-                  <TableRow key={`status-${key}`}>
-                    <TableCell>
-                      <Chip label={status} />{' '}
-                    </TableCell>
-                    <TableCell>
-                      <Typography>
-                        {(statuses as any)[status](event)}
-                      </Typography>
+                      <Typography>{message}</Typography>
                     </TableCell>
                   </TableRow>
                 );
@@ -94,7 +70,7 @@ export const HardCodedMessages: StoryObj = {
   render: () => renderEventMessages(events),
 };
 
-const customizableEvent: Event = eventFactory.build();
+// const customizableEvent: Event = eventFactory.build();
 
 // export const EventPlayground: StoryObj = {
 //   argTypes: {
