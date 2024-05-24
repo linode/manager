@@ -9,6 +9,10 @@ import {
   creditCard,
   database,
   disk,
+  dns,
+  domain,
+  entity,
+  firewall,
   placementGroup,
 } from './factories';
 
@@ -58,5 +62,9 @@ export const events: CompleteEventMap = {
   ...withTypography(creditCard),
   ...withTypography(database),
   ...withTypography(disk),
+  ...withTypography(dns),
+  ...withTypography(domain),
+  ...withTypography(entity),
+  ...withTypography(firewall),
   ...withTypography(placementGroup),
 };
