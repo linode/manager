@@ -1,6 +1,6 @@
-import { events } from './events.factory';
+import { events } from './factory';
 
-import type { EventMessage } from './events.factory';
+import type { EventMessage } from './types';
 import type { Event, EventAction } from '@linode/api-v4';
 
 export const getEventMessage = <T extends EventAction>(

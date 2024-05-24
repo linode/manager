@@ -8,24 +8,24 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { eventFactory } from 'src/factories/events';
-import { events } from 'src/features/Events/events.factory';
+import { events } from 'src/features/Events/factory';
 
-import type { CompleteEventMap } from './events.factory';
+import type { CompleteEventMap } from './types';
 import type { Event } from '@linode/api-v4/lib/account';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const event: Event = eventFactory.build({
   action: 'linode_boot',
-  entity: { id: 1, label: '{Entity}', type: 'any', url: 'https://google.com' },
-  message: '{Message}',
+  entity: { id: 1, label: '{entity}', type: 'any', url: 'https://google.com' },
+  message: '{message}',
   secondary_entity: {
     id: 1,
-    label: '{Secondary Entity}',
+    label: '{secondary entity}',
     type: 'linode',
     url: 'https://google.com',
   },
-  status: '{Status}' as Event['status'],
-  username: '{Username}',
+  status: '{status}' as Event['status'],
+  username: '{username}',
 });
 
 const renderEventMessages = (events: CompleteEventMap) => {

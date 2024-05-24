@@ -2,22 +2,17 @@ import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
 
-import { account, placementGroup } from './factories';
+import {
+  account,
+  backup,
+  community,
+  creditCard,
+  database,
+  placementGroup,
+} from './factories';
 
-import type { Event, EventAction, EventStatus } from '@linode/api-v4';
-
-export type EventMessage = {
-  [S in EventStatus]?: (e: Partial<Event>) => JSX.Element | string;
-};
-
-export type PartialEventMap = {
-  [K in EventAction]?: EventMessage;
-};
-
-export type CompleteEventMap = {
-  // remove conditional type when all events are implemented
-  [K in EventAction]?: EventMessage;
-};
+import type { CompleteEventMap, EventMessage, PartialEventMap } from './types';
+import type { Event } from '@linode/api-v4';
 
 export const factorEventMessage = (e: Event): EventMessage => {
   const action = events[e.action];
@@ -56,6 +51,10 @@ export const withTypography = (eventMap: PartialEventMap): PartialEventMap => {
 };
 
 export const events: CompleteEventMap = {
-  ...account,
+  ...withTypography(account),
+  ...withTypography(backup),
+  ...withTypography(community),
+  ...withTypography(creditCard),
+  ...withTypography(database),
   ...withTypography(placementGroup),
 };

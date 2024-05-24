@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { EventMessageLink } from '../EventMessageLink';
 
-import type { PartialEventMap } from '../events.factory';
+import type { PartialEventMap } from '../types';
 
 export const placementGroup: PartialEventMap = {
   placement_group_assign: {
@@ -17,45 +17,49 @@ export const placementGroup: PartialEventMap = {
   placement_group_became_compliant: {
     notification: (e) => (
       <>
-        Placement Group <EventMessageLink entity={e.entity} /> has become
-        compliant.
+        Placement Group <EventMessageLink entity={e.entity} /> has become{' '}
+        <strong>compliant</strong>.
       </>
     ),
   },
   placement_group_became_non_compliant: {
     notification: (e) => (
       <>
-        Placement Group <EventMessageLink entity={e.entity} /> has become
-        non-compliant.
+        Placement Group <EventMessageLink entity={e.entity} /> has become{' '}
+        <strong>non-compliant</strong>.
       </>
     ),
   },
   placement_group_create: {
     notification: (e) => (
       <>
-        Placement Group <EventMessageLink entity={e.entity} /> has been created.
+        Placement Group <EventMessageLink entity={e.entity} /> has been{' '}
+        <strong>created</strong>.
       </>
     ),
   },
   placement_group_delete: {
     notification: (e) => (
       <>
-        Placement Group <EventMessageLink entity={e.entity} /> has been deleted.
+        Placement Group <EventMessageLink entity={e.entity} /> has been{' '}
+        <strong>deleted</strong>.
       </>
     ),
   },
   placement_group_unassign: {
     notification: (e) => (
       <>
-        Linode <EventMessageLink entity={e.secondary_entity} /> has been
-        unassigned from Placement Group <EventMessageLink entity={e.entity} />.
+        Linode <EventMessageLink entity={e.secondary_entity} /> has been{' '}
+        <strong>unassigned</strong> from Placement Group{' '}
+        <EventMessageLink entity={e.entity} />.
       </>
     ),
   },
   placement_group_update: {
     notification: (e) => (
       <>
-        Placement Group <EventMessageLink entity={e.entity} /> has been updated.
+        Placement Group <EventMessageLink entity={e.entity} /> has been{' '}
+        <strong>updated</strong>.
       </>
     ),
   },
