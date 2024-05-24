@@ -27,6 +27,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'parentChildAccountAccess', label: 'Parent/Child Account' },
   { flag: 'placementGroups', label: 'Placement Groups' },
+  { flag: 'taxId', label: 'Tax Id' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
 ];

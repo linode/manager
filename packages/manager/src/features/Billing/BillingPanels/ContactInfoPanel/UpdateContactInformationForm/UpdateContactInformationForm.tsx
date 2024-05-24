@@ -9,7 +9,10 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
+import {
+  getRestrictedResourceText,
+  useIsTaxIdEnabled,
+} from 'src/features/Account/utils';
 import { TAX_ID_HELPER_TEXT } from 'src/features/Billing/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount, useMutateAccount } from 'src/queries/account/account';
@@ -32,6 +35,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { classes } = useStyles();
   const emailRef = React.useRef<HTMLInputElement>();
   const { data: profile } = useProfile();
+  const { isTaxIdEnabled } = useIsTaxIdEnabled();
   const isChildUser = profile?.user_type === 'child';
   const isParentUser = profile?.user_type === 'parent';
   const isReadOnly =
@@ -66,7 +70,11 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
 
       await mutateAsync(clonedValues);
 
-      if (values.country !== 'US' && account?.tax_id !== values.tax_id) {
+      if (
+        isTaxIdEnabled &&
+        values.country !== 'US' &&
+        account?.tax_id !== values.tax_id
+      ) {
         enqueueSnackbar(
           "You edited the Tax Identification Number. It's being verified. You'll get an email with the verification result.",
           {
@@ -377,10 +385,14 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         </Grid>
         <Grid xs={12}>
           <TextField
+            helperText={
+              isTaxIdEnabled &&
+              formik.values.country !== 'US' &&
+              TAX_ID_HELPER_TEXT
+            }
             data-qa-contact-tax-id
             disabled={isReadOnly}
             errorText={errorMap.tax_id}
-            helperText={formik.values.country !== 'US' && TAX_ID_HELPER_TEXT}
             label="Tax ID"
             name="tax_id"
             onChange={formik.handleChange}

@@ -1,3 +1,5 @@
+import { useFlags } from 'src/hooks/useFlags';
+
 import { ADMINISTRATOR, PARENT_USER } from './constants';
 
 import type { GlobalGrantTypes, GrantLevel } from '@linode/api-v4';
@@ -62,4 +64,24 @@ export const getRestrictedResourceText = ({
   }
 
   return message;
+};
+
+/**
+ * Hook to determine if the Tax Id feature should be visible to the user.
+ * Based on the user's account capability and the feature flag.
+ *
+ * @returns {boolean} - Whether the Placement Group feature is enabled for the current user.
+ */
+export const useIsTaxIdEnabled = (): {
+  isTaxIdEnabled: boolean;
+} => {
+  const flags = useFlags();
+
+  if (!flags) {
+    return { isTaxIdEnabled: false };
+  }
+
+  const isTaxIdEnabled = Boolean(flags.taxId?.enabled);
+
+  return { isTaxIdEnabled };
 };

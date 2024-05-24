@@ -12,6 +12,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
 
+import { useIsTaxIdEnabled } from '../Account/utils';
 import { EventRow } from './EventRow';
 import {
   StyledH1Header,
@@ -29,6 +30,7 @@ interface Props {
 
 export const EventsLanding = (props: Props) => {
   const { emptyMessage, entityId } = props;
+  const { isTaxIdEnabled } = useIsTaxIdEnabled();
 
   const filter: Filter = { action: { '+neq': 'profile_update' } };
 
@@ -46,6 +48,10 @@ export const EventsLanding = (props: Props) => {
     isLoading,
   } = useEventsInfiniteQuery(filter);
 
+  const filteredEvents = isTaxIdEnabled
+    ? events?.filter((event) => event.action !== 'tax_id_invalid')
+    : events;
+
   const renderTableBody = () => {
     if (isLoading) {
       return (
@@ -57,7 +63,7 @@ export const EventsLanding = (props: Props) => {
       );
     } else if (error) {
       return <TableRowError colSpan={12} message={error[0].reason} />;
-    } else if (events && events.length === 0) {
+    } else if (filteredEvents && filteredEvents.length === 0) {
       return (
         <TableRowEmpty
           colSpan={12}
@@ -67,7 +73,7 @@ export const EventsLanding = (props: Props) => {
     } else {
       return (
         <>
-          {events?.map((event) => (
+          {filteredEvents?.map((event) => (
             <EventRow
               entityId={entityId}
               event={event}
@@ -112,8 +118,8 @@ export const EventsLanding = (props: Props) => {
           <div />
         </Waypoint>
       ) : (
-        events &&
-        events.length > 0 && (
+        filteredEvents &&
+        filteredEvents.length > 0 && (
           <StyledTypography>No more events to show</StyledTypography>
         )
       )}
