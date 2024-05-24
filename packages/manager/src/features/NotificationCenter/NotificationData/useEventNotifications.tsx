@@ -31,7 +31,7 @@ export const useEventNotifications = (givenEvents?: Event[]) => {
   // TODO: TaxId - This entire function can be removed when we cleanup tax id feature flags
   const unwantedEvents = React.useMemo(() => {
     const events = [...defaultUnwantedEvents];
-    if (isTaxIdEnabled) {
+    if (!isTaxIdEnabled) {
       events.push('tax_id_invalid');
     }
     return events;
