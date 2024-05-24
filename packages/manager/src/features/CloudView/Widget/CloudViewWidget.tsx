@@ -32,6 +32,8 @@ import { IntervalSelectComponent } from './Components/IntervalSelectComponent';
 import { ZoomIcon } from './Components/Zoomer';
 import { seriesDataFormatter } from './Formatters/CloudViewFormatter';
 
+import { updateWidgetPreference } from '../Utils/UserPreference';
+
 export interface CloudViewWidgetProperties {
   // we can try renaming this CloudViewWidget
   ariaLabel?: string;
@@ -243,6 +245,8 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     setWidget((widget) => {
       return { ...widget, size: zoomInValue ? 12 : 6 };
     });
+
+    updateWidgetPreference(props.widget.label, "size", zoomInValue ? 12 : 6);
   };
 
   const handleAggregateFunctionChange = (aggregateValue: string) => {
@@ -254,6 +258,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
         };
       });
       setSelectedAggregatedFunction(aggregateValue);
+      updateWidgetPreference(props.widget.label, "aggregateFunction", aggregateValue);
     }
   };
 

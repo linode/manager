@@ -3,12 +3,12 @@ import { Paper } from '@mui/material';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
-import { AclpConfig, AclpWidget } from '../Models/CloudPulsePreferences';
+import { AclpConfig } from '../Models/CloudPulsePreferences';
 import { FiltersObject } from '../Models/GlobalFilterProperties';
 import { GlobalFilters } from '../Overview/GlobalFilters';
 import { CloudPulseDashboard, DashboardProperties } from './Dashboard';
+import { getUserPreference} from '../Utils/UserPreference'
 
 export const DashBoardLanding = () => {
   const generateStartTime = (modifier: string, nowInSeconds: number) => {
@@ -57,22 +57,10 @@ export const DashBoardLanding = () => {
   // since preference is mutable and savable
   const preferenceRef = React.useRef<any>();
 
-  const { data: preferences, refetch: refetchPreferences } = usePreferences();
-  const { mutateAsync: updatePreferences } = useMutatePreferences();
+  // const { data: preferences, refetch: refetchPreferences } = usePreferences();
+  const [ preferences, setPreferences] = React.useState<any>();
 
   const updatedDashboard = React.useRef<Dashboard>();
-
-  const handlPrefChange = (item: AclpConfig) => {
-    refetchPreferences()
-      .then(({ data: response }) => response ?? Promise.reject())
-      .then((response) => {
-        updatePreferences({
-          ...response,
-          aclpPreference: item,
-        });
-      })
-      .catch(); // swallow the error, it's nbd if the choice isn't saved
-  };
 
   const handleGlobalFilterChange = (
     globalFilter: FiltersObject,
@@ -139,7 +127,6 @@ export const DashBoardLanding = () => {
         : undefined!,
     });
 
-    handlPrefChange(preferenceRef.current.aclpPreference);
   };
 
   const handleDashboardChange = (dashboard: Dashboard) => {
@@ -153,7 +140,6 @@ export const DashBoardLanding = () => {
       preferenceRef.current.aclpPreference.resources = [];
       preferenceRef.current.aclpPreference.region = '';
 
-      handlPrefChange(preferenceRef.current.aclpPreference);
       return;
     }
 
@@ -204,7 +190,6 @@ export const DashBoardLanding = () => {
       }
     }
 
-    handlPrefChange(preferenceRef.current.aclpPreference);
   };
 
   const saveOrEditDashboard = (dashboard: Dashboard) => {
@@ -238,10 +223,18 @@ export const DashBoardLanding = () => {
           };
         }
       );
-      // call preferences
-      handlPrefChange(preferenceRef.current.aclpPreference);
     }
   };
+
+  //Fetch the data from preferences
+  React.useEffect( () =>{
+    const fetchPreferences = async () =>{
+       const userPreference = await getUserPreference();
+       console.log("Preference Data: ", userPreference);
+       setPreferences(userPreference);
+    }
+    fetchPreferences();
+ }, [])
 
   if (!preferences) {
     return <CircleProgress></CircleProgress>;
@@ -258,6 +251,8 @@ export const DashBoardLanding = () => {
       }
     }
   }
+
+
   return (
     <>
       <Paper style={{ borderStyle: 'ridge' }}>

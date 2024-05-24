@@ -15,6 +15,8 @@ import { CloudViewRegionSelect } from '../shared/RegionSelect';
 import { CloudViewMultiResourceSelect } from '../shared/ResourceMultiSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/TimeRangeSelect';
 
+import { updateGlobalFilterPreference } from '../Utils/UserPreference';
+
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const emitGlobalFilterChange = (
     updatedFilters: FiltersObject,
@@ -37,6 +39,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       filterObj.duration = timeDuration;
       filterObj.durationLabel = timeRangeLabel!;
       emitGlobalFilterChange(filterObj, 'timeduration');
+      updateGlobalFilterPreference("timeDuration", filterObj.duration);
     }
   };
 
@@ -45,6 +48,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
 
     if (region) {
       emitGlobalFilterChange({ ...props.globalFilters, region }, 'region');
+      updateGlobalFilterPreference("region", region);
     }
   };
 
@@ -52,6 +56,8 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     console.log('Resource ID: ', resourceId);
     console.log('resourcereason', reason);
     if ((resourceId && resourceId.length > 0) || reason == 'clear') {
+      updateGlobalFilterPreference("resources", resourceId.map((obj) => obj.id));
+      console.log("Resources Updated");
       emitGlobalFilterChange(
         {
           ...props.globalFilters,
@@ -70,6 +76,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
 
     if (dashboard || (!dashboard && !isClear)) {
       props.handleDashboardChange(dashboard!);
+
     }
   };
 
