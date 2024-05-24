@@ -17,6 +17,7 @@ import {
   image,
   ip,
   lassie,
+  linode,
   placementGroup,
 } from './factories';
 
@@ -74,5 +75,6 @@ export const events: CompleteEventMap = {
   ...withTypography(image),
   ...withTypography(ip),
   ...withTypography(lassie),
+  ...withTypography(linode),
   ...withTypography(placementGroup),
 };

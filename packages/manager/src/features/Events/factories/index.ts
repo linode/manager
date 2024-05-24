@@ -12,6 +12,7 @@ import { host } from './host';
 import { image } from './image';
 import { ip } from './ip';
 import { lassie } from './lassie';
+import { linode } from './linode';
 import { placementGroup } from './placementGroup';
 
 export {
@@ -29,5 +30,6 @@ export {
   image,
   ip,
   lassie,
+  linode,
   placementGroup,
 };
