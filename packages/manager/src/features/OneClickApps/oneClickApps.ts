@@ -129,7 +129,7 @@ export const oneClickApps: OCA[] = [
       start: '85A355',
     },
     description: `Distributed, masterless, replicating NoSQL database cluster.`,
-    logo_url: 'cassandra.svg',
+    logo_url: 'apachecassandra.svg',
     name: 'Apache Cassandra Cluster',
     related_guides: [
       {
@@ -150,7 +150,7 @@ export const oneClickApps: OCA[] = [
       start: '00C7D4',
     },
     description: `Apache Kafka supports a wide range of applications from log aggregation to real-time analytics. Kafka provides a foundation for building data pipelines, event-driven architectures, or stream processing applications.`,
-    logo_url: 'kafka.svg',
+    logo_url: 'apachekafka.svg',
     name: 'Apache Kafka Cluster',
     related_guides: [
       {
@@ -323,7 +323,7 @@ export const oneClickApps: OCA[] = [
   {
     alt_description:
       'Highly available, five-node enterprise NoSQL database cluster.',
-    alt_name: 'Couchbase Enterprise Server',
+    alt_name: 'Couchbase Enterprise Server Cluster',
     categories: ['Databases'],
     colors: {
       end: 'EC1018',
@@ -331,7 +331,7 @@ export const oneClickApps: OCA[] = [
     },
     description: `Couchbase Enterprise Server is a high-performance NoSQL database, built for scale. Couchbase Server is designed with memory-first architecture, built-in cache and workload isolation.`,
     logo_url: 'couchbase.svg',
-    name: 'Couchbase Enterprise Server Cluster',
+    name: 'Couchbase Cluster',
     related_guides: [
       {
         href:
