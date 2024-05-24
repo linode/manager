@@ -19,7 +19,6 @@ export const CredentialRow = (props: CredentialRowProps) => {
 
   return (
     <StyledTableRow
-      ariaLabel={`Credential ${credential.label}`}
       data-qa-credential-cell={credential.id}
       data-testid={'credential-row'}
       key={credential.id}

@@ -45,6 +45,7 @@
     "coverage": "yarn workspace linode-manager coverage",
     "coverage:summary": "yarn workspace linode-manager coverage:summary",
     "junit:summary": "ts-node scripts/junit-summary/index.ts",
+    "generate-tod": "ts-node scripts/tod-payload/index.ts",
     "docs": "bunx vitepress@1.0.0-rc.44 dev docs"
   },
   "resolutions": {
@@ -55,7 +56,6 @@
     "node-fetch": "^2.6.7",
     "ua-parser-js": "^0.7.33",
     "immer": "^9.0.6",
-    "lodash": "^4.17.21",
     "glob-parent": "^5.1.2",
     "hosted-git-info": "^5.0.0",
     "yaml": "^2.3.0",

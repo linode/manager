@@ -33,7 +33,7 @@ import {
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
-import { sendMigrationInitiatedEvent } from 'src/utilities/analytics';
+import { sendMigrationInitiatedEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { formatDate } from 'src/utilities/formatDate';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
@@ -159,7 +159,7 @@ export const MigrateLinode = React.memo((props: Props) => {
 
   const edgeRegionWarning =
     flags.gecko2?.enabled && linodeIsInEdgeRegion
-      ? 'Edge sites may only be migrated to other Edge sites.'
+      ? 'Edge regions may only be migrated to other edge regions.'
       : undefined;
 
   if (!linode) {

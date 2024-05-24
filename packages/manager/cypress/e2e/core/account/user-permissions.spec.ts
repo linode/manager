@@ -4,27 +4,19 @@ import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
 import { userPermissionsGrants } from 'support/constants/user-permissions';
 import {
-  mockAddUser,
   mockGetUser,
   mockGetUserGrants,
   mockGetUserGrantsUnrestrictedAccess,
   mockGetUsers,
   mockUpdateUser,
   mockUpdateUserGrants,
-  mockDeleteUser,
 } from 'support/intercepts/account';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { shuffleArray } from 'support/util/arrays';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
-import { PARENT_USER } from 'src/features/Account/constants';
 
-// Message shown when user has unrestricted account acess.
+// Message shown when user has unrestricted account access.
 const unrestrictedAccessMessage =
   'This user has unrestricted access to the account.';
 
@@ -482,7 +474,11 @@ describe('User permission management', () => {
       });
   });
 
-  it('disables Read-Write and defaults to Read Only Billing Access for child account users with Parent/Child feature flag', () => {
+  /**
+   * Confirm the User Permissions flow for a child account.
+   * Confirm that child accounts default to "Read Only" Billing Access and have disabled "Read Write".
+   */
+  it('tests the user permissions for a child account', () => {
     const mockProfile = profileFactory.build({
       username: 'unrestricted-child-user',
     });
@@ -503,37 +499,16 @@ describe('User permission management', () => {
       global: { account_access: 'read_write' },
     });
 
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     mockGetUsers([mockActiveUser, mockRestrictedUser]).as('getUsers');
     mockGetUser(mockActiveUser);
     mockGetUserGrants(mockActiveUser.username, mockUserGrants);
     mockGetProfile(mockProfile);
-
-    // Navigate to Users & Grants page, find mock restricted user, click its "User Permissions" button.
-    cy.visitWithLogin('/account/users');
-    cy.wait('@getUsers');
-    cy.findByText(mockRestrictedUser.username)
-      .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        ui.button
-          .findByTitle('User Permissions')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
 
     cy.visitWithLogin(
       `/account/users/${mockRestrictedUser.username}/permissions`
     );
     mockGetUser(mockRestrictedUser);
     mockGetUserGrants(mockRestrictedUser.username, mockUserGrants);
-    cy.wait(['@getClientStream', '@getFeatureFlags']);
 
     cy.get('[data-qa-global-section]')
       .should('be.visible')
@@ -561,14 +536,11 @@ describe('User permission management', () => {
   });
 
   /**
-   * Confirm the Users & Grants and User Permissions pages flow for a child account viewing a proxy user.
-   * Confirm that "Parent User Settings" and "User Settings" sections are present on the Users & Grants page.
-   * Confirm that proxy accounts are listed under "Parent User Settings".
-   * Confirm that clicking the "Manage Access" button navigates to the proxy user's User Permissions page at /account/users/:user/permissions.
+   * Confirm the User Permissions flow for a child account viewing a proxy user.
    * Confirm that no "Profile" tab is present on the proxy user's User Permissions page.
    * Confirm that proxy accounts default to "Read Write" Billing Access and have disabled "Read Only" and "None" options.
    */
-  it('tests the users landing and user permissions flow for a child account viewing a proxy user ', () => {
+  it('tests the user permissions for a child account viewing a proxy user', () => {
     const mockChildProfile = profileFactory.build({
       username: 'proxy-user',
       user_type: 'child',
@@ -589,12 +561,6 @@ describe('User permission management', () => {
       global: { account_access: 'read_write' },
     });
 
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     mockGetUsers([mockRestrictedProxyUser]).as('getUsers');
     mockGetUser(mockChildUser);
     mockGetUserGrants(mockChildUser.username, mockUserGrants);
@@ -602,34 +568,9 @@ describe('User permission management', () => {
     mockGetUser(mockRestrictedProxyUser);
     mockGetUserGrants(mockRestrictedProxyUser.username, mockUserGrants);
 
-    // Navigate to Users & Grants page and confirm "Parent User Settings" and "User Settings" sections are visible.
-    cy.visitWithLogin('/account/users');
-    cy.wait('@getUsers');
-    cy.findByText(`${PARENT_USER} Settings`).should('be.visible');
-    cy.findByText('User Settings').should('be.visible');
-
-    // Find mock restricted proxy user under "Parent User Settings", click its "Manage Access" button.
-    cy.findByLabelText('List of Parent Users')
-      .should('be.visible')
-      .within(() => {
-        cy.findByText(mockRestrictedProxyUser.username)
-          .should('be.visible')
-          .closest('tr')
-          .within(() => {
-            ui.button
-              .findByTitle('Manage Access')
-              .should('be.visible')
-              .should('be.enabled')
-              .click();
-          });
-      });
-
-    // Confirm button navigates to the proxy user's User Permissions page at /account/users/:user/permissions.
-    cy.url().should(
-      'endWith',
+    cy.visitWithLogin(
       `/account/users/${mockRestrictedProxyUser.username}/permissions`
     );
-    cy.wait(['@getClientStream', '@getFeatureFlags']);
 
     cy.findByText('Parent User Permissions', { exact: false }).should(
       'be.visible'
@@ -659,355 +600,5 @@ describe('User permission management', () => {
           .should('be.visible')
           .should('have.attr', 'disabled');
       });
-  });
-
-  it('can add users with full access', () => {
-    const mockUser = accountUserFactory.build({
-      username: randomLabel(),
-      restricted: false,
-    });
-
-    const username = randomLabel();
-    const newUser = accountUserFactory.build({
-      username: username,
-      email: `${username}@test.com`,
-      restricted: false,
-    });
-
-    mockGetUsers([mockUser]).as('getUsers');
-    mockGetUser(mockUser);
-    mockGetUserGrantsUnrestrictedAccess(mockUser.username);
-    mockAddUser(newUser).as('addUser');
-
-    // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
-    cy.visitWithLogin('/account/users');
-    cy.wait('@getUsers');
-
-    // Confirm that the "Users & Grants" page initially lists the main user
-    cy.findByText(mockUser.username).should('be.visible');
-
-    mockGetUsers([mockUser, newUser]).as('getUsers');
-
-    // "Add a User" button shows up and is clickable
-    cy.findByText('Add a User')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    // "Add a User" drawer shows up
-    ui.drawer
-      .findByTitle('Add a User')
-      .should('be.visible')
-      .within(() => {
-        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
-        cy.findByText('Email')
-          .click()
-          .type(`${newUser.username}@test.com{enter}`);
-        ui.buttonGroup
-          .findButtonByTitle('Cancel')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-    // the drawer has been closed
-    cy.findByText('Add a User').should('not.exist');
-    // cancel button will not add a new user
-    cy.findByText(newUser.username).should('not.exist');
-
-    cy.findByText('Add a User')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    // "x" button will not add a new user
-    ui.drawer
-      .findByTitle('Add a User')
-      .should('be.visible')
-      .within(() => {
-        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
-        cy.findByText('Email')
-          .click()
-          .type(`${newUser.username}@test.com{enter}`);
-        ui.buttonGroup
-          .findButtonByTitle('Cancel')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-    // the drawer has been closed
-    cy.findByText('Add a User').should('not.exist');
-    // no new user is added
-    cy.findByText(newUser.username).should('not.exist');
-
-    // new user should be added and shown in the user list
-    cy.findByText('Add a User')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    // confirm to add a new user
-    ui.drawer
-      .findByTitle('Add a User')
-      .should('be.visible')
-      .within(() => {
-        // an inline error message will be displayed when username or email is not specified
-        ui.buttonGroup
-          .findButtonByTitle('Add User')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-        cy.findByText('Username is required.').should('be.visible');
-        cy.findByText('Email address is required.').should('be.visible');
-
-        // type username
-        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
-
-        // an inline error message will be displayed when the email address is invalid
-        cy.findByText('Email').click().type(`not_valid_email_address{enter}`);
-        ui.buttonGroup
-          .findButtonByTitle('Add User')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-        cy.findByText('Must be a valid Email address.').should('be.visible');
-
-        // type email address
-        cy.get('[id="email"]')
-          .click()
-          .clear()
-          .type(`${newUser.username}@test.com{enter}`);
-
-        ui.buttonGroup
-          .findButtonByTitle('Add User')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-    // Cloud Manager passes "restricted: false" in the request payload
-    cy.wait('@addUser').then((intercept) => {
-      expect(intercept.request.body['restricted']).to.equal(newUser.restricted);
-    });
-    cy.wait('@getUsers');
-
-    // the new user is displayed in the user list
-    cy.findByText(newUser.username).should('be.visible');
-
-    // no redirect occurs
-    cy.url().should('endWith', '/users');
-  });
-
-  it('can add users with restricted access', () => {
-    const mockUser = accountUserFactory.build({
-      username: randomLabel(),
-      restricted: false,
-    });
-
-    const username = randomLabel();
-    const newUser = accountUserFactory.build({
-      username: username,
-      email: `${username}@test.com`,
-      restricted: true,
-    });
-
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
-    mockGetUsers([mockUser]).as('getUsers');
-    mockGetUser(mockUser);
-    mockGetUserGrantsUnrestrictedAccess(mockUser.username);
-    mockAddUser(newUser).as('addUser');
-
-    // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
-    cy.visitWithLogin('/account/users');
-    cy.wait('@getUsers');
-
-    // Confirm that the "Users & Grants" page initially lists the main user
-    cy.findByText(mockUser.username).should('be.visible');
-
-    mockGetUsers([mockUser, newUser]).as('getUsers');
-
-    // "Add a User" button shows up and is clickable
-    cy.findByText('Add a User')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    // "Add a User" drawer shows up
-    ui.drawer
-      .findByTitle('Add a User')
-      .should('be.visible')
-      .within(() => {
-        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
-        cy.findByText('Email')
-          .click()
-          .type(`${newUser.username}@test.com{enter}`);
-        ui.buttonGroup
-          .findButtonByTitle('Cancel')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    // "x" or cancel button will not add a new user
-    cy.findByText(newUser.username).should('not.exist');
-
-    // new user should be added and shown in the user list
-    cy.findByText('Add a User')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    // confirm to add a new user
-    ui.drawer
-      .findByTitle('Add a User')
-      .should('be.visible')
-      .within(() => {
-        // an inline error message will be displayed when username or email is not specified
-        ui.buttonGroup
-          .findButtonByTitle('Add User')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-        cy.findByText('Username is required.').should('be.visible');
-        cy.findByText('Email address is required.').should('be.visible');
-
-        // type username
-        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
-
-        // an inline error message will be displayed when the email address is invalid
-        cy.findByText('Email').click().type(`not_valid_email_address{enter}`);
-        ui.buttonGroup
-          .findButtonByTitle('Add User')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-        cy.findByText('Must be a valid Email address.').should('be.visible');
-
-        // type email address
-        cy.get('[id="email"]')
-          .click()
-          .clear()
-          .type(`${newUser.username}@test.com{enter}`);
-
-        // toggle to disable full access
-        cy.get('[data-qa-create-restricted="true"]')
-          .should('be.visible')
-          .click();
-
-        ui.buttonGroup
-          .findButtonByTitle('Add User')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-    // Cloud Manager passes "restricted: true" in the request payload
-    cy.wait('@addUser').then((intercept) => {
-      expect(intercept.request.body['restricted']).to.equal(newUser.restricted);
-    });
-    cy.wait('@getUsers');
-    cy.wait(['@getClientStream', '@getFeatureFlags']);
-
-    // the new user is displayed in the user list
-    cy.findByText(newUser.username).should('be.visible');
-
-    // redirects to the new user's "User Permissions" page
-    cy.url().should('endWith', `/users/${newUser.username}/permissions`);
-  });
-
-  it('can delete users', () => {
-    const mockUser = accountUserFactory.build({
-      username: randomLabel(),
-      restricted: false,
-    });
-
-    const username = randomLabel();
-    const additionalUser = accountUserFactory.build({
-      username: username,
-      email: `${username}@test.com`,
-      restricted: false,
-    });
-
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
-    mockGetUsers([mockUser, additionalUser]).as('getUsers');
-    mockGetUser(mockUser);
-    mockGetUserGrantsUnrestrictedAccess(mockUser.username);
-    mockGetUserGrantsUnrestrictedAccess(additionalUser.username);
-    mockDeleteUser(additionalUser.username).as('deleteUser');
-
-    // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
-    cy.visitWithLogin('/account/users');
-    cy.wait('@getUsers');
-
-    mockGetUsers([mockUser]).as('getUsers');
-
-    // Confirm that the "Users & Grants" page initially lists the main and additional users
-    cy.findByText(mockUser.username).should('be.visible');
-    cy.findByText(additionalUser.username)
-      .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        ui.button
-          .findByTitle('Delete')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    // the "Confirm Deletion" dialog opens
-    ui.dialog.findByTitle('Confirm Deletion').within(() => {
-      ui.button.findByTitle('Cancel').should('be.visible').click();
-    });
-    // click the "Cancel" button will do nothing
-    cy.findByText(mockUser.username).should('be.visible');
-    cy.findByText(additionalUser.username).should('be.visible');
-
-    // clicking the "x" button will dismiss the dialog and do nothing
-    cy.findByText(additionalUser.username)
-      .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        ui.button
-          .findByTitle('Delete')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-    ui.dialog.findByTitle('Confirm Deletion').within(() => {
-      cy.get('[data-testid="CloseIcon"]').should('be.visible').click();
-    });
-    cy.findByText(mockUser.username).should('be.visible');
-    cy.findByText(additionalUser.username).should('be.visible');
-
-    // delete the user
-    cy.findByText(additionalUser.username)
-      .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        ui.button
-          .findByTitle('Delete')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    // the "Confirm Deletion" dialog opens
-    ui.dialog.findByTitle('Confirm Deletion').within(() => {
-      ui.button.findByTitle('Delete').should('be.visible').click();
-    });
-    cy.wait(['@deleteUser', '@getUsers']);
-
-    // the user is deleted
-    ui.toast.assertMessage(
-      `User ${additionalUser.username} has been deleted successfully.`
-    );
-    cy.findByText(additionalUser.username).should('not.exist');
   });
 });

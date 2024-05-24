@@ -20,11 +20,17 @@ import {
   getClusters,
   getObjectList,
   getObjectStorageKeys,
+  getObjectStorageTypes,
   getObjectURL,
   getSSLCert,
   uploadSSLCert,
 } from '@linode/api-v4';
-import { APIError, Params, ResourcePage } from '@linode/api-v4/lib/types';
+import {
+  APIError,
+  Params,
+  PriceType,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 import {
   QueryClient,
   useInfiniteQuery,
@@ -140,6 +146,10 @@ export const useCreateBucketMutation = () => {
     APIError[],
     ObjectStorageBucketRequestPayload
   >(createBucket, {
+    onMutate: async () => {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries([`${queryKey}-buckets`]);
+    },
     onSuccess: (newEntity) => {
       // Invalidate account settings because it contains obj information
       queryClient.invalidateQueries(accountQueries.settings.queryKey);
@@ -150,6 +160,7 @@ export const useCreateBucketMutation = () => {
           errors: oldData?.errors || [],
         })
       );
+      queryClient.invalidateQueries([`${queryKey}-buckets`]);
     },
   });
 };
@@ -401,3 +412,16 @@ export const useBucketSSLDeleteMutation = (cluster: string, bucket: string) => {
     },
   });
 };
+
+const getAllObjectStorageTypes = () =>
+  getAll<PriceType>((params) => getObjectStorageTypes(params))().then(
+    (data) => data.data
+  );
+
+export const useObjectStorageTypesQuery = (enabled = true) =>
+  useQuery<PriceType[], APIError[]>({
+    queryFn: getAllObjectStorageTypes,
+    queryKey: [queryKey, 'types'],
+    ...queryPresets.oneTimeFetch,
+    enabled,
+  });

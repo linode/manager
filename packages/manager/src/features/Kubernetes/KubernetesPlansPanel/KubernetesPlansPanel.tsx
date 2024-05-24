@@ -4,9 +4,8 @@ import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { PlanInformation } from 'src/features/components/PlansPanel/PlanInformation';
 import {
   determineInitialPlanCategoryTab,
-  getIsLimitedAvailability,
+  extractPlansInformation,
   getPlanSelectionsByPlanType,
-  isMajorityLimitedAvailabilityPlans,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
 } from 'src/features/components/PlansPanel/utils';
@@ -18,16 +17,12 @@ import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 
 import type { CreateNodePoolData, Region } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
-import type {
-  PlanSelectionType,
-  TypeWithAvailability,
-} from 'src/features/components/PlansPanel/types';
+import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 
 interface Props {
   addPool?: (pool?: CreateNodePoolData) => void;
   copy?: string;
   currentPlanHeading?: string;
-  disabled?: boolean;
   error?: string;
   getTypeCount: (planId: string) => number;
   hasSelectedRegion: boolean;
@@ -49,7 +44,6 @@ export const KubernetesPlansPanel = (props: Props) => {
   const {
     copy,
     currentPlanHeading,
-    disabled,
     error,
     getTypeCount,
     hasSelectedRegion,
@@ -79,23 +73,18 @@ export const KubernetesPlansPanel = (props: Props) => {
   );
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
-    const _plansForThisLinodeTypeClass: PlanSelectionType[] = plans[plan];
-    const plansForThisLinodeTypeClass: TypeWithAvailability[] = _plansForThisLinodeTypeClass.map(
-      (plan) => {
-        return {
-          ...plan,
-          isLimitedAvailabilityPlan: getIsLimitedAvailability({
-            plan,
-            regionAvailabilities,
-            selectedRegionId,
-          }),
-        };
-      }
-    );
-
-    const mostClassPlansAreLimitedAvailability = isMajorityLimitedAvailabilityPlans(
-      plansForThisLinodeTypeClass
-    );
+    const plansMap: PlanSelectionType[] = plans[plan];
+    const {
+      allDisabledPlans,
+      hasDisabledPlans,
+      hasMajorityOfPlansDisabled,
+      plansForThisLinodeTypeClass,
+    } = extractPlansInformation({
+      disableLargestGbPlansFlag: flags.disableLargestGbPlans,
+      plans: plansMap,
+      regionAvailabilities,
+      selectedRegionId,
+    });
 
     return {
       render: () => {
@@ -105,22 +94,22 @@ export const KubernetesPlansPanel = (props: Props) => {
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                 plan
               )}
-              mostClassPlansAreLimitedAvailability={
-                mostClassPlansAreLimitedAvailability
-              }
+              hasDisabledPlans={hasDisabledPlans}
               hasSelectedRegion={hasSelectedRegion}
               planType={plan}
               regionsData={regionsData}
             />
             <KubernetesPlanContainer
-              disabled={disabled || isPlanPanelDisabled(plan)}
+              allDisabledPlans={allDisabledPlans}
               getTypeCount={getTypeCount}
+              hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
               onAdd={onAdd}
               onSelect={onSelect}
-              plans={plans[plan]}
+              plans={plansForThisLinodeTypeClass}
               selectedId={selectedId}
               selectedRegionId={selectedRegionId}
               updatePlanCount={updatePlanCount}
+              wholePanelIsDisabled={isPlanPanelDisabled(plan)}
             />
           </>
         );

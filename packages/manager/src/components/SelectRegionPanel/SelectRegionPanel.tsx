@@ -13,7 +13,8 @@ import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCre
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
-import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
+import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import {
   DIFFERENT_PRICE_STRUCTURE_WARNING,
   DOCS_LINK_LABEL_DC_PRICING,
@@ -24,9 +25,9 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { Box } from '../Box';
 import { DocsLink } from '../DocsLink/DocsLink';
 import { Link } from '../Link';
+import { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
-import { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 
 interface SelectRegionPanelProps {
   RegionSelectProps?: Partial<RegionSelectProps>;
@@ -44,6 +45,7 @@ interface SelectRegionPanelProps {
 
 export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const {
+    RegionSelectProps,
     currentCapability,
     disabled,
     error,
@@ -51,7 +53,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     helperText,
     selectedId,
     selectedLinodeTypeId,
-    RegionSelectProps,
   } = props;
 
   const flags = useFlags();
@@ -61,6 +62,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const { data: regions } = useRegionsQuery();
 
   const isCloning = /clone/i.test(params.type);
+  const isFromLinodeCreate = location.pathname.includes('/linodes/create');
 
   const { data: type } = useTypeQuery(
     selectedLinodeTypeId ?? '',
@@ -84,11 +86,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     !flags.gecko2?.enabled ||
     flags.gecko2?.ga ||
     !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
-
-  const isGeckoGA =
-    flags.gecko2?.enabled &&
-    flags.gecko2?.ga &&
-    getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
 
   const showEdgeIconHelperText = Boolean(
     !hideEdgeRegions &&
@@ -120,6 +117,16 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           Region
         </Typography>
         <DocsLink
+          onClick={() =>
+            isFromLinodeCreate &&
+            sendLinodeCreateFormStepEvent({
+              action: 'click',
+              category: 'link',
+              createType: (params.type as LinodeCreateType) ?? 'Distributions',
+              label: DOCS_LINK_LABEL_DC_PRICING,
+              version: 'v1',
+            })
+          }
           href="https://www.linode.com/pricing"
           label={DOCS_LINK_LABEL_DC_PRICING}
         />
@@ -139,7 +146,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           </Typography>
         </Notice>
       ) : null}
-      {isGeckoGA && 'Gecko GA'}
       <RegionSelect
         currentCapability={currentCapability}
         disabled={disabled}

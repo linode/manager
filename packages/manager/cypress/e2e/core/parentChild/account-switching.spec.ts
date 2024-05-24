@@ -21,10 +21,6 @@ import {
   mockGetUser,
 } from 'support/intercepts/account';
 import { mockGetEvents, mockGetNotifications } from 'support/intercepts/events';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { mockAllApiRequests } from 'support/intercepts/general';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
@@ -33,7 +29,6 @@ import {
 } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { assertLocalStorageValue } from 'support/util/local-storage';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { grantsFactory } from '@src/factories/grants';
@@ -156,14 +151,6 @@ describe('Parent/Child account switching', () => {
    * Tests to confirm that Parent account users can switch to Child accounts as expected.
    */
   describe('From Parent to Child', () => {
-    beforeEach(() => {
-      // @TODO M3-7554, M3-7559: Remove feature flag mocks after feature launch and clean-up.
-      mockAppendFeatureFlags({
-        parentChildAccountAccess: makeFeatureFlagData(true),
-      });
-      mockGetFeatureFlagClientstream();
-    });
-
     /*
      * - Confirms that Parent account user can switch to Child account from Account Billing page.
      * - Confirms that Child account information is displayed in user menu button after switch.
@@ -179,6 +166,7 @@ describe('Parent/Child account switching', () => {
       interceptGetInvoices().as('getInvoices');
 
       cy.visitWithLogin('/account/billing');
+      cy.trackPageVisit().as('pageVisit');
       cy.wait(['@getPayments', '@getInvoices', '@getPaymentMethods']);
 
       // Confirm that "Switch Account" button is present, then click it.
@@ -220,6 +208,7 @@ describe('Parent/Child account switching', () => {
         });
 
       cy.wait('@switchAccount');
+      cy.expectNewPageVisit('@pageVisit');
 
       // Confirm that Cloud Manager updates local storage authentication values.
       // Satisfy TypeScript using non-null assertions since we know what the mock data contains.
@@ -253,6 +242,7 @@ describe('Parent/Child account switching', () => {
       mockGetUser(mockParentUser);
 
       cy.visitWithLogin('/');
+      cy.trackPageVisit().as('pageVisit');
 
       // Confirm that Parent account username and company name are shown in user
       // menu button, then click the button.
@@ -301,6 +291,7 @@ describe('Parent/Child account switching', () => {
         });
 
       cy.wait('@switchAccount');
+      cy.expectNewPageVisit('@pageVisit');
 
       // Confirm that Cloud Manager updates local storage authentication values.
       // Satisfy TypeScript using non-null assertions since we know what the mock data contains.
@@ -322,19 +313,12 @@ describe('Parent/Child account switching', () => {
    * Tests to confirm that Parent account users can switch back from Child accounts as expected.
    */
   describe('From Child to Parent', () => {
-    beforeEach(() => {
-      mockAppendFeatureFlags({
-        parentChildAccountAccess: makeFeatureFlagData(true),
-      });
-      mockGetFeatureFlagClientstream();
-    });
-
     /*
      * - Confirms that a Child account Proxy user can switch back to a Parent account from Billing page.
      * - Confirms that Parent account information is displayed in user menu button after switch.
      * - Confirms that Cloud updates local storage auth values upon account switch.
      */
-    it.skip('can switch from Proxy user back to Parent account user from Billing page', () => {
+    it('can switch from Proxy user back to Parent account user from Billing page', () => {
       const mockParentToken = randomString(32);
       const mockParentExpiration = DateTime.now().plus({ minutes: 15 }).toISO();
 
@@ -356,6 +340,10 @@ describe('Parent/Child account switching', () => {
           'authentication/parent_token/scopes': '*',
         },
       });
+
+      // Track the initial page visit so that we can later assert that Cloud has
+      // reloaded upon switching accounts.
+      cy.trackPageVisit().as('pageVisit');
 
       // Wait for page to finish loading before proceeding with account switch.
       cy.wait(['@getPayments', '@getPaymentMethods', '@getInvoices']);
@@ -398,15 +386,15 @@ describe('Parent/Child account switching', () => {
             .click();
         });
 
-      // Allow page to load before asserting user menu, ensuring no app crash, etc.
+      cy.expectNewPageVisit('@pageVisit');
       cy.wait(['@getInvoices', '@getPayments', '@getPaymentMethods']);
+
+      assertAuthLocalStorage(mockParentToken, mockParentExpiration, '*');
 
       assertUserMenuButton(
         mockParentProfile.username,
         mockParentAccount.company
       );
-
-      assertAuthLocalStorage(mockParentToken, mockParentExpiration, '*');
     });
   });
 
@@ -441,6 +429,8 @@ describe('Parent/Child account switching', () => {
           'authentication/parent_token/scopes': '*',
         },
       });
+
+      cy.trackPageVisit().as('pageVisit');
 
       // Wait for page to finish loading before proceeding with account switch.
       cy.wait(['@getPayments', '@getPaymentMethods', '@getInvoices']);
@@ -489,6 +479,7 @@ describe('Parent/Child account switching', () => {
 
       // Allow page to load before asserting user menu, ensuring no app crash, etc.
       cy.wait('@switchAccount');
+      cy.expectNewPageVisit('@pageVisit');
       cy.wait(['@getInvoices', '@getPayments', '@getPaymentMethods']);
 
       assertUserMenuButton(

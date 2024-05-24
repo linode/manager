@@ -13,8 +13,9 @@ import type { PlacementGroup } from '@linode/api-v4';
 
 interface DetailsPanelProps {
   error?: string;
-  handlePlacementGroupChange: (selected: PlacementGroup) => void;
+  handlePlacementGroupChange: (selected: PlacementGroup | null) => void;
   labelFieldProps?: TextFieldProps;
+  selectedPlacementGroupId: null | number;
   selectedRegionId?: string;
   tagsInputProps?: TagsInputProps;
 }
@@ -24,6 +25,7 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
     error,
     handlePlacementGroupChange,
     labelFieldProps,
+    selectedPlacementGroupId,
     selectedRegionId,
     tagsInputProps,
   } = props;
@@ -58,9 +60,11 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
       />
 
       {tagsInputProps && <TagsInput {...tagsInputProps} />}
+
       {isPlacementGroupsEnabled && (
         <PlacementGroupsDetailPanel
           handlePlacementGroupChange={handlePlacementGroupChange}
+          selectedPlacementGroupId={selectedPlacementGroupId}
           selectedRegionId={selectedRegionId}
         />
       )}

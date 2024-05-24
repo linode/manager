@@ -7,6 +7,7 @@ import { PlacementGroupsDetailPanel } from './PlacementGroupsDetailPanel';
 
 const defaultProps = {
   handlePlacementGroupChange: vi.fn(),
+  selectedPlacementGroupId: null,
 };
 
 const queryMocks = vi.hoisted(() => ({
@@ -112,7 +113,7 @@ describe('PlacementGroupsDetailPanel', () => {
 
     expect(getByRole('combobox')).toBeDisabled();
     expect(getByTestId('notice-warning')).toHaveTextContent(
-      'The selected region does not currently have Placement Group capabilities.'
+      'Currently, only specific regions support placement groups.'
     );
     expect(
       queryByRole('button', { name: /create placement group/i })

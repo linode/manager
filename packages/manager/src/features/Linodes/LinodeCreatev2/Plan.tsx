@@ -6,13 +6,15 @@ import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllTypes } from 'src/queries/types';
-import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics';
+import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { extendType } from 'src/utilities/extendType';
 
+import type { LinodeCreateFormValues } from './utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const Plan = () => {
-  const regionId = useWatch<CreateLinodeRequest>({ name: 'region' });
+  const regionId = useWatch<CreateLinodeRequest, 'region'>({ name: 'region' });
+  const linode = useWatch<LinodeCreateFormValues, 'linode'>({ name: 'linode' });
 
   const { field, fieldState } = useController<CreateLinodeRequest>({
     name: 'type',
@@ -40,12 +42,12 @@ export const Plan = () => {
       disabled={isLinodeCreateRestricted}
       error={fieldState.error?.message}
       isCreate
-      linodeID={undefined} // @todo add cloning support
+      linodeID={linode?.id}
       onSelect={field.onChange}
       regionsData={regions} // @todo move this query deeper if possible
       selectedId={field.value}
       selectedRegionID={regionId}
-      showTransfer
+      showLimits
       types={types?.map(extendType) ?? []} // @todo don't extend type
     />
   );

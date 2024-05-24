@@ -62,9 +62,7 @@ export const useImageQuery = (imageId: string, enabled = true) =>
 export const useCreateImageMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Image, APIError[], CreateImagePayload>({
-    mutationFn: ({ cloud_init, description, diskID, label }) => {
-      return createImage(diskID, label, description, cloud_init);
-    },
+    mutationFn: createImage,
     onSuccess(image) {
       queryClient.invalidateQueries(imageQueries.paginated._def);
       queryClient.setQueryData<Image>(
@@ -82,10 +80,10 @@ export const useUpdateImageMutation = () => {
   return useMutation<
     Image,
     APIError[],
-    { description?: string; imageId: string; label?: string }
+    { description?: string; imageId: string; label?: string; tags?: string[] }
   >({
-    mutationFn: ({ description, imageId, label }) =>
-      updateImage(imageId, label, description),
+    mutationFn: ({ description, imageId, label, tags }) =>
+      updateImage(imageId, label, description, tags),
     onSuccess(image) {
       queryClient.invalidateQueries(imageQueries.paginated._def);
       queryClient.setQueryData<Image>(

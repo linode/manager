@@ -10,12 +10,10 @@ import { PlacementGroupsSelect } from './PlacementGroupsSelect';
 import type { PlacementGroupsSelectProps } from './PlacementGroupsSelect';
 
 const props: PlacementGroupsSelectProps = {
-  errorText: '',
   handlePlacementGroupChange: vi.fn(),
-  id: '',
   label: 'Placement Groups in Atlanta, GA (us-southeast)',
   noOptionsMessage: '',
-  selectedPlacementGroup: null,
+  selectedPlacementGroupId: null,
   selectedRegion: regionFactory.build({ id: 'us-southeast' }),
 };
 
@@ -102,10 +100,10 @@ describe('PlacementGroupSelect', () => {
 
     fireEvent.focus(select);
     fireEvent.change(select, {
-      target: { value: 'my-placement-group (Affinity)' },
+      target: { value: 'my-placement-group' },
     });
 
-    const selectedRegionOption = getByText('my-placement-group (Affinity)');
+    const selectedRegionOption = getByText('my-placement-group');
     fireEvent.click(selectedRegionOption);
 
     expect(

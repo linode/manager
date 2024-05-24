@@ -2,6 +2,9 @@ import { oneClickAppFactory } from 'src/factories/stackscripts';
 
 import type { OCA } from './types';
 
+/**
+ * @deprecated See oneClickAppsv2.ts
+ */
 export const oneClickApps: OCA[] = [
   {
     alt_description: 'Free open source control panel with a mobile app.',
@@ -579,25 +582,26 @@ export const oneClickApps: OCA[] = [
     website: 'https://gopaddle.io/',
   },
   {
-    alt_description: 'Monitoring server.',
-    alt_name: 'Monitoring visualization dashboards',
-    categories: ['Monitoring'],
+    alt_description: 'Open source, highly available, shared filesystem.',
+    alt_name: 'GlusterFS',
+    categories: ['Development'],
     colors: {
-      end: 'f9b716',
-      start: '606060',
+      end: '784900',
+      start: 'D4AC5C',
     },
-    description: `Grafana gives you the ability to create, monitor, store, and share metrics with your team to keep tabs on your infrastructure.`,
-    logo_url: 'grafana.svg',
-    name: 'Grafana',
+    description:
+      'GlusterFS is an open source, software scalable network filesystem. This app deploys three GlusterFS servers and three GlusterFS clients.',
+    logo_url: 'glusterfs.svg',
+    name: 'GlusterFS Cluster',
     related_guides: [
       {
         href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/grafana/',
-        title: 'Deploy Grafana through the Linode Marketplace',
+          'https://www.linode.com/docs/products/tools/marketplace/guides/glusterfs-cluster/',
+        title: 'Deploy GlusterFS Cluster through the Linode Marketplace',
       },
     ],
-    summary: `An open source analytics and monitoring solution with a focus on accessibility for metric visualization.`,
-    website: 'https://grafana.com/',
+    summary: 'Open source network filesystem.',
+    website: 'https://www.gluster.org/',
   },
   {
     alt_description: 'Markdown-based website CMS.',
@@ -857,6 +861,28 @@ export const oneClickApps: OCA[] = [
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/jitsi/',
         title: 'Deploy Jitsi through the Linode Marketplace',
+      },
+    ],
+    summary: 'Free, open source video conferencing and communication platform.',
+    website: 'https://jitsi.org/',
+  },
+  {
+    alt_description:
+      'Open source video conferencing cluster, alternative to Zoom.',
+    alt_name: 'Video chat and video conferencing cluster',
+    categories: ['Media and Entertainment'],
+    colors: {
+      end: '949699',
+      start: '1d76ba',
+    },
+    description: `Secure, stable, and free alternative to popular video conferencing services. This app deploys four networked Jitsi nodes.`,
+    logo_url: 'jitsi.svg',
+    name: 'Jitsi Cluster',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/jitsi-cluster/',
+        title: 'Deploy Jitsi Cluster through the Linode Marketplace',
       },
     ],
     summary: 'Free, open source video conferencing and communication platform.',
@@ -1841,28 +1867,6 @@ export const oneClickApps: OCA[] = [
   },
   {
     alt_description: 'Monitoring server.',
-    alt_name: 'Server monitoring',
-    categories: ['Monitoring'],
-    colors: {
-      end: 'e27c37',
-      start: 'e6522c',
-    },
-    description: `Prometheus is a powerful monitoring software tool that collects metrics from configurable data points at given intervals, evaluates rule expressions, and can trigger alerts if some condition is observed.`,
-    logo_url: 'prometheus.svg',
-    name: 'Prometheus',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/prometheus/',
-        title: 'Deploy Prometheus through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'Gain metrics and receive alerts with this open-source monitoring tool.',
-    website: 'https://prometheus.io/',
-  },
-  {
-    alt_description: 'Monitoring server.',
     alt_name: 'Server monitoring and visualization',
     categories: ['Monitoring'],
     colors: {
@@ -2010,27 +2014,6 @@ export const oneClickApps: OCA[] = [
     ],
     summary: `Ruby on Rails is a web framework that allows web designers and developers to implement dynamic, fully featured web applications.`,
     website: 'https://rubyonrails.org/',
-  },
-  {
-    alt_description: 'Open world survival game.',
-    alt_name: 'Survival game',
-    categories: ['Games'],
-    colors: {
-      end: 'cd412b',
-      start: '050508',
-    },
-    description: `In Rust, you must work with or against other players to ensure your own survival. Players are able to steal, lie, cheat, or trick each other. Build a shelter, hunt animals for food, craft weapons and armor, and much more. Hosting your own Rust server allows you to customize settings and curate the number of players in the world.`,
-    logo_url: 'rust.svg',
-    name: 'Rust',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/rust/',
-        title: 'Deploy Rust through the Linode Marketplace',
-      },
-    ],
-    summary: `A free-for-all battle for survival in a harsh open-world environment. In Rust, you can do anything--but so can everyone else.`,
-    website: 'https://rust.facepunch.com/',
   },
   {
     alt_description: 'Database low-code/no-code application builder.',
@@ -2250,28 +2233,6 @@ export const oneClickApps: OCA[] = [
     website: 'https://www.utunnel.io/linode-vpn-server.html',
   },
   {
-    alt_description: 'Open world surival crafting game.',
-    alt_name: 'Viking survival game',
-    categories: ['Games'],
-    colors: {
-      end: 'bb470d',
-      start: '081e2b',
-    },
-    description: `In the relatively peaceful place called Valheim, traveling farther comes with a price: more enemies and greater challenges to stay alive. Experience a punishing combat system, intense boss battles, and a complex building system to construct Viking warships and more.`,
-    logo_url: 'valheim.svg',
-    name: 'Valheim',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/valheim/',
-        title: 'Deploy Valheim through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'Explore, build, and conquer in the popular open-world Viking survival game.',
-    website: 'https://www.valheimgame.com/',
-  },
-  {
     alt_description: 'Time series database and database monitoring/metrics.',
     alt_name: 'Database monitoring',
     categories: ['Databases'],
@@ -2292,27 +2253,6 @@ export const oneClickApps: OCA[] = [
     summary:
       'Free and open source time series database (TSDB) and monitoring solution.',
     website: 'https://victoriametrics.com/',
-  },
-  {
-    alt_description: 'Domain management and website control panel.',
-    alt_name: 'Website control panel',
-    categories: ['Control Panels'],
-    colors: {
-      end: '005ebd',
-      start: '58cc00',
-    },
-    description: `Streamline domain management, included as part of Webmin. Choose between the standard free version or upgrade to their premium service to access more features.`,
-    logo_url: 'virtualmin.svg',
-    name: 'Virtualmin',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/virtualmin/',
-        title: 'Deploy Virtualmin through the Linode Marketplace',
-      },
-    ],
-    summary: 'Domain hosting and website control panel.',
-    website: 'https://www.virtualmin.com/',
   },
   {
     alt_description: 'Fancy development text editor.',
@@ -2377,27 +2317,6 @@ export const oneClickApps: OCA[] = [
     ],
     summary: 'Free open source security monitoring solution.',
     website: 'https://documentation.wazuh.com/current/index.html',
-  },
-  {
-    alt_description: 'Unix management in the browser.',
-    alt_name: 'Linux & UNIX management',
-    categories: ['Control Panels'],
-    colors: {
-      end: '3a70c4',
-      start: '6ca034',
-    },
-    description: `Web interface for Unix to optimize system management, both from the console and remotely.`,
-    logo_url: 'webmin.svg',
-    name: 'Webmin',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/webmin/',
-        title: 'Deploy Webmin through the Linode Marketplace',
-      },
-    ],
-    summary: 'Unix management in your browser.',
-    website: 'http://www.webmin.com/',
   },
   {
     alt_description:

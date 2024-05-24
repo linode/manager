@@ -10,6 +10,13 @@ import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
 import { Typography } from 'src/components/Typography';
+import {
+  getIsUDFHeader,
+  getIsUDFMultiSelect,
+  getIsUDFSingleSelect,
+  getIsUDFPasswordField,
+  separateUDFsByRequiredStatus,
+} from 'src/features/Linodes/LinodeCreatev2/Tabs/StackScripts/UserDefinedFields/utilities';
 
 import { AppInfo } from '../../Linodes/LinodesCreate/AppInfo';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
@@ -38,7 +45,7 @@ const renderField = (
   // if the 'default' key is returned from the API, the field is optional
   const isOptional = field.hasOwnProperty('default');
 
-  if (isHeader(field)) {
+  if (getIsUDFHeader(field)) {
     return (
       <Grid key={field.name} lg={5} style={{ marginTop: 24 }} xs={12}>
         <Divider />
@@ -47,7 +54,7 @@ const renderField = (
     );
   }
 
-  if (isMultiSelect(field)) {
+  if (getIsUDFMultiSelect(field)) {
     return (
       <Grid key={field.name} lg={5} xs={12}>
         <UserDefinedMultiSelect
@@ -62,7 +69,7 @@ const renderField = (
       </Grid>
     );
   }
-  if (isOneSelect(field)) {
+  if (getIsUDFSingleSelect(field)) {
     return (
       <Grid key={field.name} lg={5} xs={12}>
         <UserDefinedSelect
@@ -76,7 +83,7 @@ const renderField = (
       </Grid>
     );
   }
-  if (isPasswordField(field.name)) {
+  if (getIsUDFPasswordField(field)) {
     const isTokenPassword = field.name === 'token_password';
     return (
       <Grid key={field.name} lg={5} xs={12}>
@@ -95,7 +102,6 @@ const renderField = (
           isOptional={isOptional}
           isPassword={true}
           placeholder={isTokenPassword ? 'Enter your token' : field.example}
-          tooltipInteractive={isTokenPassword}
           updateFor={[field.label, udf_data[field.name], error]}
           updateFormState={handleChange}
           /**
@@ -236,46 +242,6 @@ const getError = (field: UserDefinedField, errors?: APIError[]) => {
   }
   const error = errors.find((thisError) => thisError.field === field.name);
   return error ? error.reason.replace('the UDF', '') : undefined;
-};
-
-const isPasswordField = (udfName: string) => {
-  return udfName.toLowerCase().includes('password');
-};
-
-const isOneSelect = (udf: UserDefinedField) => {
-  return !!udf.oneof; // if we have a oneof prop, it's a radio button
-};
-
-const isMultiSelect = (udf: UserDefinedField) => {
-  return !!udf.manyof; // if we have a manyof prop, it's a checkbox
-};
-
-const isHeader = (udf: UserDefinedField) => {
-  return udf.header?.toLowerCase() === 'yes';
-};
-
-/**
- * Used to separate required UDFs from non-required ones
- *
- * @return nested array [[...requiredUDFs], [...nonRequiredUDFs]]
- */
-const separateUDFsByRequiredStatus = (udfs: UserDefinedField[] = []) => {
-  return udfs.reduce(
-    (accum, eachUDF) => {
-      /**
-       * if the "default" key exists, it's optional
-       */
-      if (
-        eachUDF.hasOwnProperty('default') &&
-        !eachUDF.hasOwnProperty('required')
-      ) {
-        return [[...accum[0]], [...accum[1], eachUDF]];
-      } else {
-        return [[...accum[0], eachUDF], [...accum[1]]];
-      }
-    },
-    [[], []]
-  );
 };
 
 export default RenderGuard(UserDefinedFieldsPanel);

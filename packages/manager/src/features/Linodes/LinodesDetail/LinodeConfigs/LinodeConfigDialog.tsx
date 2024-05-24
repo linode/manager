@@ -49,7 +49,7 @@ import {
 } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { vlanQueries } from 'src/queries/vlans';
-import { useAllVolumesQuery } from 'src/queries/volumes';
+import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { vpcQueries } from 'src/queries/vpcs/vpcs';
 import {
   DevicesAsStrings,
@@ -62,7 +62,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { ExtendedIP } from 'src/utilities/ipUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import {
   ExtendedInterface,
@@ -213,7 +213,18 @@ const interfacesToPayload = (
     return [];
   }
 
-  if (equals(interfaces, defaultInterfaceList)) {
+  const filteredInterfaces = interfaces.filter(
+    (thisInterface) => thisInterface.purpose !== 'none'
+  );
+
+  if (
+    equals(
+      filteredInterfaces,
+      defaultInterfaceList.filter(
+        (thisInterface) => thisInterface.purpose !== 'none'
+      )
+    )
+  ) {
     // In this case, where eth0 is set to public interface
     // and no other interfaces are specified, the API prefers
     // to receive an empty array.
@@ -224,9 +235,7 @@ const interfacesToPayload = (
     interfaces[primaryInterfaceIndex].primary = true;
   }
 
-  return interfaces.filter(
-    (thisInterface) => thisInterface.purpose !== 'none'
-  ) as Interface[];
+  return filteredInterfaces as Interface[];
 };
 
 const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
@@ -236,6 +245,7 @@ const deviceCounterDefault = 1;
 const finnixDiskID = 25669;
 
 export const LinodeConfigDialog = (props: Props) => {
+  const formContainerRef = React.useRef<HTMLDivElement>(null);
   const { config, isReadOnly, linodeId, onClose, open } = props;
 
   const { data: linode } = useLinodeQuery(linodeId, open);
@@ -295,7 +305,10 @@ export const LinodeConfigDialog = (props: Props) => {
   const { resetForm, setFieldValue, values, ...formik } = useFormik({
     initialValues: defaultFieldsValues,
     onSubmit: (values) => onSubmit(values),
-    validate: (values) => onValidate(values),
+    validate: (values) => {
+      onValidate(values);
+      scrollErrorIntoViewV2(formContainerRef);
+    },
     validateOnChange: false,
     validateOnMount: false,
   });
@@ -440,7 +453,6 @@ export const LinodeConfigDialog = (props: Props) => {
         error,
         'An unexpected error occurred.'
       );
-      scrollErrorIntoView('linode-config-dialog');
     };
 
     /** Editing */
@@ -678,7 +690,7 @@ export const LinodeConfigDialog = (props: Props) => {
       open={open}
       title={`${config ? 'Edit' : 'Add'} Configuration`}
     >
-      <Grid container direction="row">
+      <Grid container direction="row" ref={formContainerRef}>
         <DialogContent errors={kernelsError} loading={kernelsLoading}>
           <React.Fragment>
             {generalError && (
@@ -947,7 +959,6 @@ export const LinodeConfigDialog = (props: Props) => {
                     paddingBottom: 0,
                     paddingTop: 0,
                   }}
-                  interactive
                   status="help"
                   sx={{ tooltip: { maxWidth: 350 } }}
                   text={networkInterfacesHelperText}
@@ -1114,7 +1125,6 @@ export const LinodeConfigDialog = (props: Props) => {
                         }
                         checked={values.helpers.network}
                         disabled={isReadOnly}
-                        interactive={true}
                         onChange={formik.handleChange}
                       />
                     }

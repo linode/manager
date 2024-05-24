@@ -55,10 +55,7 @@ export const PlacementGroupsRow = React.memo(
     ];
 
     return (
-      <TableRow
-        ariaLabel={`Placement Group ${label}`}
-        data-testid={`placement-group-${id}`}
-      >
+      <TableRow data-testid={`placement-group-${id}`}>
         <TableCell>
           <Link
             data-testid={`link-to-placement-group-${id}`}
@@ -85,20 +82,25 @@ export const PlacementGroupsRow = React.memo(
             '0'
           ) : (
             <TextTooltip
+              PopperProps={{
+                sx: {
+                  '& .MuiTooltip-tooltip': {
+                    transform: 'translateX(-16px) !important',
+                  },
+                },
+              }}
               tooltipText={
                 <List>
                   {assignedLinodes?.map((linode, idx) => (
-                    <ListItem
-                      key={`pg-linode-${idx}`}
-                      sx={{ paddingBottom: 0.5, paddingTop: 0.5 }}
-                    >
-                      {linode.label}
+                    <ListItem key={`pg-linode-${idx}`} sx={{ p: 0.5 }}>
+                      <Link to={`linodes/${linode.id}`}>{linode.label}</Link>
                     </ListItem>
                   ))}
                 </List>
               }
               displayText={`${assignedLinodes?.length ?? 0}`}
               minWidth={250}
+              placement="bottom-start"
             />
           )}
           &nbsp; of{' '}

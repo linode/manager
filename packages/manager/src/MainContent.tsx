@@ -1,6 +1,5 @@
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
@@ -21,20 +20,19 @@ import {
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationContext';
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useDatabaseEnginesQuery } from 'src/queries/databases';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
-import { ManagerPreferences } from 'src/types/ManagerPreferences';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
+import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
-import { FlagSet } from './featureFlags';
+import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsACLBEnabled } from './features/LoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
+import { useAccountSettings } from './queries/account/settings';
+import { useProfile } from './queries/profile';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {
@@ -206,44 +204,25 @@ export const MainContent = () => {
     isOpen: false,
   });
 
-  const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
-  const {
-    _isManagedAccount,
-    account,
-    accountError,
-    profile,
-  } = useAccountManagement();
+  const SessionExpirationProvider = sessionExpirationContext.Provider;
+  const sessionExpirationContextValue = useDialogContext({
+    isOpen: false,
+  });
 
+  const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
+
+  const { data: profile } = useProfile();
   const username = profile?.username || '';
 
-  const [bannerDismissed, setBannerDismissed] = React.useState<boolean>(false);
-
-  const checkRestrictedUser = !Boolean(flags.databases) && !!accountError;
-  const {
-    error: enginesError,
-    isLoading: enginesLoading,
-  } = useDatabaseEnginesQuery(checkRestrictedUser);
-
-  const showDatabases =
-    isFeatureEnabled(
-      'Managed Databases',
-      Boolean(flags.databases),
-      account?.capabilities ?? []
-    ) ||
-    (checkRestrictedUser && !enginesLoading && !enginesError);
-
+  const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isACLBEnabled } = useIsACLBEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
-  const defaultRoot = _isManagedAccount ? '/managed' : '/linodes';
+  const { data: accountSettings } = useAccountSettings();
 
-  const shouldDisplayMainContentBanner =
-    !bannerDismissed &&
-    checkFlagsForMainContentBanner(flags) &&
-    !checkPreferencesForBannerDismissal(
-      preferences ?? {},
-      flags?.mainContentBanner?.key
-    );
+  const showCloudPulse = Boolean(flags.aclp?.enabled);
+  
+  const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
 
   const showCloudPulse = Boolean(flags.aclp?.enabled);
   /**
@@ -299,24 +278,12 @@ export const MainContent = () => {
     });
   };
 
-  /**
-   * otherwise just show the rest of the app.
-   */
   return (
     <div className={classes.appFrame}>
-      <SwitchAccountSessionProvider value={switchAccountSessionContextValue}>
-        <ComplianceUpdateProvider value={complianceUpdateContextValue}>
-          <NotificationProvider value={contextValue}>
-            <>
-              {shouldDisplayMainContentBanner ? (
-                <MainContentBanner
-                  bannerKey={flags.mainContentBanner?.key ?? ''}
-                  bannerText={flags.mainContentBanner?.text ?? ''}
-                  linkText={flags.mainContentBanner?.link?.text ?? ''}
-                  onClose={() => setBannerDismissed(true)}
-                  url={flags.mainContentBanner?.link?.url ?? ''}
-                />
-              ) : null}
+      <SessionExpirationProvider value={sessionExpirationContextValue}>
+        <SwitchAccountSessionProvider value={switchAccountSessionContextValue}>
+          <ComplianceUpdateProvider value={complianceUpdateContextValue}>
+            <NotificationProvider value={contextValue}>
               <SideMenu
                 closeMenu={() => toggleMenu(false)}
                 collapse={desktopMenuIsOpen || false}
@@ -329,6 +296,7 @@ export const MainContent = () => {
                     (desktopMenuIsOpen && desktopMenuIsOpen === true),
                 })}
               >
+                <MainContentBanner />
                 <TopMenu
                   desktopMenuToggle={desktopMenuToggle}
                   isSideMenuOpen={!desktopMenuIsOpen}
@@ -383,7 +351,7 @@ export const MainContent = () => {
                           <Route component={SearchLanding} path="/search" />
                           <Route component={EventsLanding} path="/events" />
                           <Route component={Firewalls} path="/firewalls" />
-                          {showDatabases && (
+                          {isDatabasesEnabled && (
                             <Route component={Databases} path="/databases" />
                           )}
                           {flags.selfServeBetas && (
@@ -406,29 +374,11 @@ export const MainContent = () => {
                   </Grid>
                 </main>
               </div>
-            </>
-          </NotificationProvider>
-          <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
-        </ComplianceUpdateProvider>
-      </SwitchAccountSessionProvider>
+            </NotificationProvider>
+            <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
+          </ComplianceUpdateProvider>
+        </SwitchAccountSessionProvider>
+      </SessionExpirationProvider>
     </div>
   );
-};
-
-// =============================================================================
-// Utilities
-// =============================================================================
-export const checkFlagsForMainContentBanner = (flags: FlagSet) => {
-  return Boolean(
-    flags.mainContentBanner &&
-      !isEmpty(flags.mainContentBanner) &&
-      flags.mainContentBanner.key
-  );
-};
-
-export const checkPreferencesForBannerDismissal = (
-  preferences: ManagerPreferences,
-  key = 'defaultKey'
-) => {
-  return Boolean(preferences?.main_content_banner_dismissal?.[key]);
 };

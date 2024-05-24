@@ -72,21 +72,23 @@ describe('OneClick Apps (OCA)', () => {
         });
       });
 
-      // Check drawer content for one OCA candidate
-      const candidate = trimmedApps[0].label;
+      // Check drawer content for one OCA candidate.
+      const candidateApp = trimmedApps[0];
+      const candidateLabel = handleAppLabel(trimmedApps[0]).label;
+
       const stackScriptCandidate = cy
-        .get(`[data-qa-selection-card-info="${candidate}"]`)
+        .get(`[data-qa-selection-card-info="${candidateLabel}"]`)
         .first();
       stackScriptCandidate.should('exist').click();
 
       const app: OCA | undefined = mapStackScriptLabelToOCA({
         oneClickApps,
-        stackScriptLabel: candidate,
+        stackScriptLabel: candidateApp.label,
       });
 
       if (!app) {
         throw new Error(
-          `Failed to map StackScript label '${candidate}' to a One-Click App`
+          `Failed to map StackScript label '${candidateLabel}' to a One-Click App`
         );
       }
 
@@ -106,13 +108,13 @@ describe('OneClick Apps (OCA)', () => {
       const initialNumberOfApps = trimmedApps.length;
       cy.findByPlaceholderText('Search for app name')
         .should('exist')
-        .type(candidate);
+        .type(candidateLabel);
       cy.findByTestId('one-click-apps-container').within(() => {
         cy.get('[data-qa-selection-card="true"]').should(
           'have.length.below',
           initialNumberOfApps
         );
-        cy.get(`[data-qa-selection-card-info="${candidate}"]`).should(
+        cy.get(`[data-qa-selection-card-info="${candidateLabel}"]`).should(
           'be.visible'
         );
       });
@@ -129,7 +131,7 @@ describe('OneClick Apps (OCA)', () => {
       description: 'Minecraft OCA',
       ordinal: 10,
       logo_url: 'assets/Minecraft.svg',
-      images: ['linode/debian11', 'linode/ubuntu20.04'],
+      images: ['linode/debian11', 'linode/ubuntu22.04'],
       deployments_total: 18854,
       deployments_active: 412,
       is_public: true,
@@ -159,7 +161,7 @@ describe('OneClick Apps (OCA)', () => {
 
     const firstName = randomLabel();
     const password = randomString(16);
-    const image = 'linode/ubuntu20.04';
+    const image = 'linode/ubuntu22.04';
     const rootPassword = randomString(16);
     const region = chooseRegion();
     const linodeLabel = randomLabel();

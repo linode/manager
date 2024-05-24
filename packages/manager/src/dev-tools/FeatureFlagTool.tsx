@@ -22,16 +22,13 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclbFullCreateFlow', label: 'ACLB Full Create Flow' },
   { flag: 'aclp', label: 'CloudPulse' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
-  { flag: 'linodeCloneUiChanges', label: 'Linode Clone UI Changes' },
   { flag: 'gecko2', label: 'Gecko' },
-  { flag: 'parentChildAccountAccess', label: 'Parent/Child Account' },
-  { flag: 'selfServeBetas', label: 'Self Serve Betas' },
-  { flag: 'firewallNodebalancer', label: 'Firewall NodeBalancer' },
-  { flag: 'recharts', label: 'Recharts' },
+  { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },
+  { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'placementGroups', label: 'Placement Groups' },
+  { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
-  { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },
 ];
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {

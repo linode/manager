@@ -76,6 +76,8 @@ import {
   objectStorageBucketFactory,
   objectStorageClusterFactory,
   objectStorageKeyFactory,
+  objectStorageTypeFactory,
+  objectStorageOverageTypeFactory,
   paymentFactory,
   paymentMethodFactory,
   placementGroupFactory,
@@ -849,9 +851,14 @@ export const handlers = [
     return HttpResponse.json(cluster);
   }),
   http.get('*/lke/clusters/:clusterId/pools', async () => {
-    const pools = nodePoolFactory.buildList(10);
+    const encryptedPools = nodePoolFactory.buildList(5);
+    const unencryptedPools = nodePoolFactory.buildList(5, {
+      disk_encryption: 'disabled',
+    });
     nodePoolFactory.resetSequenceNumber();
-    return HttpResponse.json(makeResourcePage(pools));
+    return HttpResponse.json(
+      makeResourcePage([...encryptedPools, ...unencryptedPools])
+    );
   }),
   http.get('*/lke/clusters/*/api-endpoints', async () => {
     const endpoints = kubeEndpointFactory.buildList(2);
@@ -918,6 +925,13 @@ export const handlers = [
       nodeBalancerConfigNodeFactory.build({ status: 'unknown' }),
     ];
     return HttpResponse.json(makeResourcePage(configs));
+  }),
+  http.get('*/v4/object-storage/types', () => {
+    const objectStorageTypes = [
+      objectStorageTypeFactory.build(),
+      objectStorageOverageTypeFactory.build(),
+    ];
+    return HttpResponse.json(makeResourcePage(objectStorageTypes));
   }),
   http.get('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);
@@ -1609,14 +1623,14 @@ export const handlers = [
         status: 'notification',
       });
       const placementGroupCreateEvent = eventFactory.buildList(1, {
-        action: 'placement_group_created',
+        action: 'placement_group_create',
         entity: { id: 999, label: 'PG-1', type: 'placement_group' },
         message: 'Placement Group successfully created.',
         percent_complete: 100,
         status: 'notification',
       });
       const placementGroupAssignedEvent = eventFactory.buildList(1, {
-        action: 'placement_group_assigned',
+        action: 'placement_group_assign',
         entity: { id: 990, label: 'PG-2', type: 'placement_group' },
         message: 'Placement Group successfully assigned.',
         percent_complete: 100,
