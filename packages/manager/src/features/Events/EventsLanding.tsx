@@ -10,9 +10,11 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { useFlags } from 'src/hooks/useFlags';
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
 
 import { EventRow } from './EventRow';
+import { EventRowV2 } from './EventRowV2';
 import {
   StyledH1Header,
   StyledLabelTableCell,
@@ -29,6 +31,7 @@ interface Props {
 
 export const EventsLanding = (props: Props) => {
   const { emptyMessage, entityId } = props;
+  const flags = useFlags();
 
   const filter: Filter = { action: { '+neq': 'profile_update' } };
 
@@ -67,13 +70,21 @@ export const EventsLanding = (props: Props) => {
     } else {
       return (
         <>
-          {events?.map((event) => (
-            <EventRow
-              entityId={entityId}
-              event={event}
-              key={`event-${event.id}`}
-            />
-          ))}
+          {events?.map((event) =>
+            flags.eventMessagesV2 ? (
+              <EventRowV2
+                entityId={entityId}
+                event={event}
+                key={`event-${event.id}`}
+              />
+            ) : (
+              <EventRow
+                entityId={entityId}
+                event={event}
+                key={`event-${event.id}`}
+              />
+            )
+          )}
           {isFetchingNextPage && (
             <TableRowLoading
               columns={4}

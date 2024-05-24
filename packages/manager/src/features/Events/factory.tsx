@@ -21,21 +21,8 @@ import {
   placementGroup,
 } from './factories';
 
-import type { CompleteEventMap, EventMessage, PartialEventMap } from './types';
+import type { CompleteEventMap, PartialEventMap } from './types';
 import type { Event } from '@linode/api-v4';
-
-export const factorEventMessage = (e: Event): EventMessage => {
-  const action = events[e.action];
-
-  // console.log(action)
-
-  if (!action) {
-    // send sentry event
-    return {};
-  }
-
-  return action;
-};
 
 const wrappedWithTypography = (
   Component: (e: Partial<Event>) => JSX.Element | string
