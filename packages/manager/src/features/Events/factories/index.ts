@@ -8,6 +8,10 @@ import { dns } from './dns';
 import { domain } from './domain';
 import { entity } from './entity';
 import { firewall } from './firewall';
+import { host } from './host';
+import { image } from './image';
+import { ip } from './ip';
+import { lassie } from './lassie';
 import { placementGroup } from './placementGroup';
 
 export {
@@ -21,5 +25,9 @@ export {
   domain,
   entity,
   firewall,
+  host,
+  image,
+  ip,
+  lassie,
   placementGroup,
 };

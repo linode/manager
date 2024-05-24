@@ -13,6 +13,10 @@ import {
   domain,
   entity,
   firewall,
+  host,
+  image,
+  ip,
+  lassie,
   placementGroup,
 } from './factories';
 
@@ -66,5 +70,9 @@ export const events: CompleteEventMap = {
   ...withTypography(domain),
   ...withTypography(entity),
   ...withTypography(firewall),
+  ...withTypography(host),
+  ...withTypography(image),
+  ...withTypography(ip),
+  ...withTypography(lassie),
   ...withTypography(placementGroup),
 };
