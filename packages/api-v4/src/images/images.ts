@@ -11,8 +11,8 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import {
+import type { Filter, Params, ResourcePage as Page } from '../types';
+import type {
   CreateImagePayload,
   Image,
   ImageUploadPayload,
@@ -63,11 +63,13 @@ export const createImage = (data: CreateImagePayload) => {
 export const updateImage = (
   imageId: string,
   label?: string,
-  description?: string
+  description?: string,
+  tags?: string[]
 ) => {
   const data = {
     ...(label && { label }),
     ...(description && { description }),
+    ...(tags && { tags }),
   };
 
   return Request<Image>(

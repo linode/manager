@@ -50,6 +50,11 @@ interface GaFeatureFlag extends BaseFeatureFlag {
   ga: boolean;
 }
 
+interface AclpFlag {
+  beta: boolean;
+  enabled: boolean;
+}
+
 interface gpuV2 {
   planDivider: boolean;
 }
@@ -59,6 +64,7 @@ type OneClickApp = Record<string, string>;
 export interface Flags {
   aclb: boolean;
   aclbFullCreateFlow: boolean;
+  aclp: AclpFlag;
   apiMaintenance: APIMaintenance;
   databaseBeta: boolean;
   databaseResize: boolean;
@@ -76,7 +82,6 @@ export interface Flags {
   objMultiCluster: boolean;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
-  parentChildAccountAccess: boolean;
   placementGroups: BetaFeatureFlag;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;

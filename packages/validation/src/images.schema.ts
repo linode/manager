@@ -31,4 +31,5 @@ export const updateImageSchema = object({
   description: string()
     .notRequired()
     .max(65000, 'Length must be 65000 characters or less.'),
+  tags: array(string()).notRequired(),
 });
