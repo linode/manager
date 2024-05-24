@@ -16,7 +16,6 @@ const props = {
 };
 
 it('should display a list of child accounts', async () => {
-  const { findByTestId } = renderWithTheme(<ChildAccountList {...props} />);
   server.use(
     http.get('*/profile', () => {
       return HttpResponse.json(profileFactory.build({ user_type: 'parent' }));
@@ -27,11 +26,15 @@ it('should display a list of child accounts', async () => {
       );
     })
   );
+
+  const { findByTestId } = renderWithTheme(<ChildAccountList {...props} />);
+
   await waitFor(async () => {
     expect(await findByTestId('child-account-list')).not.toBeNull();
   });
 
   const childAccounts = await findByTestId('child-account-list');
+
   expect(
     within(childAccounts).getAllByText('Child Co.', { exact: false })
   ).toHaveLength(5);
