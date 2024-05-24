@@ -93,7 +93,6 @@ export const ImagesDrawer = (props: CombinedProps) => {
         }
 
         updateImage({ description: safeDescription, imageId, label, tags })
-          .then(() => Promise.reject([{ reason: 'Unable to edit Image' }]))
           .then(onClose)
           .catch((errorResponse: APIError[]) => {
             setErrors(
