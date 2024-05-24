@@ -15,6 +15,7 @@ import { CloudViewRegionSelect } from '../shared/RegionSelect';
 import { CloudViewMultiResourceSelect } from '../shared/ResourceMultiSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/TimeRangeSelect';
 
+
 import { updateGlobalFilterPreference } from '../Utils/UserPreference';
 import { TIME_DURATION, INTERVAL, REGION, RESOURCES, DASHBOARD_ID } from '../Utils/CloudPulseConstants';
 
@@ -40,8 +41,10 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       filterObj.durationLabel = timeRangeLabel!;
       emitGlobalFilterChange(filterObj, TIME_DURATION);
       updateGlobalFilterPreference({ [TIME_DURATION]: filterObj.durationLabel });
+
     }
   }, []);
+
 
   const handleRegionChange = React.useCallback((region: string | undefined) => {
 
@@ -71,6 +74,7 @@ RESOURCES
     
     if (dashboard || (!dashboard && !isClear)) {
       props.handleDashboardChange(dashboard!);
+
     }
   }, []);
 
@@ -84,28 +88,6 @@ RESOURCES
     );
   },[]);
 
-  const getIntervalToGranularity = (interval: string | undefined) => {
-    if (interval == undefined) {
-      return undefined!;
-    }
-    if (interval == '1m' || interval == '1minute') {
-      return { unit: 'min', value: 1 };
-    }
-
-    if (interval == '5minute') {
-      return { unit: 'min', value: 5 };
-    }
-
-    if (interval == '2hour') {
-      return { unit: 'hr', value: 2 };
-    }
-
-    if (interval == '1day') {
-      return { unit: 'day', value: 1 };
-    }
-
-    return undefined!;
-  };
 
   return (
     <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
