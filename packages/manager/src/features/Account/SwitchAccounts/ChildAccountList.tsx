@@ -15,7 +15,7 @@ import type { Filter, UserType } from '@linode/api-v4';
 
 interface ChildAccountListProps {
   currentTokenWithBearer: string;
-  filter?: Filter;
+  filter: Filter;
   isLoading?: boolean;
   onClose: () => void;
   onSwitchAccount: (props: {
@@ -60,9 +60,7 @@ export const ChildAccountList = React.memo(
           : undefined,
     });
     // Sort the list of child accounts alphabetically.
-    const childAccounts = data?.pages
-      .flatMap((page) => page.data)
-      .sort((a, b) => a.company.localeCompare(b.company));
+    const childAccounts = data?.pages.flatMap((page) => page.data);
 
     if (
       isInitialLoading ||

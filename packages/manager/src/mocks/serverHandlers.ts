@@ -76,8 +76,8 @@ import {
   objectStorageBucketFactory,
   objectStorageClusterFactory,
   objectStorageKeyFactory,
-  objectStorageTypeFactory,
   objectStorageOverageTypeFactory,
+  objectStorageTypeFactory,
   paymentFactory,
   paymentMethodFactory,
   placementGroupFactory,
@@ -1354,11 +1354,7 @@ export const handlers = [
     const url = new URL(request.url);
     const page = Number(url.searchParams.get('page') || 1);
     const pageSize = Number(url.searchParams.get('page_size') || 25);
-    const childAccounts = [
-      accountFactory.build({ company: 'z-company-2' }),
-      accountFactory.build({ company: 'z-company' }),
-      ...accountFactory.buildList(100),
-    ];
+    const childAccounts = [...accountFactory.buildList(100)];
     return HttpResponse.json({
       data: childAccounts.slice(
         (page - 1) * pageSize,

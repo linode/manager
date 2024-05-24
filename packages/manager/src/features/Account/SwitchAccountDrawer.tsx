@@ -38,8 +38,12 @@ export const SwitchAccountDrawer = (props: Props) => {
   const [isParentTokenError, setIsParentTokenError] = React.useState<
     APIError[]
   >([]);
-  const filter = {};
   const [query, setQuery] = React.useState<string>('');
+
+  const filter = {
+    ['+order']: 'asc',
+    ['+order_by']: 'company',
+  };
   if (query) {
     filter['company'] = { '+contains': query };
   }
@@ -173,7 +177,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         currentTokenWithBearer={
           isProxyUser ? currentParentTokenWithBearer : currentTokenWithBearer
         }
-        filter={Object.keys(filter).length > 0 ? filter : undefined}
+        filter={filter}
         isLoading={isSubmitting}
         onClose={onClose}
         onSwitchAccount={handleSwitchToChildAccount}
