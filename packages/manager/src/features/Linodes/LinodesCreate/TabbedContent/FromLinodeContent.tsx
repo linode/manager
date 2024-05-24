@@ -106,8 +106,12 @@ export const FromLinodeContent = (props: CombinedProps) => {
         <StyledGrid>
           <SelectLinodePanel
             notices={[
+              <>
+                To help <strong>avoid data corruption</strong> during the
+                cloning process, we recommend powering off your Compute Instance
+                prior to cloning.
+              </>,
               'This newly created Linode will be created with the same password and SSH Keys (if any) as the original Linode.',
-              'To help avoid data corruption during the cloning process, we recommend powering off your Compute Instance prior to cloning.',
             ]}
             data-qa-linode-panel
             disabled={userCannotCreateLinode}
