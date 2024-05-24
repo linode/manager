@@ -1,24 +1,27 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
+import { imageFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { EditImageDrawer } from './EditImageDrawer';
 
 const props = {
-  changeDescription: vi.fn(),
-  changeDisk: vi.fn(),
-  changeLabel: vi.fn(),
-  changeLinode: vi.fn(),
-  changeTags: vi.fn(),
-  description: 'Example description',
-  imageID: '0',
-  label: 'Test Image',
+  image: imageFactory.build(),
   onClose: vi.fn(),
   open: true,
-  selectedLinode: null,
-  tags: [],
 };
+
+const mockUpdateImage = vi.fn();
+vi.mock('@linode/api-v4', async () => {
+  return {
+    ...(await vi.importActual<any>('@linode/api-v4')),
+    updateImage: (imageId: any, data: any) => {
+      mockUpdateImage(imageId, data);
+      return Promise.resolve(props.image);
+    },
+  };
+});
 
 describe('EditImageDrawer', () => {
   it('should render', async () => {
@@ -48,18 +51,12 @@ describe('EditImageDrawer', () => {
 
     fireEvent.click(getByText('Save Changes'));
 
-    expect(props.changeLabel).toBeCalledWith(
-      expect.objectContaining({
-        target: expect.objectContaining({ value: 'test-image-label' }),
-      })
-    );
-
-    expect(props.changeDescription).toBeCalledWith(
-      expect.objectContaining({
-        target: expect.objectContaining({ value: 'test description' }),
-      })
-    );
-
-    expect(props.changeTags).toBeCalledWith(['new-tag']);
+    await waitFor(() => {
+      expect(mockUpdateImage).toHaveBeenCalledWith('private/0', {
+        description: 'test description',
+        label: 'test-image-label',
+        tags: ['new-tag'],
+      });
+    });
   });
 });

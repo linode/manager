@@ -1,7 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { linodeFactory } from 'src/factories';
+import { imageFactory, linodeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -10,9 +10,20 @@ import { RebuildImageDrawer } from './RebuildImageDrawer';
 
 const props = {
   changeLinode: vi.fn(),
+  image: imageFactory.build(),
   onClose: vi.fn(),
   open: true,
 };
+
+const mockHistoryPush = vi.fn();
+vi.mock('react-router-dom', async () => {
+  return {
+    ...(await vi.importActual('react-router-dom')),
+    useHistory: () => ({
+      push: mockHistoryPush,
+    }),
+  };
+});
 
 describe('RebuildImageDrawer', () => {
   it('should render', async () => {
@@ -22,7 +33,7 @@ describe('RebuildImageDrawer', () => {
     getByText('Restore from Image');
   });
 
-  it('should allow editing image details', async () => {
+  it('should allow selecting a Linode to rebuild', async () => {
     const { findByText, getByRole, getByText } = renderWithTheme(
       <RebuildImageDrawer {...props} />
     );
@@ -37,6 +48,9 @@ describe('RebuildImageDrawer', () => {
     await userEvent.click(await findByText('linode-1'));
     await userEvent.click(getByText('Restore Image'));
 
-    expect(props.changeLinode).toBeCalledWith(1);
+    expect(mockHistoryPush).toBeCalledWith({
+      pathname: '/linodes/1/rebuild',
+      search: 'selectedImageId=private%2F0',
+    });
   });
 });
