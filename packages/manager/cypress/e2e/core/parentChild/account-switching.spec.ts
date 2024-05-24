@@ -311,7 +311,7 @@ describe('Parent/Child account switching', () => {
     /*
      * - Confirms search functionality in the account switching drawer.
      */
-    it.only('can search child accounts', () => {
+    it('can search child accounts', () => {
       mockGetProfile(mockParentProfile);
       mockGetAccount(mockParentAccount);
       mockGetChildAccounts([mockChildAccount, mockAlternateChildAccount]);
@@ -349,8 +349,8 @@ describe('Parent/Child account switching', () => {
           cy.findByText(mockAlternateChildAccount.company).should('be.visible');
 
           // Confirm no results message.
-          cy.findByPlaceholderText('Search').click().type('Fake Name');
           mockGetChildAccounts([]).as('getEmptySearchResults');
+          cy.findByPlaceholderText('Search').click().type('Fake Name');
           cy.wait('@getEmptySearchResults');
 
           cy.contains(mockChildAccount.company).should('not.exist');
@@ -359,14 +359,13 @@ describe('Parent/Child account switching', () => {
           ).should('be.visible');
 
           // Confirm filtering by company name displays only one search result.
+          mockGetChildAccounts([mockChildAccount]).as('getSearchResults');
           cy.findByPlaceholderText('Search')
             .click()
             .clear()
             .type(mockChildAccount.company);
-          mockGetChildAccounts([mockChildAccount]).as('getSearchResults');
           cy.wait('@getSearchResults');
 
-          // TODO: Debug - search result isn't reliable. Sometimes shows the no results notice instead of the account.
           cy.findByText(mockChildAccount.company).should('be.visible');
           cy.contains(mockAlternateChildAccount.company).should('not.exist');
           cy.contains(
