@@ -164,16 +164,16 @@ export const SwitchAccountDrawer = (props: Props) => {
         debounceTime={250}
         hideLabel
         label="Search"
-        onChange={(e) => setQuery(e.target.value)}
+        onSearch={(query) => setQuery(query)}
         placeholder="Search"
-        sx={{ marginBottom: 2 }}
+        sx={{ marginBottom: 3 }}
         value={query}
       />
       <ChildAccountList
         currentTokenWithBearer={
           isProxyUser ? currentParentTokenWithBearer : currentTokenWithBearer
         }
-        filter={filter}
+        filter={Object.keys(filter).length > 0 ? filter : undefined}
         isLoading={isSubmitting}
         onClose={onClose}
         onSwitchAccount={handleSwitchToChildAccount}

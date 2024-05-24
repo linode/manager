@@ -50,7 +50,7 @@ export const ChildAccountList = React.memo(
       isInitialLoading,
       refetch: refetchChildAccounts,
     } = useChildAccountsInfiniteQuery({
-      filter: filter ?? undefined,
+      filter,
       headers:
         userType === 'proxy'
           ? {
@@ -74,8 +74,8 @@ export const ChildAccountList = React.memo(
     if (childAccounts?.length === 0) {
       return (
         <Notice variant="info">
-          There are no indirect customer accounts{' '}
-          {filter !== undefined ? 'that match this query' : undefined}.
+          There are no indirect customer accounts
+          {filter ? ' that match this query' : undefined}.
         </Notice>
       );
     }
