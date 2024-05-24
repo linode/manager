@@ -52,6 +52,8 @@ export const SelectLinodeCard = ({
   });
 
   const iconStatus = getLinodeIconStatus(linode?.status);
+  const shouldShowPowerButton =
+    showPowerActions && linode?.status === 'running' && selected;
 
   const type = linodeType ? formatStorageUnits(linodeType?.label) : linode.type;
   const image = linodeImage?.label ?? linode.image;
@@ -60,16 +62,16 @@ export const SelectLinodeCard = ({
     linode.region;
 
   const renderVariant = () => (
-    <Grid xs={12}>
-      <Stack direction="row" justifyContent="space-between">
-        <Stack direction="row">
+    <Grid paddingTop={0} xs={12}>
+      <Stack direction="row" justifyContent="space-between" marginBottom={1}>
+        <Stack alignItems="center" direction="row" height={34}>
           <StatusIcon
             aria-label={`Linode status ${linode?.status ?? iconStatus}`}
             status={iconStatus}
           />
           {capitalizeAllWords(linode.status.replace('_', ' '))}
         </Stack>
-        {showPowerActions && linode?.status === 'running' && selected && (
+        {shouldShowPowerButton && (
           <Button buttonType="outlined" onClick={handlePowerOff}>
             Power Off
           </Button>
