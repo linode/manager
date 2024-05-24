@@ -5,7 +5,6 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { displayPrice } from 'src/components/DisplayPrice';
 import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
@@ -22,13 +21,13 @@ import {
 } from 'src/utilities/pricing/kubernetes';
 
 import { nodeWarning } from '../kubeUtils';
-import NodePoolSummary from './NodePoolSummary';
+import { NodePoolSummary } from './NodePoolSummary';
 
 export interface Props {
   createCluster: () => void;
   hasAgreed: boolean;
   highAvailability?: boolean;
-  highAvailabilityPrice: number | undefined;
+  highAvailabilityPrice?: string;
   pools: KubeNodePoolResponse[];
   region: string;
   regionsData: Region[];
@@ -39,7 +38,7 @@ export interface Props {
   updatePool: (poolIdx: number, updatedPool: KubeNodePoolResponse) => void;
 }
 
-export const KubeCheckoutBar: React.FC<Props> = (props) => {
+export const KubeCheckoutBar = (props: Props) => {
   const {
     createCluster,
     hasAgreed,
@@ -99,7 +98,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
         region !== ''
           ? getTotalClusterPrice({
               highAvailabilityPrice: highAvailability
-                ? highAvailabilityPrice
+                ? Number(highAvailabilityPrice)
                 : undefined,
               pools,
               region,
@@ -153,9 +152,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             <StyledHAHeader>
               High Availability (HA) Control Plane
             </StyledHAHeader>
-            <Typography>
-              {displayPrice(Number(highAvailabilityPrice))}/month
-            </Typography>
+            <Typography>{`$${highAvailabilityPrice}/month`}</Typography>
             <Divider dark spacingBottom={0} spacingTop={16} />
           </StyledHABox>
         ) : undefined}

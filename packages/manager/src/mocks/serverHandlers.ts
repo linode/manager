@@ -47,7 +47,6 @@ import {
   invoiceItemFactory,
   kubeEndpointFactory,
   kubernetesAPIResponse,
-  kubernetesTypeFactory,
   kubernetesVersionFactory,
   linodeConfigFactory,
   linodeDiskFactory,
@@ -56,6 +55,8 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
+  lkeHighAvailabilityTypeFactory,
+  lkeStandardAvailabilityTypeFactory,
   loadbalancerEndpointHealthFactory,
   loadbalancerFactory,
   longviewActivePlanFactory,
@@ -832,8 +833,11 @@ export const handlers = [
     return HttpResponse.json(makeResourcePage(clusters));
   }),
   http.get('*/lke/types', async () => {
-    const kubernetesTypes = kubernetesTypeFactory.buildList(1);
-    return HttpResponse.json(makeResourcePage(kubernetesTypes));
+    const lkeTypes = [
+      lkeStandardAvailabilityTypeFactory.buildList(1),
+      lkeHighAvailabilityTypeFactory.buildList(1),
+    ];
+    return HttpResponse.json(makeResourcePage(lkeTypes));
   }),
   http.get('*/lke/versions', async () => {
     const versions = kubernetesVersionFactory.buildList(1);

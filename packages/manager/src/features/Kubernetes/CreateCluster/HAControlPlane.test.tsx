@@ -6,7 +6,9 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { HAControlPlane, HAControlPlaneProps } from './HAControlPlane';
 
 const props: HAControlPlaneProps = {
-  highAvailabilityPrice: 60,
+  hasHAPriceError: false,
+  highAvailabilityPrice: '60',
+  selectedRegionId: 'us-southeast',
   setHighAvailability: vi.fn(),
 };
 
@@ -18,11 +20,16 @@ describe('HAControlPlane', () => {
   });
 
   it('should not render an HA price when the price is undefined', () => {
+    const highAvailabilityPriceError = '--.--';
+
     const { queryAllByText } = renderWithTheme(
-      <HAControlPlane {...props} highAvailabilityPrice={undefined} />
+      <HAControlPlane
+        {...props}
+        highAvailabilityPrice={highAvailabilityPriceError}
+      />
     );
 
-    expect(queryAllByText(/\$60\.00/)).toHaveLength(0);
+    expect(queryAllByText(/\$--\.--/)).toHaveLength(1);
   });
 
   it('should render an HA price when the price is a number', async () => {

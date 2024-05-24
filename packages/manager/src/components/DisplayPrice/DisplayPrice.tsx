@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
 import { Typography } from 'src/components/Typography';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
 export interface DisplayPriceProps {
   decimalPlaces?: number;
@@ -11,7 +12,12 @@ export interface DisplayPriceProps {
   price: '--.--' | number;
 }
 
-export const displayPrice = (price: number) => `$${price.toFixed(2)}`;
+export const displayPrice = (price: number | undefined) => {
+  if (price !== undefined) {
+    return `$${price.toFixed(2)}`;
+  }
+  return `$${UNKNOWN_PRICE}`;
+};
 
 export const DisplayPrice = (props: DisplayPriceProps) => {
   const theme = useTheme<Theme>();

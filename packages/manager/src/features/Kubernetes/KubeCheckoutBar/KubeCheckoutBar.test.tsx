@@ -14,7 +14,7 @@ const props: Props = {
   createCluster: vi.fn(),
   hasAgreed: false,
   highAvailability: false,
-  highAvailabilityPrice: 60,
+  highAvailabilityPrice: '60',
   pools,
   region: 'us-east',
   regionsData: regionFactory.buildList(1),

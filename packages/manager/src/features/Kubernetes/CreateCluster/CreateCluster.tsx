@@ -1,4 +1,3 @@
-import { Region } from '@linode/api-v4';
 import {
   CreateKubeClusterPayload,
   CreateNodePoolData,
@@ -44,6 +43,7 @@ import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
@@ -73,7 +73,12 @@ export const CreateCluster = () => {
   const history = useHistory();
   const { data: account } = useAccount();
   const { showHighAvailability } = getKubeHighAvailability(account);
-  const { data: types } = useKubernetesTypesQuery();
+
+  const {
+    data: types,
+    isError: isErrorKubernetesTypes,
+    // isLoading: isLoadingKubernetesTypes,
+  } = useKubernetesTypesQuery();
 
   const {
     data: allTypes,
@@ -163,20 +168,22 @@ export const CreateCluster = () => {
     setLabel(newLabel ? newLabel : undefined);
   };
 
-  const getHighAvailabilityPrice = (regionId: Region['id'] | null) => {
-    const dcSpecificPrice = regionId
-      ? getDCSpecificPriceByType({ regionId, type: types?.[1] })
-      : undefined;
+  const selectedId = selectedRegionID || null;
 
-    return dcSpecificPrice ? parseFloat(dcSpecificPrice) : undefined;
-  };
+  const getHighAvailabilityPrice = getDCSpecificPriceByType({
+    regionId: selectedId ? selectedId : undefined,
+    type: types?.[1],
+  });
+
+  const dcSpecificPrice =
+    getHighAvailabilityPrice && !isErrorKubernetesTypes
+      ? getHighAvailabilityPrice
+      : UNKNOWN_PRICE;
 
   const errorMap = getErrorMap(
     ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
     errors
   );
-
-  const selectedId = selectedRegionID || null;
 
   const {
     hasSelectedRegion,
@@ -252,7 +259,9 @@ export const CreateCluster = () => {
           {showHighAvailability ? (
             <Box data-testid="ha-control-plane">
               <HAControlPlane
-                highAvailabilityPrice={getHighAvailabilityPrice(selectedId)}
+                hasHAPriceError={isErrorKubernetesTypes}
+                highAvailabilityPrice={dcSpecificPrice}
+                selectedRegionId={selectedRegionID}
                 setHighAvailability={setHighAvailability}
               />
             </Box>
@@ -299,7 +308,7 @@ export const CreateCluster = () => {
           createCluster={createCluster}
           hasAgreed={hasAgreed}
           highAvailability={highAvailability}
-          highAvailabilityPrice={getHighAvailabilityPrice(selectedId)}
+          highAvailabilityPrice={dcSpecificPrice}
           pools={nodePools}
           region={selectedRegionID}
           regionsData={regionsData}

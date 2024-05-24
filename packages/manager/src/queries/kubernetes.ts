@@ -323,7 +323,7 @@ const getAllKubernetesTypes = () =>
   );
 
 export const typesQueries = createQueryKeys('types', {
-  clusters: {
+  lkeClusters: {
     queryFn: getAllKubernetesTypes,
     queryKey: null,
   },
@@ -332,5 +332,5 @@ export const typesQueries = createQueryKeys('types', {
 export const useKubernetesTypesQuery = () =>
   useQuery<PriceType[], APIError[]>({
     ...queryPresets.oneTimeFetch,
-    ...typesQueries.clusters,
+    ...typesQueries.lkeClusters,
   });
