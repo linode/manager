@@ -5,6 +5,8 @@ import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { Typography } from 'src/components/Typography';
+import { getEventMessage } from 'src/features/Events/utils';
+import { useFlags } from 'src/hooks/useFlags';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 import { getAllowedHTMLTags } from 'src/utilities/sanitizeHTML.utils';
 
@@ -21,9 +23,11 @@ interface RenderEventProps {
 }
 
 export const RenderEvent = React.memo((props: RenderEventProps) => {
+  const flags = useFlags();
   const { classes, cx } = useRenderEventStyles();
   const { event } = props;
   const { message } = useEventInfo(event);
+  const messageV2 = getEventMessage(event.action, event.status, event);
 
   const unseenEventClass = cx({ [classes.unseenEvent]: !event.seen });
 
@@ -42,6 +46,23 @@ export const RenderEvent = React.memo((props: RenderEventProps) => {
       />
     </div>
   );
+
+  if (flags.eventMessagesV2) {
+    return (
+      <>
+        <RenderEventStyledBox data-test-id={event.action} display="flex">
+          <RenderEventGravatar username={event.username} />
+          <Box sx={{ marginTop: '-2px' }}>
+            {messageV2}
+            <Typography className={unseenEventClass}>
+              {getEventTimestamp(event).toRelative()} | {event.username}
+            </Typography>
+          </Box>
+        </RenderEventStyledBox>
+        <Divider />
+      </>
+    );
+  }
 
   return (
     <>

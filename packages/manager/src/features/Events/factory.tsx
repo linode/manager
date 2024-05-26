@@ -18,6 +18,8 @@ import {
   ip,
   lassie,
   linode,
+  lish,
+  lke,
   placementGroup,
 } from './factories';
 
@@ -63,5 +65,7 @@ export const events: CompleteEventMap = {
   ...withTypography(ip),
   ...withTypography(lassie),
   ...withTypography(linode),
+  ...withTypography(lish),
+  ...withTypography(lke),
   ...withTypography(placementGroup),
 };

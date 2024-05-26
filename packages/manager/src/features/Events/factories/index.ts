@@ -13,6 +13,8 @@ import { image } from './image';
 import { ip } from './ip';
 import { lassie } from './lassie';
 import { linode } from './linode';
+import { lish } from './lish';
+import { lke } from './lke';
 import { placementGroup } from './placementGroup';
 
 export {
@@ -31,5 +33,7 @@ export {
   ip,
   lassie,
   linode,
+  lish,
+  lke,
   placementGroup,
 };
