@@ -8,7 +8,8 @@ export const lke: PartialEventMap = {
   lke_cluster_create: {
     notification: (e) => (
       <>
-        Kubernetes Cluster <EventMessageLink entity={e.entity} /> has been{' '}
+        Kubernetes Cluster{' '}
+        <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
         <strong>created</strong>.
       </>
     ),
@@ -16,7 +17,8 @@ export const lke: PartialEventMap = {
   lke_cluster_delete: {
     notification: (e) => (
       <>
-        Kubernetes Cluster <EventMessageLink entity={e.entity} /> has been{' '}
+        Kubernetes Cluster{' '}
+        <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
         <strong>deleted</strong>.
       </>
     ),
@@ -24,7 +26,8 @@ export const lke: PartialEventMap = {
   lke_cluster_recycle: {
     notification: (e) => (
       <>
-        Kubernetes Cluster <EventMessageLink entity={e.entity} /> has been{' '}
+        Kubernetes Cluster{' '}
+        <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
         <strong>recycled</strong>.
       </>
     ),
@@ -32,7 +35,8 @@ export const lke: PartialEventMap = {
   lke_cluster_regenerate: {
     notification: (e) => (
       <>
-        Kubernetes Cluster <EventMessageLink entity={e.entity} /> has been{' '}
+        Kubernetes Cluster{' '}
+        <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
         <strong>regenerated</strong>.
       </>
     ),
@@ -40,7 +44,8 @@ export const lke: PartialEventMap = {
   lke_cluster_update: {
     notification: (e) => (
       <>
-        Kubernetes Cluster <EventMessageLink entity={e.entity} /> has been{' '}
+        Kubernetes Cluster{' '}
+        <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
         <strong>updated</strong>.
       </>
     ),
@@ -48,16 +53,18 @@ export const lke: PartialEventMap = {
   lke_control_plane_acl_create: {
     notification: (e) => (
       <>
-        The IP ACL for Kubernetes Cluster <EventMessageLink entity={e.entity} />{' '}
-        has been <strong>created</strong>.
+        The IP ACL for Kubernetes Cluster{' '}
+        <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
+        <strong>created</strong>.
       </>
     ),
   },
   lke_control_plane_acl_delete: {
     notification: (e) => (
       <>
-        The IP ACL for Kubernetes Cluster <EventMessageLink entity={e.entity} />{' '}
-        has been <strong>disabled</strong>.
+        The IP ACL for Kubernetes Cluster{' '}
+        <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
+        <strong>disabled</strong>.
       </>
     ),
   },
@@ -67,8 +74,9 @@ export const lke: PartialEventMap = {
       //   e.entity?.label ? ` ${e.entity.label}` : ''
       // } has been updated.`,
       <>
-        The IP ACL for Kubernetes Cluster <EventMessageLink entity={e.entity} />{' '}
-        has been <strong>updated</strong>.
+        The IP ACL for Kubernetes Cluster{' '}
+        <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
+        <strong>updated</strong>.
       </>
     ),
   },
@@ -76,7 +84,7 @@ export const lke: PartialEventMap = {
     notification: (e) => (
       <>
         The kubeconfig for Kubernetes Cluster{' '}
-        <EventMessageLink entity={e.entity} /> has been{' '}
+        <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
         <strong>regenerated</strong>.
       </>
     ),
@@ -88,15 +96,16 @@ export const lke: PartialEventMap = {
       <>
         Kubernetes Cluster node could not be <strong>created</strong>
         {e.entity?.label ? ' on ' : ''}
-        <EventMessageLink entity={e.entity} />.
+        <EventMessageLink action={e.action} entity={e.entity} />.
       </>
     ),
   },
   lke_node_recycle: {
     notification: (e) => (
       <>
-        The node for Kubernetes Cluster <EventMessageLink entity={e.entity} />{' '}
-        has been <strong>recycled</strong>.
+        The node for Kubernetes Cluster{' '}
+        <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
+        <strong>recycled</strong>.
       </>
     ),
   },
@@ -104,8 +113,8 @@ export const lke: PartialEventMap = {
     notification: (e) => (
       <>
         A Node Pool for Kubernetes Cluster{' '}
-        <EventMessageLink entity={e.entity} /> has been <strong>created</strong>
-        .
+        <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
+        <strong>created</strong>.
       </>
     ),
   },
@@ -113,8 +122,8 @@ export const lke: PartialEventMap = {
     notification: (e) => (
       <>
         A Node Pool for Kubernetes Cluster{' '}
-        <EventMessageLink entity={e.entity} /> has been <strong>deleted</strong>
-        .
+        <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
+        <strong>deleted</strong>.
       </>
     ),
   },
@@ -122,7 +131,7 @@ export const lke: PartialEventMap = {
     notification: (e) => (
       <>
         A Node Pool for Kubernetes Cluster{' '}
-        <EventMessageLink entity={e.entity} /> has been{' '}
+        <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
         <strong>recycled</strong>.
       </>
     ),
@@ -130,8 +139,9 @@ export const lke: PartialEventMap = {
   lke_token_rotate: {
     notification: (e) => (
       <>
-        The token for Kubernetes Cluster <EventMessageLink entity={e.entity} />{' '}
-        has been <strong>rotated</strong>.
+        The token for Kubernetes Cluster{' '}
+        <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
+        <strong>rotated</strong>.
       </>
     ),
   },

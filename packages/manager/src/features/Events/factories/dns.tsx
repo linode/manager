@@ -9,7 +9,7 @@ export const dns: PartialEventMap = {
     notification: (e) => (
       <>
         DNS record has been <strong>added</strong> to{' '}
-        <EventMessageLink entity={e.entity} />.
+        <EventMessageLink action={e.action} entity={e.entity} />.
       </>
     ),
   },
@@ -17,7 +17,7 @@ export const dns: PartialEventMap = {
     notification: (e) => (
       <>
         DNS record has been <strong>removed</strong> from{' '}
-        <EventMessageLink entity={e.entity} />.
+        <EventMessageLink action={e.action} entity={e.entity} />.
       </>
     ),
   },
@@ -25,7 +25,7 @@ export const dns: PartialEventMap = {
     notification: (e) => (
       <>
         DNS zone has been <strong>added</strong> to{' '}
-        <EventMessageLink entity={e.entity} />.
+        <EventMessageLink action={e.action} entity={e.entity} />.
       </>
     ),
   },
@@ -33,7 +33,7 @@ export const dns: PartialEventMap = {
     notification: (e) => (
       <>
         DNS zone has been <strong>removed</strong> from{' '}
-        <EventMessageLink entity={e.entity} />.
+        <EventMessageLink action={e.action} entity={e.entity} />.
       </>
     ),
   },

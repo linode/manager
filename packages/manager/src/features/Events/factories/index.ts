@@ -15,7 +15,20 @@ import { lassie } from './lassie';
 import { linode } from './linode';
 import { lish } from './lish';
 import { lke } from './lke';
+import { longview } from './longview';
+import { managed } from './managed';
+import { nodeBalancer } from './nodeBalancer';
+import { oAuth } from './oAuth';
+import { obj } from './obj';
+import { password } from './password';
+import { payment } from './payment';
 import { placementGroup } from './placementGroup';
+import { profile } from './profile';
+import { stackScript } from './stackScript';
+import { subnet } from './subnet';
+import { tag } from './tag';
+import { tfa } from './tfa';
+import { ticket } from './ticket';
 
 export {
   account,
@@ -35,5 +48,18 @@ export {
   linode,
   lish,
   lke,
+  longview,
+  managed,
+  nodeBalancer,
+  oAuth,
+  obj,
+  password,
+  payment,
   placementGroup,
+  profile,
+  stackScript,
+  subnet,
+  tag,
+  tfa,
+  ticket,
 };

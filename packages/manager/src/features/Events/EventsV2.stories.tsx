@@ -8,7 +8,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { eventFactory } from 'src/factories/events';
-import { events } from 'src/features/Events/factory';
+import { eventMessages } from 'src/features/Events/factory';
 
 import type { CompleteEventMap } from './types';
 import type { Event } from '@linode/api-v4/lib/account';
@@ -67,7 +67,7 @@ const renderEventMessages = (events: CompleteEventMap) => {
 };
 
 export const HardCodedMessages: StoryObj = {
-  render: () => renderEventMessages(events),
+  render: () => renderEventMessages(eventMessages),
 };
 
 // const customizableEvent: Event = eventFactory.build();

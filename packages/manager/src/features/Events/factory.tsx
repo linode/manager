@@ -20,7 +20,20 @@ import {
   linode,
   lish,
   lke,
+  longview,
+  managed,
+  nodeBalancer,
+  oAuth,
+  obj,
+  password,
+  payment,
   placementGroup,
+  profile,
+  stackScript,
+  subnet,
+  tag,
+  tfa,
+  ticket,
 } from './factories';
 
 import type { CompleteEventMap, PartialEventMap } from './types';
@@ -49,7 +62,7 @@ export const withTypography = (eventMap: PartialEventMap): PartialEventMap => {
   );
 };
 
-export const events: CompleteEventMap = {
+export const eventMessages: CompleteEventMap = {
   ...withTypography(account),
   ...withTypography(backup),
   ...withTypography(community),
@@ -67,5 +80,18 @@ export const events: CompleteEventMap = {
   ...withTypography(linode),
   ...withTypography(lish),
   ...withTypography(lke),
+  ...withTypography(longview),
+  ...withTypography(managed),
+  ...withTypography(nodeBalancer),
+  ...withTypography(oAuth),
+  ...withTypography(obj),
+  ...withTypography(password),
+  ...withTypography(payment),
   ...withTypography(placementGroup),
+  ...withTypography(profile),
+  ...withTypography(stackScript),
+  ...withTypography(subnet),
+  ...withTypography(tag),
+  ...withTypography(tfa),
+  ...withTypography(ticket),
 };
