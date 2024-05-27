@@ -175,6 +175,10 @@ export const DashBoardLanding = () => {
             dashboard.widgets[i].aggregate_function =
               preferences.aclpPreference.widgets[j].aggregateFunction ??
               dashboard.widgets[i].aggregate_function;
+            dashboard.widgets[i].time_granularity = preferences.aclpPreference
+              .widgets[j].time_granularity ?? {
+              ...dashboard.widgets[i].time_granularity,
+            };
             break;
           }
         }
@@ -230,6 +234,7 @@ export const DashBoardLanding = () => {
             aggregateFunction: obj.aggregate_function,
             label: obj.label,
             size: obj.size,
+            time_granularity: { ...obj.time_granularity },
           };
         }
       );

@@ -20,7 +20,6 @@ export interface Dashboard {
   widgets: Widgets[];
   created: string;
   updated: string;
-  time_granularity: TimeGranularity;
   time_duration: TimeDuration;
   service_type: string;
 }

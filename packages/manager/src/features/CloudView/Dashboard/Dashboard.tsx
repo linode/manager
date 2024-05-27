@@ -139,12 +139,15 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
         if (pref.label == widgetObj.label) {
           widgetObj.size = pref.size;
           widgetObj.aggregate_function = pref.aggregateFunction;
+          //interval from pref
+          widgetObj.time_granularity = {...pref.time_granularity};
 
           // update ref
           dashboardRef.current?.widgets.forEach((obj) => {
             if (obj.label == widgetObj.label) {
               obj.size = widgetObj.size;
               obj.aggregate_function = widgetObj.aggregate_function;
+              obj.time_granularity = {...widgetObj.time_granularity};
             }
           });
 

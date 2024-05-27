@@ -580,10 +580,6 @@ const cloudView = [
               unit: 'hr',
               value: 1,
             },
-            time_granularity: {
-              unit: 'sec',
-              value: 1,
-            },
             updated: '2023-07-12T16:08:53',
             widgets: [
               {
@@ -655,10 +651,6 @@ const cloudView = [
             service_type: 'aclb',
             time_duration: {
               unit: 'hr',
-              value: 1,
-            },
-            time_granularity: {
-              unit: 'sec',
               value: 1,
             },
             updated: '2023-07-12T16:08:53',
@@ -795,10 +787,6 @@ const cloudView = [
           service_type: 'ACLB',
           time_duration: {
             unit: 'hr',
-            value: 1,
-          },
-          time_granularity: {
-            unit: 'sec',
             value: 1,
           },
           updated: '2023-07-12T16:08:53',
