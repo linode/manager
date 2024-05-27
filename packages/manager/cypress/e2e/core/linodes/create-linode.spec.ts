@@ -133,13 +133,11 @@ describe('Create Linode', () => {
           // confirm that LISH Console via SSH section is correct
           cy.contains('LISH Console via SSH')
             .should('be.visible')
-            .next() // Navigate to the next element which should be the value
-            .invoke('text') // Get the text of the next element
-            .then((text) => {
-              // Example assertion (ssh -t <Linode account username>@lish-<Linode region>.linode.com <Linode label>)
-              expect(text).equal(
+            .closest('tr')
+            .within(() => {
+              cy.contains(
                 `ssh -t ${username}@lish-${linodeRegion.id}.linode.com ${linodeLabel}`
-              );
+              ).should('be.visible');
             });
         });
       });
