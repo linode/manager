@@ -78,11 +78,34 @@ RESOURCES
     emitGlobalFilterChange(
       {
         ...props.globalFilters,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       },
       'refresh'
     );
   },[]);
+
+  const getIntervalToGranularity = (interval: string | undefined) => {
+    if (interval == undefined) {
+      return undefined!;
+    }
+    if (interval == '1m' || interval == '1minute') {
+      return { unit: 'min', value: 1 };
+    }
+
+    if (interval == '5minute') {
+      return { unit: 'min', value: 5 };
+    }
+
+    if (interval == '2hour') {
+      return { unit: 'hr', value: 2 };
+    }
+
+    if (interval == '1day') {
+      return { unit: 'day', value: 1 };
+    }
+
+    return undefined!;
+  };
 
   return (
     <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
@@ -175,14 +198,12 @@ const itemSpacing = {
 };
 
 const StyledReload = styled(Reload, { label: 'StyledReload' })(({ theme }) => ({
-
+  '&:active': {
+    color: 'green',
+  },
+  '&:hover': {
+    cursor: 'pointer',
+  },
   height: '27px',
   width: '27px',
-  '&:hover': {
-    cursor: 'pointer'
-  },
-  '&:active': {
-    color: 'green'
-  }
-}))
-
+}));
