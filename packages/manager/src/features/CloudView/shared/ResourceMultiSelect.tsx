@@ -2,7 +2,6 @@
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import Select from 'src/components/EnhancedSelect/Select';
 import {
   useLinodeResourcesQuery,
   useLoadBalancerResourcesQuery,
@@ -20,38 +19,13 @@ export const CloudViewMultiResourceSelect = (
   props: CloudViewResourceSelectProps
 ) => {
   const resourceOptions: any = {};
-
+  const [selectedResource, setResource] = React.useState<any>([]);
   const defaultCalls = React.useRef(false);
-
-  const selectedResources = React.useRef<any>([]);
-
-  const getResourceList = () => {
-    if (props.region && props.resourceType) {
-      return props.resourceType && resourceOptions[props.resourceType]
-        ? filterResourcesByRegion(resourceOptions[props.resourceType]?.data)
-        : [];
-    }
-    return [];
-  };
-
-  const getSelectedResources = () => {
-    const selectedResourceObj = getResourceList().filter(
-      (obj) =>
-        (props.defaultValue && props.defaultValue?.includes(obj.id)) ||
-        (selectedResources.current && selectedResources.current.includes(obj))
-    );
-
-    if (!defaultCalls.current) {
-      props.handleResourceChange(selectedResourceObj, 'default');
-    }
-
-    defaultCalls.current = true;
-
-    return selectedResourceObj;
-  };
-
   const filterResourcesByRegion = (resourcesList: any[]) => {
     return resourcesList?.filter((resource: any) => {
+      if (props.region == undefined) {
+        return true;
+      }
       if (resource.region) {
         return resource.region === props.region;
       } else if (resource.regions) {
@@ -62,6 +36,12 @@ export const CloudViewMultiResourceSelect = (
     });
   };
 
+  const getResourceList = () => {
+    return props.resourceType && resourceOptions[props.resourceType]
+      ? filterResourcesByRegion(resourceOptions[props.resourceType]?.data)
+      : [];
+  };
+
   ({ data: resourceOptions['linode'] } = useLinodeResourcesQuery(
     props.resourceType === 'linode'
   ));
@@ -69,42 +49,45 @@ export const CloudViewMultiResourceSelect = (
     props.resourceType === 'aclb'
   ));
 
-  React.useEffect(() => {
-    selectedResources.current = [];
-  }, [props.resourceType, props.region])
-
-  if (
-    props.disabled ||
-    !resourceOptions[props.resourceType!] ||
-    !props.region
-  ) {
-    return (
-      <Select
-        disabled={true}
-        isClearable={true}
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onChange={() => {}}
-        placeholder="Select Resources"
-      />
+  const getSelectedResources = () => {
+    const selectedResourceObj = getResourceList().filter(
+      (obj) => props.defaultValue && props.defaultValue?.includes(obj.id)
     );
-  }
+
+    defaultCalls.current = true;
+    setResource(selectedResourceObj);
+    props.handleResourceChange(selectedResourceObj, 'default');
+  };
+
+  React.useEffect(() => {
+    setResource([]);
+  }, [props.region, props.resourceType]);
+
+  React.useEffect(() => {
+    if (!defaultCalls.current && resourceOptions[props.resourceType!]) {
+      getSelectedResources();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resourceOptions]);
 
   return (
     <Autocomplete
       onChange={(_: any, resource: any, reason) => {
-        selectedResources.current = resource;
+        setResource(resource);
         props.handleResourceChange(resource, reason);
       }}
       autoHighlight
       clearOnBlur
+      data-testid={'Resource-select'}
       disabled={props.disabled}
       isOptionEqualToValue={(option, value) => option.label === value.label}
+      key={'multi-select-resource'}
       label=""
       limitTags={2}
       multiple
       options={getResourceList()}
-      placeholder="Select a resources"
-      value={getSelectedResources()}
+      placeholder="Select a resource"
+      value={selectedResource ? selectedResource : []}
     />
   );
 };

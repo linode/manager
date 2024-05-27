@@ -4,6 +4,8 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
+import Reload from 'src/assets/icons/reload.svg';
+
 import {
   FiltersObject,
   GlobalFilterProperties,
@@ -13,7 +15,6 @@ import { CloudViewIntervalSelect } from '../shared/IntervalSelect';
 import { CloudViewRegionSelect } from '../shared/RegionSelect';
 import { CloudViewMultiResourceSelect } from '../shared/ResourceMultiSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/TimeRangeSelect';
-import Reload from 'src/assets/icons/reload.svg';
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const emitGlobalFilterChange = (
@@ -88,12 +89,11 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     emitGlobalFilterChange(
       {
         ...props.globalFilters,
-        timestamp : Date.now()
+        timestamp: Date.now(),
       },
       'refresh'
     );
-  }
-
+  };
 
   const getIntervalToGranularity = (interval: string | undefined) => {
     if (interval == undefined) {
@@ -148,7 +148,9 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
                 ? props.filterPreferences.resources
                 : []
             }
-            disabled={!props.globalFilters.serviceType || !props.globalFilters.region}
+            disabled={
+              !props.globalFilters.serviceType || !props.globalFilters.region
+            }
             handleResourceChange={handleResourceChange}
             region={props.globalFilters.region}
             resourceType={props.globalFilters.serviceType}
@@ -176,8 +178,8 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             label="Select Time Range"
           />
         </Grid>
-        <Grid sx={{ marginLeft: -4, marginRight: 3}}>
-            <StyledReload onClick={handleGlobalRefresh}/>
+        <Grid sx={{ marginLeft: -4, marginRight: 3 }}>
+          <StyledReload onClick={handleGlobalRefresh} />
         </Grid>
       </StyledGrid>
     </Grid>
@@ -224,13 +226,12 @@ const itemSpacing = {
 };
 
 const StyledReload = styled(Reload, { label: 'StyledReload' })(({ theme }) => ({
+  '&:active': {
+    color: 'green',
+  },
+  '&:hover': {
+    cursor: 'pointer',
+  },
   height: '27px',
   width: '27px',
-  '&:hover': {
-    cursor: 'pointer'
-  },
-  '&:active':{
-    color: 'green'
-  }
-}))
-
+}));
