@@ -219,12 +219,13 @@ export const MainContent = () => {
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
   const { data: accountSettings } = useAccountSettings();
-
-  const showCloudPulse = Boolean(flags.aclp?.enabled);
-  
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
 
   const showCloudPulse = Boolean(flags.aclp?.enabled);
+  // the followed comment is for later use, the showCloudPulse will be removed and isACLPEnabled will be used
+  // const { isACLPEnabled } = useIsACLPEnabled();
+
+
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,

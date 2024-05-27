@@ -43,13 +43,16 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time, selectedRegion]); // if anything changes, emit an event to parent component
 
-  const handleTimeRangeChange = (start: number, end: number) => {
-    setTimeBox({ end, start });
-  };
+  const handleTimeRangeChange = React.useCallback(
+    (start: number, end: number) => {
+      setTimeBox({ end, start });
+    },
+    []
+  );
 
-  const handleRegionChange = (region: string | undefined) => {
+  const handleRegionChange = React.useCallback((region: string | undefined) => {
     setRegion(region);
-  };
+  }, []);
 
   return (
     <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
