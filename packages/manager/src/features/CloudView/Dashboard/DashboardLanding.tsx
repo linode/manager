@@ -139,7 +139,6 @@ export const DashBoardLanding = () => {
       updateGlobalFilterPreference({
         [DASHBOARD_ID]: undefined,
         [RESOURCES]: [],
-        [REGION]: ''
       });
       preferenceRef.current.aclpPreference.dashboardId = undefined!;
       preferenceRef.current.aclpPreference.resources = [];
@@ -186,7 +185,6 @@ export const DashBoardLanding = () => {
       preferenceRef.current.aclpPreference.dashboardId = dashboard.id;
       updateGlobalFilterPreference({
         [DASHBOARD_ID] : dashboard.id,
-        [REGION] : '',
         [RESOURCES] : []
       })
       if (

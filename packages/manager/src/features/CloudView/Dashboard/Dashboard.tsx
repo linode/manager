@@ -47,6 +47,8 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     jweTokenPayload.resource_id = resources
       ? resources.data?.map((resource: any) => resource.id)
       : undefined!;
+
+      jweTokenPayload.resource_id = [57352521,57407248]
     return jweTokenPayload;
   };
 

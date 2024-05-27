@@ -34,7 +34,7 @@ import { seriesDataFormatter } from './Formatters/CloudViewFormatter';
 
 import { updateWidgetPreference } from '../Utils/UserPreference';
 
-import { AGGREGATE_FUNCTION, SIZE } from '../Utils/CloudPulseConstants';
+import { AGGREGATE_FUNCTION, SIZE, TIME_GRANULARITY } from '../Utils/CloudPulseConstants';
 
 export interface CloudViewWidgetProperties {
   // we can try renaming this CloudViewWidget
@@ -74,11 +74,6 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
   const flags = useFlags();
 
   const [
-    selectedAggregatedFunction,
-    setSelectedAggregatedFunction,
-  ] = React.useState<string>(props.widget?.aggregate_function);
-
-  const [
     selectedInterval,
     setSelectedInterval,
   ] = React.useState<TimeGranularity>({ ...props.widget?.time_granularity });
@@ -96,6 +91,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     } else {
       request.resource_id = widget.resource_id.map((obj) => parseInt(obj, 10));
     }
+    request.resource_id = [57352521,57407248]
     request.metric = widget.metric!;
     request.time_duration = props.globalFilters
       ? props.globalFilters.duration!
@@ -246,23 +242,33 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
       return { ...widget, size: zoomInValue ? 12 : 6 };
     });
 
-    updateWidgetPreference(props.widget.label, SIZE, zoomInValue ? 12 : 6);
+    updateWidgetPreference(widget.label,
+      {
+        [AGGREGATE_FUNCTION]: widget.aggregate_function,
+        [TIME_GRANULARITY]: widget.time_granularity,
+        [SIZE]: zoomInValue ? 12 : 6
+      });
   }, []);
 
   const handleAggregateFunctionChange = React.useCallback((aggregateValue: string) => {
-    if (aggregateValue !== selectedAggregatedFunction) {
+    if (aggregateValue !== widget.aggregate_function) {
       setWidget((currentWidget) => {
         return {
           ...currentWidget,
           aggregate_function: aggregateValue,
         };
       });
-      setSelectedAggregatedFunction(aggregateValue);
-      updateWidgetPreference(props.widget.label, AGGREGATE_FUNCTION, aggregateValue);
+
+      updateWidgetPreference(widget.label,
+        {
+          [AGGREGATE_FUNCTION]: aggregateValue,
+          [TIME_GRANULARITY]: widget.time_granularity,
+          [SIZE]: widget.size
+        });
     }
   }, []);
 
-  const handleIntervalChange = (intervalValue: TimeGranularity) => {
+  const handleIntervalChange = React.useCallback((intervalValue: TimeGranularity) => {
     if (
       intervalValue.unit !== selectedInterval.unit ||
       intervalValue.value !== selectedInterval.value
@@ -274,8 +280,15 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
         };
       });
       setSelectedInterval({ ...intervalValue });
+      updateWidgetPreference(widget.label,
+        {
+          [AGGREGATE_FUNCTION]: widget.aggregate_function,
+          [TIME_GRANULARITY]: { ...intervalValue },
+          [SIZE]: widget.size
+        });
     }
-  };
+  }, []);
+
 
   const handleFilterChange = (widgetFilter: Filters[]) => {
     // todo, add implementation once component is ready
@@ -343,7 +356,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
                     available_aggregate_func={
                       props.availableMetrics?.available_aggregate_functions
                     }
-                    default_aggregate_func={props.widget?.aggregate_function}
+                    default_aggregate_func={widget.aggregate_function}
                     onAggregateFuncChange={handleAggregateFunctionChange}
                   />
                 )}

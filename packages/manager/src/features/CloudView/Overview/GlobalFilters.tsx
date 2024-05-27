@@ -43,17 +43,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     }
   }, []);
 
-  const handleIntervalChange = React.useCallback((interval: string | undefined) => {
-    console.log('Interval: ', interval);
-    if (interval) {
-      const filterObj = { ...props.globalFilters };
-      filterObj.interval = interval;
-      filterObj.step = getIntervalToGranularity(interval);
-      emitGlobalFilterChange(filterObj, INTERVAL);
-      updateGlobalFilterPreference({ [INTERVAL]: interval });
-    }
-  }, []);
-
   const handleRegionChange = React.useCallback((region: string | undefined) => {
 
     if (region) {
@@ -93,31 +82,7 @@ RESOURCES
       },
       'refresh'
     );
-  }, [])
-
-
-  const getIntervalToGranularity = (interval: string | undefined) => {
-    if (interval == undefined) {
-      return undefined!;
-    }
-    if (interval == '1m' || interval == '1minute') {
-      return { unit: 'min', value: 1 };
-    }
-
-    if (interval == '5minute') {
-      return { unit: 'min', value: 5 };
-    }
-
-    if (interval == '2hour') {
-      return { unit: 'hr', value: 2 };
-    }
-
-    if (interval == '1day') {
-      return { unit: 'day', value: 1 };
-    }
-
-    return undefined!;
-  };
+  },[]);
 
   return (
     <Grid container sx={{ ...itemSpacing, padding: '8px' }}>

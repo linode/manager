@@ -16,3 +16,5 @@ export const SIZE = "size";
 export const LABEL = "label";
 
 export const REFRESH = "refresh";
+
+export const TIME_GRANULARITY = "time_granularity"
