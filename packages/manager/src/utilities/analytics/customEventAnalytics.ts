@@ -469,3 +469,13 @@ export const sendManageGravatarEvent = () => {
     label: 'Manage photo',
   });
 };
+
+// SelectLinodePanel.tsx
+// LinodeSelectTable.tsx
+export const sendLinodePowerOffEvent = (category: string) => {
+  sendEvent({
+    action: 'Click:button',
+    category,
+    label: 'Power Off',
+  });
+};

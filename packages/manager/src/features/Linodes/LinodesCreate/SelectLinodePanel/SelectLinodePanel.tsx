@@ -15,6 +15,7 @@ import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
+import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { PowerActionsDialog } from '../../PowerActionsDialogOrDrawer';
 import { SelectLinodeCards } from './SelectLinodeCards';
@@ -26,7 +27,7 @@ interface Props {
   handleSelection: (id: number, type: null | string, diskSize?: number) => void;
   header?: string;
   linodes: Linode[];
-  notices?: string[];
+  notices?: (JSX.Element | string)[];
   selectedLinodeID?: number;
   showPowerActions?: boolean;
 }
@@ -155,9 +156,10 @@ export const SelectLinodePanel = (props: Props) => {
                 />
                 <StyledBox>
                   <SelectComponent
-                    handlePowerOff={(linodeId) =>
-                      setPowerOffLinode({ linodeId })
-                    }
+                    handlePowerOff={(linodeId) => {
+                      setPowerOffLinode({ linodeId });
+                      sendLinodePowerOffEvent('Clone Linode');
+                    }}
                     orderBy={{
                       data: linodesData,
                       handleOrderChange,
