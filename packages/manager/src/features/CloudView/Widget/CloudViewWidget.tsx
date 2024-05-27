@@ -2,6 +2,7 @@ import {
   AvailableMetrics,
   CloudViewMetricsRequest,
   Filters,
+  TimeGranularity,
   Widgets,
 } from '@linode/api-v4';
 import { Paper } from '@mui/material';
@@ -26,6 +27,7 @@ import {
 import { COLOR_MAP } from '../Utils/WidgetColorPalette';
 import { CloudViewLineGraph } from './CloudViewLineGraph';
 import { AggregateFunctionComponent } from './Components/AggregateFunctionComponent';
+import { IntervalSelectComponent } from './Components/IntervalSelectComponent';
 import { ZoomIcon } from './Components/Zoomer';
 import { seriesDataFormatter } from './Formatters/CloudViewFormatter';
 
@@ -54,8 +56,6 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
 
   const [legendRows, setLegendRows] = React.useState<any[]>([]);
 
-  const [error, setError] = React.useState<boolean>(false);
-
   const [today, setToday] = React.useState<boolean>(false);
 
   const flags = useFlags();
@@ -64,6 +64,11 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     selectedAggregatedFunction,
     setSelectedAggregatedFunction,
   ] = React.useState<string>(props.widget?.aggregate_function);
+
+  const [
+    selectedInterval,
+    setSelectedInterval,
+  ] = React.useState<TimeGranularity>({ ...props.widget?.time_granularity });
 
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget }); // any change in agg_functions, step, group_by, will be published to dashboard component for save
 
@@ -82,9 +87,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     request.time_duration = props.globalFilters
       ? props.globalFilters.duration!
       : widget.time_duration;
-    request.time_granularity = props.globalFilters
-      ? props.globalFilters.step!
-      : widget.time_granularity; // todo, move to widgets
+    request.time_granularity = { ...widget.time_granularity };
 
     // if (props.globalFilters) {
     //   // this has been kept because for mocking data, we will remove this
@@ -124,7 +127,12 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     return getDimensionName(metric, flag, props.resources);
   };
 
-  const { data: metricsList, isLoading, status } = useCloudViewMetricsQuery(
+  const {
+    data: metricsList,
+    error,
+    isLoading,
+    status,
+  } = useCloudViewMetricsQuery(
     getServiceType()!,
     getCloudViewMetricsRequest(),
     props,
@@ -146,7 +154,9 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     // on any change in the widget object, just publish the changes to parent component using a callback function
     if (
       props.widget.size != widget.size ||
-      props.widget.aggregate_function !== widget.aggregate_function
+      props.widget.aggregate_function !== widget.aggregate_function ||
+      props.widget.time_granularity?.unit !== widget.time_granularity?.unit ||
+      props.widget.time_granularity?.value !== widget.time_granularity?.value
     ) {
       props.handleWidgetChange(widget);
     }
@@ -213,12 +223,6 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
       setLegendRows(legendRowsData);
     }
 
-    if (status == 'error') {
-      setError(true);
-    } else {
-      // set error false
-      setError(false);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, metricsList]);
 
@@ -252,6 +256,21 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     }
   };
 
+  const handleIntervalChange = (intervalValue: TimeGranularity) => {
+    if (
+      intervalValue.unit !== selectedInterval.unit ||
+      intervalValue.value !== selectedInterval.value
+    ) {
+      setWidget((currentWidget) => {
+        return {
+          ...currentWidget,
+          time_granularity: { ...intervalValue },
+        };
+      });
+      setSelectedInterval({ ...intervalValue });
+    }
+  };
+
   const handleFilterChange = (widgetFilter: Filters[]) => {
     // todo, add implementation once component is ready
   };
@@ -262,10 +281,6 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
 
   const handleGranularityChange = (step: string) => {
     // todo, add implementation once component is ready
-  };
-
-  const handleIntervalChange = () => {
-    // todo, add implementation
   };
 
   const StyledZoomIcon = styled(ZoomIcon, {
@@ -289,17 +304,28 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
               width: '70%',
             }}
           >
-            {props.availableMetrics?.available_aggregate_functions &&
-              props.availableMetrics.available_aggregate_functions.length >
-                0 && (
-                <AggregateFunctionComponent
-                  available_aggregate_func={
-                    props.availableMetrics?.available_aggregate_functions
-                  }
-                  default_aggregate_func={selectedAggregatedFunction}
-                  onAggregateFuncChange={handleAggregateFunctionChange}
+            <Grid sx={{ marginRight: 5, width: 100 }}>
+              {props.availableMetrics?.scrape_interval && (
+                <IntervalSelectComponent
+                  default_interval={{ ...selectedInterval }}
+                  onIntervalChange={handleIntervalChange}
+                  scrape_interval={props.availableMetrics.scrape_interval}
                 />
               )}
+            </Grid>
+            <Grid sx={{ marginRight: 5, width: 100 }}>
+              {props.availableMetrics?.available_aggregate_functions &&
+                props.availableMetrics.available_aggregate_functions.length >
+                  0 && (
+                  <AggregateFunctionComponent
+                    available_aggregate_func={
+                      props.availableMetrics?.available_aggregate_functions
+                    }
+                    default_aggregate_func={selectedAggregatedFunction}
+                    onAggregateFuncChange={handleAggregateFunctionChange}
+                  />
+                )}
+            </Grid>
             <StyledZoomIcon
               handleZoomToggle={handleZoomToggle}
               zoomIn={widget.size == 12 ? true : false}
@@ -307,9 +333,9 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
           </div>
           <CloudViewLineGraph // rename where we have cloudview to cloudpulse
             error={
-              error
-                ? props.errorLabel && props.errorLabel.length > 0
-                  ? props.errorLabel
+              status == 'error'
+                ? error && error.length > 0
+                  ? error[0].reason
                   : 'Error while rendering widget'
                 : undefined
             }

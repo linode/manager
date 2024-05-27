@@ -11,7 +11,6 @@ import {
   GlobalFilterProperties,
 } from '../Models/GlobalFilterProperties';
 import { CloudViewDashboardSelect } from '../shared/DashboardSelect';
-import { CloudViewIntervalSelect } from '../shared/IntervalSelect';
 import { CloudViewRegionSelect } from '../shared/RegionSelect';
 import { CloudViewMultiResourceSelect } from '../shared/ResourceMultiSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/TimeRangeSelect';
@@ -38,17 +37,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       filterObj.duration = timeDuration;
       filterObj.durationLabel = timeRangeLabel!;
       emitGlobalFilterChange(filterObj, 'timeduration');
-    }
-  };
-
-  const handleIntervalChange = (interval: string | undefined) => {
-    console.log('Interval: ', interval);
-
-    if (interval) {
-      const filterObj = { ...props.globalFilters };
-      filterObj.interval = interval;
-      filterObj.step = getIntervalToGranularity(interval);
-      emitGlobalFilterChange(filterObj, 'timestep');
     }
   };
 
@@ -95,29 +83,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     );
   };
 
-  const getIntervalToGranularity = (interval: string | undefined) => {
-    if (interval == undefined) {
-      return undefined!;
-    }
-    if (interval == '1m' || interval == '1minute') {
-      return { unit: 'min', value: 1 };
-    }
-
-    if (interval == '5minute') {
-      return { unit: 'min', value: 5 };
-    }
-
-    if (interval == '2hour') {
-      return { unit: 'hr', value: 2 };
-    }
-
-    if (interval == '1day') {
-      return { unit: 'day', value: 1 };
-    }
-
-    return undefined!;
-  };
-
   return (
     <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
       <StyledGrid xs={12}>
@@ -131,7 +96,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             handleDashboardChange={handleDashboardChange}
           />
         </Grid>
-        <Grid sx={{ marginLeft: 2, width: 200 }}>
+        <Grid sx={{ marginLeft: 4, width: 200 }}>
           <StyledCloudViewRegionSelect
             defaultValue={
               props.filterPreferences
@@ -141,7 +106,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             handleRegionChange={handleRegionChange}
           />
         </Grid>
-        <Grid sx={{ marginLeft: 3, width: 450 }}>
+        <Grid sx={{ marginLeft: 4, width: 450 }}>
           <StyledCloudViewResourceSelect
             defaultValue={
               props.filterPreferences && props.filterPreferences.resources
@@ -156,17 +121,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             resourceType={props.globalFilters.serviceType}
           />
         </Grid>
-        <Grid sx={{ marginLeft: 5 }}>
-          <StyledCloudViewIntervalSelect
-            defaultValue={
-              props.filterPreferences && props.filterPreferences.interval
-                ? props.filterPreferences.interval
-                : undefined
-            }
-            handleIntervalChange={handleIntervalChange}
-          />
-        </Grid>
-        <Grid sx={{ marginLeft: 13, width: 250 }}>
+        <Grid sx={{ marginLeft: 3, width: 250 }}>
           <StyledCloudViewTimeRangeSelect
             defaultValue={
               props.filterPreferences && props.filterPreferences.timeDuration
@@ -202,13 +157,6 @@ const StyledCloudViewTimeRangeSelect = styled(CloudPulseTimeRangeSelect, {
   label: 'StyledCloudViewTimeRangeSelect',
 })({
   width: 140,
-});
-
-const StyledCloudViewIntervalSelect = styled(CloudViewIntervalSelect, {
-  label: 'StyledCloudViewIntervalSelect',
-})({
-  marginRight: 10,
-  width: 20,
 });
 
 const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
