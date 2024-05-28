@@ -117,7 +117,10 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
           </StyledTabList>
           <TabPanels>
             {tabs.map((tab, idx) => (
-              <TabPanel key={`tabs-panel-${tab.title}-${idx}`}>
+              <TabPanel
+                key={`tabs-panel-${tab.title}-${idx}`}
+                data-qa-tp-tab={tab.title}
+              >
                 {tab.render(rest.children)}
               </TabPanel>
             ))}
