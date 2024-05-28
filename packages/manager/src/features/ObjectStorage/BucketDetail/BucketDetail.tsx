@@ -30,7 +30,7 @@ import {
   updateBucket,
   useObjectBucketDetailsInfiniteQuery,
 } from 'src/queries/objectStorage';
-import { sendDownloadObjectEvent } from 'src/utilities/analytics';
+import { sendDownloadObjectEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { truncateMiddle } from 'src/utilities/truncate';
 

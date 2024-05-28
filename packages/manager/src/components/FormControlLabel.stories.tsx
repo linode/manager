@@ -11,22 +11,21 @@ const meta: Meta<typeof FormControlLabel> = {
   title: 'Components/Form/FormControlLabel',
 };
 
-const controlOptions = {
-  Checkbox: <Checkbox />,
-  Radio: <Radio />,
-  Toggle: <Toggle />,
-};
-
 type Story = StoryObj<typeof FormControlLabel>;
 
 export const Default: Story = {
   argTypes: {
     control: {
-      options: controlOptions,
+      mapping: {
+        Checkbox: <Checkbox />,
+        Radio: <Radio />,
+        Toggle: <Toggle />,
+      },
+      options: ['Checkbox', 'Radio', 'Toggle'],
     },
   },
   args: {
-    control: controlOptions.Checkbox,
+    control: <Checkbox />,
     label: 'This is a FormControlLabel',
   },
   render: (args) => <FormControlLabel {...args} />,

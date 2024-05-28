@@ -46,7 +46,12 @@ export const PlacementGroupsCreateDrawer = (
     selectedRegionId,
   } = props;
   const { data: regions } = useRegionsQuery();
-  const { data: allPlacementGroups } = useAllPlacementGroupsQuery();
+  const { data: allPlacementGroupsInRegion } = useAllPlacementGroupsQuery({
+    enabled: Boolean(selectedRegionId),
+    filter: {
+      region: selectedRegionId,
+    },
+  });
   const { error, mutateAsync } = useCreatePlacementGroup();
   const { enqueueSnackbar } = useSnackbar();
   const {
@@ -183,7 +188,7 @@ export const PlacementGroupsCreateDrawer = (
               handleDisabledRegion={(region) => {
                 const isRegionAtCapacity = hasRegionReachedPlacementGroupCapacity(
                   {
-                    allPlacementGroups,
+                    allPlacementGroups: allPlacementGroupsInRegion,
                     region,
                   }
                 );
