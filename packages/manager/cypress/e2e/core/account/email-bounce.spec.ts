@@ -9,6 +9,8 @@ import { getProfile } from 'support/api/account';
 import { ui } from 'support/ui';
 import { mockUpdateProfile } from 'support/intercepts/profile';
 import { randomString } from 'support/util/random';
+import { accountFactory } from 'src/factories/account';
+import { mockGetAccount, mockUpdateAccount } from 'support/intercepts/account';
 
 const notifications_billing_email_bounce: Notification[] = [
   notificationFactory.build({
@@ -86,11 +88,6 @@ describe('Email bounce banners', () => {
       cy.visitWithLogin('/account/users');
       cy.wait('@mockNotifications');
 
-      mockUpdateProfile({
-        ...profile.body,
-        email: userprofileEmail,
-      }).as('updateEmail');
-
       cy.contains(UserProfileEmailBounceBanner)
         .should('be.visible')
         .parent()
@@ -121,25 +118,29 @@ describe('Email bounce banners', () => {
             .click();
         });
 
-      cy.wait('@updateEmail');
       cy.findByText('Email updated successfully.').should('be.visible');
       // email bounce still exist ???
     });
   });
 
-  it.only('Billing email bounce is visible and can be confirmed by users', () => {
-    //how to get billing email???
-    const BillingEmail = 'azsh@akamai.com';
+  /*
+   *   Confirm that the billing email banner appears when the billing_email_bounce notification is present
+   *   Confirm that clicking "Yes, it's correct" causes a PUT request to be made to the API account endpoint containing the current billing email address
+   */
+  it('Billing email bounce is visible and can be confirmed by users', () => {
+    const accountData = accountFactory.build();
+    const billingemail = accountData.email;
 
-    const BillingEmailBounceBanner = `An email to your account’s email address couldn’t be delivered. Is ${BillingEmail} the correct address?`;
+    const BillingEmailBounceBanner = `An email to your account’s email address couldn’t be delivered. Is ${billingemail} the correct address?`;
 
     mockGetNotifications(notifications_billing_email_bounce).as(
       'mockNotifications'
     );
-    cy.visitWithLogin('/account/billing');
-    cy.wait('@mockNotifications');
+    // mock the user's account data and confirm that it is displayed correctly upon page load
+    mockGetAccount(accountData).as('getAccount');
 
-    //mockUpdateAccount(mockAccount).as('AccountBilling');
+    cy.visitWithLogin('/account/billing');
+    cy.wait(['@mockNotifications', '@getAccount']);
 
     cy.contains(BillingEmailBounceBanner)
       .should('be.visible')
@@ -155,14 +156,52 @@ describe('Email bounce banners', () => {
 
     ui.toast.assertMessage('Email confirmed');
 
-    //cy.wait('@AccountBilling');
     cy.contains(BillingEmailBounceBanner).should('not.exist');
     cy.findByText('Billing Contact')
       .should('be.visible')
       .parent()
       .parent()
       .within(() => {
-        cy.findByText(`${BillingEmail}`).should('be.visible');
+        cy.findByText(`${billingemail}`).should('be.visible');
       });
+  });
+
+  /*
+   *   Confirm that the billing email banner appears when the billing_email_bounce notification is present
+   *   Confirm that clicking "No, let's update it" redirects the user to {{/account} and that the contact info edit drawer is automatically opened
+   */
+  it.only('Billing email bounce is visible and can be updated by users', () => {
+    const accountData = accountFactory.build();
+    const billingemail = accountData.email;
+
+    const BillingEmailBounceBanner = `An email to your account’s email address couldn’t be delivered. Is ${billingemail} the correct address?`;
+
+    mockGetNotifications(notifications_billing_email_bounce).as(
+      'mockNotifications'
+    );
+
+    // mock the user's account data and confirm that it is displayed correctly upon page load
+    mockGetAccount(accountData).as('getAccount');
+
+    cy.visitWithLogin('/account/billing');
+    cy.wait(['@mockNotifications', '@getAccount']);
+
+    // mock the user's account data and confirm that it is displayed correctly upon page load
+    //mockUpdateAccount(accountFactory.build()).as('updateAccount');
+
+    cy.contains(BillingEmailBounceBanner)
+      .should('be.visible')
+      .parent()
+      .parent()
+      .within(() => {
+        ui.button
+          .findByTitle(updateButton)
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+    mockUpdateAccount(accountFactory.build()).as('updateAccount');
+
+    cy.wait('@updateAccount');
   });
 });
