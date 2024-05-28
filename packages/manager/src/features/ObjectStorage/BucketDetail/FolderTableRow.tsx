@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ export const FolderTableRow = (props: Props) => {
   const { displayName, folderName, handleClickDelete } = props;
 
   return (
-    <TableRow ariaLabel={`Folder ${displayName}`} key={folderName} {...props}>
+    <TableRow key={folderName} {...props}>
       <TableCell parentColumn="Object">
         <Grid alignItems="center" container spacing={2} wrap="nowrap">
           <StyledIconWrapper>

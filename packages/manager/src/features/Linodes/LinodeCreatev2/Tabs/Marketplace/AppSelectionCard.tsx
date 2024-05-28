@@ -51,7 +51,7 @@ export const AppSelectionCard = (props: Props) => {
   const renderIcon =
     iconUrl === ''
       ? () => <span className="fl-tux" />
-      : () => <img alt={`${label} logo`} src={`${APP_ROOT}/${iconUrl}`} />;
+      : () => <img alt={`${label} logo`} src={`${APP_ROOT}${iconUrl}`} />;
 
   const renderVariant = () => (
     <IconButton

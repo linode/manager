@@ -274,12 +274,10 @@ const PlacementGroupPayloadSchema = object({
   id: number().notRequired().nullable(true),
 });
 
-const DiskEncryptionSchema = object({
-  disk_encryption: string()
-    .oneOf(['enabled', 'disabled'])
-    .nullable()
-    .notRequired(),
-});
+const DiskEncryptionSchema = string()
+  .oneOf(['enabled', 'disabled'])
+  .notRequired()
+  .nullable(true);
 
 export const CreateLinodeSchema = object({
   type: string().ensure().required('Plan is required.'),

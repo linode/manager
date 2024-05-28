@@ -1,6 +1,6 @@
-import Grid from '@mui/material/Unstable_Grid2';
-import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
@@ -8,7 +8,6 @@ import { Button } from 'src/components/Button/Button';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 
 import { AddLinodeDrawer } from './AddLinodeDrawer';
@@ -44,9 +43,8 @@ export const FirewallDeviceLanding = React.memo(
     const routeMatch = useRouteMatch();
     const location = useLocation();
 
-    const flags = useFlags();
-    const entityName = flags.firewallNodebalancer ? 'services' : 'Linodes';
-    const helperText = `Assign one or more ${entityName} to this firewall. You can add ${entityName} later if you want to customize your rules first.`;
+    const helperText =
+      'Assign one or more services to this firewall. You can add services later if you want to customize your rules first.';
 
     React.useEffect(() => {
       if (location.pathname.endsWith('add')) {

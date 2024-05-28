@@ -1,10 +1,10 @@
 import { createLinode } from 'support/api/linodes';
 import { containsVisible, fbtVisible, getClick } from 'support/helpers';
-import { apiMatcher } from 'support/util/intercepts';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { authenticate } from 'support/api/authentication';
 import { mockGetFeatureFlagClientstream } from 'support/intercepts/feature-flags';
+import { interceptLinodeResize } from 'support/intercepts/linodes';
 
 authenticate();
 describe('resize linode', () => {
@@ -16,10 +16,7 @@ describe('resize linode', () => {
     mockGetFeatureFlagClientstream().as('getClientStream');
 
     createLinode().then((linode) => {
-      cy.intercept(
-        'POST',
-        apiMatcher(`linode/instances/${linode.id}/resize`)
-      ).as('linodeResize');
+      interceptLinodeResize(linode.id).as('linodeResize');
       cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
       cy.findByText('Shared CPU').click({ scrollBehavior: false });
       containsVisible('Linode 8 GB');
@@ -39,10 +36,7 @@ describe('resize linode', () => {
   it('resizes a linode by increasing size: cold migration', () => {
     mockGetFeatureFlagClientstream().as('getClientStream');
     createLinode().then((linode) => {
-      cy.intercept(
-        'POST',
-        apiMatcher(`linode/instances/${linode.id}/resize`)
-      ).as('linodeResize');
+      interceptLinodeResize(linode.id).as('linodeResize');
       cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
       cy.findByText('Shared CPU').click({ scrollBehavior: false });
       containsVisible('Linode 8 GB');
@@ -80,10 +74,7 @@ describe('resize linode', () => {
 
       containsVisible('OFFLINE');
 
-      cy.intercept(
-        'POST',
-        apiMatcher(`linode/instances/${linode.id}/resize`)
-      ).as('linodeResize');
+      interceptLinodeResize(linode.id).as('linodeResize');
       cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
       cy.findByText('Shared CPU').click({ scrollBehavior: false });
       containsVisible('Linode 8 GB');
@@ -113,10 +104,7 @@ describe('resize linode', () => {
 
       // Error flow when attempting to resize a linode to a smaller size without
       // resizing the disk to the requested size first.
-      cy.intercept(
-        'POST',
-        apiMatcher(`linode/instances/${linode.id}/resize`)
-      ).as('linodeResize');
+      interceptLinodeResize(linode.id).as('linodeResize');
       cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
       cy.findByText('Shared CPU').click({ scrollBehavior: false });
       containsVisible('Linode 2 GB');
@@ -175,10 +163,7 @@ describe('resize linode', () => {
       // Wait until the disk resize is done.
       ui.toast.assertMessage(`Disk ${diskName} successfully resized.`);
 
-      cy.intercept(
-        'POST',
-        apiMatcher(`linode/instances/${linode.id}/resize`)
-      ).as('linodeResize');
+      interceptLinodeResize(linode.id).as('linodeResize');
       cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
       cy.findByText('Shared CPU').click({ scrollBehavior: false });
       containsVisible('Linode 2 GB');

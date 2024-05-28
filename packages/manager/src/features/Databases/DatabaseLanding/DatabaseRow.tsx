@@ -26,7 +26,7 @@ export const databaseEngineMap: Record<Engine, string> = {
 };
 
 interface Props {
-  database: DatabaseInstance | Database;
+  database: Database | DatabaseInstance;
   events?: Event[];
 }
 
@@ -62,16 +62,12 @@ export const DatabaseRow = ({ database, events }: Props) => {
     );
 
   return (
-    <TableRow
-      ariaLabel={`Database ${label}`}
-      data-qa-database-cluster-id={id}
-      key={`database-row-${id}`}
-    >
+    <TableRow data-qa-database-cluster-id={id} key={`database-row-${id}`}>
       <TableCell>
         <Link to={`/databases/${engine}/${id}`}>{label}</Link>
       </TableCell>
       <TableCell statusCell>
-        <DatabaseStatusDisplay events={events} database={database} />
+        <DatabaseStatusDisplay database={database} events={events} />
       </TableCell>
       <Hidden smDown>
         <TableCell>{configuration}</TableCell>

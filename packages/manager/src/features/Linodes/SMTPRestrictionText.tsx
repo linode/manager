@@ -5,7 +5,7 @@ import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
 import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
 import { useAccount } from 'src/queries/account/account';
-import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
+import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 export interface SMTPRestrictionTextProps {
   children: (props: { text: React.ReactNode }) => React.ReactNode;

@@ -1,3 +1,7 @@
+/**
+ * ONLY USED IN LONGVIEW
+ * Delete when Lonview is sunsetted, along with AccessibleGraphData
+ */
 import { Theme, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {

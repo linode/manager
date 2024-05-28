@@ -16,7 +16,7 @@ import { ImageEmptyState } from 'src/features/Linodes/LinodesCreate/TabbedConten
 import { AppDetailDrawer } from 'src/features/OneClickApps';
 import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel/UserDefinedFieldsPanel';
-import { sendMarketplaceSearchEvent } from 'src/utilities/analytics';
+import { sendMarketplaceSearchEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { compact } from 'src/utilities/compact';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 

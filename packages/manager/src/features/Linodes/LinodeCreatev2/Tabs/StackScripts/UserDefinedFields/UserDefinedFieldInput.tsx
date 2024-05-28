@@ -135,7 +135,6 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
         onChange={(e) => field.onChange(e.target.value)}
         placeholder={isTokenPassword ? 'Enter your token' : 'Enter a password.'}
         required={isRequired}
-        tooltipInteractive={isTokenPassword}
         value={field.value ?? ''}
       />
     );

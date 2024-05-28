@@ -10,7 +10,7 @@ import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResourc
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
   gettingStartedGuides,

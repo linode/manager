@@ -12,7 +12,12 @@ import Request, {
   setXFilter,
 } from '../request';
 import { Filter, Params, ResourcePage as Page } from '../types';
-import { Image, ImageUploadPayload, UploadImageResponse } from './types';
+import {
+  CreateImagePayload,
+  Image,
+  ImageUploadPayload,
+  UploadImageResponse,
+} from './types';
 
 /**
  * Get information about a single Image.
@@ -39,25 +44,8 @@ export const getImages = (params: Params = {}, filters: Filter = {}) =>
 
 /**
  * Create a private gold-master Image from a Linode Disk.
- *
- * @param diskId { number } The ID of the Linode Disk that this Image will be created from.
- * @param label { string } A short description of the Image. Labels cannot contain special characters.
- * @param description { string } A detailed description of this Image.
- * @param cloud_init { boolean } An indicator of whether Image supports cloud-init.
  */
-export const createImage = (
-  diskId: number,
-  label?: string,
-  description?: string,
-  cloud_init?: boolean
-) => {
-  const data = {
-    disk_id: diskId,
-    ...(label && { label }),
-    ...(description && { description }),
-    ...(cloud_init && { cloud_init }),
-  };
-
+export const createImage = (data: CreateImagePayload) => {
   return Request<Image>(
     setURL(`${API_ROOT}/images`),
     setMethod('POST'),

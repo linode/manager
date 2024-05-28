@@ -34,10 +34,11 @@ export const Default: StoryObj<ActionMenuProps> = {
 const meta: Meta<ActionMenuProps> = {
   argTypes: {
     actionsList: {
-      options: {
-        'disabled actions': standardAndDisabledActions,
-        'standard actions': standardActions,
+      mapping: {
+        Disabled: standardAndDisabledActions,
+        Standard: standardActions,
       },
+      options: ['Standard', 'Disabled'],
     },
   },
   args: { actionsList: standardActions, ariaLabel: 'action menu' },

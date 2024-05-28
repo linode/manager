@@ -31,7 +31,6 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   reportAgreementSigningError,
@@ -44,7 +43,7 @@ import {
 } from 'src/queries/nodebalancers';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics';
+import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
@@ -98,7 +97,6 @@ const defaultFieldsStates = {
 };
 
 const NodeBalancerCreate = () => {
-  const flags = useFlags();
   const { data: agreements } = useAccountAgreements();
   const { data: profile } = useProfile();
   const { data: regions } = useRegionsQuery();
@@ -518,26 +516,24 @@ const NodeBalancerCreate = () => {
         handleSelection={regionChange}
         selectedId={nodeBalancerFields.region}
       />
-      {flags.firewallNodebalancer && (
-        <SelectFirewallPanel
-          handleFirewallChange={(firewallId: number) => {
-            setNodeBalancerFields((prev) => ({
-              ...prev,
-              firewall_id: firewallId > 0 ? firewallId : undefined,
-            }));
-          }}
-          helperText={
-            <Typography>
-              Assign an existing Firewall to this NodeBalancer to control
-              inbound network traffic.{' '}
-              <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
-            </Typography>
-          }
-          disabled={isRestricted}
-          entityType="nodebalancer"
-          selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
-        />
-      )}
+      <SelectFirewallPanel
+        handleFirewallChange={(firewallId: number) => {
+          setNodeBalancerFields((prev) => ({
+            ...prev,
+            firewall_id: firewallId > 0 ? firewallId : undefined,
+          }));
+        }}
+        helperText={
+          <Typography>
+            Assign an existing Firewall to this NodeBalancer to control inbound
+            network traffic.{' '}
+            <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
+          </Typography>
+        }
+        disabled={isRestricted}
+        entityType="nodebalancer"
+        selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
+      />
       <Box marginBottom={2} marginTop={2}>
         {nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
           const onChange = (key: keyof NodeBalancerConfigFieldsWithStatus) => (

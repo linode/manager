@@ -23,7 +23,6 @@ export const PublicIpsUnassignedTooltip = (
         .
       </Typography>
     }
-    interactive
     status="help"
     sxTooltipIcon={sxTooltipIcon}
   />

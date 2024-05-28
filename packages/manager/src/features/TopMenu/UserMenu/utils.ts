@@ -2,7 +2,6 @@ import { Profile } from '@linode/api-v4';
 
 export interface CompanyNameOrEmailOptions {
   company: string | undefined;
-  isParentChildFeatureEnabled: boolean;
   profile: Profile | undefined;
 }
 
@@ -13,20 +12,16 @@ export interface CompanyNameOrEmailOptions {
  */
 export const getCompanyNameOrEmail = ({
   company,
-  isParentChildFeatureEnabled,
   profile,
 }: CompanyNameOrEmailOptions) => {
-  const isParentChildOrProxyUser = profile?.user_type !== 'default';
-  const isParentUser = profile?.user_type === 'parent';
-
   // Return early if we do not need the company name or email.
-  if (!isParentChildFeatureEnabled || !profile || !isParentChildOrProxyUser) {
+  if (!profile || profile.user_type === 'default') {
     return undefined;
   }
 
   // For parent users lacking `account_access`: without a company name to identify an account, fall back on the email.
   // We do not need to do this for child users lacking `account_access` because we do not need to display the email.
-  if (isParentUser && !company) {
+  if (profile.user_type === 'parent' && !company) {
     return profile.email;
   }
 

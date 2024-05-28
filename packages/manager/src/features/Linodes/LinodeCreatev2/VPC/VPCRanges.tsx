@@ -32,7 +32,6 @@ export const VPCRanges = () => {
               <TextField
                 errorText={fieldState.error?.message}
                 hideLabel
-                inputRef={field.ref}
                 label={`IP Range ${index}`}
                 onBlur={field.onBlur}
                 onChange={field.onChange}

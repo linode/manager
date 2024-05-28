@@ -95,14 +95,12 @@ describe('Update stackscripts', () => {
     cy.visitWithLogin('/stackscripts/account');
     cy.wait('@getStackScripts');
 
-    cy.get(`[aria-label="${stackScripts[0].label}"]`)
-      .closest('tr')
-      .within(() => {
-        ui.actionMenu
-          .findByTitle(`Action menu for StackScript ${stackScripts[0].label}`)
-          .should('be.visible')
-          .click();
-      });
+    cy.get(`[data-qa-table-row="${stackScripts[0].label}"]`).within(() => {
+      ui.actionMenu
+        .findByTitle(`Action menu for StackScript ${stackScripts[0].label}`)
+        .should('be.visible')
+        .click();
+    });
     mockGetStackScript(stackScripts[0].id, stackScripts[0]).as(
       'getStackScript'
     );
@@ -205,14 +203,12 @@ describe('Update stackscripts', () => {
     cy.wait('@getStackScripts');
 
     // Do nothing when cancelling
-    cy.get(`[aria-label="${stackScripts[0].label}"]`)
-      .closest('tr')
-      .within(() => {
-        ui.actionMenu
-          .findByTitle(`Action menu for StackScript ${stackScripts[0].label}`)
-          .should('be.visible')
-          .click();
-      });
+    cy.get(`[data-qa-table-row="${stackScripts[0].label}"]`).within(() => {
+      ui.actionMenu
+        .findByTitle(`Action menu for StackScript ${stackScripts[0].label}`)
+        .should('be.visible')
+        .click();
+    });
     ui.actionMenuItem
       .findByTitle('Make StackScript Public')
       .should('be.visible')
@@ -234,14 +230,12 @@ describe('Update stackscripts', () => {
       });
 
     // The status of the StackScript will become public
-    cy.get(`[aria-label="${stackScripts[0].label}"]`)
-      .closest('tr')
-      .within(() => {
-        ui.actionMenu
-          .findByTitle(`Action menu for StackScript ${stackScripts[0].label}`)
-          .should('be.visible')
-          .click();
-      });
+    cy.get(`[data-qa-table-row="${stackScripts[0].label}"]`).within(() => {
+      ui.actionMenu
+        .findByTitle(`Action menu for StackScript ${stackScripts[0].label}`)
+        .should('be.visible')
+        .click();
+    });
     ui.actionMenuItem
       .findByTitle('Make StackScript Public')
       .should('be.visible')

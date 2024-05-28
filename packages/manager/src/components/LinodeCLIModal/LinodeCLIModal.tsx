@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import { sendCLIClickEvent } from 'src/utilities/analytics';
+import { sendCLIClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 export interface ImageUploadSuccessDialogProps {
   analyticsKey?: string;

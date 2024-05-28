@@ -1,10 +1,5 @@
 import { Profile } from '@linode/api-v4';
 import { profileFactory } from '@src/factories';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { getProfile } from 'support/api/account';
 import { interceptGetProfile } from 'support/intercepts/profile';
@@ -18,12 +13,6 @@ const verifyUsernameAndEmail = (
   tooltip: string,
   checkEmail: boolean
 ) => {
-  // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-  mockAppendFeatureFlags({
-    parentChildAccountAccess: makeFeatureFlagData(true),
-  }).as('getFeatureFlags');
-  mockGetFeatureFlagClientstream().as('getClientStream');
-
   mockGetProfile(mockRestrictedProxyProfile);
 
   // Navigate to User Profile page

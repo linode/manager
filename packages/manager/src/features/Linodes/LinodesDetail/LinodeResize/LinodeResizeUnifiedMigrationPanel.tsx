@@ -81,7 +81,6 @@ export const UnifiedMigrationPanel = (props: Props) => {
                   )}
                 </>
               }
-              interactive
               status="help"
               tooltipPosition="right"
               width={[theme.breakpoints.up('sm')] ? 375 : 300}
@@ -111,7 +110,6 @@ export const UnifiedMigrationPanel = (props: Props) => {
                   </Link>
                 </>
               }
-              interactive
               status="help"
               tooltipPosition="right"
               width={[theme.breakpoints.up('sm')] ? 450 : 300}

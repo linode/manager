@@ -23,7 +23,7 @@ import {
   sendEditBreadcrumbEvent,
   sendLinodeCreateFlowDocsClickEvent,
   sendUpdateLinodeLabelEvent,
-} from 'src/utilities/analytics';
+} from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';

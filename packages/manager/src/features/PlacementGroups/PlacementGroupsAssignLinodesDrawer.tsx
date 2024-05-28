@@ -44,7 +44,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
   const {
     data: allPlacementGroups,
     error: allPlacementGroupsError,
-  } = useAllPlacementGroupsQuery();
+  } = useAllPlacementGroupsQuery({});
   const { enqueueSnackbar } = useSnackbar();
 
   // We display a notice and disable inputs in case the user reaches this drawer somehow

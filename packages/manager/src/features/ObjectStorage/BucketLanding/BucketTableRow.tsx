@@ -63,7 +63,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
   const regionsLookup = regions && getRegionsByRegionId(regions);
 
   return (
-    <StyledBucketRow ariaLabel={label} data-qa-bucket-cell={label} key={label}>
+    <StyledBucketRow data-qa-bucket-cell={label} key={label}>
       <TableCell>
         <Grid alignItems="center" container spacing={2} wrap="nowrap">
           <Grid>

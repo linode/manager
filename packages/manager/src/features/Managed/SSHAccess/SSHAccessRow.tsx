@@ -19,7 +19,6 @@ export const SSHAccessRow = (props: SSHAccessRowProps) => {
 
   return (
     <TableRow
-      ariaLabel={linodeSetting.label}
       data-qa-monitor-cell={linodeSetting.id}
       data-testid={'linode-row'}
       key={linodeSetting.id}

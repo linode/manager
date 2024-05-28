@@ -78,7 +78,7 @@ export const StackScriptRow = (props: Props) => {
   };
 
   return (
-    <StyledTableRow ariaLabel={label} data-qa-table-row={label}>
+    <StyledTableRow data-qa-table-row={label}>
       <StyledTitleTableCell data-qa-stackscript-title>
         {renderLabel()}
       </StyledTitleTableCell>

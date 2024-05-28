@@ -17,7 +17,7 @@ export const ContactsRow = (props: ContactsRowProps) => {
   const { contact, openDialog, openDrawer } = props;
 
   return (
-    <TableRow ariaLabel={`Contact ${contact.id}`} key={contact.id}>
+    <TableRow key={contact.id}>
       <TableCell>{contact.name}</TableCell>
       <Hidden mdDown>
         <TableCell>{contact.group}</TableCell>
