@@ -76,6 +76,9 @@ export const KubeClusterSpecs = (props: Props) => {
       })
     : undefined;
 
+  {
+    /* TODO LKE/TYPES API: Show API error on UI */
+  }
   const highAvailabilityPrice = dcSpecificPrice
     ? parseFloat(dcSpecificPrice)
     : undefined;

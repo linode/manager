@@ -4,9 +4,9 @@ import * as React from 'react';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
+import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 
 export interface HAControlPlaneProps {
@@ -53,30 +53,30 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
         <Typography variant="inherit">HA Control Plane</Typography>
       </FormLabel>
       <HACopy />
-      {hasHAPriceError && (
-        <Notice
-          dataTestId="ha-price-error-notice"
-          spacingBottom={0}
-          spacingTop={8}
-          variant="error"
-        >
-          <Typography sx={(theme) => ({ fontFamily: theme.font.bold })}>
-            Could not load price for high availability (HA) control plane at
-            this time.
-          </Typography>
-        </Notice>
-      )}
       <RadioGroup
         aria-labelledby="ha-radio-buttons-group-label"
         name="ha-radio-buttons-group"
         onChange={(e) => handleChange(e)}
       >
         <FormControlLabel
-          label={`Yes, enable HA control plane. ${
-            !selectedRegionId
-              ? '(Select a region to view price information.)'
-              : `($${highAvailabilityPrice}/month)`
-          }`}
+          label={
+            <Typography>
+              Yes, enable HA control plane.{' '}
+              {!selectedRegionId ? (
+                '(Select a region to view price information.)'
+              ) : hasHAPriceError ? (
+                <>
+                  (${highAvailabilityPrice}/month){' '}
+                  <TextTooltip
+                    displayText="Error"
+                    tooltipText={'sorry for the error'}
+                  />
+                </>
+              ) : (
+                `($${highAvailabilityPrice}/month)`
+              )}
+            </Typography>
+          }
           control={<Radio data-testid="ha-radio-button-yes" />}
           name="yes"
           value="yes"

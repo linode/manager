@@ -110,6 +110,7 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
       <HACopy />
       <Typography style={{ marginBottom: 8, marginTop: 12 }} variant="body1">
         For this region, pricing for the HA control plane is $
+        {/* TODO LKE/TYPES API: Show API error on UI */}
         {getHighAvailabilityPrice(regionID)} per month per cluster.
       </Typography>
       <Notice spacingBottom={16} spacingTop={16} variant="warning">
@@ -125,6 +126,7 @@ export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
           </li>
         </ul>
       </Notice>
+      {/* TODO LKE/TYPES API: Disable in the event of API error */}
       <Checkbox
         checked={checked}
         onChange={toggleChecked}
