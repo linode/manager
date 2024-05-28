@@ -11,7 +11,7 @@ import {
   useLinodeQuery,
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
-import { sendUpdateLinodeLabelEvent } from 'src/utilities/analytics';
+import { sendUpdateLinodeLabelEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props {

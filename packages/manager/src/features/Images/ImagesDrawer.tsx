@@ -222,7 +222,7 @@ export const ImagesDrawer = (props: CombinedProps) => {
       case 'imagize':
         createImage({
           description: safeDescription,
-          diskID: Number(selectedDisk),
+          disk_id: Number(selectedDisk),
           label,
         })
           .then(() => {

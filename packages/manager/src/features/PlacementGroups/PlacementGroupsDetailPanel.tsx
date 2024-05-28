@@ -8,37 +8,46 @@ import { Notice } from 'src/components/Notice/Notice';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
+import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
 import { PlacementGroupsCreateDrawer } from 'src/features/PlacementGroups/PlacementGroupsCreateDrawer';
 import { hasRegionReachedPlacementGroupCapacity } from 'src/features/PlacementGroups/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
-import { PLACEMENT_GROUP_SELECT_TOOLTIP_COPY } from './constants';
+import {
+  NO_REGIONS_SUPPORT_PLACEMENT_GROUPS_MESSAGE,
+  PLACEMENT_GROUP_SELECT_TOOLTIP_COPY,
+} from './constants';
 import { StyledDetailPanelFormattedRegionList } from './PlacementGroups.styles';
 
 import type { PlacementGroup } from '@linode/api-v4';
 
 interface Props {
-  handlePlacementGroupChange: (selected: PlacementGroup) => void;
+  handlePlacementGroupChange: (selected: PlacementGroup | null) => void;
+  selectedPlacementGroupId: null | number;
   selectedRegionId?: string;
 }
 
 export const PlacementGroupsDetailPanel = (props: Props) => {
   const theme = useTheme();
-  const { handlePlacementGroupChange, selectedRegionId } = props;
-  const { data: allPlacementGroups } = useAllPlacementGroupsQuery();
+  const {
+    handlePlacementGroupChange,
+    selectedPlacementGroupId,
+    selectedRegionId,
+  } = props;
+  const { data: allPlacementGroupsInRegion } = useAllPlacementGroupsQuery({
+    enabled: Boolean(selectedRegionId),
+    filter: {
+      region: selectedRegionId,
+    },
+  });
   const { data: regions } = useRegionsQuery();
 
   const [
     isCreatePlacementGroupDrawerOpen,
     setIsCreatePlacementGroupDrawerOpen,
   ] = React.useState(false);
-
-  const [
-    selectedPlacementGroup,
-    setSelectedPlacementGroup,
-  ] = React.useState<PlacementGroup | null>(null);
 
   const selectedRegion = regions?.find(
     (thisRegion) => thisRegion.id === selectedRegionId
@@ -52,13 +61,8 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
     globalGrantType: 'add_linodes',
   });
 
-  const handlePlacementGroupSelection = (placementGroup: PlacementGroup) => {
-    setSelectedPlacementGroup(placementGroup);
-    handlePlacementGroupChange(placementGroup);
-  };
-
   const handlePlacementGroupCreated = (placementGroup: PlacementGroup) => {
-    handlePlacementGroupSelection(placementGroup);
+    handlePlacementGroupChange(placementGroup);
   };
 
   const allRegionsWithPlacementGroupCapability = regions?.filter((region) =>
@@ -99,14 +103,22 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
                 fontFamily: theme.font.bold,
               }}
               tooltipText={
-                <StyledDetailPanelFormattedRegionList>
-                  {allRegionsWithPlacementGroupCapability?.map((region) => (
-                    <ListItem key={region.id}>
-                      {region.label} ({region.id})
-                    </ListItem>
-                  ))}
-                </StyledDetailPanelFormattedRegionList>
+                allRegionsWithPlacementGroupCapability?.length ? (
+                  <StyledDetailPanelFormattedRegionList>
+                    {allRegionsWithPlacementGroupCapability?.map((region) => (
+                      <ListItem
+                        data-testid={`supported-pg-region-${region.id}`}
+                        key={region.id}
+                      >
+                        {region.label} ({region.id})
+                      </ListItem>
+                    ))}
+                  </StyledDetailPanelFormattedRegionList>
+                ) : (
+                  NO_REGIONS_SUPPORT_PLACEMENT_GROUPS_MESSAGE
+                )
               }
+              dataQaTooltip="Regions that support placement groups"
               displayText="regions"
               minWidth={225}
             />{' '}
@@ -116,9 +128,6 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
       )}
       <Box>
         <PlacementGroupsSelect
-          handlePlacementGroupChange={(placementGroup) => {
-            handlePlacementGroupSelection(placementGroup);
-          }}
           sx={{
             mb: 1,
             width: '100%',
@@ -127,17 +136,17 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
             tooltipPosition: 'right',
             tooltipText: PLACEMENT_GROUP_SELECT_TOOLTIP_COPY,
           }}
-          clearOnBlur={true}
           disabled={isPlacementGroupSelectDisabled}
+          handlePlacementGroupChange={handlePlacementGroupChange}
           label={placementGroupSelectLabel}
-          noOptionsMessage="There are no Placement Groups in this region."
-          selectedPlacementGroup={selectedPlacementGroup}
+          noOptionsMessage={NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE}
+          selectedPlacementGroupId={selectedPlacementGroupId}
           selectedRegion={selectedRegion}
         />
         {selectedRegion && hasRegionPlacementGroupCapability && (
           <Button
             disabled={hasRegionReachedPlacementGroupCapacity({
-              allPlacementGroups,
+              allPlacementGroups: allPlacementGroupsInRegion,
               region: selectedRegion,
             })}
             sx={(theme) => ({

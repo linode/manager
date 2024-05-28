@@ -6,7 +6,7 @@ import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllTypes } from 'src/queries/types';
-import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics';
+import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { extendType } from 'src/utilities/extendType';
 
 import type { LinodeCreateFormValues } from './utilities';

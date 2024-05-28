@@ -90,7 +90,7 @@ const OAuthClients = () => {
     }
 
     return data?.data.map(({ id, label, public: isPublic, redirect_uri }) => (
-      <TableRow ariaLabel={label} key={id}>
+      <TableRow key={id}>
         <TableCell>{label}</TableCell>
         <Hidden smDown>
           <TableCell>{isPublic ? 'Public' : 'Private'}</TableCell>

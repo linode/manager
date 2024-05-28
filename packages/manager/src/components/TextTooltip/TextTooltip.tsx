@@ -13,6 +13,11 @@ export interface TextTooltipProps {
    * Props to pass to the Popper component
    */
   PopperProps?: TooltipProps['PopperProps'];
+  /**
+   * The data-qa-tooltip attribute for the tooltip.
+   * Defaults to the tooltip title, but will be undefined if the title is a JSX element.
+   */
+  dataQaTooltip?: string;
   /** The text to hover on to display the tooltip */
   displayText: string;
   /** If true, the tooltip will not have a min-width of 375px
@@ -41,6 +46,7 @@ export interface TextTooltipProps {
 export const TextTooltip = (props: TextTooltipProps) => {
   const {
     PopperProps,
+    dataQaTooltip,
     displayText,
     minWidth,
     placement,
@@ -60,6 +66,8 @@ export const TextTooltip = (props: TextTooltipProps) => {
           },
         },
       }}
+      leaveDelay={500000}
+      data-qa-tooltip={dataQaTooltip}
       enterTouchDelay={0}
       placement={placement ? placement : 'bottom'}
       title={tooltipText}

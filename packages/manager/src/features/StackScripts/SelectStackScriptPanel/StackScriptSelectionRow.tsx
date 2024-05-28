@@ -93,7 +93,7 @@ export class StackScriptSelectionRow extends React.Component<
     };
 
     return (
-      <TableRow ariaLabel={label} data-qa-table-row={label}>
+      <TableRow data-qa-table-row={label}>
         <TableCell>
           <Radio
             checked={!disabled && checked}

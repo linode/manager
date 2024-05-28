@@ -19,7 +19,7 @@ export const Region = () => {
     <SelectRegionPanel
       RegionSelectProps={{
         textFieldProps: {
-          inputRef: field.ref,
+          onBlur: field.onBlur,
         },
       }}
       currentCapability="Linodes"

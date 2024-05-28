@@ -5,8 +5,8 @@ import * as React from 'react';
 
 import CheckboxIcon from 'src/assets/icons/checkbox.svg';
 import CheckboxCheckedIcon from 'src/assets/icons/checkboxChecked.svg';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { FormControlLabel } from 'src/components/FormControlLabel';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 
 interface Props extends CheckboxProps {
   /**
@@ -17,11 +17,6 @@ interface Props extends CheckboxProps {
    * Renders a `FormControlLabel` that controls the underlying Checkbox with a label of `text`
    */
   text?: JSX.Element | string;
-  /**
-   * Whether or not the tooltip is interactive
-   * @default false
-   */
-  toolTipInteractive?: boolean;
   /**
    * Renders a tooltip to the right of the Checkbox
    */
@@ -44,7 +39,7 @@ interface Props extends CheckboxProps {
  * - If the user clicks the Back button, any changes made to checkboxes should be discarded and the original settings reinstated.
  */
 export const Checkbox = (props: Props) => {
-  const { sxFormLabel, text, toolTipInteractive, toolTipText, ...rest } = props;
+  const { sxFormLabel, text, toolTipText, ...rest } = props;
 
   const BaseCheckbox = (
     <StyledCheckbox
@@ -69,13 +64,7 @@ export const Checkbox = (props: Props) => {
   return (
     <>
       {CheckboxComponent}
-      {toolTipText ? (
-        <TooltipIcon
-          interactive={toolTipInteractive}
-          status="help"
-          text={toolTipText}
-        />
-      ) : null}
+      {toolTipText ? <TooltipIcon status="help" text={toolTipText} /> : null}
     </>
   );
 };

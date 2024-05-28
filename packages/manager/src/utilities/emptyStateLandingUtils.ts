@@ -1,4 +1,4 @@
-import { sendEvent } from 'src/utilities/analytics';
+import { sendEvent } from 'src/utilities/analytics/utils';
 
 export const guidesMoreLinkText = 'Check out all our Docs';
 export const docsLink = 'https://www.linode.com/docs/';

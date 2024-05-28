@@ -8,8 +8,8 @@ export interface DiskEncryptionProps {
   descriptionCopy: JSX.Element | string;
   disabled?: boolean;
   disabledReason?: string;
-  // encryptionStatus
-  // toggleEncryption
+  isEncryptDiskChecked: boolean;
+  toggleDiskEncryptionEnabled: () => void;
 }
 
 export const headerTestId = 'disk-encryption-header';
@@ -17,9 +17,13 @@ export const descriptionTestId = 'disk-encryption-description';
 export const checkboxTestId = 'encrypt-disk-checkbox';
 
 export const DiskEncryption = (props: DiskEncryptionProps) => {
-  const { descriptionCopy, disabled, disabledReason } = props;
-
-  const [checked, setChecked] = React.useState<boolean>(false); // @TODO LDE: temporary placeholder until toggleEncryption logic is in place
+  const {
+    descriptionCopy,
+    disabled,
+    disabledReason,
+    isEncryptDiskChecked,
+    toggleDiskEncryptionEnabled,
+  } = props;
 
   return (
     <>
@@ -41,10 +45,10 @@ export const DiskEncryption = (props: DiskEncryptionProps) => {
         flexDirection="row"
       >
         <Checkbox
-          checked={checked} // @TODO LDE: in Create flows, this will be defaulted to be checked. Otherwise, we will rely on the current encryption status for the initial value
+          checked={disabled ? false : isEncryptDiskChecked} // in Create flows, this will be defaulted to be checked. Otherwise, we will rely on the current encryption status for the initial value
           data-testid={checkboxTestId}
           disabled={disabled}
-          onChange={() => setChecked(!checked)} // @TODO LDE: toggleEncryption will be used here
+          onChange={toggleDiskEncryptionEnabled}
           text="Encrypt Disk"
           toolTipText={disabled ? disabledReason : ''}
         />

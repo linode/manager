@@ -12,7 +12,11 @@ import {
 describe('DiskEncryption', () => {
   it('should render a header', () => {
     const { getByTestId } = renderWithTheme(
-      <DiskEncryption descriptionCopy="Description for unit test" />
+      <DiskEncryption
+        descriptionCopy="Description for unit test"
+        isEncryptDiskChecked={true}
+        toggleDiskEncryptionEnabled={vi.fn()}
+      />
     );
 
     const heading = getByTestId(headerTestId);
@@ -23,7 +27,11 @@ describe('DiskEncryption', () => {
 
   it('should render a description', () => {
     const { getByTestId } = renderWithTheme(
-      <DiskEncryption descriptionCopy="Description for unit test" />
+      <DiskEncryption
+        descriptionCopy="Description for unit test"
+        isEncryptDiskChecked={true}
+        toggleDiskEncryptionEnabled={vi.fn()}
+      />
     );
 
     const description = getByTestId(descriptionTestId);
@@ -33,7 +41,11 @@ describe('DiskEncryption', () => {
 
   it('should render a checkbox', () => {
     const { getByTestId } = renderWithTheme(
-      <DiskEncryption descriptionCopy="Description for unit test" />
+      <DiskEncryption
+        descriptionCopy="Description for unit test"
+        isEncryptDiskChecked={true}
+        toggleDiskEncryptionEnabled={vi.fn()}
+      />
     );
 
     const checkbox = getByTestId(checkboxTestId);

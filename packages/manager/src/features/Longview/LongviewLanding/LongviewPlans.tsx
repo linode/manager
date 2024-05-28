@@ -24,6 +24,7 @@ import { UseAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import {
   StyledChip,
   StyledClientCell,
@@ -228,15 +229,15 @@ export const LongviewPlans = (props: LongviewPlansProps) => {
                 </TableBody>
               </StyledTable>
               <Button
+                sx={{
+                  marginBottom: theme.spacing(3),
+                  marginTop: theme.spacing(3),
+                }}
                 buttonType="primary"
                 data-testid="submit-button"
                 disabled={isButtonDisabled}
                 loading={updateLoading}
                 onClick={onSubmit}
-                sx={{
-                  marginBottom: theme.spacing(3),
-                  marginTop: theme.spacing(3),
-                }}
               >
                 Change Plan
               </Button>
@@ -355,25 +356,24 @@ export const LongviewSubscriptionRow = React.memo(
 
     return (
       <StyledTableRow
-        ariaLabel={plan}
-        disabled={disabled}
         data-testid={`lv-sub-table-row-${id}`}
+        disabled={disabled}
         key={id}
         onClick={handleClick}
       >
         <TableCell data-testid={`plan-cell-${id}`}>
           <StyledDiv>
             <Radio
-              checked={isSelected}
-              data-testid={`lv-sub-radio-${id}`}
-              disabled={disabled}
-              id={id}
-              onChange={onRadioSelect}
               sx={{
                 marginLeft: `-${theme.spacing(0.5)}`,
                 marginRight: theme.spacing(2),
                 padding: '2px',
               }}
+              checked={isSelected}
+              data-testid={`lv-sub-radio-${id}`}
+              disabled={disabled}
+              id={id}
+              onChange={onRadioSelect}
               value={id}
             />
             {plan}

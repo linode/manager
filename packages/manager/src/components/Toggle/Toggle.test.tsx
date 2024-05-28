@@ -13,7 +13,7 @@ describe('Toggle component', () => {
   });
   it('should render a tooltip button', async () => {
     const screen = renderWithTheme(
-      <Toggle interactive={true} tooltipText={'some tooltip text'} />
+      <Toggle tooltipText={'some tooltip text'} />
     );
     const tooltipButton = screen.getByRole('button');
     expect(tooltipButton).toBeInTheDocument();

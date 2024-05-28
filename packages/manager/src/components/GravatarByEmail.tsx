@@ -2,10 +2,8 @@ import Avatar from '@mui/material/Avatar';
 import * as React from 'react';
 
 import UserIcon from 'src/assets/icons/account.svg';
-import {
-  sendHasGravatarEvent,
-  waitForAdobeAnalyticsToBeLoaded,
-} from 'src/utilities/analytics';
+import { sendHasGravatarEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { waitForAdobeAnalyticsToBeLoaded } from 'src/utilities/analytics/utils';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 export const DEFAULT_AVATAR_SIZE = 28;

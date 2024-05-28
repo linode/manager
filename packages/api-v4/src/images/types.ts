@@ -30,13 +30,32 @@ export interface UploadImageResponse {
 }
 
 export interface BaseImagePayload {
+  /**
+   * A short title of this Image.
+   *
+   * Defaults to the label of the Disk it is being created from if not provided.
+   */
   label?: string;
+  /**
+   * A detailed description of this Image.
+   */
   description?: string;
+  /**
+   * Whether this Image supports cloud-init.
+   * @default false
+   */
   cloud_init?: boolean;
+  /**
+   * An array of Tags applied to this Image. Tags are for organizational purposes only.
+   */
+  tags?: string[];
 }
 
 export interface CreateImagePayload extends BaseImagePayload {
-  diskID: number;
+  /**
+   * The ID of the Linode Disk that this Image will be created from.
+   */
+  disk_id: number;
 }
 
 export interface ImageUploadPayload extends BaseImagePayload {

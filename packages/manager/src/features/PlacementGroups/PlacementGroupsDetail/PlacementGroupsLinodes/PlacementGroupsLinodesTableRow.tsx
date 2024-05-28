@@ -28,10 +28,7 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
   });
 
   return (
-    <TableRow
-      ariaLabel={`Linode ${label}`}
-      data-testid={`placement-group-linode-${linode.id}`}
-    >
+    <TableRow data-testid={`placement-group-linode-${linode.id}`}>
       <TableCell>
         <Link to={`/linodes/${linode.id}`}>{label}</Link>
       </TableCell>

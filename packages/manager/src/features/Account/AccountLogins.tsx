@@ -16,7 +16,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountLoginsQuery } from 'src/queries/account/logins';
@@ -44,7 +43,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
 const AccountLogins = () => {
   const { classes } = useStyles();
   const pagination = usePagination(1, preferenceKey);
-  const flags = useFlags();
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -69,9 +67,7 @@ const AccountLogins = () => {
   const { data: profile } = useProfile();
   const isChildUser = profile?.user_type === 'child';
 
-  const isRestrictedChildUser = Boolean(
-    flags.parentChildAccountAccess && isChildUser
-  );
+  const isRestrictedChildUser = Boolean(isChildUser);
   const isAccountAccessRestricted =
     isRestrictedChildUser || profile?.restricted;
 

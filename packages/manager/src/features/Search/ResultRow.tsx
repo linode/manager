@@ -24,7 +24,7 @@ export const ResultRow = (props: ResultRowProps) => {
   const { result } = props;
 
   return (
-    <StyledTableRow ariaLabel={result.label} data-qa-result-row={result.label}>
+    <StyledTableRow data-qa-result-row={result.label}>
       <StyledLabelTableCell>
         <StyledLink title={result.label} to={result.data.path}>
           {result.label}

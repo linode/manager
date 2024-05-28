@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
   gettingStartedGuides,

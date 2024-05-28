@@ -10,7 +10,7 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { VPCPanel } from 'src/features/Linodes/LinodesCreate/VPCPanel';
 import { useVlansQuery } from 'src/queries/vlans';
-import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
+import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import type {
   InterfacePayload,

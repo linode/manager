@@ -27,11 +27,6 @@ import {
 } from 'support/util/random';
 import type { CancelAccount } from '@linode/api-v4';
 import { mockWebpageUrl } from 'support/intercepts/general';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 
 describe('Account cancellation', () => {
   /*
@@ -324,12 +319,6 @@ describe('Parent/Child account cancellation', () => {
     };
 
     const cancellationComments = randomPhrase();
-
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     mockGetAccount(mockAccount).as('getAccount');
     mockGetProfile(mockProfile).as('getProfile');

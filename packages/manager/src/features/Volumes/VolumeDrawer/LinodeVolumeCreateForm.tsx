@@ -16,7 +16,7 @@ import {
   useCreateVolumeMutation,
   useVolumeTypesQuery,
 } from 'src/queries/volumes/volumes';
-import { sendCreateVolumeEvent } from 'src/utilities/analytics';
+import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,

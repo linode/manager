@@ -68,11 +68,7 @@ export const Row = (props: RowProps) => {
   }
 
   return (
-    <TableRow
-      ariaLabel={`Event ${message}`}
-      data-qa-event-row
-      data-test-id={action}
-    >
+    <TableRow data-qa-event-row data-test-id={action}>
       <Hidden smDown>
         <TableCell data-qa-event-icon-cell>
           <StyledGravatar username={username ?? ''} />

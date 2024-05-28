@@ -36,7 +36,7 @@ describe('Display stackscripts', () => {
     cy.wait('@getStackScripts');
 
     stackScripts.forEach((stackScript) => {
-      cy.get(`[aria-label="${stackScript.label}"]`)
+      cy.get(`[data-qa-table-row="${stackScript.label}"]`)
         .closest('tr')
         .within(() => {
           cy.findByText(stackScript.deployments_total).should('be.visible');

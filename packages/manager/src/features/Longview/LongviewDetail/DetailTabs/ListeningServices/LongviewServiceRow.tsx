@@ -12,7 +12,7 @@ export const LongviewServiceRow = (props: Props) => {
   const { service } = props;
 
   return (
-    <TableRow ariaLabel={service.name} data-testid="longview-service-row">
+    <TableRow data-testid="longview-service-row">
       <TableCell data-qa-service-process parentColumn="Process">
         {service.name}
       </TableCell>

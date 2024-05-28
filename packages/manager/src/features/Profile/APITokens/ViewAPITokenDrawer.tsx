@@ -7,7 +7,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
-import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useProfile } from 'src/queries/profile';
 
@@ -27,8 +26,6 @@ interface Props {
 export const ViewAPITokenDrawer = (props: Props) => {
   const { onClose, open, token } = props;
 
-  const flags = useFlags();
-
   const { data: profile } = useProfile();
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
@@ -39,9 +36,7 @@ export const ViewAPITokenDrawer = (props: Props) => {
 
   // Visually hide the "Child Account Access" permission even though it's still part of the base perms.
   const hideChildAccountAccessScope =
-    profile?.user_type !== 'parent' ||
-    isChildAccountAccessRestricted ||
-    !flags.parentChildAccountAccess;
+    profile?.user_type !== 'parent' || isChildAccountAccessRestricted;
 
   return (
     <Drawer onClose={onClose} open={open} title={token?.label ?? 'Token'}>

@@ -10,7 +10,6 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
@@ -38,7 +37,6 @@ export const AddLinodeDrawer = (props: Props) => {
   const isRestrictedUser = Boolean(profile?.restricted);
 
   const { data, error, isLoading } = useAllFirewallsQuery();
-  const flags = useFlags();
 
   const firewall = data?.find((firewall) => firewall.id === Number(id));
 
@@ -152,25 +150,17 @@ export const AddLinodeDrawer = (props: Props) => {
     ? getEntityIdsByPermission(grants, 'linode', 'read_only')
     : [];
 
-  const linodeOptionsFilter = (() => {
-    // When `firewallNodebalancer` feature flag is disabled, no filtering
-    // occurs. In this case, pass a filter callback that always returns `true`.
-    if (!flags.firewallNodebalancer) {
-      return () => true;
-    }
+  const assignedLinodes = data
+    ?.map((firewall) => firewall.entities)
+    .flat()
+    ?.filter((service) => service.type === 'linode');
 
-    const assignedLinodes = data
-      ?.map((firewall) => firewall.entities)
-      .flat()
-      ?.filter((service) => service.type === 'linode');
-
-    return (linode: Linode) => {
-      return (
-        !readOnlyLinodeIds.includes(linode.id) &&
-        !assignedLinodes?.some((service) => service.id === linode.id)
-      );
-    };
-  })();
+  const linodeOptionsFilter = (linode: Linode) => {
+    return (
+      !readOnlyLinodeIds.includes(linode.id) &&
+      !assignedLinodes?.some((service) => service.id === linode.id)
+    );
+  };
 
   React.useEffect(() => {
     if (error) {

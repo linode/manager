@@ -31,7 +31,7 @@ import {
   useCreateVolumeMutation,
   useVolumeTypesQuery,
 } from 'src/queries/volumes/volumes';
-import { sendCreateVolumeEvent } from 'src/utilities/analytics';
+import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
   handleFieldErrors,

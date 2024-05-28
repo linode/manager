@@ -114,7 +114,6 @@ const BackupStatus = (props: Props) => {
             padding: 0,
           }}
           classes={{ tooltip: classes.tooltip }}
-          interactive
           status="help"
           text={backupsUnavailableMessage}
         />
