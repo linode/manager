@@ -40,7 +40,6 @@ export const PlanContainer = (props: PlanContainerProps) => {
     onSelect,
     planType,
     plans,
-    selectedDiskSize,
     selectedId,
     selectedRegionId,
     showLimits,
@@ -115,7 +114,6 @@ export const PlanContainer = (props: PlanContainerProps) => {
             linodeID={linodeID}
             onSelect={onSelect}
             plan={plan}
-            selectedDiskSize={selectedDiskSize}
             selectedId={selectedId}
             selectedRegionId={selectedRegionId}
             showNetwork={showNetwork}
@@ -132,9 +130,9 @@ export const PlanContainer = (props: PlanContainerProps) => {
       isCreate,
       linodeID,
       onSelect,
-      selectedDiskSize,
       selectedId,
       selectedRegionId,
+      showNetwork,
       showTransfer,
       wholePanelIsDisabled,
     ]

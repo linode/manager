@@ -9,7 +9,7 @@ import { ResourcesMoreLink } from 'src/components/EmptyLandingPageResources/Reso
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendEvent } from 'src/utilities/analytics/utils';
 import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
 
 import { AppsSection } from './AppsSection';

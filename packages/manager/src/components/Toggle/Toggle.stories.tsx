@@ -11,12 +11,6 @@ export const Default: StoryObj<ToggleProps> = {
   render: (args) => <Toggle {...args} tooltipText={EXAMPLE_TEXT} />,
 };
 
-export const WithInteractiveTooltip: StoryObj<ToggleProps> = {
-  render: (args) => (
-    <Toggle {...args} interactive={true} tooltipText={EXAMPLE_TEXT} />
-  ),
-};
-
 const meta: Meta<ToggleProps> = {
   args: {
     disabled: false,

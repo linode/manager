@@ -70,6 +70,7 @@ export const planSelectionTypeFactory = Factory.Sync.makeFactory<PlanWithAvailab
     planBelongsToDisabledClass: false,
     planHasLimitedAvailability: false,
     planIsDisabled512Gb: false,
+    planIsTooSmall: false,
     price: typeFactory.build().price,
     region_prices: typeFactory.build().region_prices,
     subHeadings: [
@@ -119,6 +120,7 @@ export const extendedTypeFactory = Factory.Sync.makeFactory<
   planBelongsToDisabledClass: false,
   planHasLimitedAvailability: false,
   planIsDisabled512Gb: false,
+  planIsTooSmall: false,
   price: typeFactory.build().price,
   region_prices: typeFactory.build().region_prices,
   subHeadings: ['$10/mo ($0.015/hr)', '8 CPU, 1024 GB Storage, 16 GB RAM'],
@@ -170,3 +172,49 @@ export const volumeTypeFactory = Factory.Sync.makeFactory<PriceType>({
   ],
   transfer: 0,
 });
+
+export const objectStorageTypeFactory = Factory.Sync.makeFactory<PriceType>({
+  id: 'objectstorage',
+  label: 'Object Storage',
+  price: {
+    hourly: 0.0075,
+    monthly: 5.0,
+  },
+  region_prices: [
+    {
+      hourly: 0.0075,
+      id: 'id-cgk',
+      monthly: 5.0,
+    },
+    {
+      hourly: 0.0075,
+      id: 'br-gru',
+      monthly: 5.0,
+    },
+  ],
+  transfer: 1000,
+});
+
+export const objectStorageOverageTypeFactory = Factory.Sync.makeFactory<PriceType>(
+  {
+    id: 'objectstorage-overage',
+    label: 'Object Storage Overage',
+    price: {
+      hourly: 0.02,
+      monthly: null,
+    },
+    region_prices: [
+      {
+        hourly: 0.024,
+        id: 'id-cgk',
+        monthly: null,
+      },
+      {
+        hourly: 0.028,
+        id: 'br-gru',
+        monthly: null,
+      },
+    ],
+    transfer: 0,
+  }
+);

@@ -1,9 +1,4 @@
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { mockGetLinodes } from 'support/intercepts/linodes';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   accountFactory,
   accountUserFactory,
@@ -33,14 +28,6 @@ const mockChildAccountProxyProfile = profileFactory.build({
 });
 
 describe('Parent/Child token expiration', () => {
-  // @TODO M3-7554, M3-7559: Remove feature flag mocks after launch and clean-up.
-  beforeEach(() => {
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    });
-    mockGetFeatureFlagClientstream();
-  });
-
   /*
    * - Confirms flow when a Proxy user attempts to switch back to a Parent account with expired auth token.
    * - Uses mock API and local storage data.

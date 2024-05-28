@@ -1,20 +1,17 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme, styled, useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
 import { NetworkTimeData } from 'src/components/AreaChart/types';
 import { Box } from 'src/components/Box';
-import { LineGraph } from 'src/components/LineGraph/LineGraph';
 import {
+  NetworkUnit,
   convertNetworkToUnit,
   formatBitsPerSecond,
-  formatNetworkTooltip,
   generateNetworkUnits,
-  NetworkUnit,
 } from 'src/features/Longview/shared/utilities';
-import { useFlags } from 'src/hooks/useFlags';
 import { Metrics, getMetrics } from 'src/utilities/statMetrics';
 
 import { StatsPanel } from './StatsPanel';
@@ -66,7 +63,6 @@ export const NetworkGraphs = (props: Props) => {
   const { rangeSelection, stats, xAxisTickFormat, ...rest } = props;
 
   const theme = useTheme();
-  const flags = useFlags();
 
   const v4Data: NetworkStats = {
     privateIn: stats?.data.netv4.private_in ?? [],
@@ -115,7 +111,7 @@ export const NetworkGraphs = (props: Props) => {
 
   return (
     <StyledGraphGrid container spacing={4} xs={12}>
-      <StyledGrid recharts={flags.recharts} xs={12}>
+      <StyledGrid xs={12}>
         <StatsPanel
           renderBody={() => (
             <Graph
@@ -130,7 +126,7 @@ export const NetworkGraphs = (props: Props) => {
           {...rest}
         />
       </StyledGrid>
-      <StyledGrid recharts={flags.recharts} xs={12}>
+      <StyledGrid xs={12}>
         <StatsPanel
           renderBody={() => (
             <Graph
@@ -164,17 +160,13 @@ interface GraphProps {
 const Graph = (props: GraphProps) => {
   const {
     ariaLabel,
-    chartHeight,
     data,
     metrics,
-    rangeSelection,
     theme,
     timezone,
     unit,
     xAxisTickFormat,
   } = props;
-
-  const flags = useFlags();
 
   const format = formatBitsPerSecond;
 
@@ -182,21 +174,6 @@ const Graph = (props: GraphProps) => {
     return convertNetworkToUnit(value, unit);
   };
 
-  /**
-   * formatNetworkTooltip is a helper method from Longview, where
-   * data is expected in bytes. The method does the rounding, unit conversions, etc.
-   * that we want, but it first multiplies by 8 to convert to bits.
-   * APIv4 returns this data in bits to begin with,
-   * so we have to preemptively divide by 8 to counter the conversion inside the helper.
-   *
-   */
-  const _formatTooltip = (valueInBytes: number) =>
-    formatNetworkTooltip(valueInBytes / 8);
-
-  const convertedPublicIn = data.publicIn;
-  const convertedPublicOut = data.publicOut;
-  const convertedPrivateIn = data.privateIn;
-  const convertedPrivateOut = data.privateOut;
   const timeData: NetworkTimeData[] = [];
 
   for (let i = 0; i < data.publicIn.length; i++) {
@@ -209,139 +186,78 @@ const Graph = (props: GraphProps) => {
     });
   }
 
-  // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
-  if (flags.recharts) {
-    return (
-      <Box marginLeft={-4} marginTop={2}>
-        <AreaChart
-          areas={[
-            {
-              color: theme.graphs.darkGreen,
-              dataKey: 'Public In',
-            },
-            {
-              color: theme.graphs.lightGreen,
-              dataKey: 'Public Out',
-            },
-            {
-              color: theme.graphs.purple,
-              dataKey: 'Private In',
-            },
-            {
-              color: theme.graphs.yellow,
-              dataKey: 'Private Out',
-            },
-          ]}
-          legendRows={[
-            {
-              data: metrics.publicIn,
-              format,
-              legendColor: 'darkGreen',
-              legendTitle: 'Public In',
-            },
-            {
-              data: metrics.publicOut,
-              format,
-              legendColor: 'lightGreen',
-              legendTitle: 'Public Out',
-            },
-            {
-              data: metrics.privateIn,
-              format,
-              legendColor: 'purple',
-              legendTitle: 'Private In',
-            },
-            {
-              data: metrics.privateOut,
-              format,
-              legendColor: 'yellow',
-              legendTitle: 'Private Out',
-            },
-          ]}
-          xAxis={{
-            tickFormat: xAxisTickFormat,
-            tickGap: 60,
-          }}
-          ariaLabel={ariaLabel}
-          data={timeData}
-          height={420}
-          showLegend
-          timezone={timezone}
-          unit={` ${unit}/s`}
-        />
-      </Box>
-    );
-  }
-
   return (
-    <LineGraph
-      data={[
-        {
-          backgroundColor: theme.graphs.darkGreen,
-          borderColor: 'transparent',
-          data: convertedPublicIn,
-          label: 'Public In',
-        },
-        {
-          backgroundColor: theme.graphs.lightGreen,
-          borderColor: 'transparent',
-          data: convertedPublicOut,
-          label: 'Public Out',
-        },
-        {
-          backgroundColor: theme.graphs.purple,
-          borderColor: 'transparent',
-          data: convertedPrivateIn,
-          label: 'Private In',
-        },
-        {
-          backgroundColor: theme.graphs.yellow,
-          borderColor: 'transparent',
-          data: convertedPrivateOut,
-          label: 'Private Out',
-        },
-      ]}
-      legendRows={[
-        {
-          data: metrics.publicIn,
-          format,
-        },
-        {
-          data: metrics.publicOut,
-          format,
-        },
-        {
-          data: metrics.privateIn,
-          format,
-        },
-        {
-          data: metrics.privateOut,
-          format,
-        },
-      ]}
-      accessibleDataTable={{ unit: 'Kb/s' }}
-      ariaLabel={ariaLabel}
-      chartHeight={chartHeight}
-      formatData={convertNetworkData}
-      formatTooltip={_formatTooltip}
-      showToday={rangeSelection === '24'}
-      timezone={timezone}
-      unit={`/s`}
-    />
+    <Box marginLeft={-4} marginTop={2}>
+      <AreaChart
+        areas={[
+          {
+            color: theme.graphs.darkGreen,
+            dataKey: 'Public In',
+          },
+          {
+            color: theme.graphs.lightGreen,
+            dataKey: 'Public Out',
+          },
+          {
+            color: theme.graphs.purple,
+            dataKey: 'Private In',
+          },
+          {
+            color: theme.graphs.yellow,
+            dataKey: 'Private Out',
+          },
+        ]}
+        legendRows={[
+          {
+            data: metrics.publicIn,
+            format,
+            legendColor: 'darkGreen',
+            legendTitle: 'Public In',
+          },
+          {
+            data: metrics.publicOut,
+            format,
+            legendColor: 'lightGreen',
+            legendTitle: 'Public Out',
+          },
+          {
+            data: metrics.privateIn,
+            format,
+            legendColor: 'purple',
+            legendTitle: 'Private In',
+          },
+          {
+            data: metrics.privateOut,
+            format,
+            legendColor: 'yellow',
+            legendTitle: 'Private Out',
+          },
+        ]}
+        xAxis={{
+          tickFormat: xAxisTickFormat,
+          tickGap: 60,
+        }}
+        ariaLabel={ariaLabel}
+        data={timeData}
+        height={420}
+        showLegend
+        timezone={timezone}
+        unit={` ${unit}/s`}
+      />
+    </Box>
   );
 };
 
 const StyledGrid = styled(Grid, {
   label: 'StyledGrid',
-  shouldForwardProp: (prop) => prop !== 'recharts',
-})<{ recharts?: boolean }>(({ recharts, theme }) => ({
+})(({ theme }) => ({
   '& h2': {
     fontSize: '1rem',
   },
   '&.MuiGrid-item': {
     padding: theme.spacing(2),
   },
-  backgroundColor: recharts ? theme.bg.white : theme.bg.offWhite,
+  backgroundColor: theme.bg.white,
   border: `solid 1px ${theme.borderColors.divider}`,
   padding: theme.spacing(3),
   paddingBottom: theme.spacing(2),
