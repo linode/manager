@@ -28,7 +28,7 @@ export const HostNameTableCell = ({
 
   const { regions } = storageKeyData;
 
-  if (!regionsLookup || !regionsData || !regions) {
+  if (!regionsLookup || !regionsData || !regions.length) {
     return <TableCell />;
   }
 
