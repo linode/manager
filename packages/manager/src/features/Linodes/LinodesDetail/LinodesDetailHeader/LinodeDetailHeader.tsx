@@ -141,7 +141,9 @@ const LinodeDetailHeader = () => {
         'An error occurred while updating label',
         'label'
       );
-      const errorReasons: string[] = errors.map((error) => error.reason);
+      const errorReasons: string[] = errors.map(
+        (error) => error.formattedReason
+      );
       throw new Error(errorReasons[0]);
     }
   };

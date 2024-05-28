@@ -20,7 +20,7 @@ interface Props {
 }
 
 const BetaError = (props: { errors: APIError[] | null }) =>
-  props.errors ? <ErrorState errorText={props.errors[0].reason} /> : null;
+  props.errors ? <ErrorState errorText={props.errors[0].formattedReason} /> : null;
 
 export const BetaDetailsList = (props: Props) => {
   const { betas, errors, isLoading, title } = props;

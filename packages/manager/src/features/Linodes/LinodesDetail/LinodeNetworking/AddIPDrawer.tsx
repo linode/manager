@@ -169,7 +169,7 @@ export const AddIPDrawer = (props: Props) => {
       <Stack spacing={2}>
         <Typography variant="h3">IPv4</Typography>
         {Boolean(ipv4Error) && (
-          <Notice spacingTop={4} text={ipv4Error?.[0].reason} variant="error" />
+          <Notice spacingTop={4} text={ipv4Error?.[0].formattedReason} variant="error" />
         )}
 
         <StyledRadioGroup
@@ -230,7 +230,7 @@ export const AddIPDrawer = (props: Props) => {
           IPv6
         </Typography>
         {Boolean(ipv6Error) && (
-          <Notice spacingTop={4} text={ipv6Error?.[0].reason} variant="error" />
+          <Notice spacingTop={4} text={ipv6Error?.[0].formattedReason} variant="error" />
         )}
 
         <StyledRadioGroup

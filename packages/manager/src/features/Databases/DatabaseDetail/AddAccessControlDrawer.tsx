@@ -166,8 +166,8 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
         {allowListErrors
           ? allowListErrors.map((allowListError) => (
               <Notice
-                key={allowListError.reason}
-                text={allowListError.reason}
+                key={allowListError.formattedReason}
+                text={allowListError.formattedReason}
                 variant="error"
               />
             ))

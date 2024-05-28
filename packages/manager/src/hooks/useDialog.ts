@@ -86,7 +86,7 @@ export const useDialog = <T extends number | string | undefined>(
          * Consumers can use the exposed handleError method
          * directly if they want to override this with a custom message.
          */
-        handleError(e[0].reason);
+        handleError(e[0].formattedReason);
         return Promise.reject(e);
       });
   };

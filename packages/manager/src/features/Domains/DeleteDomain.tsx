@@ -49,7 +49,7 @@ export const DeleteDomain = (props: DeleteDomainProps) => {
         loading={isLoading}
         error={
           error
-            ? getAPIErrorOrDefault(error, 'Error deleting domain.')[0].reason
+            ? getAPIErrorOrDefault(error, 'Error deleting domain.')[0].formattedReason
             : undefined
         }
         onClose={() => setOpen(false)}

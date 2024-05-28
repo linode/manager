@@ -91,7 +91,7 @@ export const TwoFactor = (props: TwoFactorProps) => {
     if (!hasSecurityQuestions) {
       setErrors([
         {
-          reason: `You must add Security Questions to your profile in order to ${
+          formattedReason: `You must add Security Questions to your profile in order to ${
             twoFactor ? 'reset' : 'enable'
           } Two-Factor Authentication`,
         },

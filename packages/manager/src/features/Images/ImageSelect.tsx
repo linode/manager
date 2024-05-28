@@ -54,7 +54,7 @@ export const ImageSelect = (props: MultiProps | Props) => {
 
   // Check for request errors in RQ
   const rqError = isError
-    ? getAPIErrorOrDefault(error ?? [], 'Unable to load Images')[0].reason
+    ? getAPIErrorOrDefault(error ?? [], 'Unable to load Images')[0].formattedReason
     : undefined;
 
   const renderedImages = React.useMemo(() => getImagesOptions(images), [

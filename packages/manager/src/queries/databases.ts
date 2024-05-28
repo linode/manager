@@ -24,12 +24,7 @@ import {
   UpdateDatabasePayload,
   UpdateDatabaseResponse,
 } from '@linode/api-v4/lib/databases/types';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
+import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import {
   QueryClient,
   useMutation,
@@ -38,6 +33,7 @@ import {
 } from '@tanstack/react-query';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets, updateInPaginatedStore } from './base';
@@ -46,7 +42,7 @@ import { profileQueries } from './profile';
 export const queryKey = 'databases';
 
 export const useDatabaseQuery = (engine: Engine, id: number) =>
-  useQuery<Database, APIError[]>(
+  useQuery<Database, FormattedAPIError[]>(
     [queryKey, id],
     () => getEngineDatabase(engine, id),
     // @TODO Consider removing polling
@@ -57,7 +53,7 @@ export const useDatabaseQuery = (engine: Engine, id: number) =>
   );
 
 export const useDatabasesQuery = (params: Params, filter: Filter) =>
-  useQuery<ResourcePage<DatabaseInstance>, APIError[]>(
+  useQuery<ResourcePage<DatabaseInstance>, FormattedAPIError[]>(
     [`${queryKey}-list`, params, filter],
     () => getDatabases(params, filter),
     // @TODO Consider removing polling
@@ -65,7 +61,7 @@ export const useDatabasesQuery = (params: Params, filter: Filter) =>
   );
 
 export const useAllDatabasesQuery = (enabled: boolean = true) =>
-  useQuery<DatabaseInstance[], APIError[]>(
+  useQuery<DatabaseInstance[], FormattedAPIError[]>(
     [`${queryKey}-all-list`],
     getAllDatabases,
     { enabled }
@@ -73,39 +69,40 @@ export const useAllDatabasesQuery = (enabled: boolean = true) =>
 
 export const useDatabaseMutation = (engine: Engine, id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<UpdateDatabaseResponse, APIError[], UpdateDatabasePayload>(
-    (data) => updateDatabase(engine, id, data),
-    {
-      onSuccess: (data) => {
-        queryClient.setQueryData<Database | undefined>(
-          [queryKey, Number(id)],
-          (oldEntity) => {
-            if (oldEntity === undefined) {
-              return undefined;
-            }
-
-            if (oldEntity.label !== data.label) {
-              updateInPaginatedStore<Database>(
-                [`${queryKey}-list`],
-                id,
-                {
-                  label: data.label,
-                },
-                queryClient
-              );
-            }
-
-            return { ...oldEntity, ...data };
+  return useMutation<
+    UpdateDatabaseResponse,
+    FormattedAPIError[],
+    UpdateDatabasePayload
+  >((data) => updateDatabase(engine, id, data), {
+    onSuccess: (data) => {
+      queryClient.setQueryData<Database | undefined>(
+        [queryKey, Number(id)],
+        (oldEntity) => {
+          if (oldEntity === undefined) {
+            return undefined;
           }
-        );
-      },
-    }
-  );
+
+          if (oldEntity.label !== data.label) {
+            updateInPaginatedStore<Database>(
+              [`${queryKey}-list`],
+              id,
+              {
+                label: data.label,
+              },
+              queryClient
+            );
+          }
+
+          return { ...oldEntity, ...data };
+        }
+      );
+    },
+  });
 };
 
 export const useCreateDatabaseMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Database, APIError[], CreateDatabasePayload>(
+  return useMutation<Database, FormattedAPIError[], CreateDatabasePayload>(
     (data) => createDatabase(data.engine?.split('/')[0] as Engine, data),
     {
       onSuccess: (data) => {
@@ -124,18 +121,21 @@ export const useCreateDatabaseMutation = () => {
 
 export const useDeleteDatabaseMutation = (engine: Engine, id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteDatabase(engine, id), {
-    onSuccess: () => {
-      // Invalidate useDatabasesQuery to remove the deleted database.
-      // We choose to refetch insted of manually mutate the cache because it
-      // is API paginated.
-      queryClient.invalidateQueries([`${queryKey}-list`]);
-    },
-  });
+  return useMutation<{}, FormattedAPIError[]>(
+    () => deleteDatabase(engine, id),
+    {
+      onSuccess: () => {
+        // Invalidate useDatabasesQuery to remove the deleted database.
+        // We choose to refetch insted of manually mutate the cache because it
+        // is API paginated.
+        queryClient.invalidateQueries([`${queryKey}-list`]);
+      },
+    }
+  );
 };
 
 export const useDatabaseBackupsQuery = (engine: Engine, id: number) =>
-  useQuery<ResourcePage<DatabaseBackup>, APIError[]>(
+  useQuery<ResourcePage<DatabaseBackup>, FormattedAPIError[]>(
     [`${queryKey}-backups`, id],
     () => getDatabaseBackups(engine, id)
   );
@@ -151,7 +151,7 @@ export const getAllDatabaseEngines = () =>
   );
 
 export const useDatabaseEnginesQuery = (enabled: boolean = false) =>
-  useQuery<DatabaseEngine[], APIError[]>(
+  useQuery<DatabaseEngine[], FormattedAPIError[]>(
     [`${queryKey}-versions`],
     getAllDatabaseEngines,
     { enabled }
@@ -163,7 +163,7 @@ export const getAllDatabaseTypes = () =>
   );
 
 export const useDatabaseTypesQuery = () =>
-  useQuery<DatabaseType[], APIError[]>(
+  useQuery<DatabaseType[], FormattedAPIError[]>(
     [`${queryKey}-types`],
     getAllDatabaseTypes
   );
@@ -173,7 +173,7 @@ export const useDatabaseCredentialsQuery = (
   id: number,
   enabled: boolean = false
 ) =>
-  useQuery<DatabaseCredentials, APIError[]>(
+  useQuery<DatabaseCredentials, FormattedAPIError[]>(
     [queryKey, 'credentials', id],
     () => getDatabaseCredentials(engine, id),
     { ...queryPresets.oneTimeFetch, enabled }
@@ -181,7 +181,7 @@ export const useDatabaseCredentialsQuery = (
 
 export const useDatabaseCredentialsMutation = (engine: Engine, id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(
+  return useMutation<{}, FormattedAPIError[]>(
     () => resetDatabaseCredentials(engine, id),
     {
       onSuccess: () => {
@@ -198,7 +198,7 @@ export const useRestoreFromBackupMutation = (
   backupId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(
+  return useMutation<{}, FormattedAPIError[]>(
     () => restoreWithBackup(engine, databaseId, backupId),
     {
       onSuccess: () =>

@@ -16,7 +16,7 @@ export const SupportError = (props: Props) => {
   const supportTextRegex = new RegExp(
     /(open a support ticket|contact Support)/i
   );
-  const errorMsg = errors[0].reason.split(supportTextRegex);
+  const errorMsg = errors[0].formattedReason.split(supportTextRegex);
 
   return (
     <Typography

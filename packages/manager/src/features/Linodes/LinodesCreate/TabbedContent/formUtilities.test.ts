@@ -7,15 +7,15 @@ describe('Linode Create Utilities', () => {
     const mockErrors: APIError[] = [
       {
         field: 'label',
-        reason: 'label is required',
+        formattedReason: 'label is required',
       },
       {
         field: 'ssh_keys',
-        reason: 'ssh_keys are required',
+        formattedReason: 'ssh_keys are required',
       },
       {
         field: 'wp_password',
-        reason: 'a value for the UDF is required',
+        formattedReason: 'a value for the UDF is required',
       },
     ];
 

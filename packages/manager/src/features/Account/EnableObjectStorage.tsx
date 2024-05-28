@@ -78,7 +78,7 @@ export const EnableObjectStorage = (props: Props) => {
   };
 
   const handleError = (e: APIError[]) => {
-    setError(e[0].reason);
+    setError(e[0].formattedReason);
     setLoading(false);
   };
 

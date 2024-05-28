@@ -157,7 +157,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
       }).catch((e) => {
         return enqueueSnackbar(
           getAPIErrorOrDefault(e, 'There was an issue enabling your domain')[0]
-            .reason,
+            .formattedReason,
           {
             variant: 'error',
           }
@@ -313,7 +313,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
         error={
           deleteError
             ? getAPIErrorOrDefault(deleteError, 'Error deleting Domain.')[0]
-                .reason
+                .formattedReason
             : undefined
         }
         entity="domain"

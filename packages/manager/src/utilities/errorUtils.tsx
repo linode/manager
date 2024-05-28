@@ -1,7 +1,11 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { pathOr } from 'ramda';
+import React from 'react';
 
+import { Typography } from 'src/components/Typography';
 import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 /**
  *
@@ -29,13 +33,24 @@ import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
  *
  */
 export const getAPIErrorOrDefault = (
-  errorResponse: APIError[],
+  errorResponse: FormattedAPIError[],
   defaultError: string = DEFAULT_ERROR_MESSAGE,
   field?: string
-): APIError[] => {
-  const _defaultError = field
-    ? [{ field, reason: defaultError }]
-    : [{ reason: defaultError }];
+): FormattedAPIError[] => {
+  const _defaultError: FormattedAPIError[] = field
+    ? [
+        {
+          field,
+          formattedReason: <Typography>{defaultError}</Typography>,
+          reason: defaultError,
+        },
+      ]
+    : [
+        {
+          formattedReason: <Typography>{defaultError}</Typography>,
+          reason: defaultError,
+        },
+      ];
 
   return isDefaultError(errorResponse) ? _defaultError : errorResponse;
 };

@@ -696,7 +696,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       return this.setState({
         errors: [
           {
-            reason: `Can\'t set ${type} permissions at this time. Please try again later`,
+            formattedReason: `Can\'t set ${type} permissions at this time. Please try again later`,
           },
         ],
       });
@@ -753,7 +753,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       return this.setState({
         errors: [
           {
-            reason: `Can\'t set entity-specific permissions at this time. Please try again later`,
+            formattedReason: `Can\'t set entity-specific permissions at this time. Please try again later`,
           },
         ],
         isSavingEntity: false,

@@ -64,7 +64,7 @@ describe('Top Processes', () => {
           <TopProcesses
             {...props}
             topProcessesData={{ Processes: {} }}
-            topProcessesError={[{ reason: 'Error' }]}
+            topProcessesError={[{ formattedReason: 'Error' }]}
           />
         )
       );

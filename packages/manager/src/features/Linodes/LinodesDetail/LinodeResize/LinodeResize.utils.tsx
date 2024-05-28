@@ -10,7 +10,7 @@ export const getError = (error: APIError[] | null) => {
     return null;
   }
 
-  const errorText = error?.[0]?.reason;
+  const errorText = error?.[0]?.formattedReason;
   if (
     typeof errorText === 'string' &&
     errorText.match(/allocated more disk/i)

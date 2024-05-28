@@ -23,7 +23,7 @@ export const CredentialTableContent = (props: CredentialTableContentProps) => {
   }
 
   if (error) {
-    return <TableRowError colSpan={3} message={error[0].reason} />;
+    return <TableRowError colSpan={3} message={error[0].formattedReason} />;
   }
 
   if (credentials.length === 0) {

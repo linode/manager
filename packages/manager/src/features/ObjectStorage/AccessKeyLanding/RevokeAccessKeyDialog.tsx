@@ -47,7 +47,7 @@ export const RevokeAccessKeyDialog = (props: RevokeKeysDialogProps) => {
   return (
     <ConfirmationDialog
       actions={actions}
-      error={(errors || []).map((e) => e.reason).join(',')}
+      error={(errors || []).map((e) => e.formattedReason).join(',')}
       onClose={handleClose}
       open={isOpen}
       title={`Revoking ${label}`}

@@ -10,12 +10,7 @@ import {
   updateImage,
   uploadImage,
 } from '@linode/api-v4';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
+import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -23,6 +18,8 @@ import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
 
 import { profileQueries } from './profile';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const getAllImages = (
   passedParams: Params = {},
@@ -48,20 +45,20 @@ export const imageQueries = createQueryKeys('images', {
 });
 
 export const useImagesQuery = (params: Params, filters: Filter) =>
-  useQuery<ResourcePage<Image>, APIError[]>({
+  useQuery<ResourcePage<Image>, FormattedAPIError[]>({
     ...imageQueries.paginated(params, filters),
     keepPreviousData: true,
   });
 
 export const useImageQuery = (imageId: string, enabled = true) =>
-  useQuery<Image, APIError[]>({
+  useQuery<Image, FormattedAPIError[]>({
     ...imageQueries.image(imageId),
     enabled,
   });
 
 export const useCreateImageMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Image, APIError[], CreateImagePayload>({
+  return useMutation<Image, FormattedAPIError[], CreateImagePayload>({
     mutationFn: createImage,
     onSuccess(image) {
       queryClient.invalidateQueries(imageQueries.paginated._def);
@@ -79,7 +76,7 @@ export const useUpdateImageMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<
     Image,
-    APIError[],
+    FormattedAPIError[],
     { description?: string; imageId: string; label?: string; tags?: string[] }
   >({
     mutationFn: ({ description, imageId, label, tags }) =>
@@ -96,7 +93,7 @@ export const useUpdateImageMutation = () => {
 
 export const useDeleteImageMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { imageId: string }>(
+  return useMutation<{}, FormattedAPIError[], { imageId: string }>(
     ({ imageId }) => deleteImage(imageId),
     {
       onSuccess(_, variables) {
@@ -114,14 +111,18 @@ export const useAllImagesQuery = (
   filters: Filter = {},
   enabled = true
 ) =>
-  useQuery<Image[], APIError[]>({
+  useQuery<Image[], FormattedAPIError[]>({
     ...imageQueries.all(params, filters),
     enabled,
   });
 
 export const useUploadImageMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<UploadImageResponse, APIError[], ImageUploadPayload>({
+  return useMutation<
+    UploadImageResponse,
+    FormattedAPIError[],
+    ImageUploadPayload
+  >({
     mutationFn: uploadImage,
     onSuccess(data) {
       queryClient.invalidateQueries(imageQueries.paginated._def);

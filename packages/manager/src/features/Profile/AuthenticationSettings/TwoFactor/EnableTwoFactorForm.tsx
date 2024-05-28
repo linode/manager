@@ -58,7 +58,7 @@ export const EnableTwoFactorForm = (props: Props) => {
         APIErrors = APIErrors.filter((err: APIError) => {
           // Filter potentially confusing API error
           return (
-            err.reason !==
+            err.formattedReason !==
             'Invalid token. Two-factor auth not enabled. Please try again.'
           );
         });

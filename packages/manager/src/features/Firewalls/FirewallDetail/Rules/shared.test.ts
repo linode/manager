@@ -8,7 +8,7 @@ const generateError = (field: string) => ({
 describe('shared Firewall rule utilities', () => {
   describe('parseFirewallRuleError', () => {
     it('returns `null` when no field', () => {
-      expect(parseFirewallRuleError({ reason: 'Error!' })).toBeNull();
+      expect(parseFirewallRuleError({ formattedReason: 'Error!' })).toBeNull();
     });
 
     const error = generateError('rules.inbound[0].ports');

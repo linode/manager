@@ -47,7 +47,7 @@ export const KubernetesClusterDetail = () => {
     return (
       <ErrorState
         errorText={
-          getAPIErrorOrDefault(error, 'Unable to load cluster data.')[0].reason
+          getAPIErrorOrDefault(error, 'Unable to load cluster data.')[0].formattedReason
         }
       />
     );

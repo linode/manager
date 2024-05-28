@@ -175,7 +175,7 @@ const SearchBar = (props: SearchProps) => {
         .catch((error) => {
           setAPIError(
             getAPIErrorOrDefault(error, 'Error loading search results')[0]
-              .reason
+              .formattedReason
           );
           setAPILoading(false);
         });

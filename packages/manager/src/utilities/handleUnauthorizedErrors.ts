@@ -20,10 +20,7 @@ export const handleUnauthorizedErrors = (
 
   try {
     filteredErrors = e.filter((eachError) => {
-      if (
-        typeof eachError.reason === 'string' &&
-        eachError.reason.toLowerCase().includes('unauthorized')
-      ) {
+      if (eachError.reason.toLowerCase().includes('unauthorized')) {
         hasUnauthorizedError = true;
         return false;
       }

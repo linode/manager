@@ -49,7 +49,7 @@ const renderDrawerContent = (
       <ErrorState
         errorText={
           getAPIErrorOrDefault(error, 'Error loading your issue history')[0]
-            .reason
+            .formattedReason
         }
       />
     );

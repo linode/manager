@@ -57,7 +57,7 @@ const PromoDialog = (props: Props) => {
       .catch((error: APIError[]) => {
         setLoading(false);
         setError(
-          getAPIErrorOrDefault(error, 'Unable to add promo code')[0].reason
+          getAPIErrorOrDefault(error, 'Unable to add promo code')[0].formattedReason
         );
       });
   };

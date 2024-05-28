@@ -118,7 +118,7 @@ const MaintenanceTable = ({ type }: Props) => {
     }
 
     if (error) {
-      return <TableRowError colSpan={7} message={error[0].reason} />;
+      return <TableRowError colSpan={7} message={error[0].formattedReason} />;
     }
 
     if (data?.results === 0) {

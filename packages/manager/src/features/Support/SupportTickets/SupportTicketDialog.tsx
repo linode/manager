@@ -439,7 +439,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       setErrors([
         {
           field: 'input',
-          reason: `Please select a ${entityIdToNameMap[entityType]}.`,
+          formattedReason: `Please select a ${entityIdToNameMap[entityType]}.`,
         },
       ]);
       return;

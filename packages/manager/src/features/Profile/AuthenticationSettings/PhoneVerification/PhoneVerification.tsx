@@ -160,7 +160,7 @@ export const PhoneVerification = ({
         });
       })
       .catch((e: APIError[]) =>
-        enqueueSnackbar(e?.[0].reason ?? 'Unable to resend verification code')
+        enqueueSnackbar(e?.[0].formattedReason ?? 'Unable to resend verification code')
       );
   };
 

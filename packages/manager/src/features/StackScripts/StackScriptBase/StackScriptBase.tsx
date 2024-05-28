@@ -174,8 +174,8 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
       return (
         <React.Fragment>
-          {fieldError && fieldError.reason && (
-            <Notice text={fieldError.reason} variant="error" />
+          {fieldError && fieldError.formattedReason && (
+            <Notice text={fieldError.formattedReason} variant="error" />
           )}
           {successMessage && <Notice text={successMessage} variant="success" />}
           {/*

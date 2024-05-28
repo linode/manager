@@ -7,12 +7,7 @@ import {
   unassignLinodesFromPlacementGroup,
   updatePlacementGroup,
 } from '@linode/api-v4';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
+import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -28,6 +23,7 @@ import type {
   UnassignLinodesFromPlacementGroupPayload,
   UpdatePlacementGroupPayload,
 } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const getAllPlacementGroupsRequest = (
   _params: Params = {},
@@ -63,7 +59,7 @@ export const useAllPlacementGroupsQuery = ({
   filter = {},
   params = {},
 }: AllPlacementGroupsQueryOptions) =>
-  useQuery<PlacementGroup[], APIError[]>({
+  useQuery<PlacementGroup[], FormattedAPIError[]>({
     enabled,
     ...placementGroupQueries.all(params, filter),
   });
@@ -73,7 +69,7 @@ export const usePlacementGroupsQuery = (
   filter: Filter,
   enabled: boolean = true
 ) =>
-  useQuery<ResourcePage<PlacementGroup>, APIError[]>({
+  useQuery<ResourcePage<PlacementGroup>, FormattedAPIError[]>({
     enabled,
     keepPreviousData: true,
     ...placementGroupQueries.paginated(params, filter),
@@ -83,7 +79,7 @@ export const usePlacementGroupQuery = (
   placementGroupId: number,
   enabled: boolean = true
 ) => {
-  return useQuery<PlacementGroup, APIError[]>({
+  return useQuery<PlacementGroup, FormattedAPIError[]>({
     enabled,
     ...placementGroupQueries.placementGroup(placementGroupId),
   });
@@ -92,7 +88,11 @@ export const usePlacementGroupQuery = (
 export const useCreatePlacementGroup = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<PlacementGroup, APIError[], CreatePlacementGroupPayload>({
+  return useMutation<
+    PlacementGroup,
+    FormattedAPIError[],
+    CreatePlacementGroupPayload
+  >({
     mutationFn: createPlacementGroup,
     onSuccess: (placementGroup) => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
@@ -111,7 +111,11 @@ export const useCreatePlacementGroup = () => {
 export const useMutatePlacementGroup = (id: number) => {
   const queryClient = useQueryClient();
 
-  return useMutation<PlacementGroup, APIError[], UpdatePlacementGroupPayload>({
+  return useMutation<
+    PlacementGroup,
+    FormattedAPIError[],
+    UpdatePlacementGroupPayload
+  >({
     mutationFn: (data) => updatePlacementGroup(id, data),
     onSuccess: (placementGroup) => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
@@ -127,7 +131,7 @@ export const useMutatePlacementGroup = (id: number) => {
 export const useDeletePlacementGroup = (id: number) => {
   const queryClient = useQueryClient();
 
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: () => deletePlacementGroup(id),
     onSuccess: () => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
@@ -144,7 +148,7 @@ export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
 
   return useMutation<
     PlacementGroup,
-    APIError[],
+    FormattedAPIError[],
     AssignLinodesToPlacementGroupPayload
   >({
     mutationFn: (req) => assignLinodesToPlacementGroup(placementGroupId, req),
@@ -170,7 +174,7 @@ export const useUnassignLinodesFromPlacementGroup = (
   const queryClient = useQueryClient();
   return useMutation<
     PlacementGroup,
-    APIError[],
+    FormattedAPIError[],
     UnassignLinodesFromPlacementGroupPayload
   >({
     mutationFn: (req) =>

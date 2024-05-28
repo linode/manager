@@ -65,7 +65,7 @@ describe('utilities', () => {
 
     it('sets errors', () => {
       const newState = reducer(baseState, {
-        errors: [{ reason: 'ERROR' }],
+        errors: [{ formattedReason: 'ERROR' }],
         type: 'setErrors',
       });
       expect(newState.errors).toEqual([{ reason: 'ERROR' }]);
@@ -80,7 +80,7 @@ describe('utilities', () => {
             isSelected: true,
           },
         },
-        errors: [{ reason: 'ERROR' }],
+        errors: [{ formattedReason: 'ERROR' }],
         selectedLinodeId: 3000,
       };
 
@@ -162,7 +162,7 @@ describe('utilities', () => {
     it('clears errors after each type of input change', () => {
       const state: CloneLandingState = {
         ...baseState,
-        errors: [{ reason: 'ERROR' }],
+        errors: [{ formattedReason: 'ERROR' }],
       };
       expect(reducer(state, { id: 1000, type: 'toggleConfig' }).errors).toBe(
         undefined

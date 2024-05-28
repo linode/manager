@@ -174,7 +174,7 @@ export const PayPalButton = (props: Props) => {
         const errorText = getAPIErrorOrDefault(
           error,
           'Unable to complete PayPal payment.'
-        )[0].reason;
+        )[0].formattedReason;
         setError(errorText);
         setProcessing(false);
       });

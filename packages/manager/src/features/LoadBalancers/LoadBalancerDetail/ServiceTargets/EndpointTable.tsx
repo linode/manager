@@ -47,13 +47,13 @@ export const EndpointTable = (props: Props) => {
         {endpoints.map((endpoint, idx) => {
           const fieldErrors = {
             host: errors?.find((e) => e.field === `endpoints[${idx}].host`)
-              ?.reason,
-            ip: errors?.find((e) => e.field === `endpoints[${idx}].ip`)?.reason,
+              ?.formattedReason,
+            ip: errors?.find((e) => e.field === `endpoints[${idx}].ip`)?.formattedReason,
             port: errors?.find((e) => e.field === `endpoints[${idx}].port`)
-              ?.reason,
+              ?.formattedReason,
             rate_capacity: errors?.find(
               (e) => e.field === `endpoints[${idx}].rate_capacity`
-            )?.reason,
+            )?.formattedReason,
           };
 
           const linode = linodes?.data.find((linode) =>

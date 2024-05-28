@@ -85,7 +85,7 @@ export const UserDetail = () => {
       .catch((errorResponse) => {
         setError(
           getAPIErrorOrDefault(errorResponse, 'Error loading user data.')[0]
-            .reason
+            .formattedReason
         );
       });
 

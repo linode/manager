@@ -38,7 +38,7 @@ export const TableContentWrapper = (props: TableContentWrapperProps) => {
   }
 
   if (error && error.length > 0) {
-    return <TableRowError colSpan={6} message={error[0].reason} />;
+    return <TableRowError colSpan={6} message={error[0].formattedReason} />;
   }
 
   if (lastUpdated !== 0 && length === 0) {

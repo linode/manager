@@ -138,7 +138,7 @@ export const CreateDomain = () => {
       return setErrors([
         {
           field: 'defaultLinode',
-          reason: 'Please select a Linode.',
+          formattedReason: 'Please select a Linode.',
         },
       ]);
     }
@@ -150,7 +150,7 @@ export const CreateDomain = () => {
       return setErrors([
         {
           field: 'defaultNodeBalancer',
-          reason: 'Please select a NodeBalancer.',
+          formattedReason: 'Please select a NodeBalancer.',
         },
       ]);
     }
@@ -188,7 +188,7 @@ export const CreateDomain = () => {
               })
               .catch((e: APIError[]) => {
                 reportException(
-                  `Default DNS Records couldn't be created from Linode: ${e[0].reason}`,
+                  `Default DNS Records couldn't be created from Linode: ${e[0].formattedReason}`,
                   {
                     domainID: domainData.id,
                     ipv4: path(['ipv4', 0], selectedDefaultLinode),
@@ -215,7 +215,7 @@ export const CreateDomain = () => {
               })
               .catch((e: APIError[]) => {
                 reportException(
-                  `Default DNS Records couldn't be created from NodeBalancer: ${e[0].reason}`,
+                  `Default DNS Records couldn't be created from NodeBalancer: ${e[0].formattedReason}`,
                   {
                     domainID: domainData.id,
                     ipv4: path(['ipv4'], selectedDefaultNodeBalancer),

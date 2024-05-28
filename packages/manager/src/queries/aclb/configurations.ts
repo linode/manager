@@ -15,7 +15,7 @@ import {
 import { QUERY_KEY } from './loadbalancers';
 
 import type {
-  APIError,
+  FormattedAPIError,
   Configuration,
   ConfigurationPayload,
   ConfigurationsEndpointHealth,
@@ -30,7 +30,7 @@ export const useLoadBalancerConfigurationsQuery = (
   params?: Params,
   filter?: Filter
 ) => {
-  return useQuery<ResourcePage<Configuration>, APIError[]>(
+  return useQuery<ResourcePage<Configuration>, FormattedAPIError[]>(
     [QUERY_KEY, 'aclb', loadbalancerId, 'configurations', params, filter],
     () => getLoadbalancerConfigurations(loadbalancerId, params, filter),
     { keepPreviousData: true }
@@ -40,7 +40,7 @@ export const useLoadBalancerConfigurationsQuery = (
 export const useLoadBalancerConfigurationsEndpointsHealth = (
   loadbalancerId: number
 ) => {
-  return useQuery<ConfigurationsEndpointHealth, APIError[]>({
+  return useQuery<ConfigurationsEndpointHealth, FormattedAPIError[]>({
     queryFn: () => getLoadbalancerConfigurationsEndpointHealth(loadbalancerId),
     queryKey: [
       QUERY_KEY,
@@ -56,7 +56,7 @@ export const useLoadBalancerConfigurationsEndpointsHealth = (
 export const useLoabalancerConfigurationsInfiniteQuery = (
   loadbalancerId: number
 ) => {
-  return useInfiniteQuery<ResourcePage<Configuration>, APIError[]>(
+  return useInfiniteQuery<ResourcePage<Configuration>, FormattedAPIError[]>(
     [QUERY_KEY, 'aclb', loadbalancerId, 'configurations', 'infinite'],
     ({ pageParam }) =>
       getLoadbalancerConfigurations(loadbalancerId, {
@@ -80,7 +80,7 @@ export const useLoadBalancerConfigurationMutation = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<Configuration, APIError[], UpdateConfigurationPayload>(
+  return useMutation<Configuration, FormattedAPIError[], UpdateConfigurationPayload>(
     (data) =>
       updateLoadbalancerConfiguration(loadbalancerId, configurationId, data),
     {
@@ -104,7 +104,7 @@ export const useLoadBalancerConfigurationCreateMutation = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<Configuration, APIError[], ConfigurationPayload>(
+  return useMutation<Configuration, FormattedAPIError[], ConfigurationPayload>(
     (data) => createLoadbalancerConfiguration(loadbalancerId, data),
     {
       onSuccess() {
@@ -128,7 +128,7 @@ export const useLoadBalancerConfigurationDeleteMutation = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<{}, APIError[]>(
+  return useMutation<{}, FormattedAPIError[]>(
     () => deleteLoadbalancerConfiguration(loadbalancerId, configurationId),
     {
       onSuccess() {

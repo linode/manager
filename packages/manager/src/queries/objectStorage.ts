@@ -45,6 +45,7 @@ import { getAll } from 'src/utilities/getAll';
 import { accountQueries } from './account/queries';
 import { queryPresets } from './base';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 import type { AtLeastOne } from 'src/utilities/types/typesHelpers';
 
 export interface BucketError {
@@ -55,7 +56,7 @@ export interface BucketError {
    remove 'cluster' and retain 'regions'.
   */
   cluster: ObjectStorageCluster;
-  error: APIError[];
+  error: FormattedAPIError[];
   region?: Region;
 }
 
@@ -96,7 +97,7 @@ export const getAllObjectStorageBuckets = () =>
   getAll<ObjectStorageBucket>(() => getBuckets())().then((data) => data.data);
 
 export const useObjectStorageClusters = (enabled: boolean = true) =>
-  useQuery<ObjectStorageCluster[], APIError[]>(
+  useQuery<ObjectStorageCluster[], FormattedAPIError[]>(
     [`${queryKey}-clusters`],
     getAllObjectStorageClusters,
     { ...queryPresets.oneTimeFetch, enabled }
@@ -115,7 +116,7 @@ export const useObjectStorageBuckets = ({
   isObjMultiClusterEnabled = false,
   regions,
 }: UseObjectStorageBucketsOptions) =>
-  useQuery<BucketsResponce, APIError[]>(
+  useQuery<BucketsResponce, FormattedAPIError[]>(
     [`${queryKey}-buckets`],
     // Ideally we would use the line below, but if a cluster is down, the buckets on that
     // cluster don't show up in the responce. We choose to fetch buckets per-cluster so
@@ -133,7 +134,7 @@ export const useObjectStorageBuckets = ({
   );
 
 export const useObjectStorageAccessKeys = (params: Params) =>
-  useQuery<ResourcePage<ObjectStorageKey>, APIError[]>(
+  useQuery<ResourcePage<ObjectStorageKey>, FormattedAPIError[]>(
     [`${queryKey}-access-keys`, params],
     () => getObjectStorageKeys(params),
     { keepPreviousData: true }
@@ -143,7 +144,7 @@ export const useCreateBucketMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<
     ObjectStorageBucket,
-    APIError[],
+    FormattedAPIError[],
     ObjectStorageBucketRequestPayload
   >(createBucket, {
     onMutate: async () => {
@@ -167,29 +168,30 @@ export const useCreateBucketMutation = () => {
 
 export const useDeleteBucketMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { cluster: string; label: string }>(
-    (data) => deleteBucket(data),
-    {
-      onSuccess: (_, variables) => {
-        queryClient.setQueryData<BucketsResponce>(
-          [`${queryKey}-buckets`],
-          (oldData) => {
-            return {
-              buckets:
-                oldData?.buckets.filter(
-                  (bucket: ObjectStorageBucket) =>
-                    !(
-                      bucket.cluster === variables.cluster &&
-                      bucket.label === variables.label
-                    )
-                ) || [],
-              errors: oldData?.errors || [],
-            };
-          }
-        );
-      },
-    }
-  );
+  return useMutation<
+    {},
+    FormattedAPIError[],
+    { cluster: string; label: string }
+  >((data) => deleteBucket(data), {
+    onSuccess: (_, variables) => {
+      queryClient.setQueryData<BucketsResponce>(
+        [`${queryKey}-buckets`],
+        (oldData) => {
+          return {
+            buckets:
+              oldData?.buckets.filter(
+                (bucket: ObjectStorageBucket) =>
+                  !(
+                    bucket.cluster === variables.cluster &&
+                    bucket.label === variables.label
+                  )
+              ) || [],
+            errors: oldData?.errors || [],
+          };
+        }
+      );
+    },
+  });
 };
 
 /*
@@ -200,29 +202,30 @@ export const useDeleteBucketMutation = () => {
 
 export const useDeleteBucketWithRegionMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { label: string; region: string }>(
-    (data) => deleteBucketWithRegion(data),
-    {
-      onSuccess: (_, variables) => {
-        queryClient.setQueryData<BucketsResponce>(
-          [`${queryKey}-buckets`],
-          (oldData) => {
-            return {
-              buckets:
-                oldData?.buckets.filter(
-                  (bucket: ObjectStorageBucket) =>
-                    !(
-                      bucket.region === variables.region &&
-                      bucket.label === variables.label
-                    )
-                ) || [],
-              errors: oldData?.errors || [],
-            };
-          }
-        );
-      },
-    }
-  );
+  return useMutation<
+    {},
+    FormattedAPIError[],
+    { label: string; region: string }
+  >((data) => deleteBucketWithRegion(data), {
+    onSuccess: (_, variables) => {
+      queryClient.setQueryData<BucketsResponce>(
+        [`${queryKey}-buckets`],
+        (oldData) => {
+          return {
+            buckets:
+              oldData?.buckets.filter(
+                (bucket: ObjectStorageBucket) =>
+                  !(
+                    bucket.region === variables.region &&
+                    bucket.label === variables.label
+                  )
+              ) || [],
+            errors: oldData?.errors || [],
+          };
+        }
+      );
+    },
+  });
 };
 
 export const useObjectBucketDetailsInfiniteQuery = (
@@ -230,7 +233,7 @@ export const useObjectBucketDetailsInfiniteQuery = (
   bucket: string,
   prefix: string
 ) =>
-  useInfiniteQuery<ObjectStorageObjectListResponse, APIError[]>(
+  useInfiniteQuery<ObjectStorageObjectListResponse, FormattedAPIError[]>(
     [queryKey, cluster, bucket, 'objects', ...prefixToQueryKey(prefix)],
     ({ pageParam }) =>
       getObjectList(cluster, bucket, { delimiter, marker: pageParam, prefix }),
@@ -368,7 +371,7 @@ export const useCreateObjectUrlMutation = (
 ) =>
   useMutation<
     ObjectStorageObjectURL,
-    APIError[],
+    FormattedAPIError[],
     {
       method: 'DELETE' | 'GET' | 'POST' | 'PUT';
       name: string;
@@ -388,7 +391,7 @@ export const useBucketSSLMutation = (cluster: string, bucket: string) => {
 
   return useMutation<
     ObjectStorageBucketSSLResponse,
-    APIError[],
+    FormattedAPIError[],
     ObjectStorageBucketSSLRequest
   >((data) => uploadSSLCert(cluster, bucket, data), {
     onSuccess(data) {
@@ -403,14 +406,17 @@ export const useBucketSSLMutation = (cluster: string, bucket: string) => {
 export const useBucketSSLDeleteMutation = (cluster: string, bucket: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation<{}, APIError[]>(() => deleteSSLCert(cluster, bucket), {
-    onSuccess() {
-      queryClient.setQueryData<ObjectStorageBucketSSLResponse>(
-        [queryKey, cluster, bucket, 'ssl'],
-        { ssl: false }
-      );
-    },
-  });
+  return useMutation<{}, FormattedAPIError[]>(
+    () => deleteSSLCert(cluster, bucket),
+    {
+      onSuccess() {
+        queryClient.setQueryData<ObjectStorageBucketSSLResponse>(
+          [queryKey, cluster, bucket, 'ssl'],
+          { ssl: false }
+        );
+      },
+    }
+  );
 };
 
 const getAllObjectStorageTypes = () =>

@@ -7,12 +7,13 @@ import { useProfile } from 'src/queries/profile';
 import { queryPresets } from '../base';
 import { accountQueries } from './queries';
 
-import type { APIError, Agreements } from '@linode/api-v4';
+import type { Agreements } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const useAccountAgreements = (enabled?: boolean) => {
   const { data: profile } = useProfile();
 
-  return useQuery<Agreements, APIError[]>({
+  return useQuery<Agreements, FormattedAPIError[]>({
     ...accountQueries.agreements,
     ...queryPresets.oneTimeFetch,
     ...queryPresets.noRetry,
@@ -25,7 +26,7 @@ export const useAccountAgreements = (enabled?: boolean) => {
 
 export const useMutateAccountAgreements = () => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], Partial<Agreements>>({
+  return useMutation<{}, FormattedAPIError[], Partial<Agreements>>({
     mutationFn: signAgreement,
     onSuccess(data, variables) {
       queryClient.setQueryData<Agreements>(
@@ -53,10 +54,10 @@ export const useMutateAccountAgreements = () => {
 export const reportAgreementSigningError = (err: any) => {
   let customErrorMessage =
     'Expected to sign the EU agreement, but the request resulted in an error';
-  const apiErrorMessage = err?.[0]?.reason;
+  const FormattedAPIErrorMessage = err?.[0]?.reason;
 
-  if (apiErrorMessage) {
-    customErrorMessage += `: ${apiErrorMessage}`;
+  if (FormattedAPIErrorMessage) {
+    customErrorMessage += `: ${FormattedAPIErrorMessage}`;
   }
 
   reportException(customErrorMessage);

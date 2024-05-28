@@ -29,6 +29,7 @@ import { DateTime } from 'luxon';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAll } from 'src/utilities/getAll';
 
@@ -37,7 +38,6 @@ import { itemInListCreationHandler, itemInListMutationHandler } from './base';
 import { profileQueries } from './profile';
 
 import type {
-  APIError,
   Filter,
   Params,
   PriceType,
@@ -70,7 +70,7 @@ const getIsTooEarlyForStats = (created?: string) => {
 };
 
 export const useNodeBalancerStats = (id: number, created?: string) => {
-  return useQuery<NodeBalancerStats, APIError[]>(
+  return useQuery<NodeBalancerStats, FormattedAPIError[]>(
     [queryKey, 'nodebalancer', id, 'stats'],
     getIsTooEarlyForStats(created)
       ? () =>
@@ -85,14 +85,14 @@ export const useNodeBalancerStats = (id: number, created?: string) => {
 };
 
 export const useNodeBalancersQuery = (params: Params, filter: Filter) =>
-  useQuery<ResourcePage<NodeBalancer>, APIError[]>(
+  useQuery<ResourcePage<NodeBalancer>, FormattedAPIError[]>(
     [queryKey, 'paginated', params, filter],
     () => getNodeBalancers(params, filter),
     { keepPreviousData: true }
   );
 
 export const useNodeBalancerQuery = (id: number, enabled = true) =>
-  useQuery<NodeBalancer, APIError[]>(
+  useQuery<NodeBalancer, FormattedAPIError[]>(
     [queryKey, 'nodebalancer', id],
     () => getNodeBalancer(id),
     { enabled }
@@ -100,7 +100,7 @@ export const useNodeBalancerQuery = (id: number, enabled = true) =>
 
 export const useNodebalancerUpdateMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<NodeBalancer, APIError[], Partial<NodeBalancer>>(
+  return useMutation<NodeBalancer, FormattedAPIError[], Partial<NodeBalancer>>(
     (data) => updateNodeBalancer(id, data),
     {
       onSuccess(data) {
@@ -113,7 +113,7 @@ export const useNodebalancerUpdateMutation = (id: number) => {
 
 export const useNodebalancerDeleteMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteNodeBalancer(id), {
+  return useMutation<{}, FormattedAPIError[]>(() => deleteNodeBalancer(id), {
     onSuccess() {
       queryClient.removeQueries([queryKey, 'nodebalancer', id]);
       queryClient.invalidateQueries([queryKey]);
@@ -123,22 +123,27 @@ export const useNodebalancerDeleteMutation = (id: number) => {
 
 export const useNodebalancerCreateMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<NodeBalancer, APIError[], CreateNodeBalancerPayload>(
-    createNodeBalancer,
-    {
-      onSuccess(data) {
-        queryClient.invalidateQueries([queryKey]);
-        queryClient.setQueryData([queryKey, 'nodebalancer', data.id], data);
-        // If a restricted user creates an entity, we must make sure grants are up to date.
-        queryClient.invalidateQueries(profileQueries.grants.queryKey);
-      },
-    }
-  );
+  return useMutation<
+    NodeBalancer,
+    FormattedAPIError[],
+    CreateNodeBalancerPayload
+  >(createNodeBalancer, {
+    onSuccess(data) {
+      queryClient.invalidateQueries([queryKey]);
+      queryClient.setQueryData([queryKey, 'nodebalancer', data.id], data);
+      // If a restricted user creates an entity, we must make sure grants are up to date.
+      queryClient.invalidateQueries(profileQueries.grants.queryKey);
+    },
+  });
 };
 
 export const useNodebalancerConfigCreateMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<NodeBalancerConfig, APIError[], CreateNodeBalancerConfig>(
+  return useMutation<
+    NodeBalancerConfig,
+    FormattedAPIError[],
+    CreateNodeBalancerConfig
+  >(
     (data) => createNodeBalancerConfig(id, data),
     itemInListCreationHandler(
       [queryKey, 'nodebalancer', id, 'configs'],
@@ -156,7 +161,7 @@ export const useNodebalancerConfigUpdateMutation = (nodebalancerId: number) => {
   const queryClient = useQueryClient();
   return useMutation<
     NodeBalancerConfig,
-    APIError[],
+    FormattedAPIError[],
     CreateNodeBalancerConfigWithConfig
   >(
     ({ configId, ...data }) =>
@@ -170,7 +175,7 @@ export const useNodebalancerConfigUpdateMutation = (nodebalancerId: number) => {
 
 export const useNodebalancerConfigDeleteMutation = (nodebalancerId: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { configId: number }>(
+  return useMutation<{}, FormattedAPIError[], { configId: number }>(
     ({ configId }) => deleteNodeBalancerConfig(nodebalancerId, configId),
     {
       onSuccess(_, vars) {
@@ -188,7 +193,7 @@ export const useNodebalancerConfigDeleteMutation = (nodebalancerId: number) => {
 };
 
 export const useAllNodeBalancerConfigsQuery = (id: number) =>
-  useQuery<NodeBalancerConfig[], APIError[]>(
+  useQuery<NodeBalancerConfig[], FormattedAPIError[]>(
     [queryKey, 'nodebalanacer', id, 'configs'],
     () => getAllNodeBalancerConfigs(id),
     { refetchInterval: 20000 }
@@ -206,12 +211,16 @@ export const getAllNodeBalancers = () =>
 
 // Please don't use
 export const useAllNodeBalancersQuery = (enabled = true) =>
-  useQuery<NodeBalancer[], APIError[]>([queryKey, 'all'], getAllNodeBalancers, {
-    enabled,
-  });
+  useQuery<NodeBalancer[], FormattedAPIError[]>(
+    [queryKey, 'all'],
+    getAllNodeBalancers,
+    {
+      enabled,
+    }
+  );
 
 export const useInfiniteNodebalancersQuery = (filter: Filter) =>
-  useInfiniteQuery<ResourcePage<NodeBalancer>, APIError[]>(
+  useInfiniteQuery<ResourcePage<NodeBalancer>, FormattedAPIError[]>(
     [queryKey, 'infinite', filter],
     ({ pageParam }) =>
       getNodeBalancers({ page: pageParam, page_size: 25 }, filter),
@@ -253,14 +262,14 @@ export const nodebalanacerEventHandler = ({
 };
 
 export const useNodeBalancersFirewallsQuery = (nodebalancerId: number) =>
-  useQuery<ResourcePage<Firewall>, APIError[]>(
+  useQuery<ResourcePage<Firewall>, FormattedAPIError[]>(
     [queryKey, 'nodebalancer', nodebalancerId, 'firewalls'],
     () => getNodeBalancerFirewalls(nodebalancerId),
     queryPresets.oneTimeFetch
   );
 
 export const useNodeBalancerTypesQuery = () =>
-  useQuery<PriceType[], APIError[]>({
+  useQuery<PriceType[], FormattedAPIError[]>({
     ...queryPresets.oneTimeFetch,
     ...typesQueries.nodebalancers,
   });

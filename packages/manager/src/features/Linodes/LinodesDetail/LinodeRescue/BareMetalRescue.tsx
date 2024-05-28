@@ -50,7 +50,7 @@ export const BareMetalRescue = (props: Props) => {
       .catch((err) => {
         setLoading(false);
         setError(
-          getAPIErrorOrDefault(err, 'Error booting into rescue mode.')[0].reason
+          getAPIErrorOrDefault(err, 'Error booting into rescue mode.')[0].formattedReason
         );
       });
   };

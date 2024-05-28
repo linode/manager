@@ -157,7 +157,7 @@ export const gPay = async (
           message: errorMsg,
         });
         setMessage({
-          text: getAPIErrorOrDefault(error, errorMsg)[0].reason,
+          text: getAPIErrorOrDefault(error, errorMsg)[0].formattedReason,
           variant: 'error',
         });
       }

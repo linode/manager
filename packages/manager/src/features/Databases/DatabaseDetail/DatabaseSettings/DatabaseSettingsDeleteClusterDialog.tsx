@@ -42,7 +42,7 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
       })
       .catch((e) => {
         setIsLoading(false);
-        setError(getAPIErrorOrDefault(e, defaultError)[0].reason);
+        setError(getAPIErrorOrDefault(e, defaultError)[0].formattedReason);
       });
   };
 

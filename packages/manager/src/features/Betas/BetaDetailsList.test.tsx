@@ -37,7 +37,7 @@ describe('BetaDetails', () => {
 
   it("should display the error state component with the error's reason as the error text", () => {
     const error: APIError = {
-      reason: 'You do not have permissions to access this resource.',
+      formattedReason: 'You do not have permissions to access this resource.',
     };
     const betasList = renderWithTheme(
       <BetaDetailsList
@@ -48,7 +48,7 @@ describe('BetaDetails', () => {
       />
     );
     expect(betasList.queryByTestId('error-state')).toBeFalsy();
-    expect(betasList.queryByText(error.reason)).toBeFalsy();
+    expect(betasList.queryByText(error.formattedReason)).toBeFalsy();
 
     const errorBetasList = renderWithTheme(
       <BetaDetailsList
@@ -59,6 +59,6 @@ describe('BetaDetails', () => {
       />
     );
     expect(errorBetasList.queryByTestId('error-state')).not.toBeFalsy();
-    expect(errorBetasList.queryByText(error.reason)).not.toBeFalsy();
+    expect(errorBetasList.queryByText(error.formattedReason)).not.toBeFalsy();
   });
 });

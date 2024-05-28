@@ -241,7 +241,7 @@ const getError = (field: UserDefinedField, errors?: APIError[]) => {
     return;
   }
   const error = errors.find((thisError) => thisError.field === field.name);
-  return error ? error.reason.replace('the UDF', '') : undefined;
+  return error ? error.formattedReason.replace('the UDF', '') : undefined;
 };
 
 export default RenderGuard(UserDefinedFieldsPanel);

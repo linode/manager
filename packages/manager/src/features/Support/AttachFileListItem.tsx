@@ -52,7 +52,7 @@ export const AttachFileListItem = (props: Props) => {
   }
 
   const err =
-    file.errors && file.errors.length ? file.errors[0].reason : undefined;
+    file.errors && file.errors.length ? file.errors[0].formattedReason : undefined;
 
   return (
     <Grid container spacing={2}>

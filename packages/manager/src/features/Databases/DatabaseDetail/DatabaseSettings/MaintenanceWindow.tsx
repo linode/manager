@@ -181,7 +181,7 @@ export const MaintenanceWindow = (props: Props) => {
           </Typography>
           {maintenanceUpdateError ? (
             <Notice spacingTop={8} variant="error">
-              {maintenanceUpdateError[0].reason}
+              {maintenanceUpdateError[0].formattedReason}
             </Notice>
           ) : null}
           <Typography className={classes.sectionText}>

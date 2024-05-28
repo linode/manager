@@ -1,6 +1,4 @@
 import { getEvents, markEventSeen } from '@linode/api-v4';
-import { DateTime } from 'luxon';
-import { useRef } from 'react';
 import {
   InfiniteData,
   QueryClient,
@@ -10,6 +8,8 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+import { DateTime } from 'luxon';
+import { useRef } from 'react';
 
 import { ISO_DATETIME_NO_TZ_FORMAT, POLLING_INTERVALS } from 'src/constants';
 import { useEventHandlers } from 'src/hooks/useEventHandlers';
@@ -20,8 +20,9 @@ import {
   getExistingEventDataForPollingFilterGenerator,
   isInProgressEvent,
 } from 'src/queries/events/event.helpers';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
-import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
+import type { Event, Filter, ResourcePage } from '@linode/api-v4';
 
 /**
  * Gets an infinitely scrollable list of all Events
@@ -36,7 +37,7 @@ import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
  * the next set of events when the items returned by the server may have shifted.
  */
 export const useEventsInfiniteQuery = (filter?: Filter) => {
-  const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>(
+  const query = useInfiniteQuery<ResourcePage<Event>, FormattedAPIError[]>(
     ['events', 'infinite', filter],
     ({ pageParam }) =>
       getEvents(
@@ -82,7 +83,7 @@ export const useEventsInfiniteQuery = (filter?: Filter) => {
  * );
  */
 export const useInProgressEvents = () => {
-  return useQuery<Event[], APIError[]>({
+  return useQuery<Event[], FormattedAPIError[]>({
     enabled: false,
     queryKey: ['events', 'poller'],
   });
@@ -195,7 +196,7 @@ export const useEventsPollingActions = () => {
 export const useMarkEventsAsSeen = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<{}, APIError[], number>(
+  return useMutation<{}, FormattedAPIError[], number>(
     (eventId) => markEventSeen(eventId),
     {
       onSuccess: (_, eventId) => {

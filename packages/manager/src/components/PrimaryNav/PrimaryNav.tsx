@@ -157,9 +157,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const allowMarketplacePrefetch =
     !oneClickApps && !oneClickAppsLoading && !oneClickAppsError;
-;
   const showCloudPulse = Boolean(flags.aclp?.enabled);
-  
+
   const { isACLBEnabled } = useIsACLBEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled } = useIsDatabasesEnabled();

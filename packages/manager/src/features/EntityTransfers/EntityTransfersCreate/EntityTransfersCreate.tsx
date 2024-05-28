@@ -94,7 +94,7 @@ export const EntityTransfersCreate = () => {
       />
       {error ? (
         <StyledNotice
-          text={getAPIErrorOrDefault(error)[0].reason}
+          text={getAPIErrorOrDefault(error)[0].formattedReason}
           variant="error"
         />
       ) : null}

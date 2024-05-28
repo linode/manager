@@ -301,7 +301,7 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
       ) : null}
 
       {generalErrors?.length === 1 && (
-        <Notice spacingTop={8} text={generalErrors[0].reason} variant="error" />
+        <Notice spacingTop={8} text={generalErrors[0].formattedReason} variant="error" />
       )}
 
       <StyledDiv>

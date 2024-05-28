@@ -21,12 +21,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getAllVPCsRequest } from './requests';
 
-import type {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
+import type { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 // VPC queries
 export const vpcQueries = createQueryKeys('vpcs', {
@@ -60,7 +56,7 @@ export const vpcQueries = createQueryKeys('vpcs', {
 });
 
 export const useAllVPCsQuery = (enabled = true) =>
-  useQuery<VPC[], APIError[]>({
+  useQuery<VPC[], FormattedAPIError[]>({
     ...vpcQueries.all,
     enabled,
   });
@@ -70,7 +66,7 @@ export const useVPCsQuery = (
   filter: Filter,
   enabled = true
 ) => {
-  return useQuery<ResourcePage<VPC>, APIError[]>({
+  return useQuery<ResourcePage<VPC>, FormattedAPIError[]>({
     ...vpcQueries.paginated(params, filter),
     enabled,
     keepPreviousData: true,
@@ -78,14 +74,14 @@ export const useVPCsQuery = (
 };
 
 export const useVPCQuery = (id: number, enabled: boolean = true) =>
-  useQuery<VPC, APIError[]>({
+  useQuery<VPC, FormattedAPIError[]>({
     ...vpcQueries.vpc(id),
     enabled,
   });
 
 export const useCreateVPCMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<VPC, APIError[], CreateVPCPayload>({
+  return useMutation<VPC, FormattedAPIError[], CreateVPCPayload>({
     mutationFn: createVPC,
     onSuccess: (VPC) => {
       queryClient.invalidateQueries(vpcQueries.all.queryKey);
@@ -97,7 +93,7 @@ export const useCreateVPCMutation = () => {
 
 export const useUpdateVPCMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<VPC, APIError[], UpdateVPCPayload>({
+  return useMutation<VPC, FormattedAPIError[], UpdateVPCPayload>({
     mutationFn: (data) => updateVPC(id, data),
     onSuccess: (VPC) => {
       queryClient.invalidateQueries(vpcQueries.paginated._def);
@@ -108,7 +104,7 @@ export const useUpdateVPCMutation = (id: number) => {
 
 export const useDeleteVPCMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: () => deleteVPC(id),
     onSuccess: () => {
       queryClient.invalidateQueries(vpcQueries.all.queryKey);
@@ -125,7 +121,7 @@ export const useSubnetsQuery = (
   filter: Filter,
   enabled: boolean = true
 ) =>
-  useQuery<ResourcePage<Subnet>, APIError[]>({
+  useQuery<ResourcePage<Subnet>, FormattedAPIError[]>({
     ...vpcQueries.vpc(vpcId)._ctx.subnets._ctx.paginated(params, filter),
     enabled,
     keepPreviousData: true,
@@ -133,7 +129,7 @@ export const useSubnetsQuery = (
 
 export const useCreateSubnetMutation = (vpcId: number) => {
   const queryClient = useQueryClient();
-  return useMutation<Subnet, APIError[], CreateSubnetPayload>({
+  return useMutation<Subnet, FormattedAPIError[], CreateSubnetPayload>({
     mutationFn: (data) => createSubnet(vpcId, data),
     onSuccess: () => {
       // New subnet created --> refresh the VPC queries (all, paginated, & individual), plus the /subnets VPC query
@@ -149,7 +145,7 @@ export const useCreateSubnetMutation = (vpcId: number) => {
 
 export const useUpdateSubnetMutation = (vpcId: number, subnetId: number) => {
   const queryClient = useQueryClient();
-  return useMutation<Subnet, APIError[], ModifySubnetPayload>({
+  return useMutation<Subnet, FormattedAPIError[], ModifySubnetPayload>({
     mutationFn: (data) => modifySubnet(vpcId, subnetId, data),
     onSuccess: () => {
       // New subnet created --> refresh the VPC queries (all, paginated, & individual), plus the /subnets VPC query
@@ -165,7 +161,7 @@ export const useUpdateSubnetMutation = (vpcId: number, subnetId: number) => {
 
 export const useDeleteSubnetMutation = (vpcId: number, subnetId: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: () => deleteSubnet(vpcId, subnetId),
     onSuccess: () => {
       // New subnet created --> refresh the VPC queries (all, paginated, & individual), plus the /subnets VPC query

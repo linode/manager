@@ -221,7 +221,7 @@ export const MainContent = () => {
   const { data: accountSettings } = useAccountSettings();
 
   const showCloudPulse = Boolean(flags.aclp?.enabled);
-  
+
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
 
   /**

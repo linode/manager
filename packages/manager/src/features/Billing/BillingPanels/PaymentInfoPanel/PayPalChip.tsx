@@ -129,7 +129,7 @@ export const PayPalChip = (props: Props) => {
         const error = getAPIErrorOrDefault(
           errors,
           'Unable to add payment method'
-        )[0].reason;
+        )[0].formattedReason;
 
         enqueueSnackbar(error, { variant: 'error' });
 

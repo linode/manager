@@ -177,7 +177,7 @@ export const StandardRescueDialog = (props: Props) => {
         onClose();
       })
       .catch((errorResponse: APIError[]) => {
-        setAPIError(errorResponse[0].reason);
+        setAPIError(errorResponse[0].formattedReason);
       });
   };
 

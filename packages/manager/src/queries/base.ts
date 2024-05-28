@@ -1,10 +1,12 @@
 import { isEmpty } from '@linode/api-v4/lib/request';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { ResourcePage } from '@linode/api-v4/lib/types';
 import {
   QueryClient,
   QueryKey,
   UseMutationOptions,
 } from '@tanstack/react-query';
+
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 // =============================================================================
 // Config
@@ -66,7 +68,7 @@ export const listToItemsByID = <E extends {}[]>(
   );
 };
 
-export const mutationHandlers = <T, V, E = APIError[]>(
+export const mutationHandlers = <T, V, E = FormattedAPIError[]>(
   queryKey: QueryKey,
   indexer: string = 'id',
   queryClient: QueryClient
@@ -82,7 +84,7 @@ export const mutationHandlers = <T, V, E = APIError[]>(
   };
 };
 
-export const simpleMutationHandlers = <T, V, E = APIError[]>(
+export const simpleMutationHandlers = <T, V, E = FormattedAPIError[]>(
   queryKey: QueryKey,
   queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
@@ -96,7 +98,7 @@ export const simpleMutationHandlers = <T, V, E = APIError[]>(
   };
 };
 
-export const creationHandlers = <T, V, E = APIError[]>(
+export const creationHandlers = <T, V, E = FormattedAPIError[]>(
   queryKey: QueryKey,
   indexer: string = 'id',
   queryClient: QueryClient
@@ -112,7 +114,7 @@ export const creationHandlers = <T, V, E = APIError[]>(
   };
 };
 
-export const deletionHandlers = <T, V, E = APIError[]>(
+export const deletionHandlers = <T, V, E = FormattedAPIError[]>(
   queryKey: QueryKey,
   indexer: string = 'id',
   queryClient: QueryClient
@@ -132,7 +134,7 @@ export const deletionHandlers = <T, V, E = APIError[]>(
 export const itemInListMutationHandler = <
   T extends { id: number | string },
   V,
-  E = APIError[]
+  E = FormattedAPIError[]
 >(
   queryKey: QueryKey,
   queryClient: QueryClient
@@ -162,7 +164,7 @@ export const itemInListMutationHandler = <
   };
 };
 
-export const itemInListCreationHandler = <T, V, E = APIError[]>(
+export const itemInListCreationHandler = <T, V, E = FormattedAPIError[]>(
   queryKey: QueryKey,
   queryClient: QueryClient
 ): UseMutationOptions<T, E, V, () => void> => {
@@ -184,7 +186,7 @@ export const itemInListCreationHandler = <T, V, E = APIError[]>(
 export const itemInListDeletionHandler = <
   T,
   V extends { id?: number | string },
-  E = APIError[]
+  E = FormattedAPIError[]
 >(
   queryKey: QueryKey,
   queryClient: QueryClient

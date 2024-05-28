@@ -435,7 +435,7 @@ export const BillingActivityPanel = (props: Props) => {
                           accountPaymentsError || accountInvoicesError
                             ? [
                                 {
-                                  reason:
+                                  formattedReason:
                                     'There was an error retrieving your billing activity.',
                                 },
                               ]

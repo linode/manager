@@ -132,7 +132,7 @@ export const ProcessesLanding = React.memo((props: Props) => {
             />
           </StyledBox>
           <ProcessesTable
-            error={lastUpdatedError?.[0]?.reason || error}
+            error={lastUpdatedError?.[0]?.formattedReason || error}
             // It's correct to set loading to `true` when
             // processes.lastUpdated === 0. The reason we do this is to avoid
             // a state where we haven't made the request to get processes yet
@@ -148,7 +148,7 @@ export const ProcessesLanding = React.memo((props: Props) => {
         <StyledItemGrid lg={5} xs={12}>
           <ProcessesGraphs
             clientAPIKey={clientAPIKey || ''}
-            error={lastUpdatedError?.[0]?.reason || error}
+            error={lastUpdatedError?.[0]?.formattedReason || error}
             isToday={isToday}
             lastUpdated={lastUpdated}
             processesData={data}

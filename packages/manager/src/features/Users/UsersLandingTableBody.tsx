@@ -23,7 +23,7 @@ export const UsersLandingTableBody = (props: Props) => {
   }
 
   if (error) {
-    return <TableRowError colSpan={numCols} message={error[0].reason} />;
+    return <TableRowError colSpan={numCols} message={error[0].formattedReason} />;
   }
 
   if (!users || users.length === 0) {

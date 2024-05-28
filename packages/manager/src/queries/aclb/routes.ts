@@ -16,7 +16,7 @@ import { updateInPaginatedStore } from '../base';
 import { QUERY_KEY } from './loadbalancers';
 
 import type {
-  APIError,
+  FormattedAPIError,
   Filter,
   Params,
   ResourcePage,
@@ -29,7 +29,7 @@ export const useLoadBalancerRoutesQuery = (
   params: Params,
   filter: Filter
 ) => {
-  return useQuery<ResourcePage<Route>, APIError[]>(
+  return useQuery<ResourcePage<Route>, FormattedAPIError[]>(
     [QUERY_KEY, 'loadbalancer', id, 'routes', 'paginated', params, filter],
     () => getLoadbalancerRoutes(id, params, filter),
     { keepPreviousData: true }
@@ -38,7 +38,7 @@ export const useLoadBalancerRoutesQuery = (
 
 export const useLoadBalancerRouteCreateMutation = (loadbalancerId: number) => {
   const queryClient = useQueryClient();
-  return useMutation<Route, APIError[], CreateRoutePayload>(
+  return useMutation<Route, FormattedAPIError[], CreateRoutePayload>(
     (data) => createLoadbalancerRoute(loadbalancerId, data),
     {
       onSuccess() {
@@ -58,7 +58,7 @@ export const useLoadBalancerRouteUpdateMutation = (
   routeId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<Route, APIError[], UpdateRoutePayload>(
+  return useMutation<Route, FormattedAPIError[], UpdateRoutePayload>(
     (data) => updateLoadbalancerRoute(loadbalancerId, routeId, data),
     {
       onError() {
@@ -90,7 +90,7 @@ export const useLoadBalancerRouteDeleteMutation = (
   routeId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(
+  return useMutation<{}, FormattedAPIError[]>(
     () => deleteLoadbalancerRoute(loadbalancerId, routeId),
     {
       onSuccess() {
@@ -109,7 +109,7 @@ export const useLoadBalancerRoutesInfiniteQuery = (
   id: number,
   filter: Filter = {}
 ) => {
-  return useInfiniteQuery<ResourcePage<Route>, APIError[]>(
+  return useInfiniteQuery<ResourcePage<Route>, FormattedAPIError[]>(
     [QUERY_KEY, 'loadbalancer', id, 'routes', 'infinite', filter],
     ({ pageParam }) =>
       getLoadbalancerRoutes(id, { page: pageParam, page_size: 25 }, filter),

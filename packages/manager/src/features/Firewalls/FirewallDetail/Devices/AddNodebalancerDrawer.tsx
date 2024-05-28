@@ -85,7 +85,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
       const errorReason = getAPIErrorOrDefault(
         result.reason,
         `Failed to add NodeBalancer ${label} (ID ${id}).`
-      )[0].reason;
+      )[0].formattedReason;
 
       if (!firstError) {
         firstError = errorReason;

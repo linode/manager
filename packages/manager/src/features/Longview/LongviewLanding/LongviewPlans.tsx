@@ -141,7 +141,7 @@ export const LongviewPlans = (props: LongviewPlansProps) => {
           'There was an error updating your Longview Plan.'
         );
         setUpdateLoading(false);
-        setUpdateErrorMsg(normalizedError[0].reason);
+        setUpdateErrorMsg(normalizedError[0].formattedReason);
       });
   };
 
@@ -274,7 +274,7 @@ export const LongviewPlansTableBody = React.memo(
     }
 
     if (error && error.length > 0) {
-      return <TableRowError colSpan={12} message={error[0].reason} />;
+      return <TableRowError colSpan={12} message={error[0].formattedReason} />;
     }
 
     return (

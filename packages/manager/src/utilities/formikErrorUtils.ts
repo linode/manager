@@ -6,6 +6,7 @@ import { getAPIErrorOrDefault } from './errorUtils';
 import { isNilOrEmpty } from './isNilOrEmpty';
 
 import type { FormikErrors } from 'formik';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const getFormikErrorsFromAPIErrors = <T>(
   errors: APIError[],
@@ -40,7 +41,7 @@ export const handleFieldErrors = (
 
 export const handleGeneralErrors = (
   callback: (error: unknown) => void,
-  apiErrors: APIError[],
+  apiErrors: FormattedAPIError[],
   defaultMessage: string = 'An error has occurred.'
 ) => {
   if (!apiErrors) {

@@ -105,7 +105,7 @@ export const ConfirmTransferCancelDialog = React.memo((props: Props) => {
           ? submissionErrors.map((thisError, idx) => (
               <Notice
                 key={`form-submit-error-${idx}`}
-                text={thisError.reason}
+                text={thisError.formattedReason}
                 variant="error"
               />
             ))

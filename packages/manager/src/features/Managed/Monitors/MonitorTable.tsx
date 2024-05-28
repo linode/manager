@@ -130,7 +130,7 @@ export const MonitorTable = () => {
       .catch((err) => {
         handleError(
           getAPIErrorOrDefault(err, 'Error deleting this Service Monitor.')[0]
-            .reason
+            .formattedReason
         );
       });
   };

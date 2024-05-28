@@ -112,7 +112,7 @@ export const Apache = React.memo((props: Props) => {
         <ApacheGraphs
           data={data?.Applications?.Apache}
           end={time.end}
-          error={lastUpdatedError?.[0]?.reason || error}
+          error={lastUpdatedError?.[0]?.formattedReason || error}
           isToday={isToday}
           loading={loading}
           processesData={apacheProcesses.data?.Processes ?? {}}

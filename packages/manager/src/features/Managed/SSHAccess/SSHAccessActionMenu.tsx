@@ -29,7 +29,7 @@ export const SSHAccessActionMenu = (props: SSHAccessActionMenuProps) => {
 
   const handleError = (message: string, error: APIError[]) => {
     const errMessage = getAPIErrorOrDefault(error, message);
-    enqueueSnackbar(errMessage[0].reason, { variant: 'error' });
+    enqueueSnackbar(errMessage[0].formattedReason, { variant: 'error' });
   };
 
   const actions: Action[] = [

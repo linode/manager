@@ -71,7 +71,7 @@ const Contacts = () => {
       })
       .catch((e) =>
         handleError(
-          getAPIErrorOrDefault(e, 'Error deleting this contact.')[0].reason
+          getAPIErrorOrDefault(e, 'Error deleting this contact.')[0].formattedReason
         )
       );
   };

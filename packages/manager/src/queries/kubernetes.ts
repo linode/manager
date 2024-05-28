@@ -25,15 +25,11 @@ import {
   updateKubernetesCluster,
   updateNodePool,
 } from '@linode/api-v4';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
+import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
@@ -85,33 +81,37 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
 });
 
 export const useKubernetesClustersQuery = (params: Params, filter: Filter) => {
-  return useQuery<ResourcePage<KubernetesCluster>, APIError[]>({
+  return useQuery<ResourcePage<KubernetesCluster>, FormattedAPIError[]>({
     ...kubernetesQueries.lists._ctx.paginated(params, filter),
     keepPreviousData: true,
   });
 };
 
 export const useKubernetesClusterQuery = (id: number) => {
-  return useQuery<KubernetesCluster, APIError[]>(kubernetesQueries.cluster(id));
+  return useQuery<KubernetesCluster, FormattedAPIError[]>(
+    kubernetesQueries.cluster(id)
+  );
 };
 
 export const useKubernetesClusterMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<KubernetesCluster, APIError[], Partial<KubernetesCluster>>(
-    {
-      mutationFn: (data) => updateKubernetesCluster(id, data),
-      onSuccess(data) {
-        queryClient.invalidateQueries({
-          queryKey: kubernetesQueries.lists.queryKey,
-        });
-        queryClient.setQueryData(kubernetesQueries.cluster(id).queryKey, data);
-      },
-    }
-  );
+  return useMutation<
+    KubernetesCluster,
+    FormattedAPIError[],
+    Partial<KubernetesCluster>
+  >({
+    mutationFn: (data) => updateKubernetesCluster(id, data),
+    onSuccess(data) {
+      queryClient.invalidateQueries({
+        queryKey: kubernetesQueries.lists.queryKey,
+      });
+      queryClient.setQueryData(kubernetesQueries.cluster(id).queryKey, data);
+    },
+  });
 };
 
 export const useAllKubernetesClusterAPIEndpointsQuery = (id: number) => {
-  return useQuery<KubernetesEndpointResponse[], APIError[]>({
+  return useQuery<KubernetesEndpointResponse[], FormattedAPIError[]>({
     ...kubernetesQueries.cluster(id)._ctx.endpoints,
     keepPreviousData: true,
     refetchOnMount: true,
@@ -124,7 +124,7 @@ export const useKubenetesKubeConfigQuery = (
   clusterId: number,
   enabled = false
 ) =>
-  useQuery<string, APIError[]>({
+  useQuery<string, FormattedAPIError[]>({
     ...kubernetesQueries.cluster(clusterId)._ctx.kubeconfig,
     enabled,
     refetchOnMount: true,
@@ -134,7 +134,7 @@ export const useKubenetesKubeConfigQuery = (
 
 export const useResetKubeConfigMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { id: number }>({
+  return useMutation<{}, FormattedAPIError[], { id: number }>({
     mutationFn: ({ id }) => resetKubeConfig(id),
     onSuccess(_, { id }) {
       queryClient.removeQueries({
@@ -146,7 +146,7 @@ export const useResetKubeConfigMutation = () => {
 
 export const useDeleteKubernetesClusterMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { id: number }>({
+  return useMutation<{}, FormattedAPIError[], { id: number }>({
     mutationFn: ({ id }) => deleteKubernetesCluster(id),
     onSuccess(data, variables) {
       queryClient.removeQueries({
@@ -161,7 +161,11 @@ export const useDeleteKubernetesClusterMutation = () => {
 
 export const useCreateKubernetesClusterMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<KubernetesCluster, APIError[], CreateKubeClusterPayload>({
+  return useMutation<
+    KubernetesCluster,
+    FormattedAPIError[],
+    CreateKubeClusterPayload
+  >({
     mutationFn: createKubernetesCluster,
     onSuccess() {
       queryClient.invalidateQueries({
@@ -177,7 +181,11 @@ export const useCreateKubernetesClusterMutation = () => {
 
 export const useCreateNodePoolMutation = (clusterId: number) => {
   const queryClient = useQueryClient();
-  return useMutation<KubeNodePoolResponse, APIError[], CreateNodePoolData>({
+  return useMutation<
+    KubeNodePoolResponse,
+    FormattedAPIError[],
+    CreateNodePoolData
+  >({
     mutationFn: (data) => createNodePool(clusterId, data),
     onSuccess() {
       queryClient.invalidateQueries({
@@ -194,7 +202,7 @@ export const useUpdateNodePoolMutation = (
   const queryClient = useQueryClient();
   return useMutation<
     KubeNodePoolResponse,
-    APIError[],
+    FormattedAPIError[],
     Partial<UpdateNodePoolData>
   >({
     mutationFn: (data) => updateNodePool(clusterId, poolId, data),
@@ -211,7 +219,7 @@ export const useDeleteNodePoolMutation = (
   poolId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: () => deleteNodePool(clusterId, poolId),
     onSuccess() {
       queryClient.invalidateQueries({
@@ -226,7 +234,7 @@ export const useRecycleNodePoolMutation = (
   poolId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: () => recycleAllNodes(clusterId, poolId),
     onSuccess() {
       queryClient.invalidateQueries({
@@ -238,7 +246,7 @@ export const useRecycleNodePoolMutation = (
 
 export const useRecycleNodeMutation = (clusterId: number, nodeId: string) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: () => recycleNode(clusterId, nodeId),
     onSuccess() {
       queryClient.invalidateQueries({
@@ -250,7 +258,7 @@ export const useRecycleNodeMutation = (clusterId: number, nodeId: string) => {
 
 export const useRecycleClusterMutation = (clusterId: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: () => recycleClusterNodes(clusterId),
     onSuccess() {
       queryClient.invalidateQueries({
@@ -264,20 +272,20 @@ export const useAllKubernetesNodePoolQuery = (
   clusterId: number,
   options?: { enabled?: boolean; refetchInterval?: number }
 ) => {
-  return useQuery<KubeNodePoolResponse[], APIError[]>({
+  return useQuery<KubeNodePoolResponse[], FormattedAPIError[]>({
     ...kubernetesQueries.cluster(clusterId)._ctx.pools,
     ...options,
   });
 };
 
 export const useKubernetesDashboardQuery = (clusterId: number) => {
-  return useQuery<KubernetesDashboardResponse, APIError[]>(
+  return useQuery<KubernetesDashboardResponse, FormattedAPIError[]>(
     kubernetesQueries.cluster(clusterId)._ctx.dashboard
   );
 };
 
 export const useKubernetesVersionQuery = () =>
-  useQuery<KubernetesVersion[], APIError[]>({
+  useQuery<KubernetesVersion[], FormattedAPIError[]>({
     ...kubernetesQueries.versions,
     ...queryPresets.oneTimeFetch,
   });
@@ -287,7 +295,7 @@ export const useKubernetesVersionQuery = () =>
  * Before you use this, consider implementing infinite scroll insted.
  */
 export const useAllKubernetesClustersQuery = (enabled = false) => {
-  return useQuery<KubernetesCluster[], APIError[]>({
+  return useQuery<KubernetesCluster[], FormattedAPIError[]>({
     ...kubernetesQueries.lists._ctx.all,
     enabled,
   });

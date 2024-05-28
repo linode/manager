@@ -181,7 +181,7 @@ export const ManagedChartPanel = () => {
           getAPIErrorOrDefault(
             error,
             'Unable to load your usage statistics.'
-          )[0].reason
+          )[0].formattedReason
         }
       />
     );

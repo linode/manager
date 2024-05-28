@@ -85,7 +85,7 @@ const AccountLogins = () => {
       );
     }
     if (error) {
-      return <TableRowError colSpan={5} message={error[0].reason} />;
+      return <TableRowError colSpan={5} message={error[0].formattedReason} />;
     }
     if (data?.results == 0) {
       return <TableRowEmpty colSpan={5} message="No account logins" />;

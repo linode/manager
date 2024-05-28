@@ -2,10 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 
 import { accountQueries } from './queries';
 
-import type { APIError, AccountAvailability } from '@linode/api-v4';
+import type { AccountAvailability } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const useAllAccountAvailabilitiesQuery = (enabled: boolean = true) =>
-  useQuery<AccountAvailability[], APIError[]>({
+  useQuery<AccountAvailability[], FormattedAPIError[]>({
     ...accountQueries.availability,
     enabled,
   });

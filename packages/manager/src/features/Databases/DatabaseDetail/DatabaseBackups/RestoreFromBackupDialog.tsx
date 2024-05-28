@@ -63,7 +63,7 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
         <Notice
           text={
             getAPIErrorOrDefault(error, 'Unable to restore this backup.')[0]
-              .reason
+              .formattedReason
           }
           variant="error"
         />

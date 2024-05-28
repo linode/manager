@@ -159,10 +159,10 @@ export const RebuildFromStackScript = (props: Props) => {
            * we're listening for in Formik, and use a more helpful message.
            */
           if (thisError.field === 'script') {
-            const reason = thisError.reason.match(/invalid stackscript/i)
+            const reason = thisError.formattedReason.match(/invalid stackscript/i)
               ? 'The selected StackScript is invalid.'
-              : thisError.reason;
-            return { field: 'stackscript_id', reason };
+              : thisError.formattedReason;
+            return { field: 'stackscript_id', formattedReason: reason };
           } else {
             return thisError;
           }
@@ -188,7 +188,7 @@ export const RebuildFromStackScript = (props: Props) => {
         // If not, we've got an error.
         maybeErrors.push({
           field: eachUdf.name,
-          reason: `A value for the ${eachUdf.name} is required.`,
+          formattedReason: `A value for the ${eachUdf.name} is required.`,
         });
       }
     });

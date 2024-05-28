@@ -84,7 +84,7 @@ export const CredentialList = () => {
       })
       .catch((e) =>
         handleError(
-          getAPIErrorOrDefault(e, 'Error deleting this credential.')[0].reason
+          getAPIErrorOrDefault(e, 'Error deleting this credential.')[0].formattedReason
         )
       );
   };

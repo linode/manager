@@ -45,7 +45,7 @@ export const SessionExpirationDialog = React.memo(
       validateParentToken,
     } = useParentChildAuthentication();
 
-    const createTokenErrorReason = createTokenError?.[0]?.reason;
+    const createTokenErrorReason = createTokenError?.[0]?.formattedReason;
 
     const formattedTimeRemaining = `${timeRemaining.minutes}:${
       timeRemaining.seconds < 10 ? '0' : ''

@@ -142,7 +142,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
   return (
     <ConfirmationDialog
       actions={actions}
-      error={errors ? errors[0].reason : undefined}
+      error={errors ? errors[0].formattedReason : undefined}
       onClose={onClose}
       onExited={onExited}
       open={open}

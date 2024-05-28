@@ -34,7 +34,7 @@ export const LongviewDeleteDialog = React.memo((props: Props) => {
     if (!selectedLongviewClientID) {
       return setErrors([
         {
-          reason: 'There was an issue deleting this Longview Client.',
+          formattedReason: 'There was an issue deleting this Longview Client.',
         },
       ]);
     }
@@ -62,7 +62,7 @@ export const LongviewDeleteDialog = React.memo((props: Props) => {
           onSubmit={handleDelete}
         />
       }
-      error={errors ? errors[0].reason : ''}
+      error={errors ? errors[0].formattedReason : ''}
       onClose={props.closeDialog}
       open={open}
       title={`Delete ${label ? label : 'this Longview Client'}?`}

@@ -24,7 +24,6 @@ import {
   updateLinode,
 } from '@linode/api-v4/lib/linodes';
 import {
-  APIError,
   DeepPartial,
   Filter,
   Params,
@@ -38,6 +37,7 @@ import {
 } from '@tanstack/react-query';
 
 import { placementGroupQueries } from 'src/queries/placementGroups';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { manuallySetVPCConfigInterfacesToActive } from 'src/utilities/configs';
 
 import { accountQueries } from '../account/queries';
@@ -53,7 +53,7 @@ export const useLinodesQuery = (
   filter: Filter = {},
   enabled: boolean = true
 ) => {
-  return useQuery<ResourcePage<Linode>, APIError[]>(
+  return useQuery<ResourcePage<Linode>, FormattedAPIError[]>(
     [queryKey, 'paginated', params, filter],
     () => getLinodes(params, filter),
     { ...queryPresets.longLived, enabled, keepPreviousData: true }
@@ -65,7 +65,7 @@ export const useAllLinodesQuery = (
   filter: Filter = {},
   enabled: boolean = true
 ) => {
-  return useQuery<Linode[], APIError[]>(
+  return useQuery<Linode[], FormattedAPIError[]>(
     [queryKey, 'all', params, filter],
     () => getAllLinodesRequest(params, filter),
     { ...queryPresets.longLived, enabled }
@@ -73,7 +73,7 @@ export const useAllLinodesQuery = (
 };
 
 export const useInfiniteLinodesQuery = (filter: Filter = {}) =>
-  useInfiniteQuery<ResourcePage<Linode>, APIError[]>(
+  useInfiniteQuery<ResourcePage<Linode>, FormattedAPIError[]>(
     [queryKey, 'infinite', filter],
     ({ pageParam }) => getLinodes({ page: pageParam, page_size: 25 }, filter),
     {
@@ -87,7 +87,7 @@ export const useInfiniteLinodesQuery = (filter: Filter = {}) =>
   );
 
 export const useLinodeQuery = (id: number, enabled = true) => {
-  return useQuery<Linode, APIError[]>(
+  return useQuery<Linode, FormattedAPIError[]>(
     [queryKey, 'linode', id, 'details'],
     () => getLinode(id),
     {
@@ -98,7 +98,7 @@ export const useLinodeQuery = (id: number, enabled = true) => {
 
 export const useLinodeUpdateMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<Linode, APIError[], DeepPartial<Linode>>(
+  return useMutation<Linode, FormattedAPIError[], DeepPartial<Linode>>(
     (data) => updateLinode(id, data),
     {
       onSuccess(linode) {
@@ -116,7 +116,7 @@ export const useAllLinodeKernelsQuery = (
   filter: Filter = {},
   enabled = true
 ) => {
-  return useQuery<Kernel[], APIError[]>(
+  return useQuery<Kernel[], FormattedAPIError[]>(
     [queryKey, 'linode', 'kernels', params, filter],
     () => getAllLinodeKernelsRequest(params, filter),
     { enabled }
@@ -124,14 +124,14 @@ export const useAllLinodeKernelsQuery = (
 };
 
 export const useLinodeKernelQuery = (kernel: string) => {
-  return useQuery<Kernel, APIError[]>(
+  return useQuery<Kernel, FormattedAPIError[]>(
     [queryKey, 'linode', 'kernels', 'kernel', kernel],
     () => getLinodeKernel(kernel)
   );
 };
 
 export const useLinodeLishTokenQuery = (id: number) => {
-  return useQuery<{ lish_token: string }, APIError[]>(
+  return useQuery<{ lish_token: string }, FormattedAPIError[]>(
     [queryKey, 'linode', id, 'lish-token'],
     () => getLinodeLishToken(id),
     { staleTime: Infinity }
@@ -148,7 +148,7 @@ export const useDeleteLinodeMutation = (id: number) => {
   ]);
   const placementGroupId = linode?.placement_group?.id;
 
-  return useMutation<{}, APIError[]>(() => deleteLinode(id), {
+  return useMutation<{}, FormattedAPIError[]>(() => deleteLinode(id), {
     onSuccess() {
       queryClient.removeQueries([queryKey, 'linode', id]);
       queryClient.invalidateQueries([queryKey, 'paginated']);
@@ -170,36 +170,39 @@ export const useDeleteLinodeMutation = (id: number) => {
 
 export const useCreateLinodeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Linode, APIError[], CreateLinodeRequest>(createLinode, {
-    onSuccess(linode, variables) {
-      queryClient.invalidateQueries([queryKey, 'paginated']);
-      queryClient.invalidateQueries([queryKey, 'all']);
-      queryClient.invalidateQueries([queryKey, 'infinite']);
-      queryClient.setQueryData(
-        [queryKey, 'linode', linode.id, 'details'],
-        linode
-      );
-      // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries(profileQueries.grants.queryKey);
-
-      if (variables.interfaces?.some((i) => i.purpose === 'vlan')) {
-        // If a Linode is created with a VLAN, invalidate vlans because
-        // they are derived from Linode configs.
-        queryClient.invalidateQueries(vlanQueries._def);
-      }
-
-      // If the Linode is assigned to a placement group on creation,
-      // we need to invalidate the placement group queries
-      if (variables.placement_group?.id) {
-        queryClient.invalidateQueries(
-          placementGroupQueries.placementGroup(variables.placement_group.id)
-            .queryKey
+  return useMutation<Linode, FormattedAPIError[], CreateLinodeRequest>(
+    createLinode,
+    {
+      onSuccess(linode, variables) {
+        queryClient.invalidateQueries([queryKey, 'paginated']);
+        queryClient.invalidateQueries([queryKey, 'all']);
+        queryClient.invalidateQueries([queryKey, 'infinite']);
+        queryClient.setQueryData(
+          [queryKey, 'linode', linode.id, 'details'],
+          linode
         );
-        queryClient.invalidateQueries(placementGroupQueries.all._def);
-        queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      }
-    },
-  });
+        // If a restricted user creates an entity, we must make sure grants are up to date.
+        queryClient.invalidateQueries(profileQueries.grants.queryKey);
+
+        if (variables.interfaces?.some((i) => i.purpose === 'vlan')) {
+          // If a Linode is created with a VLAN, invalidate vlans because
+          // they are derived from Linode configs.
+          queryClient.invalidateQueries(vlanQueries._def);
+        }
+
+        // If the Linode is assigned to a placement group on creation,
+        // we need to invalidate the placement group queries
+        if (variables.placement_group?.id) {
+          queryClient.invalidateQueries(
+            placementGroupQueries.placementGroup(variables.placement_group.id)
+              .queryKey
+          );
+          queryClient.invalidateQueries(placementGroupQueries.all._def);
+          queryClient.invalidateQueries(placementGroupQueries.paginated._def);
+        }
+      },
+    }
+  );
 };
 
 interface LinodeCloneDataWithId extends LinodeCloneData {
@@ -208,7 +211,7 @@ interface LinodeCloneDataWithId extends LinodeCloneData {
 
 export const useCloneLinodeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Linode, APIError[], LinodeCloneDataWithId>(
+  return useMutation<Linode, FormattedAPIError[], LinodeCloneDataWithId>(
     ({ sourceLinodeId, ...data }) => cloneLinode(sourceLinodeId, data),
     {
       onSuccess(linode) {
@@ -229,7 +232,7 @@ export const useBootLinodeMutation = (
   configsToUpdate?: Config[]
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { config_id?: number }>(
+  return useMutation<{}, FormattedAPIError[], { config_id?: number }>(
     ({ config_id }) => linodeBoot(id, config_id),
     {
       onSuccess() {
@@ -262,7 +265,7 @@ export const useRebootLinodeMutation = (
   configsToUpdate?: Config[]
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { config_id?: number }>(
+  return useMutation<{}, FormattedAPIError[], { config_id?: number }>(
     ({ config_id }) => linodeReboot(id, config_id),
     {
       onSuccess() {
@@ -292,7 +295,7 @@ export const useRebootLinodeMutation = (
 
 export const useShutdownLinodeMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => linodeShutdown(id), {
+  return useMutation<{}, FormattedAPIError[]>(() => linodeShutdown(id), {
     onSuccess() {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.invalidateQueries([queryKey, 'all']);
@@ -303,13 +306,13 @@ export const useShutdownLinodeMutation = (id: number) => {
 };
 
 export const useLinodeChangePasswordMutation = (id: number) =>
-  useMutation<{}, APIError[], { root_pass: string }>(({ root_pass }) =>
+  useMutation<{}, FormattedAPIError[], { root_pass: string }>(({ root_pass }) =>
     changeLinodePassword(id, root_pass)
   );
 
 export const useLinodeMigrateMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], MigrateLinodeRequest>(
+  return useMutation<{}, FormattedAPIError[], MigrateLinodeRequest>(
     (data) => scheduleOrQueueMigration(id, data),
     {
       onSuccess(id, data) {
@@ -333,7 +336,7 @@ export const useLinodeMigrateMutation = (id: number) => {
 
 export const useLinodeResizeMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], ResizeLinodePayload>(
+  return useMutation<{}, FormattedAPIError[], ResizeLinodePayload>(
     (data) => resizeLinode(id, data),
     {
       onSuccess() {
@@ -349,7 +352,7 @@ export const useLinodeResizeMutation = (id: number) => {
 
 export const useLinodeRescueMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], Devices>(
+  return useMutation<{}, FormattedAPIError[], Devices>(
     (data) => rescueLinode(id, data),
     {
       onSuccess() {

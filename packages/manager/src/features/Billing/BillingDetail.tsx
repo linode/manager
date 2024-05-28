@@ -42,7 +42,7 @@ export const BillingDetail = () => {
     const errorText = getAPIErrorOrDefault(
       accountError,
       'There was an error retrieving your account data.'
-    )[0].reason;
+    )[0].formattedReason;
     return <ErrorState errorText={errorText} />;
   }
 

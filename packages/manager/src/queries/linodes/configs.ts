@@ -1,5 +1,4 @@
 import {
-  APIError,
   Config,
   ConfigInterfaceOrderPayload,
   Interface,
@@ -18,11 +17,13 @@ import {
 } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 import { queryKey } from './linodes';
 import { getAllLinodeConfigs } from './requests';
 
 export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
-  return useQuery<Config[], APIError[]>(
+  return useQuery<Config[], FormattedAPIError[]>(
     [queryKey, 'linode', id, 'configs'],
     () => getAllLinodeConfigs(id),
     { enabled }
@@ -38,7 +39,7 @@ export const useLinodeConfigDeleteMutation = (
   configId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(
+  return useMutation<{}, FormattedAPIError[]>(
     () => deleteLinodeConfig(linodeId, configId),
     {
       onSuccess() {
@@ -55,7 +56,7 @@ export const useLinodeConfigDeleteMutation = (
 
 export const useLinodeConfigCreateMutation = (linodeId: number) => {
   const queryClient = useQueryClient();
-  return useMutation<Config, APIError[], LinodeConfigCreationData>(
+  return useMutation<Config, FormattedAPIError[], LinodeConfigCreationData>(
     (data) => createLinodeConfig(linodeId, data),
     {
       onSuccess() {
@@ -75,19 +76,20 @@ export const useLinodeConfigUpdateMutation = (
   configId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<Config, APIError[], Partial<LinodeConfigCreationData>>(
-    (data) => updateLinodeConfig(linodeId, configId, data),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries([
-          queryKey,
-          'linode',
-          linodeId,
-          configQueryKey,
-        ]);
-      },
-    }
-  );
+  return useMutation<
+    Config,
+    FormattedAPIError[],
+    Partial<LinodeConfigCreationData>
+  >((data) => updateLinodeConfig(linodeId, configId, data), {
+    onSuccess() {
+      queryClient.invalidateQueries([
+        queryKey,
+        'linode',
+        linodeId,
+        configQueryKey,
+      ]);
+    },
+  });
 };
 
 // Config Interface queries
@@ -95,7 +97,7 @@ export const useConfigInterfacesQuery = (
   linodeID: number,
   configID: number
 ) => {
-  return useQuery<Interface[], APIError[]>(
+  return useQuery<Interface[], FormattedAPIError[]>(
     [
       queryKey,
       'linode',
@@ -115,7 +117,7 @@ export const useConfigInterfaceQuery = (
   configID: number,
   interfaceID: number
 ) => {
-  return useQuery<Interface, APIError[]>(
+  return useQuery<Interface, FormattedAPIError[]>(
     [
       queryKey,
       'linode',
@@ -137,7 +139,7 @@ export const useConfigInterfacesOrderMutation = (
   configID: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], ConfigInterfaceOrderPayload>(
+  return useMutation<{}, FormattedAPIError[], ConfigInterfaceOrderPayload>(
     (data) => updateLinodeConfigOrder(linodeID, configID, data),
     {
       onSuccess() {
@@ -159,7 +161,7 @@ export const useAppendConfigInterfaceMutation = (
   configID: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<Interface, APIError[], InterfacePayload>(
+  return useMutation<Interface, FormattedAPIError[], InterfacePayload>(
     (data) => appendConfigInterface(linodeID, configID, data),
     {
       onSuccess() {
@@ -183,11 +185,23 @@ export const useUpdateConfigInterfaceMutation = (
   interfaceID: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<Interface, APIError[], UpdateConfigInterfacePayload>(
-    (data) => updateConfigInterface(linodeID, configID, interfaceID, data),
-    {
-      onSuccess: (InterfaceObj) => {
-        queryClient.invalidateQueries([
+  return useMutation<
+    Interface,
+    FormattedAPIError[],
+    UpdateConfigInterfacePayload
+  >((data) => updateConfigInterface(linodeID, configID, interfaceID, data), {
+    onSuccess: (InterfaceObj) => {
+      queryClient.invalidateQueries([
+        queryKey,
+        'linode',
+        linodeID,
+        configQueryKey,
+        'config',
+        configID,
+        interfaceQueryKey,
+      ]);
+      queryClient.setQueryData<Interface>(
+        [
           queryKey,
           'linode',
           linodeID,
@@ -195,24 +209,13 @@ export const useUpdateConfigInterfaceMutation = (
           'config',
           configID,
           interfaceQueryKey,
-        ]);
-        queryClient.setQueryData<Interface>(
-          [
-            queryKey,
-            'linode',
-            linodeID,
-            configQueryKey,
-            'config',
-            configID,
-            interfaceQueryKey,
-            'interface',
-            InterfaceObj.id,
-          ],
-          InterfaceObj
-        );
-      },
-    }
-  );
+          'interface',
+          InterfaceObj.id,
+        ],
+        InterfaceObj
+      );
+    },
+  });
 };
 
 export const useDeleteConfigInterfaceMutation = (
@@ -221,7 +224,7 @@ export const useDeleteConfigInterfaceMutation = (
   interfaceID: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(
+  return useMutation<{}, FormattedAPIError[]>(
     () => deleteLinodeConfigInterface(linodeID, configID, interfaceID),
     {
       onSuccess() {

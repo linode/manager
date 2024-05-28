@@ -38,7 +38,7 @@ export const Referrals = () => {
           getAPIErrorOrDefault(
             profileError,
             'Unable to load referral information.'
-          )[0].reason
+          )[0].formattedReason
         }
         variant="error"
       />

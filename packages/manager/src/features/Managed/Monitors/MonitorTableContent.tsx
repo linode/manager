@@ -37,7 +37,7 @@ export const MonitorTableContent = (props: MonitorTableContentProps) => {
   }
 
   if (error) {
-    return <TableRowError colSpan={4} message={error[0].reason} />;
+    return <TableRowError colSpan={4} message={error[0].formattedReason} />;
   }
 
   if (monitors.length === 0) {

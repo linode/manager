@@ -61,9 +61,9 @@ export const SubnetContent = (props: Props) => {
       {subnetErrors
         ? subnetErrors.map((apiError: APIError) => (
             <Notice
-              key={apiError.reason}
+              key={apiError.formattedReason}
               spacingBottom={8}
-              text={apiError.reason}
+              text={apiError.formattedReason}
               variant="error"
             />
           ))

@@ -197,7 +197,7 @@ export const PaymentDrawer = (props: Props) => {
           getAPIErrorOrDefault(
             errorResponse,
             'Unable to make a payment at this time.'
-          )[0].reason
+          )[0].formattedReason
         );
       });
   };

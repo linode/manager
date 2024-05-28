@@ -68,7 +68,7 @@ const PaymentInformation = (props: Props) => {
       .catch((e: APIError[]) => {
         setDeleteLoading(false);
         setDeleteError(
-          getAPIErrorOrDefault(e, 'Unable to delete payment method.')[0].reason
+          getAPIErrorOrDefault(e, 'Unable to delete payment method.')[0].formattedReason
         );
       });
   };

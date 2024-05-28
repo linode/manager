@@ -195,7 +195,7 @@ export const SearchLanding = (props: SearchLandingProps) => {
         .catch((error) => {
           setAPIError(
             getAPIErrorOrDefault(error, 'Error loading search results')[0]
-              .reason
+              .formattedReason
           );
           setAPILoading(false);
         });

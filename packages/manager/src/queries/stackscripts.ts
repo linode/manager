@@ -3,17 +3,13 @@ import {
   getStackScript,
   getStackScripts,
 } from '@linode/api-v4/lib/stackscripts';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
+import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
@@ -40,7 +36,7 @@ const stackscriptQueries = createQueryKeys('stackscripts', {
 });
 
 export const useMarketplaceAppsQuery = (enabled: boolean) => {
-  return useQuery<StackScript[], APIError[]>({
+  return useQuery<StackScript[], FormattedAPIError[]>({
     ...stackscriptQueries.marketplace,
     enabled,
     ...queryPresets.oneTimeFetch,
@@ -48,7 +44,7 @@ export const useMarketplaceAppsQuery = (enabled: boolean) => {
 };
 
 export const useStackScriptQuery = (id: number, enabled = true) =>
-  useQuery<StackScript, APIError[]>({
+  useQuery<StackScript, FormattedAPIError[]>({
     ...stackscriptQueries.stackscript(id),
     enabled,
   });
@@ -57,7 +53,7 @@ export const useStackScriptsInfiniteQuery = (
   filter: Filter = {},
   enabled = true
 ) =>
-  useInfiniteQuery<ResourcePage<StackScript>, APIError[]>({
+  useInfiniteQuery<ResourcePage<StackScript>, FormattedAPIError[]>({
     ...stackscriptQueries.infinite(filter),
     enabled,
     getNextPageParam: ({ page, pages }) => {

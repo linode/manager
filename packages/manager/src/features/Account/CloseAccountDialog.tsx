@@ -97,7 +97,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       title="Are you sure you want to close your cloud computing services account?"
     >
       {errors ? (
-        <Notice text={errors ? errors[0].reason : ''} variant="error" />
+        <Notice text={errors ? errors[0].formattedReason : ''} variant="error" />
       ) : null}
       <StyledNoticeWrapper>
         <Notice spacingBottom={12} variant="warning">

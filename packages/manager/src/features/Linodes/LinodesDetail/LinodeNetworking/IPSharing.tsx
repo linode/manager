@@ -224,7 +224,7 @@ const IPSharingPanel = (props: Props) => {
 
     // if the user hasn't selected any IP to share or hasn't removed any, don't do anything
     if (areArraysEqual(linodeSharedIPs, ipsToShare)) {
-      setErrors([{ reason: 'Please select an action.' }]);
+      setErrors([{ formattedReason: 'Please select an action.' }]);
       setSubmitting(false);
 
       return;

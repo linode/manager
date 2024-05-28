@@ -15,7 +15,7 @@ import {
 import { QUERY_KEY } from './loadbalancers';
 
 import type {
-  APIError,
+  FormattedAPIError,
   Certificate,
   CreateCertificatePayload,
   Filter,
@@ -29,7 +29,7 @@ export const useLoadBalancerCertificatesQuery = (
   params: Params,
   filter: Filter
 ) => {
-  return useQuery<ResourcePage<Certificate>, APIError[]>(
+  return useQuery<ResourcePage<Certificate>, FormattedAPIError[]>(
     [
       QUERY_KEY,
       'loadbalancer',
@@ -49,7 +49,7 @@ export const useLoadbalancerCertificateQuery = (
   certificateId: number,
   enabled = true
 ) => {
-  return useQuery<Certificate, APIError[]>(
+  return useQuery<Certificate, FormattedAPIError[]>(
     [
       QUERY_KEY,
       'loadbalancer',
@@ -67,7 +67,7 @@ export const useLoadBalancerCertificateCreateMutation = (
   loadbalancerId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<Certificate, APIError[], CreateCertificatePayload>(
+  return useMutation<Certificate, FormattedAPIError[], CreateCertificatePayload>(
     (data) => createLoadbalancerCertificate(loadbalancerId, data),
     {
       onSuccess(certificate) {
@@ -98,7 +98,7 @@ export const useLoadBalancerCertificateMutation = (
   certificateId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<Certificate, APIError[], UpdateCertificatePayload>(
+  return useMutation<Certificate, FormattedAPIError[], UpdateCertificatePayload>(
     (data) =>
       updateLoadbalancerCertificate(loadbalancerId, certificateId, data),
     {
@@ -130,7 +130,7 @@ export const useLoadBalancerCertificateDeleteMutation = (
   certificateId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(
+  return useMutation<{}, FormattedAPIError[]>(
     () => deleteLoadbalancerCertificate(loadbalancerId, certificateId),
     {
       onSuccess() {
@@ -157,7 +157,7 @@ export const useLoadBalancerCertificatesInfiniteQuery = (
   id: number,
   filter: Filter = {}
 ) => {
-  return useInfiniteQuery<ResourcePage<Certificate>, APIError[]>(
+  return useInfiniteQuery<ResourcePage<Certificate>, FormattedAPIError[]>(
     [QUERY_KEY, 'loadbalancer', id, 'certificates', 'infinite', filter],
     ({ pageParam }) =>
       getLoadbalancerCertificates(

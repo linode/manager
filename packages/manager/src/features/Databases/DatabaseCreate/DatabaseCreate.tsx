@@ -601,8 +601,8 @@ const DatabaseCreate = () => {
             {ipErrorsFromAPI
               ? ipErrorsFromAPI.map((apiError: APIError) => (
                   <Notice
-                    key={apiError.reason}
-                    text={apiError.reason}
+                    key={apiError.formattedReason}
+                    text={apiError.formattedReason}
                     variant="error"
                   />
                 ))

@@ -1,5 +1,4 @@
 import {
-  APIError,
   LinodeBackupsResponse,
   cancelBackups,
   enableBackups,
@@ -9,10 +8,12 @@ import {
 } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 import { queryKey } from './linodes';
 
 export const useLinodeBackupsQuery = (id: number, enabled = true) => {
-  return useQuery<LinodeBackupsResponse, APIError[]>(
+  return useQuery<LinodeBackupsResponse, FormattedAPIError[]>(
     [queryKey, 'linode', id, 'backups'],
     () => getLinodeBackups(id),
     { enabled }
@@ -21,7 +22,7 @@ export const useLinodeBackupsQuery = (id: number, enabled = true) => {
 
 export const useLinodeBackupsEnableMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => enableBackups(id), {
+  return useMutation<{}, FormattedAPIError[]>(() => enableBackups(id), {
     onSuccess() {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.invalidateQueries([queryKey, 'all']);
@@ -33,7 +34,7 @@ export const useLinodeBackupsEnableMutation = (id: number) => {
 
 export const useLinodeBackupsCancelMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => cancelBackups(id), {
+  return useMutation<{}, FormattedAPIError[]>(() => cancelBackups(id), {
     onSuccess() {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.invalidateQueries([queryKey, 'all']);
@@ -45,7 +46,7 @@ export const useLinodeBackupsCancelMutation = (id: number) => {
 
 export const useLinodeBackupSnapshotMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { label: string }>(
+  return useMutation<{}, FormattedAPIError[], { label: string }>(
     ({ label }) => takeSnapshot(id, label),
     {
       onSuccess() {
@@ -62,7 +63,7 @@ export const useLinodeBackupSnapshotMutation = (id: number) => {
 export const useLinodeBackupRestoreMutation = () => {
   return useMutation<
     {},
-    APIError[],
+    FormattedAPIError[],
     {
       backupId: number;
       linodeId: number;

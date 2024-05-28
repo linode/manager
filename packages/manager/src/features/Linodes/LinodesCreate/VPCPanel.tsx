@@ -130,7 +130,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
       })) ?? [];
 
   const vpcError = error
-    ? getAPIErrorOrDefault(error, 'Unable to load VPCs')[0].reason
+    ? getAPIErrorOrDefault(error, 'Unable to load VPCs')[0].formattedReason
     : undefined;
 
   const getMainCopyVPC = () => {

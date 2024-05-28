@@ -69,7 +69,7 @@ export const LongviewClientHeader = enhanced(
         .catch((error) => {
           setUpdating(false);
           return Promise.reject(
-            getAPIErrorOrDefault(error, 'Error updating label')[0].reason
+            getAPIErrorOrDefault(error, 'Error updating label')[0].formattedReason
           );
         });
     };

@@ -14,16 +14,12 @@ import {
   updateFirewall,
   updateFirewallRules,
 } from '@linode/api-v4/lib/firewalls';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
+import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAll } from 'src/utilities/getAll';
 
 import { updateInPaginatedStore } from './base';
@@ -32,30 +28,31 @@ import { profileQueries } from './profile';
 export const queryKey = 'firewall';
 
 export const useAllFirewallDevicesQuery = (id: number) =>
-  useQuery<FirewallDevice[], APIError[]>(
+  useQuery<FirewallDevice[], FormattedAPIError[]>(
     [queryKey, 'firewall', id, 'devices'],
     () => getAllFirewallDevices(id)
   );
 
 export const useAddFirewallDeviceMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<FirewallDevice, APIError[], FirewallDevicePayload>(
-    (data) => addFirewallDevice(id, data),
-    {
-      onSuccess(data) {
-        // Refresh the cached device list
-        queryClient.invalidateQueries([queryKey, 'firewall', id, 'devices']);
+  return useMutation<
+    FirewallDevice,
+    FormattedAPIError[],
+    FirewallDevicePayload
+  >((data) => addFirewallDevice(id, data), {
+    onSuccess(data) {
+      // Refresh the cached device list
+      queryClient.invalidateQueries([queryKey, 'firewall', id, 'devices']);
 
-        // Refresh the cached result of the linode-specific firewalls query
-        queryClient.invalidateQueries([
-          linodesQueryKey,
-          'linode',
-          data.entity.id,
-          'firewalls',
-        ]);
-      },
-    }
-  );
+      // Refresh the cached result of the linode-specific firewalls query
+      queryClient.invalidateQueries([
+        linodesQueryKey,
+        'linode',
+        data.entity.id,
+        'firewalls',
+      ]);
+    },
+  });
 };
 
 export const useRemoveFirewallDeviceMutation = (
@@ -64,7 +61,7 @@ export const useRemoveFirewallDeviceMutation = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<{}, APIError[]>(
+  return useMutation<{}, FormattedAPIError[]>(
     () => deleteFirewallDevice(firewallId, deviceId),
     {
       onSuccess() {
@@ -80,7 +77,7 @@ export const useRemoveFirewallDeviceMutation = (
 };
 
 export const useFirewallsQuery = (params?: Params, filter?: Filter) => {
-  return useQuery<ResourcePage<Firewall>, APIError[]>(
+  return useQuery<ResourcePage<Firewall>, FormattedAPIError[]>(
     [queryKey, 'paginated', params, filter],
     () => getFirewalls(params, filter),
     { keepPreviousData: true }
@@ -88,13 +85,14 @@ export const useFirewallsQuery = (params?: Params, filter?: Filter) => {
 };
 
 export const useFirewallQuery = (id: number) => {
-  return useQuery<Firewall, APIError[]>([queryKey, 'firewall', id], () =>
-    getFirewall(id)
+  return useQuery<Firewall, FormattedAPIError[]>(
+    [queryKey, 'firewall', id],
+    () => getFirewall(id)
   );
 };
 
 export const useAllFirewallsQuery = (enabled: boolean = true) => {
-  return useQuery<Firewall[], APIError[]>(
+  return useQuery<Firewall[], FormattedAPIError[]>(
     [queryKey, 'all'],
     getAllFirewallsRequest,
     { enabled }
@@ -103,7 +101,7 @@ export const useAllFirewallsQuery = (enabled: boolean = true) => {
 
 export const useMutateFirewall = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<Firewall, APIError[], Partial<Firewall>>(
+  return useMutation<Firewall, FormattedAPIError[], Partial<Firewall>>(
     (data) => updateFirewall(id, data),
     {
       onSuccess(firewall) {
@@ -116,7 +114,7 @@ export const useMutateFirewall = (id: number) => {
 
 export const useCreateFirewall = () => {
   const queryClient = useQueryClient();
-  return useMutation<Firewall, APIError[], CreateFirewallPayload>(
+  return useMutation<Firewall, FormattedAPIError[], CreateFirewallPayload>(
     (data) => createFirewall(data),
     {
       onSuccess(firewall) {
@@ -131,7 +129,7 @@ export const useCreateFirewall = () => {
 
 export const useDeleteFirewall = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteFirewall(id), {
+  return useMutation<{}, FormattedAPIError[]>(() => deleteFirewall(id), {
     onSuccess() {
       queryClient.removeQueries([queryKey, 'firewall', id]);
       queryClient.invalidateQueries([queryKey, 'paginated']);
@@ -141,7 +139,7 @@ export const useDeleteFirewall = (id: number) => {
 
 export const useUpdateFirewallRulesMutation = (firewallId: number) => {
   const queryClient = useQueryClient();
-  return useMutation<FirewallRules, APIError[], FirewallRules>(
+  return useMutation<FirewallRules, FormattedAPIError[], FirewallRules>(
     (data) => updateFirewallRules(firewallId, data),
     {
       onSuccess(updatedRules) {

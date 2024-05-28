@@ -309,7 +309,7 @@ class NodeBalancerConfigurations extends React.Component<
 
   confirmationConfigError = () =>
     (this.state.deleteConfigConfirmDialog.errors || [])
-      .map((e) => e.reason)
+      .map((e) => e.formattedReason)
       .join(',');
 
   createNode = (configIdx: number, nodeIdx: number) => {
@@ -517,7 +517,7 @@ class NodeBalancerConfigurations extends React.Component<
           {
             error: {
               field: match[2],
-              reason: error.reason,
+              reason: error.formattedReason,
             },
             path: [+match[1], 'errors'],
           },

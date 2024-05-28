@@ -70,7 +70,7 @@ export const NetworkLanding = (props: Props) => {
       <StyledItemGrid className="py0" xs={12}>
         <NetworkGraphs
           end={time.end}
-          error={lastUpdatedError?.[0]?.reason || error}
+          error={lastUpdatedError?.[0]?.formattedReason || error}
           isToday={isToday}
           loading={loading}
           networkData={interfaces}

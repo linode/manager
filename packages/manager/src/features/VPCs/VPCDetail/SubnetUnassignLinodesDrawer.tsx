@@ -289,7 +289,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           />
         )}
         {unassignLinodesErrors.length > 0 && (
-          <Notice text={unassignLinodesErrors[0].reason} variant="error" />
+          <Notice text={unassignLinodesErrors[0].formattedReason} variant="error" />
         )}
         <Notice
           spacingBottom={singleLinodeToBeUnassigned ? 0 : 16}

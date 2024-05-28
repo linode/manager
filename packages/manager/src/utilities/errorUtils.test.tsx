@@ -14,7 +14,12 @@ describe('Error handling utilities', () => {
     it('should override a default error', () => {
       expect(
         getAPIErrorOrDefault(
-          [{ reason: DEFAULT_ERROR_MESSAGE }],
+          [
+            {
+              formattedReason: DEFAULT_ERROR_MESSAGE,
+              reason: DEFAULT_ERROR_MESSAGE,
+            },
+          ],
           'New error message'
         )
       ).toEqual([{ reason: 'New error message' }]);

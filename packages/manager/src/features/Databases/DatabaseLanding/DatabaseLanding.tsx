@@ -54,7 +54,7 @@ const DatabaseLanding = () => {
     return (
       <ErrorState
         errorText={
-          getAPIErrorOrDefault(error, 'Error loading your databases.')[0].reason
+          getAPIErrorOrDefault(error, 'Error loading your databases.')[0].formattedReason
         }
       />
     );

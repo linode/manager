@@ -44,7 +44,7 @@ export const PORT_PRESETS_ITEMS = sortBy(
 export const parseFirewallRuleError = (
   error: APIError
 ): FirewallRuleError | null => {
-  const { field, reason } = error;
+  const { field, formattedReason: reason } = error;
 
   if (!field) {
     return null;

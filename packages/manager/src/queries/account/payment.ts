@@ -3,7 +3,7 @@ import {
   PaymentMethod,
   makeDefaultPaymentMethod,
 } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
+import { FormattedAPIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useGrants } from 'src/queries/profile';
@@ -14,7 +14,7 @@ import { accountQueries } from './queries';
 export const useAllPaymentMethodsQuery = () => {
   const { data: grants } = useGrants();
 
-  return useQuery<PaymentMethod[], APIError[]>({
+  return useQuery<PaymentMethod[], FormattedAPIError[]>({
     ...accountQueries.paymentMethods,
     ...queryPresets.oneTimeFetch,
     enabled: grants?.global?.account_access !== null,
@@ -22,7 +22,7 @@ export const useAllPaymentMethodsQuery = () => {
 };
 
 export const useClientToken = () =>
-  useQuery<ClientToken, APIError[]>({
+  useQuery<ClientToken, FormattedAPIError[]>({
     ...accountQueries.clientToken,
     ...queryPresets.longLived,
   });
@@ -30,7 +30,7 @@ export const useClientToken = () =>
 export const useMakeDefaultPaymentMethodMutation = (id: number) => {
   const queryClient = useQueryClient();
 
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: () => makeDefaultPaymentMethod(id),
     onSuccess() {
       queryClient.setQueryData<PaymentMethod[]>(

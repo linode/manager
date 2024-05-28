@@ -55,7 +55,7 @@ export const DatabaseDetail = () => {
     return (
       <ErrorState
         errorText={
-          getAPIErrorOrDefault(error, 'Error loading your database.')[0].reason
+          getAPIErrorOrDefault(error, 'Error loading your database.')[0].formattedReason
         }
       />
     );
@@ -123,7 +123,7 @@ export const DatabaseDetail = () => {
           'label'
         );
 
-        const errorStrings: string[] = errors.map((e) => e.reason);
+        const errorStrings: string[] = errors.map((e) => e.formattedReason);
         setEditableLabelError(errorStrings[0]);
         return Promise.reject(errorStrings[0]);
       });

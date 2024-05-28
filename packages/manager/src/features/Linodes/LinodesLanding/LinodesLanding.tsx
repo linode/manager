@@ -127,7 +127,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
 
     if (linodesRequestError) {
       let errorText: JSX.Element | string =
-        linodesRequestError?.[0]?.reason ?? 'Error loading Linodes';
+        linodesRequestError?.[0]?.formattedReason ?? 'Error loading Linodes';
 
       if (
         typeof errorText === 'string' &&

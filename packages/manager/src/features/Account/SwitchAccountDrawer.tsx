@@ -51,7 +51,7 @@ export const SwitchAccountDrawer = (props: Props) => {
     validateParentToken,
   } = useParentChildAuthentication();
 
-  const createTokenErrorReason = createTokenError?.[0]?.reason;
+  const createTokenErrorReason = createTokenError?.[0]?.formattedReason;
 
   const handleSwitchToChildAccount = React.useCallback(
     async ({
@@ -98,7 +98,7 @@ export const SwitchAccountDrawer = (props: Props) => {
     if (!validateParentToken()) {
       const expiredTokenError: APIError = {
         field: 'token',
-        reason: PARENT_USER_SESSION_EXPIRED,
+        formattedReason: PARENT_USER_SESSION_EXPIRED,
       };
 
       setIsParentTokenError([expiredTokenError]);
@@ -129,7 +129,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         <Notice text={createTokenErrorReason} variant="error" />
       )}
       {isParentTokenError.length > 0 && (
-        <Notice text={isParentTokenError[0].reason} variant="error" />
+        <Notice text={isParentTokenError[0].formattedReason} variant="error" />
       )}
       <Typography
         sx={(theme) => ({

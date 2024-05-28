@@ -405,7 +405,9 @@ const NodeBalancerCreate = () => {
     setDeleteConfigConfirmDialog(clone(defaultDeleteConfigConfirmDialogState));
 
   const confirmationConfigError = () =>
-    (deleteConfigConfirmDialog.errors || []).map((e) => e.reason).join(',');
+    (deleteConfigConfirmDialog.errors || [])
+      .map((e) => e.formattedReason)
+      .join(',');
 
   const hasErrorFor = getAPIErrorFor(errorResources, error ?? undefined);
   const generalError = hasErrorFor('none');
@@ -753,7 +755,7 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
         return {
           error: {
             field: err.field,
-            reason: error.reason,
+            reason: error.formattedReason,
           },
           path: [...err.path, 'errors'],
         };

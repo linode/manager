@@ -45,7 +45,7 @@ const PaymentMethods = ({
           getAPIErrorOrDefault(
             error,
             'There was an error retrieving your payment methods.'
-          )[0].reason
+          )[0].formattedReason
         }
       </Typography>
     );

@@ -42,7 +42,7 @@ export const TablesPanel = () => {
   );
 
   const statsErrorString = error
-    ? getAPIErrorOrDefault(error, 'Unable to load stats')[0].reason
+    ? getAPIErrorOrDefault(error, 'Unable to load stats')[0].formattedReason
     : undefined;
 
   const statsNotReadyError =

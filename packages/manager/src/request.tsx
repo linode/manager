@@ -1,5 +1,5 @@
+import { APIError } from '@linode/api-v4';
 import { baseRequest } from '@linode/api-v4/lib/request';
-import { APIError } from '@linode/api-v4/lib/types';
 import {
   AxiosError,
   AxiosHeaders,

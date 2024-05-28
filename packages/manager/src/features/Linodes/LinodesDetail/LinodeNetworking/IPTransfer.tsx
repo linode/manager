@@ -433,7 +433,7 @@ export const IPTransfer = (props: Props) => {
       (ip) => ip.mode !== 'none'
     );
     if (noActionSelected) {
-      setError([{ reason: 'Please select an action.' }]);
+      setError([{ formattedReason: 'Please select an action.' }]);
       setSubmitting(false);
 
       return;
@@ -475,7 +475,7 @@ export const IPTransfer = (props: Props) => {
     <Dialog fullWidth onClose={onClose} open={open} title="IP Transfer">
       {error && (
         <Grid xs={12}>
-          {error.map(({ reason }, idx) => (
+          {error.map(({ formattedReason: reason }, idx) => (
             <Notice key={idx} text={reason} variant="error" />
           ))}
         </Grid>

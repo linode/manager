@@ -177,7 +177,7 @@ export const RebuildFromImage = (props: Props) => {
   };
 
   const _imagesError = imagesError
-    ? getAPIErrorOrDefault(imagesError, 'Unable to load Images')[0].reason
+    ? getAPIErrorOrDefault(imagesError, 'Unable to load Images')[0].formattedReason
     : undefined;
 
   return (

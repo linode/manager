@@ -10,7 +10,7 @@ describe('normalizeErrorMessage', () => {
   });
 
   it("returns the API error reason if it's one APIError", () => {
-    const apiError: APIError[] = [{ reason: INVALID_TOKEN }];
+    const apiError: APIError[] = [{ formattedReason: INVALID_TOKEN }];
     expect(normalizeErrorMessage(apiError as any)).toBe(INVALID_TOKEN);
   });
 

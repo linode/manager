@@ -8,6 +8,8 @@ import {
   deleteSSHKey,
   deleteTrustedDevice,
   disableTwoFactor,
+  getAppTokens,
+  getPersonalAccessTokens,
   getProfile,
   getSSHKeys,
   getTrustedDevices,
@@ -17,15 +19,8 @@ import {
   updateProfile,
   updateSSHKey,
   verifyPhoneNumberCode,
-  getAppTokens,
-  getPersonalAccessTokens,
 } from '@linode/api-v4/lib/profile';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
+import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   QueryClient,
@@ -35,6 +30,7 @@ import {
 } from '@tanstack/react-query';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { Grants } from '../../../api-v4/lib';
 import { accountQueries } from './account/queries';
@@ -70,7 +66,7 @@ export const profileQueries = createQueryKeys('profile', {
 });
 
 export const useProfile = (options: RequestOptions = {}) => {
-  return useQuery<Profile, APIError[]>({
+  return useQuery<Profile, FormattedAPIError[]>({
     ...profileQueries.profile(options),
     ...queryPresets.oneTimeFetch,
   });
@@ -78,7 +74,7 @@ export const useProfile = (options: RequestOptions = {}) => {
 
 export const useMutateProfile = () => {
   const queryClient = useQueryClient();
-  return useMutation<Profile, APIError[], Partial<Profile>>({
+  return useMutation<Profile, FormattedAPIError[], Partial<Profile>>({
     mutationFn: updateProfile,
     onSuccess: (newData) => updateProfileData(newData, queryClient),
   });
@@ -99,7 +95,7 @@ export const updateProfileData = (
 
 export const useGrants = () => {
   const { data: profile } = useProfile();
-  return useQuery<Grants, APIError[]>({
+  return useQuery<Grants, FormattedAPIError[]>({
     ...profileQueries.grants,
     ...queryPresets.oneTimeFetch,
     enabled: Boolean(profile?.restricted),
@@ -108,7 +104,7 @@ export const useGrants = () => {
 
 export const useSMSOptOutMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: smsOptOut,
     onSuccess: () => {
       updateProfileData({ verified_phone_number: null }, queryClient);
@@ -117,12 +113,12 @@ export const useSMSOptOutMutation = () => {
 };
 
 export const useSendPhoneVerificationCodeMutation = () =>
-  useMutation<{}, APIError[], SendPhoneVerificationCodePayload>({
+  useMutation<{}, FormattedAPIError[], SendPhoneVerificationCodePayload>({
     mutationFn: sendCodeToPhoneNumber,
   });
 
 export const useVerifyPhoneVerificationCodeMutation = () =>
-  useMutation<{}, APIError[], VerifyVerificationCodePayload>({
+  useMutation<{}, FormattedAPIError[], VerifyVerificationCodePayload>({
     mutationFn: verifyPhoneNumberCode,
   });
 
@@ -139,7 +135,11 @@ export const useSSHKeysQuery = (
 
 export const useCreateSSHKeyMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<SSHKey, APIError[], { label: string; ssh_key: string }>({
+  return useMutation<
+    SSHKey,
+    FormattedAPIError[],
+    { label: string; ssh_key: string }
+  >({
     mutationFn: createSSHKey,
     onSuccess() {
       queryClient.invalidateQueries(profileQueries.sshKeys._def);
@@ -151,7 +151,7 @@ export const useCreateSSHKeyMutation = () => {
 
 export const useUpdateSSHKeyMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<SSHKey, APIError[], { label: string }>({
+  return useMutation<SSHKey, FormattedAPIError[], { label: string }>({
     mutationFn: (data) => updateSSHKey(id, data),
     onSuccess() {
       queryClient.invalidateQueries(profileQueries.sshKeys._def);
@@ -163,7 +163,7 @@ export const useUpdateSSHKeyMutation = (id: number) => {
 
 export const useDeleteSSHKeyMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: () => deleteSSHKey(id),
     onSuccess() {
       queryClient.invalidateQueries(profileQueries.sshKeys._def);
@@ -183,14 +183,14 @@ export const sshKeyEventHandler = (event: EventHandlerData) => {
 };
 
 export const useTrustedDevicesQuery = (params?: Params, filter?: Filter) =>
-  useQuery<ResourcePage<TrustedDevice>, APIError[]>({
+  useQuery<ResourcePage<TrustedDevice>, FormattedAPIError[]>({
     ...profileQueries.trustedDevices(params, filter),
     keepPreviousData: true,
   });
 
 export const useRevokeTrustedDeviceMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: () => deleteTrustedDevice(id),
     onSuccess() {
       queryClient.invalidateQueries(profileQueries.trustedDevices._def);
@@ -200,7 +200,7 @@ export const useRevokeTrustedDeviceMutation = (id: number) => {
 
 export const useDisableTwoFactorMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: disableTwoFactor,
     onSuccess() {
       queryClient.invalidateQueries(profileQueries.profile().queryKey);

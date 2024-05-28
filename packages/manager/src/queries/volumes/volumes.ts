@@ -16,7 +16,7 @@ import {
   resizeVolume,
   updateVolume,
 } from '@linode/api-v4';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { ResourcePage } from '@linode/api-v4/lib/types';
 import { Filter, Params, PriceType } from '@linode/api-v4/src/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
@@ -30,6 +30,8 @@ import { accountQueries } from '../account/queries';
 import { queryPresets } from '../base';
 import { profileQueries } from '../profile';
 import { getAllVolumeTypes, getAllVolumes } from './requests';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const volumeQueries = createQueryKeys('volumes', {
   linode: (linodeId: number) => ({
@@ -66,19 +68,19 @@ export const volumeQueries = createQueryKeys('volumes', {
 });
 
 export const useVolumesQuery = (params: Params, filter: Filter) =>
-  useQuery<ResourcePage<Volume>, APIError[]>({
+  useQuery<ResourcePage<Volume>, FormattedAPIError[]>({
     ...volumeQueries.lists._ctx.paginated(params, filter),
     keepPreviousData: true,
   });
 
 export const useVolumeTypesQuery = () =>
-  useQuery<PriceType[], APIError[]>({
+  useQuery<PriceType[], FormattedAPIError[]>({
     ...volumeQueries.types,
     ...queryPresets.oneTimeFetch,
   });
 
 export const useInfiniteVolumesQuery = (filter: Filter) =>
-  useInfiniteQuery<ResourcePage<Volume>, APIError[]>({
+  useInfiniteQuery<ResourcePage<Volume>, FormattedAPIError[]>({
     ...volumeQueries.lists._ctx.infinite(filter),
     getNextPageParam: ({ page, pages }) => {
       if (page === pages) {
@@ -93,7 +95,7 @@ export const useAllVolumesQuery = (
   filter: Filter = {},
   enabled = true
 ) =>
-  useQuery<Volume[], APIError[]>({
+  useQuery<Volume[], FormattedAPIError[]>({
     ...volumeQueries.lists._ctx.all(params, filter),
     enabled,
   });
@@ -104,7 +106,7 @@ export const useLinodeVolumesQuery = (
   filter: Filter = {},
   enabled = true
 ) =>
-  useQuery<ResourcePage<Volume>, APIError[]>({
+  useQuery<ResourcePage<Volume>, FormattedAPIError[]>({
     ...volumeQueries.linode(linodeId)._ctx.volumes(params, filter),
     enabled,
     keepPreviousData: true,
@@ -116,7 +118,7 @@ interface ResizeVolumePayloadWithId extends ResizeVolumePayload {
 
 export const useResizeVolumeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Volume, APIError[], ResizeVolumePayloadWithId>({
+  return useMutation<Volume, FormattedAPIError[], ResizeVolumePayloadWithId>({
     mutationFn: ({ volumeId, ...data }) => resizeVolume(volumeId, data),
     onSuccess(volume) {
       // Invalidate all lists
@@ -139,7 +141,7 @@ interface CloneVolumePayloadWithId extends CloneVolumePayload {
 
 export const useCloneVolumeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Volume, APIError[], CloneVolumePayloadWithId>({
+  return useMutation<Volume, FormattedAPIError[], CloneVolumePayloadWithId>({
     mutationFn: ({ volumeId, ...data }) => cloneVolume(volumeId, data),
     onSuccess() {
       queryClient.invalidateQueries({
@@ -151,7 +153,7 @@ export const useCloneVolumeMutation = () => {
 
 export const useDeleteVolumeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { id: number }>({
+  return useMutation<{}, FormattedAPIError[], { id: number }>({
     mutationFn: ({ id }) => deleteVolume(id),
     onSuccess() {
       queryClient.invalidateQueries({
@@ -163,7 +165,7 @@ export const useDeleteVolumeMutation = () => {
 
 export const useCreateVolumeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Volume, APIError[], VolumeRequestPayload>({
+  return useMutation<Volume, FormattedAPIError[], VolumeRequestPayload>({
     mutationFn: createVolume,
     onSuccess(volume) {
       queryClient.invalidateQueries({
@@ -185,7 +187,7 @@ export const useCreateVolumeMutation = () => {
 export const useVolumesMigrateMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<{}, APIError[], number[]>({
+  return useMutation<{}, FormattedAPIError[], number[]>({
     mutationFn: migrateVolumes,
     onSuccess: () => {
       // If a customer "force" migrates they will then see a
@@ -207,7 +209,7 @@ interface UpdateVolumePayloadWithId extends UpdateVolumeRequest {
 
 export const useUpdateVolumeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Volume, APIError[], UpdateVolumePayloadWithId>({
+  return useMutation<Volume, FormattedAPIError[], UpdateVolumePayloadWithId>({
     mutationFn: ({ volumeId, ...data }) => updateVolume(volumeId, data),
     onSuccess(volume) {
       // Invalidate all lists
@@ -230,7 +232,7 @@ interface AttachVolumePayloadWithId extends AttachVolumePayload {
 
 export const useAttachVolumeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Volume, APIError[], AttachVolumePayloadWithId>({
+  return useMutation<Volume, FormattedAPIError[], AttachVolumePayloadWithId>({
     mutationFn: ({ volumeId, ...data }) => attachVolume(volumeId, data),
     onSuccess(volume) {
       // Invalidate all lists
@@ -248,6 +250,6 @@ export const useAttachVolumeMutation = () => {
 };
 
 export const useDetachVolumeMutation = () =>
-  useMutation<{}, APIError[], { id: number }>({
+  useMutation<{}, FormattedAPIError[], { id: number }>({
     mutationFn: ({ id }) => detachVolume(id),
   });

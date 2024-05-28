@@ -67,7 +67,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
     (tags: string[]) => {
       return updateLinode({ tags }).catch((e) =>
         enqueueSnackbar(
-          getAPIErrorOrDefault(e, 'Error updating tags')[0].reason,
+          getAPIErrorOrDefault(e, 'Error updating tags')[0].formattedReason,
           {
             variant: 'error',
           }

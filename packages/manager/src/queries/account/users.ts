@@ -6,7 +6,7 @@ import { useProfile } from 'src/queries/profile';
 import { accountQueries } from './queries';
 
 import type {
-  APIError,
+  FormattedAPIError,
   Filter,
   Grants,
   Params,
@@ -25,7 +25,7 @@ export const useAccountUsers = ({
 }) => {
   const { data: profile } = useProfile();
 
-  return useQuery<ResourcePage<User>, APIError[]>({
+  return useQuery<ResourcePage<User>, FormattedAPIError[]>({
     ...accountQueries.users._ctx.paginated(params, filters),
     enabled: enabled && !profile?.restricted,
     keepPreviousData: true,
@@ -33,7 +33,7 @@ export const useAccountUsers = ({
 };
 
 export const useAccountUser = (username: string) => {
-  return useQuery<User, APIError[]>({
+  return useQuery<User, FormattedAPIError[]>({
     ...accountQueries.users._ctx.user(username),
     // Enable the query if the user is not on the blocklist
     enabled: !getIsBlocklistedUser(username),
@@ -41,14 +41,14 @@ export const useAccountUser = (username: string) => {
 };
 
 export const useAccountUserGrants = (username: string) => {
-  return useQuery<Grants, APIError[]>(
+  return useQuery<Grants, FormattedAPIError[]>(
     accountQueries.users._ctx.user(username)._ctx.grants
   );
 };
 
 export const useAccountUserDeleteMutation = (username: string) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteUser(username), {
+  return useMutation<{}, FormattedAPIError[]>(() => deleteUser(username), {
     onSuccess() {
       queryClient.invalidateQueries(accountQueries.users._ctx.paginated._def);
       queryClient.removeQueries(

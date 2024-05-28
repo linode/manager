@@ -43,7 +43,7 @@ const GlobalSettings = () => {
     const errorText = getAPIErrorOrDefault(
       errors,
       'There was an error updating your account settings.'
-    )[0].reason;
+    )[0].formattedReason;
 
     return enqueueSnackbar(errorText, {
       variant: 'error',

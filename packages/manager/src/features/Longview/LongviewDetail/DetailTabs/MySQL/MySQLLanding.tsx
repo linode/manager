@@ -109,7 +109,7 @@ export const MySQLLanding = React.memo((props: Props) => {
         <MySQLGraphs
           data={data?.Applications?.MySQL}
           end={time.end}
-          error={lastUpdatedError?.[0]?.reason || error}
+          error={lastUpdatedError?.[0]?.formattedReason || error}
           isToday={isToday}
           loading={loading}
           processesData={MySQLProcesses.data?.Processes ?? {}}

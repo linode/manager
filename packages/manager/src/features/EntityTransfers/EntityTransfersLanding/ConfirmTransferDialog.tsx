@@ -191,7 +191,7 @@ export const DialogContent = React.memo((props: ContentProps) => {
             getAPIErrorOrDefault(
               errors ?? [],
               'Unable to load this transfer.'
-            )[0].reason
+            )[0].formattedReason
           }
         />
       </div>
@@ -208,7 +208,7 @@ export const DialogContent = React.memo((props: ContentProps) => {
           ? submissionErrors.map((thisError, idx) => (
               <Notice
                 key={`form-submit-error-${idx}`}
-                text={thisError.reason}
+                text={thisError.formattedReason}
                 variant="error"
               />
             ))

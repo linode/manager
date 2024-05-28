@@ -15,18 +15,18 @@ import { queryPresets } from '../base';
 import { accountQueries } from './queries';
 
 import type {
-  APIError,
   Account,
   ChildAccountPayload,
   RequestOptions,
   ResourcePage,
   Token,
 } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const useAccount = () => {
   const { data: profile } = useProfile();
 
-  return useQuery<Account, APIError[]>({
+  return useQuery<Account, FormattedAPIError[]>({
     ...accountQueries.account,
     ...queryPresets.oneTimeFetch,
     ...queryPresets.noRetry,
@@ -37,11 +37,14 @@ export const useAccount = () => {
 export const useMutateAccount = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<Account, APIError[], Partial<Account>>(updateAccountInfo, {
-    onSuccess(account) {
-      queryClient.setQueryData(accountQueries.account.queryKey, account);
-    },
-  });
+  return useMutation<Account, FormattedAPIError[], Partial<Account>>(
+    updateAccountInfo,
+    {
+      onSuccess(account) {
+        queryClient.setQueryData(accountQueries.account.queryKey, account);
+      },
+    }
+  );
 };
 
 export const useChildAccountsInfiniteQuery = (options: RequestOptions) => {
@@ -53,7 +56,7 @@ export const useChildAccountsInfiniteQuery = (options: RequestOptions) => {
     Boolean(grants?.global?.child_account_access) ||
     hasExplicitAuthToken;
 
-  return useInfiniteQuery<ResourcePage<Account>, APIError[]>({
+  return useInfiniteQuery<ResourcePage<Account>, FormattedAPIError[]>({
     enabled,
     getNextPageParam: ({ page, pages }) => {
       if (page === pages) {
@@ -67,7 +70,7 @@ export const useChildAccountsInfiniteQuery = (options: RequestOptions) => {
 };
 
 export const useCreateChildAccountPersonalAccessTokenMutation = () =>
-  useMutation<Token, APIError[], ChildAccountPayload>(
+  useMutation<Token, FormattedAPIError[], ChildAccountPayload>(
     ({ euuid, headers }: ChildAccountPayload) =>
       createChildAccountPersonalAccessToken({ euuid, headers })
   );

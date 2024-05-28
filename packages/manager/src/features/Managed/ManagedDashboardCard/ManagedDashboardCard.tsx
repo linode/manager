@@ -35,13 +35,13 @@ export const ManagedDashboardCard = () => {
   const defaultError = 'Error loading your Managed service information.';
 
   if (monitorsError) {
-    const error = getAPIErrorOrDefault(monitorsError, defaultError)[0].reason;
+    const error = getAPIErrorOrDefault(monitorsError, defaultError)[0].formattedReason;
 
     return <ErrorState compact errorText={error} />;
   }
 
   if (issuesError) {
-    const error = getAPIErrorOrDefault(issuesError, defaultError)[0].reason;
+    const error = getAPIErrorOrDefault(issuesError, defaultError)[0].formattedReason;
 
     return <ErrorState compact errorText={error} />;
   }

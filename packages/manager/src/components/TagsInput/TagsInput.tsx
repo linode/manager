@@ -93,7 +93,7 @@ export const TagsInput = (props: TagsInputProps) => {
       setErrors([
         {
           field: 'label',
-          reason: 'Length must be 3-50 characters',
+          formattedReason: 'Length must be 3-50 characters',
         },
       ]);
     } else {
