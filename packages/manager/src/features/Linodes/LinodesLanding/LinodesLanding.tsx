@@ -26,7 +26,7 @@ import { DialogType } from 'src/features/Linodes/types';
 import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent,
-} from 'src/utilities/analytics';
+} from 'src/utilities/analytics/customEventAnalytics';
 import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import { EnableBackupsDialog } from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';

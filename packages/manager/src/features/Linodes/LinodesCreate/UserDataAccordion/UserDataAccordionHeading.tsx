@@ -38,7 +38,6 @@ export const UserDataAccordionHeading = (props: Props) => {
               </Link>
             </>
           }
-          interactive
           status="help"
           sxTooltipIcon={{ alignItems: 'baseline', padding: '0 8px' }}
         />

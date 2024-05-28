@@ -10,6 +10,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
+import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
 import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 
 import { getDefaultUDFData } from '../StackScripts/UserDefinedFields/utilities';
@@ -18,13 +19,23 @@ import { categoryOptions } from './utilities';
 
 import type { LinodeCreateFormValues } from '../../utilities';
 
-export const AppSelect = () => {
+interface Props {
+  /**
+   * Opens the Marketplace App details drawer for the given app
+   */
+  onOpenDetailsDrawer: (stackscriptId: number) => void;
+}
+
+export const AppSelect = (props: Props) => {
+  const { onOpenDetailsDrawer } = props;
   const { setValue } = useFormContext<LinodeCreateFormValues>();
   const { field } = useController<LinodeCreateFormValues, 'stackscript_id'>({
     name: 'stackscript_id',
   });
 
-  const { data: apps, error, isLoading } = useMarketplaceAppsQuery(true);
+  const { data: stackscripts, error, isLoading } = useMarketplaceAppsQuery(
+    true
+  );
 
   const renderContent = () => {
     if (isLoading) {
@@ -47,22 +58,27 @@ export const AppSelect = () => {
 
     return (
       <Grid container spacing={2}>
-        {apps?.map((app) => (
-          <AppSelectionCard
-            onSelect={() => {
-              setValue(
-                'stackscript_data',
-                getDefaultUDFData(app.user_defined_fields)
-              );
-              field.onChange(app.id);
-            }}
-            checked={field.value === app.id}
-            iconUrl={app.logo_url}
-            key={app.label}
-            label={app.label}
-            onOpenDetailsDrawer={() => alert('details')}
-          />
-        ))}
+        {stackscripts?.map((stackscript) => {
+          if (!oneClickApps[stackscript.id]) {
+            return null;
+          }
+          return (
+            <AppSelectionCard
+              onSelect={() => {
+                setValue(
+                  'stackscript_data',
+                  getDefaultUDFData(stackscript.user_defined_fields)
+                );
+                field.onChange(stackscript.id);
+              }}
+              checked={field.value === stackscript.id}
+              iconUrl={`/assets/${oneClickApps[stackscript.id].logo_url}`}
+              key={stackscript.id}
+              label={stackscript.label}
+              onOpenDetailsDrawer={() => onOpenDetailsDrawer(stackscript.id)}
+            />
+          );
+        })}
       </Grid>
     );
   };

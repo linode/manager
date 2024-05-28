@@ -12,7 +12,7 @@ export const ConnectionRow = (props: Props) => {
   const { connection } = props;
 
   return (
-    <TableRow ariaLabel={connection.name} data-testid="longview-connection-row">
+    <TableRow data-testid="longview-connection-row">
       <TableCell data-qa-active-connection-name parentColumn="Name">
         {connection.name}
       </TableCell>
