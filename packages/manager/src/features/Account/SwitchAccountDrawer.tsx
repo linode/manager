@@ -40,14 +40,6 @@ export const SwitchAccountDrawer = (props: Props) => {
   >([]);
   const [query, setQuery] = React.useState<string>('');
 
-  const filter = {
-    ['+order']: 'asc',
-    ['+order_by']: 'company',
-  };
-  if (query) {
-    filter['company'] = { '+contains': query };
-  }
-
   const isProxyUser = userType === 'proxy';
   const currentParentTokenWithBearer =
     getStorage('authentication/parent_token/token') ?? '';
@@ -165,10 +157,11 @@ export const SwitchAccountDrawer = (props: Props) => {
         .
       </Typography>
       <DebouncedSearchTextField
+        clearable
         debounceTime={250}
         hideLabel
         label="Search"
-        onSearch={(query) => setQuery(query)}
+        onSearch={setQuery}
         placeholder="Search"
         sx={{ marginBottom: 3 }}
         value={query}
@@ -177,10 +170,10 @@ export const SwitchAccountDrawer = (props: Props) => {
         currentTokenWithBearer={
           isProxyUser ? currentParentTokenWithBearer : currentTokenWithBearer
         }
-        filter={filter}
         isLoading={isSubmitting}
         onClose={onClose}
         onSwitchAccount={handleSwitchToChildAccount}
+        searchQuery={query}
         userType={userType}
       />
     </Drawer>

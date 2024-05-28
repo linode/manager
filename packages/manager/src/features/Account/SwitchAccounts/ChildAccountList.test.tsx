@@ -9,9 +9,9 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 const props = {
   currentTokenWithBearer: 'Bearer 123',
-  filter: {},
   onClose: vi.fn(),
   onSwitchAccount: vi.fn(),
+  searchQuery: '',
   userType: undefined,
 };
 

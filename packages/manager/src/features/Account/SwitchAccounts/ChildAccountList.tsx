@@ -15,7 +15,6 @@ import type { Filter, UserType } from '@linode/api-v4';
 
 interface ChildAccountListProps {
   currentTokenWithBearer: string;
-  filter: Filter;
   isLoading?: boolean;
   onClose: () => void;
   onSwitchAccount: (props: {
@@ -25,18 +24,27 @@ interface ChildAccountListProps {
     onClose: () => void;
     userType: UserType | undefined;
   }) => void;
+  searchQuery: string;
   userType: UserType | undefined;
 }
 
 export const ChildAccountList = React.memo(
   ({
     currentTokenWithBearer,
-    filter,
     isLoading,
     onClose,
     onSwitchAccount,
+    searchQuery,
     userType,
   }: ChildAccountListProps) => {
+    const filter: Filter = {
+      ['+order']: 'asc',
+      ['+order_by']: 'company',
+    };
+    if (searchQuery) {
+      filter['company'] = { '+contains': searchQuery };
+    }
+
     const [
       isSwitchingChildAccounts,
       setIsSwitchingChildAccounts,
@@ -59,7 +67,6 @@ export const ChildAccountList = React.memo(
             }
           : undefined,
     });
-    // Sort the list of child accounts alphabetically.
     const childAccounts = data?.pages.flatMap((page) => page.data);
 
     if (
