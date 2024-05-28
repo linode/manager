@@ -2422,6 +2422,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: '1d76ba',
     },
     description: `Secure, stable, and free alternative to popular video conferencing services. This app deploys four networked Jitsi nodes.`,
+    isNew: true,
     logo_url: 'jitsi.svg',
     name: 'Jitsi Cluster',
     related_guides: [
@@ -2436,6 +2437,7 @@ export const oneClickApps: Record<number, OCA> = {
   },
   1350783: {
     alt_description: 'Open source, highly available, shared filesystem.',
+    isNew: true,
     alt_name: 'GlusterFS',
     categories: ['Development'],
     colors: {

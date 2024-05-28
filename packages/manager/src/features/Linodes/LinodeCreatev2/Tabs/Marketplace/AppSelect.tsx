@@ -1,4 +1,3 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
@@ -14,10 +13,11 @@ import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
 import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 
 import { getDefaultUDFData } from '../StackScripts/UserDefinedFields/utilities';
-import { AppSelectionCard } from './AppSelectionCard';
+import { AppSection } from './AppSection';
 import { categoryOptions } from './utilities';
 
 import type { LinodeCreateFormValues } from '../../utilities';
+import type { StackScript } from '@linode/api-v4';
 
 interface Props {
   /**
@@ -36,6 +36,14 @@ export const AppSelect = (props: Props) => {
   const { data: stackscripts, error, isLoading } = useMarketplaceAppsQuery(
     true
   );
+
+  const onSelect = (stackscript: StackScript) => {
+    setValue(
+      'stackscript_data',
+      getDefaultUDFData(stackscript.user_defined_fields)
+    );
+    field.onChange(stackscript.id);
+  };
 
   const renderContent = () => {
     if (isLoading) {
@@ -56,30 +64,68 @@ export const AppSelect = (props: Props) => {
       return <ErrorState errorText={error?.[0].reason} />;
     }
 
+    // We will render this when we are filtering
+    // return (
+    //   <Grid container spacing={2}>
+    //     {stackscripts?.map((stackscript) => {
+    //       if (!oneClickApps[stackscript.id]) {
+    //         return null;
+    //       }
+    //       return (
+    //         <AppSelectionCard
+    //           onSelect={() => {
+    //             setValue(
+    //               'stackscript_data',
+    //               getDefaultUDFData(stackscript.user_defined_fields)
+    //             );
+    //             field.onChange(stackscript.id);
+    //           }}
+    //           checked={field.value === stackscript.id}
+    //           iconUrl={`/assets/${oneClickApps[stackscript.id].logo_url}`}
+    //           key={stackscript.id}
+    //           label={stackscript.label}
+    //           onOpenDetailsDrawer={() => onOpenDetailsDrawer(stackscript.id)}
+    //         />
+    //       );
+    //     })}
+    //   </Grid>
+    // );
+
+    const newApps = stackscripts.filter(
+      (stackscript) => oneClickApps[stackscript.id]?.isNew
+    );
+
+    const popularApps = stackscripts.slice(0, 10);
+
+    // @ts-expect-error Can we use toSorted? 😣
+    const allApps = stackscripts.toSorted((a, b) =>
+      a.label.toLowerCase().localeCompare(b.label.toLowerCase())
+    );
+
     return (
-      <Grid container spacing={2}>
-        {stackscripts?.map((stackscript) => {
-          if (!oneClickApps[stackscript.id]) {
-            return null;
-          }
-          return (
-            <AppSelectionCard
-              onSelect={() => {
-                setValue(
-                  'stackscript_data',
-                  getDefaultUDFData(stackscript.user_defined_fields)
-                );
-                field.onChange(stackscript.id);
-              }}
-              checked={field.value === stackscript.id}
-              iconUrl={`/assets/${oneClickApps[stackscript.id].logo_url}`}
-              key={stackscript.id}
-              label={stackscript.label}
-              onOpenDetailsDrawer={() => onOpenDetailsDrawer(stackscript.id)}
-            />
-          );
-        })}
-      </Grid>
+      <Stack spacing={2}>
+        <AppSection
+          onOpenDetailsDrawer={onOpenDetailsDrawer}
+          onSelect={onSelect}
+          selectedStackscriptId={field.value}
+          stackscripts={newApps}
+          title="New apps"
+        />
+        <AppSection
+          onOpenDetailsDrawer={onOpenDetailsDrawer}
+          onSelect={onSelect}
+          selectedStackscriptId={field.value}
+          stackscripts={popularApps}
+          title="Popular apps"
+        />
+        <AppSection
+          onOpenDetailsDrawer={onOpenDetailsDrawer}
+          onSelect={onSelect}
+          selectedStackscriptId={field.value}
+          stackscripts={allApps}
+          title="All apps"
+        />
+      </Stack>
     );
   };
 

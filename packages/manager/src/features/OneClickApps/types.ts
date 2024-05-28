@@ -5,6 +5,7 @@ export interface OCA {
   colors: Colors;
   description: string;
   href?: string;
+  isNew?: boolean;
   logo_url: string;
   name: string;
   related_guides?: Doc[];
