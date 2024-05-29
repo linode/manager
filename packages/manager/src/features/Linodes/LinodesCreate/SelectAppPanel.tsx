@@ -2,8 +2,8 @@ import { Theme, styled } from '@mui/material/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 
+import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { AppPanelSection } from 'src/features/Linodes/LinodesCreate/AppPanelSection';
@@ -75,7 +75,7 @@ class SelectAppPanel extends React.PureComponent<Props> {
       return (
         <StyledPanel error={error} title="Select App">
           <StyledLoadingSpan>
-            <LandingLoading />
+            <CircleProgress />
           </StyledLoadingSpan>
         </StyledPanel>
       );
