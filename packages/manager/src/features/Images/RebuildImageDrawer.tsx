@@ -22,7 +22,6 @@ export const RebuildImageDrawer = (props: Props) => {
 
   const history = useHistory();
   const {
-    canCreateImage,
     permissionedLinodes: availableLinodes,
   } = useImageAndLinodeGrantCheck();
 
@@ -57,12 +56,6 @@ export const RebuildImageDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Restore from Image">
-      {!canCreateImage ? (
-        <Notice
-          text="You don't have permissions to create a new Image. Please contact an account administrator for details."
-          variant="error"
-        />
-      ) : null}
       {formState.errors.root?.message && (
         <Notice
           data-qa-notice
@@ -81,7 +74,6 @@ export const RebuildImageDrawer = (props: Props) => {
               availableLinodes ? availableLinodes.includes(linode.id) : true
             }
             clearable={true}
-            disabled={!canCreateImage}
             errorText={fieldState.error?.message}
             value={field.value}
           />

@@ -61,7 +61,7 @@ export const EditImageDrawer = (props: Props) => {
       .catch((errors: APIError[]) => {
         for (const error of errors) {
           if (
-            (error.field && error.field === 'label') ||
+            error.field === 'label' ||
             error.field == 'description' ||
             error.field == 'tags'
           ) {
@@ -75,12 +75,12 @@ export const EditImageDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Edit Image">
-      {!canCreateImage ? (
+      {!canCreateImage && (
         <Notice
-          text="You don't have permissions to create a new Image. Please contact an account administrator for details."
+          text="You don't have permissions to edit images. Please contact an account administrator for details."
           variant="error"
         />
-      ) : null}
+      )}
 
       {formState.errors.root?.message && (
         <Notice
