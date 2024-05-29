@@ -15,16 +15,15 @@ export const managed: PartialEventMap = {
   managed_service_create: {
     notification: (e) => (
       <>
-        Managed service <EventMessageLink action={e.action} entity={e.entity} />{' '}
-        has been <strong>created</strong>.
+        Managed service <EventMessageLink event={e} to="entity" /> has been{' '}
+        <strong>created</strong>.
       </>
     ),
   },
   managed_service_delete: {
     notification: (e) => (
       <>
-        Managed service <EventMessageLink action={e.action} entity={e.entity} />{' '}
-        has been <strong>deleted</strong>.
+        Managed service {e.entity?.label} has been <strong>deleted</strong>.
       </>
     ),
   },

@@ -8,7 +8,7 @@ export const tag: PartialEventMap = {
   tag_create: {
     notification: (e) => (
       <>
-        Tag <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
+        Tag <EventMessageLink event={e} to="entity" /> has been{' '}
         <strong>created</strong>.
       </>
     ),
@@ -16,8 +16,7 @@ export const tag: PartialEventMap = {
   tag_delete: {
     notification: (e) => (
       <>
-        Tag <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
-        <strong>deleted</strong>.
+        Tag {e.entity?.label} has been <strong>deleted</strong>.
       </>
     ),
   },

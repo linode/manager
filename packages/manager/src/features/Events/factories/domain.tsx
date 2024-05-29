@@ -8,7 +8,7 @@ export const domain: PartialEventMap = {
   domain_create: {
     notification: (e) => (
       <>
-        Domain <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
+        Domain <EventMessageLink event={e} to="entity" /> has been{' '}
         <strong>created</strong>.
       </>
     ),
@@ -16,15 +16,14 @@ export const domain: PartialEventMap = {
   domain_delete: {
     notification: (e) => (
       <>
-        Domain <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
-        <strong>deleted</strong>.
+        Domain {e.entity?.label} has been <strong>deleted</strong>.
       </>
     ),
   },
   domain_import: {
     notification: (e) => (
       <>
-        Domain <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
+        Domain <EventMessageLink event={e} to="entity" /> has been{' '}
         <strong>imported</strong>.
       </>
     ),
@@ -33,7 +32,7 @@ export const domain: PartialEventMap = {
     notification: (e) => (
       <>
         {e.message} has been <strong>added</strong> to{' '}
-        <EventMessageLink action={e.action} entity={e.entity} />.
+        <EventMessageLink event={e} to="entity" />.
       </>
     ),
   },
@@ -41,7 +40,7 @@ export const domain: PartialEventMap = {
     notification: (e) => (
       <>
         A domain record has been <strong>deleted</strong> from{' '}
-        <EventMessageLink action={e.action} entity={e.entity} />.
+        <EventMessageLink event={e} to="entity" />.
       </>
     ),
   },
@@ -49,14 +48,14 @@ export const domain: PartialEventMap = {
     notification: (e) => (
       <>
         {e.message} has been <strong>updated</strong> for{' '}
-        <EventMessageLink action={e.action} entity={e.entity} />.
+        <EventMessageLink event={e} to="entity" />.
       </>
     ),
   },
   domain_update: {
     notification: (e) => (
       <>
-        Domain <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
+        Domain <EventMessageLink event={e} to="entity" /> has been{' '}
         <strong>updated</strong>.
       </>
     ),

@@ -8,30 +8,26 @@ export const password: PartialEventMap = {
   password_reset: {
     failed: (e) => (
       <>
-        Password for Linode{' '}
-        <EventMessageLink action={e.action} entity={e.entity} /> could{' '}
+        Password for Linode <EventMessageLink event={e} to="entity" /> could{' '}
         <strong>not</strong> be <strong>reset</strong>.
       </>
     ),
     finished: (e) => (
       <>
-        Password for Linode{' '}
-        <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
+        Password for Linode <EventMessageLink event={e} to="entity" /> has been{' '}
         <strong>reset</strong>.
       </>
     ),
 
     scheduled: (e) => (
       <>
-        Password for Linode{' '}
-        <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
+        Password for Linode <EventMessageLink event={e} to="entity" /> has been{' '}
         <strong>scheduled</strong>.
       </>
     ),
     started: (e) => (
       <>
-        Password for Linode{' '}
-        <EventMessageLink action={e.action} entity={e.entity} /> is being{' '}
+        Password for Linode <EventMessageLink event={e} to="entity" /> is being{' '}
         <strong>reset</strong>.
       </>
     ),

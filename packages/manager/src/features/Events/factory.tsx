@@ -7,7 +7,7 @@ import * as factories from './factories';
 import type { CompleteEventMap, PartialEventMap } from './types';
 import type { Event } from '@linode/api-v4';
 
-const wrappedWithTypography = (
+const wrapWithTypography = (
   Component: (e: Partial<Event>) => JSX.Element | string
 ) => {
   return (e: Partial<Event>) => {
@@ -23,7 +23,7 @@ export const withTypography = (eventMap: PartialEventMap): PartialEventMap => {
       Object.fromEntries(
         Object.entries(statuses).map(([status, func]) => [
           status,
-          wrappedWithTypography(func),
+          wrapWithTypography(func),
         ])
       ),
     ])

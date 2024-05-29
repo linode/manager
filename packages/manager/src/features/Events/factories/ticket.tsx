@@ -10,7 +10,7 @@ export const ticket: PartialEventMap = {
       <>
         File has been successfully <strong>uploaded</strong> to support ticket
         &quot;
-        <EventMessageLink action={e.action} entity={e.entity} />
+        <EventMessageLink event={e} to="entity" />
         &quot;.
       </>
     ),
@@ -26,7 +26,7 @@ export const ticket: PartialEventMap = {
     notification: (e) => (
       <>
         New support ticket &quot;
-        <EventMessageLink action={e.action} entity={e.entity} />
+        <EventMessageLink event={e} to="entity" />
         &quot; has been <strong>created</strong>.
       </>
     ),
@@ -35,7 +35,7 @@ export const ticket: PartialEventMap = {
     notification: (e) => (
       <>
         Support ticket &quot;
-        <EventMessageLink action={e.action} entity={e.entity} />
+        <EventMessageLink event={e} to="entity" />
         &quot; has been <strong>updated</strong>.
       </>
     ),

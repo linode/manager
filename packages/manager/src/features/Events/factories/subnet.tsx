@@ -8,27 +8,26 @@ export const subnet: PartialEventMap = {
   subnet_create: {
     notification: (e) => (
       <>
-        Subnet <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
+        Subnet <EventMessageLink event={e} to="entity" /> has been{' '}
         <strong>created</strong> in VPC{' '}
-        <EventMessageLink action={e.action} entity={e.secondary_entity} />.
+        <EventMessageLink event={e} to="secondaryEntity" />.
       </>
     ),
   },
   subnet_delete: {
     notification: (e) => (
       <>
-        Subnet <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
-        <strong>deleted</strong> in VPC{' '}
-        <EventMessageLink action={e.action} entity={e.secondary_entity} />.
+        Subnet {e.entity?.label} has been <strong>deleted</strong> in VPC{' '}
+        <EventMessageLink event={e} to="secondaryEntity" />.
       </>
     ),
   },
   subnet_update: {
     notification: (e) => (
       <>
-        Subnet <EventMessageLink action={e.action} entity={e.entity} /> in VPC{' '}
-        <EventMessageLink action={e.action} entity={e.secondary_entity} /> has
-        been <strong>updated</strong>.
+        Subnet <EventMessageLink event={e} to="entity" /> in VPC{' '}
+        <EventMessageLink event={e} to="secondaryEntity" /> has been{' '}
+        <strong>updated</strong>.
       </>
     ),
   },

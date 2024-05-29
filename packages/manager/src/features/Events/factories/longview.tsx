@@ -8,24 +8,23 @@ export const longview: PartialEventMap = {
   longviewclient_create: {
     notification: (e) => (
       <>
-        Longview Client <EventMessageLink action={e.action} entity={e.entity} />{' '}
-        has been <strong>created</strong>.
+        Longview Client <EventMessageLink event={e} to="entity" /> has been{' '}
+        <strong>created</strong>.
       </>
     ),
   },
   longviewclient_delete: {
     notification: (e) => (
       <>
-        Longview Client <EventMessageLink action={e.action} entity={e.entity} />{' '}
-        has been <strong>deleted</strong>.
+        Longview Client {e.entity?.label} has been <strong>deleted</strong>.
       </>
     ),
   },
   longviewclient_update: {
     notification: (e) => (
       <>
-        Longview Client <EventMessageLink action={e.action} entity={e.entity} />{' '}
-        has been <strong>updated</strong>.
+        Longview Client <EventMessageLink event={e} to="entity" /> has been{' '}
+        <strong>updated</strong>.
       </>
     ),
   },

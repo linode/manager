@@ -8,71 +8,70 @@ export const database: PartialEventMap = {
   database_backup_restore: {
     notification: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> has
-        been <strong>restored</strong> from a backup.
+        Database <EventMessageLink event={e} to="entity" /> has been{' '}
+        <strong>restored</strong> from a backup.
       </>
     ),
   },
   database_create: {
     failed: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> could{' '}
+        Database <EventMessageLink event={e} to="entity" /> could{' '}
         <strong>not</strong> be <strong>created</strong>.
       </>
     ),
     finished: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> has
-        been <strong>created</strong>.
+        Database <EventMessageLink event={e} to="entity" /> has been{' '}
+        <strong>created</strong>.
       </>
     ),
     notification: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> has
-        been <strong>created</strong>.
+        Database <EventMessageLink event={e} to="entity" /> has been{' '}
+        <strong>created</strong>.
       </>
     ),
     scheduled: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> is
-        scheduled for <strong>creation</strong>.
+        Database <EventMessageLink event={e} to="entity" /> is scheduled for{' '}
+        <strong>creation</strong>.
       </>
     ),
     started: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> is
-        being <strong>created</strong>.
+        Database <EventMessageLink event={e} to="entity" /> is being{' '}
+        <strong>created</strong>.
       </>
     ),
   },
   database_credentials_reset: {
     notification: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} />{' '}
-        credentials have been <strong>reset</strong>.
+        Database <EventMessageLink event={e} to="entity" /> credentials have
+        been <strong>reset</strong>.
       </>
     ),
   },
   database_degraded: {
     notification: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> has
-        been <strong>degraded</strong>.
+        Database <EventMessageLink event={e} to="entity" /> has been{' '}
+        <strong>degraded</strong>.
       </>
     ),
   },
   database_delete: {
     notification: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> has
-        been <strong>deleted</strong>.
+        Database {e.entity?.label} has been <strong>deleted</strong>.
       </>
     ),
   },
   database_failed: {
     notification: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> could{' '}
+        Database <EventMessageLink event={e} to="entity" /> could{' '}
         <strong>not</strong> be <strong>updated</strong>.
       </>
     ),
@@ -81,14 +80,13 @@ export const database: PartialEventMap = {
     finished: (e) => (
       <>
         Low disk space alert for database{' '}
-        <EventMessageLink action={e.action} entity={e.entity} /> has{' '}
-        <strong>cleared</strong>.
+        <EventMessageLink event={e} to="entity" /> has <strong>cleared</strong>.
       </>
     ),
 
     notification: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> has{' '}
+        Database <EventMessageLink event={e} to="entity" /> has{' '}
         <strong>low disk space</strong>.
       </>
     ),
@@ -96,25 +94,25 @@ export const database: PartialEventMap = {
   database_resize: {
     failed: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> could{' '}
+        Database <EventMessageLink event={e} to="entity" /> could{' '}
         <strong>not</strong> be <strong>resized</strong>.
       </>
     ),
     finished: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> has
-        been <strong>resized</strong>.
+        Database <EventMessageLink event={e} to="entity" /> has been{' '}
+        <strong>resized</strong>.
       </>
     ),
     scheduled: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> is
-        scheduled for <strong>resizing</strong>.
+        Database <EventMessageLink event={e} to="entity" /> is scheduled for{' '}
+        <strong>resizing</strong>.
       </>
     ),
     started: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> is{' '}
+        Database <EventMessageLink event={e} to="entity" /> is{' '}
         <strong>resizing</strong>.
       </>
     ),
@@ -122,33 +120,33 @@ export const database: PartialEventMap = {
   database_resize_create: {
     notification: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} />{' '}
-        scheduled to be <strong>resized</strong>.
+        Database <EventMessageLink event={e} to="entity" /> scheduled to be{' '}
+        <strong>resized</strong>.
       </>
     ),
   },
   database_scale: {
     failed: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> could{' '}
+        Database <EventMessageLink event={e} to="entity" /> could{' '}
         <strong>not</strong> be <strong>resized</strong>.
       </>
     ),
     finished: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> has
-        been <strong>resized</strong>.
+        Database <EventMessageLink event={e} to="entity" /> has been{' '}
+        <strong>resized</strong>.
       </>
     ),
     scheduled: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> is
-        scheduled for <strong>resizing</strong>.
+        Database <EventMessageLink event={e} to="entity" /> is scheduled for{' '}
+        <strong>resizing</strong>.
       </>
     ),
     started: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> is{' '}
+        Database <EventMessageLink event={e} to="entity" /> is{' '}
         <strong>resizing</strong>.
       </>
     ),
@@ -156,15 +154,15 @@ export const database: PartialEventMap = {
   database_update: {
     finished: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> has
-        been <strong>updated</strong>.
+        Database <EventMessageLink event={e} to="entity" /> has been{' '}
+        <strong>updated</strong>.
       </>
     ),
   },
   database_update_failed: {
     notification: (e) => (
       <>
-        Database <EventMessageLink action={e.action} entity={e.entity} /> could{' '}
+        Database <EventMessageLink event={e} to="entity" /> could{' '}
         <strong>not</strong> be <strong>updated</strong>.
       </>
     ),

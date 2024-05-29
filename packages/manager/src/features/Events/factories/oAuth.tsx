@@ -8,24 +8,22 @@ export const oAuth: PartialEventMap = {
   oauth_client_create: {
     notification: (e) => (
       <>
-        OAuth App <EventMessageLink action={e.action} entity={e.entity} /> has
-        been <strong>created</strong>.
+        OAuth App <EventMessageLink event={e} to="entity" /> has been{' '}
+        <strong>created</strong>.
       </>
     ),
   },
   oauth_client_delete: {
     notification: (e) => (
       <>
-        OAuth App <EventMessageLink action={e.action} entity={e.entity} /> has
-        been <strong>deleted</strong>.
+        OAuth App {e.entity?.label} has been <strong>deleted</strong>.
       </>
     ),
   },
   oauth_client_secret_reset: {
     notification: (e) => (
       <>
-        Secret for OAuth App{' '}
-        <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
+        Secret for OAuth App <EventMessageLink event={e} to="entity" /> has been{' '}
         <strong>reset</strong>.
       </>
     ),
@@ -33,8 +31,8 @@ export const oAuth: PartialEventMap = {
   oauth_client_update: {
     notification: (e) => (
       <>
-        OAuth App <EventMessageLink action={e.action} entity={e.entity} /> has
-        been <strong>updated</strong>.
+        OAuth App <EventMessageLink event={e} to="entity" /> has been{' '}
+        <strong>updated</strong>.
       </>
     ),
   },

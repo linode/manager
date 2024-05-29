@@ -9,8 +9,8 @@ export const community: PartialEventMap = {
     notification: (e) =>
       e.entity?.label ? (
         <>
-          A post on <EventMessageLink action={e.action} entity={e.entity} /> has
-          been <strong>liked</strong>.
+          A post on <EventMessageLink event={e} to="entity" /> has been{' '}
+          <strong>liked</strong>.
         </>
       ) : (
         <>
@@ -23,7 +23,7 @@ export const community: PartialEventMap = {
       e.entity?.label ? (
         <>
           You have been <strong>mentioned</strong> in a post on{' '}
-          <EventMessageLink action={e.action} entity={e.entity} />.
+          <EventMessageLink event={e} to="entity" />.
         </>
       ) : (
         <>
@@ -36,7 +36,7 @@ export const community: PartialEventMap = {
       e.entity?.label ? (
         <>
           A <strong>reply</strong> has been posted to your question on{' '}
-          <EventMessageLink action={e.action} entity={e.entity} />.
+          <EventMessageLink event={e} to="entity" />.
         </>
       ) : (
         <>

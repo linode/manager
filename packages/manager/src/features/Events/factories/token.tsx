@@ -8,7 +8,7 @@ export const token: PartialEventMap = {
   token_create: {
     notification: (e) => (
       <>
-        Token <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
+        Token <EventMessageLink event={e} to="entity" /> has been{' '}
         <strong>created</strong>.
       </>
     ),
@@ -16,15 +16,14 @@ export const token: PartialEventMap = {
   token_delete: {
     notification: (e) => (
       <>
-        Token <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
-        <strong>revoked</strong>.
+        Token {e.entity?.label} has been <strong>revoked</strong>.
       </>
     ),
   },
   token_update: {
     notification: (e) => (
       <>
-        Token <EventMessageLink action={e.action} entity={e.entity} /> has been{' '}
+        Token <EventMessageLink event={e} to="entity" /> has been{' '}
         <strong>updated</strong>.
       </>
     ),
