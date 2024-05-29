@@ -1,8 +1,4 @@
-import {
-  TicketSeverity,
-  createSupportTicket,
-  uploadAttachment,
-} from '@linode/api-v4/lib/support';
+import { TicketSeverity, uploadAttachment } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import { update } from 'ramda';
@@ -27,6 +23,7 @@ import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
+import { useCreateSupportTicketMutation } from 'src/queries/support';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import {
@@ -220,6 +217,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     publicInfo: '',
     useCase: '',
   });
+
+  const { mutateAsync: createSupportTicket } = useCreateSupportTicketMutation();
 
   const [files, setFiles] = React.useState<FileAttachment[]>([]);
 

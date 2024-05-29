@@ -2,12 +2,15 @@ import {
   ReplyRequest,
   SupportReply,
   SupportTicket,
+  TicketRequest,
   closeSupportTicket,
   createReply,
+  createSupportTicket,
   getTicket,
   getTicketReplies,
   getTickets,
 } from '@linode/api-v4/lib/support';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   useInfiniteQuery,
   useMutation,
@@ -20,57 +23,113 @@ import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import type { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
 
-const queryKey = `tickets`;
+const supportQueries = createQueryKeys('support', {
+  ticket: (id: number) => ({
+    contextQueries: {
+      replies: {
+        queryFn: ({ pageParam }) =>
+          getTicketReplies(id, { page: pageParam, page_size: 25 }),
+        queryKey: null,
+      },
+    },
+    queryFn: () => getTicket(id),
+    queryKey: [id],
+  }),
+  tickets: (params: Params, filter: Filter) => ({
+    queryFn: () => getTickets(params, filter),
+    queryKey: [params, filter],
+  }),
+});
 
 export const useSupportTicketsQuery = (params: Params, filter: Filter) =>
-  useQuery<ResourcePage<SupportTicket>, FormattedAPIError[]>(
-    [queryKey, 'paginated', params, filter],
-    () => getTickets(params, filter),
-    { keepPreviousData: true }
-  );
+  useQuery<ResourcePage<SupportTicket>, FormattedAPIError[]>({
+    ...supportQueries.tickets(params, filter),
+    keepPreviousData: true,
+  });
 
 export const useSupportTicketQuery = (id: number) =>
-  useQuery<SupportTicket, FormattedAPIError[]>([queryKey, 'ticket', id], () =>
-    getTicket(id)
-  );
+  useQuery<SupportTicket, FormattedAPIError[]>(supportQueries.ticket(id));
+
+export const useCreateSupportTicketMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<SupportTicket, FormattedAPIError[], TicketRequest>({
+    mutationFn: createSupportTicket,
+    onSuccess(ticket) {
+      queryClient.invalidateQueries({ queryKey: supportQueries.tickets._def });
+      queryClient.setQueryData<SupportTicket>(
+        supportQueries.ticket(ticket.id).queryKey,
+        ticket
+      );
+    },
+  });
+};
 
 export const useInfiniteSupportTicketRepliesQuery = (id: number) =>
-  useInfiniteQuery<ResourcePage<SupportReply>, FormattedAPIError[]>(
-    [queryKey, 'ticket', id, 'replies'],
-    ({ pageParam }) => getTicketReplies(id, { page: pageParam, page_size: 25 }),
-    {
-      getNextPageParam: ({ page, pages }) => {
-        if (page === pages) {
-          return undefined;
-        }
-        return page + 1;
-      },
-    }
-  );
+  useInfiniteQuery<ResourcePage<SupportReply>, FormattedAPIError[]>({
+    ...supportQueries.ticket(id)._ctx.replies,
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+  });
 
 export const useSupportTicketReplyMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<SupportReply, FormattedAPIError[], ReplyRequest>(
-    createReply,
-    {
-      onSuccess() {
-        queryClient.invalidateQueries([queryKey]);
-      },
-    }
-  );
+  return useMutation<SupportReply, FormattedAPIError[], ReplyRequest>({
+    mutationFn: createReply,
+    onSuccess(data, variables) {
+      queryClient.invalidateQueries({
+        queryKey: supportQueries.tickets._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: supportQueries.ticket(variables.ticket_id).queryKey,
+      });
+    },
+  });
 };
 
 export const useSupportTicketCloseMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, FormattedAPIError[]>(() => closeSupportTicket(id), {
+  return useMutation<{}, FormattedAPIError[]>({
+    mutationFn: () => closeSupportTicket(id),
     onSuccess() {
-      queryClient.invalidateQueries([queryKey]);
+      queryClient.invalidateQueries({
+        queryKey: supportQueries.tickets._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: supportQueries.ticket(id).queryKey,
+      });
     },
   });
 };
 
 export const supportTicketEventHandler = ({
+  event,
   queryClient,
 }: EventHandlerData) => {
-  queryClient.invalidateQueries([queryKey]);
+  /**
+   * Ticket events have entities that look like this:
+   *
+   * "entity": {
+   *   "label": "Great news! We're upgrading your Block Storage",
+   *   "id": 3674063,
+   *   "type": "ticket",
+   *   "url": "/v4/support/tickets/3674063"
+   * }
+   */
+
+  // Invalidate paginated support tickets
+  queryClient.invalidateQueries({
+    queryKey: supportQueries.tickets._def,
+  });
+
+  if (event.entity) {
+    // If there is an entity associated with the event, invalidate that ticket
+    queryClient.invalidateQueries({
+      queryKey: supportQueries.ticket(event.entity.id).queryKey,
+    });
+  }
 };
