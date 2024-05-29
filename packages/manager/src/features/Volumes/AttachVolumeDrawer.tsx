@@ -1,4 +1,5 @@
 import { Volume } from '@linode/api-v4';
+import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -6,7 +7,6 @@ import { number, object } from 'yup';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { FormControl } from 'src/components/FormControl';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { Notice } from 'src/components/Notice/Notice';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
@@ -104,6 +104,11 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
         )}
         {generalError && <Notice text={generalError} variant="error" />}
         <LinodeSelect
+          errorText={
+            formik.touched.linode_id && formik.errors.linode_id
+              ? formik.errors.linode_id
+              : linodeError
+          }
           onSelectionChange={(linode) => {
             if (linode !== null) {
               formik.setFieldValue('linode_id', linode.id);
@@ -111,7 +116,6 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
           }}
           clearable={false}
           disabled={isReadOnly}
-          errorText={formik.errors.linode_id ?? linodeError}
           filter={{ region: volume?.region }}
           noMarginTop
           value={formik.values.linode_id}
@@ -121,24 +125,24 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
             Only Linodes in this Volume&rsquo;s region are displayed.
           </FormHelperText>
         )}
-        {/* Config Selection */}
-        <FormControl fullWidth>
-          <ConfigSelect
-            error={
-              formik.touched.config_id && formik.errors.config_id
-                ? formik.errors.config_id
-                : configError
-            }
-            onChange={(id: number) => {
-              formik.setFieldValue('config_id', +id);
-            }}
-            disabled={isReadOnly || formik.values.linode_id === -1}
-            linodeId={formik.values.linode_id}
-            name="configId"
-            onBlur={() => null}
-            value={formik.values.config_id}
-          />
-        </FormControl>
+        <StyledConfigSelect
+          error={
+            formik.touched.config_id && formik.errors.config_id
+              ? formik.errors.config_id
+              : configError
+          }
+          linodeId={
+            formik.values.linode_id === -1 ? null : formik.values.linode_id
+          }
+          onChange={(id: number) => {
+            formik.setFieldValue('config_id', +id);
+          }}
+          disabled={isReadOnly || formik.values.linode_id === -1}
+          name="configId"
+          onBlur={() => null}
+          value={formik.values.config_id}
+        />
+
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',
@@ -157,3 +161,9 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
     </Drawer>
   );
 });
+
+const StyledConfigSelect = styled(ConfigSelect, {
+  label: 'StyledConfigSelect',
+})(() => ({
+  p: { marginLeft: 0 },
+}));

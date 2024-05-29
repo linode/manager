@@ -43,10 +43,6 @@ export const ConfigSelect = React.memo((props: Props) => {
     }
   }
 
-  if (linodeId === null) {
-    return null;
-  }
-
   return (
     <FormControl
       fullWidth={width ? false : true}
@@ -72,9 +68,11 @@ export const ConfigSelect = React.memo((props: Props) => {
             : { label: '', value: -1 }
         }
         disableClearable
+        fullWidth
         id={name}
         isOptionEqualToValue={(option, value) => option.value === value.value}
         label="Config"
+        noMarginTop
         onBlur={onBlur}
         options={configList ?? []}
         placeholder="Select a Config"
