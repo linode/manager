@@ -256,9 +256,9 @@ export class LinodeCreate extends React.PureComponent<
   }
 
   componentDidUpdate(prevProps: any) {
-    // if (this.props.errors !== prevProps.errors) {
-    //   this.handleAnalyticsFormError(getErrorMap(errorMap, this.props.errors));
-    // }
+    if (this.props.errors !== prevProps.errors) {
+      this.handleAnalyticsFormError(getErrorMap(errorMap, this.props.errors));
+    }
 
     if (this.props.location.search === prevProps.location.search) {
       return;
@@ -1066,31 +1066,27 @@ export class LinodeCreate extends React.PureComponent<
   ) => {
     const { selectedTab } = this.state;
     const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
+    let errorString = '';
 
     if (!errorMap) {
       return;
     }
+
     if (errorMap.region) {
-      sendLinodeCreateFormErrorEvent(
-        'Region not selected',
-        selectedTabName ?? 'Distributions',
-        'v1'
-      );
+      errorString += errorMap.region;
     }
     if (errorMap.type) {
-      sendLinodeCreateFormErrorEvent(
-        'Plan not selected',
-        selectedTabName ?? 'Distributions',
-        'v1'
-      );
+      errorString += `|${errorMap.type}`;
     }
     if (errorMap.root_pass) {
-      sendLinodeCreateFormErrorEvent(
-        'Password not created',
-        selectedTabName ?? 'Distributions',
-        'v1'
-      );
+      errorString += `|${errorMap.root_pass}`;
     }
+
+    sendLinodeCreateFormErrorEvent(
+      errorString,
+      selectedTabName ?? 'Distributions',
+      'v1'
+    );
   };
 
   handleClickCreateUsingCommandLine = () => {
