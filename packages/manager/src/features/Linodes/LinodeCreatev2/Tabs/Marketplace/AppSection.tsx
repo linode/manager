@@ -28,9 +28,9 @@ export const AppSection = (props: Props) => {
   } = props;
 
   return (
-    <Stack spacing={1}>
+    <Stack>
       <Typography variant="h2">{title}</Typography>
-      <Divider />
+      <Divider spacingBottom={16} spacingTop={16} />
       <Grid container spacing={2}>
         {stackscripts?.map((stackscript) => (
           <AppSelectionCard
