@@ -8,7 +8,7 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
-import { CircularProgress } from 'src/components/CircularProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
@@ -164,7 +164,7 @@ export const LongviewPlans = (props: LongviewPlansProps) => {
     !mayUserModifyLVSubscription;
 
   if (!profile) {
-    return <CircularProgress data-testid="loading" />;
+    return <CircleProgress />;
   }
 
   return (

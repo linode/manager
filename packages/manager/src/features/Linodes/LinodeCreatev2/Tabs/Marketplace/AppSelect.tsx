@@ -4,7 +4,7 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
-import { CircularProgress } from 'src/components/CircularProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Paper } from 'src/components/Paper';
@@ -47,7 +47,7 @@ export const AppSelect = (props: Props) => {
           justifyContent="center"
           width="100%"
         >
-          <CircularProgress />
+          <CircleProgress />
         </Box>
       );
     }

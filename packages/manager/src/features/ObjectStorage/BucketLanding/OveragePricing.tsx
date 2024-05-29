@@ -2,7 +2,8 @@ import { Region } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import { CircularProgress } from 'src/components/CircularProgress';
+import { Box } from 'src/components/Box';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 import { useObjectStorageTypesQuery } from 'src/queries/objectStorage';
@@ -45,7 +46,9 @@ export const OveragePricing = (props: Props) => {
   );
 
   return isLoading ? (
-    <CircularProgress size={16} sx={{ marginTop: 2 }} />
+    <Box marginLeft={-1} marginTop={1}>
+      <CircleProgress mini />
+    </Box>
   ) : (
     <>
       <StyledTypography>
