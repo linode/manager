@@ -43,7 +43,7 @@ export const DeleteIPDialog = (props: Props) => {
       error={error?.[0].reason}
       onClose={onClose}
       open={open}
-      title={`Delete ${address}?`}
+      title={`Delete ${address}`}
     >
       <Typography>
         Are you sure you want to delete this IP Address? This action cannot be

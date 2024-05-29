@@ -46,7 +46,7 @@ export const DeleteOAuthClientDialog = ({
       error={error?.[0].reason}
       onClose={onClose}
       open={open}
-      title={`Delete ${label}?`}
+      title={`Delete ${label}`}
     >
       <Typography>
         Are you sure you want to permanently delete this app?

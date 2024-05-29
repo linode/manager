@@ -99,7 +99,7 @@ export const FirewallDialog = React.memo((props: Props) => {
       error={errorMap[mode]?.[0].reason}
       onClose={onClose}
       open={open}
-      title={`${capitalize(mode)} Firewall ${label}?`}
+      title={`${capitalize(mode)} Firewall ${label}`}
     >
       Are you sure you want to {mode} this firewall?
     </ConfirmationDialog>

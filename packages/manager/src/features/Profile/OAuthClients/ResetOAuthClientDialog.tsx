@@ -44,7 +44,7 @@ export const ResetOAuthClientDialog = ({
       error={error?.[0].reason}
       onClose={onClose}
       open={open}
-      title={`Reset secret for ${label}?`}
+      title={`Reset Secret for ${label}`}
     >
       <Typography>
         Are you sure you want to permanently reset the secret for this app?

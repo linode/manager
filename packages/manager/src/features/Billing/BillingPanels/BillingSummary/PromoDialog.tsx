@@ -79,7 +79,7 @@ const PromoDialog = (props: Props) => {
       actions={actions}
       onClose={onClose}
       open={open}
-      title="Add promo code"
+      title="Add Promo Code"
     >
       {error && <Notice text={error} variant="error" />}
       <Typography>

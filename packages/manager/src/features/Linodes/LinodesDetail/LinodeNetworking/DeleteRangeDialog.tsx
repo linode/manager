@@ -46,7 +46,7 @@ export const DeleteRangeDialog = (props: Props) => {
       error={error?.[0].reason}
       onClose={onClose}
       open={open}
-      title={`Delete ${range.range}/${range.prefix}?`}
+      title={`Delete ${range.range}/${range.prefix}`}
     >
       <Typography>
         Are you sure you want to delete this IP Range? This action cannot be

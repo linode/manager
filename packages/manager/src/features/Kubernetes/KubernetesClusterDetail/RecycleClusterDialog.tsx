@@ -56,7 +56,7 @@ export const RecycleClusterDialog = (props: Props) => {
       error={error?.[0].reason}
       onClose={onClose}
       open={open}
-      title="Recycle all nodes in cluster?"
+      title="Recycle All Nodes in Cluster"
     >
       <Typography>
         {nodesDeletionWarning} {localStorageWarning} This may take several

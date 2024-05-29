@@ -57,7 +57,7 @@ export const DisableDomainDialog = React.memo(
         error={error?.[0]?.reason}
         onClose={onClose}
         open={open}
-        title={`Disable Domain ${domain?.domain}?`}
+        title={`Disable Domain ${domain?.domain}`}
       >
         Are you sure you want to disable this DNS zone?
       </ConfirmationDialog>

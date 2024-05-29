@@ -200,7 +200,7 @@ export const StackScriptPanelContent = (
         error={dialog.delete.error}
         onClose={handleCloseDialog}
         open={dialog.delete.open}
-        title={`Delete StackScript ${dialog.stackScriptLabel}?`}
+        title={`Delete StackScript ${dialog.stackScriptLabel}`}
       >
         <Typography>
           Are you sure you want to delete this StackScript?
@@ -215,7 +215,7 @@ export const StackScriptPanelContent = (
         actions={renderConfirmMakePublicActions}
         onClose={handleCloseDialog}
         open={dialog.makePublic.open}
-        title={`Woah, just a word of caution...`}
+        title="Woah, just a word of caution..."
       >
         <Typography>
           Are you sure you want to make {dialog.stackScriptLabel} public? This

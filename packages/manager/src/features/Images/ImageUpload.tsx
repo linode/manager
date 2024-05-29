@@ -416,7 +416,7 @@ export const ImageUpload = () => {
               }
               onClose={handleCancel}
               open={isModalOpen}
-              title="Leave this page?"
+              title="Leave Page"
             >
               <Typography variant="subtitle1">
                 An upload is in progress. If you navigate away from this page,

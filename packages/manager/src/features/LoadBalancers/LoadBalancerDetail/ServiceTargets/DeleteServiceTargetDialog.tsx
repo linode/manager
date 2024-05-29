@@ -58,7 +58,7 @@ export const DeleteServiceTargetDialog = (props: Props) => {
       error={error?.[0]?.reason}
       onClose={handleClose}
       open={open}
-      title={`Delete Service Target ${serviceTarget?.label}?`}
+      title={`Delete Service Target ${serviceTarget?.label}`}
     >
       Are you sure you want to delete this Service Target?
     </ConfirmationDialog>

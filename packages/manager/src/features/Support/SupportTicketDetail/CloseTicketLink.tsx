@@ -69,7 +69,7 @@ export const CloseTicketLink = ({ ticketId }: Props) => {
         error={error?.[0].reason}
         onClose={() => setIsDialogOpen(false)}
         open={isDialogOpen}
-        title={`Confirm Ticket Close`}
+        title="Confirm Ticket Close"
       >
         <Typography>{`Are you sure you want to close this ticket?`}</Typography>
       </ConfirmationDialog>

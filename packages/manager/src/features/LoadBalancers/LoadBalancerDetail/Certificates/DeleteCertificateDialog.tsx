@@ -59,7 +59,7 @@ export const DeleteCertificateDialog = (props: Props) => {
       error={error?.[0]?.reason}
       onClose={handleClose}
       open={open}
-      title={`Delete Certificate ${certificate?.label}?`}
+      title={`Delete Certificate ${certificate?.label}`}
     >
       Are you sure you want to delete this certificate?
     </ConfirmationDialog>

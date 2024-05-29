@@ -61,7 +61,7 @@ export const CreateImageFromDiskDialog = (props: Props) => {
       error={error?.[0].reason}
       onClose={onClose}
       open={open}
-      title={`Create Image from ${disk?.label}?`}
+      title={`Create Image from ${disk?.label}`}
     >
       <Typography>
         Linode Images are limited to 6144 MB of data per disk by default. Please

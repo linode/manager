@@ -18,7 +18,7 @@ interface Props extends Actions {
 }
 
 export const CreditCardDialog = (props: Props) => {
-  const { cancel, error, open, usd, isMakingPayment, executePayment } = props;
+  const { cancel, error, executePayment, isMakingPayment, open, usd } = props;
 
   return (
     <ConfirmationDialog

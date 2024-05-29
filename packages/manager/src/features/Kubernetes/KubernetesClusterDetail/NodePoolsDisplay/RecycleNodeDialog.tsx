@@ -54,7 +54,7 @@ export const RecycleNodeDialog = (props: Props) => {
       error={error?.[0].reason}
       onClose={onClose}
       open={open}
-      title={`Recycle ${nodeId}?`}
+      title={`Recycle ${nodeId}`}
     >
       <Typography>
         This node will be deleted and a new node will be created to replace it.{' '}

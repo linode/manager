@@ -89,7 +89,7 @@ export const SMSMessaging = () => {
         error={error?.[0].reason}
         onClose={onClose}
         open={open}
-        title={'Opt out of SMS messaging for phone verification'}
+        title="Opt Out of SMS Messaging for Phone Verification"
       >
         <Typography>
           Opting out of SMS messaging will reduce security and limit the ways

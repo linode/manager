@@ -59,7 +59,7 @@ export const RevokeTokenDialog = ({ onClose, open, token, type }: Props) => {
       error={error?.[0].reason}
       onClose={onClose}
       open={open}
-      title={`Revoke ${token?.label}?`}
+      title={`Revoke ${token?.label}`}
     >
       <Typography>Are you sure you want to revoke this API Token?</Typography>
     </ConfirmationDialog>

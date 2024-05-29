@@ -15,6 +15,7 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+import { capitalize } from 'src/utilities/capitalize';
 
 interface Props {
   objectStorageKey?: ObjectStorageKey | null;
@@ -54,7 +55,7 @@ export const SecretTokenDialog = (props: Props) => {
 
   const modalConfirmationButtonText = objectStorageKey
     ? 'I Have Saved My Secret Key'
-    : `I Have Saved My ${title}`;
+    : `I Have Saved My ${capitalize(title)}`;
 
   const actions = renderActions(onClose, modalConfirmationButtonText);
 

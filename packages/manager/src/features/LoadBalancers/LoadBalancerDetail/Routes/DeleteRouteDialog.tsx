@@ -56,7 +56,7 @@ export const DeleteRouteDialog = (props: Props) => {
       error={error?.[0]?.reason}
       onClose={handleClose}
       open={open}
-      title={`Delete Route ${route?.label}?`}
+      title={`Delete Route ${route?.label}`}
     >
       Are you sure you want to delete this route?
     </ConfirmationDialog>

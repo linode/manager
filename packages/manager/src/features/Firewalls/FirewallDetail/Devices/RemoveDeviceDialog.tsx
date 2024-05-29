@@ -65,8 +65,8 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
   };
 
   const dialogTitle = onService
-    ? `Unassign Firewall ${firewallLabel}?`
-    : `Remove ${deviceDialog} ${device?.entity.label}?`;
+    ? `Unassign Firewall ${firewallLabel}`
+    : `Remove ${deviceDialog} ${device?.entity.label}`;
 
   const confirmationText = (
     <Typography>

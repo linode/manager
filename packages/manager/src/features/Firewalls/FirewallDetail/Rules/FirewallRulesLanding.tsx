@@ -278,7 +278,7 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
               )}
               onClose={handleCancel}
               open={isModalOpen}
-              title="Discard Firewall changes?"
+              title="Discard Firewall Changes"
             >
               <Typography variant="subtitle1">
                 The changes you made to this Firewall haven&rsquo;t been
@@ -428,7 +428,7 @@ export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.m
         actions={actions}
         onClose={() => handleClose()}
         open={isOpen}
-        title="Discard Firewall changes?"
+        title="Discard Firewall Changes"
       >
         <Typography variant="subtitle1">
           Are you sure you want to discard changes to this Firewall?

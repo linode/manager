@@ -65,7 +65,7 @@ export const LongviewDeleteDialog = React.memo((props: Props) => {
       error={errors ? errors[0].reason : ''}
       onClose={props.closeDialog}
       open={open}
-      title={`Delete ${label ? label : 'this Longview Client'}?`}
+      title={`Delete ${label ? label : 'Longview Client'}`}
     >
       Are you sure you want to delete this Longview Client?
     </ConfirmationDialog>

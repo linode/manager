@@ -50,7 +50,7 @@ export const RevokeAccessKeyDialog = (props: RevokeKeysDialogProps) => {
       error={(errors || []).map((e) => e.reason).join(',')}
       onClose={handleClose}
       open={isOpen}
-      title={`Revoking ${label}`}
+      title={`Revoke ${label}`}
     >
       <Typography>Are you sure you want to revoke this Access Key?</Typography>
       {/* If the user is attempting to revoke their last Access Key, remind them
