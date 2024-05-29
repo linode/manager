@@ -1,8 +1,8 @@
 import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 import Grid from '@mui/material/Unstable_Grid2';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 
 import { Chip } from 'src/components/Chip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -83,7 +83,6 @@ export const KubernetesClusterRow = (props: Props) => {
 
   return (
     <TableRow
-      ariaLabel={`Cluster ${cluster.label}`}
       className={classes.clusterRow}
       data-qa-cluster-cell={cluster.id}
       data-testid={'cluster-row'}

@@ -33,7 +33,6 @@
     "start:manager:ci": "yarn workspace linode-manager start:ci",
     "clean": "rm -rf node_modules && rm -rf packages/@linode/api-v4/node_modules && rm -rf packages/manager/node_modules && rm -rf packages/@linode/validation/node_modules",
     "test": "yarn workspace linode-manager test",
-    "vitest-preview": "yarn workspace linode-manager vitest-preview",
     "package-versions": "node ./scripts/package-versions/index.js",
     "storybook": "yarn workspace linode-manager storybook",
     "cy:run": "yarn workspace linode-manager cy:run",
@@ -46,6 +45,7 @@
     "coverage": "yarn workspace linode-manager coverage",
     "coverage:summary": "yarn workspace linode-manager coverage:summary",
     "junit:summary": "ts-node scripts/junit-summary/index.ts",
+    "generate-tod": "ts-node scripts/tod-payload/index.ts",
     "docs": "bunx vitepress@1.0.0-rc.44 dev docs"
   },
   "resolutions": {

@@ -20,12 +20,12 @@ const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclb', label: 'ACLB' },
   { flag: 'aclbFullCreateFlow', label: 'ACLB Full Create Flow' },
+  { flag: 'aclp', label: 'CloudPulse' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
   { flag: 'gecko2', label: 'Gecko' },
   { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
-  { flag: 'parentChildAccountAccess', label: 'Parent/Child Account' },
   { flag: 'placementGroups', label: 'Placement Groups' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },

@@ -1,6 +1,5 @@
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
-
 import type { PlacementGroup } from '@linode/api-v4';
 import { makeResponse } from 'support/util/response';
 import { makeErrorResponse } from 'support/util/errors';
@@ -151,6 +150,28 @@ export const mockUnassignPlacementGroupLinodesError = (
   return cy.intercept(
     'POST',
     apiMatcher(`placement/groups/${placementGroupId}/unassign`),
+    makeErrorResponse(errorMessage, errorCode)
+  );
+};
+
+/**
+ * Intercepts POST request to delete a Placement Group and mocks an HTTP error response.
+ *
+ * By default, a 500 response is mocked.
+ *
+ * @param errorMessage - Optional error message with which to mock response.
+ * @param errorCode - Optional error code with which to mock response. Default is `500`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeletePlacementGroupError = (
+  placementGroupId: number,
+  errorMessage: string = 'An error has occurred',
+  errorCode: number = 500
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`placement/groups/${placementGroupId}`),
     makeErrorResponse(errorMessage, errorCode)
   );
 };

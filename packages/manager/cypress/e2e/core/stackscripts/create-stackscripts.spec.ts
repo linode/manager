@@ -133,6 +133,7 @@ const createLinodeAndImage = async () => {
 
   const image = await createImage({
     disk_id: diskId,
+    label: randomLabel(),
   });
 
   await pollImageStatus(

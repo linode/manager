@@ -2,10 +2,18 @@ import { Region } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
+import { CircularProgress } from 'src/components/CircularProgress';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
-import { OBJ_STORAGE_PRICE } from 'src/utilities/pricing/constants';
-import { objectStoragePriceIncreaseMap } from 'src/utilities/pricing/dynamicPricing';
+import { useObjectStorageTypesQuery } from 'src/queries/objectStorage';
+import {
+  OBJ_STORAGE_PRICE,
+  UNKNOWN_PRICE,
+} from 'src/utilities/pricing/constants';
+import {
+  getDCSpecificPriceByType,
+  objectStoragePriceIncreaseMap,
+} from 'src/utilities/pricing/dynamicPricing';
 
 interface Props {
   regionId: Region['id'];
@@ -18,23 +26,40 @@ export const GLOBAL_TRANSFER_POOL_TOOLTIP_TEXT =
 
 export const OveragePricing = (props: Props) => {
   const { regionId } = props;
+
+  const { data: types, isError, isLoading } = useObjectStorageTypesQuery();
+
+  const overageType = types?.find(
+    (type) => type.id === 'objectstorage-overage'
+  );
+
+  const storageOveragePrice = getDCSpecificPriceByType({
+    decimalPrecision: 3,
+    interval: 'hourly',
+    regionId,
+    type: overageType,
+  });
+
   const isDcSpecificPricingRegion = objectStoragePriceIncreaseMap.hasOwnProperty(
     regionId
   );
 
-  return (
+  return isLoading ? (
+    <CircularProgress size={16} sx={{ marginTop: 2 }} />
+  ) : (
     <>
       <StyledTypography>
         For this region, additional storage costs{' '}
         <strong>
           $
-          {isDcSpecificPricingRegion
-            ? objectStoragePriceIncreaseMap[regionId].storage_overage
-            : OBJ_STORAGE_PRICE.storage_overage}{' '}
+          {storageOveragePrice && !isError
+            ? parseFloat(storageOveragePrice)
+            : UNKNOWN_PRICE}{' '}
           per GB
         </strong>
         .
       </StyledTypography>
+
       <StyledTypography>
         Outbound transfer will cost{' '}
         <strong>

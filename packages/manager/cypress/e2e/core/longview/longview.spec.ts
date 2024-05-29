@@ -156,13 +156,7 @@ describe('longview', () => {
         });
 
       // Install Longview on Linode by SSHing into machine and executing cURL command.
-      installLongview(linodeIp, linodePassword, installCommand).then(
-        (output) => {
-          // TODO Output this to a log file.
-          console.log(output.stdout);
-          console.log(output.stderr);
-        }
-      );
+      installLongview(linodeIp, linodePassword, installCommand);
 
       // Wait for Longview to begin serving data and confirm that Cloud Manager
       // UI updates accordingly.

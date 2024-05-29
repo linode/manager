@@ -145,10 +145,7 @@ describe('Payment Info Panel', () => {
             {...props}
             profile={queryMocks.useProfile().data}
           />
-        </PayPalScriptProvider>,
-        {
-          flags: { parentChildAccountAccess: true },
-        }
+        </PayPalScriptProvider>
       );
 
       expect(getByTestId(ADD_PAYMENT_METHOD_BUTTON_ID)).toHaveAttribute(

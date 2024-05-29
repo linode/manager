@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react-swc';
 import svgr from 'vite-plugin-svgr';
 import { defineConfig } from 'vitest/config';
+import { URL } from 'url';
 
 // ESM-friendly alternative to `__dirname`.
 const DIRNAME = new URL('.', import.meta.url).pathname;
@@ -10,11 +11,6 @@ export default defineConfig({
     outDir: 'build',
   },
   envPrefix: 'REACT_APP_',
-  optimizeDeps: {
-    esbuildOptions: {
-      target: 'es5',
-    },
-  },
   plugins: [react(), svgr({ exportAsDefault: true })],
   resolve: {
     alias: {
@@ -39,7 +35,6 @@ export default defineConfig({
         'src/**/*.utils.{js,jsx,ts,tsx}',
       ],
     },
-    css: true,
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/testSetup.ts',
