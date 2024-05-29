@@ -2,39 +2,7 @@ import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
 
-import {
-  account,
-  backup,
-  community,
-  creditCard,
-  database,
-  disk,
-  dns,
-  domain,
-  entity,
-  firewall,
-  host,
-  image,
-  ip,
-  lassie,
-  linode,
-  lish,
-  lke,
-  longview,
-  managed,
-  nodeBalancer,
-  oAuth,
-  obj,
-  password,
-  payment,
-  placementGroup,
-  profile,
-  stackScript,
-  subnet,
-  tag,
-  tfa,
-  ticket,
-} from './factories';
+import * as factories from './factories';
 
 import type { CompleteEventMap, PartialEventMap } from './types';
 import type { Event } from '@linode/api-v4';
@@ -62,36 +30,10 @@ export const withTypography = (eventMap: PartialEventMap): PartialEventMap => {
   );
 };
 
-export const eventMessages: CompleteEventMap = {
-  ...withTypography(account),
-  ...withTypography(backup),
-  ...withTypography(community),
-  ...withTypography(creditCard),
-  ...withTypography(database),
-  ...withTypography(disk),
-  ...withTypography(dns),
-  ...withTypography(domain),
-  ...withTypography(entity),
-  ...withTypography(firewall),
-  ...withTypography(host),
-  ...withTypography(image),
-  ...withTypography(ip),
-  ...withTypography(lassie),
-  ...withTypography(linode),
-  ...withTypography(lish),
-  ...withTypography(lke),
-  ...withTypography(longview),
-  ...withTypography(managed),
-  ...withTypography(nodeBalancer),
-  ...withTypography(oAuth),
-  ...withTypography(obj),
-  ...withTypography(password),
-  ...withTypography(payment),
-  ...withTypography(placementGroup),
-  ...withTypography(profile),
-  ...withTypography(stackScript),
-  ...withTypography(subnet),
-  ...withTypography(tag),
-  ...withTypography(tfa),
-  ...withTypography(ticket),
-};
+export const eventMessages: CompleteEventMap = Object.keys(factories).reduce(
+  (acc, factoryName) => ({
+    ...acc,
+    ...withTypography(factories[factoryName]),
+  }),
+  {}
+);

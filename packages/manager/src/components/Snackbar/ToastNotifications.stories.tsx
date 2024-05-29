@@ -107,20 +107,18 @@ export const WithEventMessage: Story = {
   render: (args) => {
     const WithEventMessage = () => {
       const { enqueueSnackbar } = useSnackbar();
-      const message = getEventMessage(
-        'placement_group_assign',
-        'notification',
-        {
-          entity: {
-            label: 'Entity',
-            url: 'https://google.com',
-          },
-          secondary_entity: {
-            label: 'Secondary Entity',
-            url: 'https://google.com',
-          },
-        }
-      );
+      const message = getEventMessage({
+        action: 'placement_group_assign',
+        entity: {
+          label: 'Entity',
+          url: 'https://google.com',
+        },
+        secondary_entity: {
+          label: 'Secondary Entity',
+          url: 'https://google.com',
+        },
+        status: 'notification',
+      });
 
       const showToast = (variant: any) =>
         enqueueSnackbar(message, {

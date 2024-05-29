@@ -27,7 +27,7 @@ export const RenderEvent = React.memo((props: RenderEventProps) => {
   const { classes, cx } = useRenderEventStyles();
   const { event } = props;
   const { message } = useEventInfo(event);
-  const messageV2 = getEventMessage(event.action, event.status, event);
+  const messageV2 = getEventMessage(event);
 
   const unseenEventClass = cx({ [classes.unseenEvent]: !event.seen });
 

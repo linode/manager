@@ -28,7 +28,7 @@ export const EventRowV2 = (props: EventRowProps) => {
     action: event.action,
     entityId,
     link,
-    message: getEventMessage(event.action, event.status, event),
+    message: getEventMessage(event),
     timestamp,
     type,
     username: event.username,
@@ -40,7 +40,7 @@ export const EventRowV2 = (props: EventRowProps) => {
 export interface RowProps {
   action: EventAction;
   link?: (() => void) | string;
-  message?: JSX.Element | string | undefined;
+  message?: JSX.Element | null | string;
   status?: string;
   timestamp: DateTime;
   type:

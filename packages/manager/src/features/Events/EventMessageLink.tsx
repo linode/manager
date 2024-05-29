@@ -6,19 +6,23 @@ import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 import type { Event, EventAction } from '@linode/api-v4';
 
 interface MessageLinkEntity {
-  action: EventAction | undefined;
-  entity: Event['entity'] | Event['secondary_entity'] | null | undefined;
+  action: EventAction;
+  entity: Event['entity'] | Event['secondary_entity'] | null;
 }
 
 export const EventMessageLink = (props: MessageLinkEntity) => {
   const { action, entity } = props;
 
-  if (!entity?.url || !entity?.label || !action) {
+  const renderDefault = () => {
     // eslint-disable-next-line react/jsx-no-useless-fragment
     return <>{entity?.label ?? ''}</>;
+  };
+
+  if (!entity?.url || !entity?.label) {
+    return renderDefault();
   }
 
-  const link = getLinkForEvent(action, entity ?? null);
+  const link = getLinkForEvent(action, entity);
 
-  return <Link to={link ?? ''}>{entity.label}</Link>;
+  return link ? <Link to={link ?? ''}>{entity.label}</Link> : renderDefault();
 };
