@@ -5,7 +5,8 @@ import { Action, Dispatch } from 'redux';
 import { ThunkDispatch as _ThunkDispatch, ThunkAction } from 'redux-thunk';
 
 import { ApplicationState } from 'src/store';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface EntityEvent extends Omit<Event, 'entity'> {
   entity: EventEntity;

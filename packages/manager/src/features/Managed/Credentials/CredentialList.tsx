@@ -23,7 +23,6 @@ import {
   useUpdateCredentialMutation,
   useUpdateCredentialPasswordMutation,
 } from 'src/queries/managed/managed';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -38,6 +37,8 @@ import {
 import AddCredentialDrawer from './AddCredentialDrawer';
 import CredentialTableContent from './CredentialTableContent';
 import UpdateCredentialDrawer from './UpdateCredentialDrawer';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export type FormikProps = FormikBag<{}, CredentialPayload>;
 

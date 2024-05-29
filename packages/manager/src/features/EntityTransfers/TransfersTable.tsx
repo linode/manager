@@ -12,13 +12,14 @@ import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { ConfirmTransferCancelDialog } from './EntityTransfersLanding/ConfirmTransferCancelDialog';
 import { TransferDetailsDialog } from './EntityTransfersLanding/TransferDetailsDialog';
 import { RenderTransferRow } from './RenderTransferRow';
 import { StyledDiv, StyledTable } from './TransfersTable.styles';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   error: FormattedAPIError[] | null;

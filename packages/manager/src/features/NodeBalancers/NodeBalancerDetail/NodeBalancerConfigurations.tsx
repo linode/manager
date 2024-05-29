@@ -43,7 +43,6 @@ import {
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
 import { queryKey } from 'src/queries/nodebalancers';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
@@ -64,6 +63,7 @@ import type {
   NodeBalancerConfigNodeFields,
 } from '../types';
 import type { Grants } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const StyledPortsSpan = styled('span', {
   label: 'StyledPortsSpan',

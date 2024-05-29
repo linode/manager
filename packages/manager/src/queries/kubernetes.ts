@@ -29,11 +29,12 @@ import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
 import { profileQueries } from './profile';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const kubernetesQueries = createQueryKeys('kubernetes', {
   cluster: (id: number) => ({

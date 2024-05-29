@@ -1,7 +1,8 @@
 import * as React from 'react';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const useErrors = (): [
   FormattedAPIError[],

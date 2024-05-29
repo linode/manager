@@ -9,7 +9,8 @@ import { TextField } from 'src/components/TextField';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   closeDialog: () => void;

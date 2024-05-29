@@ -26,9 +26,10 @@ import {
   useLinodeIPsQuery,
   useLinodeShareIPMutation,
 } from 'src/queries/linodes/networking';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { areArraysEqual } from 'src/utilities/areArraysEqual';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   linodeId: number;

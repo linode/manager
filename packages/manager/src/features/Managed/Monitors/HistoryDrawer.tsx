@@ -5,10 +5,11 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Drawer } from 'src/components/Drawer';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { IssueCalendar } from './IssueCalendar';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface HistoryDrawerProps {
   error?: FormattedAPIError[] | null;

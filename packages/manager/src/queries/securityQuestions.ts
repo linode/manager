@@ -6,9 +6,9 @@ import {
 } from '@linode/api-v4/lib/profile';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
-
 import { queryPresets } from './base';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const queryKey = 'securityQuestions';
 

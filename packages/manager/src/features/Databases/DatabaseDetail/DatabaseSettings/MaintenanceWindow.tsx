@@ -17,7 +17,8 @@ import { RadioGroup } from 'src/components/RadioGroup';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useDatabaseMutation } from 'src/queries/databases';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 // import { updateDatabaseSchema } from '@linode/validation/src/databases.schema';
 

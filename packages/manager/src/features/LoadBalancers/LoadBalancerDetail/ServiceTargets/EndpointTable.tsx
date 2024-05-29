@@ -10,9 +10,9 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Typography } from 'src/components/Typography';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import type { Endpoint } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   endpoints: Endpoint[];

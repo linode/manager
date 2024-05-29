@@ -43,7 +43,6 @@ import {
 } from 'src/containers/withQueryClient.container';
 import { PARENT_USER, grantTypeMap } from 'src/features/Account/constants';
 import { accountQueries } from 'src/queries/account/queries';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
@@ -59,6 +58,8 @@ import {
   StyledUnrestrictedGrid,
 } from './UserPermissions.styles';
 import { UserPermissionsEntitySection } from './UserPermissionsEntitySection';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 interface Props {
   accountUsername?: string;
   clearNewUser: () => void;

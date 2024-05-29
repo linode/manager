@@ -9,10 +9,11 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const getAllOCAsRequest = (passedParams: Params = {}) =>
   getAll<StackScript>((params) =>

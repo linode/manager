@@ -33,8 +33,9 @@ import {
   useAssignAdressesMutation,
   useLinodeIPsQuery,
 } from 'src/queries/linodes/networking';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   linodeId: number;

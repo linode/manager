@@ -1,4 +1,4 @@
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 /**
  * filter out all the API errors that aren't UDF errors from our error state.

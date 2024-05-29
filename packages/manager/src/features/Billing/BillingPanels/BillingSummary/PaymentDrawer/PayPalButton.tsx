@@ -19,10 +19,11 @@ import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 import { useAccount } from 'src/queries/account/account';
 import { useClientToken } from 'src/queries/account/payment';
 import { accountQueries } from 'src/queries/account/queries';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { SetSuccess } from './types';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const useStyles = makeStyles()(() => ({
   loading: {

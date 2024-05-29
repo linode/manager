@@ -7,7 +7,6 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { profileQueries } from 'src/queries/profile';
 import { useSecurityQuestions } from 'src/queries/securityQuestions';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -20,6 +19,8 @@ import {
   StyledRootContainer,
 } from './TwoFactor.styles';
 import { TwoFactorToggle } from './TwoFactorToggle';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface TwoFactorProps {
   disabled?: boolean;

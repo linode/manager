@@ -8,7 +8,6 @@ import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
@@ -17,6 +16,7 @@ import { updateParentTokenInLocalStorage } from './SwitchAccounts/utils';
 
 import type { UserType } from '@linode/api-v4';
 import type { State as AuthState } from 'src/store/authentication';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   onClose: () => void;

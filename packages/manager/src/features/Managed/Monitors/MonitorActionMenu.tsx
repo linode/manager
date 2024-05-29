@@ -11,8 +11,9 @@ import {
   useDisableMonitorMutation,
   useEnableMonitorMutation,
 } from 'src/queries/managed/managed';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface MonitorActionMenuProps {
   label: string;

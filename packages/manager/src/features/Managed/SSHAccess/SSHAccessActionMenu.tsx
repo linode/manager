@@ -6,8 +6,9 @@ import * as React from 'react';
 import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface SSHAccessActionMenuProps {
   isEnabled: boolean;

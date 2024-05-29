@@ -30,13 +30,13 @@ import {
 } from '@tanstack/react-query';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { Grants } from '../../../api-v4/lib';
 import { accountQueries } from './account/queries';
 import { queryPresets } from './base';
 
 import type { RequestOptions } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const profileQueries = createQueryKeys('profile', {
   appTokens: (params: Params = {}, filter: Filter = {}) => ({

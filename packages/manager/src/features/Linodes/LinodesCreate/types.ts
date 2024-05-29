@@ -8,8 +8,9 @@ import { Region } from '@linode/api-v4/lib/regions';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 
 import { Tag } from 'src/components/TagsInput/TagsInput';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { ExtendedType } from 'src/utilities/extendType';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export type TypeInfo =
   | {

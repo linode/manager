@@ -18,10 +18,11 @@ import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAll } from 'src/utilities/getAll';
 
 import { profileQueries } from './profile';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const queryKey = 'domains';
 

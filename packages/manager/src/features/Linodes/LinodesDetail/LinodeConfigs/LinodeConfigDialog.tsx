@@ -50,7 +50,6 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { vlanQueries } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { vpcQueries } from 'src/queries/vpcs/vpcs';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import {
   DevicesAsStrings,
   createDevicesFromStrings,
@@ -76,6 +75,8 @@ import {
   StyledFormGroup,
   StyledRadioGroup,
 } from './LinodeConfigDialog.styles';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Helpers {
   devtmpfs_automount: boolean;

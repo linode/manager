@@ -18,8 +18,9 @@ import { reportException } from 'src/exceptionReporting';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 import { useClientToken } from 'src/queries/account/payment';
 import { accountQueries } from 'src/queries/account/queries';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const useStyles = makeStyles()(() => ({
   disabled: {

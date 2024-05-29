@@ -11,9 +11,10 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { queryKey } from 'src/queries/entityTransfers';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { sendEntityTransferCancelEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface Props {
   entities?: TransferEntities;

@@ -7,9 +7,10 @@ import * as React from 'react';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import MonitorRow from './MonitorRow';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface MonitorTableContentProps {
   error?: FormattedAPIError[] | null;

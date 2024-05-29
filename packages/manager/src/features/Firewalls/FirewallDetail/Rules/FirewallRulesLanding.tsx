@@ -8,7 +8,6 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Prompt } from 'src/components/Prompt/Prompt';
 import { Typography } from 'src/components/Typography';
 import { useUpdateFirewallRulesMutation } from 'src/queries/firewalls';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';
@@ -30,6 +29,7 @@ import type {
   FirewallRuleType,
   FirewallRules,
 } from '@linode/api-v4/lib/firewalls';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   disabled: boolean;

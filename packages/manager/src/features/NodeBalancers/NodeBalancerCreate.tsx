@@ -43,7 +43,6 @@ import {
 } from 'src/queries/nodebalancers';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
@@ -65,6 +64,7 @@ import {
 
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
 import type { APIError } from '@linode/api-v4/lib/types';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface NodeBalancerConfigFieldsWithStatusAndErrors
   extends NodeBalancerConfigFieldsWithStatus {

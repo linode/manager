@@ -23,7 +23,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { BackupsCTA } from 'src/features/Backups/BackupsCTA';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import { DialogType } from 'src/features/Linodes/types';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent,
@@ -50,6 +49,7 @@ import { ExtendedStatus, statusToPriority } from './utils';
 
 import type { Config } from '@linode/api-v4/lib/linodes/types';
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface State {
   deleteDialogOpen: boolean;

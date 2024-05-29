@@ -18,7 +18,6 @@ import {
   useLinodeQuery,
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import {
   sendEditBreadcrumbEvent,
   sendLinodeCreateFlowDocsClickEvent,
@@ -38,6 +37,8 @@ import { HostMaintenance } from './HostMaintenance';
 import { MutationNotification } from './MutationNotification';
 import Notifications from './Notifications';
 import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const LinodeDetailHeader = () => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)

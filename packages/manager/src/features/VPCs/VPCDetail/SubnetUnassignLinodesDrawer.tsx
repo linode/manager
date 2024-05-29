@@ -20,7 +20,6 @@ import {
 } from 'src/queries/linodes/linodes';
 import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import type {
@@ -30,6 +29,7 @@ import type {
   Linode,
   UpdateConfigInterfacePayload,
 } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   onClose: () => void;

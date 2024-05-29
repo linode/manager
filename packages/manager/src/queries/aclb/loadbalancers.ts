@@ -9,8 +9,6 @@ import {
 } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
-
 import type {
   CreateBasicLoadbalancerPayload,
   CreateLoadbalancerPayload,
@@ -21,6 +19,7 @@ import type {
   ResourcePage,
   UpdateLoadbalancerPayload,
 } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const QUERY_KEY = 'aclbs';
 

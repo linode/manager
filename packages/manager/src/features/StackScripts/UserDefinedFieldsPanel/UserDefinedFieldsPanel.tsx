@@ -16,13 +16,14 @@ import {
   getIsUDFSingleSelect,
   separateUDFsByRequiredStatus,
 } from 'src/features/Linodes/LinodeCreatev2/Tabs/StackScripts/UserDefinedFields/utilities';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { AppInfo } from '../../Linodes/LinodesCreate/AppInfo';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import { UserDefinedSelect } from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
 import { StyledBox, StyledPaper } from './UserDefinedFieldsPanel.styles';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   appLogo?: JSX.Element;

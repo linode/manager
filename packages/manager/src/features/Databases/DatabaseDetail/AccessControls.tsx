@@ -14,10 +14,11 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useDatabaseMutation } from 'src/queries/databases';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import AddAccessControlDrawer from './AddAccessControlDrawer';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   addAccessControlBtn: {

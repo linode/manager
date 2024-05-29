@@ -16,12 +16,13 @@ import {
   LongviewTopProcesses,
   TopProcessStat,
 } from 'src/features/Longview/request.types';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { formatCPU } from '../../shared/formatters';
 import { StyledItemGrid } from './CommonStyles.styles';
 import { StyledLink } from './TopProcesses.styles';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface Props {
   clientID: number;

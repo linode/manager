@@ -3,7 +3,7 @@ import produce from 'immer';
 import { DateTime } from 'luxon';
 import { append, compose, flatten, keys, map, pickBy, uniqBy } from 'ramda';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 /**
  * TYPES

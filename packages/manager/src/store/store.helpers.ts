@@ -7,7 +7,8 @@ import {
   MappedEntityState,
   ThunkActionCreator,
 } from 'src/store/types';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 /** ID's are all mapped to string. */
 export const mapIDs = (e: { id: number | string }) => String(e.id);

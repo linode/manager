@@ -51,7 +51,6 @@ import {
   useDatabaseTypesQuery,
 } from 'src/queries/databases';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
@@ -63,6 +62,7 @@ import {
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   btnCtn: {

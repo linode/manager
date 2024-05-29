@@ -33,7 +33,6 @@ import {
   useAllLinodesQuery,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
@@ -45,6 +44,8 @@ import {
   curriedCloneLandingReducer,
   defaultState,
 } from './utilities';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));

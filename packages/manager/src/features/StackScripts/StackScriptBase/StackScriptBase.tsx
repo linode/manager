@@ -18,7 +18,6 @@ import {
 } from 'src/containers/profile.container';
 import { WithQueryClientProps } from 'src/containers/withQueryClient.container';
 import { isLinodeKubeImageId } from 'src/store/image/image.helpers';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getDisplayName } from 'src/utilities/getDisplayName';
 import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors';
@@ -40,6 +39,8 @@ import {
   StyledTable,
 } from './StackScriptBase.styles';
 import { StackScriptsEmptyLandingState } from './StackScriptsEmptyLandingPage';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 type CurrentFilter = 'deploys' | 'label' | 'revision';
 

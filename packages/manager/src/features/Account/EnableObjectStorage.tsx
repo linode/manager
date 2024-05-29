@@ -13,7 +13,8 @@ import { Typography } from 'src/components/Typography';
 import { updateAccountSettingsData } from 'src/queries/account/settings';
 import { queryKey } from 'src/queries/objectStorage';
 import { useProfile } from 'src/queries/profile';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 interface Props {
   object_storage: AccountSettings['object_storage'];
 }

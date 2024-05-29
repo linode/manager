@@ -6,13 +6,13 @@ import {
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQuery } from '@tanstack/react-query';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
-
 import { queryPresets } from '../base';
 import {
   getAllRegionAvailabilitiesRequest,
   getAllRegionsRequest,
 } from './requests';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const regionQueries = createQueryKeys('regions', {
   availability: {

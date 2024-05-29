@@ -8,9 +8,10 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import BetaDetails from './BetaDetails';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   betas: (AccountBeta | Beta)[];

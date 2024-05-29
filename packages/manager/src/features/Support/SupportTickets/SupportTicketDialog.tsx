@@ -25,7 +25,6 @@ import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useCreateSupportTicketMutation } from 'src/queries/support';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import {
   getAPIErrorOrDefault,
   getErrorMap,
@@ -47,6 +46,8 @@ import SupportTicketSMTPFields, {
   smtpHelperText,
 } from './SupportTicketSMTPFields';
 import { severityLabelMap, useTicketSeverityCapability } from './ticketUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   expPanelSummary: {

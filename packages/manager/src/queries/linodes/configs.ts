@@ -17,10 +17,10 @@ import {
 } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
-
 import { queryKey } from './linodes';
 import { getAllLinodeConfigs } from './requests';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
   return useQuery<Config[], FormattedAPIError[]>(

@@ -19,11 +19,12 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAll } from 'src/utilities/getAll';
 
 import { updateInPaginatedStore } from './base';
 import { profileQueries } from './profile';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const queryKey = 'firewall';
 

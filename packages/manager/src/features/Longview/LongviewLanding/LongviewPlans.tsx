@@ -22,7 +22,6 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { UseAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -35,6 +34,8 @@ import {
   StyledTable,
   StyledTableRow,
 } from './LongviewPlans.styles';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 // If an account has the "free" Longview plan,
 // longview_subscription will be {}. We'd rather use

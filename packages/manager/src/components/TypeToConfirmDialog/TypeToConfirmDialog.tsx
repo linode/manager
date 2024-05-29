@@ -10,7 +10,8 @@ import {
   TypeToConfirmProps,
 } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { usePreferences } from 'src/queries/preferences';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface EntityInfo {
   action?:

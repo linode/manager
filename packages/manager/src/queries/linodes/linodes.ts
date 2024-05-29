@@ -37,7 +37,6 @@ import {
 } from '@tanstack/react-query';
 
 import { placementGroupQueries } from 'src/queries/placementGroups';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { manuallySetVPCConfigInterfacesToActive } from 'src/utilities/configs';
 
 import { accountQueries } from '../account/queries';
@@ -45,6 +44,8 @@ import { queryPresets } from '../base';
 import { profileQueries } from '../profile';
 import { vlanQueries } from '../vlans';
 import { getAllLinodeKernelsRequest, getAllLinodesRequest } from './requests';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const queryKey = 'linodes';
 

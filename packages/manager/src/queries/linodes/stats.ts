@@ -8,10 +8,11 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { DateTime } from 'luxon';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { parseAPIDate } from 'src/utilities/date';
 
 import { queryKey } from './linodes';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const STATS_NOT_READY_API_MESSAGE =
   'Stats are unavailable at this time.';

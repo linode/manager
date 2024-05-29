@@ -11,7 +11,6 @@ import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPa
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { accountQueries } from 'src/queries/account/queries';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -22,6 +21,7 @@ import {
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
 
 import type { Profile } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   error?: FormattedAPIError[] | null;

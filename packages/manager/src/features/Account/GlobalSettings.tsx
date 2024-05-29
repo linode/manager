@@ -8,7 +8,6 @@ import {
   useMutateAccountSettings,
 } from 'src/queries/account/settings';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { BackupDrawer } from '../Backups';
@@ -17,6 +16,8 @@ import CloseAccountSetting from './CloseAccountSetting';
 import { EnableManaged } from './EnableManaged';
 import EnableObjectStorage from './EnableObjectStorage';
 import NetworkHelper from './NetworkHelper';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const GlobalSettings = () => {
   const [isBackupsDrawerOpen, setIsBackupsDrawerOpen] = React.useState(false);

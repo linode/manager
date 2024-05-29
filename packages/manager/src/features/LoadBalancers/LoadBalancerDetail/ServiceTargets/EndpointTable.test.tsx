@@ -4,10 +4,11 @@ import React from 'react';
 import { endpointFactory, linodeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { EndpointTable } from './EndpointTable';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 describe('EndpointTable', () => {
   it('should render a table with endpoints', async () => {

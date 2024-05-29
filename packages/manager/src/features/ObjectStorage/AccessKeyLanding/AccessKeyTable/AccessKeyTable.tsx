@@ -12,12 +12,13 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { HostNamesDrawer } from '../HostNamesDrawer';
 import { OpenAccessDrawer } from '../types';
 import { AccessKeyTableBody } from './AccessKeyTableBody';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface AccessKeyTableProps {
   data: ObjectStorageKey[] | undefined;

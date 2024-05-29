@@ -1,7 +1,7 @@
 import produce from 'immer';
 import { useEffect, useState } from 'react';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface UseAPIRequest<T> {
   data: T;

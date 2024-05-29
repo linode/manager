@@ -17,7 +17,6 @@ import {
   useTransferQuery,
 } from 'src/queries/entityTransfers';
 import { useProfile } from 'src/queries/profile';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { sendEntityTransferReceiveEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { capitalize } from 'src/utilities/capitalize';
 import { parseAPIDate } from 'src/utilities/date';
@@ -34,6 +33,8 @@ import {
   StyledSummaryTypography,
   StyledUl,
 } from './ConfirmTransferDialog.styles';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface ConfirmTransferDialogProps {
   onClose: () => void;

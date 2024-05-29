@@ -9,7 +9,6 @@ import {
   LongviewPortsResponse,
   LongviewTopProcesses,
 } from 'src/features/Longview/request.types';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { LongviewPackageDrawer } from '../../LongviewPackageDrawer';
 import { ActiveConnections } from './ActiveConnections/ActiveConnections';
@@ -19,6 +18,8 @@ import { IconSection } from './IconSection';
 import { ListeningServices } from './ListeningServices/ListeningServices';
 import { OverviewGraphs } from './OverviewGraphs/OverviewGraphs';
 import { TopProcesses } from './TopProcesses';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   client: string;

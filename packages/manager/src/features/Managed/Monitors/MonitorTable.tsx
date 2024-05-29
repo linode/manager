@@ -25,7 +25,6 @@ import {
   useDeleteMonitorMutation,
   useUpdateMonitorMutation,
 } from 'src/queries/managed/managed';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -40,6 +39,8 @@ import {
   StyledTableSortCell,
 } from './MonitorTable.styles';
 import MonitorTableContent from './MonitorTableContent';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export type Modes = 'create' | 'edit';
 export type FormikProps = FormikBag<{}, ManagedServicePayload>;

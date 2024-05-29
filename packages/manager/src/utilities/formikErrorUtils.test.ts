@@ -1,10 +1,10 @@
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
-
 import {
   getFormikErrorsFromAPIErrors,
   handleAPIErrors,
   handleVPCAndSubnetErrors,
 } from './formikErrorUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const errorWithoutField: FormattedAPIError[] = [
   { formattedReason: 'Internal server error', reason: 'Internal server error' },

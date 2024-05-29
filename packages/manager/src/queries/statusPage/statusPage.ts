@@ -3,10 +3,11 @@ import Axios from 'axios';
 
 import { LINODE_STATUS_PAGE_URL } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { queryPresets } from '../base';
 import { IncidentResponse, MaintenanceResponse } from './types';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 /**
  * Documentation for the Linode-specific statuspage API can be found at:

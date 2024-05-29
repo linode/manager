@@ -9,7 +9,6 @@ import {
   WithStartAndEnd,
 } from 'src/features/Longview/request.types';
 import { statAverage, statMax } from 'src/features/Longview/shared/utilities';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { escapeRegExp } from 'src/utilities/escapeRegExp';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
@@ -19,6 +18,8 @@ import { ProcessesGraphs } from './ProcessesGraphs';
 import { StyledBox, StyledTimeRangeSelect } from './ProcessesLanding.styles';
 import { ExtendedProcess, ProcessesTable } from './ProcessesTable';
 import { Process } from './types';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   clientAPIKey?: string;

@@ -1,10 +1,10 @@
 import { pathOr } from 'ramda';
 import { useEffect, useRef, useState } from 'react';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
-
 import { getLastUpdated } from '../request';
 import { LongviewNotification } from '../request.types';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const useClientLastUpdated = (
   clientAPIKey?: string,

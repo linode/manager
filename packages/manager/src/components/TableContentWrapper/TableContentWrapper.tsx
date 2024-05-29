@@ -6,7 +6,8 @@ import {
   TableRowLoading,
   TableRowLoadingProps,
 } from 'src/components/TableRowLoading/TableRowLoading';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface TableContentWrapperProps {
   children?: React.ReactNode;

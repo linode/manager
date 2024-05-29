@@ -12,8 +12,9 @@ import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
 import { updateAccountSettingsData } from 'src/queries/account/settings';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { pluralize } from 'src/utilities/pluralize';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   isManaged: boolean;

@@ -12,8 +12,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
-
 import { QUERY_KEY } from './loadbalancers';
 
 import type {
@@ -24,6 +22,7 @@ import type {
   ResourcePage,
   UpdateCertificatePayload,
 } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const useLoadBalancerCertificatesQuery = (
   id: number,

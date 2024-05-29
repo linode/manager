@@ -9,7 +9,6 @@ import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput'
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import {
   ExtendedIP,
@@ -17,6 +16,8 @@ import {
   ipFieldPlaceholder,
   validateIPs,
 } from 'src/utilities/ipUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   instructions: {

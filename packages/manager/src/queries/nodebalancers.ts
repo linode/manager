@@ -29,7 +29,6 @@ import { DateTime } from 'luxon';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAll } from 'src/utilities/getAll';
 
@@ -43,6 +42,7 @@ import type {
   PriceType,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const queryKey = 'nodebalancers';
 

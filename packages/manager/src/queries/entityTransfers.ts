@@ -9,9 +9,10 @@ import { Filter, Params } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useProfile } from 'src/queries/profile';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { creationHandlers, listToItemsByID, queryPresets } from './base';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const queryKey = 'entity-transfers';
 

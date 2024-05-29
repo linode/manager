@@ -9,10 +9,11 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 import { queryPresets } from './base';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const queryKey = 'preferences';
 

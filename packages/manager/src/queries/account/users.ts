@@ -2,7 +2,6 @@ import { deleteUser } from '@linode/api-v4/lib/account';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useProfile } from 'src/queries/profile';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { accountQueries } from './queries';
 
@@ -13,6 +12,7 @@ import type {
   ResourcePage,
   User,
 } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const useAccountUsers = ({
   enabled = true,

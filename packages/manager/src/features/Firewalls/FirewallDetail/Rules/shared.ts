@@ -1,6 +1,6 @@
 import { prop, sortBy } from 'ramda';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 export type Category = 'inbound' | 'outbound';
 
 export interface FirewallRuleError {

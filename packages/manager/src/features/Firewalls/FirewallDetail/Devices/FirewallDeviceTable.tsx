@@ -10,13 +10,13 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { formattedTypes } from './FirewallDeviceLanding';
 import { FirewallDeviceRow } from './FirewallDeviceRow';
 
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface FirewallDeviceTableProps {
   deviceType: FirewallDeviceEntityType;

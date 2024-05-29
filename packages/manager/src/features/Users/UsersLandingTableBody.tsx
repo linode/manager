@@ -4,9 +4,10 @@ import React from 'react';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { UserRow } from './UserRow';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   error: FormattedAPIError[] | null;

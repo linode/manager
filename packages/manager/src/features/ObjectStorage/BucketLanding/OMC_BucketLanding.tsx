@@ -24,7 +24,6 @@ import {
 } from 'src/queries/objectStorage';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import {
   sendDeleteBucketEvent,
@@ -37,6 +36,8 @@ import { CancelNotice } from '../CancelNotice';
 import { BucketDetailsDrawer } from './BucketDetailsDrawer';
 import { BucketLandingEmptyState } from './BucketLandingEmptyState';
 import { BucketTable } from './BucketTable';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {

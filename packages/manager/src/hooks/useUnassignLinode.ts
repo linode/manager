@@ -5,9 +5,9 @@ import * as React from 'react';
 import { configQueryKey, interfaceQueryKey } from 'src/queries/linodes/configs';
 import { queryKey } from 'src/queries/linodes/linodes';
 import { vpcQueries } from 'src/queries/vpcs/vpcs';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import type { DeleteLinodeConfigInterfacePayload } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface IdsForUnassignLinode extends DeleteLinodeConfigInterfacePayload {
   vpcId: number;

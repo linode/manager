@@ -3,8 +3,9 @@ import * as React from 'react';
 
 import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { capitalize } from 'src/utilities/capitalize';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   errors: FormattedAPIError[];

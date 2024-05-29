@@ -10,13 +10,13 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { PLACEMENT_GROUP_LINODES_ERROR_MESSAGE } from '../../constants';
 import { PlacementGroupsLinodesTableRow } from './PlacementGroupsLinodesTableRow';
 
 import type { Linode } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface Props {
   error?: FormattedAPIError[];

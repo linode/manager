@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import type { Disk, LinodeType } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const getError = (error: FormattedAPIError[] | null) => {
   if (!error) {

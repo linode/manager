@@ -8,8 +8,9 @@ import Select, {
 } from 'src/components/EnhancedSelect/Select';
 import { useProfile } from 'src/queries/profile';
 import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getErrorMap } from 'src/utilities/errorUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface Tag {
   label: string;

@@ -1,6 +1,6 @@
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
-
 import { filterUDFErrors } from './formUtilities';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 describe('Linode Create Utilities', () => {
   it('should filter out all errors except UDF errors', () => {

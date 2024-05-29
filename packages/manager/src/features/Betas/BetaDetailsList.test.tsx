@@ -1,9 +1,10 @@
 import * as React from 'react';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BetaDetailsList } from './BetaDetailsList';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 describe('BetaDetails', () => {
   it('should display the title supplied in the props as an h2 component', () => {

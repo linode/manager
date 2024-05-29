@@ -1,9 +1,9 @@
 import { startMutation } from '@linode/api-v4';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
-
 import { queryKey } from './linodes';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const useStartLinodeMutationMutation = (id: number) => {
   const queryClient = useQueryClient();

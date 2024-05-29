@@ -1,6 +1,6 @@
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
-
 import { parseFirewallRuleError, sortPortString } from './shared';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const generateError = (field: string): FormattedAPIError => ({
   field,

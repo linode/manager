@@ -17,7 +17,6 @@ import {
   useSendPhoneVerificationCodeMutation,
   useVerifyPhoneVerificationCodeMutation,
 } from 'src/queries/profile';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { countries } from './countries';
 import { getCountryFlag, getCountryName, getFormattedNumber } from './helpers';
@@ -37,6 +36,7 @@ import type {
   VerifyVerificationCodePayload,
 } from '@linode/api-v4/lib/profile/types';
 import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const PhoneVerification = ({
   phoneNumberRef,

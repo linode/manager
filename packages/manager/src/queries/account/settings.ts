@@ -10,10 +10,11 @@ import {
 } from '@tanstack/react-query';
 
 import { useProfile } from 'src/queries/profile';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { queryPresets } from '../base';
 import { accountQueries } from './queries';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const useAccountSettings = () => {
   const { data: profile } = useProfile();

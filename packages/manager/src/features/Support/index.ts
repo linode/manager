@@ -1,4 +1,4 @@
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface FileAttachment {
   /* Each file needs to keep track of its own errors because each request hits the same endpoint */

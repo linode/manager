@@ -6,7 +6,7 @@ import {
   UseMutationOptions,
 } from '@tanstack/react-query';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 // =============================================================================
 // Config

@@ -6,10 +6,11 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useGrants } from 'src/queries/profile';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { queryPresets } from '../base';
 import { accountQueries } from './queries';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const useAllPaymentMethodsQuery = () => {
   const { data: grants } = useGrants();

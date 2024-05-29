@@ -20,9 +20,9 @@ import {
   getExistingEventDataForPollingFilterGenerator,
   isInProgressEvent,
 } from 'src/queries/events/event.helpers';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import type { Event, Filter, ResourcePage } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 /**
  * Gets an infinitely scrollable list of all Events

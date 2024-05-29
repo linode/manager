@@ -12,8 +12,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
-
 import { updateInPaginatedStore } from '../base';
 import { QUERY_KEY } from './loadbalancers';
 
@@ -24,6 +22,7 @@ import type {
   Route,
   UpdateRoutePayload,
 } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const useLoadBalancerRoutesQuery = (
   id: number,

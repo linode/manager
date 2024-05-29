@@ -1,10 +1,11 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { TableContentWrapper } from './TableContentWrapper';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const children = [
   <tr key={1}>

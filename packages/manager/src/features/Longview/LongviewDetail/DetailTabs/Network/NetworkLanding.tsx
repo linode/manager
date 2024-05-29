@@ -2,7 +2,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
 import {
@@ -13,6 +12,8 @@ import { StyledItemGrid, StyledTimeRangeSelect } from '../CommonStyles.styles';
 import { StyledBox } from '../Disks/Disks.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { NetworkGraphs } from './NetworkGraphs';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   clientAPIKey: string;

@@ -18,7 +18,6 @@ import {
 } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import {
   DevicesAsStrings,
   createDevicesFromStrings,
@@ -27,6 +26,8 @@ import {
 import { LinodePermissionsError } from '../LinodePermissionsError';
 import { DeviceSelection, ExtendedDisk } from './DeviceSelection';
 import { RescueDescription } from './RescueDescription';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   linodeId: number | undefined;

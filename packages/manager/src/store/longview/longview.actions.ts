@@ -2,8 +2,9 @@ import { LongviewClient } from '@linode/api-v4/lib/longview';
 import { Filter, Params } from '@linode/api-v4/lib/types';
 import actionCreatorFactory from 'typescript-fsa';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { GetAllData } from 'src/utilities/getAll';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const actionCreator = actionCreatorFactory(`@@manager/longview`);
 

@@ -5,8 +5,9 @@ import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { PaymentMethodRow } from 'src/components/PaymentMethodRow/PaymentMethodRow';
 import { Typography } from 'src/components/Typography';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   error: FormattedAPIError[] | null | undefined;

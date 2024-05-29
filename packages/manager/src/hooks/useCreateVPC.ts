@@ -11,7 +11,6 @@ import { useHistory } from 'react-router-dom';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useCreateVPCMutation } from 'src/queries/vpcs/vpcs';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import {
   SubnetError,
   handleVPCAndSubnetErrors,
@@ -21,6 +20,8 @@ import {
   DEFAULT_SUBNET_IPV4_VALUE,
   SubnetFieldState,
 } from 'src/utilities/subnets';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 // Custom hook to consolidate shared logic between VPCCreate.tsx and VPCCreateDrawer.tsx
 
