@@ -122,7 +122,8 @@ export const VolumesLanding = () => {
     return (
       <ErrorState
         errorText={
-          getAPIErrorOrDefault(error, 'Error loading your volumes.')[0].formattedReason
+          getAPIErrorOrDefault(error, 'Error loading your volumes.')[0]
+            .formattedReason
         }
       />
     );

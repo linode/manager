@@ -18,6 +18,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useDatabasesQuery } from 'src/queries/databases';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import { DatabaseEmptyState } from './DatabaseEmptyState';
 import { DatabaseRow } from './DatabaseRow';
 
@@ -54,7 +55,8 @@ const DatabaseLanding = () => {
     return (
       <ErrorState
         errorText={
-          getAPIErrorOrDefault(error, 'Error loading your databases.')[0].formattedReason
+          getAPIErrorOrDefault(error, 'Error loading your databases.')[0]
+            .formattedReason
         }
       />
     );
@@ -133,8 +135,8 @@ const DatabaseLanding = () => {
           {data?.data.map((database: DatabaseInstance) => (
             <DatabaseRow
               database={database}
-              key={database.id}
               events={events}
+              key={database.id}
             />
           ))}
         </TableBody>

@@ -68,7 +68,8 @@ export const UpgradeVolumesDialog = (props: Props) => {
     <ConfirmationDialog
       error={
         error
-          ? getAPIErrorOrDefault(error, 'Unable to migrate volumes.')[0].formattedReason
+          ? getAPIErrorOrDefault(error, 'Unable to migrate volumes.')[0]
+              .formattedReason
           : undefined
       }
       actions={actions}
