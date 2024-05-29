@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-05-29] - v1.120.1
+
+
+### Fixed:
+
+- Tooltip not closing when unhovered ([#10523](https://github.com/linode/manager/pull/10523))
+
 ## [2024-05-28] - v1.120.0
 
 
