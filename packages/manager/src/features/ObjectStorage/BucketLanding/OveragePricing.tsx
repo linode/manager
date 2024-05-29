@@ -78,6 +78,7 @@ export const OveragePricing = (props: Props) => {
             the{' '}
             <TextTooltip
               displayText="network transfer pool for this region"
+              placement="top"
               tooltipText={DC_SPECIFIC_TRANSFER_POOLS_TOOLTIP_TEXT}
             />
           </>
@@ -86,6 +87,7 @@ export const OveragePricing = (props: Props) => {
             your{' '}
             <TextTooltip
               displayText="global network transfer pool"
+              placement="top"
               tooltipText={GLOBAL_TRANSFER_POOL_TOOLTIP_TEXT}
             />
           </>
