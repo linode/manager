@@ -68,7 +68,6 @@ export const ConfigSelect = React.memo((props: Props) => {
             : { label: '', value: -1 }
         }
         disableClearable
-        fullWidth
         id={name}
         isOptionEqualToValue={(option, value) => option.value === value.value}
         label="Config"
