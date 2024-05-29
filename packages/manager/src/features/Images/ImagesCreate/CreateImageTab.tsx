@@ -32,6 +32,8 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
+export const encryptionCaveatNoticeTestId = 'encryption-caveat-notice';
+
 export const CreateImageTab = () => {
   const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
     null
@@ -187,6 +189,7 @@ export const CreateImageTab = () => {
               selectedLinodeId !== null && (
                 <Notice variant="warning">
                   <Typography
+                    data-testid={encryptionCaveatNoticeTestId}
                     sx={(theme) => ({ fontFamily: theme.font.normal })}
                   >
                     {DISK_ENCRYPTION_IMAGES_CAVEAT_COPY}
