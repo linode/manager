@@ -1,12 +1,11 @@
+import _CircularProgress from '@mui/material/CircularProgress';
 import { SxProps, styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
-import {
-  CircularProgress,
-  CircularProgressProps,
-} from 'src/components/CircularProgress';
 import { omittedProps } from 'src/utilities/omittedProps';
+
+import type { CircularProgressProps } from '@mui/material/CircularProgress';
 
 interface CircleProgressProps extends CircularProgressProps {
   /**
@@ -116,7 +115,7 @@ const StyledTopDiv = styled('div')(({ theme }) => ({
   width: 70,
 }));
 
-const StyledCircularProgress = styled(CircularProgress)<CircleProgressProps>(
+const StyledCircularProgress = styled(_CircularProgress)<CircleProgressProps>(
   ({ theme }) => ({
     position: 'relative',
     [theme.breakpoints.down('sm')]: {
@@ -126,7 +125,7 @@ const StyledCircularProgress = styled(CircularProgress)<CircleProgressProps>(
   })
 );
 
-const StyledMiniCircularProgress = styled(CircularProgress, {
+const StyledMiniCircularProgress = styled(_CircularProgress, {
   shouldForwardProp: omittedProps(['noPadding']),
 })<CircleProgressProps>(({ theme, ...props }) => ({
   padding: `calc(${theme.spacing()} * 1.3)`,
