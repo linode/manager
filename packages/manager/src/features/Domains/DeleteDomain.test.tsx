@@ -24,8 +24,8 @@ describe('DeleteDomain', () => {
       wrapWithTheme(<DeleteDomain {...props} />)
     );
     fireEvent.click(getByText('Delete Domain'));
-    await findByText('Delete Domain example.com?');
-    expect(getByText('Delete Domain example.com?')).toBeInTheDocument();
+    await findByText('Delete Domain example.com');
+    expect(getByText('Delete Domain example.com')).toBeInTheDocument();
   });
 
   it('closes the modal when the "Cancel" button is clicked', async () => {
