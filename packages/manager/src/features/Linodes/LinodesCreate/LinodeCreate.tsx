@@ -63,7 +63,6 @@ import {
 import {
   sendLinodeCreateFormErrorEvent,
   sendLinodeCreateFormInputEvent,
-  sendLinodeCreateFormSubmitEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -257,9 +256,9 @@ export class LinodeCreate extends React.PureComponent<
   }
 
   componentDidUpdate(prevProps: any) {
-    if (this.props.errors !== prevProps.errors) {
-      this.handleAnalyticsFormError(getErrorMap(errorMap, this.props.errors));
-    }
+    // if (this.props.errors !== prevProps.errors) {
+    //   this.handleAnalyticsFormError(getErrorMap(errorMap, this.props.errors));
+    // }
 
     if (this.props.location.search === prevProps.location.search) {
       return;
@@ -888,8 +887,6 @@ export class LinodeCreate extends React.PureComponent<
 
   createLinode = () => {
     const payload = this.getPayload();
-    const { selectedTab } = this.state;
-    const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
 
     try {
       CreateLinodeSchema.validateSync(payload, {
@@ -902,11 +899,6 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
     this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
-    sendLinodeCreateFormSubmitEvent(
-      'Create Linode',
-      selectedTabName ?? 'Distributions',
-      'v1'
-    );
   };
 
   createLinodeFormRef = React.createRef<HTMLFormElement>();

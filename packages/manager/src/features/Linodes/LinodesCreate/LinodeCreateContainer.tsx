@@ -60,7 +60,11 @@ import {
   sendCreateLinodeEvent,
   sendLinodeCreateFlowDocsClickEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import {
+  sendLinodeCreateFormInputEvent,
+  sendLinodeCreateFormSubmitEvent,
+} from 'src/utilities/analytics/formEventAnalytics';
+import { capitalize } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 import {
@@ -95,7 +99,6 @@ import {
   withAccount,
   WithAccountProps,
 } from 'src/containers/account.container';
-import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -1011,6 +1014,7 @@ const handleAnalytics = (details: {
 }) => {
   const { label, linode: linode, payload, type } = details;
   const eventInfo = actionsAndLabels[type];
+  const eventCreateType = capitalize(eventInfo?.action) ?? 'Distributions';
   let eventAction = 'unknown';
   let eventLabel = '';
 
@@ -1028,11 +1032,18 @@ const handleAnalytics = (details: {
     eventLabel = label;
   }
 
+  // Send custom click event.
   sendCreateLinodeEvent(
     eventAction,
     eventLabel,
     linode && eventAction == 'clone'
       ? { isLinodePoweredOff: linode.status === 'offline' }
       : undefined
+  );
+  // Send form event.
+  sendLinodeCreateFormSubmitEvent(
+    'Create Linode',
+    eventCreateType as LinodeCreateType,
+    'v1'
   );
 };
