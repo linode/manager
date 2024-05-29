@@ -28,22 +28,20 @@ export const AppSection = (props: Props) => {
   } = props;
 
   return (
-    <Stack>
+    <Stack spacing={1}>
       <Typography variant="h2">{title}</Typography>
-      <Divider spacingBottom={16} spacingTop={16} />
+      <Divider />
       <Grid container spacing={2}>
-        {stackscripts?.map((stackscript) => {
-          return (
-            <AppSelectionCard
-              checked={stackscript.id === selectedStackscriptId}
-              iconUrl={`/assets/${oneClickApps[stackscript.id].logo_url}`}
-              key={stackscript.id}
-              label={stackscript.label}
-              onOpenDetailsDrawer={() => onOpenDetailsDrawer(stackscript.id)}
-              onSelect={() => onSelect(stackscript)}
-            />
-          );
-        })}
+        {stackscripts?.map((stackscript) => (
+          <AppSelectionCard
+            checked={stackscript.id === selectedStackscriptId}
+            iconUrl={`/assets/${oneClickApps[stackscript.id].logo_url}`}
+            key={stackscript.id}
+            label={stackscript.label}
+            onOpenDetailsDrawer={() => onOpenDetailsDrawer(stackscript.id)}
+            onSelect={() => onSelect(stackscript)}
+          />
+        ))}
       </Grid>
     </Stack>
   );
