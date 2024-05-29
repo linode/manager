@@ -133,7 +133,6 @@ export const baseApps = {
   '1350783': 'GlusterFS Cluster',
   '1366191': 'Couchbase Cluster',
   '1377657': 'Apache Kafka Cluster',
-  '1350845': 'Apache Cassandra Cluster',
 };
 
 const oneClickFilter = [
