@@ -9,6 +9,5 @@ export type PartialEventMap = {
 };
 
 export type CompleteEventMap = {
-  // remove conditional type when all events are implemented
-  [K in EventAction]?: EventMessage;
+  [K in EventAction]: EventMessage;
 };

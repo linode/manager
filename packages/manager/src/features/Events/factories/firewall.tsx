@@ -14,6 +14,14 @@ const secondaryFirewallEntityNameMap: Record<
 };
 
 export const firewall: PartialEventMap = {
+  firewall_apply: {
+    notification: (e) => (
+      <>
+        Firewall <EventMessageLink event={e} to="entity" /> has been{' '}
+        <strong>applied</strong>.
+      </>
+    ),
+  },
   firewall_create: {
     notification: (e) => (
       <>

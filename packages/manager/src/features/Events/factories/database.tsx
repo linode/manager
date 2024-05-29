@@ -5,6 +5,21 @@ import { EventMessageLink } from '../EventMessageLink';
 import type { PartialEventMap } from '../types';
 
 export const database: PartialEventMap = {
+  database_backup_create: {
+    notification: (e) => (
+      <>
+        Database backup <EventMessageLink event={e} to="entity" /> has been{' '}
+        <strong>created</strong>.
+      </>
+    ),
+  },
+  database_backup_delete: {
+    notification: (e) => (
+      <>
+        Database backup {e.entity?.label} has been <strong>deleted</strong>.
+      </>
+    ),
+  },
   database_backup_restore: {
     notification: (e) => (
       <>
@@ -164,6 +179,13 @@ export const database: PartialEventMap = {
       <>
         Database <EventMessageLink event={e} to="entity" /> could{' '}
         <strong>not</strong> be <strong>updated</strong>.
+      </>
+    ),
+  },
+  database_upgrade: {
+    notification: (e) => (
+      <>
+        Database {e.entity?.label} has been <strong>upgraded</strong>.
       </>
     ),
   },

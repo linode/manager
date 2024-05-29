@@ -52,6 +52,14 @@ export const domain: PartialEventMap = {
       </>
     ),
   },
+  domain_record_updated: {
+    notification: (e) => (
+      <>
+        {e.message} has been <strong>updated</strong> for{' '}
+        <EventMessageLink event={e} to="entity" />.
+      </>
+    ),
+  },
   domain_update: {
     notification: (e) => (
       <>

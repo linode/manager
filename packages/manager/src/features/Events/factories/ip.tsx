@@ -24,4 +24,36 @@ export const ip: PartialEventMap = {
       </>
     ),
   },
+  reserved_ip_assign: {
+    notification: () => (
+      <>
+        An reserved IP address has been <strong>assigned</strong> to your
+        account.
+      </>
+    ),
+  },
+  reserved_ip_create: {
+    notification: () => (
+      <>
+        An reserved IP address has been <strong>created</strong> on your
+        account.
+      </>
+    ),
+  },
+  reserved_ip_delete: {
+    notification: () => (
+      <>
+        An reserved IP address has been <strong>deleted</strong> from your
+        account.
+      </>
+    ),
+  },
+  reserved_ip_unassign: {
+    notification: () => (
+      <>
+        An reserved IP address has been <strong>unassigned</strong> from your
+        account.
+      </>
+    ),
+  },
 };

@@ -35,5 +35,5 @@ export const eventMessages: CompleteEventMap = Object.keys(factories).reduce(
     ...acc,
     ...withTypography(factories[factoryName]),
   }),
-  {}
+  {} as CompleteEventMap
 );
