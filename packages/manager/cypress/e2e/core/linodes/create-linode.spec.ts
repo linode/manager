@@ -15,6 +15,9 @@ import {
 } from 'support/intercepts/feature-flags';
 import { interceptCreateLinode } from 'support/intercepts/linodes';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { interceptGetProfile } from 'support/intercepts/profile';
+
+let username: string;
 
 authenticate();
 describe('Create Linode', () => {
@@ -70,6 +73,8 @@ describe('Create Linode', () => {
           });
           const linodeLabel = randomLabel();
 
+          interceptGetProfile().as('getProfile');
+
           interceptCreateLinode().as('createLinode');
           cy.visitWithLogin('/linodes/create');
 
@@ -116,10 +121,24 @@ describe('Create Linode', () => {
             cy.url().should('endWith', `/linodes/${responsePayload['id']}`);
           });
 
+          cy.wait('@getProfile').then((xhr) => {
+            username = xhr.response?.body.username;
+          });
+
           // TODO Confirm whether or not toast notification should appear here.
           cy.findByText('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
             'be.visible'
           );
+
+          // confirm that LISH Console via SSH section is correct
+          cy.contains('LISH Console via SSH')
+            .should('be.visible')
+            .closest('tr')
+            .within(() => {
+              cy.contains(
+                `ssh -t ${username}@lish-${linodeRegion.id}.linode.com ${linodeLabel}`
+              ).should('be.visible');
+            });
         });
       });
     });
