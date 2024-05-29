@@ -115,6 +115,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
       : props.globalFilters
         ? props.globalFilters.serviceType
         : '';
+        
   };
 
   const getLabelName = (metric: any, serviceType: string) => {
@@ -127,7 +128,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     const results =
       flags.aclpResourceTypeMap && flags.aclpResourceTypeMap.length > 0
         ? flags.aclpResourceTypeMap.filter(
-          (obj: CloudPulseResourceTypeMap) => obj.serviceName == serviceType
+          (obj: CloudPulseResourceTypeMap) => obj.serviceName === serviceType
         )
         : [];
 

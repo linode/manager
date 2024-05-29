@@ -237,7 +237,6 @@ export const DashBoardLanding = () => {
   React.useEffect( () =>{
     const fetchPreferences = async () =>{
        const userPreference = await getUserPreference();
-       console.log("Preference Data: ", userPreference);
        setPreferences(userPreference);
     }
     fetchPreferences();

@@ -17,7 +17,7 @@ import { CloudPulseTimeRangeSelect } from '../shared/TimeRangeSelect';
 
 
 import { updateGlobalFilterPreference } from '../Utils/UserPreference';
-import { TIME_DURATION, INTERVAL, REGION, RESOURCES, DASHBOARD_ID } from '../Utils/CloudPulseConstants';
+import { TIME_DURATION,  REGION, RESOURCES } from '../Utils/CloudPulseConstants';
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const emitGlobalFilterChange = (
@@ -33,7 +33,8 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     timeDuration?: TimeDuration,
     timeRangeLabel?: string
   ) => {
-    
+
+
     if (start > 0 && end > 0) {
       const filterObj = { ...props.globalFilters };
       filterObj.timeRange = { end, start };
@@ -41,40 +42,43 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       filterObj.durationLabel = timeRangeLabel!;
       emitGlobalFilterChange(filterObj, TIME_DURATION);
       updateGlobalFilterPreference({ [TIME_DURATION]: filterObj.durationLabel });
-
     }
   }, []);
+
 
 
   const handleRegionChange = React.useCallback((region: string | undefined) => {
 
     if (region) {
       emitGlobalFilterChange({ ...props.globalFilters, region }, REGION);
-      updateGlobalFilterPreference({ [REGION]: region, [RESOURCES] : [] });
+      updateGlobalFilterPreference({ [REGION]: region, [RESOURCES]: [] });
+      emitGlobalFilterChange({ ...props.globalFilters, region }, REGION);
+      updateGlobalFilterPreference({ [REGION]: region, [RESOURCES]: [] });
     }
   }, []);
 
   const handleResourceChange = React.useCallback((resourceId: any[], reason: string) => {
     if ((resourceId && resourceId.length > 0) || (reason == 'clear' || reason === "removeOption")) {
-updateGlobalFilterPreference({ [RESOURCES]: resourceId.map((obj) => obj.id) });
-    emitGlobalFilterChange(
-{
-  ...props.globalFilters,
-  resource: resourceId.map((obj) => obj.id),
-},
-RESOURCES
-);
-}
-}, []);
+      updateGlobalFilterPreference({ [RESOURCES]: resourceId.map((obj) => obj.id) });
+      emitGlobalFilterChange(
+        {
+          ...props.globalFilters,
+          resource: resourceId.map((obj) => obj.id),
+        },
+        RESOURCES
+      );
+    }
+  }, []);
+
 
   const handleDashboardChange = React.useCallback((
     dashboard: Dashboard | undefined,
     isClear: boolean
   ) => {
-    
+
+
     if (dashboard || (!dashboard && !isClear)) {
       props.handleDashboardChange(dashboard!);
-
     }
   }, []);
 
@@ -82,11 +86,14 @@ RESOURCES
     emitGlobalFilterChange(
       {
         ...props.globalFilters,
-        timestamp: Date.now(),
+        timestamp: Date.now()
       },
       'refresh'
     );
-  },[]);
+  }, [])
+
+
+
 
 
   return (

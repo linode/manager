@@ -20,30 +20,42 @@ const updateUserPreference = async (updatedData : AclpConfig) => {
     return await updateUserPreferences({"aclpPreference" : updatedData});
 }
 
-export const updateGlobalFilterPreference =  (data : {})=>{
+export const updateGlobalFilterPreference =  (data :{})=>{
     if(!userPreference){
         userPreference = {} as AclpConfig
     }
     userPreference = { ...userPreference, ...data};
+    userPreference = { ...userPreference, ...data};
     updateUserPreference(userPreference);
 }
 
-export const updateWidgetPreference =  (label : string, key : string, value : any) => {
+export const updateWidgetPreference =  (label : string, data: {}) => {
     if(!userPreference){
         userPreference = {} as AclpConfig
     }
 
-    userPreference.widgets = userPreference.widgets?.map((widget) => {
-        const newWidget = {...widget} as AclpWidget
-        if(widget.label === label){
-            if(key === 'size'){
-                newWidget.size = value;
-            }else if(key === 'aggregateFunction'){
-                newWidget.aggregateFunction = value
-            }
-        }
-        return newWidget;
+    let widget = userPreference.widgets?.find((w) =>{
+        return w.label === label;
     });
+    if(!widget){
+        widget = {
+            label : label,
+            ...data
+        } as AclpWidget
+        if(!userPreference.widgets){
+            userPreference.widgets = []
+        }
+        userPreference.widgets.push(widget);
+    }else{
+        widget = {...widget, ...data};
+        userPreference.widgets = userPreference.widgets?.map((w) => {
+            if(w.label === label){
+                return widget;
+            }else{
+                return w;
+            }
+        });
+    }
 
     updateUserPreference(userPreference);
 }
