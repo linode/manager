@@ -20,11 +20,11 @@ const updateUserPreference = async (updatedData : AclpConfig) => {
     return await updateUserPreferences({"aclpPreference" : updatedData});
 }
 
-export const updateGlobalFilterPreference =  (key : string, value : any)=>{
+export const updateGlobalFilterPreference =  (data :{})=>{
     if(!userPreference){
         userPreference = {} as AclpConfig
     }
-    userPreference = { ...userPreference, [key] : value };
+    userPreference = { ...userPreference, ...data};
     updateUserPreference(userPreference);
 }
 
@@ -33,17 +33,28 @@ export const updateWidgetPreference =  (label : string, key : string, value : an
         userPreference = {} as AclpConfig
     }
 
-    userPreference.widgets = userPreference.widgets?.map((widget) => {
-        const newWidget = {...widget} as AclpWidget
-        if(widget.label === label){
-            if(key === 'size'){
-                newWidget.size = value;
-            }else if(key === 'aggregateFunction'){
-                newWidget.aggregateFunction = value
-            }
-        }
-        return newWidget;
+    let widget = userPreference.widgets?.find((w) =>{
+        return w.label === label;
     });
+    if(!widget){
+        widget = {
+            label : label,
+            [key] : value
+        } as AclpWidget
+        if(!userPreference.widgets){
+            userPreference.widgets = []
+        }
+        userPreference.widgets.push(widget);
+    }else{
+        widget = {...widget, [key]: value};
+        userPreference.widgets = userPreference.widgets?.map((w) => {
+            if(w.label === label){
+                return widget;
+            }else{
+                return w;
+            }
+        });
+    }
 
     updateUserPreference(userPreference);
 }

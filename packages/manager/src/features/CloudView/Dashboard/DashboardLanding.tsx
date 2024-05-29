@@ -8,7 +8,8 @@ import { AclpConfig } from '../Models/CloudPulsePreferences';
 import { FiltersObject } from '../Models/GlobalFilterProperties';
 import { GlobalFilters } from '../Overview/GlobalFilters';
 import { CloudPulseDashboard, DashboardProperties } from './Dashboard';
-import { getUserPreference} from '../Utils/UserPreference'
+import { getUserPreference, updateGlobalFilterPreference } from '../Utils/UserPreference'
+import { DASHBOARD_ID, INTERVAL, REFRESH, REGION, RESOURCES, TIME_DURATION } from '../Utils/CloudPulseConstants'
 
 export const DashBoardLanding = () => {
   const generateStartTime = (modifier: string, nowInSeconds: number) => {
@@ -70,7 +71,7 @@ export const DashBoardLanding = () => {
       dashboardPropRef.current = getInitDashboardProps();
     }
 
-    if (changedFilter === 'timeduration') {
+    if (changedFilter === TIME_DURATION) {
       dashboardPropRef.current.dashboardFilters.duration =
         globalFilter.duration;
       dashboardPropRef.current.dashboardFilters.timeRange =
@@ -80,7 +81,7 @@ export const DashBoardLanding = () => {
     }
 
     if (
-      changedFilter === 'region' &&
+      changedFilter === REGION &&
       dashboardPropRef.current.dashboardFilters.region != globalFilter.region
     ) {
       dashboardPropRef.current.dashboardFilters.region = globalFilter.region;
@@ -95,7 +96,7 @@ export const DashBoardLanding = () => {
       }
     }
 
-    if (changedFilter === 'resource') {
+    if (changedFilter === RESOURCES) {
       dashboardPropRef.current.dashboardFilters.resource =
         globalFilter.resource;
       preferenceRef.current.aclpPreference.dashboardId = dashboardPropRef
@@ -107,14 +108,14 @@ export const DashBoardLanding = () => {
       preferenceRef.current.aclpPreference.resources = globalFilter.resource;
     }
 
-    if (changedFilter === 'timestep') {
+    if (changedFilter === INTERVAL) {
       dashboardPropRef.current.dashboardFilters.interval =
         globalFilter.interval;
       dashboardPropRef.current.dashboardFilters.step = globalFilter.step;
       preferenceRef.current.aclpPreference.interval = globalFilter.interval;
     }
 
-    if (changedFilter === 'refresh') {
+    if (changedFilter === REFRESH) {
       dashboardPropRef.current.dashboardFilters.timestamp =
         globalFilter.timestamp;
     }
@@ -135,7 +136,11 @@ export const DashBoardLanding = () => {
       dashboardPropRef.current.dashboardFilters.serviceType = undefined!;
       updatedDashboard.current = undefined!;
       setDashboardProp({ ...dashboardPropRef.current });
-
+      updateGlobalFilterPreference({
+        [DASHBOARD_ID]: undefined,
+        [RESOURCES]: [],
+        [REGION]: ''
+      });
       preferenceRef.current.aclpPreference.dashboardId = undefined!;
       preferenceRef.current.aclpPreference.resources = [];
       preferenceRef.current.aclpPreference.region = '';
@@ -179,7 +184,11 @@ export const DashBoardLanding = () => {
 
     if (dashboard && dashboard.id) {
       preferenceRef.current.aclpPreference.dashboardId = dashboard.id;
-
+      updateGlobalFilterPreference({
+        [DASHBOARD_ID] : dashboard.id,
+        [REGION] : '',
+        [RESOURCES] : []
+      })
       if (
         preferences &&
         preferences.aclpPreference.dashboardId !=
@@ -230,7 +239,6 @@ export const DashBoardLanding = () => {
   React.useEffect( () =>{
     const fetchPreferences = async () =>{
        const userPreference = await getUserPreference();
-       console.log("Preference Data: ", userPreference);
        setPreferences(userPreference);
     }
     fetchPreferences();

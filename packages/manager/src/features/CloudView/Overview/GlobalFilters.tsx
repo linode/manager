@@ -16,6 +16,7 @@ import { CloudViewMultiResourceSelect } from '../shared/ResourceMultiSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/TimeRangeSelect';
 
 import { updateGlobalFilterPreference } from '../Utils/UserPreference';
+import { TIME_DURATION, INTERVAL, REGION, RESOURCES, DASHBOARD_ID } from '../Utils/CloudPulseConstants';
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const emitGlobalFilterChange = (
@@ -25,69 +26,97 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     props.handleAnyFilterChange(updatedFilters, changedFilter);
   };
 
-  const handleTimeRangeChange = (
+  const handleTimeRangeChange = React.useCallback((
     start: number,
     end: number,
     timeDuration?: TimeDuration,
     timeRangeLabel?: string
   ) => {
-    console.log('TimeRange: ', start, end);
-
+    
     if (start > 0 && end > 0) {
       const filterObj = { ...props.globalFilters };
       filterObj.timeRange = { end, start };
       filterObj.duration = timeDuration;
       filterObj.durationLabel = timeRangeLabel!;
-      emitGlobalFilterChange(filterObj, 'timeduration');
-      updateGlobalFilterPreference("timeDuration", filterObj.duration);
+      emitGlobalFilterChange(filterObj, TIME_DURATION);
+      updateGlobalFilterPreference({ [TIME_DURATION]: filterObj.durationLabel });
     }
-  };
+  }, []);
 
-  const handleRegionChange = (region: string | undefined) => {
-    console.log('Region: ', region);
+  const handleIntervalChange = React.useCallback((interval: string | undefined) => {
+    console.log('Interval: ', interval);
+    if (interval) {
+      const filterObj = { ...props.globalFilters };
+      filterObj.interval = interval;
+      filterObj.step = getIntervalToGranularity(interval);
+      emitGlobalFilterChange(filterObj, INTERVAL);
+      updateGlobalFilterPreference({ [INTERVAL]: interval });
+    }
+  }, []);
+
+  const handleRegionChange = React.useCallback((region: string | undefined) => {
 
     if (region) {
-      emitGlobalFilterChange({ ...props.globalFilters, region }, 'region');
-      updateGlobalFilterPreference("region", region);
+      emitGlobalFilterChange({ ...props.globalFilters, region }, REGION);
+      updateGlobalFilterPreference({ [REGION]: region, [RESOURCES] : [] });
     }
-  };
+  }, []);
 
-  const handleResourceChange = (resourceId: any[], reason: string) => {
-    console.log('Resource ID: ', resourceId);
-    console.log('resourcereason', reason);
-    if ((resourceId && resourceId.length > 0) || reason == 'clear') {
-      updateGlobalFilterPreference("resources", resourceId.map((obj) => obj.id));
-      console.log("Resources Updated");
-      emitGlobalFilterChange(
-        {
-          ...props.globalFilters,
-          resource: resourceId.map((obj) => obj.id),
-        },
-        'resource'
-      );
-    }
-  };
+  const handleResourceChange = React.useCallback((resourceId: any[], reason: string) => {
+    if ((resourceId && resourceId.length > 0) || (reason == 'clear' || reason === "removeOption")) {
+updateGlobalFilterPreference({ [RESOURCES]: resourceId.map((obj) => obj.id) });
+    emitGlobalFilterChange(
+{
+  ...props.globalFilters,
+  resource: resourceId.map((obj) => obj.id),
+},
+RESOURCES
+);
+}
+}, []);
 
-  const handleDashboardChange = (
+  const handleDashboardChange = React.useCallback((
     dashboard: Dashboard | undefined,
     isClear: boolean
   ) => {
-    console.log('Selected Dashboard: ', dashboard);
-
+    
     if (dashboard || (!dashboard && !isClear)) {
       props.handleDashboardChange(dashboard!);
-
     }
-  };
+  }, []);
 
-  const handleGlobalRefresh = () => {
+  const handleGlobalRefresh = React.useCallback(() => {
     emitGlobalFilterChange(
       {
         ...props.globalFilters,
-        timestamp: Date.now(),
+        timestamp: Date.now()
       },
       'refresh'
     );
+  }, [])
+
+
+  const getIntervalToGranularity = (interval: string | undefined) => {
+    if (interval == undefined) {
+      return undefined!;
+    }
+    if (interval == '1m' || interval == '1minute') {
+      return { unit: 'min', value: 1 };
+    }
+
+    if (interval == '5minute') {
+      return { unit: 'min', value: 5 };
+    }
+
+    if (interval == '2hour') {
+      return { unit: 'hr', value: 2 };
+    }
+
+    if (interval == '1day') {
+      return { unit: 'day', value: 1 };
+    }
+
+    return undefined!;
   };
 
   return (
@@ -181,12 +210,14 @@ const itemSpacing = {
 };
 
 const StyledReload = styled(Reload, { label: 'StyledReload' })(({ theme }) => ({
-  '&:active': {
-    color: 'green',
-  },
-  '&:hover': {
-    cursor: 'pointer',
-  },
+
   height: '27px',
   width: '27px',
-}));
+  '&:hover': {
+    cursor: 'pointer'
+  },
+  '&:active': {
+    color: 'green'
+  }
+}))
+

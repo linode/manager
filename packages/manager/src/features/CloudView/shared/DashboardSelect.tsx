@@ -70,7 +70,7 @@ export const CloudViewDashboardSelect = React.memo(
           disabled={true}
           isClearable={true}
           // eslint-disable-next-line @typescript-eslint/no-empty-function
-          onChange={() => {}}
+          onChange={() => { }}
           placeholder="Select Dashboard"
         />
       );
