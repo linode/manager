@@ -1,5 +1,4 @@
 import { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';
-import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
@@ -10,14 +9,15 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { Notice } from 'src/components/Notice/Notice';
-import { Radio } from 'src/components/Radio/Radio';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
+import { Notice } from 'src/components/Notice/Notice';
+import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
+import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Typography } from 'src/components/Typography';
 import { useDatabaseMutation } from 'src/queries/databases';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 // import { updateDatabaseSchema } from '@linode/validation/src/databases.schema';
 
@@ -71,7 +71,7 @@ export const MaintenanceWindow = (props: Props) => {
   const { database, timezone } = props;
 
   const [maintenanceUpdateError, setMaintenanceUpdateError] = React.useState<
-    APIError[]
+    FormattedAPIError[]
   >();
 
   // This will be set to `true` once a form field has been touched. This is used to disable the
@@ -137,7 +137,7 @@ export const MaintenanceWindow = (props: Props) => {
         });
         setFormTouched(false);
       })
-      .catch((e: APIError[]) => {
+      .catch((e: FormattedAPIError[]) => {
         setMaintenanceUpdateError(e);
         setSubmitting(false);
       });

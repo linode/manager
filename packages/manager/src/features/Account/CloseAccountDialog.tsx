@@ -1,5 +1,4 @@
 import { cancelAccount } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
 import { Theme, styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -10,6 +9,7 @@ import { TextField } from 'src/components/TextField';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   closeDialog: () => void;
@@ -27,7 +27,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
   const [isClosingAccount, setIsClosingAccount] = React.useState<boolean>(
     false
   );
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const [errors, setErrors] = React.useState<FormattedAPIError[]>();
   const [comments, setComments] = React.useState<string>('');
   const { classes } = useStyles();
   const history = useHistory();
@@ -69,7 +69,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
         /** shoot the user off to survey monkey to answer some questions */
         history.push('/cancel', { survey_link: response.survey_link });
       })
-      .catch((e: APIError[]) => {
+      .catch((e: FormattedAPIError[]) => {
         setIsClosingAccount(false);
         setErrors(e);
       });
@@ -97,7 +97,9 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       title="Are you sure you want to close your cloud computing services account?"
     >
       {errors ? (
-        <Notice text={errors ? errors[0].formattedReason : ''} variant="error" />
+        <Notice variant="error">
+          {errors ? errors[0].formattedReason : ''}
+        </Notice>
       ) : null}
       <StyledNoticeWrapper>
         <Notice spacingBottom={12} variant="warning">

@@ -12,13 +12,13 @@ interface Actions {
 }
 
 interface Props extends Actions {
-  error: null | string;
+  error?: JSX.Element | string;
   open: boolean;
   usd: string;
 }
 
 export const CreditCardDialog = (props: Props) => {
-  const { cancel, error, open, usd, isMakingPayment, executePayment } = props;
+  const { cancel, error, executePayment, isMakingPayment, open, usd } = props;
 
   return (
     <ConfirmationDialog
@@ -41,7 +41,7 @@ export const CreditCardDialog = (props: Props) => {
       open={open}
       title="Confirm Payment"
     >
-      {error && <Notice text={error} variant="error" />}
+      {error && <Notice variant="error">{error}</Notice>}
       <Typography>{`Confirm payment of $${usd} USD to Linode LLC?`}</Typography>
     </ConfirmationDialog>
   );

@@ -1,5 +1,4 @@
 import { makePayment } from '@linode/api-v4/lib/account/payments';
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import {
   BraintreePayPalButtons,
@@ -19,10 +18,11 @@ import { reportException } from 'src/exceptionReporting';
 import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 import { useAccount } from 'src/queries/account/account';
 import { useClientToken } from 'src/queries/account/payment';
+import { accountQueries } from 'src/queries/account/queries';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { SetSuccess } from './types';
-import { accountQueries } from 'src/queries/account/queries';
 
 const useStyles = makeStyles()(() => ({
   loading: {
@@ -44,7 +44,7 @@ const useStyles = makeStyles()(() => ({
 interface Props {
   disabled: boolean;
   renderError: (errorMsg: string) => JSX.Element;
-  setError: (error: string) => void;
+  setError: (error: JSX.Element | string) => void;
   setProcessing: (processing: boolean) => void;
   setSuccess: SetSuccess;
   usd: string;
@@ -169,7 +169,7 @@ export const PayPalButton = (props: Props) => {
       const response = await makePayment({
         nonce: payload.nonce,
         usd: stateRef!.current!.amount,
-      }).catch((error: APIError[]) => {
+      }).catch((error: FormattedAPIError[]) => {
         // Process and surface any Linode API errors during payment
         const errorText = getAPIErrorOrDefault(
           error,

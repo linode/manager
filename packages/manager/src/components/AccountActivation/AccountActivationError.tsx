@@ -1,12 +1,13 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { Typography } from '@mui/material';
 import * as React from 'react';
 import { compose } from 'recompose';
 
 import withGlobalErrors, { Props } from 'src/containers/globalErrors.container';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface InnerProps {
-  errors: APIError[];
+  errors: FormattedAPIError[];
 }
 
 interface CombinedProps extends Props, InnerProps {}
@@ -22,14 +23,14 @@ const AccountActivationError = (props: CombinedProps) => {
   }, [props.globalErrors]);
 
   return (
-    <React.Fragment>
+    <Typography>
       {
         getAPIErrorOrDefault(
           props.errors,
           'Your account is not yet activated. Please reach out to support@linode.com for more information'
         )[0].formattedReason
       }
-    </React.Fragment>
+    </Typography>
   );
 };
 

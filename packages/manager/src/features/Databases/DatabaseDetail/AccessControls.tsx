@@ -1,5 +1,4 @@
 import { Database } from '@linode/api-v4/lib/databases';
-import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -15,6 +14,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useDatabaseMutation } from 'src/queries/databases';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import AddAccessControlDrawer from './AddAccessControlDrawer';
@@ -92,7 +92,7 @@ export const AccessControls = (props: Props) => {
   const { classes } = useStyles();
 
   const [isDialogOpen, setDialogOpen] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string | undefined>();
+  const [error, setError] = React.useState<JSX.Element | string>();
 
   const [
     accessControlToBeRemoved,
@@ -140,7 +140,7 @@ export const AccessControls = (props: Props) => {
       .then(() => {
         handleDialogClose();
       })
-      .catch((e: APIError[]) => {
+      .catch((e: FormattedAPIError[]) => {
         setError(e[0].formattedReason);
       });
   };
@@ -206,7 +206,7 @@ export const AccessControls = (props: Props) => {
         open={isDialogOpen}
         title={`Remove IP Address ${accessControlToBeRemoved}`}
       >
-        {error ? <Notice text={error} variant="error" /> : null}
+        {error ? <Notice variant="error">{error}</Notice> : null}
         <Typography data-testid="ip-removal-confirmation-warning">
           IP {accessControlToBeRemoved} will lose all access to the data on this
           database cluster. This action cannot be undone, but you can re-enable

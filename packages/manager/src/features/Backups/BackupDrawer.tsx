@@ -100,7 +100,8 @@ export const BackupDrawer = (props: Props) => {
           (enableBackupsResult?.find(
             (result) =>
               result.linode.id === linode.id && result.status === 'rejected'
-          ) as EnableBackupsRejectedResult | undefined)?.reason?.[0]?.formattedReason
+          ) as EnableBackupsRejectedResult | undefined)?.reason?.[0]
+            ?.formattedReason
         }
         key={linode.id}
         linode={linode}

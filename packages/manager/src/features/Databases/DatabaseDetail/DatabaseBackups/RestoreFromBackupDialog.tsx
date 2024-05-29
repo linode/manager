@@ -60,13 +60,12 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
       open={open}
     >
       {error ? (
-        <Notice
-          text={
+        <Notice variant="error">
+          {
             getAPIErrorOrDefault(error, 'Unable to restore this backup.')[0]
               .formattedReason
           }
-          variant="error"
-        />
+        </Notice>
       ) : null}
       <Notice variant="warning">
         <Typography style={{ fontSize: '0.875rem' }}>

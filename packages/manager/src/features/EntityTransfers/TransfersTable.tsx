@@ -2,7 +2,6 @@ import {
   EntityTransfer,
   TransferEntities,
 } from '@linode/api-v4/lib/entity-transfers';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { Accordion } from 'src/components/Accordion';
@@ -13,6 +12,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { ConfirmTransferCancelDialog } from './EntityTransfersLanding/ConfirmTransferCancelDialog';
@@ -21,7 +21,7 @@ import { RenderTransferRow } from './RenderTransferRow';
 import { StyledDiv, StyledTable } from './TransfersTable.styles';
 
 interface Props {
-  error: APIError[] | null;
+  error: FormattedAPIError[] | null;
   handlePageChange: (v: number, showSpinner?: boolean | undefined) => void;
   handlePageSizeChange: (v: number) => void;
   isLoading: boolean;

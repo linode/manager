@@ -7,7 +7,6 @@ import {
   DatabasePriceObject,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
-import { APIError } from '@linode/api-v4/lib/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -52,6 +51,7 @@ import {
   useDatabaseTypesQuery,
 } from 'src/queries/databases';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
@@ -218,7 +218,9 @@ const DatabaseCreate = () => {
 
   const [nodePricing, setNodePricing] = React.useState<NodePricing>();
   const [createError, setCreateError] = React.useState<string>();
-  const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
+  const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<
+    FormattedAPIError[]
+  >();
 
   const engineOptions = React.useMemo(() => {
     if (!engines) {
@@ -278,7 +280,7 @@ const DatabaseCreate = () => {
       history.push(`/databases/${response.engine}/${response.id}`);
     } catch (errors) {
       const ipErrors = errors.filter(
-        (error: APIError) => error.field === 'allow_list'
+        (error: FormattedAPIError) => error.field === 'allow_list'
       );
       if (ipErrors) {
         setIPErrorsFromAPI(ipErrors);
@@ -599,12 +601,11 @@ const DatabaseCreate = () => {
           </Typography>
           <Grid style={{ marginTop: 24, maxWidth: 450 }}>
             {ipErrorsFromAPI
-              ? ipErrorsFromAPI.map((apiError: APIError) => (
-                  <Notice
-                    key={apiError.formattedReason}
-                    text={apiError.formattedReason}
-                    variant="error"
-                  />
+              ? ipErrorsFromAPI.map((apiError) => (
+                  <Notice key={apiError.reason} variant="error">
+                    {' '}
+                    {apiError.formattedReason}
+                  </Notice>
                 ))
               : null}
             <MultipleIPInput

@@ -1,13 +1,13 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { capitalize } from 'src/utilities/capitalize';
 
 interface Props {
-  errors: APIError[];
+  errors: FormattedAPIError[];
 }
 
 export const SupportError = (props: Props) => {
@@ -16,7 +16,7 @@ export const SupportError = (props: Props) => {
   const supportTextRegex = new RegExp(
     /(open a support ticket|contact Support)/i
   );
-  const errorMsg = errors[0].formattedReason.split(supportTextRegex);
+  const errorMsg = errors[0].reason.split(supportTextRegex);
 
   return (
     <Typography

@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { concat } from 'ramda';
 import * as React from 'react';
@@ -9,6 +8,7 @@ import Select, {
 } from 'src/components/EnhancedSelect/Select';
 import { useProfile } from 'src/queries/profile';
 import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 export interface Tag {
@@ -70,7 +70,7 @@ export const TagsInput = (props: TagsInputProps) => {
     value,
   } = props;
 
-  const [errors, setErrors] = React.useState<APIError[]>([]);
+  const [errors, setErrors] = React.useState<FormattedAPIError[]>([]);
 
   const { data: profile } = useProfile();
   const { data: accountTags, error: accountTagsError } = useTagSuggestions(
@@ -94,6 +94,7 @@ export const TagsInput = (props: TagsInputProps) => {
         {
           field: 'label',
           formattedReason: 'Length must be 3-50 characters',
+          reason: 'Length must be 3-50 characters',
         },
       ]);
     } else {

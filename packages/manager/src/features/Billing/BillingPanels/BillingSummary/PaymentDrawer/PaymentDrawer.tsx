@@ -23,6 +23,7 @@ import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
+import { accountQueries } from 'src/queries/account/queries';
 import { useProfile } from 'src/queries/profile';
 import { isCreditCardExpired } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -33,7 +34,6 @@ import { CreditCardDialog } from './PaymentBits/CreditCardDialog';
 import { PaymentMethodCard } from './PaymentMethodCard';
 import PayPalButton from './PayPalButton';
 import { SetSuccess } from './types';
-import { accountQueries } from 'src/queries/account/queries';
 
 const useStyles = makeStyles()(() => ({
   button: {
@@ -107,7 +107,9 @@ export const PaymentDrawer = (props: Props) => {
   const [submitting, setSubmitting] = React.useState<boolean>(false);
 
   const [warning, setWarning] = React.useState<APIWarning | null>(null);
-  const [errorMessage, setErrorMessage] = React.useState<null | string>(null);
+  const [errorMessage, setErrorMessage] = React.useState<
+    JSX.Element | string
+  >();
 
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
 
@@ -128,7 +130,7 @@ export const PaymentDrawer = (props: Props) => {
   React.useEffect(() => {
     if (open) {
       setWarning(null);
-      setErrorMessage(null);
+      setErrorMessage(undefined);
       setIsProcessing(false);
     }
   }, [open, paymentMethods]);
@@ -167,13 +169,13 @@ export const PaymentDrawer = (props: Props) => {
 
   const handleOpenDialog = () => {
     setDialogOpen(true);
-    setErrorMessage(null);
+    setErrorMessage(undefined);
   };
 
   const confirmCardPayment = () => {
     setSubmitting(true);
     setSuccess(null);
-    setErrorMessage(null);
+    setErrorMessage(undefined);
 
     const makePaymentData = {
       payment_method_id: paymentMethodId,
@@ -245,7 +247,7 @@ export const PaymentDrawer = (props: Props) => {
             variant="error"
           />
         )}
-        {errorMessage && <Notice text={errorMessage ?? ''} variant="error" />}
+        {errorMessage && <Notice variant="error">{errorMessage}</Notice>}
         {warning ? <Warning warning={warning} /> : null}
         {isProcessing ? <LinearProgress className={classes.progress} /> : null}
         {accountLoading ? (

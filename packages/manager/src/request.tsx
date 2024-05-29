@@ -18,6 +18,7 @@ import { interceptErrors } from 'src/utilities/interceptAPIError';
 
 import { SupportError } from './components/SupportError';
 import { ApplicationStore } from './store';
+import { FormattedAPIError } from './types/FormattedAPIError';
 import { getEnvLocalStorageOverrides } from './utilities/storage';
 
 const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
@@ -48,9 +49,9 @@ export const handleError = (
   const config = error.response?.config;
   const url = config?.url ?? '';
   const status: number = error.response?.status ?? 0;
-  const errors: APIError[] = error.response?.data?.errors ?? [
-    { reason: DEFAULT_ERROR_MESSAGE },
-  ];
+  const errors: FormattedAPIError[] = (
+    error.response?.data?.errors ?? [{ reason: DEFAULT_ERROR_MESSAGE }]
+  ).map((error) => ({ ...error, formattedReason: error.reason }));
 
   const apiInMaintenanceMode = !!error.response?.headers['x-maintenance-mode'];
 

@@ -1,6 +1,5 @@
 import { Region } from '@linode/api-v4';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
-import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
@@ -25,6 +24,7 @@ import {
 } from 'src/queries/objectStorage';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import {
   sendDeleteBucketEvent,
@@ -88,7 +88,7 @@ export const OMC_BucketLanding = () => {
     ObjectStorageBucket | undefined
   >(undefined);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<APIError[] | undefined>(undefined);
+  const [errors, setErrors] = React.useState<FormattedAPIError[]>();
   const [
     bucketDetailDrawerOpen,
     setBucketDetailDrawerOpen,
@@ -108,7 +108,7 @@ export const OMC_BucketLanding = () => {
 
   const handleClickRemove = (bucket: ObjectStorageBucket) => {
     setBucketToRemove(bucket);
-    setError(undefined);
+    setErrors(undefined);
     removeBucketConfirmationDialog.open();
   };
 
@@ -118,7 +118,7 @@ export const OMC_BucketLanding = () => {
       return;
     }
 
-    setError(undefined);
+    setErrors(undefined);
     setIsLoading(true);
 
     const { label, region } = bucketToRemove;
@@ -135,7 +135,7 @@ export const OMC_BucketLanding = () => {
         sendDeleteBucketFailedEvent(region);
 
         setIsLoading(false);
-        setError(e);
+        setErrors(e);
       }
     }
   };
@@ -228,7 +228,7 @@ export const OMC_BucketLanding = () => {
           primaryBtnText: 'Delete',
           type: 'Bucket',
         }}
-        errors={error}
+        errors={errors}
         label={'Bucket Name'}
         loading={isLoading}
         onClick={removeBucket}

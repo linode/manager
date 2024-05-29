@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -11,6 +10,7 @@ import {
   TypeToConfirmProps,
 } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { usePreferences } from 'src/queries/preferences';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface EntityInfo {
   action?:
@@ -56,7 +56,7 @@ interface TypeToConfirmDialogProps {
   /**
    * Error to be displayed in the dialog
    */
-  errors?: APIError[] | null | undefined;
+  errors?: FormattedAPIError[] | null | undefined;
   /*
    * The label for the dialog
    */

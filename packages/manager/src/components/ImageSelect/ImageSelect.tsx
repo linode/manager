@@ -156,7 +156,7 @@ export const ImageSelect = React.memo((props: ImageSelectProps) => {
   const { error, isLoading: _loading } = useAllImagesQuery();
 
   const imageError = error
-    ? getAPIErrorOrDefault(error, 'Unable to load Images')[0].formattedReason
+    ? getAPIErrorOrDefault(error, 'Unable to load Images')[0].reason
     : undefined;
 
   const filteredImages = images.filter((thisImage) => {

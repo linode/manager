@@ -1,5 +1,4 @@
 import { addPromotion } from '@linode/api-v4/lib';
-import { APIError } from '@linode/api-v4/lib/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -11,6 +10,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { accountQueries } from 'src/queries/account/queries';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles()(() => ({
@@ -31,7 +31,7 @@ const PromoDialog = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
   const [promoCode, setPromoCode] = React.useState<string>('');
-  const [error, setError] = React.useState<string>();
+  const [error, setError] = React.useState<JSX.Element | string>();
   const [loading, setLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
@@ -54,10 +54,11 @@ const PromoDialog = (props: Props) => {
         queryClient.invalidateQueries(accountQueries.account.queryKey);
         onClose();
       })
-      .catch((error: APIError[]) => {
+      .catch((error: FormattedAPIError[]) => {
         setLoading(false);
         setError(
-          getAPIErrorOrDefault(error, 'Unable to add promo code')[0].formattedReason
+          getAPIErrorOrDefault(error, 'Unable to add promo code')[0]
+            .formattedReason
         );
       });
   };
@@ -81,7 +82,7 @@ const PromoDialog = (props: Props) => {
       open={open}
       title="Add promo code"
     >
-      {error && <Notice text={error} variant="error" />}
+      {error && <Notice variant="error">{error}</Notice>}
       <Typography>
         Enter the promo code in the field below. You will see promo details in
         the Promotions panel on the Billing Info tab.

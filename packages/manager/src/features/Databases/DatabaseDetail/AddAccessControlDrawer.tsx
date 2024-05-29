@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as React from 'react';
@@ -10,6 +9,7 @@ import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput'
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import {
   ExtendedIP,
@@ -46,7 +46,9 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
   const { classes } = useStyles();
 
   const [error, setError] = React.useState<string | undefined>('');
-  const [allowListErrors, setAllowListErrors] = React.useState<APIError[]>();
+  const [allowListErrors, setAllowListErrors] = React.useState<
+    FormattedAPIError[]
+  >();
 
   // This will be set to `true` once a form field has been touched. This is used to disable the
   // "Update Access Controls" button unless there have been changes to the form.
@@ -88,10 +90,10 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
         setSubmitting(false);
         onClose();
       })
-      .catch((errors: any) => {
+      .catch((errors: FormattedAPIError[]) => {
         // Surface allow_list errors -- for example, "Invalid IPv4 address(es): ..."
         const allowListErrors = errors.filter(
-          (error: APIError) => error.field === 'allow_list'
+          (error) => error.field === 'allow_list'
         );
         if (allowListErrors) {
           setAllowListErrors(allowListErrors);
@@ -165,11 +167,9 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
         {error ? <Notice text={error} variant="error" /> : null}
         {allowListErrors
           ? allowListErrors.map((allowListError) => (
-              <Notice
-                key={allowListError.formattedReason}
-                text={allowListError.formattedReason}
-                variant="error"
-              />
+              <Notice key={allowListError.reason} variant="error">
+                {allowListError.formattedReason}
+              </Notice>
             ))
           : null}
         <Typography className={classes.instructions} variant="body1">

@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -9,6 +8,7 @@ import {
   useMutateAccountSettings,
 } from 'src/queries/account/settings';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { BackupDrawer } from '../Backups';
@@ -36,7 +36,7 @@ const GlobalSettings = () => {
 
   const { mutateAsync: updateAccount } = useMutateAccountSettings();
 
-  const displayError = (errors: APIError[] | undefined) => {
+  const displayError = (errors: FormattedAPIError[] | undefined) => {
     if (!errors) {
       return;
     }
