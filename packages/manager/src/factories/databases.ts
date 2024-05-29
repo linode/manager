@@ -14,11 +14,13 @@ import { v4 } from 'uuid';
 import { pickRandom, randomDate } from 'src/utilities/random';
 
 // These are not all of the possible statuses, but these are some common ones.
-const possibleStatuses: DatabaseStatus[] = [
+export const possibleStatuses: DatabaseStatus[] = [
   'provisioning',
   'active',
   'failed',
   'degraded',
+  'restoring',
+  'resizing',
 ];
 
 export const possibleMySQLReplicationTypes: MySQLReplicationType[] = [
@@ -37,7 +39,6 @@ export const IPv4List = ['192.0.2.1', '196.0.0.0', '198.0.0.2'];
 
 export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
   class: 'standard',
-  disk: 20480,
   engines: {
     mongodb: [
       {
@@ -133,9 +134,10 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
     ],
   },
   id: Factory.each((i) => `g6-standard-${i}`),
+  disk: Factory.each((i) => i * 20480),
   label: Factory.each((i) => `Linode ${i} GB`),
-  memory: 2048,
-  vcpus: 2,
+  memory: Factory.each((i) => i * 2048),
+  vcpus: Factory.each((i) => i * 2),
 });
 
 export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance>(
