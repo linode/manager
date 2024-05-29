@@ -2,16 +2,16 @@ import {
   TransferEntities,
   cancelTransfer,
 } from '@linode/api-v4/lib/entity-transfers';
-import { APIError } from '@linode/api-v4/lib/types';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { queryKey } from 'src/queries/entityTransfers';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { sendEntityTransferCancelEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -29,7 +29,7 @@ export const ConfirmTransferCancelDialog = React.memo((props: Props) => {
 
   const [submitting, setSubmitting] = React.useState(false);
   const [submissionErrors, setSubmissionErrors] = React.useState<
-    APIError[] | null
+    FormattedAPIError[] | null
   >(null);
 
   const queryClient = useQueryClient();
@@ -103,11 +103,9 @@ export const ConfirmTransferCancelDialog = React.memo((props: Props) => {
         // There could be multiple errors here that are relevant.
         submissionErrors
           ? submissionErrors.map((thisError, idx) => (
-              <Notice
-                key={`form-submit-error-${idx}`}
-                text={thisError.formattedReason}
-                variant="error"
-              />
+              <Notice key={`form-submit-error-${idx}`} variant="error">
+                {thisError.formattedReason}
+              </Notice>
             ))
           : null
       }

@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
@@ -7,20 +6,21 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { WithStartAndEnd } from '../../../request.types';
-import { useGraphs } from '../OverviewGraphs/useGraphs';
 import {
   StyledTimeRangeSelect,
   StyledTypography,
 } from '../CommonStyles.styles';
+import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { ApacheGraphs } from './ApacheGraphs';
 
 interface Props {
   clientAPIKey?: string;
   lastUpdated?: number;
-  lastUpdatedError?: APIError[];
+  lastUpdatedError?: FormattedAPIError[];
   timezone: string;
 }
 
@@ -112,7 +112,7 @@ export const Apache = React.memo((props: Props) => {
         <ApacheGraphs
           data={data?.Applications?.Apache}
           end={time.end}
-          error={lastUpdatedError?.[0]?.formattedReason || error}
+          error={lastUpdatedError?.[0]?.reason || error}
           isToday={isToday}
           loading={loading}
           processesData={apacheProcesses.data?.Processes ?? {}}

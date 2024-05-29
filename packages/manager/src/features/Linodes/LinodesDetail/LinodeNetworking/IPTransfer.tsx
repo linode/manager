@@ -1,7 +1,6 @@
 import { IPRange } from '@linode/api-v4/lib/networking';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled, useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import {
   both,
   compose,
@@ -34,6 +33,7 @@ import {
   useAssignAdressesMutation,
   useLinodeIPsQuery,
 } from 'src/queries/linodes/networking';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
@@ -122,7 +122,9 @@ export const IPTransfer = (props: Props) => {
       {}
     )
   );
-  const [error, setError] = React.useState<APIError[] | undefined>(undefined);
+  const [error, setError] = React.useState<FormattedAPIError[] | undefined>(
+    undefined
+  );
   const [successMessage, setSuccessMessage] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
   const [searchText, setSearchText] = React.useState('');
@@ -433,7 +435,12 @@ export const IPTransfer = (props: Props) => {
       (ip) => ip.mode !== 'none'
     );
     if (noActionSelected) {
-      setError([{ formattedReason: 'Please select an action.' }]);
+      setError([
+        {
+          formattedReason: 'Please select an action.',
+          reason: 'Please select an action.',
+        },
+      ]);
       setSubmitting(false);
 
       return;
@@ -476,7 +483,9 @@ export const IPTransfer = (props: Props) => {
       {error && (
         <Grid xs={12}>
           {error.map(({ formattedReason: reason }, idx) => (
-            <Notice key={idx} text={reason} variant="error" />
+            <Notice key={idx} variant="error">
+              {reason}
+            </Notice>
           ))}
         </Grid>
       )}

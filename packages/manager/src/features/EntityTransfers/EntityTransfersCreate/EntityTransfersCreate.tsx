@@ -1,8 +1,8 @@
 import { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
 import Grid from '@mui/material/Unstable_Grid2';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { curry } from 'ramda';
 import * as React from 'react';
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -93,10 +93,9 @@ export const EntityTransfersCreate = () => {
         title="Make a Service Transfer"
       />
       {error ? (
-        <StyledNotice
-          text={getAPIErrorOrDefault(error)[0].formattedReason}
-          variant="error"
-        />
+        <StyledNotice variant="error">
+          {getAPIErrorOrDefault(error)[0].formattedReason}
+        </StyledNotice>
       ) : null}
       <StyledRootGrid container direction="row" spacing={3} wrap="wrap">
         <Grid lg={9} md={8} xs={12}>

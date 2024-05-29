@@ -19,7 +19,7 @@ interface Props {
 export const BareMetalRescue = (props: Props) => {
   const { isOpen, linodeId, onClose } = props;
   const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | undefined>(undefined);
+  const [error, setError] = React.useState<JSX.Element | string>();
   const { enqueueSnackbar } = useSnackbar();
   const { data: linode, isLoading: isLoadingLinodes } = useLinodeQuery(
     linodeId ?? -1,
@@ -50,7 +50,8 @@ export const BareMetalRescue = (props: Props) => {
       .catch((err) => {
         setLoading(false);
         setError(
-          getAPIErrorOrDefault(err, 'Error booting into rescue mode.')[0].formattedReason
+          getAPIErrorOrDefault(err, 'Error booting into rescue mode.')[0]
+            .formattedReason
         );
       });
   };
@@ -58,8 +59,8 @@ export const BareMetalRescue = (props: Props) => {
   const actions = () => (
     <ActionsPanel
       primaryButtonProps={{
-        label: 'Reboot into Rescue Mode',
         'data-qa-form-data-loading': loading || isLoadingLinodes,
+        label: 'Reboot into Rescue Mode',
         loading,
         onClick: handleSubmit,
       }}

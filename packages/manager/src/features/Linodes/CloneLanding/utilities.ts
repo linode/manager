@@ -1,8 +1,9 @@
 import { Config, Disk } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
 import produce from 'immer';
 import { DateTime } from 'luxon';
 import { append, compose, flatten, keys, map, pickBy, uniqBy } from 'ramda';
+
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 /**
  * TYPES
@@ -11,7 +12,7 @@ import { append, compose, flatten, keys, map, pickBy, uniqBy } from 'ramda';
 export interface CloneLandingState {
   configSelection: ConfigSelection;
   diskSelection: DiskSelection;
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   isSubmitting: boolean;
   selectedLinodeId: null | number;
 }
@@ -34,7 +35,7 @@ export type CloneLandingAction =
       disks: Disk[];
       type: 'syncConfigsDisks';
     }
-  | { errors?: APIError[]; type: 'setErrors' }
+  | { errors?: FormattedAPIError[]; type: 'setErrors' }
   | { id: number; type: 'setSelectedLinodeId' }
   | { id: number; type: 'toggleConfig' }
   | { id: number; type: 'toggleDisk' }

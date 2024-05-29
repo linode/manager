@@ -1,8 +1,8 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface FileAttachment {
   /* Each file needs to keep track of its own errors because each request hits the same endpoint */
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   file: File | null;
   name: string;
   /* Used to ensure that the file doesn't get uploaded again */

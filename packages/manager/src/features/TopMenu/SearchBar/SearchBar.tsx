@@ -86,7 +86,7 @@ const SearchBar = (props: SearchProps) => {
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
   const [apiResults, setAPIResults] = React.useState<any[]>([]);
-  const [apiError, setAPIError] = React.useState<null | string>(null);
+  const [apiError, setAPIError] = React.useState<JSX.Element | string>();
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
   const history = useHistory();
   const isLargeAccount = useIsLargeAccount(searchActive);
@@ -170,7 +170,7 @@ const SearchBar = (props: SearchProps) => {
         .then((searchResults) => {
           setAPIResults(searchResults.combinedResults);
           setAPILoading(false);
-          setAPIError(null);
+          setAPIError(undefined);
         })
         .catch((error) => {
           setAPIError(

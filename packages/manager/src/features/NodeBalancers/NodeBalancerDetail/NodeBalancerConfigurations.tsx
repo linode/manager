@@ -43,6 +43,7 @@ import {
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
 import { queryKey } from 'src/queries/nodebalancers';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
@@ -106,11 +107,11 @@ interface PreloadedProps {
 }
 
 interface State {
-  configErrors: APIError[][];
+  configErrors: FormattedAPIError[][];
   configSubmitting: boolean[];
   configs: NodeBalancerConfigFieldsWithStatus[];
   deleteConfigConfirmDialog: {
-    errors?: APIError[];
+    errors?: FormattedAPIError[];
     idxToDelete?: number;
     open: boolean;
     portToDelete?: number;
@@ -491,7 +492,7 @@ class NodeBalancerConfigurations extends React.Component<
       });
   };
 
-  fieldErrorsToNodePathErrors = (errors: APIError[]) => {
+  fieldErrorsToNodePathErrors = (errors: FormattedAPIError[]) => {
     /* Return objects with this shape
         {
           path: [0, 'errors'],
@@ -501,7 +502,7 @@ class NodeBalancerConfigurations extends React.Component<
           }
         }
     */
-    return errors.reduce((acc: any, error: APIError) => {
+    return errors.reduce((acc: any, error) => {
       /**
        * Regex conditions are as follows:
        *
@@ -528,7 +529,7 @@ class NodeBalancerConfigurations extends React.Component<
   };
 
   handleNodeFailure = (
-    errResponse: APIError[],
+    errResponse: FormattedAPIError[],
     configIdx: number,
     nodeIdx: number
   ) => {
@@ -1040,7 +1041,7 @@ class NodeBalancerConfigurations extends React.Component<
       });
   };
 
-  setNodeErrors = (configIdx: number, error: APIError[]) => {
+  setNodeErrors = (configIdx: number, error: FormattedAPIError[]) => {
     /* Map the objects with this shape
         {
           path: [0, 'errors'],

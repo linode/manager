@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
@@ -19,6 +18,7 @@ import {
   useLinodeQuery,
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import {
   sendEditBreadcrumbEvent,
   sendLinodeCreateFlowDocsClickEvent,
@@ -136,14 +136,12 @@ const LinodeDetailHeader = () => {
     try {
       await updateLinode({ label });
     } catch (updateError) {
-      const errors: APIError[] = getAPIErrorOrDefault(
+      const errors: FormattedAPIError[] = getAPIErrorOrDefault(
         updateError,
         'An error occurred while updating label',
         'label'
       );
-      const errorReasons: string[] = errors.map(
-        (error) => error.formattedReason
-      );
+      const errorReasons: string[] = errors.map((error) => error.reason);
       throw new Error(errorReasons[0]);
     }
   };

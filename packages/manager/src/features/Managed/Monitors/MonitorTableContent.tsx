@@ -2,17 +2,17 @@ import {
   ManagedIssue,
   ManagedServiceMonitor,
 } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import MonitorRow from './MonitorRow';
 
 interface MonitorTableContentProps {
-  error?: APIError[] | null;
+  error?: FormattedAPIError[] | null;
   issues: ManagedIssue[];
   loading: boolean;
   monitors: ManagedServiceMonitor[];

@@ -52,9 +52,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
     NodeBalancer[]
   >([]);
 
-  const [localError, setLocalError] = React.useState<string | undefined>(
-    undefined
-  );
+  const [localError, setLocalError] = React.useState<string>();
 
   const handleSubmit = async () => {
     let firstError: string | undefined = undefined;
@@ -85,7 +83,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
       const errorReason = getAPIErrorOrDefault(
         result.reason,
         `Failed to add NodeBalancer ${label} (ID ${id}).`
-      )[0].formattedReason;
+      )[0].reason;
 
       if (!firstError) {
         firstError = errorReason;

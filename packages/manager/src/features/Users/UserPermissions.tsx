@@ -9,7 +9,6 @@ import {
   updateGrants,
   updateUser,
 } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
 import { Paper } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { QueryClient } from '@tanstack/react-query';
@@ -44,6 +43,7 @@ import {
 } from 'src/containers/withQueryClient.container';
 import { PARENT_USER, grantTypeMap } from 'src/features/Account/constants';
 import { accountQueries } from 'src/queries/account/queries';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
@@ -72,7 +72,7 @@ interface TabInfo {
 }
 
 interface State {
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   grants?: Grants;
   isSavingEntity: boolean;
   isSavingGlobal: boolean;
@@ -696,7 +696,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       return this.setState({
         errors: [
           {
-            formattedReason: `Can\'t set ${type} permissions at this time. Please try again later`,
+            formattedReason: `Can't set ${type} permissions at this time. Please try again later`,
+            reason: `Can't set ${type} permissions at this time. Please try again later`,
           },
         ],
       });
@@ -753,7 +754,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       return this.setState({
         errors: [
           {
-            formattedReason: `Can\'t set entity-specific permissions at this time. Please try again later`,
+            formattedReason: `Can't set entity-specific permissions at this time. Please try again later`,
+            reason: `Can't set entity-specific permissions at this time. Please try again later`,
           },
         ],
         isSavingEntity: false,

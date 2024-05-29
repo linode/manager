@@ -1,12 +1,13 @@
 import { getTFAToken } from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
-import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
+import { profileQueries } from 'src/queries/profile';
 import { useSecurityQuestions } from 'src/queries/securityQuestions';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -19,7 +20,6 @@ import {
   StyledRootContainer,
 } from './TwoFactor.styles';
 import { TwoFactorToggle } from './TwoFactorToggle';
-import { profileQueries } from 'src/queries/profile';
 
 export interface TwoFactorProps {
   disabled?: boolean;
@@ -32,7 +32,7 @@ export const TwoFactor = (props: TwoFactorProps) => {
     'To use two-factor authentication you must set up your security questions listed below.';
   const { disabled, twoFactor, username } = props;
   const queryClient = useQueryClient();
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const [errors, setErrors] = React.useState<FormattedAPIError[]>();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [secret, setSecret] = React.useState<string>('');
   const [showQRCode, setShowQRCode] = React.useState<boolean>(false);
@@ -89,11 +89,13 @@ export const TwoFactor = (props: TwoFactorProps) => {
 
   const getToken = () => {
     if (!hasSecurityQuestions) {
+      const errorReason = `You must add Security Questions to your profile in order to ${
+        twoFactor ? 'reset' : 'enable'
+      } Two-Factor Authentication`;
       setErrors([
         {
-          formattedReason: `You must add Security Questions to your profile in order to ${
-            twoFactor ? 'reset' : 'enable'
-          } Two-Factor Authentication`,
+          formattedReason: errorReason,
+          reason: errorReason,
         },
       ]);
       return Promise.reject('Error');

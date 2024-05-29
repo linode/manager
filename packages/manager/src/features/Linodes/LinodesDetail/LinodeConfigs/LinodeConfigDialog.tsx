@@ -3,7 +3,6 @@ import {
   Interface,
   LinodeConfigCreationData,
 } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
@@ -51,6 +50,7 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { vlanQueries } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { vpcQueries } from 'src/queries/vpcs/vpcs';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import {
   DevicesAsStrings,
   createDevicesFromStrings,
@@ -429,12 +429,12 @@ export const LinodeConfigDialog = (props: Props) => {
       onClose();
     };
 
-    const handleError = (error: APIError[]) => {
+    const handleError = (error: FormattedAPIError[]) => {
       const mapErrorToStatus = (generalError: string) =>
         formik.setStatus({ generalError });
 
       // override 'disk_id' and 'volume_id' value for 'field' key with 'devices' to map and surface errors appropriately
-      const overrideFieldForDevices = (error: APIError[]) => {
+      const overrideFieldForDevices = (error: FormattedAPIError[]) => {
         error.forEach((err) => {
           if (err.field && ['disk_id', 'volume_id'].includes(err.field)) {
             err.field = 'devices';
@@ -1153,7 +1153,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
 interface ConfigFormProps {
   children: JSX.Element;
-  errors: APIError[] | null;
+  errors: FormattedAPIError[] | null;
   loading: boolean;
 }
 

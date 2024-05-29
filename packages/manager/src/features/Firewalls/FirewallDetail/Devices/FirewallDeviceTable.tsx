@@ -1,5 +1,4 @@
 import { FirewallDevice } from '@linode/api-v4/lib/firewalls/types';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import OrderBy from 'src/components/OrderBy';
@@ -11,6 +10,7 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { formattedTypes } from './FirewallDeviceLanding';
@@ -22,7 +22,7 @@ export interface FirewallDeviceTableProps {
   deviceType: FirewallDeviceEntityType;
   devices: FirewallDevice[];
   disabled: boolean;
-  error?: APIError[];
+  error?: FormattedAPIError[];
   loading: boolean;
   triggerRemoveDevice: (deviceID: number) => void;
 }

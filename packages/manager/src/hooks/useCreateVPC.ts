@@ -11,6 +11,7 @@ import { useHistory } from 'react-router-dom';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useCreateVPCMutation } from 'src/queries/vpcs/vpcs';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import {
   SubnetError,
   handleVPCAndSubnetErrors,
@@ -56,7 +57,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   const [
     generalSubnetErrorsFromAPI,
     setGeneralSubnetErrorsFromAPI,
-  ] = React.useState<APIError[]>();
+  ] = React.useState<FormattedAPIError[]>();
   const [generalAPIError, setGeneralAPIError] = React.useState<
     string | undefined
   >();

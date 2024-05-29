@@ -1,5 +1,4 @@
 import { CredentialPayload } from '@linode/api-v4/lib/managed/types';
-import { APIError } from '@linode/api-v4/lib/types';
 import { FormikBag } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -24,6 +23,7 @@ import {
   useUpdateCredentialMutation,
   useUpdateCredentialPasswordMutation,
 } from 'src/queries/managed/managed';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -84,13 +84,13 @@ export const CredentialList = () => {
       })
       .catch((e) =>
         handleError(
-          getAPIErrorOrDefault(e, 'Error deleting this credential.')[0].formattedReason
+          getAPIErrorOrDefault(e, 'Error deleting this credential.')[0].reason
         )
       );
   };
 
   const _handleError = (
-    e: APIError[],
+    e: FormattedAPIError[],
     setSubmitting: any,
     setErrors: any,
     setStatus: any,

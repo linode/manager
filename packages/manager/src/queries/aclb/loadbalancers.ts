@@ -9,8 +9,9 @@ import {
 } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 import type {
-  FormattedAPIError,
   CreateBasicLoadbalancerPayload,
   CreateLoadbalancerPayload,
   Filter,
@@ -49,33 +50,39 @@ export const useLoadBalancerEndpointHealthQuery = (id: number) => {
 
 export const useLoadBalancerMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<Loadbalancer, FormattedAPIError[], UpdateLoadbalancerPayload>(
-    (data) => updateLoadbalancer(id, data),
-    {
-      onSuccess(data) {
-        queryClient.setQueryData([QUERY_KEY, 'aclb', id], data);
-        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
-      },
-    }
-  );
+  return useMutation<
+    Loadbalancer,
+    FormattedAPIError[],
+    UpdateLoadbalancerPayload
+  >((data) => updateLoadbalancer(id, data), {
+    onSuccess(data) {
+      queryClient.setQueryData([QUERY_KEY, 'aclb', id], data);
+      queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
+    },
+  });
 };
 
 export const useLoadBalancerBasicCreateMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Loadbalancer, FormattedAPIError[], CreateBasicLoadbalancerPayload>(
-    (data) => createBasicLoadbalancer(data),
-    {
-      onSuccess(data) {
-        queryClient.setQueryData([QUERY_KEY, 'aclb', data.id], data);
-        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
-      },
-    }
-  );
+  return useMutation<
+    Loadbalancer,
+    FormattedAPIError[],
+    CreateBasicLoadbalancerPayload
+  >((data) => createBasicLoadbalancer(data), {
+    onSuccess(data) {
+      queryClient.setQueryData([QUERY_KEY, 'aclb', data.id], data);
+      queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
+    },
+  });
 };
 
 export const useLoadBalancerCreateMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Loadbalancer, FormattedAPIError[], CreateLoadbalancerPayload>({
+  return useMutation<
+    Loadbalancer,
+    FormattedAPIError[],
+    CreateLoadbalancerPayload
+  >({
     mutationFn: createLoadbalancer,
     onSuccess(data) {
       queryClient.setQueryData([QUERY_KEY, 'aclb', data.id], data);

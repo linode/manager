@@ -110,8 +110,7 @@ export const TransferHistory = React.memo((props: Props) => {
   const displayInOutTotals = monthOffset < 0;
 
   const statsErrorString = statsError
-    ? getAPIErrorOrDefault(statsError, 'Unable to load stats.')[0]
-        .formattedReason
+    ? getAPIErrorOrDefault(statsError, 'Unable to load stats.')[0].reason
     : null;
 
   const graphAriaLabel = `Network Transfer History Graph for ${humanizedDate}`;

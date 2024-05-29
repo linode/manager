@@ -1,11 +1,11 @@
 import { Event, Entity as EventEntity } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
 import { QueryClient } from '@tanstack/react-query';
 import { MapStateToProps as _MapStateToProps } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 import { ThunkDispatch as _ThunkDispatch, ThunkAction } from 'redux-thunk';
 
 import { ApplicationState } from 'src/store';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface EntityEvent extends Omit<Event, 'entity'> {
   entity: EventEntity;
@@ -19,10 +19,10 @@ export type ThunkResult<T> = ThunkAction<
 >;
 
 export interface EntityError {
-  create?: APIError[];
-  delete?: APIError[];
-  read?: APIError[];
-  update?: APIError[];
+  create?: FormattedAPIError[];
+  delete?: FormattedAPIError[];
+  read?: FormattedAPIError[];
+  update?: FormattedAPIError[];
 }
 
 export type ThunkActionCreator<ReturnType, Params = void> = (
@@ -50,7 +50,7 @@ export type EntityMap<T> = Record<string, T>;
 
 export interface MappedEntityState<
   T extends Entity,
-  E = APIError[] | undefined
+  E = FormattedAPIError[] | undefined
 > {
   error?: E;
   items: string[];
@@ -73,7 +73,10 @@ export type RelationalMappedEntityState<T extends Entity, E> = Record<
   MappedEntityState2<T, E>
 >;
 
-export interface EntityState<T extends Entity, E = APIError[] | undefined> {
+export interface EntityState<
+  T extends Entity,
+  E = FormattedAPIError[] | undefined
+> {
   entities: T[];
   error?: E;
   lastUpdated: number;
@@ -81,7 +84,7 @@ export interface EntityState<T extends Entity, E = APIError[] | undefined> {
   results: TypeOfID<T>[];
 }
 
-export interface RequestableData<D, E = APIError[]> {
+export interface RequestableData<D, E = FormattedAPIError[]> {
   data?: D;
   error?: E;
   lastUpdated: number;

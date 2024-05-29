@@ -1,4 +1,4 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 /**
  * filter out all the API errors that aren't UDF errors from our error state.
@@ -7,7 +7,7 @@ import { APIError } from '@linode/api-v4/lib/types';
  */
 export const filterUDFErrors = (
   errorResources: Record<string, string>,
-  errors?: APIError[]
+  errors?: FormattedAPIError[]
 ) => {
   if (typeof errorResources !== 'object') {
     throw Error('errorResources must be an object.');

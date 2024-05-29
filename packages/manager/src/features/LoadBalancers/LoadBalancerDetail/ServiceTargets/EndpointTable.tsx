@@ -10,12 +10,13 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Typography } from 'src/components/Typography';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
-import type { APIError, Endpoint } from '@linode/api-v4';
+import type { Endpoint } from '@linode/api-v4';
 
 interface Props {
   endpoints: Endpoint[];
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   onRemove: (index: number) => void;
 }
 
@@ -48,7 +49,8 @@ export const EndpointTable = (props: Props) => {
           const fieldErrors = {
             host: errors?.find((e) => e.field === `endpoints[${idx}].host`)
               ?.formattedReason,
-            ip: errors?.find((e) => e.field === `endpoints[${idx}].ip`)?.formattedReason,
+            ip: errors?.find((e) => e.field === `endpoints[${idx}].ip`)
+              ?.formattedReason,
             port: errors?.find((e) => e.field === `endpoints[${idx}].port`)
               ?.formattedReason,
             rate_capacity: errors?.find(

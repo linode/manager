@@ -119,7 +119,7 @@ export const NGINX = React.memo((props: Props) => {
         <NGINXGraphs
           data={data?.Applications?.Nginx}
           end={time.end}
-          error={lastUpdatedError?.[0]?.formattedReason || error}
+          error={lastUpdatedError?.[0]?.reason || error}
           isToday={isToday}
           loading={loading}
           processesData={nginxProcesses.data?.Processes ?? {}}

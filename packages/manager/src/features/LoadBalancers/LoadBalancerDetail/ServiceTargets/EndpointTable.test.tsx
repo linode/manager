@@ -3,7 +3,8 @@ import React from 'react';
 
 import { endpointFactory, linodeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { EndpointTable } from './EndpointTable';
@@ -62,12 +63,25 @@ describe('EndpointTable', () => {
       endpointFactory.build({ host: 'test.com', ip: '8.8.8.8', port: 80 }),
     ];
 
-    const errors = [
-      { field: 'endpoints[0].ip', reason: 'That is not a valid IPv4.' },
-      { field: 'endpoints[0].port', reason: 'That is not a valid port.' },
-      { field: 'endpoints[1].host', reason: 'That is not a valid host.' },
+    const errors: FormattedAPIError[] = [
+      {
+        field: 'endpoints[0].ip',
+        formattedReason: 'That is not a valid IPv4.',
+        reason: 'That is not a valid IPv4.',
+      },
+      {
+        field: 'endpoints[0].port',
+        formattedReason: 'That is not a valid port.',
+        reason: 'That is not a valid port.',
+      },
+      {
+        field: 'endpoints[1].host',
+        formattedReason: 'That is not a valid host.',
+        reason: 'That is not a valid host.',
+      },
       {
         field: 'endpoints[1].rate_capacity',
+        formattedReason: 'rate_capacity must be non-negative',
         reason: 'rate_capacity must be non-negative',
       },
     ];

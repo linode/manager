@@ -12,11 +12,12 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 import { updateInPaginatedStore } from '../base';
 import { QUERY_KEY } from './loadbalancers';
 
 import type {
-  FormattedAPIError,
   Filter,
   Params,
   ResourcePage,

@@ -41,7 +41,6 @@ import { AssignIPRanges } from './AssignIPRanges';
 import { StyledButtonBox } from './SubnetAssignLinodesDrawer.styles';
 
 import type {
-  APIError,
   Config,
   Interface,
   InterfacePayload,
@@ -247,7 +246,7 @@ export const SubnetAssignLinodesDrawer = (
         vpcId,
       });
     } catch (errors) {
-      setUnassignLinodesErrors(errors as APIError[]);
+      setUnassignLinodesErrors(errors as FormattedAPIError[]);
     }
   };
 

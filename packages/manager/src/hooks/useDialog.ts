@@ -1,5 +1,6 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface DialogState<T> {
   entityID: T;
@@ -76,7 +77,7 @@ export const useDialog = <T extends number | string | undefined>(
         handleSuccess();
         return response;
       })
-      .catch((e: APIError[]) => {
+      .catch((e: FormattedAPIError[]) => {
         if (!mountedRef.current) {
           return;
         }
@@ -86,7 +87,7 @@ export const useDialog = <T extends number | string | undefined>(
          * Consumers can use the exposed handleError method
          * directly if they want to override this with a custom message.
          */
-        handleError(e[0].formattedReason);
+        handleError(e[0].reason);
         return Promise.reject(e);
       });
   };

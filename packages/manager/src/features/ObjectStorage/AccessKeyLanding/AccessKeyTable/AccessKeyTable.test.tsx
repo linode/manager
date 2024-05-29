@@ -29,7 +29,10 @@ describe('ObjectStorageKeyTable', () => {
 
   it('returns an error state when there is an error', () => {
     const { getByText } = renderWithTheme(
-      <AccessKeyTable {...props} error={[{ formattedReason: 'oops' }]} />
+      <AccessKeyTable
+        {...props}
+        error={[{ formattedReason: 'oops', reason: 'oops' }]}
+      />
     );
     getByText('We were unable to load your Access Keys.');
   });

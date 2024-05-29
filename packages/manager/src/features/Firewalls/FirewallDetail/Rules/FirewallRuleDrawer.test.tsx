@@ -262,6 +262,7 @@ describe('utilities', () => {
         {
           category: 'inbound',
           formField: 'addresses',
+          formattedReason: 'Invalid IP',
           idx: 1,
           ip: { idx: 0, type: 'ipv4' },
           reason: 'Invalid IP',
@@ -283,6 +284,7 @@ describe('utilities', () => {
           {
             category: 'inbound',
             formField: 'addresses',
+            formattedReason: 'Invalid IP',
             idx: 1,
             ip: { idx: 0, type: 'ipv6' },
             reason: 'Invalid IP',

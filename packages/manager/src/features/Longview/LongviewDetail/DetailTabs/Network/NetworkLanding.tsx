@@ -1,8 +1,8 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
 import {
@@ -17,7 +17,7 @@ import { NetworkGraphs } from './NetworkGraphs';
 interface Props {
   clientAPIKey: string;
   lastUpdated?: number;
-  lastUpdatedError?: APIError[];
+  lastUpdatedError?: FormattedAPIError[];
   timezone: string;
 }
 
@@ -70,7 +70,7 @@ export const NetworkLanding = (props: Props) => {
       <StyledItemGrid className="py0" xs={12}>
         <NetworkGraphs
           end={time.end}
-          error={lastUpdatedError?.[0]?.formattedReason || error}
+          error={lastUpdatedError?.[0]?.reason || error}
           isToday={isToday}
           loading={loading}
           networkData={interfaces}

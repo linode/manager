@@ -1,9 +1,9 @@
-import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { SubnetFieldState } from 'src/utilities/subnets';
@@ -21,7 +21,7 @@ interface Props {
   disabled?: boolean;
   isDrawer?: boolean;
   onChangeField: (field: string, value: SubnetFieldState[]) => void;
-  subnetErrors?: APIError[];
+  subnetErrors?: FormattedAPIError[];
   subnets: SubnetFieldState[];
 }
 
@@ -59,13 +59,10 @@ export const SubnetContent = (props: Props) => {
         .
       </StyledBodyTypography>
       {subnetErrors
-        ? subnetErrors.map((apiError: APIError) => (
-            <Notice
-              key={apiError.formattedReason}
-              spacingBottom={8}
-              text={apiError.formattedReason}
-              variant="error"
-            />
+        ? subnetErrors.map((apiError) => (
+            <Notice key={apiError.reason} spacingBottom={8} variant="error">
+              {apiError.formattedReason}
+            </Notice>
           ))
         : null}
       <MultipleSubnetInput

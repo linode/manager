@@ -1,5 +1,4 @@
 import { ManagedServicePayload } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { FormikBag } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -26,6 +25,7 @@ import {
   useDeleteMonitorMutation,
   useUpdateMonitorMutation,
 } from 'src/queries/managed/managed';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -130,7 +130,7 @@ export const MonitorTable = () => {
       .catch((err) => {
         handleError(
           getAPIErrorOrDefault(err, 'Error deleting this Service Monitor.')[0]
-            .formattedReason
+            .reason
         );
       });
   };
@@ -144,7 +144,7 @@ export const MonitorTable = () => {
       handleDrawerClose();
     };
 
-    const _error = (e: APIError[]) => {
+    const _error = (e: FormattedAPIError[]) => {
       const defaultMessage = `Unable to ${
         drawerMode === 'create' ? 'create' : 'update'
       } this Monitor. Please try again later.`;

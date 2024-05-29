@@ -28,6 +28,7 @@ import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import {
   getAPIErrorOrDefault,
   getErrorMap,
@@ -222,7 +223,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const [files, setFiles] = React.useState<FileAttachment[]>([]);
 
-  const [errors, setErrors] = React.useState<APIError[] | undefined>();
+  const [errors, setErrors] = React.useState<FormattedAPIError[]>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
 
   const { classes } = useStyles();
@@ -436,10 +437,12 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     const _description =
       ticketType === 'smtp' ? formatDescription(smtpFields) : description;
     if (!['general', 'none'].includes(entityType) && !entityID) {
+      const errorReason = `Please select a ${entityIdToNameMap[entityType]}.`;
       setErrors([
         {
           field: 'input',
-          formattedReason: `Please select a ${entityIdToNameMap[entityType]}.`,
+          formattedReason: errorReason,
+          reason: errorReason,
         },
       ]);
       return;

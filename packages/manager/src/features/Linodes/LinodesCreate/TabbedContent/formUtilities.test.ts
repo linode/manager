@@ -1,21 +1,24 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { filterUDFErrors } from './formUtilities';
 
 describe('Linode Create Utilities', () => {
   it('should filter out all errors except UDF errors', () => {
-    const mockErrors: APIError[] = [
+    const mockErrors: FormattedAPIError[] = [
       {
         field: 'label',
         formattedReason: 'label is required',
+        reason: 'label is required',
       },
       {
         field: 'ssh_keys',
         formattedReason: 'ssh_keys are required',
+        reason: 'ssh_keys are required',
       },
       {
         field: 'wp_password',
         formattedReason: 'a value for the UDF is required',
+        reason: 'a value for the UDF is required',
       },
     ];
 

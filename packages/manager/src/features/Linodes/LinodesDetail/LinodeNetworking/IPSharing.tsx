@@ -1,8 +1,7 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { IPRangeInformation } from '@linode/api-v4/lib/networking';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled, useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 
@@ -27,6 +26,7 @@ import {
   useLinodeIPsQuery,
   useLinodeShareIPMutation,
 } from 'src/queries/linodes/networking';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { areArraysEqual } from 'src/utilities/areArraysEqual';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
@@ -144,7 +144,7 @@ const IPSharingPanel = (props: Props) => {
 
   const ipChoices = getIPChoicesAndLabels(linodeId, linodes ?? []);
 
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const [errors, setErrors] = React.useState<FormattedAPIError[]>();
   const [successMessage, setSuccessMessage] = React.useState<
     string | undefined
   >(undefined);
@@ -216,7 +216,7 @@ const IPSharingPanel = (props: Props) => {
 
     // use local variable and state because useState won't update state right away
     // and useEffect won't play nicely here
-    let localErrors: APIError[] | undefined = undefined;
+    let localErrors: FormattedAPIError[] | undefined = undefined;
     setErrors(undefined);
     let localSubmitting = true;
     setSubmitting(localSubmitting);
@@ -224,7 +224,12 @@ const IPSharingPanel = (props: Props) => {
 
     // if the user hasn't selected any IP to share or hasn't removed any, don't do anything
     if (areArraysEqual(linodeSharedIPs, ipsToShare)) {
-      setErrors([{ formattedReason: 'Please select an action.' }]);
+      setErrors([
+        {
+          formattedReason: 'Please select an action.',
+          reason: 'Please select an action.',
+        },
+      ]);
       setSubmitting(false);
 
       return;
@@ -445,10 +450,10 @@ export const IPRow: React.FC<RowProps> = React.memo((props) => {
       </Grid>
       <Grid xs={12}>
         <TextField
-          sx={{ marginTop: 0, width: '100%' }}
           disabled
           hideLabel
           label="IP Address"
+          sx={{ marginTop: 0, width: '100%' }}
           value={ip}
         />
       </Grid>
@@ -515,23 +520,23 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
       </Grid>
       {handleDelete ? (
         <Grid
-          sm={2}
           sx={{
             [theme.breakpoints.down('sm')]: {
               width: '100%',
             },
           }}
+          sm={2}
         >
           <Button
-            buttonType="outlined"
-            data-qa-remove-shared-ip
-            disabled={readOnly}
-            onClick={() => handleDelete(idx)}
             sx={{
               [theme.breakpoints.down('sm')]: {
                 margin: '-16px 0 0 -26px',
               },
             }}
+            buttonType="outlined"
+            data-qa-remove-shared-ip
+            disabled={readOnly}
+            onClick={() => handleDelete(idx)}
           >
             Remove
           </Button>

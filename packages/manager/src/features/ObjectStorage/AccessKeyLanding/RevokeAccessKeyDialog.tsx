@@ -1,15 +1,15 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { CancelNotice } from '../CancelNotice';
 
 interface RevokeKeysDialogProps {
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   handleClose: () => void;
   handleSubmit: () => void;
   isLoading: boolean;

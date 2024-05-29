@@ -3,7 +3,6 @@ import {
   getActiveLongviewPlan,
   updateActiveLongviewPlan,
 } from '@linode/api-v4/lib/longview';
-import { APIError } from '@linode/api-v4/lib/types';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -23,6 +22,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { UseAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { useGrants, useProfile } from 'src/queries/profile';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -83,7 +83,9 @@ export const LongviewPlans = (props: LongviewPlansProps) => {
     currentSubscription || ''
   );
   const [updateLoading, setUpdateLoading] = React.useState<boolean>(false);
-  const [updateErrorMsg, setUpdateErrorMsg] = React.useState<string>('');
+  const [updateErrorMsg, setUpdateErrorMsg] = React.useState<
+    JSX.Element | string
+  >('');
   const [updateSuccessMsg, setUpdateSuccessMsg] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -178,7 +180,7 @@ export const LongviewPlans = (props: LongviewPlansProps) => {
             paddingBottom: '4px',
           }}
         >
-          {updateErrorMsg && <Notice text={updateErrorMsg} variant="error" />}
+          {updateErrorMsg && <Notice variant="error">{updateErrorMsg}</Notice>}
           {updateSuccessMsg && (
             <Notice text={updateSuccessMsg} variant="success" />
           )}
@@ -187,7 +189,7 @@ export const LongviewPlans = (props: LongviewPlansProps) => {
       ) : (
         <>
           {mayUserModifyLVSubscription && updateErrorMsg && (
-            <Notice text={updateErrorMsg} variant="error" />
+            <Notice variant="error">{updateErrorMsg}</Notice>
           )}
           {!mayUserModifyLVSubscription && (
             <Notice
@@ -257,7 +259,7 @@ export default React.memo(LongviewPlans);
 interface LongviewPlansTableBodyProps {
   currentSubscriptionOnAccount?: string;
   disabled: boolean;
-  error: APIError[] | undefined;
+  error: FormattedAPIError[] | undefined;
   loading: boolean;
   onRadioSelect: (e: React.FormEvent<HTMLInputElement>) => void;
   onRowSelect: (plan: string) => void;

@@ -1,6 +1,7 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { pathOr } from 'ramda';
 import { useEffect, useRef, useState } from 'react';
+
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { getLastUpdated } from '../request';
 import { LongviewNotification } from '../request.types';
@@ -22,7 +23,7 @@ export const useClientLastUpdated = (
   );
   const currentLastUpdated = useRef(lastUpdated);
   const [lastUpdatedError, setLastUpdatedError] = useState<
-    APIError[] | undefined
+    FormattedAPIError[] | undefined
   >();
   const [authed, setAuthed] = useState<boolean>(true);
 

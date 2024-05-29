@@ -1,6 +1,5 @@
-import { APIError } from '@linode/api-v4/lib/types';
-
 import { normalizeErrorMessage } from './initSentry';
+import { FormattedAPIError } from './types/FormattedAPIError';
 
 const INVALID_TOKEN = 'Invalid Token';
 
@@ -10,7 +9,9 @@ describe('normalizeErrorMessage', () => {
   });
 
   it("returns the API error reason if it's one APIError", () => {
-    const apiError: APIError[] = [{ formattedReason: INVALID_TOKEN }];
+    const apiError: FormattedAPIError[] = [
+      { formattedReason: INVALID_TOKEN, reason: INVALID_TOKEN },
+    ];
     expect(normalizeErrorMessage(apiError as any)).toBe(INVALID_TOKEN);
   });
 

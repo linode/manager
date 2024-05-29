@@ -36,7 +36,7 @@ export const UserDetail = () => {
 
   const queryClient = useQueryClient();
 
-  const [error, setError] = React.useState<string | undefined>();
+  const [error, setError] = React.useState<JSX.Element | string>();
   const [username, setUsername] = React.useState<string>('');
   const [createdUsername, setCreatedUsername] = React.useState<
     string | undefined

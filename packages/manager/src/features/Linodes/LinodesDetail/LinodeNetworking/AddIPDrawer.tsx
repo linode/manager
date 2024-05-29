@@ -69,7 +69,7 @@ const IPv6ExplanatoryCopy = {
   ),
 };
 
-const tooltipCopy: Record<IPType, string | null> = {
+const tooltipCopy: Record<IPType, null | string> = {
   v4Private: 'This Linode already has a private IP address.',
   v4Public: null,
 };
@@ -169,7 +169,9 @@ export const AddIPDrawer = (props: Props) => {
       <Stack spacing={2}>
         <Typography variant="h3">IPv4</Typography>
         {Boolean(ipv4Error) && (
-          <Notice spacingTop={4} text={ipv4Error?.[0].formattedReason} variant="error" />
+          <Notice spacingTop={4} variant="error">
+            {ipv4Error?.[0].formattedReason}
+          </Notice>
         )}
 
         <StyledRadioGroup
@@ -230,7 +232,9 @@ export const AddIPDrawer = (props: Props) => {
           IPv6
         </Typography>
         {Boolean(ipv6Error) && (
-          <Notice spacingTop={4} text={ipv6Error?.[0].formattedReason} variant="error" />
+          <Notice spacingTop={4} variant="error">
+            {ipv6Error?.[0].formattedReason}
+          </Notice>
         )}
 
         <StyledRadioGroup

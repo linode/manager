@@ -473,12 +473,12 @@ export const ConditionalError = React.memo((props: ConditionalErrorProps) => {
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {uniqueByFormField.map((thisError) => {
-        if (formField !== thisError.formField || !thisError.reason) {
+        if (formField !== thisError.formField || !thisError.formattedReason) {
           return null;
         }
         return (
           <StyledErrorDiv key={thisError.idx}>
-            <Typography variant="body1">{thisError.reason}</Typography>
+            <Typography variant="body1">{thisError.formattedReason}</Typography>
           </StyledErrorDiv>
         );
       })}

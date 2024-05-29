@@ -2,7 +2,6 @@ import {
   AccountSettings,
   updateAccountSettings,
 } from '@linode/api-v4/lib/account';
-import { FormattedAPIError } from '@linode/api-v4/lib/types';
 import {
   QueryClient,
   useMutation,
@@ -11,6 +10,7 @@ import {
 } from '@tanstack/react-query';
 
 import { useProfile } from 'src/queries/profile';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { queryPresets } from '../base';
 import { accountQueries } from './queries';
@@ -28,7 +28,11 @@ export const useAccountSettings = () => {
 
 export const useMutateAccountSettings = () => {
   const queryClient = useQueryClient();
-  return useMutation<AccountSettings, FormattedAPIError[], Partial<AccountSettings>>({
+  return useMutation<
+    AccountSettings,
+    FormattedAPIError[],
+    Partial<AccountSettings>
+  >({
     mutationFn: updateAccountSettings,
     onSuccess: (newData) => updateAccountSettingsData(newData, queryClient),
   });

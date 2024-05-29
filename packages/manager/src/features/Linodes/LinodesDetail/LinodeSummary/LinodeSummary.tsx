@@ -85,7 +85,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
 
   const statsErrorString = error
     ? getAPIErrorOrDefault(error, 'An error occurred while getting stats.')[0]
-        .formattedReason
+        .reason
     : undefined;
 
   const areStatsNotReady =

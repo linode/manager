@@ -17,7 +17,7 @@ describe('PlacementGroupsLinodesTable', () => {
     const { getByText } = renderWithTheme(
       <PlacementGroupsLinodesTable
         {...defaultProps}
-        error={[{ formattedReason: 'Not found' }]}
+        error={[{ formattedReason: 'Not found', reason: 'Not found' }]}
       />
     );
 

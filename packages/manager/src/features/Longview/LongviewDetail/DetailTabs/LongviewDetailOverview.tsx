@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -10,6 +9,7 @@ import {
   LongviewPortsResponse,
   LongviewTopProcesses,
 } from 'src/features/Longview/request.types';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { LongviewPackageDrawer } from '../../LongviewPackageDrawer';
 import { ActiveConnections } from './ActiveConnections/ActiveConnections';
@@ -25,14 +25,14 @@ interface Props {
   clientAPIKey: string;
   clientID: number;
   lastUpdated?: number;
-  lastUpdatedError?: APIError[];
+  lastUpdatedError?: FormattedAPIError[];
   listeningPortsData: LongviewPortsResponse;
-  listeningPortsError?: APIError[];
+  listeningPortsError?: FormattedAPIError[];
   listeningPortsLoading: boolean;
   longviewClientData: LVDataProps['longviewClientData'];
   timezone: string;
   topProcessesData: LongviewTopProcesses;
-  topProcessesError?: APIError[];
+  topProcessesError?: FormattedAPIError[];
   topProcessesLoading: boolean;
 }
 

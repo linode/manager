@@ -38,7 +38,7 @@ export const ImageAndPassword = (props: Props) => {
 
   const { data: imagesData, error: imagesError } = useAllImagesQuery();
   const _imagesError = imagesError
-    ? getAPIErrorOrDefault(imagesError, 'Unable to load Images')[0].formattedReason
+    ? getAPIErrorOrDefault(imagesError, 'Unable to load Images')[0].reason
     : undefined;
 
   const disabled =

@@ -1,6 +1,6 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
-import { APIError, Filter, ResourcePage } from '@linode/api-v4/lib/types';
+import { Filter, ResourcePage } from '@linode/api-v4/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -18,6 +18,7 @@ import {
 } from 'src/containers/profile.container';
 import { WithQueryClientProps } from 'src/containers/withQueryClient.container';
 import { isLinodeKubeImageId } from 'src/store/image/image.helpers';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getDisplayName } from 'src/utilities/getDisplayName';
 import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors';
@@ -58,8 +59,8 @@ export interface State {
   currentPage: number;
   currentSearchFilter: Filter;
   didSearch: boolean;
-  error?: APIError[];
-  fieldError: APIError | undefined;
+  error?: FormattedAPIError[];
+  fieldError: FormattedAPIError | undefined;
   getMoreStackScriptsFailed: boolean; // did our attempt to get the next page of stackscripts fail?
   gettingMoreStackScripts: boolean;
   isSearching: boolean;
@@ -175,7 +176,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       return (
         <React.Fragment>
           {fieldError && fieldError.formattedReason && (
-            <Notice text={fieldError.formattedReason} variant="error" />
+            <Notice variant="error">{fieldError.formattedReason}</Notice>
           )}
           {successMessage && <Notice text={successMessage} variant="success" />}
           {/*

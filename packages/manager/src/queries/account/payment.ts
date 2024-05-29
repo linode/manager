@@ -3,10 +3,10 @@ import {
   PaymentMethod,
   makeDefaultPaymentMethod,
 } from '@linode/api-v4/lib/account';
-import { FormattedAPIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useGrants } from 'src/queries/profile';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { queryPresets } from '../base';
 import { accountQueries } from './queries';

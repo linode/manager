@@ -268,7 +268,7 @@ export const CreateCluster = () => {
                 ? getAPIErrorOrDefault(
                     typesError,
                     'Error loading Linode type information.'
-                  )[0].formattedReason
+                  )[0].reason
                 : undefined
             }
             addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}

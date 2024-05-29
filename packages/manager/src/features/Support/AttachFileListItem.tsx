@@ -1,9 +1,9 @@
 import Close from '@mui/icons-material/Close';
 import CloudUpload from '@mui/icons-material/CloudUpload';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { InputAdornment } from 'src/components/InputAdornment';
 import { LinearProgress } from 'src/components/LinearProgress';
@@ -52,7 +52,7 @@ export const AttachFileListItem = (props: Props) => {
   }
 
   const err =
-    file.errors && file.errors.length ? file.errors[0].formattedReason : undefined;
+    file.errors && file.errors.length ? file.errors[0].reason : undefined;
 
   return (
     <Grid container spacing={2}>

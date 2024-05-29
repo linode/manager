@@ -12,10 +12,11 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 import { QUERY_KEY } from './loadbalancers';
 
 import type {
-  FormattedAPIError,
   Certificate,
   CreateCertificatePayload,
   Filter,
@@ -67,30 +68,31 @@ export const useLoadBalancerCertificateCreateMutation = (
   loadbalancerId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<Certificate, FormattedAPIError[], CreateCertificatePayload>(
-    (data) => createLoadbalancerCertificate(loadbalancerId, data),
-    {
-      onSuccess(certificate) {
-        queryClient.invalidateQueries([
+  return useMutation<
+    Certificate,
+    FormattedAPIError[],
+    CreateCertificatePayload
+  >((data) => createLoadbalancerCertificate(loadbalancerId, data), {
+    onSuccess(certificate) {
+      queryClient.invalidateQueries([
+        QUERY_KEY,
+        'loadbalancer',
+        loadbalancerId,
+        'certificates',
+      ]);
+      queryClient.setQueryData(
+        [
           QUERY_KEY,
           'loadbalancer',
           loadbalancerId,
           'certificates',
-        ]);
-        queryClient.setQueryData(
-          [
-            QUERY_KEY,
-            'loadbalancer',
-            loadbalancerId,
-            'certificates',
-            'certificate',
-            certificate.id,
-          ],
-          certificate
-        );
-      },
-    }
-  );
+          'certificate',
+          certificate.id,
+        ],
+        certificate
+      );
+    },
+  });
 };
 
 export const useLoadBalancerCertificateMutation = (
@@ -98,7 +100,11 @@ export const useLoadBalancerCertificateMutation = (
   certificateId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<Certificate, FormattedAPIError[], UpdateCertificatePayload>(
+  return useMutation<
+    Certificate,
+    FormattedAPIError[],
+    UpdateCertificatePayload
+  >(
     (data) =>
       updateLoadbalancerCertificate(loadbalancerId, certificateId, data),
     {

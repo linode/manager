@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import { assoc, clamp, equals, pathOr } from 'ramda';
@@ -19,6 +18,7 @@ import {
 } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import {
   DevicesAsStrings,
   createDevicesFromStrings,
@@ -146,7 +146,7 @@ export const StandardRescueDialog = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const [APIError, setAPIError] = React.useState<string>('');
+  const [APIError, setAPIError] = React.useState<JSX.Element | string>('');
 
   React.useEffect(() => {
     if (!equals(deviceMap, prevDeviceMap)) {
@@ -176,7 +176,7 @@ export const StandardRescueDialog = (props: Props) => {
         checkForNewEvents();
         onClose();
       })
-      .catch((errorResponse: APIError[]) => {
+      .catch((errorResponse: FormattedAPIError[]) => {
         setAPIError(errorResponse[0].formattedReason);
       });
   };
@@ -204,7 +204,7 @@ export const StandardRescueDialog = (props: Props) => {
       open={open}
       title={`Rescue Linode ${linode?.label ?? ''}`}
     >
-      {APIError && <Notice text={APIError} variant="error" />}
+      {APIError && <Notice variant="error">{APIError}</Notice>}
       {disksError ? (
         <div>
           <ErrorState errorText="There was an error retrieving Disks information." />
@@ -228,18 +228,18 @@ export const StandardRescueDialog = (props: Props) => {
               slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
             />
             <Button
-              sx={{ marginTop: theme.spacing() }}
               buttonType="secondary"
               compactX
               disabled={disabled || counter >= 6}
               onClick={incrementCounter}
+              sx={{ marginTop: theme.spacing() }}
             >
               Add Disk
             </Button>
             <ActionsPanel
               primaryButtonProps={{
-                'data-testid': 'submit',
                 'data-qa-form-data-loading': isLoading,
+                'data-testid': 'submit',
                 disabled,
                 label: 'Reboot into Rescue Mode',
                 onClick: onSubmit,

@@ -1,5 +1,4 @@
 import { MonitorStatus } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
@@ -12,6 +11,7 @@ import {
   useDisableMonitorMutation,
   useEnableMonitorMutation,
 } from 'src/queries/managed/managed';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 export interface MonitorActionMenuProps {
@@ -44,7 +44,7 @@ export const MonitorActionMenu = (props: MonitorActionMenuProps) => {
     monitorID
   );
 
-  const handleError = (message: string, error: APIError[]) => {
+  const handleError = (message: string, error: FormattedAPIError[]) => {
     const errMessage = getAPIErrorOrDefault(error, message);
     enqueueSnackbar(errMessage[0].formattedReason, { variant: 'error' });
   };

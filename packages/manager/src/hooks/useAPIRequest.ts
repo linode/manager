@@ -1,10 +1,11 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import produce from 'immer';
 import { useEffect, useState } from 'react';
 
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 export interface UseAPIRequest<T> {
   data: T;
-  error?: APIError[];
+  error?: FormattedAPIError[];
   lastUpdated: number;
   loading: boolean;
   transformData: (fn: (data: T) => void) => void;
@@ -60,7 +61,9 @@ export const useAPIRequest = <T>(
   deps: any[] = []
 ): UseAPIRequest<T> => {
   const [data, setData] = useState<T>(initialData);
-  const [error, setError] = useState<APIError[] | undefined>(undefined);
+  const [error, setError] = useState<FormattedAPIError[] | undefined>(
+    undefined
+  );
   const [loading, setLoading] = useState<boolean>(false);
   const [lastUpdated, setLastUpdated] = useState<number>(0);
 

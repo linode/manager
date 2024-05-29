@@ -34,9 +34,9 @@ import { CloneDomainDrawer } from './CloneDomainDrawer';
 import { DisableDomainDialog } from './DisableDomainDialog';
 import { Handlers as DomainHandlers } from './DomainActionMenu';
 import { DomainBanner } from './DomainBanner';
+import { DomainsEmptyLandingState } from './DomainsEmptyLandingPage';
 import { DomainTableRow } from './DomainTableRow';
 import { DomainZoneImportDrawer } from './DomainZoneImportDrawer';
-import { DomainsEmptyLandingState } from './DomainsEmptyLandingPage';
 import { EditDomainDrawer } from './EditDomainDrawer';
 
 const DOMAIN_CREATE_ROUTE = '/domains/create';
@@ -313,7 +313,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
         error={
           deleteError
             ? getAPIErrorOrDefault(deleteError, 'Error deleting Domain.')[0]
-                .formattedReason
+                .reason
             : undefined
         }
         entity="domain"

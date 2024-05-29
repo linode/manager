@@ -170,7 +170,7 @@ export const SearchLanding = (props: SearchLandingProps) => {
   });
 
   const [apiResults, setAPIResults] = React.useState<any>({});
-  const [apiError, setAPIError] = React.useState<null | string>(null);
+  const [apiError, setAPIError] = React.useState<JSX.Element | string>();
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
 
   let query = '';
@@ -190,7 +190,7 @@ export const SearchLanding = (props: SearchLandingProps) => {
         .then((searchResults) => {
           setAPIResults(searchResults.searchResultsByEntity);
           setAPILoading(false);
-          setAPIError(null);
+          setAPIError(undefined);
         })
         .catch((error) => {
           setAPIError(
@@ -300,7 +300,7 @@ export const SearchLanding = (props: SearchLandingProps) => {
       )}
       {apiError && (
         <Grid>
-          <Notice text={apiError} variant="error" />
+          <Notice variant="error">{apiError}</Notice>
         </Grid>
       )}
       {queryError && (

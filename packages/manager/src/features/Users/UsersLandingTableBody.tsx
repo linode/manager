@@ -1,14 +1,15 @@
-import { APIError, User } from '@linode/api-v4';
+import { User } from '@linode/api-v4';
 import React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { UserRow } from './UserRow';
 
 interface Props {
-  error: APIError[] | null;
+  error: FormattedAPIError[] | null;
   isLoading: boolean;
   numCols: number;
   onDelete: (username: string) => void;
@@ -23,7 +24,9 @@ export const UsersLandingTableBody = (props: Props) => {
   }
 
   if (error) {
-    return <TableRowError colSpan={numCols} message={error[0].formattedReason} />;
+    return (
+      <TableRowError colSpan={numCols} message={error[0].formattedReason} />
+    );
   }
 
   if (!users || users.length === 0) {

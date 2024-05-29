@@ -12,10 +12,11 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 import { QUERY_KEY } from './loadbalancers';
 
 import type {
-  FormattedAPIError,
   Configuration,
   ConfigurationPayload,
   ConfigurationsEndpointHealth,
@@ -80,7 +81,11 @@ export const useLoadBalancerConfigurationMutation = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<Configuration, FormattedAPIError[], UpdateConfigurationPayload>(
+  return useMutation<
+    Configuration,
+    FormattedAPIError[],
+    UpdateConfigurationPayload
+  >(
     (data) =>
       updateLoadbalancerConfiguration(loadbalancerId, configurationId, data),
     {

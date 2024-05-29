@@ -7,8 +7,8 @@ import {
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useFormik } from 'formik';
 import { path } from 'ramda';
 import * as React from 'react';
@@ -138,7 +138,7 @@ export const CreateDomain = () => {
       return setErrors([
         {
           field: 'defaultLinode',
-          formattedReason: 'Please select a Linode.',
+          reason: 'Please select a Linode.',
         },
       ]);
     }
@@ -150,7 +150,7 @@ export const CreateDomain = () => {
       return setErrors([
         {
           field: 'defaultNodeBalancer',
-          formattedReason: 'Please select a NodeBalancer.',
+          reason: 'Please select a NodeBalancer.',
         },
       ]);
     }
@@ -188,7 +188,7 @@ export const CreateDomain = () => {
               })
               .catch((e: APIError[]) => {
                 reportException(
-                  `Default DNS Records couldn't be created from Linode: ${e[0].formattedReason}`,
+                  `Default DNS Records couldn't be created from Linode: ${e[0].reason}`,
                   {
                     domainID: domainData.id,
                     ipv4: path(['ipv4', 0], selectedDefaultLinode),
@@ -215,7 +215,7 @@ export const CreateDomain = () => {
               })
               .catch((e: APIError[]) => {
                 reportException(
-                  `Default DNS Records couldn't be created from NodeBalancer: ${e[0].formattedReason}`,
+                  `Default DNS Records couldn't be created from NodeBalancer: ${e[0].reason}`,
                   {
                     domainID: domainData.id,
                     ipv4: path(['ipv4'], selectedDefaultNodeBalancer),

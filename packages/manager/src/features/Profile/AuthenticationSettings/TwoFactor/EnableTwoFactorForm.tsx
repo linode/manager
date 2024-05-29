@@ -55,7 +55,7 @@ export const EnableTwoFactorForm = (props: Props) => {
           'Could not confirm code.',
           'tfa_code'
         );
-        APIErrors = APIErrors.filter((err: APIError) => {
+        APIErrors = APIErrors.filter((err) => {
           // Filter potentially confusing API error
           return (
             err.formattedReason !==

@@ -43,6 +43,7 @@ import {
 } from 'src/queries/nodebalancers';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
@@ -123,7 +124,7 @@ const NodeBalancerCreate = () => {
     deleteConfigConfirmDialog,
     setDeleteConfigConfirmDialog,
   ] = React.useState<{
-    errors?: APIError[];
+    errors?: FormattedAPIError[];
     idxToDelete?: number;
     open: boolean;
     submitting: boolean;
@@ -252,7 +253,7 @@ const NodeBalancerCreate = () => {
     });
   };
 
-  const setNodeErrors = (errors: APIError[]) => {
+  const setNodeErrors = (errors: FormattedAPIError[]) => {
     /* Map the objects with this shape
         {
           path: ['configs', 2, 'nodes', 0, 'errors'],
@@ -303,7 +304,7 @@ const NodeBalancerCreate = () => {
       .catch((errorResponse) => {
         const errors = getAPIErrorOrDefault(errorResponse);
         setNodeErrors(
-          errors.map((e: APIError) => ({
+          errors.map((e) => ({
             ...e,
             ...(e.field && { field: e.field.replace(/(\[|\]\.)/g, '_') }),
           }))
@@ -723,7 +724,7 @@ export interface FieldAndPath {
   path: any[];
 }
 
-export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
+export const fieldErrorsToNodePathErrors = (errors: FormattedAPIError[]) => {
   /**
    * Potentials;
    *  JOI error config_0_nodes_0_address
@@ -739,7 +740,7 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
         }
       }
   */
-  return errors.reduce((acc: any, error: APIError) => {
+  return errors.reduce((acc: any, error) => {
     const errorFields = pathOr('', ['field'], error).split('|');
     const pathErrors: FieldAndPath[] = errorFields.map((field: string) =>
       getPathAndFieldFromFieldString(field)

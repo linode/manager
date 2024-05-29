@@ -6,9 +6,9 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
 
 import { Tag } from 'src/components/TagsInput/TagsInput';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { ExtendedType } from 'src/utilities/extendType';
 
 export type TypeInfo =
@@ -62,7 +62,7 @@ export type LinodeCreateValidation = (payload: CreateLinodeRequest) => void;
 
 export interface BasicFromContentProps {
   disabledClasses?: LinodeTypeClass[];
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   regionHelperText?: string;
   selectedImageID?: string;
   selectedRegionID?: string;
@@ -80,7 +80,7 @@ export interface BaseFormStateAndHandlers {
   authorized_users: string[];
   backupsEnabled: boolean;
   disabledClasses?: LinodeTypeClass[];
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   formIsSubmitting: boolean;
   handleSubmitForm: HandleSubmit;
   label: string;

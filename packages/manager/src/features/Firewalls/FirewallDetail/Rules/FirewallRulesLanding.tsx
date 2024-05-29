@@ -8,10 +8,10 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Prompt } from 'src/components/Prompt/Prompt';
 import { Typography } from 'src/components/Typography';
 import { useUpdateFirewallRulesMutation } from 'src/queries/firewalls';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';
-import { FirewallRuleTable } from './FirewallRuleTable';
 import {
   hasModified as _hasModified,
   curriedFirewallRuleEditorReducer,
@@ -20,6 +20,7 @@ import {
   prepareRules,
   stripExtendedFields,
 } from './firewallRuleEditor';
+import { FirewallRuleTable } from './FirewallRuleTable';
 import { parseFirewallRuleError } from './shared';
 
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
@@ -29,7 +30,6 @@ import type {
   FirewallRuleType,
   FirewallRules,
 } from '@linode/api-v4/lib/firewalls';
-import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
   disabled: boolean;
@@ -86,7 +86,7 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   // @todo fine-grained error handling.
   const [generalErrors, setGeneralErrors] = React.useState<
-    APIError[] | undefined
+    FormattedAPIError[] | undefined
   >();
   const [
     discardChangesModalOpen,
@@ -301,7 +301,9 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
       ) : null}
 
       {generalErrors?.length === 1 && (
-        <Notice spacingTop={8} text={generalErrors[0].formattedReason} variant="error" />
+        <Notice spacingTop={8} variant="error">
+          {generalErrors[0].formattedReason}
+        </Notice>
       )}
 
       <StyledDiv>

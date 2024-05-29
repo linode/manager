@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { prop, sortBy } from 'ramda';
 import * as React from 'react';
@@ -10,21 +9,22 @@ import {
   WithStartAndEnd,
 } from 'src/features/Longview/request.types';
 import { statAverage, statMax } from 'src/features/Longview/shared/utilities';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { escapeRegExp } from 'src/utilities/escapeRegExp';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { StyledItemGrid } from '../CommonStyles.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { ProcessesGraphs } from './ProcessesGraphs';
-import { ProcessesTable, ExtendedProcess } from './ProcessesTable';
-import { Process } from './types';
 import { StyledBox, StyledTimeRangeSelect } from './ProcessesLanding.styles';
+import { ExtendedProcess, ProcessesTable } from './ProcessesTable';
+import { Process } from './types';
 
 interface Props {
   clientAPIKey?: string;
   clientID?: number;
   lastUpdated?: number;
-  lastUpdatedError?: APIError[];
+  lastUpdatedError?: FormattedAPIError[];
   timezone: string;
 }
 
@@ -132,7 +132,7 @@ export const ProcessesLanding = React.memo((props: Props) => {
             />
           </StyledBox>
           <ProcessesTable
-            error={lastUpdatedError?.[0]?.formattedReason || error}
+            error={lastUpdatedError?.[0]?.reason || error}
             // It's correct to set loading to `true` when
             // processes.lastUpdated === 0. The reason we do this is to avoid
             // a state where we haven't made the request to get processes yet
@@ -148,7 +148,7 @@ export const ProcessesLanding = React.memo((props: Props) => {
         <StyledItemGrid lg={5} xs={12}>
           <ProcessesGraphs
             clientAPIKey={clientAPIKey || ''}
-            error={lastUpdatedError?.[0]?.formattedReason || error}
+            error={lastUpdatedError?.[0]?.reason || error}
             isToday={isToday}
             lastUpdated={lastUpdated}
             processesData={data}

@@ -76,7 +76,7 @@ export const AddLinodeDrawer = (props: Props) => {
       const errorReason = getAPIErrorOrDefault(
         result.reason,
         `Failed to add Linode ${label} (ID ${id}).`
-      )[0].formattedReason;
+      )[0].reason;
 
       if (!firstError) {
         firstError = errorReason;

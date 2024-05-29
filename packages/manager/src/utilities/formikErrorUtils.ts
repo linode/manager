@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import set from 'lodash.set';
 import { reverse } from 'ramda';
 
@@ -9,10 +8,10 @@ import type { FormikErrors } from 'formik';
 import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const getFormikErrorsFromAPIErrors = <T>(
-  errors: APIError[],
+  errors: FormattedAPIError[],
   prefixToRemoveFromFields?: string
 ): FormikErrors<T> => {
-  return errors.reduce((acc: FormikErrors<T>, error: APIError) => {
+  return errors.reduce((acc: FormikErrors<T>, error: FormattedAPIError) => {
     if (error.field) {
       const field = prefixToRemoveFromFields
         ? error.field.replace(prefixToRemoveFromFields, '')
@@ -26,7 +25,7 @@ export const getFormikErrorsFromAPIErrors = <T>(
 
 export const handleFieldErrors = (
   callback: (error: unknown) => void,
-  fieldErrors: APIError[] = []
+  fieldErrors: FormattedAPIError[] = []
 ) => {
   const mappedFieldErrors = reverse(fieldErrors).reduce(
     (result, { field, reason }) =>
@@ -63,11 +62,11 @@ export const handleGeneralErrors = (
 };
 
 export const handleAPIErrors = (
-  errors: APIError[],
+  errors: FormattedAPIError[],
   setFieldError: (field: string, message: string) => void,
   setError?: (message: string) => void
 ) => {
-  errors.forEach((error: APIError) => {
+  errors.forEach((error: FormattedAPIError) => {
     if (error.field) {
       /**
        * The line below gets the field name because the API returns something like this...
@@ -110,12 +109,12 @@ export interface SubnetError {
  * @param setError function to set (non-subnet related) general API errors
  */
 export const handleVPCAndSubnetErrors = (
-  errors: APIError[],
+  errors: FormattedAPIError[],
   setFieldError: (field: string, message: string) => void,
   setError?: (message: string) => void
 ) => {
   const subnetErrors = {};
-  const nonSubnetErrors: APIError[] = [];
+  const nonSubnetErrors: FormattedAPIError[] = [];
 
   errors.forEach((error) => {
     if (error.field && error.field.includes('subnets[')) {

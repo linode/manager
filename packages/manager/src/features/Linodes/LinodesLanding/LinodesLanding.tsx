@@ -23,6 +23,7 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { BackupsCTA } from 'src/features/Backups/BackupsCTA';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import { DialogType } from 'src/features/Linodes/types';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent,
@@ -48,7 +49,6 @@ import { ListView } from './ListView';
 import { ExtendedStatus, statusToPriority } from './utils';
 
 import type { Config } from '@linode/api-v4/lib/linodes/types';
-import type { APIError } from '@linode/api-v4/lib/types';
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
 interface State {
@@ -86,7 +86,7 @@ export interface LinodesLandingProps {
   LandingHeader?: React.ReactElement;
   linodesData: LinodeWithMaintenance[];
   linodesInTransition: Set<number>;
-  linodesRequestError?: APIError[];
+  linodesRequestError?: FormattedAPIError[];
   linodesRequestLoading: boolean;
   someLinodesHaveScheduledMaintenance: boolean;
 }

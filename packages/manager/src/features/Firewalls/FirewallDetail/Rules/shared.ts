@@ -1,10 +1,12 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { prop, sortBy } from 'ramda';
+
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 export type Category = 'inbound' | 'outbound';
 
 export interface FirewallRuleError {
   category: string;
   formField: string;
+  formattedReason: JSX.Element | string;
   idx: number;
   ip?: {
     idx: number;
@@ -42,9 +44,9 @@ export const PORT_PRESETS_ITEMS = sortBy(
  * This function parses the "field" into a data structure usable by downstream components.
  */
 export const parseFirewallRuleError = (
-  error: APIError
+  error: FormattedAPIError
 ): FirewallRuleError | null => {
-  const { field, formattedReason: reason } = error;
+  const { field, formattedReason, reason } = error;
 
   if (!field) {
     return null;
@@ -63,6 +65,7 @@ export const parseFirewallRuleError = (
   const result: FirewallRuleError = {
     category,
     formField,
+    formattedReason,
     idx: +idx,
     reason,
   };
