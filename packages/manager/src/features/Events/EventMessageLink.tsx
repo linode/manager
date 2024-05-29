@@ -25,5 +25,5 @@ export const EventMessageLink = (props: MessageLinkEntity) => {
 
   const link = getLinkForEvent(event.action, entity);
 
-  return link ? <Link to={link ?? ''}>{entity.label}</Link> : renderDefault();
+  return link ? <Link to={link}>{entity.label}</Link> : renderDefault();
 };

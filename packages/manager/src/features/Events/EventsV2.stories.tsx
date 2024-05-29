@@ -16,7 +16,12 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 const event: Event = eventFactory.build({
   action: 'linode_boot',
-  entity: { id: 1, label: '{entity}', type: 'any', url: 'https://google.com' },
+  entity: {
+    id: 1,
+    label: '{entity}',
+    type: 'linode',
+    url: 'https://google.com',
+  },
   message: '{message}',
   secondary_entity: {
     id: 1,
