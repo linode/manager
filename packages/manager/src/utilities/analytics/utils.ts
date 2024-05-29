@@ -57,7 +57,7 @@ export const sendFormEvent = (
     } else if (eventType === 'formError' && 'formError' in eventPayload) {
       formEventPayload['formError'] = eventPayload.formError.replace(/\|/g, '');
     }
-    // window._satellite.track(eventType, formEventPayload);
+    window._satellite.track(eventType, formEventPayload);
   }
 };
 

@@ -42,7 +42,7 @@ export const VPCTopSectionContent = (props: Props) => {
               category: 'link',
               createType:
                 (queryParams.type as LinodeCreateType) ?? 'Distributions',
-              formInputName: 'Create VPC Drawer',
+              formName: 'Create VPC Drawer',
               label: 'Learn more',
               version: 'v1',
             })

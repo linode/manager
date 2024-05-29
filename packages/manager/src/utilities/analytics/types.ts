@@ -61,11 +61,11 @@ export interface FormErrorEvent extends BasicFormEvent {
   formError: string;
 }
 
-// To be used with form input events for consistent event formatting.
-export interface FormInputOptions {
+// To be used with form input and step events for consistent event formatting.
+export interface FormEventOptions {
   action: string;
   category: string;
-  formInputName?: string;
+  formName?: string;
   label: string;
 }
 
@@ -73,8 +73,7 @@ export interface FormStepOptions {
   paperName: string;
   labelName: string;
 }
-
-export interface LinodeCreateFormInputOptions extends FormInputOptions {
+export interface LinodeCreateFormEventOptions extends FormEventOptions {
   createType: LinodeCreateType;
   // Used to distinguish between the Linode Create pre and post-refactor.
   version: LinodeCreateFlowVersion;

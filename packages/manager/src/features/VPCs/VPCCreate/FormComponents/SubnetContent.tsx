@@ -47,7 +47,7 @@ export const SubnetContent = (props: Props) => {
               category: 'link',
               createType:
                 (queryParams.type as LinodeCreateType) ?? 'Distributions',
-              formInputName: 'VPC Subnets',
+              formName: 'VPC Subnets',
               label: 'Learn more',
               version: 'v1',
             })

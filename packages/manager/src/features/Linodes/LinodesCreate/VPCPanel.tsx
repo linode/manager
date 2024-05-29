@@ -153,7 +153,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
               action: 'click',
               category: 'link',
               createType: (params.type as LinodeCreateType) ?? 'Distributions',
-              formInputName: 'VPC Panel',
+              formName: 'VPC Panel',
               label: 'Learn more',
               version: 'v1',
             })
@@ -198,7 +198,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                 category: 'select',
                 createType:
                   (params.type as LinodeCreateType) ?? 'Distributions',
-                formInputName: 'VPC Panel',
+                formName: 'VPC Panel',
                 label: 'Assign VPC',
                 version: 'v1',
               });
@@ -238,7 +238,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                       category: 'button',
                       createType:
                         (params.type as LinodeCreateType) ?? 'Distributions',
-                      formInputName: 'VPC Panel',
+                      formName: 'VPC Panel',
                       label: 'Create VPC',
                       version: 'v1',
                     });

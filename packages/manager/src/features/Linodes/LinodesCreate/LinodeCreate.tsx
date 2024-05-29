@@ -772,7 +772,7 @@ export class LinodeCreate extends React.PureComponent<
                         createType:
                           (this.tabs[selectedTab].title as LinodeCreateType) ??
                           'Distributions',
-                        formInputName: 'Firewall Panel',
+                        formName: 'Firewall Panel',
                         label: 'Learn more',
                         version: 'v1',
                       })

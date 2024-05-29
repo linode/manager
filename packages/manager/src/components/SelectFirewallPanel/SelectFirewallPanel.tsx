@@ -46,7 +46,7 @@ export const SelectFirewallPanel = (props: Props) => {
         action: 'click',
         category: 'button',
         createType: (queryParams.type as LinodeCreateType) ?? 'Distributions',
-        formInputName: 'Firewall Panel',
+        formName: 'Firewall Panel',
         label: 'Create Firewall',
         version: 'v1',
       });
@@ -93,7 +93,7 @@ export const SelectFirewallPanel = (props: Props) => {
               category: 'select',
               createType:
                 (queryParams.type as LinodeCreateType) ?? 'Distributions',
-              formInputName: 'Firewall Panel',
+              formName: 'Firewall Panel',
               label: 'Assign Firewall',
               version: 'v1',
             });

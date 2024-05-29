@@ -226,7 +226,7 @@ export const CreateFirewallDrawer = React.memo(
             category: 'link',
             createType:
               (queryParams.type as LinodeCreateType) ?? 'Distributions',
-            formInputName: 'Create Firewall Drawer',
+            formName: 'Create Firewall Drawer',
             label: 'Learn more',
             version: 'v1',
           })

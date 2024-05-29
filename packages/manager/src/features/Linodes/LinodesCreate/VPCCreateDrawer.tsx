@@ -87,7 +87,7 @@ export const VPCCreateDrawer = (props: Props) => {
                   category: 'button',
                   createType:
                     (queryParams.type as LinodeCreateType) ?? 'Distributions',
-                  formInputName: 'Create VPC Drawer',
+                  formName: 'Create VPC Drawer',
                   label: 'Create VPC',
                   version: 'v1',
                 });
