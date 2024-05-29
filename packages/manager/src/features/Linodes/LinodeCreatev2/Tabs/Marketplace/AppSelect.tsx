@@ -1,3 +1,4 @@
+import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
@@ -14,7 +15,8 @@ import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 
 import { getDefaultUDFData } from '../StackScripts/UserDefinedFields/utilities';
 import { AppSection } from './AppSection';
-import { categoryOptions } from './utilities';
+import { AppSelectionCard } from './AppSelectionCard';
+import { categoryOptions, getAppSections } from './utilities';
 
 import type { LinodeCreateFormValues } from '../../utilities';
 import type { StackScript } from '@linode/api-v4';
@@ -32,6 +34,8 @@ export const AppSelect = (props: Props) => {
   const { field } = useController<LinodeCreateFormValues, 'stackscript_id'>({
     name: 'stackscript_id',
   });
+
+  const filter = null;
 
   const { data: stackscripts, error, isLoading } = useMarketplaceAppsQuery(
     true
@@ -64,67 +68,37 @@ export const AppSelect = (props: Props) => {
       return <ErrorState errorText={error?.[0].reason} />;
     }
 
-    // We will render this when we are filtering
-    // return (
-    //   <Grid container spacing={2}>
-    //     {stackscripts?.map((stackscript) => {
-    //       if (!oneClickApps[stackscript.id]) {
-    //         return null;
-    //       }
-    //       return (
-    //         <AppSelectionCard
-    //           onSelect={() => {
-    //             setValue(
-    //               'stackscript_data',
-    //               getDefaultUDFData(stackscript.user_defined_fields)
-    //             );
-    //             field.onChange(stackscript.id);
-    //           }}
-    //           checked={field.value === stackscript.id}
-    //           iconUrl={`/assets/${oneClickApps[stackscript.id].logo_url}`}
-    //           key={stackscript.id}
-    //           label={stackscript.label}
-    //           onOpenDetailsDrawer={() => onOpenDetailsDrawer(stackscript.id)}
-    //         />
-    //       );
-    //     })}
-    //   </Grid>
-    // );
+    if (filter) {
+      return (
+        <Grid container spacing={2}>
+          {stackscripts?.map((stackscript) => (
+            <AppSelectionCard
+              checked={field.value === stackscript.id}
+              iconUrl={`/assets/${oneClickApps[stackscript.id].logo_url}`}
+              key={stackscript.id}
+              label={stackscript.label}
+              onOpenDetailsDrawer={() => onOpenDetailsDrawer(stackscript.id)}
+              onSelect={() => onSelect(stackscript)}
+            />
+          ))}
+        </Grid>
+      );
+    }
 
-    const newApps = stackscripts.filter(
-      (stackscript) => oneClickApps[stackscript.id]?.isNew
-    );
-
-    const popularApps = stackscripts.slice(0, 10);
-
-    // @ts-expect-error Can we use toSorted? 😣
-    const allApps = stackscripts.toSorted((a, b) =>
-      a.label.toLowerCase().localeCompare(b.label.toLowerCase())
-    );
+    const sections = getAppSections(stackscripts);
 
     return (
       <Stack spacing={2}>
-        <AppSection
-          onOpenDetailsDrawer={onOpenDetailsDrawer}
-          onSelect={onSelect}
-          selectedStackscriptId={field.value}
-          stackscripts={newApps}
-          title="New apps"
-        />
-        <AppSection
-          onOpenDetailsDrawer={onOpenDetailsDrawer}
-          onSelect={onSelect}
-          selectedStackscriptId={field.value}
-          stackscripts={popularApps}
-          title="Popular apps"
-        />
-        <AppSection
-          onOpenDetailsDrawer={onOpenDetailsDrawer}
-          onSelect={onSelect}
-          selectedStackscriptId={field.value}
-          stackscripts={allApps}
-          title="All apps"
-        />
+        {sections.map(({ stackscripts, title }) => (
+          <AppSection
+            key={title}
+            onOpenDetailsDrawer={onOpenDetailsDrawer}
+            onSelect={onSelect}
+            selectedStackscriptId={field.value}
+            stackscripts={stackscripts}
+            title={title}
+          />
+        ))}
       </Stack>
     );
   };
