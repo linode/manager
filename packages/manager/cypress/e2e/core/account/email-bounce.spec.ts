@@ -74,7 +74,7 @@ describe('Email bounce banners', () => {
    * Confirm that the user profile email banner appears when the user_email_bounce notification is present
    * Confirm that clicking "No, let's update it" redirects the user to {{/account} and that the contact info edit drawer is automatically opened
    */
-  it('User profile email bounce is visible and can be updated by users', () => {
+  it.only('User profile email bounce is visible and can be updated by users', () => {
     const newEmail = `${randomString(12)}@example.com`;
 
     getProfile().then((profile) => {
@@ -119,6 +119,7 @@ describe('Email bounce banners', () => {
         });
 
       cy.findByText('Email updated successfully.').should('be.visible');
+      cy.contains(UserProfileEmailBounceBanner).should('not.exist');
       // email bounce still exist ???
     });
   });
@@ -170,7 +171,7 @@ describe('Email bounce banners', () => {
    *   Confirm that the billing email banner appears when the billing_email_bounce notification is present
    *   Confirm that clicking "No, let's update it" redirects the user to {{/account} and that the contact info edit drawer is automatically opened
    */
-  it.only('Billing email bounce is visible and can be updated by users', () => {
+  it('Billing email bounce is visible and can be updated by users', () => {
     const accountData = accountFactory.build();
     const billingemail = accountData.email;
 
