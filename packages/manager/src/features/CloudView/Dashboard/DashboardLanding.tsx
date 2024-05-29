@@ -10,6 +10,16 @@ import { GlobalFilters } from '../Overview/GlobalFilters';
 import { CloudPulseDashboard, DashboardProperties } from './Dashboard';
 import { getUserPreference, updateGlobalFilterPreference } from '../Utils/UserPreference'
 import { DASHBOARD_ID, INTERVAL, REFRESH, REGION, RESOURCES, TIME_DURATION } from '../Utils/CloudPulseConstants'
+import CloudViewIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { styled } from '@mui/material/styles';
+
+const StyledPlaceholder = styled(Placeholder, {
+  label: 'StyledPlaceholder',
+})({
+  flex: 'auto',
+});
+
 
 export const DashBoardLanding = () => {
   const generateStartTime = (modifier: string, nowInSeconds: number) => {
@@ -59,7 +69,7 @@ export const DashBoardLanding = () => {
   const preferenceRef = React.useRef<any>();
 
   // const { data: preferences, refetch: refetchPreferences } = usePreferences();
-  const [ preferences, setPreferences] = React.useState<any>();
+  const [preferences, setPreferences] = React.useState<any>();
 
   const updatedDashboard = React.useRef<Dashboard>();
 
@@ -89,7 +99,7 @@ export const DashBoardLanding = () => {
       if (
         preferences &&
         preferences.aclpPreference.region !=
-          preferenceRef.current.aclpPreference.region
+        preferenceRef.current.aclpPreference.region
       ) {
         preferenceRef.current.aclpPreference.resources = [];
         dashboardPropRef.current.dashboardFilters.resource = [];
@@ -190,7 +200,7 @@ export const DashBoardLanding = () => {
       if (
         preferences &&
         preferences.aclpPreference.dashboardId !=
-          preferenceRef.current.aclpPreference.dashboardId
+        preferenceRef.current.aclpPreference.dashboardId
       ) {
         preferenceRef.current.aclpPreference.resources = [];
         dashboardPropRef.current.dashboardFilters.resource = [];
@@ -234,13 +244,17 @@ export const DashBoardLanding = () => {
   };
 
   //Fetch the data from preferences
-  React.useEffect( () =>{
-    const fetchPreferences = async () =>{
-       const userPreference = await getUserPreference();
-       setPreferences(userPreference);
+  React.useEffect(() => {
+    const fetchPreferences = async () => {
+      const userPreference = await getUserPreference();
+      if (!userPreference || !userPreference.aclpPreference) {
+        setPreferences({ aclpPreference: {} })
+      } else {
+        setPreferences(userPreference);
+      }
     }
     fetchPreferences();
- }, [])
+  }, [])
 
   if (!preferences) {
     return <CircleProgress></CircleProgress>;
@@ -296,6 +310,22 @@ export const DashBoardLanding = () => {
             widgetPreferences={preferenceRef.current.aclpPreference.widgets}
           />
         )}
+
+      {
+        (!dashboardProp.dashboardFilters.serviceType ||
+          !dashboardProp.dashboardFilters.region ||
+          !dashboardProp.dashboardFilters.resource ||
+          dashboardProp.dashboardFilters.resource.length === 0 ||
+          !dashboardProp.dashboardFilters.timeRange ||
+          !dashboardProp.dashboardFilters.step) &&
+        (
+          <Paper>
+            <StyledPlaceholder icon={CloudViewIcon}
+              subtitle='Select Service Type, Region and Resource to visualize metrics'
+              title="" />
+          </Paper>
+        )
+      }
     </>
   );
 };

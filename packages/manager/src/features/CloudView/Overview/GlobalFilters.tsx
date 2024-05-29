@@ -17,7 +17,7 @@ import { CloudPulseTimeRangeSelect } from '../shared/TimeRangeSelect';
 
 
 import { updateGlobalFilterPreference } from '../Utils/UserPreference';
-import { TIME_DURATION,  REGION, RESOURCES } from '../Utils/CloudPulseConstants';
+import { TIME_DURATION, INTERVAL, REGION, RESOURCES } from '../Utils/CloudPulseConstants';
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const emitGlobalFilterChange = (
@@ -33,7 +33,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     timeDuration?: TimeDuration,
     timeRangeLabel?: string
   ) => {
-
 
     if (start > 0 && end > 0) {
       const filterObj = { ...props.globalFilters };
@@ -52,8 +51,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     if (region) {
       emitGlobalFilterChange({ ...props.globalFilters, region }, REGION);
       updateGlobalFilterPreference({ [REGION]: region, [RESOURCES]: [] });
-      emitGlobalFilterChange({ ...props.globalFilters, region }, REGION);
-      updateGlobalFilterPreference({ [REGION]: region, [RESOURCES]: [] });
     }
   }, []);
 
@@ -70,12 +67,10 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     }
   }, []);
 
-
   const handleDashboardChange = React.useCallback((
     dashboard: Dashboard | undefined,
     isClear: boolean
   ) => {
-
 
     if (dashboard || (!dashboard && !isClear)) {
       props.handleDashboardChange(dashboard!);
