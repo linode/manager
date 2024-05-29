@@ -66,7 +66,6 @@ export const TextTooltip = (props: TextTooltipProps) => {
           },
         },
       }}
-      leaveDelay={500000}
       data-qa-tooltip={dataQaTooltip}
       enterTouchDelay={0}
       placement={placement ? placement : 'bottom'}
