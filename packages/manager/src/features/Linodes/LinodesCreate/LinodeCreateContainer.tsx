@@ -1032,7 +1032,7 @@ const handleAnalytics = (details: {
     eventLabel = label;
   }
 
-  // Send custom click event.
+  // Send custom event.
   sendCreateLinodeEvent(
     eventAction,
     eventLabel,
