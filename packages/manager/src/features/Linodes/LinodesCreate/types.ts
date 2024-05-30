@@ -91,18 +91,12 @@ export interface BaseFormStateAndHandlers {
   selectedImageID?: string;
   selectedRegionID?: string;
   selectedTypeID?: string;
-  selectedVlanIDs: number[];
   setAuthorizedUsers: (usernames: string[]) => void;
-  setVlanID: (ids: number[]) => void;
   tags?: Tag[];
   toggleBackupsEnabled: () => void;
   togglePrivateIPEnabled: () => void;
   updateImageID: (id: string) => void;
-  updateLabel: (
-    event: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => void;
+  updateLabel: (label: string) => void;
   updatePassword: (password: string) => void;
   updateRegionID: (id: string) => void;
   updateTags: (tags: Tag[]) => void;

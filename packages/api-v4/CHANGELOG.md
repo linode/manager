@@ -1,3 +1,15 @@
+## [2024-05-28] - v0.118.0
+
+
+### Added:
+
+- New LKE events in `EventAction` type ([#10443](https://github.com/linode/manager/pull/10443))
+
+### Changed:
+
+- Add Disk Encryption to AccountCapability type and region Capabilities type ([#10462](https://github.com/linode/manager/pull/10462))
+
+
 ## [2024-05-13] - v0.117.0
 
 
