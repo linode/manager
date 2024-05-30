@@ -58,7 +58,6 @@ interface AclpFlag {
 interface gpuV2 {
   planDivider: boolean;
 }
-
 type OneClickApp = Record<string, string>;
 
 export interface Flags {
