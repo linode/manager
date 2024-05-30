@@ -1,6 +1,5 @@
 import { Theme, styled } from '@mui/material/styles';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
@@ -201,4 +200,4 @@ const StyledLoadingSpan = styled('span', { label: 'StyledLoadingSpan' })({
   },
 });
 
-export default compose<Props, Props>(React.memo)(SelectAppPanel);
+export default React.memo(SelectAppPanel);
