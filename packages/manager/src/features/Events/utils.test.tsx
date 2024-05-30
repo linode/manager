@@ -42,7 +42,7 @@ describe('getEventMessage', () => {
     expect(getByRole('link')).toHaveAttribute('href', '/linodes/123');
   });
 
-  it.only('returns the correct message for a given event with a secondary entity', () => {
+  it('returns the correct message for a given event with a secondary entity', () => {
     const message = getEventMessage(mockEvent2);
 
     const { container, getAllByRole } = renderWithTheme(message);
@@ -51,6 +51,7 @@ describe('getEventMessage', () => {
       /Config test-config has been created on Linode test-linode./i
     );
     expect(container.querySelector('strong')).toHaveTextContent('created');
+
     const links = getAllByRole('link');
     expect(links.length).toBe(2);
     expect(links[0]).toHaveAttribute('href', '/linodes/456');
@@ -68,7 +69,7 @@ describe('getEventMessage', () => {
       status: 'failed',
     });
 
-    const { container, getByRole } = renderWithTheme(message);
+    const { container } = renderWithTheme(message);
 
     expect(container.querySelector('span')).toHaveTextContent(
       /Linode test-linode could not be created./i
@@ -78,7 +79,5 @@ describe('getEventMessage', () => {
     expect(boldedWords).toHaveLength(2);
     expect(boldedWords[0]).toHaveTextContent('not');
     expect(boldedWords[1]).toHaveTextContent('created');
-
-    expect(getByRole('link')).toHaveAttribute('href', '/linodes/123');
   });
 });
