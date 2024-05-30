@@ -185,7 +185,7 @@ export const StackScriptPanelContent = (
     return (
       <ActionsPanel
         primaryButtonProps={{
-          label: 'Yes, make me a star!',
+          label: 'Make Public',
           onClick: handleMakePublic,
         }}
         secondaryButtonProps={{ label: 'Cancel', onClick: handleCloseDialog }}
@@ -215,7 +215,7 @@ export const StackScriptPanelContent = (
         actions={renderConfirmMakePublicActions}
         onClose={handleCloseDialog}
         open={dialog.makePublic.open}
-        title="Woah, just a word of caution..."
+        title={`Make StackScript ${dialog.stackScriptLabel} Public`}
       >
         <Typography>
           Are you sure you want to make {dialog.stackScriptLabel} public? This

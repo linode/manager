@@ -681,7 +681,7 @@ const NodeBalancerCreate = () => {
         error={confirmationConfigError()}
         onClose={onCloseConfirmation}
         open={deleteConfigConfirmDialog.open}
-        title={'Delete Configuration'}
+        title="Delete Configuration"
       >
         <Typography>
           Are you sure you want to delete this NodeBalancer Configuration?

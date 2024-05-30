@@ -116,7 +116,7 @@ export const EnableManaged = (props: Props) => {
         error={error}
         onClose={() => handleClose()}
         open={isOpen}
-        title="Just to confirm..."
+        title="Enable Managed"
       >
         <Typography variant="subtitle1">
           Linode Managed costs an additional{' '}
