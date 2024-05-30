@@ -252,8 +252,11 @@ describe('Account service transfers', () => {
         booted: true,
       });
 
-      const linode: Linode = await createTestLinode(payload);
-      await pollLinodeStatus(linode.id, 'running', {
+      const linode: Linode = await createTestLinode(payload, {
+        securityMethod: 'powered_off',
+      });
+
+      await pollLinodeStatus(linode.id, 'offline', {
         initialDelay: 15000,
       });
 
@@ -321,7 +324,7 @@ describe('Account service transfers', () => {
               cy.get('[data-qa-close-drawer]').should('be.visible').click();
             });
 
-          // Attempt to receive the an invalid token.
+          // Attempt to receive an invalid token.
           redeemToken(randomUuid());
           assertReceiptError('Not found');
 

@@ -138,14 +138,15 @@ describe('Migrate Linode With Firewall', () => {
     const linodePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
       region: migrationRegionStart.id,
-      booted: false,
     });
 
     interceptCreateFirewall().as('createFirewall');
     interceptGetFirewalls().as('getFirewalls');
 
     // Create a Linode, then navigate to the Firewalls landing page.
-    cy.defer(createTestLinode(linodePayload)).then((linode: Linode) => {
+    cy.defer(
+      createTestLinode(linodePayload, { securityMethod: 'powered_off' })
+    ).then((linode: Linode) => {
       interceptMigrateLinode(linode.id).as('migrateLinode');
       cy.visitWithLogin('/firewalls');
       cy.wait('@getFirewalls');

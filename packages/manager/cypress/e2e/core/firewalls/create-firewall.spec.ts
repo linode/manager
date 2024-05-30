@@ -68,55 +68,55 @@ describe('create firewall', () => {
       label: randomLabel(),
       region: region.id,
       root_pass: randomString(16),
-      booted: false,
     });
 
     const firewall = {
       label: randomLabel(),
     };
 
-    cy.defer(createTestLinode(linodeRequest), 'creating Linode').then(
-      (linode) => {
-        interceptCreateFirewall().as('createFirewall');
-        cy.visitWithLogin('/firewalls/create');
+    cy.defer(
+      createTestLinode(linodeRequest, { securityMethod: 'powered_off' }),
+      'creating Linode'
+    ).then((linode) => {
+      interceptCreateFirewall().as('createFirewall');
+      cy.visitWithLogin('/firewalls/create');
 
-        ui.drawer
-          .findByTitle('Create Firewall')
-          .should('be.visible')
-          .within(() => {
-            // Fill out and submit firewall create form.
-            cy.contains('Label').click().type(firewall.label);
-            cy.findByLabelText('Linodes')
-              .should('be.visible')
-              .click()
-              .type(linode.label);
+      ui.drawer
+        .findByTitle('Create Firewall')
+        .should('be.visible')
+        .within(() => {
+          // Fill out and submit firewall create form.
+          cy.contains('Label').click().type(firewall.label);
+          cy.findByLabelText('Linodes')
+            .should('be.visible')
+            .click()
+            .type(linode.label);
 
-            ui.autocompletePopper
-              .findByTitle(linode.label)
-              .should('be.visible')
-              .click();
+          ui.autocompletePopper
+            .findByTitle(linode.label)
+            .should('be.visible')
+            .click();
 
-            cy.findByLabelText('Linodes').should('be.visible').click();
+          cy.findByLabelText('Linodes').should('be.visible').click();
 
-            ui.buttonGroup
-              .findButtonByTitle('Create Firewall')
-              .should('be.visible')
-              .should('be.enabled')
-              .click();
-          });
+          ui.buttonGroup
+            .findButtonByTitle('Create Firewall')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
 
-        cy.wait('@createFirewall');
+      cy.wait('@createFirewall');
 
-        // Confirm that firewall is listed on landing page with expected configuration.
-        cy.findByText(firewall.label)
-          .closest('tr')
-          .within(() => {
-            cy.findByText(firewall.label).should('be.visible');
-            cy.findByText('Enabled').should('be.visible');
-            cy.findByText('No rules').should('be.visible');
-            cy.findByText(linode.label).should('be.visible');
-          });
-      }
-    );
+      // Confirm that firewall is listed on landing page with expected configuration.
+      cy.findByText(firewall.label)
+        .closest('tr')
+        .within(() => {
+          cy.findByText(firewall.label).should('be.visible');
+          cy.findByText('Enabled').should('be.visible');
+          cy.findByText('No rules').should('be.visible');
+          cy.findByText(linode.label).should('be.visible');
+        });
+    });
   });
 });
