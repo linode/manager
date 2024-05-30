@@ -152,6 +152,9 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
     id: Factory.each((i) => i),
     instance_uri: '',
     label: Factory.each((i) => `database-${i}`),
+    members: {
+      '2.2.2.2': 'primary',
+    },
     region: 'us-east',
     status: Factory.each(() => pickRandom(possibleStatuses)),
     type: databaseTypeFactory.build().id,
@@ -178,6 +181,9 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   },
   id: Factory.each((i) => i),
   label: Factory.each((i) => `database-${i}`),
+  members: {
+    '2.2.2.2': 'primary',
+  },
   port: 3306,
   region: 'us-east',
   ssl_connection: false,

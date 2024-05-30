@@ -14,7 +14,7 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
-import { useDatabaseMutation } from 'src/queries/databases';
+import { useDatabaseMutation } from 'src/queries/databases/databases';
 import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import AddAccessControlDrawer from './AddAccessControlDrawer';
