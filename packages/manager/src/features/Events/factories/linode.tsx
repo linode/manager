@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 
-import { EventMessageLink } from '../EventMessageLink';
+import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
@@ -11,19 +11,19 @@ export const linode: PartialEventMap = {
     notification: (e) => (
       <>
         An IP address has been <strong>added</strong> to Linode{' '}
-        <EventMessageLink event={e} to="entity" />.
+        <EventLink event={e} to="entity" />.
       </>
     ),
   },
   linode_boot: {
     failed: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> could{' '}
-        <strong>not</strong> be <strong>booted</strong>
+        Linode <EventLink event={e} to="entity" /> could <strong>not</strong> be{' '}
+        <strong>booted</strong>
         {e.secondary_entity ? (
           <>
             {' '}
-            with config <EventMessageLink event={e} to="secondaryEntity" />
+            with config <EventLink event={e} to="secondaryEntity" />
           </>
         ) : (
           ''
@@ -33,12 +33,12 @@ export const linode: PartialEventMap = {
     ),
     finished: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> has been{' '}
+        Linode <EventLink event={e} to="entity" /> has been{' '}
         <strong>booted</strong>
         {e.secondary_entity ? (
           <>
             {' '}
-            with config <EventMessageLink event={e} to="secondaryEntity" />
+            with config <EventLink event={e} to="secondaryEntity" />
           </>
         ) : (
           ''
@@ -48,12 +48,12 @@ export const linode: PartialEventMap = {
     ),
     scheduled: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is scheduled to be{' '}
+        Linode <EventLink event={e} to="entity" /> is scheduled to be{' '}
         <strong>booted</strong>
         {e.secondary_entity ? (
           <>
             {' '}
-            with config <EventMessageLink event={e} to="secondaryEntity" />
+            with config <EventLink event={e} to="secondaryEntity" />
           </>
         ) : (
           ''
@@ -63,12 +63,12 @@ export const linode: PartialEventMap = {
     ),
     started: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is being{' '}
+        Linode <EventLink event={e} to="entity" /> is being{' '}
         <strong>booted</strong>
         {e.secondary_entity ? (
           <>
             {' '}
-            with config <EventMessageLink event={e} to="secondaryEntity" />
+            with config <EventLink event={e} to="secondaryEntity" />
           </>
         ) : (
           ''
@@ -85,7 +85,7 @@ export const linode: PartialEventMap = {
         {e.secondary_entity ? (
           <>
             {' '}
-            to <EventMessageLink event={e} to="secondaryEntity" />
+            to <EventLink event={e} to="secondaryEntity" />
           </>
         ) : (
           ''
@@ -95,12 +95,12 @@ export const linode: PartialEventMap = {
     ),
     finished: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> has been{' '}
+        Linode <EventLink event={e} to="entity" /> has been{' '}
         <strong>cloned</strong>
         {e.secondary_entity ? (
           <>
             {' '}
-            to <EventMessageLink event={e} to="secondaryEntity" />
+            to <EventLink event={e} to="secondaryEntity" />
           </>
         ) : (
           ''
@@ -114,7 +114,7 @@ export const linode: PartialEventMap = {
         {e.secondary_entity ? (
           <>
             {' '}
-            to <EventMessageLink event={e} to="secondaryEntity" />
+            to <EventLink event={e} to="secondaryEntity" />
           </>
         ) : (
           ''
@@ -124,12 +124,12 @@ export const linode: PartialEventMap = {
     ),
     scheduled: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is scheduled to be{' '}
+        Linode <EventLink event={e} to="entity" /> is scheduled to be{' '}
         <strong>cloned</strong>
         {e.secondary_entity ? (
           <>
             {' '}
-            to <EventMessageLink event={e} to="secondaryEntity" />
+            to <EventLink event={e} to="secondaryEntity" />
           </>
         ) : (
           ''
@@ -139,12 +139,12 @@ export const linode: PartialEventMap = {
     ),
     started: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is being{' '}
+        Linode <EventLink event={e} to="entity" /> is being{' '}
         <strong>cloned</strong>
         {e.secondary_entity ? (
           <>
             {' '}
-            to <EventMessageLink event={e} to="secondaryEntity" />
+            to <EventLink event={e} to="secondaryEntity" />
           </>
         ) : (
           ''
@@ -156,9 +156,8 @@ export const linode: PartialEventMap = {
   linode_config_create: {
     notification: (e) => (
       <>
-        Config <EventMessageLink event={e} to="secondaryEntity" /> has been{' '}
-        <strong>created</strong> on Linode{' '}
-        <EventMessageLink event={e} to="entity" />.
+        Config <EventLink event={e} to="secondaryEntity" /> has been{' '}
+        <strong>created</strong> on Linode <EventLink event={e} to="entity" />.
       </>
     ),
   },
@@ -166,16 +165,15 @@ export const linode: PartialEventMap = {
     notification: (e) => (
       <>
         Config {e.secondary_entity?.label} has been <strong>deleted</strong> on
-        Linode <EventMessageLink event={e} to="entity" />.
+        Linode <EventLink event={e} to="entity" />.
       </>
     ),
   },
   linode_config_update: {
     notification: (e) => (
       <>
-        Config <EventMessageLink event={e} to="secondaryEntity" /> has been{' '}
-        <strong>updated</strong> on Linode{' '}
-        <EventMessageLink event={e} to="entity" />.
+        Config <EventLink event={e} to="secondaryEntity" /> has been{' '}
+        <strong>updated</strong> on Linode <EventLink event={e} to="entity" />.
       </>
     ),
   },
@@ -188,7 +186,7 @@ export const linode: PartialEventMap = {
     ),
     finished: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> has been{' '}
+        Linode <EventLink event={e} to="entity" /> has been{' '}
         <strong>created</strong>.
       </>
     ),
@@ -206,8 +204,8 @@ export const linode: PartialEventMap = {
   linode_delete: {
     failed: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> could{' '}
-        <strong>not</strong> be <strong>deleted</strong>.
+        Linode <EventLink event={e} to="entity" /> could <strong>not</strong> be{' '}
+        <strong>deleted</strong>.
       </>
     ),
     finished: (e) => (
@@ -222,13 +220,13 @@ export const linode: PartialEventMap = {
     ),
     scheduled: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is scheduled to be{' '}
+        Linode <EventLink event={e} to="entity" /> is scheduled to be{' '}
         <strong>deleted</strong>.
       </>
     ),
     started: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is being{' '}
+        Linode <EventLink event={e} to="entity" /> is being{' '}
         <strong>deleted</strong>.
       </>
     ),
@@ -237,7 +235,7 @@ export const linode: PartialEventMap = {
     notification: (e) => (
       <>
         An IP address has been <strong>removed</strong> from Linode{' '}
-        <EventMessageLink event={e} to="entity" />.
+        <EventLink event={e} to="entity" />.
       </>
     ),
   },
@@ -245,24 +243,24 @@ export const linode: PartialEventMap = {
     failed: (e) => (
       <>
         Migration <strong>failed</strong> for Linode{' '}
-        <EventMessageLink event={e} to="entity" />.
+        <EventLink event={e} to="entity" />.
       </>
     ),
     finished: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> has been{' '}
+        Linode <EventLink event={e} to="entity" /> has been{' '}
         <strong>migrated</strong>.
       </>
     ),
     scheduled: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is scheduled to be{' '}
+        Linode <EventLink event={e} to="entity" /> is scheduled to be{' '}
         <strong>migrated</strong>.
       </>
     ),
     started: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is being{' '}
+        Linode <EventLink event={e} to="entity" /> is being{' '}
         <strong>migrated</strong>.
       </>
     ),
@@ -271,24 +269,24 @@ export const linode: PartialEventMap = {
     failed: (e) => (
       <>
         Migration <strong>failed</strong> for Linode{' '}
-        <EventMessageLink event={e} to="entity" />.
+        <EventLink event={e} to="entity" />.
       </>
     ),
     finished: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> has been{' '}
+        Linode <EventLink event={e} to="entity" /> has been{' '}
         <strong>migrated</strong>.
       </>
     ),
     scheduled: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is scheduled to be{' '}
+        Linode <EventLink event={e} to="entity" /> is scheduled to be{' '}
         <strong>migrated</strong>.
       </>
     ),
     started: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is being{' '}
+        Linode <EventLink event={e} to="entity" /> is being{' '}
         <strong>migrated</strong>.
       </>
     ),
@@ -297,38 +295,38 @@ export const linode: PartialEventMap = {
     notification: (e) => (
       <>
         Migration has been <strong>initiated</strong> for Linode{' '}
-        <EventMessageLink event={e} to="entity" />.
+        <EventLink event={e} to="entity" />.
       </>
     ),
   },
   linode_mutate: {
     failed: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> could{' '}
-        <strong>not</strong> be <strong>upgraded</strong>.
+        Linode <EventLink event={e} to="entity" /> could <strong>not</strong> be{' '}
+        <strong>upgraded</strong>.
       </>
     ),
     finished: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> has been{' '}
+        Linode <EventLink event={e} to="entity" /> has been{' '}
         <strong>upgraded</strong>.
       </>
     ),
     notification: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is being{' '}
+        Linode <EventLink event={e} to="entity" /> is being{' '}
         <strong>upgraded</strong>.
       </>
     ),
     scheduled: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is scheduled to be{' '}
+        Linode <EventLink event={e} to="entity" /> is scheduled to be{' '}
         <strong>upgraded</strong>.
       </>
     ),
     started: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is being{' '}
+        Linode <EventLink event={e} to="entity" /> is being{' '}
         <strong>upgraded</strong>.
       </>
     ),
@@ -337,19 +335,19 @@ export const linode: PartialEventMap = {
     notification: (e) => (
       <>
         A <strong>resize</strong> has been initiated for Linode{' '}
-        <EventMessageLink event={e} to="entity" />.
+        <EventLink event={e} to="entity" />.
       </>
     ),
   },
   linode_reboot: {
     failed: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> could{' '}
-        <strong>not</strong> be <strong>rebooted</strong>
+        Linode <EventLink event={e} to="entity" /> could <strong>not</strong> be{' '}
+        <strong>rebooted</strong>
         {e.secondary_entity ? (
           <>
             {' '}
-            with config <EventMessageLink event={e} to="secondaryEntity" />
+            with config <EventLink event={e} to="secondaryEntity" />
           </>
         ) : (
           ''
@@ -359,12 +357,12 @@ export const linode: PartialEventMap = {
     ),
     finished: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> has been{' '}
+        Linode <EventLink event={e} to="entity" /> has been{' '}
         <strong>rebooted</strong>
         {e.secondary_entity ? (
           <>
             {' '}
-            with config <EventMessageLink event={e} to="secondaryEntity" />
+            with config <EventLink event={e} to="secondaryEntity" />
           </>
         ) : (
           ''
@@ -374,12 +372,12 @@ export const linode: PartialEventMap = {
     ),
     scheduled: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is scheduled to be{' '}
+        Linode <EventLink event={e} to="entity" /> is scheduled to be{' '}
         <strong>rebooted</strong>
         {e.secondary_entity ? (
           <>
             {' '}
-            with config <EventMessageLink event={e} to="secondaryEntity" />
+            with config <EventLink event={e} to="secondaryEntity" />
           </>
         ) : (
           ''
@@ -389,12 +387,12 @@ export const linode: PartialEventMap = {
     ),
     started: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is being{' '}
+        Linode <EventLink event={e} to="entity" /> is being{' '}
         <strong>rebooted</strong>
         {e.secondary_entity ? (
           <>
             {' '}
-            with config <EventMessageLink event={e} to="secondaryEntity" />
+            with config <EventLink event={e} to="secondaryEntity" />
           </>
         ) : (
           ''
@@ -406,25 +404,25 @@ export const linode: PartialEventMap = {
   linode_rebuild: {
     failed: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> could{' '}
-        <strong>not</strong> be <strong>rebuilt</strong>.
+        Linode <EventLink event={e} to="entity" /> could <strong>not</strong> be{' '}
+        <strong>rebuilt</strong>.
       </>
     ),
     finished: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> has been{' '}
+        Linode <EventLink event={e} to="entity" /> has been{' '}
         <strong>rebuilt</strong>.
       </>
     ),
     scheduled: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is scheduled for{' '}
+        Linode <EventLink event={e} to="entity" /> is scheduled for{' '}
         <strong>rebuild</strong>.
       </>
     ),
     started: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is being{' '}
+        Linode <EventLink event={e} to="entity" /> is being{' '}
         <strong>rebuilt</strong>.
       </>
     ),
@@ -432,32 +430,31 @@ export const linode: PartialEventMap = {
   linode_resize: {
     failed: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> could{' '}
-        <strong>not</strong> be <strong>resized</strong>.
+        Linode <EventLink event={e} to="entity" /> could <strong>not</strong> be{' '}
+        <strong>resized</strong>.
       </>
     ),
     finished: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" />
+        Linode <EventLink event={e} to="entity" />
         has been <strong>resized</strong>.
       </>
     ),
     notification: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is being{' '}
+        Linode <EventLink event={e} to="entity" /> is being{' '}
         <strong>resized</strong>.
       </>
     ),
     scheduled: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is scheduled for{' '}
+        Linode <EventLink event={e} to="entity" /> is scheduled for{' '}
         <strong>resizing</strong>.
       </>
     ),
     started: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is{' '}
-        <strong>resizing</strong>.
+        Linode <EventLink event={e} to="entity" /> is <strong>resizing</strong>.
       </>
     ),
   },
@@ -465,7 +462,7 @@ export const linode: PartialEventMap = {
     notification: (e) => (
       <>
         A <strong>resize</strong> has been initiated for Linode{' '}
-        <EventMessageLink event={e} to="entity" />.
+        <EventLink event={e} to="entity" />.
       </>
     ),
   },
@@ -473,32 +470,32 @@ export const linode: PartialEventMap = {
     notification: (e) => (
       <>
         A <strong>warm resize</strong> has been initiated for Linode{' '}
-        <EventMessageLink event={e} to="entity" />.
+        <EventLink event={e} to="entity" />.
       </>
     ),
   },
   linode_shutdown: {
     failed: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> could{' '}
-        <strong>not</strong> be <strong>shut down</strong>.
+        Linode <EventLink event={e} to="entity" /> could <strong>not</strong> be{' '}
+        <strong>shut down</strong>.
       </>
     ),
     finished: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> has been{' '}
+        Linode <EventLink event={e} to="entity" /> has been{' '}
         <strong>shut down</strong>.
       </>
     ),
     scheduled: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is scheduled for{' '}
+        Linode <EventLink event={e} to="entity" /> is scheduled for{' '}
         <strong>shutdown</strong>.
       </>
     ),
     started: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is{' '}
+        Linode <EventLink event={e} to="entity" /> is{' '}
         <strong>shutting down</strong>.
       </>
     ),
@@ -507,7 +504,7 @@ export const linode: PartialEventMap = {
     failed: (e) => (
       <>
         Snapshot backup <strong>failed</strong> on Linode{' '}
-        <EventMessageLink event={e} to="entity" />.{' '}
+        <EventLink event={e} to="entity" />.{' '}
         <Link to="https://www.linode.com/docs/products/storage/backups/#limits-and-considerations">
           Learn more about limits and considerations
         </Link>
@@ -516,26 +513,26 @@ export const linode: PartialEventMap = {
     finished: (e) => (
       <>
         A snapshot backup has been created for Linode{' '}
-        <EventMessageLink event={e} to="entity" />.
+        <EventLink event={e} to="entity" />.
       </>
     ),
     scheduled: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> is scheduled for a
-        snapshot backup.
+        Linode <EventLink event={e} to="entity" /> is scheduled for a snapshot
+        backup.
       </>
     ),
     started: (e) => (
       <>
         A snapshot backup is being created for Linode{' '}
-        <EventMessageLink event={e} to="entity" />.
+        <EventLink event={e} to="entity" />.
       </>
     ),
   },
   linode_update: {
     notification: (e) => (
       <>
-        Linode <EventMessageLink event={e} to="entity" /> has been{' '}
+        Linode <EventLink event={e} to="entity" /> has been{' '}
         <strong>updated</strong>.
       </>
     ),

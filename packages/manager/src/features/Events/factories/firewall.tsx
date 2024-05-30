@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { EventMessageLink } from '../EventMessageLink';
+import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
@@ -17,7 +17,7 @@ export const firewall: PartialEventMap = {
   firewall_apply: {
     notification: (e) => (
       <>
-        Firewall <EventMessageLink event={e} to="entity" /> has been{' '}
+        Firewall <EventLink event={e} to="entity" /> has been{' '}
         <strong>applied</strong>.
       </>
     ),
@@ -25,7 +25,7 @@ export const firewall: PartialEventMap = {
   firewall_create: {
     notification: (e) => (
       <>
-        Firewall <EventMessageLink event={e} to="entity" /> has been{' '}
+        Firewall <EventLink event={e} to="entity" /> has been{' '}
         <strong>created</strong>.
       </>
     ),
@@ -44,17 +44,16 @@ export const firewall: PartialEventMap = {
           secondaryFirewallEntityNameMap[e.secondary_entity.type];
         return (
           <>
-            {secondaryEntityName}{' '}
-            <EventMessageLink event={e} to="secondaryEntity" /> has been{' '}
-            <strong>added</strong> to Firewall{' '}
-            <EventMessageLink event={e} to="entity" />.
+            {secondaryEntityName} <EventLink event={e} to="secondaryEntity" />{' '}
+            has been <strong>added</strong> to Firewall{' '}
+            <EventLink event={e} to="entity" />.
           </>
         );
       }
       return (
         <>
           A device has been <strong>added</strong> to Firewall{' '}
-          <EventMessageLink event={e} to="entity" />.
+          <EventLink event={e} to="entity" />.
         </>
       );
     },
@@ -66,17 +65,16 @@ export const firewall: PartialEventMap = {
           secondaryFirewallEntityNameMap[e.secondary_entity.type];
         return (
           <>
-            {secondaryEntityName}{' '}
-            <EventMessageLink event={e} to="secondaryEntity" /> has been{' '}
-            <strong>removed</strong> from Firewall{' '}
-            <EventMessageLink event={e} to="entity" />.
+            {secondaryEntityName} <EventLink event={e} to="secondaryEntity" />{' '}
+            has been <strong>removed</strong> from Firewall{' '}
+            <EventLink event={e} to="entity" />.
           </>
         );
       }
       return (
         <>
           A device has been <strong>removed</strong> from Firewall{' '}
-          <EventMessageLink event={e} to="entity" />.
+          <EventLink event={e} to="entity" />.
         </>
       );
     },
@@ -84,7 +82,7 @@ export const firewall: PartialEventMap = {
   firewall_disable: {
     notification: (e) => (
       <>
-        Firewall <EventMessageLink event={e} to="entity" /> has been{' '}
+        Firewall <EventLink event={e} to="entity" /> has been{' '}
         <strong>disabled</strong>.
       </>
     ),
@@ -92,7 +90,7 @@ export const firewall: PartialEventMap = {
   firewall_enable: {
     notification: (e) => (
       <>
-        Firewall <EventMessageLink event={e} to="entity" /> has been{' '}
+        Firewall <EventLink event={e} to="entity" /> has been{' '}
         <strong>enabled</strong>.
       </>
     ),
@@ -101,14 +99,14 @@ export const firewall: PartialEventMap = {
     notification: (e) => (
       <>
         Firewall rules have been <strong>updated</strong> on{' '}
-        <EventMessageLink event={e} to="entity" />.
+        <EventLink event={e} to="entity" />.
       </>
     ),
   },
   firewall_update: {
     notification: (e) => (
       <>
-        Firewall <EventMessageLink event={e} to="entity" /> has been{' '}
+        Firewall <EventLink event={e} to="entity" /> has been{' '}
         <strong>updated</strong>.
       </>
     ),

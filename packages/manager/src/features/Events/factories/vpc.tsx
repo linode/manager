@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { EventMessageLink } from '../EventMessageLink';
+import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
@@ -8,7 +8,7 @@ export const vpc: PartialEventMap = {
   vpc_create: {
     notification: (e) => (
       <>
-        VPC <EventMessageLink event={e} to="entity" /> has been{' '}
+        VPC <EventLink event={e} to="entity" /> has been{' '}
         <strong>created</strong>.
       </>
     ),
@@ -23,7 +23,7 @@ export const vpc: PartialEventMap = {
   vpc_update: {
     notification: (e) => (
       <>
-        VPC <EventMessageLink event={e} to="entity" /> has been{' '}
+        VPC <EventLink event={e} to="entity" /> has been{' '}
         <strong>updated</strong>.
       </>
     ),

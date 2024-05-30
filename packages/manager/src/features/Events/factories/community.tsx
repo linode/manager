@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { EventMessageLink } from '../EventMessageLink';
+import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
@@ -9,7 +9,7 @@ export const community: PartialEventMap = {
     notification: (e) =>
       e.entity?.label ? (
         <>
-          A post on <EventMessageLink event={e} to="entity" /> has been{' '}
+          A post on <EventLink event={e} to="entity" /> has been{' '}
           <strong>liked</strong>.
         </>
       ) : (
@@ -23,7 +23,7 @@ export const community: PartialEventMap = {
       e.entity?.label ? (
         <>
           You have been <strong>mentioned</strong> in a post on{' '}
-          <EventMessageLink event={e} to="entity" />.
+          <EventLink event={e} to="entity" />.
         </>
       ) : (
         <>
@@ -36,7 +36,7 @@ export const community: PartialEventMap = {
       e.entity?.label ? (
         <>
           A <strong>reply</strong> has been posted to your question on{' '}
-          <EventMessageLink event={e} to="entity" />.
+          <EventLink event={e} to="entity" />.
         </>
       ) : (
         <>

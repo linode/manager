@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { EventMessageLink } from '../EventMessageLink';
+import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
@@ -8,7 +8,7 @@ export const stackScript: PartialEventMap = {
   stackscript_create: {
     notification: (e) => (
       <>
-        StackScript <EventMessageLink event={e} to="entity" /> has been{' '}
+        StackScript <EventLink event={e} to="entity" /> has been{' '}
         <strong>created</strong>.
       </>
     ),
@@ -23,7 +23,7 @@ export const stackScript: PartialEventMap = {
   stackscript_publicize: {
     notification: (e) => (
       <>
-        StackScript <EventMessageLink event={e} to="entity" /> has been{' '}
+        StackScript <EventLink event={e} to="entity" /> has been{' '}
         <strong>made public</strong>.
       </>
     ),
@@ -31,7 +31,7 @@ export const stackScript: PartialEventMap = {
   stackscript_revise: {
     notification: (e) => (
       <>
-        StackScript <EventMessageLink event={e} to="entity" /> has been{' '}
+        StackScript <EventLink event={e} to="entity" /> has been{' '}
         <strong>revised</strong>.
       </>
     ),
@@ -39,7 +39,7 @@ export const stackScript: PartialEventMap = {
   stackscript_update: {
     notification: (e) => (
       <>
-        StackScript <EventMessageLink event={e} to="entity" /> has been{' '}
+        StackScript <EventLink event={e} to="entity" /> has been{' '}
         <strong>updated</strong>.
       </>
     ),

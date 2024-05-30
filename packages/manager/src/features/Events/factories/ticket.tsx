@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { EventMessageLink } from '../EventMessageLink';
+import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
@@ -10,7 +10,7 @@ export const ticket: PartialEventMap = {
       <>
         File has been successfully <strong>uploaded</strong> to support ticket
         &quot;
-        <EventMessageLink event={e} to="entity" />
+        <EventLink event={e} to="entity" />
         &quot;.
       </>
     ),
@@ -26,7 +26,7 @@ export const ticket: PartialEventMap = {
     notification: (e) => (
       <>
         New support ticket &quot;
-        <EventMessageLink event={e} to="entity" />
+        <EventLink event={e} to="entity" />
         &quot; has been <strong>created</strong>.
       </>
     ),
@@ -35,7 +35,7 @@ export const ticket: PartialEventMap = {
     notification: (e) => (
       <>
         Support ticket &quot;
-        <EventMessageLink event={e} to="entity" />
+        <EventLink event={e} to="entity" />
         &quot; has been <strong>updated</strong>.
       </>
     ),

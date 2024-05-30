@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { EventMessageLink } from '../EventMessageLink';
+import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
@@ -8,7 +8,7 @@ export const tag: PartialEventMap = {
   tag_create: {
     notification: (e) => (
       <>
-        Tag <EventMessageLink event={e} to="entity" /> has been{' '}
+        Tag <EventLink event={e} to="entity" /> has been{' '}
         <strong>created</strong>.
       </>
     ),

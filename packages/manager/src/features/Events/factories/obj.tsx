@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { EventMessageLink } from '../EventMessageLink';
+import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
@@ -8,7 +8,7 @@ export const obj: PartialEventMap = {
   obj_access_key_create: {
     notification: (e) => (
       <>
-        Access Key <EventMessageLink event={e} to="entity" /> has been{' '}
+        Access Key <EventLink event={e} to="entity" /> has been{' '}
         <strong>created</strong>.
       </>
     ),
@@ -23,7 +23,7 @@ export const obj: PartialEventMap = {
   obj_access_key_update: {
     notification: (e) => (
       <>
-        Access Key <EventMessageLink event={e} to="entity" /> has been{' '}
+        Access Key <EventLink event={e} to="entity" /> has been{' '}
         <strong>updated</strong>.
       </>
     ),

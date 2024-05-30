@@ -4,7 +4,7 @@ import * as React from 'react';
 import { eventFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { EventMessageLink } from './EventMessageLink';
+import { EventLink } from './EventLink';
 
 import type { Event } from '@linode/api-v4';
 
@@ -20,10 +20,10 @@ vi.mock('src/utilities/getEventsActionLink', async () => {
   };
 });
 
-describe('EventMessageLink', () => {
+describe('EventLink', () => {
   it('renders null when provided with invalid props', () => {
     const { container } = renderWithTheme(
-      <EventMessageLink
+      <EventLink
         event={eventFactory.build({
           entity: null,
           secondary_entity: null,
@@ -43,7 +43,7 @@ describe('EventMessageLink', () => {
         url: 'mockEntityUrl',
       },
     });
-    renderWithTheme(<EventMessageLink event={mockEvent} to="entity" />);
+    renderWithTheme(<EventLink event={mockEvent} to="entity" />);
 
     expect(screen.getByText('mockEntityLabel')).toBeInTheDocument();
   });
@@ -58,9 +58,7 @@ describe('EventMessageLink', () => {
       },
     });
 
-    renderWithTheme(
-      <EventMessageLink event={mockEvent} to="secondaryEntity" />
-    );
+    renderWithTheme(<EventLink event={mockEvent} to="secondaryEntity" />);
 
     expect(screen.getByText('mockSecondaryEntityLabel')).toBeInTheDocument();
   });

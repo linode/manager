@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { EventMessageLink } from '../EventMessageLink';
+import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
@@ -9,7 +9,7 @@ export const dns: PartialEventMap = {
     notification: (e) => (
       <>
         DNS record has been <strong>added</strong> to{' '}
-        <EventMessageLink event={e} to="entity" />.
+        <EventLink event={e} to="entity" />.
       </>
     ),
   },
@@ -17,7 +17,7 @@ export const dns: PartialEventMap = {
     notification: (e) => (
       <>
         DNS record has been <strong>removed</strong> from{' '}
-        <EventMessageLink event={e} to="entity" />.
+        <EventLink event={e} to="entity" />.
       </>
     ),
   },
@@ -25,7 +25,7 @@ export const dns: PartialEventMap = {
     notification: (e) => (
       <>
         DNS zone has been <strong>added</strong> to{' '}
-        <EventMessageLink event={e} to="entity" />.
+        <EventLink event={e} to="entity" />.
       </>
     ),
   },
@@ -33,7 +33,7 @@ export const dns: PartialEventMap = {
     notification: (e) => (
       <>
         DNS zone has been <strong>removed</strong> from{' '}
-        <EventMessageLink event={e} to="entity" />.
+        <EventLink event={e} to="entity" />.
       </>
     ),
   },

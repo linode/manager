@@ -10,7 +10,6 @@ import { Typography } from 'src/components/Typography';
 import { eventFactory } from 'src/factories/events';
 import { eventMessages } from 'src/features/Events/factory';
 
-import type { CompleteEventMap } from './types';
 import type { Event } from '@linode/api-v4/lib/account';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -22,7 +21,7 @@ const event: Event = eventFactory.build({
     type: 'linode',
     url: 'https://google.com',
   },
-  message: '{message}',
+  message: 'message with a `ticked` word',
   secondary_entity: {
     id: 1,
     label: '{secondary entity}',
@@ -33,10 +32,13 @@ const event: Event = eventFactory.build({
   username: '{username}',
 });
 
-const renderEventMessages = (events: CompleteEventMap) => {
-  return (
+/**
+ * This story loops through all the known event messages keys, and displays their Cloud Manager message in a table.
+ */
+export const EventMessages: StoryObj = {
+  render: () => (
     <div>
-      {Object.entries(events).map(([eventKey, statuses]) => (
+      {Object.entries(eventMessages).map(([eventKey, statuses]) => (
         <div key={eventKey}>
           <Typography sx={{ marginBottom: 1, marginTop: 2 }} variant="h3">
             {eventKey}
@@ -68,43 +70,12 @@ const renderEventMessages = (events: CompleteEventMap) => {
         </div>
       ))}
     </div>
-  );
+  ),
 };
-
-export const HardCodedMessages: StoryObj = {
-  render: () => renderEventMessages(eventMessages),
-};
-
-// const customizableEvent: Event = eventFactory.build();
-
-// export const EventPlayground: StoryObj = {
-//   argTypes: {
-//     action: {
-//       control: 'select',
-//       options: EVENT_ACTIONS,
-//     },
-//     status: {
-//       control: 'select',
-//       options: EVENT_STATUSES,
-//     },
-//   },
-//   args: {
-//     ...customizableEvent,
-//   },
-//   render: (args) => factorEventMessage(args),
-// };
-
-/**
- * This renderer only loops through hard coded messages defined in `eventMessageCreators`.
- * This means that it will not render messages coming straight from the API and therefore
- * isn't an exhaustive list of all possible events.
- *
- * However a playground is available to generate message from a custom Event for testing purposes
- */
 
 const meta: Meta<any> = {
   args: {},
-  title: 'Features/EventsV2',
+  title: 'Features/Event Messages',
 };
 
 export default meta;

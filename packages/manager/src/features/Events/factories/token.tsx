@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { EventMessageLink } from '../EventMessageLink';
+import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
@@ -8,7 +8,7 @@ export const token: PartialEventMap = {
   token_create: {
     notification: (e) => (
       <>
-        Token <EventMessageLink event={e} to="entity" /> has been{' '}
+        Token <EventLink event={e} to="entity" /> has been{' '}
         <strong>created</strong>.
       </>
     ),
@@ -23,7 +23,7 @@ export const token: PartialEventMap = {
   token_update: {
     notification: (e) => (
       <>
-        Token <EventMessageLink event={e} to="entity" /> has been{' '}
+        Token <EventLink event={e} to="entity" /> has been{' '}
         <strong>updated</strong>.
       </>
     ),

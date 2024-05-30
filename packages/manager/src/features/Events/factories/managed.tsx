@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { EventMessageLink } from '../EventMessageLink';
+import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
@@ -15,7 +15,7 @@ export const managed: PartialEventMap = {
   managed_service_create: {
     notification: (e) => (
       <>
-        Managed service <EventMessageLink event={e} to="entity" /> has been{' '}
+        Managed service <EventLink event={e} to="entity" /> has been{' '}
         <strong>created</strong>.
       </>
     ),

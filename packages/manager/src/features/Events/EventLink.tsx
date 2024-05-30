@@ -10,7 +10,7 @@ interface MessageLinkEntity {
   to: 'entity' | 'secondaryEntity';
 }
 
-export const EventMessageLink = (props: MessageLinkEntity) => {
+export const EventLink = (props: MessageLinkEntity) => {
   const { event, to } = props;
   const entity = to === 'entity' ? event.entity : event.secondary_entity;
 

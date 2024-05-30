@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { EventMessageLink } from '../EventMessageLink';
+import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
@@ -8,7 +8,7 @@ export const user: PartialEventMap = {
   user_create: {
     notification: (e) => (
       <>
-        User <EventMessageLink event={e} to="entity" /> has been{' '}
+        User <EventLink event={e} to="entity" /> has been{' '}
         <strong>created</strong>.
       </>
     ),
@@ -37,7 +37,7 @@ export const user: PartialEventMap = {
   user_ssh_key_update: {
     notification: (e) => (
       <>
-        SSH key <EventMessageLink event={e} to="entity" /> has been{' '}
+        SSH key <EventLink event={e} to="entity" /> has been{' '}
         <strong>updated</strong> in your profile.
       </>
     ),
@@ -45,7 +45,7 @@ export const user: PartialEventMap = {
   user_update: {
     notification: (e) => (
       <>
-        User <EventMessageLink event={e} to="entity" /> has been{' '}
+        User <EventLink event={e} to="entity" /> has been{' '}
         <strong>updated</strong>.
       </>
     ),

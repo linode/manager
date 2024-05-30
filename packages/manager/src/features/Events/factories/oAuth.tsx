@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { EventMessageLink } from '../EventMessageLink';
+import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
@@ -8,7 +8,7 @@ export const oAuth: PartialEventMap = {
   oauth_client_create: {
     notification: (e) => (
       <>
-        OAuth App <EventMessageLink event={e} to="entity" /> has been{' '}
+        OAuth App <EventLink event={e} to="entity" /> has been{' '}
         <strong>created</strong>.
       </>
     ),
@@ -23,7 +23,7 @@ export const oAuth: PartialEventMap = {
   oauth_client_secret_reset: {
     notification: (e) => (
       <>
-        Secret for OAuth App <EventMessageLink event={e} to="entity" /> has been{' '}
+        Secret for OAuth App <EventLink event={e} to="entity" /> has been{' '}
         <strong>reset</strong>.
       </>
     ),
@@ -31,7 +31,7 @@ export const oAuth: PartialEventMap = {
   oauth_client_update: {
     notification: (e) => (
       <>
-        OAuth App <EventMessageLink event={e} to="entity" /> has been{' '}
+        OAuth App <EventLink event={e} to="entity" /> has been{' '}
         <strong>updated</strong>.
       </>
     ),
