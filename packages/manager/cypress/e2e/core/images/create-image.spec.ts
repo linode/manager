@@ -11,9 +11,11 @@ import { cleanUp } from 'support/util/cleanup';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomPhrase } from 'support/util/random';
-import { encryptionCaveatNoticeTestId } from 'src/features/Images/ImagesCreate/CreateImageTab';
 import { mockGetRegions } from 'support/intercepts/regions';
-import { mockGetLinodes } from 'support/intercepts/linodes';
+import {
+  mockGetLinodeDetails,
+  mockGetLinodes,
+} from 'support/intercepts/linodes';
 
 const mockRegions: Region[] = [
   regionFactory.build({
@@ -40,6 +42,9 @@ const mockLinodes: Linode[] = [
     region: mockRegions[1].id,
   }),
 ];
+
+const DISK_ENCRYPTION_IMAGES_CAVEAT_COPY =
+  'Virtual Machine Images are not encrypted.';
 
 authenticate();
 describe('create image (e2e)', () => {
@@ -162,7 +167,7 @@ describe('create image (e2e)', () => {
       .click();
 
     // Check if notice is visible
-    cy.get(`[data-testid=${encryptionCaveatNoticeTestId}]`).should('exist');
+    cy.findByText(DISK_ENCRYPTION_IMAGES_CAVEAT_COPY).should('be.visible');
   });
 
   it('does not display a notice informing user that Images are not encrypted if the LDE feature is disabled', () => {
@@ -206,7 +211,7 @@ describe('create image (e2e)', () => {
       .click();
 
     // Check if notice is visible
-    cy.get(`[data-testid=${encryptionCaveatNoticeTestId}]`).should('not.exist');
+    cy.findByText(DISK_ENCRYPTION_IMAGES_CAVEAT_COPY).should('not.exist');
   });
 
   it('does not display a notice informing user that Images are not encrypted if the selected linode is in an Edge region', () => {
@@ -224,6 +229,7 @@ describe('create image (e2e)', () => {
     mockGetAccount(mockAccount).as('getAccount');
     mockGetRegions(mockRegions).as('getRegions');
     mockGetLinodes(mockLinodes).as('getLinodes');
+    mockGetLinodeDetails(mockLinodes[1].id, mockLinodes[1]);
 
     // intercept request
     cy.visitWithLogin('/images/create');
@@ -250,6 +256,6 @@ describe('create image (e2e)', () => {
       .click();
 
     // Check if notice is visible
-    cy.get(`[data-testid=${encryptionCaveatNoticeTestId}]`).should('not.exist');
+    cy.findByText(DISK_ENCRYPTION_IMAGES_CAVEAT_COPY).should('not.exist');
   });
 });
