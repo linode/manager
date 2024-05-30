@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
@@ -10,7 +11,6 @@ import { TableRow } from 'src/components/TableRow';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 
-import { StyledGravatar } from './EventRow.styles';
 import { getEventMessage } from './utils';
 
 interface EventRowProps {
@@ -59,8 +59,10 @@ export interface RowProps {
 export const Row = (props: RowProps) => {
   const { action, message, timestamp, username } = props;
 
-  /** Some event types may not be handled by our system (or new types
-   * may be added). Filter these out so we don't display blank messages to the user.
+  /**
+   * Some event types may not be handled by our system (or new types or new ones may be added that we haven't caught yet).
+   * Filter these out so we don't display blank messages to the user.
+   * We have sentry events being logged for these cases, so we can always go back and add support for them as soon as aware.
    */
   if (!message) {
     return null;
@@ -68,16 +70,22 @@ export const Row = (props: RowProps) => {
 
   return (
     <TableRow data-qa-event-row data-test-id={action}>
-      <Hidden smDown>
-        <TableCell data-qa-event-icon-cell>
-          <StyledGravatar username={username ?? ''} />
-        </TableCell>
-      </Hidden>
       <TableCell data-qa-event-message-cell parentColumn="Event">
         {message}
       </TableCell>
+      <Hidden smDown>
+        <TableCell data-qa-event-username-cell parentColumn="Username">
+          {username}
+        </TableCell>
+      </Hidden>
       <TableCell parentColumn="Relative Date">
         {timestamp.toRelative()}
+        <Hidden smUp>
+          <br />
+          <Box component="span" sx={{ fontSize: '.8rem', lineHeight: 1 }}>
+            by {username}
+          </Box>
+        </Hidden>
       </TableCell>
       <Hidden mdDown>
         <TableCell data-qa-event-created-cell parentColumn="Absolute Date">

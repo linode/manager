@@ -49,18 +49,28 @@ export const RenderEvent = React.memo((props: RenderEventProps) => {
 
   if (flags.eventMessagesV2) {
     return (
-      <>
-        <RenderEventStyledBox data-test-id={event.action} display="flex">
-          <RenderEventGravatar username={event.username} />
-          <Box sx={{ marginTop: '-2px' }}>
-            {messageV2}
-            <Typography className={unseenEventClass}>
-              {getEventTimestamp(event).toRelative()} | {event.username}
-            </Typography>
-          </Box>
-        </RenderEventStyledBox>
-        <Divider />
-      </>
+      /**
+       * Some event types may not be handled by our system (or new types or new ones may be added that we haven't caught yet).
+       * Filter these out so we don't display blank messages to the user.
+       * We have sentry events being logged for these cases, so we can always go back and add support for them as soon as aware.
+       */
+      messageV2 ? (
+        <>
+          <RenderEventStyledBox data-test-id={event.action} display="flex">
+            <RenderEventGravatar
+              sx={{ height: 32, minWidth: 32, mt: '3px', width: 32 }}
+              username={event.username}
+            />
+            <Box sx={{ marginTop: '-2px' }}>
+              {messageV2}
+              <Typography className={unseenEventClass}>
+                {getEventTimestamp(event).toRelative()} | {event.username}
+              </Typography>
+            </Box>
+          </RenderEventStyledBox>
+          <Divider />
+        </>
+      ) : null
     );
   }
 

@@ -104,13 +104,22 @@ export const EventsLanding = (props: Props) => {
       <Table aria-label="List of Events">
         <TableHead>
           <TableRow>
-            <Hidden smDown>
-              <TableCell style={{ padding: 0, width: '1%' }} />
-            </Hidden>
+            {!flags.eventMessagesV2 && (
+              <Hidden smDown>
+                <TableCell style={{ padding: 0, width: '1%' }} />
+              </Hidden>
+            )}
             <StyledLabelTableCell>Event</StyledLabelTableCell>
-            <StyledTableCell>Relative Date</StyledTableCell>
+            {flags.eventMessagesV2 && (
+              <Hidden smDown>
+                <TableCell data-qa-events-username-header sx={{ width: 150 }}>
+                  User
+                </TableCell>
+              </Hidden>
+            )}
+            <StyledTableCell sx={{ width: 150 }}>Relative Date</StyledTableCell>
             <Hidden mdDown>
-              <StyledTableCell data-qa-events-time-header>
+              <StyledTableCell data-qa-events-time-header sx={{ width: 150 }}>
                 Absolute Date
               </StyledTableCell>
             </Hidden>
