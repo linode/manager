@@ -32,7 +32,14 @@ export const EventsLanding = (props: Props) => {
   const { emptyMessage, entityId } = props;
   const { isTaxIdEnabled } = useIsTaxIdEnabled();
 
-  const filter: Filter = { action: { '+neq': 'profile_update' } };
+  const filter: Filter = {
+    action: {
+      '+and': [
+        { '+neq': 'profile_update' },
+        isTaxIdEnabled ? { '+neq': 'tax_id_invalid' } : {},
+      ],
+    },
+  };
 
   if (entityId) {
     filter['entity.id'] = entityId;
@@ -48,10 +55,6 @@ export const EventsLanding = (props: Props) => {
     isLoading,
   } = useEventsInfiniteQuery(filter);
 
-  const filteredEvents = isTaxIdEnabled
-    ? events?.filter((event) => event.action !== 'tax_id_invalid')
-    : events;
-
   const renderTableBody = () => {
     if (isLoading) {
       return (
@@ -63,7 +66,7 @@ export const EventsLanding = (props: Props) => {
       );
     } else if (error) {
       return <TableRowError colSpan={12} message={error[0].reason} />;
-    } else if (filteredEvents && filteredEvents.length === 0) {
+    } else if (events && events.length === 0) {
       return (
         <TableRowEmpty
           colSpan={12}
@@ -73,7 +76,7 @@ export const EventsLanding = (props: Props) => {
     } else {
       return (
         <>
-          {filteredEvents?.map((event) => (
+          {events?.map((event) => (
             <EventRow
               entityId={entityId}
               event={event}
@@ -118,8 +121,8 @@ export const EventsLanding = (props: Props) => {
           <div />
         </Waypoint>
       ) : (
-        filteredEvents &&
-        filteredEvents.length > 0 && (
+        events &&
+        events.length > 0 && (
           <StyledTypography>No more events to show</StyledTypography>
         )
       )}

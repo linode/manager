@@ -1,7 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { allCountries } from 'country-region-data';
 import { useFormik } from 'formik';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -31,7 +30,6 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { data: account } = useAccount();
   const { error, isLoading, mutateAsync } = useMutateAccount();
   const { data: notifications, refetch } = useNotificationsQuery();
-  const { enqueueSnackbar } = useSnackbar();
   const { classes } = useStyles();
   const emailRef = React.useRef<HTMLInputElement>();
   const { data: profile } = useProfile();
@@ -69,25 +67,6 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
       }
 
       await mutateAsync(clonedValues);
-
-      if (
-        isTaxIdEnabled &&
-        values.country !== 'US' &&
-        account?.tax_id !== values.tax_id
-      ) {
-        enqueueSnackbar(
-          "You edited the Tax Identification Number. It's being verified. You'll get an email with the verification result.",
-          {
-            hideIconVariant: false,
-            style: {
-              display: 'flex',
-              flexWrap: 'nowrap',
-              width: '372px',
-            },
-            variant: 'info',
-          }
-        );
-      }
 
       // If there's a "billing_email_bounce" notification on the account, and
       // the user has just updated their email, re-request notifications to
