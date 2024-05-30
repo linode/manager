@@ -143,7 +143,7 @@ describe('Email bounce banners', () => {
     mockGetAccount(accountData).as('getAccount');
 
     cy.visitWithLogin('/account/billing');
-    cy.wait(['@mockNotifications', '@getAccount']);
+    cy.wait('@mockNotifications');
 
     cy.contains(BillingEmailBounceBanner)
       .should('be.visible')
@@ -157,6 +157,7 @@ describe('Email bounce banners', () => {
           .click();
       });
 
+    cy.wait('@getAccount');
     ui.toast.assertMessage('Email confirmed');
 
     cy.contains(BillingEmailBounceBanner).should('not.exist');
