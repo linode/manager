@@ -42,7 +42,7 @@ import { getProfile } from '@linode/api-v4/lib/profile';
 
 const UsernameDisplay = () => {
   const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState<APIError | null>(null);
+  const [error, setError] = React.useState<FormattedAPIError | null>(null);
   const [profile, setProfile] = React.useState<Profile | null>(null);
 
   React.useEffect(() => {
@@ -88,7 +88,8 @@ To fetch data with React Query:
 ```ts
 import { useQuery } from "@tanstack/react-query";
 import { getProfile } from "@linode/api-v4";
-import type { APIError, Profile } from "@linode/api-v4";
+import type { Profile } from "@linode/api-v4";
+import type { FormattedAPIError } from "src/types/FormattedAPIError";
 
 const profileQueries = createQueryKeys('profile', {
   profile: {
@@ -98,7 +99,7 @@ const profileQueries = createQueryKeys('profile', {
 });
 
 export const useProfile = () =>
-  useQuery<Profile, APIError[]>(profileQueries.profile);
+  useQuery<Profile, FormattedAPIError[]>(profileQueries.profile);
 ```
 
 The first time `useProfile()` is called, the data is fetched from the API. On subsequent calls, the data is retrieved from the in-memory cache.
@@ -116,7 +117,7 @@ const profileQueries = createQueryKeys('profile', {
 })
 
 export const useProfile = () =>
-  useQuery<Profile, APIError[]>({
+  useQuery<Profile, FormattedAPIError[]>({
     ...profileQueries.profile,
     ...queryPresets.oneTimeFetch,
   });
@@ -192,10 +193,14 @@ const UsernameDisplay = (props: ProfileProps) => {
 
 #### API Error arrays
 
-Components making API requests generally expect to work with an array of Linode API errors. These have the shape:
+Components making API requests generally expect to work with an array of Linode API errors (defined in the interface `FormattedAPIError`). These have the shape:
 
-```js
-{ field: 'field-name', reason: 'why this error occurred' }
+```jsx
+{
+  field: 'field-name',
+  reason: 'why this error occurred',
+  formattedReason: <Typography>A JSX error message that might include <Link to="somewhere">links</Link> and other rich formatting.</Typography>
+}
 ```
 
 We have added an interceptor to our Axios instance that essentially guarantees that any error from an API function will have this shape. For example, if you block network requests using Chrome Dev Tools, there is no response from the API. But if you `.catch()` this error, you'll find that it has the above shape, with a default message ("An unexpected error occurred.").
