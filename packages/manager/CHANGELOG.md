@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Upcoming Features:
 
-- fix regions length check in HostNameTableCell ([#10519](https://github.com/linode/manager/pull/10519))
+- Fix regions length check in HostNameTableCell ([#10519](https://github.com/linode/manager/pull/10519))
 
 ## [2024-05-29] - v1.120.1
 
