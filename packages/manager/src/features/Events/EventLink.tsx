@@ -10,6 +10,10 @@ interface MessageLinkEntity {
   to: 'entity' | 'secondaryEntity';
 }
 
+/**
+ * A component that renders a link to an entity or secondary entity.
+ * Meant to be used in the context of an event message.
+ */
 export const EventLink = (props: MessageLinkEntity) => {
   const { event, to } = props;
   const entity = to === 'entity' ? event.entity : event.secondary_entity;

@@ -20,8 +20,8 @@ type EventMessageManualInput = {
  * Using typescript overloads allows for both Event and EventMessageInput types.
  *
  * We don't include defaulting to the API message response here because:
- * - we want to control the message output (our types require us to define one)
- * - the API message is empty 99% of the time
+ * - we want to control the message output (our types require us to define one) and rather show nothing than a broken message.
+ * - the API message is empty 99% of the time and when present, isn't meant to be displayed as a full message, rather a part of it. (ex: `domain_record_create`)
  */
 export function getEventMessage(event: Event): JSX.Element | null | string;
 export function getEventMessage(

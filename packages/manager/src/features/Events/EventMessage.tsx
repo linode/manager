@@ -7,6 +7,7 @@ interface MessageLinkEntity {
 
 /**
  * Renders a message with inline code blocks.
+ * Meant to be used in the context of an event message.
  * This component is only used to render {e.message} in the case of potential ticks we want to render as <pre>.
  */
 export const EventMessage = (props: MessageLinkEntity) => {

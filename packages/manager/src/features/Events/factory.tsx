@@ -30,6 +30,12 @@ export const withTypography = (eventMap: PartialEventMap): PartialEventMap => {
   );
 };
 
+/**
+ * The event Message Mapper
+ *
+ * It aggregates all the event messages from the factories and wraps them with Typography.
+ * The typography intentionally wraps the message in a span to prevent nested paragraphs while adhering to the design system's typography.
+ */
 export const eventMessages: CompleteEventMap = Object.keys(factories).reduce(
   (acc, factoryName) => ({
     ...acc,
