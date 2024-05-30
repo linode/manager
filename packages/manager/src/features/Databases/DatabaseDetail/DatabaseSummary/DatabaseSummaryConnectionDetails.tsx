@@ -14,7 +14,7 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { DB_ROOT_USERNAME } from 'src/constants';
-import { useDatabaseCredentialsQuery } from 'src/queries/databases';
+import { useDatabaseCredentialsQuery } from 'src/queries/databases/databases';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
