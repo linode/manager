@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-05-30] - v1.120.2
+
+
+### Upcoming Features:
+
+- fix regions length check in HostNameTableCell ([#10519](https://github.com/linode/manager/pull/10519))
+
 ## [2024-05-29] - v1.120.1
 
 
