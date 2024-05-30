@@ -22,6 +22,7 @@ import { getMetrics } from 'src/utilities/statMetrics';
 import { FiltersObject } from '../Models/GlobalFilterProperties';
 import {
   convertTimeDurationToStartAndEndTimeRange,
+  convertStringToCamelCasesWithSpaces,
   getDimensionName,
 } from '../Utils/CloudPulseUtils';
 import { COLOR_MAP } from '../Utils/WidgetColorPalette';
@@ -292,7 +293,14 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
   });
   return (
     <Grid xs={widget.size}>
-      <Paper style={{ height: '98%', width: '100%' }}>
+      <Paper
+        style={{
+          borderStyle: 'ridge',
+          height: '98%',
+          marginTop: '10px',
+          width: '100%',
+        }}
+      >
         {/* add further components like group by resource, aggregate_function, step here , for sample added zoom icon here*/}
         <div className={widget.metric} style={{ margin: '1%' }}>
           <div
@@ -348,7 +356,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
             showToday={today}
             subtitle={props.unit}
             timezone={timezone}
-            title={props.widget.label}
+            title={convertStringToCamelCasesWithSpaces(props.widget.label)}
             unit={' ' + props.unit}
           />
         </div>

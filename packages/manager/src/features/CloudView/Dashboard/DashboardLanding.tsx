@@ -260,7 +260,7 @@ export const DashBoardLanding = () => {
   }
   return (
     <>
-      <Paper>
+      <Paper style={{ borderStyle: 'ridge' }}>
         <div style={{ display: 'flex' }}>
           <div style={{ width: '100%' }}>
             <GlobalFilters

@@ -73,3 +73,17 @@ export const convertTimeDurationToStartAndEndTimeRange = (
 
   return startEnd;
 };
+
+export const convertStringToCamelCasesWithSpaces = (
+  nonFormattedString: string
+): string => {
+  if (nonFormattedString && nonFormattedString.length > 0) {
+    const splitString = nonFormattedString.split(' ');
+
+    return splitString
+      .map((text) => text[0].toUpperCase() + text.slice(1))
+      .join(' ');
+  }
+
+  return nonFormattedString;
+};
