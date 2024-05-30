@@ -1,10 +1,10 @@
 import { confirmTwoFactor } from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
@@ -22,7 +22,9 @@ interface Props {
 }
 
 export const EnableTwoFactorForm = (props: Props) => {
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const [errors, setErrors] = React.useState<FormattedAPIError[] | undefined>(
+    undefined
+  );
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [token, setToken] = React.useState<string>('');
 

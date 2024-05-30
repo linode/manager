@@ -1,12 +1,12 @@
 import { AccountSettings } from '@linode/api-v4/lib';
-import { APIError } from '@linode/api-v4/lib/types';
-import * as React from 'react';
 import { UseQueryResult } from '@tanstack/react-query';
+import * as React from 'react';
 
 import { useAccountSettings } from 'src/queries/account/settings';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface WithAccountSettingsProps {
-  accountSettings: UseQueryResult<AccountSettings, APIError[]>;
+  accountSettings: UseQueryResult<AccountSettings, FormattedAPIError[]>;
 }
 
 export const withAccountSettings = <Props>(

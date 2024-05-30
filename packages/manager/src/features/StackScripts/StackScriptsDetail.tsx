@@ -3,7 +3,6 @@ import {
   getStackScript,
   updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 
@@ -13,6 +12,7 @@ import { NotFound } from 'src/components/NotFound';
 import { StackScript as _StackScript } from 'src/components/StackScript/StackScript';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useGrants } from 'src/queries/profile';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 import {
@@ -29,7 +29,9 @@ export const StackScriptsDetail = () => {
 
   const [label, setLabel] = React.useState<string | undefined>('');
   const [loading, setLoading] = React.useState<boolean>(true);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const [errors, setErrors] = React.useState<FormattedAPIError[] | undefined>(
+    undefined
+  );
   const [stackScript, setStackScript] = React.useState<StackScript | undefined>(
     undefined
   );

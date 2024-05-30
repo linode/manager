@@ -23,7 +23,6 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import type {
-  APIError,
   DeleteLinodeConfigInterfacePayload,
   Interface,
   Linode,
@@ -230,7 +229,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             });
           } catch (error) {
             hasError.current = true;
-            setUnassignLinodesErrors((prevErrors: APIError[]) => [
+            setUnassignLinodesErrors((prevErrors: FormattedAPIError[]) => [
               ...prevErrors,
               ...error,
             ]);

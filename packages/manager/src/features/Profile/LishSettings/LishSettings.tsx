@@ -1,5 +1,4 @@
 import { Profile } from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
 import { useTheme } from '@mui/material/styles';
 import { equals, lensPath, remove, set } from 'ramda';
 import * as React from 'react';
@@ -9,12 +8,13 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { FormControl } from 'src/components/FormControl';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { FormControl } from 'src/components/FormControl';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -33,7 +33,7 @@ export const LishSettings = () => {
   const [authorizedKeysCount, setAuthorizedKeysCount] = React.useState<number>(
     profile?.authorized_keys ? profile!.authorized_keys.length : 1
   );
-  const [errors, setErrors] = React.useState<APIError[]>([]);
+  const [errors, setErrors] = React.useState<FormattedAPIError[]>([]);
   const [success, setSuccess] = React.useState<string>();
   const thirdPartyEnabled = profile?.authentication_type !== 'password';
   const tooltipText = thirdPartyEnabled

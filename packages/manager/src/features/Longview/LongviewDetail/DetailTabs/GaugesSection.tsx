@@ -1,7 +1,8 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { CPUGauge } from '../../LongviewLanding/Gauges/CPU';
 import { LoadGauge } from '../../LongviewLanding/Gauges/Load';
@@ -12,7 +13,7 @@ import { SwapGauge } from '../../LongviewLanding/Gauges/Swap';
 
 interface Props {
   clientID: number;
-  lastUpdatedError?: APIError[];
+  lastUpdatedError?: FormattedAPIError[];
 }
 
 export const GaugesSection = React.memo((props: Props) => {
@@ -61,8 +62,8 @@ export const GaugesSection = React.memo((props: Props) => {
 const StyledGaugeContainerGrid = styled(Grid, {
   label: 'StyledGaugeContainerGrid',
 })(({ theme }) => ({
-  marginBottom: theme.spacing(6),
   boxSizing: 'border-box',
+  marginBottom: theme.spacing(6),
 }));
 
 const StyledOuterGrid = styled(Grid, { label: 'StyledOuterGrid' })(

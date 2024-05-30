@@ -1,5 +1,4 @@
 import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
-import { APIError } from '@linode/api-v4/lib/types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -8,6 +7,7 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
@@ -82,7 +82,7 @@ export const getCountOfRules = (rules: Firewall['rules']): [number, number] => {
 const getDevicesCellString = (
   data: FirewallDevice[],
   loading: boolean,
-  error?: APIError[]
+  error?: FormattedAPIError[]
 ): JSX.Element | string => {
   if (loading) {
     return 'Loading...';

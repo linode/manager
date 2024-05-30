@@ -1,5 +1,4 @@
 import { Image } from '@linode/api-v4/lib/images';
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
@@ -9,6 +8,7 @@ import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import ImageSelect from 'src/features/Images/ImageSelect';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { imageToItem } from 'src/utilities/imageToItem';
 
@@ -36,7 +36,7 @@ interface Props {
   description: TextFieldHandler;
   disableSubmit: boolean;
   disabled?: boolean;
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   images: Images;
   isSubmitting: boolean;
   label: TextFieldHandler;

@@ -5,10 +5,9 @@ import {
   getInvoice,
   getInvoiceItems,
 } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -25,11 +24,12 @@ import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 
-import { invoiceCreatedAfterDCPricingLaunch } from '../PdfGenerator/utils';
 import { getShouldUseAkamaiBilling } from '../billingUtils';
+import { invoiceCreatedAfterDCPricingLaunch } from '../PdfGenerator/utils';
 import { InvoiceTable } from './InvoiceTable';
 
 export const InvoiceDetail = () => {
@@ -46,7 +46,7 @@ export const InvoiceDetail = () => {
     undefined
   );
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>();
+  const [errors, setErrors] = React.useState<FormattedAPIError[] | undefined>();
   const [pdfGenerationError, setPDFGenerationError] = React.useState<any>(
     undefined
   );

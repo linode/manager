@@ -1,5 +1,4 @@
 import { Event, Image, ImageStatus } from '@linode/api-v4';
-import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
 import produce from 'immer';
@@ -39,6 +38,7 @@ import {
   useDeleteImageMutation,
   useImagesQuery,
 } from 'src/queries/images';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import ImageRow, { ImageWithEvent } from './ImageRow';
@@ -414,7 +414,7 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
     onRetry: onRetryClick,
   };
 
-  const renderError = (_: APIError[]) => {
+  const renderError = (_: FormattedAPIError[]) => {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Images" />

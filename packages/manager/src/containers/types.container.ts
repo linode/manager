@@ -1,13 +1,13 @@
 import { LinodeType } from '@linode/api-v4';
-import { APIError } from '@linode/api-v4/lib/types';
 import React from 'react';
 
 import { useAllTypes, useSpecificTypes } from 'src/queries/types';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 export interface WithTypesProps {
   typesData?: LinodeType[];
-  typesError?: APIError[];
+  typesError?: FormattedAPIError[];
   typesLoading: boolean;
 }
 

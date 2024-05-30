@@ -1,10 +1,10 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { TextFieldProps } from 'src/components/TextField';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { PlacementGroupSelectOption } from './PlacementGroupSelectOption';
 
@@ -132,7 +132,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
 };
 
 const getDefaultNoOptionsMessage = (
-  error: APIError[] | null,
+  error: FormattedAPIError[] | null,
   loading: boolean
 ) => {
   if (error) {

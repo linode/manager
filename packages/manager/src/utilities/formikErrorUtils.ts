@@ -64,7 +64,7 @@ export const handleGeneralErrors = (
 export const handleAPIErrors = (
   errors: FormattedAPIError[],
   setFieldError: (field: string, message: string) => void,
-  setError?: (message: string) => void
+  setError?: (message: JSX.Element | string) => void
 ) => {
   errors.forEach((error: FormattedAPIError) => {
     if (error.field) {
@@ -80,7 +80,7 @@ export const handleAPIErrors = (
     } else {
       // Put any general API errors into a <Notice />
       if (setError) {
-        setError(error.reason);
+        setError(error.formattedReason);
       }
     }
   });
@@ -111,7 +111,7 @@ export interface SubnetError {
 export const handleVPCAndSubnetErrors = (
   errors: FormattedAPIError[],
   setFieldError: (field: string, message: string) => void,
-  setError?: (message: string) => void
+  setError?: (message: JSX.Element | string) => void
 ) => {
   const subnetErrors = {};
   const nonSubnetErrors: FormattedAPIError[] = [];

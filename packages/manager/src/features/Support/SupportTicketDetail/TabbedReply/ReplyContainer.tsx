@@ -1,15 +1,15 @@
 import { SupportReply, uploadAttachment } from '@linode/api-v4/lib/support';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import Grid from '@mui/material/Unstable_Grid2';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
+import { makeStyles } from 'tss-react/mui';
 
 import { Accordion } from 'src/components/Accordion';
 import { Notice } from 'src/components/Notice/Notice';
 import { useSupportTicketReplyMutation } from 'src/queries/support';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { storage } from 'src/utilities/storage';
 
@@ -68,7 +68,9 @@ export const ReplyContainer = (props: Props) => {
   const isTextFromStorageForCurrentTicket =
     textFromStorage.ticketId === props.ticketId;
 
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const [errors, setErrors] = React.useState<FormattedAPIError[] | undefined>(
+    undefined
+  );
   const [value, setValue] = React.useState<string>(
     isTextFromStorageForCurrentTicket &&
       lastReply?.description !== textFromStorage.text

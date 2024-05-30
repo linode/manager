@@ -1,10 +1,9 @@
-import { APIError } from '@linode/api-v4/lib/types';
-
 import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const getAPIErrorFor = (
   errorMap: { [index: string]: string },
-  arr: APIError[] = []
+  arr: FormattedAPIError[] = []
 ) => (field: string): string | undefined => {
   // Safeguard in case this function isn't called with an array.
   if (!Array.isArray(arr)) {

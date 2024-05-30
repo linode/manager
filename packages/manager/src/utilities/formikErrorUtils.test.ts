@@ -147,7 +147,7 @@ describe('handleVpcAndConvertSubnetErrors', () => {
 });
 
 describe('getFormikErrorsFromAPIErrors', () => {
-  it('should convert APIError[] to errors in the shape formik expects', () => {
+  it('should convert FormattedAPIError[] to errors in the shape formik expects', () => {
     const testCases: {
       apiErrors: FormattedAPIError[];
       expected: { [field: string]: unknown };

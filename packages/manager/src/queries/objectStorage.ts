@@ -25,12 +25,7 @@ import {
   getSSLCert,
   uploadSSLCert,
 } from '@linode/api-v4';
-import {
-  APIError,
-  Params,
-  PriceType,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
+import { Params, PriceType, ResourcePage } from '@linode/api-v4/lib/types';
 import {
   QueryClient,
   useInfiniteQuery,
@@ -425,7 +420,7 @@ const getAllObjectStorageTypes = () =>
   );
 
 export const useObjectStorageTypesQuery = (enabled = true) =>
-  useQuery<PriceType[], APIError[]>({
+  useQuery<PriceType[], FormattedAPIError[]>({
     queryFn: getAllObjectStorageTypes,
     queryKey: [queryKey, 'types'],
     ...queryPresets.oneTimeFetch,

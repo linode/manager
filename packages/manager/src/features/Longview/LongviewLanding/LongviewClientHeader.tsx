@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -12,6 +11,7 @@ import withClientStats, {
   Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
 import { useProfile } from 'src/queries/profile';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import { formatUptime } from 'src/utilities/formatUptime';
@@ -29,7 +29,7 @@ import { RestrictedUserLabel } from './RestrictedUserLabel';
 interface Props {
   clientID: number;
   clientLabel: string;
-  lastUpdatedError?: APIError[];
+  lastUpdatedError?: FormattedAPIError[];
   longviewClientLastUpdated?: number;
   openPackageDrawer: () => void;
   updateLongviewClient: DispatchProps['updateLongviewClient'];

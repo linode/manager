@@ -63,12 +63,11 @@ import {
 } from './utils';
 
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
-import type { APIError } from '@linode/api-v4/lib/types';
 import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface NodeBalancerConfigFieldsWithStatusAndErrors
   extends NodeBalancerConfigFieldsWithStatus {
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
 }
 
 interface NodeBalancerFieldsState {

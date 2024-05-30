@@ -1,5 +1,6 @@
 import { clamp, compose, filter, isNil, toString } from 'ramda';
 
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { defaultNumeric } from 'src/utilities/defaultNumeric';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -9,7 +10,6 @@ import type {
   NodeBalancerConfigFieldsWithStatus,
   NodeBalancerConfigNodeFields,
 } from './types';
-import type { APIError } from '@linode/api-v4';
 import type { NodeBalancerConfigNode } from '@linode/api-v4/lib/nodebalancers';
 
 export const clampNumericString = (low: number, hi: number) =>
@@ -163,7 +163,7 @@ export const shouldIncludeCheckBody = (config: NodeBalancerConfigFields) => {
 };
 
 // We don't want to end up with nodes[3].ip_address as errorMap.none
-const filteredErrors = (errors: APIError[]) =>
+const filteredErrors = (errors: FormattedAPIError[]) =>
   errors
     ? errors.filter(
         (thisError) =>
@@ -171,7 +171,7 @@ const filteredErrors = (errors: APIError[]) =>
       )
     : [];
 
-export const setErrorMap = (errors: APIError[]) =>
+export const setErrorMap = (errors: FormattedAPIError[]) =>
   getErrorMap(
     [
       'algorithm',

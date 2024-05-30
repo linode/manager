@@ -10,7 +10,7 @@ import {
   updateNodeBalancerConfig,
   updateNodeBalancerConfigNode,
 } from '@linode/api-v4/lib/nodebalancers';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { ResourcePage } from '@linode/api-v4/lib/types';
 import { styled } from '@mui/material/styles';
 import {
   Lens,
@@ -1144,7 +1144,7 @@ class NodeBalancerConfigurations extends React.Component<
   updateNodeErrors = (
     configIdx: number,
     nodeIdx: number,
-    errors: APIError[]
+    errors: FormattedAPIError[]
   ) => {
     this.setState(
       set(lensPath(['configs', configIdx, 'nodes', nodeIdx, 'errors']), errors),

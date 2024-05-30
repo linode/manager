@@ -1,4 +1,4 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const baseGaugeProps = {
   height: 110,
@@ -7,5 +7,5 @@ export const baseGaugeProps = {
 
 export interface BaseProps {
   clientID: number;
-  lastUpdatedError?: APIError[];
+  lastUpdatedError?: FormattedAPIError[];
 }

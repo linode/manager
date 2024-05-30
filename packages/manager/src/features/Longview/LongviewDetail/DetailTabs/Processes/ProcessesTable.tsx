@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import OrderBy from 'src/components/OrderBy';
@@ -12,6 +11,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { formatCPU } from 'src/features/Longview/shared/formatters';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { StyledDiv, StyledTable } from './ProcessesTable.styles';
@@ -19,7 +19,7 @@ import { Process } from './types';
 
 export interface ProcessesTableProps {
   error?: string;
-  lastUpdatedError?: APIError[];
+  lastUpdatedError?: FormattedAPIError[];
   processesData: ExtendedProcess[];
   processesLoading: boolean;
   selectedProcess: Process | null;

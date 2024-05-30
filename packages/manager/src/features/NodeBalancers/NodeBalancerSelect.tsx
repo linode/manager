@@ -1,5 +1,4 @@
 import { NodeBalancer } from '@linode/api-v4';
-import { APIError } from '@linode/api-v4/lib/types';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { SxProps } from '@mui/system';
@@ -8,6 +7,7 @@ import * as React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { CustomPopper } from 'src/components/Autocomplete/Autocomplete.styles';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
 
 interface NodeBalancerSelectProps {
@@ -173,7 +173,7 @@ export const NodeBalancerSelect = (
 };
 
 const getDefaultNoOptionsMessage = (
-  error: APIError[] | null,
+  error: FormattedAPIError[] | null,
   loading: boolean
 ) => {
   if (error) {

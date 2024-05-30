@@ -1,6 +1,5 @@
 import { User, getUser, updateUser } from '@linode/api-v4/lib/account';
 import { updateProfile } from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { clone } from 'ramda';
 import * as React from 'react';
@@ -21,6 +20,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { accountQueries } from 'src/queries/account/queries';
 import { useAccountUser } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import UserPermissions from './UserPermissions';
@@ -53,12 +53,12 @@ export const UserDetail = () => {
   const [accountSaving, setAccountSaving] = React.useState<boolean>(false);
   const [accountSuccess, setAccountSuccess] = React.useState<boolean>(false);
   const [accountErrors, setAccountErrors] = React.useState<
-    APIError[] | undefined
+    FormattedAPIError[] | undefined
   >();
   const [profileSaving, setProfileSaving] = React.useState<boolean>(false);
   const [profileSuccess, setProfileSuccess] = React.useState<boolean>(false);
   const [profileErrors, setProfileErrors] = React.useState<
-    APIError[] | undefined
+    FormattedAPIError[] | undefined
   >();
 
   const tabs = [

@@ -7,7 +7,6 @@ import {
   createDomainRecord,
   updateDomainRecord,
 } from '@linode/api-v4/lib/domains';
-import { APIError } from '@linode/api-v4/lib/types';
 import produce from 'immer';
 import {
   cond,
@@ -27,6 +26,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import {
@@ -93,7 +93,7 @@ interface EditableDomainFields extends EditableSharedFields {
 }
 
 interface State {
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   fields: EditableDomainFields | EditableRecordFields;
   submitting: boolean;
 }
@@ -153,7 +153,7 @@ export class DomainRecordDrawer extends React.Component<
       >
         {otherErrors.length > 0 &&
           otherErrors.map((err, index) => {
-            return <Notice key={index} variant="error" text={err} />;
+            return <Notice key={index} text={err} variant="error" />;
           })}
         {!hasARecords && type === 'NS' && (
           <Notice

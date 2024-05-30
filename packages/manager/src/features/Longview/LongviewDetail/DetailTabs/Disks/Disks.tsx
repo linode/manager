@@ -1,10 +1,10 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { WithStartAndEnd } from '../../../request.types';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
@@ -16,7 +16,7 @@ interface Props {
   clientID: number;
   clientLastUpdated?: number;
   lastUpdated?: number;
-  lastUpdatedError?: APIError[];
+  lastUpdatedError?: FormattedAPIError[];
   timezone: string;
 }
 

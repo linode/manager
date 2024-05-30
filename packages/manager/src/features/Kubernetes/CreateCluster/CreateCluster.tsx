@@ -4,7 +4,6 @@ import {
   CreateNodePoolData,
   KubeNodePoolResponse,
 } from '@linode/api-v4/lib/kubernetes';
-import { APIError } from '@linode/api-v4/lib/types';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { pick, remove, update } from 'ramda';
@@ -38,6 +37,7 @@ import {
 } from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllTypes } from 'src/queries/types';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
@@ -64,7 +64,7 @@ export const CreateCluster = () => {
   const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
   const [version, setVersion] = React.useState<Item<string> | undefined>();
-  const [errors, setErrors] = React.useState<APIError[] | undefined>();
+  const [errors, setErrors] = React.useState<FormattedAPIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [hasAgreed, setAgreed] = React.useState<boolean>(false);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();

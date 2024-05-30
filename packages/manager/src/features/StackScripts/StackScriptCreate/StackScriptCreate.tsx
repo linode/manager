@@ -6,10 +6,9 @@ import {
   getStackScript,
   updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
+import { QueryClient } from '@tanstack/react-query';
 import { equals } from 'ramda';
 import * as React from 'react';
-import { QueryClient } from '@tanstack/react-query';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { debounce } from 'throttle-debounce';
@@ -33,17 +32,18 @@ import {
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
 import { StackScriptForm } from 'src/features/StackScripts/StackScriptForm/StackScriptForm';
+import { profileQueries } from 'src/queries/profile';
 import { filterImagesByType } from 'src/store/image/image.helpers';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
-import { profileQueries } from 'src/queries/profile';
 
 interface State {
   apiResponse?: StackScript;
   description: string;
   dialogOpen: boolean;
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   images: string[];
   isLoadingStackScript: boolean;
   isSubmitting: boolean;
@@ -376,7 +376,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     );
   };
 
-  handleError = (errors: APIError[]) => {
+  handleError = (errors: FormattedAPIError[]) => {
     if (!this.mounted) {
       return;
     }

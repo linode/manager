@@ -1,11 +1,11 @@
 import { ManagedContact } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
 import { equals } from 'ramda';
 import * as React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -13,7 +13,7 @@ import ContactsRow from './ContactsRow';
 
 interface ContactsTableContentProps {
   contacts: ManagedContact[];
-  error?: APIError[] | null;
+  error?: FormattedAPIError[] | null;
   lastUpdated: number;
   loading: boolean;
   openDialog: (contactId: number) => void;

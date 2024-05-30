@@ -1,5 +1,4 @@
 import { TicketSeverity, uploadAttachment } from '@linode/api-v4/lib/support';
-import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import { update } from 'ramda';
 import * as React from 'react';
@@ -557,7 +556,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     volume_id: volumesLoading,
   };
 
-  const errorMap: Record<EntityType, APIError[] | null> = {
+  const errorMap: Record<EntityType, FormattedAPIError[] | null> = {
     database_id: databasesError,
     domain_id: domainsError,
     firewall_id: firewallsError,

@@ -1,5 +1,4 @@
 // @todo rename this file to store.helpers when all reducers are using MappedEntityState2
-import { APIError } from '@linode/api-v4/lib/types';
 import { assoc, omit } from 'ramda';
 import { AsyncActionCreators } from 'typescript-fsa';
 
@@ -10,6 +9,7 @@ import {
   MappedEntityState2 as MappedEntityState,
   ThunkActionCreator,
 } from 'src/store/types';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const addEntityRecord = <T extends Entity>(
   result: EntityMap<T>,
@@ -42,7 +42,7 @@ export const setError = <E extends Entity>(
   return Object.assign({}, state, { error: { ...state.error, ...error } });
 };
 
-export const onError = <S = {}, E = APIError[] | undefined>(
+export const onError = <S = {}, E = FormattedAPIError[] | undefined>(
   error: E,
   state: S
 ) => Object.assign({}, state, { error, loading: false });
@@ -59,21 +59,30 @@ export const createDefaultState = <E extends Entity, O extends EntityError>(
   ...override,
 });
 
-export const onDeleteSuccess = <E extends Entity, O = APIError[] | undefined>(
+export const onDeleteSuccess = <
+  E extends Entity,
+  O = FormattedAPIError[] | undefined
+>(
   id: number | string,
   state: MappedEntityState<E, O>
 ): MappedEntityState<E, O> => {
   return removeMany([String(id)], state);
 };
 
-export const onCreateOrUpdate = <E extends Entity, O = APIError[] | undefined>(
+export const onCreateOrUpdate = <
+  E extends Entity,
+  O = FormattedAPIError[] | undefined
+>(
   entity: E,
   state: MappedEntityState<E, O>
 ): MappedEntityState<E, O> => {
   return addMany([entity], state);
 };
 
-export const removeMany = <E extends Entity, O = APIError[] | undefined>(
+export const removeMany = <
+  E extends Entity,
+  O = FormattedAPIError[] | undefined
+>(
   list: string[],
   state: MappedEntityState<E, O>
 ): MappedEntityState<E, O> => {
@@ -86,7 +95,7 @@ export const removeMany = <E extends Entity, O = APIError[] | undefined>(
   };
 };
 
-export const addMany = <E extends Entity, O = APIError[] | undefined>(
+export const addMany = <E extends Entity, O = FormattedAPIError[] | undefined>(
   list: E[],
   state: MappedEntityState<E, O>,
   results?: number

@@ -1,5 +1,4 @@
 import { User, createUser } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
@@ -9,6 +8,7 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle/Toggle';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -20,7 +20,7 @@ interface Props {
 
 interface State {
   email: string;
-  errors: APIError[];
+  errors: FormattedAPIError[];
   restricted: boolean;
   submitting: boolean;
   username: string;

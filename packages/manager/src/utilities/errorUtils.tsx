@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { pathOr } from 'ramda';
 
 import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
@@ -19,15 +18,19 @@ import type { FormattedAPIError } from 'src/types/FormattedAPIError';
  *
  * fetchData()
  *  .then()
- *  .catch((e: APIError[]) => getAPIErrorOrDefault(e, 'There was an error', 'label'))
+ *  .catch((e: FormattedAPIError[]) => getAPIErrorOrDefault(e, 'There was an error', 'label'))
  *
  * @param { AxiosError } - Error response from some API request
  * @param { string } - Default error message on the "reason" key
  * @param { string } - Default error field on the "field" key
  *
- * @returns Linode.APIError[]
+ * @returns FormattedAPIError[]
  *
- * [ { reason: 'Label is too long', field: 'label' } ]
+ * [ {
+ *     reason: 'Label is too long',
+ *     formattedReason: <Typography>Label is too long</Typography>,
+ *     field: 'label'
+ * } ]
  *
  */
 export const getAPIErrorOrDefault = (
@@ -53,7 +56,7 @@ export const getAPIErrorOrDefault = (
   return isDefaultError(errorResponse) ? _defaultError : errorResponse;
 };
 
-const isDefaultError = (errorResponse: APIError[]) => {
+const isDefaultError = (errorResponse: FormattedAPIError[]) => {
   return (
     errorResponse &&
     errorResponse.length === 1 &&
@@ -62,7 +65,7 @@ const isDefaultError = (errorResponse: APIError[]) => {
 };
 
 export const getErrorStringOrDefault = (
-  errors: APIError[] | string,
+  errors: FormattedAPIError[] | string,
   defaultError: string = 'An unexpected error occurred.'
 ): string => {
   if (typeof errors === 'string') {
@@ -97,7 +100,7 @@ export const getErrorStringOrDefault = (
 // type = GetReturnType<E, Record<T | 'none', (string | undefined)>>
 export const getErrorMap = <T extends string = string>(
   fields: T[] = [],
-  errors?: APIError[] | null
+  errors?: FormattedAPIError[] | null
 ): Partial<Record<'none' | T, string | undefined>> => {
   if (!errors) {
     return {} as Partial<Record<any, any>>;

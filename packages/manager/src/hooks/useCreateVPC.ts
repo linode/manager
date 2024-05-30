@@ -1,8 +1,4 @@
-import {
-  APIError,
-  CreateSubnetPayload,
-  CreateVPCPayload,
-} from '@linode/api-v4';
+import { CreateSubnetPayload, CreateVPCPayload } from '@linode/api-v4';
 import { createVPCSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import * as React from 'react';
@@ -60,7 +56,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
     setGeneralSubnetErrorsFromAPI,
   ] = React.useState<FormattedAPIError[]>();
   const [generalAPIError, setGeneralAPIError] = React.useState<
-    string | undefined
+    JSX.Element | string
   >();
 
   const {
@@ -144,7 +140,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
       }
     } catch (errors) {
       const generalSubnetErrors = errors.filter(
-        (error: APIError) =>
+        (error: FormattedAPIError) =>
           // Both general and specific subnet errors include 'subnets' in their error field.
           // General subnet errors come in as { field: subnets.some_field, ...}, whereas
           // specific subnet errors come in as { field: subnets[some_index].some_field, ...}. So,
@@ -160,7 +156,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
       const indivSubnetErrors = handleVPCAndSubnetErrors(
         errors.filter(
           // ignore general subnet errors: !(the logic of filtering for only general subnet errors)
-          (error: APIError) =>
+          (error: FormattedAPIError) =>
             !error.field?.includes('subnets') ||
             !error.field ||
             error.field.includes('[')

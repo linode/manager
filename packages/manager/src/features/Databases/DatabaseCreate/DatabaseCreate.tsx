@@ -217,7 +217,7 @@ const DatabaseCreate = () => {
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
   const [nodePricing, setNodePricing] = React.useState<NodePricing>();
-  const [createError, setCreateError] = React.useState<string>();
+  const [createError, setCreateError] = React.useState<JSX.Element | string>();
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<
     FormattedAPIError[]
   >();
@@ -463,7 +463,7 @@ const DatabaseCreate = () => {
         title="Create"
       />
       <Paper>
-        {createError ? <Notice text={createError} variant="error" /> : null}
+        {createError ? <Notice variant="error">{createError}</Notice> : null}
         <Grid>
           <Typography variant="h2">Name Your Cluster</Typography>
           <TextField

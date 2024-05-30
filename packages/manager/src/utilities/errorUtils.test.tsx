@@ -1,12 +1,30 @@
+import React from 'react';
+
+import { Typography } from 'src/components/Typography';
 import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { getAPIErrorOrDefault, getErrorStringOrDefault } from './errorUtils';
 
-const error = [{ field: 'a field', reason: 'a reason' }];
+const error: FormattedAPIError[] = [
+  {
+    field: 'a field',
+    formattedReason: <Typography>Formatted reason</Typography>,
+    reason: 'a reason',
+  },
+];
 
-const multiError = [
-  { field: 'field 1', reason: 'reason 1' },
-  { field: 'field 2', reason: 'reason 2' },
+const multiError: FormattedAPIError[] = [
+  {
+    field: 'field 1',
+    formattedReason: <Typography>reason 1</Typography>,
+    reason: 'reason 1',
+  },
+  {
+    field: 'field 2',
+    formattedReason: <Typography>reason 2</Typography>,
+    reason: 'reason 2',
+  },
 ];
 
 describe('Error handling utilities', () => {

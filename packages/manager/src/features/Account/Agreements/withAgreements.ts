@@ -1,12 +1,12 @@
 import { Agreements } from '@linode/api-v4/lib';
-import { APIError } from '@linode/api-v4/lib/types';
-import * as React from 'react';
 import { UseQueryResult } from '@tanstack/react-query';
+import * as React from 'react';
 
 import { useAccountAgreements } from 'src/queries/account/agreements';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface AgreementsProps {
-  agreements: UseQueryResult<Agreements, APIError[]>;
+  agreements: UseQueryResult<Agreements, FormattedAPIError[]>;
 }
 
 // P represents the props of the component we're wrapping

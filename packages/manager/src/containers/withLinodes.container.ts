@@ -3,7 +3,6 @@ import {
   Linode,
   LinodeCloneData,
 } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
 import React from 'react';
 
 import {
@@ -11,6 +10,7 @@ import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
 } from 'src/queries/linodes/linodes';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Actions {
   cloneLinode: (data: {
@@ -22,7 +22,7 @@ interface Actions {
 export interface WithLinodesProps {
   linodeActions: Actions;
   linodesData: Linode[] | undefined;
-  linodesError: APIError[] | null;
+  linodesError: FormattedAPIError[] | null;
   linodesLoading: boolean;
 }
 

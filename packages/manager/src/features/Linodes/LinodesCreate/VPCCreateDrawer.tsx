@@ -55,7 +55,7 @@ export const VPCCreateDrawer = (props: Props) => {
       {userCannotAddVPC && CannotCreateVPCNotice}
       <Grid>
         {generalAPIError ? (
-          <Notice text={generalAPIError} variant="error" />
+          <Notice variant="error">{generalAPIError}</Notice>
         ) : null}
         <form onSubmit={handleSubmit}>
           <Box sx={{ marginTop: theme.spacing(3) }}>

@@ -46,7 +46,7 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
 
   const { classes } = useStyles();
 
-  const [error, setError] = React.useState<string | undefined>('');
+  const [error, setError] = React.useState<JSX.Element | string>();
   const [allowListErrors, setAllowListErrors] = React.useState<
     FormattedAPIError[]
   >();
@@ -165,7 +165,7 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
   return (
     <Drawer onClose={onClose} open={open} title="Manage Access Controls">
       <React.Fragment>
-        {error ? <Notice text={error} variant="error" /> : null}
+        {error ? <Notice variant="error">{error}</Notice> : null}
         {allowListErrors
           ? allowListErrors.map((allowListError) => (
               <Notice key={allowListError.reason} variant="error">

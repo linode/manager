@@ -2,7 +2,8 @@ import {
   NodeBalancerConfigNodeMode,
   NodeBalancerProxyProtocol,
 } from '@linode/api-v4/lib/nodebalancers/types';
-import { APIError } from '@linode/api-v4/lib/types';
+
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface NodeBalancerConfigFieldsWithStatus
   extends NodeBalancerConfigFields {
@@ -11,7 +12,7 @@ export interface NodeBalancerConfigFieldsWithStatus
 export interface ExtendedNodeBalancerConfigNode {
   address: string;
   config_id?: number;
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   id: number;
   label: string;
   mode?: NodeBalancerConfigNodeMode;
@@ -45,7 +46,7 @@ export interface NodeBalancerConfigFields {
 export interface NodeBalancerConfigNodeFields {
   address: string;
   config_id?: number;
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   id?: number;
   label: string;
   mode?: NodeBalancerConfigNodeMode;
@@ -66,7 +67,7 @@ export interface NodeBalancerConfigPanelProps {
   checkPath: string;
   configIdx?: number;
   disabled?: boolean;
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
 
   forEdit?: boolean;
   healthCheckAttempts: number;

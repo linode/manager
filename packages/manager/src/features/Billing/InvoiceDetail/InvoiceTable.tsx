@@ -1,5 +1,4 @@
 import { InvoiceItem } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -18,6 +17,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { renderUnitPrice } from 'src/features/Billing/billingUtils';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { getInvoiceRegion } from '../PdfGenerator/utils';
 
@@ -34,7 +34,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 interface Props {
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   items?: InvoiceItem[];
   loading: boolean;
   shouldShowRegion: boolean;

@@ -1,4 +1,4 @@
-import { APIError, Linode, Volume } from '@linode/api-v4';
+import { Linode, Volume } from '@linode/api-v4';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -16,6 +16,7 @@ import {
   useCreateVolumeMutation,
   useVolumeTypesQuery,
 } from 'src/queries/volumes/volumes';
+import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
@@ -192,7 +193,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
           touched.tags
             ? errors.tags
               ? getErrorStringOrDefault(
-                  (errors.tags as unknown) as APIError[],
+                  (errors.tags as unknown) as FormattedAPIError[],
                   'Unable to tag volume.'
                 )
               : undefined
