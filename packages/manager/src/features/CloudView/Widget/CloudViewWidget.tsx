@@ -243,12 +243,12 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
       return { ...widget, size: zoomInValue ? 12 : 6 };
     });
 
-    updateWidgetPreference(widget.label,
+    updateWidgetPreference(props.widget.label,
       {
+        [TIME_GRANULARITY]: selectedInterval,
         [AGGREGATE_FUNCTION]: widget.aggregate_function,
-        [TIME_GRANULARITY]: widget.time_granularity,
         [SIZE]: zoomInValue ? 12 : 6
-      });
+      })
   }, []);
 
   const handleAggregateFunctionChange = React.useCallback((aggregateValue: string) => {
@@ -268,6 +268,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
         });
     }
   }, []);
+
 
   const handleIntervalChange = React.useCallback((intervalValue: TimeGranularity) => {
     if (

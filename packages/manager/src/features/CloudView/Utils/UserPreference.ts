@@ -25,15 +25,15 @@ export const updateGlobalFilterPreference =  (data :{})=>{
         userPreference = {} as AclpConfig
     }
     userPreference = { ...userPreference, ...data};
-    userPreference = { ...userPreference, ...data};
+
     updateUserPreference(userPreference);
 }
 
-export const updateWidgetPreference =  (label : string, data: {}) => {
+export const updateWidgetPreference =  (label : string, data : {}) => {
     if(!userPreference){
         userPreference = {} as AclpConfig
     }
-
+    console.log(label, data);
     let widget = userPreference.widgets?.find((w) =>{
         return w.label === label;
     });

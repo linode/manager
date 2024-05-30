@@ -17,7 +17,7 @@ import { CloudPulseTimeRangeSelect } from '../shared/TimeRangeSelect';
 
 
 import { updateGlobalFilterPreference } from '../Utils/UserPreference';
-import { TIME_DURATION, INTERVAL, REGION, RESOURCES } from '../Utils/CloudPulseConstants';
+import { TIME_DURATION,  REGION, RESOURCES } from '../Utils/CloudPulseConstants';
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const emitGlobalFilterChange = (
@@ -43,8 +43,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       updateGlobalFilterPreference({ [TIME_DURATION]: filterObj.durationLabel });
     }
   }, []);
-
-
 
   const handleRegionChange = React.useCallback((region: string | undefined) => {
 
