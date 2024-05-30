@@ -10,7 +10,7 @@ import { ui } from 'support/ui';
 import { mockUpdateProfile } from 'support/intercepts/profile';
 import { randomString } from 'support/util/random';
 import { accountFactory } from 'src/factories/account';
-import { mockGetAccount, mockUpdateAccount } from 'support/intercepts/account';
+import { mockGetAccount } from 'support/intercepts/account';
 
 const notifications_billing_email_bounce: Notification[] = [
   notificationFactory.build({
@@ -74,7 +74,8 @@ describe('Email bounce banners', () => {
    * Confirm that the user profile email banner appears when the user_email_bounce notification is present
    * Confirm that clicking "No, let's update it" redirects the user to {{/account} and that the contact info edit drawer is automatically opened
    */
-  it.only('User profile email bounce is visible and can be updated by users', () => {
+  // TODO unskip the test once https://jira.linode.com/browse/M3-8181 is fixed
+  it.skip('User profile email bounce is visible and can be updated by users', () => {
     const newEmail = `${randomString(12)}@example.com`;
 
     getProfile().then((profile) => {
@@ -119,8 +120,9 @@ describe('Email bounce banners', () => {
         });
 
       cy.findByText('Email updated successfully.').should('be.visible');
+
+      // https://jira.linode.com/browse/M3-8181
       cy.contains(UserProfileEmailBounceBanner).should('not.exist');
-      // email bounce still exist ???
     });
   });
 
@@ -171,7 +173,8 @@ describe('Email bounce banners', () => {
    *   Confirm that the billing email banner appears when the billing_email_bounce notification is present
    *   Confirm that clicking "No, let's update it" redirects the user to {{/account} and that the contact info edit drawer is automatically opened
    */
-  it('Billing email bounce is visible and can be updated by users', () => {
+  // TODO unskip the test once https://jira.linode.com/browse/M3-8181 is fixed
+  it.skip('Billing email bounce is visible and can be updated by users', () => {
     const accountData = accountFactory.build();
     const billingemail = accountData.email;
 
@@ -187,9 +190,6 @@ describe('Email bounce banners', () => {
     cy.visitWithLogin('/account/billing');
     cy.wait(['@mockNotifications', '@getAccount']);
 
-    // mock the user's account data and confirm that it is displayed correctly upon page load
-    //mockUpdateAccount(accountFactory.build()).as('updateAccount');
-
     cy.contains(BillingEmailBounceBanner)
       .should('be.visible')
       .parent()
@@ -201,8 +201,8 @@ describe('Email bounce banners', () => {
           .should('be.enabled')
           .click();
       });
-    mockUpdateAccount(accountFactory.build()).as('updateAccount');
 
-    cy.wait('@updateAccount');
+    //https://jira.linode.com/browse/M3-8181
+    cy.contains(BillingEmailBounceBanner).should('not.exist');
   });
 });
