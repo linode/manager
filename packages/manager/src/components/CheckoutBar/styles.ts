@@ -16,6 +16,9 @@ const StyledRoot = styled('div')(() => {
   return {
     minHeight: '24px',
     minWidth: '24px',
+    [theme.breakpoints.between('md', 1280)]: {
+      padding: theme.spacing(2),
+    },
     [theme.breakpoints.down('md')]: {
       background: theme.color.white,
       bottom: '0 !important' as '0',
