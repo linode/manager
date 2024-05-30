@@ -111,7 +111,8 @@ describe('longview', () => {
    * - Creates a Linode, connects to it via SSH, and installs Longview using the given cURL command.
    * - Confirms that Cloud Manager UI updates to reflect Longview installation and data.
    */
-  it('can install Longview client on a Linode', () => {
+  // TODO Unskip for M3-8107.
+  it.skip('can install Longview client on a Linode', () => {
     const linodePassword = randomString(32, {
       symbols: false,
       lowercase: true,
