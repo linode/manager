@@ -2,13 +2,29 @@ import { createLinode, getLinodeConfigs } from '@linode/api-v4';
 import { createLinodeRequestFactory } from '@src/factories';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { pollLinodeDiskStatuses, pollLinodeStatus } from 'support/util/polling';
-import { randomLabel } from 'support/util/random';
+import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { depaginate } from './paginate';
 import { pageSize } from 'support/constants/api';
 
-import type { Config, Linode } from '@linode/api-v4';
-import type { CreateLinodeRequest } from '@linode/api-v4';
+import type { Config, CreateLinodeRequest, Linode } from '@linode/api-v4';
+import { findOrCreateDependencyFirewall } from 'support/api/firewalls';
+
+/**
+ * Methods used to secure test Linodes.
+ *
+ * - `firewall`: A firewall is used to secure the created Linode. If a suitable
+ *   firewall does not exist, one is created first.
+ *
+ * - `vlan_no_internet`: The created Linode's `eth0` network interface is set to
+ *   a VLAN, and no public internet interface is configured.
+ *
+ * - `powered_off`: The created Linode is not booted upon creation.
+ */
+export type CreateTestLinodeSecurityMethod =
+  | 'firewall'
+  | 'vlan_no_internet'
+  | 'powered_off';
 
 /**
  * Options to control the behavior of test Linode creation.
@@ -19,6 +35,9 @@ export interface CreateTestLinodeOptions {
 
   /** Whether to wait for created Linode to boot before resolving. */
   waitForBoot: boolean;
+
+  /** Method to use to secure the test Linode. */
+  securityMethod: CreateTestLinodeSecurityMethod;
 }
 
 /**
@@ -27,6 +46,7 @@ export interface CreateTestLinodeOptions {
 export const defaultCreateTestLinodeOptions = {
   waitForDisks: false,
   waitForBoot: false,
+  securityMethod: 'firewall',
 };
 
 /**
@@ -46,6 +66,34 @@ export const createTestLinode = async (
     ...(options || {}),
   };
 
+  const securityMethodPayload: Partial<CreateLinodeRequest> = await (async () => {
+    switch (resolvedOptions.securityMethod) {
+      case 'firewall':
+      default:
+        const firewall = await findOrCreateDependencyFirewall();
+        return {
+          firewall_id: firewall.id,
+        };
+
+      case 'vlan_no_internet':
+        return {
+          interfaces: [
+            {
+              purpose: 'vlan',
+              primary: false,
+              label: randomLabel(),
+              ipam_address: null,
+            },
+          ],
+        };
+
+      case 'powered_off':
+        return {
+          booted: false,
+        };
+    }
+  })();
+
   const resolvedCreatePayload = {
     ...createLinodeRequestFactory.build({
       label: randomLabel(),
@@ -54,6 +102,16 @@ export const createTestLinode = async (
       booted: false,
     }),
     ...(createRequestPayload || {}),
+    ...securityMethodPayload,
+
+    // Override given root password; mitigate against using default factory password, inadvertent logging, etc.
+    root_pass: randomString(64, {
+      spaces: true,
+      symbols: true,
+      numbers: true,
+      lowercase: true,
+      uppercase: true,
+    }),
   };
 
   // Display warnings for certain combinations of options/request payloads...
@@ -106,33 +164,16 @@ export const createTestLinode = async (
     consoleProps: () => {
       return {
         options: resolvedOptions,
-        payload: resolvedCreatePayload,
+        payload: {
+          ...resolvedCreatePayload,
+          root_pass: '(redacted)',
+        },
         linode,
       };
     },
   });
 
   return linode;
-};
-
-/**
- * Creates a Linode and waits for it to be in "running" state.
- *
- * Deprecated. Use `createTestLinode` with `waitForBoot` set to `true`.
- *
- * @param createPayload - Optional Linode create payload options.
- *
- * @deprecated
- *
- * @returns Promis that resolves when Linode is created and booted.
- */
-export const createAndBootLinode = async (
-  createPayload?: Partial<CreateLinodeRequest>
-): Promise<Linode> => {
-  console.warn(
-    '`createAndBootLinode()` is deprecated. Use `createTestLinode()` instead.'
-  );
-  return createTestLinode(createPayload, { waitForBoot: true });
 };
 
 /**
