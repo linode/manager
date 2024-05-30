@@ -1,0 +1,153 @@
+/**
+ * @file Integration tests for Placement Group update label flows.
+ */
+
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { randomLabel, randomNumber } from 'support/util/random';
+import {
+  mockGetPlacementGroups,
+  mockUpdatePlacementGroupLabel,
+  mockUpdatePlacementGroupLabelError,
+} from 'support/intercepts/placement-groups';
+import { accountFactory, placementGroupFactory } from 'src/factories';
+import { mockGetAccount } from 'support/intercepts/account';
+import { authenticate } from 'support/api/authentication';
+import type { Flags } from 'src/featureFlags';
+import { chooseRegion } from 'support/util/regions';
+import { ui } from 'support/ui';
+import type { UpdatePlacementGroupPayload } from '@linode/api-v4';
+
+const mockAccount = accountFactory.build();
+authenticate();
+
+describe('Placement Group update label flow', () => {
+  // Mock the VM Placement Groups feature flag to be enabled for each test in this block.
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      placementGroups: makeFeatureFlagData<Flags['placementGroups']>({
+        beta: true,
+        enabled: true,
+      }),
+    });
+    mockGetFeatureFlagClientstream();
+    mockGetAccount(mockAccount).as('getAccount');
+  });
+
+  /**
+   * - Confirms that a Placement Group's label can be updated from the landing page.
+   * - Confirms that clicking "Edit" opens PG edit drawer.
+   * - Only the label field is shown in the edit drawer.
+   * - New label can be entered into the label field.
+   * - Confirms that Placement Groups landing page updates to reflect successful label update.
+   * - Confirms a toast notification is shown upon successful label update.
+   */
+  it("update to a Placement Group's label is successful", () => {
+    const mockPlacementGroupCompliantRegion = chooseRegion();
+
+    const mockPlacementGroup = placementGroupFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      region: mockPlacementGroupCompliantRegion.id,
+      affinity_type: 'anti_affinity:local',
+      is_compliant: true,
+      is_strict: false,
+      members: [],
+    });
+
+    const newLabel: UpdatePlacementGroupPayload = {
+      label: randomLabel(),
+    };
+
+    mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
+
+    mockUpdatePlacementGroupLabel(mockPlacementGroup.id, newLabel).as(
+      'updatePlacementGroupLabel'
+    );
+
+    cy.visitWithLogin('/placement-groups');
+    cy.wait(['@getPlacementGroups']);
+
+    // Confirm that compliant Placement Group is listed  on landing page, click "Edit" to open drawer.
+    cy.findByText(mockPlacementGroup.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        cy.findByText('Edit').click();
+      });
+
+    // Enter new label, click "Edit".
+    cy.get('[data-qa-drawer="true"]').within(() => {
+      cy.findByText('Edit').should('be.visible');
+      cy.findByDisplayValue(mockPlacementGroup.label)
+        .should('be.visible')
+        .click()
+        .type(`{selectall}{backspace}${newLabel.label}`);
+
+      cy.findByText('Edit').should('be.visible').click();
+
+      cy.wait('@updatePlacementGroupLabel').then((intercept) => {
+        expect(intercept.request.body['label']).to.equal(newLabel.label);
+      });
+    });
+
+    ui.toast.assertMessage(
+      `Placement Group ${newLabel.label} successfully updated.`
+    );
+  });
+
+  it("update to a Placement Group's label fails", () => {
+    const mockPlacementGroupCompliantRegion = chooseRegion();
+
+    const mockPlacementGroup = placementGroupFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      region: mockPlacementGroupCompliantRegion.id,
+      affinity_type: 'anti_affinity:local',
+      is_compliant: true,
+      is_strict: false,
+      members: [],
+    });
+
+    const newLabel: UpdatePlacementGroupPayload = {
+      label: randomLabel(),
+    };
+
+    mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
+
+    mockUpdatePlacementGroupLabelError(
+      mockPlacementGroup.id,
+      'An unexpected error occurred.',
+      400
+    ).as('updatePlacementGroupLabelError');
+
+    cy.visitWithLogin('/placement-groups');
+    cy.wait(['@getPlacementGroups']);
+
+    // Confirm that compliant Placement Group is listed  on landing page, click "Edit" to open drawer.
+    cy.findByText(mockPlacementGroup.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        cy.findByText('Edit').click();
+      });
+
+    // Enter new label, click "Edit".
+    cy.get('[data-qa-drawer="true"]').within(() => {
+      cy.findByText('Edit').should('be.visible');
+      cy.findByDisplayValue(mockPlacementGroup.label)
+        .should('be.visible')
+        .click()
+        .type(`{selectall}{backspace}${newLabel.label}`);
+
+      cy.findByText('Edit').should('be.visible').click();
+
+      // Confirm error message is displayed in the drawer.
+      cy.wait('@updatePlacementGroupLabelError');
+      cy.findByText('An unexpected error occurred.').should('be.visible');
+    });
+  });
+});

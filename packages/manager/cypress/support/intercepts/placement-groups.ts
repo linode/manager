@@ -1,8 +1,12 @@
+import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
-import type { PlacementGroup } from '@linode/api-v4';
 import { makeResponse } from 'support/util/response';
-import { makeErrorResponse } from 'support/util/errors';
+
+import type {
+  PlacementGroup,
+  UpdatePlacementGroupPayload,
+} from '@linode/api-v4';
 
 /**
  * Intercepts GET request to fetch Placement Groups and mocks response.
@@ -171,6 +175,48 @@ export const mockDeletePlacementGroupError = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'DELETE',
+    apiMatcher(`placement/groups/${placementGroupId}`),
+    makeErrorResponse(errorMessage, errorCode)
+  );
+};
+
+/**
+ * Intercepts PUT request to update Placement Group label and mocks response.
+ *
+ * @param placementGroupId - ID of Placement Group for which to intercept update label request.
+ * @param placementGroupData - Placement Group object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdatePlacementGroupLabel = (
+  placementGroupId: number,
+  placementGroupData: UpdatePlacementGroupPayload
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`placement/groups/${placementGroupId}`),
+    makeResponse(placementGroupData)
+  );
+};
+
+/**
+ * Intercepts PUT request to update Placement Group label and mocks HTTP error response.
+ *
+ * By default, a 500 response is mocked.
+ *
+ * @param placementGroupId - ID of Placement Group for which to intercept update label request.
+ * @param errorMessage - Optional error message with which to mock response.
+ * @param errorCode - Optional error code with which to mock response. Default is `500`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdatePlacementGroupLabelError = (
+  placementGroupId: number,
+  errorMessage: string = 'An error has occurred',
+  errorCode: number = 500
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
     apiMatcher(`placement/groups/${placementGroupId}`),
     makeErrorResponse(errorMessage, errorCode)
   );
