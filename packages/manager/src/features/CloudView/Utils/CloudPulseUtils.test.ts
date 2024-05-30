@@ -1,4 +1,5 @@
 import {
+  convertStringToCamelCasesWithSpaces,
   getDimensionName,
   getResourceIDsPayload,
   mapResourceIdToName,
@@ -221,4 +222,30 @@ it('test getDimensionName matching use case with multiple metrics in which id is
   const result = getDimensionName(metric, flag, resources);
 
   expect(result).toBe('Country'); // whatever the metric key which are not undefined
+});
+
+it('test convertStringToCamelCasesWithSpaces all test cases', () => {
+  let result = convertStringToCamelCasesWithSpaces('CPU utilization');
+
+  expect(result).toBe('CPU Utilization');
+
+  result = convertStringToCamelCasesWithSpaces('memory');
+
+  expect(result).toBe('Memory');
+
+  result = convertStringToCamelCasesWithSpaces('cpu utilization results');
+
+  expect(result).toBe('Cpu Utilization Results');
+
+  result = convertStringToCamelCasesWithSpaces(undefined!);
+
+  expect(result).toBe(undefined);
+
+  result = convertStringToCamelCasesWithSpaces(null!);
+
+  expect(result).toBe(null);
+
+  result = convertStringToCamelCasesWithSpaces('');
+
+  expect(result).toBe('');
 });
