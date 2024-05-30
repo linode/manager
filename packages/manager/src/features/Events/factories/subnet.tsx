@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const subnet: PartialEventMap = {
+export const subnet: PartialEventMap<'subnet'> = {
   subnet_create: {
     notification: (e) => (
       <>

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import type { PartialEventMap } from '../types';
 
-export const tfa: PartialEventMap = {
+export const tfa: PartialEventMap<'tfa'> = {
   tfa_disabled: {
     notification: () => (
       <>

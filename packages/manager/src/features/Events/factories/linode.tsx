@@ -6,7 +6,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const linode: PartialEventMap = {
+export const linode: PartialEventMap<'linode'> = {
   linode_addip: {
     notification: (e) => (
       <>

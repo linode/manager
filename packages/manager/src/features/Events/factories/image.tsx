@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const image: PartialEventMap = {
+export const image: PartialEventMap<'image'> = {
   image_delete: {
     failed: (e) => (
       <>

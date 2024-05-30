@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const vpc: PartialEventMap = {
+export const vpc: PartialEventMap<'vpc'> = {
   vpc_create: {
     notification: (e) => (
       <>

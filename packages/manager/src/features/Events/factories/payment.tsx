@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import type { PartialEventMap } from '../types';
 
-export const payment: PartialEventMap = {
+export const payment: PartialEventMap<'payment'> = {
   payment_method_add: {
     notification: () => (
       <>

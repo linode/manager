@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const longview: PartialEventMap = {
+export const longviewclient: PartialEventMap<'longviewclient'> = {
   longviewclient_create: {
     notification: (e) => (
       <>

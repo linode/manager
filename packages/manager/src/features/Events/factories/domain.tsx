@@ -5,7 +5,7 @@ import { EventMessage } from '../EventMessage';
 
 import type { PartialEventMap } from '../types';
 
-export const domain: PartialEventMap = {
+export const domain: PartialEventMap<'domain'> = {
   domain_create: {
     notification: (e) => (
       <>

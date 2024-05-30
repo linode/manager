@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const stackScript: PartialEventMap = {
+export const stackscript: PartialEventMap<'stackscript'> = {
   stackscript_create: {
     notification: (e) => (
       <>

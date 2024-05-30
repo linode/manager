@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const database: PartialEventMap = {
+export const database: PartialEventMap<'database'> = {
   database_backup_create: {
     notification: (e) => (
       <>

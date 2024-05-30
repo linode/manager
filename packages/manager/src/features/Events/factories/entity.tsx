@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import type { PartialEventMap } from '../types';
 
-export const entity: PartialEventMap = {
+export const entity: PartialEventMap<'entity'> = {
   entity_transfer_accept: {
     notification: () => (
       <>

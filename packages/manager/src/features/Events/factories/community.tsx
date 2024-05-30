@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const community: PartialEventMap = {
+export const community: PartialEventMap<'community'> = {
   community_like: {
     notification: (e) =>
       e.entity?.label ? (

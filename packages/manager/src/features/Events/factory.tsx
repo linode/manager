@@ -4,7 +4,7 @@ import { Typography } from 'src/components/Typography';
 
 import * as factories from './factories';
 
-import type { CompleteEventMap, PartialEventMap } from './types';
+import type { EventMap, OptionalEventMap } from './types';
 import type { Event } from '@linode/api-v4';
 
 const wrapWithTypography = (
@@ -16,7 +16,7 @@ const wrapWithTypography = (
   };
 };
 
-export const withTypography = (eventMap: PartialEventMap): PartialEventMap => {
+export const withTypography = (eventMap: EventMap): OptionalEventMap => {
   return Object.fromEntries(
     Object.entries(eventMap).map(([action, statuses]) => [
       action,
@@ -36,10 +36,10 @@ export const withTypography = (eventMap: PartialEventMap): PartialEventMap => {
  * It aggregates all the event messages from the factories and wraps them with Typography.
  * The typography intentionally wraps the message in a span to prevent nested paragraphs while adhering to the design system's typography.
  */
-export const eventMessages: CompleteEventMap = Object.keys(factories).reduce(
+export const eventMessages: EventMap = Object.keys(factories).reduce(
   (acc, factoryName) => ({
     ...acc,
     ...withTypography(factories[factoryName]),
   }),
-  {} as CompleteEventMap
+  {} as EventMap
 );

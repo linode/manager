@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const user: PartialEventMap = {
+export const user: PartialEventMap<'user'> = {
   user_create: {
     notification: (e) => (
       <>

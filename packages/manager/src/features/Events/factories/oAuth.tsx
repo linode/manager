@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const oAuth: PartialEventMap = {
+export const oAuth: PartialEventMap<'oauth'> = {
   oauth_client_create: {
     notification: (e) => (
       <>

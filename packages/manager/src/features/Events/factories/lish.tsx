@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const lish: PartialEventMap = {
+export const lish: PartialEventMap<'lish'> = {
   lish_boot: {
     failed: (e) => (
       <>

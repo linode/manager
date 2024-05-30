@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const nodeBalancer: PartialEventMap = {
+export const nodebalancer: PartialEventMap<'nodebalancer'> = {
   nodebalancer_config_create: {
     notification: (e) => (
       <>

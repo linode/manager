@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const dns: PartialEventMap = {
+export const dns: PartialEventMap<'dns'> = {
   dns_record_create: {
     notification: (e) => (
       <>

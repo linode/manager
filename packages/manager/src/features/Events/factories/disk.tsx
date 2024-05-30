@@ -6,7 +6,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const disk: PartialEventMap = {
+export const disk: PartialEventMap<'disk'> = {
   disk_create: {
     failed: (e) => (
       <>

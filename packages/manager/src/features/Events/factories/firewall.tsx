@@ -13,7 +13,7 @@ const secondaryFirewallEntityNameMap: Record<
   nodebalancer: 'NodeBalancer',
 };
 
-export const firewall: PartialEventMap = {
+export const firewall: PartialEventMap<'firewall'> = {
   firewall_apply: {
     notification: (e) => (
       <>

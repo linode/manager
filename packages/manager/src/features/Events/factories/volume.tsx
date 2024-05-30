@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const volume: PartialEventMap = {
+export const volume: PartialEventMap<'volume'> = {
   volume_attach: {
     failed: (e) => (
       <>

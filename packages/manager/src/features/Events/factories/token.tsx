@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const token: PartialEventMap = {
+export const token: PartialEventMap<'token'> = {
   token_create: {
     notification: (e) => (
       <>

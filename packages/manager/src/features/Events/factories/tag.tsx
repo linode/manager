@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const tag: PartialEventMap = {
+export const tag: PartialEventMap<'tag'> = {
   tag_create: {
     notification: (e) => (
       <>

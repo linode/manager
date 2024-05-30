@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const lke: PartialEventMap = {
+export const lke: PartialEventMap<'lke'> = {
   lke_cluster_create: {
     notification: (e) => (
       <>

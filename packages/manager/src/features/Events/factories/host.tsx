@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const host: PartialEventMap = {
+export const host: PartialEventMap<'host'> = {
   host_reboot: {
     failed: (e) => (
       <>

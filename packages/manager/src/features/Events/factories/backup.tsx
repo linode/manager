@@ -4,7 +4,7 @@ import { Link } from 'src/components/Link';
 
 import type { PartialEventMap } from '../types';
 
-export const backup: PartialEventMap = {
+export const backup: PartialEventMap<'backups'> = {
   backups_cancel: {
     notification: (e) => (
       <>

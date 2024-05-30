@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const obj: PartialEventMap = {
+export const obj: PartialEventMap<'obj'> = {
   obj_access_key_create: {
     notification: (e) => (
       <>

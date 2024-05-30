@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const managed: PartialEventMap = {
+export const managed: PartialEventMap<'managed'> = {
   managed_enabled: {
     notification: () => (
       <>

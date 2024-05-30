@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const ticket: PartialEventMap = {
+export const ticket: PartialEventMap<'ticket'> = {
   ticket_attachment_upload: {
     notification: (e) => (
       <>

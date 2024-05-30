@@ -63,7 +63,10 @@ export const RenderEvent = React.memo((props: RenderEventProps) => {
             />
             <Box sx={{ marginTop: '-2px' }}>
               {messageV2}
-              <Typography className={unseenEventClass}>
+              <Typography
+                className={unseenEventClass}
+                sx={{ fontSize: '0.8rem' }}
+              >
                 {getEventTimestamp(event).toRelative()} | {event.username}
               </Typography>
             </Box>

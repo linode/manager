@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const placementGroup: PartialEventMap = {
+export const placement: PartialEventMap<'placement'> = {
   placement_group_assign: {
     notification: (e) => (
       <>

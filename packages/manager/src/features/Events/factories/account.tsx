@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import type { PartialEventMap } from '../types';
 
-export const account: PartialEventMap = {
+export const account: PartialEventMap<'account'> = {
   account_agreement_eu_model: {
     notification: () => (
       <>

@@ -4,7 +4,7 @@ import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 
-export const password: PartialEventMap = {
+export const password: PartialEventMap<'password'> = {
   password_reset: {
     failed: (e) => (
       <>

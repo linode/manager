@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import type { PartialEventMap } from '../types';
 
-export const lassie: PartialEventMap = {
+export const lassie: PartialEventMap<'lassie'> = {
   lassie_reboot: {
     failed: (e) => (
       <>
