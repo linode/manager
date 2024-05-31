@@ -32,6 +32,8 @@ import {
 } from './constants';
 import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
 import { SupportTicketSMTPFields } from './SupportTicketSMTPFields';
+import { SupportTicketAccountLimitFields } from './SupportTicketAccountLimitFields';
+
 import { formatDescription, useTicketSeverityCapability } from './ticketUtils';
 
 import type { FileAttachment } from '../index';
@@ -82,7 +84,7 @@ export type EntityType =
   | 'none'
   | 'volume_id';
 
-export type TicketType = 'general' | 'smtp';
+export type TicketType = 'accountLimit' | 'general' | 'smtp';
 
 export type AllSupportTicketFormFields = SupportTicketFormFields &
   SMTPCustomFields;
@@ -427,9 +429,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               )}
             </>
           )}
-          {ticketType === 'smtp' ? (
+          {ticketType === 'smtp' && (
             <SupportTicketSMTPFields />
-          ) : (
+          )}
+          {ticketType === 'accountLimit' && (
+            <SupportTicketAccountLimitFields />
+          )}
+          {(!ticketType || ticketType === 'general') && (
             <>
               {props.hideProductSelection ? null : (
                 <SupportTicketProductSelectionFields />

@@ -16,6 +16,11 @@ export const SupportError = (props: Props) => {
   const supportTextRegex = new RegExp(
     /(open a support ticket|contact Support)/i
   );
+
+  // Determine whether we'll need to link to a specific support ticket form based on ticketType.
+  const accountLimitRegex = new RegExp(/limit on your account/i);
+  const isAccountLimitSupportTicket = errors[0].reason.match(accountLimitRegex);
+
   const errorMsg = errors[0].reason.split(supportTextRegex);
 
   return (
@@ -28,6 +33,7 @@ export const SupportError = (props: Props) => {
     >
       {errorMsg.map((substring: string, idx) => {
         const openTicket = substring.match(supportTextRegex);
+
         if (openTicket) {
           return (
             <SupportLink
@@ -35,6 +41,9 @@ export const SupportError = (props: Props) => {
                 substring.match(/^[A-Z]/)
                   ? capitalize(openTicket[0])
                   : openTicket[0]
+              }
+              ticketType={
+                isAccountLimitSupportTicket ? 'accountLimit' : 'general'
               }
               key={`${substring}-${idx}`}
             />
