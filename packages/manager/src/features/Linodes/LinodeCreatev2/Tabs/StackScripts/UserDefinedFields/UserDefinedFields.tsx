@@ -70,7 +70,7 @@ export const UserDefinedFields = ({ onOpenDetailsDrawer }: Props) => {
             <img
               alt={`${stackscript.label} logo`}
               height={60}
-              src={`/${stackscript.logo_url}`}
+              src={`/assets/${marketplaceAppInfo.logo_url}`}
             />
             <Typography variant="h2">
               {decode(stackscript.label.replace('One-Click', ''))} Setup
