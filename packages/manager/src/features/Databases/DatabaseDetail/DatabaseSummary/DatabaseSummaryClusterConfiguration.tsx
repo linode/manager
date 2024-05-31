@@ -11,7 +11,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Box } from 'src/components/Box';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { useDatabaseTypesQuery } from 'src/queries/databases';
+import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
