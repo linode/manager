@@ -1,24 +1,39 @@
 import { CreateLinodeRequest } from '@linode/api-v4';
+import { decode } from 'he';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import Info from 'src/assets/icons/info.svg';
 import { Box } from 'src/components/Box';
+import { IconButton } from 'src/components/IconButton';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
+import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
 import { useStackScriptQuery } from 'src/queries/stackscripts';
 
 import { UserDefinedFieldInput } from './UserDefinedFieldInput';
 import { separateUDFsByRequiredStatus } from './utilities';
 
-export const UserDefinedFields = () => {
-  const stackscriptId = useWatch<CreateLinodeRequest, 'stackscript_id'>({
-    name: 'stackscript_id',
-  });
+interface Props {
+  /**
+   * Opens the Marketplace App details drawer for a given StackScript
+   *
+   * This is optional because we use this components for regular StackScripts too
+   * and they don't have details drawers
+   */
+  onOpenDetailsDrawer?: (stackscriptId: number) => void;
+}
 
-  const { formState } = useFormContext<CreateLinodeRequest>();
+export const UserDefinedFields = ({ onOpenDetailsDrawer }: Props) => {
+  const { control, formState } = useFormContext<CreateLinodeRequest>();
+
+  const [stackscriptId, stackscriptData] = useWatch({
+    control,
+    name: ['stackscript_id', 'stackscript_data'],
+  });
 
   const hasStackscriptSelected =
     stackscriptId !== null && stackscriptId !== undefined;
@@ -34,6 +49,15 @@ export const UserDefinedFields = () => {
     userDefinedFields
   );
 
+  const clusterSize = stackscriptData?.['cluster_size'];
+
+  const isCluster = clusterSize !== null && clusterSize !== undefined;
+
+  const marketplaceAppInfo =
+    stackscriptId !== null && stackscriptId !== undefined
+      ? oneClickApps[stackscriptId]
+      : undefined;
+
   if (!stackscript || userDefinedFields?.length === 0) {
     return null;
   }
@@ -41,11 +65,37 @@ export const UserDefinedFields = () => {
   return (
     <Paper>
       <Stack spacing={2}>
-        <Typography variant="h2">{stackscript.label} Setup</Typography>
+        {marketplaceAppInfo ? (
+          <Stack alignItems="center" direction="row" gap={2}>
+            <img
+              alt={`${stackscript.label} logo`}
+              height={60}
+              src={`/${stackscript.logo_url}`}
+            />
+            <Typography variant="h2">
+              {decode(stackscript.label.replace('One-Click', ''))} Setup
+            </Typography>
+            <IconButton
+              aria-label={`View details for ${stackscript.label}`}
+              onClick={() => onOpenDetailsDrawer?.(stackscriptId!)}
+              size="large"
+            >
+              <Info />
+            </IconButton>
+          </Stack>
+        ) : (
+          <Typography variant="h2">{stackscript.label} Setup</Typography>
+        )}
         {formState.errors.stackscript_data && (
           <Notice
             text={formState.errors.stackscript_data.message as string}
             variant="error"
+          />
+        )}
+        {isCluster && (
+          <Notice
+            text={`You are creating a cluster with ${clusterSize} nodes.`}
+            variant="success"
           />
         )}
         <Stack spacing={2}>
