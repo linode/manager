@@ -1,9 +1,5 @@
 import { oauthToken } from 'support/constants/api';
-import {
-  dependencyPrefix,
-  entityPrefix,
-  entityTag,
-} from 'support/constants/cypress';
+import { entityPrefix, entityTag } from 'support/constants/cypress';
 
 const apiroot = Cypress.env('REACT_APP_API_ROOT') + '/';
 const apirootBeta = Cypress.env('REACT_APP_API_ROOT') + 'beta/';
@@ -126,19 +122,4 @@ export const isTestEntity = (entity: {
  */
 export const isTestLabel = (label: string) => {
   return label.startsWith(entityPrefix);
-};
-
-/**
- * Determines whether or not a label is a dependency label.
- *
- * @param label - Label to check.
- *
- * @example
- * isDependencyLabel('my-label'); // `false`.
- * isDependencyLabel('cy-dep-my-firewall'); // `true`.
- *
- * @returns True if label is a dependency label, false otherwise.
- */
-export const isDependencyLabel = (label: string) => {
-  return label.startsWith(dependencyPrefix);
 };

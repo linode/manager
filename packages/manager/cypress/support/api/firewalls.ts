@@ -6,26 +6,35 @@ import {
 } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
-import { randomString } from 'support/util/random';
+import { randomLabel } from 'support/util/random';
 
-import { isTestLabel, isDependencyLabel } from './common';
+import { isTestLabel } from './common';
 
 /**
  * Determines if a Firewall is sufficiently locked down to use for a test resource.
  *
- * Returns `true` if the Firewall has a default inbound policy to drop connections
- * and does not have any additional inbound rules.
+ * Returns `true` if the Firewall has default inbound and outbound policies to
+ * drop connections and does not have any additional rules.
  *
- * @param firewall - Firewall for which to check inbound rules and policies.
+ * @param firewall - Firewall for which to check rules and policies.
  *
  * @returns `true` if Firewall is locked down, `false` otherwise.
  */
 export const isFirewallLockedDown = (firewall: Firewall) => {
+  const hasOutboundRules =
+    !!firewall.rules.outbound && firewall.rules.outbound.length > 0;
   const hasInboundRules =
     !!firewall.rules.inbound && firewall.rules.inbound.length > 0;
+
+  const hasOutboundDropPolicy = firewall.rules.outbound_policy === 'DROP';
   const hasInboundDropPolicy = firewall.rules.inbound_policy === 'DROP';
 
-  return hasInboundDropPolicy && !hasInboundRules;
+  return (
+    hasInboundDropPolicy &&
+    hasOutboundDropPolicy &&
+    !hasInboundRules &&
+    !hasOutboundRules
+  );
 };
 
 /**
@@ -40,7 +49,7 @@ export const findOrCreateDependencyFirewall = async () => {
 
   const suitableFirewalls = firewalls.filter(
     (firewall: Firewall) =>
-      isDependencyLabel(firewall.label) && isFirewallLockedDown(firewall)
+      isTestLabel(firewall.label) && isFirewallLockedDown(firewall)
   );
 
   if (suitableFirewalls.length > 0) {
@@ -48,15 +57,8 @@ export const findOrCreateDependencyFirewall = async () => {
   }
 
   // No suitable firewalls exist, so we'll create one and return it.
-  const firewallLabel = `cy-dep-${randomString(10, {
-    lowercase: true,
-    spaces: false,
-    symbols: false,
-    uppercase: false,
-    numbers: false,
-  })}`;
   return createFirewall({
-    label: firewallLabel,
+    label: randomLabel(),
     rules: {
       inbound: [],
       outbound: [],
@@ -78,23 +80,6 @@ export const deleteAllTestFirewalls = async (): Promise<void> => {
 
   const deletionPromises = firewalls
     .filter((firewall: Firewall) => isTestLabel(firewall.label))
-    .map((firewall: Firewall) => deleteFirewall(firewall.id));
-
-  await Promise.all(deletionPromises);
-};
-
-/**
- * Deletes all Firewalls whose labels are prefixed with "cy-dep-".
- *
- * @returns Promise that resolves when Firewalls have been deleted.
- */
-export const deleteAllDependencyFirewalls = async (): Promise<void> => {
-  const firewalls = await depaginate<Firewall>((page: number) =>
-    getFirewalls({ page, page_size: pageSize })
-  );
-
-  const deletionPromises = firewalls
-    .filter((firewall: Firewall) => isDependencyLabel(firewall.label))
     .map((firewall: Firewall) => deleteFirewall(firewall.id));
 
   await Promise.all(deletionPromises);
