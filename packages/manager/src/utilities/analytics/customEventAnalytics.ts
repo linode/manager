@@ -1,80 +1,9 @@
-import { ADOBE_ANALYTICS_URL } from 'src/constants';
-
-// Define a custom type for the _satellite object
-declare global {
-  interface Window {
-    _satellite: DTMSatellite;
-  }
-}
-
-type DTMSatellite = {
-  track: (
-    eventName: string,
-    eventPayload: AnalyticsPayload | PageViewPayload
-  ) => void;
-};
-
-interface PageViewPayload {
-  url: string;
-}
-
-export interface CustomAnalyticsData {
-  isLinodePoweredOff?: boolean;
-}
-
-interface AnalyticsEvent {
-  action: string;
-  category: string;
-  data?: CustomAnalyticsData;
-  label?: string;
-  value?: number;
-}
-
-interface AnalyticsPayload extends Omit<AnalyticsEvent, 'data'> {
-  data?: string;
-}
-
-export const sendEvent = (eventPayload: AnalyticsEvent): void => {
-  if (!ADOBE_ANALYTICS_URL) {
-    return;
-  }
-
-  // Send a Direct Call Rule if our environment is configured with an Adobe Launch script
-  if (window._satellite) {
-    // Just don't allow pipes in strings for Adobe Analytics processing.
-    window._satellite.track('custom event', {
-      action: eventPayload.action.replace(/\|/g, ''),
-      category: eventPayload.category.replace(/\|/g, ''),
-      data: eventPayload.data ? JSON.stringify(eventPayload.data) : undefined,
-      label: eventPayload.label?.replace(/\|/g, ''),
-      value: eventPayload.value,
-    });
-  }
-};
+import { CustomAnalyticsData } from './types';
+import { sendEvent } from './utils';
 
 /**
- * A Promise that will resolve once Adobe Analytics loads.
- *
- * @throws if Adobe does not load after 5 seconds
+ * Custom Events
  */
-export const waitForAdobeAnalyticsToBeLoaded = () =>
-  new Promise<void>((resolve, reject) => {
-    let attempts = 0;
-    const interval = setInterval(() => {
-      if (window._satellite) {
-        resolve();
-        clearInterval(interval);
-        return;
-      }
-
-      attempts++;
-
-      if (attempts >= 5) {
-        reject('Adobe Analytics did not load after 5 seconds');
-        clearInterval(interval);
-      }
-    }, 1000);
-  });
 
 // LinodeActionMenu.tsx
 export const sendLinodeActionEvent = (): void => {
@@ -538,5 +467,15 @@ export const sendManageGravatarEvent = () => {
     action: 'Click:link',
     category: 'Gravatar',
     label: 'Manage photo',
+  });
+};
+
+// SelectLinodePanel.tsx
+// LinodeSelectTable.tsx
+export const sendLinodePowerOffEvent = (category: string) => {
+  sendEvent({
+    action: 'Click:button',
+    category,
+    label: 'Power Off',
   });
 };

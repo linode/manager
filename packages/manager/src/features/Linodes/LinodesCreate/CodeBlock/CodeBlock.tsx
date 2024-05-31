@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { sendApiAwarenessClickEvent } from 'src/utilities/analytics';
+import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import {
   StyledCommandDiv,
   StyledCopyTooltip,

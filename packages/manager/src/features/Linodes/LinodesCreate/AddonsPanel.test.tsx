@@ -31,6 +31,7 @@ const props: AddonsPanelProps = {
   changeBackups: vi.fn(),
   createType: 'fromLinode',
   disabled: false,
+  diskEncryptionEnabled: false,
   handleVLANChange: vi.fn(),
   ipamAddress: 'ipadAddress',
   ipamError: 'test ipad error',

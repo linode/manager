@@ -1,11 +1,11 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
 import { useDeleteFirewall, useMutateFirewall } from 'src/queries/firewalls';
+import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
@@ -17,7 +17,7 @@ interface Props {
   mode: Mode;
   onClose: () => void;
   open: boolean;
-  selectedFirewallId?: number;
+  selectedFirewallId: number;
   selectedFirewallLabel: string;
 }
 
@@ -33,20 +33,18 @@ export const FirewallDialog = React.memo((props: Props) => {
     selectedFirewallLabel: label,
   } = props;
 
-  const { data: devices } = useAllFirewallDevicesQuery(
-    selectedFirewallId ?? -1
-  );
+  const { data: devices } = useAllFirewallDevicesQuery(selectedFirewallId);
 
   const {
     error: updateError,
     isLoading: isUpdating,
     mutateAsync: updateFirewall,
-  } = useMutateFirewall(selectedFirewallId ?? -1);
+  } = useMutateFirewall(selectedFirewallId);
   const {
     error: deleteError,
     isLoading: isDeleting,
     mutateAsync: deleteFirewall,
-  } = useDeleteFirewall(selectedFirewallId ?? -1);
+  } = useDeleteFirewall(selectedFirewallId);
 
   const requestMap = {
     delete: () => deleteFirewall(),

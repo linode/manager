@@ -66,8 +66,8 @@ interface ImageDrawerState {
   label?: string;
   mode: DrawerMode;
   open: boolean;
-  selectedDisk: null | string;
   selectedLinode?: number;
+  tags?: string[];
 }
 
 interface ImageDialogState {
@@ -81,12 +81,12 @@ interface ImageDialogState {
 
 interface ImagesLandingProps extends ImageDrawerState, ImageDialogState {}
 
-const defaultDrawerState = {
+const defaultDrawerState: ImageDrawerState = {
   description: '',
   label: '',
-  mode: 'edit' as DrawerMode,
+  mode: 'edit',
   open: false,
-  selectedDisk: null,
+  tags: [],
 };
 
 const defaultDialogState = {
@@ -290,14 +290,19 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
     queryClient.invalidateQueries(imageQueries.paginated._def);
   };
 
-  const openForEdit = (label: string, description: string, imageID: string) => {
+  const openForEdit = (
+    label: string,
+    description: string,
+    imageID: string,
+    tags: string[]
+  ) => {
     setDrawer({
       description,
       imageID,
       label,
       mode: 'edit',
       open: true,
-      selectedDisk: null,
+      tags,
     });
   };
 
@@ -306,7 +311,6 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
       imageID,
       mode: 'restore',
       open: true,
-      selectedDisk: null,
     });
   };
 
@@ -350,6 +354,12 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
     }));
   };
 
+  const setTags = (tags: string[]) =>
+    setDrawer((prevDrawerState) => ({
+      ...prevDrawerState,
+      tags,
+    }));
+
   const getActions = () => {
     return (
       <ActionsPanel
@@ -382,14 +392,15 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
         changeDisk={changeSelectedDisk}
         changeLabel={setLabel}
         changeLinode={changeSelectedLinode}
+        changeTags={setTags}
         description={drawer.description}
         imageId={drawer.imageID}
         label={drawer.label}
         mode={drawer.mode}
         onClose={closeImageDrawer}
         open={drawer.open}
-        selectedDisk={drawer.selectedDisk}
         selectedLinode={drawer.selectedLinode || null}
+        tags={drawer.tags}
       />
     );
   };
