@@ -3,7 +3,8 @@ import { UseQueryResult } from '@tanstack/react-query';
 import * as React from 'react';
 
 import { useGrants, useProfile } from 'src/queries/profile';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface WithProfileProps {
   grants: UseQueryResult<Grants, FormattedAPIError[]>;

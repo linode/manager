@@ -7,10 +7,11 @@ import React from 'react';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { OpenAccessDrawer } from '../types';
 import { AccessKeyTableRow } from './AccessKeyTableRow';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 type Props = {
   data: ObjectStorageKey[] | undefined;

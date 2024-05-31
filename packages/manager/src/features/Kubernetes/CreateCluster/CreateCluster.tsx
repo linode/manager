@@ -37,7 +37,6 @@ import {
 } from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllTypes } from 'src/queries/types';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
@@ -57,6 +56,8 @@ import {
 } from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();

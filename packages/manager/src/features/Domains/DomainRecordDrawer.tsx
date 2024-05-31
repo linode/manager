@@ -26,7 +26,6 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import {
@@ -43,6 +42,8 @@ import {
   isValidCNAME,
   isValidDomainRecord,
 } from './domainUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface UpdateDomainDataProps extends UpdateDomainPayload {
   id: number;

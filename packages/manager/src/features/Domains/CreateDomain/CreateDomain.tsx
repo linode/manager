@@ -30,7 +30,6 @@ import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useCreateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { sendCreateDomainEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -46,6 +45,8 @@ import {
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { generateDefaultDomainRecords } from '../domainUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 type DefaultRecordsType = 'linode' | 'nodebalancer' | 'none';
 

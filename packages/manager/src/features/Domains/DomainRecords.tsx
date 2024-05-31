@@ -35,7 +35,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Typography } from 'src/components/Typography';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import {
   getAPIErrorOrDefault,
   getErrorStringOrDefault,
@@ -47,6 +46,8 @@ import { truncateEnd } from 'src/utilities/truncate';
 import { DomainRecordActionMenu } from './DomainRecordActionMenu';
 import { DomainRecordDrawer } from './DomainRecordDrawer';
 import { StyledDiv, StyledGrid, StyledTableCell } from './DomainRecords.styles';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface UpdateDomainDataProps extends UpdateDomainPayload {
   id: number;

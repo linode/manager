@@ -6,17 +6,18 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { WithStartAndEnd } from '../../../request.types';
-import { StyledItemGrid } from '../CommonStyles.styles';
 import {
   StyledTimeRangeSelect,
   StyledTypography,
 } from '../CommonStyles.styles';
+import { StyledItemGrid } from '../CommonStyles.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { MySQLGraphs } from './MySQLGraphs';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   clientAPIKey?: string;

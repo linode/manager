@@ -20,11 +20,12 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { accountQueries } from 'src/queries/account/queries';
 import { useAccountUser } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import UserPermissions from './UserPermissions';
 import { UserProfile } from './UserProfile';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const UserDetail = () => {
   const { username: currentUsername } = useParams<{ username: string }>();

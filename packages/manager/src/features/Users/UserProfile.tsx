@@ -11,12 +11,13 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useAccountUser } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { PARENT_USER, RESTRICTED_FIELD_TOOLTIP } from '../Account/constants';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { StyledTitle, StyledWrapper } from './UserProfile.styles';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface UserProfileProps {
   accountErrors?: FormattedAPIError[];

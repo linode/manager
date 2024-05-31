@@ -3,7 +3,7 @@ import {
   NodeBalancerProxyProtocol,
 } from '@linode/api-v4/lib/nodebalancers/types';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface NodeBalancerConfigFieldsWithStatus
   extends NodeBalancerConfigFields {

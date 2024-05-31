@@ -9,7 +9,8 @@ import {
   MappedEntityState2 as MappedEntityState,
   ThunkActionCreator,
 } from 'src/store/types';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const addEntityRecord = <T extends Entity>(
   result: EntityMap<T>,

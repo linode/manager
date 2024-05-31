@@ -8,10 +8,11 @@ import { TableCell } from 'src/components/TableCell';
 import { Typography } from 'src/components/Typography';
 import { transitionText } from 'src/features/Linodes/transitions';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import NodeActionMenu from './NodeActionMenu';
 import { StyledCopyTooltip, StyledTableRow } from './NodeTable.styles';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface NodeRow {
   instanceId?: number;

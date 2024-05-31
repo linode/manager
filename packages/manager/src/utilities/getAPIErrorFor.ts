@@ -1,5 +1,6 @@
 import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const getAPIErrorFor = (
   errorMap: { [index: string]: string },

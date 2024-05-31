@@ -11,7 +11,6 @@ import withClientStats, {
   Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
 import { useProfile } from 'src/queries/profile';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import { formatUptime } from 'src/utilities/formatUptime';
@@ -25,6 +24,8 @@ import {
   StyledUpdatesGrid,
 } from './LongviewClientHeader.styles';
 import { RestrictedUserLabel } from './RestrictedUserLabel';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   clientID: number;

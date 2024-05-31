@@ -5,10 +5,11 @@ import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { imageFactory, normalizeEntities, profileFactory } from 'src/factories';
 import { queryClientFactory } from 'src/queries/base';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { StackScriptCreate } from './StackScriptCreate';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const images = normalizeEntities(imageFactory.buildList(10));
 const queryClient = queryClientFactory();

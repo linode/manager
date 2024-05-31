@@ -4,10 +4,11 @@ import * as React from 'react';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import SSHAccessRow from './SSHAccessRow';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface SSHAccessTableContentProps {
   error?: FormattedAPIError[] | null;

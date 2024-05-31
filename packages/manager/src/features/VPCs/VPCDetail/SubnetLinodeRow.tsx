@@ -21,7 +21,6 @@ import {
   queryKey as linodesQueryKey,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
@@ -44,6 +43,7 @@ import {
 
 import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   handlePowerActionsLinode: (linode: Linode, action: Action) => void;

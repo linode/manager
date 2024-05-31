@@ -12,13 +12,14 @@ import { NotFound } from 'src/components/NotFound';
 import { StackScript as _StackScript } from 'src/components/StackScript/StackScript';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useGrants } from 'src/queries/profile';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 import {
   canUserModifyAccountStackScript,
   getStackScriptUrl,
 } from './stackScriptUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const StackScriptsDetail = () => {
   const { _hasGrant, _isRestrictedUser, profile } = useAccountManagement();

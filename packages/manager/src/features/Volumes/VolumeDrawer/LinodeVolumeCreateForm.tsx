@@ -16,7 +16,6 @@ import {
   useCreateVolumeMutation,
   useVolumeTypesQuery,
 } from 'src/queries/volumes/volumes';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
@@ -29,6 +28,8 @@ import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants
 import { ConfigSelect } from './ConfigSelect';
 import { PricePanel } from './PricePanel';
 import { SizeField } from './SizeField';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   linode: Linode;

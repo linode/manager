@@ -3,7 +3,8 @@ import * as React from 'react';
 
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface WithImagesProps {
   imagesData: Record<string, Image>;

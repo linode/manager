@@ -34,10 +34,11 @@ import {
 import { StackScriptForm } from 'src/features/StackScripts/StackScriptForm/StackScriptForm';
 import { profileQueries } from 'src/queries/profile';
 import { filterImagesByType } from 'src/store/image/image.helpers';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface State {
   apiResponse?: StackScript;

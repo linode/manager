@@ -1,5 +1,6 @@
 import { reportException } from 'src/exceptionReporting';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const handleUnauthorizedErrors = (
   e: FormattedAPIError[],

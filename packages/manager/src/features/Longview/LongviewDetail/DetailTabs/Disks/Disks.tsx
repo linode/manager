@@ -4,12 +4,13 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { WithStartAndEnd } from '../../../request.types';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { DiskGraph } from './DiskGraph';
 import { StyledBox, StyledTimeRangeSelect } from './Disks.styles';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   clientAPIKey: string;

@@ -38,13 +38,14 @@ import {
   useDeleteImageMutation,
   useImagesQuery,
 } from 'src/queries/images';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import { DrawerMode, ImagesDrawer } from './ImagesDrawer';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   imageTable: {

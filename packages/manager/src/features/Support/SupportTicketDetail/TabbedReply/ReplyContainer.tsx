@@ -9,7 +9,6 @@ import { makeStyles } from 'tss-react/mui';
 import { Accordion } from 'src/components/Accordion';
 import { Notice } from 'src/components/Notice/Notice';
 import { useSupportTicketReplyMutation } from 'src/queries/support';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { storage } from 'src/utilities/storage';
 
@@ -18,6 +17,8 @@ import { FileAttachment } from '../../index';
 import { MarkdownReference } from './MarkdownReference';
 import { ReplyActions } from './ReplyActions';
 import { TabbedReply } from './TabbedReply';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   expPanelSummary: {

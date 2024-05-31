@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface OpenCloseState {
   error?: FormattedAPIError[];

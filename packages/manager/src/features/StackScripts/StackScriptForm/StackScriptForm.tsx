@@ -8,7 +8,6 @@ import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import ImageSelect from 'src/features/Images/ImageSelect';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { imageToItem } from 'src/utilities/imageToItem';
 
@@ -18,6 +17,8 @@ import {
   StyledNotice,
   StyledTextField,
 } from './StackScriptForm.styles';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface TextFieldHandler {
   handler: (e: React.ChangeEvent<HTMLInputElement>) => void;

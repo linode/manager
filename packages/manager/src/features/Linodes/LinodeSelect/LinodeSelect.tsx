@@ -7,8 +7,9 @@ import React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { CustomPopper } from 'src/components/Autocomplete/Autocomplete.styles';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface LinodeSelectProps {
   /** Determine whether isOptionEqualToValue prop should be defined for Autocomplete

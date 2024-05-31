@@ -2,7 +2,8 @@ import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
 
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface RegionsProps {
   regionsData: Region[];

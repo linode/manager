@@ -12,8 +12,6 @@ import {
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
-
 import { queryPresets } from '../base';
 import { profileQueries } from '../profile';
 import {
@@ -36,6 +34,7 @@ import type {
   ResourcePage,
   UpdateDatabasePayload,
 } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const databaseQueries = createQueryKeys('databases', {
   database: (engine: Engine, id: number) => ({

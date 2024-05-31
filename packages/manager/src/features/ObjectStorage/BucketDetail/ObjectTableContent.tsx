@@ -4,7 +4,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { truncateEnd, truncateMiddle } from 'src/utilities/truncate';
 
 import { displayName, isEmptyObjectForFolder, isFolder } from '../utilities';
@@ -15,6 +14,7 @@ import type {
   ObjectStorageObject,
   ObjectStorageObjectListResponse,
 } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   data: ObjectStorageObjectListResponse[];

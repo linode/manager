@@ -2,9 +2,10 @@ import React from 'react';
 
 import { Typography } from 'src/components/Typography';
 import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { getAPIErrorOrDefault, getErrorStringOrDefault } from './errorUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const error: FormattedAPIError[] = [
   {

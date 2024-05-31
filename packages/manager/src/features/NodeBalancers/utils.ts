@@ -1,6 +1,5 @@
 import { clamp, compose, filter, isNil, toString } from 'ramda';
 
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { defaultNumeric } from 'src/utilities/defaultNumeric';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -11,6 +10,7 @@ import type {
   NodeBalancerConfigNodeFields,
 } from './types';
 import type { NodeBalancerConfigNode } from '@linode/api-v4/lib/nodebalancers';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const clampNumericString = (low: number, hi: number) =>
   compose(toString, clamp(low, hi), (value: number) =>

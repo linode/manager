@@ -7,8 +7,9 @@ import * as React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { CustomPopper } from 'src/components/Autocomplete/Autocomplete.styles';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface NodeBalancerSelectProps {
   /** Whether to display the clear icon. Defaults to `true`. */

@@ -1,4 +1,4 @@
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const baseGaugeProps = {
   height: 110,

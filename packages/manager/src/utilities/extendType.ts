@@ -3,10 +3,11 @@ import { UseQueryResult } from '@tanstack/react-query';
 
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { formatStorageUnits } from './formatStorageUnits';
 import { isNotNullOrUndefined } from './nullOrUndefined';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface ExtendedType extends LinodeType {
   formattedLabel: string;

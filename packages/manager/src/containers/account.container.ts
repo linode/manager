@@ -3,7 +3,8 @@ import { UseQueryResult } from '@tanstack/react-query';
 import * as React from 'react';
 
 import { useAccount } from 'src/queries/account/account';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface WithAccountProps {
   account: UseQueryResult<Account, FormattedAPIError[]>;

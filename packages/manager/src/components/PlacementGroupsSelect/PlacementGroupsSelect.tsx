@@ -4,12 +4,12 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { TextFieldProps } from 'src/components/TextField';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 import { PlacementGroupSelectOption } from './PlacementGroupSelectOption';
 
 import type { PlacementGroup, Region } from '@linode/api-v4';
 import type { SxProps } from '@mui/system';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface PlacementGroupsSelectProps {
   /**

@@ -4,8 +4,9 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField, TextFieldProps } from 'src/components/TextField';
-import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props extends TextFieldProps {
   errorMessage?: string;
