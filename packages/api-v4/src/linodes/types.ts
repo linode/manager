@@ -27,6 +27,7 @@ export interface Linode {
   ipv4: string[];
   ipv6: string | null;
   label: string;
+  lke_cluster_id: number | null;
   placement_group?: PlacementGroupPayload; // If not in a placement group, this will be excluded from the response.
   type: string | null;
   status: LinodeStatus;

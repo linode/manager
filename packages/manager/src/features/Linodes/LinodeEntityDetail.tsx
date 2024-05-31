@@ -108,10 +108,12 @@ export const LinodeEntityDetail = (props: Props) => {
         body={
           <LinodeEntityDetailBody
             configInterfaceWithVPC={configInterfaceWithVPC}
+            encryptionStatus={linode.disk_encryption}
             gbRAM={linode.specs.memory / 1024}
             gbStorage={linode.specs.disk / 1024}
             ipv4={linode.ipv4}
             ipv6={trimmedIPv6}
+            isLKELinode={Boolean(linode.lke_cluster_id)}
             isVPCOnlyLinode={isVPCOnlyLinode}
             linodeId={linode.id}
             linodeIsInEdgeRegion={linodeIsInEdgeRegion}
