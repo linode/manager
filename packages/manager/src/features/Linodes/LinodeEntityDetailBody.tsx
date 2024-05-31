@@ -17,6 +17,7 @@ import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { useProfile } from 'src/queries/profile';
 import { pluralize } from 'src/utilities/pluralize';
 
+import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import {
   StyledBodyGrid,
@@ -151,7 +152,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               <Grid>
                 <Box
                   alignItems="center"
-                  // data-testid={encryptionStatusTestId}
+                  data-testid={encryptionStatusTestId}
                   display="flex"
                   flexDirection="row"
                 >
