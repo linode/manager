@@ -10,6 +10,7 @@ import { Typography } from 'src/components/Typography';
 import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
@@ -80,7 +81,7 @@ export const Summary = () => {
     {
       item: {
         details: `$${price?.monthly}/month`,
-        title: type?.label ?? typeId,
+        title: type ? formatStorageUnits(type.label) : typeId,
       },
       show: Boolean(typeId),
     },
