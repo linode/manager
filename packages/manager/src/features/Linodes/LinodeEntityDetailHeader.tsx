@@ -134,10 +134,13 @@ export const LinodeEntityDetailHeader = (
     formattedTransitionText !== formattedStatus;
 
   const sxActionItem = {
-    '&:hover': {
-      backgroundColor: theme.color.blue,
-      color: '#fff',
+    '&:focus': {
+      color: theme.color.white,
     },
+    '&:hover': {
+      color: theme.color.white,
+    },
+    background: 'transparent',
     color: theme.textColors.linkActiveLight,
     fontFamily: theme.font.normal,
     fontSize: '0.875rem',
@@ -197,14 +200,14 @@ export const LinodeEntityDetailHeader = (
             onClick={() =>
               handlers.onOpenPowerDialog(isRunning ? 'Power Off' : 'Power On')
             }
-            buttonType="secondary"
+            buttonType="primary"
             disabled={!(isRunning || isOffline) || isLinodesGrantReadOnly}
             sx={sxActionItem}
           >
             {isRunning ? 'Power Off' : 'Power On'}
           </Button>
           <Button
-            buttonType="secondary"
+            buttonType="primary"
             disabled={isOffline || isLinodesGrantReadOnly}
             onClick={() => handlers.onOpenPowerDialog('Reboot')}
             sx={sxActionItem}
@@ -215,7 +218,7 @@ export const LinodeEntityDetailHeader = (
             onClick={() => {
               handleConsoleButtonClick(linodeId);
             }}
-            buttonType="secondary"
+            buttonType="primary"
             disabled={isLinodesGrantReadOnly}
             sx={sxActionItem}
           >

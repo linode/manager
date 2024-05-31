@@ -1,5 +1,6 @@
 import {
   Action,
+  Border,
   Button,
   Color,
   Select,
@@ -25,7 +26,7 @@ export const customDarkModeOptions = {
     appBar: Color.Neutrals.Black,
     bgAccessRow: Color.Neutrals[80],
     bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
-    bgPaper: Color.Neutrals[100],
+    bgPaper: Color.Neutrals[90],
     lightBlue1: Color.Neutrals.Black,
     lightBlue2: Color.Brand[100],
     main: Color.Neutrals[100],
@@ -47,21 +48,23 @@ export const customDarkModeOptions = {
     border3: Color.Neutrals.Black,
     boxShadow: 'rgba(0, 0, 0, 0.5)',
     boxShadowDark: Color.Neutrals.Black,
+    buttonPrimaryHover: Button.Primary.Hover.Background,
     drawerBackdrop: 'rgba(0, 0, 0, 0.5)',
     grey1: Color.Neutrals[50],
-    grey2: Color.Neutrals[50],
+    grey2: Color.Neutrals[100],
     grey3: Color.Neutrals[60],
-    grey5: Color.Neutrals[50],
+    grey5: Color.Neutrals[100],
     grey6: Color.Neutrals[50],
-    grey7: Color.Neutrals[100],
+    grey7: Color.Neutrals[80],
     grey9: primaryColors.divider,
     headline: primaryColors.headline,
     label: Color.Neutrals[40],
     offBlack: Color.Neutrals.White,
     red: Color.Red[70],
     tableHeaderText: Color.Neutrals.White,
-    tagButton: Color.Brand[90],
-    tagIcon: Color.Neutrals.White,
+    tagButtonBg: Color.Brand[40],
+    tagButtonText: Button.Primary.Default.Text,
+    tagIcon: Button.Primary.Default.Icon,
     white: Color.Neutrals[100],
   },
   textColors: {
@@ -477,12 +480,31 @@ export const darkTheme: ThemeOptions = {
     MuiMenuItem: {
       styleOverrides: {
         root: {
-          '&$selected, &$selected:hover': {
-            backgroundColor: 'transparent',
-            color: primaryColors.main,
-            opacity: 1,
+          '&.loading': {
+            backgroundColor: primaryColors.text,
           },
-          color: primaryColors.text,
+          '&:active': {
+            backgroundColor: Button.Primary.Pressed.Background,
+          },
+          '&:disabled': {
+            backgroundColor: Button.Primary.Disabled.Background,
+            color: Button.Primary.Disabled.Text,
+          },
+          '&:hover, &:focus': {
+            backgroundColor: Button.Primary.Hover.Background,
+            color: Button.Primary.Default.Text,
+          },
+          '&:last-child)': {
+            borderBottom: 0,
+          },
+          '&[aria-disabled="true"]': {
+            backgroundColor: Button.Primary.Disabled.Background,
+            color: Button.Primary.Disabled.Text,
+          },
+          backgroundColor: Button.Primary.Default.Background,
+          borderBottom: `1px solid ${Border.Normal}`,
+          color: Button.Primary.Default.Text,
+          padding: '10px 10px 10px 16px',
         },
         selected: {},
       },
@@ -492,9 +514,7 @@ export const darkTheme: ThemeOptions = {
         outlined: {
           // TODO: We can remove this variant since they will always have a border
           backgroundColor: Color.Neutrals[90],
-          outlined: {
-            border: `1px solid ${Color.Neutrals[80]}`,
-          },
+          border: `1px solid ${Color.Neutrals[80]}`,
         },
         root: {
           backgroundColor: Color.Neutrals[90],

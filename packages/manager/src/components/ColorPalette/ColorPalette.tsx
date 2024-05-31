@@ -102,7 +102,7 @@ export const ColorPalette = () => {
     { alias: 'theme.color.drawerBackdrop', color: theme.color.drawerBackdrop },
     { alias: 'theme.color.label', color: theme.color.label },
     { alias: 'theme.color.disabledText', color: theme.color.disabledText },
-    { alias: 'theme.color.tagButton', color: theme.color.tagButton },
+    { alias: 'theme.color.tagButton', color: theme.color.tagButtonBg },
     { alias: 'theme.color.tagIcon', color: theme.color.tagIcon },
   ];
 

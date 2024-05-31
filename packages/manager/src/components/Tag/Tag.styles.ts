@@ -32,14 +32,14 @@ export const StyledChip = styled(Chip, {
     ['& .StyledDeleteButton']: {
       color: theme.color.tagIcon,
     },
-    backgroundColor: theme.color.tagButton,
+    backgroundColor: theme.color.tagButtonBg,
   },
   // Overrides MUI chip default styles so these appear as separate elements.
   '&:hover': {
     ['& .StyledDeleteButton']: {
       color: theme.color.tagIcon,
     },
-    backgroundColor: theme.color.tagButton,
+    backgroundColor: theme.color.tagButtonBg,
   },
   fontSize: '0.875rem',
   height: 30,
@@ -58,7 +58,7 @@ export const StyledChip = styled(Chip, {
   ...(props.colorVariant === 'lightBlue' && {
     '& > span': {
       '&:focus': {
-        backgroundColor: theme.color.tagButton,
+        backgroundColor: theme.color.tagButtonBg,
         color: theme.color.black,
       },
       '&:hover': {
@@ -66,7 +66,7 @@ export const StyledChip = styled(Chip, {
         color: 'white',
       },
     },
-    backgroundColor: theme.color.tagButton,
+    backgroundColor: theme.color.tagButtonBg,
   }),
 }));
 
