@@ -77,7 +77,7 @@ export const RegionOption = ({
             {label}
             {displayDistributedRegionIcon && (
               <Box sx={visuallyHidden}>
-                &nbsp;(This region is an distributed region.)
+                &nbsp;(This region is a distributed region.)
               </Box>
             )}
             {isRegionDisabled && isRegionDisabledReason && (
