@@ -7,6 +7,13 @@ import * as factories from './factories';
 import type { EventMap, OptionalEventMap } from './types';
 import type { Event } from '@linode/api-v4';
 
+/**
+ * The event Message Mapper
+ *
+ * It aggregates all the event messages from the factories and wraps them with Typography.
+ * The typography intentionally wraps the message in a span to prevent nested paragraphs while adhering to the design system's typography.
+ */
+
 const wrapWithTypography = (
   Component: (e: Partial<Event>) => JSX.Element | string
 ) => {
@@ -30,12 +37,6 @@ export const withTypography = (eventMap: EventMap): OptionalEventMap => {
   );
 };
 
-/**
- * The event Message Mapper
- *
- * It aggregates all the event messages from the factories and wraps them with Typography.
- * The typography intentionally wraps the message in a span to prevent nested paragraphs while adhering to the design system's typography.
- */
 export const eventMessages: EventMap = Object.keys(factories).reduce(
   (acc, factoryName) => ({
     ...acc,
