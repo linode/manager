@@ -7,6 +7,8 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { Addons } from './Addons';
 
+import type { LinodeCreateFormValues } from '../utilities';
+
 describe('Linode Create v2 Addons', () => {
   it('should render an "Add-ons" heading', () => {
     const { getByText } = renderWithThemeAndHookFormContext({
@@ -36,5 +38,20 @@ describe('Linode Create v2 Addons', () => {
     await findByText(
       'Backups and Private IP are currently not available for Edge regions.'
     );
+  });
+
+  it('renders a warning if disk encryption is enabled and backups are enabled', async () => {
+    const {
+      getByText,
+    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+      component: <Addons />,
+      useFormOptions: {
+        defaultValues: { backups_enabled: true, disk_encryption: 'enabled' },
+      },
+    });
+
+    expect(
+      getByText('Virtual Machine Backups are not encrypted.')
+    ).toBeVisible();
   });
 });

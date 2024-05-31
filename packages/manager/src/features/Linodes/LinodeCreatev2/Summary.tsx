@@ -15,7 +15,6 @@ import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/d
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
-import { extendType } from 'src/utilities/extendType';
 
 export const Summary = () => {
   const theme = useTheme();
@@ -34,6 +33,7 @@ export const Summary = () => {
     placementGroupId,
     vlanLabel,
     vpcId,
+    diskEncryption,
   ] = useWatch({
     control,
     name: [
@@ -47,6 +47,7 @@ export const Summary = () => {
       'placement_group.id',
       'interfaces.1.label',
       'interfaces.0.vpc_id',
+      'disk_encryption',
     ],
   });
 
@@ -79,9 +80,9 @@ export const Summary = () => {
     {
       item: {
         details: `$${price?.monthly}/month`,
-        title: type && extendType(type).formattedLabel,
+        title: type?.label ?? typeId,
       },
-      show: Boolean(type),
+      show: Boolean(typeId),
     },
     {
       item: {
@@ -119,6 +120,12 @@ export const Summary = () => {
         title: 'Firewall Assigned',
       },
       show: Boolean(firewallId),
+    },
+    {
+      item: {
+        title: 'Encrypted',
+      },
+      show: diskEncryption === 'enabled',
     },
   ];
 
