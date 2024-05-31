@@ -13,7 +13,6 @@ import cloneDeep from 'lodash.clonedeep';
 import * as React from 'react';
 import { MapDispatchToProps, connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose as recompose } from 'recompose';
 import { v4 } from 'uuid';
 
 import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
@@ -34,10 +33,7 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
-import {
-  WithAccountProps,
-  withAccount,
-} from 'src/containers/account.container';
+import { WithAccountProps } from 'src/containers/account.container';
 import { WithFeatureFlagProps } from 'src/containers/flags.container';
 import { WithImagesProps as ImagesProps } from 'src/containers/images.container';
 import { RegionsProps } from 'src/containers/regions.container';
@@ -1232,6 +1228,4 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, CombinedProps> = (
 
 const connected = connect(undefined, mapDispatchToProps);
 
-const enhanced = recompose<CombinedProps, InnerProps>(connected, withAccount);
-
-export default enhanced(LinodeCreate);
+export default connected(LinodeCreate);

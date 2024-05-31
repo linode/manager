@@ -16,7 +16,7 @@ import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { useDatabaseMutation } from 'src/queries/databases';
+import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 

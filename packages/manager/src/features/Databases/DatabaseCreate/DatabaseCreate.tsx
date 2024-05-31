@@ -49,7 +49,7 @@ import {
   useCreateDatabaseMutation,
   useDatabaseEnginesQuery,
   useDatabaseTypesQuery,
-} from 'src/queries/databases';
+} from 'src/queries/databases/databases';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';

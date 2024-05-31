@@ -16,7 +16,7 @@ import {
   useDatabaseMutation,
   useDatabaseQuery,
   useDatabaseTypesQuery,
-} from 'src/queries/databases';
+} from 'src/queries/databases/databases';
 import { FormattedAPIError } from 'src/types/FormattedAPIError';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 

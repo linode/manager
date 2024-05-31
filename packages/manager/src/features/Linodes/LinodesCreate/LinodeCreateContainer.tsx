@@ -11,12 +11,15 @@ import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose as recompose } from 'recompose';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Tag } from 'src/components/TagsInput/TagsInput';
+import {
+  WithAccountProps,
+  withAccount,
+} from 'src/containers/account.container';
 import {
   WithAccountSettingsProps,
   withAccountSettings,
@@ -135,6 +138,7 @@ interface State {
 }
 
 type CombinedProps = CreateType &
+  WithAccountProps &
   WithImagesProps &
   WithTypesProps &
   WithLinodesProps &
@@ -978,20 +982,31 @@ const mapStateToProps: MapState<CreateType, CombinedProps> = (state) => ({
 
 const connected = connect(mapStateToProps);
 
-export default recompose<CombinedProps, {}>(
-  withImages,
-  withLinodes,
-  withRegions,
-  withTypes,
-  connected,
-  withFeatureFlags,
-  withProfile,
-  withAgreements,
-  withQueryClient,
-  withAccountSettings,
-  withMarketplaceApps,
-  withEventsPollingActions
-)(LinodeCreateContainer);
+export default withImages(
+  withAccount(
+    withLinodes(
+      withRegions(
+        withTypes(
+          connected(
+            withFeatureFlags(
+              withProfile(
+                withAgreements(
+                  withQueryClient(
+                    withAccountSettings(
+                      withMarketplaceApps(
+                        withEventsPollingActions(LinodeCreateContainer)
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+);
 
 const actionsAndLabels = {
   fromApp: { action: 'one-click', labelPayloadKey: 'stackscript_id' },

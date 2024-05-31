@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { useDeleteDatabaseMutation } from 'src/queries/databases';
+import { useDeleteDatabaseMutation } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
