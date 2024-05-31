@@ -91,7 +91,6 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     } else {
       request.resource_id = widget.resource_id.map((obj) => parseInt(obj, 10));
     }
-    request.resource_id = [57352521,57407248]
     request.metric = widget.metric!;
     request.time_duration = props.globalFilters
       ? props.globalFilters.duration!
