@@ -92,36 +92,12 @@ export const PlansPanel = (props: PlansPanelProps) => {
     getIsDistributedRegion(regionsData ?? [], selectedRegionID ?? '');
 
   const getDedicatedDistributedRegionPlanType = () => {
-    const distributedRegionPlans = types.filter(
+    return types.filter(
       (type) =>
         type.id.includes('dedicated-edge') ||
         type.id.includes('nanode-edge') ||
         type.class === 'edge'
     );
-
-    if (distributedRegionPlans.length) {
-      return distributedRegionPlans;
-    }
-
-    // @TODO Remove fallback once distributed region plans are activated
-    // 256GB and 512GB plans will not be supported for distributed regions
-    const plansUpTo128GB = (_plans.dedicated ?? []).filter(
-      (planType) =>
-        !['Dedicated 256 GB', 'Dedicated 512 GB'].includes(
-          planType.formattedLabel
-        )
-    );
-
-    return plansUpTo128GB.map((plan) => {
-      delete plan.transfer;
-      return {
-        ...plan,
-        price: {
-          hourly: 0,
-          monthly: 0,
-        },
-      };
-    });
   };
 
   const plans = showDistributedRegionPlanTable
