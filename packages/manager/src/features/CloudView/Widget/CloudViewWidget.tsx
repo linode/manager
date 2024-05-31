@@ -323,7 +323,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     <Grid xs={widget.size}>
       <Paper
         style={{
-          borderStyle: 'ridge',
+          border: 'solid 1px #e3e5e8',
           height: '98%',
           marginTop: '10px',
           width: '100%',

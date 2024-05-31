@@ -121,11 +121,6 @@ export const Autocomplete = <
               </React.Fragment>
             ),
           }}
-          sx={{
-            '& .MuiAutocomplete-endAdornment': {
-              top: '50%',
-            },
-          }}
         />
       )}
       renderOption={(props, option, state, ownerState) => {
