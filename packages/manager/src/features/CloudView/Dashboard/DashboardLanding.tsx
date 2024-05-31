@@ -3,12 +3,23 @@ import { Paper } from '@mui/material';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
-import { AclpConfig, AclpWidget } from '../Models/CloudPulsePreferences';
+import { AclpConfig } from '../Models/CloudPulsePreferences';
 import { FiltersObject } from '../Models/GlobalFilterProperties';
 import { GlobalFilters } from '../Overview/GlobalFilters';
 import { CloudPulseDashboard, DashboardProperties } from './Dashboard';
+import { getUserPreference, updateGlobalFilterPreference } from '../Utils/UserPreference'
+import { DASHBOARD_ID, INTERVAL, REFRESH, REGION, RESOURCES, TIME_DURATION } from '../Utils/CloudPulseConstants'
+import CloudViewIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { styled } from '@mui/material/styles';
+
+const StyledPlaceholder = styled(Placeholder, {
+  label: 'StyledPlaceholder',
+})({
+  flex: 'auto',
+});
+
 
 export const DashBoardLanding = () => {
   const generateStartTime = (modifier: string, nowInSeconds: number) => {
@@ -57,22 +68,10 @@ export const DashBoardLanding = () => {
   // since preference is mutable and savable
   const preferenceRef = React.useRef<any>();
 
-  const { data: preferences, refetch: refetchPreferences } = usePreferences();
-  const { mutateAsync: updatePreferences } = useMutatePreferences();
+  // const { data: preferences, refetch: refetchPreferences } = usePreferences();
+  const [preferences, setPreferences] = React.useState<any>();
 
   const updatedDashboard = React.useRef<Dashboard>();
-
-  const handlPrefChange = (item: AclpConfig) => {
-    refetchPreferences()
-      .then(({ data: response }) => response ?? Promise.reject())
-      .then((response) => {
-        updatePreferences({
-          ...response,
-          aclpPreference: item,
-        });
-      })
-      .catch(); // swallow the error, it's nbd if the choice isn't saved
-  };
 
   const handleGlobalFilterChange = (
     globalFilter: FiltersObject,
@@ -82,7 +81,7 @@ export const DashBoardLanding = () => {
       dashboardPropRef.current = getInitDashboardProps();
     }
 
-    if (changedFilter === 'timeduration') {
+    if (changedFilter === TIME_DURATION) {
       dashboardPropRef.current.dashboardFilters.duration =
         globalFilter.duration;
       dashboardPropRef.current.dashboardFilters.timeRange =
@@ -92,7 +91,7 @@ export const DashBoardLanding = () => {
     }
 
     if (
-      changedFilter === 'region' &&
+      changedFilter === REGION &&
       dashboardPropRef.current.dashboardFilters.region != globalFilter.region
     ) {
       dashboardPropRef.current.dashboardFilters.region = globalFilter.region;
@@ -100,14 +99,14 @@ export const DashBoardLanding = () => {
       if (
         preferences &&
         preferences.aclpPreference.region !=
-          preferenceRef.current.aclpPreference.region
+        preferenceRef.current.aclpPreference.region
       ) {
         preferenceRef.current.aclpPreference.resources = [];
         dashboardPropRef.current.dashboardFilters.resource = [];
       }
     }
 
-    if (changedFilter === 'resource') {
+    if (changedFilter === RESOURCES) {
       dashboardPropRef.current.dashboardFilters.resource =
         globalFilter.resource;
       preferenceRef.current.aclpPreference.dashboardId = dashboardPropRef
@@ -119,14 +118,14 @@ export const DashBoardLanding = () => {
       preferenceRef.current.aclpPreference.resources = globalFilter.resource;
     }
 
-    if (changedFilter === 'timestep') {
+    if (changedFilter === INTERVAL) {
       dashboardPropRef.current.dashboardFilters.interval =
         globalFilter.interval;
       dashboardPropRef.current.dashboardFilters.step = globalFilter.step;
       preferenceRef.current.aclpPreference.interval = globalFilter.interval;
     }
 
-    if (changedFilter === 'refresh') {
+    if (changedFilter === REFRESH) {
       dashboardPropRef.current.dashboardFilters.timestamp =
         globalFilter.timestamp;
     }
@@ -139,7 +138,6 @@ export const DashBoardLanding = () => {
         : undefined!,
     });
 
-    handlPrefChange(preferenceRef.current.aclpPreference);
   };
 
   const handleDashboardChange = (dashboard: Dashboard) => {
@@ -148,12 +146,14 @@ export const DashBoardLanding = () => {
       dashboardPropRef.current.dashboardFilters.serviceType = undefined!;
       updatedDashboard.current = undefined!;
       setDashboardProp({ ...dashboardPropRef.current });
-
+      updateGlobalFilterPreference({
+        [DASHBOARD_ID]: undefined,
+        [RESOURCES]: [],
+      });
       preferenceRef.current.aclpPreference.dashboardId = undefined!;
       preferenceRef.current.aclpPreference.resources = [];
       preferenceRef.current.aclpPreference.region = '';
 
-      handlPrefChange(preferenceRef.current.aclpPreference);
       return;
     }
 
@@ -193,18 +193,20 @@ export const DashBoardLanding = () => {
 
     if (dashboard && dashboard.id) {
       preferenceRef.current.aclpPreference.dashboardId = dashboard.id;
-
+      updateGlobalFilterPreference({
+        [DASHBOARD_ID] : dashboard.id,
+        [RESOURCES] : []
+      })
       if (
         preferences &&
         preferences.aclpPreference.dashboardId !=
-          preferenceRef.current.aclpPreference.dashboardId
+        preferenceRef.current.aclpPreference.dashboardId
       ) {
         preferenceRef.current.aclpPreference.resources = [];
         dashboardPropRef.current.dashboardFilters.resource = [];
       }
     }
 
-    handlPrefChange(preferenceRef.current.aclpPreference);
   };
 
   const saveOrEditDashboard = (dashboard: Dashboard) => {
@@ -238,10 +240,21 @@ export const DashBoardLanding = () => {
           };
         }
       );
-      // call preferences
-      handlPrefChange(preferenceRef.current.aclpPreference);
     }
   };
+
+  //Fetch the data from preferences
+  React.useEffect(() => {
+    const fetchPreferences = async () => {
+      const userPreference = await getUserPreference();
+      if (!userPreference || !userPreference.aclpPreference) {
+        setPreferences({ aclpPreference: {} })
+      } else {
+        setPreferences(userPreference);
+      }
+    }
+    fetchPreferences();
+  }, [])
 
   if (!preferences) {
     return <CircleProgress></CircleProgress>;
@@ -258,6 +271,10 @@ export const DashBoardLanding = () => {
       }
     }
   }
+
+
+
+
   return (
     <>
       <Paper style={{ borderStyle: 'ridge' }}>
@@ -293,6 +310,22 @@ export const DashBoardLanding = () => {
             widgetPreferences={preferenceRef.current.aclpPreference.widgets}
           />
         )}
+
+      {
+        (!dashboardProp.dashboardFilters.serviceType ||
+          !dashboardProp.dashboardFilters.region ||
+          !dashboardProp.dashboardFilters.resource ||
+          dashboardProp.dashboardFilters.resource.length === 0 ||
+          !dashboardProp.dashboardFilters.timeRange ||
+          !dashboardProp.dashboardFilters.step) &&
+        (
+          <Paper>
+            <StyledPlaceholder icon={CloudViewIcon}
+              subtitle='Select Service Type, Region and Resource to visualize metrics'
+              title="" />
+          </Paper>
+        )
+      }
     </>
   );
 };

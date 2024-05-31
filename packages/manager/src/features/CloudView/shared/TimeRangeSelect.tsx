@@ -80,9 +80,9 @@ export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
     props.defaultValue
       ? getTimeDurationFromTimeRange(props.defaultValue)
       : {
-          unit: 'min',
-          value: 30,
-        }
+        unit: 'min',
+        value: 30,
+      }
   );
   /*
     Why division by 1000?

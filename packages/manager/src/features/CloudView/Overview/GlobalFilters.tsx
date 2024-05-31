@@ -15,6 +15,10 @@ import { CloudViewRegionSelect } from '../shared/RegionSelect';
 import { CloudViewMultiResourceSelect } from '../shared/ResourceMultiSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/TimeRangeSelect';
 
+
+import { updateGlobalFilterPreference } from '../Utils/UserPreference';
+import { TIME_DURATION,  REGION, RESOURCES } from '../Utils/CloudPulseConstants';
+
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const emitGlobalFilterChange = (
     updatedFilters: FiltersObject,
@@ -23,65 +27,67 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     props.handleAnyFilterChange(updatedFilters, changedFilter);
   };
 
-  const handleTimeRangeChange = (
+  const handleTimeRangeChange = React.useCallback((
     start: number,
     end: number,
     timeDuration?: TimeDuration,
     timeRangeLabel?: string
   ) => {
-    console.log('TimeRange: ', start, end);
 
     if (start > 0 && end > 0) {
       const filterObj = { ...props.globalFilters };
       filterObj.timeRange = { end, start };
       filterObj.duration = timeDuration;
       filterObj.durationLabel = timeRangeLabel!;
-      emitGlobalFilterChange(filterObj, 'timeduration');
+      emitGlobalFilterChange(filterObj, TIME_DURATION);
+      updateGlobalFilterPreference({ [TIME_DURATION]: filterObj.durationLabel });
     }
-  };
+  }, []);
 
-  const handleRegionChange = (region: string | undefined) => {
-    console.log('Region: ', region);
+  const handleRegionChange = React.useCallback((region: string | undefined) => {
 
     if (region) {
-      emitGlobalFilterChange({ ...props.globalFilters, region }, 'region');
+      emitGlobalFilterChange({ ...props.globalFilters, region }, REGION);
+      updateGlobalFilterPreference({ [REGION]: region, [RESOURCES]: [] });
     }
-  };
+  }, []);
 
-  const handleResourceChange = (resourceId: any[], reason: string) => {
-    console.log('Resource ID: ', resourceId);
-    console.log('resourcereason', reason);
-    if ((resourceId && resourceId.length > 0) || reason == 'clear') {
+  const handleResourceChange = React.useCallback((resourceId: any[], reason: string) => {
+    if ((resourceId && resourceId.length > 0) || (reason == 'clear' || reason === "removeOption")) {
+      updateGlobalFilterPreference({ [RESOURCES]: resourceId.map((obj) => obj.id) });
       emitGlobalFilterChange(
         {
           ...props.globalFilters,
           resource: resourceId.map((obj) => obj.id),
         },
-        'resource'
+        RESOURCES
       );
     }
-  };
+  }, []);
 
-  const handleDashboardChange = (
+  const handleDashboardChange = React.useCallback((
     dashboard: Dashboard | undefined,
     isClear: boolean
   ) => {
-    console.log('Selected Dashboard: ', dashboard);
 
     if (dashboard || (!dashboard && !isClear)) {
       props.handleDashboardChange(dashboard!);
     }
-  };
+  }, []);
 
-  const handleGlobalRefresh = () => {
+  const handleGlobalRefresh = React.useCallback(() => {
     emitGlobalFilterChange(
       {
         ...props.globalFilters,
-        timestamp: Date.now(),
+        timestamp: Date.now()
       },
       'refresh'
     );
-  };
+  }, [])
+
+
+
+
 
   return (
     <Grid container sx={{ ...itemSpacing, padding: '8px' }}>

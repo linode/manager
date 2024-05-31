@@ -9,7 +9,7 @@ export interface IntervalSelectProperties {
   scrape_interval: string;
 }
 
-export const IntervalSelectComponent = (props: IntervalSelectProperties) => {
+export const IntervalSelectComponent = React.memo((props: IntervalSelectProperties) => {
   const getInSeconds = (interval: string) => {
     if (interval.endsWith('s')) {
       return Number(interval.slice(0, -1));
@@ -117,4 +117,4 @@ export const IntervalSelectComponent = (props: IntervalSelectProperties) => {
       )}
     </div>
   );
-};
+});

@@ -7,10 +7,10 @@ export interface AggregateFunctionProperties {
   onAggregateFuncChange: any;
 }
 
-export const AggregateFunctionComponent = (
+export const AggregateFunctionComponent = React.memo((
   props: AggregateFunctionProperties
 ) => {
-
+  
   //Convert list of available_aggregate_fun into a proper response structure accepted by Autocomplete component
   const available_aggregate_func = props.available_aggregate_func?.map(
     (aggregate_func) => {
@@ -63,4 +63,4 @@ export const AggregateFunctionComponent = (
       )}
     </div>
   );
-};
+});

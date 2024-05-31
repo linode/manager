@@ -34,6 +34,7 @@ export const getCloudViewMetricsAPI = (
     setMethod('POST'),
     setData(metricsRequest),
     setHeaders({
-      Authorization: 'Bearer ' + jweToken,
+      Authorization: `Bearer ${jweToken}`,
+      // 'Authentication-type' : "jwe"
     })
   );

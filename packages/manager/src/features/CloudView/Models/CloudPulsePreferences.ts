@@ -6,11 +6,7 @@ export interface AclpConfig {
   region: string;
   resources: string[];
   timeDuration: string;
-  widgets: {
-    aggregateFunction: string;
-    label: string;
-    size: number;
-  }[];
+  widgets: AclpWidget[];
 }
 
 export interface AclpWidget {
