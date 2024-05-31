@@ -8,7 +8,7 @@ import { useDeleteFirewall, useMutateFirewall } from 'src/queries/firewalls';
 import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
-import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
+import { queryKey as nodebalancersQueryKey } from 'src/queries/nodebalancers';
 import { capitalize } from 'src/utilities/capitalize';
 
 export type Mode = 'delete' | 'disable' | 'enable';
@@ -71,7 +71,7 @@ export const FirewallDialog = React.memo((props: Props) => {
     devices?.forEach((device) => {
       const deviceType = device.entity.type;
       queryClient.invalidateQueries([
-        deviceType === 'linode' ? linodesQueryKey : nodebalancerQueryKey,
+        deviceType === 'linode' ? linodesQueryKey : nodebalancersQueryKey,
         deviceType,
         device.entity.id,
         'firewalls',
