@@ -119,7 +119,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
     const plansMap: PlanSelectionType[] = plans[plan];
     const {
       allDisabledPlans,
-      hasDisabledPlans,
       hasMajorityOfPlansDisabled,
       plansForThisLinodeTypeClass,
     } = extractPlansInformation({
@@ -144,7 +143,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
                 plan
               )}
               disabledClasses={disabledClasses}
-              hasDisabledPlans={hasDisabledPlans}
+              hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
               hasSelectedRegion={hasSelectedRegion}
               planType={plan}
               regionsData={regionsData || []}

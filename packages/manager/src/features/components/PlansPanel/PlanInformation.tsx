@@ -22,7 +22,7 @@ import type { Region } from '@linode/api-v4';
 
 export interface PlanInformationProps {
   disabledClasses?: LinodeTypeClass[];
-  hasDisabledPlans: boolean;
+  hasMajorityOfPlansDisabled: boolean;
   hasSelectedRegion: boolean;
   hideLimitedAvailabilityBanner?: boolean;
   isSelectedRegionEligibleForPlan: boolean;
@@ -34,7 +34,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
   const theme = useTheme();
   const {
     disabledClasses,
-    hasDisabledPlans,
+    hasMajorityOfPlansDisabled,
     hasSelectedRegion,
     hideLimitedAvailabilityBanner,
     isSelectedRegionEligibleForPlan,
@@ -74,7 +74,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
         isSelectedRegionEligibleForPlan &&
         !hideLimitedAvailabilityBanner && (
           <LimitedAvailabilityNotice
-            hasDisabledPlans={hasDisabledPlans}
+            hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
             planType={planType}
           />
         )}
@@ -91,21 +91,21 @@ export const PlanInformation = (props: PlanInformationProps) => {
 export const limitedAvailabilityBannerTestId = 'limited-availability-banner';
 
 interface LimitedAvailabilityNoticeProps {
-  hasDisabledPlans: boolean;
+  hasMajorityOfPlansDisabled: boolean;
   planType: 'shared' | LinodeTypeClass;
 }
 
 export const LimitedAvailabilityNotice = (
   props: LimitedAvailabilityNoticeProps
 ) => {
-  const { hasDisabledPlans, planType } = props;
+  const { hasMajorityOfPlansDisabled, planType } = props;
 
   switch (planType) {
     case 'dedicated':
       return (
         <LimitedAvailabilityNoticeCopy
           docsLink={DEDICATED_COMPUTE_INSTANCES_LINK}
-          hasDisabledPlans={hasDisabledPlans}
+          hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
           planTypeLabel="Dedicated CPU"
         />
       );
@@ -114,7 +114,7 @@ export const LimitedAvailabilityNotice = (
       return (
         <LimitedAvailabilityNoticeCopy
           docsLink={SHARED_COMPUTE_INSTANCES_LINK}
-          hasDisabledPlans={hasDisabledPlans}
+          hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
           planTypeLabel="Shared CPU"
         />
       );
@@ -123,7 +123,7 @@ export const LimitedAvailabilityNotice = (
       return (
         <LimitedAvailabilityNoticeCopy
           docsLink={HIGH_MEMORY_COMPUTE_INSTANCES_LINK}
-          hasDisabledPlans={hasDisabledPlans}
+          hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
           planTypeLabel="High Memory"
         />
       );
@@ -132,7 +132,7 @@ export const LimitedAvailabilityNotice = (
       return (
         <LimitedAvailabilityNoticeCopy
           docsLink={PREMIUM_COMPUTE_INSTANCES_LINK}
-          hasDisabledPlans={hasDisabledPlans}
+          hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
           planTypeLabel="Premium CPU"
         />
       );
@@ -141,7 +141,7 @@ export const LimitedAvailabilityNotice = (
       return (
         <LimitedAvailabilityNoticeCopy
           docsLink={GPU_COMPUTE_INSTANCES_LINK}
-          hasDisabledPlans={hasDisabledPlans}
+          hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
           planTypeLabel="GPU"
         />
       );
@@ -153,16 +153,16 @@ export const LimitedAvailabilityNotice = (
 
 interface LimitedAvailabilityNoticeCopyProps {
   docsLink: string;
-  hasDisabledPlans: boolean;
+  hasMajorityOfPlansDisabled: boolean;
   planTypeLabel: string;
 }
 
 export const LimitedAvailabilityNoticeCopy = (
   props: LimitedAvailabilityNoticeCopyProps
 ) => {
-  const { docsLink, hasDisabledPlans, planTypeLabel } = props;
+  const { docsLink, hasMajorityOfPlansDisabled, planTypeLabel } = props;
 
-  return hasDisabledPlans ? (
+  return hasMajorityOfPlansDisabled ? (
     <Notice
       sx={(theme: Theme) => ({
         marginBottom: theme.spacing(3),
