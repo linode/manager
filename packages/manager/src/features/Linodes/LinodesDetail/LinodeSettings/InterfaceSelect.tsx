@@ -5,6 +5,7 @@ import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
 import Select from 'src/components/EnhancedSelect/Select';
+import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
@@ -384,26 +385,33 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
   return (
     <Grid container>
       {fromAddonsPanel ? null : (
-        <Grid xs={isSmallBp ? 12 : 6}>
-          <Select
-            options={
-              // Do not display "None" as an option for eth0 (must be Public Internet, VLAN, or VPC).
-              slotNumber > 0
-                ? purposeOptions
-                : purposeOptions.filter(
-                    (thisPurposeOption) => thisPurposeOption.value !== 'none'
-                  )
-            }
-            value={purposeOptions.find(
-              (thisOption) => thisOption.value === purpose
+        <>
+          <Grid width={'100%'}>
+            {errors.primaryError && (
+              <Notice text={errors.primaryError} variant="error" />
             )}
-            disabled={readOnly}
-            isClearable={false}
-            label={`eth${slotNumber}`}
-            onChange={handlePurposeChange}
-          />
-          {unavailableInRegionHelperTextJSX}
-        </Grid>
+          </Grid>
+          <Grid xs={isSmallBp ? 12 : 6}>
+            <Select
+              options={
+                // Do not display "None" as an option for eth0 (must be Public Internet, VLAN, or VPC).
+                slotNumber > 0
+                  ? purposeOptions
+                  : purposeOptions.filter(
+                      (thisPurposeOption) => thisPurposeOption.value !== 'none'
+                    )
+              }
+              value={purposeOptions.find(
+                (thisOption) => thisOption.value === purpose
+              )}
+              disabled={readOnly}
+              isClearable={false}
+              label={`eth${slotNumber}`}
+              onChange={handlePurposeChange}
+            />
+            {unavailableInRegionHelperTextJSX}
+          </Grid>
+        </>
       )}
       {purpose === 'vlan' &&
         regionHasVLANs !== false &&

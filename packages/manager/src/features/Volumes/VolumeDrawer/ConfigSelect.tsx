@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormControl } from 'src/components/FormControl';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 
@@ -43,39 +43,38 @@ export const ConfigSelect = React.memo((props: Props) => {
     }
   }
 
-  if (linodeId === null) {
-    return null;
-  }
-
   return (
     <FormControl
       fullWidth={width ? false : true}
       style={{ marginTop: 20, width }}
     >
-      <Select
+      <Autocomplete
         errorText={
           error ?? configsError
             ? 'An error occurred while retrieving configs for this Linode.'
             : undefined
         }
-        noOptionsMessage={
-          () =>
-            !configs || configs.length == 0
-              ? 'No configs are available for this Linode.'
-              : 'No options.' // No matches for search
+        noOptionsText={
+          !configs || configs.length == 0
+            ? 'No configs are available for this Linode.'
+            : 'No options.'
         }
-        onChange={(e: Item<number>) => {
-          onChange(+e.value);
+        onChange={(_, selected) => {
+          onChange(+selected.value);
         }}
+        value={
+          value && value !== -1
+            ? configList?.find((thisConfig) => thisConfig.value === value)
+            : { label: '', value: -1 }
+        }
+        disableClearable
         id={name}
-        isClearable={false}
+        isOptionEqualToValue={(option, value) => option.value === value.value}
         label="Config"
-        name={name}
         noMarginTop
         onBlur={onBlur}
-        options={configList}
+        options={configList ?? []}
         placeholder="Select a Config"
-        value={configList?.find((thisConfig) => thisConfig.value === value)}
         {...rest}
       />
     </FormControl>

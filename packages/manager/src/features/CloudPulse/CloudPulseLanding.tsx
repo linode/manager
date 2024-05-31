@@ -1,13 +1,23 @@
 import * as React from 'react';
+import { Route, Switch } from 'react-router-dom';
 
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
-import { Paper } from 'src/components/Paper';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
+import { CloudPulseTabs } from './CloudPulseTabs';
 export const CloudPulseLanding = () => {
   return (
     <>
-      <LandingHeader removeCrumbX={1} title="Akamai Cloud Pulse" />
-      <Paper></Paper>
+      <LandingHeader
+        breadcrumbProps={{ pathname: '/Akamai Cloud Pulse' }}
+        docsLabel="Getting Started"
+        docsLink="https://www.linode.com/docs/"
+      />
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <Switch>
+          <Route component={CloudPulseTabs} />
+        </Switch>
+      </React.Suspense>
     </>
   );
 };
