@@ -14,7 +14,7 @@ export const reserved: PartialEventMap<'reserved'> = {
   reserved_ip_create: {
     notification: () => (
       <>
-        An reserved IP address has been <strong>created</strong> on your
+        A reserved IP address has been <strong>created</strong> on your
         account.
       </>
     ),
