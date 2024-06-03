@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import { isEmpty } from '@linode/api-v4';
+import React, { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
@@ -14,7 +15,7 @@ import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
 } from 'src/queries/linodes/linodes';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { Access } from './Access';
 import { Actions } from './Actions';
@@ -97,6 +98,18 @@ export const LinodeCreatev2 = () => {
     }
   };
 
+  const previousSubmitCount = useRef<number>(0);
+
+  useEffect(() => {
+    if (
+      !isEmpty(form.formState.errors) &&
+      form.formState.submitCount > previousSubmitCount.current
+    ) {
+      scrollErrorIntoView(undefined, { behavior: 'smooth' });
+    }
+    previousSubmitCount.current = form.formState.submitCount;
+  }, [form.formState]);
+
   return (
     <FormProvider {...form}>
       <DocumentTitleSegment segment="Create a Linode" />
@@ -105,12 +118,7 @@ export const LinodeCreatev2 = () => {
         docsLink="https://www.linode.com/docs/guides/platform/get-started/"
         title="Create"
       />
-      <form
-        onSubmit={form.handleSubmit(onSubmit, () =>
-          scrollErrorIntoViewV2(formRef)
-        )}
-        ref={formRef}
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} ref={formRef}>
         <Error />
         <Stack gap={3}>
           <Tabs index={currentTabIndex} onChange={onTabChange}>
