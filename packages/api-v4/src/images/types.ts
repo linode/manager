@@ -4,7 +4,21 @@ export type ImageStatus =
   | 'deleted'
   | 'pending_upload';
 
-type ImageCapabilities = 'cloud-init';
+type ImageCapabilities = 'cloud-init' | 'distributed-images';
+
+type ImageRegionStatus =
+  | 'creating'
+  | 'pending'
+  | 'available'
+  | 'pending deletion'
+  | 'pending replication'
+  | 'replicating'
+  | 'timedout';
+
+export interface ImageRegion {
+  region: string;
+  status: ImageRegionStatus;
+}
 
 export interface Image {
   eol: string | null;
@@ -16,12 +30,14 @@ export interface Image {
   type: string;
   is_public: boolean;
   size: number;
+  total_size: number;
   created_by: null | string;
   vendor: string | null;
   deprecated: boolean;
   expiry: null | string;
   status: ImageStatus;
   capabilities: ImageCapabilities[];
+  regions: ImageRegion[];
   tags: string[];
 }
 
