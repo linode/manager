@@ -13,7 +13,7 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { Backups } from './Backups';
 
-import type { CreateLinodeRequest } from '@linode/api-v4';
+import type { LinodeCreateFormValues } from '../utilities';
 
 describe('Linode Create V2 Backups Addon', () => {
   it('should render a label and checkbox', () => {
@@ -30,7 +30,7 @@ describe('Linode Create V2 Backups Addon', () => {
   it('should get its value from the form context', () => {
     const {
       getByRole,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
       component: <Backups />,
       useFormOptions: { defaultValues: { backups_enabled: true } },
     });
@@ -75,7 +75,7 @@ describe('Linode Create V2 Backups Addon', () => {
 
     const {
       getByRole,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
       component: <Backups />,
       useFormOptions: { defaultValues: { region: region.id } },
     });
@@ -101,7 +101,7 @@ describe('Linode Create V2 Backups Addon', () => {
 
     const {
       getByRole,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
       component: <Backups />,
     });
 
@@ -110,5 +110,20 @@ describe('Linode Create V2 Backups Addon', () => {
     await waitFor(() => {
       expect(checkbox).toBeDisabled();
     });
+  });
+
+  it('renders a warning if disk encryption is enabled and backups are enabled', async () => {
+    const {
+      getByText,
+    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+      component: <Backups />,
+      useFormOptions: {
+        defaultValues: { backups_enabled: true, disk_encryption: 'enabled' },
+      },
+    });
+
+    expect(
+      getByText('Virtual Machine Backups are not encrypted.')
+    ).toBeVisible();
   });
 });
