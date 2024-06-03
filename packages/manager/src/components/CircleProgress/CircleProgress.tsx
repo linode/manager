@@ -21,9 +21,9 @@ interface CircleProgressProps extends Omit<CircularProgressProps, 'size'> {
    */
   noPadding?: boolean;
   /**
-   * To be primarily used with mini and noPadding. Set spinner to a custom size.
+   * Set spinner to a smaller custom size
    */
-  size?: 'lg' | 'md' | 'sm' | 'xs';
+  size?: 'md' | 'sm' | 'xs';
   /**
    * Additional styles to apply to the root element.
    */
@@ -31,7 +31,6 @@ interface CircleProgressProps extends Omit<CircularProgressProps, 'size'> {
 }
 
 const SIZE_MAP = {
-  lg: 70,
   md: 40,
   sm: 20,
   xs: 14,
@@ -49,7 +48,7 @@ const CircleProgress = (props: CircleProgressProps) => {
 
   if (size) {
     return (
-      <StyledMiniCircularProgress
+      <StyledCustomCircularProgress
         aria-label="Content is loading"
         data-qa-circle-progress
         data-testid="circle-progress"
@@ -126,7 +125,7 @@ const StyledCircularProgress = styled(_CircularProgress)(({ theme }) => ({
   },
 }));
 
-const StyledMiniCircularProgress = styled(_CircularProgress, {
+const StyledCustomCircularProgress = styled(_CircularProgress, {
   shouldForwardProp: omittedProps(['noPadding']),
 })<{ noPadding: boolean | undefined }>(({ theme, ...props }) => ({
   padding: `calc(${theme.spacing()} * 1.3)`,
