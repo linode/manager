@@ -131,6 +131,8 @@ export const baseApps = {
   '1329462': 'LinuxGSM',
   '1350733': 'Jitsi Cluster',
   '1350783': 'GlusterFS Cluster',
+  '1366191': 'Couchbase Cluster',
+  '1377657': 'Apache Kafka Cluster',
 };
 
 const oneClickFilter = [
