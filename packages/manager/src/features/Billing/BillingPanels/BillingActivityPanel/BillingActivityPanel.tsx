@@ -64,7 +64,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   headerContainer: {
     alignItems: 'center',
-    backgroundColor: theme.color.white,
+    backgroundColor: theme.bg.bgPaper,
+    border:
+      theme.name === 'dark' ? `1px solid ${theme.borderColors.divider}` : 0,
+    borderBottom: 0,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -335,7 +338,7 @@ export const BillingActivityPanel = (props: Props) => {
   }, [selectedTransactionType, combinedData]);
 
   return (
-    <Grid xs={12} data-qa-billing-activity-panel>
+    <Grid data-qa-billing-activity-panel xs={12}>
       <div className={classes.root}>
         <div className={classes.headerContainer}>
           <Typography className={classes.headline} variant="h2">
