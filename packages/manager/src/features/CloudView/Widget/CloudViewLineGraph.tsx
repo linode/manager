@@ -56,7 +56,7 @@ export const CloudViewLineGraph = React.memo(
       <React.Fragment>
         <Typography
           className={classes.title}
-          style={{ marginLeft: '13px', marginTop: '25px', paddingTop: '10px' }}
+          style={{ marginLeft: '13px', marginTop: '25px', paddingTop: '15px' }}
           variant="body1"
         >
           {title}

@@ -1,25 +1,34 @@
 import { Dashboard } from '@linode/api-v4';
 import { Paper } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import CloudViewIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
 import { AclpConfig } from '../Models/CloudPulsePreferences';
 import { FiltersObject } from '../Models/GlobalFilterProperties';
 import { GlobalFilters } from '../Overview/GlobalFilters';
+import {
+  DASHBOARD_ID,
+  INTERVAL,
+  REFRESH,
+  REGION,
+  RESOURCES,
+  TIME_DURATION,
+} from '../Utils/CloudPulseConstants';
+import {
+  getUserPreference,
+  updateGlobalFilterPreference,
+} from '../Utils/UserPreference';
 import { CloudPulseDashboard, DashboardProperties } from './Dashboard';
-import { getUserPreference, updateGlobalFilterPreference } from '../Utils/UserPreference'
-import { DASHBOARD_ID, INTERVAL, REFRESH, REGION, RESOURCES, TIME_DURATION } from '../Utils/CloudPulseConstants'
-import CloudViewIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import { styled } from '@mui/material/styles';
 
 const StyledPlaceholder = styled(Placeholder, {
   label: 'StyledPlaceholder',
 })({
   flex: 'auto',
 });
-
 
 export const DashBoardLanding = () => {
   const generateStartTime = (modifier: string, nowInSeconds: number) => {
@@ -99,7 +108,7 @@ export const DashBoardLanding = () => {
       if (
         preferences &&
         preferences.aclpPreference.region !=
-        preferenceRef.current.aclpPreference.region
+          preferenceRef.current.aclpPreference.region
       ) {
         preferenceRef.current.aclpPreference.resources = [];
         dashboardPropRef.current.dashboardFilters.resource = [];
@@ -137,7 +146,6 @@ export const DashBoardLanding = () => {
         ? updatedDashboard.current.id
         : undefined!,
     });
-
   };
 
   const handleDashboardChange = (dashboard: Dashboard) => {
@@ -194,19 +202,18 @@ export const DashBoardLanding = () => {
     if (dashboard && dashboard.id) {
       preferenceRef.current.aclpPreference.dashboardId = dashboard.id;
       updateGlobalFilterPreference({
-        [DASHBOARD_ID] : dashboard.id,
-        [RESOURCES] : []
-      })
+        [DASHBOARD_ID]: dashboard.id,
+        [RESOURCES]: [],
+      });
       if (
         preferences &&
         preferences.aclpPreference.dashboardId !=
-        preferenceRef.current.aclpPreference.dashboardId
+          preferenceRef.current.aclpPreference.dashboardId
       ) {
         preferenceRef.current.aclpPreference.resources = [];
         dashboardPropRef.current.dashboardFilters.resource = [];
       }
     }
-
   };
 
   const saveOrEditDashboard = (dashboard: Dashboard) => {
@@ -243,18 +250,18 @@ export const DashBoardLanding = () => {
     }
   };
 
-  //Fetch the data from preferences
+  // Fetch the data from preferences
   React.useEffect(() => {
     const fetchPreferences = async () => {
       const userPreference = await getUserPreference();
       if (!userPreference || !userPreference.aclpPreference) {
-        setPreferences({ aclpPreference: {} })
+        setPreferences({ aclpPreference: {} });
       } else {
         setPreferences(userPreference);
       }
-    }
+    };
     fetchPreferences();
-  }, [])
+  }, []);
 
   if (!preferences) {
     return <CircleProgress></CircleProgress>;
@@ -271,9 +278,6 @@ export const DashBoardLanding = () => {
       }
     }
   }
-
-
-
 
   return (
     <>
@@ -311,21 +315,20 @@ export const DashBoardLanding = () => {
           />
         )}
 
-      {
-        (!dashboardProp.dashboardFilters.serviceType ||
-          !dashboardProp.dashboardFilters.region ||
-          !dashboardProp.dashboardFilters.resource ||
-          dashboardProp.dashboardFilters.resource.length === 0 ||
-          !dashboardProp.dashboardFilters.timeRange ||
-          !dashboardProp.dashboardFilters.step) &&
-        (
-          <Paper>
-            <StyledPlaceholder icon={CloudViewIcon}
-              subtitle='Select Service Type, Region and Resource to visualize metrics'
-              title="" />
-          </Paper>
-        )
-      }
+      {(!dashboardProp.dashboardFilters.serviceType ||
+        !dashboardProp.dashboardFilters.region ||
+        !dashboardProp.dashboardFilters.resource ||
+        dashboardProp.dashboardFilters.resource.length === 0 ||
+        !dashboardProp.dashboardFilters.timeRange ||
+        !dashboardProp.dashboardFilters.step) && (
+        <Paper>
+          <StyledPlaceholder
+            icon={CloudViewIcon}
+            subtitle="Select Service Type, Region and Resource to visualize metrics"
+            title=""
+          />
+        </Paper>
+      )}
     </>
   );
 };

@@ -21,20 +21,22 @@ import { getMetrics } from 'src/utilities/statMetrics';
 
 import { FiltersObject } from '../Models/GlobalFilterProperties';
 import {
-  convertTimeDurationToStartAndEndTimeRange,
+  AGGREGATE_FUNCTION,
+  SIZE,
+  TIME_GRANULARITY,
+} from '../Utils/CloudPulseConstants';
+import {
   convertStringToCamelCasesWithSpaces,
+  convertTimeDurationToStartAndEndTimeRange,
   getDimensionName,
 } from '../Utils/CloudPulseUtils';
+import { updateWidgetPreference } from '../Utils/UserPreference';
 import { COLOR_MAP } from '../Utils/WidgetColorPalette';
 import { CloudViewLineGraph } from './CloudViewLineGraph';
 import { AggregateFunctionComponent } from './Components/AggregateFunctionComponent';
 import { IntervalSelectComponent } from './Components/IntervalSelectComponent';
 import { ZoomIcon } from './Components/Zoomer';
 import { seriesDataFormatter } from './Formatters/CloudViewFormatter';
-
-import { updateWidgetPreference } from '../Utils/UserPreference';
-
-import { AGGREGATE_FUNCTION, SIZE, TIME_GRANULARITY } from '../Utils/CloudPulseConstants';
 
 export interface CloudViewWidgetProperties {
   // we can try renaming this CloudViewWidget
@@ -112,9 +114,8 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     return props.widget.service_type
       ? props.widget.service_type!
       : props.globalFilters
-        ? props.globalFilters.serviceType
-        : '';
-        
+      ? props.globalFilters.serviceType
+      : '';
   };
 
   const getLabelName = (metric: any, serviceType: string) => {
@@ -127,8 +128,8 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     const results =
       flags.aclpResourceTypeMap && flags.aclpResourceTypeMap.length > 0
         ? flags.aclpResourceTypeMap.filter(
-          (obj: CloudPulseResourceTypeMap) => obj.serviceName === serviceType
-        )
+            (obj: CloudPulseResourceTypeMap) => obj.serviceName === serviceType
+          )
         : [];
 
     const flag = results && results.length > 0 ? results[0] : undefined;
@@ -146,16 +147,16 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     getCloudViewMetricsRequest(),
     props,
     widget.aggregate_function +
-    '_' +
-    widget.group_by +
-    '_' +
-    widget.time_granularity +
-    '_' +
-    widget.metric +
-    '_' +
-    widget.label +
-    '_' +
-    props.globalFilters?.timestamp ?? '',
+      '_' +
+      widget.group_by +
+      '_' +
+      widget.time_granularity +
+      '_' +
+      widget.metric +
+      '_' +
+      widget.label +
+      '_' +
+      props.globalFilters?.timestamp ?? '',
     true
   ); // fetch the metrics on any property change
 
@@ -235,61 +236,60 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, metricsList]);
 
-
-
   const handleZoomToggle = React.useCallback((zoomInValue: boolean) => {
     setWidget((widget) => {
       return { ...widget, size: zoomInValue ? 12 : 6 };
     });
 
-    updateWidgetPreference(props.widget.label,
-      {
-        [TIME_GRANULARITY]: selectedInterval,
-        [AGGREGATE_FUNCTION]: widget.aggregate_function,
-        [SIZE]: zoomInValue ? 12 : 6
-      })
+    updateWidgetPreference(props.widget.label, {
+      [AGGREGATE_FUNCTION]: widget.aggregate_function,
+      [SIZE]: zoomInValue ? 12 : 6,
+      [TIME_GRANULARITY]: selectedInterval,
+    });
   }, []);
 
-  const handleAggregateFunctionChange = React.useCallback((aggregateValue: string) => {
-    if (aggregateValue !== widget.aggregate_function) {
-      setWidget((currentWidget) => {
-        return {
-          ...currentWidget,
-          aggregate_function: aggregateValue,
-        };
-      });
+  const handleAggregateFunctionChange = React.useCallback(
+    (aggregateValue: string) => {
+      if (aggregateValue !== widget.aggregate_function) {
+        setWidget((currentWidget) => {
+          return {
+            ...currentWidget,
+            aggregate_function: aggregateValue,
+          };
+        });
 
-      updateWidgetPreference(widget.label,
-        {
+        updateWidgetPreference(widget.label, {
           [AGGREGATE_FUNCTION]: aggregateValue,
+          [SIZE]: widget.size,
           [TIME_GRANULARITY]: widget.time_granularity,
-          [SIZE]: widget.size
         });
-    }
-  }, []);
+      }
+    },
+    []
+  );
 
-
-  const handleIntervalChange = React.useCallback((intervalValue: TimeGranularity) => {
-    if (
-      intervalValue.unit !== selectedInterval.unit ||
-      intervalValue.value !== selectedInterval.value
-    ) {
-      setWidget((currentWidget) => {
-        return {
-          ...currentWidget,
-          time_granularity: { ...intervalValue },
-        };
-      });
-      setSelectedInterval({ ...intervalValue });
-      updateWidgetPreference(widget.label,
-        {
+  const handleIntervalChange = React.useCallback(
+    (intervalValue: TimeGranularity) => {
+      if (
+        intervalValue.unit !== selectedInterval.unit ||
+        intervalValue.value !== selectedInterval.value
+      ) {
+        setWidget((currentWidget) => {
+          return {
+            ...currentWidget,
+            time_granularity: { ...intervalValue },
+          };
+        });
+        setSelectedInterval({ ...intervalValue });
+        updateWidgetPreference(widget.label, {
           [AGGREGATE_FUNCTION]: widget.aggregate_function,
+          [SIZE]: widget.size,
           [TIME_GRANULARITY]: { ...intervalValue },
-          [SIZE]: widget.size
         });
-    }
-  }, []);
-
+      }
+    },
+    []
+  );
 
   const handleFilterChange = (widgetFilter: Filters[]) => {
     // todo, add implementation once component is ready
@@ -303,9 +303,6 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     // todo, add implementation once component is ready
   };
 
-
-
-
   if (isLoading) {
     return (
       <Grid xs={widget.size}>
@@ -317,7 +314,6 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
       </Grid>
     );
   }
-
 
   return (
     <Grid xs={widget.size}>
@@ -352,7 +348,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
             <Grid sx={{ marginRight: 5, width: 100 }}>
               {props.availableMetrics?.available_aggregate_functions &&
                 props.availableMetrics.available_aggregate_functions.length >
-                0 && (
+                  0 && (
                   <AggregateFunctionComponent
                     available_aggregate_func={
                       props.availableMetrics?.available_aggregate_functions
