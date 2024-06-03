@@ -15,13 +15,6 @@ export const ticket: PartialEventMap<'ticket'> = {
       </>
     ),
   },
-  // ticket_reply: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
   ticket_create: {
     notification: (e) => (
       <>

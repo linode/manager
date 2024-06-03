@@ -83,15 +83,34 @@ export const volume: PartialEventMap<'volume'> = {
     ),
   },
   volume_delete: {
-    failed: (e) => ``,
-    finished: (e) => ``,
+    failed: (e) => (
+      <>
+        Volume <EventLink event={e} to="entity" /> could <strong>not</strong> be{' '}
+        <strong>deleted</strong>.
+      </>
+    ),
+    finished: (e) => (
+      <>
+        Volume {e.entity?.label} has been <strong>deleted</strong>.
+      </>
+    ),
     notification: (e) => (
       <>
         Volume {e.entity?.label} has been <strong>deleted</strong>.
       </>
     ),
-    scheduled: (e) => ``,
-    started: (e) => ``,
+    scheduled: (e) => (
+      <>
+        Volume <EventLink event={e} to="entity" /> is scheduled to be{' '}
+        <strong>deleted</strong>.
+      </>
+    ),
+    started: (e) => (
+      <>
+        Volume <EventLink event={e} to="entity" /> is being{' '}
+        <strong>deleted</strong>.
+      </>
+    ),
   },
   volume_detach: {
     failed: (e) => (

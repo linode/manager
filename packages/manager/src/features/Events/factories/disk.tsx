@@ -21,7 +21,12 @@ export const disk: PartialEventMap<'disk'> = {
         <strong>added</strong> to Linode <EventLink event={e} to="entity" />.
       </>
     ),
-    notification: () => '',
+    notification: (e) => (
+      <>
+        Disk <EventLink event={e} to="secondaryEntity" /> has been{' '}
+        <strong>added</strong> to Linode <EventLink event={e} to="entity" />.
+      </>
+    ),
     scheduled: (e) => (
       <>
         Disk <EventLink event={e} to="secondaryEntity" /> is being{' '}
@@ -49,7 +54,12 @@ export const disk: PartialEventMap<'disk'> = {
         <EventLink event={e} to="entity" /> has been <strong>deleted</strong>.
       </>
     ),
-    // notification: () => '',
+    notification: (e) => (
+      <>
+        Disk {e.secondary_entity?.label} on Linode{' '}
+        <EventLink event={e} to="entity" /> has been <strong>deleted</strong>.
+      </>
+    ),
     scheduled: (e) => (
       <>
         Disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
@@ -76,7 +86,12 @@ export const disk: PartialEventMap<'disk'> = {
         <strong>duplicated</strong>.
       </>
     ),
-    // notification: () => '',
+    notification: (e) => (
+      <>
+        Disk on Linode <EventLink event={e} to="entity" /> has been{' '}
+        <strong>duplicated</strong>.
+      </>
+    ),
     scheduled: (e) => (
       <>
         Disk on Linode <EventLink event={e} to="entity" /> is scheduled to be{' '}
@@ -98,6 +113,7 @@ export const disk: PartialEventMap<'disk'> = {
         <Link to="https://www.linode.com/docs/products/tools/images/#technical-specifications">
           Learn more about image technical specifications.
         </Link>
+        .
       </>
     ),
     finished: (e) => (
@@ -136,6 +152,12 @@ export const disk: PartialEventMap<'disk'> = {
         <strong>resized</strong>.
       </>
     ),
+    notification: (e) => (
+      <>
+        A disk on Linode <EventLink event={e} to="entity" /> has been{' '}
+        <strong>resized</strong>.
+      </>
+    ),
     scheduled: (e) => (
       <>
         A disk on Linode <EventLink event={e} to="entity" /> is scheduled to be{' '}
@@ -148,7 +170,6 @@ export const disk: PartialEventMap<'disk'> = {
         <strong>resized</strong>.
       </>
     ),
-    // notification: e => '',
   },
   disk_update: {
     notification: (e) => (

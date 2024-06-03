@@ -36,10 +36,10 @@ const formatTicks = (message: string): JSX.Element => {
   );
 };
 
-const StyledPre = styled('pre')({
-  backgroundColor: '#f4f4f4',
+const StyledPre = styled('pre')(({ theme }) => ({
+  backgroundColor: theme.name === 'dark' ? '#222' : '#f4f4f4',
   borderRadius: 4,
   display: 'inline',
   fontSize: '0.75rem',
   padding: '0.15rem 0.25rem',
-});
+}));

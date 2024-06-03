@@ -36,7 +36,7 @@ export const EventRowV2 = (props: EventRowProps) => {
       </TableCell>
       <Hidden smDown>
         <TableCell data-qa-event-username-cell parentColumn="Username">
-          {username ?? 'Unknown'}
+          {username ?? 'Linode'}
         </TableCell>
       </Hidden>
       <TableCell parentColumn="Relative Date">

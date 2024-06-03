@@ -62,9 +62,6 @@ export const lke: PartialEventMap<'lke'> = {
   },
   lke_control_plane_acl_update: {
     notification: (e) => (
-      // `The IP ACL for Kubernetes Cluster${
-      //   e.entity?.label ? ` ${e.entity.label}` : ''
-      // } has been updated.`,
       <>
         The IP ACL for Kubernetes Cluster <EventLink event={e} to="entity" />{' '}
         has been <strong>updated</strong>.
