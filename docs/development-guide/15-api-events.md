@@ -68,6 +68,6 @@ try {
 }
 ```
 
-Both `action` and `status` are required. The `entity` and `secondary_entity` can optionally be passed to allow for linking. **Note**: it is possible the Event Message formatting will be slightly broken if the action status message expects either but isn't not provided by the instance call.
+Both `action` and `status` are required. The `entity` and `secondary_entity` can optionally be passed to allow for linking. **Note**: it is possible the Event Message formatting will be slightly broken if the action status message expects either but isn't provided by the instance call.
 
 If a corresponding status does not exist (ex: "failed"), it's quite ok to add it to the Action. Event if not triggered by the API, it can be useful to have a reusable Event Message to use through the App.
