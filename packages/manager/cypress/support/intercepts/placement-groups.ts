@@ -3,10 +3,7 @@ import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 
-import type {
-  PlacementGroup,
-  UpdatePlacementGroupPayload,
-} from '@linode/api-v4';
+import type { PlacementGroup } from '@linode/api-v4';
 
 /**
  * Intercepts GET request to fetch Placement Groups and mocks response.
@@ -188,9 +185,9 @@ export const mockDeletePlacementGroupError = (
  *
  * @returns Cypress chainable.
  */
-export const mockUpdatePlacementGroupLabel = (
+export const mockUpdatePlacementGroup = (
   placementGroupId: number,
-  placementGroupData: UpdatePlacementGroupPayload
+  placementGroupData: string
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'PUT',
@@ -210,7 +207,7 @@ export const mockUpdatePlacementGroupLabel = (
  *
  * @returns Cypress chainable.
  */
-export const mockUpdatePlacementGroupLabelError = (
+export const mockUpdatePlacementGroupError = (
   placementGroupId: number,
   errorMessage: string = 'An error has occurred',
   errorCode: number = 500

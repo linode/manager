@@ -10,8 +10,8 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel, randomNumber } from 'support/util/random';
 import {
   mockGetPlacementGroups,
-  mockUpdatePlacementGroupLabel,
-  mockUpdatePlacementGroupLabelError,
+  mockUpdatePlacementGroup,
+  mockUpdatePlacementGroupError,
 } from 'support/intercepts/placement-groups';
 import { accountFactory, placementGroupFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -19,7 +19,6 @@ import { authenticate } from 'support/api/authentication';
 import type { Flags } from 'src/featureFlags';
 import { chooseRegion } from 'support/util/regions';
 import { ui } from 'support/ui';
-import type { UpdatePlacementGroupPayload } from '@linode/api-v4';
 
 const mockAccount = accountFactory.build();
 authenticate();
@@ -41,7 +40,7 @@ describe('Placement Group update label flow', () => {
    * - Confirms that a Placement Group's label can be updated from the landing page.
    * - Confirms that clicking "Edit" opens PG edit drawer.
    * - Only the label field is shown in the edit drawer.
-   * - New label can be entered into the label field.
+   * - A new value can be entered into the label field.
    * - Confirms that Placement Groups landing page updates to reflect successful label update.
    * - Confirms a toast notification is shown upon successful label update.
    */
@@ -58,20 +57,22 @@ describe('Placement Group update label flow', () => {
       members: [],
     });
 
-    const newLabel: UpdatePlacementGroupPayload = {
+    const mockPlacementGroupUpdated = {
+      ...mockPlacementGroup,
       label: randomLabel(),
     };
 
     mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
 
-    mockUpdatePlacementGroupLabel(mockPlacementGroup.id, newLabel).as(
-      'updatePlacementGroupLabel'
-    );
+    mockUpdatePlacementGroup(
+      mockPlacementGroup.id,
+      mockPlacementGroupUpdated.label
+    ).as('updatePlacementGroupLabel');
 
     cy.visitWithLogin('/placement-groups');
     cy.wait(['@getPlacementGroups']);
 
-    // Confirm that compliant Placement Group is listed  on landing page, click "Edit" to open drawer.
+    // Confirm that Placement Group is listed  on landing page, click "Edit" to open drawer.
     cy.findByText(mockPlacementGroup.label)
       .should('be.visible')
       .closest('tr')
@@ -80,25 +81,35 @@ describe('Placement Group update label flow', () => {
       });
 
     // Enter new label, click "Edit".
+    mockGetPlacementGroups([mockPlacementGroupUpdated]).as(
+      'getPlacementGroups'
+    );
     cy.get('[data-qa-drawer="true"]').within(() => {
       cy.findByText('Edit').should('be.visible');
       cy.findByDisplayValue(mockPlacementGroup.label)
         .should('be.visible')
         .click()
-        .type(`{selectall}{backspace}${newLabel.label}`);
+        .type(`{selectall}{backspace}${mockPlacementGroupUpdated.label}`);
 
       cy.findByText('Edit').should('be.visible').click();
 
       cy.wait('@updatePlacementGroupLabel').then((intercept) => {
-        expect(intercept.request.body['label']).to.equal(newLabel.label);
+        expect(intercept.request.body['label']).to.equal(
+          mockPlacementGroupUpdated.label
+        );
       });
     });
 
     ui.toast.assertMessage(
-      `Placement Group ${newLabel.label} successfully updated.`
+      `Placement Group ${mockPlacementGroupUpdated.label} successfully updated.`
     );
   });
 
+  /**
+   * - Confirms that an http error is handled gracefully for Placement Group label update.
+   * - A new value can be entered into the label field.
+   * - Confirms an error notice is shown upon failure to label update.
+   */
   it("update to a Placement Group's label fails", () => {
     const mockPlacementGroupCompliantRegion = chooseRegion();
 
@@ -112,13 +123,14 @@ describe('Placement Group update label flow', () => {
       members: [],
     });
 
-    const newLabel: UpdatePlacementGroupPayload = {
+    const mockPlacementGroupUpdated = {
+      ...mockPlacementGroup,
       label: randomLabel(),
     };
 
     mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
 
-    mockUpdatePlacementGroupLabelError(
+    mockUpdatePlacementGroupError(
       mockPlacementGroup.id,
       'An unexpected error occurred.',
       400
@@ -127,7 +139,7 @@ describe('Placement Group update label flow', () => {
     cy.visitWithLogin('/placement-groups');
     cy.wait(['@getPlacementGroups']);
 
-    // Confirm that compliant Placement Group is listed  on landing page, click "Edit" to open drawer.
+    // Confirm that Placement Group is listed  on landing page, click "Edit" to open drawer.
     cy.findByText(mockPlacementGroup.label)
       .should('be.visible')
       .closest('tr')
@@ -141,7 +153,7 @@ describe('Placement Group update label flow', () => {
       cy.findByDisplayValue(mockPlacementGroup.label)
         .should('be.visible')
         .click()
-        .type(`{selectall}{backspace}${newLabel.label}`);
+        .type(`{selectall}{backspace}${mockPlacementGroupUpdated.label}`);
 
       cy.findByText('Edit').should('be.visible').click();
 
