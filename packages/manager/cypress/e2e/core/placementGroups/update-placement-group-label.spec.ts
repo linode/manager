@@ -15,13 +15,11 @@ import {
 } from 'support/intercepts/placement-groups';
 import { accountFactory, placementGroupFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
-import { authenticate } from 'support/api/authentication';
 import type { Flags } from 'src/featureFlags';
 import { chooseRegion } from 'support/util/regions';
 import { ui } from 'support/ui';
 
 const mockAccount = accountFactory.build();
-authenticate();
 
 describe('Placement Group update label flow', () => {
   // Mock the VM Placement Groups feature flag to be enabled for each test in this block.
@@ -33,7 +31,7 @@ describe('Placement Group update label flow', () => {
       }),
     });
     mockGetFeatureFlagClientstream();
-    mockGetAccount(mockAccount).as('getAccount');
+    mockGetAccount(mockAccount);
   });
 
   /**
@@ -110,7 +108,7 @@ describe('Placement Group update label flow', () => {
    * - A new value can be entered into the label field.
    * - Confirms an error notice is shown upon failure to label update.
    */
-  it("update to a Placement Group's label fails", () => {
+  it("update to a Placement Group's label fails with error message", () => {
     const mockPlacementGroupCompliantRegion = chooseRegion();
 
     const mockPlacementGroup = placementGroupFactory.build({
