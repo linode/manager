@@ -2,7 +2,7 @@
 
 In order to display Events, Cloud Manager polls the [account/events](https://www.linode.com/docs/api/account/#events-list) endpoint at a 16 second interval, or every 2 seconds if there are “in-progress” events.
 
-In order to display these messages the application (Notification Center, /events page), we compose messages according to the Event key (`EventAction`). Each key requires an entry and set of custom messages for each status (`EventStatus`) dictated by API specs. Not every Status is required for a given Action.
+In order to display these messages in the application (Notification Center, /events page), we compose messages according to the Event key (`EventAction`). Each key requires an entry and set of custom messages for each status (`EventStatus`), dictated by API specs. Not every Status is required for a given Action.
 
 ## Adding a new Action and Composing Messages
 
