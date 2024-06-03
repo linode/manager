@@ -1,9 +1,12 @@
 import * as React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { EnableBackupsDialog } from './EnableBackupsDialog';
-import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
-import { typeFactory } from 'src/factories/types';
+
+import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/DiskEncryption/constants';
 import { linodeFactory } from 'src/factories';
+import { typeFactory } from 'src/factories/types';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { EnableBackupsDialog } from './EnableBackupsDialog';
 
 const queryMocks = vi.hoisted(() => ({
   useLinodeQuery: vi.fn().mockReturnValue({
@@ -30,12 +33,16 @@ vi.mock('src/queries/types', async () => {
   };
 });
 
+const diskEncryptionEnabledMock = vi.hoisted(() => {
+  return {
+    useIsDiskEncryptionFeatureEnabled: vi.fn(),
+  };
+});
+
 describe('EnableBackupsDialog component', () => {
   beforeEach(() => {
     queryMocks.useTypeQuery.mockReturnValue({
       data: typeFactory.build({
-        id: 'mock-linode-type',
-        label: 'Mock Linode Type',
         addons: {
           backups: {
             price: {
@@ -51,8 +58,27 @@ describe('EnableBackupsDialog component', () => {
             ],
           },
         },
+        id: 'mock-linode-type',
+        label: 'Mock Linode Type',
       }),
     });
+  });
+
+  vi.mock('src/components/DiskEncryption/utils.ts', async () => {
+    const actual = await vi.importActual<any>(
+      'src/components/DiskEncryption/utils.ts'
+    );
+    return {
+      ...actual,
+      __esModule: true,
+      useIsDiskEncryptionFeatureEnabled: diskEncryptionEnabledMock.useIsDiskEncryptionFeatureEnabled.mockImplementation(
+        () => {
+          return {
+            isDiskEncryptionFeatureEnabled: false, // indicates the feature flag is off or account capability is absent
+          };
+        }
+      ),
+    };
   });
 
   it('Displays the monthly backup price', async () => {
@@ -60,8 +86,8 @@ describe('EnableBackupsDialog component', () => {
       data: linodeFactory.build({
         id: 1,
         label: 'Mock Linode',
-        type: 'mock-linode-type',
         region: 'us-east',
+        type: 'mock-linode-type',
       }),
     });
 
@@ -84,12 +110,12 @@ describe('EnableBackupsDialog component', () => {
       data: linodeFactory.build({
         id: 1,
         label: 'Mock Linode',
-        type: 'mock-linode-type',
         region: 'es-mad',
+        type: 'mock-linode-type',
       }),
     });
 
-    const { getByTestId, findByText, queryByText } = renderWithTheme(
+    const { findByText, getByTestId, queryByText } = renderWithTheme(
       <EnableBackupsDialog linodeId={1} onClose={vi.fn()} open={true} />
     );
 
@@ -118,12 +144,12 @@ describe('EnableBackupsDialog component', () => {
       data: linodeFactory.build({
         id: 1,
         label: 'Mock Linode',
-        type: 'mock-linode-type',
         region: 'es-mad',
+        type: 'mock-linode-type',
       }),
     });
 
-    const { getByTestId, findByText } = renderWithTheme(
+    const { findByText, getByTestId } = renderWithTheme(
       <EnableBackupsDialog linodeId={1} onClose={vi.fn()} open={true} />
     );
 
@@ -132,5 +158,39 @@ describe('EnableBackupsDialog component', () => {
 
     // Confirm that "Enable Backups" button is disabled.
     expect(getByTestId('confirm-enable-backups')).toBeDisabled();
+  });
+
+  it('does not display a notice regarding Backups not being encrypted if the Disk Encryption feature is disabled', () => {
+    const { queryByText } = renderWithTheme(
+      <EnableBackupsDialog linodeId={1} onClose={vi.fn()} open={true} />
+    );
+
+    const encryptionBackupsCaveatNotice = queryByText(
+      DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY
+    );
+
+    expect(encryptionBackupsCaveatNotice).not.toBeInTheDocument();
+  });
+
+  it('displays a notice regarding Backups not being encrypted if the Disk Encryption feature is enabled', () => {
+    diskEncryptionEnabledMock.useIsDiskEncryptionFeatureEnabled.mockImplementationOnce(
+      () => {
+        return {
+          isDiskEncryptionFeatureEnabled: true,
+        };
+      }
+    );
+
+    const { queryByText } = renderWithTheme(
+      <EnableBackupsDialog linodeId={1} onClose={vi.fn()} open={true} />
+    );
+
+    const encryptionBackupsCaveatNotice = queryByText(
+      DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY
+    );
+
+    expect(encryptionBackupsCaveatNotice).toBeInTheDocument();
+
+    diskEncryptionEnabledMock.useIsDiskEncryptionFeatureEnabled.mockRestore();
   });
 });
