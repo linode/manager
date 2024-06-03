@@ -11,7 +11,7 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useChildAccountsInfiniteQuery } from 'src/queries/account/account';
 
-import type { UserType } from '@linode/api-v4';
+import type { Filter, UserType } from '@linode/api-v4';
 
 interface ChildAccountListProps {
   currentTokenWithBearer: string;
@@ -24,6 +24,7 @@ interface ChildAccountListProps {
     onClose: () => void;
     userType: UserType | undefined;
   }) => void;
+  searchQuery: string;
   userType: UserType | undefined;
 }
 
@@ -33,8 +34,17 @@ export const ChildAccountList = React.memo(
     isLoading,
     onClose,
     onSwitchAccount,
+    searchQuery,
     userType,
   }: ChildAccountListProps) => {
+    const filter: Filter = {
+      ['+order']: 'asc',
+      ['+order_by']: 'company',
+    };
+    if (searchQuery) {
+      filter['company'] = { '+contains': searchQuery };
+    }
+
     const [
       isSwitchingChildAccounts,
       setIsSwitchingChildAccounts,
@@ -46,8 +56,10 @@ export const ChildAccountList = React.memo(
       isError,
       isFetchingNextPage,
       isInitialLoading,
+      isRefetching,
       refetch: refetchChildAccounts,
     } = useChildAccountsInfiniteQuery({
+      filter,
       headers:
         userType === 'proxy'
           ? {
@@ -57,7 +69,12 @@ export const ChildAccountList = React.memo(
     });
     const childAccounts = data?.pages.flatMap((page) => page.data);
 
-    if (isInitialLoading) {
+    if (
+      isInitialLoading ||
+      isLoading ||
+      isSwitchingChildAccounts ||
+      isRefetching
+    ) {
       return (
         <Box display="flex" justifyContent="center">
           <CircleProgress size="md" />
@@ -67,7 +84,13 @@ export const ChildAccountList = React.memo(
 
     if (childAccounts?.length === 0) {
       return (
-        <Notice variant="info">There are no indirect customer accounts.</Notice>
+        <Notice variant="info">
+          There are no child accounts
+          {filter.hasOwnProperty('company')
+            ? ' that match this query'
+            : undefined}
+          .
+        </Notice>
       );
     }
 
@@ -119,11 +142,6 @@ export const ChildAccountList = React.memo(
 
     return (
       <Stack alignItems={'flex-start'} data-testid="child-account-list">
-        {(isSwitchingChildAccounts || isLoading) && (
-          <Box display="flex" justifyContent="center" width={'100%'}>
-            <CircleProgress size="md" />
-          </Box>
-        )}
         {!isSwitchingChildAccounts && !isLoading && renderChildAccounts}
         {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
         {isFetchingNextPage && <CircleProgress size="sm" />}
