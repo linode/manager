@@ -70,7 +70,7 @@ describe('EditRouteDrawer', () => {
 
     expect(routeLabelFiled).toHaveDisplayValue('route-label');
 
-    userEvent.type(routeLabelFiled, 'rote-new-label');
+    await userEvent.type(routeLabelFiled, 'rote-new-label');
 
     await userEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
   });
