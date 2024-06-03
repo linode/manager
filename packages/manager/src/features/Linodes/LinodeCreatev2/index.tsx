@@ -1,3 +1,4 @@
+import { isEmpty } from '@linode/api-v4';
 import React, { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
@@ -14,6 +15,7 @@ import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
 } from 'src/queries/linodes/linodes';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { Access } from './Access';
 import { Actions } from './Actions';
@@ -45,8 +47,6 @@ import { VLAN } from './VLAN';
 import { VPC } from './VPC/VPC';
 
 import type { SubmitHandler } from 'react-hook-form';
-import { isEmpty } from '@linode/api-v4';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 export const LinodeCreatev2 = () => {
   const { params, setParams } = useLinodeCreateQueryParams();

@@ -2422,7 +2422,6 @@ export const oneClickApps: Record<number, OCA> = {
       start: '1d76ba',
     },
     description: `Secure, stable, and free alternative to popular video conferencing services. This app deploys four networked Jitsi nodes.`,
-    isNew: true,
     logo_url: 'jitsi.svg',
     name: 'Jitsi Cluster',
     related_guides: [
@@ -2437,7 +2436,6 @@ export const oneClickApps: Record<number, OCA> = {
   },
   1350783: {
     alt_description: 'Open source, highly available, shared filesystem.',
-    isNew: true,
     alt_name: 'GlusterFS',
     categories: ['Development'],
     colors: {
@@ -2468,6 +2466,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: '333333',
     },
     description: `Couchbase Enterprise Server is a high-performance NoSQL database, built for scale. Couchbase Server is designed with memory-first architecture, built-in cache and workload isolation.`,
+    isNew: true,
     logo_url: 'couchbase.svg',
     name: 'Couchbase Cluster',
     related_guides: [
@@ -2490,6 +2489,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: '00C7D4',
     },
     description: `Apache Kafka supports a wide range of applications from log aggregation to real-time analytics. Kafka provides a foundation for building data pipelines, event-driven architectures, or stream processing applications.`,
+    isNew: true,
     logo_url: 'apachekafka.svg',
     name: 'Apache Kafka Cluster',
     related_guides: [
