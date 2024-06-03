@@ -12,7 +12,6 @@ import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose as recompose } from 'recompose';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -61,13 +60,14 @@ import {
   sendCreateLinodeEvent,
   sendLinodeCreateFlowDocsClickEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
-import { isEURegion } from 'src/utilities/formatRegion';
 import {
   getGDPRDetails,
   getSelectedRegionGroup,
 } from 'src/utilities/formatRegion';
+import { isEURegion } from 'src/utilities/formatRegion';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
@@ -91,7 +91,10 @@ import type {
   LinodeTypeClass,
   PriceObject,
 } from '@linode/api-v4/lib/linodes';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import {
+  withAccount,
+  WithAccountProps,
+} from 'src/containers/account.container';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -135,6 +138,7 @@ interface State {
 }
 
 type CombinedProps = CreateType &
+  WithAccountProps &
   WithImagesProps &
   WithTypesProps &
   WithLinodesProps &
@@ -964,20 +968,31 @@ const mapStateToProps: MapState<CreateType, CombinedProps> = (state) => ({
 
 const connected = connect(mapStateToProps);
 
-export default recompose<CombinedProps, {}>(
-  withImages,
-  withLinodes,
-  withRegions,
-  withTypes,
-  connected,
-  withFeatureFlags,
-  withProfile,
-  withAgreements,
-  withQueryClient,
-  withAccountSettings,
-  withMarketplaceApps,
-  withEventsPollingActions
-)(LinodeCreateContainer);
+export default withImages(
+  withAccount(
+    withLinodes(
+      withRegions(
+        withTypes(
+          connected(
+            withFeatureFlags(
+              withProfile(
+                withAgreements(
+                  withQueryClient(
+                    withAccountSettings(
+                      withMarketplaceApps(
+                        withEventsPollingActions(LinodeCreateContainer)
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+);
 
 const actionsAndLabels = {
   fromApp: { action: 'one-click', labelPayloadKey: 'stackscript_id' },

@@ -48,15 +48,20 @@ interface GeckoFlag {
   ga: boolean;
 }
 
+interface AclpFlag {
+  beta: boolean;
+  enabled: boolean;
+}
+
 interface gpuV2 {
   planDivider: boolean;
 }
-
 type OneClickApp = Record<string, string>;
 
 export interface Flags {
   aclb: boolean;
   aclbFullCreateFlow: boolean;
+  aclp: AclpFlag;
   apiMaintenance: APIMaintenance;
   databaseBeta: boolean;
   databaseResize: boolean;

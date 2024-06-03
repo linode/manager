@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import { MapDispatchToProps, connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -143,7 +142,4 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 const connected = connect(undefined, mapDispatchToProps);
 
-export default compose<OAuthCallbackPageProps, {}>(
-  connected,
-  withRouter
-)(OAuthCallbackPage);
+export default connected(withRouter(OAuthCallbackPage));
