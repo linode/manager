@@ -10,12 +10,12 @@ import { Typography } from 'src/components/Typography';
 import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
-import { extendType } from 'src/utilities/extendType';
 
 export const Summary = () => {
   const theme = useTheme();
@@ -34,6 +34,7 @@ export const Summary = () => {
     placementGroupId,
     vlanLabel,
     vpcId,
+    diskEncryption,
   ] = useWatch({
     control,
     name: [
@@ -47,6 +48,7 @@ export const Summary = () => {
       'placement_group.id',
       'interfaces.1.label',
       'interfaces.0.vpc_id',
+      'disk_encryption',
     ],
   });
 
@@ -79,9 +81,9 @@ export const Summary = () => {
     {
       item: {
         details: `$${price?.monthly}/month`,
-        title: type && extendType(type).formattedLabel,
+        title: type ? formatStorageUnits(type.label) : typeId,
       },
-      show: Boolean(type),
+      show: Boolean(typeId),
     },
     {
       item: {
@@ -119,6 +121,12 @@ export const Summary = () => {
         title: 'Firewall Assigned',
       },
       show: Boolean(firewallId),
+    },
+    {
+      item: {
+        title: 'Encrypted',
+      },
+      show: diskEncryption === 'enabled',
     },
   ];
 
