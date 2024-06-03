@@ -38,7 +38,7 @@ export const PricePanel = ({ currentSize, regionId, value }: Props) => {
   if (isLoading) {
     return (
       <Box marginLeft={-1} marginTop={2}>
-        <CircleProgress mini />
+        <CircleProgress size="sm" />
       </Box>
     );
   }

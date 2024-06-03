@@ -60,7 +60,7 @@ export const ChildAccountList = React.memo(
     if (isInitialLoading) {
       return (
         <Box display="flex" justifyContent="center">
-          <CircleProgress mini size={70} />
+          <CircleProgress size="md" />
         </Box>
       );
     }
@@ -121,12 +121,12 @@ export const ChildAccountList = React.memo(
       <Stack alignItems={'flex-start'} data-testid="child-account-list">
         {(isSwitchingChildAccounts || isLoading) && (
           <Box display="flex" justifyContent="center" width={'100%'}>
-            <CircleProgress mini size={70} />
+            <CircleProgress size="md" />
           </Box>
         )}
         {!isSwitchingChildAccounts && !isLoading && renderChildAccounts}
         {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
-        {isFetchingNextPage && <CircleProgress mini />}
+        {isFetchingNextPage && <CircleProgress size="sm" />}
       </Stack>
     );
   }

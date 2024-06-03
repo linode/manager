@@ -47,7 +47,7 @@ export const OveragePricing = (props: Props) => {
 
   return isLoading ? (
     <Box marginLeft={-1} marginTop={1}>
-      <CircleProgress mini />
+      <CircleProgress size="sm" />
     </Box>
   ) : (
     <>

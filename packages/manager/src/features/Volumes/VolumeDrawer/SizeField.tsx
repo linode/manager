@@ -117,7 +117,7 @@ export const SizeField = (props: Props) => {
       />
       <div className={classes.priceDisplay}>
         {shouldShowPriceLoadingSpinner ? (
-          <CircleProgress mini noPadding />
+          <CircleProgress noPadding size="sm" />
         ) : hasSelectedRegion ? (
           priceDisplayText
         ) : (

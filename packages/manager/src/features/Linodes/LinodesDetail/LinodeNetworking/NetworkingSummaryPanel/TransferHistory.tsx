@@ -119,7 +119,7 @@ export const TransferHistory = React.memo((props: Props) => {
     if (statsLoading) {
       return (
         <StyledDiv>
-          <CircleProgress mini />
+          <CircleProgress size="sm" />
         </StyledDiv>
       );
     }

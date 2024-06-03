@@ -57,7 +57,7 @@ export const LinkButton = (props: Props) => {
       <Box alignItems="center" display="flex">
         {Button}
         <Box marginLeft={1}>
-          <CircleProgress mini noPadding size={12} />
+          <CircleProgress noPadding size="xs" />
         </Box>
       </Box>
     );

@@ -59,7 +59,7 @@ export const LinodeWatchdogPanel = (props: Props) => {
             label={
               <Stack alignItems="center" direction="row" spacing={1}>
                 <Box>{linode?.watchdog_enabled ? 'Enabled' : 'Disabled'}</Box>
-                <Box>{isLoading && <CircleProgress mini />}</Box>
+                <Box>{isLoading && <CircleProgress size="sm" />}</Box>
               </Stack>
             }
             disabled={isReadOnly}
