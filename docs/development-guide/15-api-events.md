@@ -26,7 +26,7 @@ export const linode: PartialEventMap<'linode'> = {
 };
 ```
 
-The convention to compose message is as follow:
+The convention to compose the message is as follow:
 - Use the `<EventLink />` component for linking `entity` or `secondary_entity`. This component includes a lookup util to format the link `href` according to the feature.
 - The bolding should only be applied to:
   - the primary action: (ex: `<strong>created</strong>`) 
