@@ -67,7 +67,8 @@ export const RenderEvent = React.memo((props: RenderEventProps) => {
                 className={unseenEventClass}
                 sx={{ fontSize: '0.8rem' }}
               >
-                {getEventTimestamp(event).toRelative()} | {event.username}
+                {getEventTimestamp(event).toRelative()}
+                {event.username && ` | {event.username}`}
               </Typography>
             </Box>
           </RenderEventStyledBox>

@@ -36,17 +36,19 @@ export const EventRowV2 = (props: EventRowProps) => {
       </TableCell>
       <Hidden smDown>
         <TableCell data-qa-event-username-cell parentColumn="Username">
-          {username}
+          {username ?? 'Unknown'}
         </TableCell>
       </Hidden>
       <TableCell parentColumn="Relative Date">
         {timestamp.toRelative()}
-        <Hidden smUp>
-          <br />
-          <Box component="span" sx={{ fontSize: '.8rem', lineHeight: 1 }}>
-            by {username}
-          </Box>
-        </Hidden>
+        {username && (
+          <Hidden smUp>
+            <br />
+            <Box component="span" sx={{ fontSize: '.8rem', lineHeight: 1 }}>
+              by {username}
+            </Box>
+          </Hidden>
+        )}
       </TableCell>
       <Hidden mdDown>
         <TableCell data-qa-event-created-cell parentColumn="Absolute Date">
