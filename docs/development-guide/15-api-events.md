@@ -35,7 +35,7 @@ The convention to compose the message is as follow:
 
 ## Displaying Events in snackbars
 
-We can leverage the Event Message factories in order to display events in popup notifications (aka snackbars) when a given action gets triggered via APIv4.
+We can leverage the Event Message factories in order to display events in snackbars/toasts when a given action gets triggered via APIv4.
 
 ```Typescript
 const { enqueueSnackbar } = useSnackbar();
