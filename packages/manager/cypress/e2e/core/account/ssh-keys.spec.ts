@@ -1,5 +1,4 @@
 import { sshKeyFactory } from 'src/factories';
-import { authenticate } from 'support/api/authentication';
 import {
   mockCreateSSHKey,
   mockCreateSSHKeyError,
@@ -7,8 +6,8 @@ import {
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
+import { sshFormatErrorMessage } from 'support/constants/account';
 
-authenticate();
 describe('SSH keys', () => {
   /*
    * - Vaildates SSH key creation flow using mock data.
@@ -55,16 +54,14 @@ describe('SSH keys', () => {
           .click();
         cy.findByText('Label is required.');
 
-        // When a user tries to create an SSH key without the SSH Public Key, a form validation error
+        // When a user tries to create an SSH key without the SSH Public Key, a form validation error appears
         cy.get('[id="label"]').clear().type(mockSSHKey.label);
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
           .should('be.enabled')
           .click();
-        cy.findAllByText(
-          'SSH Key key-type must be ssh-dss, ssh-rsa, ecdsa-sha2-nistp, ssh-ed25519, or sk-ecdsa-sha2-nistp256.'
-        ).should('be.visible');
+        cy.findAllByText(sshFormatErrorMessage).should('be.visible');
 
         // An alert displays when the format of SSH key is incorrect
         cy.get('[id="ssh-public-key"]').clear().type('WrongFormatSshKey');
@@ -73,9 +70,7 @@ describe('SSH keys', () => {
           .should('be.visible')
           .should('be.enabled')
           .click();
-        cy.findAllByText(
-          'SSH Key key-type must be ssh-dss, ssh-rsa, ecdsa-sha2-nistp, ssh-ed25519, or sk-ecdsa-sha2-nistp256.'
-        ).should('be.visible');
+        cy.findAllByText(sshFormatErrorMessage).should('be.visible');
 
         cy.get('[id="ssh-public-key"]').clear().type(mockSSHKey.ssh_key);
         ui.button
