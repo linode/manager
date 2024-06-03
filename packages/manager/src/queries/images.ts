@@ -80,10 +80,10 @@ export const useUpdateImageMutation = () => {
   return useMutation<
     Image,
     APIError[],
-    { description?: string; imageId: string; label?: string }
+    { description?: string; imageId: string; label?: string; tags?: string[] }
   >({
-    mutationFn: ({ description, imageId, label }) =>
-      updateImage(imageId, label, description),
+    mutationFn: ({ description, imageId, label, tags }) =>
+      updateImage(imageId, label, description, tags),
     onSuccess(image) {
       queryClient.invalidateQueries(imageQueries.paginated._def);
       queryClient.setQueryData<Image>(
@@ -119,10 +119,20 @@ export const useAllImagesQuery = (
     enabled,
   });
 
-export const useUploadImageMutation = (payload: ImageUploadPayload) =>
-  useMutation<UploadImageResponse, APIError[]>({
-    mutationFn: () => uploadImage(payload),
+export const useUploadImageMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<UploadImageResponse, APIError[], ImageUploadPayload>({
+    mutationFn: uploadImage,
+    onSuccess(data) {
+      queryClient.invalidateQueries(imageQueries.paginated._def);
+      queryClient.invalidateQueries(imageQueries.all._def);
+      queryClient.setQueryData<Image>(
+        imageQueries.image(data.image.id).queryKey,
+        data.image
+      );
+    },
   });
+};
 
 export const imageEventsHandler = ({
   event,

@@ -78,6 +78,8 @@ import {
   objectStorageBucketFactory,
   objectStorageClusterFactory,
   objectStorageKeyFactory,
+  objectStorageOverageTypeFactory,
+  objectStorageTypeFactory,
   paymentFactory,
   paymentMethodFactory,
   placementGroupFactory,
@@ -858,9 +860,14 @@ export const handlers = [
     return HttpResponse.json(cluster);
   }),
   http.get('*/lke/clusters/:clusterId/pools', async () => {
-    const pools = nodePoolFactory.buildList(10);
+    const encryptedPools = nodePoolFactory.buildList(5);
+    const unencryptedPools = nodePoolFactory.buildList(5, {
+      disk_encryption: 'disabled',
+    });
     nodePoolFactory.resetSequenceNumber();
-    return HttpResponse.json(makeResourcePage(pools));
+    return HttpResponse.json(
+      makeResourcePage([...encryptedPools, ...unencryptedPools])
+    );
   }),
   http.get('*/lke/clusters/*/api-endpoints', async () => {
     const endpoints = kubeEndpointFactory.buildList(2);
@@ -927,6 +934,13 @@ export const handlers = [
       nodeBalancerConfigNodeFactory.build({ status: 'unknown' }),
     ];
     return HttpResponse.json(makeResourcePage(configs));
+  }),
+  http.get('*/v4/object-storage/types', () => {
+    const objectStorageTypes = [
+      objectStorageTypeFactory.build(),
+      objectStorageOverageTypeFactory.build(),
+    ];
+    return HttpResponse.json(makeResourcePage(objectStorageTypes));
   }),
   http.get('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);
