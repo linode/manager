@@ -436,8 +436,8 @@ export const linode: PartialEventMap<'linode'> = {
     ),
     finished: (e) => (
       <>
-        Linode <EventLink event={e} to="entity" />
-        has been <strong>resized</strong>.
+        Linode <EventLink event={e} to="entity" /> has been{' '}
+        <strong>resized</strong>.
       </>
     ),
     notification: (e) => (
