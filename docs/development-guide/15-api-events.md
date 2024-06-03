@@ -6,7 +6,7 @@ In order to display these messages in the application (Notification Center, /eve
 
 ## Adding a new Action and Composing Messages
 
-In order to add a new Action, one must add a new key to the read-only `EventActionValues` constant array in the api-v4 package.
+In order to add a new Action, one must add a new key to the read-only `EventActionKeys` constant array in the api-v4 package.
 Once that's done, a related entry must be added to the `eventMessages` Event Map. In order to do so, the entry can either be added to an existing Event Factory or a new one. `eventMessages` is strictly typed, so the decision where to add the new Action will be clear. ex:
 
 ```Typescript
@@ -68,6 +68,6 @@ try {
 }
 ```
 
-Both `action` and `status` are required. The `entity` and `secondary_entity` can optionally be passed to allow for linking. **Note**: it is possible the Event Message formatting will be slightly broken if the action status message expects either but isn't provided by the instance call.
+Both `action` and `status` are required. The `entity` and `secondary_entity` can optionally be passed to allow for linking. **Note**: it is possible the Event Message linking will be missing if the action status message expects either value but isn't not provided by the instance call.
 
-If a corresponding status does not exist (ex: "failed"), it's quite ok to add it to the Action. Event if not triggered by the API, it can be useful to have a reusable Event Message to use through the App.
+If a corresponding status does not exist (ex: "failed"), it's encouraged to add it to the Action. Event if not triggered by the API, it can be useful to have a reusable Event Message to use through the App.

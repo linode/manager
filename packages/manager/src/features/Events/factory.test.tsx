@@ -1,4 +1,4 @@
-import { EventActionValues } from '@linode/api-v4';
+import { EventActionKeys } from '@linode/api-v4';
 
 import { eventMessages } from './factory';
 
@@ -7,7 +7,7 @@ import { eventMessages } from './factory';
  */
 describe('eventMessages', () => {
   it('should have a message for each EventAction', () => {
-    EventActionValues.forEach((action) => {
+    EventActionKeys.forEach((action) => {
       expect(eventMessages).toHaveProperty(action);
     });
   });

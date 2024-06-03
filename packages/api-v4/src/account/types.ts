@@ -279,7 +279,7 @@ export interface Entity {
   url: string;
 }
 
-export const EventActionValues = [
+export const EventActionKeys = [
   'account_agreement_eu_model',
   'account_promo_apply',
   'account_settings_update',
@@ -460,7 +460,7 @@ export const EventActionValues = [
   'vpc_update',
 ] as const;
 
-export type EventAction = typeof EventActionValues[number];
+export type EventAction = typeof EventActionKeys[number];
 
 export type EventStatus =
   | 'scheduled'
