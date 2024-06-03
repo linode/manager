@@ -116,7 +116,7 @@ export const volume: PartialEventMap<'volume'> = {
     failed: (e) => (
       <>
         Volume <EventLink event={e} to="entity" /> could <strong>not</strong> be{' '}
-        <strong>detached</strong> to Linode{' '}
+        <strong>detached</strong> from Linode{' '}
         <EventLink event={e} to="secondaryEntity" />.
       </>
     ),
