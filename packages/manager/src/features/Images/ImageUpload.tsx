@@ -1,152 +1,163 @@
-import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useSnackbar } from 'notistack';
+import React, { useState } from 'react';
+import { flushSync } from 'react-dom';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
-import { LinodeCLIModal } from 'src/components/LinodeCLIModal/LinodeCLIModal';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Prompt } from 'src/components/Prompt/Prompt';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { Stack } from 'src/components/Stack';
+import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { ImageUploader } from 'src/components/Uploaders/ImageUploader/ImageUploader';
+import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/reducer';
 import { Dispatch } from 'src/hooks/types';
-import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { useFlags } from 'src/hooks/useFlags';
+import { usePendingUpload } from 'src/hooks/usePendingUpload';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useUploadImageMutation } from 'src/queries/images';
+import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { redirectToLogin } from 'src/session';
-import { ApplicationState } from 'src/store';
 import { setPendingUpload } from 'src/store/pendingUpload';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
-import { wrapInQuotes } from 'src/utilities/stringUtils';
+import { readableBytes } from 'src/utilities/unitConversions';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
+import { getRestrictedResourceText } from '../Account/utils';
+import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
+import {
+  ImageUploadFormData,
+  ImageUploadNavigationState,
+} from './ImageUpload.utils';
+import { ImageUploadCLIDialog } from './ImageUploadCLIDialog';
+import { uploadImageFile } from './requests';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  browseFilesButton: {
-    marginLeft: '1rem',
-  },
-  cliModalButton: {
-    ...theme.applyLinkStyles,
-    fontFamily: theme.font.bold,
-  },
-  cloudInitCheckboxWrapper: {
-    marginLeft: '3px',
-    marginTop: theme.spacing(2),
-  },
-  container: {
-    '& .MuiFormHelperText-root': {
-      marginBottom: theme.spacing(2),
-    },
-    minWidth: '100%',
-    paddingBottom: theme.spacing(),
-    paddingTop: theme.spacing(2),
-  },
-  helperText: {
-    marginTop: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-    width: '90%',
-  },
-}));
+import type { AxiosError, AxiosProgressEvent } from 'axios';
 
-const cloudInitTooltipMessage = (
-  <Typography>
-    Only check this box if your Custom Image is compatible with cloud-init, or
-    has cloud-init installed, and the config has been changed to use our data
-    service.{' '}
-    <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata-cloud-config/">
-      Learn how.
-    </Link>
-  </Typography>
-);
+export const ImageUpload = () => {
+  const { location } = useHistory<ImageUploadNavigationState | undefined>();
 
-const imageSizeLimitsMessage = (
-  <Typography>
-    Image files must be raw disk images (.img) compressed using gzip (.gz). The
-    maximum file size is 5 GB (compressed) and maximum image size is 6 GB
-    (uncompressed).
-  </Typography>
-);
-
-export interface Props {
-  changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  changeIsCloudInit: () => void;
-  changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  description: string;
-  isCloudInit: boolean;
-  label: string;
-}
-
-export const ImageUpload: React.FC<Props> = (props) => {
-  const {
-    changeDescription,
-    changeIsCloudInit,
-    changeLabel,
-    description,
-    isCloudInit,
-    label,
-  } = props;
-
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
-  const { data: agreements } = useAccountAgreements();
-  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
-
-  const { classes } = useStyles();
-  const regions = useRegionsQuery().data ?? [];
-  const dispatch: Dispatch = useDispatch();
+  const dispatch = useDispatch<Dispatch>();
+  const hasPendingUpload = usePendingUpload();
   const { push } = useHistory();
   const flags = useFlags();
 
-  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
-    false
-  );
+  const [uploadProgress, setUploadProgress] = useState<AxiosProgressEvent>();
+  const cancelRef = React.useRef<(() => void) | null>(null);
+  const [hasSignedAgreement, setHasSignedAgreement] = useState<boolean>(false);
+  const [linodeCLIModalOpen, setLinodeCLIModalOpen] = useState<boolean>(false);
 
-  const [region, setRegion] = React.useState<string>('');
-  const [errors, setErrors] = React.useState<APIError[] | undefined>();
-  const [linodeCLIModalOpen, setLinodeCLIModalOpen] = React.useState<boolean>(
-    false
-  );
+  const { data: profile } = useProfile();
+  const { data: agreements } = useAccountAgreements();
+  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
+  const { data: regions } = useRegionsQuery();
+  const { mutateAsync: createImage } = useUploadImageMutation();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const form = useForm<ImageUploadFormData>({
+    defaultValues: {
+      description: location.state?.imageDescription,
+      label: location.state?.imageLabel,
+    },
+    mode: 'onBlur',
+    resolver: yupResolver(ImageUploadSchema),
+  });
+
+  const onSubmit = form.handleSubmit(async (values) => {
+    const { file, ...createPayload } = values;
+
+    try {
+      const { image, upload_to } = await createImage(createPayload);
+
+      // Let the entire app know that there's a pending upload via Redux.
+      // High-level components like AuthenticationWrapper need to know
+      // this, so the user isn't redirected to Login if the token expires.
+      dispatch(setPendingUpload(true));
+
+      recordImageAnalytics('start', file);
+
+      try {
+        const { cancel, request } = uploadImageFile(
+          upload_to,
+          file,
+          setUploadProgress
+        );
+
+        cancelRef.current = cancel;
+
+        await request();
+
+        if (hasSignedAgreement) {
+          updateAccountAgreements({
+            eu_model: true,
+            privacy_policy: true,
+          }).catch(reportAgreementSigningError);
+        }
+
+        enqueueSnackbar(
+          `Image ${image.label} uploaded successfully. It is being processed and will be available shortly.`,
+          { variant: 'success' }
+        );
+
+        recordImageAnalytics('success', file);
+
+        // Force a re-render so that `hasPendingUpload` is false when navigating away
+        // from the upload page. We need this to make the <Prompt /> work as expected.
+        flushSync(() => {
+          dispatch(setPendingUpload(false));
+        });
+
+        push('/images');
+      } catch (error) {
+        // Handle an Axios error for the actual image upload
+        form.setError('root', { message: (error as AxiosError).message });
+        // Update Redux to show we have no upload in progress
+        dispatch(setPendingUpload(false));
+        recordImageAnalytics('fail', file);
+      }
+    } catch (errors) {
+      // Handle API errors from the POST /v4/images/upload
+      for (const error of errors) {
+        if (error.field) {
+          form.setError(error.field, { message: error.reason });
+        } else {
+          window.scrollTo({ top: 0 });
+          form.setError('root', { message: error.reason });
+        }
+      }
+      // Update Redux to show we have no upload in progress
+      dispatch(setPendingUpload(false));
+    }
+  });
+
+  const selectedRegionId = form.watch('region');
 
   const { showGDPRCheckbox } = getGDPRDetails({
     agreements,
     profile,
     regions,
-    selectedRegionId: region,
+    selectedRegionId,
   });
 
-  //  This holds a "cancel function" from the Axios instance that handles image
-  // uploads. Calling this function will cancel the HTTP request.
-  const [cancelFn, setCancelFn] = React.useState<(() => void) | null>(null);
-
-  // Whether or not there is an upload pending. This is stored in Redux since
-  // high-level components like AuthenticationWrapper need to read it.
-  const pendingUpload = useSelector<ApplicationState, boolean>(
-    (state) => state.pendingUpload
-  );
-
-  // Keep track of the session token since we may need to grab the user a new
-  // one after a long upload (if their session has expired).
-  const currentToken = useCurrentToken();
-
-  const canCreateImage =
-    Boolean(!profile?.restricted) || Boolean(grants?.global?.add_images);
+  const isImageCreateRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_images',
+  });
 
   // Called after a user confirms they want to navigate to another part of
   // Cloud during a pending upload. When we have refresh tokens this won't be
@@ -154,55 +165,244 @@ export const ImageUpload: React.FC<Props> = (props) => {
   // will show the upload progress in the lower part of the screen. For now we
   // box the user on this page so we can handle token expiry (semi)-gracefully.
   const onConfirm = (nextLocation: string) => {
-    if (cancelFn) {
-      cancelFn();
+    if (cancelRef.current) {
+      cancelRef.current();
     }
 
     dispatch(setPendingUpload(false));
 
-    // If the user's session has expired we need to send them to Login to get
-    // a new token. They will be redirected back to path they were trying to
-    // reach.
-    if (!currentToken) {
-      redirectToLogin(nextLocation);
-    } else {
-      push(nextLocation);
-    }
+    push(nextLocation);
   };
-
-  const onSuccess = () => {
-    if (hasSignedAgreement) {
-      updateAccountAgreements({
-        eu_model: true,
-        privacy_policy: true,
-      }).catch(reportAgreementSigningError);
-    }
-  };
-
-  const uploadingDisabled =
-    !label ||
-    !region ||
-    !canCreateImage ||
-    (showGDPRCheckbox && !hasSignedAgreement);
-
-  const errorMap = getErrorMap(['label', 'description', 'region'], errors);
-
-  const cliLabel = formatForCLI(label, 'label');
-  const cliDescription = formatForCLI(description, 'description');
-  const cliRegion = formatForCLI(region, 'region');
-  const linodeCLICommand = `linode-cli image-upload --label ${cliLabel} --description ${cliDescription} --region ${cliRegion} FILE`;
 
   return (
-    <>
+    <FormProvider {...form}>
+      <form onSubmit={onSubmit}>
+        <Stack spacing={2}>
+          <Paper>
+            <Typography mb={1.5} variant="h2">
+              Image Details
+            </Typography>
+            {form.formState.errors.root?.message && (
+              <Notice
+                text={form.formState.errors.root.message}
+                variant="error"
+              />
+            )}
+            {isImageCreateRestricted && (
+              <Notice
+                text={getRestrictedResourceText({
+                  action: 'create',
+                  isSingular: false,
+                  resourceType: 'Images',
+                })}
+                variant="error"
+              />
+            )}
+            <Controller
+              render={({ field, fieldState }) => (
+                <TextField
+                  disabled={
+                    isImageCreateRestricted || form.formState.isSubmitting
+                  }
+                  errorText={fieldState.error?.message}
+                  inputRef={field.ref}
+                  label="Label"
+                  noMarginTop
+                  onBlur={field.onBlur}
+                  onChange={field.onChange}
+                  value={field.value ?? ''}
+                />
+              )}
+              control={form.control}
+              name="label"
+            />
+            {flags.metadata && (
+              <Box pl={0.25} pt={2}>
+                <Controller
+                  render={({ field }) => (
+                    <Checkbox
+                      disabled={
+                        isImageCreateRestricted || form.formState.isSubmitting
+                      }
+                      toolTipText={
+                        <Typography>
+                          Only check this box if your Custom Image is compatible
+                          with cloud-init, or has cloud-init installed, and the
+                          config has been changed to use our data service.{' '}
+                          <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata-cloud-config/">
+                            Learn how.
+                          </Link>
+                        </Typography>
+                      }
+                      checked={field.value ?? false}
+                      onChange={field.onChange}
+                      text="This image is cloud-init compatible"
+                    />
+                  )}
+                  control={form.control}
+                  name="cloud_init"
+                />
+              </Box>
+            )}
+            <Controller
+              render={({ field, fieldState }) => (
+                <RegionSelect
+                  disabled={
+                    isImageCreateRestricted || form.formState.isSubmitting
+                  }
+                  textFieldProps={{
+                    helperTextPosition: 'top',
+                    inputRef: field.ref,
+                    onBlur: field.onBlur,
+                  }}
+                  currentCapability={undefined}
+                  errorText={fieldState.error?.message}
+                  handleSelection={field.onChange}
+                  helperText="For fastest initial upload, select the region that is geographically closest to you. Once uploaded, you will be able to deploy the image to other regions."
+                  label="Region"
+                  regionFilter="core" // Images service will not be supported for Gecko Beta
+                  regions={regions ?? []}
+                  selectedId={field.value ?? null}
+                />
+              )}
+              control={form.control}
+              name="region"
+            />
+            <Controller
+              render={({ field, fieldState }) => (
+                <TagsInput
+                  disabled={
+                    isImageCreateRestricted || form.formState.isSubmitting
+                  }
+                  onChange={(items) =>
+                    field.onChange(items.map((item) => item.value))
+                  }
+                  value={
+                    field.value?.map((tag) => ({ label: tag, value: tag })) ??
+                    []
+                  }
+                  tagError={fieldState.error?.message}
+                />
+              )}
+              control={form.control}
+              name="tags"
+            />
+            <Controller
+              render={({ field, fieldState }) => (
+                <TextField
+                  disabled={
+                    isImageCreateRestricted || form.formState.isSubmitting
+                  }
+                  errorText={fieldState.error?.message}
+                  label="Description"
+                  multiline
+                  onBlur={field.onBlur}
+                  onChange={field.onChange}
+                  rows={1}
+                  value={field.value ?? ''}
+                />
+              )}
+              control={form.control}
+              name="description"
+            />
+            {showGDPRCheckbox && (
+              <EUAgreementCheckbox
+                centerCheckbox
+                checked={hasSignedAgreement}
+                onChange={(e) => setHasSignedAgreement(e.target.checked)}
+              />
+            )}
+          </Paper>
+          <Paper>
+            <Typography mb={1} variant="h2">
+              Image Upload
+            </Typography>
+            {form.formState.errors.file?.message && (
+              <Notice
+                spacingBottom={12}
+                text={form.formState.errors.file.message}
+                variant="error"
+              />
+            )}
+            <Notice spacingBottom={0} variant="warning">
+              <Typography>
+                Image files must be raw disk images (.img) compressed using gzip
+                (.gz). The maximum file size is 5 GB (compressed) and maximum
+                image size is 6 GB (uncompressed).
+              </Typography>
+            </Notice>
+            <Typography sx={{ paddingBlock: 2 }}>
+              Custom Images are billed at $0.10/GB per month based on the
+              uncompressed image size.
+            </Typography>
+            <Controller
+              render={({ field }) => (
+                <ImageUploader
+                  onDropAccepted={(files) => {
+                    form.setError('file', {});
+                    field.onChange(files[0]);
+                  }}
+                  onDropRejected={(fileRejections) => {
+                    let message = '';
+                    switch (fileRejections[0].errors[0].code) {
+                      case 'file-invalid-type':
+                        message =
+                          'Only raw disk images (.img) compressed using gzip (.gz) can be uploaded.';
+                        break;
+                      case 'file-too-large':
+                        message = `Max file size (${
+                          readableBytes(MAX_FILE_SIZE_IN_BYTES).formatted
+                        }) exceeded`;
+                        break;
+                      default:
+                        message = fileRejections[0].errors[0].message;
+                    }
+                    form.setError('file', { message });
+                    form.resetField('file', { keepError: true });
+                  }}
+                  disabled={isImageCreateRestricted}
+                  isUploading={form.formState.isSubmitting}
+                  progress={uploadProgress}
+                />
+              )}
+              control={form.control}
+              name="file"
+            />
+          </Paper>
+          <Box display="flex" gap={1} justifyContent="flex-end">
+            <Button
+              buttonType="outlined"
+              onClick={() => setLinodeCLIModalOpen(true)}
+            >
+              Upload Using Command Line
+            </Button>
+            <Button
+              disabled={
+                isImageCreateRestricted ||
+                (showGDPRCheckbox && !hasSignedAgreement)
+              }
+              buttonType="primary"
+              loading={form.formState.isSubmitting}
+              type="submit"
+            >
+              Upload Image
+            </Button>
+          </Box>
+        </Stack>
+      </form>
+      <ImageUploadCLIDialog
+        isOpen={linodeCLIModalOpen}
+        onClose={() => setLinodeCLIModalOpen(false)}
+      />
       <Prompt
         confirmWhenLeaving={true}
         onConfirm={onConfirm}
-        when={pendingUpload}
+        when={hasPendingUpload}
       >
         {({ handleCancel, handleConfirm, isModalOpen }) => {
           return (
             <ConfirmationDialog
-              actions={() => (
+              actions={
                 <ActionsPanel
                   primaryButtonProps={{
                     label: 'Leave Page',
@@ -213,7 +413,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
                     onClick: handleCancel,
                   }}
                 />
-              )}
+              }
               onClose={handleCancel}
               open={isModalOpen}
               title="Leave this page?"
@@ -226,118 +426,6 @@ export const ImageUpload: React.FC<Props> = (props) => {
           );
         }}
       </Prompt>
-
-      <Paper className={classes.container}>
-        {errorMap.none ? <Notice text={errorMap.none} variant="error" /> : null}
-        {!canCreateImage ? (
-          <Notice
-            text="You don't have permissions to create a new Image. Please contact an account administrator for details."
-            variant="error"
-          />
-        ) : null}
-
-        <div style={{ width: '100%' }}>
-          <TextField
-            disabled={!canCreateImage}
-            errorText={errorMap.label}
-            label="Label"
-            onChange={changeLabel}
-            required
-            value={label}
-          />
-
-          <TextField
-            disabled={!canCreateImage}
-            errorText={errorMap.description}
-            label="Description"
-            multiline
-            onChange={changeDescription}
-            rows={1}
-            value={description}
-          />
-          {flags.metadata && (
-            <div className={classes.cloudInitCheckboxWrapper}>
-              <Checkbox
-                checked={isCloudInit}
-                onChange={changeIsCloudInit}
-                text="This image is cloud-init compatible"
-                toolTipInteractive
-                toolTipText={cloudInitTooltipMessage}
-              />
-            </div>
-          )}
-          <RegionSelect
-            helperText="For fastest initial upload, select the region that is geographically
-            closest to you. Once uploaded you will be able to deploy the image
-            to other regions."
-            currentCapability={undefined}
-            disabled={!canCreateImage}
-            errorText={errorMap.region}
-            handleSelection={setRegion}
-            label="Region"
-            regionFilter="core" // Images service will not be supported for Gecko Beta
-            regions={regions}
-            required
-            selectedId={region}
-          />
-          {showGDPRCheckbox ? (
-            <EUAgreementCheckbox
-              centerCheckbox
-              checked={hasSignedAgreement}
-              className={classes.helperText}
-              onChange={(e) => setHasSignedAgreement(e.target.checked)}
-            />
-          ) : null}
-          <Notice
-            spacingTop={24}
-            sx={{ fontSize: '0.875rem' }}
-            variant="warning"
-          >
-            {imageSizeLimitsMessage}
-          </Notice>
-          <Typography className={classes.helperText}>
-            Custom Images are billed at $0.10/GB per month based on the
-            uncompressed image size.
-          </Typography>
-          <ImageUploader
-            apiError={errorMap.none} // Any errors that aren't related to 'label', 'description', or 'region' fields
-            description={description}
-            dropzoneDisabled={uploadingDisabled}
-            isCloudInit={isCloudInit}
-            label={label}
-            onSuccess={onSuccess}
-            region={region}
-            setCancelFn={setCancelFn}
-            setErrors={setErrors}
-          />
-          <Typography sx={{ paddingBottom: 1, paddingTop: 2 }}>
-            Or, upload an image using the{' '}
-            <button
-              className={classes.cliModalButton}
-              onClick={() => setLinodeCLIModalOpen(true)}
-            >
-              Linode CLI
-            </button>
-            . For more information, please see{' '}
-            <Link to="https://www.linode.com/docs/guides/linode-cli">
-              our guide on using the Linode CLI
-            </Link>
-            .
-          </Typography>
-        </div>
-      </Paper>
-      <LinodeCLIModal
-        analyticsKey="Image Upload"
-        command={linodeCLICommand}
-        isOpen={linodeCLIModalOpen}
-        onClose={() => setLinodeCLIModalOpen(false)}
-      />
-    </>
+    </FormProvider>
   );
-};
-
-export default ImageUpload;
-
-const formatForCLI = (value: string, fallback: string) => {
-  return value ? wrapInQuotes(value) : `[${fallback.toUpperCase()}]`;
 };

@@ -11,7 +11,7 @@ import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import { useDatabaseTypesQuery } from 'src/queries/databases';
+import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';

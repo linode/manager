@@ -16,7 +16,6 @@ import { QueryClient } from '@tanstack/react-query';
 import { enqueueSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
-import { compose as recompose } from 'recompose';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
@@ -46,7 +45,7 @@ import { PARENT_USER, grantTypeMap } from 'src/features/Account/constants';
 import { accountQueries } from 'src/queries/account/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import {
   StyledCircleProgress,
@@ -109,10 +108,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { currentUsername } = this.props;
 
     return (
-      <React.Fragment>
+      <div ref={this.formContainerRef}>
         <DocumentTitleSegment segment={`${currentUsername} - Permissions`} />
         {loading ? <CircleProgress /> : this.renderBody()}
-      </React.Fragment>
+      </div>
     );
   }
 
@@ -184,6 +183,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
   };
 
+  formContainerRef = React.createRef<HTMLDivElement>();
+
   getTabInformation = (grants: Grants) =>
     this.entityPerms.reduce(
       (acc: TabInfo, entity: GrantType) => {
@@ -232,7 +233,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               'Unknown error occurred while fetching user permissions. Try again later.'
             ),
           });
-          scrollErrorIntoView();
+          scrollErrorIntoViewV2(this.formContainerRef);
         });
     }
   };
@@ -255,7 +256,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             'Unknown error occurred while fetching user permissions. Try again later.'
           ),
         });
-        scrollErrorIntoView();
+        scrollErrorIntoViewV2(this.formContainerRef);
       }
     }
   };
@@ -736,7 +737,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             ),
             isSavingGlobal: false,
           });
-          scrollErrorIntoView();
+          scrollErrorIntoViewV2(this.formContainerRef);
         });
     }
 
@@ -794,7 +795,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           ),
           isSavingEntity: false,
         });
-        scrollErrorIntoView();
+        scrollErrorIntoViewV2(this.formContainerRef);
       });
   };
 
@@ -826,7 +827,4 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 }
 
-export default recompose<CombinedProps, Props>(
-  withQueryClient,
-  withFeatureFlags
-)(UserPermissions);
+export default withQueryClient(withFeatureFlags(UserPermissions));

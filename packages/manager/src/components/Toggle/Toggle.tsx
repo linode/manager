@@ -7,10 +7,6 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 
 export interface ToggleProps extends SwitchProps {
   /**
-   * Makes a tooltip interactive (meaning the tooltip will not close when the user hovers over the tooltip). Note that in order for the tooltip to show up, tooltipText must be passed in as a prop.
-   */
-  interactive?: boolean;
-  /**
    * Content to display inside an optional tooltip.
    */
   tooltipText?: JSX.Element | string;
@@ -28,7 +24,7 @@ export interface ToggleProps extends SwitchProps {
  * > **Note:** Do not use toggles in long forms where other types of form fields are present, and users will need to click a Submit button for other changes to take effect. This scenario confuses users because they can’t be sure whether their toggle choice will take immediate effect.
  */
 export const Toggle = (props: ToggleProps) => {
-  const { interactive, tooltipText, ...rest } = props;
+  const { tooltipText, ...rest } = props;
 
   return (
     <React.Fragment>
@@ -39,13 +35,7 @@ export const Toggle = (props: ToggleProps) => {
         icon={<ToggleOff />}
         {...rest}
       />
-      {tooltipText && (
-        <TooltipIcon
-          interactive={interactive}
-          status="help"
-          text={tooltipText}
-        />
-      )}
+      {tooltipText && <TooltipIcon status="help" text={tooltipText} />}
     </React.Fragment>
   );
 };

@@ -6,7 +6,6 @@ import { Hidden } from 'src/components/Hidden';
 import { StyledTableDataCell, StyledTableRow } from './TableRow.styles';
 
 export interface TableRowProps extends _TableRowProps {
-  ariaLabel?: string;
   className?: string;
   disabled?: boolean;
   domRef?: any;
@@ -18,15 +17,10 @@ export interface TableRowProps extends _TableRowProps {
 }
 
 export const TableRow = React.memo((props: TableRowProps) => {
-  const { ariaLabel, domRef, selected, ...rest } = props;
+  const { domRef, selected, ...rest } = props;
 
   return (
-    <StyledTableRow
-      aria-label={ariaLabel ?? `View Details`}
-      ref={domRef}
-      selected={selected}
-      {...rest}
-    >
+    <StyledTableRow ref={domRef} selected={selected} {...rest}>
       {props.children}
       {selected && (
         <Hidden lgDown>

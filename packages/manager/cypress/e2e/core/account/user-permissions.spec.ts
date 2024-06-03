@@ -11,14 +11,9 @@ import {
   mockUpdateUser,
   mockUpdateUserGrants,
 } from 'support/intercepts/account';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { shuffleArray } from 'support/util/arrays';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
 
 // Message shown when user has unrestricted account access.
@@ -504,12 +499,6 @@ describe('User permission management', () => {
       global: { account_access: 'read_write' },
     });
 
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     mockGetUsers([mockActiveUser, mockRestrictedUser]).as('getUsers');
     mockGetUser(mockActiveUser);
     mockGetUserGrants(mockActiveUser.username, mockUserGrants);
@@ -520,7 +509,6 @@ describe('User permission management', () => {
     );
     mockGetUser(mockRestrictedUser);
     mockGetUserGrants(mockRestrictedUser.username, mockUserGrants);
-    cy.wait(['@getClientStream', '@getFeatureFlags']);
 
     cy.get('[data-qa-global-section]')
       .should('be.visible')
@@ -573,12 +561,6 @@ describe('User permission management', () => {
       global: { account_access: 'read_write' },
     });
 
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     mockGetUsers([mockRestrictedProxyUser]).as('getUsers');
     mockGetUser(mockChildUser);
     mockGetUserGrants(mockChildUser.username, mockUserGrants);
@@ -589,8 +571,6 @@ describe('User permission management', () => {
     cy.visitWithLogin(
       `/account/users/${mockRestrictedProxyUser.username}/permissions`
     );
-
-    cy.wait(['@getClientStream', '@getFeatureFlags']);
 
     cy.findByText('Parent User Permissions', { exact: false }).should(
       'be.visible'

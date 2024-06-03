@@ -21,10 +21,6 @@ import {
   mockGetUser,
 } from 'support/intercepts/account';
 import { mockGetEvents, mockGetNotifications } from 'support/intercepts/events';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { mockAllApiRequests } from 'support/intercepts/general';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
@@ -33,7 +29,6 @@ import {
 } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { assertLocalStorageValue } from 'support/util/local-storage';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { grantsFactory } from '@src/factories/grants';
@@ -156,14 +151,6 @@ describe('Parent/Child account switching', () => {
    * Tests to confirm that Parent account users can switch to Child accounts as expected.
    */
   describe('From Parent to Child', () => {
-    beforeEach(() => {
-      // @TODO M3-7554, M3-7559: Remove feature flag mocks after feature launch and clean-up.
-      mockAppendFeatureFlags({
-        parentChildAccountAccess: makeFeatureFlagData(true),
-      });
-      mockGetFeatureFlagClientstream();
-    });
-
     /*
      * - Confirms that Parent account user can switch to Child account from Account Billing page.
      * - Confirms that Child account information is displayed in user menu button after switch.
@@ -320,19 +307,78 @@ describe('Parent/Child account switching', () => {
         mockChildAccount.company
       );
     });
+
+    /*
+     * - Confirms search functionality in the account switching drawer.
+     */
+    it('can search child accounts', () => {
+      mockGetProfile(mockParentProfile);
+      mockGetAccount(mockParentAccount);
+      mockGetChildAccounts([mockChildAccount, mockAlternateChildAccount]);
+      mockGetUser(mockParentUser);
+
+      cy.visitWithLogin('/');
+      cy.trackPageVisit().as('pageVisit');
+
+      // Confirm that Parent account username and company name are shown in user
+      // menu button, then click the button.
+      assertUserMenuButton(
+        mockParentProfile.username,
+        mockParentAccount.company
+      ).click();
+
+      // Click "Switch Account" button in user menu.
+      ui.userMenu
+        .find()
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Switch Account')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Confirm search functionality.
+      ui.drawer
+        .findByTitle('Switch Account')
+        .should('be.visible')
+        .within(() => {
+          // Confirm all child accounts are displayed when drawer loads.
+          cy.findByText(mockChildAccount.company).should('be.visible');
+          cy.findByText(mockAlternateChildAccount.company).should('be.visible');
+
+          // Confirm no results message.
+          mockGetChildAccounts([]).as('getEmptySearchResults');
+          cy.findByPlaceholderText('Search').click().type('Fake Name');
+          cy.wait('@getEmptySearchResults');
+
+          cy.contains(mockChildAccount.company).should('not.exist');
+          cy.findByText(
+            'There are no child accounts that match this query.'
+          ).should('be.visible');
+
+          // Confirm filtering by company name displays only one search result.
+          mockGetChildAccounts([mockChildAccount]).as('getSearchResults');
+          cy.findByPlaceholderText('Search')
+            .click()
+            .clear()
+            .type(mockChildAccount.company);
+          cy.wait('@getSearchResults');
+
+          cy.findByText(mockChildAccount.company).should('be.visible');
+          cy.contains(mockAlternateChildAccount.company).should('not.exist');
+          cy.contains(
+            'There are no child accounts that match this query.'
+          ).should('not.exist');
+        });
+    });
   });
 
   /**
    * Tests to confirm that Parent account users can switch back from Child accounts as expected.
    */
   describe('From Child to Parent', () => {
-    beforeEach(() => {
-      mockAppendFeatureFlags({
-        parentChildAccountAccess: makeFeatureFlagData(true),
-      });
-      mockGetFeatureFlagClientstream();
-    });
-
     /*
      * - Confirms that a Child account Proxy user can switch back to a Parent account from Billing page.
      * - Confirms that Parent account information is displayed in user menu button after switch.
@@ -398,9 +444,7 @@ describe('Parent/Child account switching', () => {
         .findByTitle('Switch Account')
         .should('be.visible')
         .within(() => {
-          cy.findByText('There are no indirect customer accounts.').should(
-            'be.visible'
-          );
+          cy.findByText('There are no child accounts.').should('be.visible');
           cy.findByText('switch back to your account')
             .should('be.visible')
             .click();

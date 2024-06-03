@@ -29,6 +29,12 @@ describe('SwitchAccountDrawer', () => {
     ).toBeInTheDocument();
   });
 
+  it('should have a search bar', () => {
+    const { getByText } = renderWithTheme(<SwitchAccountDrawer {...props} />);
+
+    expect(getByText('Search')).toBeVisible();
+  });
+
   it('should include a link to switch back to the parent account if the active user is a proxy user', async () => {
     server.use(
       http.get('*/profile', () => {

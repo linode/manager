@@ -132,7 +132,10 @@ const createLinodeAndImage = async () => {
   await resizeLinodeDisk(linode.id, diskId, resizedDiskSize);
   await pollLinodeDiskSize(linode.id, diskId, resizedDiskSize);
 
-  const image = await createImage(diskId, randomLabel(), randomPhrase());
+  const image = await createImage({
+    disk_id: diskId,
+    label: randomLabel(),
+  });
 
   await pollImageStatus(
     image.id,

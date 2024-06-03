@@ -1,10 +1,11 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React, { useState } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 
 import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Stack } from 'src/components/Stack';
 import { Table } from 'src/components/Table';
@@ -22,6 +23,7 @@ import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDra
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
+import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 import { isNumeric } from 'src/utilities/stringUtils';
 
@@ -36,7 +38,8 @@ import type { Theme } from '@mui/material';
 
 interface Props {
   /**
-   * Adds an extra column that will dispay a "power off" option when the row is selected
+   * In desktop view, adds an extra column that will display a "power off" option when the row is selected.
+   * In mobile view, allows the "power off" button to display when the card is selected.
    */
   enablePowerOff?: boolean;
 }
@@ -50,10 +53,12 @@ export const LinodeSelectTable = (props: Props) => {
 
   const { control, reset } = useFormContext<LinodeCreateFormValues>();
 
-  const selectedLinode = useWatch<LinodeCreateFormValues>({
-    control,
-    name: 'linode',
-  });
+  const { field, fieldState } = useController<LinodeCreateFormValues, 'linode'>(
+    {
+      control,
+      name: 'linode',
+    }
+  );
 
   const { params } = useLinodeCreateQueryParams();
 
@@ -61,7 +66,7 @@ export const LinodeSelectTable = (props: Props) => {
     params.linodeID
   );
 
-  const [query, setQuery] = useState(selectedLinode?.label ?? '');
+  const [query, setQuery] = useState(field.value?.label ?? '');
   const [linodeToPowerOff, setLinodeToPowerOff] = useState<Linode>();
 
   const pagination = usePagination();
@@ -99,10 +104,18 @@ export const LinodeSelectTable = (props: Props) => {
     }));
   };
 
+  const handlePowerOff = (linode: Linode) => {
+    setLinodeToPowerOff(linode);
+    sendLinodePowerOffEvent('Clone Linode');
+  };
+
   const columns = enablePowerOff ? 6 : 5;
 
   return (
     <Stack pt={1} spacing={2}>
+      {fieldState.error?.message && (
+        <Notice text={fieldState.error?.message} variant="error" />
+      )}
       <DebouncedSearchTextField
         customValue={{
           onChange: (value) => {
@@ -111,7 +124,7 @@ export const LinodeSelectTable = (props: Props) => {
             }
             setQuery(value ?? '');
           },
-          value: preselectedLinodeId ? selectedLinode?.label ?? '' : query,
+          value: preselectedLinodeId ? field.value?.label ?? '' : query,
         }}
         clearable
         hideLabel
@@ -156,13 +169,16 @@ export const LinodeSelectTable = (props: Props) => {
                 <LinodeSelectTableRow
                   onPowerOff={
                     enablePowerOff
-                      ? () => setLinodeToPowerOff(linode)
+                      ? () => {
+                          setLinodeToPowerOff(linode);
+                          sendLinodePowerOffEvent('Clone Linode');
+                        }
                       : undefined
                   }
                   key={linode.id}
                   linode={linode}
                   onSelect={() => handleSelect(linode)}
-                  selected={linode.id === selectedLinode?.id}
+                  selected={linode.id === field.value?.id}
                 />
               ))}
             </TableBody>
@@ -171,10 +187,12 @@ export const LinodeSelectTable = (props: Props) => {
           <Grid container spacing={2}>
             {data?.data.map((linode) => (
               <SelectLinodeCard
+                handlePowerOff={() => handlePowerOff(linode)}
                 handleSelection={() => handleSelect(linode)}
                 key={linode.id}
                 linode={linode}
-                selected={linode.id === selectedLinode?.id}
+                selected={linode.id === field.value?.id}
+                showPowerActions={Boolean(enablePowerOff)}
               />
             ))}
             {data?.results === 0 && (

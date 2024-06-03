@@ -36,7 +36,7 @@ export const ObjectTableRow = (props: Props) => {
   } = props;
 
   return (
-    <TableRow ariaLabel={displayName}>
+    <TableRow>
       <TableCell>
         <Grid alignItems="center" container spacing={2} wrap="nowrap">
           <Grid className="py0">

@@ -66,9 +66,7 @@ describe('UserRow', () => {
     );
 
     const { findByText } = renderWithTheme(
-      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />, {
-        flags: { parentChildAccountAccess: true },
-      })
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
     expect(await findByText('Enabled')).toBeVisible();
   });
@@ -91,9 +89,7 @@ describe('UserRow', () => {
     );
 
     const { findByText } = renderWithTheme(
-      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />, {
-        flags: { parentChildAccountAccess: true },
-      })
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
     expect(await findByText('Disabled')).toBeVisible();
   });
@@ -118,9 +114,7 @@ describe('UserRow', () => {
     );
 
     const { queryByText } = renderWithTheme(
-      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />, {
-        flags: { parentChildAccountAccess: true },
-      })
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
     );
     expect(queryByText('Enabled')).not.toBeInTheDocument();
   });
@@ -145,9 +139,7 @@ describe('UserRow', () => {
     );
 
     const { findByText, queryByText } = renderWithTheme(
-      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={proxyUser} />, {
-        flags: { parentChildAccountAccess: true },
-      })
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={proxyUser} />)
     );
 
     // Renders Username, Email, and Account Access fields for a proxy user.

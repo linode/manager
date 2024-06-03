@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
@@ -8,7 +9,7 @@ import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
-import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics';
+import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
@@ -37,6 +38,7 @@ export const SwitchAccountDrawer = (props: Props) => {
   const [isParentTokenError, setIsParentTokenError] = React.useState<
     APIError[]
   >([]);
+  const [query, setQuery] = React.useState<string>('');
 
   const isProxyUser = userType === 'proxy';
   const currentParentTokenWithBearer =
@@ -154,6 +156,16 @@ export const SwitchAccountDrawer = (props: Props) => {
         )}
         .
       </Typography>
+      <DebouncedSearchTextField
+        clearable
+        debounceTime={250}
+        hideLabel
+        label="Search"
+        onSearch={setQuery}
+        placeholder="Search"
+        sx={{ marginBottom: 3 }}
+        value={query}
+      />
       <ChildAccountList
         currentTokenWithBearer={
           isProxyUser ? currentParentTokenWithBearer : currentTokenWithBearer
@@ -161,6 +173,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         isLoading={isSubmitting}
         onClose={onClose}
         onSwitchAccount={handleSwitchToChildAccount}
+        searchQuery={query}
         userType={userType}
       />
     </Drawer>
