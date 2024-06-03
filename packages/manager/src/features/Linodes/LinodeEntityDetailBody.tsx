@@ -7,7 +7,7 @@ import { HashLink } from 'react-router-hash-link';
 
 import { Box } from 'src/components/Box';
 import {
-  UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY,
+  DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY as UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY,
   UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY,
 } from 'src/components/DiskEncryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
