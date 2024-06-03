@@ -22,7 +22,7 @@ export const reserved: PartialEventMap<'reserved'> = {
   reserved_ip_delete: {
     notification: () => (
       <>
-        An reserved IP address has been <strong>deleted</strong> from your
+        A reserved IP address has been <strong>deleted</strong> from your
         account.
       </>
     ),
