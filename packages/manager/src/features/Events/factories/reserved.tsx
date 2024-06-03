@@ -30,7 +30,7 @@ export const reserved: PartialEventMap<'reserved'> = {
   reserved_ip_unassign: {
     notification: () => (
       <>
-        An reserved IP address has been <strong>unassigned</strong> from your
+        A reserved IP address has been <strong>unassigned</strong> from your
         account.
       </>
     ),
