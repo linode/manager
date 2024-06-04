@@ -435,6 +435,15 @@ export const darkThemeTokens: ThemeOptions = {
         },
       },
     },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          '&:hover': {
+            color: primaryColors.main,
+          },
+        },
+      },
+    },
     MuiInput: {
       styleOverrides: {
         disabled: {},
