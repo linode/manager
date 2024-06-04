@@ -2,11 +2,13 @@ import { Event } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import * as React from 'react';
 
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -28,6 +30,7 @@ const ImageRow = (props: Props) => {
     label,
     onCancelFailed,
     onRetry,
+    regions,
     size,
     status,
     ...rest
@@ -35,7 +38,26 @@ const ImageRow = (props: Props) => {
 
   const { data: profile } = useProfile();
 
+  const { data: regionsData } = useRegionsQuery();
+
   const isFailed = status === 'pending_upload' && event?.status === 'failed';
+
+  // TODO Image Service v2: delete after GA
+  const multiRegionsEnabled = regions.length > 0;
+
+  const regionsList = multiRegionsEnabled && (
+    <>
+      {regionsData?.find((region) => region.id == regions[0].region)?.label}
+      {regions.length > 1 && (
+        <>
+          ,{' '}
+          <StyledLinkButton onClick={openRegionsDrawer}>
+            +{regions.length - 1}
+          </StyledLinkButton>
+        </>
+      )}
+    </>
+  );
 
   const getStatusForImage = (status: string) => {
     switch (status) {
@@ -74,6 +96,13 @@ const ImageRow = (props: Props) => {
       <TableCell data-qa-image-label>{label}</TableCell>
       <Hidden smDown>
         {status ? <TableCell>{getStatusForImage(status)}</TableCell> : null}
+      </Hidden>
+      {regionsList && (
+        <Hidden smDown>
+          <TableCell>{regionsList}</TableCell>
+        </Hidden>
+      )}
+      <Hidden smDown>
         <TableCell data-qa-image-date>
           {formatDate(created, {
             timezone: profile?.timezone,

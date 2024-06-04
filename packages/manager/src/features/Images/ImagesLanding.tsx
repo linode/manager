@@ -194,6 +194,19 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
   const manualImagesData = getImagesWithEvents(
     manualImages?.data ?? [],
     imageEvents
+  )
+    // TODO: delete
+    .map<ImageWithEvent>((image) => ({
+      ...image,
+      regions: [
+        { region: 'us-east', status: 'available' },
+        { region: 'us-southeast', status: 'available' },
+      ],
+    }));
+
+  // TODO Image Service v2: delete after GA
+  const multiRegionsEnabled = manualImagesData.some(
+    (image) => image.regions.length
   );
 
   // Automatic images with the associated events tied in.
@@ -452,6 +465,7 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
     return renderEmpty();
   }
 
+  // TODO update colSpan
   const noManualImages = (
     <TableRowEmpty colSpan={5} message={`No Custom Images to display.`} />
   );
@@ -491,6 +505,11 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
               <Hidden smDown>
                 <TableCell>Status</TableCell>
               </Hidden>
+              {multiRegionsEnabled && (
+                <Hidden smDown>
+                  <TableCell>Region(s)</TableCell>
+                </Hidden>
+              )}
               <Hidden smDown>
                 <TableSortCell
                   active={manualImagesOrderBy === 'created'}
