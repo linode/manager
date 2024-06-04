@@ -17,7 +17,7 @@ import {
   useDatabaseMutation,
   useDatabaseQuery,
   useDatabaseTypesQuery,
-} from 'src/queries/databases';
+} from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));

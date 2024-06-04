@@ -25,3 +25,6 @@ export const DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY =
 
 export const UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY =
   'Use Rebuild to enable or disable disk encryption.';
+
+export const DISK_ENCRYPTION_IMAGES_CAVEAT_COPY =
+  'Virtual Machine Images are not encrypted.';

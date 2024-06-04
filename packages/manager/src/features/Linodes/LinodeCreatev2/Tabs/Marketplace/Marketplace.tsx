@@ -17,7 +17,7 @@ export const Marketplace = () => {
   return (
     <Stack spacing={2}>
       <AppSelect onOpenDetailsDrawer={onOpenDetailsDrawer} />
-      <UserDefinedFields />
+      <UserDefinedFields onOpenDetailsDrawer={onOpenDetailsDrawer} />
       <StackScriptImages />
       <AppDetailDrawerv2
         onClose={() => setDrawerStackScriptId(undefined)}
