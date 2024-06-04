@@ -6,7 +6,7 @@ export const reserved: PartialEventMap<'reserved'> = {
   reserved_ip_assign: {
     notification: () => (
       <>
-        An reserved IP address has been <strong>assigned</strong> to your
+        A reserved IP address has been <strong>assigned</strong> to your
         account.
       </>
     ),
