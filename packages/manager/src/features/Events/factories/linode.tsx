@@ -514,7 +514,7 @@ export const linode: PartialEventMap<'linode'> = {
     ),
     finished: (e) => (
       <>
-        A snapshot backup has been created for Linode{' '}
+        A snapshot backup has been <strong>created</strong> for Linode{' '}
         <EventLink event={e} to="entity" />.
       </>
     ),
