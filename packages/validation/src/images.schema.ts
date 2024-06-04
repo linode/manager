@@ -12,7 +12,7 @@ export const baseImageSchema = object({
   label: labelSchema.notRequired(),
   description: string().notRequired().min(1).max(65000),
   cloud_init: boolean().notRequired(),
-  tags: array(string()).notRequired(),
+  tags: array(string().min(3).max(50)).max(500).notRequired(),
 });
 
 export const createImageSchema = baseImageSchema.shape({
@@ -32,4 +32,10 @@ export const updateImageSchema = object({
     .notRequired()
     .max(65000, 'Length must be 65000 characters or less.'),
   tags: array(string()).notRequired(),
+});
+
+export const updateImageRegionsSchema = object({
+  regions: array(string())
+    .required('Regions are required.')
+    .min(1, 'Must specify at least one region.'),
 });
