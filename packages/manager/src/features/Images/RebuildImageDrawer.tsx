@@ -78,15 +78,19 @@ export const RebuildImageDrawer = (props: Props) => {
             value={field.value}
           />
         )}
+        rules={{
+          required: {
+            message: 'Select a Linode to restore.',
+            value: true,
+          },
+        }}
         control={control}
         name="linodeId"
-        rules={{ required: true }}
       />
 
       <ActionsPanel
         primaryButtonProps={{
           'data-testid': 'submit',
-          disabled: !formState.isValid,
           label: 'Restore Image',
           loading: formState.isSubmitting,
           onClick: onSubmit,

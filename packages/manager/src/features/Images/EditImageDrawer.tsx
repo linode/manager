@@ -51,12 +51,12 @@ export const EditImageDrawer = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  const onSubmit = handleSubmit((values) => {
+  const onSubmit = handleSubmit(async (values) => {
     if (!image) {
       return;
     }
 
-    updateImage({ imageId: image.id, ...values })
+    await updateImage({ imageId: image.id, ...values })
       .then(onClose)
       .catch((errors: APIError[]) => {
         for (const error of errors) {
