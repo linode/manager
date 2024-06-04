@@ -8,7 +8,7 @@ import { HashLink } from 'react-router-hash-link';
 import { Link } from 'src/components/Link';
 import { Typography, TypographyProps } from 'src/components/Typography';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { pluralize } from 'src/utilities/pluralize';
 
 import {

@@ -13,7 +13,7 @@ import { Typography } from 'src/components/Typography';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 
 import GooglePayChip from '../GooglePayChip';
 import { PayPalChip } from '../PayPalChip';

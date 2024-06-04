@@ -30,7 +30,7 @@ import {
   useLinodeMigrateMutation,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { sendMigrationInitiatedEvent } from 'src/utilities/analytics/customEventAnalytics';

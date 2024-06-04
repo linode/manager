@@ -21,11 +21,11 @@ import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constan
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import {
   useAppTokensQuery,
   usePersonalAccessTokensQuery,
-} from 'src/queries/tokens';
+} from 'src/queries/profile/tokens';
 
 import { APITokenMenu } from './APITokenMenu';
 import {

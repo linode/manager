@@ -17,7 +17,7 @@ import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { reportException } from 'src/exceptionReporting';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatDate } from 'src/utilities/formatDate';
 

@@ -27,7 +27,7 @@ import {
   useUpdateDomainMutation,
 } from 'src/queries/domains';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CloneDomainDrawer } from './CloneDomainDrawer';
