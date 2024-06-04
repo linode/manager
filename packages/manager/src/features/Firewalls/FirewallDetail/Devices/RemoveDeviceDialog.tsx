@@ -1,15 +1,15 @@
 import { FirewallDevice } from '@linode/api-v4';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
-import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
 import { useRemoveFirewallDeviceMutation } from 'src/queries/firewalls';
+import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
-import { queryKey as nodeBalancerQueryKey } from 'src/queries/nodebalancers';
+import { queryKey as nodebalancersQueryKey } from 'src/queries/nodebalancers';
 
 export interface Props {
   device: FirewallDevice | undefined;
@@ -48,12 +48,12 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
       enqueueSnackbar(error[0].reason, { variant: 'error' });
     }
 
-    const querykey =
-      deviceType === 'linode' ? linodesQueryKey : nodeBalancerQueryKey;
+    const queryKey =
+      deviceType === 'linode' ? linodesQueryKey : nodebalancersQueryKey;
 
     // Since the linode was removed as a device, invalidate the linode-specific firewall query
     queryClient.invalidateQueries([
-      querykey,
+      queryKey,
       deviceType,
       device?.entity.id,
       'firewalls',
