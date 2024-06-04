@@ -102,8 +102,8 @@ describe('CreateImageTab', () => {
     await findByText('Image scheduled for creation.');
   });
 
-  it('should render a notice if the user selects a Linode in an edge region', async () => {
-    const region = regionFactory.build({ site_type: 'edge' });
+  it('should render a notice if the user selects a Linode in a distributed compute region', async () => {
+    const region = regionFactory.build({ site_type: 'distributed' });
     const linode = linodeFactory.build({ region: region.id });
 
     server.use(
@@ -128,7 +128,7 @@ describe('CreateImageTab', () => {
 
     await userEvent.click(linodeOption);
 
-    // Verify edge notice renders
+    // Verify distributed compute region notice renders
     await findByText(
       'This Linode is in a distributed compute region. Images captured from this Linode will be stored in the closest core site.'
     );
@@ -139,7 +139,7 @@ describe('CreateImageTab', () => {
     );
   });
 
-  it('should render an encryption notice if disk encryption is enabled and the Linode is not in an edge region', async () => {
+  it('should render an encryption notice if disk encryption is enabled and the Linode is not in a distributed compute region', async () => {
     const region = regionFactory.build({ site_type: 'core' });
     const linode = linodeFactory.build({ region: region.id });
 
