@@ -116,12 +116,13 @@ export const CreateImageTab = () => {
   /*
     We only want to display the notice about disk encryption if:
     1. the Disk Encryption feature is enabled
+    2. a linode is selected
     2. the selected linode is not in an Edge region
   */
   const showDiskEncryptionWarning =
     isDiskEncryptionFeatureEnabled &&
-    !linodeIsInEdgeRegion &&
-    selectedLinodeId !== null;
+    selectedLinodeId !== null &&
+    !linodeIsInEdgeRegion;
 
   const linodeSelectHelperText = [
     {
