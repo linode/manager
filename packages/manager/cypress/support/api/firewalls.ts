@@ -3,6 +3,7 @@ import {
   deleteFirewall,
   getFirewalls,
   createFirewall,
+  FirewallRules,
 } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
@@ -11,27 +12,24 @@ import { randomLabel } from 'support/util/random';
 import { isTestLabel } from './common';
 
 /**
- * Determines if a Firewall is sufficiently locked down to use for a test resource.
+ * Determines if Firewall rules are sufficiently locked down to use for a test resource.
  *
- * Returns `true` if the Firewall has default inbound and outbound policies to
- * drop connections and does not have any additional rules.
+ * Returns `true` if the rules have default inbound and outbound policies to
+ * drop connections and do not have any additional rules.
  *
- * @param firewall - Firewall for which to check rules and policies.
+ * @param rules - Firewall rules to assess.
  *
- * @returns `true` if Firewall is locked down, `false` otherwise.
+ * @returns `true` if Firewall rules are locked down, `false` otherwise.
  */
-export const isFirewallLockedDown = (firewall: Firewall) => {
-  const hasOutboundRules =
-    !!firewall.rules.outbound && firewall.rules.outbound.length > 0;
-  const hasInboundRules =
-    !!firewall.rules.inbound && firewall.rules.inbound.length > 0;
+export const areFirewallRulesLockedDown = (rules: FirewallRules) => {
+  const { outbound, outbound_policy, inbound, inbound_policy } = rules;
 
-  const hasOutboundDropPolicy = firewall.rules.outbound_policy === 'DROP';
-  const hasInboundDropPolicy = firewall.rules.inbound_policy === 'DROP';
+  const hasOutboundRules = !!outbound && outbound.length > 0;
+  const hasInboundRules = !!inbound && inbound.length > 0;
 
   return (
-    hasInboundDropPolicy &&
-    hasOutboundDropPolicy &&
+    outbound_policy === 'DROP' &&
+    inbound_policy === 'DROP' &&
     !hasInboundRules &&
     !hasOutboundRules
   );
@@ -48,8 +46,8 @@ export const findOrCreateDependencyFirewall = async () => {
   );
 
   const suitableFirewalls = firewalls.filter(
-    (firewall: Firewall) =>
-      isTestLabel(firewall.label) && isFirewallLockedDown(firewall)
+    ({ label, rules }: Firewall) =>
+      isTestLabel(label) && areFirewallRulesLockedDown(rules)
   );
 
   if (suitableFirewalls.length > 0) {
