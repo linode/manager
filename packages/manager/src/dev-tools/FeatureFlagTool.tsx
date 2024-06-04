@@ -31,6 +31,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'recharts', label: 'Recharts' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
+  { flag: 'designTokens', label: 'Design Tokens' },
 ];
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {

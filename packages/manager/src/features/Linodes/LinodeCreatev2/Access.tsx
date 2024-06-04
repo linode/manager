@@ -5,7 +5,7 @@ import UserSSHKeyPanel from 'src/components/AccessPanel/UserSSHKeyPanel';
 import { Divider } from 'src/components/Divider';
 import { Paper } from 'src/components/Paper';
 import { Skeleton } from 'src/components/Skeleton';
-import { inputMaxWidth } from 'src/foundations/themes/light';
+import { inputMaxWidth } from 'src/foundations/themes/lightTokens';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';

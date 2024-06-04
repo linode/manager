@@ -1,79 +1,75 @@
-import {
-  Action,
-  Border,
-  Button,
-  Color,
-  Select,
-} from '@linode/design-language-system/themes/dark';
 import { ThemeOptions } from '@mui/material/styles';
 
 import { breakpoints } from 'src/foundations/breakpoints';
-import { latoWeb } from 'src/foundations/fonts';
 
 const primaryColors = {
-  dark: Color.Brand[90],
-  divider: Color.Neutrals.Black,
-  headline: Color.Neutrals[5],
-  light: Color.Brand[60],
-  main: Color.Brand[80],
-  text: Color.Neutrals.White,
-  white: Color.Neutrals.Black,
+  dark: '#2466b3',
+  divider: '#222222',
+  headline: '#f4f4f4',
+  light: '#4d99f1',
+  main: '#3683dc',
+  text: '#ffffff',
+  white: '#222',
 };
 
 export const customDarkModeOptions = {
   bg: {
-    app: Color.Neutrals[100],
-    appBar: Color.Neutrals.Black,
-    bgAccessRow: Color.Neutrals[80],
+    app: '#3a3f46',
+    appBar: '#2e3238',
+    bgAccessRow: '#454b54',
     bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
-    bgPaper: Color.Neutrals[90],
-    lightBlue1: Color.Neutrals.Black,
-    lightBlue2: Color.Brand[100],
-    main: Color.Neutrals[100],
-    mainContentBanner: Color.Neutrals[100],
-    offWhite: Color.Neutrals[90],
-    primaryNavPaper: Color.Neutrals[100],
-    tableHeader: Color.Neutrals[100],
-    white: Color.Neutrals[100],
+    bgPaper: '#2e3238',
+    lightBlue1: '#222',
+    lightBlue2: '#364863',
+    main: '#2f3236',
+    mainContentBanner: '#23272b',
+    offWhite: '#444',
+    primaryNavPaper: '#2e3238',
+    tableHeader: '#33373e',
+    white: '#32363c',
   },
   borderColors: {
-    borderTable: Color.Neutrals[80],
-    borderTypography: Color.Neutrals[80],
-    divider: Color.Neutrals[80],
+    borderTable: '#3a3f46',
+    borderTypography: '#454b54',
+    divider: '#222',
   },
   color: {
-    black: Color.Neutrals.White,
-    blueDTwhite: Color.Neutrals.White,
-    border2: Color.Neutrals.Black,
-    border3: Color.Neutrals.Black,
-    boxShadow: 'rgba(0, 0, 0, 0.5)',
-    boxShadowDark: Color.Neutrals.Black,
-    buttonPrimaryHover: Button.Primary.Hover.Background,
+    black: '#ffffff',
+    blueDTwhite: '#fff',
+    border2: '#111',
+    border3: '#222',
+    boxShadow: '#222',
+    boxShadowDark: '#000',
+    buttonPrimaryHover: '#226dc3',
     drawerBackdrop: 'rgba(0, 0, 0, 0.5)',
-    grey1: Color.Neutrals[50],
-    grey2: Color.Neutrals[100],
-    grey3: Color.Neutrals[60],
-    grey5: Color.Neutrals[100],
-    grey6: Color.Neutrals[50],
-    grey7: Color.Neutrals[80],
+    grey1: '#abadaf',
+    grey2: 'rgba(0, 0, 0, 0.2)',
+    grey3: '#999',
+    grey5: 'rgba(0, 0, 0, 0.2)',
+    grey6: '#606469',
+    grey7: '#2e3238',
     grey9: primaryColors.divider,
     headline: primaryColors.headline,
-    label: Color.Neutrals[40],
-    offBlack: Color.Neutrals.White,
-    red: Color.Red[70],
-    tableHeaderText: Color.Neutrals.White,
-    tagButtonBg: Color.Brand[40],
-    tagButtonText: Button.Primary.Default.Text,
-    tagIcon: Button.Primary.Default.Icon,
-    white: Color.Neutrals[100],
+    label: '#c9cacb',
+    offBlack: '#ffffff',
+    red: '#fb6d6d',
+    tableHeaderText: '#fff',
+    white: '#32363c',
+
+    // TODO: This should be moved to component level.
+    tagButtonBg: '#364863',
+    tagButtonBgHover: '#226dc3',
+    tagButtonText: '#74aae6',
+    tagButtonTextHover: '#fff',
+    tagIcon: '#9caec9',
+    tagIconHover: '#fff',
   },
   textColors: {
-    headlineStatic: Color.Neutrals[20],
-    linkActiveLight: Action.Primary.Default,
-    linkHover: Action.Primary.Hover,
-    tableHeader: Color.Neutrals[60],
-    tableStatic: Color.Neutrals[20],
-    textAccessTable: Color.Neutrals[50],
+    headlineStatic: '#e6e6e6',
+    linkActiveLight: '#74aae6',
+    tableHeader: '#888F91',
+    tableStatic: '#e6e6e6',
+    textAccessTable: '#acb0b4',
   },
 } as const;
 
@@ -83,7 +79,7 @@ const iconCircleAnimation = {
     transition: 'fill .2s ease-in-out .2s',
   },
   '& .insidePath *': {
-    stroke: Color.Neutrals.White,
+    stroke: 'white',
     transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
   },
   '& .outerCircle': {
@@ -97,12 +93,12 @@ const iconCircleAnimation = {
 // Used for styling html buttons to look like our generic links
 const genericLinkStyle = {
   '&:hover': {
-    color: Action.Primary.Hover,
+    color: primaryColors.main,
     textDecoration: 'underline',
   },
   background: 'none',
   border: 'none',
-  color: Action.Primary.Default,
+  color: customDarkModeOptions.textColors.linkActiveLight,
   cursor: 'pointer',
   font: 'inherit',
   padding: 0,
@@ -161,7 +157,8 @@ export const darkTheme: ThemeOptions = {
           backgroundColor: 'transparent',
         },
         root: {
-          backgroundColor: Color.Neutrals.Black,
+          backgroundColor: customDarkModeOptions.bg.bgPaper,
+          color: primaryColors.text,
         },
       },
     },
@@ -172,10 +169,10 @@ export const darkTheme: ThemeOptions = {
           border: `1px solid ${primaryColors.main}`,
         },
         loading: {
-          color: Color.Neutrals.White,
+          color: '#fff',
         },
         noOptions: {
-          color: Color.Neutrals.White,
+          color: '#fff',
         },
         tag: {
           '.MuiChip-deleteIcon': { color: primaryColors.text },
@@ -191,87 +188,57 @@ export const darkTheme: ThemeOptions = {
     MuiButton: {
       styleOverrides: {
         containedPrimary: {
-          // TODO: We can remove this after migration since we can define variants
-          '&.loading': {
-            backgroundColor: primaryColors.text,
-          },
-          '&:active': {
-            backgroundColor: Button.Primary.Pressed.Background,
-          },
-          '&:disabled': {
-            backgroundColor: Button.Primary.Disabled.Background,
-            color: Button.Primary.Disabled.Text,
-          },
-          '&:hover, &:focus': {
-            backgroundColor: Button.Primary.Hover.Background,
-          },
-          '&[aria-disabled="true"]': {
-            backgroundColor: Button.Primary.Disabled.Background,
-            color: Button.Primary.Disabled.Text,
-          },
-          backgroundColor: Button.Primary.Default.Background,
-          color: Button.Primary.Default.Text,
-          padding: '2px 20px',
-        },
-        containedSecondary: {
-          // TODO: We can remove this after migration since we can define variants
           '&.loading': {
             color: primaryColors.text,
           },
           '&:active': {
-            backgroundColor: 'transparent',
-            color: Button.Secondary.Pressed.Text,
+            backgroundColor: primaryColors.dark,
           },
           '&:disabled': {
-            backgroundColor: 'transparent',
-            color: Button.Secondary.Disabled.Text,
+            backgroundColor: '#454b54',
+            color: '#5c6470',
           },
           '&:hover, &:focus': {
-            backgroundColor: 'transparent',
-            color: Button.Secondary.Hover.Text,
+            backgroundColor: '#226dc3',
           },
           '&[aria-disabled="true"]': {
-            backgroundColor: 'transparent',
-            color: Button.Secondary.Disabled.Text,
+            backgroundColor: '#454b54',
+            color: '#5c6470',
           },
-          backgroundColor: 'transparent',
-          color: Button.Secondary.Default.Text,
+        },
+        containedSecondary: {
+          '&[aria-disabled="true"]': {
+            color: '#c9cacb',
+          },
         },
         outlined: {
-          '&:active': {
-            backgroundColor: Button.Secondary.Pressed.Background,
-            borderColor: Button.Secondary.Pressed.Text,
-            color: Button.Secondary.Pressed.Text,
-          },
           '&:hover, &:focus': {
-            backgroundColor: Button.Secondary.Hover.Background,
-            border: `1px solid ${Button.Secondary.Hover.Border}`,
-            color: Button.Secondary.Hover.Text,
+            backgroundColor: 'transparent',
+            border: '1px solid #fff',
+            color: '#fff',
           },
           '&[aria-disabled="true"]': {
-            backgroundColor: Button.Secondary.Disabled.Background,
-            border: `1px solid ${Button.Secondary.Disabled.Border}`,
-            color: Button.Secondary.Disabled.Text,
+            backgroundColor: '#454b54',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            color: '#5c6470',
           },
-          backgroundColor: Button.Secondary.Default.Background,
-          border: `1px solid ${Button.Secondary.Default.Border}`,
-          color: Button.Secondary.Default.Text,
-          minHeight: 34,
+          color: customDarkModeOptions.textColors.linkActiveLight,
         },
         root: {
+          '&.loading': {
+            color: primaryColors.text,
+          },
+          '&:disabled': {
+            backgroundColor: '#454b54',
+            color: '#5c6470',
+          },
+          '&:hover': {
+            backgroundColor: '#000',
+          },
           '&[aria-disabled="true"]': {
             cursor: 'not-allowed',
           },
-          border: 'none',
-          borderRadius: 1,
-          cursor: 'pointer',
-          fontFamily: latoWeb.bold,
-          fontSize: '1rem',
-          lineHeight: 1,
-          minHeight: 34,
-          minWidth: 105,
-          textTransform: 'capitalize',
-          transition: 'none',
+          color: primaryColors.main,
         },
       },
     },
@@ -292,7 +259,7 @@ export const darkTheme: ThemeOptions = {
     MuiCardHeader: {
       styleOverrides: {
         root: {
-          backgroundColor: Color.Neutrals[50],
+          backgroundColor: 'rgba(0, 0, 0, 0.2)',
         },
       },
     },
@@ -304,12 +271,12 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         clickable: {
           '&:focus': {
-            backgroundColor: Color.Brand[60],
+            backgroundColor: '#374863',
           },
           '&:hover': {
-            backgroundColor: Color.Brand[60],
+            backgroundColor: '#374863',
           },
-          backgroundColor: Color.Brand[50],
+          backgroundColor: '#415d81',
         },
         colorInfo: {
           color: primaryColors.dark,
@@ -329,39 +296,30 @@ export const darkTheme: ThemeOptions = {
     MuiDialog: {
       styleOverrides: {
         paper: {
-          boxShadow: `0 0 5px ${Color.Neutrals[100]}`,
+          boxShadow: '0 0 5px #222',
         },
       },
     },
     MuiDialogTitle: {
       styleOverrides: {
         root: {
-          borderBottom: `1px solid ${Color.Neutrals[100]}`,
+          borderBottom: '1px solid #222',
           color: primaryColors.headline,
-        },
-      },
-    },
-    MuiDivider: {
-      styleOverrides: {
-        root: {
-          borderColor: customDarkModeOptions.borderColors.divider,
         },
       },
     },
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          border: 0,
-          boxShadow: `0 0 5px ${Color.Neutrals[100]}`,
+          boxShadow: '0 0 5px #222',
         },
       },
     },
     MuiFormControl: {
       styleOverrides: {
         root: {
-          // Component.Checkbox.Checked.Disabled
           '&.copy > div': {
-            backgroundColor: Color.Neutrals[100],
+            backgroundColor: '#2f3236',
           },
         },
       },
@@ -371,7 +329,7 @@ export const darkTheme: ThemeOptions = {
         disabled: {},
         label: {
           '&.Mui-disabled': {
-            color: `${Color.Neutrals[50]} !important`,
+            color: '#aaa !important',
           },
           color: primaryColors.text,
         },
@@ -381,10 +339,10 @@ export const darkTheme: ThemeOptions = {
     MuiFormHelperText: {
       styleOverrides: {
         root: {
-          '&[class*="error"]': {
-            color: Select.Error.HintText,
+          '&$error': {
+            color: '#fb6d6d',
           },
-          color: Color.Neutrals[40],
+          color: '#c9cacb',
           lineHeight: 1.25,
         },
       },
@@ -393,15 +351,15 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&$disabled': {
-            color: Color.Neutrals[40],
+            color: '#c9cacb',
           },
           '&$error': {
-            color: Color.Neutrals[40],
+            color: '#c9cacb',
           },
           '&.Mui-focused': {
-            color: Color.Neutrals[40],
+            color: '#c9cacb',
           },
-          color: Color.Neutrals[40],
+          color: '#c9cacb',
         },
       },
     },
@@ -412,48 +370,31 @@ export const darkTheme: ThemeOptions = {
         input: {
           '&.Mui-disabled': {
             WebkitTextFillColor: 'unset !important',
+            borderColor: '#606469',
+            color: '#ccc !important',
+            opacity: 0.5,
           },
         },
         root: {
           '& svg': {
-            color: Select.Default.Icon,
+            color: primaryColors.main,
           },
           '&.Mui-disabled': {
-            '& svg': {
-              color: Select.Disabled.Icon,
-            },
-            backgroundColor: Select.Disabled.Background,
-            borderColor: Select.Disabled.Border,
-            color: Select.Disabled.Text,
+            backgroundColor: '#444444',
+            borderColor: '#606469',
+            color: '#ccc !important',
+            opacity: 0.5,
           },
           '&.Mui-error': {
-            '& svg': {
-              color: Select.Error.Icon,
-            },
-            backgroundColor: Select.Error.Background,
-            borderColor: Select.Error.Border,
-            color: Select.Error.Text,
+            borderColor: '#fb6d6d',
           },
           '&.Mui-focused': {
-            '& svg': {
-              color: Select.Focus.Icon,
-            },
-            backgroundColor: Select.Focus.Background,
-            borderColor: Select.Focus.Border,
-            boxShadow: `0 0 2px 1px ${Color.Neutrals[100]}`,
-            color: Select.Focus.Text,
+            borderColor: primaryColors.main,
+            boxShadow: '0 0 2px 1px #222',
           },
-          '&.Mui-hover': {
-            '& svg': {
-              color: Select.Hover.Icon,
-            },
-            backgroundColor: Select.Hover.Background,
-            borderColor: Select.Hover.Border,
-            color: Select.Hover.Text,
-          },
-          backgroundColor: Select.Default.Background,
-          borderColor: Select.Default.Border,
-          color: Select.Default.Text,
+          backgroundColor: '#444',
+          border: '1px solid #222',
+          color: primaryColors.text,
         },
       },
     },
@@ -461,9 +402,9 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '& p': {
-            color: Color.Neutrals[20],
+            color: '#eee',
           },
-          color: Color.Neutrals[20],
+          color: '#eee',
         },
       },
     },
@@ -480,31 +421,12 @@ export const darkTheme: ThemeOptions = {
     MuiMenuItem: {
       styleOverrides: {
         root: {
-          '&.loading': {
-            backgroundColor: primaryColors.text,
+          '&$selected, &$selected:hover': {
+            backgroundColor: 'transparent',
+            color: primaryColors.main,
+            opacity: 1,
           },
-          '&:active': {
-            backgroundColor: Button.Primary.Pressed.Background,
-          },
-          '&:disabled': {
-            backgroundColor: Button.Primary.Disabled.Background,
-            color: Button.Primary.Disabled.Text,
-          },
-          '&:hover, &:focus': {
-            backgroundColor: Button.Primary.Hover.Background,
-            color: Button.Primary.Default.Text,
-          },
-          '&:last-child)': {
-            borderBottom: 0,
-          },
-          '&[aria-disabled="true"]': {
-            backgroundColor: Button.Primary.Disabled.Background,
-            color: Button.Primary.Disabled.Text,
-          },
-          backgroundColor: Button.Primary.Default.Background,
-          borderBottom: `1px solid ${Border.Normal}`,
-          color: Button.Primary.Default.Text,
-          padding: '10px 10px 10px 16px',
+          color: primaryColors.text,
         },
         selected: {},
       },
@@ -512,21 +434,18 @@ export const darkTheme: ThemeOptions = {
     MuiPaper: {
       styleOverrides: {
         outlined: {
-          // TODO: We can remove this variant since they will always have a border
-          backgroundColor: Color.Neutrals[90],
-          border: `1px solid ${Color.Neutrals[80]}`,
+          border: '1px solid rgba(0, 0, 0, 0.2)',
         },
         root: {
-          backgroundColor: Color.Neutrals[90],
+          backgroundColor: '#2e3238',
           backgroundImage: 'none', // I have no idea why MUI defaults to setting a background image...
-          border: `1px solid ${Color.Neutrals[80]}`,
         },
       },
     },
     MuiPopover: {
       styleOverrides: {
         paper: {
-          boxShadow: `0 0 5px ${Color.Neutrals[100]}`,
+          boxShadow: '0 0 5px #222',
         },
       },
     },
@@ -547,14 +466,14 @@ export const darkTheme: ThemeOptions = {
         root: ({ theme }) => ({
           '& .defaultFill': {
             '& circle': {
-              color: Color.Neutrals[40],
+              color: '#ccc',
             },
-            color: Color.Neutrals[80],
-            fill: Color.Neutrals[80],
+            color: '#55595c',
+            fill: '#53575a',
           },
           '&.Mui-disabled': {
             '& .defaultFill': {
-              color: Color.Neutrals[40],
+              color: '#ccc',
               opacity: 0.15,
             },
           },
@@ -570,8 +489,8 @@ export const darkTheme: ThemeOptions = {
     MuiSnackbarContent: {
       styleOverrides: {
         root: {
-          backgroundColor: Color.Neutrals[100],
-          boxShadow: `0 0 5px ${Color.Neutrals[100]}`,
+          backgroundColor: '#32363c',
+          boxShadow: '0 0 5px #222',
           color: primaryColors.text,
         },
       },
@@ -587,7 +506,7 @@ export const darkTheme: ThemeOptions = {
           },
         },
         track: {
-          backgroundColor: Color.Neutrals[80],
+          backgroundColor: '#55595c',
         },
       },
     },
@@ -595,25 +514,16 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&$selected, &$selected:hover': {
-            color: Color.Neutrals.White,
+            color: '#fff',
           },
-          color: Color.Neutrals.White,
+          color: '#fff',
         },
         selected: {},
         textColorPrimary: {
           '&$selected, &$selected:hover': {
-            color: Color.Neutrals.White,
+            color: '#fff',
           },
-          color: Color.Neutrals.White,
-        },
-      },
-    },
-    MuiTable: {
-      styleOverrides: {
-        root: {
-          border: `1px solid ${customDarkModeOptions.borderColors.borderTable}`,
-          borderBottom: 0,
-          borderTop: 0,
+          color: '#fff',
         },
       },
     },
@@ -625,10 +535,10 @@ export const darkTheme: ThemeOptions = {
         },
         root: {
           '& a': {
-            color: Action.Primary.Default,
+            color: customDarkModeOptions.textColors.linkActiveLight,
           },
           '& a:hover': {
-            color: Action.Primary.Hover,
+            color: primaryColors.main,
           },
           borderBottom: `1px solid ${primaryColors.divider}`,
           borderTop: `1px solid ${primaryColors.divider}`,
@@ -641,7 +551,7 @@ export const darkTheme: ThemeOptions = {
           '&:before': {
             backgroundColor: 'rgba(0, 0, 0, 0.15) !important',
           },
-          backgroundColor: Color.Neutrals[100],
+          backgroundColor: '#32363c',
         },
         hover: {
           '& a': {
@@ -650,13 +560,14 @@ export const darkTheme: ThemeOptions = {
         },
         root: {
           '&:before': {
-            borderLeftColor: Color.Neutrals[90],
+            borderLeftColor: '#32363c',
           },
           '&:hover, &:focus': {
-            backgroundColor: Color.Neutrals[80],
+            '&$hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            },
           },
-          backgroundColor: Color.Neutrals[90],
-          border: `1px solid ${Color.Neutrals[50]}`,
+          backgroundColor: '#32363c',
         },
       },
     },
@@ -664,23 +575,23 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         flexContainer: {
           '& $scrollButtons:first-of-type': {
-            color: Color.Neutrals.Black,
+            color: '#222',
           },
         },
         root: {
-          boxShadow: `inset 0 -1px 0 ${Color.Neutrals[100]}`,
+          boxShadow: 'inset 0 -1px 0 #222',
         },
         scrollButtons: {
-          color: Color.Neutrals.White,
+          color: '#fff',
         },
       },
     },
     MuiTooltip: {
       styleOverrides: {
         tooltip: {
-          backgroundColor: Color.Neutrals[70],
-          boxShadow: `0 0 5px ${Color.Neutrals[100]}`,
-          color: Color.Neutrals.White,
+          backgroundColor: '#444',
+          boxShadow: '0 0 5px #222',
+          color: '#fff',
         },
       },
     },
@@ -688,7 +599,7 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '& a': {
-            color: Action.Primary.Default,
+            color: customDarkModeOptions.textColors.linkActiveLight,
           },
           '& a.black': {
             color: primaryColors.text,
@@ -700,7 +611,7 @@ export const darkTheme: ThemeOptions = {
             color: primaryColors.text,
           },
           '& a:hover': {
-            color: Action.Primary.Hover,
+            color: primaryColors.main,
           },
         },
       },
@@ -726,55 +637,20 @@ export const darkTheme: ThemeOptions = {
   },
   inputStyles: {
     default: {
-      backgroundColor: Select.Default.Background,
-      borderColor: Select.Default.Border,
-      color: Select.Default.Text,
-    },
-    disabled: {
-      '& svg': {
-        color: Select.Disabled.Icon,
-      },
-      backgroundColor: Select.Disabled.Background,
-      borderColor: Select.Disabled.Border,
-      color: Select.Disabled.Text,
-    },
-    error: {
-      '& svg': {
-        color: Select.Error.Icon,
-      },
-      backgroundColor: Select.Error.Background,
-      borderColor: Select.Error.Border,
-      color: Select.Error.Text,
-    },
-    focused: {
-      '& svg': {
-        color: Select.Focus.Icon,
-      },
-      backgroundColor: Select.Focus.Background,
-      borderColor: Select.Focus.Border,
-      boxShadow: `0 0 2px 1px ${Color.Neutrals[100]}`,
-      color: Select.Focus.Text,
-    },
-    hover: {
-      '& svg': {
-        color: Select.Hover.Icon,
-      },
-      backgroundColor: Select.Hover.Background,
-      borderColor: Select.Hover.Border,
-      color: Select.Hover.Text,
+      backgroundColor: customDarkModeOptions.bg.app,
     },
   },
   name: 'dark',
   palette: {
     background: {
       default: customDarkModeOptions.bg.app,
-      paper: Color.Neutrals[100],
+      paper: '#2e3238',
     },
     divider: primaryColors.divider,
     error: {
-      dark: Color.Red[60],
-      light: Color.Red[10],
-      main: Color.Red[40],
+      dark: customDarkModeOptions.color.red,
+      light: customDarkModeOptions.color.red,
+      main: customDarkModeOptions.color.red,
     },
     mode: 'dark',
     primary: primaryColors,

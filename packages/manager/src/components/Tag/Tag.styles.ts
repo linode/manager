@@ -16,7 +16,6 @@ export const StyledChip = styled(Chip, {
       borderTopRightRadius: props.onDelete && 0,
     },
     borderRadius: 4,
-    color: theme.name === 'light' ? '#3a3f46' : '#fff',
     fontFamily: theme.font.normal,
     maxWidth: 350,
     padding: '7px 10px',
@@ -44,6 +43,7 @@ export const StyledChip = styled(Chip, {
   fontSize: '0.875rem',
   height: 30,
   padding: 0,
+  transition: 'none',
   ...(props.colorVariant === 'blue' && {
     '& > span': {
       '&:hover, &:focus': {
@@ -59,14 +59,15 @@ export const StyledChip = styled(Chip, {
     '& > span': {
       '&:focus': {
         backgroundColor: theme.color.tagButtonBg,
-        color: theme.color.black,
+        color: theme.color.white,
       },
       '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        color: 'white',
+        backgroundColor: theme.color.tagButtonBgHover,
+        color: theme.color.tagButtonTextHover,
       },
     },
     backgroundColor: theme.color.tagButtonBg,
+    color: theme.color.tagButtonText,
   }),
 }));
 
@@ -85,10 +86,9 @@ export const StyledDeleteButton = styled(StyledLinkButton, {
   },
   '&:hover': {
     '& svg': {
-      color: 'white',
+      color: theme.color.tagIconHover,
     },
-    backgroundColor: theme.palette.primary.main,
-    color: 'white',
+    backgroundColor: theme.color.buttonPrimaryHover,
   },
   borderBottomRightRadius: 3,
   borderLeft: `1px solid ${theme.name === 'light' ? '#fff' : '#2e3238'}`,

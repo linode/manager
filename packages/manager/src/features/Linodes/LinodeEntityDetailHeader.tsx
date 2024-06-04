@@ -138,7 +138,15 @@ export const LinodeEntityDetailHeader = (
       color: theme.color.white,
     },
     '&:hover': {
+      '&[aria-disabled="true"]': {
+        color: theme.color.disabledText,
+      },
+
       color: theme.color.white,
+    },
+    '&[aria-disabled="true"]': {
+      background: 'transparent',
+      color: theme.color.disabledText,
     },
     background: 'transparent',
     color: theme.textColors.linkActiveLight,

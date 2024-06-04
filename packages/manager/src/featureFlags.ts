@@ -57,6 +57,10 @@ export interface Flags {
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;
+  designTokens: {
+    beta: boolean;
+    enabled: boolean;
+  };
   disableLargestGbPlans: boolean;
   firewallNodebalancer: boolean;
   gecko: boolean; // @TODO gecko: delete this after next release
