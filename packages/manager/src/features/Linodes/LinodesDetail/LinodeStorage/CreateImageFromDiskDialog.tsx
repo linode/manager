@@ -5,6 +5,9 @@ import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { DISK_ENCRYPTION_IMAGES_CAVEAT_COPY } from 'src/components/DiskEncryption/constants';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
+import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink/SupportLink';
 import { useCreateImageMutation } from 'src/queries/images';
 
@@ -26,6 +29,10 @@ export const CreateImageFromDiskDialog = (props: Props) => {
     reset,
   } = useCreateImageMutation();
 
+  const {
+    isDiskEncryptionFeatureEnabled,
+  } = useIsDiskEncryptionFeatureEnabled();
+
   React.useEffect(() => {
     if (open) {
       reset();
@@ -34,7 +41,7 @@ export const CreateImageFromDiskDialog = (props: Props) => {
 
   const onCreate = async () => {
     await createImage({
-      diskID: disk?.id ?? -1,
+      disk_id: disk?.id ?? -1,
     });
     enqueueSnackbar('Image scheduled for creation.', {
       variant: 'info',
@@ -63,6 +70,13 @@ export const CreateImageFromDiskDialog = (props: Props) => {
       open={open}
       title={`Create Image from ${disk?.label}?`}
     >
+      {isDiskEncryptionFeatureEnabled && (
+        <Notice
+          spacingTop={8}
+          text={DISK_ENCRYPTION_IMAGES_CAVEAT_COPY}
+          variant="warning"
+        />
+      )}
       <Typography>
         Linode Images are limited to 6144 MB of data per disk by default. Please
         ensure that your disk content does not exceed this size limit, or{' '}

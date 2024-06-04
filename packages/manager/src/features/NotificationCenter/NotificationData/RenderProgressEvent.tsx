@@ -58,7 +58,10 @@ export const RenderProgressEvent = (props: Props) => {
   return (
     <>
       <RenderEventStyledBox data-test-id={event.action} display="flex">
-        <RenderEventGravatar username={event.username} />
+        <RenderEventGravatar
+          sx={{ height: 32, minWidth: 32, mt: '3px', width: 32 }}
+          username={event.username}
+        />
         <Box
           data-test-id={event.action}
           sx={{ marginTop: '-2px', width: '100%' }}

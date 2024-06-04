@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.119.0",
+  "version": "1.120.1",
   "private": true,
   "type": "module",
   "bugs": {
@@ -32,7 +32,7 @@
     "braintree-web": "^3.92.2",
     "chart.js": "~2.9.4",
     "copy-to-clipboard": "^3.0.8",
-    "country-region-data": "^1.4.5",
+    "country-region-data": "^3.0.0",
     "dompurify": "^3.1.0",
     "flag-icons": "^6.6.5",
     "font-logos": "^0.18.0",

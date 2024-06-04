@@ -10,7 +10,7 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics';
+import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { RegionFilterValue } from './RegionSelect.types';
 
