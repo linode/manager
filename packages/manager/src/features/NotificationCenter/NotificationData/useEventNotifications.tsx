@@ -1,4 +1,4 @@
-import { Event, EventAction } from '@linode/api-v4/lib/account/types';
+// TODO eventMessagesV2: delete when flag is removed
 import { partition } from 'ramda';
 import * as React from 'react';
 
@@ -8,9 +8,11 @@ import { useEventsInfiniteQuery } from 'src/queries/events/events';
 import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 
 import { notificationContext as _notificationContext } from '../NotificationContext';
-import { NotificationItem } from '../NotificationSection';
 import { RenderEvent } from './RenderEvent';
 import RenderProgressEvent from './RenderProgressEvent';
+
+import type { NotificationItem } from '../NotificationSection';
+import type { Event, EventAction } from '@linode/api-v4/lib/account/types';
 
 const defaultUnwantedEvents: EventAction[] = [
   'account_update',
@@ -41,18 +43,16 @@ export const useEventNotifications = (givenEvents?: Event[]) => {
     (thisEvent) => !unwantedEvents.includes(thisEvent.action)
   );
 
-  // const [inProgress, completed] = partition<Event>(isInProgressEvent, _events);
-  // const allEvents = [
-  //   ...inProgress.map((thisEvent) =>
-  //     formatProgressEventForDisplay(thisEvent, notificationContext.closeMenu)
-  //   ),
-  //   ...completed.map((thisEvent) =>
-  //     formatEventForDisplay(thisEvent, notificationContext.closeMenu)
-  //   ),
-  // ];
-  const allEvents = _events.map((thisEvent) =>
-    formatEventForDisplay(thisEvent, notificationContext.closeMenu)
-  );
+  const [inProgress, completed] = partition<Event>(isInProgressEvent, _events);
+
+  const allEvents = [
+    ...inProgress.map((thisEvent) =>
+      formatProgressEventForDisplay(thisEvent, notificationContext.closeMenu)
+    ),
+    ...completed.map((thisEvent) =>
+      formatEventForDisplay(thisEvent, notificationContext.closeMenu)
+    ),
+  ];
 
   return allEvents.filter((thisAction) =>
     Boolean(thisAction.body)

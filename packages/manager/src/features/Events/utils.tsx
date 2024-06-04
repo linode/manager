@@ -1,12 +1,6 @@
-import * as React from 'react';
-
-import { BarPercent } from 'src/components/BarPercent';
-import { Box } from 'src/components/Box';
-
 import { eventMessages } from './factory';
 
 import type { Event } from '@linode/api-v4';
-import type { Theme } from '@mui/material';
 
 type EventMessageManualInput = {
   action: Event['action'];
@@ -42,22 +36,5 @@ export function getEventMessage(
 
   const message = eventMessages[event?.action]?.[event.status];
 
-  return (
-    <Box data-test-id={event.action} sx={{ width: '100%' }}>
-      {message ? message(event as Event) : null}
-      {'percent_complete' in event &&
-        event.percent_complete !== null &&
-        event.percent_complete < 100 && (
-          <BarPercent
-            sx={(theme: Theme) => ({
-              marginTop: theme.spacing(),
-            })}
-            max={100}
-            narrow
-            rounded
-            value={event.percent_complete ?? 0}
-          />
-        )}
-    </Box>
-  );
+  return message ? message(event as Event) : null;
 }

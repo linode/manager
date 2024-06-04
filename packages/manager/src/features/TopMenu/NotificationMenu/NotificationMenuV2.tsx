@@ -1,4 +1,3 @@
-// TODO eventMessagesV2: delete when flag is removed
 import { IconButton } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
@@ -7,12 +6,12 @@ import { useDispatch } from 'react-redux';
 
 import Bell from 'src/assets/icons/notification.svg';
 import { Chip } from 'src/components/Chip';
-import Events from 'src/features/NotificationCenter/Events';
+import { EventsV2 } from 'src/features/NotificationCenter/EventsV2';
 import {
   notificationContext as _notificationContext,
   menuButtonId,
 } from 'src/features/NotificationCenter/NotificationContext';
-import { useEventNotifications } from 'src/features/NotificationCenter/NotificationData/useEventNotifications';
+import { useEventNotificationsV2 } from 'src/features/NotificationCenter/NotificationData/useEventNotificationsV2';
 import { useFormattedNotifications } from 'src/features/NotificationCenter/NotificationData/useFormattedNotifications';
 import Notifications from 'src/features/NotificationCenter/Notifications';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
@@ -37,11 +36,11 @@ const StyledChip = styled(Chip)(() => ({
   top: 4,
 }));
 
-export const NotificationMenu = () => {
+export const NotificationMenuV2 = () => {
   const { dismissNotifications } = useDismissibleNotifications();
   const { data: notifications } = useNotificationsQuery();
   const formattedNotifications = useFormattedNotifications();
-  const eventNotifications = useEventNotifications();
+  const eventNotifications = useEventNotificationsV2();
   const notificationContext = React.useContext(_notificationContext);
   const { mutateAsync: markEventsAsSeen } = useMarkEventsAsSeen();
 
@@ -132,7 +131,7 @@ export const NotificationMenu = () => {
         open={notificationContext.menuOpen}
       >
         <Notifications />
-        <Events />
+        <EventsV2 />
       </Popover>
     </>
   );
