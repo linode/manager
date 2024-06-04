@@ -110,7 +110,8 @@ export const linode: PartialEventMap<'linode'> = {
     ),
     notification: (e) => (
       <>
-        Linode {e.entity?.label} is scheduled to be <strong>cloned</strong>
+        Linode <EventLink event={e} to="entity" /> has been{' '}
+        <strong>cloned</strong>
         {e.secondary_entity ? (
           <>
             {' '}
@@ -508,6 +509,7 @@ export const linode: PartialEventMap<'linode'> = {
         <Link to="https://www.linode.com/docs/products/storage/backups/#limits-and-considerations">
           Learn more about limits and considerations
         </Link>
+        .
       </>
     ),
     finished: (e) => (
