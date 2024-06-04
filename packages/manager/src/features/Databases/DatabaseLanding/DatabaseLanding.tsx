@@ -15,7 +15,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useDatabasesQuery } from 'src/queries/databases';
+import { useDatabasesQuery } from 'src/queries/databases/databases';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { DatabaseEmptyState } from './DatabaseEmptyState';

@@ -17,7 +17,7 @@ import { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useAccount } from 'src/queries/account/account';
-import { useAllDatabasesQuery } from 'src/queries/databases';
+import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';

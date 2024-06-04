@@ -56,7 +56,6 @@ interface AclpFlag {
 interface gpuV2 {
   planDivider: boolean;
 }
-
 type OneClickApp = Record<string, string>;
 
 export interface Flags {
@@ -68,6 +67,7 @@ export interface Flags {
   databaseResize: boolean;
   databases: boolean;
   disableLargestGbPlans: boolean;
+  eventMessagesV2: boolean;
   gecko: boolean; // @TODO gecko: delete this after next release
   gecko2: GeckoFlag;
   gpuv2: gpuV2;
