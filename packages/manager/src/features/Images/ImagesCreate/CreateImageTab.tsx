@@ -15,7 +15,7 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Stack } from 'src/components/Stack';
 import { SupportLink } from 'src/components/SupportLink';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
@@ -113,7 +113,7 @@ export const CreateImageTab = () => {
     Boolean(selectedLinodeId) && isDiskEncryptionFeatureEnabled
   );
 
-  const linodeIsInEdgeRegion = getIsEdgeRegion(
+  const linodeIsInDistributedRegion = getIsDistributedRegion(
     regionsData ?? [],
     linode?.region ?? ''
   );
@@ -183,7 +183,7 @@ export const CreateImageTab = () => {
               value={selectedLinodeId}
             />
             {isDiskEncryptionFeatureEnabled &&
-              !linodeIsInEdgeRegion &&
+              !linodeIsInDistributedRegion &&
               selectedLinodeId !== null && (
                 <Notice variant="warning">
                   <Typography

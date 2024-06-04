@@ -683,8 +683,8 @@ export const regions: Region[] = [
   {
     capabilities: ['Linodes'],
     country: 'us',
-    id: 'us-edge-1',
-    label: 'Gecko Edge Test',
+    id: 'us-den-10',
+    label: 'Gecko Distributed Region Test',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -695,14 +695,14 @@ export const regions: Region[] = [
       ipv6:
         '2a01:7e01::5, 2a01:7e01::9, 2a01:7e01::7, 2a01:7e01::c, 2a01:7e01::2, 2a01:7e01::4, 2a01:7e01::3, 2a01:7e01::6, 2a01:7e01::b, 2a01:7e01::8',
     },
-    site_type: 'edge',
+    site_type: 'distributed',
     status: 'ok',
   },
   {
     capabilities: ['Linodes'],
     country: 'us',
-    id: 'us-edge-2',
-    label: 'Gecko Edge Test 2',
+    id: 'us-den-11',
+    label: 'Gecko Distributed Region Test 2',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -713,7 +713,7 @@ export const regions: Region[] = [
       ipv6:
         '2a01:7e01::5, 2a01:7e01::9, 2a01:7e01::7, 2a01:7e01::c, 2a01:7e01::2, 2a01:7e01::4, 2a01:7e01::3, 2a01:7e01::6, 2a01:7e01::b, 2a01:7e01::8',
     },
-    site_type: 'edge',
+    site_type: 'distributed',
     status: 'ok',
   },
 ];

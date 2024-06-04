@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { Notice } from 'src/components/Notice/Notice';
-import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
@@ -81,7 +81,10 @@ export const LinodeEntityDetail = (props: Props) => {
   const linodeRegionDisplay =
     regions?.find((r) => r.id === linode.region)?.label ?? linode.region;
 
-  const linodeIsInEdgeRegion = getIsEdgeRegion(regions ?? [], linode.region);
+  const linodeIsInDistributedRegion = getIsDistributedRegion(
+    regions ?? [],
+    linode.region
+  );
 
   let progress;
   let transitionText;
@@ -114,7 +117,7 @@ export const LinodeEntityDetail = (props: Props) => {
             ipv6={trimmedIPv6}
             isVPCOnlyLinode={isVPCOnlyLinode}
             linodeId={linode.id}
-            linodeIsInEdgeRegion={linodeIsInEdgeRegion}
+            linodeIsInDistributedRegion={linodeIsInDistributedRegion}
             linodeLabel={linode.label}
             numCPUs={linode.specs.vcpus}
             numVolumes={numberOfVolumes}

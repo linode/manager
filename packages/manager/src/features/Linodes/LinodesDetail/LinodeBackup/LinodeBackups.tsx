@@ -8,7 +8,7 @@ import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Paper } from 'src/components/Paper';
-import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -64,7 +64,7 @@ export const LinodeBackups = () => {
 
   const [selectedBackup, setSelectedBackup] = React.useState<LinodeBackup>();
 
-  const linodeIsInEdgeRegion = getIsEdgeRegion(
+  const linodeIsInDistributedRegion = getIsDistributedRegion(
     regions ?? [],
     linode?.region ?? ''
   );
@@ -94,7 +94,7 @@ export const LinodeBackups = () => {
         backupsMonthlyPrice={backupsMonthlyPrice}
         disabled={doesNotHavePermission}
         linodeId={id}
-        linodeIsInEdgeRegion={linodeIsInEdgeRegion}
+        linodeIsInDistributedRegion={linodeIsInDistributedRegion}
       />
     );
   }
