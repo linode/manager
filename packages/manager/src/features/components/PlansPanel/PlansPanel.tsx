@@ -2,15 +2,15 @@ import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Notice } from 'src/components/Notice/Notice';
-import { getIsLinodeCreateTypeEdgeSupported } from 'src/components/RegionSelect/RegionSelect.utils';
-import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionAvailabilityQuery } from 'src/queries/regions/regions';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import { EdgePlanTable } from './EdgePlanTable';
+import { DistributedRegionPlanTable } from './DistributedRegionPlanTable';
 import { PlanContainer } from './PlanContainer';
 import { PlanInformation } from './PlanInformation';
 import {
@@ -83,44 +83,26 @@ export const PlansPanel = (props: PlansPanelProps) => {
     flags.disableLargestGbPlans ? _types : types
   );
 
-  const hideEdgeRegions =
+  const hideDistributedRegions =
     !flags.gecko2?.enabled ||
-    !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
+    !isDistributedRegionSupported(params.type as LinodeCreateType);
 
-  const showEdgePlanTable =
-    !hideEdgeRegions &&
-    getIsEdgeRegion(regionsData ?? [], selectedRegionID ?? '');
+  const showDistributedRegionPlanTable =
+    !hideDistributedRegions &&
+    getIsDistributedRegion(regionsData ?? [], selectedRegionID ?? '');
 
-  const getDedicatedEdgePlanType = () => {
-    const edgePlans = types.filter((type) => type.class === 'edge');
-    if (edgePlans.length) {
-      return edgePlans;
-    }
-
-    // @TODO Remove fallback once edge plans are activated
-    // 256GB and 512GB plans will not be supported for Edge
-    const plansUpTo128GB = (_plans.dedicated ?? []).filter(
-      (planType) =>
-        !['Dedicated 256 GB', 'Dedicated 512 GB'].includes(
-          planType.formattedLabel
-        )
+  const getDedicatedDistributedRegionPlanType = () => {
+    return types.filter(
+      (type) =>
+        type.id.includes('dedicated-edge') ||
+        type.id.includes('nanode-edge') ||
+        type.class === 'edge'
     );
-
-    return plansUpTo128GB.map((plan) => {
-      delete plan.transfer;
-      return {
-        ...plan,
-        price: {
-          hourly: 0,
-          monthly: 0,
-        },
-      };
-    });
   };
 
-  const plans = showEdgePlanTable
+  const plans = showDistributedRegionPlanTable
     ? {
-        dedicated: getDedicatedEdgePlanType(),
+        dedicated: getDedicatedDistributedRegionPlanType(),
       }
     : _plans;
 
@@ -156,7 +138,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
           <>
             <PlanInformation
               hideLimitedAvailabilityBanner={
-                showEdgePlanTable || !flags.disableLargestGbPlans
+                showDistributedRegionPlanTable || !flags.disableLargestGbPlans
               }
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                 plan
@@ -167,9 +149,9 @@ export const PlansPanel = (props: PlansPanelProps) => {
               planType={plan}
               regionsData={regionsData || []}
             />
-            {showEdgePlanTable && (
+            {showDistributedRegionPlanTable && (
               <Notice
-                text="Edge region pricing is temporarily $0 during the beta period, after which billing will begin."
+                text="Distributed region pricing is temporarily $0 during the beta period, after which billing will begin."
                 variant="warning"
               />
             )}
@@ -200,9 +182,9 @@ export const PlansPanel = (props: PlansPanelProps) => {
     currentPlanHeading
   );
 
-  if (showEdgePlanTable) {
+  if (showDistributedRegionPlanTable) {
     return (
-      <EdgePlanTable
+      <DistributedRegionPlanTable
         copy={copy}
         data-qa-select-plan
         docsLink={docsLink}

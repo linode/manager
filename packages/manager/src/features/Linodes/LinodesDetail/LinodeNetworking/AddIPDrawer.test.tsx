@@ -5,11 +5,11 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { AddIPDrawer } from './AddIPDrawer';
 
 describe('AddIPDrawer', () => {
-  it('should display a warning notice if linodeIsInEdgeRegion is true', () => {
+  it('should display a warning notice if linodeIsInDistributedRegion is true', () => {
     const { getByTestId } = renderWithTheme(
       <AddIPDrawer
         linodeId={1}
-        linodeIsInEdgeRegion={true}
+        linodeIsInDistributedRegion={true}
         onClose={() => null}
         open={true}
         readOnly={false}
@@ -17,11 +17,11 @@ describe('AddIPDrawer', () => {
     );
     expect(getByTestId('notice-warning')).toBeInTheDocument();
   });
-  it('should not display a warning notice if linodeIsInEdgeRegion is false', () => {
+  it('should not display a warning notice if linodeIsInDistributedRegion is false', () => {
     const { queryByTestId } = renderWithTheme(
       <AddIPDrawer
         linodeId={1}
-        linodeIsInEdgeRegion={false}
+        linodeIsInDistributedRegion={false}
         onClose={() => null}
         open={true}
         readOnly={false}

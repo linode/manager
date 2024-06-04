@@ -48,7 +48,7 @@ export interface RegionSelectProps
   regions: Region[];
   required?: boolean;
   selectedId: null | string;
-  showEdgeIconHelperText?: boolean;
+  showDistributedRegionIconHelperText?: boolean;
   tooltipText?: string;
   width?: number;
 }
@@ -104,4 +104,4 @@ export interface GetSelectedRegionsByIdsArgs {
   selectedRegionIds: string[];
 }
 
-export type SupportedEdgeTypes = 'Distributions' | 'StackScripts';
+export type SupportedDistributedRegionTypes = 'Distributions' | 'StackScripts';
