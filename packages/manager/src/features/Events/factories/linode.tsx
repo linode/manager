@@ -521,7 +521,7 @@ export const linode: PartialEventMap<'linode'> = {
     scheduled: (e) => (
       <>
         Linode <EventLink event={e} to="entity" /> is scheduled for a snapshot
-        backup.
+        <strong>backup</strong>.
       </>
     ),
     started: (e) => (
