@@ -11,6 +11,7 @@ export const bg = {
   bgAccessRow: '#fafafa',
   bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
   bgPaper: '#ffffff',
+  interactionBgPrimary: '#f7f7fa',
   lightBlue1: '#f0f7ff',
   lightBlue2: '#e5f1ff',
   main: '#f4f4f4',
@@ -59,17 +60,17 @@ export const color = {
   orange: '#ffb31a',
   red: '#ca0813',
   tableHeaderText: 'rgba(0, 0, 0, 0.54)',
-  teal: '#17cf73',
-  white: '#fff',
-  yellow: '#fecf2f',
-
   // TODO: This should be moved to component level.
   tagButtonBg: '#f1f7fd',
   tagButtonBgHover: '#226dc3',
   tagButtonText: '#3a3f46',
+
   tagButtonTextHover: '#fff',
   tagIcon: '#7daee8',
   tagIconHover: '#fff',
+  teal: '#17cf73',
+  white: '#fff',
+  yellow: '#fecf2f',
 } as const;
 
 export const textColors = {
@@ -82,6 +83,8 @@ export const textColors = {
 } as const;
 
 export const borderColors = {
+  borderFocus: '#0174bc',
+  borderHover: '#3d3d42',
   borderTable: '#f4f5f6',
   borderTypography: '#e3e5e8',
   divider: '#e3e5e8',

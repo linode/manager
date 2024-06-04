@@ -1,8 +1,10 @@
 import {
   Action,
+  Badge,
   Border,
   Button,
   Color,
+  Interaction,
   Select,
 } from '@linode/design-language-system/themes/dark';
 import { ThemeOptions } from '@mui/material/styles';
@@ -27,6 +29,7 @@ export const customDarkTokenModeOptions = {
     bgAccessRow: Color.Neutrals[80],
     bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
     bgPaper: Color.Neutrals[90],
+    interactionBgPrimary: Interaction.Background.Secondary,
     lightBlue1: Color.Neutrals.Black,
     lightBlue2: Color.Brand[100],
     main: Color.Neutrals[100],
@@ -37,6 +40,8 @@ export const customDarkTokenModeOptions = {
     white: Color.Neutrals[100],
   },
   borderColors: {
+    borderFocus: Interaction.Border.Focus,
+    borderHover: Interaction.Border.Hover,
     borderTable: Color.Neutrals[80],
     borderTypography: Color.Neutrals[80],
     divider: Color.Neutrals[80],
@@ -62,15 +67,14 @@ export const customDarkTokenModeOptions = {
     offBlack: Color.Neutrals.White,
     red: Color.Red[70],
     tableHeaderText: Color.Neutrals.White,
-    white: Color.Neutrals[100],
-
-    // TODO: This should be moved to component level.
+    // TODO: `tagButton*` should be moved to component level.
     tagButtonBg: Color.Brand[40],
     tagButtonBgHover: Button.Primary.Hover.Background,
     tagButtonText: Button.Primary.Default.Text,
     tagButtonTextHover: Button.Primary.Hover.Text,
     tagIcon: Button.Primary.Default.Icon,
     tagIconHover: Button.Primary.Default.Text,
+    white: Color.Neutrals[100],
   },
   textColors: {
     headlineStatic: Color.Neutrals[20],
@@ -283,6 +287,12 @@ export const darkThemeTokens: ThemeOptions = {
     MuiButtonBase: {
       styleOverrides: {
         root: {
+          '&[aria-disabled="true"]': {
+            '&& .MuiSvgIcon-root': {
+              fill: Button.Primary.Disabled.Icon,
+            },
+            cursor: 'not-allowed',
+          },
           fontSize: '1rem',
         },
       },
@@ -309,18 +319,33 @@ export const darkThemeTokens: ThemeOptions = {
       styleOverrides: {
         clickable: {
           '&:focus': {
-            backgroundColor: Color.Brand[60],
+            backgroundColor: Badge.Subtle.Ultramarine.Background,
           },
           '&:hover': {
-            backgroundColor: Color.Brand[60],
+            backgroundColor: Badge.Subtle.Ultramarine.Background,
           },
-          backgroundColor: Color.Brand[50],
+          backgroundColor: Badge.Subtle.Ultramarine.Background,
+          color: Badge.Subtle.Ultramarine.Text,
+        },
+        colorError: {
+          backgroundColor: Badge.Subtle.Red.Background,
+          color: Badge.Subtle.Red.Text,
         },
         colorInfo: {
-          color: primaryColors.dark,
+          backgroundColor: Badge.Subtle.Ultramarine.Background,
+          color: Badge.Subtle.Ultramarine.Text,
+        },
+        colorPrimary: {
+          backgroundColor: Badge.Subtle.Ultramarine.Background,
+          color: Badge.Subtle.Ultramarine.Text,
+        },
+        colorSuccess: {
+          backgroundColor: Badge.Subtle.Green.Background,
+          color: Badge.Subtle.Green.Text,
         },
         colorWarning: {
-          color: primaryColors.dark,
+          backgroundColor: Badge.Subtle.Amber.Background,
+          color: Badge.Subtle.Amber.Text,
         },
         outlined: {
           backgroundColor: 'transparent',
@@ -505,6 +530,7 @@ export const darkThemeTokens: ThemeOptions = {
           '&[aria-disabled="true"]': {
             backgroundColor: Button.Primary.Disabled.Background,
             color: Button.Primary.Disabled.Text,
+            opacity: 1,
           },
           backgroundColor: Button.Primary.Default.Background,
           borderBottom: `1px solid ${Border.Normal}`,
@@ -616,6 +642,10 @@ export const darkThemeTokens: ThemeOptions = {
     MuiTable: {
       styleOverrides: {
         root: {
+          // For nested tables like VPC
+          '& table': {
+            border: 0,
+          },
           border: `1px solid ${customDarkTokenModeOptions.borderColors.borderTable}`,
           borderBottom: 0,
           borderTop: 0,

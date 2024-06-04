@@ -10,9 +10,9 @@ const useStyles = makeStyles<void, 'linkItem'>()(
         opacity: 1,
       },
       '& svg': {
-        color: theme.palette.success.dark,
+        color: '#fff',
       },
-      backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
+      backgroundColor: 'rgba(37, 117, 208, 0.4)',
       textDecoration: 'none',
     },
     chip: {
@@ -23,6 +23,11 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       color: '#222',
     },
     fadeContainer: {
+      background: theme.palette.mode === 'dark' ? theme.bg.main : 'inherit',
+      borderRight:
+        theme.palette.mode === 'dark'
+          ? `1px solid ${theme.borderColors.divider}`
+          : 'none',
       display: 'flex',
       flexDirection: 'column',
       height: 'calc(100% - 90px)',
@@ -70,13 +75,13 @@ const useStyles = makeStyles<void, 'linkItem'>()(
           opacity: 1,
         },
         '& svg': {
-          color: theme.palette.success.dark,
-          fill: theme.palette.success.dark,
+          color: '#fff',
+          fill: '#fff',
         },
         [`& .${classes.linkItem}`]: {
           color: 'white',
         },
-        backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
+        backgroundColor: 'rgba(37, 117, 208, 0.4)',
         border: 'red',
         textDecoration: 'none',
       },
@@ -86,7 +91,6 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       minWidth: SIDEBAR_WIDTH,
       padding: '8px 13px',
       position: 'relative',
-      transition: theme.transitions.create(['background-color']),
     },
     logo: {
       '& .akamai-logo-name': {
@@ -96,7 +100,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       transition: 'width .1s linear',
     },
     logoAkamaiCollapsed: {
-      background: theme.bg.primaryNavPaper,
+      background: theme.bg.appBar,
       width: 83,
     },
     logoContainer: {

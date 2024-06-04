@@ -19,6 +19,7 @@ export const bg = {
   bgAccessRow: Color.Neutrals[5],
   bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
   bgPaper: Color.Neutrals.White,
+  interactionBgPrimary: Interaction.Background.Secondary,
   lightBlue1: Color.Brand[10],
   lightBlue2: Color.Brand[40],
   main: Color.Neutrals[5],
@@ -67,17 +68,16 @@ export const color = {
   orange: Color.Amber[70],
   red: Color.Red[70],
   tableHeaderText: 'rgba(0, 0, 0, 0.54)',
-  teal: Color.Teal[70],
-  white: Color.Neutrals.White,
-  yellow: Color.Yellow[70],
-
-  // TODO: This should be moved to component level.
+  // TODO: `tagButton*` should be moved to component level.
   tagButtonBg: Color.Brand[10],
   tagButtonBgHover: Button.Primary.Hover.Background,
   tagButtonText: Color.Brand[60],
   tagButtonTextHover: Color.Neutrals.White,
   tagIcon: Color.Brand[60],
   tagIconHover: Button.Primary.Default.Text,
+  teal: Color.Teal[70],
+  white: Color.Neutrals.White,
+  yellow: Color.Yellow[70],
 } as const;
 
 export const textColors = {
@@ -90,6 +90,8 @@ export const textColors = {
 } as const;
 
 export const borderColors = {
+  borderFocus: Interaction.Border.Focus,
+  borderHover: Interaction.Border.Hover,
   borderTable: Color.Neutrals[5],
   borderTypography: Color.Neutrals[30],
   divider: Color.Neutrals[30],

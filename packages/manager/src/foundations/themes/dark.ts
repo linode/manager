@@ -19,6 +19,7 @@ export const customDarkModeOptions = {
     bgAccessRow: '#454b54',
     bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
     bgPaper: '#2e3238',
+    interactionBgPrimary: '#343438',
     lightBlue1: '#222',
     lightBlue2: '#364863',
     main: '#2f3236',
@@ -29,6 +30,8 @@ export const customDarkModeOptions = {
     white: '#32363c',
   },
   borderColors: {
+    borderFocus: '#5bb3ea',
+    borderHover: '#c2c2ca',
     borderTable: '#3a3f46',
     borderTypography: '#454b54',
     divider: '#222',
@@ -54,15 +57,15 @@ export const customDarkModeOptions = {
     offBlack: '#ffffff',
     red: '#fb6d6d',
     tableHeaderText: '#fff',
-    white: '#32363c',
-
     // TODO: This should be moved to component level.
     tagButtonBg: '#364863',
+
     tagButtonBgHover: '#226dc3',
     tagButtonText: '#74aae6',
     tagButtonTextHover: '#fff',
     tagIcon: '#9caec9',
     tagIconHover: '#fff',
+    white: '#32363c',
   },
   textColors: {
     headlineStatic: '#e6e6e6',
