@@ -3,13 +3,15 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { Checkbox } from 'src/components/Checkbox';
 import { Typography } from 'src/components/Typography';
+import { Notice } from '../Notice/Notice';
 
 export interface DiskEncryptionProps {
   descriptionCopy: JSX.Element | string;
   disabled?: boolean;
   disabledReason?: string;
+  error?: string;
   isEncryptDiskChecked: boolean;
-  toggleDiskEncryptionEnabled: () => void;
+  onChange: (checked: boolean) => void;
 }
 
 export const headerTestId = 'disk-encryption-header';
@@ -21,8 +23,9 @@ export const DiskEncryption = (props: DiskEncryptionProps) => {
     descriptionCopy,
     disabled,
     disabledReason,
+    error,
     isEncryptDiskChecked,
-    toggleDiskEncryptionEnabled,
+    onChange,
   } = props;
 
   return (
@@ -30,6 +33,9 @@ export const DiskEncryption = (props: DiskEncryptionProps) => {
       <Typography data-testid={headerTestId} variant="h3">
         Disk Encryption
       </Typography>
+      {error && (
+        <Notice spacingBottom={0} spacingTop={8} text={error} variant="error" />
+      )}
       <Typography
         data-testid={descriptionTestId}
         sx={(theme) => ({ padding: `${theme.spacing()} 0` })}
@@ -48,7 +54,7 @@ export const DiskEncryption = (props: DiskEncryptionProps) => {
           checked={disabled ? false : isEncryptDiskChecked} // in Create flows, this will be defaulted to be checked. Otherwise, we will rely on the current encryption status for the initial value
           data-testid={checkboxTestId}
           disabled={disabled}
-          onChange={toggleDiskEncryptionEnabled}
+          onChange={(e, checked) => onChange(checked)}
           text="Encrypt Disk"
           toolTipText={disabled ? disabledReason : ''}
         />

@@ -7,6 +7,7 @@ import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
+import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
 import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
@@ -27,7 +28,10 @@ const stackscriptQueries = createQueryKeys('stackscripts', {
     queryKey: [filter],
   }),
   marketplace: {
-    queryFn: () => getAllOCAsRequest(),
+    queryFn: async () => {
+      const stackscripts = await getAllOCAsRequest();
+      return stackscripts.filter((s) => oneClickApps[s.id]);
+    },
     queryKey: null,
   },
   stackscript: (id: number) => ({
