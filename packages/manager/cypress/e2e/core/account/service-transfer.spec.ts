@@ -244,12 +244,11 @@ describe('Account service transfers', () => {
    * - Confirms that users can cancel a service transfer
    */
   it('can initiate and cancel a service transfer', () => {
-    // Create a Linode to transfer and wait for it to boot.
+    // Create a Linode to transfer.
     const setupLinode = async (): Promise<Linode> => {
       const payload = createLinodeRequestFactory.build({
         label: randomLabel(),
         region: chooseRegion().id,
-        booted: true,
       });
 
       const linode: Linode = await createTestLinode(payload, {
