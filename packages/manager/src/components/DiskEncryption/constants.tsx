@@ -24,7 +24,7 @@ export const DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY =
   'To enable disk encryption, delete the node pool and create a new node pool. New node pools are always encrypted.';
 
 export const UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY =
-  'Use Rebuild to enable or disable disk encryption.';
+  'Rebuild this Linode to enable or disable disk encryption.';
 
 export const DISK_ENCRYPTION_IMAGES_CAVEAT_COPY =
   'Virtual Machine Images are not encrypted.';
