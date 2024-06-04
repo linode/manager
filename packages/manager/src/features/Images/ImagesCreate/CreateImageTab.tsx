@@ -15,7 +15,7 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Stack } from 'src/components/Stack';
 import { SupportLink } from 'src/components/SupportLink';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
@@ -108,7 +108,7 @@ export const CreateImageTab = () => {
     selectedLinodeId !== null
   );
 
-  const linodeIsInEdgeRegion = getIsEdgeRegion(
+  const linodeIsInDistributedRegion = getIsDistributedRegion(
     regionsData ?? [],
     linode?.region ?? ''
   );
@@ -122,11 +122,11 @@ export const CreateImageTab = () => {
   const showDiskEncryptionWarning =
     isDiskEncryptionFeatureEnabled &&
     selectedLinodeId !== null &&
-    !linodeIsInEdgeRegion;
+    !linodeIsInDistributedRegion;
 
   const linodeSelectHelperText = [
     {
-      show: linodeIsInEdgeRegion,
+      show: linodeIsInDistributedRegion,
       text: `Image will be stored in the closest core site to (${linode?.region})`,
     },
     {
@@ -174,7 +174,7 @@ export const CreateImageTab = () => {
               created from a raw disk or a disk that&rsquo;s formatted using a
               custom file system.
             </Typography>
-            {linodeIsInEdgeRegion && (
+            {linodeIsInDistributedRegion && (
               <Notice variant="info">
                 This Linode is in a distributed compute region. Images captured
                 from this Linode will be stored in the closest core site.
