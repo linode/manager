@@ -41,16 +41,18 @@ export const useEventNotifications = (givenEvents?: Event[]) => {
     (thisEvent) => !unwantedEvents.includes(thisEvent.action)
   );
 
-  const [inProgress, completed] = partition<Event>(isInProgressEvent, _events);
-
-  const allEvents = [
-    ...inProgress.map((thisEvent) =>
-      formatProgressEventForDisplay(thisEvent, notificationContext.closeMenu)
-    ),
-    ...completed.map((thisEvent) =>
-      formatEventForDisplay(thisEvent, notificationContext.closeMenu)
-    ),
-  ];
+  // const [inProgress, completed] = partition<Event>(isInProgressEvent, _events);
+  // const allEvents = [
+  //   ...inProgress.map((thisEvent) =>
+  //     formatProgressEventForDisplay(thisEvent, notificationContext.closeMenu)
+  //   ),
+  //   ...completed.map((thisEvent) =>
+  //     formatEventForDisplay(thisEvent, notificationContext.closeMenu)
+  //   ),
+  // ];
+  const allEvents = _events.map((thisEvent) =>
+    formatEventForDisplay(thisEvent, notificationContext.closeMenu)
+  );
 
   return allEvents.filter((thisAction) =>
     Boolean(thisAction.body)
