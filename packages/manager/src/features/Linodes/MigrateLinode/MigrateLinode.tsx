@@ -7,7 +7,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
-import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { MBpsInterDC } from 'src/constants';
@@ -152,14 +152,14 @@ export const MigrateLinode = React.memo((props: Props) => {
       : undefined;
   }, [flags.metadata, linode, regionsData, selectedRegion]);
 
-  const linodeIsInEdgeRegion = getIsEdgeRegion(
+  const linodeIsInDistributedRegion = getIsDistributedRegion(
     regionsData ?? [],
     linode?.region ?? ''
   );
 
-  const edgeRegionWarning =
-    flags.gecko2?.enabled && linodeIsInEdgeRegion
-      ? 'Edge regions may only be migrated to other edge regions.'
+  const distributedRegionWarning =
+    flags.gecko2?.enabled && linodeIsInDistributedRegion
+      ? 'Distributed regions may only be migrated to other distributed regions.'
       : undefined;
 
   if (!linode) {
@@ -247,7 +247,7 @@ export const MigrateLinode = React.memo((props: Props) => {
         notifications={notifications}
       /> */}
       <CautionNotice
-        edgeRegionWarning={edgeRegionWarning}
+        distributedRegionWarning={distributedRegionWarning}
         hasConfirmed={hasConfirmed}
         linodeId={linodeId}
         metadataWarning={metadataMigrateWarning}
