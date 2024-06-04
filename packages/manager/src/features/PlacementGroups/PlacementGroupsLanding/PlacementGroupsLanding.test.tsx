@@ -30,7 +30,7 @@ describe('PlacementGroupsLanding', () => {
 
   it('renders error state', () => {
     queryMocks.usePlacementGroupsQuery.mockReturnValue({
-      error: [{ reason: 'Not found' }],
+      error: [{ formattedReason: 'Not found', reason: 'Not found' }],
     });
 
     const { getByText } = renderWithTheme(<PlacementGroupsLanding />);

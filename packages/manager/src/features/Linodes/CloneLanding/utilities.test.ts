@@ -68,7 +68,9 @@ describe('utilities', () => {
         errors: [{ formattedReason: 'ERROR', reason: 'ERROR' }],
         type: 'setErrors',
       });
-      expect(newState.errors).toEqual([{ reason: 'ERROR' }]);
+      expect(newState.errors).toEqual([
+        { formattedReason: 'ERROR', reason: 'ERROR' },
+      ]);
     });
 
     it('clears all', () => {

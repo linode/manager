@@ -41,7 +41,9 @@ describe('Error handling utilities', () => {
           ],
           'New error message'
         )
-      ).toEqual([{ reason: 'New error message' }]);
+      ).toEqual([
+        { formattedReason: 'New error message', reason: 'New error message' },
+      ]);
     });
   });
 
