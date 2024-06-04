@@ -101,22 +101,42 @@ export const CreateImageTab = () => {
 
   const isRawDisk = selectedDisk?.filesystem === 'raw';
 
-  /*
-    We only want to display the notice about disk encryption if:
-    1. the Disk Encryption feature is enabled
-    2. the selected linode is not in an Edge region
-  */
   const { data: regionsData } = useRegionsQuery();
 
   const { data: linode } = useLinodeQuery(
     selectedLinodeId ?? -1,
-    Boolean(selectedLinodeId) && isDiskEncryptionFeatureEnabled
+    selectedLinodeId !== null
   );
 
   const linodeIsInEdgeRegion = getIsEdgeRegion(
     regionsData ?? [],
     linode?.region ?? ''
   );
+
+  /*
+    We only want to display the notice about disk encryption if:
+    1. the Disk Encryption feature is enabled
+    2. the selected linode is not in an Edge region
+  */
+  const showDiskEncryptionWarning =
+    isDiskEncryptionFeatureEnabled &&
+    !linodeIsInEdgeRegion &&
+    selectedLinodeId !== null;
+
+  const linodeSelectHelperText = [
+    {
+      show: linodeIsInEdgeRegion,
+      text: `Image will be stored in the closest core site to (${linode?.region})`,
+    },
+    {
+      show: grants?.linode.some((grant) => grant.permissions === 'read_only'),
+      text:
+        'You can only create Images from Linodes you have read/write access to.',
+    },
+  ]
+    .filter((item) => item.show)
+    .map((item) => item.text)
+    .join('. ');
 
   return (
     <form onSubmit={onSubmit}>
@@ -153,6 +173,12 @@ export const CreateImageTab = () => {
               created from a raw disk or a disk that&rsquo;s formatted using a
               custom file system.
             </Typography>
+            {linodeIsInEdgeRegion && (
+              <Notice variant="info">
+                This Linode is in a distributed compute region. Images captured
+                from this Linode will be stored in the closest core site.
+              </Notice>
+            )}
             <LinodeSelect
               getOptionDisabled={
                 grants
@@ -164,13 +190,6 @@ export const CreateImageTab = () => {
                       )
                   : undefined
               }
-              helperText={
-                grants?.linode.some(
-                  (grant) => grant.permissions === 'read_only'
-                )
-                  ? 'You can only create Images from Linodes you have read/write access to.'
-                  : undefined
-              }
               onSelectionChange={(linode) => {
                 setSelectedLinodeId(linode?.id ?? null);
                 if (linode === null) {
@@ -178,21 +197,18 @@ export const CreateImageTab = () => {
                 }
               }}
               disabled={isImageCreateRestricted}
+              helperText={linodeSelectHelperText}
               noMarginTop
               required
               value={selectedLinodeId}
             />
-            {isDiskEncryptionFeatureEnabled &&
-              !linodeIsInEdgeRegion &&
-              selectedLinodeId !== null && (
-                <Notice variant="warning">
-                  <Typography
-                    sx={(theme) => ({ fontFamily: theme.font.normal })}
-                  >
-                    {DISK_ENCRYPTION_IMAGES_CAVEAT_COPY}
-                  </Typography>
-                </Notice>
-              )}
+            {showDiskEncryptionWarning && (
+              <Notice variant="warning">
+                <Typography sx={(theme) => ({ fontFamily: theme.font.normal })}>
+                  {DISK_ENCRYPTION_IMAGES_CAVEAT_COPY}
+                </Typography>
+              </Notice>
+            )}
             <Controller
               render={({ field, fieldState }) => (
                 <Autocomplete
