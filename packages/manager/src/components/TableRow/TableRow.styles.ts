@@ -59,12 +59,12 @@ export const StyledTableRow = styled(_TableRow, {
   ...(props.highlight && {
     backgroundColor: theme.bg.lightBlue1,
   }),
-  ...(props.disabled && {
+  '&.disabled-row': {
     '& td:not(.hasTooltip *), & td:has(.hasTooltip):not(.MuiRadio-root)': {
       color:
         theme.palette.mode === 'dark' ? theme.color.grey6 : theme.color.grey1,
     },
-  }),
+  },
 }));
 
 export const StyledTableDataCell = styled('td', {

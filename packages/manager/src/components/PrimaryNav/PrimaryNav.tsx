@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
 
 import Account from 'src/assets/icons/account.svg';
+import CloudPulse from 'src/assets/icons/cloudpulse.svg';
 import Beta from 'src/assets/icons/entityIcons/beta.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
@@ -25,12 +26,12 @@ import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
+import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePrefetch } from 'src/hooks/usePreFetch';
-import { useDatabaseEnginesQuery } from 'src/queries/databases';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
@@ -58,6 +59,7 @@ type NavEntity =
   | 'Longview'
   | 'Managed'
   | 'Marketplace'
+  | 'Monitor'
   | 'NodeBalancers'
   | 'Object Storage'
   | 'Placement Groups'
@@ -98,7 +100,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     setEnableMarketplacePrefetch,
   ] = React.useState(false);
 
-  const { _isManagedAccount, account, accountError } = useAccountManagement();
+  const { _isManagedAccount, account } = useAccountManagement();
 
   const isObjMultiClusterEnabled = isFeatureEnabled(
     'Object Storage Access Key Regions',
@@ -156,22 +158,13 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const allowMarketplacePrefetch =
     !oneClickApps && !oneClickAppsLoading && !oneClickAppsError;
 
-  const checkRestrictedUser = !Boolean(flags.databases) && !!accountError;
-  const {
-    error: enginesError,
-    isLoading: enginesLoading,
-  } = useDatabaseEnginesQuery(checkRestrictedUser);
-
-  const showDatabases =
-    isFeatureEnabled(
-      'Managed Databases',
-      Boolean(flags.databases),
-      account?.capabilities ?? []
-    ) ||
-    (checkRestrictedUser && !enginesLoading && !enginesError);
+  const showCloudPulse = Boolean(flags.aclp?.enabled);
+  // the followed comment is for later use, the showCloudPulse will be removed and isACLPEnabled will be used
+  // const { isACLPEnabled } = useIsACLPEnabled();
 
   const { isACLBEnabled } = useIsACLBEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
+  const { isDatabasesEnabled } = useIsDatabasesEnabled();
 
   const prefetchObjectStorage = () => {
     if (!enableObjectPrefetch) {
@@ -261,7 +254,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         },
         {
           display: 'Databases',
-          hide: !showDatabases,
+          hide: !isDatabasesEnabled,
           href: '/databases',
           icon: <Database />,
           isBeta: flags.databaseBeta,
@@ -287,6 +280,13 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           display: 'Longview',
           href: '/longview',
           icon: <Longview />,
+        },
+        {
+          display: 'Monitor',
+          hide: !showCloudPulse,
+          href: '/monitor/cloudpulse',
+          icon: <CloudPulse />,
+          isBeta: flags.aclp?.beta,
         },
         {
           attr: { 'data-qa-one-click-nav-btn': true },
@@ -318,7 +318,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
-      showDatabases,
+      isDatabasesEnabled,
       _isManagedAccount,
       allowObjPrefetch,
       allowMarketplacePrefetch,
@@ -326,6 +326,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       isACLBEnabled,
       isPlacementGroupsEnabled,
       flags.placementGroups,
+      showCloudPulse,
     ]
   );
 

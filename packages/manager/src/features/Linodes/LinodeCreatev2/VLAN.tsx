@@ -104,7 +104,6 @@ export const VLAN = () => {
               containerProps={{ maxWidth: 335 }}
               disabled={disabled}
               errorText={fieldState.error?.message}
-              inputRef={field.ref}
               label="IPAM Address"
               onBlur={field.onBlur}
               onChange={field.onChange}

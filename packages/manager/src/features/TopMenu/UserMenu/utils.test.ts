@@ -13,7 +13,6 @@ describe('getCompanyNameOrEmail', () => {
     newUserTypes.forEach((newUserType: UserType) => {
       const actual = getCompanyNameOrEmail({
         company: MOCK_COMPANY_NAME,
-        isParentChildFeatureEnabled: true,
         profile: profileFactory.build({ user_type: newUserType }),
       });
       const expected = MOCK_COMPANY_NAME;
@@ -26,7 +25,6 @@ describe('getCompanyNameOrEmail', () => {
 
     const actual = getCompanyNameOrEmail({
       company: undefined,
-      isParentChildFeatureEnabled: true,
       profile: profileFactory.build({
         email: parentEmail,
         user_type: 'parent',
@@ -41,7 +39,6 @@ describe('getCompanyNameOrEmail', () => {
 
     const actual = getCompanyNameOrEmail({
       company: undefined,
-      isParentChildFeatureEnabled: true,
       profile: profileFactory.build({
         email: childEmail,
         user_type: 'child',
@@ -54,24 +51,9 @@ describe('getCompanyNameOrEmail', () => {
   it('returns undefined for the company/email of a regular (default) user', async () => {
     const actual = getCompanyNameOrEmail({
       company: MOCK_COMPANY_NAME,
-      isParentChildFeatureEnabled: true,
       profile: profileFactory.build({ user_type: 'default' }),
     });
     const expected = undefined;
     expect(actual).toEqual(expected);
-  });
-
-  it('returns undefined for the company/email of all users when the parent/child feature is not enabled', async () => {
-    const allUserTypes = ['parent', 'child', 'proxy', 'default'];
-
-    allUserTypes.forEach((userType: UserType) => {
-      const actual = getCompanyNameOrEmail({
-        company: MOCK_COMPANY_NAME,
-        isParentChildFeatureEnabled: false,
-        profile: profileFactory.build({ user_type: userType }),
-      });
-      const expected = undefined;
-      expect(actual).toEqual(expected);
-    });
   });
 });

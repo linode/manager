@@ -119,7 +119,11 @@ const iconCircleHoverEffect = {
 
 // Used for styling html buttons to look like our generic links
 const genericLinkStyle = {
-  '&:hover': {
+  '&:disabled': {
+    color: color.disabledText,
+    cursor: 'not-allowed',
+  },
+  '&:hover:not(:disabled)': {
     backgroundColor: 'transparent',
     color: primaryColors.main,
     textDecoration: 'underline',

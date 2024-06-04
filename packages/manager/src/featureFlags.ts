@@ -48,11 +48,20 @@ interface GeckoFlag {
   ga: boolean;
 }
 
+interface AclpFlag {
+  beta: boolean;
+  enabled: boolean;
+}
+
+interface gpuV2 {
+  planDivider: boolean;
+}
 type OneClickApp = Record<string, string>;
 
 export interface Flags {
   aclb: boolean;
   aclbFullCreateFlow: boolean;
+  aclp: AclpFlag;
   apiMaintenance: APIMaintenance;
   databaseBeta: boolean;
   databaseResize: boolean;
@@ -62,9 +71,9 @@ export interface Flags {
     enabled: boolean;
   };
   disableLargestGbPlans: boolean;
-  firewallNodebalancer: boolean;
   gecko: boolean; // @TODO gecko: delete this after next release
   gecko2: GeckoFlag;
+  gpuv2: gpuV2;
   ipv6Sharing: boolean;
   linodeCreateRefactor: boolean;
   linodeCreateWithFirewall: boolean;
@@ -74,12 +83,10 @@ export interface Flags {
   objMultiCluster: boolean;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
-  parentChildAccountAccess: boolean;
   placementGroups: PlacementGroupsFlag;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
-  recharts: boolean;
   referralBannerText: ReferralBannerText;
   selfServeBetas: boolean;
   soldOutChips: boolean;

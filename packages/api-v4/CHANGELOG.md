@@ -1,3 +1,40 @@
+## [2024-05-28] - v0.118.0
+
+
+### Added:
+
+- New LKE events in `EventAction` type ([#10443](https://github.com/linode/manager/pull/10443))
+
+### Changed:
+
+- Add Disk Encryption to AccountCapability type and region Capabilities type ([#10462](https://github.com/linode/manager/pull/10462))
+
+
+## [2024-05-13] - v0.117.0
+
+
+### Added:
+
+- 'edge' Linode type class ([#10415](https://github.com/linode/manager/pull/10415))
+
+### Changed:
+
+- Allow `backup_id` to be `null` in `CreateLinodeRequest` ([#10404](https://github.com/linode/manager/pull/10404))
+- Add disk_encryption to Linode, Disk, CreateLinodeRequest, RebuildRequest, and KubeNodePoolResponse interfaces ([#10413](https://github.com/linode/manager/pull/10413))
+- Allow null for Placement Groups maximum_pgs_per_customer ([#10433](https://github.com/linode/manager/pull/10433))
+
+### Upcoming Features:
+
+- Update Placement Group event types ([#10420](https://github.com/linode/manager/pull/10420))
+
+
+## [2024-05-06] - v0.116.0
+
+
+### Added:
+
+- 'edge' Linode type class ([#10441](https://github.com/linode/manager/pull/10441))
+
 ## [2024-04-29] - v0.115.0
 
 

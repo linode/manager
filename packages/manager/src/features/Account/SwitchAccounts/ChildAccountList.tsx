@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
@@ -11,10 +11,11 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useChildAccountsInfiniteQuery } from 'src/queries/account/account';
 
-import type { UserType } from '@linode/api-v4';
+import type { Filter, UserType } from '@linode/api-v4';
 
 interface ChildAccountListProps {
   currentTokenWithBearer: string;
+  isLoading?: boolean;
   onClose: () => void;
   onSwitchAccount: (props: {
     currentTokenWithBearer: string;
@@ -23,25 +24,42 @@ interface ChildAccountListProps {
     onClose: () => void;
     userType: UserType | undefined;
   }) => void;
+  searchQuery: string;
   userType: UserType | undefined;
 }
 
 export const ChildAccountList = React.memo(
   ({
     currentTokenWithBearer,
+    isLoading,
     onClose,
     onSwitchAccount,
+    searchQuery,
     userType,
   }: ChildAccountListProps) => {
+    const filter: Filter = {
+      ['+order']: 'asc',
+      ['+order_by']: 'company',
+    };
+    if (searchQuery) {
+      filter['company'] = { '+contains': searchQuery };
+    }
+
+    const [
+      isSwitchingChildAccounts,
+      setIsSwitchingChildAccounts,
+    ] = useState<boolean>(false);
     const {
       data,
       fetchNextPage,
       hasNextPage,
       isError,
       isFetchingNextPage,
-      isLoading,
+      isInitialLoading,
+      isRefetching,
       refetch: refetchChildAccounts,
     } = useChildAccountsInfiniteQuery({
+      filter,
       headers:
         userType === 'proxy'
           ? {
@@ -51,7 +69,12 @@ export const ChildAccountList = React.memo(
     });
     const childAccounts = data?.pages.flatMap((page) => page.data);
 
-    if (isLoading) {
+    if (
+      isInitialLoading ||
+      isLoading ||
+      isSwitchingChildAccounts ||
+      isRefetching
+    ) {
       return (
         <Box display="flex" justifyContent="center">
           <CircleProgress mini size={70} />
@@ -61,7 +84,13 @@ export const ChildAccountList = React.memo(
 
     if (childAccounts?.length === 0) {
       return (
-        <Notice variant="info">There are no indirect customer accounts.</Notice>
+        <Notice variant="info">
+          There are no child accounts
+          {filter.hasOwnProperty('company')
+            ? ' that match this query'
+            : undefined}
+          .
+        </Notice>
       );
     }
 
@@ -90,18 +119,20 @@ export const ChildAccountList = React.memo(
       const euuid = childAccount.euuid;
       return (
         <StyledLinkButton
-          onClick={(event) =>
+          onClick={(event) => {
+            setIsSwitchingChildAccounts(true);
             onSwitchAccount({
               currentTokenWithBearer,
               euuid,
               event,
               onClose,
               userType,
-            })
-          }
+            });
+          }}
           sx={(theme) => ({
             marginBottom: theme.spacing(2),
           })}
+          disabled={isSwitchingChildAccounts}
           key={`child-account-link-button-${idx}`}
         >
           {childAccount.company}
@@ -111,7 +142,7 @@ export const ChildAccountList = React.memo(
 
     return (
       <Stack alignItems={'flex-start'} data-testid="child-account-list">
-        {renderChildAccounts}
+        {!isSwitchingChildAccounts && !isLoading && renderChildAccounts}
         {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
         {isFetchingNextPage && <CircleProgress mini />}
       </Stack>

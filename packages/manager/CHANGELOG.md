@@ -4,6 +4,130 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-05-29] - v1.120.1
+
+
+### Fixed:
+
+- Tooltip not closing when unhovered ([#10523](https://github.com/linode/manager/pull/10523))
+
+## [2024-05-28] - v1.120.0
+
+
+### Added:
+
+- Event message handling for new LKE event types ([#10443](https://github.com/linode/manager/pull/10443))
+- Tags to Image Create capture tab ([#10471](https://github.com/linode/manager/pull/10471))
+- Options for default policies when creating a Firewall ([#10474](https://github.com/linode/manager/pull/10474))
+
+### Changed:
+
+- Make all tooltips interactive and prevent `disableInteractive` for future usage ([#10501](https://github.com/linode/manager/pull/10501))
+
+### Fixed:
+
+- Duplicate speedtest helper text in Create Cluster form ([#10490](https://github.com/linode/manager/pull/10490))
+- `RegionSelect` unexpected keyboard behavior ([#10495](https://github.com/linode/manager/pull/10495))
+
+### Removed:
+
+- `parentChildAccountAccess` feature flag ([#10489](https://github.com/linode/manager/pull/10489))
+- `firewallNodebalancer` feature flag ([#10460](https://github.com/linode/manager/pull/10460))
+- `recharts` feature flag ([#10483](https://github.com/linode/manager/pull/10483))
+
+### Tech Stories:
+
+- Add script to generate internal test results payload ([#10422](https://github.com/linode/manager/pull/10422))
+- Update Storybook to 8.1.0 ([#10463](https://github.com/linode/manager/pull/10463))
+- Upgrade country-region-data to 3.0.0 ([#10464](https://github.com/linode/manager/pull/10464))
+- Remove aria-label from TableRow ([#10485](https://github.com/linode/manager/pull/10485))
+
+### Tests:
+
+- Add Placement Group populated landing page UI tests ([#10446](https://github.com/linode/manager/pull/10446))
+- Add Placement Group Linode assignment UI tests ([#10449](https://github.com/linode/manager/pull/10449))
+- Add Cypress test coverage for Disk Encryption in Linode Create flow ([#10462](https://github.com/linode/manager/pull/10462))
+- Clean up support ticket test intercepts ([#10465](https://github.com/linode/manager/pull/10465))
+- Clean up cy.intercept calls in nodebalancer test ([#10467](https://github.com/linode/manager/pull/10467))
+- Fix failing StackScript test following deprecation of Fedora 38 Image ([#10470](https://github.com/linode/manager/pull/10470))
+- Clean up and improves image creation Cypress tests ([#10471](https://github.com/linode/manager/pull/10471))
+- Clean up cy.intercept calls in notification and events ([#10472](https://github.com/linode/manager/pull/10472))
+- Add integration test for Linode Create with Placement Group ([#10473](https://github.com/linode/manager/pull/10473))
+- Clean up cy.intercept calls in resize-linode test ([#10476](https://github.com/linode/manager/pull/10476))
+- Clean up cy.intercept calls in smoke-delete-linode test ([#10478](https://github.com/linode/manager/pull/10478))
+- Add cypress assertion and test for placement group deletion error handling ([#10493](https://github.com/linode/manager/pull/10493))
+
+### Upcoming Features:
+
+- Linode Create Refactor - Scroll Errors Into View ([#10454](https://github.com/linode/manager/pull/10454))
+- Optimize and clean up PlacementGroups Select ([#10455](https://github.com/linode/manager/pull/10455))
+- Add Disk Encryption section to Linode Create flow ([#10462](https://github.com/linode/manager/pull/10462))
+- Reset errors in PlacementGroupDeleteModal ([#10486](https://github.com/linode/manager/pull/10486))
+
+
+## [2024-05-13] - v1.119.0
+
+
+### Changed:
+
+- Update Account Closure Dialog Wording ([#10406](https://github.com/linode/manager/pull/10406))
+- Implement GPUv2 plan divider & cleanup/consolidate plan selection components ([#10407](https://github.com/linode/manager/pull/10407)) [#10450](https://github.com/linode/manager/pull/10450)
+
+### Fixed:
+
+- Object ACL select field enabled in loading state ([#10412](https://github.com/linode/manager/pull/10412))
+- Modification of Linode config 'interfaces' array on no changes ([#10423](https://github.com/linode/manager/pull/10423))
+- Table component props forwarding ([#10424](https://github.com/linode/manager/pull/10424))
+
+### Tech Stories:
+
+- Remove `linodeCloneUiChanges` feature flag and clean up usages ([#10385](https://github.com/linode/manager/pull/10385))
+- Query Key Factory for Volumes ([#10414](https://github.com/linode/manager/pull/10414))
+- Query Key Factory for Kubernetes ([#10428](https://github.com/linode/manager/pull/10428))
+- Clean up Main Content Banner ([#10430](https://github.com/linode/manager/pull/10430))
+- Clean up Database feature flagging logic ([#10435](https://github.com/linode/manager/pull/10435))
+
+### Tests:
+
+- Add Cypress test coverage for Firewall renaming ([#10384](https://github.com/linode/manager/pull/10384))
+- Add Cypress test for Domain cloning ([#10403](https://github.com/linode/manager/pull/10403))
+- Fix VPC subnet Linode assignment integration test failures ([#10405](https://github.com/linode/manager/pull/10405))
+- Fix access key test failure when user has many OBJ buckets ([#10405](https://github.com/linode/manager/pull/10405))
+- Refactor Linode config end-to-end tests ([#10405](https://github.com/linode/manager/pull/10405))
+- Fix failing OBJ E2E tests following API release ([#10417](https://github.com/linode/manager/pull/10417))
+- Add Cypress tests for Placement Group deletion flows ([#10425](https://github.com/linode/manager/pull/10425))
+- Add Placement Group create flow UI test ([#10445](https://github.com/linode/manager/pull/10445))
+- Fix One-Click App test by using Ubuntu 22.04 image ([#10447](https://github.com/linode/manager/pull/10447))
+
+### Upcoming Features:
+
+- Add dialog to refresh proxy tokens as time expires ([#10361](https://github.com/linode/manager/pull/10361))
+- Update Placement Groups text copy ([#10399](https://github.com/linode/manager/pull/10399))
+- Linode Create Refactor:
+   - Marketplace - Part 1 ([#10401](https://github.com/linode/manager/pull/10401))
+   - Backups (#10404)
+   - Marketplace - Part 2 (#10419)
+   - Cloning ([#10421](https://github.com/linode/manager/pull/10421))
+- Update Placement Group Table Row linodes tooltip and SelectPlacementGroup option label ([#10408](https://github.com/linode/manager/pull/10408))
+- Add content to the ResourcesSection of the PG landing page in empty state ([#10411](https://github.com/linode/manager/pull/10411))
+- Use 'edge'-class plans in edge regions ([#10415](https://github.com/linode/manager/pull/10415))
+- Add disk_encryption to several factories for mocked data ([#10418](https://github.com/linode/manager/pull/10418))
+- Fix Placement Group action event formatting ([#10420](https://github.com/linode/manager/pull/10420))
+- Replace remaining feature flag implementation with `useIsPlacementGroupsEnabled` utility function ([#10431](https://github.com/linode/manager/pull/10431))
+- Update Placement Groups final copy ([#10434](https://github.com/linode/manager/pull/10434))
+- Add support for Placement Groups in Linode CLI tool ([#10438](https://github.com/linode/manager/pull/10438))
+- Set PlacementGroupSelect clearOnBlur to true ([#10427](https://github.com/linode/manager/pull/10427))
+- Update Placement Groups maximum_pgs_per_customer UI (#10433)
+- Add DiskEncryption component ([#10439](https://github.com/linode/manager/pull/10439))
+
+
+## [2024-05-06] - v1.118.1
+
+
+### Upcoming Features:
+
+- Use 'edge'-class plans in edge regions ([#10441](https://github.com/linode/manager/pull/10441))
+
 ## [2024-04-29] - v1.118.0
 
 

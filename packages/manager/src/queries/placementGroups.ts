@@ -29,19 +29,22 @@ import type {
   UpdatePlacementGroupPayload,
 } from '@linode/api-v4';
 
-const getAllPlacementGroupsRequest = () =>
-  getAll<PlacementGroup>((params, filters) =>
-    getPlacementGroups(params, filters)
+const getAllPlacementGroupsRequest = (
+  _params: Params = {},
+  _filter: Filter = {}
+) =>
+  getAll<PlacementGroup>((params, filter) =>
+    getPlacementGroups({ ...params, ..._params }, { ...filter, ..._filter })
   )().then((data) => data.data);
 
 export const placementGroupQueries = createQueryKeys('placement-groups', {
-  all: {
-    queryFn: getAllPlacementGroupsRequest,
-    queryKey: null,
-  },
-  paginated: (params: Params, filters: Filter) => ({
-    queryFn: () => getPlacementGroups(params, filters),
-    queryKey: [params, filters],
+  all: (params: Params = {}, filter: Filter = {}) => ({
+    queryFn: () => getAllPlacementGroupsRequest(params, filter),
+    queryKey: [params, filter],
+  }),
+  paginated: (params: Params, filter: Filter) => ({
+    queryFn: () => getPlacementGroups(params, filter),
+    queryKey: [params, filter],
   }),
   placementGroup: (placementGroupId: number) => ({
     queryFn: () => getPlacementGroup(placementGroupId),
@@ -49,10 +52,20 @@ export const placementGroupQueries = createQueryKeys('placement-groups', {
   }),
 });
 
-export const useAllPlacementGroupsQuery = (enabled = true) =>
+interface AllPlacementGroupsQueryOptions {
+  enabled?: boolean;
+  filter?: Filter;
+  params?: Params;
+}
+
+export const useAllPlacementGroupsQuery = ({
+  enabled = true,
+  filter = {},
+  params = {},
+}: AllPlacementGroupsQueryOptions) =>
   useQuery<PlacementGroup[], APIError[]>({
     enabled,
-    ...placementGroupQueries.all,
+    ...placementGroupQueries.all(params, filter),
   });
 
 export const usePlacementGroupsQuery = (
@@ -83,7 +96,7 @@ export const useCreatePlacementGroup = () => {
     mutationFn: createPlacementGroup,
     onSuccess: (placementGroup) => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
+      queryClient.invalidateQueries(placementGroupQueries.all._def);
       queryClient.setQueryData<PlacementGroup>(
         placementGroupQueries.placementGroup(placementGroup.id).queryKey,
         placementGroup
@@ -102,7 +115,7 @@ export const useMutatePlacementGroup = (id: number) => {
     mutationFn: (data) => updatePlacementGroup(id, data),
     onSuccess: (placementGroup) => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
+      queryClient.invalidateQueries(placementGroupQueries.all._def);
       queryClient.setQueryData(
         placementGroupQueries.placementGroup(id).queryKey,
         placementGroup
@@ -118,7 +131,7 @@ export const useDeletePlacementGroup = (id: number) => {
     mutationFn: () => deletePlacementGroup(id),
     onSuccess: () => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
+      queryClient.invalidateQueries(placementGroupQueries.all._def);
       queryClient.removeQueries(
         placementGroupQueries.placementGroup(id).queryKey
       );
@@ -137,7 +150,7 @@ export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
     mutationFn: (req) => assignLinodesToPlacementGroup(placementGroupId, req),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
+      queryClient.invalidateQueries(placementGroupQueries.all._def);
       queryClient.invalidateQueries(
         placementGroupQueries.placementGroup(placementGroupId).queryKey
       );
@@ -164,7 +177,7 @@ export const useUnassignLinodesFromPlacementGroup = (
       unassignLinodesFromPlacementGroup(placementGroupId, req),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all.queryKey);
+      queryClient.invalidateQueries(placementGroupQueries.all._def);
       queryClient.invalidateQueries(
         placementGroupQueries.placementGroup(placementGroupId).queryKey
       );

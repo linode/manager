@@ -6,12 +6,7 @@ import { profileFactory } from 'src/factories';
 import { accountLoginFactory } from 'src/factories/accountLogin';
 import { formatDate } from 'src/utilities/formatDate';
 import { mockGetAccountLogins } from 'support/intercepts/account';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { mockGetProfile } from 'support/intercepts/profile';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { PARENT_USER } from 'src/features/Account/constants';
 
 describe('Account login history', () => {
@@ -42,15 +37,9 @@ describe('Account login history', () => {
       'getAccountLogins'
     );
 
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     // Navigate to Account Login History page.
     cy.visitWithLogin('/account/login-history');
-    cy.wait(['@getClientStream', '@getFeatureFlags', '@getProfile']);
+    cy.wait(['@getProfile']);
 
     // Confirm helper text above table is visible.
     cy.findByText(
@@ -114,15 +103,9 @@ describe('Account login history', () => {
 
     mockGetProfile(mockProfile).as('getProfile');
 
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     // Navigate to Account Login History page.
     cy.visitWithLogin('/account/login-history');
-    cy.wait(['@getClientStream', '@getFeatureFlags', '@getProfile']);
+    cy.wait(['@getProfile']);
 
     // Confirm helper text above table and table are not visible.
     cy.findByText(
@@ -149,15 +132,9 @@ describe('Account login history', () => {
 
     mockGetProfile(mockProfile).as('getProfile');
 
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     // Navigate to Account Login History page.
     cy.visitWithLogin('/account/login-history');
-    cy.wait(['@getClientStream', '@getFeatureFlags', '@getProfile']);
+    cy.wait(['@getProfile']);
 
     // Confirm helper text above table and table are not visible.
     cy.findByText(

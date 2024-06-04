@@ -31,7 +31,7 @@ import {
   useCreateVolumeMutation,
   useVolumeTypesQuery,
 } from 'src/queries/volumes/volumes';
-import { sendCreateVolumeEvent } from 'src/utilities/analytics';
+import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
   handleFieldErrors,
@@ -364,7 +364,7 @@ export const VolumeCreate = () => {
                 )}
               </Box>
               <ConfigSelect
-                disabled={doesNotHavePermission}
+                disabled={doesNotHavePermission || config_id === null}
                 error={touched.config_id ? errors.config_id : undefined}
                 linodeId={linode_id}
                 name="configId"

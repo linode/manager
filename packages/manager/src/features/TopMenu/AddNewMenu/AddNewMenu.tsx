@@ -25,12 +25,9 @@ import PlacementGroupsIcon from 'src/assets/icons/entityIcons/placement-groups.s
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import VPCIcon from 'src/assets/icons/entityIcons/vpc.svg';
 import { Button } from 'src/components/Button/Button';
+import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
-import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
-import { useDatabaseEnginesQuery } from 'src/queries/databases';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 interface LinkProps {
   attr?: { [key: string]: boolean };
@@ -43,25 +40,10 @@ interface LinkProps {
 
 export const AddNewMenu = () => {
   const theme = useTheme();
-  const { data: account, error: accountError } = useAccount();
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
-  const flags = useFlags();
   const open = Boolean(anchorEl);
 
-  const checkRestrictedUser = !Boolean(flags.databases) && !!accountError;
-  const {
-    error: enginesError,
-    isLoading: enginesLoading,
-  } = useDatabaseEnginesQuery(checkRestrictedUser);
-
-  const showDatabases =
-    isFeatureEnabled(
-      'Managed Databases',
-      Boolean(flags.databases),
-      account?.capabilities ?? []
-    ) ||
-    (checkRestrictedUser && !enginesLoading && !enginesError);
-
+  const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isACLBEnabled } = useIsACLBEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
@@ -128,7 +110,7 @@ export const AddNewMenu = () => {
     {
       description: 'High-performance managed database clusters',
       entity: 'Database',
-      hide: !showDatabases,
+      hide: !isDatabasesEnabled,
       icon: DatabaseIcon,
       link: '/databases/create',
     },

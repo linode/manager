@@ -44,7 +44,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
   const {
     data: allPlacementGroups,
     error: allPlacementGroupsError,
-  } = useAllPlacementGroupsQuery();
+  } = useAllPlacementGroupsQuery({});
   const { enqueueSnackbar } = useSnackbar();
 
   // We display a notice and disable inputs in case the user reaches this drawer somehow
@@ -181,7 +181,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
               placement="right"
               status="help"
               sxTooltipIcon={{ position: 'relative', top: 4 }}
-              text="Only displaying Linodes that aren’t assigned to a Placement Group"
+              text="Only displaying Linodes that aren’t assigned to a Placement Group."
             />
           </Box>
           <ActionsPanel

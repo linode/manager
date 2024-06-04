@@ -16,6 +16,18 @@ You may want to group Linodes closer together to help improve performance, or fu
 export const PLACEMENT_GROUP_HAS_NO_CAPACITY =
   'This placement group has reached the maximum Linode capacity.';
 
+export const MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION =
+  'Maximum placement groups in region:';
+
+export const NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE =
+  'There are no placement groups in this region.';
+
+export const NO_REGIONS_SUPPORT_PLACEMENT_GROUPS_MESSAGE =
+  'No regions currently support Placement Groups.';
+
+export const CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE =
+  'Once you create a placement group, you cannot change its Affinity Type Enforcement setting.';
+
 // Links
 export const PLACEMENT_GROUPS_DOCS_LINK =
   'https://www.linode.com/docs/products/compute/compute-instances/guides/placement-groups/';
