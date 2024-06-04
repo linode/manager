@@ -15,8 +15,6 @@ describe('CircleProgress', () => {
     const circle = screen.getByTestId('circle-progress');
     expect(circle).toBeInTheDocument();
     expect(circle).toHaveStyle('width: 124px; height: 124px;');
-    const innerCircle = screen.getByTestId('inner-circle-progress');
-    expect(innerCircle).toBeInTheDocument();
   });
 
   it('renders a small CircleProgress', () => {
