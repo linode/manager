@@ -53,7 +53,7 @@ export const AppsList = ({ onOpenDetailsDrawer }: Props) => {
         justifyContent="center"
         width="100%"
       >
-        <CircleProgress />
+        <CircleProgress size="md" />
       </Box>
     );
   }

@@ -34,13 +34,4 @@ describe('CircleProgress', () => {
     expect(circleProgress).toBeVisible();
     expect(circleProgress).toHaveStyle('width: 20px; height: 20px;');
   });
-
-  it('renders a CircleProgress without the inner circle', () => {
-    const screen = renderWithTheme(<CircleProgress noInner />);
-
-    const circleProgress = screen.getByLabelText(CONTENT_LOADING);
-    expect(circleProgress).toBeVisible();
-    const innerCircle = screen.queryByTestId('inner-circle-progress');
-    expect(innerCircle).not.toBeInTheDocument();
-  });
 });

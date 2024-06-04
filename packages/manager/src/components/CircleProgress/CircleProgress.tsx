@@ -13,17 +13,13 @@ interface CircleProgressProps extends Omit<CircularProgressProps, 'size'> {
    */
   children?: JSX.Element;
   /**
-   * If true, will not show an inner circle beneath the spinning circle
-   */
-  noInner?: boolean;
-  /**
    * Removes the padding
    */
   noPadding?: boolean;
   /**
    * Set spinner to a smaller custom size
    */
-  size?: 'md' | 'sm' | 'xs';
+  size?: 'lg' | 'md' | 'sm' | 'xs';
   /**
    * Additional styles to apply to the root element.
    */
@@ -31,16 +27,23 @@ interface CircleProgressProps extends Omit<CircularProgressProps, 'size'> {
 }
 
 const SIZE_MAP = {
+  lg: 124,
   md: 40,
   sm: 20,
   xs: 14,
 };
 
 /**
- * Use for short, indeterminate activities requiring user attention.
+ * Use for short, indeterminate activities requiring user attention. Defaults to large.
+ *
+ * sizes:
+ * xs = 14
+ * md = 20
+ * md = 40
+ * lg = 124
  */
 const CircleProgress = (props: CircleProgressProps) => {
-  const { children, noInner, noPadding, size, sx, ...rest } = props;
+  const { children, noPadding, size, sx, ...rest } = props;
 
   const variant =
     typeof props.value === 'number' ? 'determinate' : 'indeterminate';
@@ -64,16 +67,11 @@ const CircleProgress = (props: CircleProgressProps) => {
       {children !== undefined && (
         <Box sx={{ marginTop: 4, position: 'absolute' }}>{children}</Box>
       )}
-      {noInner !== true && (
-        <StyledTopWrapperDiv data-testid="inner-circle-progress">
-          <StyledTopDiv />
-        </StyledTopWrapperDiv>
-      )}
       <StyledCircularProgress
         {...rest}
         data-qa-circle-progress={value}
         data-testid="circle-progress"
-        size={124}
+        size={SIZE_MAP['lg']}
         thickness={2}
         value={value}
         variant={variant}
@@ -95,26 +93,6 @@ const StyledRootDiv = styled('div')(({ theme }) => ({
     height: 300,
   },
   width: '100%',
-}));
-
-const StyledTopWrapperDiv = styled('div')(({}) => ({
-  alignItems: 'center',
-  display: 'flex',
-  height: '100%',
-  justifyContent: 'center',
-  position: 'absolute',
-  width: '100%',
-}));
-
-const StyledTopDiv = styled('div')(({ theme }) => ({
-  border: '1px solid #999',
-  borderRadius: '50%',
-  height: 70,
-  [theme.breakpoints.up('sm')]: {
-    height: 120,
-    width: 120,
-  },
-  width: 70,
 }));
 
 const StyledCircularProgress = styled(_CircularProgress)(({ theme }) => ({
