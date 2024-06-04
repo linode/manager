@@ -1,10 +1,12 @@
 import React, { useMemo } from 'react';
-import { useController, useWatch } from 'react-hook-form';
+import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { Checkbox } from 'src/components/Checkbox';
 import { Currency } from 'src/components/Currency';
+import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/DiskEncryption/constants';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
+import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -15,19 +17,23 @@ import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
 import { getBackupsEnabledValue } from './utilities';
 
-import type { CreateLinodeRequest } from '@linode/api-v4';
+import type { LinodeCreateFormValues } from '../utilities';
 
 export const Backups = () => {
-  const { field } = useController<CreateLinodeRequest, 'backups_enabled'>({
+  const { control } = useFormContext<LinodeCreateFormValues>();
+  const { field } = useController({
+    control,
     name: 'backups_enabled',
+  });
+
+  const [regionId, typeId, diskEncryption] = useWatch({
+    control,
+    name: ['region', 'type', 'disk_encryption'],
   });
 
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
   });
-
-  const regionId = useWatch<CreateLinodeRequest, 'region'>({ name: 'region' });
-  const typeId = useWatch<CreateLinodeRequest, 'type'>({ name: 'type' });
 
   const { data: type } = useTypeQuery(typeId, Boolean(typeId));
   const { data: regions } = useRegionsQuery();
@@ -49,20 +55,21 @@ export const Backups = () => {
     selectedRegion?.site_type === 'distributed' ||
     selectedRegion?.site_type === 'edge';
 
+  const checked = getBackupsEnabledValue({
+    accountBackupsEnabled: isAccountBackupsEnabled,
+    isDistributedRegion: isDistributedRegionSelected,
+    value: field.value,
+  });
+
   return (
     <FormControlLabel
-      checked={getBackupsEnabledValue({
-        accountBackupsEnabled: isAccountBackupsEnabled,
-        isDistributedRegion: isDistributedRegionSelected,
-        value: field.value,
-      })}
       disabled={
         isDistributedRegionSelected ||
         isLinodeCreateRestricted ||
         isAccountBackupsEnabled
       }
       label={
-        <Stack sx={{ pl: 2 }}>
+        <Stack spacing={1} sx={{ pl: 2 }}>
           <Stack alignItems="center" direction="row" spacing={2}>
             <Typography variant="h3">Backups</Typography>
             {backupsMonthlyPrice && (
@@ -71,6 +78,17 @@ export const Backups = () => {
               </Typography>
             )}
           </Stack>
+          {checked && diskEncryption === 'enabled' && (
+            <Notice
+              typeProps={{
+                style: { fontSize: '0.875rem' },
+              }}
+              spacingBottom={0}
+              spacingTop={0}
+              text={DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY}
+              variant="warning"
+            />
+          )}
           <Typography>
             {isAccountBackupsEnabled ? (
               <React.Fragment>
@@ -88,6 +106,7 @@ export const Backups = () => {
           </Typography>
         </Stack>
       }
+      checked={checked}
       control={<Checkbox />}
       onChange={field.onChange}
     />

@@ -10,9 +10,12 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
+import { DISK_ENCRYPTION_IMAGES_CAVEAT_COPY } from 'src/components/DiskEncryption/constants';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Stack } from 'src/components/Stack';
 import { SupportLink } from 'src/components/SupportLink';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
@@ -25,7 +28,9 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useCreateImageMutation } from 'src/queries/images';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 export const CreateImageTab = () => {
   const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
@@ -58,6 +63,10 @@ export const CreateImageTab = () => {
   const isImageCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_images',
   });
+
+  const {
+    isDiskEncryptionFeatureEnabled,
+  } = useIsDiskEncryptionFeatureEnabled();
 
   const onSubmit = handleSubmit(async (values) => {
     try {
@@ -92,6 +101,23 @@ export const CreateImageTab = () => {
 
   const isRawDisk = selectedDisk?.filesystem === 'raw';
 
+  /*
+    We only want to display the notice about disk encryption if:
+    1. the Disk Encryption feature is enabled
+    2. the selected linode is not in an Edge region
+  */
+  const { data: regionsData } = useRegionsQuery();
+
+  const { data: linode } = useLinodeQuery(
+    selectedLinodeId ?? -1,
+    Boolean(selectedLinodeId) && isDiskEncryptionFeatureEnabled
+  );
+
+  const linodeIsInDistributedRegion = getIsDistributedRegion(
+    regionsData ?? [],
+    linode?.region ?? ''
+  );
+
   return (
     <form onSubmit={onSubmit}>
       <Stack spacing={2}>
@@ -113,7 +139,7 @@ export const CreateImageTab = () => {
             <Typography variant="h2">Select Linode & Disk</Typography>
             <Typography sx={{ maxWidth: { md: '80%', sm: '100%' } }}>
               By default, Linode images are limited to 6144 MB of data per disk.
-              Ensure your content doesn't exceed this limit, or{' '}
+              Ensure your content doesn&rsquo;t exceed this limit, or{' '}
               <SupportLink
                 entity={
                   selectedLinodeId !== null
@@ -123,9 +149,9 @@ export const CreateImageTab = () => {
                 text="open a support ticket"
                 title="Request to increase Image size limit when capturing from Linode disk"
               />{' '}
-              to request a higher limit. Additionally, images can't be created
-              from a raw disk or a disk that's formatted using a custom file
-              system.
+              to request a higher limit. Additionally, images can&rsquo;t be
+              created from a raw disk or a disk that&rsquo;s formatted using a
+              custom file system.
             </Typography>
             <LinodeSelect
               getOptionDisabled={
@@ -156,6 +182,17 @@ export const CreateImageTab = () => {
               required
               value={selectedLinodeId}
             />
+            {isDiskEncryptionFeatureEnabled &&
+              !linodeIsInDistributedRegion &&
+              selectedLinodeId !== null && (
+                <Notice variant="warning">
+                  <Typography
+                    sx={(theme) => ({ fontFamily: theme.font.normal })}
+                  >
+                    {DISK_ENCRYPTION_IMAGES_CAVEAT_COPY}
+                  </Typography>
+                </Notice>
+              )}
             <Controller
               render={({ field, fieldState }) => (
                 <Autocomplete
