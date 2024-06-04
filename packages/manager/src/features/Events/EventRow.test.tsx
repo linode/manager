@@ -1,3 +1,4 @@
+// TODO eventMessagesV2: delete when flag is removed
 import { DateTime } from 'luxon';
 import * as React from 'react';
 

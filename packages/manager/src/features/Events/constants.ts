@@ -1,3 +1,4 @@
+// TODO eventMessagesV2: delete when flag is removed
 import type { Event } from '@linode/api-v4/lib/account';
 
 export const EVENT_ACTIONS: Event['action'][] = [

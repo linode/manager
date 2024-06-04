@@ -1,3 +1,4 @@
+// TODO eventMessagesV2: delete when flag is removed
 import { Event, EventAction } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
 import { pathOr } from 'ramda';

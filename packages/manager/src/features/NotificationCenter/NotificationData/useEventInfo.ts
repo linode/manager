@@ -1,3 +1,4 @@
+// TODO eventMessagesV2: delete when flag is removed
 import { Event } from '@linode/api-v4/lib/account/types';
 
 import { generateEventMessage } from 'src/features/Events/eventMessageGenerator';
