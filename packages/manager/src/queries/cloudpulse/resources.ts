@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { CloudPulseResources } from 'src/features/CloudPulse/shared/ResourceMultiSelect';
+import { CloudPulseResources } from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';
 
 import { getAllLoadbalancers } from '../aclb/requests';
 import { getAllLinodesRequest } from '../linodes/requests';

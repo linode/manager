@@ -4,12 +4,12 @@ import * as React from 'react';
 
 import { WithStartAndEnd } from 'src/features/Longview/request.types';
 
-import { CloudPulseRegionSelect } from '../shared/RegionSelect';
+import { CloudPulseRegionSelect } from '../shared/CloudPulseRegionSelect';
 import {
   CloudPulseResources,
   CloudPulseResourcesSelect,
-} from '../shared/ResourceMultiSelect';
-import { CloudPulseTimeRangeSelect } from '../shared/TimeRangeSelect';
+} from '../shared/CloudPulseResourcesSelect';
+import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(filters: FiltersObject): undefined | void;

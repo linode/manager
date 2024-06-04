@@ -4,7 +4,7 @@ import * as React from 'react';
 import { linodeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { CloudPulseResourcesSelect } from './ResourceMultiSelect';
+import { CloudPulseResourcesSelect } from './CloudPulseResourcesSelect';
 
 const queryMocks = vi.hoisted(() => ({
   useResourcesQuery: vi.fn().mockReturnValue({}),
