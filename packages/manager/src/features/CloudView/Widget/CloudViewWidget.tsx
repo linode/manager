@@ -37,7 +37,7 @@ import { AggregateFunctionComponent } from './Components/AggregateFunctionCompon
 import { IntervalSelectComponent } from './Components/IntervalSelectComponent';
 import { ZoomIcon } from './Components/Zoomer';
 import { seriesDataFormatter } from './Formatters/CloudViewFormatter';
-import { convertNetworkToUnit, formatNetworkTooltip, generateNetworkUnits } from '../Utils/UnitConversion';
+import { convertBytesToUnit, formatToolTip, generateUnitByByteValue } from '../Utils/UnitConversion';
 
 export interface CloudViewWidgetProperties {
   // we can try renaming this CloudViewWidget
@@ -76,6 +76,8 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
 
   const flags = useFlags();
 
+  const isBytes = props.unit === "Bytes";
+
   const [
     selectedInterval,
     setSelectedInterval,
@@ -83,7 +85,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
 
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget }); // any change in agg_functions, step, group_by, will be published to dashboard component for save
 
-  const [currentUnit, setCurrentUnit] = React.useState<any>(props.unit==="Bytes" ? "b" : props.unit);
+  const [currentUnit, setCurrentUnit] = React.useState<any>(isBytes ? "b" : props.unit);
 
   const getCloudViewMetricsRequest = (): CloudViewMetricsRequest => {
     const request = {} as CloudViewMetricsRequest;
@@ -117,8 +119,8 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     return props.widget.service_type
       ? props.widget.service_type!
       : props.globalFilters
-      ? props.globalFilters.serviceType
-      : '';
+        ? props.globalFilters.serviceType
+        : '';
   };
 
   const getLabelName = (metric: any, serviceType: string) => {
@@ -131,8 +133,8 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     const results =
       flags.aclpResourceTypeMap && flags.aclpResourceTypeMap.length > 0
         ? flags.aclpResourceTypeMap.filter(
-            (obj: CloudPulseResourceTypeMap) => obj.serviceName === serviceType
-          )
+          (obj: CloudPulseResourceTypeMap) => obj.serviceName === serviceType
+        )
         : [];
 
     const flag = results && results.length > 0 ? results[0] : undefined;
@@ -150,16 +152,16 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     getCloudViewMetricsRequest(),
     props,
     widget.aggregate_function +
-      '_' +
-      widget.group_by +
-      '_' +
-      widget.time_granularity +
-      '_' +
-      widget.metric +
-      '_' +
-      widget.label +
-      '_' +
-      props.globalFilters?.timestamp ?? '',
+    '_' +
+    widget.group_by +
+    '_' +
+    widget.time_granularity +
+    '_' +
+    widget.metric +
+    '_' +
+    widget.label +
+    '_' +
+    props.globalFilters?.timestamp ?? '',
     true
   ); // fetch the metrics on any property change
 
@@ -242,7 +244,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
   }, [status, metricsList]);
 
   const formatBytesData = (dimensions: any, legendRowsData: any) => {
-    if ((props.unit && props.unit!=="Bytes") || !dimensions) {
+    if ((props.unit && props.unit !== "Bytes") || !dimensions) {
       return;
     }
     let maxValue = 0;
@@ -250,10 +252,10 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
       maxValue = Math.max(maxValue, legendRowsData[index]?.data.max ?? 0);
     });
     if (maxValue === 0) return;
-    const unit = generateNetworkUnits(maxValue);
+    const unit = generateUnitByByteValue(maxValue);
     setCurrentUnit(unit);
     dimensions.forEach((dimension: any, index: number) => {
-      legendRowsData[index].format = formatNetworkTooltip;
+      legendRowsData[index].format = formatToolTip;
     });
 
   }
@@ -370,7 +372,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
             <Grid sx={{ marginRight: 5, width: 100 }}>
               {props.availableMetrics?.available_aggregate_functions &&
                 props.availableMetrics.available_aggregate_functions.length >
-                  0 && (
+                0 && (
                   <AggregateFunctionComponent
                     available_aggregate_func={
                       props.availableMetrics?.available_aggregate_functions
@@ -403,9 +405,9 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
             subtitle={currentUnit}
             timezone={timezone}
             title={convertStringToCamelCasesWithSpaces(props.widget.label)}
-            unit={props.unit !== "Bytes" ? ` ${currentUnit}` : undefined}
-            formatTooltip={props.unit === "Bytes" ? formatNetworkTooltip : undefined}
-            formatData={(props.unit === "Bytes") ? (data: number) => convertNetworkToUnit(data*8, currentUnit) : undefined}
+            unit={!isBytes ? ` ${currentUnit}` : undefined}
+            formatTooltip={isBytes ? formatToolTip : undefined}
+            formatData={isBytes ? (data: number) => convertBytesToUnit(data * 8, currentUnit) : undefined}
           />
         </div>
       </Paper>
