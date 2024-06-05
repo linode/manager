@@ -20,7 +20,6 @@ import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
 interface Props {
   disabledOptions?: DisableRegionOption;
-  displayDistributedRegionIcon?: boolean;
   props: React.HTMLAttributes<HTMLLIElement>;
   region: Region;
   selected?: boolean;
@@ -28,7 +27,6 @@ interface Props {
 
 export const RegionOption = ({
   disabledOptions,
-  displayDistributedRegionIcon,
   props,
   region,
   selected,
@@ -36,6 +34,9 @@ export const RegionOption = ({
   const { className, onClick } = props;
   const isRegionDisabled = Boolean(disabledOptions);
   const isRegionDisabledReason = disabledOptions?.reason;
+
+  const displayDistributedRegionIcon =
+    region.site_type === 'edge' || region.site_type === 'distributed';
 
   return (
     <Tooltip

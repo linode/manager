@@ -9,7 +9,15 @@ import type {
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
 
 export interface DisableRegionOption {
+  /**
+   * The reason the region option is disabled.
+   * This is shown to the user as a tooltip.
+   */
   reason: JSX.Element | string;
+  /**
+   * An optional minWith applied to the tooltip
+   * @default 215
+   */
   tooltipWidth?: number;
 }
 
@@ -26,6 +34,9 @@ export interface RegionSelectProps
    * See `ImageUpload.tsx` for an example of a RegionSelect with an undefined `currentCapability` - there is no capability associated with Images yet.
    */
   currentCapability: Capabilities | undefined;
+  /**
+   * A key/value object for disabling regions by their ID.
+   */
   disabledRegions?: Record<string, DisableRegionOption>;
   helperText?: string;
   isClearable?: boolean;
@@ -36,6 +47,9 @@ export interface RegionSelectProps
   required?: boolean;
   showDistributedRegionIconHelperText?: boolean;
   tooltipText?: string;
+  /**
+   * The ID of the selected region.
+   */
   value: null | string;
   width?: number;
 }
@@ -50,10 +64,10 @@ export interface RegionMultiSelectProps
     selectedRegions: Region[];
   }>;
   currentCapability: Capabilities | undefined;
-  onChange: (ids: string[]) => void;
   helperText?: string;
   isClearable?: boolean;
   label?: string;
+  onChange: (ids: string[]) => void;
   regions: Region[];
   required?: boolean;
   selectedIds: string[];
@@ -62,33 +76,10 @@ export interface RegionMultiSelectProps
   width?: number;
 }
 
-export interface RegionOptionAvailability {
+export interface GetRegionOptionAvailability {
   accountAvailabilityData: AccountAvailability[] | undefined;
   currentCapability: Capabilities | undefined;
-  handleDisabledRegion?: (
-    region: Region
-  ) => DisableRegionOption;
-}
-
-export interface GetRegionOptions extends RegionOptionAvailability {
-  regionFilter?: RegionSite;
-  regions: Region[];
-}
-
-export interface GetSelectedRegionById extends RegionOptionAvailability {
-  regions: Region[];
-  selectedRegionId: string;
-}
-
-export interface GetRegionOptionAvailability extends RegionOptionAvailability {
   region: Region;
-}
-
-export interface GetSelectedRegionsByIdsArgs {
-  accountAvailabilityData: AccountAvailability[] | undefined;
-  currentCapability: Capabilities | undefined;
-  regions: Region[];
-  selectedRegionIds: string[];
 }
 
 export type SupportedDistributedRegionTypes = 'Distributions' | 'StackScripts';

@@ -91,24 +91,13 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   return (
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete
-        onChange={(_, region) => {
-          onChange(region!);
-        }}
-        renderOption={(props, option) => {
-          return (
-            <RegionOption
-              displayDistributedRegionIcon={
-                regionFilter !== 'core' &&
-                (option.site_type === 'distributed' ||
-                  option.site_type === 'edge')
-              }
-              disabledOptions={disabledRegions[option.id]}
-              key={option.id}
-              props={props}
-              region={option}
-            />
-          );
-        }}
+        renderOption={(props, region) => (
+          <RegionOption
+            disabledOptions={disabledRegions[region.id]}
+            props={props}
+            region={region}
+          />
+        )}
         sx={(theme) => ({
           [theme.breakpoints.up('md')]: {
             width: '416px',
@@ -117,16 +106,15 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         textFieldProps={{
           ...props.textFieldProps,
           InputProps: {
-            endAdornment: regionFilter !== 'core' &&
-              (selectedRegion?.site_type === 'distributed' ||
-                selectedRegion?.site_type === 'edge') && (
-                <TooltipIcon
-                  icon={<DistributedRegion />}
-                  status="other"
-                  sxTooltipIcon={sxDistributedRegionIcon}
-                  text="This region is a distributed region."
-                />
-              ),
+            endAdornment: (selectedRegion?.site_type === 'distributed' ||
+              selectedRegion?.site_type === 'edge') && (
+              <TooltipIcon
+                icon={<DistributedRegion />}
+                status="other"
+                sxTooltipIcon={sxDistributedRegionIcon}
+                text="This region is a distributed region."
+              />
+            ),
             required,
             startAdornment: selectedRegion && (
               <StyledFlagContainer>
@@ -149,6 +137,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         loading={accountAvailabilityLoading}
         loadingText="Loading regions..."
         noOptionsText="No results"
+        onChange={(_, region) => onChange(region!)}
         options={regionOptions}
         placeholder="Select a Region"
         value={selectedRegion}
