@@ -21,14 +21,14 @@ export const StatsPanel = (props: Props) => {
       {loading ? (
         <div
           style={{
-            minHeight: height,
             alignItems: 'center',
             display: 'flex',
             justifyContent: 'center',
+            minHeight: height,
             width: '100%',
           }}
         >
-          <CircleProgress mini />
+          <CircleProgress size="sm" />
         </div>
       ) : (
         renderBody()

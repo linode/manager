@@ -4,7 +4,7 @@ import * as React from 'react';
 import Step1 from 'src/assets/referrals/step-1.svg';
 import Step2 from 'src/assets/referrals/step-2.svg';
 import Step3 from 'src/assets/referrals/step-3.svg';
-import { CircularProgress } from 'src/components/CircularProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
@@ -46,7 +46,7 @@ export const Referrals = () => {
   }
 
   if (profileLoading || !profile) {
-    return <CircularProgress />;
+    return <CircleProgress />;
   }
 
   const { completed, credit, pending, total, url } = profile?.referrals;

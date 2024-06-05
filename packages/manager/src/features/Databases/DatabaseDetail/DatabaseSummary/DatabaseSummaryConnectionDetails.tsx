@@ -244,7 +244,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
           </Typography>
           {showCredentials && credentialsLoading ? (
             <div className={classes.progressCtn}>
-              <CircleProgress mini noPadding size={12} />
+              <CircleProgress noPadding size="xs" />
             </div>
           ) : credentialsError ? (
             <>

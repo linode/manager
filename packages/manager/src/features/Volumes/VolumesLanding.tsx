@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
+import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -115,7 +115,7 @@ export const VolumesLanding = () => {
   };
 
   if (isLoading) {
-    return <LandingLoading />;
+    return <CircleProgress />;
   }
 
   if (error) {

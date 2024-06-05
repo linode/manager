@@ -98,7 +98,7 @@ export const TableSortCell = (props: TableSortCellProps) => {
         {children}
         {!active && <Sort className={classes.initialIcon} />}
       </TableSortLabel>
-      {isLoading && <CircleProgress mini />}
+      {isLoading && <CircleProgress size="sm" />}
     </TableCell>
   );
 };

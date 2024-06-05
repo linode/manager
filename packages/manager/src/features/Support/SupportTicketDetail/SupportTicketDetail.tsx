@@ -125,7 +125,7 @@ export const SupportTicketDetail = () => {
               ticketUpdated={ticket ? ticket.updated : ''}
             />
           ))}
-          {repliesLoading && <CircleProgress mini />}
+          {repliesLoading && <CircleProgress size="sm" />}
           {repliesError ? (
             <ErrorState errorText={repliesError?.[0].reason} />
           ) : null}
