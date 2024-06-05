@@ -57,7 +57,7 @@ export const profileQueries = createQueryKeys('profile', {
     queryFn: () => getPersonalAccessTokens(params, filter),
     queryKey: [params, filter],
   }),
-  prefernces: {
+  preferences: {
     queryFn: getUserPreferences,
     queryKey: null,
   },

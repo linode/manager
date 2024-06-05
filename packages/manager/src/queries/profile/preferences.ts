@@ -15,7 +15,7 @@ import type { APIError } from '@linode/api-v4';
 
 export const usePreferences = (enabled = true) =>
   useQuery<ManagerPreferences, APIError[]>({
-    ...profileQueries.prefernces,
+    ...profileQueries.preferences,
     ...queryPresets.oneTimeFetch,
     enabled,
   });
@@ -44,7 +44,7 @@ export const updatePreferenceData = (
   queryClient: QueryClient
 ): void => {
   queryClient.setQueryData<ManagerPreferences>(
-    profileQueries.prefernces.queryKey,
+    profileQueries.preferences.queryKey,
     (oldData) => ({
       ...(!replace ? oldData : {}),
       ...newData,
