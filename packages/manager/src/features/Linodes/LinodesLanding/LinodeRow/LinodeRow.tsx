@@ -34,7 +34,9 @@ import {
   StyledMaintenanceTableCell,
 } from './LinodeRow.styles';
 
-type Props = LinodeWithMaintenance & { handlers: LinodeHandlers };
+interface Props extends LinodeWithMaintenance {
+  handlers: LinodeHandlers;
+}
 
 export const LinodeRow = (props: Props) => {
   const {
@@ -91,7 +93,6 @@ export const LinodeRow = (props: Props) => {
 
   return (
     <TableRow
-      ariaLabel={label}
       data-qa-linode={label}
       data-qa-loading
       key={id}
@@ -131,7 +132,6 @@ export const LinodeRow = (props: Props) => {
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <strong>Maintenance Scheduled</strong>
             <TooltipIcon
-              interactive
               status="help"
               sx={{ tooltip: { maxWidth: 300 } }}
               text={<MaintenanceText />}

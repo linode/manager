@@ -1,21 +1,24 @@
-import { Database, DatabaseInstance } from '@linode/api-v4/lib/databases/types';
+import { Region } from '@linode/api-v4';
+import {
+  Database,
+  DatabaseInstance,
+  DatabaseType,
+} from '@linode/api-v4/lib/databases/types';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Box } from 'src/components/Box';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { useDatabaseTypesQuery } from 'src/queries/databases';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
+import { useInProgressEvents } from 'src/queries/events/events';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
-import {
-  databaseEngineMap,
-  databaseStatusMap,
-} from '../../DatabaseLanding/DatabaseRow';
+import { databaseEngineMap } from '../../DatabaseLanding/DatabaseRow';
+import { DatabaseStatusDisplay } from '../DatabaseStatusDisplay';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   configs: {
@@ -53,9 +56,11 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
   const { data: types } = useDatabaseTypesQuery();
   const { data: regions } = useRegionsQuery();
 
-  const region = regions?.find((r) => r.id === database.region);
+  const region = regions?.find((r: Region) => r.id === database.region);
 
-  const type = types?.find((type) => type.id === database?.type);
+  const type = types?.find((type: DatabaseType) => type.id === database?.type);
+
+  const { data: events } = useInProgressEvents();
 
   if (!database || !type) {
     return null;
@@ -72,7 +77,7 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
   };
 
   const STORAGE_COPY =
-    'The total disk size is smaller than the selected plan capacity due to the OS overhead.';
+    'The total disk size is smaller than the selected plan capacity due to overhead from the OS.';
 
   return (
     <>
@@ -82,10 +87,9 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
       <div className={classes.configs} data-qa-cluster-config>
         <Box display="flex">
           <Typography className={classes.label}>Status</Typography>
-          <span className={classes.status}>
-            <StatusIcon status={databaseStatusMap[database.status]} />
-            {database.status}
-          </span>
+          <div className={classes.status}>
+            <DatabaseStatusDisplay database={database} events={events} />
+          </div>
         </Box>
         <Box display="flex">
           <Typography className={classes.label}>Version</Typography>

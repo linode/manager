@@ -16,7 +16,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useOAuthClientsQuery } from 'src/queries/accountOAuth';
+import { useOAuthClientsQuery } from 'src/queries/account/oauth';
 
 import { SecretTokenDialog } from '../SecretTokenDialog/SecretTokenDialog';
 import { CreateOAuthClientDrawer } from './CreateOAuthClientDrawer';
@@ -90,7 +90,7 @@ const OAuthClients = () => {
     }
 
     return data?.data.map(({ id, label, public: isPublic, redirect_uri }) => (
-      <TableRow ariaLabel={label} key={id}>
+      <TableRow key={id}>
         <TableCell>{label}</TableCell>
         <Hidden smDown>
           <TableCell>{isPublic ? 'Public' : 'Private'}</TableCell>

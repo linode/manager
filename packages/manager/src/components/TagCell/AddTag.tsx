@@ -1,96 +1,92 @@
-import { styled } from '@mui/material/styles';
-import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
 
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
-import { omittedProps } from 'src/utilities/omittedProps';
+
+import { Autocomplete } from '../Autocomplete/Autocomplete';
 
 interface AddTagProps {
   addTag: (tag: string) => Promise<void>;
-  fixedMenu?: boolean;
-  inDetailsContext?: boolean;
-  label?: string;
+  existingTags: string[];
   onClose?: () => void;
-  tags: string[];
 }
 
-const AddTag = (props: AddTagProps) => {
-  const { addTag, fixedMenu, label, onClose, tags } = props;
+export const AddTag = (props: AddTagProps) => {
+  const { addTag, existingTags, onClose } = props;
 
   const queryClient = useQueryClient();
-  const [isLoading, setIsLoading] = React.useState(false);
   const { data: profile } = useProfile();
   const {
     data: accountTags,
-    isLoading: accountTagsLoading,
+    isFetching: accountTagsLoading,
   } = useTagSuggestions(!profile?.restricted);
   // @todo should we toast for this? If we swallow the error the only
   // thing we lose is preexisting tabs as options; the add tag flow
   // should still work.
 
-  const tagOptions = accountTags
-    ?.filter((tag) => !tags.includes(tag.label))
-    .map((tag) => ({ label: tag.label, value: tag.label }));
+  const [inputValue, setInputValue] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
 
-  const handleAddTag = (newTag: Item<string>) => {
-    if (newTag?.value) {
-      setIsLoading(true);
-      addTag(newTag.value)
-        .then(() => {
-          if (accountTags) {
-            updateTagsSuggestionsData([...accountTags, newTag], queryClient);
-          }
-          if (onClose) {
-            onClose();
-          }
-        })
-        .finally(() => setIsLoading(false));
-    }
+  const createTag =
+    !!accountTags &&
+    !!inputValue &&
+    !accountTags.some(
+      (tag) => tag.label.toLowerCase() == inputValue.toLowerCase()
+    );
+
+  const tagOptions: { displayLabel?: string; label: string }[] = [
+    ...(createTag
+      ? [{ displayLabel: `Create "${inputValue}"`, label: inputValue }]
+      : []),
+    ...(accountTags?.filter((tag) => !existingTags.includes(tag.label)) ?? []),
+  ];
+
+  const handleAddTag = (newTag: string) => {
+    setLoading(true);
+    addTag(newTag)
+      .then(() => {
+        if (accountTags) {
+          updateTagsSuggestionsData(
+            [...accountTags, { label: newTag }],
+            queryClient
+          );
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+        if (onClose) {
+          onClose();
+        }
+      });
   };
 
-  const loading = accountTagsLoading || isLoading;
-
   return (
-    <StyledSelect
-      // eslint-disable-next-line
-      autoFocus
-      creatable
-      createOptionPosition="first"
-      escapeClearsValue
-      hideLabel={!label}
-      isLoading={loading}
-      label={label ?? 'Add a tag'}
-      menuPosition={fixedMenu ? 'fixed' : 'absolute'}
-      onBlur={onClose}
-      onChange={handleAddTag}
-      options={tagOptions}
+    <Autocomplete
+      onBlur={() => {
+        if (onClose) {
+          onClose();
+        }
+      }}
+      onChange={(_, value) => {
+        if (value) {
+          handleAddTag(typeof value == 'string' ? value : value.label);
+        }
+      }}
+      renderOption={(props, option) => (
+        <li {...props}>{option.displayLabel ?? option.label}</li>
+      )}
+      disableClearable
+      forcePopupIcon
+      label={'Create or Select a Tag'}
+      loading={accountTagsLoading || loading}
+      noOptionsText={<i>{`"${inputValue}" already added`}</i>} // Will display create option unless that tag is already added
+      onInputChange={(_, value) => setInputValue(value)}
+      openOnFocus
+      options={tagOptions ?? []}
       placeholder="Create or Select a Tag"
-      small
+      sx={{ width: '100%' }}
+      textFieldProps={{ autoFocus: true, hideLabel: true }}
     />
   );
 };
-
-export { AddTag };
-
-const StyledSelect = styled(Select, {
-  shouldForwardProp: omittedProps(['fixedMenu', 'inDetailsContext']),
-})<{
-  fixedMenu?: boolean;
-  inDetailsContext?: boolean;
-}>(({ ...props }) => ({
-  padding: '0px',
-  width: '100%',
-  ...(props.fixedMenu && {
-    '& .react-select__menu': {
-      margin: '2px 0 0 0',
-    },
-  }),
-  ...(props.inDetailsContext && {
-    display: 'flex',
-    flexBasis: '100%',
-    justifyContent: 'flex-end',
-    width: '415px',
-  }),
-}));

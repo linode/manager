@@ -5,17 +5,13 @@
 import { paymentMethodFactory, profileFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
+import { ADMINISTRATOR, PARENT_USER } from 'src/features/Account/constants';
 import { mockGetPaymentMethods, mockGetUser } from 'support/intercepts/account';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import {
   mockGetProfile,
   mockGetProfileGrants,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
 
 // Tooltip message that appears on disabled billing action buttons for restricted
@@ -173,164 +169,173 @@ const assertAddPaymentMethodEnabled = () => {
     });
 };
 
+/**
+ * Asserts that the "Make a Payment" button is disabled.
+ *
+ * Additionally confirms that clicking the "Make a Payment" button reveals
+ * a tooltip and does not open the "Make a Payment" drawer.
+ *
+ * @param tooltipText - Expected tooltip message to be shown to the user.
+ */
+const assertMakeAPaymentDisabled = (tooltipText: string) => {
+  // Confirm "Make A Payment" button is disabled, then click it.
+  ui.button
+    .findByTitle('Make a Payment')
+    .should('be.visible')
+    .should('be.disabled')
+    .click();
+
+  // Assert that "Make a Payment" drawer does not open and that tooltip is revealed.
+  cy.get(`[data-qa-drawer-title="Make a Payment"]`).should('not.exist');
+  ui.tooltip.findByText(tooltipText).should('be.visible');
+};
+
+/**
+ * Asserts that the "Make a Payment" button is enabled.
+ *
+ * Additionally confirms that clicking the "Make a Payment" button reveals
+ * a tooltip and does not open the "Make a Payment" drawer.
+ *
+ * @param tooltipText - Expected tooltip message to be shown to the user.
+ */
+const assertMakeAPaymentEnabled = () => {
+  // Confirm "Make A Payment" button is enabled, then click it.
+  ui.button
+    .findByTitle('Make a Payment')
+    .should('be.visible')
+    .should('be.enabled')
+    .click();
+
+  cy.get(`[data-qa-drawer-title="Make a Payment"]`).should('be.visible');
+  ui.drawer
+    .findByTitle('Make a Payment')
+    .should('be.visible')
+    .within(() => {
+      ui.button
+        .findByTitle('Pay Now')
+        .should('be.visible')
+        .should('be.enabled');
+      ui.drawerCloseButton.find().click();
+    });
+};
+
 describe('restricted user billing flows', () => {
   beforeEach(() => {
     mockGetPaymentMethods(mockPaymentMethods);
   });
 
-  // TODO Delete all of these tests when Parent/Child launches and flag is removed.
-  describe('Parent/Child feature disabled', () => {
-    beforeEach(() => {
-      // Mock the Parent/Child feature flag to be enabled.
-      mockAppendFeatureFlags({
-        parentChildAccountAccess: makeFeatureFlagData(false),
-      });
-      mockGetFeatureFlagClientstream();
+  /*
+   * - Confirms that users with read-only account access cannot edit billing information.
+   * - Confirms UX enhancements are applied when parent/child feature flag is enabled.
+   * - Confirms that "Edit" and "Add Payment Method" buttons are disabled and have informational tooltips.
+   * - Confirms that clicking "Edit" and "Add Payment Method" does not open their respective drawers when disabled.
+   * - Confirms that button tooltip text reflects read-only account access.
+   * - Confirms that payment method action menu items are disabled.
+   */
+  it('cannot edit billing information with read-only account access', () => {
+    const mockProfile = profileFactory.build({
+      username: randomLabel(),
+      restricted: true,
     });
 
-    /*
-     * - Smoke test to confirm that regular users can edit billing information.
-     * - Confirms that billing action buttons are enabled and open their respective drawers on click.
-     * - Confirms that payment method action menu items are enabled.
-     */
-    it('can edit billing information', () => {
-      // The flow prior to Parent/Child does not account for user privileges, instead relying
-      // on the API to forbid actions when the user does not have the required privileges.
-      // Because the API is doing the heavy lifting, we only need to ensure that the billing action
-      // buttons behave as expected for this smoke test.
-      const mockProfile = profileFactory.build({
-        username: randomLabel(),
-        restricted: false,
-      });
-
-      const mockUser = accountUserFactory.build({
-        username: mockProfile.username,
-        user_type: 'default',
-        restricted: false,
-      });
-
-      // Confirm button behavior for regular users.
-      mockGetProfile(mockProfile);
-      mockGetUser(mockUser);
-      cy.visitWithLogin('/account/billing');
-      assertEditBillingInfoEnabled();
-      assertAddPaymentMethodEnabled();
+    const mockUser = accountUserFactory.build({
+      username: mockProfile.username,
+      restricted: true,
+      user_type: 'default',
     });
+
+    const mockGrants = grantsFactory.build({
+      global: {
+        account_access: 'read_only',
+      },
+    });
+
+    mockGetProfile(mockProfile);
+    mockGetProfileGrants(mockGrants);
+    mockGetUser(mockUser);
+    cy.visitWithLogin('/account/billing');
+
+    assertEditBillingInfoDisabled(restrictedUserTooltip);
+    assertAddPaymentMethodDisabled(restrictedUserTooltip);
+    assertMakeAPaymentDisabled(
+      restrictedUserTooltip +
+        ` Please contact your ${ADMINISTRATOR} to request the necessary permissions.`
+    );
   });
 
-  describe('Parent/Child feature enabled', () => {
-    beforeEach(() => {
-      // Mock the Parent/Child feature flag to be enabled.
-      // TODO Delete this `beforeEach()` block when Parent/Child launches and flag is removed.
-      mockAppendFeatureFlags({
-        parentChildAccountAccess: makeFeatureFlagData(true),
-      });
-      mockGetFeatureFlagClientstream();
+  /*
+   * - Confirms that child users cannot edit billing information.
+   * - Confirms that UX enhancements are applied when parent/child feature flag is enabled.
+   * - Confirms that "Edit" and "Add Payment Method" buttons are disabled and have informational tooltips.
+   * - Confirms that clicking "Edit" and "Add Payment Method" does not open their respective drawers when disabled.
+   * - Confirms that button tooltip text reflects child user access.
+   * - Confirms that payment method action menu items are disabled.
+   */
+  it('cannot edit billing information as child account', () => {
+    const mockProfile = profileFactory.build({
+      username: randomLabel(),
+      user_type: 'child',
     });
 
-    /*
-     * - Confirms that users with read-only account access cannot edit billing information.
-     * - Confirms UX enhancements are applied when parent/child feature flag is enabled.
-     * - Confirms that "Edit" and "Add Payment Method" buttons are disabled and have informational tooltips.
-     * - Confirms that clicking "Edit" and "Add Payment Method" does not open their respective drawers when disabled.
-     * - Confirms that button tooltip text reflects read-only account access.
-     * - Confirms that payment method action menu items are disabled.
-     */
-    it('cannot edit billing information with read-only account access', () => {
-      const mockProfile = profileFactory.build({
-        username: randomLabel(),
-        restricted: true,
-      });
-
-      const mockUser = accountUserFactory.build({
-        username: mockProfile.username,
-        restricted: true,
-        user_type: 'default',
-      });
-
-      const mockGrants = grantsFactory.build({
-        global: {
-          account_access: 'read_only',
-        },
-      });
-
-      mockGetProfile(mockProfile);
-      mockGetProfileGrants(mockGrants);
-      mockGetUser(mockUser);
-      cy.visitWithLogin('/account/billing');
-
-      assertEditBillingInfoDisabled(restrictedUserTooltip);
-      assertAddPaymentMethodDisabled(restrictedUserTooltip);
+    const mockUser = accountUserFactory.build({
+      username: mockProfile.username,
     });
 
-    /*
-     * - Confirms that child users cannot edit billing information.
-     * - Confirms that UX enhancements are applied when parent/child feature flag is enabled.
-     * - Confirms that "Edit" and "Add Payment Method" buttons are disabled and have informational tooltips.
-     * - Confirms that clicking "Edit" and "Add Payment Method" does not open their respective drawers when disabled.
-     * - Confirms that button tooltip text reflects child user access.
-     * - Confirms that payment method action menu items are disabled.
-     */
-    it('cannot edit billing information as child account', () => {
-      const mockProfile = profileFactory.build({
-        username: randomLabel(),
-        user_type: 'child',
-      });
+    mockGetProfile(mockProfile);
+    mockGetUser(mockUser);
+    cy.visitWithLogin('/account/billing');
 
-      const mockUser = accountUserFactory.build({
-        username: mockProfile.username,
-      });
+    assertEditBillingInfoDisabled(restrictedUserTooltip);
+    assertAddPaymentMethodDisabled(restrictedUserTooltip);
+    assertMakeAPaymentDisabled(
+      restrictedUserTooltip +
+        ` Please contact your ${PARENT_USER} to request the necessary permissions.`
+    );
+  });
 
-      mockGetProfile(mockProfile);
-      mockGetUser(mockUser);
-      cy.visitWithLogin('/account/billing');
-
-      assertEditBillingInfoDisabled(restrictedUserTooltip);
-      assertAddPaymentMethodDisabled(restrictedUserTooltip);
+  /*
+   * - Smoke test to confirm that regular and parent users can edit billing information.
+   * - Confirms that billing action buttons are enabled and open their respective drawers on click.
+   */
+  it('can edit billing information as a regular user and as a parent user', () => {
+    const mockProfileRegular = profileFactory.build({
+      username: randomLabel(),
+      restricted: false,
     });
 
-    /*
-     * - Smoke test to confirm that regular and parent users can edit billing information.
-     * - Confirms that billing action buttons are enabled and open their respective drawers on click.
-     */
-    it('can edit billing information as a regular user and as a parent user', () => {
-      const mockProfileRegular = profileFactory.build({
-        username: randomLabel(),
-        restricted: false,
-      });
-
-      const mockUserRegular = accountUserFactory.build({
-        username: mockProfileRegular.username,
-        user_type: 'default',
-        restricted: false,
-      });
-
-      const mockProfileParent = profileFactory.build({
-        username: randomLabel(),
-        restricted: false,
-      });
-
-      const mockUserParent = accountUserFactory.build({
-        username: mockProfileParent.username,
-        user_type: 'parent',
-        restricted: false,
-      });
-
-      // Confirm button behavior for regular users.
-      mockGetProfile(mockProfileRegular);
-      mockGetUser(mockUserRegular);
-      cy.visitWithLogin('/account/billing');
-      cy.findByText(mockProfileRegular.username);
-      assertEditBillingInfoEnabled();
-      assertAddPaymentMethodEnabled();
-
-      // Confirm button behavior for parent users.
-      mockGetProfile(mockProfileParent);
-      mockGetUser(mockUserParent);
-      cy.visitWithLogin('/account/billing');
-      cy.findByText(mockProfileParent.username);
-      assertEditBillingInfoEnabled();
-      assertAddPaymentMethodEnabled();
+    const mockUserRegular = accountUserFactory.build({
+      username: mockProfileRegular.username,
+      user_type: 'default',
+      restricted: false,
     });
+
+    const mockProfileParent = profileFactory.build({
+      username: randomLabel(),
+      restricted: false,
+    });
+
+    const mockUserParent = accountUserFactory.build({
+      username: mockProfileParent.username,
+      user_type: 'parent',
+      restricted: false,
+    });
+
+    // Confirm button behavior for regular users.
+    mockGetProfile(mockProfileRegular);
+    mockGetUser(mockUserRegular);
+    cy.visitWithLogin('/account/billing');
+    cy.findByText(mockProfileRegular.username);
+    assertEditBillingInfoEnabled();
+    assertAddPaymentMethodEnabled();
+    assertMakeAPaymentEnabled();
+
+    // Confirm button behavior for parent users.
+    mockGetProfile(mockProfileParent);
+    mockGetUser(mockUserParent);
+    cy.visitWithLogin('/account/billing');
+    cy.findByText(mockProfileParent.username);
+    assertEditBillingInfoEnabled();
+    assertAddPaymentMethodEnabled();
+    assertMakeAPaymentEnabled();
   });
 });

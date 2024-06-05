@@ -1,23 +1,26 @@
-import { Database, DatabaseInstance } from '@linode/api-v4/lib/databases/types';
+import { Region } from '@linode/api-v4';
+import {
+  Database,
+  DatabaseInstance,
+  DatabaseType,
+} from '@linode/api-v4/lib/databases/types';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import { useDatabaseTypesQuery } from 'src/queries/databases';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
+import { useInProgressEvents } from 'src/queries/events/events';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
+import { databaseEngineMap } from '../../DatabaseLanding/DatabaseRow';
+import { DatabaseStatusDisplay } from '../DatabaseStatusDisplay';
 import {
-  databaseEngineMap,
-  databaseStatusMap,
-} from '../../DatabaseLanding/DatabaseRow';
-import {
-  StyledStatusSpan,
+  StyledStatusBox,
   StyledSummaryBox,
   StyledSummaryTextBox,
   StyledSummaryTextTypography,
@@ -41,10 +44,11 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
   const theme = useTheme();
   const { data: regions } = useRegionsQuery();
 
-  const region = regions?.find((r) => r.id === database.region);
+  const region = regions?.find((r: Region) => r.id === database.region);
 
-  const type = types?.find((type) => type.id === database?.type);
+  const type = types?.find((type: DatabaseType) => type.id === database?.type);
 
+  const { data: events } = useInProgressEvents();
   if (typesLoading) {
     return <CircleProgress />;
   }
@@ -68,7 +72,7 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
   };
 
   const STORAGE_COPY =
-    'The total disk size is smaller than the selected plan capacity due to the OS overhead.';
+    'The total disk size is smaller than the selected plan capacity due to overhead from the OS.';
 
   return (
     <>
@@ -83,13 +87,9 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
         <Box key={'status-version'} paddingRight={6}>
           <StyledSummaryTextBox>
             <span style={{ fontFamily: theme.font.bold }}>Status</span>{' '}
-            <StyledStatusSpan>
-              <StatusIcon
-                status={databaseStatusMap[database.status]}
-                sx={{ verticalAlign: 'sub' }}
-              />
-              {database.status}
-            </StyledStatusSpan>
+            <StyledStatusBox>
+              <DatabaseStatusDisplay database={database} events={events} />
+            </StyledStatusBox>
           </StyledSummaryTextBox>
           <StyledSummaryTextTypography>
             <span style={{ fontFamily: theme.font.bold }}>Version</span>{' '}

@@ -1,5 +1,5 @@
 import { fireEvent } from '@testing-library/react';
-import { rest } from 'msw';
+import { HttpResponse, http } from 'msw';
 import React from 'react';
 
 import { imageFactory, linodeFactory } from 'src/factories';
@@ -22,11 +22,11 @@ const setupMocks = () => {
   });
 
   server.use(
-    rest.get('*/linode/instances/:linodeId', (req, res, ctx) => {
-      return res(ctx.json(defaultProps.linodes[0]));
+    http.get('*/linode/instances/:linodeId', () => {
+      return HttpResponse.json(defaultProps.linodes[0]);
     }),
-    rest.get('*/images/:imageId', (req, res, ctx) => {
-      return res(ctx.json(image1));
+    http.get('*/images/:imageId', () => {
+      return HttpResponse.json(image1);
     })
   );
 };
@@ -39,10 +39,7 @@ describe('SelectLinodePanel (table, desktop)', () => {
 
   it('renders as a table', async () => {
     const { container, findAllByRole, findByRole } = renderWithTheme(
-      <SelectLinodePanel {...defaultProps} />,
-      {
-        flags: { linodeCloneUiChanges: true },
-      }
+      <SelectLinodePanel {...defaultProps} />
     );
 
     expect(await findByRole('table')).toBeInTheDocument();
@@ -56,10 +53,7 @@ describe('SelectLinodePanel (table, desktop)', () => {
 
   it('can be disabled', async () => {
     const { findAllByRole } = renderWithTheme(
-      <SelectLinodePanel {...defaultProps} disabled />,
-      {
-        flags: { linodeCloneUiChanges: true },
-      }
+      <SelectLinodePanel {...defaultProps} disabled />
     );
 
     for (const radio of await findAllByRole('radio')) {
@@ -71,10 +65,7 @@ describe('SelectLinodePanel (table, desktop)', () => {
     const mockOnSelect = vi.fn();
 
     const { findAllByRole } = renderWithTheme(
-      <SelectLinodePanel {...defaultProps} handleSelection={mockOnSelect} />,
-      {
-        flags: { linodeCloneUiChanges: true },
-      }
+      <SelectLinodePanel {...defaultProps} handleSelection={mockOnSelect} />
     );
 
     const radioInput = (await findAllByRole('radio'))[0];
@@ -91,10 +82,7 @@ describe('SelectLinodePanel (table, desktop)', () => {
     setupMocks();
 
     const { findAllByRole, findByRole } = renderWithTheme(
-      <SelectLinodePanel {...defaultProps} />,
-      {
-        flags: { linodeCloneUiChanges: true },
-      }
+      <SelectLinodePanel {...defaultProps} />
     );
 
     fireEvent.change(await findByRole('textbox'), {
@@ -115,10 +103,7 @@ describe('SelectLinodePanel (table, desktop)', () => {
         error={'Example error'}
         header={'Example header'}
         notices={['Example notice']}
-      />,
-      {
-        flags: { linodeCloneUiChanges: true },
-      }
+      />
     );
 
     expect(getByText('Example error')).toBeInTheDocument();
@@ -130,10 +115,7 @@ describe('SelectLinodePanel (table, desktop)', () => {
     setupMocks();
 
     const { container, findAllByRole } = renderWithTheme(
-      <SelectLinodePanel {...defaultProps} selectedLinodeID={0} />,
-      {
-        flags: { linodeCloneUiChanges: true },
-      }
+      <SelectLinodePanel {...defaultProps} selectedLinodeID={0} />
     );
 
     expect(
@@ -156,10 +138,7 @@ describe('SelectLinodePanel (cards, mobile)', () => {
 
   it('renders as cards', async () => {
     const { container, queryByRole } = renderWithTheme(
-      <SelectLinodePanel {...defaultProps} />,
-      {
-        flags: { linodeCloneUiChanges: true },
-      }
+      <SelectLinodePanel {...defaultProps} />
     );
 
     expect(queryByRole('table')).not.toBeInTheDocument();
@@ -171,10 +150,7 @@ describe('SelectLinodePanel (cards, mobile)', () => {
 
   it('can be disabled', async () => {
     const { container } = renderWithTheme(
-      <SelectLinodePanel {...defaultProps} disabled />,
-      {
-        flags: { linodeCloneUiChanges: true },
-      }
+      <SelectLinodePanel {...defaultProps} disabled />
     );
 
     container
@@ -186,10 +162,7 @@ describe('SelectLinodePanel (cards, mobile)', () => {
     const mockOnSelect = vi.fn();
 
     const { container } = renderWithTheme(
-      <SelectLinodePanel {...defaultProps} handleSelection={mockOnSelect} />,
-      {
-        flags: { linodeCloneUiChanges: true },
-      }
+      <SelectLinodePanel {...defaultProps} handleSelection={mockOnSelect} />
     );
 
     const selectionCard = container.querySelectorAll(
@@ -208,10 +181,7 @@ describe('SelectLinodePanel (cards, mobile)', () => {
     setupMocks();
 
     const { container, findByRole } = renderWithTheme(
-      <SelectLinodePanel {...defaultProps} />,
-      {
-        flags: { linodeCloneUiChanges: true },
-      }
+      <SelectLinodePanel {...defaultProps} />
     );
 
     fireEvent.change(await findByRole('textbox'), {
@@ -227,32 +197,11 @@ describe('SelectLinodePanel (cards, mobile)', () => {
     ).toHaveTextContent(defaultProps.linodes[0].label);
   });
 
-  it('displays the heading, notices and error', () => {
-    const { getByText } = renderWithTheme(
-      <SelectLinodePanel
-        {...defaultProps}
-        error={'Example error'}
-        header={'Example header'}
-        notices={['Example notice']}
-      />,
-      {
-        flags: { linodeCloneUiChanges: true },
-      }
-    );
-
-    expect(getByText('Example error')).toBeInTheDocument();
-    expect(getByText('Example header')).toBeInTheDocument();
-    expect(getByText('Example notice')).toBeInTheDocument();
-  });
-
   it('prefills the search box when mounted with a selected linode', async () => {
     setupMocks();
 
     const { container } = renderWithTheme(
-      <SelectLinodePanel {...defaultProps} selectedLinodeID={0} />,
-      {
-        flags: { linodeCloneUiChanges: true },
-      }
+      <SelectLinodePanel {...defaultProps} selectedLinodeID={0} />
     );
 
     expect(

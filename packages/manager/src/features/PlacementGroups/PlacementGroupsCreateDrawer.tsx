@@ -2,8 +2,10 @@ import { createPlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
@@ -11,15 +13,23 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
-import { useCreatePlacementGroup } from 'src/queries/placementGroups';
-import { useRegionsQuery } from 'src/queries/regions';
+import {
+  useAllPlacementGroupsQuery,
+  useCreatePlacementGroup,
+} from 'src/queries/placementGroups';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { PlacementGroupsAffinityEnforcementRadioGroup } from './PlacementGroupsAffinityEnforcementRadioGroup';
+import { MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION } from './constants';
+import { PlacementGroupsAffinityTypeEnforcementRadioGroup } from './PlacementGroupsAffinityEnforcementRadioGroup';
 import { PlacementGroupsAffinityTypeSelect } from './PlacementGroupsAffinityTypeSelect';
-import { hasRegionReachedPlacementGroupCapacity } from './utils';
+import {
+  getMaxPGsPerCustomer,
+  hasRegionReachedPlacementGroupCapacity,
+} from './utils';
 
 import type { PlacementGroupsCreateDrawerProps } from './types';
 import type { CreatePlacementGroupPayload, Region } from '@linode/api-v4';
@@ -29,44 +39,36 @@ export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps
 ) => {
   const {
-    allPlacementGroups,
+    disabledPlacementGroupCreateButton,
     onClose,
     onPlacementGroupCreate,
     open,
     selectedRegionId,
   } = props;
   const { data: regions } = useRegionsQuery();
+  const { data: allPlacementGroupsInRegion } = useAllPlacementGroupsQuery({
+    enabled: Boolean(selectedRegionId),
+    filter: {
+      region: selectedRegionId,
+    },
+  });
   const { error, mutateAsync } = useCreatePlacementGroup();
   const { enqueueSnackbar } = useSnackbar();
   const {
     hasFormBeenSubmitted,
     setHasFormBeenSubmitted,
   } = useFormValidateOnChange();
-  const [
-    hasRegionReachedPGCapacity,
-    setHasRegionReachedPGCapacity,
-  ] = React.useState<boolean>(false);
 
-  const selectedRegionFromProps = regions?.find(
-    (r) => r.id === selectedRegionId
-  );
+  const location = useLocation();
+  const displayRegionHeaderText = location.pathname.includes('/linodes/create');
 
   const handleRegionSelect = (region: Region['id']) => {
-    const selectedRegion = regions?.find((r) => r.id === region);
-
     setFieldValue('region', region);
-    setHasRegionReachedPGCapacity(
-      hasRegionReachedPlacementGroupCapacity({
-        allPlacementGroups,
-        region: selectedRegion,
-      })
-    );
   };
 
   const handleResetForm = () => {
     resetForm();
     setHasFormBeenSubmitted(false);
-    setHasRegionReachedPGCapacity(false);
   };
 
   const handleDrawerClose = () => {
@@ -85,7 +87,7 @@ export const PlacementGroupsCreateDrawer = (
     try {
       const response = await mutateAsync(values);
 
-      enqueueSnackbar(`Placement Group ${values.label} successfully created`, {
+      enqueueSnackbar(`Placement Group ${values.label} successfully created.`, {
         variant: 'success',
       });
 
@@ -112,7 +114,7 @@ export const PlacementGroupsCreateDrawer = (
   } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      affinity_type: 'anti_affinity',
+      affinity_type: 'anti_affinity:local',
       is_strict: true,
       label: '',
       region: selectedRegionId ?? '',
@@ -125,20 +127,44 @@ export const PlacementGroupsCreateDrawer = (
 
   const generalError = error?.find((e) => !e.field)?.reason;
 
+  const selectedRegion = React.useMemo(
+    () => regions?.find((region) => region.id == values.region),
+    [regions, values.region]
+  );
+
+  const pgRegionLimitHelperText = `${MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION} ${getMaxPGsPerCustomer(
+    selectedRegion
+  )}`;
+
   return (
     <Drawer
       onClose={handleDrawerClose}
       open={open}
       title="Create Placement Group"
     >
+      {disabledPlacementGroupCreateButton && (
+        <Notice
+          text={getRestrictedResourceText({
+            action: 'edit',
+            resourceType: 'Placement Groups',
+          })}
+          spacingTop={16}
+          variant="error"
+        />
+      )}
       <form onSubmit={handleSubmit}>
         <Stack spacing={1}>
           {generalError && <Notice text={generalError} variant="error" />}
-          {selectedRegionFromProps && (
-            <Typography data-testid="selected-region" py={2}>
-              <strong>Region: </strong>
-              {`${selectedRegionFromProps.label} (${selectedRegionFromProps.id})`}
-            </Typography>
+          {selectedRegion && displayRegionHeaderText && (
+            <DescriptionList
+              items={[
+                {
+                  description: `${selectedRegion.label} (${selectedRegion.id})`,
+                  title: 'Region',
+                },
+              ]}
+              sx={{ my: 2 }}
+            />
           )}
           <Divider hidden={!selectedRegionId} />
           <TextField
@@ -146,7 +172,7 @@ export const PlacementGroupsCreateDrawer = (
               autoFocus: true,
             }}
             aria-label="Label for the Placement Group"
-            disabled={false}
+            disabled={disabledPlacementGroupCreateButton || false}
             errorText={errors.label}
             label="Label"
             name="label"
@@ -156,26 +182,55 @@ export const PlacementGroupsCreateDrawer = (
           />
           {!selectedRegionId && (
             <RegionSelect
-              errorText={
-                hasRegionReachedPGCapacity
-                  ? 'This region has reached capacity'
-                  : errors.region
+              disabled={
+                Boolean(selectedRegionId) || disabledPlacementGroupCreateButton
               }
+              handleDisabledRegion={(region) => {
+                const isRegionAtCapacity = hasRegionReachedPlacementGroupCapacity(
+                  {
+                    allPlacementGroups: allPlacementGroupsInRegion,
+                    region,
+                  }
+                );
+
+                return {
+                  disabled: isRegionAtCapacity,
+                  reason: (
+                    <>
+                      <Typography>
+                        You’ve reached the limit of placement groups you can
+                        create in this region.
+                      </Typography>
+                      <Typography mt={2}>
+                        {MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION}{' '}
+                        {getMaxPGsPerCustomer(region)}
+                      </Typography>
+                    </>
+                  ),
+                  tooltipWidth: 300,
+                };
+              }}
               handleSelection={(selection) => {
                 handleRegionSelect(selection);
               }}
               currentCapability="Placement Group"
-              disabled={Boolean(selectedRegionId)}
-              helperText="Only regions supporting Placement Groups are listed."
+              helperText={values.region && pgRegionLimitHelperText}
               regions={regions ?? []}
               selectedId={selectedRegionId ?? values.region}
+              tooltipText="Only Linode data center regions that support placement groups are listed."
             />
           )}
           <PlacementGroupsAffinityTypeSelect
+            disabledPlacementGroupCreateButton={
+              disabledPlacementGroupCreateButton
+            }
             error={errors.affinity_type}
             setFieldValue={setFieldValue}
           />
-          <PlacementGroupsAffinityEnforcementRadioGroup
+          <PlacementGroupsAffinityTypeEnforcementRadioGroup
+            disabledPlacementGroupCreateButton={
+              disabledPlacementGroupCreateButton
+            }
             handleChange={handleChange}
             setFieldValue={setFieldValue}
             value={values.is_strict}
@@ -183,7 +238,11 @@ export const PlacementGroupsCreateDrawer = (
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
-              disabled: isSubmitting || hasRegionReachedPGCapacity,
+              disabled:
+                isSubmitting ||
+                !values.region ||
+                !values.label ||
+                disabledPlacementGroupCreateButton,
               label: 'Create Placement Group',
               loading: isSubmitting,
               onClick: () => setHasFormBeenSubmitted(true),
@@ -192,7 +251,7 @@ export const PlacementGroupsCreateDrawer = (
             secondaryButtonProps={{
               'data-testid': 'cancel',
               label: 'Cancel',
-              onClick: onClose,
+              onClick: handleDrawerClose,
             }}
             sx={{ pt: 4 }}
           />

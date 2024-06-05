@@ -12,6 +12,8 @@ import {
   interceptDeleteBucket,
   interceptGetBuckets,
   interceptUploadBucketObjectS3,
+  interceptGetBucketAccess,
+  interceptUpdateBucketAccess,
 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
@@ -51,7 +53,14 @@ const getNonEmptyBucketMessage = (bucketLabel: string) => {
  * @returns Promise that resolves to created Bucket.
  */
 const setUpBucket = (label: string, cluster: string) => {
-  return createBucket(objectStorageBucketFactory.build({ label, cluster }));
+  return createBucket(
+    objectStorageBucketFactory.build({
+      label,
+      cluster,
+      // Default factory sets `region`, but API does not accept it yet.
+      region: undefined,
+    })
+  );
 };
 
 /**
@@ -228,7 +237,7 @@ describe('object storage end-to-end tests', () => {
       cy.wait('@uploadObject');
       cy.reload();
 
-      cy.findByLabelText(bucketFiles[0].name).should('be.visible');
+      cy.findByText(bucketFiles[0].name).should('be.visible');
       ui.button.findByTitle('Delete').should('be.visible').click();
 
       ui.dialog
@@ -341,8 +350,10 @@ describe('object storage end-to-end tests', () => {
           assertStatusForUrlAtAlias('@bucketObjectUrl', 403);
 
           // Make object public, confirm it can be accessed, then close drawer.
-          cy.findByText('Access Control List (ACL)')
+          cy.findByLabelText('Access Control List (ACL)')
             .should('be.visible')
+            .should('not.have.value', 'Loading access...')
+            .should('have.value', 'Private')
             .click()
             .type('Public Read');
 
@@ -387,5 +398,50 @@ describe('object storage end-to-end tests', () => {
       // Confirm that bucket is empty.
       cy.findByText(emptyBucketMessage).should('be.visible');
     });
+  });
+
+  /*
+   * - Confirms that user can update Bucket access.
+   */
+  it('can update bucket access', () => {
+    const bucketLabel = randomLabel();
+    const bucketCluster = 'us-southeast-1';
+    const bucketAccessPage = `/object-storage/buckets/${bucketCluster}/${bucketLabel}/access`;
+
+    cy.defer(
+      setUpBucket(bucketLabel, bucketCluster),
+      'creating Object Storage bucket'
+    ).then(() => {
+      interceptGetBucketAccess(bucketLabel, bucketCluster).as(
+        'getBucketAccess'
+      );
+      interceptUpdateBucketAccess(bucketLabel, bucketCluster).as(
+        'updateBucketAccess'
+      );
+    });
+
+    // Navigate to new bucket page, upload and delete an object.
+    cy.visitWithLogin(bucketAccessPage);
+
+    cy.wait('@getBucketAccess');
+
+    // Make object public, confirm it can be accessed.
+    cy.findByLabelText('Access Control List (ACL)')
+      .should('be.visible')
+      .should('not.have.value', 'Loading access...')
+      .should('have.value', 'Private')
+      .click()
+      .type('Public Read');
+
+    ui.autocompletePopper
+      .findByTitle('Public Read')
+      .should('be.visible')
+      .click();
+
+    ui.button.findByTitle('Save').should('be.visible').click();
+
+    cy.wait('@updateBucketAccess');
+
+    cy.findByText('Bucket access updated successfully.');
   });
 });

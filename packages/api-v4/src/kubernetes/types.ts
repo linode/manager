@@ -1,3 +1,5 @@
+import type { EncryptionStatus } from '../linodes';
+
 export interface KubernetesCluster {
   created: string;
   updated: string;
@@ -16,6 +18,7 @@ export interface KubeNodePoolResponse {
   nodes: PoolNodeResponse[];
   type: string;
   autoscaler: AutoscaleSettings;
+  disk_encryption?: EncryptionStatus; // @TODO LDE: remove optionality once LDE is fully rolled out
 }
 
 export interface PoolNodeResponse {

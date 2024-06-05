@@ -1,3 +1,4 @@
+// TODO eventMessagesV2: delete when flag is removed
 import { Event, EventAction } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
 import { pathOr } from 'ramda';
@@ -68,11 +69,7 @@ export const Row = (props: RowProps) => {
   }
 
   return (
-    <TableRow
-      ariaLabel={`Event ${message}`}
-      data-qa-event-row
-      data-test-id={action}
-    >
+    <TableRow data-qa-event-row data-test-id={action}>
       <Hidden smDown>
         <TableCell data-qa-event-icon-cell>
           <StyledGravatar username={username ?? ''} />
@@ -81,7 +78,7 @@ export const Row = (props: RowProps) => {
       <TableCell data-qa-event-message-cell parentColumn="Event">
         <HighlightedMarkdown
           sanitizeOptions={{
-            allowedTags: ['a'],
+            ALLOWED_TAGS: ['a'],
             disallowedTagsMode: 'discard',
           }}
           textOrMarkdown={message}

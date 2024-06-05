@@ -15,15 +15,15 @@ import { TextField, TextFieldProps } from '../TextField';
 const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
   (theme: Theme, _params, classes) => ({
     button: {
-      '&:first-of-type': {
+      '&[aria-label="Save"]': {
         marginLeft: theme.spacing(2),
         [theme.breakpoints.down('md')]: {
           marginLeft: theme.spacing(2),
         },
       },
       background: 'transparent !important',
+      height: 34,
       marginLeft: 0,
-      marginTop: 2,
       minWidth: 'auto',
       paddingLeft: 6,
       paddingRight: 6,
@@ -103,6 +103,7 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
 
 interface Props {
   className?: string;
+  disabledBreadcrumbEditButton?: boolean;
   errorText?: string;
   /**
    * Send event analytics
@@ -130,7 +131,7 @@ interface Props {
   textSuffix?: string;
 }
 
-type PassThroughProps = Props & Omit<TextFieldProps, 'label'>;
+interface PassThroughProps extends Props, Omit<TextFieldProps, 'label'> {}
 
 export const EditableText = (props: PassThroughProps) => {
   const { classes } = useStyles();
@@ -139,6 +140,7 @@ export const EditableText = (props: PassThroughProps) => {
   const [text, setText] = React.useState(props.text);
   const {
     className,
+    disabledBreadcrumbEditButton,
     errorText,
     handleAnalyticsEvent,
     labelLink,
@@ -228,6 +230,7 @@ export const EditableText = (props: PassThroughProps) => {
         aria-label={`Edit ${text}`}
         className={`${classes.button} ${classes.editIcon}`}
         data-qa-edit-button
+        disabled={disabledBreadcrumbEditButton}
         onClick={openEdit}
       >
         <Edit className={classes.icon} />

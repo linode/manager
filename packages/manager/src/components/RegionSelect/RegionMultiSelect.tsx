@@ -1,11 +1,18 @@
+import CloseIcon from '@mui/icons-material/Close';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { StyledListItem } from 'src/components/Autocomplete/Autocomplete.styles';
-import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
+import { Box } from 'src/components/Box';
+import { Chip } from 'src/components/Chip';
+import { Flag } from 'src/components/Flag';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 import { RegionOption } from './RegionOption';
-import { StyledAutocompleteContainer } from './RegionSelect.styles';
+import {
+  StyledAutocompleteContainer,
+  StyledFlagContainer,
+} from './RegionSelect.styles';
 import {
   getRegionOptions,
   getSelectedRegionsByIds,
@@ -15,6 +22,32 @@ import type {
   RegionMultiSelectProps,
   RegionSelectOption,
 } from './RegionSelect.types';
+
+interface LabelComponentProps {
+  selection: RegionSelectOption;
+}
+
+const SelectedRegion = ({ selection }: LabelComponentProps) => {
+  return (
+    <Box
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+        flexGrow: 1,
+      }}
+    >
+      <StyledFlagContainer
+        sx={(theme) => ({
+          marginRight: theme.spacing(1 / 2),
+          transform: 'scale(0.8)',
+        })}
+      >
+        <Flag country={selection.data.country} />
+      </StyledFlagContainer>
+      {selection.label}
+    </Box>
+  );
+};
 
 export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
   const {
@@ -26,7 +59,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     helperText,
     isClearable,
     label,
-    onBlur,
     placeholder,
     regions,
     required,
@@ -38,7 +70,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,
-  } = useAccountAvailabilitiesQueryUnpaginated();
+  } = useAllAccountAvailabilitiesQuery();
 
   const [selectedRegions, setSelectedRegions] = useState<RegionSelectOption[]>(
     getSelectedRegionsByIds({
@@ -51,8 +83,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
 
   const handleRegionChange = (selection: RegionSelectOption[]) => {
     setSelectedRegions(selection);
-    const selectedIds = selection.map((region) => region.value);
-    handleSelection(selectedIds);
   };
 
   useEffect(() => {
@@ -91,6 +121,9 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     <>
       <StyledAutocompleteContainer sx={{ width }}>
         <Autocomplete
+          getOptionDisabled={(option: RegionSelectOption) =>
+            Boolean(option.disabledProps?.disabled)
+          }
           groupBy={(option: RegionSelectOption) => {
             return option?.data?.region;
           }}
@@ -101,6 +134,10 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
           onChange={(_, selectedOption) =>
             handleRegionChange(selectedOption as RegionSelectOption[])
           }
+          onClose={() => {
+            const selectedIds = selectedRegions.map((region) => region.value);
+            handleSelection(selectedIds);
+          }}
           renderOption={(props, option, { selected }) => {
             if (!option.data) {
               // Render options like "Select All / Deselect All "
@@ -117,6 +154,18 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
               />
             );
           }}
+          renderTags={(tagValue, getTagProps) => {
+            return tagValue.map((option, index) => (
+              <Chip
+                {...getTagProps({ index })}
+                data-testid={option.value}
+                deleteIcon={<CloseIcon />}
+                key={index}
+                label={<SelectedRegion selection={option} />}
+                onDelete={() => handleRemoveOption(option.value)}
+              />
+            ));
+          }}
           sx={(theme) => ({
             [theme.breakpoints.up('md')]: {
               width: '416px',
@@ -126,6 +175,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             InputProps: {
               required,
             },
+            placeholder: selectedRegions.length > 0 ? '' : placeholder,
             tooltipText: helperText,
           }}
           autoHighlight
@@ -134,15 +184,12 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
           disableClearable={!isClearable}
           disabled={disabled}
           errorText={errorText}
-          getOptionDisabled={(option: RegionSelectOption) => option.unavailable}
           label={label ?? 'Regions'}
           loading={accountAvailabilityLoading}
           multiple
           noOptionsText="No results"
-          onBlur={onBlur}
           options={options}
           placeholder={placeholder ?? 'Select Regions'}
-          renderTags={() => null}
           value={selectedRegions}
         />
       </StyledAutocompleteContainer>

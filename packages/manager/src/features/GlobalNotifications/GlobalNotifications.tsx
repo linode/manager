@@ -2,13 +2,15 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
+import { sessionExpirationContext as _sessionExpirationContext } from 'src/context/sessionExpirationContext';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountSessionDialog } from 'src/features/Account/SwitchAccounts/SwitchAccountSessionDialog';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { useFlags } from 'src/hooks/useFlags';
-import { useProfile } from 'src/queries/profile';
-import { useSecurityQuestions } from 'src/queries/securityQuestions';
+import { useProfile } from 'src/queries/profile/profile';
+import { useSecurityQuestions } from 'src/queries/profile/securityQuestions';
 
+import { SessionExpirationDialog } from '../Account/SwitchAccounts/SessionExpirationDialog';
 import { APIMaintenanceBanner } from './APIMaintenanceBanner';
 import { ComplianceBanner } from './ComplianceBanner';
 import { ComplianceUpdateModal } from './ComplianceUpdateModal';
@@ -16,15 +18,13 @@ import { EmailBounceNotificationSection } from './EmailBounce';
 import { RegionStatusBanner } from './RegionStatusBanner';
 import { TaxCollectionBanner } from './TaxCollectionBanner';
 import { VerificationDetailsBanner } from './VerificationDetailsBanner';
-
 export const GlobalNotifications = () => {
   const flags = useFlags();
   const { data: profile } = useProfile();
   const sessionContext = React.useContext(switchAccountSessionContext);
-  const isChildUser =
-    Boolean(flags.parentChildAccountAccess) && profile?.user_type === 'child';
-  const isProxyUser =
-    Boolean(flags.parentChildAccountAccess) && profile?.user_type === 'proxy';
+  const sessionExpirationContext = React.useContext(_sessionExpirationContext);
+  const isChildUser = profile?.user_type === 'child';
+  const isProxyUser = profile?.user_type === 'proxy';
   const { data: securityQuestions } = useSecurityQuestions({
     enabled: isChildUser,
   });
@@ -56,10 +56,18 @@ export const GlobalNotifications = () => {
       <AbuseTicketBanner />
       <ComplianceBanner />
       {isProxyUser && (
-        <SwitchAccountSessionDialog
-          isOpen={Boolean(sessionContext.isOpen)}
-          onClose={() => sessionContext.updateState({ isOpen: false })}
-        />
+        <>
+          <SwitchAccountSessionDialog
+            isOpen={Boolean(sessionContext.isOpen)}
+            onClose={() => sessionContext.updateState({ isOpen: false })}
+          />
+          <SessionExpirationDialog
+            onClose={() =>
+              sessionExpirationContext.updateState({ isOpen: false })
+            }
+            isOpen={Boolean(sessionExpirationContext.isOpen)}
+          />
+        </>
       )}
       <ComplianceUpdateModal />
       {isChildUser && !isVerified && (

@@ -9,8 +9,8 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/profile', async () => {
-  const actual = await vi.importActual('src/queries/profile');
+vi.mock('src/queries/profile/profile', async () => {
+  const actual = await vi.importActual('src/queries/profile/profile');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
@@ -63,10 +63,8 @@ describe('DisplaySettings component', () => {
 
     expect(updateUsernameButton).not.toHaveAttribute('disabled');
     expect(updateUsernameButton).toHaveAttribute('aria-disabled', 'true');
-    expect(updateEmailButton).toHaveAttribute('data-qa-tooltip');
 
     expect(updateEmailButton).not.toHaveAttribute('disabled');
     expect(updateEmailButton).toHaveAttribute('aria-disabled', 'true');
-    expect(updateEmailButton).toHaveAttribute('data-qa-tooltip');
   });
 });

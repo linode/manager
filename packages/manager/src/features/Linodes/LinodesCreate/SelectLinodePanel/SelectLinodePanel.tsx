@@ -14,8 +14,8 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
+import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { PowerActionsDialog } from '../../PowerActionsDialogOrDrawer';
 import { SelectLinodeCards } from './SelectLinodeCards';
@@ -27,7 +27,7 @@ interface Props {
   handleSelection: (id: number, type: null | string, diskSize?: number) => void;
   header?: string;
   linodes: Linode[];
-  notices?: string[];
+  notices?: (JSX.Element | string)[];
   selectedLinodeID?: number;
   showPowerActions?: boolean;
 }
@@ -51,7 +51,6 @@ export const SelectLinodePanel = (props: Props) => {
 
   const orderedLinodes = sortData<Linode>(orderBy, order)(linodes);
 
-  const flags = useFlags();
   const theme = useTheme();
   const matchesMdUp = useMediaQuery(theme.breakpoints.up('md'));
 
@@ -65,9 +64,7 @@ export const SelectLinodePanel = (props: Props) => {
 
   // Capture the selected linode when this component mounts,
   // so it doesn't change when the user selects a different one.
-  const [preselectedLinodeID] = React.useState(
-    flags.linodeCloneUiChanges && selectedLinodeID
-  );
+  const [preselectedLinodeID] = React.useState(selectedLinodeID);
 
   const searchText = React.useMemo(
     () =>
@@ -86,10 +83,7 @@ export const SelectLinodePanel = (props: Props) => {
     [orderedLinodes, searchText]
   );
 
-  const SelectComponent =
-    matchesMdUp && flags.linodeCloneUiChanges
-      ? SelectLinodeTable
-      : SelectLinodeCards;
+  const SelectComponent = matchesMdUp ? SelectLinodeTable : SelectLinodeCards;
 
   return (
     <>
@@ -119,13 +113,14 @@ export const SelectLinodePanel = (props: Props) => {
                       <List
                         sx={(theme) => ({
                           '& > li': {
-                            display: 'list-item',
+                            display:
+                              notices.length > 1 ? 'list-item' : 'inline',
                             lineHeight: theme.spacing(3),
                             padding: 0,
                             pl: 0,
                           },
                           listStyle: 'disc',
-                          ml: theme.spacing(2),
+                          ml: notices.length > 1 ? theme.spacing(2) : 0,
                         })}
                       >
                         {notices.map((notice, i) => (
@@ -136,38 +131,35 @@ export const SelectLinodePanel = (props: Props) => {
                   )}
                 </Stack>
                 <Typography
-                  marginBottom={
-                    flags.linodeCloneUiChanges ? theme.spacing(2) : undefined
-                  }
                   data-qa-select-linode-header
+                  marginBottom={theme.spacing(2)}
                   variant="h2"
                 >
                   {!!header ? header : 'Select Linode'}
                 </Typography>
-                {flags.linodeCloneUiChanges && (
-                  <DebouncedSearchTextField
-                    customValue={{
-                      onChange: setUserSearchText,
-                      value: searchText,
-                    }}
-                    sx={{
-                      marginBottom: theme.spacing(1),
-                      width: '330px',
-                    }}
-                    clearable
-                    data-qa-linode-search
-                    debounceTime={0}
-                    expand={true}
-                    hideLabel
-                    label=""
-                    placeholder="Search"
-                  />
-                )}
+                <DebouncedSearchTextField
+                  customValue={{
+                    onChange: setUserSearchText,
+                    value: searchText,
+                  }}
+                  sx={{
+                    marginBottom: theme.spacing(1),
+                    width: '330px',
+                  }}
+                  clearable
+                  data-qa-linode-search
+                  debounceTime={0}
+                  expand={true}
+                  hideLabel
+                  label=""
+                  placeholder="Search"
+                />
                 <StyledBox>
                   <SelectComponent
-                    handlePowerOff={(linodeId) =>
-                      setPowerOffLinode({ linodeId })
-                    }
+                    handlePowerOff={(linodeId) => {
+                      setPowerOffLinode({ linodeId });
+                      sendLinodePowerOffEvent('Clone Linode');
+                    }}
                     orderBy={{
                       data: linodesData,
                       handleOrderChange,
@@ -198,7 +190,6 @@ export const SelectLinodePanel = (props: Props) => {
           action={'Power Off'}
           isOpen={!!powerOffLinode}
           linodeId={powerOffLinode.linodeId}
-          manuallyUpdateConfigs={true}
           onClose={() => setPowerOffLinode(false)}
         />
       )}

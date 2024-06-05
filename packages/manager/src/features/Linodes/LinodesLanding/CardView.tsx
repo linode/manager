@@ -1,55 +1,45 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { keyframes, styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { TagDrawer, TagDrawerProps } from 'src/components/TagCell/TagDrawer';
+import { TagDrawer } from 'src/components/TagCell/TagDrawer';
 import { Typography } from 'src/components/Typography';
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 
 import { RenderLinodesProps } from './DisplayLinodes';
 
 export const CardView = (props: RenderLinodesProps) => {
+  const { data, openDialog, openPowerActionDialog } = props;
+
   const { data: profile } = useProfile();
 
-  const [tagDrawer, setTagDrawer] = React.useState<
-    Omit<TagDrawerProps, 'onClose' | 'updateTags'>
-  >({
-    entityID: 0,
-    entityLabel: '',
-    open: false,
-    tags: [],
-  });
+  const [tagDrawerLinodeId, setTagDrawerLinodeId] = React.useState<number>();
 
-  const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
-    tagDrawer.entityID
+  const tagDrawerLinode = React.useMemo(
+    () => data.find((linode) => linode.id == tagDrawerLinodeId),
+    [data, tagDrawerLinodeId]
   );
 
-  const closeTagDrawer = () => {
-    setTagDrawer({ ...tagDrawer, open: false });
-  };
+  const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
+    tagDrawerLinodeId ?? -1
+  );
 
-  const openTagDrawer = (
-    entityLabel: string,
-    entityID: number,
-    tags: string[]
-  ) => {
-    setTagDrawer({
-      entityID,
-      entityLabel,
-      open: true,
-      tags,
-    });
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: tagDrawerLinodeId,
+  });
+
+  const closeTagDrawer = () => {
+    setTagDrawerLinodeId(undefined);
   };
 
   const updateTags = (tags: string[]) => {
-    return updateLinode({ tags }).then((_) => {
-      setTagDrawer({ ...tagDrawer, tags });
-    });
+    return updateLinode({ tags });
   };
-
-  const { data, openDialog, openPowerActionDialog } = props;
 
   if (!profile?.username) {
     return null;
@@ -68,7 +58,7 @@ export const CardView = (props: RenderLinodesProps) => {
       <Grid className="m0" container style={{ width: '100%' }}>
         {data.map((linode, idx: number) => (
           <React.Fragment key={`linode-card-${idx}`}>
-            <StyledSummaryGrid xs={12} data-qa-linode-card={linode.id}>
+            <StyledSummaryGrid data-qa-linode-card={linode.id} xs={12}>
               <LinodeEntityDetail
                 handlers={{
                   onOpenDeleteDialog: () =>
@@ -84,25 +74,25 @@ export const CardView = (props: RenderLinodesProps) => {
                   onOpenResizeDialog: () =>
                     openDialog('resize', linode.id, linode.label),
                 }}
-                openTagDrawer={(tags) =>
-                  openTagDrawer(linode.label, linode.id, tags)
-                }
                 id={linode.id}
                 isSummaryView
                 linode={linode}
+                openTagDrawer={() => setTagDrawerLinodeId(linode.id)}
               />
             </StyledSummaryGrid>
           </React.Fragment>
         ))}
       </Grid>
-      <TagDrawer
-        entityID={tagDrawer.entityID}
-        entityLabel={tagDrawer.entityLabel}
-        onClose={closeTagDrawer}
-        open={tagDrawer.open}
-        tags={tagDrawer.tags}
-        updateTags={updateTags}
-      />
+      {tagDrawerLinode && (
+        <TagDrawer
+          disabled={isLinodesGrantReadOnly}
+          entityLabel={tagDrawerLinode.label}
+          onClose={closeTagDrawer}
+          open
+          tags={tagDrawerLinode.tags}
+          updateTags={updateTags}
+        />
+      )}
     </React.Fragment>
   );
 };
@@ -123,7 +113,7 @@ const StyledSummaryGrid = styled(Grid, { label: 'StyledSummaryGrid' })(
     },
     backgroundColor: theme.palette.background.paper,
     marginBottom: 20,
-    paddingTop: 0, // from .py0 css class
     paddingBottom: 0,
+    paddingTop: 0, // from .py0 css class
   })
 );

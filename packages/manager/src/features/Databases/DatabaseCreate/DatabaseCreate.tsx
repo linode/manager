@@ -9,8 +9,8 @@ import {
 } from '@linode/api-v4/lib/databases/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useFormik } from 'formik';
 import { groupBy } from 'ramda';
 import * as React from 'react';
@@ -24,8 +24,8 @@ import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -40,18 +40,18 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { EngineOption } from 'src/features/Databases/DatabaseCreate/EngineOption';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
-import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { useFlags } from 'src/hooks/useFlags';
 import {
   useCreateDatabaseMutation,
   useDatabaseEnginesQuery,
   useDatabaseTypesQuery,
-} from 'src/queries/databases';
-import { useRegionsQuery } from 'src/queries/regions';
+} from 'src/queries/databases/databases';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
@@ -60,7 +60,7 @@ import {
   ipFieldPlaceholder,
   validateIPs,
 } from 'src/utilities/ipUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 
@@ -213,6 +213,7 @@ const DatabaseCreate = () => {
     isLoading: typesLoading,
   } = useDatabaseTypesQuery();
 
+  const formRef = React.useRef<HTMLFormElement>(null);
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
   const [nodePricing, setNodePricing] = React.useState<NodePricing>();
@@ -316,7 +317,10 @@ const DatabaseCreate = () => {
       type: '',
     },
     onSubmit: submitForm,
-    validate: handleIPValidation,
+    validate: () => {
+      handleIPValidation();
+      scrollErrorIntoViewV2(formRef);
+    },
     validateOnChange: false,
     validationSchema: createDatabaseSchema,
   });
@@ -350,12 +354,6 @@ const DatabaseCreate = () => {
       };
     });
   }, [dbtypes, selectedEngine]);
-
-  React.useEffect(() => {
-    if (errors || createError) {
-      scrollErrorIntoView();
-    }
-  }, [errors, createError]);
 
   const labelToolTip = (
     <div className={classes.labelToolTipCtn}>
@@ -444,7 +442,7 @@ const DatabaseCreate = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} ref={formRef}>
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
@@ -519,7 +517,9 @@ const DatabaseCreate = () => {
             error={errors.type}
             header="Choose a Plan"
             isCreate
+            regionsData={regionsData}
             selectedId={values.type}
+            selectedRegionID={values.region}
             types={displayTypes}
           />
         </Grid>

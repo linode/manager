@@ -1,6 +1,4 @@
-import _ from 'lodash';
-import React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
@@ -11,50 +9,72 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
-import {
-  queryKey as accountQueryKey,
-  useChildAccountsInfiniteQuery,
-} from 'src/queries/account';
+import { useChildAccountsInfiniteQuery } from 'src/queries/account/account';
+
+import type { Filter, UserType } from '@linode/api-v4';
 
 interface ChildAccountListProps {
   currentTokenWithBearer: string;
-  isProxyUser: boolean;
+  isLoading?: boolean;
   onClose: () => void;
   onSwitchAccount: (props: {
     currentTokenWithBearer: string;
     euuid: string;
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>;
-    handleClose: () => void;
-    isProxyUser: boolean;
+    onClose: () => void;
+    userType: UserType | undefined;
   }) => void;
+  searchQuery: string;
+  userType: UserType | undefined;
 }
 
 export const ChildAccountList = React.memo(
   ({
     currentTokenWithBearer,
-    isProxyUser,
+    isLoading,
     onClose,
     onSwitchAccount,
+    searchQuery,
+    userType,
   }: ChildAccountListProps) => {
+    const filter: Filter = {
+      ['+order']: 'asc',
+      ['+order_by']: 'company',
+    };
+    if (searchQuery) {
+      filter['company'] = { '+contains': searchQuery };
+    }
+
+    const [
+      isSwitchingChildAccounts,
+      setIsSwitchingChildAccounts,
+    ] = useState<boolean>(false);
     const {
       data,
       fetchNextPage,
       hasNextPage,
       isError,
       isFetchingNextPage,
-      isLoading,
+      isInitialLoading,
+      isRefetching,
       refetch: refetchChildAccounts,
     } = useChildAccountsInfiniteQuery({
-      headers: isProxyUser
-        ? {
-            Authorization: currentTokenWithBearer,
-          }
-        : undefined,
+      filter,
+      headers:
+        userType === 'proxy'
+          ? {
+              Authorization: currentTokenWithBearer,
+            }
+          : undefined,
     });
-    const queryClient = useQueryClient();
     const childAccounts = data?.pages.flatMap((page) => page.data);
 
-    if (isLoading) {
+    if (
+      isInitialLoading ||
+      isLoading ||
+      isSwitchingChildAccounts ||
+      isRefetching
+    ) {
       return (
         <Box display="flex" justifyContent="center">
           <CircleProgress mini size={70} />
@@ -64,7 +84,13 @@ export const ChildAccountList = React.memo(
 
     if (childAccounts?.length === 0) {
       return (
-        <Notice variant="info">There are no indirect customer accounts.</Notice>
+        <Notice variant="info">
+          There are no child accounts
+          {filter.hasOwnProperty('company')
+            ? ' that match this query'
+            : undefined}
+          .
+        </Notice>
       );
     }
 
@@ -77,18 +103,11 @@ export const ChildAccountList = React.memo(
             Try again or contact support if the issue persists.
           </Typography>
           <Button
-            onClick={() => {
-              queryClient.invalidateQueries([
-                accountQueryKey,
-                'childAccounts',
-                'infinite',
-              ]);
-              refetchChildAccounts();
-            }}
             sx={(theme) => ({
               marginTop: theme.spacing(2),
             })}
             buttonType="primary"
+            onClick={() => refetchChildAccounts()}
           >
             Try again
           </Button>
@@ -100,18 +119,20 @@ export const ChildAccountList = React.memo(
       const euuid = childAccount.euuid;
       return (
         <StyledLinkButton
-          onClick={(event) =>
+          onClick={(event) => {
+            setIsSwitchingChildAccounts(true);
             onSwitchAccount({
               currentTokenWithBearer,
               euuid,
               event,
-              handleClose: onClose,
-              isProxyUser,
-            })
-          }
+              onClose,
+              userType,
+            });
+          }}
           sx={(theme) => ({
             marginBottom: theme.spacing(2),
           })}
+          disabled={isSwitchingChildAccounts}
           key={`child-account-link-button-${idx}`}
         >
           {childAccount.company}
@@ -121,7 +142,7 @@ export const ChildAccountList = React.memo(
 
     return (
       <Stack alignItems={'flex-start'} data-testid="child-account-list">
-        {renderChildAccounts}
+        {!isSwitchingChildAccounts && !isLoading && renderChildAccounts}
         {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
         {isFetchingNextPage && <CircleProgress mini />}
       </Stack>

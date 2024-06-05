@@ -1,11 +1,11 @@
 import MenuIcon from '@mui/icons-material/Menu';
-import { useArgs } from '@storybook/client-api';
+import { useArgs } from '@storybook/preview-api';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Hidden } from 'src/components/Hidden';
 import { IconButton } from 'src/components/IconButton';
-import { TopMenuIcon } from 'src/features/TopMenu/TopMenuIcon';
+import { TopMenuTooltip } from 'src/features/TopMenu/TopMenuTooltip';
 
 import { SideMenu } from './SideMenu';
 
@@ -36,7 +36,7 @@ export const Default: StoryObj<SideMenuProps> = {
           </Box>
           <Box sx={{ ml: '200px' }}>
             <Hidden mdDown>
-              <TopMenuIcon key={navHoverText} title={navHoverText}>
+              <TopMenuTooltip key={navHoverText} title={navHoverText}>
                 <IconButton
                   aria-label="open menu"
                   color="inherit"
@@ -46,10 +46,10 @@ export const Default: StoryObj<SideMenuProps> = {
                 >
                   <MenuIcon />
                 </IconButton>
-              </TopMenuIcon>
+              </TopMenuTooltip>
             </Hidden>
             <Hidden mdUp>
-              <TopMenuIcon key={navHoverText} title={navHoverText}>
+              <TopMenuTooltip key={navHoverText} title={navHoverText}>
                 <IconButton
                   aria-label="open menu"
                   color="inherit"
@@ -58,7 +58,7 @@ export const Default: StoryObj<SideMenuProps> = {
                 >
                   <MenuIcon />
                 </IconButton>
-              </TopMenuIcon>
+              </TopMenuTooltip>
             </Hidden>
           </Box>
         </Box>

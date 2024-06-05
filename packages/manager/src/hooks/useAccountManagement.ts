@@ -1,8 +1,8 @@
 import { GlobalGrantTypes } from '@linode/api-v4/lib/account';
 
-import { useAccount } from 'src/queries/account';
-import { useAccountSettings } from 'src/queries/accountSettings';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useAccount } from 'src/queries/account/account';
+import { useAccountSettings } from 'src/queries/account/settings';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 
 export const useAccountManagement = () => {
   const { data: account, error: accountError } = useAccount();

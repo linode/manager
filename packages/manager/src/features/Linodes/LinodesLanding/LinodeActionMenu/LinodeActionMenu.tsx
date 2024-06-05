@@ -5,20 +5,20 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import {
   ActionType,
   getRestrictedResourceText,
 } from 'src/features/Account/utils';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import {
   sendLinodeActionEvent,
   sendLinodeActionMenuItemEvent,
   sendMigrationNavigationEvent,
-} from 'src/utilities/analytics';
+} from 'src/utilities/analytics/customEventAnalytics';
 import { extendType } from 'src/utilities/extendType';
 
 import { LinodeHandlers } from '../LinodesLanding';
@@ -81,10 +81,13 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     props.onOpenPowerDialog(action);
   };
 
-  const linodeIsInEdgeRegion = getIsEdgeRegion(regions, linodeRegion);
+  const linodeIsInDistributedRegion = getIsDistributedRegion(
+    regions,
+    linodeRegion
+  );
 
-  const edgeRegionTooltipText =
-    'Cloning is currently not supported for Edge instances.';
+  const distributedRegionTooltipText =
+    'Cloning is currently not supported for distributed region instances.';
 
   const actionConfigs: ActionConfig[] = [
     {
@@ -124,7 +127,8 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     },
     {
       condition: !isBareMetalInstance,
-      disabled: isLinodeReadOnly || hasHostMaintenance || linodeIsInEdgeRegion,
+      disabled:
+        isLinodeReadOnly || hasHostMaintenance || linodeIsInDistributedRegion,
       isReadOnly: isLinodeReadOnly,
       onClick: () => {
         sendLinodeActionMenuItemEvent('Clone');
@@ -141,8 +145,8 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       },
       title: 'Clone',
       tooltipAction: 'clone',
-      tooltipText: linodeIsInEdgeRegion
-        ? edgeRegionTooltipText
+      tooltipText: linodeIsInDistributedRegion
+        ? distributedRegionTooltipText
         : maintenanceTooltipText,
     },
     {

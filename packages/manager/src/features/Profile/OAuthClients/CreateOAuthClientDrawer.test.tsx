@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { oauthClientFactory } from 'src/factories/accountOAuth';
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateOAuthClientDrawer } from './CreateOAuthClientDrawer';
@@ -39,13 +39,11 @@ describe('Create API Token Drawer', () => {
   });
   it('Should see secret modal with secret when you type a label and callback url then submit the form successfully', async () => {
     server.use(
-      rest.post('*/account/oauth-clients', (req, res, ctx) => {
-        return res(
-          ctx.json({
-            ...oauthClientFactory.build(),
-            secret: 'omg!',
-          })
-        );
+      http.post('*/account/oauth-clients', () => {
+        return HttpResponse.json({
+          ...oauthClientFactory.build(),
+          secret: 'omg!',
+        });
       })
     );
 

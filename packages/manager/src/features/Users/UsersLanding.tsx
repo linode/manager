@@ -10,11 +10,11 @@ import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { Typography } from 'src/components/Typography';
 import { PARENT_USER } from 'src/features/Account/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountUsers } from 'src/queries/accountUsers';
-import { useProfile } from 'src/queries/profile';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useAccountUsers } from 'src/queries/account/users';
+import { useProfile } from 'src/queries/profile/profile';
 
 import CreateUserDrawer from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
@@ -31,7 +31,6 @@ export const UsersLanding = () => {
   );
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedUsername, setSelectedUsername] = React.useState('');
-  const flags = useFlags();
   const { data: profile } = useProfile();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
@@ -40,8 +39,7 @@ export const UsersLanding = () => {
   const order = useOrder();
 
   const showProxyUserTable =
-    flags.parentChildAccountAccess &&
-    (profile?.user_type === 'child' || profile?.user_type === 'proxy');
+    profile?.user_type === 'child' || profile?.user_type === 'proxy';
 
   const usersFilter: Filter = {
     ['+order']: order.order,
@@ -49,7 +47,8 @@ export const UsersLanding = () => {
     ['user_type']: showProxyUserTable ? 'child' : undefined,
   };
 
-  const { data: users, error, isLoading, refetch } = useAccountUsers({
+  // Since this query is disabled for restricted users, use isInitialLoading.
+  const { data: users, error, isInitialLoading, refetch } = useAccountUsers({
     filters: usersFilter,
     params: {
       page: pagination.page,
@@ -59,18 +58,22 @@ export const UsersLanding = () => {
 
   const isRestrictedUser = profile?.restricted;
 
+  // Since this query is disabled for restricted users, use isInitialLoading.
   const {
     data: proxyUser,
     error: proxyUserError,
-    isLoading: isLoadingProxyUser,
+    isInitialLoading: isLoadingProxyUser,
   } = useAccountUsers({
-    enabled:
-      flags.parentChildAccountAccess && showProxyUserTable && !isRestrictedUser,
+    enabled: showProxyUserTable && !isRestrictedUser,
     filters: { user_type: 'proxy' },
   });
 
+  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'child_account_access',
+  });
+
   const showChildAccountAccessCol = Boolean(
-    flags.parentChildAccountAccess && profile?.user_type === 'parent'
+    profile?.user_type === 'parent' && !isChildAccountAccessRestricted
   );
 
   // Parent/Child accounts include additional "child account access" column.
@@ -162,7 +165,7 @@ export const UsersLanding = () => {
         <TableBody>
           <UsersLandingTableBody
             error={error}
-            isLoading={isLoading}
+            isLoading={isInitialLoading}
             numCols={numCols}
             onDelete={handleDelete}
             users={users?.data}

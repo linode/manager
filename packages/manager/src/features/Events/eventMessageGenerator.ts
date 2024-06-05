@@ -1,3 +1,4 @@
+// TODO eventMessagesV2: delete when flag is removed
 import { Event } from '@linode/api-v4/lib/account';
 import { path } from 'ramda';
 
@@ -123,6 +124,15 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => `Database ${e.entity!.label} has low disk space.`,
   },
   database_resize: {
+    failed: (e) => `Database ${e.entity!.label} could not be resized.`,
+    finished: (e) => `Database ${e.entity!.label} has been resized.`,
+    scheduled: (e) => `Database ${e.entity!.label} is scheduled for resizing.`,
+    started: (e) => `Database ${e.entity!.label} is resizing.`,
+  },
+  database_resize_create: {
+    notification: (e) => `Database ${e.entity!.label} scheduled to be resized.`,
+  },
+  database_scale: {
     failed: (e) => `Database ${e.entity!.label} could not be resized.`,
     finished: (e) => `Database ${e.entity!.label} has been resized.`,
     scheduled: (e) => `Database ${e.entity!.label} is scheduled for resizing.`,
@@ -607,6 +617,90 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
         e.entity?.label ? ` ${e.entity.label}` : ''
       }.`,
   },
+  lke_node_recycle: {
+    notification: (e) =>
+      `The node for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been recycled.`,
+  },
+  lke_cluster_create: {
+    notification: (e) =>
+      `Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been created.`,
+  },
+  lke_cluster_update: {
+    notification: (e) =>
+      `Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been updated.`,
+  },
+  lke_cluster_delete: {
+    notification: (e) =>
+      `Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been deleted.`,
+  },
+  lke_cluster_regenerate: {
+    notification: (e) =>
+      `Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been regenerated.`,
+  },
+  lke_cluster_recycle: {
+    notification: (e) =>
+      `Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been recycled.`,
+  },
+  lke_control_plane_acl_create: {
+    notification: (e) =>
+      `The IP ACL for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been created.`,
+  },
+  lke_control_plane_acl_update: {
+    notification: (e) =>
+      `The IP ACL for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been updated.`,
+  },
+  lke_control_plane_acl_delete: {
+    notification: (e) =>
+      `The IP ACL for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been disabled.`,
+  },
+  lke_kubeconfig_regenerate: {
+    notification: (e) =>
+      `The kubeconfig for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been regenerated.`,
+  },
+  lke_token_rotate: {
+    notification: (e) =>
+      `The token for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been rotated.`,
+  },
+  lke_pool_create: {
+    notification: (e) =>
+      `A Node Pool for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been created.`,
+  },
+  lke_pool_delete: {
+    notification: (e) =>
+      `A Node Pool for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been deleted.`,
+  },
+  lke_pool_recycle: {
+    notification: (e) =>
+      `A Node Pool for Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      } has been recycled.`,
+  },
   longviewclient_create: {
     notification: (e) => `Longview Client ${e.entity!.label} has been created.`,
   },
@@ -699,27 +793,31 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   payment_submitted: {
     notification: (e) => `A payment was successfully submitted.`,
   },
-  // This event action denotes when a Placement Group has been selected during the Linode Create flow.
+  // This event action captures Linode assignment to a Placement Group from Linode Create flow and from PlacementGroupAssignLinodeDrawer.
   placement_group_assign: {
-    notification: (e) => `Placement Group successfully assigned.`,
-  },
-  // This event action denotes an existing Linode instance has been assigned to an existing Placement Group.
-  placement_group_assigned: {
     notification: (e) =>
       `Linode ${e.secondary_entity?.label} has been assigned to Placement Group ${e.entity?.label}.`,
   },
-  placement_group_created: {
+  placement_group_became_compliant: {
+    notification: (e) =>
+      `Placement Group ${e.entity?.label} has become compliant.`,
+  },
+  placement_group_became_non_compliant: {
+    notification: (e) =>
+      `Placement Group ${e.entity?.label} has become non-compliant.`,
+  },
+  placement_group_create: {
     notification: (e) =>
       `Placement Group ${e.entity?.label} has been successfully created.`,
   },
-  placement_group_deleted: {
+  placement_group_delete: {
     notification: (e) => `Placement Group ${e.entity?.label} has been deleted.`,
   },
-  placement_group_unassigned: {
+  placement_group_unassign: {
     notification: (e) =>
       `Linode ${e.secondary_entity?.label} has been unassigned from Placement Group ${e.entity?.label}.`,
   },
-  placement_group_updated: {
+  placement_group_update: {
     notification: (e) => `Placement Group ${e.entity?.label} has been updated.`,
   },
   profile_update: {

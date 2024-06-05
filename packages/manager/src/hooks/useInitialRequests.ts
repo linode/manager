@@ -1,12 +1,11 @@
-import { getAccountInfo, getAccountSettings } from '@linode/api-v4/lib/account';
 import { getUserPreferences } from '@linode/api-v4/lib/profile';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
 import { useAuthentication } from 'src/hooks/useAuthentication';
 import { usePendingUpload } from 'src/hooks/usePendingUpload';
-import { queryKey as accountQueryKey } from 'src/queries/account';
-import { profileQueries } from 'src/queries/profile';
+import { accountQueries } from 'src/queries/account/queries';
+import { profileQueries } from 'src/queries/profile/profile';
 import { redirectToLogin } from 'src/session';
 
 /**
@@ -61,19 +60,13 @@ export const useInitialRequests = () => {
     // Initial Requests: Things we need immediately (before rendering the app)
     const dataFetchingPromises: Promise<any>[] = [
       // Fetch user's account information
-      queryClient.prefetchQuery({
-        queryFn: getAccountInfo,
-        queryKey: [accountQueryKey],
-      }),
+      queryClient.prefetchQuery(accountQueries.account),
+
+      // Is a user managed
+      queryClient.prefetchQuery(accountQueries.settings),
 
       // Username and whether a user is restricted
       queryClient.prefetchQuery(profileQueries.profile()),
-
-      // Is a user managed
-      queryClient.prefetchQuery({
-        queryFn: getAccountSettings,
-        queryKey: ['account', 'settings'],
-      }),
 
       // preferences
       queryClient.prefetchQuery({

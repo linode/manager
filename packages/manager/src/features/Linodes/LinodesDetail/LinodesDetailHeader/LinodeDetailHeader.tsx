@@ -13,19 +13,17 @@ import {
   Action,
   PowerActionsDialog,
 } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
-import { useFlags } from 'src/hooks/useFlags';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
 } from 'src/queries/linodes/linodes';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import {
   sendEditBreadcrumbEvent,
   sendLinodeCreateFlowDocsClickEvent,
   sendUpdateLinodeLabelEvent,
-} from 'src/utilities/analytics';
+} from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -40,11 +38,6 @@ import { HostMaintenance } from './HostMaintenance';
 import { MutationNotification } from './MutationNotification';
 import Notifications from './Notifications';
 import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
-
-interface TagDrawerProps {
-  open: boolean;
-  tags: string[];
-}
 
 const LinodeDetailHeader = () => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
@@ -67,13 +60,11 @@ const LinodeDetailHeader = () => {
     matchedLinodeId
   );
 
-  const flags = useFlags();
-  const { account } = useAccountManagement();
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
+  const isLinodesGrantReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: matchedLinodeId,
+  });
 
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
   const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
@@ -97,10 +88,7 @@ const LinodeDetailHeader = () => {
   );
   const isUpgradeVolumesDialogOpen = queryParams.upgrade === 'true';
 
-  const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
-    open: false,
-    tags: [],
-  });
+  const [tagDrawerOpen, setTagDrawerOpen] = React.useState<boolean>(false);
 
   const history = useHistory();
 
@@ -127,20 +115,15 @@ const LinodeDetailHeader = () => {
   };
 
   const closeTagDrawer = () => {
-    setTagDrawer((tagDrawer) => ({ ...tagDrawer, open: false }));
+    setTagDrawerOpen(false);
   };
 
-  const openTagDrawer = (tags: string[]) => {
-    setTagDrawer({
-      open: true,
-      tags,
-    });
+  const openTagDrawer = () => {
+    setTagDrawerOpen(true);
   };
 
   const updateTags = (tags: string[]) => {
-    return updateLinode({ tags }).then((_) => {
-      setTagDrawer((tagDrawer) => ({ ...tagDrawer, tags }));
-    });
+    return updateLinode({ tags });
   };
 
   const {
@@ -258,7 +241,6 @@ const LinodeDetailHeader = () => {
         action={powerAction}
         isOpen={powerDialogOpen}
         linodeId={matchedLinodeId}
-        manuallyUpdateConfigs={showVPCs}
         onClose={closeDialogs}
       />
       <DeleteLinodeDialog
@@ -293,11 +275,11 @@ const LinodeDetailHeader = () => {
         open={isUpgradeVolumesDialogOpen}
       />
       <TagDrawer
-        entityID={linode.id}
+        disabled={isLinodesGrantReadOnly}
         entityLabel={linode.label}
         onClose={closeTagDrawer}
-        open={tagDrawer.open}
-        tags={tagDrawer.tags}
+        open={tagDrawerOpen}
+        tags={linode.tags}
         updateTags={updateTags}
       />
       <EnableBackupsDialog

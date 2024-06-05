@@ -12,13 +12,12 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
-import { useParentTokenManagement } from 'src/features/Account/SwitchAccounts/useParentTokenManagement';
+import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccount } from 'src/queries/account';
-import { useProfile } from 'src/queries/profile';
-import { sendSwitchAccountEvent } from 'src/utilities/analytics';
+import { useAccount } from 'src/queries/account/account';
+import { useProfile } from 'src/queries/profile/profile';
+import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import AccountLogins from './AccountLogins';
 import { SwitchAccountButton } from './SwitchAccountButton';
@@ -52,7 +51,6 @@ const AccountLanding = () => {
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
 
-  const flags = useFlags();
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
   const sessionContext = React.useContext(switchAccountSessionContext);
 
@@ -71,7 +69,7 @@ const AccountLanding = () => {
     globalGrantType: 'child_account_access',
   });
 
-  const { isParentTokenExpired } = useParentTokenManagement({ isProxyUser });
+  const { isParentTokenExpired } = useIsParentTokenExpired({ isProxyUser });
 
   const tabs = [
     {
@@ -143,8 +141,7 @@ const AccountLanding = () => {
 
   const isBillingTabSelected = location.pathname.match(/billing/);
   const canSwitchBetweenParentOrProxyAccount =
-    flags.parentChildAccountAccess &&
-    ((!isChildAccountAccessRestricted && isParentUser) || isProxyUser);
+    (!isChildAccountAccessRestricted && isParentUser) || isProxyUser;
 
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
@@ -212,9 +209,9 @@ const AccountLanding = () => {
         </React.Suspense>
       </Tabs>
       <SwitchAccountDrawer
-        isProxyUser={isProxyUser}
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
+        userType={profile?.user_type}
       />
     </React.Fragment>
   );

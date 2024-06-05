@@ -19,14 +19,13 @@ import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
-import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import {
   useAppTokensQuery,
   usePersonalAccessTokensQuery,
-} from 'src/queries/tokens';
+} from 'src/queries/profile/tokens';
 
 import { APITokenMenu } from './APITokenMenu';
 import {
@@ -37,8 +36,8 @@ import {
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
 import { EditAPITokenDrawer } from './EditAPITokenDrawer';
 import { RevokeTokenDialog } from './RevokeTokenDialog';
-import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
 import { isWayInTheFuture } from './utils';
+import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
 
 export type APITokenType = 'OAuth Client Token' | 'Personal Access Token';
 
@@ -56,7 +55,6 @@ const PREFERENCE_KEY = 'api-tokens';
 export const APITokenTable = (props: Props) => {
   const { title, type } = props;
 
-  const flags = useFlags();
   const { data: profile } = useProfile();
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -83,9 +81,7 @@ export const APITokenTable = (props: Props) => {
     { '+order': order, '+order_by': orderBy }
   );
 
-  const isProxyUser = Boolean(
-    flags.parentChildAccountAccess && profile?.user_type === 'proxy'
-  );
+  const isProxyUser = Boolean(profile?.user_type === 'proxy');
 
   const [isCreateOpen, setIsCreateOpen] = React.useState<boolean>(false);
   const [isRevokeOpen, setIsRevokeOpen] = React.useState<boolean>(false);
@@ -146,11 +142,7 @@ export const APITokenTable = (props: Props) => {
 
   const renderRows = (tokens: Token[]) => {
     return tokens.map((token: Token) => (
-      <TableRow
-        ariaLabel={token.label}
-        data-qa-table-row={token.label}
-        key={token.id}
-      >
+      <TableRow data-qa-table-row={token.label} key={token.id}>
         <TableCell data-qa-token-label>{token.label}</TableCell>
         <TableCell>
           <Typography data-qa-token-created variant="body1">

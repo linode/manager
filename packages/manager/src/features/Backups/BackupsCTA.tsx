@@ -4,10 +4,13 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Typography } from 'src/components/Typography';
-import { useAccountSettings } from 'src/queries/accountSettings';
+import { useAccountSettings } from 'src/queries/account/settings';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
-import { useProfile } from 'src/queries/profile';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
+import { useProfile } from 'src/queries/profile/profile';
 
 import { BackupDrawer } from './BackupDrawer';
 import { StyledPaper } from './BackupsCTA.styles';

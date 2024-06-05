@@ -11,3 +11,26 @@ export interface PlanSelectionType extends BaseType {
   subHeadings: ExtendedType['subHeadings'];
   transfer?: ExtendedType['transfer'];
 }
+
+interface ExtendedPlanWithAvailability
+  extends ExtendedType,
+    PlanSelectionAvailabilityTypes {}
+
+interface PlanSelectionPlanWithAvailability
+  extends PlanSelectionType,
+    PlanSelectionAvailabilityTypes {}
+
+export type PlanWithAvailability =
+  | ExtendedPlanWithAvailability
+  | PlanSelectionPlanWithAvailability;
+
+export interface PlanSelectionAvailabilityTypes {
+  planBelongsToDisabledClass: boolean;
+  planHasLimitedAvailability: boolean;
+  planIsDisabled512Gb: boolean;
+  planIsTooSmall: boolean;
+}
+
+export interface DisabledTooltipReasons extends PlanSelectionAvailabilityTypes {
+  wholePanelIsDisabled?: boolean;
+}

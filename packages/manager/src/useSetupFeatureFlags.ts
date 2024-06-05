@@ -4,8 +4,8 @@ import * as React from 'react';
 import { LAUNCH_DARKLY_API_KEY } from 'src/constants';
 
 import { configureErrorReportingUser } from './exceptionReporting';
-import { useAccount } from './queries/account';
-import { useProfile } from './queries/profile';
+import { useAccount } from './queries/account/account';
+import { useProfile } from './queries/profile/profile';
 
 /**
  * This hook uses Linode account data to set Sentry and Launch Darkly context.

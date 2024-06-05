@@ -1,9 +1,9 @@
-import { getUser, updateUser } from '@linode/api-v4/lib/account';
+import { User, getUser, updateUser } from '@linode/api-v4/lib/account';
 import { updateProfile } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
+import { useQueryClient } from '@tanstack/react-query';
 import { clone } from 'ramda';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import {
   matchPath,
   useHistory,
@@ -18,9 +18,9 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { queryKey } from 'src/queries/account';
-import { useAccountUser } from 'src/queries/accountUsers';
-import { useProfile } from 'src/queries/profile';
+import { accountQueries } from 'src/queries/account/queries';
+import { useAccountUser } from 'src/queries/account/users';
+import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import UserPermissions from './UserPermissions';
@@ -143,7 +143,15 @@ export const UserDetail = () => {
         if (profile?.username === originalUsername) {
           refreshProfile();
         } else {
-          queryClient.invalidateQueries([queryKey, 'users']);
+          // Invalidate the paginated store
+          queryClient.invalidateQueries(
+            accountQueries.users._ctx.paginated._def
+          );
+          // set the user in the store
+          queryClient.setQueryData<User>(
+            accountQueries.users._ctx.user(user.username).queryKey,
+            user
+          );
         }
 
         history.replace(`/account/users/${user.username}`, {

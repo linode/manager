@@ -6,8 +6,8 @@ import {
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 
 import { AccessSelect } from './AccessSelect';
 

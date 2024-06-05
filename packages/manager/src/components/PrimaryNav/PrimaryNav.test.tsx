@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
@@ -20,8 +20,8 @@ const queryString = 'menu-item-Managed';
 describe('PrimaryNav', () => {
   it('only contains a "Managed" menu link if the user has Managed services.', async () => {
     server.use(
-      rest.get('*/account/maintenance', (req, res, ctx) => {
-        return res(ctx.json({ managed: false }));
+      http.get('*/account/maintenance', () => {
+        return HttpResponse.json({ managed: false });
       })
     );
 
@@ -34,8 +34,8 @@ describe('PrimaryNav', () => {
     expect(queryByTestId(queryString)).not.toBeInTheDocument();
 
     server.use(
-      rest.get('*/account/maintenance', (req, res, ctx) => {
-        return res(ctx.json({ managed: true }));
+      http.get('*/account/maintenance', () => {
+        return HttpResponse.json({ managed: true });
       })
     );
 
@@ -54,22 +54,22 @@ describe('PrimaryNav', () => {
     expect(getByTestId(queryString).getAttribute('aria-current')).toBe('false');
   });
 
-  it('should show Databases menu item when feature flag is off but user has Managed Databases', () => {
-    const { getByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags: { databases: false },
-      queryClient,
+  it('should show Databases menu item if the user has the account capability', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Managed Databases'],
     });
 
-    expect(getByTestId('menu-item-Databases')).toBeInTheDocument();
-  });
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
 
-  it('should show databases menu when feature is on', () => {
-    const { getByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags: { databases: true },
-      queryClient,
-    });
+    const { findByText } = renderWithTheme(<PrimaryNav {...props} />);
 
-    expect(getByTestId('menu-item-Databases')).toBeInTheDocument();
+    const databaseNavItem = await findByText('Databases');
+
+    expect(databaseNavItem).toBeVisible();
   });
 
   it('should show ACLB if the feature flag is on, but there is not an account capability', async () => {
@@ -78,8 +78,8 @@ describe('PrimaryNav', () => {
     });
 
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(account));
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
       })
     );
 
@@ -98,8 +98,8 @@ describe('PrimaryNav', () => {
     });
 
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(account));
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
       })
     );
 
@@ -118,8 +118,8 @@ describe('PrimaryNav', () => {
     });
 
     server.use(
-      rest.get('*/account', (req, res, ctx) => {
-        return res(ctx.json(account));
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
       })
     );
 

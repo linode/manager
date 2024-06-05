@@ -59,6 +59,7 @@ describe('VPC assign/unassign flows', () => {
     const mockSubnet = subnetFactory.build({
       id: randomNumber(2),
       label: randomLabel(),
+      linodes: [],
     });
 
     const mockVPC = vpcFactory.build({
@@ -191,8 +192,8 @@ describe('VPC assign/unassign flows', () => {
           .click();
       });
 
-    cy.get('[aria-label="View Details"]')
-      .closest('tbody')
+    cy.get('[data-qa-table-row="collapsible-table-headers-row"]')
+      .siblings('tbody')
       .within(() => {
         // after assigning Linode(s) to a VPC, VPC page increases number in 'Linodes' column
         cy.findByText('1').should('be.visible');

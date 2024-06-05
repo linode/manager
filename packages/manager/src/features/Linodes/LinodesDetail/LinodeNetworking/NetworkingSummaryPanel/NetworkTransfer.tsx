@@ -4,8 +4,8 @@ import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import { useAccountTransfer } from 'src/queries/accountTransfer';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useAccountNetworkTransfer } from 'src/queries/account/transfer';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import {
   getDynamicDCNetworkTransferData,
@@ -39,7 +39,7 @@ export const NetworkTransfer = React.memo((props: Props) => {
     data: accountTransfer,
     error: accountTransferError,
     isLoading: accountTransferLoading,
-  } = useAccountTransfer();
+  } = useAccountNetworkTransfer();
 
   const currentRegion = regions.data?.find(
     (region) => region.id === linodeRegionId

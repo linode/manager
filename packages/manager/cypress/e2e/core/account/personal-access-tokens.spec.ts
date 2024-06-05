@@ -15,11 +15,6 @@ import {
 } from 'support/intercepts/profile';
 import { randomLabel, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
 
 describe('Personal access tokens', () => {
@@ -68,7 +63,34 @@ describe('Personal access tokens', () => {
       .findByTitle('Add Personal Access Token')
       .should('be.visible')
       .within(() => {
-        // Attempt to submit form without specifying a label
+        // Confirm submit button is disabled without specifying scopes.
+        ui.buttonGroup
+          .findButtonByTitle('Create Token')
+          .scrollIntoView()
+          .should('be.visible')
+          .should('be.disabled');
+
+        // Select just one scope.
+        cy.get('[data-qa-row="Account"]').within(() => {
+          cy.get('[type="radio"]').first().click();
+        });
+
+        // Confirm submit button is still disabled without specifying ALL scopes.
+        ui.buttonGroup
+          .findButtonByTitle('Create Token')
+          .scrollIntoView()
+          .should('be.visible')
+          .should('be.disabled');
+
+        // Specify ALL scopes by selecting the "No Access" Select All radio button.
+        cy.get('[data-qa-perm-no-access-radio]').click();
+        cy.get('[data-qa-perm-no-access-radio]').should(
+          'have.attr',
+          'data-qa-radio',
+          'true'
+        );
+
+        // Confirm submit button is enabled; attempt to submit form without specifying a label.
         ui.buttonGroup
           .findButtonByTitle('Create Token')
           .scrollIntoView()
@@ -76,6 +98,7 @@ describe('Personal access tokens', () => {
           .should('be.enabled')
           .click();
 
+        // Confirm validation error.
         cy.findByText('Label must be between 1 and 100 characters.')
           .scrollIntoView()
           .should('be.visible');
@@ -250,24 +273,13 @@ describe('Personal access tokens', () => {
     });
     const proxyUserProfile = profileFactory.build({ user_type: 'proxy' });
 
-    // TODO: Parent/Child - M3-7559 clean up when feature is live in prod and feature flag is removed.
-    mockAppendFeatureFlags({
-      parentChildAccountAccess: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     mockGetProfile(proxyUserProfile);
     mockGetPersonalAccessTokens([proxyToken]).as('getTokens');
     mockGetAppTokens([]).as('getAppTokens');
     mockRevokePersonalAccessToken(proxyToken.id).as('revokeToken');
 
     cy.visitWithLogin('/profile/tokens');
-    cy.wait([
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getTokens',
-      '@getAppTokens',
-    ]);
+    cy.wait(['@getTokens', '@getAppTokens']);
 
     // Find token in list, confirm "Rename" is disabled and tooltip displays.
     cy.findByText(proxyToken.label)

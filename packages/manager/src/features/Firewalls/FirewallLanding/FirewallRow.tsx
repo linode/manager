@@ -7,35 +7,22 @@ import { Hidden } from 'src/components/Hidden';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
 
-export type Props = Firewall & ActionHandlers;
+export interface FirewallRowProps extends Firewall, ActionHandlers {}
 
-export const FirewallRow = React.memo((props: Props) => {
-  const flags = useFlags();
+export const FirewallRow = React.memo((props: FirewallRowProps) => {
   const { id, label, rules, status, ...actionHandlers } = props;
 
   const { data: devices, error, isLoading } = useAllFirewallDevicesQuery(id);
 
-  let featureFlaggedDevices: FirewallDevice[] = devices ?? [];
-  if (!flags.firewallNodebalancer) {
-    featureFlaggedDevices =
-      devices?.filter((thisDevice) => {
-        return thisDevice.entity.type === 'linode';
-      }) ?? [];
-  }
-
   const count = getCountOfRules(rules);
 
   return (
-    <TableRow
-      ariaLabel={`Firewall ${label}`}
-      data-testid={`firewall-row-${id}`}
-    >
+    <TableRow data-testid={`firewall-row-${id}`}>
       <TableCell>
         <Link tabIndex={0} to={`/firewalls/${id}`}>
           {label}
@@ -48,11 +35,7 @@ export const FirewallRow = React.memo((props: Props) => {
       <Hidden smDown>
         <TableCell>{getRuleString(count)}</TableCell>
         <TableCell>
-          {getDevicesCellString(
-            featureFlaggedDevices ?? [],
-            isLoading,
-            error ?? undefined
-          )}
+          {getDevicesCellString(devices ?? [], isLoading, error ?? undefined)}
         </TableCell>
       </Hidden>
       <TableCell sx={{ textAlign: 'end', whiteSpace: 'nowrap' }}>
@@ -122,21 +105,19 @@ export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
   return (
     <>
       {firstThree.map((thisDevice, idx) => (
-        <Link
-          className="link secondaryLink"
-          data-testid="firewall-row-link"
-          key={thisDevice.id}
-          to={`/${thisDevice.entity.type}s/${thisDevice.entity.id}`}
-        >
-          {idx > 0 && `, `}
-          {thisDevice.entity.label}
-        </Link>
+        <>
+          {idx > 0 && ', '}
+          <Link
+            className="link secondaryLink"
+            data-testid="firewall-row-link"
+            key={thisDevice.id}
+            to={`/${thisDevice.entity.type}s/${thisDevice.entity.id}`}
+          >
+            {thisDevice.entity.label}
+          </Link>
+        </>
       ))}
-      {data.length > 3 && (
-        <span>
-          {`, `}plus {data.length - 3} more.
-        </span>
-      )}
+      {data.length > 3 && <span>, plus {data.length - 3} more.</span>}
     </>
   );
 };

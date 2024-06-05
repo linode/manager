@@ -16,9 +16,9 @@ import { Typography } from 'src/components/Typography';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { reportException } from 'src/exceptionReporting';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { useProfile } from 'src/queries/profile/profile';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { notificationContext as _notificationContext } from '../NotificationContext';

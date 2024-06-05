@@ -69,21 +69,27 @@ const IPv6ExplanatoryCopy = {
   ),
 };
 
-const tooltipCopy: Record<IPType, JSX.Element | null> = {
-  v4Private: <>This Linode already has a private IP address.</>,
+const tooltipCopy: Record<IPType, string | null> = {
+  v4Private: 'This Linode already has a private IP address.',
   v4Public: null,
 };
 
 interface Props {
   linodeId: number;
-  linodeIsInEdgeRegion?: boolean;
+  linodeIsInDistributedRegion?: boolean;
   onClose: () => void;
   open: boolean;
   readOnly: boolean;
 }
 
 export const AddIPDrawer = (props: Props) => {
-  const { linodeId, linodeIsInEdgeRegion, onClose, open, readOnly } = props;
+  const {
+    linodeId,
+    linodeIsInDistributedRegion,
+    onClose,
+    open,
+    readOnly,
+  } = props;
 
   const {
     error: ipv4Error,
@@ -179,10 +185,10 @@ export const AddIPDrawer = (props: Props) => {
           onChange={handleIPv4Change}
           value={selectedIPv4}
         >
-          {linodeIsInEdgeRegion && (
+          {linodeIsInDistributedRegion && (
             <Notice
               sx={{ fontSize: 15 }}
-              text="Private IP is currently not available for Edge regions"
+              text="Private IP is currently not available for distributed regions."
               variant="warning"
             />
           )}
@@ -192,7 +198,9 @@ export const AddIPDrawer = (props: Props) => {
               <FormControlLabel
                 control={<Radio />}
                 data-qa-radio={option.label}
-                disabled={option.value === 'v4Private' && linodeIsInEdgeRegion}
+                disabled={
+                  option.value === 'v4Private' && linodeIsInDistributedRegion
+                }
                 key={idx}
                 label={option.label}
                 value={option.value}

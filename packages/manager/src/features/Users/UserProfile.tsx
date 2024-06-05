@@ -10,8 +10,8 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useAccountUser } from 'src/queries/accountUsers';
-import { useProfile } from 'src/queries/profile';
+import { useAccountUser } from 'src/queries/account/users';
+import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { PARENT_USER, RESTRICTED_FIELD_TOOLTIP } from '../Account/constants';
@@ -69,6 +69,16 @@ export const UserProfile = (props: UserProfileProps) => {
 
   const isProxyUserProfile = currentUser?.user_type === 'proxy';
 
+  const tooltipForDisabledUsernameField = isProxyUserProfile
+    ? RESTRICTED_FIELD_TOOLTIP
+    : undefined;
+
+  const tooltipForDisabledEmailField = isProxyUserProfile
+    ? RESTRICTED_FIELD_TOOLTIP
+    : profile?.username !== originalUsername
+    ? 'You can\u{2019}t change another user\u{2019}s email address.'
+    : undefined;
+
   const renderProfileSection = () => {
     const hasAccountErrorFor = getAPIErrorFor(
       { username: 'Username' },
@@ -101,15 +111,13 @@ export const UserProfile = (props: UserProfileProps) => {
             />
           )}
           <TextField
-            tooltipText={
-              isProxyUserProfile ? RESTRICTED_FIELD_TOOLTIP : undefined
-            }
             data-qa-username
             disabled={isProxyUserProfile}
             errorText={hasAccountErrorFor('username')}
             label="Username"
             onBlur={changeUsername}
             onChange={changeUsername}
+            tooltipText={tooltipForDisabledUsernameField}
             trimmed
             value={username}
           />
@@ -141,17 +149,11 @@ export const UserProfile = (props: UserProfileProps) => {
             disabled={
               profile?.username !== originalUsername || isProxyUserProfile
             }
-            tooltipText={
-              isProxyUserProfile
-                ? RESTRICTED_FIELD_TOOLTIP
-                : profile?.username !== originalUsername
-                ? 'You can\u{2019}t change another user\u{2019}s email address.'
-                : undefined
-            }
             data-qa-email
             errorText={hasProfileErrorFor('email')}
             label="Email"
             onChange={changeEmail}
+            tooltipText={tooltipForDisabledEmailField}
             trimmed
             type="email"
             value={email}

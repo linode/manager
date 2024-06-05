@@ -1,7 +1,11 @@
-import { LinodeType } from '@linode/api-v4/lib/linodes/types';
 import * as Factory from 'factory.ts';
 
-import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
+import type { LinodeType } from '@linode/api-v4/lib/linodes/types';
+import type { PriceType } from '@linode/api-v4/src/types';
+import type {
+  PlanSelectionAvailabilityTypes,
+  PlanWithAvailability,
+} from 'src/features/components/PlansPanel/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
@@ -53,7 +57,7 @@ export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
   vcpus: 8,
 });
 
-export const planSelectionTypeFactory = Factory.Sync.makeFactory<PlanSelectionType>(
+export const planSelectionTypeFactory = Factory.Sync.makeFactory<PlanWithAvailability>(
   {
     class: typeFactory.build().class,
     disk: typeFactory.build().disk,
@@ -63,6 +67,10 @@ export const planSelectionTypeFactory = Factory.Sync.makeFactory<PlanSelectionTy
     label: typeFactory.build().label,
     memory: typeFactory.build().memory,
     network_out: typeFactory.build().network_out,
+    planBelongsToDisabledClass: false,
+    planHasLimitedAvailability: false,
+    planIsDisabled512Gb: false,
+    planIsTooSmall: false,
     price: typeFactory.build().price,
     region_prices: typeFactory.build().region_prices,
     subHeadings: [
@@ -76,7 +84,9 @@ export const planSelectionTypeFactory = Factory.Sync.makeFactory<PlanSelectionTy
   }
 );
 
-export const extendedTypeFactory = Factory.Sync.makeFactory<ExtendedType>({
+export const extendedTypeFactory = Factory.Sync.makeFactory<
+  ExtendedType & PlanSelectionAvailabilityTypes
+>({
   addons: {
     backups: {
       price: {
@@ -107,6 +117,10 @@ export const extendedTypeFactory = Factory.Sync.makeFactory<ExtendedType>({
   label: typeFactory.build().label,
   memory: typeFactory.build().memory,
   network_out: typeFactory.build().network_out,
+  planBelongsToDisabledClass: false,
+  planHasLimitedAvailability: false,
+  planIsDisabled512Gb: false,
+  planIsTooSmall: false,
   price: typeFactory.build().price,
   region_prices: typeFactory.build().region_prices,
   subHeadings: ['$10/mo ($0.015/hr)', '8 CPU, 1024 GB Storage, 16 GB RAM'],
@@ -114,3 +128,93 @@ export const extendedTypeFactory = Factory.Sync.makeFactory<ExtendedType>({
   transfer: typeFactory.build().transfer,
   vcpus: typeFactory.build().vcpus,
 });
+
+export const nodeBalancerTypeFactory = Factory.Sync.makeFactory<PriceType>({
+  id: 'nodebalancer',
+  label: 'NodeBalancer',
+  price: {
+    hourly: 0.015,
+    monthly: 10.0,
+  },
+  region_prices: [
+    {
+      hourly: 0.018,
+      id: 'id-cgk',
+      monthly: 12.0,
+    },
+    {
+      hourly: 0.021,
+      id: 'br-gru',
+      monthly: 14.0,
+    },
+  ],
+  transfer: 0,
+});
+
+export const volumeTypeFactory = Factory.Sync.makeFactory<PriceType>({
+  id: 'volume',
+  label: 'Volume',
+  price: {
+    hourly: 0.00015,
+    monthly: 0.1,
+  },
+  region_prices: [
+    {
+      hourly: 0.00018,
+      id: 'id-cgk',
+      monthly: 0.12,
+    },
+    {
+      hourly: 0.00021,
+      id: 'br-gru',
+      monthly: 0.14,
+    },
+  ],
+  transfer: 0,
+});
+
+export const objectStorageTypeFactory = Factory.Sync.makeFactory<PriceType>({
+  id: 'objectstorage',
+  label: 'Object Storage',
+  price: {
+    hourly: 0.0075,
+    monthly: 5.0,
+  },
+  region_prices: [
+    {
+      hourly: 0.0075,
+      id: 'id-cgk',
+      monthly: 5.0,
+    },
+    {
+      hourly: 0.0075,
+      id: 'br-gru',
+      monthly: 5.0,
+    },
+  ],
+  transfer: 1000,
+});
+
+export const objectStorageOverageTypeFactory = Factory.Sync.makeFactory<PriceType>(
+  {
+    id: 'objectstorage-overage',
+    label: 'Object Storage Overage',
+    price: {
+      hourly: 0.02,
+      monthly: null,
+    },
+    region_prices: [
+      {
+        hourly: 0.024,
+        id: 'id-cgk',
+        monthly: null,
+      },
+      {
+        hourly: 0.028,
+        id: 'br-gru',
+        monthly: null,
+      },
+    ],
+    transfer: 0,
+  }
+);

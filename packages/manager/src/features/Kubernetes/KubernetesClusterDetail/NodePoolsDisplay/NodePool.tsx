@@ -1,20 +1,23 @@
-import {
-  AutoscaleSettings,
-  PoolNodeResponse,
-} from '@linode/api-v4/lib/kubernetes';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 
-import NodeTable from './NodeTable';
+import { NodeTable } from './NodeTable';
+
+import type {
+  AutoscaleSettings,
+  PoolNodeResponse,
+} from '@linode/api-v4/lib/kubernetes';
+import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
 
 interface Props {
   autoscaler: AutoscaleSettings;
+  encryptionStatus: EncryptionStatus | undefined;
   handleClickResize: (poolId: number) => void;
   isOnlyNodePool: boolean;
   nodes: PoolNodeResponse[];
@@ -40,9 +43,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-const NodePool: React.FC<Props> = (props) => {
+export const NodePool = (props: Props) => {
   const {
     autoscaler,
+    encryptionStatus,
     handleClickResize,
     isOnlyNodePool,
     nodes,
@@ -126,6 +130,7 @@ const NodePool: React.FC<Props> = (props) => {
         xs={12}
       >
         <NodeTable
+          encryptionStatus={encryptionStatus}
           nodes={nodes}
           openRecycleNodeDialog={openRecycleNodeDialog}
           poolId={poolId}
@@ -135,5 +140,3 @@ const NodePool: React.FC<Props> = (props) => {
     </Grid>
   );
 };
-
-export default NodePool;

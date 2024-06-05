@@ -1,8 +1,8 @@
 import { Subnet } from '@linode/api-v4/lib/vpcs/types';
 import { Stack, Typography } from '@mui/material';
+import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -19,7 +19,7 @@ import {
   useAllLinodesQuery,
 } from 'src/queries/linodes/linodes';
 import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import type {
@@ -225,7 +225,6 @@ export const SubnetUnassignLinodesDrawer = React.memo(
               configId: _interface.configId,
               interfaceId: _interface.interfaceId,
               linodeId: _interface.linodeId,
-              subnetId: subnetId ?? -1,
               vpcId,
             });
           } catch (error) {

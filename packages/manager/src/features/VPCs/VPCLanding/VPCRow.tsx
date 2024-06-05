@@ -7,7 +7,7 @@ import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 interface Props {
   handleDeleteVPC: () => void;
@@ -37,11 +37,7 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
   ];
 
   return (
-    <TableRow
-      ariaLabel={`VPC ${label}`}
-      data-qa-vpc-id={id}
-      key={`vpc-row-${id}`}
-    >
+    <TableRow data-qa-vpc-id={id} key={`vpc-row-${id}`}>
       <TableCell>
         <Link to={`/vpcs/${id}`}>{label}</Link>
       </TableCell>

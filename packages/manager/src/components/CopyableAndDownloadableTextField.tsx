@@ -1,7 +1,6 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
-import snakeCase from 'lodash/snakeCase';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DownloadTooltip } from 'src/components/DownloadTooltip';
@@ -25,11 +24,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-type Props = TextFieldProps & {
+interface Props extends TextFieldProps {
   className?: string;
   fileName?: string;
   hideIcon?: boolean;
-};
+}
 
 export const CopyableAndDownloadableTextField = (props: Props) => {
   const { classes } = useStyles();
@@ -58,4 +57,16 @@ export const CopyableAndDownloadableTextField = (props: Props) => {
       disabled
     />
   );
+};
+
+const snakeCase = (str: string | undefined): string => {
+  if (!str) {
+    return '';
+  }
+
+  return str
+    .replace(/\W+/g, ' ')
+    .split(/ |\B(?=[A-Z])/)
+    .map((word) => word.toLowerCase())
+    .join('_');
 };

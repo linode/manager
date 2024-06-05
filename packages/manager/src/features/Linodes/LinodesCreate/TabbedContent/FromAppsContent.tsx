@@ -1,8 +1,7 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { styled } from '@mui/material/styles';
-import compact from 'lodash/compact';
-import curry from 'lodash/curry';
+import curry from 'lodash.curry';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 
@@ -17,7 +16,8 @@ import { ImageEmptyState } from 'src/features/Linodes/LinodesCreate/TabbedConten
 import { AppDetailDrawer } from 'src/features/OneClickApps';
 import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel/UserDefinedFieldsPanel';
-import { sendMarketplaceSearchEvent } from 'src/utilities/analytics';
+import { sendMarketplaceSearchEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { compact } from 'src/utilities/compact';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import SelectAppPanel from '../SelectAppPanel';

@@ -14,9 +14,13 @@ export interface RegionSelectOption {
     country: Country;
     region: string;
   };
+  disabledProps?: {
+    disabled: boolean;
+    reason?: JSX.Element | string;
+    tooltipWidth?: number;
+  };
   label: string;
   site_type: RegionSite;
-  unavailable: boolean;
   value: string;
 }
 
@@ -33,6 +37,9 @@ export interface RegionSelectProps
    * See `ImageUpload.tsx` for an example of a RegionSelect with an undefined `currentCapability` - there is no capability associated with Images yet.
    */
   currentCapability: Capabilities | undefined;
+  handleDisabledRegion?: (
+    region: Region
+  ) => RegionSelectOption['disabledProps'];
   handleSelection: (id: string) => void;
   helperText?: string;
   isClearable?: boolean;
@@ -41,7 +48,8 @@ export interface RegionSelectProps
   regions: Region[];
   required?: boolean;
   selectedId: null | string;
-  showEdgeIconHelperText?: boolean;
+  showDistributedRegionIconHelperText?: boolean;
+  tooltipText?: string;
   width?: number;
 }
 
@@ -63,12 +71,16 @@ export interface RegionMultiSelectProps
   required?: boolean;
   selectedIds: string[];
   sortRegionOptions?: (a: RegionSelectOption, b: RegionSelectOption) => number;
+  tooltipText?: string;
   width?: number;
 }
 
 export interface RegionOptionAvailability {
   accountAvailabilityData: AccountAvailability[] | undefined;
   currentCapability: Capabilities | undefined;
+  handleDisabledRegion?: (
+    region: Region
+  ) => RegionSelectOption['disabledProps'];
 }
 
 export interface GetRegionOptions extends RegionOptionAvailability {
@@ -92,4 +104,4 @@ export interface GetSelectedRegionsByIdsArgs {
   selectedRegionIds: string[];
 }
 
-export type SupportedEdgeTypes = 'Distributions' | 'StackScripts';
+export type SupportedDistributedRegionTypes = 'Distributions' | 'StackScripts';

@@ -24,8 +24,9 @@ export const linode1: Linode = {
   ipv4: ['97.107.143.78', '98.107.143.78', '99.107.143.78'],
   ipv6: '2600:3c03::f03c:91ff:fe0a:109a/64',
   label: 'test',
+  lke_cluster_id: null,
   placement_group: {
-    affinity_type: 'anti_affinity',
+    affinity_type: 'anti_affinity:local',
     id: 1,
     is_strict: true,
     label: 'pg-1',
@@ -69,8 +70,9 @@ export const linode2: Linode = {
   ipv4: ['97.107.143.49'],
   ipv6: '2600:3c03::f03c:91ff:fe0a:0d7a/64',
   label: 'another-test',
+  lke_cluster_id: null,
   placement_group: {
-    affinity_type: 'anti_affinity',
+    affinity_type: 'anti_affinity:local',
     id: 1,
     is_strict: true,
     label: 'pg-1',
@@ -114,8 +116,9 @@ export const linode3: Linode = {
   ipv4: ['97.107.143.49'],
   ipv6: '2600:3c03::f03c:91ff:fe0a:0d7a/64',
   label: 'another-test',
+  lke_cluster_id: null,
   placement_group: {
-    affinity_type: 'anti_affinity',
+    affinity_type: 'anti_affinity:local',
     id: 1,
     is_strict: true,
     label: 'pg-1',
@@ -159,8 +162,9 @@ export const linode4: Linode = {
   ipv4: ['97.107.143.49'],
   ipv6: '2600:3c03::f03c:91ff:fe0a:0d7a/64',
   label: 'another-test-eu',
+  lke_cluster_id: null,
   placement_group: {
-    affinity_type: 'anti_affinity',
+    affinity_type: 'anti_affinity:local',
     id: 1,
     is_strict: true,
     label: 'pg-1',

@@ -1,3 +1,4 @@
+// TODO eventMessagesV2: delete when flag is removed
 import type { Event } from '@linode/api-v4/lib/account';
 
 export const EVENT_ACTIONS: Event['action'][] = [
@@ -17,6 +18,7 @@ export const EVENT_ACTIONS: Event['action'][] = [
   'database_update_failed',
   'database_update',
   'database_resize',
+  'database_resize_create',
   'disk_create',
   'disk_delete',
   'disk_duplicate',
@@ -80,11 +82,12 @@ export const EVENT_ACTIONS: Event['action'][] = [
   'nodebalancer_update',
   'password_reset',
   'placement_group_assign',
-  'placement_group_created',
-  'placement_group_assigned',
-  'placement_group_unassigned',
-  'placement_group_updated',
-  'placement_group_deleted',
+  'placement_group_became_non_compliant',
+  'placement_group_became_compliant',
+  'placement_group_create',
+  'placement_group_unassign',
+  'placement_group_update',
+  'placement_group_delete',
   'profile_update',
   'stackscript_create',
   'stackscript_delete',

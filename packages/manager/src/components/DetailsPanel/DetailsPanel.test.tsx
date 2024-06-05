@@ -9,6 +9,8 @@ const onTagsChange = vi.fn();
 const INPUT_LABEL = 'Linode Label';
 const TAG_LABEL = 'Custom Label';
 
+const handlePlacementGroupChange = vi.fn();
+
 describe('Tags list', () => {
   it('should render tags input if tagsInputProps are specified', () => {
     const { getByLabelText, queryByText } = renderWithTheme(
@@ -23,6 +25,8 @@ describe('Tags list', () => {
           onChange: onTagsChange,
           value: ['tag1', 'tag2'].map((tag) => ({ label: tag, value: tag })),
         }}
+        handlePlacementGroupChange={handlePlacementGroupChange}
+        selectedPlacementGroupId={null}
       />
     );
 
@@ -49,6 +53,8 @@ describe('Tags list', () => {
             value: tag,
           })),
         }}
+        handlePlacementGroupChange={handlePlacementGroupChange}
+        selectedPlacementGroupId={null}
       />
     );
 
@@ -64,6 +70,8 @@ describe('Tags list', () => {
           onChange: onLabelChange,
           value: '',
         }}
+        handlePlacementGroupChange={handlePlacementGroupChange}
+        selectedPlacementGroupId={null}
       />
     );
     expect(queryByLabelText(TAG_LABEL)).not.toBeInTheDocument();

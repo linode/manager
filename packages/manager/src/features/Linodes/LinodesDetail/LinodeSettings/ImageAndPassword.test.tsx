@@ -3,7 +3,7 @@ import { profileFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantsFactory } from 'src/factories/grants';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ImageAndPassword } from './ImageAndPassword';
@@ -44,8 +44,8 @@ describe('ImageAndPassword', () => {
     const users = accountUserFactory.buildList(3, { ssh_keys: ['my-ssh-key'] });
 
     server.use(
-      rest.get('*/account/users', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage(users)));
+      http.get('*/account/users', () => {
+        return HttpResponse.json(makeResourcePage(users));
       })
     );
 
@@ -62,16 +62,14 @@ describe('ImageAndPassword', () => {
   });
   it('should be disabled for a restricted user with read only access', async () => {
     server.use(
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ restricted: true })));
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ restricted: true }));
       }),
-      rest.get('*/profile/grants', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            grantsFactory.build({
-              linode: [{ id: 0, permissions: 'read_only' }],
-            })
-          )
+      http.get('*/profile/grants', () => {
+        return HttpResponse.json(
+          grantsFactory.build({
+            linode: [{ id: 0, permissions: 'read_only' }],
+          })
         );
       })
     );
@@ -88,11 +86,11 @@ describe('ImageAndPassword', () => {
   });
   it('should be disabled for a restricted user with no access', async () => {
     server.use(
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ restricted: true })));
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ restricted: true }));
       }),
-      rest.get('*/profile/grants', (req, res, ctx) => {
-        return res(ctx.json(grantsFactory.build({ linode: [] })));
+      http.get('*/profile/grants', () => {
+        return HttpResponse.json(grantsFactory.build({ linode: [] }));
       })
     );
 

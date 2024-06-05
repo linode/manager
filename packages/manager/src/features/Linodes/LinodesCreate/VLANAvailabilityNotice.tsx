@@ -6,7 +6,7 @@ import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { regionsWithFeature } from 'src/utilities/doesRegionSupportFeature';
 
 import type { Region } from '@linode/api-v4';

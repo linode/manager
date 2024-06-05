@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -29,9 +29,9 @@ interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
 }
 
-export type Props = LinodeEntityDetailProps & {
+export interface Props extends LinodeEntityDetailProps {
   handlers: LinodeHandlers;
-};
+}
 
 interface FooterProps {
   isLinodesGrantReadOnly: boolean;
@@ -41,7 +41,7 @@ interface FooterProps {
   linodePlan: null | string;
   linodeRegionDisplay: null | string;
   linodeTags: string[];
-  openTagDrawer: (tags: string[]) => void;
+  openTagDrawer: () => void;
 }
 
 export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
@@ -155,12 +155,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
       >
         <TagCell
           sx={{
-            [theme.breakpoints.down('lg')]: {
-              '& > button': {
-                marginRight: theme.spacing(0.5),
-              },
-              flexDirection: 'row-reverse',
-            },
+            width: '100%',
           }}
           disabled={isLinodesGrantReadOnly}
           listAllTags={openTagDrawer}

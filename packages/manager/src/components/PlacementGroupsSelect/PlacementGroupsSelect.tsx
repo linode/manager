@@ -1,46 +1,64 @@
-import { AFFINITY_TYPES, PlacementGroup } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { TextFieldProps } from 'src/components/TextField';
-import { useUnpaginatedPlacementGroupsQuery } from 'src/queries/placementGroups';
+import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
+import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
+
+import { PlacementGroupSelectOption } from './PlacementGroupSelectOption';
+
+import type { PlacementGroup, Region } from '@linode/api-v4';
+import type { SxProps } from '@mui/system';
 
 export interface PlacementGroupsSelectProps {
-  clearable?: boolean;
+  /**
+   * If true, the component will be disabled.
+   */
   disabled?: boolean;
-  errorText?: string;
-  handlePlacementGroupSelection: (selected: PlacementGroup) => void;
-  id?: string;
+  /**
+   * A callback to execute when the selected Placement Group changes.
+   * The selection is handled by a parent component.
+   */
+  handlePlacementGroupChange: (selected: PlacementGroup | null) => void;
+  /**
+   * The label for the TextField component.
+   */
   label: string;
+  /**
+   * If true, the component will display a loading spinner. (usually when fetching data)
+   */
   loading?: boolean;
+  /**
+   * The message to display when there are no options available.
+   */
   noOptionsMessage?: string;
-  onBlur?: (e: React.FocusEvent) => void;
-  renderOption?: (
-    placementGroup: PlacementGroup,
-    selected: boolean
-  ) => JSX.Element;
-  renderOptionLabel?: (placementGroups: PlacementGroup) => string;
-  selectedRegionId?: string;
+  /**
+   * The ID of the selected Placement Group.
+   */
+  selectedPlacementGroupId: null | number;
+  /**
+   * We want to pass the full region object here so we can check if the selected Placement Group is at capacity.
+   */
+  selectedRegion: Region | undefined;
+  /**
+   * Any additional styles to apply to the root element.
+   */
   sx?: SxProps;
+  /**
+   * Any additional props to pass to the TextField component.
+   */
   textFieldProps?: Partial<TextFieldProps>;
 }
 
 export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const {
-    clearable = true,
     disabled,
-    errorText,
-    handlePlacementGroupSelection,
-    id,
+    handlePlacementGroupChange,
     label,
-    loading,
     noOptionsMessage,
-    onBlur,
-    renderOption,
-    renderOptionLabel,
-    selectedRegionId,
+    selectedPlacementGroupId,
+    selectedRegion,
     sx,
     ...textFieldProps
   } = props;
@@ -48,56 +66,66 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
   const {
     data: placementGroups,
     error,
+    isFetching,
     isLoading,
-  } = useUnpaginatedPlacementGroupsQuery(Boolean(selectedRegionId));
+  } = useAllPlacementGroupsQuery({
+    enabled: Boolean(selectedRegion?.id),
+    // Placement Group selection is always dependent on a selected region.
+    filter: {
+      region: selectedRegion?.id,
+    },
+  });
 
-  const placementGroupsOptions = placementGroups?.filter(
-    (placementGroup) => placementGroup.region === selectedRegionId
-  );
+  const isDisabledPlacementGroup = (
+    selectedPlacementGroup: PlacementGroup,
+    selectedRegion: Region | undefined
+  ) => {
+    if (!selectedRegion?.id) {
+      return false;
+    }
 
-  const handlePlacementGroupChange = (selection: PlacementGroup) => {
-    handlePlacementGroupSelection(selection);
+    return hasPlacementGroupReachedCapacity({
+      placementGroup: selectedPlacementGroup,
+      region: selectedRegion,
+    });
   };
+
+  const selection =
+    placementGroups?.find(
+      (placementGroup) => placementGroup.id === selectedPlacementGroupId
+    ) ?? null;
 
   return (
     <Autocomplete
-      getOptionLabel={(placementGroupsOptions: PlacementGroup) =>
-        renderOptionLabel
-          ? renderOptionLabel(placementGroupsOptions)
-          : `${placementGroupsOptions.label} (${
-              AFFINITY_TYPES[placementGroupsOptions?.affinity_type]
-            })`
-      }
       noOptionsText={
         noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
       }
-      onChange={(_, selectedOption: PlacementGroup) => {
-        handlePlacementGroupChange(selectedOption);
+      onChange={(_, selectedOption) => {
+        handlePlacementGroupChange(selectedOption ?? null);
       }}
-      renderOption={
-        renderOption
-          ? (props, option, { selected }) => {
-              return (
-                <li {...props} data-qa-placement-group-option>
-                  {renderOption(option, selected)}
-                </li>
-              );
-            }
-          : undefined
-      }
-      clearOnBlur={false}
+      renderOption={(props, option, { selected }) => {
+        return (
+          <PlacementGroupSelectOption
+            disabled={isDisabledPlacementGroup(option, selectedRegion)}
+            key={option.id}
+            label={option.label}
+            props={props}
+            selected={selected}
+            value={option}
+          />
+        );
+      }}
+      clearOnBlur={true}
       data-testid="placement-groups-select"
-      disableClearable={!clearable}
-      disabled={disabled}
-      errorText={errorText}
-      id={id}
-      key={selectedRegionId}
+      disabled={Boolean(!selectedRegion?.id) || disabled}
+      errorText={error?.[0]?.reason}
+      getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
       label={label}
-      loading={isLoading || loading}
-      onBlur={onBlur}
-      options={placementGroupsOptions ?? []}
-      placeholder="Select a Placement Group"
+      loading={isFetching}
+      options={placementGroups ?? []}
+      placeholder="None"
       sx={sx}
+      value={selection}
       {...textFieldProps}
     />
   );

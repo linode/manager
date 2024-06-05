@@ -8,9 +8,9 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { useGrants, useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
-import { useCreateVPCMutation } from 'src/queries/vpcs';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useCreateVPCMutation } from 'src/queries/vpcs/vpcs';
 import {
   SubnetError,
   handleVPCAndSubnetErrors,
@@ -181,6 +181,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   };
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       description: '',
       label: '',

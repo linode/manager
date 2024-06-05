@@ -9,7 +9,7 @@ import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Typography } from 'src/components/Typography';
-import { useMutateProfile, useProfile } from 'src/queries/profile';
+import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 
 interface Props {
   loggedInAsCustomer: boolean;

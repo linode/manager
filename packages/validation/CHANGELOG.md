@@ -1,3 +1,55 @@
+## [2024-05-28] - v0.47.0
+
+
+### Added:
+
+- `tags` to `createImageSchema` ([#10471](https://github.com/linode/manager/pull/10471))
+
+### Changed:
+
+- Adjust DiskEncryptionSchema so it is not an object ([#10462](https://github.com/linode/manager/pull/10462))
+- Improve Image `label` validation ([#10471](https://github.com/linode/manager/pull/10471))
+
+
+## [2024-05-13] - v0.46.0
+
+
+### Changed:
+
+- Include disk_encryption in CreateLinodeSchema and RebuildLinodeSchema ([#10413](https://github.com/linode/manager/pull/10413))
+- Allow `backup_id` to be nullable in `CreateLinodeSchema` ([#10421](https://github.com/linode/manager/pull/10421))
+
+
+## [2024-04-29] - v0.45.0
+
+
+### Changed:
+
+- Improved VPC `ip_ranges` validation in `LinodeInterfaceSchema` ([#10354](https://github.com/linode/manager/pull/10354))
+- Allow `stackscript_id` to be `null` in `CreateLinodeSchema` ([#10367](https://github.com/linode/manager/pull/10367))
+
+## [2024-04-15] - v0.44.0
+
+### Changed:
+
+- Update Regions error message in `updateObjectStorageKeysSchema` ([#10329](https://github.com/linode/manager/pull/10329))
+
+## [2024-04-01] - v0.43.0
+
+### Changed:
+
+- Make `image` nullable in `CreateLinodeSchema` ([#10281](https://github.com/linode/manager/pull/10281))
+- Enforce that the `certificates` array is empty for `http` and `tcp` configurations ([#10311](https://github.com/linode/manager/pull/10311))
+- Allow `firewall_id` to be `null` in `CreateLinodeSchema` ([#10319](https://github.com/linode/manager/pull/10319))
+
+## [2024-03-18] - v0.42.0
+
+
+### Changed:
+
+- Update TCP rules to not include a `match_condition` ([#10264](https://github.com/linode/manager/pull/10264))
+
+
 ## [2024-03-04] - v0.41.0
 
 ### Upcoming Features:

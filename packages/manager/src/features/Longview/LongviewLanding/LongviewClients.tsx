@@ -16,8 +16,8 @@ import { Typography } from 'src/components/Typography';
 import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
-import { useAccountSettings } from 'src/queries/accountSettings';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useAccountSettings } from 'src/queries/account/settings';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
 
@@ -288,10 +288,9 @@ const mapStateToProps: MapState<StateProps, Props> = (state, _ownProps) => {
 
 const connected = connect(mapStateToProps);
 
-export default compose<
-  LongviewClientsCombinedProps,
-  Props & RouteComponentProps
->(
+interface ComposeProps extends Props, RouteComponentProps {}
+
+export default compose<LongviewClientsCombinedProps, ComposeProps>(
   React.memo,
   connected,
   withLongviewClients()

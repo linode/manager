@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -12,6 +11,10 @@ import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceTogg
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import {
+  WithFeatureFlagProps,
+  withFeatureFlags,
+} from 'src/containers/flags.container';
+import {
   WithProfileProps,
   withProfile,
 } from 'src/containers/profile.container';
@@ -22,7 +25,7 @@ import { DialogType } from 'src/features/Linodes/types';
 import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent,
-} from 'src/utilities/analytics';
+} from 'src/utilities/analytics/customEventAnalytics';
 import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import { EnableBackupsDialog } from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
@@ -87,7 +90,10 @@ export interface LinodesLandingProps {
   someLinodesHaveScheduledMaintenance: boolean;
 }
 
-type CombinedProps = LinodesLandingProps & RouteProps & WithProfileProps;
+type CombinedProps = LinodesLandingProps &
+  RouteProps &
+  WithFeatureFlagProps &
+  WithProfileProps;
 
 class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
@@ -444,9 +450,4 @@ const sendGroupByAnalytic = (value: boolean) => {
   sendGroupByTagEnabledEvent(eventCategory, value);
 };
 
-export const enhanced = compose<CombinedProps, LinodesLandingProps>(
-  withRouter,
-  withProfile
-);
-
-export default enhanced(ListLinodes);
+export default withRouter(withProfile(withFeatureFlags(ListLinodes)));

@@ -2,6 +2,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import { styled } from '@mui/material/styles';
 
 import { Box } from 'src/components/Box';
+import { Chip } from 'src/components/Chip';
 import { ListItem } from 'src/components/ListItem';
 
 export const StyledAutocompleteContainer = styled(Box, {
@@ -29,7 +30,7 @@ export const StyledAutocompleteContainer = styled(Box, {
   },
 }));
 
-export const sxEdgeIcon = {
+export const sxDistributedRegionIcon = {
   '& svg': {
     color: 'inherit !important',
     height: 21,
@@ -42,28 +43,28 @@ export const sxEdgeIcon = {
   padding: 0,
 };
 
-export const StyledEdgeBox = styled(Box, { label: 'StyledEdgeBox' })(
-  ({ theme }) => ({
-    '& svg': {
-      height: 21,
-      marginLeft: 8,
-      marginRight: 8,
-      width: 24,
-    },
-    alignSelf: 'end',
-    color: 'inherit',
-    display: 'flex',
+export const StyledDistributedRegionBox = styled(Box, {
+  label: 'StyledDistributedRegionBox',
+})(({ theme }) => ({
+  '& svg': {
+    height: 21,
     marginLeft: 8,
-    padding: '8px 0',
-    [theme.breakpoints.down('md')]: {
-      '& svg': {
-        marginLeft: 0,
-      },
-      alignSelf: 'start',
+    marginRight: 8,
+    width: 24,
+  },
+  alignSelf: 'end',
+  color: 'inherit',
+  display: 'flex',
+  marginLeft: 8,
+  padding: '8px 0',
+  [theme.breakpoints.down('md')]: {
+    '& svg': {
       marginLeft: 0,
     },
-  })
-);
+    alignSelf: 'start',
+    marginLeft: 0,
+  },
+}));
 
 export const StyledFlagContainer = styled('div', {
   label: 'RegionSelectFlagContainer',
@@ -107,4 +108,21 @@ export const SelectedIcon = styled(DoneIcon, {
   marginRight: '5px',
   visibility: visible ? 'visible' : 'hidden',
   width: 17,
+}));
+
+export const StyledChip = styled(Chip)(() => ({
+  '& .MuiChip-deleteIcon': {
+    '& svg': {
+      borderRadius: '50%',
+    },
+    padding: 0,
+  },
+  '& .MuiChip-deleteIcon.MuiSvgIcon-root': {
+    '&:hover': {
+      backgroundColor: '#fff',
+      color: '#3683dc',
+    },
+    backgroundColor: '#3683dc',
+    color: '#fff',
+  },
 }));

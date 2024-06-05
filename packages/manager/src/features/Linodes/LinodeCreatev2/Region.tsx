@@ -17,6 +17,11 @@ export const Region = () => {
 
   return (
     <SelectRegionPanel
+      RegionSelectProps={{
+        textFieldProps: {
+          onBlur: field.onBlur,
+        },
+      }}
       currentCapability="Linodes"
       disabled={isLinodeCreateRestricted}
       error={formState.errors.region?.message}

@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { useDeleteSubnetMutation } from 'src/queries/vpcs';
+import { useDeleteSubnetMutation } from 'src/queries/vpcs/vpcs';
 
 interface Props {
   onClose: () => void;

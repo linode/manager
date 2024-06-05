@@ -1,17 +1,18 @@
 import { PlacementGroup } from '@linode/api-v4';
 import {
   CreateLinodePlacementGroupPayload,
+  EncryptionStatus,
   InterfacePayload,
   PriceObject,
   restoreBackup,
 } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
+import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
-import cloneDeep from 'lodash/cloneDeep';
+import cloneDeep from 'lodash.clonedeep';
 import * as React from 'react';
 import { MapDispatchToProps, connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose as recompose } from 'recompose';
 import { v4 } from 'uuid';
 
 import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
@@ -23,7 +24,7 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { Stack } from 'src/components/Stack';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -32,10 +33,7 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
-import {
-  WithAccountProps,
-  withAccount,
-} from 'src/containers/account.container';
+import { WithAccountProps } from 'src/containers/account.container';
 import { WithFeatureFlagProps } from 'src/containers/flags.container';
 import { WithImagesProps as ImagesProps } from 'src/containers/images.container';
 import { RegionsProps } from 'src/containers/regions.container';
@@ -49,7 +47,6 @@ import {
   utoa,
 } from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
-import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -62,7 +59,12 @@ import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
 import {
   sendApiAwarenessClickEvent,
   sendLinodeCreateFlowDocsClickEvent,
-} from 'src/utilities/analytics';
+} from 'src/utilities/analytics/customEventAnalytics';
+import {
+  sendLinodeCreateFormErrorEvent,
+  sendLinodeCreateFormStepEvent,
+  sendLinodeCreateFormSubmitEvent,
+} from 'src/utilities/analytics/formEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
@@ -72,6 +74,7 @@ import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { SelectFirewallPanel } from '../../../components/SelectFirewallPanel/SelectFirewallPanel';
 import { AddonsPanel } from './AddonsPanel';
@@ -113,10 +116,12 @@ export interface LinodeCreateProps {
   autoassignIPv4WithinVPC: boolean;
   checkValidation: LinodeCreateValidation;
   createType: CreateTypes;
+  diskEncryptionEnabled: boolean;
   firewallId?: number;
   handleAgreementChange: () => void;
   handleFirewallChange: (firewallId: number) => void;
   handleIPv4RangesForVPC: (ranges: ExtendedIP[]) => void;
+  handlePlacementGroupChange: (placementGroup: PlacementGroup | null) => void;
   handleShowApiAwarenessModal: () => void;
   handleSubmitForm: HandleSubmit;
   handleSubnetChange: (subnetId: number) => void;
@@ -141,13 +146,13 @@ export interface LinodeCreateProps {
   toggleAssignPublicIPv4Address: () => void;
   toggleAutoassignIPv4WithinVPCEnabled: () => void;
   toggleBackupsEnabled: () => void;
+  toggleDiskEncryptionEnabled: () => void;
   togglePrivateIPEnabled: () => void;
   typeDisplayInfo: TypeInfo;
   updateDiskSize: (size: number) => void;
   updateLabel: (label: string) => void;
   updateLinodeID: (id: number, diskSize?: number | undefined) => void;
   updatePassword: (password: string) => void;
-  updatePlacementGroupSelection: (placementGroup: PlacementGroup) => void;
   updateTags: (tags: Tag[]) => void;
   updateUserData: (userData: string) => void;
   userData: string | undefined;
@@ -190,6 +195,7 @@ type CombinedProps = AllFormStateAndHandlers &
   WithTypesProps;
 
 interface State {
+  hasError: boolean;
   numberOfNodes: number;
   planKey: string;
   selectedTab: number;
@@ -200,11 +206,13 @@ interface CreateTab extends Tab {
   type: CreateTypes;
 }
 
+interface LinodeCreateComponentProps extends CombinedProps, DispatchProps {}
+
 export class LinodeCreate extends React.PureComponent<
-  CombinedProps & DispatchProps,
+  LinodeCreateComponentProps,
   State
 > {
-  constructor(props: CombinedProps & DispatchProps) {
+  constructor(props: LinodeCreateComponentProps) {
     super(props);
 
     /** Get the query params as an object, excluding the "?" */
@@ -232,6 +240,7 @@ export class LinodeCreate extends React.PureComponent<
     }
 
     this.state = {
+      hasError: false,
       numberOfNodes: 0,
       planKey: v4(),
       selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0,
@@ -248,10 +257,13 @@ export class LinodeCreate extends React.PureComponent<
   }
 
   componentDidUpdate(prevProps: any) {
+    if (this.props.errors !== prevProps.errors) {
+      this.handleAnalyticsFormError(getErrorMap(errorMap, this.props.errors));
+    }
+
     if (this.props.location.search === prevProps.location.search) {
       return;
     }
-
     // This is for the case where a user is already on the create flow and click the "Marketplace" link in the PrimaryNav.
     // Because it is the same route, the component will not unmount and remount, so we need to manually update the tab state.
     // This fix provides an isolated solution for this specific case.
@@ -272,11 +284,13 @@ export class LinodeCreate extends React.PureComponent<
     const { selectedTab, stackScriptSelectedTab } = this.state;
 
     const {
+      account,
       accountBackupsEnabled,
       errors,
       flags,
       formIsSubmitting,
       handleAgreementChange,
+      handlePlacementGroupChange,
       handleShowApiAwarenessModal,
       imageDisplayInfo,
       imagesData,
@@ -286,7 +300,6 @@ export class LinodeCreate extends React.PureComponent<
       linodesData,
       linodesError,
       linodesLoading,
-      placementGroupSelection,
       regionDisplayInfo,
       regionsData,
       regionsError,
@@ -302,7 +315,6 @@ export class LinodeCreate extends React.PureComponent<
       typesError,
       typesLoading,
       updateLabel,
-      updatePlacementGroupSelection,
       updateTags,
       updateUserData,
       userCannotCreateLinode,
@@ -326,18 +338,6 @@ export class LinodeCreate extends React.PureComponent<
       return null;
     }
 
-    {
-      /* TODO VM_Placement: Refactor this into a util method */
-    }
-    const regionLabel = regionsData?.find((r) => r.id === selectedRegionID)
-      ?.label;
-    let placementGroupsLabel;
-    if (selectedRegionID && regionLabel) {
-      placementGroupsLabel = `Placement Groups in ${regionLabel} (${selectedRegionID})`;
-    } else {
-      placementGroupsLabel = 'Placement Group';
-    }
-
     const tagsInputProps = {
       disabled: userCannotCreateLinode,
       onChange: updateTags,
@@ -345,19 +345,16 @@ export class LinodeCreate extends React.PureComponent<
       value: tags || [],
     };
 
-    let errorText;
-    if (
-      hasPlacementGroupReachedCapacity({
-        placementGroup: placementGroupSelection!,
-        region: regionsData.find((r) => r.id === selectedRegionID)!,
-      })
-    ) {
-      errorText = `This Placement Group doesn't have any capacity`;
-    }
-
     const hasBackups = Boolean(
       this.props.backupsEnabled || accountBackupsEnabled
     );
+
+    const hasDiskEncryptionAccountCapability = account.data?.capabilities?.includes(
+      'Disk Encryption'
+    );
+
+    const isDiskEncryptionFeatureEnabled =
+      flags.linodeDiskEncryption && hasDiskEncryptionAccountCapability;
 
     const displaySections = [];
     if (imageDisplayInfo) {
@@ -371,9 +368,15 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
 
-    const linodeIsInEdgeRegion = getIsEdgeRegion(
+    const linodeIsInDistributedRegion = getIsDistributedRegion(
       regionsData,
       selectedRegionID ?? ''
+    );
+
+    const regionSupportsDiskEncryption = doesRegionSupportFeature(
+      this.props.selectedRegionID ?? '',
+      this.props.regionsData,
+      'Disk Encryption'
     );
 
     if (typeDisplayInfo) {
@@ -399,7 +402,7 @@ export class LinodeCreate extends React.PureComponent<
       }
 
       // @TODO Gecko: Remove $0 hardcoding once plan data is returned from API
-      if (linodeIsInEdgeRegion) {
+      if (linodeIsInDistributedRegion) {
         displaySections.push({
           ...typeDisplayInfoCopy,
           details: '$0/month',
@@ -426,11 +429,21 @@ export class LinodeCreate extends React.PureComponent<
       hasBackups &&
       typeDisplayInfo &&
       backupsMonthlyPrice &&
-      !linodeIsInEdgeRegion
+      !linodeIsInDistributedRegion
     ) {
       displaySections.push(
         renderBackupsDisplaySection(accountBackupsEnabled, backupsMonthlyPrice)
       );
+    }
+
+    if (
+      isDiskEncryptionFeatureEnabled &&
+      regionSupportsDiskEncryption &&
+      this.props.diskEncryptionEnabled
+    ) {
+      displaySections.push({
+        title: 'Encrypted',
+      });
     }
 
     if (this.props.vlanLabel) {
@@ -442,6 +455,12 @@ export class LinodeCreate extends React.PureComponent<
     if (this.props.privateIPEnabled) {
       displaySections.push({
         title: 'Private IP',
+      });
+    }
+
+    if (this.props.placementGroupSelection) {
+      displaySections.push({
+        title: 'Assigned to Placement Group',
       });
     }
 
@@ -489,13 +508,13 @@ export class LinodeCreate extends React.PureComponent<
       ) &&
       (imageIsCloudInitCompatible || linodeIsCloudInitCompatible);
 
-    const isEdgeRegionSelected = Boolean(
-      flags.gecko &&
-        getIsEdgeRegion(regionsData, this.props.selectedRegionID ?? '')
+    const isDistributedRegionSelected = Boolean(
+      flags.gecko2?.enabled &&
+        getIsDistributedRegion(regionsData, this.props.selectedRegionID ?? '')
     );
 
     return (
-      <StyledForm>
+      <StyledForm ref={this.createLinodeFormRef}>
         <Grid className="py0">
           {hasErrorFor.none && !!showGeneralError && (
             <Notice spacingTop={8} text={hasErrorFor.none} variant="error" />
@@ -644,6 +663,15 @@ export class LinodeCreate extends React.PureComponent<
                 <DocsLink
                   onClick={() => {
                     sendLinodeCreateFlowDocsClickEvent('Choosing a Plan');
+                    sendLinodeCreateFormStepEvent({
+                      action: 'click',
+                      category: 'link',
+                      createType:
+                        (this.tabs[selectedTab].title as LinodeCreateType) ??
+                        'Distributions',
+                      label: 'Choosing a Plan',
+                      version: 'v1',
+                    });
                   }}
                   href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
                   label="Choosing a Plan"
@@ -660,7 +688,7 @@ export class LinodeCreate extends React.PureComponent<
               regionsData={regionsData!}
               selectedId={this.props.selectedTypeID}
               selectedRegionID={selectedRegionID}
-              showTransfer
+              showLimits
               types={this.filterTypes()}
             />
           </Stack>
@@ -672,14 +700,9 @@ export class LinodeCreate extends React.PureComponent<
               onChange: (e) => updateLabel(e.target.value),
               value: label || '',
             }}
-            placementGroupsSelectProps={{
-              disabled: !selectedRegionID,
-              errorText,
-              handlePlacementGroupSelection: updatePlacementGroupSelection,
-              label: placementGroupsLabel,
-              noOptionsMessage: 'There are no Placement Groups in this region',
-              selectedRegionId: selectedRegionID,
-            }}
+            selectedPlacementGroupId={
+              this.props.placementGroupSelection?.id ?? null
+            }
             tagsInputProps={
               this.props.createType !== 'fromLinode'
                 ? tagsInputProps
@@ -687,7 +710,8 @@ export class LinodeCreate extends React.PureComponent<
             }
             data-qa-details-panel
             error={hasErrorFor.placement_group}
-            regions={regionsData!}
+            handlePlacementGroupChange={handlePlacementGroupChange}
+            selectedRegionId={selectedRegionID}
           />
           {/* Hide for backups and clone */}
           {!['fromBackup', 'fromLinode'].includes(this.props.createType) && (
@@ -697,12 +721,18 @@ export class LinodeCreate extends React.PureComponent<
                   ? 'You must select an image to set a root password'
                   : ''
               }
+              toggleDiskEncryptionEnabled={
+                this.props.toggleDiskEncryptionEnabled
+              }
               authorizedUsers={this.props.authorized_users}
               data-qa-access-panel
               disabled={!this.props.selectedImageID || userCannotCreateLinode}
+              diskEncryptionEnabled={this.props.diskEncryptionEnabled}
+              displayDiskEncryption
               error={hasErrorFor.root_pass}
               handleChange={this.props.updatePassword}
               password={this.props.password}
+              selectedRegion={this.props.selectedRegionID}
               setAuthorizedUsers={this.props.setAuthorizedUsers}
             />
           )}
@@ -734,7 +764,24 @@ export class LinodeCreate extends React.PureComponent<
                 <Typography>
                   Assign an existing Firewall to this Linode to control inbound
                   and outbound network traffic.{' '}
-                  <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
+                  <Link
+                    onClick={() =>
+                      sendLinodeCreateFormStepEvent({
+                        action: 'click',
+                        category: 'link',
+                        createType:
+                          (this.tabs[selectedTab].title as LinodeCreateType) ??
+                          'Distributions',
+                        formStepName: 'Firewall Panel',
+                        label: 'Learn more',
+                        version: 'v1',
+                      })
+                    }
+                    to={FIREWALL_GET_STARTED_LINK}
+                  >
+                    Learn more
+                  </Link>
+                  .
                 </Typography>
               }
               disabled={userCannotCreateLinode}
@@ -744,6 +791,9 @@ export class LinodeCreate extends React.PureComponent<
             />
           )}
           <AddonsPanel
+            diskEncryptionEnabled={
+              regionSupportsDiskEncryption && this.props.diskEncryptionEnabled
+            }
             userData={{
               createType: this.props.createType,
               onChange: updateUserData,
@@ -760,7 +810,7 @@ export class LinodeCreate extends React.PureComponent<
             handleVLANChange={this.props.handleVLANChange}
             ipamAddress={this.props.ipamAddress || ''}
             ipamError={hasErrorFor['interfaces[1].ipam_address']}
-            isEdgeRegionSelected={isEdgeRegionSelected}
+            isDistributedRegionSelected={isDistributedRegionSelected}
             isPrivateIPChecked={this.props.privateIPEnabled}
             labelError={hasErrorFor['interfaces[1].label']}
             linodesData={this.props.linodesData}
@@ -829,7 +879,6 @@ export class LinodeCreate extends React.PureComponent<
               isOpen={showApiAwarenessModal}
               onClose={handleShowApiAwarenessModal}
               payLoad={this.getPayload()}
-              route={this.props.match.url}
             />
           </StyledButtonGroupBox>
         </Grid>
@@ -839,8 +888,28 @@ export class LinodeCreate extends React.PureComponent<
 
   createLinode = () => {
     const payload = this.getPayload();
+    const { selectedTab } = this.state;
+    const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
+
+    try {
+      CreateLinodeSchema.validateSync(payload, {
+        abortEarly: true,
+      });
+      this.setState({ hasError: false });
+    } catch (e) {
+      this.setState({ hasError: true }, () => {
+        scrollErrorIntoViewV2(this.createLinodeFormRef);
+      });
+    }
     this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
+    sendLinodeCreateFormSubmitEvent(
+      'Create Linode',
+      selectedTabName ?? 'Distributions',
+      'v1'
+    );
   };
+
+  createLinodeFormRef = React.createRef<HTMLFormElement>();
 
   filterTypes = () => {
     const { createType, typesData } = this.props;
@@ -867,6 +936,25 @@ export class LinodeCreate extends React.PureComponent<
       'VPCs'
     );
 
+    const regionSupportsDiskEncryption = doesRegionSupportFeature(
+      this.props.selectedRegionID ?? '',
+      this.props.regionsData,
+      'Disk Encryption'
+    );
+
+    const hasDiskEncryptionAccountCapability = this.props.account.data?.capabilities?.includes(
+      'Disk Encryption'
+    );
+
+    const isDiskEncryptionFeatureEnabled =
+      this.props.flags.linodeDiskEncryption &&
+      hasDiskEncryptionAccountCapability;
+
+    const diskEncryptionPayload: EncryptionStatus = this.props
+      .diskEncryptionEnabled
+      ? 'enabled'
+      : 'disabled';
+
     const placement_group_payload: CreateLinodePlacementGroupPayload = {
       id: this.props.placementGroupSelection?.id ?? -1,
     };
@@ -879,13 +967,16 @@ export class LinodeCreate extends React.PureComponent<
       backup_id: this.props.selectedBackupID,
       backups_enabled: this.props.backupsEnabled,
       booted: true,
+      disk_encryption:
+        isDiskEncryptionFeatureEnabled && regionSupportsDiskEncryption
+          ? diskEncryptionPayload
+          : undefined,
       firewall_id:
         this.props.firewallId !== -1 ? this.props.firewallId : undefined,
       image: this.props.selectedImageID,
       label: this.props.label,
-      placement_group: this.props.flags.placementGroups?.enabled
-        ? placement_group_payload
-        : undefined,
+      placement_group:
+        placement_group_payload.id !== -1 ? placement_group_payload : undefined,
       private_ip: this.props.privateIPEnabled,
       region: this.props.selectedRegionID ?? '',
       root_pass: this.props.password,
@@ -978,6 +1069,38 @@ export class LinodeCreate extends React.PureComponent<
     return payload;
   };
 
+  handleAnalyticsFormError = (
+    errorMap: Partial<Record<string, string | undefined>>
+  ) => {
+    const { selectedTab } = this.state;
+    const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
+
+    if (!errorMap) {
+      return;
+    }
+    if (errorMap.region) {
+      sendLinodeCreateFormErrorEvent(
+        'Region not selected',
+        selectedTabName ?? 'Distributions',
+        'v1'
+      );
+    }
+    if (errorMap.type) {
+      sendLinodeCreateFormErrorEvent(
+        'Plan not selected',
+        selectedTabName ?? 'Distributions',
+        'v1'
+      );
+    }
+    if (errorMap.root_pass) {
+      sendLinodeCreateFormErrorEvent(
+        'Password not created',
+        selectedTabName ?? 'Distributions',
+        'v1'
+      );
+    }
+  };
+
   handleClickCreateUsingCommandLine = () => {
     const payload = {
       authorized_users: this.props.authorized_users,
@@ -1003,6 +1126,8 @@ export class LinodeCreate extends React.PureComponent<
   };
 
   handleTabChange = (index: number) => {
+    const prevTabIndex = this.state.selectedTab;
+
     this.props.resetCreationState();
 
     /** set the tab in redux state */
@@ -1014,6 +1139,20 @@ export class LinodeCreate extends React.PureComponent<
       planKey: v4(),
       selectedTab: index,
     });
+
+    // Do not fire the form event if a user is not switching to a different tab.
+    // Prevents a double-firing on Marketplace because we manually handle the tab change.
+    if (prevTabIndex !== index) {
+      sendLinodeCreateFormStepEvent({
+        action: 'click',
+        category: 'tab',
+        createType:
+          (this.tabs[prevTabIndex].title as LinodeCreateType) ??
+          'Distributions',
+        label: `${this.tabs[index].title} Tab`,
+        version: 'v1',
+      });
+    }
   };
 
   mounted: boolean = false;
@@ -1089,6 +1228,4 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, CombinedProps> = (
 
 const connected = connect(undefined, mapDispatchToProps);
 
-const enhanced = recompose<CombinedProps, InnerProps>(connected, withAccount);
-
-export default enhanced(LinodeCreate);
+export default connected(LinodeCreate);

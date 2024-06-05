@@ -8,8 +8,8 @@ import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { getUpgradeableVolumeIds } from 'src/features/Volumes/utils';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import { useLinodeVolumesQuery } from 'src/queries/volumes';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
 
 interface Props {
   linodeId: number;

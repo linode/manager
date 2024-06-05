@@ -218,10 +218,10 @@ describe('update firewall', () => {
       addFirewallRules(inboundRule, 'inbound');
 
       // Confirm that the inbound rules are listed on edit page with expected configuration
-      cy.get('[data-rbd-droppable-context-id="0"]')
+      cy.findByText(inboundRule.label!)
         .should('be.visible')
+        .closest('li')
         .within(() => {
-          cy.findByText(inboundRule.label!).should('be.visible');
           cy.findByText(inboundRule.protocol).should('be.visible');
           cy.findByText(inboundRule.ports!).should('be.visible');
           cy.findByText(getRuleActionLabel(inboundRule.action)).should(
@@ -233,10 +233,10 @@ describe('update firewall', () => {
       addFirewallRules(outboundRule, 'outbound');
 
       // Confirm that the outbound rules are listed on edit page with expected configuration
-      cy.get('[data-rbd-droppable-context-id="1"]')
+      cy.findByText(outboundRule.label!)
         .should('be.visible')
+        .closest('li')
         .within(() => {
-          cy.findByText(outboundRule.label!).should('be.visible');
           cy.findByText(outboundRule.protocol).should('be.visible');
           cy.findByText(outboundRule.ports!).should('be.visible');
           cy.findByText(getRuleActionLabel(outboundRule.action)).should(
@@ -394,6 +394,67 @@ describe('update firewall', () => {
         .within(() => {
           cy.findByText('Enabled').should('be.visible');
         });
+    });
+  });
+
+  /*
+   * - Confirms that firewall's label can be updated on landing page.
+   */
+  it("updates a firewall's label", () => {
+    const region = chooseRegion();
+
+    const linodeRequest = createLinodeRequestFactory.build({
+      label: randomLabel(),
+      region: region.id,
+      root_pass: randomString(16),
+    });
+
+    const firewallRequest = firewallFactory.build({
+      label: randomLabel(),
+      rules: {
+        inbound: [],
+        outbound: [],
+      },
+    });
+
+    const newFirewallLabel = randomLabel();
+
+    cy.defer(
+      createLinodeAndFirewall(linodeRequest, firewallRequest),
+      'creating Linode and firewall'
+    ).then(([_linode, firewall]) => {
+      cy.visitWithLogin('/firewalls');
+
+      // Confirm that firewall is listed on landing page with expected configuration.
+      cy.findByText(firewall.label)
+        .closest('tr')
+        .within(() => {
+          cy.findByText(firewall.label).should('be.visible');
+          cy.findByText('Enabled').should('be.visible');
+          cy.findByText('No rules').should('be.visible');
+          cy.findByText('None assigned').should('be.visible');
+        });
+
+      cy.visitWithLogin(`/firewalls/${firewall.id}`);
+
+      cy.findByLabelText(`Edit ${firewall.label}`).click();
+      cy.get(`[id="edit-${firewall.label}-label"]`)
+        .click()
+        .clear()
+        .type(`${newFirewallLabel}{enter}`);
+
+      // Confirm Firewall label updates in breadcrumbs.
+      ui.entityHeader.find().within(() => {
+        cy.findByText(newFirewallLabel).should('be.visible');
+        cy.findByText('firewalls').click();
+      });
+
+      // Confirm firewall label is updated on landing page without refresh.
+      cy.findByText(newFirewallLabel).should('be.visible');
+
+      // Confirm firewall label is updated on landing page after refresh.
+      cy.reload();
+      cy.findByText(newFirewallLabel).should('be.visible');
     });
   });
 });

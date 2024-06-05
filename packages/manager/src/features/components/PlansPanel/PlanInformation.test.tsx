@@ -3,11 +3,15 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { PlanInformation } from './PlanInformation';
+import {
+  PlanInformation,
+  limitedAvailabilityBannerTestId,
+} from './PlanInformation';
 
 import type { PlanInformationProps } from './PlanInformation';
 
 const mockProps: PlanInformationProps = {
+  hasMajorityOfPlansDisabled: false,
   hasSelectedRegion: true,
   isSelectedRegionEligibleForPlan: false,
   planType: 'standard',
@@ -28,5 +32,21 @@ describe('PlanInformation', () => {
     renderWithTheme(<PlanInformation {...mockProps} planType="metal" />);
     const element = screen.getByTestId('metal-notice');
     expect(element).toBeInTheDocument();
+  });
+
+  it('should inform the user about Dedicated plans having limited availability when appropriate', () => {
+    renderWithTheme(
+      <PlanInformation
+        {...mockProps}
+        hasMajorityOfPlansDisabled={true}
+        isSelectedRegionEligibleForPlan={true}
+        planType="dedicated"
+      />
+    );
+
+    const limitedAvailabilityBanner = screen.getByTestId(
+      limitedAvailabilityBannerTestId
+    );
+    expect(limitedAvailabilityBanner).toBeInTheDocument();
   });
 });

@@ -1,8 +1,7 @@
-import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { imageFactory, linodeTypeFactory } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
@@ -32,6 +31,7 @@ const props: AddonsPanelProps = {
   changeBackups: vi.fn(),
   createType: 'fromLinode',
   disabled: false,
+  diskEncryptionEnabled: false,
   handleVLANChange: vi.fn(),
   ipamAddress: 'ipadAddress',
   ipamError: 'test ipad error',
@@ -62,8 +62,9 @@ const props: AddonsPanelProps = {
       ipv4: ['45.56.75.98'],
       ipv6: '2600:3c00::f03c:93ff:fe85:576d/128',
       label: 'test_instance',
+      lke_cluster_id: null,
       placement_group: {
-        affinity_type: 'anti_affinity',
+        affinity_type: 'anti_affinity:local',
         id: 1,
         is_strict: true,
         label: 'test',
@@ -107,8 +108,9 @@ const props: AddonsPanelProps = {
       ipv4: ['192.168.139.183', '139.144.17.202'],
       ipv6: '2600:3c04::f03c:93ff:fe75:0612/128',
       label: 'debian-ca-central',
+      lke_cluster_id: null,
       placement_group: {
-        affinity_type: 'anti_affinity',
+        affinity_type: 'anti_affinity:local',
         id: 1,
         is_strict: true,
         label: 'test',
@@ -151,8 +153,9 @@ const props: AddonsPanelProps = {
       ipv4: ['45.79.74.95'],
       ipv6: '2600:3c01::f03c:93ff:fe75:e4f9/128',
       label: 'almalinux-us-west',
+      lke_cluster_id: null,
       placement_group: {
-        affinity_type: 'anti_affinity',
+        affinity_type: 'anti_affinity:local',
         id: 1,
         is_strict: true,
         label: 'test',
@@ -186,15 +189,11 @@ const props: AddonsPanelProps = {
   vlanLabel: 'abc',
 };
 
-const privateIPContextualCopyTestId = 'private-ip-contextual-copy';
-const vlanAccordionTestId = 'vlan-accordion';
-const attachVLANTestId = 'attach-vlan';
-
 describe('AddonsPanel', () => {
   beforeEach(() => {
     server.use(
-      rest.get('*/images/*', (req, res, ctx) => {
-        return res(ctx.json(imageFactory.build()));
+      http.get('*/images/*', () => {
+        return HttpResponse.json(imageFactory.build());
       })
     );
   });
@@ -273,77 +272,25 @@ describe('AddonsPanel', () => {
     expect(getByText(/\$3.57/)).toBeInTheDocument();
   });
 
-  it('should display the VLANAccordion component instead of the AttachVLAN component when VPCs are viewable in the flow', async () => {
-    const _props: AddonsPanelProps = { ...props, createType: 'fromImage' };
-
-    const wrapper = renderWithTheme(<AddonsPanel {..._props} />, {
-      flags: { vpc: true },
-    });
-
-    await waitFor(() => {
-      expect(wrapper.getByTestId(vlanAccordionTestId)).toBeInTheDocument();
-      expect(wrapper.queryByTestId(attachVLANTestId)).not.toBeInTheDocument();
-    });
-  });
-
-  it('should display the AttachVLAN component instead of the VLANAccordion component when VPCs are not viewable in the flow', async () => {
-    const _props: AddonsPanelProps = { ...props, createType: 'fromImage' };
-
-    const wrapper = renderWithTheme(<AddonsPanel {..._props} />, {
-      flags: { vpc: false },
-    });
-
-    await waitFor(() => {
-      expect(wrapper.getByTestId(attachVLANTestId)).toBeInTheDocument();
-      expect(
-        wrapper.queryByTestId(vlanAccordionTestId)
-      ).not.toBeInTheDocument();
-    });
-  });
-
-  it('should have contextual copy for the Private IP add-on when VPC is enabled', async () => {
-    const wrapper = renderWithTheme(<AddonsPanel {...props} />, {
-      flags: { vpc: true },
-    });
-
-    await waitFor(() => {
-      expect(
-        wrapper.getByTestId(privateIPContextualCopyTestId)
-      ).toBeInTheDocument();
-    });
-  });
-
-  it('should not have contextual copy for the Private IP add-on if VPC is not enabled', async () => {
-    const wrapper = renderWithTheme(<AddonsPanel {...props} />, {
-      flags: { vpc: false },
-    });
-
-    await waitFor(() => {
-      expect(
-        wrapper.queryByTestId(privateIPContextualCopyTestId)
-      ).not.toBeInTheDocument();
-    });
-  });
-
-  it('should render a warning notice if isEdgeRegionSelected is true and disable backups and private ip checkbox', () => {
-    const propsWithEdgeRegionSelected = {
+  it('should render a warning notice if isDistributedRegionSelected is true and disable backups and private ip checkbox', () => {
+    const propsWithDistributedRegionSelected = {
       ...props,
-      isEdgeRegionSelected: true,
+      isDistributedRegionSelected: true,
     };
     const { getByTestId } = renderWithTheme(
-      <AddonsPanel {...propsWithEdgeRegionSelected} />
+      <AddonsPanel {...propsWithDistributedRegionSelected} />
     );
     expect(getByTestId('notice-warning')).toBeInTheDocument();
     expect(getByTestId('private_ip')).toHaveAttribute('aria-disabled', 'true');
     expect(getByTestId('backups')).toHaveAttribute('aria-disabled', 'true');
   });
-  it('should not render a warning notice if isEdgeRegionSelected is false', () => {
-    const propsWithEdgeRegionNotSelected = {
+  it('should not render a warning notice if isDistributedRegionSelected is false', () => {
+    const propsWithDistributedRegionNotSelected = {
       ...props,
-      isEdgeRegionSelected: false,
+      isDistributedRegionSelected: false,
     };
     const { queryByTestId } = renderWithTheme(
-      <AddonsPanel {...propsWithEdgeRegionNotSelected} />
+      <AddonsPanel {...propsWithDistributedRegionNotSelected} />
     );
     expect(queryByTestId('notice-warning')).not.toBeInTheDocument();
   });

@@ -1,16 +1,24 @@
 import type { Linode, LongviewClient } from '@linode/api-v4';
 import { createLongviewClient } from '@linode/api-v4';
+import { longviewResponseFactory, longviewClientFactory } from 'src/factories';
+import { LongviewResponse } from 'src/features/Longview/request.types';
 import { authenticate } from 'support/api/authentication';
 import {
   longviewInstallTimeout,
   longviewStatusTimeout,
+  longviewEmptyStateMessage,
+  longviewAddClientButtonText,
 } from 'support/constants/longview';
 import {
   interceptFetchLongviewStatus,
   interceptGetLongviewClients,
+  mockGetLongviewClients,
+  mockFetchLongviewStatus,
+  mockCreateLongviewClient,
 } from 'support/intercepts/longview';
+import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { createAndBootLinode } from 'support/util/linodes';
+import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomString } from 'support/util/random';
 
 // Timeout if Linode creation and boot takes longer than 1 and a half minutes.
@@ -103,7 +111,8 @@ describe('longview', () => {
    * - Creates a Linode, connects to it via SSH, and installs Longview using the given cURL command.
    * - Confirms that Cloud Manager UI updates to reflect Longview installation and data.
    */
-  it('can install Longview client on a Linode', () => {
+  // TODO Unskip for M3-8107.
+  it.skip('can install Longview client on a Linode', () => {
     const linodePassword = randomString(32, {
       symbols: false,
       lowercase: true,
@@ -114,9 +123,10 @@ describe('longview', () => {
 
     const createLinodeAndClient = async () => {
       return Promise.all([
-        createAndBootLinode({
+        createTestLinode({
           root_pass: linodePassword,
           type: 'g6-standard-1',
+          booted: true,
         }),
         createLongviewClient(randomLabel()),
       ]);
@@ -147,13 +157,7 @@ describe('longview', () => {
         });
 
       // Install Longview on Linode by SSHing into machine and executing cURL command.
-      installLongview(linodeIp, linodePassword, installCommand).then(
-        (output) => {
-          // TODO Output this to a log file.
-          console.log(output.stdout);
-          console.log(output.stderr);
-        }
-      );
+      installLongview(linodeIp, linodePassword, installCommand);
 
       // Wait for Longview to begin serving data and confirm that Cloud Manager
       // UI updates accordingly.
@@ -175,5 +179,45 @@ describe('longview', () => {
           cy.findByText('Storage').should('be.visible');
         });
     });
+  });
+
+  /*
+   * - Confirms that the landing page empty state message is displayed when no Longview clients are present.
+   * - Confirms that UI updates to show the new client when creating one.
+   */
+  it('displays empty state message when no clients are present and shows the new client when creating one', () => {
+    const client: LongviewClient = longviewClientFactory.build();
+    const status: LongviewResponse = longviewResponseFactory.build();
+    mockGetLongviewClients([]).as('getLongviewClients');
+    mockCreateLongviewClient(client).as('createLongviewClient');
+    mockFetchLongviewStatus(status).as('fetchLongviewStatus');
+
+    cy.visitWithLogin('/longview');
+    cy.wait('@getLongviewClients');
+
+    // Confirms that a landing page empty state message is displayed
+    cy.findByText(longviewEmptyStateMessage).should('be.visible');
+    cy.findByText(longviewAddClientButtonText).should('be.visible');
+
+    ui.button
+      .findByTitle(longviewAddClientButtonText)
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+    cy.wait('@createLongviewClient');
+
+    // Confirms that UI updates to show the new client when creating one.
+    cy.findByText(`${client.label}`).should('be.visible');
+    cy.get(`[data-qa-longview-client="${client.id}"]`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Waiting for data...').should('not.exist');
+        cy.findByText('CPU').should('be.visible');
+        cy.findByText('RAM').should('be.visible');
+        cy.findByText('Swap').should('be.visible');
+        cy.findByText('Load').should('be.visible');
+        cy.findByText('Network').should('be.visible');
+        cy.findByText('Storage').should('be.visible');
+      });
   });
 });

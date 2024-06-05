@@ -1,6 +1,4 @@
 import { styled } from '@mui/material';
-import { Stack } from 'src/components/Stack';
-import { isNumber } from 'lodash';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -10,6 +8,7 @@ import { DisplayPrice } from 'src/components/DisplayPrice';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { Stack } from 'src/components/Stack';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -21,9 +20,10 @@ import { Typography } from 'src/components/Typography';
 import {
   useAccountSettings,
   useMutateAccountSettings,
-} from 'src/queries/accountSettings';
+} from 'src/queries/account/settings';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllTypes } from 'src/queries/types';
+import { isNumber } from 'src/utilities/isNumber';
 import { pluralize } from 'src/utilities/pluralize';
 import { getTotalBackupsPrice } from 'src/utilities/pricing/backups';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';

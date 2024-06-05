@@ -1,3 +1,4 @@
+// TODO eventMessagesV2: delete when flag is removed
 import { Event } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
@@ -80,6 +81,8 @@ export const eventMessageGenerator = (
       return 'image uploading';
     case 'volume_migrate':
       return `Volume ${e.entity?.label} is being upgraded to NVMe.`;
+    case 'database_resize':
+      return 'resizing';
 
     default:
       // If we haven't handled it explicitly here, it doesn't count as
@@ -91,6 +94,10 @@ export const eventMessageGenerator = (
 export const eventLabelGenerator = (e: Event) => {
   if (['disk_imagize'].includes(e.action)) {
     return e.secondary_entity?.label;
+  }
+
+  if (e.action == 'database_resize') {
+    return `Database ${e.entity!.label}`;
   }
   return e.entity?.label;
 };

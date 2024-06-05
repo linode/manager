@@ -6,20 +6,23 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
-import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
-import { usePlacementGroupQuery } from 'src/queries/placementGroups';
-import { useMutatePlacementGroup } from 'src/queries/placementGroups';
+import {
+  useMutatePlacementGroup,
+  usePlacementGroupQuery,
+} from 'src/queries/placementGroups';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { getAffinityEnforcement } from './utils';
+import { getAffinityTypeEnforcement } from './utils';
 
 import type { PlacementGroupsEditDrawerProps } from './types';
 import type { UpdatePlacementGroupPayload } from '@linode/api-v4';
@@ -28,17 +31,32 @@ import type { FormikHelpers } from 'formik';
 export const PlacementGroupsEditDrawer = (
   props: PlacementGroupsEditDrawerProps
 ) => {
-  const { onClose, onPlacementGroupEdit, open } = props;
+  const {
+    disableEditButton,
+    onClose,
+    onPlacementGroupEdit,
+    open,
+    region,
+    selectedPlacementGroup: placementGroupFromProps,
+  } = props;
   const { id } = useParams<{ id: string }>();
-  const { data: selectedPlacementGroup } = usePlacementGroupQuery(
-    +id,
-    Boolean(id)
+  const {
+    data: placementGroupFromParam,
+    isFetching,
+    status,
+  } = usePlacementGroupQuery(
+    Number(id),
+    open && placementGroupFromProps === undefined
   );
-  const { region } = usePlacementGroupData({
-    placementGroup: selectedPlacementGroup,
-  });
+
+  const placementGroup = React.useMemo(
+    () =>
+      open ? placementGroupFromProps ?? placementGroupFromParam : undefined,
+    [open, placementGroupFromProps, placementGroupFromParam]
+  );
+
   const { error, mutateAsync } = useMutatePlacementGroup(
-    selectedPlacementGroup?.id ?? -1
+    placementGroup?.id ?? -1
   );
   const { enqueueSnackbar } = useSnackbar();
   const {
@@ -51,9 +69,9 @@ export const PlacementGroupsEditDrawer = (
     setHasFormBeenSubmitted(false);
   };
 
-  const handleDrawerClose = () => {
-    onClose();
+  const handleClose = () => {
     handleResetForm();
+    onClose();
   };
 
   const handleFormSubmit = async (
@@ -67,7 +85,7 @@ export const PlacementGroupsEditDrawer = (
     try {
       const response = await mutateAsync(values);
 
-      enqueueSnackbar(`Placement Group ${values.label} successfully updated`, {
+      enqueueSnackbar(`Placement Group ${values.label} successfully updated.`, {
         variant: 'success',
       });
 
@@ -92,7 +110,7 @@ export const PlacementGroupsEditDrawer = (
   } = useFormik<UpdatePlacementGroupPayload>({
     enableReinitialize: true,
     initialValues: {
-      label: selectedPlacementGroup?.label ?? '',
+      label: placementGroup?.label ?? '',
     },
     onSubmit: handleFormSubmit,
     validateOnBlur: false,
@@ -102,60 +120,81 @@ export const PlacementGroupsEditDrawer = (
 
   const generalError = error?.find((e) => !e.field)?.reason;
 
-  if (!selectedPlacementGroup) {
-    return null;
-  }
-
   return (
     <Drawer
-      title={`Edit Placement Group ${selectedPlacementGroup.label} (${
-        AFFINITY_TYPES[selectedPlacementGroup.affinity_type]
-      })`}
-      onClose={handleDrawerClose}
+      title={
+        placementGroup
+          ? `Edit Placement Group ${placementGroup.label}`
+          : 'Edit Placement Group'
+      }
+      onClose={handleClose}
       open={open}
     >
       {generalError && <Notice text={generalError} variant="error" />}
-      <Typography mb={1} mt={4}>
-        <strong>Region: </strong>
-        {region ? `${region.label} (${region.id})` : 'Unknown'}
-      </Typography>
-      <Typography mb={4}>
-        <strong>Affinity Enforcement: </strong>
-        {getAffinityEnforcement(selectedPlacementGroup.is_strict)}
-      </Typography>
-      <Divider />
-      <form onSubmit={handleSubmit}>
-        <Stack spacing={1}>
-          <TextField
-            inputProps={{
-              autoFocus: true,
+      {placementGroup ? (
+        <>
+          <DescriptionList
+            items={[
+              {
+                description: region
+                  ? `${region.label} (${region.id})`
+                  : 'Unknown',
+                title: 'Region',
+              },
+              {
+                description: AFFINITY_TYPES[placementGroup.affinity_type],
+                title: 'Affinity Type',
+              },
+              {
+                description: getAffinityTypeEnforcement(
+                  placementGroup.is_strict
+                ),
+                title: 'Affinity Type Enforcement',
+              },
+            ]}
+            sx={{
+              my: 2,
             }}
-            aria-label="Label for the Placement Group"
-            disabled={false}
-            errorText={errors.label}
-            label="Label"
-            name="label"
-            onBlur={handleBlur}
-            onChange={handleChange}
-            value={values.label}
           />
-
-          <ActionsPanel
-            primaryButtonProps={{
-              'data-testid': 'submit',
-              label: 'Edit',
-              loading: isSubmitting,
-              type: 'submit',
-            }}
-            secondaryButtonProps={{
-              'data-testid': 'cancel',
-              label: 'Cancel',
-              onClick: onClose,
-            }}
-            sx={{ pt: 4 }}
-          />
-        </Stack>
-      </form>
+          <Divider />
+          <form onSubmit={handleSubmit}>
+            <Stack spacing={1}>
+              <TextField
+                inputProps={{
+                  autoFocus: true,
+                }}
+                aria-label="Label for the Placement Group"
+                disabled={!placementGroup || disableEditButton || false}
+                errorText={errors.label}
+                label="Label"
+                name="label"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.label}
+              />
+              <ActionsPanel
+                primaryButtonProps={{
+                  'data-testid': 'submit',
+                  disabled: !placementGroup || disableEditButton,
+                  label: 'Edit',
+                  loading: isSubmitting,
+                  type: 'submit',
+                }}
+                secondaryButtonProps={{
+                  'data-testid': 'cancel',
+                  label: 'Cancel',
+                  onClick: handleClose,
+                }}
+                sx={{ pt: 4 }}
+              />
+            </Stack>
+          </form>
+        </>
+      ) : isFetching ? (
+        <CircleProgress />
+      ) : status === 'error' ? (
+        <NotFound />
+      ) : null}
     </Drawer>
   );
 };

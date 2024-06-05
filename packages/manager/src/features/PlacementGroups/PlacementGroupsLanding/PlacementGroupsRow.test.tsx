@@ -11,75 +11,42 @@ import {
 
 import { PlacementGroupsRow } from './PlacementGroupsRow';
 
-const queryMocks = vi.hoisted(() => ({
-  useLinodesQuery: vi.fn().mockReturnValue({}),
-  useRegionsQuery: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('src/queries/linodes/linodes', async () => {
-  const actual = await vi.importActual('src/queries/linodes/linodes');
-
-  return {
-    ...actual,
-    useLinodesQuery: queryMocks.useLinodesQuery,
-  };
-});
-
-vi.mock('src/queries/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions');
-
-  return {
-    ...actual,
-    useRegionsQuery: queryMocks.useRegionsQuery,
-  };
-});
-
 const handleDeletePlacementGroupMock = vi.fn();
 const handleEditPlacementGroupMock = vi.fn();
 
-describe('PlacementGroupsLanding', () => {
+describe('PlacementGroupsRow', () => {
   it('renders the columns with proper data', () => {
     resizeScreenSize(1200);
-
-    queryMocks.useLinodesQuery.mockReturnValue({
-      data: {
-        data: [
-          linodeFactory.build({
-            id: 1,
-            label: 'linode1',
-            region: 'us-east',
-          }),
-        ],
-        results: 0,
-      },
-    });
-
-    queryMocks.useRegionsQuery.mockReturnValue({
-      data: [
-        regionFactory.build({
-          country: 'us',
-          id: 'us-east',
-          label: 'Newark, NJ',
-          status: 'ok',
-        }),
-      ],
-    });
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
       wrapWithTableBody(
         <PlacementGroupsRow
+          assignedLinodes={[
+            linodeFactory.build({
+              id: 1,
+              label: 'linode1',
+              region: 'us-east',
+            }),
+          ]}
           placementGroup={placementGroupFactory.build({
-            affinity_type: 'anti_affinity',
+            affinity_type: 'anti_affinity:local',
             is_compliant: false,
             label: 'group 1',
-            linodes: [
+            members: [
               {
                 is_compliant: true,
-                linode: 1,
+                linode_id: 1,
               },
             ],
             region: 'us-east',
           })}
+          region={regionFactory.build({
+            country: 'us',
+            id: 'us-east',
+            label: 'Newark, NJ',
+            status: 'ok',
+          })}
+          disabled
           handleDeletePlacementGroup={handleDeletePlacementGroupMock}
           handleEditPlacementGroup={handleEditPlacementGroupMock}
         />
@@ -87,7 +54,7 @@ describe('PlacementGroupsLanding', () => {
     );
 
     expect(getByTestId('link-to-placement-group-1')).toHaveTextContent(
-      'group 1 (Anti-affinity)'
+      'group 1'
     );
     expect(getByText('Non-compliant')).toBeInTheDocument();
     expect(getByTestId('placement-group-1-assigned-linodes')).toHaveTextContent(

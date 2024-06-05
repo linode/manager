@@ -20,10 +20,15 @@ type TooltipIconStatus =
   | 'success'
   | 'warning';
 
-type EnhancedTooltipProps = TooltipProps & { width?: number };
+interface EnhancedTooltipProps extends TooltipProps {
+  width?: number;
+}
 
 export interface TooltipIconProps
-  extends Omit<TooltipProps, 'children' | 'leaveDelay' | 'title'> {
+  extends Omit<
+    TooltipProps,
+    'children' | 'disableInteractive' | 'leaveDelay' | 'title'
+  > {
   /**
    * An optional className that does absolutely nothing
    */
@@ -33,11 +38,6 @@ export interface TooltipIconProps
    * @todo this seems like a flaw... passing an icon should not require `status` to be `other`
    */
   icon?: JSX.Element;
-  /**
-   * Makes the tooltip interactive (stays open when cursor is over tooltip)
-   * @default false
-   */
-  interactive?: boolean;
   /**
    * Enables a leaveDelay of 3000ms
    * @default false
@@ -90,7 +90,6 @@ export const TooltipIcon = (props: TooltipIconProps) => {
   const {
     classes,
     icon,
-    interactive,
     leaveDelay,
     status,
     sx,
@@ -153,7 +152,6 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       classes={classes}
       componentsProps={props.componentsProps}
       data-qa-help-tooltip
-      disableInteractive={!interactive}
       enterTouchDelay={0}
       leaveDelay={leaveDelay ? 3000 : undefined}
       leaveTouchDelay={5000}
@@ -163,7 +161,16 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       title={text}
       width={width}
     >
-      <IconButton data-qa-help-button size="large" sx={sxTooltipIcon}>
+      <IconButton
+        onClick={(e) => {
+          // This prevents unwanted behavior when clicking a tooltip icon.
+          // See https://github.com/linode/manager/pull/10331#pullrequestreview-1971338778
+          e.stopPropagation();
+        }}
+        data-qa-help-button
+        size="large"
+        sx={sxTooltipIcon}
+      >
         {renderIcon}
       </IconButton>
     </StyledTooltip>

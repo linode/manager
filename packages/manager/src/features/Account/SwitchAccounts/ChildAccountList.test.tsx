@@ -4,28 +4,25 @@ import * as React from 'react';
 import { accountFactory, profileFactory } from 'src/factories';
 import { ChildAccountList } from 'src/features/Account/SwitchAccounts/ChildAccountList';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 const props = {
   currentTokenWithBearer: 'Bearer 123',
-  isProxyUser: false,
   onClose: vi.fn(),
   onSwitchAccount: vi.fn(),
+  searchQuery: '',
+  userType: undefined,
 };
 
 it('should display a list of child accounts', async () => {
   server.use(
-    rest.get('*/profile', (req, res, ctx) => {
-      return res(ctx.json(profileFactory.build({ user_type: 'parent' })));
+    http.get('*/profile', () => {
+      return HttpResponse.json(profileFactory.build({ user_type: 'parent' }));
     }),
-    rest.get('*/account/child-accounts', (req, res, ctx) => {
-      return res(
-        ctx.json(
-          makeResourcePage(
-            accountFactory.buildList(5, { company: 'Child Co.' })
-          )
-        )
+    http.get('*/account/child-accounts', () => {
+      return HttpResponse.json(
+        makeResourcePage(accountFactory.buildList(5, { company: 'Child Co.' }))
       );
     })
   );

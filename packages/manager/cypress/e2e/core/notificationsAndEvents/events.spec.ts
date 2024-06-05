@@ -1,9 +1,13 @@
 import { Event, EventAction } from '@linode/api-v4';
 import { eventFactory } from '@src/factories/events';
-import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { RecPartial } from 'factory.ts';
 import { containsClick, getClick } from 'support/helpers';
-import { apiMatcher } from 'support/util/intercepts';
+import { mockGetEvents } from 'support/intercepts/events';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
 
 const eventActions: RecPartial<EventAction>[] = [
   'backups_cancel',
@@ -16,6 +20,7 @@ const eventActions: RecPartial<EventAction>[] = [
   'disk_duplicate',
   'disk_resize',
   'disk_update',
+  'database_resize',
   'database_low_disk_space',
   'entity_transfer_accept',
   'entity_transfer_cancel',
@@ -107,10 +112,16 @@ const events: Event[] = eventActions.map((action) => {
 });
 
 describe('verify notification types and icons', () => {
+  before(() => {
+    // TODO eventMessagesV2: delete when flag is removed and update test
+    mockAppendFeatureFlags({
+      eventMessagesV2: makeFeatureFlagData(false),
+    });
+    mockGetFeatureFlagClientstream();
+  });
+
   it(`notifications`, () => {
-    cy.intercept(apiMatcher('account/events*'), (req) => {
-      req.reply(makeResourcePage(events));
-    }).as('mockEvents');
+    mockGetEvents(events).as('mockEvents');
     cy.visitWithLogin('/linodes');
     cy.wait('@mockEvents').then(() => {
       getClick('button[aria-label="Notifications"]');

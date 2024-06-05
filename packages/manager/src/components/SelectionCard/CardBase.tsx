@@ -37,8 +37,11 @@ export const CardBase = (props: CardBaseProps) => {
   } = props;
 
   const renderSubheadings = subheadings.map((subheading, idx) => {
+    const subHeadingIsString = typeof subheading === 'string';
+
     return (
       <CardBaseSubheading
+        className={subHeadingIsString ? 'cardSubheadingItem' : ''}
         data-qa-select-card-subheading={`subheading-${idx + 1}`}
         key={idx}
         sx={sxSubheading}
@@ -52,7 +55,10 @@ export const CardBase = (props: CardBaseProps) => {
     <CardBaseGrid checked={checked} container spacing={2} sx={sx}>
       {renderIcon && <CardBaseIcon sx={sxIcon}>{renderIcon()}</CardBaseIcon>}
       <CardBaseHeadings sx={sxHeading}>
-        <CardBaseHeading data-qa-select-card-heading={heading}>
+        <CardBaseHeading
+          className="cardSubheadingTitle"
+          data-qa-select-card-heading={heading}
+        >
           {heading}
           {headingDecoration}
         </CardBaseHeading>

@@ -1,7 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import countryData, { Region } from 'country-region-data';
+import { allCountries } from 'country-region-data';
 import { useFormik } from 'formik';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -11,12 +10,10 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccount, useMutateAccount } from 'src/queries/account';
-import { useNotificationsQuery } from 'src/queries/accountNotifications';
-import { useProfile } from 'src/queries/profile';
+import { useAccount, useMutateAccount } from 'src/queries/account/account';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { useProfile } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
-
-import { Country } from './types';
 
 interface Props {
   focusEmail: boolean;
@@ -107,36 +104,44 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
 
   const generalError = errorMap.none;
 
-  const countryResults: Item<string>[] = countryData.map((country: Country) => {
+  /**
+   * `country-region-data` mapping:
+   *
+   * COUNTRY
+   * - country[0] is the readable name of the country (e.g. "United States")
+   * - country[1] is the ISO 3166-1 alpha-2 code of the country (e.g. "US")
+   * - country[2] is an array of regions for the country
+   *
+   * REGION
+   * - region[0] is the readable name of the region (e.g. "Alabama")
+   * - region[1] is the ISO 3166-2 code of the region (e.g. "AL")
+   */
+  const countryResults: Item<string>[] = allCountries.map((country) => {
     return {
-      label: country.countryName,
-      value: country.countryShortCode,
+      label: country[0],
+      value: country[1],
     };
   });
 
-  const currentCountryResult = countryData.filter((country: Country) =>
+  const currentCountryResult = allCountries.filter((country) =>
     formik.values.country
-      ? country.countryShortCode === formik.values.country
-      : country.countryShortCode === account?.country
+      ? country[1] === formik.values.country
+      : country[1] === account?.country
   );
 
-  const countryRegions: Region[] = pathOr(
-    [],
-    ['0', 'regions'],
-    currentCountryResult
-  );
+  const countryRegions = currentCountryResult?.[0]?.[2] ?? [];
 
   const regionResults = countryRegions.map((region) => {
-    if (formik.values.country === 'US' && region.name === 'Virgin Islands') {
+    if (formik.values.country === 'US' && region[0] === 'Virgin Islands') {
       return {
         label: 'Virgin Islands, U.S.',
-        value: region.shortCode,
+        value: region[1],
       };
     }
 
     return {
-      label: region.name,
-      value: region.shortCode,
+      label: region[0],
+      value: region[1],
     };
   });
 

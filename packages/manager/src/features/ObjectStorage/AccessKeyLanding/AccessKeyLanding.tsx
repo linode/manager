@@ -1,6 +1,7 @@
 import {
   ObjectStorageKey,
   ObjectStorageKeyRequest,
+  UpdateObjectStorageKeyRequest,
   createObjectStorageKeys,
   revokeObjectStorageKey,
   updateObjectStorageKey,
@@ -16,22 +17,22 @@ import { useErrors } from 'src/hooks/useErrors';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountSettings } from 'src/queries/accountSettings';
+import { useAccountSettings } from 'src/queries/account/settings';
 import { useObjectStorageAccessKeys } from 'src/queries/objectStorage';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import {
   sendCreateAccessKeyEvent,
   sendEditAccessKeyEvent,
   sendRevokeAccessKeyEvent,
-} from 'src/utilities/analytics';
+} from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 import { AccessKeyDrawer } from './AccessKeyDrawer';
 import { AccessKeyTable } from './AccessKeyTable/AccessKeyTable';
 import { OMC_AccessKeyDrawer } from './OMC_AccessKeyDrawer';
 import { RevokeAccessKeyDialog } from './RevokeAccessKeyDialog';
-import ViewPermissionsDrawer from './ViewPermissionsDrawer';
 import { MODE, OpenAccessDrawer } from './types';
+import ViewPermissionsDrawer from './ViewPermissionsDrawer';
 
 interface Props {
   accessDrawerOpen: boolean;
@@ -155,12 +156,12 @@ export const AccessKeyLanding = (props: Props) => {
   };
 
   const handleEditKey = (
-    values: ObjectStorageKeyRequest,
+    values: UpdateObjectStorageKeyRequest,
     {
       setErrors,
       setStatus,
       setSubmitting,
-    }: FormikHelpers<ObjectStorageKeyRequest>
+    }: FormikHelpers<UpdateObjectStorageKeyRequest>
   ) => {
     // This shouldn't happen, but just in case.
     if (!keyToEdit) {
@@ -178,7 +179,10 @@ export const AccessKeyLanding = (props: Props) => {
 
     setSubmitting(true);
 
-    updateObjectStorageKey(keyToEdit.id, values)
+    updateObjectStorageKey(
+      keyToEdit.id,
+      isObjMultiClusterEnabled ? values : { label: values.label }
+    )
       .then((_) => {
         setSubmitting(false);
 

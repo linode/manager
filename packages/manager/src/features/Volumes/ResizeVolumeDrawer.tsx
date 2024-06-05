@@ -8,12 +8,16 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useGrants } from 'src/queries/profile';
-import { useResizeVolumeMutation } from 'src/queries/volumes';
+import { useGrants } from 'src/queries/profile/profile';
+import {
+  useResizeVolumeMutation,
+  useVolumeTypesQuery,
+} from 'src/queries/volumes/volumes';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
 import { PricePanel } from './VolumeDrawer/PricePanel';
 import { SizeField } from './VolumeDrawer/SizeField';
@@ -36,11 +40,14 @@ export const ResizeVolumeDrawer = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: grants } = useGrants();
+  const { data: types, isError, isLoading } = useVolumeTypesQuery();
 
   const isReadOnly =
     grants !== undefined &&
     grants.volume.find((grant) => grant.id === volume?.id)?.permissions ===
       'read_only';
+
+  const isInvalidPrice = !types || isError;
 
   const {
     dirty,
@@ -113,9 +120,13 @@ export const ResizeVolumeDrawer = (props: Props) => {
         />
         <ActionsPanel
           primaryButtonProps={{
-            disabled: isReadOnly || !dirty,
+            disabled: isReadOnly || !dirty || isInvalidPrice,
             label: 'Resize Volume',
             loading: isSubmitting,
+            tooltipText:
+              !isLoading && isInvalidPrice
+                ? PRICES_RELOAD_ERROR_NOTICE_TEXT
+                : '',
             type: 'submit',
           }}
           secondaryButtonProps={{

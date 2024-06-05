@@ -22,10 +22,12 @@ import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { MODE } from './AccessKeyLanding/types';
 import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
+import { OMC_BucketLanding } from './BucketLanding/OMC_BucketLanding';
 import { OMC_CreateBucketDrawer } from './BucketLanding/OMC_CreateBucketDrawer';
 
 const BucketLanding = React.lazy(() =>
@@ -52,12 +54,43 @@ export const ObjectStorageLanding = () => {
     account,
     accountSettings,
   } = useAccountManagement();
-  const { data: objectStorageClusters } = useObjectStorageClusters();
+
+  const flags = useFlags();
+
+  const isObjMultiClusterEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
+
+  const { data: objectStorageClusters } = useObjectStorageClusters(
+    !isObjMultiClusterEnabled
+  );
+
+  const { data: regionsData } = useRegionsQuery();
+
+  const regionsSupportingObjectStorage = regionsData?.filter((region) =>
+    region.capabilities.includes('Object Storage')
+  );
+
+  /*
+   @TODO OBJ Multicluster:'region' will become required, and the
+   'cluster' field will be deprecated once the feature is fully rolled out in production.
+   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
+   remove 'cluster' and retain 'regions'.
+  */
   const {
     data: objectStorageBucketsResponse,
     error: bucketsErrors,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets(objectStorageClusters);
+  } = useObjectStorageBuckets({
+    clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
+    isObjMultiClusterEnabled,
+    regions: isObjMultiClusterEnabled
+      ? regionsSupportingObjectStorage
+      : undefined,
+  });
+
   const userHasNoBucketCreated =
     objectStorageBucketsResponse?.buckets.length === 0;
   const createOrEditDrawer = useOpenClose();
@@ -83,14 +116,6 @@ export const ObjectStorageLanding = () => {
   const navToURL = (index: number) => {
     history.push(tabs[index].routeName);
   };
-
-  const flags = useFlags();
-
-  const isObjMultiClusterEnabled = isFeatureEnabled(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
 
   const objPromotionalOffers = (
     flags.promotionalOffers ?? []
@@ -158,7 +183,11 @@ export const ObjectStorageLanding = () => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <BucketLanding />
+              {isObjMultiClusterEnabled ? (
+                <OMC_BucketLanding />
+              ) : (
+                <BucketLanding />
+              )}
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <AccessKeyLanding

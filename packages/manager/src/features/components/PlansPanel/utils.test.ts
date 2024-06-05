@@ -1,10 +1,14 @@
 import { extendedTypes } from 'src/__data__/ExtendedType';
+import { regionAvailabilityFactory } from 'src/factories';
 import { planSelectionTypeFactory, typeFactory } from 'src/factories/types';
 
+import { PLAN_IS_CURRENTLY_UNAVAILABLE_COPY } from './constants';
 import {
   determineInitialPlanCategoryTab,
+  extractPlansInformation,
+  getDisabledPlanReasonCopy,
+  getIsLimitedAvailability,
   getPlanSelectionsByPlanType,
-  getIsPlanSoldOut,
   planTypeOrder,
 } from './utils';
 
@@ -145,12 +149,12 @@ describe('determineInitialPlanCategoryTab', () => {
   });
 });
 
-describe('getIsPlanSoldOut', () => {
+describe('getIsLimitedAvailability', () => {
   const mockPlan: PlanSelectionType = planSelectionTypeFactory.build();
   const mockSelectedRegionId = 'us-east-1';
 
   it('should return false if regionAvailabilities is falsy', () => {
-    const result = getIsPlanSoldOut({
+    const result = getIsLimitedAvailability({
       plan: mockPlan,
       regionAvailabilities: undefined,
       selectedRegionId: mockSelectedRegionId,
@@ -160,7 +164,7 @@ describe('getIsPlanSoldOut', () => {
   });
 
   it('should return false if no matching regionAvailability is found (based on planId)', () => {
-    const result = getIsPlanSoldOut({
+    const result = getIsLimitedAvailability({
       plan: mockPlan,
       regionAvailabilities: [
         { available: true, plan: 'fakeplan', region: 'us-east-1' },
@@ -172,7 +176,7 @@ describe('getIsPlanSoldOut', () => {
   });
 
   it('should return false if selectedRegionId is falsy', () => {
-    const result = getIsPlanSoldOut({
+    const result = getIsLimitedAvailability({
       plan: mockPlan,
       regionAvailabilities: [
         { available: false, plan: mockPlan.id, region: 'us-east-1' },
@@ -184,7 +188,7 @@ describe('getIsPlanSoldOut', () => {
   });
 
   it('should return false if no matching regionAvailability is found', () => {
-    const result = getIsPlanSoldOut({
+    const result = getIsLimitedAvailability({
       plan: mockPlan,
       regionAvailabilities: [
         { available: false, plan: mockPlan.id, region: 'us-west-2' },
@@ -196,7 +200,7 @@ describe('getIsPlanSoldOut', () => {
   });
 
   it('should return true if matching regionAvailability is found with available set to false', () => {
-    const result = getIsPlanSoldOut({
+    const result = getIsLimitedAvailability({
       plan: mockPlan,
       regionAvailabilities: [
         { available: false, plan: mockPlan.id, region: 'us-east-1' },
@@ -208,7 +212,7 @@ describe('getIsPlanSoldOut', () => {
   });
 
   it('should return false if matching regionAvailability is found with available set to true', () => {
-    const result = getIsPlanSoldOut({
+    const result = getIsLimitedAvailability({
       plan: mockPlan,
       regionAvailabilities: [
         { available: true, plan: mockPlan.id, region: 'us-east-1' },
@@ -217,5 +221,200 @@ describe('getIsPlanSoldOut', () => {
     });
 
     expect(result).toBe(false);
+  });
+});
+
+describe('extractPlansInformation', () => {
+  const g6Standard1 = planSelectionTypeFactory.build({
+    id: 'g6-standard-1',
+  });
+  const g7Standard1 = planSelectionTypeFactory.build({
+    id: 'g7-standard-1',
+  });
+  const g6Nanode1 = planSelectionTypeFactory.build({
+    id: 'g6-nanode-1',
+  });
+  it('should return correct information when less than half of plans are disabled', () => {
+    const result = extractPlansInformation({
+      disableLargestGbPlansFlag: false,
+      plans: [g6Standard1, g7Standard1, g6Nanode1],
+      regionAvailabilities: [
+        regionAvailabilityFactory.build({
+          available: false,
+          plan: 'g6-standard-1',
+          region: 'us-east',
+        }),
+      ],
+      selectedRegionId: 'us-east',
+    });
+
+    expect(result).toHaveProperty('allDisabledPlans', [
+      {
+        ...g6Standard1,
+        ...{
+          planBelongsToDisabledClass: false,
+          planHasLimitedAvailability: true,
+          planIsDisabled512Gb: false,
+        },
+      },
+    ]);
+    expect(result).toHaveProperty('hasDisabledPlans', true);
+    expect(result).toHaveProperty('hasMajorityOfPlansDisabled', false);
+    expect(result).toHaveProperty('plansForThisLinodeTypeClass', [
+      {
+        ...g6Standard1,
+        planBelongsToDisabledClass: false,
+        planHasLimitedAvailability: true,
+        planIsDisabled512Gb: false,
+      },
+      {
+        ...g7Standard1,
+        planBelongsToDisabledClass: false,
+        planHasLimitedAvailability: false,
+        planIsDisabled512Gb: false,
+      },
+      {
+        ...g6Nanode1,
+        planBelongsToDisabledClass: false,
+        planHasLimitedAvailability: false,
+        planIsDisabled512Gb: false,
+      },
+    ]);
+  });
+
+  it('should return correct information when all plans are disabled', () => {
+    const result = extractPlansInformation({
+      disableLargestGbPlansFlag: false,
+      disabledSmallerPlans: [g7Standard1],
+      plans: [g6Standard1, g6Nanode1, g7Standard1],
+      regionAvailabilities: [
+        regionAvailabilityFactory.build({
+          available: false,
+          plan: 'g6-standard-1',
+          region: 'us-east',
+        }),
+        regionAvailabilityFactory.build({
+          available: false,
+          plan: 'g6-nanode-1',
+          region: 'us-east',
+        }),
+        regionAvailabilityFactory.build({
+          available: true,
+          plan: 'g7-standard-1',
+          region: 'us-east',
+        }),
+      ],
+      selectedRegionId: 'us-east',
+    });
+
+    expect(result).toHaveProperty('allDisabledPlans', [
+      {
+        ...g6Standard1,
+        ...{
+          planBelongsToDisabledClass: false,
+          planHasLimitedAvailability: true,
+          planIsDisabled512Gb: false,
+          planIsTooSmall: false,
+        },
+      },
+      {
+        ...g6Nanode1,
+        ...{
+          planBelongsToDisabledClass: false,
+          planHasLimitedAvailability: true,
+          planIsDisabled512Gb: false,
+          planIsTooSmall: false,
+        },
+      },
+      {
+        ...g7Standard1,
+        ...{
+          planBelongsToDisabledClass: false,
+          planHasLimitedAvailability: false,
+          planIsDisabled512Gb: false,
+          planIsTooSmall: true,
+        },
+      },
+    ]);
+    expect(result).toHaveProperty('hasDisabledPlans', true);
+    expect(result).toHaveProperty('hasMajorityOfPlansDisabled', true);
+    expect(result).toHaveProperty('plansForThisLinodeTypeClass', [
+      {
+        ...g6Standard1,
+        ...{
+          planBelongsToDisabledClass: false,
+          planHasLimitedAvailability: true,
+          planIsDisabled512Gb: false,
+          planIsTooSmall: false,
+        },
+      },
+      {
+        ...g6Nanode1,
+        ...{
+          planBelongsToDisabledClass: false,
+          planHasLimitedAvailability: true,
+          planIsDisabled512Gb: false,
+          planIsTooSmall: false,
+        },
+      },
+      {
+        ...g7Standard1,
+        ...{
+          planBelongsToDisabledClass: false,
+          planHasLimitedAvailability: false,
+          planIsDisabled512Gb: false,
+          planIsTooSmall: true,
+        },
+      },
+    ]);
+  });
+
+  it('should return correct information when no plans are disabled', () => {
+    const result = extractPlansInformation({
+      disableLargestGbPlansFlag: false,
+      disabledSmallerPlans: [],
+      plans: [g6Standard1, g6Nanode1],
+      regionAvailabilities: [
+        regionAvailabilityFactory.build({
+          available: true,
+          plan: 'g6-standard-1',
+          region: 'us-east',
+        }),
+        regionAvailabilityFactory.build({
+          available: true,
+          plan: 'g6-nanode-1',
+          region: 'us-east',
+        }),
+      ],
+      selectedRegionId: 'us-east',
+    });
+
+    expect(result).toHaveProperty('allDisabledPlans', []);
+    expect(result).toHaveProperty('hasDisabledPlans', false);
+    expect(result).toHaveProperty('hasMajorityOfPlansDisabled', false);
+    expect(result).toHaveProperty('plansForThisLinodeTypeClass', [
+      {
+        ...g6Standard1,
+        planBelongsToDisabledClass: false,
+        planHasLimitedAvailability: false,
+        planIsDisabled512Gb: false,
+        planIsTooSmall: false,
+      },
+      {
+        ...g6Nanode1,
+        planBelongsToDisabledClass: false,
+        planHasLimitedAvailability: false,
+        planIsDisabled512Gb: false,
+        planIsTooSmall: false,
+      },
+    ]);
+  });
+
+  describe('getDisabledPlanReasonCopy', () => {
+    it('should always return the default copy', () => {
+      const result = getDisabledPlanReasonCopy({} as any);
+
+      expect(result).toBe(PLAN_IS_CURRENTLY_UNAVAILABLE_COPY);
+    });
   });
 });

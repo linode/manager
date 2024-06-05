@@ -1,10 +1,11 @@
 import Avatar from '@mui/material/Avatar';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import UserIcon from 'src/assets/icons/account.svg';
-import { useAccountUser } from 'src/queries/accountUsers';
+import { useAccountUser } from 'src/queries/account/users';
 import { getGravatarUrl } from 'src/utilities/gravatar';
+
+import { DEFAULT_AVATAR_SIZE } from './GravatarByEmail';
 
 interface Props {
   className?: string;
@@ -17,20 +18,13 @@ export const GravatarByUsername = (props: Props) => {
   const url = user?.email ? getGravatarUrl(user.email) : undefined;
 
   return (
-    <StyledAvatar
+    <Avatar
       alt={`Avatar for user ${username}`}
       className={className}
       src={url}
+      sx={{ height: DEFAULT_AVATAR_SIZE, width: DEFAULT_AVATAR_SIZE }}
     >
       <UserIcon className={className} />
-    </StyledAvatar>
+    </Avatar>
   );
 };
-
-const StyledAvatar = styled(Avatar, {
-  label: 'StyledGravatarByUsername',
-})(() => ({
-  borderRadius: '50%',
-  height: 28,
-  width: 28,
-}));

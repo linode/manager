@@ -85,10 +85,10 @@ const SupportTicketsLanding = () => {
           <Tab data-qa-tab="Closed Tickets">Closed Tickets</Tab>
         </TabList>
         <TabPanels>
-          <TabPanel>
+          <TabPanel data-qa-open-tickets-tab>
             <TicketList filterStatus="open" />
           </TabPanel>
-          <TabPanel>
+          <TabPanel data-qa-closed-tickets-tab>
             <TicketList filterStatus="closed" />
           </TabPanel>
         </TabPanels>

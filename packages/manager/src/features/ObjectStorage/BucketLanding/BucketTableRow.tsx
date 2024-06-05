@@ -6,8 +6,12 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { Typography } from 'src/components/Typography';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageClusters } from 'src/queries/objectStorage';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { getRegionsByRegionId } from 'src/utilities/regions';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { BucketActionMenu } from './BucketActionMenu';
@@ -34,24 +38,41 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
     objects,
     onDetails,
     onRemove,
+    region,
     size,
   } = props;
 
-  const { data: clusters } = useObjectStorageClusters();
   const { data: regions } = useRegionsQuery();
 
+  const flags = useFlags();
+  const { account } = useAccountManagement();
+
+  const isObjMultiClusterEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
+
+  const { data: clusters } = useObjectStorageClusters(
+    !isObjMultiClusterEnabled
+  );
+
   const actualCluster = clusters?.find((c) => c.id === cluster);
-  const region = regions?.find((r) => r.id === actualCluster?.region);
+  const clusterRegion = regions?.find((r) => r.id === actualCluster?.region);
+
+  const regionsLookup = regions && getRegionsByRegionId(regions);
 
   return (
-    <StyledBucketRow ariaLabel={label} data-qa-bucket-cell={label} key={label}>
+    <StyledBucketRow data-qa-bucket-cell={label} key={label}>
       <TableCell>
         <Grid alignItems="center" container spacing={2} wrap="nowrap">
           <Grid>
             <StyledBucketNameWrapper>
               <Typography component="h3" data-qa-label variant="body1">
                 <StyledBucketLabelLink
-                  to={`/object-storage/buckets/${cluster}/${label}`}
+                  to={`/object-storage/buckets/${
+                    isObjMultiClusterEnabled ? region : cluster
+                  }/${label}`}
                 >
                   {label}{' '}
                 </StyledBucketLabelLink>
@@ -65,7 +86,9 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
       <Hidden smDown>
         <StyledBucketRegionCell>
           <Typography data-qa-region variant="body1">
-            {region?.label ?? cluster}
+            {isObjMultiClusterEnabled && regionsLookup && region
+              ? regionsLookup[region].label
+              : clusterRegion?.label ?? cluster}
           </Typography>
         </StyledBucketRegionCell>
       </Hidden>

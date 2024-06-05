@@ -2,10 +2,12 @@
  * @files Cypress intercepts and mocks for Volume API requests.
  */
 
+import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
+import { makeResponse } from 'support/util/response';
 
-import type { Volume } from '@linode/api-v4';
+import type { PriceType, Volume } from '@linode/api-v4';
 
 /**
  * Intercepts GET request to fetch Volumes and mocks response.
@@ -121,4 +123,34 @@ export const interceptDeleteVolume = (
  */
 export const mockMigrateVolumes = (): Cypress.Chainable<null> => {
   return cy.intercept('POST', apiMatcher(`volumes/migrate`), {});
+};
+
+/**
+ * Intercepts GET request to fetch Volumes Types and mocks response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetVolumeTypes = (
+  volumeTypes: PriceType[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('volumes/types*'),
+    paginateResponse(volumeTypes)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch Volumes Types and mocks an error response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetVolumeTypesError = (): Cypress.Chainable<null> => {
+  const errorResponse = makeErrorResponse('', 500);
+
+  return cy.intercept(
+    'GET',
+    apiMatcher('volumes/types*'),
+    makeResponse(errorResponse)
+  );
 };

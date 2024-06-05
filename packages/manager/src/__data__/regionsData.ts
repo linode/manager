@@ -10,15 +10,17 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Block Storage Migrations',
       'Managed Databases',
-      'Placement Group',
     ],
     country: 'in',
     id: 'ap-west',
     label: 'Mumbai, IN',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 5,
+      maximum_pgs_per_customer: 10,
+    },
     resolvers: {
       ipv4:
         '172.105.34.5, 172.105.35.5, 172.105.36.5, 172.105.37.5, 172.105.38.5, 172.105.39.5, 172.105.40.5, 172.105.41.5, 172.105.42.5, 172.105.43.5',
@@ -36,6 +38,7 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Block Storage Migrations',
       'Managed Databases',
       'Placement Group',
@@ -43,8 +46,10 @@ export const regions: Region[] = [
     country: 'ca',
     id: 'ca-central',
     label: 'Toronto, CA',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 1,
+      maximum_pgs_per_customer: null,
+    },
     resolvers: {
       ipv4:
         '172.105.0.5, 172.105.3.5, 172.105.4.5, 172.105.5.5, 172.105.6.5, 172.105.7.5, 172.105.8.5, 172.105.9.5, 172.105.10.5, 172.105.11.5',
@@ -62,15 +67,17 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Block Storage Migrations',
       'Managed Databases',
-      'Placement Group',
     ],
     country: 'au',
     id: 'ap-southeast',
     label: 'Sydney, AU',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '172.105.166.5, 172.105.169.5, 172.105.168.5, 172.105.172.5, 172.105.162.5, 172.105.170.5, 172.105.167.5, 172.105.171.5, 172.105.181.5, 172.105.161.5',
@@ -89,6 +96,7 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Managed Databases',
       'Metadata',
       'Premium Plans',
@@ -97,8 +105,10 @@ export const regions: Region[] = [
     country: 'us',
     id: 'us-iad',
     label: 'Washington, DC',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '139.144.192.62,   139.144.192.60,   139.144.192.61,   139.144.192.53,   139.144.192.54,   139.144.192.67,   139.144.192.69,    139.144.192.66,   139.144.192.52,   139.144.192.68',
@@ -117,6 +127,7 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Managed Databases',
       'Metadata',
       'Premium Plans',
@@ -124,8 +135,10 @@ export const regions: Region[] = [
     country: 'us',
     id: 'us-ord',
     label: 'Chicago, IL',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '172.232.0.17,   172.232.0.16,   172.232.0.21,   172.232.0.13,   172.232.0.22,   172.232.0.9,   172.232.0.19,   172.232.0.20,   172.232.0.15,   172.232.0.18',
@@ -144,16 +157,18 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Managed Databases',
       'Metadata',
       'Premium Plans',
-      'Placement Group',
     ],
     country: 'fr',
     id: 'fr-par',
     label: 'Paris, FR',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '172.232.32.21,  172.232.32.23,  172.232.32.17,  172.232.32.18,  172.232.32.16,  172.232.32.22,  172.232.32.20,  172.232.32.14,  172.232.32.11,  172.232.32.12',
@@ -172,6 +187,7 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Metadata',
       'Premium Plans',
       'Placement Group',
@@ -179,8 +195,10 @@ export const regions: Region[] = [
     country: 'us',
     id: 'us-sea',
     label: 'Seattle, WA',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '172.232.160.19, 172.232.160.21, 172.232.160.17, 172.232.160.15, 172.232.160.18, 172.232.160.8, 172.232.160.12, 172.232.160.11, 172.232.160.14, 172.232.160.16',
@@ -199,6 +217,7 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Metadata',
       'Premium Plans',
       'Placement Group',
@@ -206,8 +225,10 @@ export const regions: Region[] = [
     country: 'br',
     id: 'br-gru',
     label: 'Sao Paulo, BR',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '172.233.0.4, 172.233.0.9, 172.233.0.7, 172.233.0.12, 172.233.0.5, 172.233.0.13, 172.233.0.10, 172.233.0.6, 172.233.0.8, 172.233.0.11',
@@ -226,15 +247,17 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Metadata',
       'Premium Plans',
-      'Placement Group',
     ],
     country: 'nl',
     id: 'nl-ams',
     label: 'Amsterdam, NL',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '172.233.33.36, 172.233.33.38, 172.233.33.35, 172.233.33.39, 172.233.33.34, 172.233.33.33, 172.233.33.31, 172.233.33.30, 172.233.33.37, 172.233.33.32',
@@ -253,15 +276,17 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Metadata',
       'Premium Plans',
-      'Placement Group',
     ],
     country: 'se',
     id: 'se-sto',
     label: 'Stockholm, SE',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '172.232.128.24, 172.232.128.26, 172.232.128.20, 172.232.128.22, 172.232.128.25, 172.232.128.19, 172.232.128.23, 172.232.128.18, 172.232.128.21, 172.232.128.27',
@@ -280,15 +305,17 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Metadata',
       'Premium Plans',
-      'Placement Group',
     ],
     country: 'in',
     id: 'in-maa',
     label: 'Chennai, IN',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '172.232.96.17, 172.232.96.26, 172.232.96.19, 172.232.96.20, 172.232.96.25, 172.232.96.21, 172.232.96.18, 172.232.96.22, 172.232.96.23, 172.232.96.24',
@@ -307,6 +334,7 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Metadata',
       'Premium Plans',
       'Placement Group',
@@ -314,8 +342,10 @@ export const regions: Region[] = [
     country: 'jp',
     id: 'jp-osa',
     label: 'Osaka, JP',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '172.233.64.44, 172.233.64.43, 172.233.64.37, 172.233.64.40, 172.233.64.46, 172.233.64.41, 172.233.64.39, 172.233.64.42, 172.233.64.45, 172.233.64.38',
@@ -334,15 +364,17 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Metadata',
       'Premium Plans',
-      'Placement Group',
     ],
     country: 'it',
     id: 'it-mil',
     label: 'Milan, IT',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '172.232.192.19, 172.232.192.18, 172.232.192.16, 172.232.192.20, 172.232.192.24, 172.232.192.21, 172.232.192.22, 172.232.192.17, 172.232.192.15, 172.232.192.23',
@@ -361,6 +393,7 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Metadata',
       'Premium Plans',
       'Placement Group',
@@ -368,8 +401,10 @@ export const regions: Region[] = [
     country: 'us',
     id: 'us-mia',
     label: 'Miami, FL',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '172.233.160.34, 172.233.160.27, 172.233.160.30, 172.233.160.29, 172.233.160.32, 172.233.160.28, 172.233.160.33, 172.233.160.26, 172.233.160.25, 172.233.160.31',
@@ -388,15 +423,17 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Metadata',
       'Premium Plans',
-      'Placement Group',
     ],
     country: 'id',
     id: 'id-cgk',
     label: 'Jakarta, ID',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '172.232.224.23, 172.232.224.32, 172.232.224.26, 172.232.224.27, 172.232.224.21, 172.232.224.24, 172.232.224.22, 172.232.224.20, 172.232.224.31, 172.232.224.28',
@@ -415,6 +452,7 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Metadata',
       'Premium Plans',
       'Placement Group',
@@ -422,8 +460,10 @@ export const regions: Region[] = [
     country: 'us',
     id: 'us-lax',
     label: 'Los Angeles, CA',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '172.233.128.45, 172.233.128.38, 172.233.128.53, 172.233.128.37, 172.233.128.34, 172.233.128.36, 172.233.128.33, 172.233.128.39, 172.233.128.43, 172.233.128.44',
@@ -441,6 +481,7 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Block Storage Migrations',
       'Managed Databases',
       'Placement Group',
@@ -448,8 +489,10 @@ export const regions: Region[] = [
     country: 'us',
     id: 'us-central',
     label: 'Dallas, TX',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '72.14.179.5, 72.14.188.5, 173.255.199.5, 66.228.53.5, 96.126.122.5, 96.126.124.5, 96.126.127.5, 198.58.107.5, 198.58.111.5, 23.239.24.5',
@@ -473,8 +516,10 @@ export const regions: Region[] = [
     country: 'us',
     id: 'us-west',
     label: 'Fremont, CA',
-    maximum_pgs_per_customer: 0,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 1,
+    },
     resolvers: {
       ipv4:
         '173.230.145.5, 173.230.147.5, 173.230.155.5, 173.255.212.5, 173.255.219.5, 173.255.241.5, 173.255.243.5, 173.255.244.5, 74.207.241.5, 74.207.242.5',
@@ -494,6 +539,7 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Block Storage Migrations',
       'Managed Databases',
       'Placement Group',
@@ -501,8 +547,10 @@ export const regions: Region[] = [
     country: 'us',
     id: 'us-southeast',
     label: 'Atlanta, GA',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '74.207.231.5, 173.230.128.5, 173.230.129.5, 173.230.136.5, 173.230.140.5, 66.228.59.5, 66.228.62.5, 50.116.35.5, 50.116.41.5, 23.239.18.5',
@@ -523,6 +571,7 @@ export const regions: Region[] = [
       'Cloud Firewall',
       'Bare Metal',
       'Vlans',
+      'VPCs',
       'Block Storage Migrations',
       'Managed Databases',
       'Placement Group',
@@ -530,8 +579,10 @@ export const regions: Region[] = [
     country: 'us',
     id: 'us-east',
     label: 'Newark, NJ',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '66.228.42.5, 96.126.106.5, 50.116.53.5, 50.116.58.5, 50.116.61.5, 50.116.62.5, 66.175.211.5, 97.107.133.4, 207.192.69.4, 207.192.69.5',
@@ -549,15 +600,17 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Block Storage Migrations',
       'Managed Databases',
-      'Placement Group',
     ],
     country: 'gb',
     id: 'eu-west',
     label: 'London, UK',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '178.79.182.5,  176.58.107.5,  176.58.116.5,  176.58.121.5,  151.236.220.5,  212.71.252.5,  212.71.253.5,  109.74.192.20,  109.74.193.20,  109.74.194.20',
@@ -577,15 +630,17 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Block Storage Migrations',
       'Managed Databases',
-      'Placement Group',
     ],
     country: 'sg',
     id: 'ap-south',
     label: 'Singapore, SG',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '139.162.11.5, 139.162.13.5, 139.162.14.5, 139.162.15.5, 139.162.16.5, 139.162.21.5, 139.162.27.5, 103.3.60.18, 103.3.60.19, 103.3.60.20',
@@ -605,15 +660,17 @@ export const regions: Region[] = [
       'Kubernetes',
       'Cloud Firewall',
       'Vlans',
+      'VPCs',
       'Block Storage Migrations',
       'Managed Databases',
-      'Placement Group',
     ],
     country: 'de',
     id: 'eu-central',
     label: 'Frankfurt, DE',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '139.162.130.5, 139.162.131.5, 139.162.132.5, 139.162.133.5, 139.162.134.5, 139.162.135.5, 139.162.136.5, 139.162.137.5, 139.162.138.5, 139.162.139.5',
@@ -626,33 +683,37 @@ export const regions: Region[] = [
   {
     capabilities: ['Linodes'],
     country: 'us',
-    id: 'us-edge-1',
-    label: 'Gecko Edge Test',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    id: 'us-den-10',
+    label: 'Gecko Distributed Region Test',
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '139.162.130.5, 139.162.131.5, 139.162.132.5, 139.162.133.5, 139.162.134.5, 139.162.135.5, 139.162.136.5, 139.162.137.5, 139.162.138.5, 139.162.139.5',
       ipv6:
         '2a01:7e01::5, 2a01:7e01::9, 2a01:7e01::7, 2a01:7e01::c, 2a01:7e01::2, 2a01:7e01::4, 2a01:7e01::3, 2a01:7e01::6, 2a01:7e01::b, 2a01:7e01::8',
     },
-    site_type: 'edge',
+    site_type: 'distributed',
     status: 'ok',
   },
   {
     capabilities: ['Linodes'],
     country: 'us',
-    id: 'us-edge-2',
-    label: 'Gecko Edge Test 2',
-    maximum_pgs_per_customer: 5,
-    maximum_vms_per_pg: 10,
+    id: 'us-den-11',
+    label: 'Gecko Distributed Region Test 2',
+    placement_group_limits: {
+      maximum_linodes_per_pg: 10,
+      maximum_pgs_per_customer: 5,
+    },
     resolvers: {
       ipv4:
         '139.162.130.5, 139.162.131.5, 139.162.132.5, 139.162.133.5, 139.162.134.5, 139.162.135.5, 139.162.136.5, 139.162.137.5, 139.162.138.5, 139.162.139.5',
       ipv6:
         '2a01:7e01::5, 2a01:7e01::9, 2a01:7e01::7, 2a01:7e01::c, 2a01:7e01::2, 2a01:7e01::4, 2a01:7e01::3, 2a01:7e01::6, 2a01:7e01::b, 2a01:7e01::8',
     },
-    site_type: 'edge',
+    site_type: 'distributed',
     status: 'ok',
   },
 ];

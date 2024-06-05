@@ -5,13 +5,22 @@ import {
   supportReplyFactory,
   supportTicketFactory,
 } from 'src/factories/support';
+import { breakpoints } from 'src/foundations/breakpoints';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
-import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
+import {
+  renderWithTheme,
+  resizeScreenSize,
+  wrapWithTheme,
+} from 'src/utilities/testHelpers';
 
 import { SupportTicketDetail } from './SupportTicketDetail';
 
 describe('Support Ticket Detail', () => {
+  beforeAll(() => {
+    resizeScreenSize(breakpoints.values.lg);
+  });
+
   it('should display a loading spinner', () => {
     renderWithTheme(<SupportTicketDetail />);
     expect(screen.getByTestId('circle-progress')).toBeInTheDocument();
@@ -19,14 +28,14 @@ describe('Support Ticket Detail', () => {
 
   it('should display the ticket body', async () => {
     server.use(
-      rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
+      http.get('*/support/tickets/:ticketId', ({ params }) => {
         const ticket = supportTicketFactory.build({
           description: 'TEST Support Ticket body',
-          id: Number(req.params.ticketId),
+          id: Number(params.ticketId),
           status: 'open',
           summary: '#0: TEST Support Ticket',
         });
-        return res(ctx.json(ticket));
+        return HttpResponse.json(ticket);
       })
     );
     const { findByText } = render(wrapWithTheme(<SupportTicketDetail />));
@@ -38,13 +47,13 @@ describe('Support Ticket Detail', () => {
 
   it("should display a 'new' status and 'updated by' messaging", async () => {
     server.use(
-      rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
+      http.get('*/support/tickets/:ticketId', ({ params }) => {
         const ticket = supportTicketFactory.build({
-          id: Number(req.params.ticketId),
+          id: Number(params.ticketId),
           status: 'new',
           updated_by: 'test-account',
         });
-        return res(ctx.json(ticket));
+        return HttpResponse.json(ticket);
       })
     );
     renderWithTheme(<SupportTicketDetail />);
@@ -56,13 +65,13 @@ describe('Support Ticket Detail', () => {
 
   it("should display an 'open' status and 'updated by' messaging", async () => {
     server.use(
-      rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
+      http.get('*/support/tickets/:ticketId', ({ params }) => {
         const ticket = supportTicketFactory.build({
-          id: Number(req.params.ticketId),
+          id: Number(params.ticketId),
           status: 'open',
           updated_by: 'test-account',
         });
-        return res(ctx.json(ticket));
+        return HttpResponse.json(ticket);
       })
     );
     renderWithTheme(<SupportTicketDetail />);
@@ -74,12 +83,12 @@ describe('Support Ticket Detail', () => {
 
   it("should display a 'closed' status and 'closed by' messaging", async () => {
     server.use(
-      rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
+      http.get('*/support/tickets/:ticketId', ({ params }) => {
         const ticket = supportTicketFactory.build({
-          id: Number(req.params.ticketId),
+          id: Number(params.ticketId),
           status: 'closed',
         });
-        return res(ctx.json(ticket));
+        return HttpResponse.json(ticket);
       })
     );
     renderWithTheme(<SupportTicketDetail />);
@@ -97,12 +106,12 @@ describe('Support Ticket Detail', () => {
       url: '/',
     };
     server.use(
-      rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
+      http.get('*/support/tickets/:ticketId', ({ params }) => {
         const ticket = supportTicketFactory.build({
           entity: mockEntity,
-          id: Number(req.params.ticketId),
+          id: Number(params.ticketId),
         });
-        return res(ctx.json(ticket));
+        return HttpResponse.json(ticket);
       })
     );
     renderWithTheme(<SupportTicketDetail />);
@@ -118,21 +127,21 @@ describe('Support Ticket Detail', () => {
 
   it('should display replies', async () => {
     server.use(
-      rest.get('*/support/tickets/:ticketId/replies', (req, res, ctx) => {
+      http.get('*/support/tickets/:ticketId/replies', () => {
         const ticket = supportReplyFactory.buildList(1, {
           description:
             'Hi, this is lindoe support! OMG, sorry your Linode is broken!',
         });
-        return res(ctx.json(makeResourcePage(ticket)));
+        return HttpResponse.json(makeResourcePage(ticket));
       }),
-      rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
+      http.get('*/support/tickets/:ticketId', ({ params }) => {
         const ticket = supportTicketFactory.build({
           description: 'this ticket should have a reply on it',
-          id: Number(req.params.ticketId),
+          id: Number(params.ticketId),
           status: 'open',
           summary: 'My Linode is broken :(',
         });
-        return res(ctx.json(ticket));
+        return HttpResponse.json(ticket);
       })
     );
     renderWithTheme(<SupportTicketDetail />);

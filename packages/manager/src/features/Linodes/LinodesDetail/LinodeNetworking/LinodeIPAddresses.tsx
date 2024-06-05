@@ -10,7 +10,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import OrderBy from 'src/components/OrderBy';
 import { Paper } from 'src/components/Paper';
-import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -21,7 +21,7 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
-import { useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { AddIPDrawer } from './AddIPDrawer';
 import { DeleteIPDialog } from './DeleteIPDialog';
@@ -54,7 +54,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const { data: linode } = useLinodeQuery(linodeID);
   const { data: regions } = useRegionsQuery();
 
-  const linodeIsInEdgeRegion = getIsEdgeRegion(
+  const linodeIsInDistributedRegion = getIsDistributedRegion(
     regions ?? [],
     linode?.region ?? ''
   );
@@ -257,7 +257,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
       />
       <AddIPDrawer
         linodeId={linodeID}
-        linodeIsInEdgeRegion={linodeIsInEdgeRegion}
+        linodeIsInDistributedRegion={linodeIsInDistributedRegion}
         onClose={() => setIsAddDrawerOpen(false)}
         open={isAddDrawerOpen}
         readOnly={isLinodesGrantReadOnly}

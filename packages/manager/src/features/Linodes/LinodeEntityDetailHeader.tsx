@@ -2,8 +2,8 @@ import { Config } from '@linode/api-v4/lib';
 import { LinodeBackups } from '@linode/api-v4/lib/linodes';
 import { Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
@@ -18,7 +18,7 @@ import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/L
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
-import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics';
+import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
 import { StyledLink } from './LinodeEntityDetail.styles';
@@ -35,9 +35,9 @@ interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
 }
 
-export type Props = LinodeEntityDetailProps & {
+export interface Props extends LinodeEntityDetailProps {
   handlers: LinodeHandlers;
-};
+}
 
 // =============================================================================
 // Header
@@ -45,7 +45,6 @@ export type Props = LinodeEntityDetailProps & {
 export interface HeaderProps {
   backups: LinodeBackups;
   configs?: Config[];
-  enableVPCLogic?: boolean;
   image: string;
   imageVendor: null | string;
   isSummaryView?: boolean;
@@ -60,8 +59,12 @@ export interface HeaderProps {
   variant?: TypographyProps['variant'];
 }
 
+interface LinodeEntityDetailHeaderProps extends HeaderProps {
+  handlers: LinodeHandlers;
+}
+
 export const LinodeEntityDetailHeader = (
-  props: HeaderProps & { handlers: LinodeHandlers }
+  props: LinodeEntityDetailHeaderProps
 ) => {
   const theme = useTheme();
   const queryClient = useQueryClient();
@@ -69,7 +72,6 @@ export const LinodeEntityDetailHeader = (
   const {
     backups,
     configs,
-    enableVPCLogic,
     handlers,
     isSummaryView,
     linodeId,
@@ -98,7 +100,6 @@ export const LinodeEntityDetailHeader = (
   };
 
   const isRebootNeeded =
-    enableVPCLogic &&
     isRunning &&
     configs?.some((config) =>
       config.interfaces.some(
@@ -110,7 +111,7 @@ export const LinodeEntityDetailHeader = (
   // If the Linode is running, we want to check the active status of its interfaces to determine whether it needs to
   // be rebooted or not. So, we need to invalidate the linode configs query to get the most up to date information.
   React.useEffect(() => {
-    if (isRunning && enableVPCLogic) {
+    if (isRunning) {
       queryClient.invalidateQueries([
         linodesQueryKey,
         'linode',
@@ -118,7 +119,7 @@ export const LinodeEntityDetailHeader = (
         'configs',
       ]);
     }
-  }, [linodeId, enableVPCLogic, isRunning, queryClient]);
+  }, [linodeId, isRunning, queryClient]);
 
   const formattedStatus = isRebootNeeded
     ? 'REBOOT NEEDED'
