@@ -1,14 +1,10 @@
 import { Linode, deleteLinode, getLinodes } from '@linode/api-v4';
-import { CreateLinodeRequest } from '@linode/api-v4';
 import { linodeFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
-import { oauthToken, pageSize } from 'support/constants/api';
-import { entityTag } from 'support/constants/cypress';
+import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
-import { randomLabel, randomString } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
 
-import { apiCheckErrors, deleteById, isTestLabel } from './common';
+import { deleteById, isTestLabel } from './common';
 
 export const createMockLinodeList = (data?: {}, listNumber: number = 1) => {
   return makeResourcePage(
@@ -16,47 +12,6 @@ export const createMockLinodeList = (data?: {}, listNumber: number = 1) => {
       ...data,
     })
   );
-};
-
-const defaultLinodeRequestBody = {
-  authorized_users: [],
-  backups_enabled: false,
-  booted: true,
-  image: 'linode/debian10',
-  private_ip: true,
-  region: chooseRegion().id,
-  root_pass: randomString(32),
-  tags: [entityTag],
-  type: 'g6-standard-2',
-};
-
-const linodeRequest = (linodeData: CreateLinodeRequest) => {
-  return cy.request({
-    auth: {
-      bearer: oauthToken,
-    },
-    body: linodeData,
-    method: 'POST',
-    url: Cypress.env('REACT_APP_API_ROOT') + '/linode/instances',
-  });
-};
-
-export const requestBody = (data: Partial<CreateLinodeRequest>) => {
-  const label = randomLabel();
-  return linodeRequest({ label, ...defaultLinodeRequestBody, ...data });
-};
-
-/**
- * Deprecated. Use `createTestLinode()` with `cy.defer()` instead.
- *
- * @deprecated
- */
-export const createLinode = (data = {}) => {
-  return requestBody(data).then((resp) => {
-    apiCheckErrors(resp);
-    console.log(`Created Linode ${resp.body.label} successfully`, resp);
-    return resp.body;
-  });
 };
 
 export const deleteLinodeById = (linodeId: number) =>

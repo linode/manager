@@ -1,4 +1,4 @@
-import { createLinode, CreateLinodeRequest, Linode } from '@linode/api-v4';
+import { CreateLinodeRequest, Linode } from '@linode/api-v4';
 import { ui } from 'support/ui';
 import { randomString, randomLabel } from 'support/util/random';
 import { authenticate } from 'support/api/authentication';
@@ -12,6 +12,7 @@ import {
   mockGetLinodeDetails,
   mockRebuildLinodeError,
 } from 'support/intercepts/linodes';
+import { createTestLinode } from 'support/util/linodes';
 
 /**
  * Creates a Linode and StackScript.
@@ -27,7 +28,7 @@ const createStackScriptAndLinode = async (
 ) => {
   return Promise.all([
     createStackScript(stackScriptRequestPayload),
-    createLinode(linodeRequestPayload),
+    createTestLinode(linodeRequestPayload),
   ]);
 };
 
@@ -117,7 +118,7 @@ describe('rebuild linode', () => {
       region: chooseRegion().id,
     });
 
-    cy.defer(createLinode(linodeCreatePayload), 'creating Linode').then(
+    cy.defer(createTestLinode(linodeCreatePayload), 'creating Linode').then(
       (linode: Linode) => {
         interceptRebuildLinode(linode.id).as('linodeRebuild');
 
@@ -171,7 +172,7 @@ describe('rebuild linode', () => {
       region: chooseRegion().id,
     });
 
-    cy.defer(createLinode(linodeCreatePayload), 'creating Linode').then(
+    cy.defer(createTestLinode(linodeCreatePayload), 'creating Linode').then(
       (linode: Linode) => {
         interceptRebuildLinode(linode.id).as('linodeRebuild');
         interceptGetStackScripts().as('getStackScripts');
