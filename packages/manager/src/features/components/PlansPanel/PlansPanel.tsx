@@ -53,8 +53,8 @@ export interface PlansPanelProps {
  * It is used in the Linode create, Kubernetes and Database create flows.
  * It contains ample logic to determine which plans are available based on the selected region availability and display related visual indicators:
  * - If the region is not supported, show an error notice and disable all plans.
- * - If more than half plans are disabled, show the limited availability banner and hide the limited availability tooltip
- * - If less than half plans are disabled, hide the limited availability banner and show the limited availability tooltip
+ * - If more than half the plans are disabled, show the limited availability banner and hide the limited availability tooltip
+ * - If less than half the plans are disabled, hide the limited availability banner and show the limited availability tooltip
  */
 export const PlansPanel = (props: PlansPanelProps) => {
   const {
