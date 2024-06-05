@@ -283,6 +283,6 @@ const Loading = () => (
       minHeight: 300,
     }}
   >
-    <CircleProgress mini />
+    <CircleProgress size="sm" />
   </div>
 );

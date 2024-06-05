@@ -1,19 +1,17 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
+
+import { CircleProgress } from 'src/components/CircleProgress';
 
 import { Box } from './Box';
 import { StyledLinkButton } from './Button/StyledLinkButton';
-import { CircularProgress } from './CircularProgress';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   disabled: {
     color: theme.palette.text.primary,
     cursor: 'default',
     pointerEvents: 'none',
-  },
-  spinner: {
-    marginLeft: theme.spacing(),
   },
 }));
 
@@ -58,7 +56,9 @@ export const LinkButton = (props: Props) => {
     return (
       <Box alignItems="center" display="flex">
         {Button}
-        <CircularProgress className={classes.spinner} size={12} />
+        <Box marginLeft={1}>
+          <CircleProgress noPadding size="xs" />
+        </Box>
       </Box>
     );
   }
