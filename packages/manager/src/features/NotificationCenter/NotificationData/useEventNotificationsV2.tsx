@@ -1,6 +1,7 @@
 import { Event } from '@linode/api-v4/lib/account/types';
 import * as React from 'react';
 
+import { EVENT_POLLING_FILTER } from 'src/features/Events/constants';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
 
@@ -9,17 +10,10 @@ import { RenderEventV2 } from './RenderEventV2';
 
 import type { NotificationItem } from '../NotificationSection';
 
-// const unwantedEvents: EventAction[] = [
-//   'account_update',
-//   'account_settings_update',
-//   'credit_card_updated',
-//   'profile_update',
-//   'ticket_attachment_upload',
-//   'volume_update',
-// ];
-
 export const useEventNotificationsV2 = () => {
-  const events = useEventsInfiniteQuery().events;
+  // Profile_update is a noisy event
+  // Any change to user preferences will trigger this event, so we filter it out at the API level
+  const events = useEventsInfiniteQuery(EVENT_POLLING_FILTER).events;
   const notificationContext = React.useContext(_notificationContext);
 
   const formattedEvents = events?.map((event) =>

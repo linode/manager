@@ -1,4 +1,5 @@
 import { eventMessages } from './factory';
+import { Duration } from 'luxon';
 
 import type { Event } from '@linode/api-v4';
 
@@ -38,3 +39,33 @@ export function getEventMessage(
 
   return message ? message(event as Event) : null;
 }
+
+/**
+ * Format the time remaining for an event.
+ * This is used for the progress events in the notification center.
+ */
+export const formatEventTimeRemaining = (time: null | string) => {
+  if (!time) {
+    return null;
+  }
+
+  try {
+    const [hours, minutes, seconds] = time.split(':').map(Number);
+    if (
+      [hours, minutes, seconds].some(
+        (thisNumber) => typeof thisNumber === 'undefined'
+      ) ||
+      [hours, minutes, seconds].some(isNaN)
+    ) {
+      // Bad input, don't display a duration
+      return null;
+    }
+    const duration = Duration.fromObject({ hours, minutes, seconds });
+    return hours > 0
+      ? `${Math.round(duration.as('hours'))} hours remaining`
+      : `${Math.round(duration.as('minutes'))} minutes remaining`;
+  } catch {
+    // Broken/unexpected input
+    return null;
+  }
+};
