@@ -12,7 +12,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
 
-import { useIsTaxIdEnabled } from '../Account/utils';
 import { EventRow } from './EventRow';
 import {
   StyledH1Header,
@@ -30,16 +29,8 @@ interface Props {
 
 export const EventsLanding = (props: Props) => {
   const { emptyMessage, entityId } = props;
-  const { isTaxIdEnabled } = useIsTaxIdEnabled();
 
-  const filter: Filter = {
-    action: {
-      '+and': [
-        { '+neq': 'profile_update' },
-        isTaxIdEnabled ? { '+neq': 'tax_id_invalid' } : {},
-      ],
-    },
-  };
+  const filter: Filter = { action: { '+neq': 'profile_update' } };
 
   if (entityId) {
     filter['entity.id'] = entityId;

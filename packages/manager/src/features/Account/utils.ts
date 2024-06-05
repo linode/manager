@@ -70,7 +70,7 @@ export const getRestrictedResourceText = ({
  * Hook to determine if the Tax Id feature should be visible to the user.
  * Based on the user's account capability and the feature flag.
  *
- * @returns {boolean} - Whether the Placement Group feature is enabled for the current user.
+ * @returns {boolean} - Whether the TaxId feature is enabled for the current user.
  */
 export const useIsTaxIdEnabled = (): {
   isTaxIdEnabled: boolean;

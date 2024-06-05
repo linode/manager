@@ -52,6 +52,7 @@ export const useMutateAccount = () => {
 
           if (
             isTaxIdEnabled &&
+            account.tax_id &&
             account.country !== 'US' &&
             prevAccount?.tax_id !== account.tax_id
           ) {

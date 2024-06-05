@@ -171,6 +171,11 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
     formik.setFieldValue('company', '');
   }
 
+  const handleCountryChange = (item: Item<string>) => {
+    formik.setFieldValue('country', item.value);
+    formik.setFieldValue('tax_id', '');
+  };
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <Grid
@@ -282,7 +287,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             errorText={errorMap.country}
             isClearable={false}
             label="Country"
-            onChange={(item) => formik.setFieldValue('country', item.value)}
+            onChange={(item) => handleCountryChange(item)}
             options={countryResults}
             placeholder="Select a Country"
             required
