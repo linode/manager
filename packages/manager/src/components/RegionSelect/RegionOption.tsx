@@ -56,7 +56,6 @@ export const RegionOption = ({
       enterDelay={200}
       enterNextDelay={200}
       enterTouchDelay={200}
-      key={region.id}
     >
       <StyledListItem
         {...props}

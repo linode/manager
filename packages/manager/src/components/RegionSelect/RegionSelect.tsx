@@ -94,6 +94,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         renderOption={(props, region) => (
           <RegionOption
             disabledOptions={disabledRegions[region.id]}
+            key={region.id}
             props={props}
             region={region}
           />
@@ -131,6 +132,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         disabled={disabled}
         errorText={errorText}
         getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
+        getOptionLabel={(region) => `${region.label} (${region.id})`}
         groupBy={(option) => getRegionCountryGroup(option)}
         helperText={helperText}
         label={label ?? 'Region'}
