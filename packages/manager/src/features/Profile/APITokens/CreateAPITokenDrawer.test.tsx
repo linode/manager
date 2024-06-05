@@ -5,7 +5,7 @@ import * as React from 'react';
 import { appTokenFactory } from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
 import { profileFactory } from 'src/factories/profile';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
@@ -16,19 +16,11 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/profile', async () => {
-  const actual = await vi.importActual<any>('src/queries/profile');
+vi.mock('src/queries/profile/profile', async () => {
+  const actual = await vi.importActual<any>('src/queries/profile/profile');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
-  };
-});
-
-vi.mock('src/queries/grants', async () => {
-  const actual = await vi.importActual<any>('src/queries/grants');
-  return {
-    ...actual,
-    useGrants: queryMocks.useGrants,
   };
 });
 
@@ -123,9 +115,7 @@ describe('Create API Token Drawer', () => {
       data: profileFactory.build({ user_type: 'parent' }),
     });
 
-    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />, {
-      flags: { parentChildAccountAccess: true },
-    });
+    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />);
     const childScope = getByText('Child Account Access');
     expect(childScope).toBeInTheDocument();
   });
@@ -139,10 +129,7 @@ describe('Create API Token Drawer', () => {
     });
 
     const { queryByText } = renderWithTheme(
-      <CreateAPITokenDrawer {...props} />,
-      {
-        flags: { parentChildAccountAccess: true },
-      }
+      <CreateAPITokenDrawer {...props} />
     );
     const childScope = queryByText('Child Account Access');
     expect(childScope).not.toBeInTheDocument();
@@ -154,10 +141,7 @@ describe('Create API Token Drawer', () => {
     });
 
     const { queryByText } = renderWithTheme(
-      <CreateAPITokenDrawer {...props} />,
-      {
-        flags: { parentChildAccountAccess: true },
-      }
+      <CreateAPITokenDrawer {...props} />
     );
 
     const childScope = queryByText('Child Account Access');

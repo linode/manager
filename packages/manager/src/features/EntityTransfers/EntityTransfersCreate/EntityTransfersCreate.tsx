@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { queryKey, useCreateTransfer } from 'src/queries/entityTransfers';
-import { sendEntityTransferCreateEvent } from 'src/utilities/analytics';
+import { sendEntityTransferCreateEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { countByEntity } from '../utilities';

@@ -29,8 +29,8 @@ const props = {
   zip: '19106',
 };
 
-vi.mock('src/queries/profile', async () => {
-  const actual = await vi.importActual<any>('src/queries/profile');
+vi.mock('src/queries/profile/profile', async () => {
+  const actual = await vi.importActual<any>('src/queries/profile/profile');
   return {
     ...actual,
     useGrants: queryMocks.useGrants,
@@ -47,10 +47,7 @@ describe('Edit Contact Information', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <ContactInformation {...props} profile={queryMocks.useProfile().data} />,
-      {
-        flags: { parentChildAccountAccess: true },
-      }
+      <ContactInformation {...props} profile={queryMocks.useProfile().data} />
     );
 
     expect(getByTestId(EDIT_BUTTON_ID)).toHaveAttribute(

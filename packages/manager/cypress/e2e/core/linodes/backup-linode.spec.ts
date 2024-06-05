@@ -1,6 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import type { Linode } from '@linode/api-v4';
-import { createLinode } from '@linode/api-v4';
 import {
   linodeFactory,
   linodeBackupsFactory,
@@ -27,6 +26,7 @@ import { randomLabel } from 'support/util/random';
 import { dcPricingMockLinodeTypesForBackups } from 'support/constants/dc-specific-pricing';
 import { chooseRegion } from 'support/util/regions';
 import { expectManagedDisabled } from 'support/api/managed';
+import { createTestLinode } from 'support/util/linodes';
 
 authenticate();
 describe('linode backups', () => {
@@ -53,7 +53,7 @@ describe('linode backups', () => {
       booted: false,
     });
 
-    cy.defer(createLinode(createLinodeRequest), 'creating Linode').then(
+    cy.defer(createTestLinode(createLinodeRequest), 'creating Linode').then(
       (linode: Linode) => {
         interceptGetLinode(linode.id).as('getLinode');
         interceptEnableLinodeBackups(linode.id).as('enableBackups');
@@ -116,7 +116,7 @@ describe('linode backups', () => {
 
     const snapshotName = randomLabel();
 
-    cy.defer(createLinode(createLinodeRequest), 'creating Linode').then(
+    cy.defer(createTestLinode(createLinodeRequest), 'creating Linode').then(
       (linode: Linode) => {
         interceptGetLinode(linode.id).as('getLinode');
         interceptCreateLinodeSnapshot(linode.id).as('createSnapshot');

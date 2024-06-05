@@ -11,35 +11,45 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { Radio } from 'src/components/Radio/Radio';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
-import { useAllFirewallsQuery } from 'src/queries/firewalls';
-import { useCreateFirewall } from 'src/queries/firewalls';
+import {
+  queryKey as firewallQueryKey,
+  useAllFirewallsQuery,
+  useCreateFirewall,
+} from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
-import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
-import { useGrants } from 'src/queries/profile';
+import { queryKey as nodebalancersQueryKey } from 'src/queries/nodebalancers';
+import { useGrants } from 'src/queries/profile/profile';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import {
   LINODE_CREATE_FLOW_TEXT,
   NODEBALANCER_CREATE_FLOW_TEXT,
 } from './constants';
+
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
@@ -59,7 +69,7 @@ const initialValues: CreateFirewallPayload = {
   },
   label: '',
   rules: {
-    inbound_policy: 'ACCEPT',
+    inbound_policy: 'DROP',
     outbound_policy: 'ACCEPT',
   },
 };
@@ -75,6 +85,10 @@ export const CreateFirewallDrawer = React.memo(
 
     const { enqueueSnackbar } = useSnackbar();
     const queryClient = useQueryClient();
+
+    const location = useLocation();
+    const isFromLinodeCreate = location.pathname.includes('/linodes/create');
+    const queryParams = getQueryParamsFromQueryString(location.search);
 
     const {
       errors,
@@ -139,7 +153,7 @@ export const CreateFirewallDrawer = React.memo(
             if (payload.devices?.nodebalancers) {
               payload.devices.nodebalancers.forEach((nodebalancerId) => {
                 queryClient.invalidateQueries([
-                  nodebalancerQueryKey,
+                  nodebalancersQueryKey,
                   'nodebalancer',
                   nodebalancerId,
                   'firewalls',
@@ -178,6 +192,20 @@ export const CreateFirewallDrawer = React.memo(
         resetForm();
       }
     }, [open, resetForm]);
+
+    const handleInboundPolicyChange = React.useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>, value: 'ACCEPT' | 'DROP') => {
+        setFieldValue('rules.inbound_policy', value);
+      },
+      [setFieldValue]
+    );
+
+    const handleOutboundPolicyChange = React.useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>, value: 'ACCEPT' | 'DROP') => {
+        setFieldValue('rules.outbound_policy', value);
+      },
+      [setFieldValue]
+    );
 
     const userCannotAddFirewall =
       _isRestrictedUser && !_hasGrant('add_firewalls');
@@ -223,7 +251,23 @@ export const CreateFirewallDrawer = React.memo(
     };
 
     const learnMoreLink = (
-      <Link to={FIREWALL_LIMITS_CONSIDERATIONS_LINK}>Learn more</Link>
+      <Link
+        onClick={() =>
+          isFromLinodeCreate &&
+          sendLinodeCreateFormStepEvent({
+            action: 'click',
+            category: 'link',
+            createType:
+              (queryParams.type as LinodeCreateType) ?? 'Distributions',
+            formStepName: 'Create Firewall Drawer',
+            label: 'Learn more',
+            version: 'v1',
+          })
+        }
+        to={FIREWALL_LIMITS_CONSIDERATIONS_LINK}
+      >
+        Learn more
+      </Link>
     );
 
     const generalError =
@@ -263,6 +307,43 @@ export const CreateFirewallDrawer = React.memo(
             required
             value={values.label}
           />
+
+          <Typography style={{ marginTop: 24 }}>
+            <strong>Default Inbound Policy</strong>
+          </Typography>
+          <RadioGroup
+            aria-label="default inbound policy "
+            data-testid="default-inbound-policy"
+            onChange={handleInboundPolicyChange}
+            row
+            value={values.rules.inbound_policy}
+          >
+            <FormControlLabel
+              control={<Radio />}
+              label="Accept"
+              value="ACCEPT"
+            />
+            <FormControlLabel control={<Radio />} label="Drop" value="DROP" />
+          </RadioGroup>
+
+          <Typography style={{ marginTop: 16 }}>
+            <strong>Default Outbound Policy</strong>
+          </Typography>
+          <RadioGroup
+            aria-label="default outbound policy"
+            data-testid="default-outbound-policy"
+            onChange={handleOutboundPolicyChange}
+            row
+            value={values.rules.outbound_policy}
+          >
+            <FormControlLabel
+              control={<Radio />}
+              label="Accept"
+              value="ACCEPT"
+            />
+            <FormControlLabel control={<Radio />} label="Drop" value="DROP" />
+          </RadioGroup>
+
           <Box>
             <Typography
               sx={(theme) => ({
@@ -326,6 +407,17 @@ export const CreateFirewallDrawer = React.memo(
               disabled: userCannotAddFirewall,
               label: 'Create Firewall',
               loading: isSubmitting,
+              onClick: () =>
+                isFromLinodeCreate &&
+                sendLinodeCreateFormStepEvent({
+                  action: 'click',
+                  category: 'button',
+                  createType:
+                    (queryParams.type as LinodeCreateType) ?? 'Distributions',
+                  formStepName: 'Create Firewall Drawer',
+                  label: 'Create Firewall',
+                  version: 'v1',
+                }),
               type: 'submit',
             }}
             secondaryButtonProps={{

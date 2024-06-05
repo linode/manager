@@ -17,7 +17,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import {
   useDatabaseBackupsQuery,
   useDatabaseQuery,
-} from 'src/queries/databases';
+} from 'src/queries/databases/databases';
 
 import RestoreFromBackupDialog from './RestoreFromBackupDialog';
 import { BackupTableRow } from './DatabaseBackupTableRow';

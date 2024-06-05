@@ -21,11 +21,10 @@ import { switchAccountSessionContext } from 'src/context/switchAccountSessionCon
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
-import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
-import { useGrants, useProfile } from 'src/queries/profile';
-import { sendSwitchAccountEvent } from 'src/utilities/analytics';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
 import { getCompanyNameOrEmail } from './utils';
@@ -64,7 +63,6 @@ export const UserMenu = React.memo(() => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { enqueueSnackbar } = useSnackbar();
-  const flags = useFlags();
   const sessionContext = React.useContext(switchAccountSessionContext);
 
   const hasGrant = (grant: GlobalGrantTypes) =>
@@ -72,39 +70,33 @@ export const UserMenu = React.memo(() => {
   const isRestrictedUser = profile?.restricted ?? false;
   const hasAccountAccess = !isRestrictedUser || hasGrant('account_access');
   const hasReadWriteAccountAccess = hasGrant('account_access') === 'read_write';
-  const hasParentChildAccountAccess = Boolean(flags.parentChildAccountAccess);
   const isParentUser = profile?.user_type === 'parent';
   const isProxyUser = profile?.user_type === 'proxy';
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',
   });
   const canSwitchBetweenParentOrProxyAccount =
-    flags.parentChildAccountAccess &&
-    ((!isChildAccountAccessRestricted && isParentUser) || isProxyUser);
+    (!isChildAccountAccessRestricted && isParentUser) || isProxyUser;
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
 
   const companyNameOrEmail = getCompanyNameOrEmail({
     company: account?.company,
-    isParentChildFeatureEnabled: hasParentChildAccountAccess,
     profile,
   });
 
   const { isParentTokenExpired } = useIsParentTokenExpired({ isProxyUser });
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
-  const proxyHeaders =
-    hasParentChildAccountAccess && isProxyUser
-      ? {
-          Authorization: getStorage(`authentication/parent_token/token`),
-        }
-      : undefined;
+  const proxyHeaders = isProxyUser
+    ? {
+        Authorization: getStorage(`authentication/parent_token/token`),
+      }
+    : undefined;
 
   const { data: parentProfile } = useProfile({ headers: proxyHeaders });
 
-  const userName =
-    (hasParentChildAccountAccess && isProxyUser ? parentProfile : profile)
-      ?.username ?? '';
+  const userName = (isProxyUser ? parentProfile : profile)?.username ?? '';
 
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')

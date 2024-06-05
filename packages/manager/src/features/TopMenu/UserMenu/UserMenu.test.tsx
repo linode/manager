@@ -31,9 +31,7 @@ describe('UserMenu', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(<UserMenu />, {
-      flags: { parentChildAccountAccess: true },
-    });
+    const { findByText } = renderWithTheme(<UserMenu />);
 
     expect(await findByText('parent-user')).toBeInTheDocument();
     expect(await findByText('Parent Company')).toBeInTheDocument();
@@ -56,9 +54,7 @@ describe('UserMenu', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(<UserMenu />, {
-      flags: { parentChildAccountAccess: true },
-    });
+    const { findByText } = renderWithTheme(<UserMenu />);
 
     expect(await findByText('parent-user')).toBeInTheDocument();
     expect(await findByText('Child Company')).toBeInTheDocument();
@@ -78,9 +74,7 @@ describe('UserMenu', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(<UserMenu />, {
-      flags: { parentChildAccountAccess: true },
-    });
+    const { findByText } = renderWithTheme(<UserMenu />);
 
     expect(await findByText('child-user')).toBeInTheDocument();
     expect(await findByText('Child Company')).toBeInTheDocument();
@@ -103,9 +97,7 @@ describe('UserMenu', () => {
       })
     );
 
-    const { findByText, queryByText } = renderWithTheme(<UserMenu />, {
-      flags: { parentChildAccountAccess: true },
-    });
+    const { findByText, queryByText } = renderWithTheme(<UserMenu />);
 
     expect(await findByText('regular-user')).toBeInTheDocument();
     // Should not be displayed for regular users, only parent/child/proxy users.
@@ -124,9 +116,7 @@ describe('UserMenu', () => {
       })
     );
 
-    const { findByLabelText, findByTestId } = renderWithTheme(<UserMenu />, {
-      flags: { parentChildAccountAccess: true },
-    });
+    const { findByLabelText, findByTestId } = renderWithTheme(<UserMenu />);
 
     const userMenuButton = await findByLabelText('Profile & Account');
     fireEvent.click(userMenuButton);
@@ -151,9 +141,7 @@ describe('UserMenu', () => {
       })
     );
 
-    const { findByLabelText, queryByTestId } = renderWithTheme(<UserMenu />, {
-      flags: { parentChildAccountAccess: true },
-    });
+    const { findByLabelText, queryByTestId } = renderWithTheme(<UserMenu />);
 
     const userMenuButton = await findByLabelText('Profile & Account');
     fireEvent.click(userMenuButton);
@@ -173,9 +161,7 @@ describe('UserMenu', () => {
       })
     );
 
-    const { findByLabelText, findByTestId } = renderWithTheme(<UserMenu />, {
-      flags: { parentChildAccountAccess: true },
-    });
+    const { findByLabelText, findByTestId } = renderWithTheme(<UserMenu />);
 
     const userMenuButton = await findByLabelText('Profile & Account');
     fireEvent.click(userMenuButton);
@@ -212,9 +198,7 @@ describe('UserMenu', () => {
       })
     );
 
-    const { findByLabelText, findByTestId } = renderWithTheme(<UserMenu />, {
-      flags: { parentChildAccountAccess: true },
-    });
+    const { findByLabelText, findByTestId } = renderWithTheme(<UserMenu />);
 
     const userMenuButton = await findByLabelText('Profile & Account');
     fireEvent.click(userMenuButton);

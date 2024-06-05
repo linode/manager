@@ -12,12 +12,11 @@ import {
 import { interceptCreateLinode } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { createLinodeRequestFactory } from 'src/factories';
-import { createLinode, getLinodeDisks } from '@linode/api-v4/lib/linodes';
-import { createImage } from '@linode/api-v4/lib/images';
+import { createImage, getLinodeDisks, resizeLinodeDisk } from '@linode/api-v4';
 import { chooseRegion } from 'support/util/regions';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { cleanUp } from 'support/util/cleanup';
-import { resizeLinodeDisk } from '@linode/api-v4/lib';
+import { createTestLinode } from 'support/util/linodes';
 
 // StackScript fixture paths.
 const stackscriptBasicPath = 'stackscripts/stackscript-basic.sh';
@@ -113,7 +112,7 @@ const createLinodeAndImage = async () => {
   // 1.5GB
   // Shout out to Debian for fitting on a 1.5GB disk.
   const resizedDiskSize = 1536;
-  const linode = await createLinode(
+  const linode = await createTestLinode(
     createLinodeRequestFactory.build({
       label: randomLabel(),
       region: chooseRegion().id,
@@ -132,7 +131,10 @@ const createLinodeAndImage = async () => {
   await resizeLinodeDisk(linode.id, diskId, resizedDiskSize);
   await pollLinodeDiskSize(linode.id, diskId, resizedDiskSize);
 
-  const image = await createImage(diskId, randomLabel(), randomPhrase());
+  const image = await createImage({
+    disk_id: diskId,
+    label: randomLabel(),
+  });
 
   await pollImageStatus(
     image.id,

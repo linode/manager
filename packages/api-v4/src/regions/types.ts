@@ -5,6 +5,7 @@ export type Capabilities =
   | 'Block Storage'
   | 'Block Storage Migrations'
   | 'Cloud Firewall'
+  | 'Disk Encryption'
   | 'GPU Linodes'
   | 'Kubernetes'
   | 'Linodes'
@@ -24,7 +25,7 @@ export interface DNSResolvers {
 
 export type RegionStatus = 'ok' | 'outage';
 
-export type RegionSite = 'core' | 'edge';
+export type RegionSite = 'core' | 'distributed' | 'edge';
 
 export interface Region {
   id: string;

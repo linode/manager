@@ -45,7 +45,6 @@ export const TicketRow = ({ ticket }: Props) => {
 
   return (
     <TableRow
-      ariaLabel={`Ticket subject ${ticketSummary}`}
       data-qa-support-ticket={ticket.id}
       data-testid="ticket-row"
       key={`ticket-${ticket.id}`}

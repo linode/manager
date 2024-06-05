@@ -22,10 +22,7 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
   const count = getCountOfRules(rules);
 
   return (
-    <TableRow
-      ariaLabel={`Firewall ${label}`}
-      data-testid={`firewall-row-${id}`}
-    >
+    <TableRow data-testid={`firewall-row-${id}`}>
       <TableCell>
         <Link tabIndex={0} to={`/firewalls/${id}`}>
           {label}
@@ -108,21 +105,19 @@ export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
   return (
     <>
       {firstThree.map((thisDevice, idx) => (
-        <Link
-          className="link secondaryLink"
-          data-testid="firewall-row-link"
-          key={thisDevice.id}
-          to={`/${thisDevice.entity.type}s/${thisDevice.entity.id}`}
-        >
-          {idx > 0 && `, `}
-          {thisDevice.entity.label}
-        </Link>
+        <>
+          {idx > 0 && ', '}
+          <Link
+            className="link secondaryLink"
+            data-testid="firewall-row-link"
+            key={thisDevice.id}
+            to={`/${thisDevice.entity.type}s/${thisDevice.entity.id}`}
+          >
+            {thisDevice.entity.label}
+          </Link>
+        </>
       ))}
-      {data.length > 3 && (
-        <span>
-          {`, `}plus {data.length - 3} more.
-        </span>
-      )}
+      {data.length > 3 && <span>, plus {data.length - 3} more.</span>}
     </>
   );
 };

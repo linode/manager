@@ -4,7 +4,7 @@ Cloud Manager uses Adobe Analytics to capture page view and custom event statist
 
 ## Writing a Custom Event
 
-Custom events live (mostly) in `src/utilities/analytics.ts`. Try to write and export custom events in this file if possible, and import them in the component(s) where they are used.
+Custom events live (mostly) in `src/utilities/analytics/customEventAnalytics.ts`. Try to write and export custom events in this file if possible, and import them in the component(s) where they are used.
 
 A custom event will take this shape:
 ```tsx
