@@ -1,4 +1,3 @@
-import { Event } from '@linode/api-v4/lib/account/types';
 import * as React from 'react';
 
 import { EVENT_POLLING_FILTER } from 'src/features/Events/constants';
@@ -9,6 +8,7 @@ import { notificationContext as _notificationContext } from '../NotificationCont
 import { RenderEventV2 } from './RenderEventV2';
 
 import type { NotificationItem } from '../NotificationSection';
+import type { Event } from '@linode/api-v4';
 
 export const useEventNotificationsV2 = () => {
   // Profile_update is a noisy event

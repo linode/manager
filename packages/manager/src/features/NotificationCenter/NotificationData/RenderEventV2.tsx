@@ -1,4 +1,3 @@
-import { Event } from '@linode/api-v4/lib/account/types';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
@@ -18,6 +17,8 @@ import {
   useRenderEventStyles,
 } from './RenderEvent.styles';
 
+import type { Event } from '@linode/api-v4/lib/account/types';
+
 interface RenderEventProps {
   event: Event;
   isProgressEvent: boolean;
@@ -29,7 +30,7 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
   const { event, isProgressEvent } = props;
   const message = getEventMessage(event);
 
-  const unseenEventClass = cx({ [classes.unseenEvent]: !event.seen });
+  const unseenEventClass = cx({ [classes.unseenEventV2]: !event.seen });
 
   /**
    * Some event types may not be handled by our system (or new types or new ones may be added that we haven't caught yet).
@@ -58,17 +59,21 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
   const timeTypeToDisplay = showProgress
     ? parsedTimeRemaining
       ? ` (~${parsedTimeRemaining})`
-      : null
+      : `Started: ${getEventTimestamp(event).toRelative()}`
     : getEventTimestamp(event).toRelative();
 
   return (
     <>
-      <RenderEventStyledBox data-test-id={event.action} display="flex">
+      <RenderEventStyledBox
+        className={`yo ${unseenEventClass}`}
+        data-test-id={event.action}
+        display="flex"
+      >
         <RenderEventGravatar
           sx={{ height: 32, minWidth: 32, mt: '3px', width: 32 }}
           username={event.username}
         />
-        <Box sx={{ marginTop: '-2px', width: '100%' }}>
+        <Box sx={{ marginTop: '-2px', paddingRight: 1, width: '100%' }}>
           {message}
           {showProgress && (
             <BarPercent
@@ -79,14 +84,9 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
               value={event.percent_complete ?? 0}
             />
           )}
-          {timeTypeToDisplay && (
-            <Typography
-              className={unseenEventClass}
-              sx={{ fontSize: '0.8rem' }}
-            >
-              {timeTypeToDisplay} | {event.username ?? 'Linode'}
-            </Typography>
-          )}
+          <Typography sx={{ fontSize: '0.8rem' }}>
+            {timeTypeToDisplay} | {event.username ?? 'Linode'}
+          </Typography>
         </Box>
       </RenderEventStyledBox>
       <Divider />

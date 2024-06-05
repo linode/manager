@@ -1,9 +1,10 @@
-import { Theme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
 import { Box } from 'src/components/Box';
 import { GravatarByUsername } from 'src/components/GravatarByUsername';
+
+import type { Theme } from '@mui/material/styles';
 
 export const RenderEventStyledBox = styled(Box, {
   label: 'StyledBox',
@@ -34,5 +35,20 @@ export const useRenderEventStyles = makeStyles()((theme: Theme) => ({
   unseenEvent: {
     color: theme.textColors.headlineStatic,
     textDecoration: 'none',
+  },
+  unseenEventV2: {
+    '&:after': {
+      backgroundColor: theme.color.green,
+      content: '""',
+      display: 'block',
+      height: '100%',
+      left: 0,
+      position: 'absolute',
+      top: 0,
+      width: 4,
+    },
+    backgroundColor: theme.bg.offWhite,
+    borderBottom: `1px solid ${theme.bg.main}`,
+    position: 'relative',
   },
 }));
