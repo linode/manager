@@ -14,11 +14,12 @@ import {
   sxDistributedRegionIcon,
 } from './RegionSelect.styles';
 
+import type { DisableRegionOption } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
 import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
 interface Props {
-  disabledReason?: string;
+  disabledOptions?: DisableRegionOption;
   displayDistributedRegionIcon?: boolean;
   props: React.HTMLAttributes<HTMLLIElement>;
   region: Region;
@@ -26,22 +27,22 @@ interface Props {
 }
 
 export const RegionOption = ({
-  disabledReason,
+  disabledOptions,
   displayDistributedRegionIcon,
   props,
   region,
   selected,
 }: Props) => {
   const { className, onClick } = props;
-  const isRegionDisabled = Boolean(disabledReason);
-  const isRegionDisabledReason = disabledReason;
+  const isRegionDisabled = Boolean(disabledOptions);
+  const isRegionDisabledReason = disabledOptions?.reason;
 
   return (
     <Tooltip
       PopperProps={{
         sx: {
           '& .MuiTooltip-tooltip': {
-            minWidth: 215,
+            minWidth: disabledOptions?.tooltipWidth ?? 215,
           },
         },
       }}

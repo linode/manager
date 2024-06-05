@@ -8,11 +8,11 @@ import {
   RemovableSelectionsList,
 } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
 
-import type { RegionSelectOption } from 'src/components/RegionSelect/RegionSelect.types';
+import type { Region } from '@linode/api-v4';
 
 interface SelectedRegionsProps {
   onRemove: (region: string) => void;
-  selectedRegions: RegionSelectOption[];
+  selectedRegions: Region[];
 }
 
 interface LabelComponentProps {

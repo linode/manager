@@ -1,3 +1,4 @@
+import { Region } from '@linode/api-v4';
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
@@ -5,8 +6,6 @@ import { regionFactory } from 'src/factories/regions';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RegionMultiSelect } from './RegionMultiSelect';
-
-import type { RegionSelectOption } from 'src/components/RegionSelect/RegionSelect.types';
 
 const regions = regionFactory.buildList(1, {
   id: 'us-east',
@@ -23,7 +22,7 @@ const regionsAtlanta = regionFactory.buildList(1, {
 });
 interface SelectedRegionsProps {
   onRemove: (region: string) => void;
-  selectedRegions: RegionSelectOption[];
+  selectedRegions: Region[];
 }
 const SelectedRegionsList = ({
   onRemove,
@@ -33,7 +32,7 @@ const SelectedRegionsList = ({
     {selectedRegions.map((region, index) => (
       <li aria-label={region.label} key={index}>
         {region.label}
-        <button onClick={() => onRemove(region.value)}>Remove</button>
+        <button onClick={() => onRemove(region.id)}>Remove</button>
       </li>
     ))}
   </ul>
@@ -46,7 +45,7 @@ describe('RegionMultiSelect', () => {
     renderWithTheme(
       <RegionMultiSelect
         currentCapability="Block Storage"
-        handleSelection={mockHandleSelection}
+        onChange={mockHandleSelection}
         regions={regions}
         selectedIds={[]}
       />
@@ -59,7 +58,7 @@ describe('RegionMultiSelect', () => {
     renderWithTheme(
       <RegionMultiSelect
         currentCapability="Block Storage"
-        handleSelection={mockHandleSelection}
+        onChange={mockHandleSelection}
         regions={[...regionsNewark, ...regionsAtlanta]}
         selectedIds={[]}
       />
@@ -87,7 +86,7 @@ describe('RegionMultiSelect', () => {
     renderWithTheme(
       <RegionMultiSelect
         currentCapability="Block Storage"
-        handleSelection={mockHandleSelection}
+        onChange={mockHandleSelection}
         regions={[...regionsNewark, ...regionsAtlanta]}
         selectedIds={['us-east', 'us-southeast']}
       />
@@ -121,7 +120,7 @@ describe('RegionMultiSelect', () => {
           />
         )}
         currentCapability="Block Storage"
-        handleSelection={mockHandleSelection}
+        onChange={mockHandleSelection}
         regions={[...regionsNewark, ...regionsAtlanta]}
         selectedIds={[]}
       />

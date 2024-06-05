@@ -17,11 +17,14 @@ import {
   sxDistributedRegionIcon,
 } from './RegionSelect.styles';
 import {
-  getRegionOptionsv2,
+  getRegionOptions,
   isRegionOptionUnavailable,
 } from './RegionSelect.utils';
 
-import type { RegionSelectProps } from './RegionSelect.types';
+import type {
+  DisableRegionOption,
+  RegionSelectProps,
+} from './RegionSelect.types';
 
 /**
  * A specific select for regions.
@@ -36,8 +39,8 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   const {
     currentCapability,
     disabled,
+    disabledRegions: disabledRegionsFromProps,
     errorText,
-    handleDisabledRegion,
     handleSelection,
     helperText,
     isClearable,
@@ -56,7 +59,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     isLoading: accountAvailabilityLoading,
   } = useAllAccountAvailabilitiesQuery();
 
-  const regionOptions = getRegionOptionsv2({
+  const regionOptions = getRegionOptions({
     currentCapability,
     regionFilter,
     regions,
@@ -64,26 +67,26 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
 
   const selectedRegion = regionOptions.find((r) => r.id === selectedId) ?? null;
 
-  const disabledRegions = regionOptions.reduce<Record<number, string>>(
-    (acc, region) => {
-      const disabledInfo = handleDisabledRegion?.(region);
-      if (disabledInfo?.disabled) {
-        acc[region.id] = disabledInfo.reason;
-      }
-      if (
-        isRegionOptionUnavailable({
-          accountAvailabilityData: accountAvailability,
-          currentCapability,
-          region,
-        })
-      ) {
-        acc[region.id] =
-          'This region is currently unavailable. For help, open a support ticket.';
-      }
-      return acc;
-    },
-    {}
-  );
+  const disabledRegions = regionOptions.reduce<
+    Record<string, DisableRegionOption>
+  >((acc, region) => {
+    if (disabledRegionsFromProps?.[region.id]) {
+      acc[region.id] = disabledRegionsFromProps[region.id];
+    }
+    if (
+      isRegionOptionUnavailable({
+        accountAvailabilityData: accountAvailability,
+        currentCapability,
+        region,
+      })
+    ) {
+      acc[region.id] = {
+        reason:
+          'This region is currently unavailable. For help, open a support ticket.',
+      };
+    }
+    return acc;
+  }, {});
 
   return (
     <StyledAutocompleteContainer sx={{ width }}>
@@ -99,7 +102,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
                 (option.site_type === 'distributed' ||
                   option.site_type === 'edge')
               }
-              disabledReason={disabledRegions[option.id]}
+              disabledOptions={disabledRegions[option.id]}
               key={option.id}
               props={props}
               region={option}
@@ -139,7 +142,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         disableClearable={!isClearable}
         disabled={disabled}
         errorText={errorText}
-        getOptionDisabled={(option) => disabledRegions[option.id]}
+        getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
         groupBy={(option) => getRegionCountryGroup(option)}
         helperText={helperText}
         label={label ?? 'Region'}

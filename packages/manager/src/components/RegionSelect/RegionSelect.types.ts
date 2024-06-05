@@ -3,30 +3,19 @@ import React from 'react';
 import type {
   AccountAvailability,
   Capabilities,
-  Country,
   Region,
   RegionSite,
 } from '@linode/api-v4';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
 
-export interface RegionSelectOption {
-  data: {
-    country: Country;
-    region: string;
-  };
-  disabledProps?: {
-    disabled: boolean;
-    reason?: JSX.Element | string;
-    tooltipWidth?: number;
-  };
-  label: string;
-  site_type: RegionSite;
-  value: string;
+export interface DisableRegionOption {
+  reason: JSX.Element | string;
+  tooltipWidth?: number;
 }
 
 export interface RegionSelectProps
   extends Omit<
-    EnhancedAutocompleteProps<RegionSelectOption, false>,
+    EnhancedAutocompleteProps<Region, false>,
     'label' | 'onChange' | 'options'
   > {
   /**
@@ -37,9 +26,7 @@ export interface RegionSelectProps
    * See `ImageUpload.tsx` for an example of a RegionSelect with an undefined `currentCapability` - there is no capability associated with Images yet.
    */
   currentCapability: Capabilities | undefined;
-  handleDisabledRegion?: (
-    region: Region
-  ) => RegionSelectOption['disabledProps'];
+  disabledRegions?: Record<string, DisableRegionOption>;
   handleSelection: (id: string) => void;
   helperText?: string;
   isClearable?: boolean;
@@ -55,22 +42,22 @@ export interface RegionSelectProps
 
 export interface RegionMultiSelectProps
   extends Omit<
-    EnhancedAutocompleteProps<RegionSelectOption, false>,
+    EnhancedAutocompleteProps<Region, false>,
     'label' | 'onChange' | 'options'
   > {
   SelectedRegionsList?: React.ComponentType<{
     onRemove: (region: string) => void;
-    selectedRegions: RegionSelectOption[];
+    selectedRegions: Region[];
   }>;
   currentCapability: Capabilities | undefined;
-  handleSelection: (ids: string[]) => void;
+  onChange: (ids: string[]) => void;
   helperText?: string;
   isClearable?: boolean;
   label?: string;
   regions: Region[];
   required?: boolean;
   selectedIds: string[];
-  sortRegionOptions?: (a: RegionSelectOption, b: RegionSelectOption) => number;
+  sortRegionOptions?: (a: Region, b: Region) => number;
   tooltipText?: string;
   width?: number;
 }
@@ -80,7 +67,7 @@ export interface RegionOptionAvailability {
   currentCapability: Capabilities | undefined;
   handleDisabledRegion?: (
     region: Region
-  ) => RegionSelectOption['disabledProps'];
+  ) => DisableRegionOption;
 }
 
 export interface GetRegionOptions extends RegionOptionAvailability {
