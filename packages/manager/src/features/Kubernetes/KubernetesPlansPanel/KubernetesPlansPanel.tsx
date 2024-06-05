@@ -76,7 +76,6 @@ export const KubernetesPlansPanel = (props: Props) => {
     const plansMap: PlanSelectionType[] = plans[plan];
     const {
       allDisabledPlans,
-      hasDisabledPlans,
       hasMajorityOfPlansDisabled,
       plansForThisLinodeTypeClass,
     } = extractPlansInformation({
@@ -94,7 +93,7 @@ export const KubernetesPlansPanel = (props: Props) => {
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                 plan
               )}
-              hasDisabledPlans={hasDisabledPlans}
+              hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
               hasSelectedRegion={hasSelectedRegion}
               planType={plan}
               regionsData={regionsData}
