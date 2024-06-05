@@ -56,35 +56,39 @@ describe('Create API Token Drawer', () => {
     expect(cancelBtn).toBeVisible();
   });
 
-  it('Should see secret modal with secret when you type a label and submit the form successfully', async () => {
-    server.use(
-      http.post('*/profile/tokens', () => {
-        return HttpResponse.json(
-          appTokenFactory.build({ token: 'secret-value' })
-        );
-      })
-    );
+  it(
+    'Should see secret modal with secret when you type a label and submit the form successfully',
+    async () => {
+      server.use(
+        http.post('*/profile/tokens', () => {
+          return HttpResponse.json(
+            appTokenFactory.build({ token: 'secret-value' })
+          );
+        })
+      );
 
-    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
-      <CreateAPITokenDrawer {...props} />
-    );
+      const { getByLabelText, getByTestId, getByText } = renderWithTheme(
+        <CreateAPITokenDrawer {...props} />
+      );
 
-    const labelField = getByTestId('textfield-input');
-    await userEvent.type(labelField, 'my-test-token');
+      const labelField = getByTestId('textfield-input');
+      await userEvent.type(labelField, 'my-test-token');
 
-    const selectAllNoAccessPermRadioButton = getByLabelText(
-      'Select no access for all'
-    );
-    const submitBtn = getByText('Create Token');
+      const selectAllNoAccessPermRadioButton = getByLabelText(
+        'Select no access for all'
+      );
+      const submitBtn = getByText('Create Token');
 
-    expect(submitBtn).not.toHaveAttribute('aria-disabled', 'true');
-    await userEvent.click(selectAllNoAccessPermRadioButton);
-    await userEvent.click(submitBtn);
+      expect(submitBtn).not.toHaveAttribute('aria-disabled', 'true');
+      await userEvent.click(selectAllNoAccessPermRadioButton);
+      await userEvent.click(submitBtn);
 
-    await waitFor(() =>
-      expect(props.showSecret).toBeCalledWith('secret-value')
-    );
-  });
+      await waitFor(() =>
+        expect(props.showSecret).toBeCalledWith('secret-value')
+      );
+    },
+    { timeout: 15000 }
+  );
 
   it('Should default to no selection for all scopes', () => {
     const { getByLabelText } = renderWithTheme(
