@@ -148,7 +148,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             return (
               <RegionOption
                 key={option.value}
-                option={option}
+                region={option}
                 props={props}
                 selected={selected}
               />

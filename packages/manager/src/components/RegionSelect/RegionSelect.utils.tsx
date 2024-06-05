@@ -1,4 +1,8 @@
-import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
+import {
+  Capabilities,
+  CONTINENT_CODE_TO_CONTINENT,
+  RegionSite,
+} from '@linode/api-v4';
 
 import {
   getRegionCountryGroup,
@@ -109,6 +113,68 @@ export const getRegionOptions = ({
         return 1;
       }
       if (region1.data.country > region2.data.country) {
+        return -1;
+      }
+
+      // If regions are in the same group or country, sort alphabetically by label
+      if (region1.label < region2.label) {
+        return -1;
+      }
+
+      return 1;
+    });
+};
+
+interface RegionSelectOptionsOptions {
+  regions: Region[];
+  currentCapability: Capabilities | undefined;
+  regionFilter?: RegionSite;
+}
+
+export const getRegionOptionsv2 = ({
+  regions,
+  currentCapability,
+  regionFilter,
+}: RegionSelectOptionsOptions) => {
+  return regions
+    .filter((region) => {
+      let keepRegion = true;
+      if (currentCapability) {
+        keepRegion = region.capabilities.includes(currentCapability);
+      }
+      if (regionFilter) {
+        keepRegion = region.site_type === regionFilter;
+      }
+      return keepRegion;
+    })
+    .sort((region1, region2) => {
+      const region1Group = getRegionCountryGroup(region1);
+      const region2Group = getRegionCountryGroup(region2);
+
+      // North America group comes first
+      if (
+        region1Group === 'North America' &&
+        region2Group !== 'North America'
+      ) {
+        return -1;
+      }
+      if (region1Group !== NORTH_AMERICA && region2Group === NORTH_AMERICA) {
+        return 1;
+      }
+
+      // Rest of the regions are sorted alphabetically
+      if (region1Group < region2Group) {
+        return -1;
+      }
+      if (region1Group > region2Group) {
+        return 1;
+      }
+
+      // Then we group by country
+      if (region1.country < region2.country) {
+        return 1;
+      }
+      if (region1.country > region2.country) {
         return -1;
       }
 

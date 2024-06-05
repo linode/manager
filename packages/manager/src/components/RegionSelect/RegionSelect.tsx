@@ -7,6 +7,7 @@ import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
+import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { RegionOption } from './RegionOption';
 import {
@@ -15,12 +16,12 @@ import {
   StyledFlagContainer,
   sxDistributedRegionIcon,
 } from './RegionSelect.styles';
-import { getRegionOptions, getSelectedRegionById } from './RegionSelect.utils';
+import {
+  getRegionOptionsv2,
+  isRegionOptionUnavailable,
+} from './RegionSelect.utils';
 
-import type {
-  RegionSelectOption,
-  RegionSelectProps,
-} from './RegionSelect.types';
+import type { RegionSelectProps } from './RegionSelect.types';
 
 /**
  * A specific select for regions.
@@ -55,62 +56,40 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     isLoading: accountAvailabilityLoading,
   } = useAllAccountAvailabilitiesQuery();
 
-  const regionFromSelectedId: RegionSelectOption | null =
-    getSelectedRegionById({
-      accountAvailabilityData: accountAvailability,
-      currentCapability,
-      regions,
-      selectedRegionId: selectedId ?? '',
-    }) ?? null;
+  const regionOptions = getRegionOptionsv2({
+    currentCapability,
+    regionFilter,
+    regions,
+  });
 
-  const [selectedRegion, setSelectedRegion] = React.useState<
-    RegionSelectOption | null | undefined
-  >(regionFromSelectedId);
+  const selectedRegion = regionOptions.find((r) => r.id === selectedId) ?? null;
 
-  const handleRegionChange = (selection: RegionSelectOption | null) => {
-    setSelectedRegion(selection);
-    handleSelection(selection?.value || '');
-  };
-
-  React.useEffect(() => {
-    if (selectedId) {
-      setSelectedRegion(regionFromSelectedId);
-    } else {
-      // We need to reset the state when create types change
-      setSelectedRegion(null);
-    }
-  }, [selectedId, regions]);
-
-  const options = React.useMemo(
-    () =>
-      getRegionOptions({
-        accountAvailabilityData: accountAvailability,
-        currentCapability,
-        handleDisabledRegion,
-        regionFilter,
-        regions,
-      }),
-    [
-      accountAvailability,
-      currentCapability,
-      handleDisabledRegion,
-      regions,
-      regionFilter,
-    ]
+  const disabledRegions = regionOptions.reduce<Record<number, string>>(
+    (acc, region) => {
+      const disabledInfo = handleDisabledRegion?.(region);
+      if (disabledInfo?.disabled) {
+        acc[region.id] = disabledInfo.reason;
+      }
+      if (
+        isRegionOptionUnavailable({
+          accountAvailabilityData: accountAvailability,
+          currentCapability,
+          region,
+        })
+      ) {
+        acc[region.id] =
+          'This region is currently unavailable. For help, open a support ticket.';
+      }
+      return acc;
+    },
+    {}
   );
 
   return (
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete
-        getOptionDisabled={(option: RegionSelectOption) =>
-          Boolean(option.disabledProps?.disabled)
-        }
-        isOptionEqualToValue={(
-          option: RegionSelectOption,
-          { value }: RegionSelectOption
-        ) => option.value === value}
-        onChange={(_, selectedOption: RegionSelectOption) => {
-          handleRegionChange(selectedOption);
+        onChange={(_, selectedOption) => {
+          handleSelection(selectedOption!.id);
         }}
         renderOption={(props, option) => {
           return (
@@ -120,9 +99,10 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
                 (option.site_type === 'distributed' ||
                   option.site_type === 'edge')
               }
-              key={option.value}
-              option={option}
+              disabledReason={disabledRegions[option.id]}
+              key={option.id}
               props={props}
+              region={option}
             />
           );
         }}
@@ -147,7 +127,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
             required,
             startAdornment: selectedRegion && (
               <StyledFlagContainer>
-                <Flag country={selectedRegion?.data.country} />
+                <Flag country={selectedRegion?.country} />
               </StyledFlagContainer>
             ),
           },
@@ -159,13 +139,14 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         disableClearable={!isClearable}
         disabled={disabled}
         errorText={errorText}
-        groupBy={(option: RegionSelectOption) => option.data.region}
+        getOptionDisabled={(option) => disabledRegions[option.id]}
+        groupBy={(option) => getRegionCountryGroup(option)}
         helperText={helperText}
         label={label ?? 'Region'}
         loading={accountAvailabilityLoading}
         loadingText="Loading regions..."
         noOptionsText="No results"
-        options={options}
+        options={regionOptions}
         placeholder="Select a Region"
         value={selectedRegion}
       />
