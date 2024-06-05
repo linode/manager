@@ -129,7 +129,7 @@ export const ConfirmTransferDialog = React.memo(
         actions={actions}
         onClose={onClose}
         open={open}
-        title="Receive a Service Transfer"
+        title="Receive a service transfer"
       >
         <DialogContent
           entities={data?.entities ?? { linodes: [] }}

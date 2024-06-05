@@ -38,7 +38,7 @@ export const CaptureSnapshotConfirmationDialog = (props: Props) => {
       error={error}
       onClose={onClose}
       open={open}
-      title="Take a Snapshot"
+      title="Take a snapshot"
     >
       <Typography>
         Taking a snapshot will back up your Linode in its current state,

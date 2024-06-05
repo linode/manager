@@ -43,7 +43,7 @@ export const SubscriptionDialog = (props: Props) => {
       actions={actions}
       onClose={onClose}
       open={isOpen}
-      title="Maximum Clients Reached"
+      title="Maximum clients reached"
     >
       <Typography variant="body1">{text}</Typography>
     </ConfirmationDialog>

@@ -59,7 +59,7 @@ export const UserDeleteConfirmationDialog = (props: Props) => {
       error={error?.[0].reason}
       onClose={onClose}
       open={open}
-      title="Confirm Deletion"
+      title="Confirm deletion"
     >
       User {username} will be permanently deleted. Are you sure?
     </ConfirmationDialog>

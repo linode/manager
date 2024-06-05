@@ -39,7 +39,7 @@ export const CreditCardDialog = (props: Props) => {
       }
       onClose={cancel}
       open={open}
-      title="Confirm Payment"
+      title="Confirm payment"
     >
       {error && <Notice text={error} variant="error" />}
       <Typography>{`Confirm payment of $${usd} USD to Linode LLC?`}</Typography>

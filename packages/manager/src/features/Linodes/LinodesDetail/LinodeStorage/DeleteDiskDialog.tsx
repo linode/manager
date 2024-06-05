@@ -55,7 +55,7 @@ export const DeleteDiskDialog = (props: Props) => {
       error={error?.[0].reason}
       onClose={onClose}
       open={open}
-      title="Confirm Delete"
+      title="Confirm delete"
     >
       Are you sure you want to delete {disk?.label}?
     </ConfirmationDialog>

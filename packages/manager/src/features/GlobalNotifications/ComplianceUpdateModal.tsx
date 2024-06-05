@@ -64,7 +64,7 @@ export const ComplianceUpdateModal = () => {
       error={error}
       onClose={complianceModelContext.close}
       open={complianceModelContext.isOpen}
-      title="Compliance Update"
+      title="Compliance update"
     >
       <Typography>
         Recent legal changes now require users located in Europe, or with

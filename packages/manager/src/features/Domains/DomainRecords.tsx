@@ -255,7 +255,7 @@ class DomainRecords extends React.Component<Props, State> {
           actions={this.renderDialogActions}
           onClose={this.handleCloseDialog}
           open={confirmDialog.open}
-          title="Confirm Deletion"
+          title="Confirm deletion"
         >
           Are you sure you want to delete this record?
         </ConfirmationDialog>

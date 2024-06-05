@@ -228,7 +228,7 @@ export const AccessSelect = React.memo((props: Props) => {
         )}
         onClose={closeDialog}
         open={isOpen}
-        title={`Confirm ${label} Access`}
+        title={`Confirm ${label} access`}
       >
         Are you sure you want to set access for {name} to Public Read/Write?
         Everyone will be able to list, create, overwrite, and delete Objects in

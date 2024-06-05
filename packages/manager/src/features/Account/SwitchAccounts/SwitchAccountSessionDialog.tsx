@@ -39,7 +39,7 @@ export const SwitchAccountSessionDialog = React.memo(
         data-testid="switch-account-session-dialog"
         maxWidth="xs"
         open={isOpen}
-        title="Session Expired"
+        title="Session expired"
       >
         <Typography>
           Log in again to switch accounts or close this window to continue

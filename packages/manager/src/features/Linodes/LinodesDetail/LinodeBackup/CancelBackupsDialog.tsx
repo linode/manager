@@ -57,7 +57,7 @@ export const CancelBackupsDialog = (props: Props) => {
       error={error?.[0].reason}
       onClose={onClose}
       open={isOpen}
-      title="Confirm Cancellation"
+      title="Confirm cancellation"
     >
       <Typography>
         Canceling backups associated with this Linode will delete all existing

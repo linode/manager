@@ -127,7 +127,7 @@ export const MigrationNotification = React.memo((props: Props) => {
         error={dialog.error}
         onClose={() => closeDialog()}
         open={dialog.isOpen}
-        title="Confirm Migration"
+        title="Confirm migration"
       >
         <Typography variant="subtitle1">
           Are you sure you want to {migrationActionDescription}?

@@ -51,7 +51,7 @@ export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
       actions={renderActions(onClose, onResetRootPassword, isLoading)}
       onClose={onClose}
       open={open}
-      title="Reset Root Password"
+      title="Reset root password"
     >
       {error ? <Notice variant="error">{error[0].reason}</Notice> : undefined}
       <Typography>

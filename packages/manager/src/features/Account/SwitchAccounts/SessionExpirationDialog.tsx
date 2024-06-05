@@ -181,7 +181,7 @@ export const SessionExpirationDialog = React.memo(
         error={createTokenErrorReason}
         maxWidth="xs"
         open={isOpen}
-        title="Your Session is About to Expire"
+        title="Your session is about to expire"
       >
         <Typography>
           Your session will expire in{' '}

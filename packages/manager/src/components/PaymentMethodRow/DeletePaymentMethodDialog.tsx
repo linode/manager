@@ -52,7 +52,7 @@ export const DeletePaymentMethodDialog = React.memo((props: Props) => {
       error={error}
       onClose={onClose}
       open={open}
-      title="Delete Payment Method"
+      title="Delete payment method"
     >
       Are you sure you want to delete this payment method?
       <Grid className={classes.container} container>

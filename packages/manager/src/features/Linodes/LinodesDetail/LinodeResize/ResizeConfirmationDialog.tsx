@@ -54,7 +54,7 @@ export const ResizeDialog = (props: Props) => {
       error={error}
       onClose={onClose}
       open={isOpen}
-      title="Confirm Linode Resize"
+      title="Confirm Linode resize"
     >
       <Typography>
         Are you sure you want to resize your Linode from {currentPlan} to{' '}

@@ -50,7 +50,7 @@ export const BootConfigDialog = (props: Props) => {
       error={error?.[0].reason}
       onClose={onClose}
       open={open}
-      title="Confirm Boot"
+      title="Confirm boot"
     >
       <Typography>
         Are you sure you want to boot &quot;{config?.label}&quot;?

@@ -215,7 +215,7 @@ export const StackScriptPanelContent = (
         actions={renderConfirmMakePublicActions}
         onClose={handleCloseDialog}
         open={dialog.makePublic.open}
-        title={`Make StackScript ${dialog.stackScriptLabel} Public`}
+        title={`Make StackScript ${dialog.stackScriptLabel} public`}
       >
         <Typography>
           Are you sure you want to make {dialog.stackScriptLabel} public? This
