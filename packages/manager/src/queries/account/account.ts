@@ -11,7 +11,7 @@ import {
 import { useSnackbar } from 'notistack';
 
 import { useIsTaxIdEnabled } from 'src/features/Account/utils';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 
 import { queryPresets } from '../base';
 import { accountQueries } from './queries';

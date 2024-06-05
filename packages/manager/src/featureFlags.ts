@@ -69,6 +69,7 @@ export interface Flags {
   databaseResize: boolean;
   databases: boolean;
   disableLargestGbPlans: boolean;
+  eventMessagesV2: boolean;
   gecko: boolean; // @TODO gecko: delete this after next release
   gecko2: GaFeatureFlag;
   gpuv2: gpuV2;

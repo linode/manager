@@ -8,7 +8,7 @@ import {
 import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 
 import { creationHandlers, listToItemsByID, queryPresets } from './base';
 

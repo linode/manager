@@ -5,6 +5,8 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Currency } from 'src/components/Currency';
+import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/DiskEncryption/constants';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useEventsPollingActions } from 'src/queries/events/events';
@@ -39,6 +41,10 @@ export const EnableBackupsDialog = (props: Props) => {
     linode?.type ?? '',
     Boolean(linode?.type)
   );
+
+  const {
+    isDiskEncryptionFeatureEnabled,
+  } = useIsDiskEncryptionFeatureEnabled();
 
   const backupsMonthlyPrice:
     | PriceObject['monthly']
@@ -95,6 +101,13 @@ export const EnableBackupsDialog = (props: Props) => {
       open={open}
       title="Enable backups?"
     >
+      {isDiskEncryptionFeatureEnabled && (
+        <Notice
+          spacingTop={8}
+          text={DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY}
+          variant="warning"
+        />
+      )}
       {!hasBackupsMonthlyPriceError ? (
         <Typography>
           Are you sure you want to enable backups on this Linode?{` `}

@@ -8,7 +8,7 @@ import { useDeleteFirewall, useMutateFirewall } from 'src/queries/firewalls';
 import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
-import { queryKey as nodebalancerQueryKey } from 'src/queries/nodebalancers';
+import { queryKey as nodebalancersQueryKey } from 'src/queries/nodebalancers';
 import { capitalize } from 'src/utilities/capitalize';
 
 export type Mode = 'delete' | 'disable' | 'enable';
@@ -66,17 +66,19 @@ export const FirewallDialog = React.memo((props: Props) => {
 
   const onSubmit = async () => {
     await requestMap[mode]();
+    // Invalidate Firewalls assigned to NodeBalancers and Linodes when Firewall is enabled, disabled, or deleted.
+    // eslint-disable-next-line no-unused-expressions
+    devices?.forEach((device) => {
+      const deviceType = device.entity.type;
+      queryClient.invalidateQueries([
+        deviceType === 'linode' ? linodesQueryKey : nodebalancersQueryKey,
+        deviceType,
+        device.entity.id,
+        'firewalls',
+      ]);
+    });
     if (mode === 'delete') {
-      devices?.forEach((device) => {
-        const deviceType = device.entity.type;
-        queryClient.invalidateQueries([
-          deviceType === 'linode' ? linodesQueryKey : nodebalancerQueryKey,
-          deviceType,
-          device.entity.id,
-          'firewalls',
-        ]);
-        queryClient.invalidateQueries([firewallQueryKey]);
-      });
+      queryClient.invalidateQueries([firewallQueryKey]);
     }
     enqueueSnackbar(`Firewall ${label} successfully ${mode}d`, {
       variant: 'success',
