@@ -1,13 +1,17 @@
 import React from 'react';
-import { useController } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
-import type { CreateLinodeRequest } from '@linode/api-v4';
+import { defaultInterfaces } from './utilities';
+
+import type { LinodeCreateFormValues } from './utilities';
 
 export const Region = () => {
-  const { field, formState } = useController<CreateLinodeRequest>({
+  const { control, setValue } = useFormContext<LinodeCreateFormValues>();
+  const { field, fieldState } = useController({
+    control,
     name: 'region',
   });
 
@@ -22,10 +26,21 @@ export const Region = () => {
           onBlur: field.onBlur,
         },
       }}
+      handleSelection={(regionId) => {
+        field.onChange(regionId);
+
+        // Reset interfaces because VPC and VLANs are region-sepecific
+        setValue('interfaces', defaultInterfaces);
+
+        // Reset the placement group because they are region-specific
+        setValue('placement_group', undefined);
+
+        // Reset disk encryption because it may not be 
+        setValue('disk_encryption', undefined);
+      }}
       currentCapability="Linodes"
       disabled={isLinodeCreateRestricted}
-      error={formState.errors.region?.message}
-      handleSelection={field.onChange}
+      error={fieldState.error?.message}
       selectedId={field.value}
     />
   );

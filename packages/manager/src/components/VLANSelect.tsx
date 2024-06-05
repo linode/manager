@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useVLANsInfiniteQuery } from 'src/queries/vlans';
 
@@ -50,6 +50,12 @@ export const VLANSelect = (props: Props) => {
 
   const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = useState<string>('');
+
+  useEffect(() => {
+    if (!value) {
+      setInputValue('');
+    }
+  }, [value]);
 
   const apiFilter = getVLANSelectFilter({
     defaultFilter: filter,
