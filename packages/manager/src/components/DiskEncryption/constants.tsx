@@ -28,3 +28,9 @@ export const UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY =
 
 export const DISK_ENCRYPTION_IMAGES_CAVEAT_COPY =
   'Virtual Machine Images are not encrypted.';
+
+export const ENCRYPT_DISK_DISABLED_REBUILD_LKE_REASON =
+  'The Encrypt Disk setting cannot be changed for a Linode attached to a node pool.';
+
+export const ENCRYPT_DISK_DISABLED_REBUILD_DISTRIBUTED_REGION_REASON =
+  'The Encrypt Disk setting cannot be changed for distributed instances.';

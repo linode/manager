@@ -8,10 +8,14 @@ import { RebuildFromStackScript } from './RebuildFromStackScript';
 
 const props = {
   disabled: false,
+  diskEncryptionEnabled: true,
   handleRebuildError: vi.fn(),
+  isLKELinode: false,
   linodeId: 1234,
+  linodeIsInDistributedRegion: false,
   onClose: vi.fn(),
   passwordHelperText: '',
+  toggleDiskEncryptionEnabled: vi.fn(),
   type: 'community' as const,
   ...reactRouterProps,
 };

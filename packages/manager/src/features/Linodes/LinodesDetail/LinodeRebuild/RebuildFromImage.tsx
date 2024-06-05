@@ -39,12 +39,16 @@ import {
 
 interface Props {
   disabled: boolean;
+  diskEncryptionEnabled: boolean;
   handleRebuildError: (status: string) => void;
+  isLKELinode: boolean;
   linodeId: number;
+  linodeIsInDistributedRegion: boolean;
   linodeLabel?: string;
   linodeRegion?: string;
   onClose: () => void;
   passwordHelperText: string;
+  toggleDiskEncryptionEnabled: () => void;
 }
 
 interface RebuildFromImageForm {
@@ -66,12 +70,16 @@ const initialValues: RebuildFromImageForm = {
 export const RebuildFromImage = (props: Props) => {
   const {
     disabled,
+    diskEncryptionEnabled,
     handleRebuildError,
+    isLKELinode,
     linodeId,
+    linodeIsInDistributedRegion,
     linodeLabel,
     linodeRegion,
     onClose,
     passwordHelperText,
+    toggleDiskEncryptionEnabled,
   } = props;
 
   const {
@@ -129,6 +137,7 @@ export const RebuildFromImage = (props: Props) => {
 
     const params: RebuildRequest = {
       authorized_users,
+      disk_encryption: diskEncryptionEnabled ? 'enabled' : 'disabled',
       image,
       metadata: {
         user_data: userData
@@ -149,6 +158,12 @@ export const RebuildFromImage = (props: Props) => {
     */
     if (shouldReuseUserData) {
       delete params['metadata'];
+    }
+
+    // if the linode is part of an LKE cluster or is in a Distributed region, the disk_encryption value
+    // cannot be changed, so omit it from the payload
+    if (isLKELinode || linodeIsInDistributedRegion) {
+      delete params['disk_encryption'];
     }
 
     // @todo: eventually this should be a dispatched action instead of a services library call
@@ -245,10 +260,16 @@ export const RebuildFromImage = (props: Props) => {
                 authorizedUsers={values.authorized_users}
                 data-qa-access-panel
                 disabled={disabled}
+                diskEncryptionEnabled={diskEncryptionEnabled}
+                displayDiskEncryption
                 error={errors.root_pass}
                 handleChange={(input) => setFieldValue('root_pass', input)}
+                isLKELinode={isLKELinode}
+                linodeIsInDistributedRegion={linodeIsInDistributedRegion}
                 password={values.root_pass}
                 passwordHelperText={passwordHelperText}
+                selectedRegion={linodeRegion}
+                toggleDiskEncryptionEnabled={toggleDiskEncryptionEnabled}
               />
               {shouldDisplayUserDataAccordion ? (
                 <>

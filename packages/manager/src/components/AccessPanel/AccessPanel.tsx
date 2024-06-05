@@ -5,6 +5,8 @@ import { makeStyles } from 'tss-react/mui';
 import {
   DISK_ENCRYPTION_GENERAL_DESCRIPTION,
   DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY,
+  ENCRYPT_DISK_DISABLED_REBUILD_DISTRIBUTED_REGION_REASON,
+  ENCRYPT_DISK_DISABLED_REBUILD_LKE_REASON,
 } from 'src/components/DiskEncryption/constants';
 import { DiskEncryption } from 'src/components/DiskEncryption/DiskEncryption';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
@@ -46,8 +48,10 @@ interface Props {
   handleChange: (value: string) => void;
   heading?: string;
   hideStrengthLabel?: boolean;
+  isLKELinode?: boolean;
   isOptional?: boolean;
   label?: string;
+  linodeIsInDistributedRegion?: boolean;
   password: null | string;
   passwordHelperText?: string;
   placeholder?: string;
@@ -69,8 +73,10 @@ export const AccessPanel = (props: Props) => {
     error,
     handleChange: _handleChange,
     hideStrengthLabel,
+    isLKELinode,
     isOptional,
     label,
+    linodeIsInDistributedRegion,
     password,
     passwordHelperText,
     placeholder,
@@ -97,6 +103,14 @@ export const AccessPanel = (props: Props) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     _handleChange(e.target.value);
 
+  const encryptDiskDisabledReason = isLKELinode
+    ? ENCRYPT_DISK_DISABLED_REBUILD_LKE_REASON
+    : linodeIsInDistributedRegion
+    ? ENCRYPT_DISK_DISABLED_REBUILD_DISTRIBUTED_REGION_REASON
+    : !regionSupportsDiskEncryption
+    ? DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY
+    : '';
+
   /**
    * Display the "Disk Encryption" section if:
    * 1) the feature is enabled
@@ -111,9 +125,13 @@ export const AccessPanel = (props: Props) => {
       <>
         <Divider spacingBottom={20} spacingTop={24} />
         <DiskEncryption
+          disabled={
+            !regionSupportsDiskEncryption ||
+            isLKELinode ||
+            linodeIsInDistributedRegion
+          }
           descriptionCopy={DISK_ENCRYPTION_GENERAL_DESCRIPTION}
-          disabled={!regionSupportsDiskEncryption}
-          disabledReason={DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY}
+          disabledReason={encryptDiskDisabledReason}
           isEncryptDiskChecked={diskEncryptionEnabled ?? false}
           onChange={() => toggleDiskEncryptionEnabled()}
         />
