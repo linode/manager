@@ -16,19 +16,11 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/profile', async () => {
-  const actual = await vi.importActual<any>('src/queries/profile');
+vi.mock('src/queries/profile/profile', async () => {
+  const actual = await vi.importActual<any>('src/queries/profile/profile');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
-  };
-});
-
-vi.mock('src/queries/grants', async () => {
-  const actual = await vi.importActual<any>('src/queries/grants');
-  return {
-    ...actual,
-    useGrants: queryMocks.useGrants,
   };
 });
 

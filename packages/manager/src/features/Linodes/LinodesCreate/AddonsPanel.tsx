@@ -39,7 +39,7 @@ export interface AddonsPanelProps {
   handleVLANChange: (updatedInterface: Interface) => void;
   ipamAddress: string;
   ipamError?: string;
-  isEdgeRegionSelected?: boolean;
+  isDistributedRegionSelected?: boolean;
   isPrivateIPChecked: boolean;
   labelError?: string;
   linodesData?: Linode[];
@@ -63,7 +63,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
     handleVLANChange,
     ipamAddress,
     ipamError,
-    isEdgeRegionSelected,
+    isDistributedRegionSelected,
     isPrivateIPChecked,
     labelError,
     linodesData,
@@ -154,7 +154,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
   }, [selectedLinodeID]);
 
   const isBackupsBoxChecked =
-    (accountBackups && !isEdgeRegionSelected) || props.backups;
+    (accountBackups && !isDistributedRegionSelected) || props.backups;
 
   return (
     <>
@@ -184,9 +184,9 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
             <TooltipIcon status="help" text={backupsDisabledReason} />
           )}
         </Typography>
-        {isEdgeRegionSelected && (
+        {isDistributedRegionSelected && (
           <Notice
-            text="Backups and Private IP are currently not available for Edge regions."
+            text="Backups and Private IP are currently not available for distributed regions."
             variant="warning"
           />
         )}
@@ -206,7 +206,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
                 accountBackups ||
                 disabled ||
                 isBareMetal ||
-                isEdgeRegionSelected
+                isDistributedRegionSelected
               }
               checked={isBackupsBoxChecked}
               data-testid="backups"
@@ -233,7 +233,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
             />
           )}
         <StyledTypography variant="body1">
-          {accountBackups && !isEdgeRegionSelected ? (
+          {accountBackups && !isDistributedRegionSelected ? (
             <React.Fragment>
               You have enabled automatic backups for your account. This Linode
               will automatically have backups enabled. To change this setting,{' '}
@@ -254,7 +254,7 @@ export const AddonsPanel = React.memo((props: AddonsPanelProps) => {
               checked={isPrivateIPChecked}
               data-qa-check-private-ip
               data-testid="private_ip"
-              disabled={disabled || isEdgeRegionSelected}
+              disabled={disabled || isDistributedRegionSelected}
               onChange={togglePrivateIP}
             />
           }

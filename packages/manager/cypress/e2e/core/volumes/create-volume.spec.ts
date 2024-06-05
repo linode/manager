@@ -1,5 +1,5 @@
 import type { Linode } from '@linode/api-v4';
-import { createLinode } from '@linode/api-v4/lib/linodes';
+import { createTestLinode } from 'support/util/linodes';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
@@ -76,6 +76,7 @@ describe('volume create flow', () => {
       label: randomLabel(),
       region: region.id,
       root_pass: randomString(16),
+      booted: false,
     });
 
     const volume = {
@@ -85,7 +86,7 @@ describe('volume create flow', () => {
       regionLabel: region.label,
     };
 
-    cy.defer(() => createLinode(linodeRequest), 'creating Linode').then(
+    cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
       (linode) => {
         interceptCreateVolume().as('createVolume');
 
@@ -147,9 +148,10 @@ describe('volume create flow', () => {
       label: randomLabel(),
       root_pass: randomString(16),
       region: chooseRegion().id,
+      booted: false,
     });
 
-    cy.defer(() => createLinode(linodeRequest), 'creating Linode').then(
+    cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
       (linode: Linode) => {
         const volume = {
           label: randomLabel(),

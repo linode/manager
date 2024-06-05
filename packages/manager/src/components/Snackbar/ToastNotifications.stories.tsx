@@ -3,6 +3,7 @@ import React from 'react';
 
 import { Button } from 'src/components/Button/Button';
 import { Snackbar } from 'src/components/Snackbar/Snackbar';
+import { getEventMessage } from 'src/features/Events/utils';
 
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -96,3 +97,48 @@ function Example() {
     </>
   );
 }
+
+export const WithEventMessage: Story = {
+  args: {
+    anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
+    hideIconVariant: true,
+    maxSnack: 5,
+  },
+  render: (args) => {
+    const WithEventMessage = () => {
+      const { enqueueSnackbar } = useSnackbar();
+      const message = getEventMessage({
+        action: 'placement_group_assign',
+        entity: {
+          label: 'Entity',
+          url: 'https://google.com',
+        },
+        secondary_entity: {
+          label: 'Secondary Entity',
+          url: 'https://google.com',
+        },
+        status: 'notification',
+      });
+
+      const showToast = (variant: any) =>
+        enqueueSnackbar(message, {
+          variant,
+        });
+      return (
+        <MyButton
+          sx={{
+            margin: 2,
+          }}
+          onClick={showToast}
+          variant={'success'}
+        />
+      );
+    };
+
+    return (
+      <Snackbar {...args}>
+        <WithEventMessage />
+      </Snackbar>
+    );
+  },
+};

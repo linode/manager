@@ -17,7 +17,13 @@ describe('switch linode state', () => {
    * - Does not wait for Linode to finish being shut down before succeeding.
    */
   it('powers off a linode from landing page', () => {
-    cy.defer(createTestLinode).then((linode: Linode) => {
+    // Use `vlan_no_internet` security method.
+    // This works around an issue where the Linode API responds with a 400
+    // when attempting to reboot shortly after booting up when the Linode is
+    // attached to a Cloud Firewall.
+    cy.defer(() =>
+      createTestLinode({ booted: true }, { securityMethod: 'vlan_no_internet' })
+    ).then((linode: Linode) => {
       cy.visitWithLogin('/linodes');
       cy.get(`[data-qa-linode="${linode.label}"]`)
         .should('be.visible')
@@ -58,7 +64,13 @@ describe('switch linode state', () => {
    * - Waits for Linode to fully shut down before succeeding.
    */
   it('powers off a linode from details page', () => {
-    cy.defer(createTestLinode).then((linode: Linode) => {
+    // Use `vlan_no_internet` security method.
+    // This works around an issue where the Linode API responds with a 400
+    // when attempting to reboot shortly after booting up when the Linode is
+    // attached to a Cloud Firewall.
+    cy.defer(() =>
+      createTestLinode({ booted: true }, { securityMethod: 'vlan_no_internet' })
+    ).then((linode: Linode) => {
       cy.visitWithLogin(`/linodes/${linode.id}`);
       cy.contains('RUNNING').should('be.visible');
       cy.findByText(linode.label).should('be.visible');
@@ -160,7 +172,13 @@ describe('switch linode state', () => {
    * - Does not wait for Linode to finish rebooting before succeeding.
    */
   it('reboots a linode from landing page', () => {
-    cy.defer(createTestLinode).then((linode: Linode) => {
+    // Use `vlan_no_internet` security method.
+    // This works around an issue where the Linode API responds with a 400
+    // when attempting to reboot shortly after booting up when the Linode is
+    // attached to a Cloud Firewall.
+    cy.defer(() =>
+      createTestLinode({ booted: true }, { securityMethod: 'vlan_no_internet' })
+    ).then((linode: Linode) => {
       cy.visitWithLogin('/linodes');
       cy.get(`[data-qa-linode="${linode.label}"]`)
         .should('be.visible')
@@ -201,7 +219,13 @@ describe('switch linode state', () => {
    * - Waits for Linode to finish rebooting before succeeding.
    */
   it('reboots a linode from details page', () => {
-    cy.defer(createTestLinode).then((linode: Linode) => {
+    // Use `vlan_no_internet` security method.
+    // This works around an issue where the Linode API responds with a 400
+    // when attempting to reboot shortly after booting up when the Linode is
+    // attached to a Cloud Firewall.
+    cy.defer(() =>
+      createTestLinode({ booted: true }, { securityMethod: 'vlan_no_internet' })
+    ).then((linode: Linode) => {
       cy.visitWithLogin(`/linodes/${linode.id}`);
       cy.contains('RUNNING').should('be.visible');
       cy.findByText(linode.label).should('be.visible');
