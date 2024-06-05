@@ -257,12 +257,12 @@ export const ImageUpload = () => {
                   }}
                   currentCapability={undefined}
                   errorText={fieldState.error?.message}
-                  handleSelection={field.onChange}
+                  onChange={field.onChange}
                   helperText="For fastest initial upload, select the region that is geographically closest to you. Once uploaded, you will be able to deploy the image to other regions."
                   label="Region"
                   regionFilter="core" // Images service will not be supported for Gecko Beta
                   regions={regions ?? []}
-                  selectedId={field.value ?? null}
+                  value={field.value ?? null}
                 />
               )}
               control={form.control}

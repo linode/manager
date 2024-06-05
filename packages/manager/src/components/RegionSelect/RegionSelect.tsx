@@ -41,16 +41,16 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     disabled,
     disabledRegions: disabledRegionsFromProps,
     errorText,
-    handleSelection,
     helperText,
     isClearable,
     label,
+    onChange,
     regionFilter,
     regions,
     required,
-    selectedId,
     showDistributedRegionIconHelperText,
     tooltipText,
+    value,
     width,
   } = props;
 
@@ -65,7 +65,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     regions,
   });
 
-  const selectedRegion = regionOptions.find((r) => r.id === selectedId) ?? null;
+  const selectedRegion = regionOptions.find((r) => r.id === value) ?? null;
 
   const disabledRegions = regionOptions.reduce<
     Record<string, DisableRegionOption>
@@ -91,8 +91,8 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
   return (
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete
-        onChange={(_, selectedOption) => {
-          handleSelection(selectedOption!.id);
+        onChange={(_, region) => {
+          onChange(region!);
         }}
         renderOption={(props, option) => {
           return (

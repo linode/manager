@@ -303,7 +303,7 @@ export const VolumeCreate = () => {
             />
             <Box alignItems="flex-end" display="flex">
               <RegionSelect
-                handleSelection={(value) => {
+                onChange={(value) => {
                   setFieldValue('region', value);
                   setFieldValue('linode_id', null);
                 }}
@@ -314,7 +314,7 @@ export const VolumeCreate = () => {
                 label="Region"
                 onBlur={handleBlur}
                 regions={regions ?? []}
-                selectedId={values.region}
+                value={values.region}
                 width={400}
               />
               {renderSelectTooltip(

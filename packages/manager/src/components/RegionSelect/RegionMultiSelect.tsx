@@ -106,7 +106,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     <>
       <StyledAutocompleteContainer sx={{ width }}>
         <Autocomplete
-          getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
           onChange={(_, selectedOptions) =>
             onChange(selectedOptions.map((region) => region.id))
           }
@@ -157,6 +156,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
           disableClearable={!isClearable}
           disabled={disabled}
           errorText={errorText}
+          getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
           groupBy={(option) => getRegionCountryGroup(option)}
           label={label ?? 'Regions'}
           loading={accountAvailabilityLoading}

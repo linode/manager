@@ -191,9 +191,9 @@ export const ConfigureForm = React.memo((props: Props) => {
             }}
             currentCapability="Linodes"
             errorText={errorText}
-            handleSelection={handleSelectRegion}
             label="New Region"
-            selectedId={selectedRegion}
+            onChange={(region) => handleSelectRegion(region.id)}
+            value={selectedRegion}
           />
           {shouldDisplayPriceComparison && selectedRegion && (
             <MigrationPricing

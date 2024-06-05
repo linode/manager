@@ -147,17 +147,17 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         </Notice>
       ) : null}
       <RegionSelect
-        currentCapability={currentCapability}
-        disabled={disabled}
-        errorText={error}
-        handleSelection={handleSelection}
-        helperText={helperText}
-        regionFilter={hideDistributedRegions ? 'core' : undefined}
-        regions={regions ?? []}
-        selectedId={selectedId || null}
         showDistributedRegionIconHelperText={
           showDistributedRegionIconHelperText
         }
+        currentCapability={currentCapability}
+        disabled={disabled}
+        errorText={error}
+        helperText={helperText}
+        onChange={(region) => handleSelection(region.id)}
+        regionFilter={hideDistributedRegions ? 'core' : undefined}
+        regions={regions ?? []}
+        value={selectedId || null}
         {...RegionSelectProps}
       />
       {showClonePriceWarning && (

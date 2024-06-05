@@ -496,13 +496,11 @@ const DatabaseCreate = () => {
         </Grid>
         <Grid>
           <RegionSelect
-            handleSelection={(selected: string) =>
-              setFieldValue('region', selected)
-            }
             currentCapability="Managed Databases"
             errorText={errors.region}
+            onChange={(region) => setFieldValue('region', region.id)}
             regions={regionsData}
-            selectedId={values.region}
+            value={values.region}
           />
           <RegionHelperText mt={1} />
         </Grid>

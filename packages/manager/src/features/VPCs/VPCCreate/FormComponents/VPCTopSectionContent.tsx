@@ -58,10 +58,10 @@ export const VPCTopSectionContent = (props: Props) => {
         currentCapability="VPCs"
         disabled={isDrawer ? true : disabled}
         errorText={errors.region}
-        handleSelection={(region: string) => onChangeField('region', region)}
         isClearable
+        onChange={(region) => onChangeField('region', region.id)}
         regions={regions}
-        selectedId={values.region}
+        value={values.region}
       />
       <TextField
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

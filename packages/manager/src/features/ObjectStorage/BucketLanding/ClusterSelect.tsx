@@ -48,14 +48,14 @@ export const ClusterSelect: React.FC<Props> = (props) => {
       data-qa-select-cluster
       disabled={disabled}
       errorText={errorText}
-      handleSelection={(id) => onChange(id)}
       isClearable={false}
       label="Region"
       onBlur={onBlur}
+      onChange={(region) => onChange(region.id)}
       placeholder="Select a Region"
       regions={regionOptions ?? []}
       required={required}
-      selectedId={selectedCluster}
+      value={selectedCluster}
     />
   );
 };

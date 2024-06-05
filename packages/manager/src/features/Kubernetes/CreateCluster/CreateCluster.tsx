@@ -220,17 +220,15 @@ export const CreateCluster = () => {
           <StyledRegionSelectStack>
             <Stack>
               <RegionSelect
-                handleSelection={(regionID: string) =>
-                  setSelectedRegionID(regionID)
-                }
                 textFieldProps={{
                   helperText: <RegionHelperText mb={2} />,
                   helperTextPosition: 'top',
                 }}
                 currentCapability="Kubernetes"
                 errorText={errorMap.region}
+                onChange={(region) => setSelectedRegionID(region.id)}
                 regions={regionsData}
-                selectedId={selectedId}
+                value={selectedId}
               />
             </Stack>
             <StyledDocsLinkContainer>

@@ -17,7 +17,7 @@ export const Default: StoryObj<RegionSelectProps> = {
         <Box sx={{ minHeight: 500 }}>
           <RegionSelect
             {...args}
-            handleSelection={() => setOpen(false)}
+            onChange={() => setOpen(false)}
             open={open}
           />
         </Box>
@@ -38,7 +38,7 @@ const meta: Meta<RegionSelectProps> = {
     label: 'Region',
     regions,
     required: true,
-    selectedId: regions[2].id,
+    value: regions[2].id,
   },
   component: RegionSelect,
   title: 'Components/Selects/Region Select',

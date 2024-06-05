@@ -214,15 +214,13 @@ export const PlacementGroupsCreateDrawer = (
               disabled={
                 Boolean(selectedRegionId) || disabledPlacementGroupCreateButton
               }
-              handleSelection={(selection) => {
-                handleRegionSelect(selection);
-              }}
               currentCapability="Placement Group"
               disabledRegions={disabledRegions}
               helperText={values.region && pgRegionLimitHelperText}
+              onChange={(region) => handleRegionSelect(region.id)}
               regions={regions ?? []}
-              selectedId={selectedRegionId ?? values.region}
               tooltipText="Only Linode data center regions that support placement groups are listed."
+              value={selectedRegionId ?? values.region}
             />
           )}
           <PlacementGroupsAffinityTypeSelect
