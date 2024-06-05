@@ -24,34 +24,20 @@ export const CloudPulseResourcesSelect = React.memo(
       CloudPulseResources[]
     >([]);
     const { data: resources, isLoading } = useResourcesQuery(
-      'cloudpulse-resources' + props.region,
       props.region && props.resourceType ? true : false,
-      props.resourceType
+      props.resourceType,
+      {},
+      { region: props.region }
     );
 
-    const filterResourcesByRegion = (): CloudPulseResources[] => {
-      return resources
-        ? resources.filter((instance) => applyRegionFilter(instance))
-        : [];
-    };
-
     const getResourcesList = (): CloudPulseResources[] => {
-      return resources && resources.length > 0 ? filterResourcesByRegion() : [];
-    };
-
-    const applyRegionFilter = (instance: CloudPulseResources): boolean => {
-      return (
-        (props.region === undefined ||
-          instance.region === props.region ||
-          (instance.regions && instance.regions.includes(props.region))) ??
-        false
-      );
+      return resources && resources.length > 0 ? resources : [];
     };
 
     React.useEffect(() => {
-      const defaultResources = resources
-        ?.filter((instance) => props.defaultSelection?.includes(instance.id))
-        .filter((instance) => applyRegionFilter(instance));
+      const defaultResources = resources?.filter((instance) =>
+        props.defaultSelection?.includes(instance.id)
+      );
 
       if (defaultResources && defaultResources.length > 0) {
         setResources(defaultResources);
@@ -72,7 +58,6 @@ export const CloudPulseResourcesSelect = React.memo(
         data-testid={'Resource-select'}
         disabled={!props.region || !props.resourceType || isLoading}
         isOptionEqualToValue={(option, value) => option.label === value.label}
-        key={'multi-select-resource'}
         label=""
         limitTags={2}
         multiple
