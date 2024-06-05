@@ -93,11 +93,11 @@ export const EditImageDrawer = (props: Props) => {
       <Controller
         render={({ field, fieldState }) => (
           <TextField
-            data-qa-image-label
             disabled={!canCreateImage}
             error={Boolean(fieldState.error)}
             errorText={fieldState.error?.message}
             label="Label"
+            onBlur={field.onBlur}
             onChange={(e) => field.onChange(e.target.value)}
             value={field.value}
           />
@@ -109,12 +109,12 @@ export const EditImageDrawer = (props: Props) => {
       <Controller
         render={({ field, fieldState }) => (
           <TextField
-            data-qa-image-description
             disabled={!canCreateImage}
             error={Boolean(fieldState.error)}
             errorText={fieldState.error?.message}
             label="Description"
             multiline
+            onBlur={field.onBlur}
             onChange={(e) => field.onChange(e.target.value)}
             rows={1}
             value={field.value}
@@ -142,14 +142,12 @@ export const EditImageDrawer = (props: Props) => {
 
       <ActionsPanel
         primaryButtonProps={{
-          'data-testid': 'submit',
           disabled: !canCreateImage || !formState.isDirty,
           label: 'Save Changes',
           loading: formState.isSubmitting,
           onClick: onSubmit,
         }}
         secondaryButtonProps={{
-          'data-testid': 'cancel',
           disabled: !canCreateImage,
           label: 'Cancel',
           onClick: onClose,

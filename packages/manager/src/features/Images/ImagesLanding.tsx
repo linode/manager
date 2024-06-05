@@ -1,4 +1,4 @@
-import { Event, Image, ImageStatus } from '@linode/api-v4';
+import { Image, ImageStatus } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
@@ -44,6 +44,7 @@ import ImageRow from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
+import { getEventsForImages } from './utils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   imageTable: {
@@ -531,16 +532,3 @@ export const ImagesLanding = () => {
 };
 
 export default ImagesLanding;
-
-const getEventsForImages = (images: Image[], events: Event[]) =>
-  Object.fromEntries(
-    images.map(({ id: imageId }) => [
-      imageId,
-      events.find(
-        (thisEvent) =>
-          `private/${thisEvent.secondary_entity?.id}` === imageId ||
-          (`private/${thisEvent.entity?.id}` === imageId &&
-            thisEvent.status === 'failed')
-      ),
-    ])
-  );

@@ -76,6 +76,7 @@ export const RebuildImageDrawer = (props: Props) => {
             clearable={true}
             errorText={fieldState.error?.message}
             value={field.value}
+            onBlur={field.onBlur}
           />
         )}
         rules={{
@@ -90,13 +91,11 @@ export const RebuildImageDrawer = (props: Props) => {
 
       <ActionsPanel
         primaryButtonProps={{
-          'data-testid': 'submit',
           label: 'Restore Image',
           loading: formState.isSubmitting,
           onClick: onSubmit,
         }}
         secondaryButtonProps={{
-          'data-testid': 'cancel',
           label: 'Cancel',
           onClick: onClose,
         }}
