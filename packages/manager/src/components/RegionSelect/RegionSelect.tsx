@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import * as React from 'react';
 
-import EdgeRegion from 'src/assets/icons/entityIcons/edge-region.svg';
+import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
@@ -12,9 +12,9 @@ import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availabili
 import { RegionOption } from './RegionOption';
 import {
   StyledAutocompleteContainer,
-  StyledEdgeBox,
+  StyledDistributedRegionBox,
   StyledFlagContainer,
-  sxEdgeIcon,
+  sxDistributedRegionIcon,
 } from './RegionSelect.styles';
 import { getRegionOptions, getSelectedRegionById } from './RegionSelect.utils';
 
@@ -27,7 +27,7 @@ import type {
  * A specific select for regions.
  *
  * The RegionSelect automatically filters regions based on capability using its `currentCapability` prop. For example, if
- * `currentCapability="VPCs"`, only regions that support VPCs will appear in the RegionSelect dropdown. Edge regions are filtered based on the `regionFilter` prop.
+ * `currentCapability="VPCs"`, only regions that support VPCs will appear in the RegionSelect dropdown. Distributed regions are filtered based on the `regionFilter` prop.
  * There is no need to pre-filter regions when passing them to the RegionSelect. See the description of `currentCapability` prop for more information.
  *
  * We do not display the selected check mark for single selects.
@@ -46,7 +46,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
     regions,
     required,
     selectedId,
-    showEdgeIconHelperText,
+    showDistributedRegionIconHelperText,
     tooltipText,
     width,
   } = props;
@@ -117,9 +117,10 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         renderOption={(props, option) => {
           return (
             <RegionOption
-              displayEdgeRegionIcon={
+              displayDistributedRegionIcon={
                 regionFilter !== 'core' &&
-                option.site_type === 'edge' &&
+                (option.site_type === 'distributed' ||
+                  option.site_type === 'edge') &&
                 flags.gecko2?.enabled &&
                 !flags.gecko2.ga
               }
@@ -139,14 +140,15 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
           ...props.textFieldProps,
           InputProps: {
             endAdornment: regionFilter !== 'core' &&
-              selectedRegion?.site_type === 'edge' &&
+              (selectedRegion?.site_type === 'distributed' ||
+                selectedRegion?.site_type === 'edge') &&
               flags.gecko2?.enabled &&
               !flags.gecko2.ga && (
                 <TooltipIcon
-                  icon={<EdgeRegion />}
+                  icon={<DistributedRegion />}
                   status="other"
-                  sxTooltipIcon={sxEdgeIcon}
-                  text="This region is an edge region."
+                  sxTooltipIcon={sxDistributedRegionIcon}
+                  text="This region is a distributed region."
                 />
               ),
             required,
@@ -174,21 +176,24 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         placeholder="Select a Region"
         value={selectedRegion}
       />
-      {showEdgeIconHelperText && ( // @TODO Gecko Beta: Add docs link
-        <StyledEdgeBox>
-          <EdgeRegion />
+      {showDistributedRegionIconHelperText && ( // @TODO Gecko Beta: Add docs link
+        <StyledDistributedRegionBox>
+          <DistributedRegion />
           <Typography
-            data-testid="region-select-edge-text"
+            data-testid="region-select-distributed-region-text"
             sx={{ alignSelf: 'center', textWrap: 'nowrap' }}
           >
             {' '}
-            Indicates an edge region.{' '}
-            <Link aria-label="Learn more about Akamai edge regions" to="#">
+            Indicates a distributed region.{' '}
+            <Link
+              aria-label="Learn more about Akamai distributed regions"
+              to="#"
+            >
               Learn more
             </Link>
             .
           </Typography>
-        </StyledEdgeBox>
+        </StyledDistributedRegionBox>
       )}
     </StyledAutocompleteContainer>
   );

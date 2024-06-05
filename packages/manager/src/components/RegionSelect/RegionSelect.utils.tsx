@@ -11,7 +11,7 @@ import type {
   GetSelectedRegionById,
   GetSelectedRegionsByIdsArgs,
   RegionSelectOption,
-  SupportedEdgeTypes,
+  SupportedDistributedRegionTypes,
 } from './RegionSelect.types';
 import type { AccountAvailability, Region } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
@@ -41,13 +41,14 @@ export const getRegionOptions = ({
 
   const filteredRegionsByCapabilityAndSiteType = regionFilter
     ? filteredRegionsByCapability.filter((region) => {
-        const [, edgeContinentCode] = regionFilter.split('edge-');
-        // Filter edge regions by geographical area
-        if (edgeContinentCode && edgeContinentCode !== 'ALL') {
+        const [, distributedContinentCode] = regionFilter.split('distributed-');
+        // Filter distributed regions by geographical area
+        if (distributedContinentCode && distributedContinentCode !== 'ALL') {
           const group = getRegionCountryGroup(region);
           return (
-            region.site_type === 'edge' &&
-            CONTINENT_CODE_TO_CONTINENT[edgeContinentCode] === group
+            (region.site_type === 'edge' ||
+              region.site_type === 'distributed') &&
+            CONTINENT_CODE_TO_CONTINENT[distributedContinentCode] === group
           );
         }
         return regionFilter.includes(region.site_type);
@@ -227,36 +228,33 @@ export const getSelectedRegionsByIds = ({
 };
 
 /**
- * Util to determine whether a create type has support for edge regions.
+ * Util to determine whether a create type has support for distributed regions.
  *
- * @returns a boolean indicating whether or not the create type is edge supported.
+ * @returns a boolean indicating whether or not the create type supports distributed regions.
  */
-export const getIsLinodeCreateTypeEdgeSupported = (
-  createType: LinodeCreateType
-) => {
-  const supportedEdgeTypes: SupportedEdgeTypes[] = [
+export const isDistributedRegionSupported = (createType: LinodeCreateType) => {
+  const supportedDistributedRegionTypes: SupportedDistributedRegionTypes[] = [
     'Distributions',
     'StackScripts',
   ];
   return (
-    supportedEdgeTypes.includes(createType as SupportedEdgeTypes) ||
-    typeof createType === 'undefined' // /linodes/create route
+    supportedDistributedRegionTypes.includes(
+      createType as SupportedDistributedRegionTypes
+    ) || typeof createType === 'undefined' // /linodes/create route
   );
 };
 
 /**
- * Util to determine whether a selected region is an edge region.
+ * Util to determine whether a selected region is a distributed region.
  *
- * @returns a boolean indicating whether or not the selected region is an edge region.
+ * @returns a boolean indicating whether or not the selected region is a distributed region.
  */
-export const getIsEdgeRegion = (
+export const getIsDistributedRegion = (
   regionsData: Region[],
   selectedRegion: string
 ) => {
-  return (
-    regionsData.find(
-      (region) =>
-        region.id === selectedRegion || region.label === selectedRegion
-    )?.site_type === 'edge'
+  const region = regionsData.find(
+    (region) => region.id === selectedRegion || region.label === selectedRegion
   );
+  return region?.site_type === 'distributed' || region?.site_type === 'edge';
 };

@@ -1,7 +1,7 @@
 import { visuallyHidden } from '@mui/utils';
 import React from 'react';
 
-import EdgeRegion from 'src/assets/icons/entityIcons/edge-region.svg';
+import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
 import { Tooltip } from 'src/components/Tooltip';
@@ -12,14 +12,14 @@ import {
   SelectedIcon,
   StyledFlagContainer,
   StyledListItem,
-  sxEdgeIcon,
+  sxDistributedRegionIcon,
 } from './RegionSelect.styles';
 import { RegionSelectOption } from './RegionSelect.types';
 
 import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
 type Props = {
-  displayEdgeRegionIcon?: boolean;
+  displayDistributedRegionIcon?: boolean;
   flags?: FlagSet;
   option: RegionSelectOption;
   props: React.HTMLAttributes<HTMLLIElement>;
@@ -27,7 +27,7 @@ type Props = {
 };
 
 export const RegionOption = ({
-  displayEdgeRegionIcon,
+  displayDistributedRegionIcon,
   flags,
   option,
   props,
@@ -79,9 +79,9 @@ export const RegionOption = ({
               <Flag country={data.country} />
             </StyledFlagContainer>
             {label}
-            {displayEdgeRegionIcon && (
+            {displayDistributedRegionIcon && (
               <Box sx={visuallyHidden}>
-                &nbsp;(This region is an edge region.)
+                &nbsp;(This region is a distributed region.)
               </Box>
             )}
             {isRegionDisabled && isRegionDisabledReason && (
@@ -90,12 +90,12 @@ export const RegionOption = ({
           </Box>
           {isGeckoGA && `(${value})`}
           {selected && <SelectedIcon visible={selected} />}
-          {displayEdgeRegionIcon && (
+          {displayDistributedRegionIcon && (
             <TooltipIcon
-              icon={<EdgeRegion />}
+              icon={<DistributedRegion />}
               status="other"
-              sxTooltipIcon={sxEdgeIcon}
-              text="This region is an edge region."
+              sxTooltipIcon={sxDistributedRegionIcon}
+              text="This region is a distributed region."
             />
           )}
         </>

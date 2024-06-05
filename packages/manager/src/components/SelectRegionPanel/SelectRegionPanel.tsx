@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { getIsLinodeCreateTypeEdgeSupported } from 'src/components/RegionSelect/RegionSelect.utils';
+import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TwoStepRegionSelect } from 'src/components/RegionSelect/TwoStepRegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
@@ -85,18 +85,18 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       type,
     });
 
-  const hideEdgeRegions =
+  const hideDistributedRegions =
     !flags.gecko2?.enabled ||
-    !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
+    !isDistributedRegionSupported(params.type as LinodeCreateType);
 
   const isGeckoGA = flags.gecko2?.enabled && flags.gecko2.ga;
 
-  const showEdgeIconHelperText = Boolean(
-    !hideEdgeRegions &&
+  const showDistributedRegionIconHelperText = Boolean(
+    !hideDistributedRegions &&
       currentCapability &&
       regions?.find(
         (region) =>
-          region.site_type === 'edge' &&
+          (region.site_type === 'distributed' || region.site_type === 'edge') &&
           region.capabilities.includes(currentCapability)
       )
   );
@@ -161,30 +161,34 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         </Notice>
       ) : null}
       {isGeckoGA &&
-      getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType) ? (
+      isDistributedRegionSupported(params.type as LinodeCreateType) ? (
         <TwoStepRegionSelect
+          showDistributedRegionIconHelperText={
+            showDistributedRegionIconHelperText
+          }
           currentCapability={currentCapability}
           disabled={disabled}
           errorText={error}
           handleSelection={handleRegionSelection}
           helperText={helperText}
-          regionFilter={hideEdgeRegions ? 'core' : undefined}
+          regionFilter={hideDistributedRegions ? 'core' : undefined}
           regions={regions ?? []}
           selectedId={selectedId}
-          showEdgeIconHelperText={showEdgeIconHelperText}
           {...RegionSelectProps}
         />
       ) : (
         <RegionSelect
+          showDistributedRegionIconHelperText={
+            showDistributedRegionIconHelperText
+          }
           currentCapability={currentCapability}
           disabled={disabled}
           errorText={error}
           handleSelection={handleSelection}
           helperText={helperText}
-          regionFilter={hideEdgeRegions ? 'core' : undefined}
+          regionFilter={hideDistributedRegions ? 'core' : undefined}
           regions={regions ?? []}
           selectedId={selectedId || null}
-          showEdgeIconHelperText={showEdgeIconHelperText}
           {...RegionSelectProps}
         />
       )}

@@ -25,13 +25,13 @@ export interface RegionSelectOption {
 }
 
 export type RegionFilterValue =
-  | 'edge-AF'
-  | 'edge-ALL'
-  | 'edge-AS'
-  | 'edge-EU'
-  | 'edge-NA'
-  | 'edge-OC'
-  | 'edge-SA'
+  | 'distributed-AF'
+  | 'distributed-ALL'
+  | 'distributed-AS'
+  | 'distributed-EU'
+  | 'distributed-NA'
+  | 'distributed-OC'
+  | 'distributed-SA'
   | RegionSite;
 
 import { FlagSet } from 'src/featureFlags';
@@ -60,7 +60,7 @@ export interface RegionSelectProps
   regions: Region[];
   required?: boolean;
   selectedId: null | string;
-  showEdgeIconHelperText?: boolean;
+  showDistributedRegionIconHelperText?: boolean;
   tooltipText?: string;
   width?: number;
 }
@@ -117,4 +117,4 @@ export interface GetSelectedRegionsByIdsArgs {
   selectedRegionIds: string[];
 }
 
-export type SupportedEdgeTypes = 'Distributions' | 'StackScripts';
+export type SupportedDistributedRegionTypes = 'Distributions' | 'StackScripts';

@@ -28,31 +28,31 @@ interface GeographicalAreaOption {
 const GEOGRAPHICAL_AREA_OPTIONS: GeographicalAreaOption[] = [
   {
     label: 'All',
-    value: 'edge-ALL',
+    value: 'distributed-ALL',
   },
   {
     label: 'North America',
-    value: 'edge-NA',
+    value: 'distributed-NA',
   },
   {
     label: 'Africa',
-    value: 'edge-AF',
+    value: 'distributed-AF',
   },
   {
     label: 'Asia',
-    value: 'edge-AS',
+    value: 'distributed-AS',
   },
   {
     label: 'Europe',
-    value: 'edge-EU',
+    value: 'distributed-EU',
   },
   {
     label: 'Oceania',
-    value: 'edge-OC',
+    value: 'distributed-OC',
   },
   {
     label: 'South America',
-    value: 'edge-SA',
+    value: 'distributed-SA',
   },
 ];
 
@@ -70,14 +70,14 @@ export const TwoStepRegionSelect = React.memo(
     } = props;
 
     const [regionFilter, setRegionFilter] = React.useState<RegionFilterValue>(
-      'edge'
+      'distributed'
     );
 
     return (
       <Tabs>
         <TabList>
           <Tab>Core</Tab>
-          <Tab>Edge</Tab>
+          <Tab>distributed</Tab>
         </TabList>
         <TabPanels>
           <SafeTabPanel index={0}>
@@ -95,7 +95,7 @@ export const TwoStepRegionSelect = React.memo(
               regionFilter="core"
               regions={regions ?? []}
               selectedId={selectedId || null}
-              showEdgeIconHelperText={false}
+              showDistributedRegionIconHelperText={false}
               {...RegionSelectProps}
             />
           </SafeTabPanel>
@@ -119,7 +119,7 @@ export const TwoStepRegionSelect = React.memo(
               regionFilter={regionFilter}
               regions={regions ?? []}
               selectedId={selectedId || null}
-              showEdgeIconHelperText={false}
+              showDistributedRegionIconHelperText={false}
               {...RegionSelectProps}
             />
           </SafeTabPanel>
