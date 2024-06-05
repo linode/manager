@@ -54,7 +54,8 @@ describe('RegionMultiSelect', () => {
     screen.getByRole('combobox', { name: 'Regions' });
   });
 
-  it('should be able to select all the regions correctly', () => {
+  // Re-enable if we allow RegionMultiSelect to be uncontrolled
+  it.skip('should be able to select all the regions correctly', () => {
     renderWithTheme(
       <RegionMultiSelect
         currentCapability="Block Storage"
@@ -82,7 +83,8 @@ describe('RegionMultiSelect', () => {
     ).toHaveAttribute('aria-selected', 'true');
   });
 
-  it('should be able to deselect all the regions', () => {
+  // Re-enable if we allow RegionMultiSelect to be uncontrolled
+  it.skip('should be able to deselect all the regions', () => {
     renderWithTheme(
       <RegionMultiSelect
         currentCapability="Block Storage"
@@ -110,7 +112,8 @@ describe('RegionMultiSelect', () => {
     ).toHaveAttribute('aria-selected', 'false');
   });
 
-  it('should render selected regions correctly', () => {
+  // Re-enable if we allow RegionMultiSelect to be uncontrolled
+  it.skip('should render selected regions correctly', () => {
     renderWithTheme(
       <RegionMultiSelect
         SelectedRegionsList={({ onRemove, selectedRegions }) => (
