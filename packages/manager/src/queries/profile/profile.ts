@@ -1,31 +1,25 @@
 import {
   Profile,
   SSHKey,
-  SendPhoneVerificationCodePayload,
   TrustedDevice,
-  VerifyVerificationCodePayload,
   createSSHKey,
   deleteSSHKey,
   deleteTrustedDevice,
   disableTwoFactor,
+  getAppTokens,
+  getPersonalAccessTokens,
   getProfile,
   getSSHKeys,
+  getSecurityQuestions,
   getTrustedDevices,
+  getUserPreferences,
   listGrants,
   sendCodeToPhoneNumber,
   smsOptOut,
   updateProfile,
   updateSSHKey,
   verifyPhoneNumberCode,
-  getAppTokens,
-  getPersonalAccessTokens,
-} from '@linode/api-v4/lib/profile';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   QueryClient,
@@ -36,11 +30,19 @@ import {
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 
-import { Grants } from '../../../api-v4/lib';
-import { accountQueries } from './account/queries';
-import { queryPresets } from './base';
+import { accountQueries } from '../account/queries';
+import { queryPresets } from '../base';
 
-import type { RequestOptions } from '@linode/api-v4';
+import type {
+  APIError,
+  Filter,
+  Grants,
+  Params,
+  RequestOptions,
+  ResourcePage,
+  SendPhoneVerificationCodePayload,
+  VerifyVerificationCodePayload,
+} from '@linode/api-v4';
 
 export const profileQueries = createQueryKeys('profile', {
   appTokens: (params: Params = {}, filter: Filter = {}) => ({
@@ -55,10 +57,18 @@ export const profileQueries = createQueryKeys('profile', {
     queryFn: () => getPersonalAccessTokens(params, filter),
     queryKey: [params, filter],
   }),
+  preferences: {
+    queryFn: getUserPreferences,
+    queryKey: null,
+  },
   profile: (options: RequestOptions = {}) => ({
     queryFn: () => getProfile(options),
     queryKey: [options],
   }),
+  securityQuestions: {
+    queryFn: getSecurityQuestions,
+    queryKey: null,
+  },
   sshKeys: (params: Params = {}, filter: Filter = {}) => ({
     queryFn: () => getSSHKeys(params, filter),
     queryKey: [params, filter],

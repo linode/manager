@@ -32,7 +32,7 @@ import {
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
 import { useUploadImageMutation } from 'src/queries/images';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
