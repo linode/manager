@@ -10,13 +10,15 @@ export interface GlobalFilterProperties {
     changedFilter: string
   ): undefined | void;
   handleDashboardChange(dashboard: Dashboard): undefined | void;
+  region: string | undefined;
+  serviceType: string | undefined;
 }
 
 export interface FiltersObject {
   duration?: TimeDuration;
-  durationLabel: string;
-  interval: string;
-  region: string;
+  durationLabel?: string;
+  interval?: string;
+  region?: string;
   resource: string[];
   serviceType?: string;
   step?: TimeGranularity;

@@ -2,6 +2,7 @@ import {
   AvailableMetrics,
   Dashboard,
   GetJWETokenPayload,
+  TimeDuration,
   Widgets,
 } from '@linode/api-v4';
 import { Paper } from '@mui/material';
@@ -21,18 +22,20 @@ import { useResourcesQuery } from 'src/queries/cloudview/resources';
 import { useGetCloudViewMetricDefinitionsByServiceType } from 'src/queries/cloudview/services';
 
 import { AclpWidget } from '../Models/CloudPulsePreferences';
-import { FiltersObject } from '../Models/GlobalFilterProperties';
 import {
   CloudViewWidget,
   CloudViewWidgetProperties,
 } from '../Widget/CloudViewWidget';
 
 export interface DashboardProperties {
-  dashboardFilters: FiltersObject;
+  // dashboardFilters: FiltersObject;
   dashboardId: number; // need to pass the dashboardId
+  duration: TimeDuration;
+
   // on any change in dashboard
   onDashboardChange?: (dashboard: Dashboard) => void;
-
+  region?: string;
+  resources: string[];
   widgetPreferences?: AclpWidget[]; // this is optional
 }
 
@@ -73,25 +76,8 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     getResourceIDsPayload(),
     resources && dashboard ? true : false
   );
-  // todo define a proper properties class
-
-  const [
-    cloudViewGraphProperties,
-    setCloudViewGraphProperties,
-  ] = React.useState<CloudViewWidgetProperties>(
-    {} as CloudViewWidgetProperties
-  );
 
   const dashboardRef = React.useRef(dashboard);
-
-  React.useEffect(() => {
-    // set as dashboard filter
-    setCloudViewGraphProperties({
-      ...cloudViewGraphProperties,
-      globalFilters: props.dashboardFilters,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.dashboardFilters]); // execute every time when there is dashboardFilters change
 
   const StyledErrorState = styled(Placeholder, {
     label: 'StyledErrorState',
@@ -103,7 +89,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     isError: isMetricDefinitionError,
     isLoading,
   } = useGetCloudViewMetricDefinitionsByServiceType(
-    dashboard? dashboard!.service_type: undefined!,
+    dashboard ? dashboard!.service_type : undefined!,
     dashboard && dashboard!.service_type !== undefined ? true : false
   );
 
@@ -126,7 +112,9 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     const graphProp: CloudViewWidgetProperties = {} as CloudViewWidgetProperties;
     graphProp.widget = { ...widget };
     setPrefferedWidgetPlan(graphProp.widget);
-    graphProp.globalFilters = props.dashboardFilters;
+    graphProp.serviceType = dashboard?.service_type ?? '';
+    graphProp.resourceIds = props.resources;
+    graphProp.duration = props.duration;
     graphProp.unit = widget.unit ? widget.unit : '%';
     graphProp.ariaLabel = widget.label;
     graphProp.errorLabel = 'Error While loading data';
@@ -140,15 +128,15 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
         if (pref.label == widgetObj.label) {
           widgetObj.size = pref.size;
           widgetObj.aggregate_function = pref.aggregateFunction;
-          //interval from pref
-          widgetObj.time_granularity = {...pref.time_granularity};
+          // interval from pref
+          widgetObj.time_granularity = { ...pref.time_granularity };
 
           // update ref
           dashboardRef.current?.widgets.forEach((obj) => {
             if (obj.label == widgetObj.label) {
               obj.size = widgetObj.size;
               obj.aggregate_function = widgetObj.aggregate_function;
-              obj.time_granularity = {...widgetObj.time_granularity};
+              obj.time_granularity = { ...widgetObj.time_granularity };
             }
           });
 
@@ -178,13 +166,11 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     if (dashboard != undefined) {
       if (
         dashboard.service_type &&
-        cloudViewGraphProperties.globalFilters?.region &&
-        cloudViewGraphProperties.globalFilters?.resource &&
-        cloudViewGraphProperties.globalFilters?.resource.length > 0 &&
+        props.resources &&
+        props.resources.length > 0 &&
         jweToken?.token &&
         resources?.data
       ) {
-
         // maintain a copy
         dashboardRef.current = dashboard;
         return (

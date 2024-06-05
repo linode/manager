@@ -14,10 +14,8 @@ import { CloudViewDashboardSelect } from '../shared/DashboardSelect';
 import { CloudViewRegionSelect } from '../shared/RegionSelect';
 import { CloudViewMultiResourceSelect } from '../shared/ResourceMultiSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/TimeRangeSelect';
-
-
+import { REGION, RESOURCES, TIME_DURATION } from '../Utils/CloudPulseConstants';
 import { updateGlobalFilterPreference } from '../Utils/UserPreference';
-import { TIME_DURATION,  REGION, RESOURCES } from '../Utils/CloudPulseConstants';
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const emitGlobalFilterChange = (
@@ -27,67 +25,74 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     props.handleAnyFilterChange(updatedFilters, changedFilter);
   };
 
-  const handleTimeRangeChange = React.useCallback((
-    start: number,
-    end: number,
-    timeDuration?: TimeDuration,
-    timeRangeLabel?: string
-  ) => {
-
-    if (start > 0 && end > 0) {
-      const filterObj = { ...props.globalFilters };
-      filterObj.timeRange = { end, start };
-      filterObj.duration = timeDuration;
-      filterObj.durationLabel = timeRangeLabel!;
-      emitGlobalFilterChange(filterObj, TIME_DURATION);
-      updateGlobalFilterPreference({ [TIME_DURATION]: filterObj.durationLabel });
-    }
-  }, []);
+  const handleTimeRangeChange = React.useCallback(
+    (
+      start: number,
+      end: number,
+      timeDuration?: TimeDuration,
+      timeRangeLabel?: string
+    ) => {
+      if (start > 0 && end > 0) {
+        const filterObj = { ...props.globalFilters };
+        filterObj.timeRange = { end, start };
+        filterObj.duration = timeDuration;
+        filterObj.durationLabel = timeRangeLabel!;
+        emitGlobalFilterChange(filterObj, TIME_DURATION);
+        updateGlobalFilterPreference({
+          [TIME_DURATION]: filterObj.durationLabel,
+        });
+      }
+    },
+    []
+  );
 
   const handleRegionChange = React.useCallback((region: string | undefined) => {
-
     if (region) {
       emitGlobalFilterChange({ ...props.globalFilters, region }, REGION);
       updateGlobalFilterPreference({ [REGION]: region, [RESOURCES]: [] });
     }
   }, []);
 
-  const handleResourceChange = React.useCallback((resourceId: any[], reason: string) => {
-    if ((resourceId && resourceId.length > 0) || (reason == 'clear' || reason === "removeOption")) {
-      updateGlobalFilterPreference({ [RESOURCES]: resourceId.map((obj) => obj.id) });
-      emitGlobalFilterChange(
-        {
-          ...props.globalFilters,
-          resource: resourceId.map((obj) => obj.id),
-        },
-        RESOURCES
-      );
-    }
-  }, []);
+  const handleResourceChange = React.useCallback(
+    (resourceId: any[], reason: string) => {
+      if (
+        (resourceId && resourceId.length > 0) ||
+        reason == 'clear' ||
+        reason === 'removeOption'
+      ) {
+        updateGlobalFilterPreference({
+          [RESOURCES]: resourceId.map((obj) => obj.id),
+        });
+        emitGlobalFilterChange(
+          {
+            ...props.globalFilters,
+            resource: resourceId.map((obj) => obj.id),
+          },
+          RESOURCES
+        );
+      }
+    },
+    []
+  );
 
-  const handleDashboardChange = React.useCallback((
-    dashboard: Dashboard | undefined,
-    isClear: boolean
-  ) => {
-
-    if (dashboard || (!dashboard && !isClear)) {
-      props.handleDashboardChange(dashboard!);
-    }
-  }, []);
+  const handleDashboardChange = React.useCallback(
+    (dashboard: Dashboard | undefined, isClear: boolean) => {
+      if (dashboard || (!dashboard && !isClear)) {
+        props.handleDashboardChange(dashboard!);
+      }
+    },
+    []
+  );
 
   const handleGlobalRefresh = React.useCallback(() => {
     emitGlobalFilterChange(
       {
         ...props.globalFilters,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       },
       'refresh'
     );
-  }, [])
-
-
-
-
+  }, []);
 
   return (
     <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
@@ -119,12 +124,10 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
                 ? props.filterPreferences.resources
                 : []
             }
-            disabled={
-              !props.globalFilters.serviceType || !props.globalFilters.region
-            }
+            disabled={!props.region || !props.serviceType}
             handleResourceChange={handleResourceChange}
-            region={props.globalFilters.region}
-            resourceType={props.globalFilters.serviceType}
+            region={props.region}
+            resourceType={props.serviceType}
           />
         </Grid>
         <Grid sx={{ marginLeft: 3, width: 250 }}>

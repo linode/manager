@@ -8,6 +8,7 @@ import {
 } from '@linode/api-v4/lib/longview/types';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
+import { title } from 'process';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, matchPath } from 'react-router-dom';
@@ -22,6 +23,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
+import { CloudPulseDashboard } from 'src/features/CloudView/Dashboard/Dashboard';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -67,6 +69,10 @@ export const LongviewLanding = (props: CombinedProps) => {
     {
       routeName: `${props.match.url}/plan-details`,
       title: 'Plan Details',
+    },
+    {
+      routeName: `${props.match.url}/cloudpulseboard`,
+      title: 'Cloud Pulse Dashboard',
     },
   ];
 
@@ -157,6 +163,16 @@ export const LongviewLanding = (props: CombinedProps) => {
             <SafeTabPanel index={1}>
               <LongviewPlans
                 subscriptionRequestHook={subscriptionsRequestHook}
+              />
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
+              <CloudPulseDashboard
+                duration={{
+                  unit: 'day',
+                  value: 30,
+                }}
+                dashboardId={1} // the id of dashboard
+                resources={['57667285', '57667325', '57667355']}
               />
             </SafeTabPanel>
           </TabPanels>

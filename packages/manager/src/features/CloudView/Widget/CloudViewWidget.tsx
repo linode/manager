@@ -2,6 +2,7 @@ import {
   AvailableMetrics,
   CloudViewMetricsRequest,
   Filters,
+  TimeDuration,
   TimeGranularity,
   Widgets,
 } from '@linode/api-v4';
@@ -43,12 +44,15 @@ export interface CloudViewWidgetProperties {
   ariaLabel?: string;
   authToken: string;
   availableMetrics: AvailableMetrics | undefined;
+  duration: TimeDuration;
   errorLabel?: string; // error label can come from dashboard
-  globalFilters?: FiltersObject; // this is dashboard level global filters, its also optional
   // any change in the current widget, call and pass this function and handle in parent component
   handleWidgetChange: (widget: Widgets) => void;
-  resources: any[]; // list of resources in a service type
 
+  resourceIds: string[];
+  resources: any[]; // list of resources in a service type
+  serviceType: string;
+  timeStamp: number;
   unit: string; // this should come from dashboard, which maintains map for service types in a separate API call
   useColorIndex?: number;
   widget: Widgets; // this comes from dashboard, has inbuilt metrics, agg_func,group_by,filters,gridsize etc , also helpful in publishing any changes
@@ -86,16 +90,14 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
     const request = {} as CloudViewMetricsRequest;
     request.aggregate_function = widget.aggregate_function;
     request.group_by = widget.group_by;
-    if (props.globalFilters && props.globalFilters.resource) {
-      request.resource_id = props.globalFilters.resource.map((obj) =>
-        parseInt(obj, 10)
-      );
+    if (props && props.resources) {
+      request.resource_id = props.resourceIds.map((obj) => parseInt(obj, 10));
     } else {
       request.resource_id = widget.resource_id.map((obj) => parseInt(obj, 10));
     }
     request.metric = widget.metric!;
-    request.time_duration = props.globalFilters
-      ? props.globalFilters.duration!
+    request.time_duration = props.duration
+      ? props.duration!
       : widget.time_duration;
     request.time_granularity = { ...widget.time_granularity };
 
@@ -113,8 +115,8 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
   const getServiceType = () => {
     return props.widget.service_type
       ? props.widget.service_type!
-      : props.globalFilters
-      ? props.globalFilters.serviceType
+      : props.serviceType
+      ? props.serviceType
       : '';
   };
 
@@ -156,7 +158,7 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
       '_' +
       widget.label +
       '_' +
-      props.globalFilters?.timestamp ?? '',
+      props.timeStamp ?? '',
     true
   ); // fetch the metrics on any property change
 
@@ -198,18 +200,16 @@ export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
         }
         const color = colors[index];
         const startEnd = convertTimeDurationToStartAndEndTimeRange(
-          props.globalFilters!.duration!
+          props!.duration!
         );
         const dimension = {
           backgroundColor: color,
           borderColor: color,
           data: seriesDataFormatter(
             graphData.values,
-            props.globalFilters?.timeRange
-              ? props.globalFilters?.timeRange.start
-              : graphData.values[0][0],
-            props.globalFilters?.timeRange
-              ? props.globalFilters?.timeRange.end
+            startEnd ? startEnd.start : graphData.values[0][0],
+            startEnd
+              ? startEnd.end
               : graphData.values[graphData.values.length - 1][0]
           ),
           label: getLabelName(graphData.metric, getServiceType()!),

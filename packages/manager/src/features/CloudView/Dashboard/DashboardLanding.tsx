@@ -1,4 +1,4 @@
-import { Dashboard } from '@linode/api-v4';
+import { Dashboard, TimeDuration, TimeGranularity } from '@linode/api-v4';
 import { Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -47,27 +47,19 @@ export const DashBoardLanding = () => {
   };
 
   const getInitDashboardProps = () => {
-    const props = {} as DashboardProperties;
-    props.dashboardFilters = {} as FiltersObject;
-
-    props.dashboardFilters.interval = '1minute';
-    props.dashboardFilters.step = { unit: 'min', value: 1 };
-
-    props.dashboardFilters.region = undefined!;
-    props.dashboardFilters.resource = [];
-    props.dashboardFilters.serviceType = undefined;
-    props.dashboardFilters.duration = { unit: 'min', value: 30 };
-    props.dashboardFilters.timeRange = {
-      end: Date.now() / 1000,
-      start: generateStartTime('Past 30 Minutes', Date.now() / 1000),
-    };
-
-    return props;
+    return {} as DashboardProperties;
   };
 
   const [dashboardProp, setDashboardProp] = React.useState<DashboardProperties>(
     getInitDashboardProps()
   );
+
+  const [timeDuration, setTimeDuration] = React.useState<TimeDuration>();
+  const [region, setRegion] = React.useState<string>();
+  const [resources, setResources] = React.useState<string[]>();
+  const [step, setStep] = React.useState<TimeGranularity>();
+  const [timeStamp, setTimeStamp] = React.useState<number>();
+  const [serviceType, setServiceType] = React.useState<string>();
 
   // since dashboard prop is mutable and savable
   const dashboardPropRef = React.useRef<DashboardProperties>(
@@ -91,19 +83,13 @@ export const DashBoardLanding = () => {
     }
 
     if (changedFilter === TIME_DURATION) {
-      dashboardPropRef.current.dashboardFilters.duration =
-        globalFilter.duration;
-      dashboardPropRef.current.dashboardFilters.timeRange =
-        globalFilter.timeRange;
+      setTimeDuration(globalFilter.duration);
       preferenceRef.current.aclpPreference.timeDuration =
         globalFilter.durationLabel;
     }
 
-    if (
-      changedFilter === REGION &&
-      dashboardPropRef.current.dashboardFilters.region != globalFilter.region
-    ) {
-      dashboardPropRef.current.dashboardFilters.region = globalFilter.region;
+    if (changedFilter === REGION && region != globalFilter.region) {
+      setRegion(globalFilter.region);
       preferenceRef.current.aclpPreference.region = globalFilter.region;
       if (
         preferences &&
@@ -111,47 +97,33 @@ export const DashBoardLanding = () => {
           preferenceRef.current.aclpPreference.region
       ) {
         preferenceRef.current.aclpPreference.resources = [];
-        dashboardPropRef.current.dashboardFilters.resource = [];
+        setResources([]);
       }
     }
 
     if (changedFilter === RESOURCES) {
-      dashboardPropRef.current.dashboardFilters.resource =
-        globalFilter.resource;
+      setResources(globalFilter.resource);
       preferenceRef.current.aclpPreference.dashboardId = dashboardPropRef
         .current.dashboardId
         ? dashboardPropRef.current.dashboardId
         : undefined!;
-      preferenceRef.current.aclpPreference.region =
-        dashboardPropRef.current.dashboardFilters.region;
+      preferenceRef.current.aclpPreference.region = region;
       preferenceRef.current.aclpPreference.resources = globalFilter.resource;
     }
 
     if (changedFilter === INTERVAL) {
-      dashboardPropRef.current.dashboardFilters.interval =
-        globalFilter.interval;
-      dashboardPropRef.current.dashboardFilters.step = globalFilter.step;
+      setStep(globalFilter.step);
       preferenceRef.current.aclpPreference.interval = globalFilter.interval;
     }
 
     if (changedFilter === REFRESH) {
-      dashboardPropRef.current.dashboardFilters.timestamp =
-        globalFilter.timestamp;
+      setTimeStamp(globalFilter.timestamp);
     }
-    // set as dashboard filter
-    setDashboardProp({
-      ...dashboardProp,
-      dashboardFilters: { ...dashboardPropRef.current.dashboardFilters },
-      dashboardId: updatedDashboard.current
-        ? updatedDashboard.current.id
-        : undefined!,
-    });
   };
 
   const handleDashboardChange = (dashboard: Dashboard) => {
     if (!dashboard) {
       dashboardPropRef.current.dashboardId = undefined!;
-      dashboardPropRef.current.dashboardFilters.serviceType = undefined!;
       updatedDashboard.current = undefined!;
       setDashboardProp({ ...dashboardPropRef.current });
       updateGlobalFilterPreference({
@@ -161,7 +133,6 @@ export const DashBoardLanding = () => {
       preferenceRef.current.aclpPreference.dashboardId = undefined!;
       preferenceRef.current.aclpPreference.resources = [];
       preferenceRef.current.aclpPreference.region = '';
-
       return;
     }
 
@@ -193,10 +164,9 @@ export const DashBoardLanding = () => {
       }
     }
     dashboardPropRef.current.dashboardId = dashboard.id;
-    dashboardPropRef.current.dashboardFilters.serviceType =
-      dashboard.service_type;
 
     setDashboardProp({ ...dashboardPropRef.current });
+    setServiceType(dashboard.service_type);
     updatedDashboard.current = { ...dashboard };
 
     if (dashboard && dashboard.id) {
@@ -211,7 +181,7 @@ export const DashBoardLanding = () => {
           preferenceRef.current.aclpPreference.dashboardId
       ) {
         preferenceRef.current.aclpPreference.resources = [];
-        dashboardPropRef.current.dashboardFilters.resource = [];
+        setResources([]);
       }
     }
   };
@@ -285,11 +255,6 @@ export const DashBoardLanding = () => {
         <div style={{ display: 'flex' }}>
           <div style={{ width: '100%' }}>
             <GlobalFilters
-              globalFilters={
-                dashboardProp.dashboardFilters
-                  ? dashboardProp.dashboardFilters
-                  : ({} as FiltersObject)
-              }
               handleAnyFilterChange={(
                 filters: FiltersObject,
                 changedFilter: string
@@ -298,16 +263,19 @@ export const DashBoardLanding = () => {
                 handleDashboardChange(dashboardObj)
               }
               filterPreferences={preferences.aclpPreference}
+              globalFilters={{} as FiltersObject}
+              region={region}
+              serviceType={serviceType}
             ></GlobalFilters>
           </div>
         </div>
       </Paper>
-      {dashboardProp.dashboardFilters.serviceType &&
-        dashboardProp.dashboardFilters.region &&
-        dashboardProp.dashboardFilters.resource &&
-        dashboardProp.dashboardFilters.resource.length > 0 &&
-        dashboardProp.dashboardFilters.timeRange &&
-        dashboardProp.dashboardFilters.step && (
+      {dashboardProp.dashboardId &&
+        region &&
+        resources &&
+        resources.length > 0 &&
+        timeDuration &&
+        step && (
           <CloudPulseDashboard
             {...dashboardProp}
             onDashboardChange={dashboardChange}
@@ -315,12 +283,12 @@ export const DashBoardLanding = () => {
           />
         )}
 
-      {(!dashboardProp.dashboardFilters.serviceType ||
-        !dashboardProp.dashboardFilters.region ||
-        !dashboardProp.dashboardFilters.resource ||
-        dashboardProp.dashboardFilters.resource.length === 0 ||
-        !dashboardProp.dashboardFilters.timeRange ||
-        !dashboardProp.dashboardFilters.step) && (
+      {(!dashboardProp.dashboardId ||
+        !region ||
+        !resources ||
+        resources.length == 0 ||
+        !timeDuration ||
+        !step) && (
         <Paper>
           <StyledPlaceholder
             icon={CloudViewIcon}
