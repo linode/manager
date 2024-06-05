@@ -24,7 +24,7 @@ import {
   useLinodeStats,
   useLinodeStatsByDate,
 } from 'src/queries/linodes/stats';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { setUpCharts } from 'src/utilities/charts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {

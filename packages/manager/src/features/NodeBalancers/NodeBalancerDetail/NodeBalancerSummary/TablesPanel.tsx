@@ -20,7 +20,7 @@ import {
   useNodeBalancerQuery,
   useNodeBalancerStats,
 } from 'src/queries/nodebalancers';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getUserTimezone } from 'src/utilities/getUserTimezone';
 import { formatNumber, getMetrics } from 'src/utilities/statMetrics';

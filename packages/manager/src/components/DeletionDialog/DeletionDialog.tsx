@@ -7,7 +7,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Typography } from 'src/components/Typography';
 import { titlecase } from 'src/features/Linodes/presentation';
-import { usePreferences } from 'src/queries/preferences';
+import { usePreferences } from 'src/queries/profile/preferences';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { DialogProps } from '../Dialog/Dialog';

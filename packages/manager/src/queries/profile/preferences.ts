@@ -1,8 +1,4 @@
-import {
-  getUserPreferences,
-  updateUserPreferences,
-} from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
+import { updateUserPreferences } from '@linode/api-v4';
 import {
   QueryClient,
   useMutation,
@@ -12,12 +8,14 @@ import {
 
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
 
-import { queryPresets } from './base';
+import { queryPresets } from '../base';
+import { profileQueries } from './profile';
 
-export const queryKey = 'preferences';
+import type { APIError } from '@linode/api-v4';
 
 export const usePreferences = (enabled = true) =>
-  useQuery<ManagerPreferences, APIError[]>([queryKey], getUserPreferences, {
+  useQuery<ManagerPreferences, APIError[]>({
+    ...profileQueries.preferences,
     ...queryPresets.oneTimeFetch,
     enabled,
   });
@@ -25,20 +23,19 @@ export const usePreferences = (enabled = true) =>
 export const useMutatePreferences = (replace = false) => {
   const { data: preferences } = usePreferences(!replace);
   const queryClient = useQueryClient();
+
   return useMutation<
     ManagerPreferences,
     APIError[],
     Partial<ManagerPreferences>
-  >(
-    (data) =>
+  >({
+    mutationFn: (data) =>
       updateUserPreferences({
         ...(!replace && preferences !== undefined ? preferences : {}),
         ...data,
       }),
-    {
-      onMutate: (data) => updatePreferenceData(data, replace, queryClient),
-    }
-  );
+    onMutate: (data) => updatePreferenceData(data, replace, queryClient),
+  });
 };
 
 export const updatePreferenceData = (
@@ -47,8 +44,8 @@ export const updatePreferenceData = (
   queryClient: QueryClient
 ): void => {
   queryClient.setQueryData<ManagerPreferences>(
-    [queryKey],
-    (oldData: ManagerPreferences) => ({
+    profileQueries.preferences.queryKey,
+    (oldData) => ({
       ...(!replace ? oldData : {}),
       ...newData,
     })

@@ -5,7 +5,7 @@ import { dark, light } from 'src/foundations/themes';
 
 import type { ThemeName } from 'src/foundations/themes';
 import { useAuthentication } from 'src/hooks/useAuthentication';
-import { usePreferences } from 'src/queries/preferences';
+import { usePreferences } from 'src/queries/profile/preferences';
 
 export type ThemeChoice = 'dark' | 'light' | 'system';
 

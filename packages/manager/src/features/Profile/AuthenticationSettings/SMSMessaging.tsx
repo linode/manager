@@ -9,8 +9,8 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { useSMSOptOutMutation } from 'src/queries/profile';
-import { useProfile } from 'src/queries/profile';
+import { useSMSOptOutMutation } from 'src/queries/profile/profile';
+import { useProfile } from 'src/queries/profile/profile';
 
 import { getFormattedNumber } from './PhoneVerification/helpers';
 

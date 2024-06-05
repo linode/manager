@@ -11,7 +11,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Stack } from 'src/components/Stack';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import {
   useInfiniteSupportTicketRepliesQuery,
   useSupportTicketQuery,
