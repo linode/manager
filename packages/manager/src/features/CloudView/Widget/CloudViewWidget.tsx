@@ -20,7 +20,6 @@ import { isToday as _isToday } from 'src/utilities/isToday';
 import { roundTo } from 'src/utilities/roundTo';
 import { getMetrics } from 'src/utilities/statMetrics';
 
-import { FiltersObject } from '../Models/GlobalFilterProperties';
 import {
   AGGREGATE_FUNCTION,
   SIZE,
@@ -66,325 +65,325 @@ const StyledZoomIcon = styled(ZoomIcon, {
   marginTop: '10px',
 });
 
-export const CloudViewWidget = (props: CloudViewWidgetProperties) => {
-  const { data: profile } = useProfile();
+export const CloudViewWidget = React.memo(
+  (props: CloudViewWidgetProperties) => {
+    const { data: profile } = useProfile();
 
-  const timezone = profile?.timezone || 'US/Eastern';
+    const timezone = profile?.timezone || 'US/Eastern';
 
-  const [data, setData] = React.useState<Array<any>>([]);
+    const [data, setData] = React.useState<Array<any>>([]);
 
-  const [legendRows, setLegendRows] = React.useState<any[]>([]);
+    const [legendRows, setLegendRows] = React.useState<any[]>([]);
 
-  const [today, setToday] = React.useState<boolean>(false);
+    const [today, setToday] = React.useState<boolean>(false);
 
-  const flags = useFlags();
+    const flags = useFlags();
 
-  const [
-    selectedInterval,
-    setSelectedInterval,
-  ] = React.useState<TimeGranularity>({ ...props.widget?.time_granularity });
+    const [
+      selectedInterval,
+      setSelectedInterval,
+    ] = React.useState<TimeGranularity>({ ...props.widget?.time_granularity });
 
-  const [widget, setWidget] = React.useState<Widgets>({ ...props.widget }); // any change in agg_functions, step, group_by, will be published to dashboard component for save
+    const [widget, setWidget] = React.useState<Widgets>({ ...props.widget }); // any change in agg_functions, step, group_by, will be published to dashboard component for save
 
-  const getCloudViewMetricsRequest = (): CloudViewMetricsRequest => {
-    const request = {} as CloudViewMetricsRequest;
-    request.aggregate_function = widget.aggregate_function;
-    request.group_by = widget.group_by;
-    if (props && props.resources) {
-      request.resource_id = props.resourceIds.map((obj) => parseInt(obj, 10));
-    } else {
-      request.resource_id = widget.resource_id.map((obj) => parseInt(obj, 10));
-    }
-    request.metric = widget.metric!;
-    request.time_duration = props.duration
-      ? props.duration!
-      : widget.time_duration;
-    request.time_granularity = { ...widget.time_granularity };
-
-    // if (props.globalFilters) {
-    //   // this has been kept because for mocking data, we will remove this
-    //   request.startTime = props.globalFilters?.timeRange.start;
-    //   request.endTime = props.globalFilters?.timeRange.end;
-    // }
-    return request;
-  };
-
-  const tooltipValueFormatter = (value: number, unit: string) =>
-    `${roundTo(value)} ${unit}`;
-
-  const getServiceType = () => {
-    return props.widget.service_type
-      ? props.widget.service_type!
-      : props.serviceType
-      ? props.serviceType
-      : '';
-  };
-
-  const getLabelName = (metric: any, serviceType: string) => {
-    // aggregated metric, where metric keys will be 0
-    if (Object.keys(metric).length == 0) {
-      // in this case retrurn widget label and unit
-      return props.widget.label + ' (' + props.widget.unit + ')';
-    }
-
-    const results =
-      flags.aclpResourceTypeMap && flags.aclpResourceTypeMap.length > 0
-        ? flags.aclpResourceTypeMap.filter(
-            (obj: CloudPulseResourceTypeMap) => obj.serviceName === serviceType
-          )
-        : [];
-
-    const flag = results && results.length > 0 ? results[0] : undefined;
-
-    return getDimensionName(metric, flag, props.resources);
-  };
-
-  const {
-    data: metricsList,
-    error,
-    isLoading,
-    status,
-  } = useCloudViewMetricsQuery(
-    getServiceType()!,
-    getCloudViewMetricsRequest(),
-    props,
-    widget.aggregate_function +
-      '_' +
-      widget.group_by +
-      '_' +
-      widget.time_granularity +
-      '_' +
-      widget.metric +
-      '_' +
-      widget.label +
-      '_' +
-      props.timeStamp ?? '',
-    true
-  ); // fetch the metrics on any property change
-
-  React.useEffect(() => {
-    // on any change in the widget object, just publish the changes to parent component using a callback function
-    if (
-      props.widget.size != widget.size ||
-      props.widget.aggregate_function !== widget.aggregate_function ||
-      props.widget.time_granularity?.unit !== widget.time_granularity?.unit ||
-      props.widget.time_granularity?.value !== widget.time_granularity?.value
-    ) {
-      props.handleWidgetChange(widget);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [widget]);
-
-  /**
-   * This will be executed, each time when we receive response from metrics api
-   * and does formats the data compatible for the graph
-   */
-  React.useEffect(() => {
-    const dimensions: any[] = [];
-    const legendRowsData: any[] = [];
-
-    // for now we will use this guy, but once we decide how to work with coloring, it should be dynamic
-    const colors: string[] = COLOR_MAP.get(props.widget.color)!;
-
-    if (
-      status == 'success' &&
-      metricsList.data &&
-      metricsList.data.result.length > 0
-    ) {
-      let index = 0;
-
-      metricsList.data.result.forEach((graphData) => {
-        // todo, move it to utils at a widget level
-        if (graphData == undefined || graphData == null) {
-          return;
-        }
-        const color = colors[index];
-        const startEnd = convertTimeDurationToStartAndEndTimeRange(
-          props!.duration!
+    const getCloudViewMetricsRequest = (): CloudViewMetricsRequest => {
+      const request = {} as CloudViewMetricsRequest;
+      request.aggregate_function = widget.aggregate_function;
+      request.group_by = widget.group_by;
+      if (props && props.resources) {
+        request.resource_id = props.resourceIds.map((obj) => parseInt(obj, 10));
+      } else {
+        request.resource_id = widget.resource_id.map((obj) =>
+          parseInt(obj, 10)
         );
-        const dimension = {
-          backgroundColor: color,
-          borderColor: color,
-          data: seriesDataFormatter(
-            graphData.values,
-            startEnd ? startEnd.start : graphData.values[0][0],
-            startEnd
-              ? startEnd.end
-              : graphData.values[graphData.values.length - 1][0]
-          ),
-          label: getLabelName(graphData.metric, getServiceType()!),
-        };
+      }
+      request.metric = widget.metric!;
+      request.time_duration = props.duration
+        ? props.duration!
+        : widget.time_duration;
+      request.time_granularity = { ...widget.time_granularity };
+      return request;
+    };
 
-        // construct a legend row with the dimension
-        const legendRow = {
-          data: getMetrics(dimension.data as number[][]),
-          format: (value: number) => tooltipValueFormatter(value, widget.unit),
-          legendColor: color,
-          legendTitle: dimension.label,
-        };
-        legendRowsData.push(legendRow);
-        dimensions.push(dimension);
-        index = index + 1;
-        setToday(_isToday(startEnd.start, startEnd.end));
+    const tooltipValueFormatter = (value: number, unit: string) =>
+      `${roundTo(value)} ${unit}`;
+
+    const getServiceType = () => {
+      return props.widget.service_type
+        ? props.widget.service_type!
+        : props.serviceType
+        ? props.serviceType
+        : '';
+    };
+
+    const getLabelName = (metric: any, serviceType: string) => {
+      // aggregated metric, where metric keys will be 0
+      if (Object.keys(metric).length == 0) {
+        // in this case retrurn widget label and unit
+        return props.widget.label + ' (' + props.widget.unit + ')';
+      }
+
+      const results =
+        flags.aclpResourceTypeMap && flags.aclpResourceTypeMap.length > 0
+          ? flags.aclpResourceTypeMap.filter(
+              (obj: CloudPulseResourceTypeMap) =>
+                obj.serviceName === serviceType
+            )
+          : [];
+
+      const flag = results && results.length > 0 ? results[0] : undefined;
+
+      return getDimensionName(metric, flag, props.resources);
+    };
+
+    const {
+      data: metricsList,
+      error,
+      isLoading,
+      status,
+    } = useCloudViewMetricsQuery(
+      getServiceType()!,
+      getCloudViewMetricsRequest(),
+      props,
+      widget.aggregate_function +
+        '_' +
+        widget.group_by +
+        '_' +
+        widget.time_granularity +
+        '_' +
+        widget.metric +
+        '_' +
+        widget.label +
+        '_' +
+        props.timeStamp ?? '',
+      true
+    ); // fetch the metrics on any property change
+
+    React.useEffect(() => {
+      // on any change in the widget object, just publish the changes to parent component using a callback function
+      if (
+        props.widget.size != widget.size ||
+        props.widget.aggregate_function !== widget.aggregate_function ||
+        props.widget.time_granularity?.unit !== widget.time_granularity?.unit ||
+        props.widget.time_granularity?.value !== widget.time_granularity?.value
+      ) {
+        props.handleWidgetChange(widget);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [widget]);
+
+    /**
+     * This will be executed, each time when we receive response from metrics api
+     * and does formats the data compatible for the graph
+     */
+    React.useEffect(() => {
+      const dimensions: any[] = [];
+      const legendRowsData: any[] = [];
+
+      // for now we will use this guy, but once we decide how to work with coloring, it should be dynamic
+      const colors: string[] = COLOR_MAP.get(props.widget.color)!;
+
+      if (
+        status == 'success' &&
+        metricsList.data &&
+        metricsList.data.result.length > 0
+      ) {
+        let index = 0;
+
+        metricsList.data.result.forEach((graphData) => {
+          // todo, move it to utils at a widget level
+          if (graphData == undefined || graphData == null) {
+            return;
+          }
+          const color = colors[index];
+          const startEnd = convertTimeDurationToStartAndEndTimeRange(
+            props!.duration!
+          );
+          const dimension = {
+            backgroundColor: color,
+            borderColor: color,
+            data: seriesDataFormatter(
+              graphData.values,
+              startEnd ? startEnd.start : graphData.values[0][0],
+              startEnd
+                ? startEnd.end
+                : graphData.values[graphData.values.length - 1][0]
+            ),
+            label: getLabelName(graphData.metric, getServiceType()!),
+          };
+
+          // construct a legend row with the dimension
+          const legendRow = {
+            data: getMetrics(dimension.data as number[][]),
+            format: (value: number) =>
+              tooltipValueFormatter(value, widget.unit),
+            legendColor: color,
+            legendTitle: dimension.label,
+          };
+          legendRowsData.push(legendRow);
+          dimensions.push(dimension);
+          index = index + 1;
+          setToday(_isToday(startEnd.start, startEnd.end));
+        });
+
+        // chart dimensions
+        setData(dimensions);
+        setLegendRows(legendRowsData);
+      }
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [status, metricsList]);
+
+    const handleZoomToggle = React.useCallback((zoomInValue: boolean) => {
+      setWidget((widget) => {
+        return { ...widget, size: zoomInValue ? 12 : 6 };
       });
 
-      // chart dimensions
-      setData(dimensions);
-      setLegendRows(legendRowsData);
+      updateWidgetPreference(props.widget.label, {
+        [AGGREGATE_FUNCTION]: widget.aggregate_function,
+        [SIZE]: zoomInValue ? 12 : 6,
+        [TIME_GRANULARITY]: selectedInterval,
+      });
+    }, []);
+
+    const handleAggregateFunctionChange = React.useCallback(
+      (aggregateValue: string) => {
+        if (aggregateValue !== widget.aggregate_function) {
+          setWidget((currentWidget) => {
+            return {
+              ...currentWidget,
+              aggregate_function: aggregateValue,
+            };
+          });
+
+          updateWidgetPreference(widget.label, {
+            [AGGREGATE_FUNCTION]: aggregateValue,
+            [SIZE]: widget.size,
+            [TIME_GRANULARITY]: widget.time_granularity,
+          });
+        }
+      },
+      []
+    );
+
+    const handleIntervalChange = React.useCallback(
+      (intervalValue: TimeGranularity) => {
+        if (
+          intervalValue.unit !== selectedInterval.unit ||
+          intervalValue.value !== selectedInterval.value
+        ) {
+          setWidget((currentWidget) => {
+            return {
+              ...currentWidget,
+              time_granularity: { ...intervalValue },
+            };
+          });
+          setSelectedInterval({ ...intervalValue });
+          updateWidgetPreference(widget.label, {
+            [AGGREGATE_FUNCTION]: widget.aggregate_function,
+            [SIZE]: widget.size,
+            [TIME_GRANULARITY]: { ...intervalValue },
+          });
+        }
+      },
+      []
+    );
+
+    const handleFilterChange = (widgetFilter: Filters[]) => {
+      // todo, add implementation once component is ready
+    };
+
+    const handleGroupByChange = (groupby: string) => {
+      // todo, add implememtation once component is ready
+    };
+
+    const handleGranularityChange = (step: string) => {
+      // todo, add implementation once component is ready
+    };
+
+    if (isLoading) {
+      return (
+        <Grid xs={widget.size}>
+          <Paper style={{ height: '98%', width: '100%' }}>
+            <div style={{ margin: '1%' }}>
+              <CircleProgress />
+            </div>
+          </Paper>
+        </Grid>
+      );
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, metricsList]);
-
-  const handleZoomToggle = React.useCallback((zoomInValue: boolean) => {
-    setWidget((widget) => {
-      return { ...widget, size: zoomInValue ? 12 : 6 };
-    });
-
-    updateWidgetPreference(props.widget.label, {
-      [AGGREGATE_FUNCTION]: widget.aggregate_function,
-      [SIZE]: zoomInValue ? 12 : 6,
-      [TIME_GRANULARITY]: selectedInterval,
-    });
-  }, []);
-
-  const handleAggregateFunctionChange = React.useCallback(
-    (aggregateValue: string) => {
-      if (aggregateValue !== widget.aggregate_function) {
-        setWidget((currentWidget) => {
-          return {
-            ...currentWidget,
-            aggregate_function: aggregateValue,
-          };
-        });
-
-        updateWidgetPreference(widget.label, {
-          [AGGREGATE_FUNCTION]: aggregateValue,
-          [SIZE]: widget.size,
-          [TIME_GRANULARITY]: widget.time_granularity,
-        });
-      }
-    },
-    []
-  );
-
-  const handleIntervalChange = React.useCallback(
-    (intervalValue: TimeGranularity) => {
-      if (
-        intervalValue.unit !== selectedInterval.unit ||
-        intervalValue.value !== selectedInterval.value
-      ) {
-        setWidget((currentWidget) => {
-          return {
-            ...currentWidget,
-            time_granularity: { ...intervalValue },
-          };
-        });
-        setSelectedInterval({ ...intervalValue });
-        updateWidgetPreference(widget.label, {
-          [AGGREGATE_FUNCTION]: widget.aggregate_function,
-          [SIZE]: widget.size,
-          [TIME_GRANULARITY]: { ...intervalValue },
-        });
-      }
-    },
-    []
-  );
-
-  const handleFilterChange = (widgetFilter: Filters[]) => {
-    // todo, add implementation once component is ready
-  };
-
-  const handleGroupByChange = (groupby: string) => {
-    // todo, add implememtation once component is ready
-  };
-
-  const handleGranularityChange = (step: string) => {
-    // todo, add implementation once component is ready
-  };
-
-  if (isLoading) {
     return (
       <Grid xs={widget.size}>
-        <Paper style={{ height: '98%', width: '100%' }}>
-          <div style={{ margin: '1%' }}>
-            <CircleProgress />
+        <Paper
+          style={{
+            border: 'solid 1px #e3e5e8',
+            height: '98%',
+            marginTop: '10px',
+            width: '100%',
+          }}
+        >
+          {/* add further components like group by resource, aggregate_function, step here , for sample added zoom icon here*/}
+          <div className={widget.metric} style={{ margin: '1%' }}>
+            <div
+              style={{
+                alignItems: 'start',
+                display: 'flex',
+                float: 'right',
+                justifyContent: 'flex-end',
+                width: '70%',
+              }}
+            >
+              <Grid sx={{ marginRight: 5, width: 100 }}>
+                {props.availableMetrics?.scrape_interval && (
+                  <IntervalSelectComponent
+                    default_interval={{ ...selectedInterval }}
+                    onIntervalChange={handleIntervalChange}
+                    scrape_interval={props.availableMetrics.scrape_interval}
+                  />
+                )}
+              </Grid>
+              <Grid sx={{ marginRight: 5, width: 100 }}>
+                {props.availableMetrics?.available_aggregate_functions &&
+                  props.availableMetrics.available_aggregate_functions.length >
+                    0 && (
+                    <AggregateFunctionComponent
+                      available_aggregate_func={
+                        props.availableMetrics?.available_aggregate_functions
+                      }
+                      default_aggregate_func={widget.aggregate_function}
+                      onAggregateFuncChange={handleAggregateFunctionChange}
+                    />
+                  )}
+              </Grid>
+              <StyledZoomIcon
+                handleZoomToggle={handleZoomToggle}
+                zoomIn={widget.size == 12 ? true : false}
+              />
+            </div>
+            <CloudViewLineGraph // rename where we have cloudview to cloudpulse
+              error={
+                status == 'error'
+                  ? error && error.length > 0
+                    ? error[0].reason
+                    : 'Error while rendering widget'
+                  : undefined
+              }
+              ariaLabel={props.ariaLabel ? props.ariaLabel : ''}
+              data={data}
+              gridSize={widget.size}
+              legendRows={legendRows}
+              loading={isLoading}
+              nativeLegend={true}
+              showToday={today}
+              subtitle={props.unit}
+              timezone={timezone}
+              title={convertStringToCamelCasesWithSpaces(props.widget.label)}
+              unit={' ' + props.unit}
+            />
           </div>
         </Paper>
       </Grid>
     );
   }
-
-  return (
-    <Grid xs={widget.size}>
-      <Paper
-        style={{
-          border: 'solid 1px #e3e5e8',
-          height: '98%',
-          marginTop: '10px',
-          width: '100%',
-        }}
-      >
-        {/* add further components like group by resource, aggregate_function, step here , for sample added zoom icon here*/}
-        <div className={widget.metric} style={{ margin: '1%' }}>
-          <div
-            style={{
-              alignItems: 'start',
-              display: 'flex',
-              float: 'right',
-              justifyContent: 'flex-end',
-              width: '70%',
-            }}
-          >
-            <Grid sx={{ marginRight: 5, width: 100 }}>
-              {props.availableMetrics?.scrape_interval && (
-                <IntervalSelectComponent
-                  default_interval={{ ...selectedInterval }}
-                  onIntervalChange={handleIntervalChange}
-                  scrape_interval={props.availableMetrics.scrape_interval}
-                />
-              )}
-            </Grid>
-            <Grid sx={{ marginRight: 5, width: 100 }}>
-              {props.availableMetrics?.available_aggregate_functions &&
-                props.availableMetrics.available_aggregate_functions.length >
-                  0 && (
-                  <AggregateFunctionComponent
-                    available_aggregate_func={
-                      props.availableMetrics?.available_aggregate_functions
-                    }
-                    default_aggregate_func={widget.aggregate_function}
-                    onAggregateFuncChange={handleAggregateFunctionChange}
-                  />
-                )}
-            </Grid>
-            <StyledZoomIcon
-              handleZoomToggle={handleZoomToggle}
-              zoomIn={widget.size == 12 ? true : false}
-            />
-          </div>
-          <CloudViewLineGraph // rename where we have cloudview to cloudpulse
-            error={
-              status == 'error'
-                ? error && error.length > 0
-                  ? error[0].reason
-                  : 'Error while rendering widget'
-                : undefined
-            }
-            ariaLabel={props.ariaLabel ? props.ariaLabel : ''}
-            data={data}
-            gridSize={widget.size}
-            legendRows={legendRows}
-            loading={isLoading}
-            nativeLegend={true}
-            showToday={today}
-            subtitle={props.unit}
-            timezone={timezone}
-            title={convertStringToCamelCasesWithSpaces(props.widget.label)}
-            unit={' ' + props.unit}
-          />
-        </div>
-      </Paper>
-    </Grid>
-  );
-};
+);

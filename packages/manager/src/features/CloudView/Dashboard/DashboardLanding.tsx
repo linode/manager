@@ -7,7 +7,6 @@ import CloudViewIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
-import { AclpConfig } from '../Models/CloudPulsePreferences';
 import { FiltersObject } from '../Models/GlobalFilterProperties';
 import { GlobalFilters } from '../Overview/GlobalFilters';
 import {
@@ -19,10 +18,11 @@ import {
   TIME_DURATION,
 } from '../Utils/CloudPulseConstants';
 import {
+  fetchUserPrefObject,
   getUserPreference,
   updateGlobalFilterPreference,
 } from '../Utils/UserPreference';
-import { CloudPulseDashboard, DashboardProperties } from './Dashboard';
+import { CloudPulseDashboard } from './Dashboard';
 
 const StyledPlaceholder = styled(Placeholder, {
   label: 'StyledPlaceholder',
@@ -46,74 +46,29 @@ export const DashBoardLanding = () => {
     }
   };
 
-  const getInitDashboardProps = () => {
-    return {} as DashboardProperties;
-  };
-
-  const [dashboardProp, setDashboardProp] = React.useState<DashboardProperties>(
-    getInitDashboardProps()
-  );
-
   const [timeDuration, setTimeDuration] = React.useState<TimeDuration>();
   const [region, setRegion] = React.useState<string>();
   const [resources, setResources] = React.useState<string[]>();
-  const [step, setStep] = React.useState<TimeGranularity>();
   const [timeStamp, setTimeStamp] = React.useState<number>();
   const [serviceType, setServiceType] = React.useState<string>();
-
-  // since dashboard prop is mutable and savable
-  const dashboardPropRef = React.useRef<DashboardProperties>(
-    getInitDashboardProps()
-  );
-
-  // since preference is mutable and savable
-  const preferenceRef = React.useRef<any>();
-
-  // const { data: preferences, refetch: refetchPreferences } = usePreferences();
+  const [dashboard, selectedDashboard] = React.useState<Dashboard>();
   const [preferences, setPreferences] = React.useState<any>();
-
-  const updatedDashboard = React.useRef<Dashboard>();
 
   const handleGlobalFilterChange = (
     globalFilter: FiltersObject,
     changedFilter: string
   ) => {
-    if (!dashboardPropRef || !dashboardPropRef.current) {
-      dashboardPropRef.current = getInitDashboardProps();
-    }
-
     if (changedFilter === TIME_DURATION) {
       setTimeDuration(globalFilter.duration);
-      preferenceRef.current.aclpPreference.timeDuration =
-        globalFilter.durationLabel;
     }
 
     if (changedFilter === REGION && region != globalFilter.region) {
       setRegion(globalFilter.region);
-      preferenceRef.current.aclpPreference.region = globalFilter.region;
-      if (
-        preferences &&
-        preferences.aclpPreference.region !=
-          preferenceRef.current.aclpPreference.region
-      ) {
-        preferenceRef.current.aclpPreference.resources = [];
-        setResources([]);
-      }
+      setResources([]);
     }
 
     if (changedFilter === RESOURCES) {
       setResources(globalFilter.resource);
-      preferenceRef.current.aclpPreference.dashboardId = dashboardPropRef
-        .current.dashboardId
-        ? dashboardPropRef.current.dashboardId
-        : undefined!;
-      preferenceRef.current.aclpPreference.region = region;
-      preferenceRef.current.aclpPreference.resources = globalFilter.resource;
-    }
-
-    if (changedFilter === INTERVAL) {
-      setStep(globalFilter.step);
-      preferenceRef.current.aclpPreference.interval = globalFilter.interval;
     }
 
     if (changedFilter === REFRESH) {
@@ -123,21 +78,12 @@ export const DashBoardLanding = () => {
 
   const handleDashboardChange = (dashboard: Dashboard) => {
     if (!dashboard) {
-      dashboardPropRef.current.dashboardId = undefined!;
-      updatedDashboard.current = undefined!;
-      setDashboardProp({ ...dashboardPropRef.current });
+      selectedDashboard(undefined);
       updateGlobalFilterPreference({
         [DASHBOARD_ID]: undefined,
         [RESOURCES]: [],
       });
-      preferenceRef.current.aclpPreference.dashboardId = undefined!;
-      preferenceRef.current.aclpPreference.resources = [];
-      preferenceRef.current.aclpPreference.region = '';
       return;
-    }
-
-    if (!dashboardPropRef || !dashboardPropRef.current) {
-      dashboardPropRef.current = getInitDashboardProps();
     }
 
     // update prefs if any
@@ -163,26 +109,15 @@ export const DashBoardLanding = () => {
         }
       }
     }
-    dashboardPropRef.current.dashboardId = dashboard.id;
-
-    setDashboardProp({ ...dashboardPropRef.current });
     setServiceType(dashboard.service_type);
-    updatedDashboard.current = { ...dashboard };
+    selectedDashboard(dashboard);
 
     if (dashboard && dashboard.id) {
-      preferenceRef.current.aclpPreference.dashboardId = dashboard.id;
       updateGlobalFilterPreference({
         [DASHBOARD_ID]: dashboard.id,
         [RESOURCES]: [],
       });
-      if (
-        preferences &&
-        preferences.aclpPreference.dashboardId !=
-          preferenceRef.current.aclpPreference.dashboardId
-      ) {
-        preferenceRef.current.aclpPreference.resources = [];
-        setResources([]);
-      }
+      setResources([]);
     }
   };
 
@@ -203,21 +138,7 @@ export const DashBoardLanding = () => {
   };
 
   const dashboardChange = (dashboardObj: Dashboard) => {
-    // todo, whenever a change in dashboard happens
-    updatedDashboard.current = { ...dashboardObj };
-
-    if (dashboardObj.widgets) {
-      preferenceRef.current.aclpPreference.widgets = dashboardObj.widgets.map(
-        (obj) => {
-          return {
-            aggregateFunction: obj.aggregate_function,
-            label: obj.label,
-            size: obj.size,
-            time_granularity: { ...obj.time_granularity },
-          };
-        }
-      );
-    }
+    selectedDashboard(dashboardObj);
   };
 
   // Fetch the data from preferences
@@ -235,18 +156,6 @@ export const DashBoardLanding = () => {
 
   if (!preferences) {
     return <CircleProgress></CircleProgress>;
-  } else {
-    if (!preferenceRef || !preferenceRef.current) {
-      preferenceRef.current = { ...preferences };
-
-      if (!preferenceRef.current.aclpPreference) {
-        preferenceRef.current.aclpPreference = {} as AclpConfig;
-      } else {
-        preferenceRef.current.aclpPreference = {
-          ...preferences.aclpPreference,
-        };
-      }
-    }
   }
 
   return (
@@ -270,25 +179,27 @@ export const DashBoardLanding = () => {
           </div>
         </div>
       </Paper>
-      {dashboardProp.dashboardId &&
+      {dashboard &&
         region &&
         resources &&
         resources.length > 0 &&
-        timeDuration &&
-        step && (
+        timeDuration && (
           <CloudPulseDashboard
-            {...dashboardProp}
+            dashboardId={dashboard.id}
+            duration={timeDuration}
+            manualRefreshTimeStamp={timeStamp}
             onDashboardChange={dashboardChange}
-            widgetPreferences={preferenceRef.current.aclpPreference.widgets}
+            region={region}
+            resources={resources}
+            widgetPreferences={fetchUserPrefObject().widgets}
           />
         )}
 
-      {(!dashboardProp.dashboardId ||
+      {(!dashboard ||
         !region ||
         !resources ||
         resources.length == 0 ||
-        !timeDuration ||
-        !step) && (
+        !timeDuration) && (
         <Paper>
           <StyledPlaceholder
             icon={CloudViewIcon}

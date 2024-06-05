@@ -28,10 +28,10 @@ import {
 } from '../Widget/CloudViewWidget';
 
 export interface DashboardProperties {
-  // dashboardFilters: FiltersObject;
   dashboardId: number; // need to pass the dashboardId
   duration: TimeDuration;
 
+  manualRefreshTimeStamp?: number | undefined;
   // on any change in dashboard
   onDashboardChange?: (dashboard: Dashboard) => void;
   region?: string;
@@ -39,7 +39,7 @@ export interface DashboardProperties {
   widgetPreferences?: AclpWidget[]; // this is optional
 }
 
-export const CloudPulseDashboard = (props: DashboardProperties) => {
+export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
   // const resourceOptions: any = {};
 
   // returns a list of resource IDs to be passed as part of getJWEToken call
@@ -118,6 +118,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     graphProp.unit = widget.unit ? widget.unit : '%';
     graphProp.ariaLabel = widget.label;
     graphProp.errorLabel = 'Error While loading data';
+    graphProp.timeStamp = props.manualRefreshTimeStamp!;
 
     return graphProp;
   };
@@ -184,7 +185,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
 
                 return (
                   <CloudViewWidget
-                    key={index}
+                    key={element.label}
                     {...getCloudViewGraphProperties(element)}
                     authToken={jweToken?.token}
                     availableMetrics={availMetrics}
@@ -229,4 +230,18 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       <RenderWidgets />;
     </>
   );
-};
+}, compareProps);
+
+function compareProps(
+  prevProps: DashboardProperties,
+  newProps: DashboardProperties
+) {
+  // this component should re-render only if the following properties changes
+  return (
+    prevProps.dashboardId == newProps.dashboardId &&
+    prevProps.duration == newProps.duration &&
+    prevProps.region == newProps.region &&
+    prevProps.resources == newProps.resources &&
+    prevProps.manualRefreshTimeStamp == newProps.manualRefreshTimeStamp
+  );
+}
