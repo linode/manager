@@ -28,7 +28,7 @@ describe('SwitchAccountSessionDialog', () => {
       </MemoryRouter>
     );
 
-    expect(getByText('Session Expired')).toBeInTheDocument();
+    expect(getByText('Session expired')).toBeInTheDocument();
     expect(
       getByText(
         'Log in again to switch accounts or close this window to continue working on the current account.'

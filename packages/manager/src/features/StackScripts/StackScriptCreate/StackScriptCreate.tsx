@@ -478,7 +478,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         actions={this.renderDialogActions}
         onClose={this.handleCloseDialog}
         open={dialogOpen}
-        title="Clear StackScript Configuration"
+        title="Clear StackScript configuration"
       >
         <Typography>
           Are you sure you want to reset your StackScript configuration?

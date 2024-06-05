@@ -97,7 +97,7 @@ export const ConfirmTransferCancelDialog = React.memo((props: Props) => {
       actions={actions}
       onClose={onClose}
       open={open}
-      title="Cancel service transfer"
+      title="Cancel this service transfer"
     >
       {
         // There could be multiple errors here that are relevant.

@@ -59,7 +59,7 @@ export const DeleteConfigurationDialog = (props: Props) => {
       error={error?.[0]?.reason}
       onClose={handleClose}
       open={open}
-      title={`Delete Configuration ${configuration.label}`}
+      title={`Delete configuration ${configuration.label}`}
     >
       Are you sure you want to delete this configuration?
     </ConfirmationDialog>

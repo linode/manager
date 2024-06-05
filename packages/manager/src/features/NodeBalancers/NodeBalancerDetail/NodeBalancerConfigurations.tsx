@@ -212,8 +212,8 @@ class NodeBalancerConfigurations extends React.Component<
           title={
             typeof this.state.deleteConfigConfirmDialog.portToDelete !==
             'undefined'
-              ? `Delete Configuration on Port ${this.state.deleteConfigConfirmDialog.portToDelete}`
-              : 'Delete Configuration'
+              ? `Delete configuration on port ${this.state.deleteConfigConfirmDialog.portToDelete}`
+              : 'Delete configuration'
           }
           actions={this.renderConfigConfirmationActions}
           error={this.confirmationConfigError()}

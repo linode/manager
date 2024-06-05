@@ -93,7 +93,7 @@ export const EnableBackupsDialog = (props: Props) => {
       error={error?.[0].reason}
       onClose={onClose}
       open={open}
-      title="Enable Backups"
+      title="Enable backups"
     >
       {!hasBackupsMonthlyPriceError ? (
         <Typography>

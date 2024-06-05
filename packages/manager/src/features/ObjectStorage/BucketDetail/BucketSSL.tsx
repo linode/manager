@@ -202,7 +202,7 @@ const RemoveCertForm = (props: Props) => {
         error={error?.[0].reason}
         onClose={() => setOpen(false)}
         open={open}
-        title="Remove TLS Certificate"
+        title="Remove TLS certificate"
       >
         <Typography>
           Are you sure you want to remove all certificates from this Bucket?

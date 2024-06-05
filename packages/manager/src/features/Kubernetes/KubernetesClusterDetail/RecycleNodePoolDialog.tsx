@@ -59,7 +59,7 @@ export const RecycleNodePoolDialog = (props: Props) => {
       error={error?.[0].reason}
       onClose={onClose}
       open={open}
-      title="Recycle Node Pool"
+      title="Recycle node pool"
     >
       <Typography>
         {nodesDeletionWarning} {localStorageWarning} This may take several

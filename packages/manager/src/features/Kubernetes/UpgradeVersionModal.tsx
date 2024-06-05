@@ -86,7 +86,7 @@ export const UpgradeDialog = (props: Props) => {
   };
 
   const dialogTitle = hasUpdatedSuccessfully
-    ? `Step 2: Recycle all Cluster Nodes`
+    ? `Step 2: Recycle all cluster nodes`
     : `Step 1: Upgrade ${clusterLabel} to Kubernetes ${nextVersion}`;
 
   const actions = (

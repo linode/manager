@@ -18,7 +18,7 @@ describe('Delete Payment Method Dialog', () => {
   it('renders the delete payment method dialog', () => {
     const screen = renderWithTheme(<DeletePaymentMethodDialog {...props} />);
 
-    const headerText = screen.getByText('Delete Payment Method');
+    const headerText = screen.getByText('Delete payment method');
     expect(headerText).toBeVisible();
 
     const deleteText = screen.getByText(

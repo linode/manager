@@ -250,7 +250,7 @@ export const KubeSummaryPanel = (props: Props) => {
         }
         onClose={() => setResetKubeConfigDialogOpen(false)}
         open={resetKubeConfigDialogOpen}
-        title="Reset Cluster Kubeconfig"
+        title="Reset cluster Kubeconfig"
       >
         This will delete and regenerate the cluster&rsquo;s Kubeconfig file. You
         will no longer be able to access this cluster via your previous

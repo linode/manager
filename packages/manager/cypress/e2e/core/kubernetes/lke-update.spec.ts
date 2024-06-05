@@ -650,7 +650,7 @@ describe('LKE cluster updates', () => {
     // Click "Reset" button, proceed through confirmation dialog.
     cy.findByText('Reset').should('be.visible').click();
     ui.dialog
-      .findByTitle('Reset Cluster Kubeconfig?')
+      .findByTitle('Reset cluster Kubeconfig')
       .should('be.visible')
       .within(() => {
         resetWarnings.forEach((warning: string) => {

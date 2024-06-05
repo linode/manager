@@ -53,7 +53,7 @@ export const DeleteNodePoolDialog = (props: Props) => {
       error={error?.[0].reason}
       onClose={onClose}
       open={open}
-      title="Delete Node Pool"
+      title="Delete node pool"
     >
       <Typography>
         Are you sure you want to delete this Node Pool?{' '}

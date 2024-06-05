@@ -50,7 +50,7 @@ describe('SessionExpirationDialog', () => {
       </MemoryRouter>
     );
 
-    expect(getByText('Your Session is About to Expire')).toBeInTheDocument();
+    expect(getByText('Your session is about to expire')).toBeInTheDocument();
   });
 
   it('tests the Continue Working button when is clicked', async () => {

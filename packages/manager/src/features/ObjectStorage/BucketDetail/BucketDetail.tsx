@@ -418,7 +418,7 @@ export const BucketDetail = () => {
         title={
           objectToDelete
             ? `Delete ${truncateMiddle(displayName(objectToDelete))}`
-            : 'Delete Object'
+            : 'Delete object'
         }
         error={deleteObjectError}
         onClose={closeDeleteObjectDialog}
