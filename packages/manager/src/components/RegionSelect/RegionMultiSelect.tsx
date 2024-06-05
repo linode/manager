@@ -9,6 +9,7 @@ import { Flag } from 'src/components/Flag';
 import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
+import { StyledListItem } from '../Autocomplete/Autocomplete.styles';
 import { RegionOption } from './RegionOption';
 import {
   StyledAutocompleteContainer,
@@ -23,7 +24,6 @@ import type {
   DisableRegionOption,
   RegionMultiSelectProps,
 } from './RegionSelect.types';
-import { StyledListItem } from '../Autocomplete/Autocomplete.styles';
 
 interface LabelComponentProps {
   region: Region;
@@ -57,10 +57,10 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     currentCapability,
     disabled,
     errorText,
-    onChange,
     helperText,
     isClearable,
     label,
+    onChange,
     placeholder,
     regions,
     required,
@@ -106,23 +106,30 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     <>
       <StyledAutocompleteContainer sx={{ width }}>
         <Autocomplete
+          groupBy={(option) => {
+            if (!option.site_type) {
+              // Render empty group for "Select All / Deselect All"
+              return '';
+            }
+            return getRegionCountryGroup(option);
+          }}
           onChange={(_, selectedOptions) =>
             onChange(selectedOptions.map((region) => region.id))
           }
           renderOption={(props, option, { selected }) => {
             if (!option.site_type) {
-              // Render options like "Select All / Deselect All "
+              // Render options like "Select All / Deselect All"
               return <StyledListItem {...props}>{option.label}</StyledListItem>;
             }
 
             // Render regular options
             return (
               <RegionOption
-                key={option.id}
-                region={option}
-                props={props}
-                selected={selected}
                 disabledOptions={disabledRegions[option.id]}
+                key={option.id}
+                props={props}
+                region={option}
+                selected={selected}
               />
             );
           }}
@@ -157,7 +164,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
           disabled={disabled}
           errorText={errorText}
           getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
-          groupBy={(option) => getRegionCountryGroup(option)}
           label={label ?? 'Regions'}
           loading={accountAvailabilityLoading}
           multiple
