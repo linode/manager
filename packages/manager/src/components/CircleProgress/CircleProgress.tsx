@@ -17,7 +17,8 @@ interface CircleProgressProps extends Omit<CircularProgressProps, 'size'> {
    */
   noPadding?: boolean;
   /**
-   * Set spinner to a smaller custom size
+   * Sets the size of the spinner
+   * @default "lg"
    */
   size?: 'lg' | 'md' | 'sm' | 'xs';
   /**
@@ -55,6 +56,7 @@ const CircleProgress = (props: CircleProgressProps) => {
         aria-label="Content is loading"
         data-qa-circle-progress
         data-testid="circle-progress"
+        disableShrink
         noPadding={noPadding}
         size={noPadding ? SIZE_MAP[size] : SIZE_MAP[size] * 2}
         tabIndex={0}
@@ -71,6 +73,7 @@ const CircleProgress = (props: CircleProgressProps) => {
         {...rest}
         data-qa-circle-progress={value}
         data-testid="circle-progress"
+        disableShrink
         size={SIZE_MAP['lg']}
         thickness={2}
         value={value}
