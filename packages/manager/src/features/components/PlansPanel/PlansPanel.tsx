@@ -145,7 +145,9 @@ export const PlansPanel = (props: PlansPanelProps) => {
           <>
             <PlanInformation
               hideLimitedAvailabilityBanner={
-                showDistributedRegionPlanTable || !flags.disableLargestGbPlans
+                showDistributedRegionPlanTable ||
+                !flags.disableLargestGbPlans ||
+                plan === 'metal' // Bare Metal plans handle their own limited availability banner since they are an special case
               }
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                 plan
