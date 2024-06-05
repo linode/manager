@@ -331,7 +331,6 @@ export const extractPlansInformation = ({
   }, []);
   const hasDisabledPlans = allDisabledPlans.length > 0;
   const hasMajorityOfPlansDisabled =
-    plans.length !== 1 &&
     allDisabledPlans.length > plansForThisLinodeTypeClass.length / 2;
 
   return {
