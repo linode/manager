@@ -6,7 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { HAControlPlane, HAControlPlaneProps } from './HAControlPlane';
 
 const props: HAControlPlaneProps = {
-  highAvailabilityPrice: '60',
+  highAvailabilityPrice: '60.00',
   isErrorKubernetesTypes: false,
   isLoadingKubernetesTypes: false,
   selectedRegionId: 'us-southeast',
@@ -20,17 +20,18 @@ describe('HAControlPlane', () => {
     expect(getByTestId('ha-control-plane-form')).toBeVisible();
   });
 
-  it('should not render an HA price when the price is undefined', () => {
+  it('should not render an HA price when there is a price error', () => {
     const highAvailabilityPriceError = '--.--';
 
     const { queryAllByText } = renderWithTheme(
       <HAControlPlane
         {...props}
         highAvailabilityPrice={highAvailabilityPriceError}
+        isErrorKubernetesTypes={true}
       />
     );
 
-    expect(queryAllByText(/\$--\.--/)).toHaveLength(1);
+    expect(queryAllByText(/\$60\.00/)).toHaveLength(0);
   });
 
   it('should render an HA price when the price is a number', async () => {

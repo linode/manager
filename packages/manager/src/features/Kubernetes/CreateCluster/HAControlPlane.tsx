@@ -86,7 +86,7 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
             <Typography>
               Yes, enable HA control plane.{' '}
               {selectedRegionId
-                ? `For this region, HA Control Plane costs (${highAvailabilityPrice}/month).`
+                ? `For this region, HA Control Plane costs ($${highAvailabilityPrice}/month).`
                 : '(Select a region to view price information.)'}
             </Typography>
           }
