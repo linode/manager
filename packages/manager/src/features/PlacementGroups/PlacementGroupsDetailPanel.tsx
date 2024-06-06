@@ -6,11 +6,13 @@ import { Button } from 'src/components/Button/Button';
 import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
+import { getRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
 import { PlacementGroupsCreateDrawer } from 'src/features/PlacementGroups/PlacementGroupsCreateDrawer';
 import { hasRegionReachedPlacementGroupCapacity } from 'src/features/PlacementGroups/utils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -30,6 +32,7 @@ interface Props {
 }
 
 export const PlacementGroupsDetailPanel = (props: Props) => {
+  const flags = useFlags();
   const theme = useTheme();
   const {
     handlePlacementGroupChange,
@@ -72,7 +75,11 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
     !selectedRegionId || !hasRegionPlacementGroupCapability;
 
   const placementGroupSelectLabel = selectedRegion
-    ? `Placement Groups in ${selectedRegion.label} (${selectedRegion.id})`
+    ? `Placement Groups in ${getRegionLabel({
+        flags,
+        includeSlug: true,
+        region: selectedRegion,
+      })}`
     : 'Placement Group';
 
   return (

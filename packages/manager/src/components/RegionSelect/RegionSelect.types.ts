@@ -101,6 +101,12 @@ export interface GetRegionOptions extends RegionOptionAvailability {
   regions: Region[];
 }
 
+export interface GetRegionLabel {
+  flags: FlagSet | undefined;
+  includeSlug?: boolean;
+  region: Region;
+}
+
 export interface GetSelectedRegionById extends RegionOptionAvailability {
   regions: Region[];
   selectedRegionId: string;

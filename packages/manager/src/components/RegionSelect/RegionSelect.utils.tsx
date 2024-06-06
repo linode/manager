@@ -6,6 +6,7 @@ import {
 } from 'src/utilities/formatRegion';
 
 import type {
+  GetRegionLabel,
   GetRegionOptionAvailability,
   GetRegionOptions,
   GetSelectedRegionById,
@@ -80,23 +81,13 @@ export const getRegionOptions = ({
             disabled: false,
           };
 
-      const getLabel = () => {
-        // Display regions sorted by Country first
-        if (flags?.gecko2?.enabled && flags.gecko2.ga) {
-          const [city] = region.label.split(', ');
-          return `${region.country.toUpperCase()}, ${city}`;
-        }
-
-        return `${region.label} (${region.id})`;
-      };
-
       return {
         data: {
           country: region.country,
           region: group,
         },
         disabledProps,
-        label: getLabel(),
+        label: getRegionLabel({ flags, region }),
         site_type: region.site_type,
         value: region.id,
       };
@@ -256,4 +247,23 @@ export const getIsDistributedRegion = (
     (region) => region.id === selectedRegion || region.label === selectedRegion
   );
   return region?.site_type === 'distributed' || region?.site_type === 'edge';
+};
+
+export const getRegionLabel = ({
+  flags,
+  includeSlug,
+  region,
+}: GetRegionLabel) => {
+  const isGeckoGa = flags?.gecko2?.enabled && flags.gecko2.ga;
+  // Display regions sorted by Country first
+  if (isGeckoGa) {
+    const [city] = region.label.split(', ');
+    return `${region.country.toUpperCase()}, ${city} ${
+      includeSlug ? `(${region.id})` : ''
+    }`;
+  }
+
+  return `${region.label} (${region.id}) ${
+    includeSlug && isGeckoGa ? `(${region.id})` : ''
+  }`;
 };

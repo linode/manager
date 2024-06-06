@@ -16,7 +16,12 @@ import { RouteComponentProps } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
+import { getRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Tag } from 'src/components/TagsInput/TagsInput';
+import {
+  WithAccountProps,
+  withAccount,
+} from 'src/containers/account.container';
 import {
   WithAccountSettingsProps,
   withAccountSettings,
@@ -91,10 +96,6 @@ import type {
   LinodeTypeClass,
   PriceObject,
 } from '@linode/api-v4/lib/linodes';
-import {
-  withAccount,
-  WithAccountProps,
-} from 'src/containers/account.container';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -479,7 +480,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     return (
       selectedRegion && {
-        title: selectedRegion.label,
+        title: getRegionLabel({
+          flags: this.props.flags,
+          region: selectedRegion,
+        }),
       }
     );
   };
