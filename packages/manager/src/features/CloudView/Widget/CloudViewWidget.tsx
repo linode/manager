@@ -30,6 +30,11 @@ import {
   convertTimeDurationToStartAndEndTimeRange,
   getDimensionName,
 } from '../Utils/CloudPulseUtils';
+import {
+  convertBytesToUnit,
+  formatToolTip,
+  generateUnitByByteValue,
+} from '../Utils/UnitConversion';
 import { updateWidgetPreference } from '../Utils/UserPreference';
 import { COLOR_MAP } from '../Utils/WidgetColorPalette';
 import { CloudViewLineGraph } from './CloudViewLineGraph';
@@ -79,12 +84,18 @@ export const CloudViewWidget = React.memo(
 
     const flags = useFlags();
 
+    const isBytes = props.unit === 'Bytes';
+
     const [
       selectedInterval,
       setSelectedInterval,
     ] = React.useState<TimeGranularity>({ ...props.widget?.time_granularity });
 
     const [widget, setWidget] = React.useState<Widgets>({ ...props.widget }); // any change in agg_functions, step, group_by, will be published to dashboard component for save
+
+    const [currentUnit, setCurrentUnit] = React.useState<any>(
+      isBytes ? 'b' : props.unit
+    );
 
     const getCloudViewMetricsRequest = (): CloudViewMetricsRequest => {
       const request = {} as CloudViewMetricsRequest;
@@ -226,6 +237,11 @@ export const CloudViewWidget = React.memo(
           setToday(_isToday(startEnd.start, startEnd.end));
         });
 
+        formatBytesData(dimensions, legendRowsData);
+        // chart dimensions
+        setData(dimensions);
+        setLegendRows(legendRowsData);
+
         // chart dimensions
         setData(dimensions);
         setLegendRows(legendRowsData);
@@ -233,6 +249,24 @@ export const CloudViewWidget = React.memo(
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status, metricsList]);
+
+    const formatBytesData = (dimensions: any, legendRowsData: any) => {
+      if ((props.unit && props.unit !== 'Bytes') || !dimensions) {
+        return;
+      }
+      let maxValue = 0;
+      dimensions?.forEach((dimension: any, index: number) => {
+        maxValue = Math.max(maxValue, legendRowsData[index]?.data.max ?? 0);
+      });
+      if (maxValue === 0) {
+        return;
+      }
+      const unit = generateUnitByByteValue(maxValue);
+      setCurrentUnit(unit);
+      dimensions.forEach((dimension: any, index: number) => {
+        legendRowsData[index].format = formatToolTip;
+      });
+    };
 
     const handleZoomToggle = React.useCallback((zoomInValue: boolean) => {
       setWidget((widget) => {
@@ -369,17 +403,23 @@ export const CloudViewWidget = React.memo(
                     : 'Error while rendering widget'
                   : undefined
               }
+              formatData={
+                isBytes
+                  ? (data: number) => convertBytesToUnit(data * 8, currentUnit)
+                  : undefined
+              }
               ariaLabel={props.ariaLabel ? props.ariaLabel : ''}
               data={data}
+              formatTooltip={isBytes ? formatToolTip : undefined}
               gridSize={widget.size}
               legendRows={legendRows}
               loading={isLoading}
               nativeLegend={true}
               showToday={today}
-              subtitle={props.unit}
+              subtitle={currentUnit}
               timezone={timezone}
               title={convertStringToCamelCasesWithSpaces(props.widget.label)}
-              unit={' ' + props.unit}
+              unit={!isBytes ? ` ${currentUnit}` : undefined}
             />
           </div>
         </Paper>
