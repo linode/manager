@@ -10,7 +10,7 @@ export const linkAnalyticsEvent: ResourcesLinks['linkAnalyticsEvent'] = {
   category: 'Create Using Command Line Terraform Getting Started Resources',
 };
 
-const gettingStartedGuides: ResourcesLinks['links'] = [
+export const gettingStartedGuides: ResourcesLinks['links'] = [
   {
     text: `A Beginner's Guide to Terraform`,
     to: 'https://www.linode.com/docs/guides/beginners-guide-to-terraform/',

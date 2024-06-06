@@ -10,7 +10,7 @@ export const linkAnalyticsEvent: ResourcesLinks['linkAnalyticsEvent'] = {
   category: 'Create Using Command Line Python SDK Installation and Usage',
 };
 
-const gettingStartedGuides: ResourcesLinks['links'] = [
+export const gettingStartedGuides: ResourcesLinks['links'] = [
   {
     text: 'Official python library for the Linode APIv4 in python',
     to: 'https://github.com/linode/linode_api4-python',

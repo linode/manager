@@ -10,7 +10,7 @@ export const linkAnalyticsEvent: ResourcesLinks['linkAnalyticsEvent'] = {
   category: 'Create Using Command Line Ansible Getting Started Resources',
 };
 
-const gettingStartedGuides: ResourcesLinks['links'] = [
+export const gettingStartedGuides: ResourcesLinks['links'] = [
   {
     text: 'Getting Started With Ansible: Basic Installation and Setup',
     to: 'https://www.linode.com/docs/guides/getting-started-with-ansible/',

@@ -10,7 +10,7 @@ export const linkAnalyticsEvent: ResourcesLinks['linkAnalyticsEvent'] = {
   category: 'Create Using Command Line Go SDK Installation and Documentation',
 };
 
-const gettingStartedGuides: ResourcesLinks['links'] = [
+export const gettingStartedGuides: ResourcesLinks['links'] = [
   {
     text: `Go client for Linode REST v4 API`,
     to: 'https://github.com/linode/linodego',
