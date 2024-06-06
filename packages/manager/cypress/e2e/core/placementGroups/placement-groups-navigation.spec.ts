@@ -7,10 +7,20 @@ import {
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockGetAccount } from 'support/intercepts/account';
+import { accountFactory } from 'src/factories';
 import { ui } from 'support/ui';
+
 import type { Flags } from 'src/featureFlags';
 
+const mockAccount = accountFactory.build();
+
 describe('Placement Groups navigation', () => {
+  // Mock User Account to include Placement Group capability
+  beforeEach(() => {
+    mockGetAccount(mockAccount).as('getAccount');
+  });
+
   /*
    * - Confirms that Placement Groups navigation item is shown when feature flag is enabled.
    * - Confirms that clicking Placement Groups navigation item directs user to Placement Groups landing page.
