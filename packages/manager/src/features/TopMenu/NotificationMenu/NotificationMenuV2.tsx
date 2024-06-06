@@ -18,9 +18,10 @@ import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotificatio
 import { usePrevious } from 'src/hooks/usePrevious';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMarkEventsAsSeen } from 'src/queries/events/events';
-import { ThunkDispatch } from 'src/store/types';
 
 import { TopMenuTooltip, topMenuIconButtonSx } from '../TopMenuTooltip';
+
+import type { ThunkDispatch } from 'src/store/types';
 
 const StyledChip = styled(Chip)(() => ({
   '& .MuiChip-label': {
@@ -131,7 +132,7 @@ export const NotificationMenuV2 = () => {
         open={notificationContext.menuOpen}
       >
         <Notifications />
-        <EventsV2 />
+        <EventsV2 eventNotifications={eventNotifications} />
       </Popover>
     </>
   );

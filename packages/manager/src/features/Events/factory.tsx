@@ -6,6 +6,7 @@ import * as factories from './factories';
 
 import type { EventMap, OptionalEventMap } from './types';
 import type { Event } from '@linode/api-v4';
+import type { QueryClient } from '@tanstack/react-query';
 
 /**
  * The event Message Mapper
@@ -15,10 +16,13 @@ import type { Event } from '@linode/api-v4';
  */
 
 const wrapWithTypography = (
-  Component: (e: Partial<Event>) => JSX.Element | string
+  Component: (
+    e: Partial<Event>,
+    queryClient: QueryClient
+  ) => JSX.Element | string
 ) => {
-  return (e: Partial<Event>) => {
-    const result = Component(e);
+  return (e: Partial<Event>, queryClient: QueryClient) => {
+    const result = Component(e, queryClient);
     return <Typography component="span">{result}</Typography>;
   };
 };

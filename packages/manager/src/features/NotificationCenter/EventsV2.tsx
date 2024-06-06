@@ -1,16 +1,19 @@
 import * as React from 'react';
 
-import { useEventNotificationsV2 } from './NotificationData/useEventNotificationsV2';
 import { NotificationSection } from './NotificationSection';
+
+import type { NotificationItem } from './NotificationSection';
 
 const NUM_EVENTS_DISPLAY = 20;
 
-export const EventsV2 = () => {
-  const events = useEventNotificationsV2();
+interface EventsV2Props {
+  eventNotifications: NotificationItem[];
+}
 
+export const EventsV2 = ({ eventNotifications }: EventsV2Props) => {
   return (
     <NotificationSection
-      content={events.slice(0, NUM_EVENTS_DISPLAY)}
+      content={eventNotifications.slice(0, NUM_EVENTS_DISPLAY)}
       count={NUM_EVENTS_DISPLAY}
       emptyMessage="No recent events to display."
       header="Events"
