@@ -1,9 +1,4 @@
 import {
-  Profile,
-  SSHKey,
-  SendPhoneVerificationCodePayload,
-  TrustedDevice,
-  VerifyVerificationCodePayload,
   createSSHKey,
   deleteSSHKey,
   deleteTrustedDevice,
@@ -12,30 +7,36 @@ import {
   getPersonalAccessTokens,
   getProfile,
   getSSHKeys,
+  getSecurityQuestions,
   getTrustedDevices,
+  getUserPreferences,
   listGrants,
   sendCodeToPhoneNumber,
   smsOptOut,
   updateProfile,
   updateSSHKey,
   verifyPhoneNumberCode,
-} from '@linode/api-v4/lib/profile';
-import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
+import { accountQueries } from '../account/queries';
+import { queryPresets } from '../base';
 
-import { Grants } from '../../../api-v4/lib';
-import { accountQueries } from './account/queries';
-import { queryPresets } from './base';
-
-import type { RequestOptions } from '@linode/api-v4';
+import type {
+  Filter,
+  Grants,
+  Params,
+  Profile,
+  RequestOptions,
+  ResourcePage,
+  SSHKey,
+  SendPhoneVerificationCodePayload,
+  TrustedDevice,
+  VerifyVerificationCodePayload,
+} from '@linode/api-v4';
+import type { QueryClient } from '@tanstack/react-query';
+import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const profileQueries = createQueryKeys('profile', {
@@ -51,10 +52,18 @@ export const profileQueries = createQueryKeys('profile', {
     queryFn: () => getPersonalAccessTokens(params, filter),
     queryKey: [params, filter],
   }),
+  preferences: {
+    queryFn: getUserPreferences,
+    queryKey: null,
+  },
   profile: (options: RequestOptions = {}) => ({
     queryFn: () => getProfile(options),
     queryKey: [options],
   }),
+  securityQuestions: {
+    queryFn: getSecurityQuestions,
+    queryKey: null,
+  },
   sshKeys: (params: Params = {}, filter: Filter = {}) => ({
     queryFn: () => getSSHKeys(params, filter),
     queryKey: [params, filter],

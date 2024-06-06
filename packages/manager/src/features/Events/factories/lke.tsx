@@ -82,7 +82,8 @@ export const lke: PartialEventMap<'lke'> = {
     // The entity is the node pool, but entity.label contains the cluster's label.
     notification: (e) => (
       <>
-        Kubernetes Cluster node could <strong>not</strong> be <strong>created</strong>
+        Kubernetes Cluster node could <strong>not</strong> be{' '}
+        <strong>created</strong>
         {e.entity?.label ? ' on ' : ''}
         <EventLink event={e} to="entity" />.
       </>

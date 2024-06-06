@@ -1,49 +1,36 @@
-import {
-  getUserPreferences,
-  updateUserPreferences,
-} from '@linode/api-v4/lib/profile';
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { updateUserPreferences } from '@linode/api-v4';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { ManagerPreferences } from 'src/types/ManagerPreferences';
+import { queryPresets } from '../base';
+import { profileQueries } from './profile';
 
-import { queryPresets } from './base';
-
+import type { QueryClient } from '@tanstack/react-query';
 import type { FormattedAPIError } from 'src/types/FormattedAPIError';
-
-export const queryKey = 'preferences';
+import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 export const usePreferences = (enabled = true) =>
-  useQuery<ManagerPreferences, FormattedAPIError[]>(
-    [queryKey],
-    getUserPreferences,
-    {
-      ...queryPresets.oneTimeFetch,
-      enabled,
-    }
-  );
+  useQuery<ManagerPreferences, FormattedAPIError[]>({
+    ...profileQueries.preferences,
+    ...queryPresets.oneTimeFetch,
+    enabled,
+  });
 
 export const useMutatePreferences = (replace = false) => {
   const { data: preferences } = usePreferences(!replace);
   const queryClient = useQueryClient();
+
   return useMutation<
     ManagerPreferences,
     FormattedAPIError[],
     Partial<ManagerPreferences>
-  >(
-    (data) =>
+  >({
+    mutationFn: (data) =>
       updateUserPreferences({
         ...(!replace && preferences !== undefined ? preferences : {}),
         ...data,
       }),
-    {
-      onMutate: (data) => updatePreferenceData(data, replace, queryClient),
-    }
-  );
+    onMutate: (data) => updatePreferenceData(data, replace, queryClient),
+  });
 };
 
 export const updatePreferenceData = (
@@ -52,8 +39,8 @@ export const updatePreferenceData = (
   queryClient: QueryClient
 ): void => {
   queryClient.setQueryData<ManagerPreferences>(
-    [queryKey],
-    (oldData: ManagerPreferences) => ({
+    profileQueries.preferences.queryKey,
+    (oldData) => ({
       ...(!replace ? oldData : {}),
       ...newData,
     })

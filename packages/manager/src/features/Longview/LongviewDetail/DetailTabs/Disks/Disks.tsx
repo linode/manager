@@ -1,8 +1,8 @@
 import * as React from 'react';
 
+import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { LandingLoading } from 'src/components/LandingLoading/LandingLoading';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
 import { WithStartAndEnd } from '../../../request.types';
@@ -65,7 +65,7 @@ const Disks = (props: Props) => {
     }
 
     if (loading && Object.keys(diskData).length === 0) {
-      return <LandingLoading />;
+      return <CircleProgress />;
     }
     /*
       Longview doesn't return the Disk stats in any particular order, so sort them

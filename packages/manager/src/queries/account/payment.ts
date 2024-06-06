@@ -5,7 +5,7 @@ import {
 } from '@linode/api-v4/lib/account';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { useGrants } from 'src/queries/profile';
+import { useGrants } from 'src/queries/profile/profile';
 
 import { queryPresets } from '../base';
 import { accountQueries } from './queries';

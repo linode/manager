@@ -13,7 +13,7 @@ import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { queryPresets } from '../base';
-import { profileQueries } from '../profile';
+import { profileQueries } from '../profile/profile';
 import {
   getAllDatabaseEngines,
   getAllDatabaseTypes,

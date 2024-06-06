@@ -1,4 +1,3 @@
-import { Profile } from '@linode/api-v4/lib/profile';
 import { useTheme } from '@mui/material/styles';
 import { equals, lensPath, remove, set } from 'ramda';
 import * as React from 'react';
@@ -7,17 +6,19 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import { FormControl } from 'src/components/FormControl';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useMutateProfile, useProfile } from 'src/queries/profile';
+import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
+import type { Profile } from '@linode/api-v4/lib/profile';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const LishSettings = () => {

@@ -251,7 +251,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                */}
               {gettingMoreStackScripts && !isSorting && (
                 <div style={{ margin: '32px 0 32px 0', textAlign: 'center' }}>
-                  <CircleProgress mini />
+                  <CircleProgress size="sm" />
                 </div>
               )}
             </React.Fragment>

@@ -8,8 +8,10 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
 
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useIsTaxIdEnabled } from 'src/features/Account/utils';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 
 import { queryPresets } from '../base';
 import { accountQueries } from './queries';
@@ -36,12 +38,43 @@ export const useAccount = () => {
 
 export const useMutateAccount = () => {
   const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
+  const { isTaxIdEnabled } = useIsTaxIdEnabled();
 
   return useMutation<Account, FormattedAPIError[], Partial<Account>>(
     updateAccountInfo,
     {
       onSuccess(account) {
-        queryClient.setQueryData(accountQueries.account.queryKey, account);
+        queryClient.setQueryData<Account | undefined>(
+          accountQueries.account.queryKey,
+          (prevAccount) => {
+            if (!prevAccount) {
+              return account;
+            }
+
+            if (
+              isTaxIdEnabled &&
+              account.tax_id &&
+              account.country !== 'US' &&
+              prevAccount?.tax_id !== account.tax_id
+            ) {
+              enqueueSnackbar(
+                "You edited the Tax Identification Number. It's being verified. You'll get an email with the verification result.",
+                {
+                  hideIconVariant: false,
+                  style: {
+                    display: 'flex',
+                    flexWrap: 'nowrap',
+                    width: '372px',
+                  },
+                  variant: 'info',
+                }
+              );
+            }
+
+            return account;
+          }
+        );
       },
     }
   );

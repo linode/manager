@@ -32,7 +32,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
-import { profileQueries } from './profile';
+import { profileQueries } from './profile/profile';
 
 import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 

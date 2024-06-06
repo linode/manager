@@ -1,15 +1,11 @@
-import { Account, Grant } from '@linode/api-v4/lib/account';
 import {
-  StackScript,
-  StackScriptPayload,
   createStackScript,
   getStackScript,
   updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
-import { QueryClient } from '@tanstack/react-query';
 import { equals } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { debounce } from 'throttle-debounce';
 
@@ -17,27 +13,31 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { WithImagesProps, withImages } from 'src/containers/images.container';
-import {
-  WithProfileProps,
-  withProfile,
-} from 'src/containers/profile.container';
-import {
-  WithQueryClientProps,
-  withQueryClient,
-} from 'src/containers/withQueryClient.container';
+import { withImages } from 'src/containers/images.container';
+import { withProfile } from 'src/containers/profile.container';
+import { withQueryClient } from 'src/containers/withQueryClient.container';
 import { StackScriptForm } from 'src/features/StackScripts/StackScriptForm/StackScriptForm';
-import { profileQueries } from 'src/queries/profile';
+import { profileQueries } from 'src/queries/profile/profile';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 
+import type { Account, Grant } from '@linode/api-v4/lib/account';
+import type {
+  StackScript,
+  StackScriptPayload,
+} from '@linode/api-v4/lib/stackscripts';
+import type { QueryClient } from '@tanstack/react-query';
+import type { RouteComponentProps } from 'react-router-dom';
+import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { WithImagesProps } from 'src/containers/images.container';
+import type { WithProfileProps } from 'src/containers/profile.container';
+import type { WithQueryClientProps } from 'src/containers/withQueryClient.container';
 import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface State {

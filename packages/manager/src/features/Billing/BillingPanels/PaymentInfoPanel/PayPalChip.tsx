@@ -162,7 +162,7 @@ export const PayPalChip = (props: Props) => {
   if (isLoading || isPending || !options['data-client-token']) {
     return (
       <Grid>
-        <CircleProgress mini />
+        <CircleProgress size="sm" />
       </Grid>
     );
   }

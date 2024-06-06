@@ -5,8 +5,8 @@ import * as React from 'react';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { profileQueries } from 'src/queries/profile';
-import { useSecurityQuestions } from 'src/queries/securityQuestions';
+import { profileQueries } from 'src/queries/profile/profile';
+import { useSecurityQuestions } from 'src/queries/profile/securityQuestions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 

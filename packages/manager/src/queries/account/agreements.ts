@@ -2,7 +2,7 @@ import { signAgreement } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { reportException } from 'src/exceptionReporting';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 
 import { queryPresets } from '../base';
 import { accountQueries } from './queries';

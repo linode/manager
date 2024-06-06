@@ -7,7 +7,7 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
-import { CircularProgress } from 'src/components/CircularProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
@@ -21,7 +21,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { UseAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountSettings } from 'src/queries/account/settings';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -167,7 +167,7 @@ export const LongviewPlans = (props: LongviewPlansProps) => {
     !mayUserModifyLVSubscription;
 
   if (!profile) {
-    return <CircularProgress data-testid="loading" />;
+    return <CircleProgress />;
   }
 
   return (

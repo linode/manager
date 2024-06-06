@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useCreateVPCMutation } from 'src/queries/vpcs/vpcs';
 import {

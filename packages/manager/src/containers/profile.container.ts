@@ -2,7 +2,7 @@ import { Grants, Profile } from '@linode/api-v4/lib';
 import { UseQueryResult } from '@tanstack/react-query';
 import * as React from 'react';
 
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 
 import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 

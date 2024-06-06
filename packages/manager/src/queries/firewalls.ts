@@ -22,7 +22,7 @@ import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { getAll } from 'src/utilities/getAll';
 
 import { updateInPaginatedStore } from './base';
-import { profileQueries } from './profile';
+import { profileQueries } from './profile/profile';
 
 import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 

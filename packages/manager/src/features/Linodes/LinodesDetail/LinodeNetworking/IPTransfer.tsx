@@ -513,7 +513,7 @@ export const IPTransfer = (props: Props) => {
         ) : null}
         {(isLoading || ipv6RangesLoading) && searchText === '' ? (
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <CircleProgress mini />
+            <CircleProgress size="sm" />
           </div>
         ) : (
           <>

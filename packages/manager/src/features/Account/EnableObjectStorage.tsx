@@ -1,4 +1,3 @@
-import { AccountSettings } from '@linode/api-v4/lib/account';
 import { cancelObjectStorage } from '@linode/api-v4/lib/object-storage';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
@@ -12,8 +11,9 @@ import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToCo
 import { Typography } from 'src/components/Typography';
 import { updateAccountSettingsData } from 'src/queries/account/settings';
 import { queryKey } from 'src/queries/objectStorage';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 
+import type { AccountSettings } from '@linode/api-v4/lib/account';
 import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 interface Props {
   object_storage: AccountSettings['object_storage'];

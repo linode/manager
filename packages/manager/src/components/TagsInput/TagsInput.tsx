@@ -6,7 +6,7 @@ import Select, {
   Item,
   NoOptionsMessageProps,
 } from 'src/components/EnhancedSelect/Select';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
 import { getErrorMap } from 'src/utilities/errorUtils';
 

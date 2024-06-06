@@ -1,4 +1,4 @@
-import { act, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -82,10 +82,8 @@ describe('EditCertificateDrawer', () => {
     expect(labelInput).toHaveDisplayValue(mockCACertificate.label);
     expect(certInput).toHaveDisplayValue(mockCACertificate.certificate.trim());
 
-    await act(async () => {
-      await userEvent.type(labelInput, 'my-updated-cert-0');
-      await userEvent.click(getByTestId('submit'));
-    });
+    await userEvent.type(labelInput, 'my-updated-cert-0');
+    await userEvent.click(getByTestId('submit'));
 
     await waitFor(() => expect(onClose).toBeCalled());
   });
@@ -105,13 +103,10 @@ describe('EditCertificateDrawer', () => {
     const certInput = getByLabelText('TLS Certificate');
     const keyInput = getByLabelText('Private Key');
 
-    await act(async () => {
-      await userEvent.type(labelInput, 'my-cert-0');
-      await userEvent.type(certInput, 'massive cert');
-      await userEvent.type(keyInput, 'massive key');
-
-      await userEvent.click(getByTestId('submit'));
-    });
+    await userEvent.type(labelInput, 'my-cert-0');
+    await userEvent.type(certInput, 'massive cert');
+    await userEvent.type(keyInput, 'massive key');
+    await userEvent.click(getByTestId('submit'));
 
     await waitFor(() => expect(onClose).toBeCalled());
   });

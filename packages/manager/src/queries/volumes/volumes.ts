@@ -28,7 +28,7 @@ import {
 
 import { accountQueries } from '../account/queries';
 import { queryPresets } from '../base';
-import { profileQueries } from '../profile';
+import { profileQueries } from '../profile/profile';
 import { getAllVolumeTypes, getAllVolumes } from './requests';
 
 import type { FormattedAPIError } from 'src/types/FormattedAPIError';

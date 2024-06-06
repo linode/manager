@@ -16,7 +16,7 @@ import {
   useProfile,
   useSendPhoneVerificationCodeMutation,
   useVerifyPhoneVerificationCodeMutation,
-} from 'src/queries/profile';
+} from 'src/queries/profile/profile';
 
 import { countries } from './countries';
 import { getCountryFlag, getCountryName, getFormattedNumber } from './helpers';

@@ -27,7 +27,7 @@ import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';

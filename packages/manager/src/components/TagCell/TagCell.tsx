@@ -132,7 +132,7 @@ export const TagCell = (props: TagCellProps) => {
           >
             {loading ? (
               <StyledCircleDiv>
-                <CircleProgress mini />
+                <CircleProgress size="sm" />
               </StyledCircleDiv>
             ) : null}
             {tags.map((thisTag) => (

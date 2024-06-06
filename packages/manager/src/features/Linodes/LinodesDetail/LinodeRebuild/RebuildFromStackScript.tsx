@@ -24,7 +24,7 @@ import { useStackScript } from 'src/hooks/useStackScript';
 import { listToItemsByID } from 'src/queries/base';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
-import { usePreferences } from 'src/queries/preferences';
+import { usePreferences } from 'src/queries/profile/preferences';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {

@@ -10,7 +10,7 @@ import { DispatchProps } from 'src/containers/longview.container';
 import withClientStats, {
   Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import { formatUptime } from 'src/utilities/formatUptime';

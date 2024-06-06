@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 

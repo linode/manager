@@ -34,7 +34,7 @@ const PaymentMethods = ({
           justifyContent: 'center',
         }}
       >
-        <CircleProgress mini />
+        <CircleProgress size="sm" />
       </Grid>
     );
   }

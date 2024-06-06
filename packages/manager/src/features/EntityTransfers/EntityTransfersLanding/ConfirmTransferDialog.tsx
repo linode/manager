@@ -16,7 +16,7 @@ import {
   queryKey,
   useTransferQuery,
 } from 'src/queries/entityTransfers';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { sendEntityTransferReceiveEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { capitalize } from 'src/utilities/capitalize';
 import { parseAPIDate } from 'src/utilities/date';

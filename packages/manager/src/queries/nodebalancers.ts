@@ -34,7 +34,7 @@ import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
 import { itemInListCreationHandler, itemInListMutationHandler } from './base';
-import { profileQueries } from './profile';
+import { profileQueries } from './profile/profile';
 
 import type {
   Filter,
