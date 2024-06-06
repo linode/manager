@@ -13,6 +13,7 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import { SupportTicketDialog } from './SupportTicketDialog';
 import TicketList from './TicketList';
+import { SupportTicketDialogV2 } from './SupportTicketDialogV2';
 
 const tabs = ['open', 'closed'];
 
@@ -93,7 +94,7 @@ const SupportTicketsLanding = () => {
           </TabPanel>
         </TabPanels>
       </Tabs>
-      <SupportTicketDialog
+      <SupportTicketDialogV2
         onClose={() => setDrawerOpen(false)}
         onSuccess={handleAddTicketSuccess}
         open={drawerOpen}

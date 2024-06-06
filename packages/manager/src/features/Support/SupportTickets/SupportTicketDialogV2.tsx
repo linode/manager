@@ -1,7 +1,6 @@
-import { uploadAttachment } from '@linode/api-v4/lib/support';
-import { update } from 'ramda';
+import { FormHelperText } from '@mui/material';
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
@@ -9,12 +8,10 @@ import { Accordion } from 'src/components/Accordion';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import { FormHelperText } from 'src/components/FormHelperText';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useAccount } from 'src/queries/account/account';
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
@@ -23,20 +20,14 @@ import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useCreateSupportTicketMutation } from 'src/queries/support';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
-import {
-  getAPIErrorOrDefault,
-  getErrorMap,
-  getErrorStringOrDefault,
-} from 'src/utilities/errorUtils';
-import { reduceAsync } from 'src/utilities/reduceAsync';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 
-import { AttachFileForm } from '../AttachFileForm';
 import { MarkdownReference } from '../SupportTicketDetail/TabbedReply/MarkdownReference';
 import { TabbedReply } from '../SupportTicketDetail/TabbedReply/TabbedReply';
 import { TICKET_SEVERITY_TOOLTIP_TEXT } from './constants';
-import SupportTicketSMTPFields, {
+import {
   fieldNameToLabelMap,
   smtpDialogTitle,
   smtpHelperText,
@@ -174,7 +165,7 @@ export const getInitialValue = (
   return fromProps ?? fromStorage ?? '';
 };
 
-export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
+export const SupportTicketDialogV2 = (props: SupportTicketDialogProps) => {
   const {
     open,
     prefilledDescription,
@@ -183,8 +174,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTitle,
   } = props;
 
-  const { data: account } = useAccount();
-
   const hasSeverityCapability = useTicketSeverityCapability();
 
   interface SupportTicketFormData {
@@ -192,58 +181,42 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     entityId: string;
     entityInputValue: string;
     entityType: EntityType;
+    files: FileAttachment[];
     selectedSeverity: TicketSeverity | undefined;
     summary: string;
     ticketType: TicketType;
   }
 
+  const valuesFromStorage = storage.supportText.get();
+
+  // Ticket information
   const form = useForm<SupportTicketFormData>({
     defaultValues: {
-      description: prefilledDescription,
+      description: getInitialValue(
+        prefilledDescription,
+        valuesFromStorage.description
+      ),
       entityId: prefilledEntity ? String(prefilledEntity.id) : '',
       entityInputValue: '',
       entityType: prefilledEntity?.type ?? 'general',
-      summary: prefilledTitle,
+      files: [],
+      selectedSeverity: undefined,
+      summary: getInitialValue(prefilledTitle, valuesFromStorage.title),
       ticketType: prefilledTicketType ?? 'general',
     },
   });
 
-  const valuesFromStorage = storage.supportText.get();
-
-  // Ticket information
-  const [summary, setSummary] = React.useState<string>(
-    getInitialValue(prefilledTitle, valuesFromStorage.title)
-  );
-  const [
+  const {
+    description,
+    entityId,
+    entityInputValue,
+    entityType,
     selectedSeverity,
-    setSelectedSeverity,
-  ] = React.useState<TicketSeverity>();
-  const [description, setDescription] = React.useState<string>(
-    getInitialValue(prefilledDescription, valuesFromStorage.description)
-  );
-  const [entityType, setEntityType] = React.useState<EntityType>(
-    prefilledEntity?.type ?? 'general'
-  );
-  const [entityInputValue, setEntityInputValue] = React.useState<string>('');
-  const [entityID, setEntityID] = React.useState<string>(
-    prefilledEntity ? String(prefilledEntity.id) : ''
-  );
-  const [ticketType, setTicketType] = React.useState<TicketType>(
-    prefilledTicketType ?? 'general'
-  );
-
-  // SMTP ticket information
-  const [smtpFields, setSMTPFields] = React.useState({
-    companyName: '',
-    customerName: account ? `${account?.first_name} ${account?.last_name}` : '',
-    emailDomains: '',
-    publicInfo: '',
-    useCase: '',
-  });
+    summary,
+    ticketType,
+  } = form.getValues();
 
   const { mutateAsync: createSupportTicket } = useCreateSupportTicketMutation();
-
-  const [files, setFiles] = React.useState<FileAttachment[]>([]);
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
@@ -261,24 +234,24 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     data: databases,
     error: databasesError,
     isLoading: databasesLoading,
-  } = useAllDatabasesQuery(entityType === 'database_id');
+  } = useAllDatabasesQuery(prefilledEntity?.type === 'database_id');
 
   const {
     data: firewalls,
     error: firewallsError,
     isLoading: firewallsLoading,
-  } = useAllFirewallsQuery(entityType === 'firewall_id');
+  } = useAllFirewallsQuery(prefilledEntity?.type === 'firewall_id');
 
   const {
     data: domains,
     error: domainsError,
     isLoading: domainsLoading,
-  } = useAllDomainsQuery(entityType === 'domain_id');
+  } = useAllDomainsQuery(prefilledEntity?.type === 'domain_id');
   const {
     data: nodebalancers,
     error: nodebalancersError,
     isLoading: nodebalancersLoading,
-  } = useAllNodeBalancersQuery(entityType === 'nodebalancer_id');
+  } = useAllNodeBalancersQuery(prefilledEntity?.type === 'nodebalancer_id');
 
   const {
     data: clusters,
@@ -315,50 +288,14 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
      * Clear the drawer completely if clearValues is passed (as in when closing the drawer)
      * or reset to the default values (from props or localStorage) otherwise.
      */
-    const _summary = clearValues
-      ? ''
-      : getInitialValue(prefilledTitle, valuesFromStorage.title);
-    const _description = clearValues
-      ? ''
-      : getInitialValue(prefilledDescription, valuesFromStorage.description);
-    setSummary(_summary);
-    setDescription(_description);
-    setEntityID('');
-    setEntityType('general');
-    setTicketType('general');
   };
 
   const resetDrawer = (clearValues: boolean = false) => {
     resetTicket(clearValues);
-    setFiles([]);
 
     if (clearValues) {
       saveText('', '');
     }
-  };
-
-  const handleSummaryInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSummary(e.target.value);
-  };
-
-  const handleDescriptionInputChange = (value: string) => {
-    setDescription(value);
-    // setErrors?
-  };
-
-  const handleEntityTypeChange = (type: EntityType) => {
-    // Don't reset things if the type hasn't changed
-    if (type === entityType) {
-      return;
-    }
-    setEntityType(type);
-    setEntityID('');
-    setEntityInputValue('');
-  };
-
-  const handleSMTPFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setSMTPFields((smtpFields) => ({ ...smtpFields, [name]: value }));
   };
 
   /**
@@ -386,118 +323,40 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     window.setTimeout(() => resetDrawer(true), 500);
   };
 
-  const updateFiles = (newFiles: FileAttachment[]) => {
-    setFiles(newFiles);
-  };
-
-  /* Reducer passed into reduceAsync (previously Bluebird.reduce) below.
-   * Unfortunately, this reducer has side effects. Uploads each file and accumulates a list of
-   * any upload errors. Also tracks loading state of each individual file. */
-  const attachFileReducer = (
-    accumulator: Accumulator,
-    attachment: AttachmentWithTarget,
-    idx: number
-  ) => {
-    return uploadAttachment(attachment.ticketId, attachment.file)
-      .then(() => {
-        /* null out an uploaded file after upload */
-        setFiles((oldFiles: FileAttachment[]) =>
-          update(
-            idx,
-            { file: null, name: '', uploaded: true, uploading: false },
-            oldFiles
-          )
-        );
-        return accumulator;
-      })
-      .catch((attachmentErrors) => {
-        /*
-         * Note! We want the first few uploads to succeed even if the last few
-         * fail! Don't try to aggregate errors!
-         */
-        setFiles((oldFiles) =>
-          update(idx, { ...oldFiles[idx], uploading: false }, oldFiles)
-        );
-        const newError = getErrorStringOrDefault(
-          attachmentErrors,
-          'There was an error attaching this file. Please try again.'
-        );
-        return {
-          ...accumulator,
-          errors: [
-            ...accumulator.errors,
-            { error: newError, file: attachment.file.get('name') },
-          ],
-        };
-      });
-  };
-
-  /* Called after the ticket is successfully completed. */
-  const attachFiles = (ticketId: number) => {
-    const filesWithTarget: AttachmentWithTarget[] = files
-      .filter((file) => !file.uploaded)
-      .map((file, idx) => {
-        setFiles((oldFiles) =>
-          update(idx, { ...oldFiles[idx], uploading: true }, oldFiles)
-        );
-        const formData = new FormData();
-        formData.append('file', file.file ?? ''); // Safety check for TS only
-        formData.append('name', file.name);
-        return { file: formData, ticketId };
-      });
-
-    /* Upload each file as an attachment, and return a Promise that will resolve to
-     *  an array of aggregated errors that may have occurred for individual uploads. */
-    return reduceAsync(filesWithTarget, attachFileReducer, {
-      errors: [],
-      success: [],
-    });
-  };
-
   const onSubmit = () => {
-    const { onSuccess } = props;
-    const _description =
-      ticketType === 'smtp' ? formatDescription(smtpFields) : description;
-    if (!['general', 'none'].includes(entityType) && !entityID) {
-      setErrors([
-        {
-          field: 'input',
-          reason: `Please select a ${entityIdToNameMap[entityType]}.`,
-        },
-      ]);
-      return;
-    }
-    setErrors(undefined);
-    setSubmitting(true);
-
-    createSupportTicket({
-      description: _description,
-      [entityType]: Number(entityID),
-      severity: selectedSeverity,
-      summary,
-    })
-      .then((response) => {
-        setErrors(undefined);
-        setSubmitting(false);
-        window.setTimeout(() => resetDrawer(true), 500);
-        return response;
-      })
-      .then((response) => {
-        attachFiles(response!.id).then(({ errors: _errors }: Accumulator) => {
-          if (!props.keepOpenOnSuccess) {
-            close();
-          }
-          /* Errors will be an array of errors, or empty if all attachments succeeded. */
-          onSuccess(response!.id, _errors);
-        });
-      })
-      .catch((errResponse) => {
-        /* This block will only handle errors in creating the actual ticket; attachment
-         * errors are handled above. */
-        setErrors(getAPIErrorOrDefault(errResponse));
-        setSubmitting(false);
-        scrollErrorIntoView();
-      });
+    //console.log(form.getValues());
+    // const { onSuccess } = props;
+    // const _description = description;
+    // if (!['general', 'none'].includes(entityType) && !entityId) {
+    //   setErrors([
+    //     {
+    //       field: 'input',
+    //       reason: `Please select a ${entityIdToNameMap[entityType]}.`,
+    //     },
+    //   ]);
+    //   return;
+    // }
+    // setErrors(undefined);
+    // setSubmitting(true);
+    // createSupportTicket({
+    //   description: _description,
+    //   [entityType]: Number(entityId),
+    //   severity: selectedSeverity,
+    //   summary,
+    // })
+    //   .then((response) => {
+    //     setErrors(undefined);
+    //     setSubmitting(false);
+    //     window.setTimeout(() => resetDrawer(true), 500);
+    //     return response;
+    //   })
+    //   .catch((errResponse) => {
+    //     /* This block will only handle errors in creating the actual ticket; attachment
+    //      * errors are handled above. */
+    //     setErrors(getAPIErrorOrDefault(errResponse));
+    //     setSubmitting(false);
+    //     scrollErrorIntoView();
+    //   });
   };
 
   const renderEntityTypes = () => {
@@ -505,15 +364,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       return { label: key, value: entityMap[key] };
     });
   };
-
-  const smtpRequirementsMet =
-    smtpFields.customerName.length > 0 &&
-    smtpFields.useCase.length > 0 &&
-    smtpFields.emailDomains.length > 0 &&
-    smtpFields.publicInfo.length > 0;
-  const requirementsMet =
-    summary.length > 0 &&
-    (ticketType === 'smtp' ? smtpRequirementsMet : description.length > 0);
 
   const hasErrorFor = getErrorMap(['summary', 'description', 'input'], errors);
   const summaryError = hasErrorFor.summary;
@@ -596,7 +446,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     : undefined;
 
   const selectedEntity =
-    entityOptions.find((thisEntity) => String(thisEntity.value) === entityID) ||
+    entityOptions.find((thisEntity) => String(thisEntity.value) === entityId) ||
     null;
 
   const selectedSeverityLabel =
@@ -610,85 +460,104 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       : undefined;
 
   return (
-    <Dialog
-      fullHeight
-      fullWidth
-      onClose={close}
-      open={open}
-      title={ticketTypeMap[ticketType].dialogTitle}
-    >
-      {props.children || (
-        <React.Fragment>
-          {generalError && (
-            <Notice data-qa-notice text={generalError} variant="error" />
-          )}
+    <FormProvider {...form}>
+      <form onSubmit={onSubmit}>
+        <Dialog
+          fullHeight
+          fullWidth
+          onClose={close}
+          open={open}
+          title={ticketTypeMap[ticketType].dialogTitle}
+        >
+          {props.children || (
+            <>
+              {generalError && (
+                <Notice data-qa-notice text={generalError} variant="error" />
+              )}
 
-          <Typography data-qa-support-ticket-helper-text>
-            {ticketTypeMap[ticketType].helperText}
-          </Typography>
-          <TextField
-            data-qa-ticket-summary
-            errorText={summaryError}
-            inputProps={{ maxLength: 64 }}
-            label="Title"
-            onChange={handleSummaryInputChange}
-            placeholder="Enter a title for your ticket."
-            required
-            value={summary}
-          />
-          {hasSeverityCapability && (
-            <Autocomplete
-              onChange={(e, severity) =>
-                setSelectedSeverity(
-                  severity != null ? severity.value : undefined
-                )
-              }
-              textFieldProps={{
-                tooltipPosition: 'right',
-                tooltipText: TICKET_SEVERITY_TOOLTIP_TEXT,
-              }}
-              autoHighlight
-              clearOnBlur
-              data-qa-ticket-severity
-              label="Severity"
-              options={severityOptions}
-              sx={{ maxWidth: 'initial' }}
-              value={selectedSeverityOption ?? null}
-            />
-          )}
-          {ticketType === 'smtp' ? (
-            <SupportTicketSMTPFields
-              formState={smtpFields}
-              handleChange={handleSMTPFieldChange}
-            />
-          ) : (
-            <React.Fragment>
-              {props.hideProductSelection ? null : (
-                <React.Fragment>
+              <Typography data-qa-support-ticket-helper-text>
+                {ticketTypeMap[ticketType].helperText}
+              </Typography>
+              <Controller
+                render={({ field }) => (
+                  <TextField
+                    data-qa-ticket-summary
+                    errorText={summaryError}
+                    inputProps={{ maxLength: 64 }}
+                    label="Title"
+                    onChange={field.onChange}
+                    placeholder="Enter a title for your ticket."
+                    required
+                    value={summary}
+                  />
+                )}
+                control={form.control}
+                name="summary"
+              />
+              <Controller
+                render={({ field }) => (
                   <Autocomplete
-                    data-qa-ticket-entity-type
-                    disableClearable
-                    label="What is this regarding?"
-                    onChange={(e, type) => handleEntityTypeChange(type.value)}
-                    options={topicOptions}
-                    value={selectedTopic}
+                    onChange={(e, severity) =>
+                      field.onChange(
+                        severity != null ? severity.value : undefined
+                      )
+                    }
+                    textFieldProps={{
+                      tooltipPosition: 'right',
+                      tooltipText: TICKET_SEVERITY_TOOLTIP_TEXT,
+                    }}
+                    autoHighlight
+                    clearOnBlur
+                    data-qa-ticket-severity
+                    label="Severity"
+                    options={severityOptions}
+                    sx={{ maxWidth: 'initial' }}
+                    value={selectedSeverityOption ?? null}
+                  />
+                )}
+                control={form.control}
+                name="selectedSeverity"
+              />
+              {props.hideProductSelection ? null : (
+                <>
+                  <Controller
+                    render={({ field }) => (
+                      <Autocomplete
+                        data-qa-ticket-entity-type
+                        disableClearable
+                        label="What is this regarding?"
+                        onChange={(_e, type) => field.onChange(type.value)}
+                        options={topicOptions}
+                        value={selectedTopic}
+                      />
+                    )}
+                    control={form.control}
+                    name="entityType"
                   />
                   {!['general', 'none'].includes(entityType) && (
                     <>
-                      <Autocomplete
-                        onChange={(e, id) =>
-                          setEntityID(id ? String(id?.value) : '')
-                        }
-                        data-qa-ticket-entity-id
-                        disabled={entityOptions.length === 0}
-                        errorText={entityError || inputError}
-                        inputValue={entityInputValue}
-                        label={entityIdToNameMap[entityType] ?? 'Entity Select'}
-                        loading={areEntitiesLoading}
-                        onInputChange={(e, value) => setEntityInputValue(value)}
-                        options={entityOptions}
-                        placeholder={`Select a ${entityIdToNameMap[entityType]}`}
-                        value={selectedEntity}
+                      <Controller
+                        render={({ field }) => (
+                          <Autocomplete
+                            label={
+                              entityIdToNameMap[entityType] ?? 'Entity Select'
+                            }
+                            onChange={(e, id) =>
+                              field.onChange(id ? String(id?.value) : '')
+                            }
+                            data-qa-ticket-entity-id
+                            disabled={entityOptions.length === 0}
+                            errorText={entityError || inputError}
+                            inputValue={entityInputValue}
+                            loading={areEntitiesLoading}
+                            onInputChange={(e, value) => field.onChange(value)}
+                            options={entityOptions}
+                            placeholder={`Select a ${entityIdToNameMap[entityType]}`}
+                            value={selectedEntity}
+                          />
+                        )}
+                        control={form.control}
+                        name="entityId"
                       />
                       {!areEntitiesLoading && entityOptions.length === 0 ? (
                         <FormHelperText>
@@ -698,18 +567,24 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                       ) : null}
                     </>
                   )}
-                </React.Fragment>
+                </>
               )}
-              <TabbedReply
-                placeholder={
-                  "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
-                }
-                error={descriptionError}
-                handleChange={handleDescriptionInputChange}
-                innerClass={classes.innerReply}
-                required
-                rootClass={classes.rootReply}
-                value={description}
+              <Controller
+                render={({ field }) => (
+                  <TabbedReply
+                    placeholder={
+                      "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
+                    }
+                    error={descriptionError}
+                    handleChange={field.onChange}
+                    innerClass={classes.innerReply}
+                    required
+                    rootClass={classes.rootReply}
+                    value={description}
+                  />
+                )}
+                control={form.control}
+                name="description"
               />
               <Accordion
                 detailProps={{ className: classes.expPanelSummary }}
@@ -717,26 +592,25 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               >
                 <MarkdownReference />
               </Accordion>
-              <AttachFileForm files={files} updateFiles={updateFiles} />
-            </React.Fragment>
+              <ActionsPanel
+                primaryButtonProps={{
+                  'data-testid': 'submit',
+                  //   disabled: !requirementsMet,
+                  label: 'Open Ticket',
+                  loading: submitting,
+                  onClick: onSubmit,
+                }}
+                secondaryButtonProps={{
+                  'data-testid': 'cancel',
+                  label: 'Cancel',
+                  onClick: onCancel,
+                }}
+                sx={{ display: 'flex', justifyContent: 'flex-end' }}
+              />
+            </>
           )}
-          <ActionsPanel
-            primaryButtonProps={{
-              'data-testid': 'submit',
-              disabled: !requirementsMet,
-              label: 'Open Ticket',
-              loading: submitting,
-              onClick: onSubmit,
-            }}
-            secondaryButtonProps={{
-              'data-testid': 'cancel',
-              label: 'Cancel',
-              onClick: onCancel,
-            }}
-            sx={{ display: 'flex', justifyContent: 'flex-end' }}
-          />
-        </React.Fragment>
-      )}
-    </Dialog>
+        </Dialog>
+      </form>
+    </FormProvider>
   );
 };
