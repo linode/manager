@@ -25,7 +25,7 @@ export const CardBaseGrid = styled(Grid, {
       : theme.bg.interactionBgPrimary,
     borderColor: props.checked
       ? theme.palette.primary.main
-      : theme.borderColors.borderHover, //
+      : theme.borderColors.borderHover,
   },
   alignItems: 'center',
   backgroundColor: props.checked

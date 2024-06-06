@@ -29,7 +29,6 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'placementGroups', label: 'Placement Groups' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
-  { flag: 'designTokens', label: 'Design Tokens' },
 ];
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {

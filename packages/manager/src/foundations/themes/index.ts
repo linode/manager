@@ -1,25 +1,17 @@
 import { createTheme } from '@mui/material/styles';
 
 import { latoWeb } from 'src/foundations/fonts';
-import { customDarkModeOptions, darkTheme } from 'src/foundations/themes/dark';
-import {
-  customDarkTokenModeOptions,
-  darkThemeTokens,
-} from 'src/foundations/themes/darkTokens';
+// Themes & Brands
+import { darkTheme } from 'src/foundations/themes/dark';
+// Types & Interfaces
+import { customDarkModeOptions } from 'src/foundations/themes/dark';
+import { lightTheme } from 'src/foundations/themes/light';
 import {
   bg,
   borderColors,
   color,
   textColors,
 } from 'src/foundations/themes/light';
-import { lightTheme } from 'src/foundations/themes/light';
-import { lightThemeTokens } from 'src/foundations/themes/lightTokens';
-import {
-  bg as bgTokens,
-  borderColors as borderColorsTokens,
-  color as colorTokens,
-  textColors as textColorsTokens,
-} from 'src/foundations/themes/lightTokens';
 import { deepMerge } from 'src/utilities/deepMerge';
 
 export type ThemeName = 'dark' | 'light';
@@ -32,44 +24,22 @@ type MergeTypes<A, B> = Omit<A, keyof B> &
 
 type LightModeColors = typeof color;
 type DarkModeColors = typeof customDarkModeOptions.color;
-type LightTokenModeColors = typeof colorTokens;
-type DarkTokenModeColors = typeof customDarkTokenModeOptions.color;
 
 type Colors = MergeTypes<LightModeColors, DarkModeColors>;
-type ColorsTokens = MergeTypes<LightTokenModeColors, DarkTokenModeColors>;
 
 type LightModeBgColors = typeof bg;
 type DarkModeBgColors = typeof customDarkModeOptions.bg;
-type LightModeBgColorsTokens = typeof bgTokens;
-type DarkModeBgColorsTokens = typeof customDarkTokenModeOptions.bg;
 
 type BgColors = MergeTypes<LightModeBgColors, DarkModeBgColors>;
-type BgColorsTokens = MergeTypes<
-  LightModeBgColorsTokens,
-  DarkModeBgColorsTokens
->;
 
 type LightModeTextColors = typeof textColors;
 type DarkModeTextColors = typeof customDarkModeOptions.textColors;
-type LightModeTextColorsTokens = typeof textColorsTokens;
-type DarkModeTextColorsTokens = typeof customDarkTokenModeOptions.textColors;
-
 type TextColors = MergeTypes<LightModeTextColors, DarkModeTextColors>;
-type TextColorsTokens = MergeTypes<
-  LightModeTextColorsTokens,
-  DarkModeTextColorsTokens
->;
 
 type LightModeBorderColors = typeof borderColors;
 type DarkModeBorderColors = typeof customDarkModeOptions.borderColors;
-type LightModeBorderColorsTokens = typeof borderColorsTokens;
-type DarkModeBorderColorsTokens = typeof customDarkTokenModeOptions.borderColors;
 
 type BorderColors = MergeTypes<LightModeBorderColors, DarkModeBorderColors>;
-type BorderColorsTokens = MergeTypes<
-  LightModeBorderColorsTokens,
-  DarkModeBorderColorsTokens
->;
 
 /**
  * Augmenting the Theme and ThemeOptions.
@@ -83,14 +53,14 @@ declare module '@mui/material/styles/createTheme' {
     applyLinkStyles?: any;
     applyStatusPillStyles?: any;
     applyTableHeaderStyles?: any;
-    bg: BgColors | BgColorsTokens;
-    borderColors: BorderColors | BorderColorsTokens;
-    color: Colors | ColorsTokens;
+    bg: BgColors;
+    borderColors: BorderColors;
+    color: Colors;
     font: Fonts;
     graphs: any;
-    inputStyles?: any;
+    inputStyles: any;
     name: ThemeName;
-    textColors: TextColors | TextColorsTokens;
+    textColors: TextColors;
     visually: any;
   }
 
@@ -100,37 +70,17 @@ declare module '@mui/material/styles/createTheme' {
     applyLinkStyles?: any;
     applyStatusPillStyles?: any;
     applyTableHeaderStyles?: any;
-    bg?:
-      | DarkModeBgColors
-      | DarkModeBgColorsTokens
-      | LightModeBgColors
-      | LightModeBgColorsTokens;
-    borderColors?:
-      | DarkModeBorderColors
-      | DarkModeBorderColorsTokens
-      | LightModeBorderColors
-      | LightModeBorderColorsTokens;
-    color?:
-      | DarkModeColors
-      | DarkTokenModeColors
-      | LightModeColors
-      | LightTokenModeColors;
+    bg?: DarkModeBgColors | LightModeBgColors;
+    borderColors?: DarkModeBorderColors | LightModeBorderColors;
+    color?: DarkModeColors | LightModeColors;
     font?: Fonts;
     graphs?: any;
     inputStyles?: any;
     name: ThemeName;
-    textColors?:
-      | DarkModeTextColors
-      | DarkModeTextColorsTokens
-      | LightModeTextColors
-      | LightModeTextColorsTokens;
+    textColors?: DarkModeTextColors | LightModeTextColors;
     visually?: any;
   }
 }
 
 export const light = createTheme(lightTheme);
 export const dark = createTheme(deepMerge(lightTheme, darkTheme));
-export const lightTokens = createTheme(lightThemeTokens);
-export const darkTokens = createTheme(
-  deepMerge(lightThemeTokens, darkThemeTokens)
-);

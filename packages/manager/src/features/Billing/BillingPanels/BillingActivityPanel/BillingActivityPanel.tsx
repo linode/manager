@@ -339,7 +339,6 @@ export const BillingActivityPanel = (props: Props) => {
       <div className={classes.root}>
         <StyledBillingAndPaymentHistoryHeader
           className={classes.headerContainer}
-          designTokensEnabled={flags.designTokens?.enabled}
         >
           <Typography className={classes.headline} variant="h2">
             {`${isAkamaiCustomer ? 'Usage' : 'Billing & Payment'} History`}
@@ -494,14 +493,9 @@ export const BillingActivityPanel = (props: Props) => {
 
 const StyledBillingAndPaymentHistoryHeader = styled('div', {
   name: 'BillingAndPaymentHistoryHeader',
-})<{ designTokensEnabled: boolean | undefined }>(({ theme, ...props }) => ({
-  ...(props.designTokensEnabled
-    ? {
-        border:
-          theme.name === 'dark' ? `1px solid ${theme.borderColors.divider}` : 0,
-        borderBottom: 0,
-      }
-    : {}),
+})(({ theme }) => ({
+  border: theme.name === 'dark' ? `1px solid ${theme.borderColors.divider}` : 0,
+  borderBottom: 0,
 }));
 
 // =============================================================================
