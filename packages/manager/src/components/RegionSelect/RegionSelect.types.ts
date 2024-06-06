@@ -21,10 +21,11 @@ export interface DisableRegionOption {
   tooltipWidth?: number;
 }
 
-export interface RegionSelectProps
-  extends Omit<
-    EnhancedAutocompleteProps<Region, false>,
-    'label' | 'onChange' | 'options' | 'value'
+export interface RegionSelectProps<
+  DisableClearable extends boolean | undefined = undefined
+> extends Omit<
+    EnhancedAutocompleteProps<Region, false, DisableClearable>,
+    'label' | 'options' | 'value'
   > {
   /**
    * The specified capability to filter the regions on. Any region that does not have the `currentCapability` will not appear in the RegionSelect dropdown.
@@ -39,9 +40,7 @@ export interface RegionSelectProps
    */
   disabledRegions?: Record<string, DisableRegionOption>;
   helperText?: string;
-  isClearable?: boolean;
   label?: string;
-  onChange: (region: Region) => void;
   regionFilter?: RegionSite;
   regions: Region[];
   required?: boolean;

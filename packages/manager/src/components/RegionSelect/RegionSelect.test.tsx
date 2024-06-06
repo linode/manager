@@ -17,7 +17,6 @@ describe('RegionSelect', () => {
     errorText: '',
     onChange: vi.fn(),
     helperText: '',
-    isClearable: false,
     label: '',
     regions,
     required: false,

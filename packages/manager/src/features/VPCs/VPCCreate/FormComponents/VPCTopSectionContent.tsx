@@ -58,8 +58,7 @@ export const VPCTopSectionContent = (props: Props) => {
         currentCapability="VPCs"
         disabled={isDrawer ? true : disabled}
         errorText={errors.region}
-        isClearable
-        onChange={(region) => onChangeField('region', region.id)}
+        onChange={(e, region) => onChangeField('region', region?.id ?? '')}
         regions={regions}
         value={values.region}
       />

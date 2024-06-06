@@ -225,8 +225,9 @@ export const CreateCluster = () => {
                   helperTextPosition: 'top',
                 }}
                 currentCapability="Kubernetes"
+                disableClearable
                 errorText={errorMap.region}
-                onChange={(region) => setSelectedRegionID(region.id)}
+                onChange={(e, region) => setSelectedRegionID(region.id)}
                 regions={regionsData}
                 value={selectedId}
               />

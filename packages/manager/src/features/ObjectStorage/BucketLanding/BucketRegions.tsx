@@ -23,12 +23,12 @@ export const BucketRegions = (props: Props) => {
   return (
     <RegionSelect
       currentCapability="Object Storage"
+      disableClearable
       disabled={disabled}
       errorText={errorText}
-      isClearable={false}
       label="Region"
       onBlur={onBlur}
-      onChange={(region) => onChange(region.id)}
+      onChange={(e, region) => onChange(region.id)}
       placeholder="Select a Region"
       regions={regions ?? []}
       required={required}

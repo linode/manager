@@ -46,12 +46,12 @@ export const ClusterSelect: React.FC<Props> = (props) => {
     <RegionSelect
       currentCapability="Object Storage"
       data-qa-select-cluster
+      disableClearable
       disabled={disabled}
       errorText={errorText}
-      isClearable={false}
       label="Region"
       onBlur={onBlur}
-      onChange={(region) => onChange(region.id)}
+      onChange={(e, region) => onChange(region.id)}
       placeholder="Select a Region"
       regions={regionOptions ?? []}
       required={required}

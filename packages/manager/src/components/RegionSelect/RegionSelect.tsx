@@ -25,6 +25,7 @@ import type {
   DisableRegionOption,
   RegionSelectProps,
 } from './RegionSelect.types';
+import type { Region } from '@linode/api-v4';
 
 /**
  * A specific select for regions.
@@ -35,14 +36,18 @@ import type {
  *
  * We do not display the selected check mark for single selects.
  */
-export const RegionSelect = React.memo((props: RegionSelectProps) => {
+export const RegionSelect = <
+  DisableClearable extends boolean | undefined = undefined
+>(
+  props: RegionSelectProps<DisableClearable>
+) => {
   const {
     currentCapability,
+    disableClearable,
     disabled,
     disabledRegions: disabledRegionsFromProps,
     errorText,
     helperText,
-    isClearable,
     label,
     onChange,
     regionFilter,
@@ -90,7 +95,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
 
   return (
     <StyledAutocompleteContainer sx={{ width }}>
-      <Autocomplete
+      <Autocomplete<Region, false, DisableClearable>
         renderOption={(props, region) => (
           <RegionOption
             disabledOptions={disabledRegions[region.id]}
@@ -128,7 +133,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         autoHighlight
         clearOnBlur
         data-testid="region-select"
-        disableClearable={!isClearable}
+        disableClearable={disableClearable}
         disabled={disabled}
         errorText={errorText}
         getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
@@ -139,10 +144,10 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
         loading={accountAvailabilityLoading}
         loadingText="Loading regions..."
         noOptionsText="No results"
-        onChange={(_, region) => onChange(region!)}
+        onChange={onChange}
         options={regionOptions}
         placeholder="Select a Region"
-        value={selectedRegion}
+        value={selectedRegion as Region}
       />
       {showDistributedRegionIconHelperText && ( // @TODO Gecko Beta: Add docs link
         <StyledDistributedRegionBox>
@@ -165,4 +170,4 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
       )}
     </StyledAutocompleteContainer>
   );
-});
+};

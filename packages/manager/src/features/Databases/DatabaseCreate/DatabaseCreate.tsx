@@ -497,8 +497,9 @@ const DatabaseCreate = () => {
         <Grid>
           <RegionSelect
             currentCapability="Managed Databases"
+            disableClearable
             errorText={errors.region}
-            onChange={(region) => setFieldValue('region', region.id)}
+            onChange={(e, region) => setFieldValue('region', region.id)}
             regions={regionsData}
             value={values.region}
           />

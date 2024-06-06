@@ -215,9 +215,10 @@ export const PlacementGroupsCreateDrawer = (
                 Boolean(selectedRegionId) || disabledPlacementGroupCreateButton
               }
               currentCapability="Placement Group"
+              disableClearable
               disabledRegions={disabledRegions}
               helperText={values.region && pgRegionLimitHelperText}
-              onChange={(region) => handleRegionSelect(region.id)}
+              onChange={(e, region) => handleRegionSelect(region.id)}
               regions={regions ?? []}
               tooltipText="Only Linode data center regions that support placement groups are listed."
               value={selectedRegionId ?? values.region}
