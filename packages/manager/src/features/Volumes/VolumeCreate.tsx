@@ -303,8 +303,8 @@ export const VolumeCreate = () => {
             />
             <Box alignItems="flex-end" display="flex">
               <RegionSelect
-                onChange={(value) => {
-                  setFieldValue('region', value);
+                onChange={(region) => {
+                  setFieldValue('region', region?.id ?? null);
                   setFieldValue('linode_id', null);
                 }}
                 currentCapability="Block Storage"
