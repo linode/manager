@@ -11,6 +11,7 @@ import { useAccount } from 'src/queries/account/account';
 import {
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
+  useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -20,28 +21,31 @@ import { NodePoolsDisplay } from './NodePoolsDisplay/NodePoolsDisplay';
 import { UpgradeKubernetesClusterToHADialog } from './UpgradeClusterDialog';
 import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
 
-export const KubernetesClusterDetail = () => {
+export const KubernetesClusterDetail = React.memo(() => {
   const { data: account } = useAccount();
   const { clusterID } = useParams<{ clusterID: string }>();
   const id = Number(clusterID);
   const location = useLocation();
-
   const { data: cluster, error, isLoading } = useKubernetesClusterQuery(id);
-
   const { data: regionsData } = useRegionsQuery();
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
     id
   );
 
-  const [updateError, setUpdateError] = React.useState<string | undefined>();
-
-  const [isUpgradeToHAOpen, setIsUpgradeToHAOpen] = React.useState(false);
+  const {
+    data: kubernetesHighAvailabilityTypesData,
+    isError: isErrorKubernetesTypes,
+    isLoading: isLoadingKubernetesTypes,
+  } = useKubernetesTypesQuery();
 
   const {
     isClusterHighlyAvailable,
     showHighAvailability,
   } = getKubeHighAvailability(account, cluster);
+
+  const [updateError, setUpdateError] = React.useState<string | undefined>();
+  const [isUpgradeToHAOpen, setIsUpgradeToHAOpen] = React.useState(false);
 
   if (error) {
     return (
@@ -108,7 +112,14 @@ export const KubernetesClusterDetail = () => {
         title="Kubernetes Cluster Details"
       />
       <Grid>
-        <KubeSummaryPanel cluster={cluster} />
+        <KubeSummaryPanel
+          kubernetesHighAvailabilityTypesData={
+            kubernetesHighAvailabilityTypesData
+          }
+          cluster={cluster}
+          isErrorKubernetesTypes={isErrorKubernetesTypes}
+          isLoadingKubernetesTypes={isLoadingKubernetesTypes}
+        />
       </Grid>
       <Grid>
         <NodePoolsDisplay
@@ -119,11 +130,16 @@ export const KubernetesClusterDetail = () => {
         />
       </Grid>
       <UpgradeKubernetesClusterToHADialog
+        kubernetesHighAvailabilityTypesData={
+          kubernetesHighAvailabilityTypesData
+        }
         clusterID={cluster.id}
+        isErrorKubernetesTypes={isErrorKubernetesTypes}
+        isLoadingKubernetesTypes={isLoadingKubernetesTypes}
         onClose={() => setIsUpgradeToHAOpen(false)}
         open={isUpgradeToHAOpen}
         regionID={cluster.region}
       />
     </>
   );
-};
+});

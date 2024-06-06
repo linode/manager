@@ -75,9 +75,9 @@ export const CreateCluster = () => {
   const { showHighAvailability } = getKubeHighAvailability(account);
 
   const {
-    data: types,
+    data: kubernetesHighAvailabilityTypesData,
     isError: isErrorKubernetesTypes,
-    // isLoading: isLoadingKubernetesTypes,
+    isLoading: isLoadingKubernetesTypes,
   } = useKubernetesTypesQuery();
 
   const {
@@ -172,7 +172,7 @@ export const CreateCluster = () => {
 
   const getHighAvailabilityPrice = getDCSpecificPriceByType({
     regionId: selectedId ? selectedId : undefined,
-    type: types?.[1],
+    type: kubernetesHighAvailabilityTypesData?.[1],
   });
 
   const dcSpecificPrice =
@@ -259,8 +259,9 @@ export const CreateCluster = () => {
           {showHighAvailability ? (
             <Box data-testid="ha-control-plane">
               <HAControlPlane
-                hasHAPriceError={isErrorKubernetesTypes}
                 highAvailabilityPrice={dcSpecificPrice}
+                isErrorKubernetesTypes={isErrorKubernetesTypes}
+                isLoadingKubernetesTypes={isLoadingKubernetesTypes}
                 selectedRegionId={selectedRegionID}
                 setHighAvailability={setHighAvailability}
               />

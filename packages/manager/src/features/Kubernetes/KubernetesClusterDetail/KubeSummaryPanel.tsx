@@ -25,6 +25,8 @@ import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 import { KubeConfigDisplay } from './KubeConfigDisplay';
 import { KubeConfigDrawer } from './KubeConfigDrawer';
 
+import type { PriceType } from '@linode/api-v4';
+
 const useStyles = makeStyles()((theme: Theme) => ({
   actionRow: {
     '& button': {
@@ -98,10 +100,18 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 interface Props {
   cluster: KubernetesCluster;
+  isErrorKubernetesTypes: boolean;
+  isLoadingKubernetesTypes: boolean;
+  kubernetesHighAvailabilityTypesData: PriceType[] | undefined;
 }
 
 export const KubeSummaryPanel = React.memo((props: Props) => {
-  const { cluster } = props;
+  const {
+    cluster,
+    isErrorKubernetesTypes,
+    isLoadingKubernetesTypes,
+    kubernetesHighAvailabilityTypesData,
+  } = props;
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
@@ -156,7 +166,14 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     <>
       <Paper className={classes.root}>
         <Grid className={classes.mainGridContainer} container spacing={2}>
-          <KubeClusterSpecs cluster={cluster} />
+          <KubeClusterSpecs
+            kubernetesHighAvailabilityTypesData={
+              kubernetesHighAvailabilityTypesData
+            }
+            cluster={cluster}
+            isErrorKubernetesTypes={isErrorKubernetesTypes}
+            isLoadingKubernetesTypes={isLoadingKubernetesTypes}
+          />
           <Grid container direction="column" lg={4} xs={12}>
             <KubeConfigDisplay
               clusterId={cluster.id}

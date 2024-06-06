@@ -6,8 +6,9 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { HAControlPlane, HAControlPlaneProps } from './HAControlPlane';
 
 const props: HAControlPlaneProps = {
-  hasHAPriceError: false,
   highAvailabilityPrice: '60',
+  isErrorKubernetesTypes: false,
+  isLoadingKubernetesTypes: false,
   selectedRegionId: 'us-southeast',
   setHighAvailability: vi.fn(),
 };
