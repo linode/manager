@@ -46,10 +46,14 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
    * However, some some events are not worth showing progress for, usually because they complete too quickly.
    * To that effect, we have an include for progress events.
    * A new action should be added to `ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS` to ensure the display of the progress bar.
+   *
+   * Additionally, we only want to show the progress bar if the event is not in a scheduled state.
+   * For some reason the API will return a percent_complete value for scheduled events.
    */
   const showProgress =
     isProgressEvent &&
-    ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS.includes(event.action);
+    ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS.includes(event.action) &&
+    event.status !== 'scheduled';
 
   /**
    * If the event is a progress event, we'll show the time remaining, if available.
