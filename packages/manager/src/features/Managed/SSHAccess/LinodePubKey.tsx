@@ -64,7 +64,7 @@ const LinodePubKey = () => {
   if (isLoading) {
     return (
       <StyledLoadingStatePaper>
-        <StyledCircleProgress mini />
+        <StyledCircleProgress size="sm" />
       </StyledLoadingStatePaper>
     );
   }
