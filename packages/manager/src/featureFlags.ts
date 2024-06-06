@@ -38,13 +38,15 @@ interface TaxCollectionBanner {
   regions?: TaxCollectionRegion[];
 }
 
-interface PlacementGroupsFlag {
-  beta: boolean;
+interface BaseFeatureFlag {
   enabled: boolean;
 }
 
-interface GeckoFlag {
-  enabled: boolean;
+interface BetaFeatureFlag extends BaseFeatureFlag {
+  beta: boolean;
+}
+
+interface GaFeatureFlag extends BaseFeatureFlag {
   ga: boolean;
 }
 
@@ -69,7 +71,7 @@ export interface Flags {
   disableLargestGbPlans: boolean;
   eventMessagesV2: boolean;
   gecko: boolean; // @TODO gecko: delete this after next release
-  gecko2: GeckoFlag;
+  gecko2: GaFeatureFlag;
   gpuv2: gpuV2;
   ipv6Sharing: boolean;
   linodeCreateRefactor: boolean;
@@ -80,7 +82,7 @@ export interface Flags {
   objMultiCluster: boolean;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
-  placementGroups: PlacementGroupsFlag;
+  placementGroups: BetaFeatureFlag;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
@@ -90,6 +92,7 @@ export interface Flags {
   supportTicketSeverity: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
+  taxId: BaseFeatureFlag;
   taxes: Taxes;
   tpaProviders: Provider[];
 }

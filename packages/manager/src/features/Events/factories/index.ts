@@ -29,6 +29,7 @@ export * from './reserved';
 export * from './stackscript';
 export * from './subnet';
 export * from './tag';
+export * from './tax';
 export * from './tfa';
 export * from './ticket';
 export * from './token';
