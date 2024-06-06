@@ -77,7 +77,7 @@ export const TwoStepRegionSelect = React.memo(
       <Tabs>
         <TabList>
           <Tab>Core</Tab>
-          <Tab>distributed</Tab>
+          <Tab>Distributed</Tab>
         </TabList>
         <TabPanels>
           <SafeTabPanel index={0}>

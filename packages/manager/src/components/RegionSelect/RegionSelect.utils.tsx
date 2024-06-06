@@ -46,8 +46,7 @@ export const getRegionOptions = ({
         if (distributedContinentCode && distributedContinentCode !== 'ALL') {
           const group = getRegionCountryGroup(region);
           return (
-            (region.site_type === 'edge' ||
-              region.site_type === 'distributed') &&
+            region.site_type === 'distributed' &&
             CONTINENT_CODE_TO_CONTINENT[distributedContinentCode] === group
           );
         }
