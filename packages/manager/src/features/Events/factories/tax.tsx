@@ -4,6 +4,6 @@ import type { PartialEventMap } from '../types';
 
 export const tax: PartialEventMap<'tax'> = {
   tax_id_invalid: {
-    notification: () => <>Tax Identification Number format is invalid.</>,
+    notification: () => <>Tax Identification Number format is <strong>invalid</strong>.</>,
   },
 };
