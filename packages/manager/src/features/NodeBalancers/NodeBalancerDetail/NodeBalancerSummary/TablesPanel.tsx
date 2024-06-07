@@ -1,14 +1,10 @@
-import { Theme, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import {
-  NodeBalancerConnectionsTimeData,
-  Point,
-} from 'src/components/AreaChart/types';
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -16,7 +12,6 @@ import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
 import {
-  NODEBALANCER_STATS_NOT_READY_API_MESSAGE,
   useNodeBalancerQuery,
   useNodeBalancerStatsQuery,
 } from 'src/queries/nodebalancers';
@@ -25,6 +20,14 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getUserTimezone } from 'src/utilities/getUserTimezone';
 import { formatNumber, getMetrics } from 'src/utilities/statMetrics';
 
+import type { Theme } from '@mui/material/styles';
+import type {
+  NodeBalancerConnectionsTimeData,
+  Point,
+} from 'src/components/AreaChart/types';
+
+const NODEBALANCER_STATS_NOT_READY_API_MESSAGE =
+  'Stats are unavailable at this time.';
 const STATS_NOT_READY_TITLE =
   'Stats for this NodeBalancer are not available yet';
 
@@ -37,7 +40,7 @@ export const TablesPanel = () => {
   const { data: nodebalancer } = useNodeBalancerQuery(id);
 
   const { data: stats, error, isLoading } = useNodeBalancerStatsQuery(
-    nodebalancer?.id ?? -1,
+    nodebalancer?.id ?? -1
   );
 
   const statsErrorString = error

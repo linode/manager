@@ -24,7 +24,6 @@ import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
-import { itemInListCreationHandler, itemInListMutationHandler } from './base';
 import { profileQueries } from './profile/profile';
 
 import type {
@@ -41,11 +40,6 @@ import type {
   ResourcePage,
 } from '@linode/api-v4';
 import type { EventHandlerData } from 'src/hooks/useEventHandlers';
-
-export const queryKey = 'nodebalancers';
-
-export const NODEBALANCER_STATS_NOT_READY_API_MESSAGE =
-  'Stats are unavailable at this time.';
 
 const getAllNodeBalancerTypes = () =>
   getAll<PriceType>((params) => getNodeBalancerTypes(params))().then(
@@ -69,6 +63,10 @@ export const nodebalancerQueries = createQueryKeys('nodebalanacers', {
         queryFn: getAllNodeBalancerConfigs,
         queryKey: null,
       },
+      firewalls: {
+        queryFn: () => getNodeBalancerFirewalls(id),
+        queryKey: null,
+      },
       stats: {
         queryFn: () => getNodeBalancerStats(id),
         queryKey: null,
@@ -83,14 +81,14 @@ export const nodebalancerQueries = createQueryKeys('nodebalanacers', {
         queryFn: getAllNodeBalancers,
         queryKey: null,
       },
-      paginated: (params: Params = {}, filter: Filter = {}) => ({
-        queryFn: () => getNodeBalancers(params, filter),
-        queryKey: [params, filter],
-      }),
       infinite: (filter: Filter = {}) => ({
         queryFn: ({ pageParam }) =>
           getNodeBalancers({ page: pageParam, page_size: 25 }, filter),
         queryKey: [filter],
+      }),
+      paginated: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getNodeBalancers(params, filter),
+        queryKey: [params, filter],
       }),
     },
     queryKey: null,
@@ -276,6 +274,17 @@ export const useInfiniteNodebalancersQuery = (filter: Filter) =>
     },
   });
 
+export const useNodeBalancersFirewallsQuery = (nodebalancerId: number) =>
+  useQuery<ResourcePage<Firewall>, APIError[]>(
+    nodebalancerQueries.nodebalancer(nodebalancerId)._ctx.firewalls
+  );
+
+export const useNodeBalancerTypesQuery = () =>
+  useQuery<PriceType[], APIError[]>({
+    ...queryPresets.oneTimeFetch,
+    ...nodebalancerQueries.types,
+  });
+
 export const nodebalanacerEventHandler = ({
   event,
   queryClient,
@@ -283,7 +292,7 @@ export const nodebalanacerEventHandler = ({
   const nodebalancerId = event.entity?.id;
 
   if (event.action.startsWith('nodebalancer_node')) {
-    // We don't store NodeBalancer node is React Query currently
+    // We don't store NodeBalancer nodes is React Query currently, so just skip these events
     return;
   }
 
@@ -300,25 +309,23 @@ export const nodebalanacerEventHandler = ({
     });
   } else {
     // If we've made it here, the event is about a NodeBalancer
+
+    // Invalidate the specific NodeBalancer
     queryClient.invalidateQueries({
       exact: true,
       queryKey: nodebalancerQueries.nodebalancer(nodebalancerId).queryKey,
     });
+
+    // Invalidate all paginated lists
     queryClient.invalidateQueries({
       queryKey: nodebalancerQueries.nodebalancers.queryKey,
     });
+
+    if (event.action === 'nodebalancer_delete') {
+      // A deleted NodeBalancer may have been associated with a Firewall,
+      // so we want to invalidate Firewalls to reflect the device being removed.
+      // @tood: Optimize this heavy invalidation
+      queryClient.invalidateQueries({ queryKey: [firewallsQueryKey] });
+    }
   }
 };
-
-export const useNodeBalancersFirewallsQuery = (nodebalancerId: number) =>
-  useQuery<ResourcePage<Firewall>, APIError[]>(
-    [queryKey, 'nodebalancer', nodebalancerId, 'firewalls'],
-    () => getNodeBalancerFirewalls(nodebalancerId),
-    queryPresets.oneTimeFetch
-  );
-
-export const useNodeBalancerTypesQuery = () =>
-  useQuery<PriceType[], APIError[]>({
-    ...queryPresets.oneTimeFetch,
-    ...nodebalancerQueries.types,
-  });
