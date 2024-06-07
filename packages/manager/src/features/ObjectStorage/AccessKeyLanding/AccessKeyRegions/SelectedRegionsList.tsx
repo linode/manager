@@ -31,7 +31,7 @@ const SelectedRegion = ({ selection }: LabelComponentProps) => {
       <StyledFlagContainer>
         <Flag country={selection.country} />
       </StyledFlagContainer>
-      {selection.label}
+      {selection.label} ({selection.id})
     </Box>
   );
 };
@@ -41,17 +41,12 @@ export const SelectedRegionsList = ({
   selectedRegions,
 }: SelectedRegionsProps) => {
   const handleRemove = (item: RemovableItem) => {
-    const regionId = selectedRegions.find((r) => r.label === item.label)?.id;
-    if (regionId) {
-      onRemove(regionId);
-    }
+    onRemove(item.id as string);
   };
 
   return (
     <RemovableSelectionsList
-      selectionData={selectedRegions.map((item, index) => {
-        return { ...item, id: index };
-      })}
+      selectionData={selectedRegions}
       LabelComponent={SelectedRegion}
       headerText=""
       noDataText=""

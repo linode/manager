@@ -46,7 +46,7 @@ const SelectedRegion = ({ region }: LabelComponentProps) => {
       >
         <Flag country={region.country} />
       </StyledFlagContainer>
-      {region.label}
+      {region.label} ({region.id})
     </Box>
   );
 };
