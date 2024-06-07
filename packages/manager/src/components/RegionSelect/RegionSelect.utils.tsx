@@ -47,8 +47,9 @@ export const getRegionOptions = ({
         if (distributedContinentCode && distributedContinentCode !== 'ALL') {
           const group = getRegionCountryGroup(region);
           return (
-            region.site_type === 'distributed' &&
-            CONTINENT_CODE_TO_CONTINENT[distributedContinentCode] === group
+            region.site_type === 'edge' ||
+            (region.site_type === 'distributed' &&
+              CONTINENT_CODE_TO_CONTINENT[distributedContinentCode] === group)
           );
         }
         return regionFilter.includes(region.site_type);
@@ -258,12 +259,11 @@ export const getRegionLabel = ({
   // Display regions sorted by Country first
   if (isGeckoGa) {
     const [city] = region.label.split(', ');
-    return `${region.country.toUpperCase()}, ${city} ${
-      includeSlug ? `(${region.id})` : ''
-    }`;
+    if (includeSlug) {
+      return `${region.country.toUpperCase()}, ${city} ${`(${region.id})`}`;
+    }
+    return `${region.country.toUpperCase()}, ${city}`;
   }
 
-  return `${region.label} (${region.id}) ${
-    includeSlug && isGeckoGa ? `(${region.id})` : ''
-  }`;
+  return `${region.label} (${region.id})`;
 };
