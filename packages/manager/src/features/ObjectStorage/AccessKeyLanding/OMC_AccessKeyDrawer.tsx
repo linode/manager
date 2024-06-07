@@ -184,7 +184,6 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             ),
           }
         : { ...values, bucket_access: null };
-      debugger;
       const updatePayload = generateUpdatePayload(values, initialValues);
 
       if (mode !== 'creating') {
