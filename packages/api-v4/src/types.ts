@@ -119,7 +119,7 @@ export interface RequestHeaders {
 }
 
 export interface PriceType {
-  id: string;
+  id: string | null;
   label: string;
   price: PriceObject;
   region_prices: RegionPriceObject[];
