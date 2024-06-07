@@ -13,11 +13,7 @@ export interface Props {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const smtpDialogTitle = 'Contact Support: SMTP Restriction Removal';
-export const smtpHelperText =
-  'In an effort to fight spam, outbound connections are restricted on ports 25, 465, and 587. To have these restrictions removed, please provide us with the following information. A member of the Support team will review your request and follow up with you as soon as possible.';
-
-export const fieldNameToLabelMap: Record<string, string> = {
+export const SMTP_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
   companyName: 'Business or company name',
   customerName: 'First and last name',
   emailDomains: 'Domain(s) that will be sending emails',
@@ -27,14 +23,14 @@ export const fieldNameToLabelMap: Record<string, string> = {
     "A clear and detailed description of your email use case, including how you'll avoid sending unwanted emails",
 };
 
-const SupportTicketSMTPFields: React.FC<Props> = (props) => {
+export const SupportTicketSMTPFields = (props: Props) => {
   const { formState, handleChange } = props;
 
   return (
     <React.Fragment>
       <TextField
         data-qa-ticket-customer-name
-        label={fieldNameToLabelMap.customerName}
+        label={SMTP_FIELD_NAME_TO_LABEL_MAP.customerName}
         name="customerName"
         onChange={handleChange}
         required
@@ -42,7 +38,7 @@ const SupportTicketSMTPFields: React.FC<Props> = (props) => {
       />
       <TextField
         data-qa-ticket-company-name
-        label={fieldNameToLabelMap.companyName}
+        label={SMTP_FIELD_NAME_TO_LABEL_MAP.companyName}
         name="companyName"
         onChange={handleChange}
         value={formState.companyName}
@@ -50,7 +46,7 @@ const SupportTicketSMTPFields: React.FC<Props> = (props) => {
       <TextField
         data-qa-ticket-use-case
         expand
-        label={fieldNameToLabelMap.useCase}
+        label={SMTP_FIELD_NAME_TO_LABEL_MAP.useCase}
         multiline
         name="useCase"
         onChange={handleChange}
@@ -60,7 +56,7 @@ const SupportTicketSMTPFields: React.FC<Props> = (props) => {
       <TextField
         data-qa-ticket-email-domains
         expand
-        label={fieldNameToLabelMap.emailDomains}
+        label={SMTP_FIELD_NAME_TO_LABEL_MAP.emailDomains}
         multiline
         name="emailDomains"
         onChange={handleChange}
@@ -70,7 +66,7 @@ const SupportTicketSMTPFields: React.FC<Props> = (props) => {
       <TextField
         data-qa-ticket-public-info
         expand
-        label={fieldNameToLabelMap.publicInfo}
+        label={SMTP_FIELD_NAME_TO_LABEL_MAP.publicInfo}
         multiline
         name="publicInfo"
         onChange={handleChange}
@@ -80,5 +76,3 @@ const SupportTicketSMTPFields: React.FC<Props> = (props) => {
     </React.Fragment>
   );
 };
-
-export default SupportTicketSMTPFields;

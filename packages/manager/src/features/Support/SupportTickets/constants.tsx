@@ -1,5 +1,57 @@
-import { Typography } from '@mui/material';
 import React from 'react';
+
+import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
+
+import type {
+  EntityType,
+  TicketType,
+  TicketTypeData,
+} from './SupportTicketDialogV2';
+
+const SMTP_DIALOG_TITLE = 'Contact Support: SMTP Restriction Removal';
+const SMTP_HELPER_TEXT =
+  'In an effort to fight spam, outbound connections are restricted on ports 25, 465, and 587. To have these restrictions removed, please provide us with the following information. A member of the Support team will review your request and follow up with you as soon as possible.';
+
+export const TICKET_TYPE_MAP: Record<TicketType, TicketTypeData> = {
+  general: {
+    dialogTitle: 'Open a Support Ticket',
+    helperText: (
+      <>
+        {`We love our customers, and we\u{2019}re here to help if you need us.
+        Please keep in mind that not all topics are within the scope of our support.
+        For overall system status, please see `}
+        <Link to="https://status.linode.com">status.linode.com</Link>.
+      </>
+    ),
+  },
+  smtp: {
+    dialogTitle: SMTP_DIALOG_TITLE,
+    helperText: SMTP_HELPER_TEXT,
+  },
+};
+
+export const ENTITY_MAP: Record<string, EntityType> = {
+  Databases: 'database_id',
+  Domains: 'domain_id',
+  Firewalls: 'firewall_id',
+  Kubernetes: 'lkecluster_id',
+  Linodes: 'linode_id',
+  NodeBalancers: 'nodebalancer_id',
+  Volumes: 'volume_id',
+};
+
+export const ENTITY_ID_TO_NAME_MAP: Record<EntityType, string> = {
+  database_id: 'Database Cluster',
+  domain_id: 'Domain',
+  firewall_id: 'Firewall',
+  general: '',
+  linode_id: 'Linode',
+  lkecluster_id: 'Kubernetes Cluster',
+  nodebalancer_id: 'NodeBalancer',
+  none: '',
+  volume_id: 'Volume',
+};
 
 export const TICKET_SEVERITY_TOOLTIP_TEXT = (
   <>

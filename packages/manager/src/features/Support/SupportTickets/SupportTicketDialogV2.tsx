@@ -26,12 +26,13 @@ import { storage } from 'src/utilities/storage';
 
 import { MarkdownReference } from '../SupportTicketDetail/TabbedReply/MarkdownReference';
 import { TabbedReply } from '../SupportTicketDetail/TabbedReply/TabbedReply';
-import { TICKET_SEVERITY_TOOLTIP_TEXT } from './constants';
 import {
-  fieldNameToLabelMap,
-  smtpDialogTitle,
-  smtpHelperText,
-} from './SupportTicketSMTPFields';
+  ENTITY_ID_TO_NAME_MAP,
+  ENTITY_MAP,
+  TICKET_SEVERITY_TOOLTIP_TEXT,
+  TICKET_TYPE_MAP,
+} from './constants';
+import { SMTP_FIELD_NAME_TO_LABEL_MAP } from './SupportTicketSMTPFields';
 import { severityLabelMap, useTicketSeverityCapability } from './ticketUtils';
 
 import type { FileAttachment } from '../index';
@@ -83,7 +84,7 @@ export type EntityType =
 
 export type TicketType = 'general' | 'smtp';
 
-interface TicketTypeData {
+export interface TicketTypeData {
   dialogTitle: string;
   helperText: JSX.Element | string;
 }
@@ -100,46 +101,6 @@ export interface SupportTicketDialogProps {
   prefilledTicketType?: TicketType;
   prefilledTitle?: string;
 }
-
-const ticketTypeMap: Record<TicketType, TicketTypeData> = {
-  general: {
-    dialogTitle: 'Open a Support Ticket',
-    helperText: (
-      <>
-        {`We love our customers, and we\u{2019}re here to help if you need us.
-        Please keep in mind that not all topics are within the scope of our support.
-        For overall system status, please see `}
-        <Link to="https://status.linode.com">status.linode.com</Link>.
-      </>
-    ),
-  },
-  smtp: {
-    dialogTitle: smtpDialogTitle,
-    helperText: smtpHelperText,
-  },
-};
-
-const entityMap: Record<string, EntityType> = {
-  Databases: 'database_id',
-  Domains: 'domain_id',
-  Firewalls: 'firewall_id',
-  Kubernetes: 'lkecluster_id',
-  Linodes: 'linode_id',
-  NodeBalancers: 'nodebalancer_id',
-  Volumes: 'volume_id',
-};
-
-const entityIdToNameMap: Record<EntityType, string> = {
-  database_id: 'Database Cluster',
-  domain_id: 'Domain',
-  firewall_id: 'Firewall',
-  general: '',
-  linode_id: 'Linode',
-  lkecluster_id: 'Kubernetes Cluster',
-  nodebalancer_id: 'NodeBalancer',
-  none: '',
-  volume_id: 'Volume',
-};
 
 const severityOptions: {
   label: string;
@@ -247,6 +208,7 @@ export const SupportTicketDialogV2 = (props: SupportTicketDialogProps) => {
     error: domainsError,
     isLoading: domainsLoading,
   } = useAllDomainsQuery(prefilledEntity?.type === 'domain_id');
+
   const {
     data: nodebalancers,
     error: nodebalancersError,
@@ -306,7 +268,9 @@ export const SupportTicketDialogV2 = (props: SupportTicketDialogProps) => {
     return Object.entries(fields)
       .map(
         ([key, value]) =>
-          `**${fieldNameToLabelMap[key]}**\n${value ? value : 'No response'}`
+          `**${SMTP_FIELD_NAME_TO_LABEL_MAP[key]}**\n${
+            value ? value : 'No response'
+          }`
       )
       .join('\n\n');
   };
@@ -324,9 +288,9 @@ export const SupportTicketDialogV2 = (props: SupportTicketDialogProps) => {
   };
 
   const onSubmit = () => {
-    //console.log(form.getValues());
+    // console.log(form.getValues());
     // const { onSuccess } = props;
-    // const _description = description;
+    const _description = description;
     // if (!['general', 'none'].includes(entityType) && !entityId) {
     //   setErrors([
     //     {
@@ -337,31 +301,36 @@ export const SupportTicketDialogV2 = (props: SupportTicketDialogProps) => {
     //   return;
     // }
     // setErrors(undefined);
-    // setSubmitting(true);
-    // createSupportTicket({
-    //   description: _description,
-    //   [entityType]: Number(entityId),
-    //   severity: selectedSeverity,
-    //   summary,
-    // })
-    //   .then((response) => {
-    //     setErrors(undefined);
-    //     setSubmitting(false);
-    //     window.setTimeout(() => resetDrawer(true), 500);
-    //     return response;
-    //   })
-    //   .catch((errResponse) => {
-    //     /* This block will only handle errors in creating the actual ticket; attachment
-    //      * errors are handled above. */
-    //     setErrors(getAPIErrorOrDefault(errResponse));
-    //     setSubmitting(false);
-    //     scrollErrorIntoView();
-    //   });
+    setSubmitting(true);
+    createSupportTicket({
+      description: _description,
+      [entityType]: Number(entityId),
+      severity: selectedSeverity,
+      summary,
+    })
+      .then((response) => {
+        setErrors(undefined);
+        setSubmitting(false);
+        window.setTimeout(() => resetDrawer(true), 500);
+        return response;
+      })
+      .then((response) => {
+        if (!props.keepOpenOnSuccess) {
+          close();
+        }
+      })
+      .catch((errResponse) => {
+        /* This block will only handle errors in creating the actual ticket; attachment
+         * errors are handled above. */
+        setErrors(getAPIErrorOrDefault(errResponse));
+        setSubmitting(false);
+        scrollErrorIntoView();
+      });
   };
 
   const renderEntityTypes = () => {
-    return Object.keys(entityMap).map((key: string) => {
-      return { label: key, value: entityMap[key] };
+    return Object.keys(ENTITY_MAP).map((key: string) => {
+      return { label: key, value: ENTITY_MAP[key] };
     });
   };
 
@@ -395,7 +364,7 @@ export const SupportTicketDialogV2 = (props: SupportTicketDialogProps) => {
       return [];
     }
 
-    // domain's don't have a label so we map the domain as the label
+    // Domains don't have a label so we map the domain as the label
     if (entityType === 'domain_id') {
       return (
         reactQueryEntityDataMap[entityType]?.map(({ domain, id }) => ({
@@ -442,7 +411,7 @@ export const SupportTicketDialogV2 = (props: SupportTicketDialogProps) => {
   const entityOptions = getEntityOptions();
   const areEntitiesLoading = loadingMap[entityType];
   const entityError = Boolean(errorMap[entityType])
-    ? `Error loading ${entityIdToNameMap[entityType]}s`
+    ? `Error loading ${ENTITY_ID_TO_NAME_MAP[entityType]}s`
     : undefined;
 
   const selectedEntity =
@@ -467,7 +436,7 @@ export const SupportTicketDialogV2 = (props: SupportTicketDialogProps) => {
           fullWidth
           onClose={close}
           open={open}
-          title={ticketTypeMap[ticketType].dialogTitle}
+          title={TICKET_TYPE_MAP[ticketType].dialogTitle}
         >
           {props.children || (
             <>
@@ -476,7 +445,7 @@ export const SupportTicketDialogV2 = (props: SupportTicketDialogProps) => {
               )}
 
               <Typography data-qa-support-ticket-helper-text>
-                {ticketTypeMap[ticketType].helperText}
+                {TICKET_TYPE_MAP[ticketType].helperText}
               </Typography>
               <Controller
                 render={({ field }) => (
@@ -540,7 +509,8 @@ export const SupportTicketDialogV2 = (props: SupportTicketDialogProps) => {
                         render={({ field }) => (
                           <Autocomplete
                             label={
-                              entityIdToNameMap[entityType] ?? 'Entity Select'
+                              ENTITY_ID_TO_NAME_MAP[entityType] ??
+                              'Entity Select'
                             }
                             onChange={(e, id) =>
                               field.onChange(id ? String(id?.value) : '')
@@ -552,7 +522,7 @@ export const SupportTicketDialogV2 = (props: SupportTicketDialogProps) => {
                             loading={areEntitiesLoading}
                             onInputChange={(e, value) => field.onChange(value)}
                             options={entityOptions}
-                            placeholder={`Select a ${entityIdToNameMap[entityType]}`}
+                            placeholder={`Select a ${ENTITY_ID_TO_NAME_MAP[entityType]}`}
                             value={selectedEntity}
                           />
                         )}
@@ -562,7 +532,7 @@ export const SupportTicketDialogV2 = (props: SupportTicketDialogProps) => {
                       {!areEntitiesLoading && entityOptions.length === 0 ? (
                         <FormHelperText>
                           You don&rsquo;t have any{' '}
-                          {entityIdToNameMap[entityType]}s on your account.
+                          {ENTITY_ID_TO_NAME_MAP[entityType]}s on your account.
                         </FormHelperText>
                       ) : null}
                     </>
@@ -592,6 +562,7 @@ export const SupportTicketDialogV2 = (props: SupportTicketDialogProps) => {
               >
                 <MarkdownReference />
               </Accordion>
+              {/* <AttachFileForm files={files} updateFiles={updateFiles} /> */}
               <ActionsPanel
                 primaryButtonProps={{
                   'data-testid': 'submit',
