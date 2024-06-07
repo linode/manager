@@ -82,12 +82,9 @@ const ContactInformation = (props: Props) => {
 
   const isChildUser = Boolean(profile?.user_type === 'child');
 
-  const isTaxIdValid = notifications?.some(
-    (notification) =>
-      notification.type === 'tax_id_invalid'
-  );
-
-  console.log({isTaxIdValid})
+  const invalidTaxId = notifications?.find((notification: any) => {
+    return notification.type === 'tax_id_invalid';
+  });
 
   const isReadOnly =
     useRestrictedGlobalGrantCheck({
@@ -239,12 +236,13 @@ const ContactInformation = (props: Props) => {
                 >
                   <strong>Tax ID</strong> {taxId}
                 </StyledTypography>
-                <TooltipIcon
-                  status="warning"
-                  style={{ paddingBottom: 0, paddingTop: 0 }}
-                  text={'sdffasdfsd'}
-                  width={12}
-                />
+                {invalidTaxId && (
+                  <TooltipIcon
+                    status="warning"
+                    style={{ paddingBottom: 0, paddingTop: 0 }}
+                    text={invalidTaxId.label}
+                  />
+                )}
               </Box>
             )}
           </Grid>
