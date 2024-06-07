@@ -10,10 +10,10 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import { SupportTicketDialog } from './SupportTicketDialog';
 import TicketList from './TicketList';
-import { SupportTicketDialogV2 } from './SupportTicketDialogV2';
+
+import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 
 const tabs = ['open', 'closed'];
 
@@ -94,7 +94,7 @@ const SupportTicketsLanding = () => {
           </TabPanel>
         </TabPanels>
       </Tabs>
-      <SupportTicketDialogV2
+      <SupportTicketDialog
         onClose={() => setDrawerOpen(false)}
         onSuccess={handleAddTicketSuccess}
         open={drawerOpen}

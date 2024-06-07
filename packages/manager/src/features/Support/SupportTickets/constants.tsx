@@ -7,10 +7,10 @@ import type {
   EntityType,
   TicketType,
   TicketTypeData,
-} from './SupportTicketDialogV2';
+} from './SupportTicketDialog';
 
-const SMTP_DIALOG_TITLE = 'Contact Support: SMTP Restriction Removal';
-const SMTP_HELPER_TEXT =
+export const SMTP_DIALOG_TITLE = 'Contact Support: SMTP Restriction Removal';
+export const SMTP_HELPER_TEXT =
   'In an effort to fight spam, outbound connections are restricted on ports 25, 465, and 587. To have these restrictions removed, please provide us with the following information. A member of the Support team will review your request and follow up with you as soon as possible.';
 
 export const TICKET_TYPE_MAP: Record<TicketType, TicketTypeData> = {
