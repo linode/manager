@@ -18,7 +18,7 @@ import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
 import {
   NODEBALANCER_STATS_NOT_READY_API_MESSAGE,
   useNodeBalancerQuery,
-  useNodeBalancerStats,
+  useNodeBalancerStatsQuery,
 } from 'src/queries/nodebalancers';
 import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -36,9 +36,8 @@ export const TablesPanel = () => {
   const id = Number(nodeBalancerId);
   const { data: nodebalancer } = useNodeBalancerQuery(id);
 
-  const { data: stats, error, isLoading } = useNodeBalancerStats(
+  const { data: stats, error, isLoading } = useNodeBalancerStatsQuery(
     nodebalancer?.id ?? -1,
-    nodebalancer?.created
   );
 
   const statsErrorString = error
