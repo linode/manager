@@ -14,7 +14,7 @@ import { useUpdateImageMutation } from 'src/queries/images';
 import { useImageAndLinodeGrantCheck } from './utils';
 
 interface Props {
-  image?: Image;
+  image: Image | undefined;
   onClose: () => void;
   open: boolean;
 }

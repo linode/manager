@@ -12,7 +12,7 @@ import { REBUILD_LINODE_IMAGE_PARAM_NAME } from '../Linodes/LinodesDetail/Linode
 import { useImageAndLinodeGrantCheck } from './utils';
 
 interface Props {
-  image?: Image;
+  image: Image | undefined;
   onClose: () => void;
   open?: boolean;
 }
@@ -75,8 +75,8 @@ export const RebuildImageDrawer = (props: Props) => {
             }
             clearable={true}
             errorText={fieldState.error?.message}
-            value={field.value}
             onBlur={field.onBlur}
+            value={field.value}
           />
         )}
         rules={{
