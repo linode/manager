@@ -49,7 +49,15 @@ export const EditImageDrawer = (props: Props) => {
       return;
     }
 
-    await updateImage({ imageId: image.id, ...values })
+    const safeDescription = values.description?.length
+      ? values.description
+      : ' ';
+
+    await updateImage({
+      imageId: image.id,
+      ...values,
+      description: safeDescription,
+    })
       .then(onClose)
       .catch((errors: APIError[]) => {
         for (const error of errors) {
