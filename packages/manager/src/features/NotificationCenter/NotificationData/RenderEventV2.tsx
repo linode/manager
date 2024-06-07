@@ -62,8 +62,8 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
   const parsedTimeRemaining = formatEventTimeRemaining(event.time_remaining);
   const timeTypeToDisplay = showProgress
     ? parsedTimeRemaining
-      ? ` (~${parsedTimeRemaining})`
-      : `Started: ${getEventTimestamp(event).toRelative()}`
+      ? `~${parsedTimeRemaining}`
+      : `Started ${getEventTimestamp(event).toRelative()}`
     : getEventTimestamp(event).toRelative();
 
   return (
