@@ -1,3 +1,4 @@
+import { useArgs } from '@storybook/preview-api';
 import React from 'react';
 
 import { regions } from 'src/__data__/regionsData';
@@ -11,11 +12,13 @@ import type { Meta, StoryObj } from '@storybook/react';
 export const Default: StoryObj<RegionSelectProps> = {
   render: (args) => {
     const SelectWrapper = () => {
-      const [open, setOpen] = React.useState(false);
-
+      const [_, updateArgs] = useArgs();
       return (
         <Box sx={{ minHeight: 500 }}>
-          <RegionSelect {...args} onChange={() => setOpen(false)} open={open} />
+          <RegionSelect
+            {...args}
+            onChange={(e, region) => updateArgs({ value: region?.id })}
+          />
         </Box>
       );
     };
