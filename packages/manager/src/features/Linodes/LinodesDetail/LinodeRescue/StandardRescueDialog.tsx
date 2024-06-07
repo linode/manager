@@ -17,7 +17,7 @@ import {
   useLinodeQuery,
   useLinodeRescueMutation,
 } from 'src/queries/linodes/linodes';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import {
   DevicesAsStrings,

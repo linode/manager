@@ -1,12 +1,10 @@
-import { act, fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
+import { userEvent } from '@testing-library/user-event';
 import { linodeFactory, placementGroupFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsDeleteModal } from './PlacementGroupsDeleteModal';
-
-import type { RenderResult } from '@testing-library/react';
 
 const queryMocks = vi.hoisted(() => ({
   useDeletePlacementGroup: vi.fn().mockReturnValue({
@@ -31,36 +29,31 @@ const props = {
 
 describe('PlacementGroupsDeleteModal', () => {
   it('should render the right form elements', async () => {
-    let renderResult: RenderResult;
-    await act(async () => {
-      renderResult = renderWithTheme(
-        <PlacementGroupsDeleteModal
-          {...props}
-          linodes={[
-            linodeFactory.build({
-              id: 1,
-              label: 'test-linode',
-              region: 'us-east',
-            }),
-          ]}
-          selectedPlacementGroup={placementGroupFactory.build({
-            affinity_type: 'anti_affinity:local',
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
+      <PlacementGroupsDeleteModal
+        {...props}
+        linodes={[
+          linodeFactory.build({
             id: 1,
-            label: 'PG-to-delete',
-            members: [
-              {
-                is_compliant: true,
-                linode_id: 1,
-              },
-            ],
+            label: 'test-linode',
             region: 'us-east',
-          })}
-          disableUnassignButton={false}
-        />
-      );
-    });
-
-    const { getByRole, getByTestId, getByText } = renderResult!;
+          }),
+        ]}
+        selectedPlacementGroup={placementGroupFactory.build({
+          affinity_type: 'anti_affinity:local',
+          id: 1,
+          label: 'PG-to-delete',
+          members: [
+            {
+              is_compliant: true,
+              linode_id: 1,
+            },
+          ],
+          region: 'us-east',
+        })}
+        disableUnassignButton={false}
+      />
+    );
 
     expect(
       getByRole('heading', {
@@ -80,30 +73,25 @@ describe('PlacementGroupsDeleteModal', () => {
   });
 
   it("should be enabled when there's no assigned linodes", async () => {
-    let renderResult: RenderResult;
-    await act(async () => {
-      renderResult = renderWithTheme(
-        <PlacementGroupsDeleteModal
-          {...props}
-          linodes={[
-            linodeFactory.build({
-              id: 1,
-              label: 'test-linode',
-              region: 'us-east',
-            }),
-          ]}
-          selectedPlacementGroup={placementGroupFactory.build({
-            affinity_type: 'anti_affinity:local',
+    const { getByRole, getByTestId } = renderWithTheme(
+      <PlacementGroupsDeleteModal
+        {...props}
+        linodes={[
+          linodeFactory.build({
             id: 1,
-            label: 'PG-to-delete',
-            members: [],
-          })}
-          disableUnassignButton={false}
-        />
-      );
-    });
-
-    const { getByRole, getByTestId } = renderResult!;
+            label: 'test-linode',
+            region: 'us-east',
+          }),
+        ]}
+        selectedPlacementGroup={placementGroupFactory.build({
+          affinity_type: 'anti_affinity:local',
+          id: 1,
+          label: 'PG-to-delete',
+          members: [],
+        })}
+        disableUnassignButton={false}
+      />
+    );
 
     const textField = getByTestId('textfield-input');
     const deleteButton = getByRole('button', { name: 'Delete' });
@@ -111,10 +99,10 @@ describe('PlacementGroupsDeleteModal', () => {
     expect(textField).toBeEnabled();
     expect(deleteButton).toBeDisabled();
 
-    fireEvent.change(textField, { target: { value: 'PG-to-delete' } });
+    await userEvent.type(textField, 'PG-to-delete');
 
     expect(deleteButton).toBeEnabled();
-    fireEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
 
     expect(queryMocks.useDeletePlacementGroup).toHaveBeenCalled();
   });
