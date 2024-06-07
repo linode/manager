@@ -156,7 +156,7 @@ export const CreateImageTab = () => {
               variant="error"
             />
           )}
-          <Stack spacing={1}>
+          <Stack spacing={2}>
             <Typography variant="h2">Select Linode & Disk</Typography>
             <Typography sx={{ maxWidth: { md: '80%', sm: '100%' } }}>
               By default, Linode images are limited to 6144 MB of data per disk.
@@ -252,7 +252,7 @@ export const CreateImageTab = () => {
           </Stack>
         </Paper>
         <Paper>
-          <Stack spacing={1}>
+          <Stack spacing={2}>
             <Typography variant="h2">Image Details</Typography>
             <Controller
               render={({ field, fieldState }) => (
