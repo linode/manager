@@ -44,13 +44,6 @@ export const EditImageDrawer = (props: Props) => {
 
   const { mutateAsync: updateImage } = useUpdateImageMutation();
 
-  React.useEffect(() => {
-    if (open) {
-      reset();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
-
   const onSubmit = handleSubmit(async (values) => {
     if (!image) {
       return;
@@ -74,7 +67,7 @@ export const EditImageDrawer = (props: Props) => {
   });
 
   return (
-    <Drawer onClose={onClose} open={open} title="Edit Image">
+    <Drawer onClose={onClose} onExited={reset} open={open} title="Edit Image">
       {!canCreateImage && (
         <Notice
           text="You don't have permissions to edit images. Please contact an account administrator for details."

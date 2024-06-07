@@ -32,17 +32,12 @@ export const RebuildImageDrawer = (props: Props) => {
     mode: 'onBlur',
   });
 
-  React.useEffect(() => {
-    if (open) {
-      reset();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
-
   const onSubmit = handleSubmit((values) => {
     if (!image) {
       return;
     }
+
+    onClose();
 
     history.push({
       pathname: `/linodes/${values.linodeId}/rebuild`,
@@ -50,12 +45,15 @@ export const RebuildImageDrawer = (props: Props) => {
         [REBUILD_LINODE_IMAGE_PARAM_NAME]: image.id,
       }).toString(),
     });
-
-    onClose();
   });
 
   return (
-    <Drawer onClose={onClose} open={open} title="Restore from Image">
+    <Drawer
+      onClose={onClose}
+      onExited={reset}
+      open={open}
+      title="Restore from Image"
+    >
       {formState.errors.root?.message && (
         <Notice
           data-qa-notice
