@@ -116,7 +116,7 @@ export const EventsLanding = (props: Props) => {
                 </TableCell>
               </Hidden>
             )}
-            <StyledTableCell sx={{ width: 150 }}>Relative Date</StyledTableCell>
+            <StyledTableCell sx={{ width: 200 }}>Relative Date</StyledTableCell>
             <Hidden mdDown>
               <StyledTableCell data-qa-events-time-header sx={{ width: 150 }}>
                 Absolute Date

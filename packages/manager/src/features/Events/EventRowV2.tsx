@@ -9,7 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 
-import { getEventMessage, shouldShowEventProgress } from './utils';
+import { formatProgressEventDisplay, getEventMessage } from './utils';
 
 import type { Event } from '@linode/api-v4/lib/account';
 
@@ -31,7 +31,9 @@ export const EventRowV2 = (props: EventRowProps) => {
     return null;
   }
 
-  const showProgress = shouldShowEventProgress(event);
+  const { progressEventDisplay, showProgress } = formatProgressEventDisplay(
+    event
+  );
 
   return (
     <TableRow
@@ -40,13 +42,13 @@ export const EventRowV2 = (props: EventRowProps) => {
       data-test-id={action}
     >
       <TableCell data-qa-event-message-cell parentColumn="Event">
-        {message}
+        <Box sx={{ mt: showProgress ? 0.5 : 0 }}>{message}</Box>
         {showProgress && (
           <BarPercent
             max={100}
             narrow
             rounded
-            sx={{ my: 1 }}
+            sx={{ mb: 1, mt: 0.5 }}
             value={event.percent_complete ?? 0}
           />
         )}
@@ -57,7 +59,7 @@ export const EventRowV2 = (props: EventRowProps) => {
         </TableCell>
       </Hidden>
       <TableCell parentColumn="Relative Date">
-        {timestamp.toRelative()}
+        {progressEventDisplay}
         {username && (
           <Hidden smUp>
             <br />

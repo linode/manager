@@ -2,6 +2,7 @@ import { Duration } from 'luxon';
 
 import { ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS } from 'src/features/Events/constants';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
+import { getEventTimestamp } from 'src/utilities/eventUtils';
 
 import { eventMessages } from './factory';
 
@@ -93,4 +94,26 @@ export const shouldShowEventProgress = (event: Event): boolean => {
     ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS.includes(event.action) &&
     event.status !== 'scheduled'
   );
+};
+
+/**
+ * Format the event for display in the notification center and event page.
+ *
+ * If the event is a progress event, we'll show the time remaining, if available.
+ * Else, we'll show the time the event occurred, relative to now.
+ */
+export const formatProgressEventDisplay = (event: Event) => {
+  const showProgress = shouldShowEventProgress(event);
+  const parsedTimeRemaining = formatEventTimeRemaining(event.time_remaining);
+
+  const progressEventDisplay = showProgress
+    ? parsedTimeRemaining
+      ? `~${parsedTimeRemaining}`
+      : `Started ${getEventTimestamp(event).toRelative()}`
+    : getEventTimestamp(event).toRelative();
+
+  return {
+    progressEventDisplay,
+    showProgress,
+  };
 };

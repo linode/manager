@@ -5,11 +5,10 @@ import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
 import {
-  formatEventTimeRemaining,
+  formatProgressEventDisplay,
   getEventMessage,
   shouldShowEventProgress,
 } from 'src/features/Events/utils';
-import { getEventTimestamp } from 'src/utilities/eventUtils';
 
 import {
   RenderEventGravatar,
@@ -40,16 +39,7 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
     return null;
   }
 
-  /**
-   * If the event is a progress event, we'll show the time remaining, if available.
-   * Else, we'll show the time the event occurred, relative to now.
-   */
-  const parsedTimeRemaining = formatEventTimeRemaining(event.time_remaining);
-  const timeTypeToDisplay = showProgress
-    ? parsedTimeRemaining
-      ? `~${parsedTimeRemaining}`
-      : `Started ${getEventTimestamp(event).toRelative()}`
-    : getEventTimestamp(event).toRelative();
+  const progressEventDisplay = formatProgressEventDisplay(event);
 
   return (
     <>
@@ -74,7 +64,8 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
             />
           )}
           <Typography sx={{ fontSize: '0.8rem' }}>
-            {timeTypeToDisplay} | {event.username ?? 'Linode'}
+            {progressEventDisplay.progressEventDisplay} |{' '}
+            {event.username ?? 'Linode'}
           </Typography>
         </Box>
       </RenderEventStyledBox>
