@@ -4,10 +4,10 @@ import { BarPercent } from 'src/components/BarPercent';
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
-import { ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS } from 'src/features/Events/constants';
 import {
   formatEventTimeRemaining,
   getEventMessage,
+  shouldShowEventProgress,
 } from 'src/features/Events/utils';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 
@@ -21,16 +21,15 @@ import type { Event } from '@linode/api-v4/lib/account/types';
 
 interface RenderEventProps {
   event: Event;
-  isProgressEvent: boolean;
   onClose: () => void;
 }
 
 export const RenderEventV2 = React.memo((props: RenderEventProps) => {
+  const { event } = props;
   const { classes, cx } = useRenderEventStyles();
-  const { event, isProgressEvent } = props;
-  const message = getEventMessage(event);
-
   const unseenEventClass = cx({ [classes.unseenEventV2]: !event.seen });
+  const message = getEventMessage(event);
+  const showProgress = shouldShowEventProgress(event);
 
   /**
    * Some event types may not be handled by our system (or new types or new ones may be added that we haven't caught yet).
@@ -40,20 +39,6 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
   if (message === null) {
     return null;
   }
-
-  /**
-   * Progress events are determined based on `event.percent_complete` being defined and < 100.
-   * However, some some events are not worth showing progress for, usually because they complete too quickly.
-   * To that effect, we have an include for progress events.
-   * A new action should be added to `ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS` to ensure the display of the progress bar.
-   *
-   * Additionally, we only want to show the progress bar if the event is not in a scheduled state.
-   * For some reason the API will return a percent_complete value for scheduled events.
-   */
-  const showProgress =
-    isProgressEvent &&
-    ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS.includes(event.action) &&
-    event.status !== 'scheduled';
 
   /**
    * If the event is a progress event, we'll show the time remaining, if available.

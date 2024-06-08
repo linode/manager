@@ -42,6 +42,7 @@ export interface NotificationItem {
   countInTotal: boolean;
   eventId: number;
   id: string;
+  isProgressEvent?: boolean;
 }
 
 interface NotificationSectionProps {

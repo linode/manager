@@ -1,3 +1,4 @@
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { IconButton } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
@@ -18,6 +19,7 @@ import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotificatio
 import { usePrevious } from 'src/hooks/usePrevious';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMarkEventsAsSeen } from 'src/queries/events/events';
+import { rotate360 } from 'src/styles/keyframes';
 
 import { TopMenuTooltip, topMenuIconButtonSx } from '../TopMenuTooltip';
 
@@ -46,8 +48,15 @@ export const NotificationMenuV2 = () => {
   const { mutateAsync: markEventsAsSeen } = useMarkEventsAsSeen();
 
   const numNotifications =
-    eventNotifications.filter((thisEvent) => thisEvent.countInTotal).length +
-    formattedNotifications.filter((thisEvent) => thisEvent.countInTotal).length;
+    eventNotifications.filter(
+      (notificationItem) => notificationItem.countInTotal
+    ).length +
+    formattedNotifications.filter(
+      (notificationItem) => notificationItem.countInTotal
+    ).length;
+  const showInProgressEventIcon = eventNotifications.some(
+    (notificationItem) => notificationItem.isProgressEvent
+  );
 
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const prevOpen = usePrevious(notificationContext.menuOpen);
@@ -105,6 +114,7 @@ export const NotificationMenuV2 = () => {
           {numNotifications > 0 && (
             <StyledChip color="success" label={numNotifications} size="small" />
           )}
+          {showInProgressEventIcon && <StyledAutorenewIcon />}
         </IconButton>
       </TopMenuTooltip>
       <Popover
@@ -137,3 +147,12 @@ export const NotificationMenuV2 = () => {
     </>
   );
 };
+
+const StyledAutorenewIcon = styled(AutorenewIcon)(({ theme }) => ({
+  animation: `${rotate360} 2s linear infinite`,
+  bottom: 4,
+  color: theme.color.green,
+  fontSize: 18,
+  position: 'absolute',
+  right: 2,
+}));

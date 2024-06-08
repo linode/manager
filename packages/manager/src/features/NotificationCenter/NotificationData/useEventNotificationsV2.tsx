@@ -1,7 +1,8 @@
+// TODO eventMessagesV2: Do we need to handle unwanted taxId events
 import * as React from 'react';
 
 import { EVENT_POLLING_FILTER } from 'src/features/Events/constants';
-import { isInProgressEvent } from 'src/queries/events/event.helpers';
+import { shouldShowEventProgress } from 'src/features/Events/utils';
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
 
 import { notificationContext as _notificationContext } from '../NotificationContext';
@@ -19,7 +20,7 @@ export const useEventNotificationsV2 = () => {
   const formattedEvents = events?.map((event) =>
     formatEventForDisplay({
       event,
-      isProgressEvent: isInProgressEvent(event),
+      isProgressEvent: shouldShowEventProgress(event),
       onClose: notificationContext.closeMenu,
     })
   );
@@ -35,17 +36,11 @@ interface FormattedEventForDisplay {
 
 const formatEventForDisplay = ({
   event,
-  isProgressEvent,
   onClose,
 }: FormattedEventForDisplay): NotificationItem => ({
-  body: (
-    <RenderEventV2
-      event={event}
-      isProgressEvent={isProgressEvent}
-      onClose={onClose}
-    />
-  ),
+  body: <RenderEventV2 event={event} onClose={onClose} />,
   countInTotal: !event.seen,
   eventId: event.id,
   id: `event-${event.id}`,
+  isProgressEvent: shouldShowEventProgress(event),
 });

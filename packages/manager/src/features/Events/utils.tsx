@@ -1,5 +1,9 @@
-import { eventMessages } from './factory';
 import { Duration } from 'luxon';
+
+import { ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS } from 'src/features/Events/constants';
+import { isInProgressEvent } from 'src/queries/events/event.helpers';
+
+import { eventMessages } from './factory';
 
 import type { Event } from '@linode/api-v4';
 
@@ -68,4 +72,25 @@ export const formatEventTimeRemaining = (time: null | string) => {
     // Broken/unexpected input
     return null;
   }
+};
+
+/**
+ * Determines if the progress bar should be shown for an event (in the notification center or the event page).
+ *
+ * Progress events are determined based on `event.percent_complete` being defined and < 100.
+ * However, some some events are not worth showing progress for, usually because they complete too quickly.
+ * To that effect, we have an include for progress events.
+ * A new action should be added to `ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS` to ensure the display of the progress bar.
+ *
+ * Additionally, we only want to show the progress bar if the event is not in a scheduled state.
+ * For some reason the API will return a percent_complete value for scheduled events.
+ */
+export const shouldShowEventProgress = (event: Event): boolean => {
+  const isProgressEvent = isInProgressEvent(event);
+
+  return (
+    isProgressEvent &&
+    ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS.includes(event.action) &&
+    event.status !== 'scheduled'
+  );
 };
