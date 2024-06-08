@@ -1,6 +1,6 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider as ReduxStoreProvider } from 'react-redux';
@@ -80,10 +80,10 @@ const Main = () => {
             </Router>
           </React.Suspense>
         </LinodeThemeWrapper>
-        <ReactQueryDevtools
+        {/*        <ReactQueryDevtools
           initialIsOpen={false}
           toggleButtonProps={{ style: { marginLeft: '3em' } }}
-        />
+        />*/}
       </QueryClientProvider>
     </ReduxStoreProvider>
   );
@@ -93,7 +93,7 @@ async function loadApp() {
   if (shouldEnableDevTools) {
     // If devtools are enabled, load them before we load the main app.
     // This ensures the MSW is setup before we start making API calls.
-    await loadDevTools(store);
+    await loadDevTools(store, queryClient);
   }
   const container = document.getElementById('root');
   const root = createRoot(container!);
