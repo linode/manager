@@ -5,9 +5,8 @@ import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
 import {
-  formatProgressEventDisplay,
+  formatProgressEvent,
   getEventMessage,
-  shouldShowEventProgress,
 } from 'src/features/Events/utils';
 
 import {
@@ -28,7 +27,6 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
   const { classes, cx } = useRenderEventStyles();
   const unseenEventClass = cx({ [classes.unseenEventV2]: !event.seen });
   const message = getEventMessage(event);
-  const showProgress = shouldShowEventProgress(event);
 
   /**
    * Some event types may not be handled by our system (or new types or new ones may be added that we haven't caught yet).
@@ -39,7 +37,7 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
     return null;
   }
 
-  const progressEventDisplay = formatProgressEventDisplay(event);
+  const { progressEventDisplay, showProgress } = formatProgressEvent(event);
 
   return (
     <>
@@ -64,8 +62,7 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
             />
           )}
           <Typography sx={{ fontSize: '0.8rem' }}>
-            {progressEventDisplay.progressEventDisplay} |{' '}
-            {event.username ?? 'Linode'}
+            {progressEventDisplay} | {event.username ?? 'Linode'}
           </Typography>
         </Box>
       </RenderEventStyledBox>

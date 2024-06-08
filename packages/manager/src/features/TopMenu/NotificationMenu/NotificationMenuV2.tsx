@@ -55,7 +55,7 @@ export const NotificationMenuV2 = () => {
       (notificationItem) => notificationItem.countInTotal
     ).length;
   const showInProgressEventIcon = eventNotifications.some(
-    (notificationItem) => notificationItem.isProgressEvent
+    (notificationItem) => notificationItem.showProgress
   );
 
   const anchorRef = React.useRef<HTMLButtonElement>(null);

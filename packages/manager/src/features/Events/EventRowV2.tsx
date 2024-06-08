@@ -9,7 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 
-import { formatProgressEventDisplay, getEventMessage } from './utils';
+import { formatProgressEvent, getEventMessage } from './utils';
 
 import type { Event } from '@linode/api-v4/lib/account';
 
@@ -31,16 +31,10 @@ export const EventRowV2 = (props: EventRowProps) => {
     return null;
   }
 
-  const { progressEventDisplay, showProgress } = formatProgressEventDisplay(
-    event
-  );
+  const { progressEventDisplay, showProgress } = formatProgressEvent(event);
 
   return (
-    <TableRow
-      className={showProgress ? 'in-progress' : ''}
-      data-qa-event-row
-      data-test-id={action}
-    >
+    <TableRow data-qa-event-row data-test-id={action}>
       <TableCell data-qa-event-message-cell parentColumn="Event">
         <Box sx={{ mt: showProgress ? 0.5 : 0 }}>{message}</Box>
         {showProgress && (

@@ -86,7 +86,7 @@ export const formatEventTimeRemaining = (time: null | string) => {
  * Additionally, we only want to show the progress bar if the event is not in a scheduled state.
  * For some reason the API will return a percent_complete value for scheduled events.
  */
-export const shouldShowEventProgress = (event: Event): boolean => {
+const shouldShowEventProgress = (event: Event): boolean => {
   const isProgressEvent = isInProgressEvent(event);
 
   return (
@@ -96,13 +96,18 @@ export const shouldShowEventProgress = (event: Event): boolean => {
   );
 };
 
+interface ProgressEventDisplay {
+  progressEventDisplay: null | string;
+  showProgress: boolean;
+}
+
 /**
  * Format the event for display in the notification center and event page.
  *
  * If the event is a progress event, we'll show the time remaining, if available.
  * Else, we'll show the time the event occurred, relative to now.
  */
-export const formatProgressEventDisplay = (event: Event) => {
+export const formatProgressEvent = (event: Event): ProgressEventDisplay => {
   const showProgress = shouldShowEventProgress(event);
   const parsedTimeRemaining = formatEventTimeRemaining(event.time_remaining);
 
