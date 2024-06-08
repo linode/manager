@@ -7,7 +7,7 @@ export const MockDataTool = () => {
   return (
     <Grid container>
       <Grid xs={12}>
-        <h4 style={{ marginBottom: 8, marginTop: 0 }}>Mock Data</h4>
+        <h4 style={{ marginBottom: 8, marginTop: 0 }}>Mock Service Worker</h4>
       </Grid>
       <Grid xs={12}>
         <ServiceWorkerTool />
