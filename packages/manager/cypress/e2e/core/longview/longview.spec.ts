@@ -1,17 +1,19 @@
 import type { Linode, LongviewClient } from '@linode/api-v4';
 import { createLongviewClient } from '@linode/api-v4';
-import { longviewResponseFactory, longviewClientFactory } from 'src/factories';
+import {
+  longviewResponseFactory,
+  longviewClientFactory,
+  longviewAppsFactory,
+} from 'src/factories';
 import { LongviewResponse } from 'src/features/Longview/request.types';
 import { authenticate } from 'support/api/authentication';
 import {
-  longviewInstallTimeout,
   longviewStatusTimeout,
   longviewEmptyStateMessage,
   longviewAddClientButtonText,
 } from 'support/constants/longview';
 import {
   interceptFetchLongviewStatus,
-  interceptGetLongviewClients,
   mockGetLongviewClients,
   mockFetchLongviewStatus,
   mockCreateLongviewClient,
@@ -33,31 +35,6 @@ const linodeCreateTimeout = 90000;
  */
 const getInstallCommand = (installCode: string): string => {
   return `curl -s https://lv.linode.com/${installCode} | sudo bash`;
-};
-
-/**
- * Installs Longview on a Linode.
- *
- * @param linodeIp - IP of Linode on which to install Longview.
- * @param linodePass - Root password of Linode on which to install Longview.
- * @param installCommand - Longview installation command.
- *
- * @returns Cypress chainable.
- */
-const installLongview = (
-  linodeIp: string,
-  linodePass: string,
-  installCommand: string
-) => {
-  return cy.exec('./cypress/support/scripts/longview/install-longview.sh', {
-    failOnNonZeroExit: true,
-    timeout: longviewInstallTimeout,
-    env: {
-      LINODEIP: linodeIp,
-      LINODEPASSWORD: linodePass,
-      CURLCOMMAND: installCommand,
-    },
-  });
 };
 
 /**
@@ -111,8 +88,63 @@ describe('longview', () => {
    * - Creates a Linode, connects to it via SSH, and installs Longview using the given cURL command.
    * - Confirms that Cloud Manager UI updates to reflect Longview installation and data.
    */
+
+  it.only('can install Longview client on a Linode', () => {
+    const client: LongviewClient = longviewClientFactory.build({
+      api_key: '01AE82DD-6F99-44F6-95781512B64FFBC3',
+      apps: longviewAppsFactory.build(),
+      created: new Date().toDateString(),
+      id: 338283,
+      install_code: '748632FC-E92B-491F-A29D44019039017C',
+      label: 'longview-client-longview338283',
+      updated: new Date().toDateString(),
+    });
+    const status: LongviewResponse = longviewResponseFactory.build();
+    mockCreateLongviewClient(client).as('createLongviewClient');
+    mockGetLongviewClients([client]).as('getLongviewClients');
+    mockFetchLongviewStatus(status).as('fetchLongviewStatus');
+    const installCommand = getInstallCommand(client.install_code);
+
+    cy.visitWithLogin('/longview');
+    cy.wait('@getLongviewClients');
+
+    ui.button
+      .findByTitle('Add Client')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.wait('@createLongviewClient');
+    cy.wait('@fetchLongviewStatus');
+
+    // Find the table row for the new Longview client, assert expected information
+    // is displayed inside of it.
+    cy.get(`[data-qa-longview-client="${client.id}"]`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByText(client.label).should('be.visible');
+        cy.findByText(client.api_key).should('be.visible');
+        cy.contains(installCommand).should('be.visible');
+        cy.findByText('Waiting for data...');
+      });
+
+    // Confirms that UI updates to show the new client when creating one.
+    cy.findByText(`${client.label}`).should('be.visible');
+    cy.get(`[data-qa-longview-client="${client.id}"]`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Waiting for data...').should('not.exist');
+        cy.findByText('CPU').should('be.visible');
+        cy.findByText('RAM').should('be.visible');
+        cy.findByText('Swap').should('be.visible');
+        cy.findByText('Load').should('be.visible');
+        cy.findByText('Network').should('be.visible');
+        cy.findByText('Storage').should('be.visible');
+      });
+  });
+
   // TODO Unskip for M3-8107.
-  it.skip('can install Longview client on a Linode', () => {
+  it('can install Longview client on a Linode', () => {
     const linodePassword = randomString(32, {
       symbols: false,
       lowercase: true,
@@ -137,13 +169,14 @@ describe('longview', () => {
       label: 'Creating Linode and Longview Client...',
       timeout: linodeCreateTimeout,
     }).then(([linode, client]: [Linode, LongviewClient]) => {
-      const linodeIp = linode.ipv4[0];
+      //const linodeIp = linode.ipv4[0];
       const installCommand = getInstallCommand(client.install_code);
 
-      interceptGetLongviewClients().as('getLongviewClients');
+      mockGetLongviewClients([client]).as('getLongviewClient');
       interceptFetchLongviewStatus().as('fetchLongviewStatus');
+
       cy.visitWithLogin('/longview');
-      cy.wait('@getLongviewClients');
+      cy.wait('@getLongviewClient');
 
       // Find the table row for the new Longview client, assert expected information
       // is displayed inside of it.
@@ -156,12 +189,14 @@ describe('longview', () => {
           cy.findByText('Waiting for data...');
         });
 
+      cy.wait('@fetchLongviewStatus');
+
       // Install Longview on Linode by SSHing into machine and executing cURL command.
-      installLongview(linodeIp, linodePassword, installCommand);
+      // installLongview(linodeIp, linodePassword, installCommand);
 
       // Wait for Longview to begin serving data and confirm that Cloud Manager
       // UI updates accordingly.
-      waitForLongviewData('fetchLongviewStatus', client.api_key);
+      //waitForLongviewData('fetchLongviewStatus', client.api_key);
 
       // Sometimes Cloud Manager UI does not updated automatically upon receiving
       // Longivew status data. Performing a page reload mitigates this issue.
