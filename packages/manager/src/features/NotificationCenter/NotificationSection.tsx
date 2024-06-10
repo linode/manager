@@ -149,7 +149,7 @@ const ContentBody = React.memo((props: BodyProps) => {
   if (loading) {
     return (
       <StyledLoadingContainer>
-        <CircleProgress mini />
+        <CircleProgress size="sm" />
       </StyledLoadingContainer>
     );
   }
@@ -235,7 +235,6 @@ const StyledNotificationItem = styled(Box, {
   shouldForwardProp: omittedProps(['header']),
 })<{ header: string }>(({ theme, ...props }) => ({
   '& p': {
-    color: theme.textColors.headlineStatic,
     lineHeight: '1.25rem',
   },
   display: 'flex',

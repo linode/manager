@@ -22,7 +22,7 @@ import type { Region } from '@linode/api-v4';
 
 export interface PlanInformationProps {
   disabledClasses?: LinodeTypeClass[];
-  hasDisabledPlans: boolean;
+  hasMajorityOfPlansDisabled: boolean;
   hasSelectedRegion: boolean;
   hideLimitedAvailabilityBanner?: boolean;
   isSelectedRegionEligibleForPlan: boolean;
@@ -31,10 +31,9 @@ export interface PlanInformationProps {
 }
 
 export const PlanInformation = (props: PlanInformationProps) => {
-  const theme = useTheme();
   const {
     disabledClasses,
-    hasDisabledPlans,
+    hasMajorityOfPlansDisabled,
     hasSelectedRegion,
     hideLimitedAvailabilityBanner,
     isSelectedRegionEligibleForPlan,
@@ -72,111 +71,72 @@ export const PlanInformation = (props: PlanInformationProps) => {
       ) : null}
       {hasSelectedRegion &&
         isSelectedRegionEligibleForPlan &&
-        !hideLimitedAvailabilityBanner && (
-          <LimitedAvailabilityNotice
-            hasDisabledPlans={hasDisabledPlans}
-            planType={planType}
-          />
+        !hideLimitedAvailabilityBanner &&
+        hasMajorityOfPlansDisabled && (
+          <Notice
+            sx={(theme: Theme) => ({
+              marginBottom: theme.spacing(3),
+              marginLeft: 0,
+              marginTop: 0,
+              padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
+            })}
+            dataTestId={limitedAvailabilityBannerTestId}
+            variant="warning"
+          >
+            <StyledNoticeTypography>
+              These plans have limited deployment availability.
+            </StyledNoticeTypography>
+          </Notice>
         )}
-      <Typography
-        data-qa-prodedi
-        sx={{ marginBottom: theme.spacing(3), marginTop: theme.spacing(1) }}
-      >
-        {planTabInfoContent[planType]?.typography}
-      </Typography>
+      <ClassDescriptionCopy planType={planType} />
     </>
   );
 };
 
 export const limitedAvailabilityBannerTestId = 'limited-availability-banner';
 
-interface LimitedAvailabilityNoticeProps {
-  hasDisabledPlans: boolean;
+interface ClassDescriptionCopyProps {
   planType: 'shared' | LinodeTypeClass;
 }
 
-export const LimitedAvailabilityNotice = (
-  props: LimitedAvailabilityNoticeProps
-) => {
-  const { hasDisabledPlans, planType } = props;
+export const ClassDescriptionCopy = (props: ClassDescriptionCopyProps) => {
+  const { planType } = props;
+  const theme = useTheme();
+  let planTypeLabel: null | string;
+  let docLink: null | string;
 
   switch (planType) {
     case 'dedicated':
-      return (
-        <LimitedAvailabilityNoticeCopy
-          docsLink={DEDICATED_COMPUTE_INSTANCES_LINK}
-          hasDisabledPlans={hasDisabledPlans}
-          planTypeLabel="Dedicated CPU"
-        />
-      );
-
+      planTypeLabel = 'Dedicated CPU';
+      docLink = DEDICATED_COMPUTE_INSTANCES_LINK;
+      break;
     case 'shared':
-      return (
-        <LimitedAvailabilityNoticeCopy
-          docsLink={SHARED_COMPUTE_INSTANCES_LINK}
-          hasDisabledPlans={hasDisabledPlans}
-          planTypeLabel="Shared CPU"
-        />
-      );
-
+      planTypeLabel = 'Shared CPU';
+      docLink = SHARED_COMPUTE_INSTANCES_LINK;
+      break;
     case 'highmem':
-      return (
-        <LimitedAvailabilityNoticeCopy
-          docsLink={HIGH_MEMORY_COMPUTE_INSTANCES_LINK}
-          hasDisabledPlans={hasDisabledPlans}
-          planTypeLabel="High Memory"
-        />
-      );
-
+      planTypeLabel = 'High Memory';
+      docLink = HIGH_MEMORY_COMPUTE_INSTANCES_LINK;
+      break;
     case 'premium':
-      return (
-        <LimitedAvailabilityNoticeCopy
-          docsLink={PREMIUM_COMPUTE_INSTANCES_LINK}
-          hasDisabledPlans={hasDisabledPlans}
-          planTypeLabel="Premium CPU"
-        />
-      );
-
+      planTypeLabel = 'Premium CPU';
+      docLink = PREMIUM_COMPUTE_INSTANCES_LINK;
+      break;
     case 'gpu':
-      return (
-        <LimitedAvailabilityNoticeCopy
-          docsLink={GPU_COMPUTE_INSTANCES_LINK}
-          hasDisabledPlans={hasDisabledPlans}
-          planTypeLabel="GPU"
-        />
-      );
-
+      planTypeLabel = 'GPU';
+      docLink = GPU_COMPUTE_INSTANCES_LINK;
+      break;
     default:
-      return null;
+      planTypeLabel = null;
+      docLink = null;
   }
-};
 
-interface LimitedAvailabilityNoticeCopyProps {
-  docsLink: string;
-  hasDisabledPlans: boolean;
-  planTypeLabel: string;
-}
-
-export const LimitedAvailabilityNoticeCopy = (
-  props: LimitedAvailabilityNoticeCopyProps
-) => {
-  const { docsLink, hasDisabledPlans, planTypeLabel } = props;
-
-  return hasDisabledPlans ? (
-    <Notice
-      sx={(theme: Theme) => ({
-        marginBottom: theme.spacing(3),
-        marginLeft: 0,
-        marginTop: 0,
-        padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
-      })}
-      dataTestId={limitedAvailabilityBannerTestId}
-      variant="warning"
+  return planTypeLabel && docLink ? (
+    <Typography
+      sx={{ marginBottom: theme.spacing(3), marginTop: theme.spacing(1) }}
     >
-      <StyledNoticeTypography>
-        These plans have limited deployment availability.{' '}
-        <Link to={docsLink}>Learn more</Link> about our {planTypeLabel} plans.
-      </StyledNoticeTypography>
-    </Notice>
+      {planTabInfoContent[planType]?.typography}{' '}
+      <Link to={docLink}>Learn more</Link> about our {planTypeLabel} plans.
+    </Typography>
   ) : null;
 };

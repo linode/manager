@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 
 import AccessControls from '../AccessControls';
 import DatabaseSettingsDeleteClusterDialog from './DatabaseSettingsDeleteClusterDialog';

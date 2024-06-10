@@ -1,13 +1,20 @@
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { profileFactory, sshKeyFactory } from 'src/factories';
+import {
+  accountFactory,
+  profileFactory,
+  regionFactory,
+  sshKeyFactory,
+} from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { Access } from './Access';
+
+import type { LinodeCreateFormValues } from './utilities';
 
 describe('Access', () => {
   it(
@@ -102,5 +109,54 @@ describe('Access', () => {
     await waitFor(() => {
       expect(getByRole('checkbox')).toBeDisabled();
     });
+  });
+
+  it('should show Linode disk encryption if the flag is on and the account has the capability', async () => {
+    server.use(
+      http.get('*/v4/account', () => {
+        return HttpResponse.json(
+          accountFactory.build({ capabilities: ['Disk Encryption'] })
+        );
+      })
+    );
+
+    const { findByText } = renderWithThemeAndHookFormContext({
+      component: <Access />,
+      options: { flags: { linodeDiskEncryption: true } },
+    });
+
+    const heading = await findByText('Disk Encryption');
+
+    expect(heading).toBeVisible();
+    expect(heading.tagName).toBe('H3');
+  });
+
+  it('should disable disk encryption if the selected region does not support it', async () => {
+    const region = regionFactory.build({
+      capabilities: [],
+    });
+
+    const account = accountFactory.build({ capabilities: ['Disk Encryption'] });
+
+    server.use(
+      http.get('*/v4/account', () => {
+        return HttpResponse.json(account);
+      }),
+      http.get('*/v4/regions', () => {
+        return HttpResponse.json(makeResourcePage([region]));
+      })
+    );
+
+    const {
+      findByLabelText,
+    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+      component: <Access />,
+      options: { flags: { linodeDiskEncryption: true } },
+      useFormOptions: { defaultValues: { region: region.id } },
+    });
+
+    await findByLabelText(
+      'Disk encryption is not available in the selected region.'
+    );
   });
 });

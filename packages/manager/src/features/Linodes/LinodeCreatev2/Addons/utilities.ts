@@ -1,11 +1,11 @@
 interface BackupsEnabledOptions {
   accountBackupsEnabled: boolean | undefined;
-  isEdgeRegion: boolean;
+  isDistributedRegion: boolean;
   value: boolean | undefined;
 }
 
 export const getBackupsEnabledValue = (options: BackupsEnabledOptions) => {
-  if (options.isEdgeRegion) {
+  if (options.isDistributedRegion) {
     return false;
   }
 

@@ -6,7 +6,10 @@ import Select, {
   BaseSelectProps,
   Item,
 } from 'src/components/EnhancedSelect/Select';
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 
 interface Props
   extends Omit<

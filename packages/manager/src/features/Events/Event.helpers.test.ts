@@ -1,3 +1,4 @@
+// TODO eventMessagesV2: delete when flag is removed
 import { eventFactory } from 'src/factories/events';
 
 import {

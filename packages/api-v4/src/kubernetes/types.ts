@@ -1,4 +1,4 @@
-import type { EncryptionStatus } from 'src/linodes';
+import type { EncryptionStatus } from '../linodes';
 
 export interface KubernetesCluster {
   created: string;

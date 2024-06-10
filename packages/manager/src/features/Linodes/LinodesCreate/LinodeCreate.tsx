@@ -13,7 +13,6 @@ import cloneDeep from 'lodash.clonedeep';
 import * as React from 'react';
 import { MapDispatchToProps, connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose as recompose } from 'recompose';
 import { v4 } from 'uuid';
 
 import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
@@ -25,7 +24,7 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { Stack } from 'src/components/Stack';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -34,10 +33,7 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
-import {
-  WithAccountProps,
-  withAccount,
-} from 'src/containers/account.container';
+import { WithAccountProps } from 'src/containers/account.container';
 import { WithFeatureFlagProps } from 'src/containers/flags.container';
 import { WithImagesProps as ImagesProps } from 'src/containers/images.container';
 import { RegionsProps } from 'src/containers/regions.container';
@@ -372,7 +368,7 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
 
-    const linodeIsInEdgeRegion = getIsEdgeRegion(
+    const linodeIsInDistributedRegion = getIsDistributedRegion(
       regionsData,
       selectedRegionID ?? ''
     );
@@ -406,7 +402,7 @@ export class LinodeCreate extends React.PureComponent<
       }
 
       // @TODO Gecko: Remove $0 hardcoding once plan data is returned from API
-      if (linodeIsInEdgeRegion) {
+      if (linodeIsInDistributedRegion) {
         displaySections.push({
           ...typeDisplayInfoCopy,
           details: '$0/month',
@@ -433,7 +429,7 @@ export class LinodeCreate extends React.PureComponent<
       hasBackups &&
       typeDisplayInfo &&
       backupsMonthlyPrice &&
-      !linodeIsInEdgeRegion
+      !linodeIsInDistributedRegion
     ) {
       displaySections.push(
         renderBackupsDisplaySection(accountBackupsEnabled, backupsMonthlyPrice)
@@ -512,9 +508,9 @@ export class LinodeCreate extends React.PureComponent<
       ) &&
       (imageIsCloudInitCompatible || linodeIsCloudInitCompatible);
 
-    const isEdgeRegionSelected = Boolean(
+    const isDistributedRegionSelected = Boolean(
       flags.gecko2?.enabled &&
-        getIsEdgeRegion(regionsData, this.props.selectedRegionID ?? '')
+        getIsDistributedRegion(regionsData, this.props.selectedRegionID ?? '')
     );
 
     return (
@@ -814,7 +810,7 @@ export class LinodeCreate extends React.PureComponent<
             handleVLANChange={this.props.handleVLANChange}
             ipamAddress={this.props.ipamAddress || ''}
             ipamError={hasErrorFor['interfaces[1].ipam_address']}
-            isEdgeRegionSelected={isEdgeRegionSelected}
+            isDistributedRegionSelected={isDistributedRegionSelected}
             isPrivateIPChecked={this.props.privateIPEnabled}
             labelError={hasErrorFor['interfaces[1].label']}
             linodesData={this.props.linodesData}
@@ -1232,6 +1228,4 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, CombinedProps> = (
 
 const connected = connect(undefined, mapDispatchToProps);
 
-const enhanced = recompose<CombinedProps, InnerProps>(connected, withAccount);
-
-export default enhanced(LinodeCreate);
+export default connected(LinodeCreate);

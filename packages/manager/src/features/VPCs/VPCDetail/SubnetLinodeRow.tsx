@@ -102,7 +102,7 @@ export const SubnetLinodeRow = (props: Props) => {
     return (
       <TableRow>
         <TableCell colSpan={6}>
-          <CircleProgress mini />
+          <CircleProgress size="sm" />
         </TableCell>
       </TableRow>
     );

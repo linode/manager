@@ -52,7 +52,7 @@ export const LoadBalancerConfigurations = () => {
         ))}
       </Box>
       {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
-      {isFetchingNextPage && <CircleProgress mini />}
+      {isFetchingNextPage && <CircleProgress size="sm" />}
       <Stack spacing={2}>
         <Box>
           <Button buttonType="outlined" onClick={() => setIsCreating(true)}>

@@ -10,8 +10,11 @@ import { RadioGroup } from 'src/components/RadioGroup';
 import { Stack } from 'src/components/Stack';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
-import { useMutateProfile, useProfile } from 'src/queries/profile';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
+import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { ThemeChoice } from 'src/utilities/theme';
 import { isOSMac } from 'src/utilities/userAgent';

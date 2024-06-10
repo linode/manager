@@ -11,7 +11,6 @@ import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, matchPath } from 'react-router-dom';
-import { compose } from 'recompose';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
@@ -184,6 +183,4 @@ const StyledTabs = styled(Tabs, {
   marginTop: 0,
 }));
 
-export default compose<LongviewLandingProps, RouteComponentProps>(
-  withLongviewClients()
-)(LongviewLanding);
+export default withLongviewClients()(LongviewLanding);

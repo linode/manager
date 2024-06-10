@@ -180,7 +180,7 @@ export const PlacementGroupsLanding = React.memo(() => {
         InputProps={{
           endAdornment: query && (
             <InputAdornment position="end">
-              {isFetching && <CircleProgress mini />}
+              {isFetching && <CircleProgress size="sm" />}
 
               <IconButton
                 aria-label="Clear"

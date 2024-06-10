@@ -1,4 +1,4 @@
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 
 import type { RestrictedGlobalGrantType } from 'src/features/Account/utils';
 

@@ -151,7 +151,7 @@ const RangeRDNSCell = (props: {
   const ipsWithRDNS = listIPv6InRange(range.range, range.prefix, ipsInRegion);
 
   if (ipv6Loading) {
-    return <CircleProgress mini noPadding />;
+    return <CircleProgress size="sm" />;
   }
 
   // We don't show anything if there are no addresses.

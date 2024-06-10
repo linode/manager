@@ -1,7 +1,11 @@
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 
-import { OBJ_STORAGE_PRICE } from 'src/utilities/pricing/constants';
+import {
+  objectStorageOverageTypeFactory,
+  objectStorageTypeFactory,
+} from 'src/factories';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -23,7 +27,29 @@ const props: EnableObjectStorageProps = {
   open: true,
 };
 
+const queryMocks = vi.hoisted(() => ({
+  useObjectStorageTypesQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/queries/objectStorage', async () => {
+  const actual = await vi.importActual('src/queries/objectStorage');
+  return {
+    ...actual,
+    useObjectStorageTypesQuery: queryMocks.useObjectStorageTypesQuery,
+  };
+});
+
 describe('EnableObjectStorageModal', () => {
+  beforeAll(() => {
+    const mockObjectStorageTypes = [
+      objectStorageTypeFactory.build(),
+      objectStorageOverageTypeFactory.build(),
+    ];
+    queryMocks.useObjectStorageTypesQuery.mockReturnValue({
+      data: mockObjectStorageTypes,
+    });
+  });
+
   it('includes a header', () => {
     const { getAllByText } = render(
       wrapWithTheme(<EnableObjectStorageModal {...props} />)
@@ -37,7 +63,7 @@ describe('EnableObjectStorageModal', () => {
         <EnableObjectStorageModal {...props} regionId={BASE_PRICING_REGION} />
       )
     );
-    getByText(`$${OBJ_STORAGE_PRICE.monthly}/month`, { exact: false });
+    getByText(`$5/month`, { exact: false });
     getByText(OBJ_STORAGE_STORAGE_AMT, { exact: false });
     getByText(OBJ_STORAGE_NETWORK_TRANSFER_AMT, { exact: false });
   });
@@ -51,7 +77,7 @@ describe('EnableObjectStorageModal', () => {
         />
       )
     );
-    getByText(`$${OBJ_STORAGE_PRICE.monthly}/month`, { exact: false });
+    getByText(`$5/month`, { exact: false });
     getByText(OBJ_STORAGE_STORAGE_AMT, { exact: false });
     getByText(OBJ_STORAGE_NETWORK_TRANSFER_AMT, { exact: false });
   });
@@ -60,9 +86,25 @@ describe('EnableObjectStorageModal', () => {
     const { getByText } = render(
       wrapWithTheme(<EnableObjectStorageModal {...props} />)
     );
-    getByText(`$${OBJ_STORAGE_PRICE.monthly}/month`, { exact: false });
+    getByText(`$5/month`, { exact: false });
     getByText(OBJ_STORAGE_STORAGE_AMT, { exact: false });
     getByText(OBJ_STORAGE_NETWORK_TRANSFER_AMT, { exact: false });
+  });
+
+  it('displays placeholder unknown pricing and disables the primary action button if pricing is not available', () => {
+    queryMocks.useObjectStorageTypesQuery.mockReturnValue({
+      data: undefined,
+      isError: true,
+    });
+
+    const { getByTestId, getByText } = render(
+      wrapWithTheme(<EnableObjectStorageModal regionId="us-east" {...props} />)
+    );
+
+    const primaryActionButton = getByTestId('enable-obj');
+
+    expect(getByText(`${UNKNOWN_PRICE}/month`, { exact: false })).toBeVisible();
+    expect(primaryActionButton).toBeDisabled();
   });
 
   it('includes a link to linode.com/pricing', () => {

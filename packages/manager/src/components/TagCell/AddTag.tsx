@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
 
 import { Autocomplete } from '../Autocomplete/Autocomplete';

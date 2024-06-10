@@ -11,6 +11,7 @@ const props = {
   currentTokenWithBearer: 'Bearer 123',
   onClose: vi.fn(),
   onSwitchAccount: vi.fn(),
+  searchQuery: '',
   userType: undefined,
 };
 

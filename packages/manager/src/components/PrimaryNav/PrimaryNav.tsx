@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
 
 import Account from 'src/assets/icons/account.svg';
+import CloudPulse from 'src/assets/icons/cloudpulse.svg';
 import Beta from 'src/assets/icons/entityIcons/beta.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
@@ -58,6 +59,7 @@ type NavEntity =
   | 'Longview'
   | 'Managed'
   | 'Marketplace'
+  | 'Monitor'
   | 'NodeBalancers'
   | 'Object Storage'
   | 'Placement Groups'
@@ -155,6 +157,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const allowMarketplacePrefetch =
     !oneClickApps && !oneClickAppsLoading && !oneClickAppsError;
+
+  const showCloudPulse = Boolean(flags.aclp?.enabled);
+  // the followed comment is for later use, the showCloudPulse will be removed and isACLPEnabled will be used
+  // const { isACLPEnabled } = useIsACLPEnabled();
 
   const { isACLBEnabled } = useIsACLBEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
@@ -276,6 +282,13 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           icon: <Longview />,
         },
         {
+          display: 'Monitor',
+          hide: !showCloudPulse,
+          href: '/monitor/cloudpulse',
+          icon: <CloudPulse />,
+          isBeta: flags.aclp?.beta,
+        },
+        {
           attr: { 'data-qa-one-click-nav-btn': true },
           display: 'Marketplace',
           href: '/linodes/create?type=One-Click',
@@ -313,6 +326,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       isACLBEnabled,
       isPlacementGroupsEnabled,
       flags.placementGroups,
+      showCloudPulse,
     ]
   );
 

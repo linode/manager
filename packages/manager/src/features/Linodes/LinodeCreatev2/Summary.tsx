@@ -10,6 +10,7 @@ import { Typography } from 'src/components/Typography';
 import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
@@ -33,6 +34,7 @@ export const Summary = () => {
     placementGroupId,
     vlanLabel,
     vpcId,
+    diskEncryption,
   ] = useWatch({
     control,
     name: [
@@ -46,6 +48,7 @@ export const Summary = () => {
       'placement_group.id',
       'interfaces.1.label',
       'interfaces.0.vpc_id',
+      'disk_encryption',
     ],
   });
 
@@ -78,9 +81,9 @@ export const Summary = () => {
     {
       item: {
         details: `$${price?.monthly}/month`,
-        title: type?.label,
+        title: type ? formatStorageUnits(type.label) : typeId,
       },
-      show: Boolean(type),
+      show: Boolean(typeId),
     },
     {
       item: {
@@ -119,12 +122,18 @@ export const Summary = () => {
       },
       show: Boolean(firewallId),
     },
+    {
+      item: {
+        title: 'Encrypted',
+      },
+      show: diskEncryption === 'enabled',
+    },
   ];
 
   const summaryItemsToShow = summaryItems.filter((item) => item.show);
 
   return (
-    <Paper>
+    <Paper data-qa-linode-create-summary>
       <Stack spacing={2}>
         <Typography variant="h2">Summary {label}</Typography>
         {summaryItemsToShow.length === 0 ? (

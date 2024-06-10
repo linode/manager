@@ -53,8 +53,6 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
 
   cy.wait('@mockLinodeRequest');
 
-  console.log('mockLinode', mockLinode);
-
   fbtVisible(mockLinode.label);
   fbtVisible(region.label);
   fbtVisible(`${mockLinode.id}`);

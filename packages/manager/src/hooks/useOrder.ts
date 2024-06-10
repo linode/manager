@@ -3,7 +3,10 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import { getInitialValuesFromUserPreferences } from 'src/components/OrderBy';
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 import { OrderSet } from 'src/types/ManagerPreferences';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
