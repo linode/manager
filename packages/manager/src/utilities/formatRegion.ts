@@ -23,7 +23,9 @@ export const getRegionCountryGroup = (region: Region | undefined) => {
   }
 
   const continentCode =
-    COUNTRY_CODE_TO_CONTINENT_CODE[region.country.toUpperCase() as Country];
+    COUNTRY_CODE_TO_CONTINENT_CODE[
+      region.country.toUpperCase() as Uppercase<Country>
+    ];
 
   return continentCode
     ? CONTINENT_CODE_TO_CONTINENT[continentCode] ?? 'Other'

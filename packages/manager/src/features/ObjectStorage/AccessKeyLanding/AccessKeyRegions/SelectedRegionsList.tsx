@@ -8,11 +8,11 @@ import {
   RemovableSelectionsList,
 } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
 
-import type { RegionSelectOption } from 'src/components/RegionSelect/RegionSelect.types';
+import type { Region } from '@linode/api-v4';
 
 interface SelectedRegionsProps {
   onRemove: (region: string) => void;
-  selectedRegions: RegionSelectOption[];
+  selectedRegions: Region[];
 }
 
 interface LabelComponentProps {
@@ -29,9 +29,9 @@ const SelectedRegion = ({ selection }: LabelComponentProps) => {
       }}
     >
       <StyledFlagContainer>
-        <Flag country={selection.data.country} />
+        <Flag country={selection.country} />
       </StyledFlagContainer>
-      {selection.label}
+      {selection.label} ({selection.id})
     </Box>
   );
 };
@@ -41,14 +41,12 @@ export const SelectedRegionsList = ({
   selectedRegions,
 }: SelectedRegionsProps) => {
   const handleRemove = (item: RemovableItem) => {
-    onRemove(item.value);
+    onRemove(item.id as string);
   };
 
   return (
     <RemovableSelectionsList
-      selectionData={selectedRegions.map((item, index) => {
-        return { ...item, id: index };
-      })}
+      selectionData={selectedRegions}
       LabelComponent={SelectedRegion}
       headerText=""
       noDataText=""

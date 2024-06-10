@@ -30,7 +30,7 @@ import { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 interface SelectRegionPanelProps {
-  RegionSelectProps?: Partial<RegionSelectProps>;
+  RegionSelectProps?: Partial<RegionSelectProps<true>>;
   currentCapability: Capabilities;
   disabled?: boolean;
   error?: string;
@@ -147,17 +147,18 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         </Notice>
       ) : null}
       <RegionSelect
-        currentCapability={currentCapability}
-        disabled={disabled}
-        errorText={error}
-        handleSelection={handleSelection}
-        helperText={helperText}
-        regionFilter={hideDistributedRegions ? 'core' : undefined}
-        regions={regions ?? []}
-        selectedId={selectedId || null}
         showDistributedRegionIconHelperText={
           showDistributedRegionIconHelperText
         }
+        currentCapability={currentCapability}
+        disableClearable
+        disabled={disabled}
+        errorText={error}
+        helperText={helperText}
+        onChange={(e, region) => handleSelection(region.id)}
+        regionFilter={hideDistributedRegions ? 'core' : undefined}
+        regions={regions ?? []}
+        value={selectedId || null}
         {...RegionSelectProps}
       />
       {showClonePriceWarning && (

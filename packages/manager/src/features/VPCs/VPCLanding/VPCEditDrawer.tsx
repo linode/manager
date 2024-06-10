@@ -120,10 +120,10 @@ export const VPCEditDrawer = (props: Props) => {
             currentCapability="VPCs"
             disabled // the Region field will not be editable during beta
             errorText={(regionsError && regionsError[0].reason) || undefined}
-            handleSelection={() => null}
+            onChange={() => null}
             helperText={REGION_HELPER_TEXT}
             regions={regionsData}
-            selectedId={vpc?.region ?? null}
+            value={vpc?.region ?? null}
           />
         )}
         <ActionsPanel
