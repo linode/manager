@@ -3,11 +3,14 @@ import React from 'react';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
+import { severityLabelMap } from './ticketUtils';
+
 import type {
   EntityType,
   TicketType,
   TicketTypeData,
 } from './SupportTicketDialog';
+import type { TicketSeverity } from '@linode/api-v4';
 
 export const SMTP_DIALOG_TITLE = 'Contact Support: SMTP Restriction Removal';
 export const SMTP_HELPER_TEXT =
@@ -52,6 +55,14 @@ export const ENTITY_ID_TO_NAME_MAP: Record<EntityType, string> = {
   none: '',
   volume_id: 'Volume',
 };
+
+export const SEVERITY_OPTIONS: {
+  label: string;
+  value: TicketSeverity;
+}[] = Array.from(severityLabelMap).map(([severity, label]) => ({
+  label,
+  value: severity,
+}));
 
 export const TICKET_SEVERITY_TOOLTIP_TEXT = (
   <>

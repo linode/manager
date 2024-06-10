@@ -26,6 +26,7 @@ import { TabbedReply } from '../SupportTicketDetail/TabbedReply/TabbedReply';
 import {
   ENTITY_ID_TO_NAME_MAP,
   ENTITY_MAP,
+  SEVERITY_OPTIONS,
   TICKET_SEVERITY_TOOLTIP_TEXT,
   TICKET_TYPE_MAP,
 } from './constants';
@@ -99,13 +100,16 @@ export interface SupportTicketDialogProps {
   prefilledTitle?: string;
 }
 
-const severityOptions: {
-  label: string;
-  value: TicketSeverity;
-}[] = Array.from(severityLabelMap).map(([severity, label]) => ({
-  label,
-  value: severity,
-}));
+interface SupportTicketFormData {
+  description: string;
+  entityId: string;
+  entityInputValue: string;
+  entityType: EntityType;
+  files: FileAttachment[];
+  selectedSeverity: TicketSeverity | undefined;
+  summary: string;
+  ticketType: TicketType;
+}
 
 export const entitiesToItems = (type: string, entities: any) => {
   return entities.map((entity: any) => {
@@ -133,17 +137,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   } = props;
 
   const hasSeverityCapability = useTicketSeverityCapability();
-
-  interface SupportTicketFormData {
-    description: string;
-    entityId: string;
-    entityInputValue: string;
-    entityType: EntityType;
-    files: FileAttachment[];
-    selectedSeverity: TicketSeverity | undefined;
-    summary: string;
-    ticketType: TicketType;
-  }
 
   const valuesFromStorage = storage.supportText.get();
 
@@ -284,55 +277,53 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     window.setTimeout(() => resetDrawer(true), 500);
   };
 
-  const onSubmit = () => {
+  const onSubmit = form.handleSubmit(async (values) => {
+    console.log({ values });
     // console.log(form.getValues());
     // const { onSuccess } = props;
     const _description = description;
     // ticketType === 'smtp' ? formatDescription(smtpFields) : description;
-    // if (!['general', 'none'].includes(entityType) && !entityId) {
-    //   setErrors([
-    //     {
-    //       field: 'input',
-    //       reason: `Please select a ${entityIdToNameMap[entityType]}.`,
-    //     },
-    //   ]);
-    //   return;
-    // }
-    // setErrors(undefined);
-    setSubmitting(true);
-    createSupportTicket({
-      description: _description,
-      [entityType]: Number(entityId),
-      severity: selectedSeverity,
-      summary,
-    })
-      .then((response) => {
-        setSubmitting(false);
-        window.setTimeout(() => resetDrawer(true), 500);
-        return response;
-      })
-      .then((response) => {
-        // TODO: handle file uploading
-        if (!props.keepOpenOnSuccess) {
-          close();
-        }
-      })
-      .catch((errResponse) => {
-        /* This block will only handle errors in creating the actual ticket; attachment
-         * errors are handled above. */
-        // TODO: need schema
-        // for (const error of errResponse) {
-        //   if (error.field) {
-        //     form.setError(error.field, { message: error.reason });
-        //   } else {
-        //     form.setError('root', { message: error.reason });
-        //   }
-        // }
 
-        setSubmitting(false);
-        // scrollErrorIntoView();
+    if (!['general', 'none'].includes(entityType) && !entityId) {
+      form.setError('entityId', {
+        message: `Please select a ${ENTITY_ID_TO_NAME_MAP[entityType]}.`,
       });
-  };
+
+      return;
+    }
+    // setSubmitting(true);
+    // createSupportTicket({
+    //   description: _description,
+    //   [entityType]: Number(entityId),
+    //   severity: selectedSeverity,
+    //   summary,
+    // })
+    //   .then((response) => {
+    //     setSubmitting(false);
+    //     window.setTimeout(() => resetDrawer(true), 500);
+    //     return response;
+    //   })
+    //   .then((response) => {
+    //     // TODO: handle file uploading
+    //     if (!props.keepOpenOnSuccess) {
+    //       close();
+    //     }
+    //   })
+    //   .catch((errResponse) => {
+    //     /* This block will only handle errors in creating the actual ticket; attachment
+    //      * errors are handled above. */
+    //     for (const error of errResponse) {
+    //       if (error.field) {
+    //         form.setError(error.field, { message: error.reason });
+    //       } else {
+    //         form.setError('root', { message: error.reason });
+    //       }
+    //     }
+
+    //     setSubmitting(false);
+    //     // scrollErrorIntoView();
+    //   });
+  });
 
   const renderEntityTypes = () => {
     return Object.keys(ENTITY_MAP).map((key: string) => {
@@ -409,6 +400,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   };
 
   const entityOptions = getEntityOptions();
+  console.log({ entityOptions });
   const areEntitiesLoading = loadingMap[entityType];
   const entityError = Boolean(errorMap[entityType])
     ? `Error loading ${ENTITY_ID_TO_NAME_MAP[entityType]}s`
@@ -483,7 +475,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                       autoHighlight
                       data-qa-ticket-severity
                       label="Severity"
-                      options={severityOptions}
+                      options={SEVERITY_OPTIONS}
                       sx={{ maxWidth: 'initial' }}
                       value={selectedSeverityOption ?? null}
                     />
@@ -517,22 +509,29 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                               ENTITY_ID_TO_NAME_MAP[entityType] ??
                               'Entity Select'
                             }
-                            onChange={(e, id) =>
-                              field.onChange(id ? String(id?.value) : '')
-                            }
+                            onChange={(e, id) => {
+                              console.log({ id }, form.formState);
+                              return form.setValue(
+                                'entityId',
+                                id ? String(id?.value) : ''
+                              );
+                            }}
+                            onInputChange={(e, value) => {
+                              console.log({ value });
+                              return field.onChange(value ? value.label : '');
+                            }}
                             data-qa-ticket-entity-id
                             disabled={entityOptions.length === 0}
                             errorText={entityError || fieldState.error?.message}
                             inputValue={entityInputValue}
                             loading={areEntitiesLoading}
-                            onInputChange={(e, value) => field.onChange(value)}
                             options={entityOptions}
                             placeholder={`Select a ${ENTITY_ID_TO_NAME_MAP[entityType]}`}
                             value={selectedEntity}
                           />
                         )}
                         control={form.control}
-                        name="entityId"
+                        name="entityInputValue"
                       />
                       {!areEntitiesLoading && entityOptions.length === 0 ? (
                         <FormHelperText>
