@@ -1,9 +1,12 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { HAControlPlane, HAControlPlaneProps } from './HAControlPlane';
+import { HAControlPlane } from './HAControlPlane';
+
+import type { HAControlPlaneProps } from './HAControlPlane';
 
 const props: HAControlPlaneProps = {
   highAvailabilityPrice: '60.00',
@@ -21,12 +24,10 @@ describe('HAControlPlane', () => {
   });
 
   it('should not render an HA price when there is a price error', () => {
-    const highAvailabilityPriceError = '--.--';
-
     const { queryAllByText } = renderWithTheme(
       <HAControlPlane
         {...props}
-        highAvailabilityPrice={highAvailabilityPriceError}
+        highAvailabilityPrice={UNKNOWN_PRICE}
         isErrorKubernetesTypes={true}
       />
     );

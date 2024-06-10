@@ -1,7 +1,7 @@
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
 
-import { CircularProgress } from 'src/components/CircularProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
@@ -65,13 +65,13 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
         <Typography variant="inherit">HA Control Plane</Typography>
       </FormLabel>
       <HACopy />
-      {isLoadingKubernetesTypes ? (
-        <CircularProgress size={16} sx={{ marginTop: 2 }} />
+      {isLoadingKubernetesTypes && selectedRegionId !== '' ? (
+        <CircleProgress size="sm" sx={{ marginTop: 2 }} />
       ) : selectedRegionId && isErrorKubernetesTypes ? (
         <Notice spacingBottom={4} spacingTop={24} variant="error">
           <Typography>
-            The cost for HA Control Plane is not available at this time. Refer
-            to <Link to={getRegionPriceLink(selectedRegionId)}> pricing </Link>
+            The cost for HA control plane is not available at this time. Refer
+            to <Link to={getRegionPriceLink(selectedRegionId)}>pricing</Link>{' '}
             for information.
           </Typography>
         </Notice>
@@ -86,7 +86,7 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
             <Typography>
               Yes, enable HA control plane.{' '}
               {selectedRegionId
-                ? `For this region, HA Control Plane costs ($${highAvailabilityPrice}/month).`
+                ? `For this region, HA control plane costs $${highAvailabilityPrice}/month.`
                 : '(Select a region to view price information.)'}
             </Typography>
           }

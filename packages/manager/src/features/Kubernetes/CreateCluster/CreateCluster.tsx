@@ -1,9 +1,3 @@
-import {
-  CreateKubeClusterPayload,
-  CreateNodePoolData,
-  KubeNodePoolResponse,
-} from '@linode/api-v4/lib/kubernetes';
-import { APIError } from '@linode/api-v4/lib/types';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { pick, remove, update } from 'ramda';
@@ -13,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { Box } from 'src/components/Box';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
@@ -55,6 +49,14 @@ import {
 } from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
+
+import type {
+  CreateKubeClusterPayload,
+  CreateNodePoolData,
+  KubeNodePoolResponse,
+} from '@linode/api-v4/lib/kubernetes';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
@@ -172,7 +174,9 @@ export const CreateCluster = () => {
 
   const getHighAvailabilityPrice = getDCSpecificPriceByType({
     regionId: selectedId ? selectedId : undefined,
-    type: kubernetesHighAvailabilityTypesData?.[1],
+    type: kubernetesHighAvailabilityTypesData?.find(
+      (type) => type.id === 'lke-ha'
+    ),
   });
 
   const dcSpecificPrice =

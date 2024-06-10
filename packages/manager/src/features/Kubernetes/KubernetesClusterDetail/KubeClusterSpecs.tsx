@@ -1,9 +1,9 @@
-import { Theme, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { CircularProgress } from 'src/components/CircularProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
@@ -11,15 +11,17 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+import {
+  HA_PRICE_ERROR_MESSAGE,
+  UNKNOWN_PRICE,
+} from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { getTotalClusterPrice } from 'src/utilities/pricing/kubernetes';
 
 import { getTotalClusterMemoryCPUAndStorage } from '../kubeUtils';
 
 import type { KubernetesCluster, PriceType } from '@linode/api-v4';
-
-export const HA_PRICE_ERROR_MESSAGE = `The cost for HA Control Plane is not available at this time.`;
+import type { Theme } from '@mui/material/styles';
 
 interface Props {
   cluster: KubernetesCluster;
@@ -85,7 +87,9 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
   const dcSpecificPrice = cluster.control_plane.high_availability
     ? getDCSpecificPriceByType({
         regionId: region?.id,
-        type: kubernetesHighAvailabilityTypesData?.[1],
+        type: kubernetesHighAvailabilityTypesData?.find(
+          (type) => type.id === 'lke-ha'
+        ),
       })
     : undefined;
 
@@ -97,7 +101,7 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
     `Version ${cluster.k8s_version}`,
     displayRegion,
     isLoadingKubernetesTypes ? (
-      <CircularProgress size={16} sx={{ marginTop: 2 }} />
+      <CircleProgress size="sm" sx={{ marginTop: 2 }} />
     ) : cluster.control_plane.high_availability && isErrorKubernetesTypes ? (
       <>
         (${UNKNOWN_PRICE}/month)

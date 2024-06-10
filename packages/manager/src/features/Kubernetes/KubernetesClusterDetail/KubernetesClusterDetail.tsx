@@ -11,7 +11,6 @@ import { useAccount } from 'src/queries/account/account';
 import {
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
-  useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -32,12 +31,6 @@ export const KubernetesClusterDetail = React.memo(() => {
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
     id
   );
-
-  const {
-    data: kubernetesHighAvailabilityTypesData,
-    isError: isErrorKubernetesTypes,
-    isLoading: isLoadingKubernetesTypes,
-  } = useKubernetesTypesQuery();
 
   const {
     isClusterHighlyAvailable,
@@ -112,14 +105,7 @@ export const KubernetesClusterDetail = React.memo(() => {
         title="Kubernetes Cluster Details"
       />
       <Grid>
-        <KubeSummaryPanel
-          kubernetesHighAvailabilityTypesData={
-            kubernetesHighAvailabilityTypesData
-          }
-          cluster={cluster}
-          isErrorKubernetesTypes={isErrorKubernetesTypes}
-          isLoadingKubernetesTypes={isLoadingKubernetesTypes}
-        />
+        <KubeSummaryPanel cluster={cluster} />
       </Grid>
       <Grid>
         <NodePoolsDisplay
@@ -130,12 +116,7 @@ export const KubernetesClusterDetail = React.memo(() => {
         />
       </Grid>
       <UpgradeKubernetesClusterToHADialog
-        kubernetesHighAvailabilityTypesData={
-          kubernetesHighAvailabilityTypesData
-        }
         clusterID={cluster.id}
-        isErrorKubernetesTypes={isErrorKubernetesTypes}
-        isLoadingKubernetesTypes={isLoadingKubernetesTypes}
         onClose={() => setIsUpgradeToHAOpen(false)}
         open={isUpgradeToHAOpen}
         regionID={cluster.region}

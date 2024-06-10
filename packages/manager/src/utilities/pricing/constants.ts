@@ -15,6 +15,9 @@ export const UNKNOWN_PRICE = '--.--';
 export const PRICE_ERROR_TOOLTIP_TEXT = 'There was an error loading the price.';
 export const PRICES_RELOAD_ERROR_NOTICE_TEXT =
   'There was an error retrieving prices. Please reload and try again.';
+export const HA_UPGRADE_PRICE_ERROR_MESSAGE =
+  'Upgrading to HA is not available at this time. Try again later.';
+export const HA_PRICE_ERROR_MESSAGE = `The cost for HA Control Plane is not available at this time.`;
 
 // Other constants
 export const PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE =

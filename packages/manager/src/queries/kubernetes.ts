@@ -1,12 +1,4 @@
 import {
-  CreateKubeClusterPayload,
-  CreateNodePoolData,
-  KubeNodePoolResponse,
-  KubernetesCluster,
-  KubernetesDashboardResponse,
-  KubernetesEndpointResponse,
-  KubernetesVersion,
-  UpdateNodePoolData,
   createKubernetesCluster,
   createNodePool,
   deleteKubernetesCluster,
@@ -34,6 +26,16 @@ import { getAll } from 'src/utilities/getAll';
 import { queryPresets } from './base';
 import { profileQueries } from './profile/profile';
 
+import type {
+  CreateKubeClusterPayload,
+  CreateNodePoolData,
+  KubeNodePoolResponse,
+  KubernetesCluster,
+  KubernetesDashboardResponse,
+  KubernetesEndpointResponse,
+  KubernetesVersion,
+  UpdateNodePoolData,
+} from '@linode/api-v4';
 import type {
   APIError,
   Filter,
@@ -79,6 +81,10 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
         queryKey: [params, filter],
       }),
     },
+    queryKey: null,
+  },
+  types: {
+    queryFn: () => getAllKubernetesTypes(),
     queryKey: null,
   },
   versions: {
@@ -316,21 +322,13 @@ const getAllAPIEndpointsForCluster = (clusterId: number) =>
     getKubernetesClusterEndpoints(clusterId, params, filters)
   )().then((data) => data.data);
 
-// DC Pricing Queries
 const getAllKubernetesTypes = () =>
   getAll<PriceType>((params) => getKubernetesTypes(params))().then(
     (results) => results.data
   );
 
-export const typesQueries = createQueryKeys('types', {
-  lkeClusters: {
-    queryFn: getAllKubernetesTypes,
-    queryKey: null,
-  },
-});
-
 export const useKubernetesTypesQuery = () =>
   useQuery<PriceType[], APIError[]>({
     ...queryPresets.oneTimeFetch,
-    ...typesQueries.lkeClusters,
+    ...kubernetesQueries.types,
   });

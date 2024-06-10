@@ -1,11 +1,10 @@
-import { Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
-import { CircularProgress } from 'src/components/CircularProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
@@ -13,15 +12,17 @@ import {
   localStorageWarning,
   nodesDeletionWarning,
 } from 'src/features/Kubernetes/kubeUtils';
-import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
+import {
+  useKubernetesClusterMutation,
+  useKubernetesTypesQuery,
+} from 'src/queries/kubernetes';
+import { HA_UPGRADE_PRICE_ERROR_MESSAGE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 
 import { HACopy } from '../CreateCluster/HAControlPlane';
 
-import type { PriceType, Region } from '@linode/api-v4';
-
-export const HA_UPGRADE_PRICE_ERROR_MESSAGE =
-  'Upgrading to HA is not available at this time. Try again later.';
+import type { Region } from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   noticeHeader: {
@@ -39,27 +40,16 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 interface Props {
   clusterID: number;
-  isErrorKubernetesTypes: boolean;
-  isLoadingKubernetesTypes: boolean;
-  kubernetesHighAvailabilityTypesData: PriceType[] | undefined;
+
   onClose: () => void;
   open: boolean;
   regionID: string;
 }
 
 export const UpgradeKubernetesClusterToHADialog = React.memo((props: Props) => {
-  const {
-    clusterID,
-    isErrorKubernetesTypes,
-    isLoadingKubernetesTypes,
-    kubernetesHighAvailabilityTypesData,
-    onClose,
-    open,
-    regionID,
-  } = props;
+  const { clusterID, onClose, open, regionID } = props;
   const { enqueueSnackbar } = useSnackbar();
   const [checked, setChecked] = React.useState(false);
-
   const toggleChecked = () => setChecked((isChecked) => !isChecked);
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
@@ -68,6 +58,12 @@ export const UpgradeKubernetesClusterToHADialog = React.memo((props: Props) => {
   const [error, setError] = React.useState<string | undefined>();
   const [submitting, setSubmitting] = React.useState(false);
   const { classes } = useStyles();
+
+  const {
+    data: kubernetesHighAvailabilityTypesData,
+    isError: isErrorKubernetesTypes,
+    isLoading: isLoadingKubernetesTypes,
+  } = useKubernetesTypesQuery();
 
   const onUpgrade = () => {
     setSubmitting(true);
@@ -90,7 +86,9 @@ export const UpgradeKubernetesClusterToHADialog = React.memo((props: Props) => {
     const dcSpecificPrice = regionId
       ? getDCSpecificPriceByType({
           regionId,
-          type: kubernetesHighAvailabilityTypesData?.[1],
+          type: kubernetesHighAvailabilityTypesData?.find(
+            (type) => type.id === 'lke-ha'
+          ),
         })
       : undefined;
 
@@ -123,7 +121,7 @@ export const UpgradeKubernetesClusterToHADialog = React.memo((props: Props) => {
       title="Upgrade to High Availability"
     >
       {isLoadingKubernetesTypes ? (
-        <CircularProgress size={16} sx={{ marginTop: 2 }} />
+        <CircleProgress size="sm" sx={{ marginTop: 2 }} />
       ) : (
         <>
           <HACopy />

@@ -836,8 +836,8 @@ export const handlers = [
   }),
   http.get('*/lke/types', async () => {
     const lkeTypes = [
-      lkeStandardAvailabilityTypeFactory.buildList(1),
-      lkeHighAvailabilityTypeFactory.buildList(1),
+      lkeStandardAvailabilityTypeFactory.build(),
+      lkeHighAvailabilityTypeFactory.build(),
     ];
     return HttpResponse.json(makeResourcePage(lkeTypes));
   }),

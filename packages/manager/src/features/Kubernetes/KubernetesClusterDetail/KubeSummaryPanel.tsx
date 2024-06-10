@@ -1,6 +1,4 @@
-import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -17,6 +15,7 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useKubernetesClusterMutation,
   useKubernetesDashboardQuery,
+  useKubernetesTypesQuery,
   useResetKubeConfigMutation,
 } from 'src/queries/kubernetes';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -25,7 +24,8 @@ import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 import { KubeConfigDisplay } from './KubeConfigDisplay';
 import { KubeConfigDrawer } from './KubeConfigDrawer';
 
-import type { PriceType } from '@linode/api-v4';
+import type { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   actionRow: {
@@ -100,18 +100,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 interface Props {
   cluster: KubernetesCluster;
-  isErrorKubernetesTypes: boolean;
-  isLoadingKubernetesTypes: boolean;
-  kubernetesHighAvailabilityTypesData: PriceType[] | undefined;
 }
 
 export const KubeSummaryPanel = React.memo((props: Props) => {
-  const {
-    cluster,
-    isErrorKubernetesTypes,
-    isLoadingKubernetesTypes,
-    kubernetesHighAvailabilityTypesData,
-  } = props;
+  const { cluster } = props;
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
@@ -125,6 +117,12 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     data: dashboard,
     error: dashboardError,
   } = useKubernetesDashboardQuery(cluster.id);
+
+  const {
+    data: kubernetesHighAvailabilityTypesData,
+    isError: isErrorKubernetesTypes,
+    isLoading: isLoadingKubernetesTypes,
+  } = useKubernetesTypesQuery();
 
   const {
     error: resetKubeConfigError,
