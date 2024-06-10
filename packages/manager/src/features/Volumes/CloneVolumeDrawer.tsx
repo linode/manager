@@ -9,7 +9,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useGrants } from 'src/queries/profile';
+import { useGrants } from 'src/queries/profile/profile';
 import {
   useCloneVolumeMutation,
   useVolumeTypesQuery,

@@ -17,7 +17,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useTrustedDevicesQuery } from 'src/queries/profile';
+import { useTrustedDevicesQuery } from 'src/queries/profile/profile';
 
 import { RevokeTrustedDeviceDialog } from './RevokeTrustedDevicesDialog';
 

@@ -25,7 +25,7 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import {
   useCreateVolumeMutation,
@@ -303,18 +303,17 @@ export const VolumeCreate = () => {
             />
             <Box alignItems="flex-end" display="flex">
               <RegionSelect
-                handleSelection={(value) => {
-                  setFieldValue('region', value);
+                onChange={(e, region) => {
+                  setFieldValue('region', region?.id ?? null);
                   setFieldValue('linode_id', null);
                 }}
                 currentCapability="Block Storage"
                 disabled={doesNotHavePermission}
                 errorText={touched.region ? errors.region : undefined}
-                isClearable
                 label="Region"
                 onBlur={handleBlur}
                 regions={regions ?? []}
-                selectedId={values.region}
+                value={values.region}
                 width={400}
               />
               {renderSelectTooltip(

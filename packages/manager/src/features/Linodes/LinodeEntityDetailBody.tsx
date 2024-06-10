@@ -14,7 +14,7 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption
 import { Link } from 'src/components/Link';
 import { Typography, TypographyProps } from 'src/components/Typography';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { pluralize } from 'src/utilities/pluralize';
 
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';

@@ -19,7 +19,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKey as linodeQueryKey } from 'src/queries/linodes/linodes';
 import { getAll } from 'src/utilities/getAll';
 
-import { profileQueries } from './profile';
+import { profileQueries } from './profile/profile';
 
 import type {
   AssignLinodesToPlacementGroupPayload,

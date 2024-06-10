@@ -120,7 +120,7 @@ export const Autocomplete = <
               <>
                 {loading && (
                   <InputAdornment position="end">
-                    <CircleProgress mini={true} />
+                    <CircleProgress size="sm" />
                   </InputAdornment>
                 )}
                 {textFieldProps?.InputProps?.endAdornment}
