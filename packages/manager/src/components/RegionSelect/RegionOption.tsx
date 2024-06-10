@@ -67,6 +67,7 @@ export const RegionOption = ({
           isRegionDisabled ? e.preventDefault() : onClick ? onClick(e) : null
         }
         aria-disabled={undefined}
+        data-qa-disabled-item={isRegionDisabled}
         className={isRegionDisabled ? `${className} Mui-disabled` : className}
       >
         <>
