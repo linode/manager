@@ -24,16 +24,10 @@ export interface EnableObjectStorageProps {
   regionId?: Region['id'];
 }
 
-const defaultPrice = 5;
-
 export const EnableObjectStorageModal = React.memo(
   (props: EnableObjectStorageProps) => {
     const { handleSubmit, onClose, open, regionId } = props;
-    const {
-      data: types,
-      isError,
-      isInitialLoading,
-    } = useObjectStorageTypesQuery();
+    const { data: types, isError, isLoading } = useObjectStorageTypesQuery();
 
     const isInvalidPrice = Boolean(regionId) && (!types || isError);
 
@@ -47,7 +41,7 @@ export const EnableObjectStorageModal = React.memo(
           regionId,
           type: objectStorageType,
         })
-      : defaultPrice;
+      : objectStorageType?.price.monthly;
 
     return (
       <ConfirmationDialog
@@ -57,13 +51,13 @@ export const EnableObjectStorageModal = React.memo(
               'data-testid': 'enable-obj',
               disabled: isInvalidPrice,
               label: 'Enable Object Storage',
-              loading: isInitialLoading,
+              loading: isLoading,
               onClick: () => {
                 onClose();
                 handleSubmit();
               },
               tooltipText:
-                !isInitialLoading && isInvalidPrice
+                !isLoading && isInvalidPrice
                   ? PRICES_RELOAD_ERROR_NOTICE_TEXT
                   : '',
             }}
