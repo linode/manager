@@ -6,7 +6,7 @@ import { compose } from 'recompose';
 
 import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
 import { RenderGuard } from 'src/components/RenderGuard';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 
 import {
   getCommunityStackscripts,

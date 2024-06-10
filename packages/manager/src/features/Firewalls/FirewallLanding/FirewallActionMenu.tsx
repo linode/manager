@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 
 import { checkIfUserCanModifyFirewall } from '../shared';
 

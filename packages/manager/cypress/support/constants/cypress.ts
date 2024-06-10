@@ -3,7 +3,7 @@
  */
 
 /**
- * Tag to use to identify test entities, resources, etc.
+ * Tag to identify test entities, resources, etc.
  */
 export const entityTag = 'cy-test';
 

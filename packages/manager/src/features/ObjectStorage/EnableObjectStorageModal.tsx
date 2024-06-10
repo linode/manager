@@ -1,4 +1,3 @@
-import { Region } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -7,7 +6,14 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { OBJ_STORAGE_PRICE } from 'src/utilities/pricing/constants';
+import { useObjectStorageTypesQuery } from 'src/queries/objectStorage';
+import {
+  PRICES_RELOAD_ERROR_NOTICE_TEXT,
+  UNKNOWN_PRICE,
+} from 'src/utilities/pricing/constants';
+import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
+
+import type { Region } from '@linode/api-v4';
 
 export const OBJ_STORAGE_STORAGE_AMT = '250 GB';
 export const OBJ_STORAGE_NETWORK_TRANSFER_AMT = '1 TB';
@@ -21,6 +27,21 @@ export interface EnableObjectStorageProps {
 export const EnableObjectStorageModal = React.memo(
   (props: EnableObjectStorageProps) => {
     const { handleSubmit, onClose, open, regionId } = props;
+    const { data: types, isError, isLoading } = useObjectStorageTypesQuery();
+
+    const isInvalidPrice = Boolean(regionId) && (!types || isError);
+
+    const objectStorageType = types?.find(
+      (type) => type.id === 'objectstorage'
+    );
+
+    const price = regionId
+      ? getDCSpecificPriceByType({
+          decimalPrecision: 0,
+          regionId,
+          type: objectStorageType,
+        })
+      : objectStorageType?.price.monthly;
 
     return (
       <ConfirmationDialog
@@ -28,11 +49,17 @@ export const EnableObjectStorageModal = React.memo(
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'enable-obj',
+              disabled: isInvalidPrice,
               label: 'Enable Object Storage',
+              loading: isLoading,
               onClick: () => {
                 onClose();
                 handleSubmit();
               },
+              tooltipText:
+                !isLoading && isInvalidPrice
+                  ? PRICES_RELOAD_ERROR_NOTICE_TEXT
+                  : '',
             }}
             secondaryButtonProps={{
               'data-testid': 'cancel',
@@ -51,7 +78,7 @@ export const EnableObjectStorageModal = React.memo(
         </StyledTypography>
         <StyledTypography>
           Object Storage costs a flat rate of{' '}
-          <strong>${OBJ_STORAGE_PRICE.monthly}/month</strong>, and includes{' '}
+          <strong>${price ?? UNKNOWN_PRICE}/month</strong>, and includes{' '}
           {OBJ_STORAGE_STORAGE_AMT} of storage. When you enable Object Storage,{' '}
           {OBJ_STORAGE_NETWORK_TRANSFER_AMT} of outbound data transfer will be
           added to your global network transfer pool.

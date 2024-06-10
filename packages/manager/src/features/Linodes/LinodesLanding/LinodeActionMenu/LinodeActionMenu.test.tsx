@@ -126,14 +126,14 @@ describe('LinodeActionMenu', () => {
       );
     });
 
-    it('should disable the clone action if the Linode is in an edge region', async () => {
-      const propsWithEdgeRegion = {
+    it('should disable the clone action if the Linode is in a distributed region', async () => {
+      const propsWithDistributedRegion = {
         ...props,
-        linodeRegion: 'us-edge-1',
+        linodeRegion: 'us-den-10',
       };
 
       const { getByLabelText, getByTestId } = renderWithTheme(
-        <LinodeActionMenu {...propsWithEdgeRegion} />
+        <LinodeActionMenu {...propsWithDistributedRegion} />
       );
 
       await userEvent.click(getByLabelText(/^Action menu for/));

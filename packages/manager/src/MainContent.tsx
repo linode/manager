@@ -21,7 +21,10 @@ import {
 } from 'src/features/NotificationCenter/NotificationContext';
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import { useFlags } from 'src/hooks/useFlags';
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
@@ -32,7 +35,7 @@ import { useIsACLBEnabled } from './features/LoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { useAccountSettings } from './queries/account/settings';
-import { useProfile } from './queries/profile';
+import { useProfile } from './queries/profile/profile';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {
@@ -179,6 +182,12 @@ const PlacementGroups = React.lazy(() =>
   }))
 );
 
+const CloudPulse = React.lazy(() =>
+  import('src/features/CloudPulse/CloudPulseLanding').then((module) => ({
+    default: module.CloudPulseLanding,
+  }))
+);
+
 export const MainContent = () => {
   const { classes, cx } = useStyles();
   const flags = useFlags();
@@ -213,8 +222,11 @@ export const MainContent = () => {
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
   const { data: accountSettings } = useAccountSettings();
-
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
+
+  const showCloudPulse = Boolean(flags.aclp?.enabled);
+  // the followed comment is for later use, the showCloudPulse will be removed and isACLPEnabled will be used
+  // const { isACLPEnabled } = useIsACLPEnabled();
 
   /**
    * this is the case where the user has successfully completed signup
@@ -349,6 +361,12 @@ export const MainContent = () => {
                             <Route component={BetaRoutes} path="/betas" />
                           )}
                           <Route component={VPC} path="/vpcs" />
+                          {showCloudPulse && (
+                            <Route
+                              component={CloudPulse}
+                              path="/monitor/cloudpulse"
+                            />
+                          )}
                           <Redirect exact from="/" to={defaultRoot} />
                           {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                           <Redirect from="/dashboard" to={defaultRoot} />
