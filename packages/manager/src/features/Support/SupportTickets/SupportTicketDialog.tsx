@@ -164,7 +164,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     selectedSeverity,
     summary,
     ticketType,
-  } = form.getValues();
+  } = form.watch();
 
   const { mutateAsync: createSupportTicket } = useCreateSupportTicketMutation();
 
@@ -183,25 +183,25 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     data: databases,
     error: databasesError,
     isLoading: databasesLoading,
-  } = useAllDatabasesQuery(prefilledEntity?.type === 'database_id');
+  } = useAllDatabasesQuery(entityType === 'database_id');
 
   const {
     data: firewalls,
     error: firewallsError,
     isLoading: firewallsLoading,
-  } = useAllFirewallsQuery(prefilledEntity?.type === 'firewall_id');
+  } = useAllFirewallsQuery(entityType === 'firewall_id');
 
   const {
     data: domains,
     error: domainsError,
     isLoading: domainsLoading,
-  } = useAllDomainsQuery(prefilledEntity?.type === 'domain_id');
+  } = useAllDomainsQuery(entityType === 'domain_id');
 
   const {
     data: nodebalancers,
     error: nodebalancersError,
     isLoading: nodebalancersLoading,
-  } = useAllNodeBalancersQuery(prefilledEntity?.type === 'nodebalancer_id');
+  } = useAllNodeBalancersQuery(entityType === 'nodebalancer_id');
 
   const {
     data: clusters,
@@ -277,9 +277,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     window.setTimeout(() => resetDrawer(true), 500);
   };
 
-  const onSubmit = form.handleSubmit(async (values) => {
-    console.log({ values });
-    // console.log(form.getValues());
+  const onSubmit = form.handleSubmit(async () => {
     // const { onSuccess } = props;
     const _description = description;
     // ticketType === 'smtp' ? formatDescription(smtpFields) : description;
@@ -291,38 +289,38 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
       return;
     }
-    // setSubmitting(true);
-    // createSupportTicket({
-    //   description: _description,
-    //   [entityType]: Number(entityId),
-    //   severity: selectedSeverity,
-    //   summary,
-    // })
-    //   .then((response) => {
-    //     setSubmitting(false);
-    //     window.setTimeout(() => resetDrawer(true), 500);
-    //     return response;
-    //   })
-    //   .then((response) => {
-    //     // TODO: handle file uploading
-    //     if (!props.keepOpenOnSuccess) {
-    //       close();
-    //     }
-    //   })
-    //   .catch((errResponse) => {
-    //     /* This block will only handle errors in creating the actual ticket; attachment
-    //      * errors are handled above. */
-    //     for (const error of errResponse) {
-    //       if (error.field) {
-    //         form.setError(error.field, { message: error.reason });
-    //       } else {
-    //         form.setError('root', { message: error.reason });
-    //       }
-    //     }
+    setSubmitting(true);
+    createSupportTicket({
+      description: _description,
+      [entityType]: Number(entityId),
+      severity: selectedSeverity,
+      summary,
+    })
+      .then((response) => {
+        setSubmitting(false);
+        window.setTimeout(() => resetDrawer(true), 500);
+        return response;
+      })
+      .then((response) => {
+        // TODO: handle file uploading
+        if (!props.keepOpenOnSuccess) {
+          close();
+        }
+      })
+      .catch((errResponse) => {
+        /* This block will only handle errors in creating the actual ticket; attachment
+         * errors are handled above. */
+        for (const error of errResponse) {
+          if (error.field) {
+            form.setError(error.field, { message: error.reason });
+          } else {
+            form.setError('root', { message: error.reason });
+          }
+        }
 
-    //     setSubmitting(false);
-    //     // scrollErrorIntoView();
-    //   });
+        setSubmitting(false);
+        // scrollErrorIntoView();
+      });
   });
 
   const renderEntityTypes = () => {
@@ -400,7 +398,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   };
 
   const entityOptions = getEntityOptions();
-  console.log({ entityOptions });
   const areEntitiesLoading = loadingMap[entityType];
   const entityError = Boolean(errorMap[entityType])
     ? `Error loading ${ENTITY_ID_TO_NAME_MAP[entityType]}s`
@@ -489,10 +486,18 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                   <Controller
                     render={({ field }) => (
                       <Autocomplete
+                        onChange={(_e, type) => {
+                          // Don't reset things if the type hasn't changed
+                          if (type.value === entityType) {
+                            return;
+                          }
+                          field.onChange(type.value);
+                          form.setValue('entityId', '');
+                          form.setValue('entityInputValue', '');
+                        }}
                         data-qa-ticket-entity-type
                         disableClearable
                         label="What is this regarding?"
-                        onChange={(_e, type) => field.onChange(type.value)}
                         options={topicOptions}
                         value={selectedTopic}
                       />
@@ -509,17 +514,15 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                               ENTITY_ID_TO_NAME_MAP[entityType] ??
                               'Entity Select'
                             }
-                            onChange={(e, id) => {
-                              console.log({ id }, form.formState);
-                              return form.setValue(
+                            onChange={(e, id) =>
+                              form.setValue(
                                 'entityId',
                                 id ? String(id?.value) : ''
-                              );
-                            }}
-                            onInputChange={(e, value) => {
-                              console.log({ value });
-                              return field.onChange(value ? value.label : '');
-                            }}
+                              )
+                            }
+                            onInputChange={(e, value) =>
+                              field.onChange(value ? value : '')
+                            }
                             data-qa-ticket-entity-id
                             disabled={entityOptions.length === 0}
                             errorText={entityError || fieldState.error?.message}
