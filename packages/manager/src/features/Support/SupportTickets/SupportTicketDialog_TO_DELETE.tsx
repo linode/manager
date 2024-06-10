@@ -13,7 +13,7 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useAccount } from 'src/queries/account/account';
+// import { useAccount } from 'src/queries/account/account';
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
@@ -40,7 +40,7 @@ import {
   TICKET_SEVERITY_TOOLTIP_TEXT,
 } from './constants';
 import {
-  SMTP_FIELD_NAME_TO_LABEL_MAP,
+  // SMTP_FIELD_NAME_TO_LABEL_MAP,
   SupportTicketSMTPFields,
 } from './SupportTicketSMTPFields';
 import { severityLabelMap, useTicketSeverityCapability } from './ticketUtils';
@@ -185,7 +185,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTitle,
   } = props;
 
-  const { data: account } = useAccount();
+  // const { data: account } = useAccount();
 
   const hasSeverityCapability = useTicketSeverityCapability();
 
@@ -214,13 +214,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   );
 
   // SMTP ticket information
-  const [smtpFields, setSMTPFields] = React.useState({
-    companyName: '',
-    customerName: account ? `${account?.first_name} ${account?.last_name}` : '',
-    emailDomains: '',
-    publicInfo: '',
-    useCase: '',
-  });
+  // const [smtpFields, setSMTPFields] = React.useState({
+  //   companyName: '',
+  //   customerName: account ? `${account?.first_name} ${account?.last_name}` : '',
+  //   emailDomains: '',
+  //   publicInfo: '',
+  //   useCase: '',
+  // });
 
   const { mutateAsync: createSupportTicket } = useCreateSupportTicketMutation();
 
@@ -337,25 +337,25 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     setEntityInputValue('');
   };
 
-  const handleSMTPFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setSMTPFields((smtpFields) => ({ ...smtpFields, [name]: value }));
-  };
+  // const handleSMTPFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setSMTPFields((smtpFields) => ({ ...smtpFields, [name]: value }));
+  // };
 
   /**
    * When variant ticketTypes include additional fields, fields must concat to one description string.
    * For readability, replace field names with field labels and format the description in Markdown.
    */
-  const formatDescription = (fields: Record<string, string>) => {
-    return Object.entries(fields)
-      .map(
-        ([key, value]) =>
-          `**${SMTP_FIELD_NAME_TO_LABEL_MAP[key]}**\n${
-            value ? value : 'No response'
-          }`
-      )
-      .join('\n\n');
-  };
+  // const formatDescription = (fields: Record<string, string>) => {
+  //   return Object.entries(fields)
+  //     .map(
+  //       ([key, value]) =>
+  //         `**${SMTP_FIELD_NAME_TO_LABEL_MAP[key]}**\n${
+  //           value ? value : 'No response'
+  //         }`
+  //     )
+  //     .join('\n\n');
+  // };
 
   const close = () => {
     props.onClose();
@@ -439,8 +439,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const onSubmit = () => {
     const { onSuccess } = props;
-    const _description =
-      ticketType === 'smtp' ? formatDescription(smtpFields) : description;
+    // const _description =
+    //   ticketType === 'smtp' ? formatDescription(smtpFields) : description;
     if (!['general', 'none'].includes(entityType) && !entityID) {
       setErrors([
         {
@@ -454,7 +454,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     setSubmitting(true);
 
     createSupportTicket({
-      description: _description,
+      description,
       [entityType]: Number(entityID),
       severity: selectedSeverity,
       summary,
@@ -489,14 +489,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     });
   };
 
-  const smtpRequirementsMet =
-    smtpFields.customerName.length > 0 &&
-    smtpFields.useCase.length > 0 &&
-    smtpFields.emailDomains.length > 0 &&
-    smtpFields.publicInfo.length > 0;
-  const requirementsMet =
-    summary.length > 0 &&
-    (ticketType === 'smtp' ? smtpRequirementsMet : description.length > 0);
+  // const smtpRequirementsMet =
+  //   smtpFields.customerName.length > 0 &&
+  //   smtpFields.useCase.length > 0 &&
+  //   smtpFields.emailDomains.length > 0 &&
+  //   smtpFields.publicInfo.length > 0;
+  const requirementsMet = summary.length > 0; // &&
+  // (ticketType === 'smtp' ? smtpRequirementsMet : description.length > 0);
 
   const hasErrorFor = getErrorMap(['summary', 'description', 'input'], errors);
   const summaryError = hasErrorFor.summary;
@@ -640,10 +639,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
             />
           )}
           {ticketType === 'smtp' ? (
-            <SupportTicketSMTPFields
-              formState={smtpFields}
-              handleChange={handleSMTPFieldChange}
-            />
+            <SupportTicketSMTPFields />
           ) : (
             <React.Fragment>
               {props.hideProductSelection ? null : (

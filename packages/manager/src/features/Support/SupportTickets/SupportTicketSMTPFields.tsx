@@ -1,16 +1,15 @@
 import * as React from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { TextField } from 'src/components/TextField';
+import { useAccount } from 'src/queries/account/account';
 
-export interface Props {
-  formState: {
-    companyName: string;
-    customerName: string;
-    emailDomains: string;
-    publicInfo: string;
-    useCase: string;
-  };
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+export interface SMTPCustomFields {
+  companyName: string;
+  customerName: string;
+  emailDomains: string;
+  publicInfo: string;
+  useCase: string;
 }
 
 export const SMTP_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
@@ -23,56 +22,88 @@ export const SMTP_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
     "A clear and detailed description of your email use case, including how you'll avoid sending unwanted emails",
 };
 
-export const SupportTicketSMTPFields = (props: Props) => {
-  const { formState, handleChange } = props;
+export const SupportTicketSMTPFields = () => {
+  const form = useFormContext();
+  const { data: account } = useAccount();
 
   return (
-    <React.Fragment>
-      <TextField
-        data-qa-ticket-customer-name
-        label={SMTP_FIELD_NAME_TO_LABEL_MAP.customerName}
+    <>
+      <Controller
+        render={({ field }) => (
+          <TextField
+            data-qa-ticket-customer-name
+            defaultValue={`${account?.first_name} ${account?.last_name}`}
+            label={SMTP_FIELD_NAME_TO_LABEL_MAP.customerName}
+            name="customerName"
+            onChange={field.onChange}
+            required
+            value={field.value}
+          />
+        )}
+        control={form.control}
         name="customerName"
-        onChange={handleChange}
-        required
-        value={formState.customerName}
       />
-      <TextField
-        data-qa-ticket-company-name
-        label={SMTP_FIELD_NAME_TO_LABEL_MAP.companyName}
+      <Controller
+        render={({ field }) => (
+          <TextField
+            data-qa-ticket-company-name
+            label={SMTP_FIELD_NAME_TO_LABEL_MAP.companyName}
+            name="companyName"
+            onChange={field.onChange}
+            value={field.value}
+          />
+        )}
+        control={form.control}
         name="companyName"
-        onChange={handleChange}
-        value={formState.companyName}
       />
-      <TextField
-        data-qa-ticket-use-case
-        expand
-        label={SMTP_FIELD_NAME_TO_LABEL_MAP.useCase}
-        multiline
+      <Controller
+        render={({ field }) => (
+          <TextField
+            data-qa-ticket-use-case
+            expand
+            label={SMTP_FIELD_NAME_TO_LABEL_MAP.useCase}
+            multiline
+            name="useCase"
+            onChange={field.onChange}
+            required
+            value={field.value}
+          />
+        )}
+        control={form.control}
         name="useCase"
-        onChange={handleChange}
-        required
-        value={formState.useCase}
       />
-      <TextField
-        data-qa-ticket-email-domains
-        expand
-        label={SMTP_FIELD_NAME_TO_LABEL_MAP.emailDomains}
-        multiline
+      <Controller
+        render={({ field }) => (
+          <TextField
+            data-qa-ticket-email-domains
+            expand
+            label={SMTP_FIELD_NAME_TO_LABEL_MAP.emailDomains}
+            multiline
+            name="emailDomains"
+            onChange={field.onChange}
+            required
+            value={field.value}
+          />
+        )}
+        control={form.control}
         name="emailDomains"
-        onChange={handleChange}
-        required
-        value={formState.emailDomains}
       />
-      <TextField
-        data-qa-ticket-public-info
-        expand
-        label={SMTP_FIELD_NAME_TO_LABEL_MAP.publicInfo}
-        multiline
+      <Controller
+        render={({ field }) => (
+          <TextField
+            data-qa-ticket-public-info
+            expand
+            label={SMTP_FIELD_NAME_TO_LABEL_MAP.publicInfo}
+            multiline
+            name="publicInfo"
+            onChange={field.onChange}
+            required
+            value={field.value}
+          />
+        )}
+        control={form.control}
         name="publicInfo"
-        onChange={handleChange}
-        required
-        value={formState.publicInfo}
       />
-    </React.Fragment>
+    </>
   );
 };

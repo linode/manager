@@ -30,10 +30,12 @@ import {
   TICKET_SEVERITY_TOOLTIP_TEXT,
   TICKET_TYPE_MAP,
 } from './constants';
+import { SupportTicketSMTPFields } from './SupportTicketSMTPFields';
 import { severityLabelMap, useTicketSeverityCapability } from './ticketUtils';
 
 import type { FileAttachment } from '../index';
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
+import type { SMTPCustomFields } from './SupportTicketSMTPFields';
 import type { TicketSeverity } from '@linode/api-v4/lib/support';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { Theme } from '@mui/material/styles';
@@ -101,6 +103,7 @@ export interface SupportTicketDialogProps {
 }
 
 interface SupportTicketFormData {
+  customFieldsByTicketType?: SMTPCustomFields;
   description: string;
   entityId: string;
   entityInputValue: string;
@@ -278,9 +281,10 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   };
 
   const onSubmit = form.handleSubmit(async () => {
+    // console.log(form.getValues());
     // const { onSuccess } = props;
     const _description = description;
-    // ticketType === 'smtp' ? formatDescription(smtpFields) : description;
+    // ticketType === 'smtp' ? formatDescription() : description;
 
     if (!['general', 'none'].includes(entityType) && !entityId) {
       form.setError('entityId', {
@@ -481,6 +485,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                   name="selectedSeverity"
                 />
               )}
+            </>
+          )}
+          {ticketType === 'smtp' ? (
+            <SupportTicketSMTPFields />
+          ) : (
+            // eslint-disable-next-line react/jsx-no-useless-fragment
+            <>
               {props.hideProductSelection ? null : (
                 <>
                   <Controller
@@ -546,47 +557,47 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                   )}
                 </>
               )}
-              <Controller
-                render={({ field, fieldState }) => (
-                  <TabbedReply
-                    placeholder={
-                      "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
-                    }
-                    error={fieldState.error?.message}
-                    handleChange={field.onChange}
-                    innerClass={classes.innerReply}
-                    required
-                    rootClass={classes.rootReply}
-                    value={description}
-                  />
-                )}
-                control={form.control}
-                name="description"
-              />
-              <Accordion
-                detailProps={{ className: classes.expPanelSummary }}
-                heading="Formatting Tips"
-              >
-                <MarkdownReference />
-              </Accordion>
-              {/* <AttachFileForm files={files} updateFiles={updateFiles} /> */}
-              <ActionsPanel
-                primaryButtonProps={{
-                  'data-testid': 'submit',
-                  //   disabled: !requirementsMet,
-                  label: 'Open Ticket',
-                  loading: submitting,
-                  onClick: onSubmit,
-                }}
-                secondaryButtonProps={{
-                  'data-testid': 'cancel',
-                  label: 'Cancel',
-                  onClick: onCancel,
-                }}
-                sx={{ display: 'flex', justifyContent: 'flex-end' }}
-              />
             </>
           )}
+          <Controller
+            render={({ field, fieldState }) => (
+              <TabbedReply
+                placeholder={
+                  "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
+                }
+                error={fieldState.error?.message}
+                handleChange={field.onChange}
+                innerClass={classes.innerReply}
+                required
+                rootClass={classes.rootReply}
+                value={description}
+              />
+            )}
+            control={form.control}
+            name="description"
+          />
+          <Accordion
+            detailProps={{ className: classes.expPanelSummary }}
+            heading="Formatting Tips"
+          >
+            <MarkdownReference />
+          </Accordion>
+          {/* <AttachFileForm files={files} updateFiles={updateFiles} /> */}
+          <ActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'submit',
+              //   disabled: !requirementsMet,
+              label: 'Open Ticket',
+              loading: submitting,
+              onClick: onSubmit,
+            }}
+            secondaryButtonProps={{
+              'data-testid': 'cancel',
+              label: 'Cancel',
+              onClick: onCancel,
+            }}
+            sx={{ display: 'flex', justifyContent: 'flex-end' }}
+          />
         </Dialog>
       </form>
     </FormProvider>
