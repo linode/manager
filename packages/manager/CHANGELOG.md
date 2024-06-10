@@ -9,11 +9,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added:
 
-- TagSelect in Edit Image drawer ([#10466](https://github.com/linode/manager/pull/10466))
+- Tags to Edit Image drawer ([#10466](https://github.com/linode/manager/pull/10466))
 - Tags to image upload tab ([#10484](https://github.com/linode/manager/pull/10484))
-- adds Apache Kafka Cluster and Couchbase Cluster Marketplace Apps ([#10500](https://github.com/linode/manager/pull/10500))
+- Apache Kafka Cluster and Couchbase Cluster Marketplace Apps ([#10500](https://github.com/linode/manager/pull/10500))
 - Improvements to Clone flow to encourage powering down before cloning ([#10508](https://github.com/linode/manager/pull/10508))
-- New tax id validation for non-US countries ([#10512](https://github.com/linode/manager/pull/10512))
 - Alphabetical account sorting and search capabilities to Switch Account drawer ([#10515](https://github.com/linode/manager/pull/10515))
 
 ### Changed:
@@ -24,7 +23,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed:
 
-- Surface interface error in Linode Config dialog ([#10429](https://github.com/linode/manager/pull/10429))
+- Unsurfaced interface error in Linode Config dialog ([#10429](https://github.com/linode/manager/pull/10429))
 - Firewall landing device request with -1 ID ([#10509](https://github.com/linode/manager/pull/10509))
 - Leading whitespace in list of Firewall Services ([#10527](https://github.com/linode/manager/pull/10527))
 - Misalignment of Cluster Summary section at some screen sizes ([#10531](https://github.com/linode/manager/pull/10531))
@@ -46,30 +45,29 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Improve unit test suite stability ([#10278](https://github.com/linode/manager/pull/10278))
 - Added test automation for database resize feature. ([#10461](https://github.com/linode/manager/pull/10461))
 - Add Linode Create v2 end-to-end tests ([#10469](https://github.com/linode/manager/pull/10469))
-- Add Linode Create v2 integration tests for VLAN flows ([#10469](https://github.com/linode/manager/pull/10469))
-- Add Linode Create v2 integration tests for VPC flows ([#10469](https://github.com/linode/manager/pull/10469))
-- Add Linode Create v2 integration tests for SSH key flows ([#10469](https://github.com/linode/manager/pull/10469))
-- Add Linode Create v2 integration tests for cloud-init flows ([#10469](https://github.com/linode/manager/pull/10469))
 - Add Cypress test coverage for Linode Create v2 flow ([#10469](https://github.com/linode/manager/pull/10469))
-- remove console logs from e2e tests ([#10506](https://github.com/linode/manager/pull/10506))
+- Remove console logs from e2e tests ([#10506](https://github.com/linode/manager/pull/10506))
 - Add Linode details page assertion for LISH via SSH Info ([#10513](https://github.com/linode/manager/pull/10513))
 - Add unit tests for CreateImageFromDiskDialog and EnableBackupsDialog and LDE-related E2E assertions for Create Image flow ([#10521](https://github.com/linode/manager/pull/10521))
-- Attempt to fix `EditRouteDrawer.test.tsx` unit test flake ([#10526](https://github.com/linode/manager/pull/10526))
+- Fix `EditRouteDrawer.test.tsx` unit test flake ([#10526](https://github.com/linode/manager/pull/10526))
 - Cypress integration tests for PG update label flow ([#10529](https://github.com/linode/manager/pull/10529))
 - Add Cypress integration test for email bounce banners ([#10532](https://github.com/linode/manager/pull/10532))
 - Improve test Linode security ([#10538](https://github.com/linode/manager/pull/10538))
 
 ### Upcoming Features:
 
+- New tax id validation for non-US countries ([#10512](https://github.com/linode/manager/pull/10512))
 - Add CloudPulse feature flag and landing page([#10393](https://github.com/linode/manager/pull/10393))
 - Add Dashboard Global Filters and Dashboards Tab to the CloudPulse component ([#10397](https://github.com/linode/manager/pull/10397))
 - Add Encrypted/Not Encrypted status to LKE Node Pool table ([#10480](https://github.com/linode/manager/pull/10480))
-- Event Messages refactor ([#10517](https://github.com/linode/manager/pull/10517))
-- fix regions length check in HostNameTableCell ([#10519](https://github.com/linode/manager/pull/10519))
-- Linode Create Refactor - Marketplace App Sections ([#10520](https://github.com/linode/manager/pull/10520))
+- Refactor Event Messages ([#10517](https://github.com/linode/manager/pull/10517))
+- Fix regions length check in HostNameTableCell ([#10519](https://github.com/linode/manager/pull/10519))
+- Linode Create Refactor:
+   - Marketplace App Sections ([#10520](https://github.com/linode/manager/pull/10520))
+   - Disk Encryption ([#10535](https://github.com/linode/manager/pull/10535)
 - Add warning notices regarding non-encryption when creating Images and enabling Backups ([#10521](https://github.com/linode/manager/pull/10521))
-- Linode Create v2 - Disk Encryption ([#10535](https://github.com/linode/manager/pull/10535))
 - Add Encrypted / Not Encrypted status to Linode Detail header ([#10537](https://github.com/linode/manager/pull/10537))
+
 
 ## [2024-05-29] - v1.120.1
 
