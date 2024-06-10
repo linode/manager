@@ -39,6 +39,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - New `consistent-type-imports` es-lint warning ([#10540](https://github.com/linode/manager/pull/10540))
 - Query Key Factory for Security Questions and Preferences ([#10543](https://github.com/linode/manager/pull/10543))
 - Upgrade Cypress from v13.5.0 to v13.11.0 ([#10548](https://github.com/linode/manager/pull/10548))
+- Rename Edge regions to Distributed regions ([#10452](https://github.com/linode/manager/pull/10452))
 
 ### Tests:
 
