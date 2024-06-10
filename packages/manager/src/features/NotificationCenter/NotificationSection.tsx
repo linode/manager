@@ -162,6 +162,7 @@ const ContentBody = React.memo((props: BodyProps) => {
     <>
       {_content.map((thisItem) => (
         <StyledNotificationItem
+          data-testid="notification-item"
           header={props.header}
           key={`notification-row-${thisItem.id}`}
         >

@@ -14,7 +14,7 @@ import type { Event } from '@linode/api-v4';
 export const useEventNotificationsV2 = () => {
   // `profile_update` is a noisy event
   // Any change to user preferences will trigger this event, so we filter it out at the API level
-  const events = useEventsInfiniteQuery(EVENT_POLLING_FILTER).events;
+  const { events } = useEventsInfiniteQuery(EVENT_POLLING_FILTER);
   const notificationContext = React.useContext(_notificationContext);
 
   const formattedEvents = events?.map((event) => {

@@ -43,7 +43,7 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
     <>
       <RenderEventStyledBox
         className={`yo ${unseenEventClass}`}
-        data-test-id={event.action}
+        data-testid={event.action}
         display="flex"
       >
         <RenderEventGravatar

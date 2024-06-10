@@ -67,7 +67,9 @@ export const formatEventTimeRemaining = (time: null | string) => {
     }
     const duration = Duration.fromObject({ hours, minutes, seconds });
     return hours > 0
-      ? `${Math.round(duration.as('hours'))} hours remaining`
+      ? `${Math.round(duration.as('hours'))} ${
+          hours > 1 ? 'hours' : 'hour'
+        } remaining`
       : `${Math.round(duration.as('minutes'))} minutes remaining`;
   } catch {
     // Broken/unexpected input

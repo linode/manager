@@ -112,9 +112,16 @@ export const NotificationMenuV2 = () => {
         >
           <Bell height="20px" width="20px" />
           {numNotifications > 0 && (
-            <StyledChip color="success" label={numNotifications} size="small" />
+            <StyledChip
+              color="success"
+              data-testid="events-count-notification"
+              label={numNotifications}
+              size="small"
+            />
           )}
-          {showInProgressEventIcon && <StyledAutorenewIcon />}
+          {showInProgressEventIcon && (
+            <StyledAutorenewIcon data-testid="in-progress-event-icon" />
+          )}
         </IconButton>
       </TopMenuTooltip>
       <Popover
