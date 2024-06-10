@@ -11,7 +11,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useAccountUser } from 'src/queries/account/users';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { PARENT_USER, RESTRICTED_FIELD_TOOLTIP } from '../Account/constants';

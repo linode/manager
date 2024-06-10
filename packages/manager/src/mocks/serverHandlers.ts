@@ -681,10 +681,10 @@ export const handlers = [
       label: 'metadata-test-region',
       region: 'eu-west',
     });
-    const linodeInEdgeRegion = linodeFactory.build({
-      image: 'edge-test-image',
-      label: 'Gecko Edge Test',
-      region: 'us-edge-1',
+    const linodeInDistributedRegion = linodeFactory.build({
+      image: 'distributed-region-test-image',
+      label: 'Gecko Distributed Region Test',
+      region: 'us-den-10',
     });
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
@@ -716,7 +716,7 @@ export const handlers = [
     const linodes = [
       metadataLinodeWithCompatibleImage,
       metadataLinodeWithCompatibleImageAndRegion,
-      linodeInEdgeRegion,
+      linodeInDistributedRegion,
       ...onlineLinodes,
       linodeWithEligibleVolumes,
       ...offlineLinodes,
@@ -773,8 +773,8 @@ export const handlers = [
       linodeFactory.build({
         backups: { enabled: false },
         id,
-        label: 'Gecko Edge Test',
-        region: 'us-edge-1',
+        label: 'Gecko Distributed Region Test',
+        region: 'us-den-10',
       })
     );
   }),

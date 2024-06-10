@@ -21,7 +21,10 @@ import {
 } from 'src/features/NotificationCenter/NotificationContext';
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import { useFlags } from 'src/hooks/useFlags';
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
@@ -32,7 +35,7 @@ import { useIsACLBEnabled } from './features/LoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { useAccountSettings } from './queries/account/settings';
-import { useProfile } from './queries/profile';
+import { useProfile } from './queries/profile/profile';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {

@@ -82,7 +82,7 @@ export const DebouncedSearchTextField = React.memo(
         InputProps={{
           endAdornment: isSearching ? (
             <InputAdornment position="end">
-              <CircleProgress mini={true} />
+              <CircleProgress size="sm" />
             </InputAdornment>
           ) : (
             clearable &&

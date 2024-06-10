@@ -21,9 +21,9 @@ export const StyledLabelTableCell = styled(TableCell, {
   minWidth: 200,
   paddingLeft: 10,
   [theme.breakpoints.down('sm')]: {
-    width: '70%',
+    width: 'calc(100% - 250px)',
   },
-  width: '60%',
+  width: 'calc(100% - 400px)',
 }));
 
 export const StyledH1Header = styled(H1Header, {
