@@ -1,13 +1,25 @@
-import type { Linode, Config, Volume } from '@linode/api-v4';
+import type {
+  Linode,
+  Config,
+  Volume,
+  Event,
+  Notification,
+} from '@linode/api-v4';
 
 /**
  * Contextual data shared among mocks.
  */
 export interface MockContext {
+  // Linodes and related data.
   linodes: Linode[];
   linodeConfigs: [number, Config][];
 
+  // Volumes.
   volumes: Volume[];
+
+  // Misc.
+  eventQueue: Event[];
+  notificationQueue: Notification[];
 }
 
 export interface MockContextPopulator {
@@ -27,5 +39,7 @@ export const makeMockContext = (): MockContext => {
     linodes: [],
     linodeConfigs: [],
     volumes: [],
+    eventQueue: [],
+    notificationQueue: [],
   };
 };
