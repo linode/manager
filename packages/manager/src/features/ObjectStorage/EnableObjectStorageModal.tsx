@@ -33,7 +33,7 @@ export const EnableObjectStorageModal = React.memo(
       data: types,
       isError,
       isInitialLoading,
-    } = useObjectStorageTypesQuery(Boolean(regionId));
+    } = useObjectStorageTypesQuery();
 
     const isInvalidPrice = Boolean(regionId) && (!types || isError);
 
