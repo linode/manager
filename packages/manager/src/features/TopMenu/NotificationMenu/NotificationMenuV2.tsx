@@ -25,20 +25,6 @@ import { TopMenuTooltip, topMenuIconButtonSx } from '../TopMenuTooltip';
 
 import type { ThunkDispatch } from 'src/store/types';
 
-const StyledChip = styled(Chip)(() => ({
-  '& .MuiChip-label': {
-    paddingLeft: 2,
-    paddingRight: 2,
-  },
-  fontSize: '0.72rem',
-  height: '1rem',
-  justifyContent: 'center',
-  left: 20,
-  padding: 0,
-  position: 'absolute',
-  top: 4,
-}));
-
 export const NotificationMenuV2 = () => {
   const { dismissNotifications } = useDismissibleNotifications();
   const { data: notifications } = useNotificationsQuery();
@@ -113,9 +99,10 @@ export const NotificationMenuV2 = () => {
           <Bell height="20px" width="20px" />
           {numNotifications > 0 && (
             <StyledChip
-              color="success"
+              color="primary"
               data-testid="events-count-notification"
-              label={numNotifications}
+              label={numNotifications > 9 ? '9+' : numNotifications}
+              showPlus={numNotifications > 9}
               size="small"
             />
           )}
@@ -149,16 +136,38 @@ export const NotificationMenuV2 = () => {
         open={notificationContext.menuOpen}
       >
         <Notifications />
-        <EventsV2 eventNotifications={eventNotifications} />
+        <EventsV2
+          eventNotifications={eventNotifications}
+          onCloseNotificationCenter={() => notificationContext.closeMenu()}
+        />
       </Popover>
     </>
   );
 };
 
+const StyledChip = styled(Chip)<{ showPlus: boolean }>(
+  ({ theme, ...props }) => ({
+    '& .MuiChip-label': {
+      paddingLeft: 2,
+      paddingRight: 2,
+    },
+    borderRadius: props.showPlus ? 12 : '50%',
+    fontFamily: theme.font.bold,
+    fontSize: '0.72rem',
+    height: 18,
+    justifyContent: 'center',
+    left: 20,
+    padding: 0,
+    position: 'absolute',
+    top: 0,
+    width: props.showPlus ? 22 : 18,
+  })
+);
+
 const StyledAutorenewIcon = styled(AutorenewIcon)(({ theme }) => ({
   animation: `${rotate360} 2s linear infinite`,
   bottom: 4,
-  color: theme.color.green,
+  color: theme.palette.primary.main,
   fontSize: 18,
   position: 'absolute',
   right: 2,

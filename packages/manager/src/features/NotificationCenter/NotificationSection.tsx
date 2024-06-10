@@ -51,6 +51,7 @@ interface NotificationSectionProps {
   emptyMessage?: string;
   header: string;
   loading?: boolean;
+  onCloseNotificationCenter?: () => void;
   showMoreTarget?: string;
   showMoreText?: string;
 }
@@ -64,6 +65,7 @@ export const NotificationSection = (props: NotificationSectionProps) => {
     emptyMessage,
     header,
     loading,
+    onCloseNotificationCenter,
     showMoreTarget,
     showMoreText,
   } = props;
@@ -89,7 +91,11 @@ export const NotificationSection = (props: NotificationSectionProps) => {
                   <Typography variant="h3">{header}</Typography>
                   {showMoreTarget && (
                     <strong>
-                      <Link style={{ padding: 0 }} to={showMoreTarget}>
+                      <Link
+                        onClick={onCloseNotificationCenter}
+                        style={{ padding: 0 }}
+                        to={showMoreTarget}
+                      >
                         {showMoreText ?? 'View history'}
                       </Link>
                     </strong>

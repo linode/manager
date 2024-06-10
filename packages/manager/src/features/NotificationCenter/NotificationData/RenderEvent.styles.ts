@@ -1,3 +1,4 @@
+// TODO eventMessagesV2: cleanup unused non V2 components when flag is removed
 import { styled } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
@@ -38,7 +39,7 @@ export const useRenderEventStyles = makeStyles()((theme: Theme) => ({
   },
   unseenEventV2: {
     '&:after': {
-      backgroundColor: theme.color.green,
+      backgroundColor: theme.palette.primary.main,
       content: '""',
       display: 'block',
       height: '100%',

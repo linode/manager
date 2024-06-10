@@ -20,8 +20,11 @@ describe('EventsV2', () => {
   it('should render', () => {
     resizeScreenSize(1600);
 
-    const { getByText, getAllByTestId } = renderWithTheme(
-      <EventsV2 eventNotifications={eventNotifications} />
+    const { getAllByTestId, getByText } = renderWithTheme(
+      <EventsV2
+        eventNotifications={eventNotifications}
+        onCloseNotificationCenter={vi.fn()}
+      />
     );
 
     expect(getByText('Events')).toBeInTheDocument();
