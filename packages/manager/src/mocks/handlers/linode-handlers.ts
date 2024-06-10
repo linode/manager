@@ -40,7 +40,7 @@ export const getLinodes = (mockContext: MockContext) => [
   // Responds with a paginated list of configs if a Linode with ID `id` exists in context.
   // Otherwise, a 404 response is mocked.
   http.get(
-    '*/v4/linode/instances/:id/configs*',
+    '*/v4/linode/instances/:id/configs',
     ({
       params,
       request,
@@ -70,7 +70,7 @@ export const getLinodes = (mockContext: MockContext) => [
 
   // Get all Linodes stored in mock context.
   // Responds with a paginated list of Linodes.
-  http.get('*/v4/linode/instances*', ({ request }) => {
+  http.get('*/v4/linode/instances', ({ request }) => {
     const url = new URL(request.url);
 
     const pageNumber = Number(url.searchParams.get('page')) || 1;
