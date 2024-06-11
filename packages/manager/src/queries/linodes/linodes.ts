@@ -42,7 +42,7 @@ import { manuallySetVPCConfigInterfacesToActive } from 'src/utilities/configs';
 
 import { accountQueries } from '../account/queries';
 import { queryPresets } from '../base';
-import { profileQueries } from '../profile';
+import { profileQueries } from '../profile/profile';
 import { vlanQueries } from '../vlans';
 import { getAllLinodeKernelsRequest, getAllLinodesRequest } from './requests';
 

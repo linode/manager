@@ -37,7 +37,7 @@ import { filterImagesByType } from 'src/store/image/image.helpers';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
-import { profileQueries } from 'src/queries/profile';
+import { profileQueries } from 'src/queries/profile/profile';
 
 interface State {
   apiResponse?: StackScript;

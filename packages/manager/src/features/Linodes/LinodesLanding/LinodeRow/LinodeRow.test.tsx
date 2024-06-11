@@ -42,6 +42,7 @@ describe('LinodeRow', () => {
         ipv6={linode.ipv6 || ''}
         key={`linode-row-${1}`}
         label={linode.label}
+        lke_cluster_id={linode.lke_cluster_id}
         placement_group={linode.placement_group}
         region={linode.region}
         specs={linode.specs}

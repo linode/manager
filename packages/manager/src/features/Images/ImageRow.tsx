@@ -1,5 +1,3 @@
-import { Event } from '@linode/api-v4/lib/account';
-import { Image } from '@linode/api-v4/lib/images';
 import * as React from 'react';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
@@ -7,34 +5,26 @@ import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 
-import { Handlers, ImagesActionMenu } from './ImagesActionMenu';
+import { ImagesActionMenu } from './ImagesActionMenu';
 
-export interface ImageWithEvent extends Image {
+import type { Handlers } from './ImagesActionMenu';
+import type { Event, Image } from '@linode/api-v4';
+
+interface Props {
   event?: Event;
+  handlers: Handlers;
+  image: Image;
 }
 
-interface Props extends Handlers, ImageWithEvent {}
-
 const ImageRow = (props: Props) => {
-  const {
-    created,
-    description,
-    event,
-    expiry,
-    id,
-    label,
-    onCancelFailed,
-    onRetry,
-    regions,
-    size,
-    status,
-    ...rest
-  } = props;
+  const { event, image } = props;
+
+  const { created, expiry, id, label, regions, size, status } = image;
 
   const { data: profile } = useProfile();
 
@@ -51,7 +41,7 @@ const ImageRow = (props: Props) => {
       {regions.length > 1 && (
         <>
           ,{' '}
-          <StyledLinkButton onClick={openRegionsDrawer}>
+          <StyledLinkButton /* onClick={openRegionsDrawer}*/>
             +{regions.length - 1}
           </StyledLinkButton>
         </>
@@ -122,16 +112,7 @@ const ImageRow = (props: Props) => {
         ) : null}
       </Hidden>
       <TableCell actionCell>
-        <ImagesActionMenu
-          description={description}
-          event={event?.status === 'failed' ? event : undefined}
-          id={id}
-          label={label}
-          onCancelFailed={onCancelFailed}
-          onRetry={onRetry}
-          status={status}
-          {...rest}
-        />
+        <ImagesActionMenu {...props} />
       </TableCell>
     </TableRow>
   );
