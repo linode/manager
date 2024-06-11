@@ -56,11 +56,11 @@ export const getAllNodeBalancers = () =>
     (data) => data.data
   );
 
-export const nodebalancerQueries = createQueryKeys('nodebalanacers', {
+export const nodebalancerQueries = createQueryKeys('nodebalancers', {
   nodebalancer: (id: number) => ({
     contextQueries: {
       configurations: {
-        queryFn: getAllNodeBalancerConfigs,
+        queryFn: () => getAllNodeBalancerConfigs(id),
         queryKey: null,
       },
       firewalls: {
@@ -123,7 +123,7 @@ export const useNodebalancerUpdateMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<NodeBalancer, APIError[], Partial<NodeBalancer>>({
     mutationFn: (data) => updateNodeBalancer(id, data),
-    onSuccess(nodebalanacer) {
+    onSuccess(nodebalancer) {
       // Invalidate paginated stores
       queryClient.invalidateQueries({
         queryKey: nodebalancerQueries.nodebalancers.queryKey,
@@ -131,7 +131,7 @@ export const useNodebalancerUpdateMutation = (id: number) => {
       // Update the NodeBalancer store
       queryClient.setQueryData<NodeBalancer>(
         nodebalancerQueries.nodebalancer(id).queryKey,
-        nodebalanacer
+        nodebalancer
       );
     },
   });
@@ -158,15 +158,15 @@ export const useNodebalancerCreateMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<NodeBalancer, APIError[], CreateNodeBalancerPayload>({
     mutationFn: createNodeBalancer,
-    onSuccess(nodebalanacer) {
+    onSuccess(nodebalancer) {
       // Invalidate paginated stores
       queryClient.invalidateQueries({
         queryKey: nodebalancerQueries.nodebalancers.queryKey,
       });
       // Prime the cache for this specific NodeBalancer
       queryClient.setQueryData<NodeBalancer>(
-        nodebalancerQueries.nodebalancer(nodebalanacer.id).queryKey,
-        nodebalanacer
+        nodebalancerQueries.nodebalancer(nodebalancer.id).queryKey,
+        nodebalancer
       );
       // If a restricted user creates an entity, we must make sure grants are up to date.
       queryClient.invalidateQueries(profileQueries.grants.queryKey);
@@ -285,7 +285,7 @@ export const useNodeBalancerTypesQuery = () =>
     ...nodebalancerQueries.types,
   });
 
-export const nodebalanacerEventHandler = ({
+export const nodebalancerEventHandler = ({
   event,
   queryClient,
 }: EventHandlerData) => {
