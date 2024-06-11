@@ -1,4 +1,3 @@
-import { FormHelperText } from '@mui/material';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { debounce } from 'throttle-debounce';
@@ -11,21 +10,13 @@ import { Dialog } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useAllDatabasesQuery } from 'src/queries/databases/databases';
-import { useAllDomainsQuery } from 'src/queries/domains';
-import { useAllFirewallsQuery } from 'src/queries/firewalls';
-import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useCreateSupportTicketMutation } from 'src/queries/support';
-import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { storage } from 'src/utilities/storage';
 
 import { MarkdownReference } from '../SupportTicketDetail/TabbedReply/MarkdownReference';
 import { TabbedReply } from '../SupportTicketDetail/TabbedReply/TabbedReply';
 import {
   ENTITY_ID_TO_NAME_MAP,
-  ENTITY_MAP,
   SEVERITY_OPTIONS,
   TICKET_SEVERITY_TOOLTIP_TEXT,
   TICKET_TYPE_MAP,
@@ -37,9 +28,9 @@ import type { FileAttachment } from '../index';
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import type { SMTPCustomFields } from './SupportTicketSMTPFields';
 import type { TicketSeverity } from '@linode/api-v4/lib/support';
-import type { APIError } from '@linode/api-v4/lib/types';
 import type { Theme } from '@mui/material/styles';
 import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
+import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   expPanelSummary: {
@@ -102,7 +93,7 @@ export interface SupportTicketDialogProps {
   prefilledTitle?: string;
 }
 
-interface SupportTicketFormData {
+export interface SupportTicketFormData {
   customFieldsByTicketType?: SMTPCustomFields;
   description: string;
   entityId: string;
@@ -162,7 +153,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const {
     description,
     entityId,
-    entityInputValue,
     entityType,
     selectedSeverity,
     summary,
@@ -180,49 +170,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       resetDrawer();
     }
   }, [open]);
-
-  // React Query entities
-  const {
-    data: databases,
-    error: databasesError,
-    isLoading: databasesLoading,
-  } = useAllDatabasesQuery(entityType === 'database_id');
-
-  const {
-    data: firewalls,
-    error: firewallsError,
-    isLoading: firewallsLoading,
-  } = useAllFirewallsQuery(entityType === 'firewall_id');
-
-  const {
-    data: domains,
-    error: domainsError,
-    isLoading: domainsLoading,
-  } = useAllDomainsQuery(entityType === 'domain_id');
-
-  const {
-    data: nodebalancers,
-    error: nodebalancersError,
-    isLoading: nodebalancersLoading,
-  } = useAllNodeBalancersQuery(entityType === 'nodebalancer_id');
-
-  const {
-    data: clusters,
-    error: clustersError,
-    isLoading: clustersLoading,
-  } = useAllKubernetesClustersQuery(entityType === 'lkecluster_id');
-
-  const {
-    data: linodes,
-    error: linodesError,
-    isLoading: linodesLoading,
-  } = useAllLinodesQuery({}, {}, entityType === 'linode_id');
-
-  const {
-    data: volumes,
-    error: volumesError,
-    isLoading: volumesLoading,
-  } = useAllVolumesQuery({}, {}, entityType === 'volume_id');
 
   const saveText = (_title: string, _description: string) => {
     storage.supportText.set({ description: _description, title: _title });
@@ -327,90 +274,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       });
   });
 
-  const renderEntityTypes = () => {
-    return Object.keys(ENTITY_MAP).map((key: string) => {
-      return { label: key, value: ENTITY_MAP[key] };
-    });
-  };
-
-  const topicOptions: { label: string; value: EntityType }[] = [
-    { label: 'General/Account/Billing', value: 'general' },
-    ...renderEntityTypes(),
-  ];
-
-  const selectedTopic = topicOptions.find((eachTopic) => {
-    return eachTopic.value === entityType;
-  });
-
-  const getEntityOptions = (): { label: string; value: number }[] => {
-    const reactQueryEntityDataMap = {
-      database_id: databases,
-      domain_id: domains,
-      firewall_id: firewalls,
-      linode_id: linodes,
-      lkecluster_id: clusters,
-      nodebalancer_id: nodebalancers,
-      volume_id: volumes,
-    };
-
-    if (!reactQueryEntityDataMap[entityType]) {
-      return [];
-    }
-
-    // Domains don't have a label so we map the domain as the label
-    if (entityType === 'domain_id') {
-      return (
-        reactQueryEntityDataMap[entityType]?.map(({ domain, id }) => ({
-          label: domain,
-          value: id,
-        })) || []
-      );
-    }
-
-    return (
-      reactQueryEntityDataMap[entityType]?.map(
-        ({ id, label }: { id: number; label: string }) => ({
-          label,
-          value: id,
-        })
-      ) || []
-    );
-  };
-
-  const loadingMap: Record<EntityType, boolean> = {
-    database_id: databasesLoading,
-    domain_id: domainsLoading,
-    firewall_id: firewallsLoading,
-    general: false,
-    linode_id: linodesLoading,
-    lkecluster_id: clustersLoading,
-    nodebalancer_id: nodebalancersLoading,
-    none: false,
-    volume_id: volumesLoading,
-  };
-
-  const errorMap: Record<EntityType, APIError[] | null> = {
-    database_id: databasesError,
-    domain_id: domainsError,
-    firewall_id: firewallsError,
-    general: null,
-    linode_id: linodesError,
-    lkecluster_id: clustersError,
-    nodebalancer_id: nodebalancersError,
-    none: null,
-    volume_id: volumesError,
-  };
-
-  const entityOptions = getEntityOptions();
-  const areEntitiesLoading = loadingMap[entityType];
-  const entityError = Boolean(errorMap[entityType])
-    ? `Error loading ${ENTITY_ID_TO_NAME_MAP[entityType]}s`
-    : undefined;
-
-  const selectedEntity =
-    entityOptions.find((thisEntity) => String(thisEntity.value) === entityId) ||
-    null;
-
   const selectedSeverityLabel =
     selectedSeverity && severityLabelMap.get(selectedSeverity);
   const selectedSeverityOption =
@@ -490,99 +353,36 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
           {ticketType === 'smtp' ? (
             <SupportTicketSMTPFields />
           ) : (
-            // eslint-disable-next-line react/jsx-no-useless-fragment
             <>
               {props.hideProductSelection ? null : (
-                <>
-                  <Controller
-                    render={({ field }) => (
-                      <Autocomplete
-                        onChange={(_e, type) => {
-                          // Don't reset things if the type hasn't changed
-                          if (type.value === entityType) {
-                            return;
-                          }
-                          field.onChange(type.value);
-                          form.setValue('entityId', '');
-                          form.setValue('entityInputValue', '');
-                        }}
-                        data-qa-ticket-entity-type
-                        disableClearable
-                        label="What is this regarding?"
-                        options={topicOptions}
-                        value={selectedTopic}
-                      />
-                    )}
-                    control={form.control}
-                    name="entityType"
-                  />
-                  {!['general', 'none'].includes(entityType) && (
-                    <>
-                      <Controller
-                        render={({ field, fieldState }) => (
-                          <Autocomplete
-                            label={
-                              ENTITY_ID_TO_NAME_MAP[entityType] ??
-                              'Entity Select'
-                            }
-                            onChange={(e, id) =>
-                              form.setValue(
-                                'entityId',
-                                id ? String(id?.value) : ''
-                              )
-                            }
-                            onInputChange={(e, value) =>
-                              field.onChange(value ? value : '')
-                            }
-                            data-qa-ticket-entity-id
-                            disabled={entityOptions.length === 0}
-                            errorText={entityError || fieldState.error?.message}
-                            inputValue={entityInputValue}
-                            loading={areEntitiesLoading}
-                            options={entityOptions}
-                            placeholder={`Select a ${ENTITY_ID_TO_NAME_MAP[entityType]}`}
-                            value={selectedEntity}
-                          />
-                        )}
-                        control={form.control}
-                        name="entityInputValue"
-                      />
-                      {!areEntitiesLoading && entityOptions.length === 0 ? (
-                        <FormHelperText>
-                          You don&rsquo;t have any{' '}
-                          {ENTITY_ID_TO_NAME_MAP[entityType]}s on your account.
-                        </FormHelperText>
-                      ) : null}
-                    </>
-                  )}
-                </>
+                <SupportTicketProductSelectionFields />
               )}
+              <Controller
+                render={({ field, fieldState }) => (
+                  <TabbedReply
+                    placeholder={
+                      "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
+                    }
+                    error={fieldState.error?.message}
+                    handleChange={field.onChange}
+                    innerClass={classes.innerReply}
+                    required
+                    rootClass={classes.rootReply}
+                    value={description}
+                  />
+                )}
+                control={form.control}
+                name="description"
+              />
+              <Accordion
+                detailProps={{ className: classes.expPanelSummary }}
+                heading="Formatting Tips"
+              >
+                <MarkdownReference />
+              </Accordion>
+              {/* <AttachFileForm files={files} updateFiles={updateFiles} /> */}
             </>
           )}
-          <Controller
-            render={({ field, fieldState }) => (
-              <TabbedReply
-                placeholder={
-                  "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
-                }
-                error={fieldState.error?.message}
-                handleChange={field.onChange}
-                innerClass={classes.innerReply}
-                required
-                rootClass={classes.rootReply}
-                value={description}
-              />
-            )}
-            control={form.control}
-            name="description"
-          />
-          <Accordion
-            detailProps={{ className: classes.expPanelSummary }}
-            heading="Formatting Tips"
-          >
-            <MarkdownReference />
-          </Accordion>
-          {/* <AttachFileForm files={files} updateFiles={updateFiles} /> */}
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
