@@ -7,21 +7,44 @@ import {
 } from 'src/mocks/presets';
 
 const LOCAL_STORAGE_KEY = 'msw';
+const LOCAL_STORAGE_POPULATORS_KEY = 'msw-populators';
 const LOCAL_STORAGE_PRESET_KEY = 'msw-preset';
-//const LOCAL_STORAGE_PRESET_EXTRAS_KEY = 'msw-preset-extras';
+const LOCAL_STORAGE_PRESET_EXTRAS_KEY = 'msw-preset-extras';
 
+/**
+ * Whether MSW is enabled via local storage setting.
+ *
+ * `true` if MSW is enabled, `false` otherwise.
+ */
 export const isMSWEnabled =
   localStorage.getItem(LOCAL_STORAGE_KEY) === 'enabled';
 
+/**
+ * Enables or disables MSW via local storage setting.
+ *
+ * Reloads page upon changing setting.
+ *
+ * @param enabled - Whether or not to enable MSW.
+ */
 export const setMSWEnabled = (enabled: boolean) => {
   localStorage.setItem(LOCAL_STORAGE_KEY, enabled ? 'enabled' : 'disabled');
   window.location.reload();
 };
 
+/**
+ * Returns the ID of the selected MSW preset.
+ *
+ * @returns ID of selected MSW preset, or `null` if no preset is saved.
+ */
 export const getMSWPreset = () => {
   return localStorage.getItem(LOCAL_STORAGE_PRESET_KEY);
 };
 
+/**
+ * Saves ID of selected MSW preset in local storage.
+ *
+ * If MSW is enabled, changing the selected MSW preset will trigger a page reload.
+ */
 export const saveMSWPreset = (presetId: string) => {
   const previousPreset = localStorage.getItem(LOCAL_STORAGE_PRESET_KEY);
   localStorage.setItem(LOCAL_STORAGE_PRESET_KEY, presetId);
@@ -29,6 +52,32 @@ export const saveMSWPreset = (presetId: string) => {
   if (presetId !== previousPreset && isMSWEnabled) {
     window.location.reload();
   }
+};
+
+export const getMSWExtraPresets = (): string[] => {
+  const encodedPresets = localStorage.getItem(LOCAL_STORAGE_PRESET_EXTRAS_KEY);
+  if (!encodedPresets) {
+    return [];
+  }
+  return encodedPresets.split(',');
+};
+
+export const setMSWExtraPresets = (presets: string[]) => {
+  localStorage.setItem(LOCAL_STORAGE_PRESET_EXTRAS_KEY, presets.join(','));
+  window.location.reload();
+};
+
+export const getMSWContextPopulators = (): string[] => {
+  const encodedPopulators = localStorage.getItem(LOCAL_STORAGE_POPULATORS_KEY);
+  if (!encodedPopulators) {
+    return [];
+  }
+  return encodedPopulators.split(',');
+};
+
+export const setMSWContextPopulators = (populators: string[]) => {
+  localStorage.setItem(LOCAL_STORAGE_POPULATORS_KEY, populators.join(','));
+  window.location.reload();
 };
 
 const renderBaselinePresetOptions = () =>
