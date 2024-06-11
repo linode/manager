@@ -15,6 +15,7 @@ import {
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
 import { useAccountSettings } from 'src/queries/account/settings';
+import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';
 import {
   useCreateBucketMutation,
   useObjectStorageBuckets,
@@ -32,7 +33,6 @@ import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import ClusterSelect from './ClusterSelect';
 import { OveragePricing } from './OveragePricing';
-import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';
 
 interface Props {
   isOpen: boolean;
