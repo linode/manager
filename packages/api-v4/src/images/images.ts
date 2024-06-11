@@ -1,5 +1,6 @@
 import {
   createImageSchema,
+  updateImageRegionsSchema,
   updateImageSchema,
   uploadImageSchema,
 } from '@linode/validation/lib/images.schema';
@@ -11,8 +12,8 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import {
+import type { Filter, Params, ResourcePage as Page } from '../types';
+import type {
   CreateImagePayload,
   Image,
   ImageUploadPayload,
@@ -63,11 +64,13 @@ export const createImage = (data: CreateImagePayload) => {
 export const updateImage = (
   imageId: string,
   label?: string,
-  description?: string
+  description?: string,
+  tags?: string[]
 ) => {
   const data = {
     ...(label && { label }),
     ...(description && { description }),
+    ...(tags && { tags }),
   };
 
   return Request<Image>(
@@ -103,5 +106,23 @@ export const uploadImage = (data: ImageUploadPayload) => {
     setURL(`${API_ROOT}/images/upload`),
     setMethod('POST'),
     setData(data, uploadImageSchema)
+  );
+};
+
+/**
+ * Selects the regions to which this image will be replicated.
+ *
+ * @param imageId { string } ID of the Image to look up.
+ * @param regions { string[] } ID of regions to replicate to. Must contain at least one valid region.
+ */
+export const updateImageRegions = (imageId: string, regions: string[]) => {
+  const data = {
+    regions,
+  };
+
+  return Request<Image>(
+    setURL(`${API_ROOT}/images/${encodeURIComponent(imageId)}/regions`),
+    setMethod('POST'),
+    setData(data, updateImageRegionsSchema)
   );
 };

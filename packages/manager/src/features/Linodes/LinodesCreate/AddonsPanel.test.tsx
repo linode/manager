@@ -62,6 +62,7 @@ const props: AddonsPanelProps = {
       ipv4: ['45.56.75.98'],
       ipv6: '2600:3c00::f03c:93ff:fe85:576d/128',
       label: 'test_instance',
+      lke_cluster_id: null,
       placement_group: {
         affinity_type: 'anti_affinity:local',
         id: 1,
@@ -107,6 +108,7 @@ const props: AddonsPanelProps = {
       ipv4: ['192.168.139.183', '139.144.17.202'],
       ipv6: '2600:3c04::f03c:93ff:fe75:0612/128',
       label: 'debian-ca-central',
+      lke_cluster_id: null,
       placement_group: {
         affinity_type: 'anti_affinity:local',
         id: 1,
@@ -151,6 +153,7 @@ const props: AddonsPanelProps = {
       ipv4: ['45.79.74.95'],
       ipv6: '2600:3c01::f03c:93ff:fe75:e4f9/128',
       label: 'almalinux-us-west',
+      lke_cluster_id: null,
       placement_group: {
         affinity_type: 'anti_affinity:local',
         id: 1,
@@ -269,25 +272,25 @@ describe('AddonsPanel', () => {
     expect(getByText(/\$3.57/)).toBeInTheDocument();
   });
 
-  it('should render a warning notice if isEdgeRegionSelected is true and disable backups and private ip checkbox', () => {
-    const propsWithEdgeRegionSelected = {
+  it('should render a warning notice if isDistributedRegionSelected is true and disable backups and private ip checkbox', () => {
+    const propsWithDistributedRegionSelected = {
       ...props,
-      isEdgeRegionSelected: true,
+      isDistributedRegionSelected: true,
     };
     const { getByTestId } = renderWithTheme(
-      <AddonsPanel {...propsWithEdgeRegionSelected} />
+      <AddonsPanel {...propsWithDistributedRegionSelected} />
     );
     expect(getByTestId('notice-warning')).toBeInTheDocument();
     expect(getByTestId('private_ip')).toHaveAttribute('aria-disabled', 'true');
     expect(getByTestId('backups')).toHaveAttribute('aria-disabled', 'true');
   });
-  it('should not render a warning notice if isEdgeRegionSelected is false', () => {
-    const propsWithEdgeRegionNotSelected = {
+  it('should not render a warning notice if isDistributedRegionSelected is false', () => {
+    const propsWithDistributedRegionNotSelected = {
       ...props,
-      isEdgeRegionSelected: false,
+      isDistributedRegionSelected: false,
     };
     const { queryByTestId } = renderWithTheme(
-      <AddonsPanel {...propsWithEdgeRegionNotSelected} />
+      <AddonsPanel {...propsWithDistributedRegionNotSelected} />
     );
     expect(queryByTestId('notice-warning')).not.toBeInTheDocument();
   });

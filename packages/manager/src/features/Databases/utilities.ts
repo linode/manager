@@ -1,5 +1,5 @@
 import { useAccount } from 'src/queries/account/account';
-import { useDatabaseEnginesQuery } from 'src/queries/databases';
+import { useDatabaseEnginesQuery } from 'src/queries/databases/databases';
 
 /**
  * A hook to determine if Databases should be visible to the user.

@@ -128,7 +128,7 @@ export const getLinodesFromAllPlacementGroups = (
 
 /**
  * Hook to determine if the Placement Group feature should be visible to the user.
- * Dased on the user's account capability and the feature flag.
+ * Based on the user's account capability and the feature flag.
  *
  * @returns {boolean} - Whether the Placement Group feature is enabled for the current user.
  */
