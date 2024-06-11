@@ -1,4 +1,3 @@
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -18,6 +17,8 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 
 import { Divider } from '../Divider';
 import UserSSHKeyPanel from './UserSSHKeyPanel';
+
+import type { Theme } from '@mui/material/styles';
 
 const PasswordInput = React.lazy(
   () => import('src/components/PasswordInput/PasswordInput')
@@ -103,13 +104,29 @@ export const AccessPanel = (props: Props) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     _handleChange(e.target.value);
 
-  const encryptDiskDisabledReason = isLKELinode
-    ? ENCRYPT_DISK_DISABLED_REBUILD_LKE_REASON
-    : linodeIsInDistributedRegion
-    ? ENCRYPT_DISK_DISABLED_REBUILD_DISTRIBUTED_REGION_REASON
-    : !regionSupportsDiskEncryption
-    ? DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY
-    : '';
+  const determineEncryptDiskDisabledReason = ({
+    isLKELinode,
+    linodeIsInDistributedRegion,
+    regionSupportsDiskEncryption,
+  }: {
+    isLKELinode: boolean | undefined;
+    linodeIsInDistributedRegion: boolean | undefined;
+    regionSupportsDiskEncryption: boolean;
+  }) => {
+    if (isLKELinode) {
+      return ENCRYPT_DISK_DISABLED_REBUILD_LKE_REASON;
+    }
+
+    if (linodeIsInDistributedRegion) {
+      return ENCRYPT_DISK_DISABLED_REBUILD_DISTRIBUTED_REGION_REASON;
+    }
+
+    if (!regionSupportsDiskEncryption) {
+      return DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY;
+    }
+
+    return '';
+  };
 
   /**
    * Display the "Disk Encryption" section if:
@@ -130,8 +147,12 @@ export const AccessPanel = (props: Props) => {
             isLKELinode ||
             linodeIsInDistributedRegion
           }
+          disabledReason={determineEncryptDiskDisabledReason({
+            isLKELinode,
+            linodeIsInDistributedRegion,
+            regionSupportsDiskEncryption,
+          })}
           descriptionCopy={DISK_ENCRYPTION_GENERAL_DESCRIPTION}
-          disabledReason={encryptDiskDisabledReason}
           isEncryptDiskChecked={diskEncryptionEnabled ?? false}
           onChange={() => toggleDiskEncryptionEnabled()}
         />
