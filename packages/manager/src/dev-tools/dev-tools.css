@@ -1,4 +1,112 @@
-#dev-tools {
+.dev-tools {
+  --background-color-closed: rgba(0, 0, 0, 0.55);
+  --background-color-opened: rgba(0, 0, 0, 0.85);
+  --background-blur: blur(7px);
+  --open-close-transition: background-color 0.2s, height 0.075s;
+
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  color: white;
+}
+
+.dev-tools__toggle {
+  width: 70px;
+  height: 60px;
+  border-top-right-radius: 12px;
+}
+
+.dev-tools__toggle button {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  border: 0;
+  color: white;
+  cursor: pointer;
+}
+
+.dev-tools__toggle button svg {
+  position: relative;
+  top: 3px;
+  left: -5px;
+}
+
+.dev-tools.dev-tools--msw .dev-tools__toggle button svg {
+  color: #17cf73;
+  filter: drop-shadow(0 0 3px limegreen);
+}
+
+.dev-tools__toggle button::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  /*background-color: white;*/
+  border-right: 2px solid white;
+  border-top: 2px solid white;
+  display: inline-block;
+  position: relative;
+  left: 3px;
+  top: -3px;
+  transform: rotate(-45deg);
+  transition: 0.3s transform;
+}
+
+.dev-tools.dev-tools--open .dev-tools__toggle button::after {
+  transform: translateY(-4px) rotate(135deg);
+}
+
+.dev-tools .dev-tools__toggle,
+.dev-tools .dev-tools__body {
+  background-color: var(--background-color-closed);
+  backdrop-filter: var(--background-blur);
+  transition: var(--open-close-transition);
+}
+
+.dev-tools.dev-tools--open .dev-tools__toggle,
+.dev-tools.dev-tools--open .dev-tools__body {
+  background-color: var(--background-color-opened);
+}
+
+/*
+ * Dev tools body has height of `0` when `.dev-tools--open` class is not present.
+ */
+.dev-tools .dev-tools__body {
+  height: 0;
+  padding: 0;
+}
+.dev-tools.dev-tools--open .dev-tools__body {
+  height: 375px;
+}
+
+/*
+ *
+ */
+.dev-tools__content {
+  padding: 12px 12px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.dev-tools__status-bar {
+  border: 1px solid green;
+  flex-basis: 0;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.dev-tools__main {
+  border: 1px solid red;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow: auto;
+}
+
+/*#dev-tools {
   position: fixed;
   bottom: 0px;
   background: black;
@@ -40,3 +148,4 @@
     justify-content: space-between;
   }
 }
+*/
