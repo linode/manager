@@ -1,8 +1,7 @@
-import { Event, Image, ImageStatus } from '@linode/api-v4';
+import { Image, ImageStatus } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
-import produce from 'immer';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -28,7 +27,6 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { listToItemsByID } from 'src/queries/base';
 import {
   isEventImageUpload,
   isEventInProgressDiskImagize,
@@ -41,10 +39,12 @@ import {
 } from 'src/queries/images';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-import ImageRow, { ImageWithEvent } from './ImageRow';
+import { EditImageDrawer } from './EditImageDrawer';
+import ImageRow from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
-import { DrawerMode, ImagesDrawer } from './ImagesDrawer';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
+import { RebuildImageDrawer } from './RebuildImageDrawer';
+import { getEventsForImages } from './utils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   imageTable: {
@@ -60,16 +60,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-interface ImageDrawerState {
-  description?: string;
-  imageID?: string;
-  label?: string;
-  mode: DrawerMode;
-  open: boolean;
-  selectedLinode?: number;
-  tags?: string[];
-}
-
 interface ImageDialogState {
   error?: string;
   image?: string;
@@ -79,16 +69,6 @@ interface ImageDialogState {
   submitting: boolean;
 }
 
-interface ImagesLandingProps extends ImageDrawerState, ImageDialogState {}
-
-const defaultDrawerState: ImageDrawerState = {
-  description: '',
-  label: '',
-  mode: 'edit',
-  open: false,
-  tags: [],
-};
-
 const defaultDialogState = {
   error: undefined,
   image: '',
@@ -97,7 +77,7 @@ const defaultDialogState = {
   submitting: false,
 };
 
-export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
+export const ImagesLanding = () => {
   const { classes } = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -191,19 +171,23 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
     ) ?? [];
 
   // Private images with the associated events tied in.
-  const manualImagesData = getImagesWithEvents(
+  const manualImagesEvents = getEventsForImages(
     manualImages?.data ?? [],
     imageEvents
   );
 
   // Automatic images with the associated events tied in.
-  const automaticImagesData = getImagesWithEvents(
+  const automaticImagesEvents = getEventsForImages(
     automaticImages?.data ?? [],
     imageEvents
   );
 
-  const [drawer, setDrawer] = React.useState<ImageDrawerState>(
-    defaultDrawerState
+  const [selectedImage, setSelectedImage] = React.useState<Image>();
+
+  const [editDrawerOpen, setEditDrawerOpen] = React.useState<boolean>(false);
+
+  const [rebuildDrawerOpen, setRebuildDrawerOpen] = React.useState<boolean>(
+    false
   );
 
   const [dialog, setDialogState] = React.useState<ImageDialogState>(
@@ -290,28 +274,14 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
     queryClient.invalidateQueries(imageQueries.paginated._def);
   };
 
-  const openForEdit = (
-    label: string,
-    description: string,
-    imageID: string,
-    tags: string[]
-  ) => {
-    setDrawer({
-      description,
-      imageID,
-      label,
-      mode: 'edit',
-      open: true,
-      tags,
-    });
+  const openForEdit = (image: Image) => {
+    setSelectedImage(image);
+    setEditDrawerOpen(true);
   };
 
-  const openForRestore = (imageID: string) => {
-    setDrawer({
-      imageID,
-      mode: 'restore',
-      open: true,
-    });
+  const openForRestore = (image: Image) => {
+    setSelectedImage(image);
+    setRebuildDrawerOpen(true);
   };
 
   const deployNewLinode = (imageID: string) => {
@@ -321,44 +291,6 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
       state: { selectedImageId: imageID },
     });
   };
-
-  const changeSelectedLinode = (linodeId: null | number) => {
-    setDrawer((prevDrawerState) => ({
-      ...prevDrawerState,
-      selectedDisk: null,
-      selectedLinode: linodeId ?? undefined,
-    }));
-  };
-
-  const changeSelectedDisk = (disk: null | string) => {
-    setDrawer((prevDrawerState) => ({
-      ...prevDrawerState,
-      selectedDisk: disk,
-    }));
-  };
-
-  const setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-
-    setDrawer((prevDrawerState) => ({
-      ...prevDrawerState,
-      label: value,
-    }));
-  };
-
-  const setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setDrawer((prevDrawerState) => ({
-      ...prevDrawerState,
-      description: value,
-    }));
-  };
-
-  const setTags = (tags: string[]) =>
-    setDrawer((prevDrawerState) => ({
-      ...prevDrawerState,
-      tags,
-    }));
 
   const getActions = () => {
     return (
@@ -374,33 +306,6 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
           label: dialogAction === 'cancel' ? 'Keep Image' : 'Cancel',
           onClick: closeDialog,
         }}
-      />
-    );
-  };
-
-  const closeImageDrawer = () => {
-    setDrawer((prevDrawerState) => ({
-      ...prevDrawerState,
-      open: false,
-    }));
-  };
-
-  const renderImageDrawer = () => {
-    return (
-      <ImagesDrawer
-        changeDescription={setDescription}
-        changeDisk={changeSelectedDisk}
-        changeLabel={setLabel}
-        changeLinode={changeSelectedLinode}
-        changeTags={setTags}
-        description={drawer.description}
-        imageId={drawer.imageID}
-        label={drawer.label}
-        mode={drawer.mode}
-        onClose={closeImageDrawer}
-        open={drawer.open}
-        selectedLinode={drawer.selectedLinode || null}
-        tags={drawer.tags}
       />
     );
   };
@@ -445,10 +350,7 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
   }
 
   /** Empty States */
-  if (
-    (!manualImagesData || manualImagesData.length === 0) &&
-    (!automaticImagesData || automaticImagesData.length === 0)
-  ) {
+  if (!manualImages.data.length && !automaticImages.data.length) {
     return renderEmpty();
   }
 
@@ -513,12 +415,13 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {manualImagesData.length > 0
-              ? manualImagesData.map((manualImage) => (
+            {manualImages.data.length > 0
+              ? manualImages.data.map((manualImage) => (
                   <ImageRow
+                    event={manualImagesEvents[manualImage.id]}
+                    handlers={handlers}
+                    image={manualImage}
                     key={manualImage.id}
-                    {...manualImage}
-                    {...handlers}
                   />
                 ))
               : noManualImages}
@@ -580,12 +483,13 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {automaticImagesData.length > 0
-              ? automaticImagesData.map((automaticImage) => (
+            {automaticImages.data.length > 0
+              ? automaticImages.data.map((automaticImage) => (
                   <ImageRow
+                    event={automaticImagesEvents[automaticImage.id]}
+                    handlers={handlers}
+                    image={automaticImage}
                     key={automaticImage.id}
-                    {...automaticImage}
-                    {...handlers}
                   />
                 ))
               : noAutomaticImages}
@@ -600,7 +504,16 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
           pageSize={paginationForAutomaticImages.pageSize}
         />
       </Paper>
-      {renderImageDrawer()}
+      <EditImageDrawer
+        image={selectedImage}
+        onClose={() => setEditDrawerOpen(false)}
+        open={editDrawerOpen}
+      />
+      <RebuildImageDrawer
+        image={selectedImage}
+        onClose={() => setRebuildDrawerOpen(false)}
+        open={rebuildDrawerOpen}
+      />
       <ConfirmationDialog
         title={
           dialogAction === 'cancel'
@@ -619,27 +532,3 @@ export const ImagesLanding: React.FC<ImagesLandingProps> = () => {
 };
 
 export default ImagesLanding;
-
-const getImagesWithEvents = (images: Image[], events: Event[]) => {
-  const itemsById = listToItemsByID(images ?? []);
-  return Object.values(itemsById).reduce(
-    (accum, thisImage: Image) =>
-      produce(accum, (draft: any) => {
-        if (!thisImage.is_public) {
-          // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
-          const matchingEvent = events.find(
-            (thisEvent) =>
-              `private/${thisEvent.secondary_entity?.id}` === thisImage.id ||
-              (`private/${thisEvent.entity?.id}` === thisImage.id &&
-                thisEvent.status === 'failed')
-          );
-          if (matchingEvent) {
-            draft.push({ ...thisImage, event: matchingEvent });
-          } else {
-            draft.push(thisImage);
-          }
-        }
-      }),
-    []
-  ) as ImageWithEvent[];
-};

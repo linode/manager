@@ -9,6 +9,7 @@ import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { Box } from 'src/components/Box';
@@ -28,6 +29,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 
@@ -62,6 +64,8 @@ const initialValues: RebuildFromImageForm = {
   },
   root_pass: '',
 };
+
+export const REBUILD_LINODE_IMAGE_PARAM_NAME = 'selectedImageId';
 
 export const RebuildFromImage = (props: Props) => {
   const {
@@ -99,6 +103,13 @@ export const RebuildFromImage = (props: Props) => {
   const [userData, setUserData] = React.useState<string | undefined>('');
   const [shouldReuseUserData, setShouldReuseUserData] = React.useState<boolean>(
     false
+  );
+
+  const location = useLocation();
+  const preselectedImageId = getQueryParamFromQueryString(
+    location.search,
+    REBUILD_LINODE_IMAGE_PARAM_NAME,
+    ''
   );
 
   const handleUserDataChange = (userData: string) => {
@@ -182,7 +193,7 @@ export const RebuildFromImage = (props: Props) => {
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={{ ...initialValues, image: preselectedImageId }}
       onSubmit={handleFormSubmit}
       validateOnChange={false}
       validationSchema={RebuildSchema}
