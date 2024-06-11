@@ -373,7 +373,78 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
   });
 };
 
-export const firewallEventsHandler = ({ queryClient }: EventHandlerData) => {
-  // We will over-fetch a little bit, bit this ensures Cloud firewalls are *always* up to date
-  queryClient.invalidateQueries({ queryKey: firewallQueries._def });
+export const firewallEventsHandler = ({
+  event,
+  queryClient,
+}: EventHandlerData) => {
+  if (!event.entity) {
+    // Ignore any events that don't have an associated entity
+    return;
+  }
+
+  switch (event.action) {
+    case 'firewall_delete':
+      // Invalidate firewall lists
+      queryClient.invalidateQueries({
+        queryKey: firewallQueries.firewalls.queryKey,
+      });
+
+      // Remove firewall from the cache
+      queryClient.removeQueries({
+        queryKey: firewallQueries.firewall(event.entity.id).queryKey,
+      });
+    case 'firewall_create':
+      // Invalidate firewall lists
+      queryClient.invalidateQueries({
+        queryKey: firewallQueries.firewalls.queryKey,
+      });
+    case 'firewall_device_add':
+    case 'firewall_device_remove':
+      // For a firewall device event, the primary entity is the fireall and
+      // the secondary entity is the device that is added/removed
+
+      // If a Linode is added or removed as a firewall device, invalidate it's firewalls
+      if (event.secondary_entity && event.secondary_entity.type === 'linode') {
+        queryClient.invalidateQueries({
+          queryKey: ['linodes', 'linode', event.entity.id, 'firewalls'],
+        });
+      }
+
+      // If a NodeBalancer is added or removed as a firewall device, invalidate it's firewalls
+      if (
+        event.secondary_entity &&
+        event.secondary_entity.type === 'nodebalancer'
+      ) {
+        queryClient.invalidateQueries({
+          queryKey: [
+            'nodebalancers',
+            'nodebalancer',
+            event.entity.id,
+            'firewalls',
+          ],
+        });
+      }
+
+      // Invalidate the firewall
+      queryClient.invalidateQueries({
+        queryKey: firewallQueries.firewall(event.entity.id).queryKey,
+      });
+
+      // Invalidate firewall lists
+      queryClient.invalidateQueries({
+        queryKey: firewallQueries.firewalls.queryKey,
+      });
+    case 'firewall_disable':
+    case 'firewall_enable':
+    case 'firewall_rules_update':
+    case 'firewall_update':
+      // invalidate the firewall
+      queryClient.invalidateQueries({
+        queryKey: firewallQueries.firewall(event.entity.id).queryKey,
+      });
+      // Invalidate firewall lists
+      queryClient.invalidateQueries({
+        queryKey: firewallQueries.firewalls.queryKey,
+      });
+  }
 };
