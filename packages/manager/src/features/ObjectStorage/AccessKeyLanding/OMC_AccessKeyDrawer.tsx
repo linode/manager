@@ -156,8 +156,8 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     !createMode && objectStorageKey ? objectStorageKey.label : '';
 
   const initialRegions =
-    !createMode && objectStorageKey
-      ? objectStorageKey.regions?.map((region) => region.id)
+    !createMode && objectStorageKey?.regions
+      ? objectStorageKey.regions.map((region) => region.id)
       : [];
 
   const initialValues: FormState = {
@@ -184,7 +184,6 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             ),
           }
         : { ...values, bucket_access: null };
-
       const updatePayload = generateUpdatePayload(values, initialValues);
 
       if (mode !== 'creating') {
@@ -203,7 +202,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   const isSaveDisabled =
     isRestrictedUser ||
     (mode !== 'creating' &&
-      objectStorageKey &&
+      objectStorageKey?.regions &&
       !hasLabelOrRegionsChanged(formik.values, objectStorageKey)) ||
     (mode === 'creating' &&
       limitedAccessChecked &&
