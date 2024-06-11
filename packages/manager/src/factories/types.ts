@@ -234,7 +234,7 @@ export const distributedNetworkTransferPriceTypeFactory = Factory.Sync.makeFacto
 
 export const networkTransferPriceTypeFactory = Factory.Sync.makeFactory<PriceType>(
   {
-    id: null,
+    id: 'network_transfer',
     label: 'Network Transfer',
     price: {
       hourly: 0.005,

@@ -39,7 +39,7 @@ export const OveragePricing = (props: Props) => {
     (type) => type.id === 'objectstorage-overage'
   );
   const transferOverageType = transferTypes?.find(
-    (type) => type.label === 'Network Transfer'
+    (type) => type.id === 'network_transfer'
   );
 
   const storageOveragePrice = getDCSpecificPriceByType({
