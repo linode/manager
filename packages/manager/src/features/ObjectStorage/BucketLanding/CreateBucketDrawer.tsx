@@ -32,6 +32,7 @@ import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import ClusterSelect from './ClusterSelect';
 import { OveragePricing } from './OveragePricing';
+import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';
 
 interface Props {
   isOpen: boolean;
@@ -77,12 +78,20 @@ export const CreateBucketDrawer = (props: Props) => {
   });
 
   const {
-    data: types,
-    isError: isErrorTypes,
-    isLoading: isLoadingTypes,
+    data: objTypes,
+    isError: isErrorObjTypes,
+    isInitialLoading: isLoadingObjTypes,
   } = useObjectStorageTypesQuery(isOpen);
+  const {
+    data: transferTypes,
+    isError: isErrorTransferTypes,
+    isInitialLoading: isLoadingTransferTypes,
+  } = useNetworkTransferPricesQuery(isOpen);
 
-  const isInvalidPrice = !types || isErrorTypes;
+  const isErrorTypes = isErrorTransferTypes || isErrorObjTypes;
+  const isLoadingTypes = isLoadingTransferTypes || isLoadingObjTypes;
+  const isInvalidPrice =
+    !objTypes || !transferTypes || isErrorTypes || isErrorTransferTypes;
 
   const {
     error,

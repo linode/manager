@@ -14,9 +14,10 @@ const getAllNetworkTransferPrices = () =>
     (data) => data.data
   );
 
-export const useNetworkTransferPricesQuery = () =>
+export const useNetworkTransferPricesQuery = (enabled = true) =>
   useQuery<PriceType[], APIError[]>({
     queryFn: getAllNetworkTransferPrices,
     queryKey: [queryKey, 'prices'],
     ...queryPresets.oneTimeFetch,
+    enabled,
   });
