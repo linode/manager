@@ -2,14 +2,12 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { WithStartAndEnd } from 'src/features/Longview/request.types';
-
 import { CloudPulseRegionSelect } from '../shared/CloudPulseRegionSelect';
-import {
-  CloudPulseResources,
-  CloudPulseResourcesSelect,
-} from '../shared/CloudPulseResourcesSelect';
+import { CloudPulseResourcesSelect } from '../shared/CloudPulseResourcesSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
+
+import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
+import type { WithStartAndEnd } from 'src/features/Longview/request.types';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(filters: FiltersObject): undefined | void;
@@ -30,10 +28,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   });
 
   const [selectedRegion, setRegion] = React.useState<string>();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [selectedResources, setResources] = React.useState<
-    CloudPulseResources[]
-  >(); // this will be used later point of time
+  const [, setResources] = React.useState<CloudPulseResources[]>(); // removed the unused variable, this will be used later point of time
   React.useEffect(() => {
     const triggerGlobalFilterChange = () => {
       const globalFilters: FiltersObject = {
