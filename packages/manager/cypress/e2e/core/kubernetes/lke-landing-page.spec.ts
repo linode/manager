@@ -4,12 +4,70 @@ import {
   mockGetClusterPools,
   mockGetKubeconfig,
 } from 'support/intercepts/lke';
-import { kubernetesClusterFactory, nodePoolFactory } from 'src/factories';
+import {
+  accountFactory,
+  kubernetesClusterFactory,
+  nodePoolFactory,
+} from 'src/factories';
 import { getRegionById } from 'support/util/regions';
 import { readDownload } from 'support/util/downloads';
 import { ui } from 'support/ui';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockGetAccount } from 'support/intercepts/account';
 
 describe('LKE landing page', () => {
+  it('does not display a Disk Encryption info banner if the LDE feature is disabled', () => {
+    // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
+    mockAppendFeatureFlags({
+      linodeDiskEncryption: makeFeatureFlagData(false),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    // Mock responses
+    const mockAccount = accountFactory.build({
+      capabilities: ['Linodes', 'Disk Encryption'],
+    });
+
+    mockGetAccount(mockAccount).as('getAccount');
+
+    // Intercept request
+    cy.visitWithLogin('/kubernetes/clusters');
+    cy.wait('@getAccount');
+
+    // Check if banner is visible
+    cy.findByText('Disk encryption is now standard on Linodes.').should(
+      'not.exist'
+    );
+  });
+
+  it('displays a Disk Encryption info banner if the LDE feature is enabled', () => {
+    // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
+    mockAppendFeatureFlags({
+      linodeDiskEncryption: makeFeatureFlagData(true),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    // Mock responses
+    const mockAccount = accountFactory.build({
+      capabilities: ['Linodes', 'Disk Encryption'],
+    });
+
+    mockGetAccount(mockAccount).as('getAccount');
+
+    // Intercept request
+    cy.visitWithLogin('/kubernetes/clusters');
+    cy.wait('@getAccount');
+
+    // Check if banner is visible
+    cy.contains('Disk encryption is now standard on Linodes.').should(
+      'be.visible'
+    );
+  });
+
   /*
    * - Confirms that LKE clusters are listed on landing page.
    */
