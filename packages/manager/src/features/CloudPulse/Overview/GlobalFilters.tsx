@@ -30,9 +30,10 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   });
 
   const [selectedRegion, setRegion] = React.useState<string>();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedResources, setResources] = React.useState<
     CloudPulseResources[]
-  >();
+  >(); // this will be used later point of time
   React.useEffect(() => {
     const triggerGlobalFilterChange = () => {
       const globalFilters: FiltersObject = {
