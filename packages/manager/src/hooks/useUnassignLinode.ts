@@ -6,10 +6,8 @@ import { configQueryKey, interfaceQueryKey } from 'src/queries/linodes/configs';
 import { queryKey } from 'src/queries/linodes/linodes';
 import { vpcQueries } from 'src/queries/vpcs/vpcs';
 
-import type {
-  APIError,
-  DeleteLinodeConfigInterfacePayload,
-} from '@linode/api-v4';
+import type { DeleteLinodeConfigInterfacePayload } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface IdsForUnassignLinode extends DeleteLinodeConfigInterfacePayload {
   vpcId: number;
@@ -23,7 +21,7 @@ type InvalidateSubnetLinodeConfigQueryIds = Omit<
 export const useUnassignLinode = () => {
   const queryClient = useQueryClient();
   const [unassignLinodesErrors, setUnassignLinodesErrors] = React.useState<
-    APIError[]
+    FormattedAPIError[]
   >([]);
 
   const invalidateQueries = async ({

@@ -1,5 +1,4 @@
 import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
-import { APIError } from '@linode/api-v4/lib/types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -11,6 +10,8 @@ import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface FirewallRowProps extends Firewall, ActionHandlers {}
 
@@ -82,7 +83,7 @@ export const getCountOfRules = (rules: Firewall['rules']): [number, number] => {
 const getDevicesCellString = (
   data: FirewallDevice[],
   loading: boolean,
-  error?: APIError[]
+  error?: FormattedAPIError[]
 ): JSX.Element | string => {
   if (loading) {
     return 'Loading...';

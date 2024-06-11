@@ -3,14 +3,15 @@ import * as React from 'react';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
-import type { APIError, Disk, LinodeType } from '@linode/api-v4';
+import type { Disk, LinodeType } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
-export const getError = (error: APIError[] | null) => {
+export const getError = (error: FormattedAPIError[] | null) => {
   if (!error) {
     return null;
   }
 
-  const errorText = error?.[0]?.reason;
+  const errorText = error?.[0]?.formattedReason;
   if (
     typeof errorText === 'string' &&
     errorText.match(/allocated more disk/i)

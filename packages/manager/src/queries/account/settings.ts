@@ -2,7 +2,6 @@ import {
   AccountSettings,
   updateAccountSettings,
 } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
 import {
   QueryClient,
   useMutation,
@@ -15,10 +14,12 @@ import { useProfile } from 'src/queries/profile/profile';
 import { queryPresets } from '../base';
 import { accountQueries } from './queries';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 export const useAccountSettings = () => {
   const { data: profile } = useProfile();
 
-  return useQuery<AccountSettings, APIError[]>({
+  return useQuery<AccountSettings, FormattedAPIError[]>({
     ...accountQueries.settings,
     ...queryPresets.oneTimeFetch,
     ...queryPresets.noRetry,
@@ -28,7 +29,11 @@ export const useAccountSettings = () => {
 
 export const useMutateAccountSettings = () => {
   const queryClient = useQueryClient();
-  return useMutation<AccountSettings, APIError[], Partial<AccountSettings>>({
+  return useMutation<
+    AccountSettings,
+    FormattedAPIError[],
+    Partial<AccountSettings>
+  >({
     mutationFn: updateAccountSettings,
     onSuccess: (newData) => updateAccountSettingsData(newData, queryClient),
   });

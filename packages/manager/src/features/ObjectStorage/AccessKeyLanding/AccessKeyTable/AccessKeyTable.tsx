@@ -2,7 +2,6 @@ import {
   ObjectStorageKey,
   RegionS3EndpointAndID,
 } from '@linode/api-v4/lib/object-storage';
-import { APIError } from '@linode/api-v4/lib/types';
 import { styled } from '@mui/material/styles';
 import React, { useState } from 'react';
 
@@ -19,9 +18,11 @@ import { HostNamesDrawer } from '../HostNamesDrawer';
 import { OpenAccessDrawer } from '../types';
 import { AccessKeyTableBody } from './AccessKeyTableBody';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 export interface AccessKeyTableProps {
   data: ObjectStorageKey[] | undefined;
-  error: APIError[] | null | undefined;
+  error: FormattedAPIError[] | null | undefined;
   isLoading: boolean;
   isRestrictedUser: boolean;
   openDrawer: OpenAccessDrawer;

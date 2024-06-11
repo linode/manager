@@ -52,9 +52,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
     NodeBalancer[]
   >([]);
 
-  const [localError, setLocalError] = React.useState<string | undefined>(
-    undefined
-  );
+  const [localError, setLocalError] = React.useState<string>();
 
   const handleSubmit = async () => {
     let firstError: string | undefined = undefined;

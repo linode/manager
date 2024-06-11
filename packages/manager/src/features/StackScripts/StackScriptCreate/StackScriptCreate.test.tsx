@@ -1,7 +1,6 @@
 import { Grants, Profile } from '@linode/api-v4/lib';
-import { APIError } from '@linode/api-v4/lib/types';
-import * as React from 'react';
 import { UseQueryResult } from '@tanstack/react-query';
+import * as React from 'react';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { imageFactory, normalizeEntities, profileFactory } from 'src/factories';
@@ -9,6 +8,8 @@ import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { StackScriptCreate } from './StackScriptCreate';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const images = normalizeEntities(imageFactory.buildList(10));
 const queryClient = queryClientFactory();
@@ -21,10 +22,10 @@ describe('StackScriptCreate', () => {
         profile={
           { data: profileFactory.build() } as UseQueryResult<
             Profile,
-            APIError[]
+            FormattedAPIError[]
           >
         }
-        grants={{ data: {} } as UseQueryResult<Grants, APIError[]>}
+        grants={{ data: {} } as UseQueryResult<Grants, FormattedAPIError[]>}
         imagesData={images}
         imagesLastUpdated={0}
         imagesLoading={false}

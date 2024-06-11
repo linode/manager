@@ -14,12 +14,7 @@ import {
   importZone,
   updateDomain,
 } from '@linode/api-v4/lib/domains';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
+import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
@@ -27,44 +22,51 @@ import { getAll } from 'src/utilities/getAll';
 
 import { profileQueries } from './profile/profile';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 export const queryKey = 'domains';
 
 export const useDomainsQuery = (params: Params, filter: Filter) =>
-  useQuery<ResourcePage<Domain>, APIError[]>(
+  useQuery<ResourcePage<Domain>, FormattedAPIError[]>(
     [queryKey, 'paginated', params, filter],
     () => getDomains(params, filter),
     { keepPreviousData: true }
   );
 
 export const useAllDomainsQuery = (enabled: boolean = false) =>
-  useQuery<Domain[], APIError[]>([queryKey, 'all'], getAllDomains, {
+  useQuery<Domain[], FormattedAPIError[]>([queryKey, 'all'], getAllDomains, {
     enabled,
   });
 
 export const useDomainQuery = (id: number) =>
-  useQuery<Domain, APIError[]>([queryKey, 'domain', id], () => getDomain(id));
+  useQuery<Domain, FormattedAPIError[]>([queryKey, 'domain', id], () =>
+    getDomain(id)
+  );
 
 export const useDomainRecordsQuery = (id: number) =>
-  useQuery<DomainRecord[], APIError[]>(
+  useQuery<DomainRecord[], FormattedAPIError[]>(
     [queryKey, 'domain', id, 'records'],
     () => getAllDomainRecords(id)
   );
 
 export const useCreateDomainMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Domain, APIError[], CreateDomainPayload>(createDomain, {
-    onSuccess: (domain) => {
-      queryClient.invalidateQueries([queryKey, 'paginated']);
-      queryClient.setQueryData([queryKey, 'domain', domain.id], domain);
-      // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries(profileQueries.grants.queryKey);
-    },
-  });
+  return useMutation<Domain, FormattedAPIError[], CreateDomainPayload>(
+    createDomain,
+    {
+      onSuccess: (domain) => {
+        queryClient.invalidateQueries([queryKey, 'paginated']);
+        queryClient.setQueryData([queryKey, 'domain', domain.id], domain);
+        // If a restricted user creates an entity, we must make sure grants are up to date.
+        queryClient.invalidateQueries(profileQueries.grants.queryKey);
+      },
+    }
+  );
 };
 
 export const useCloneDomainMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<Domain, APIError[], CloneDomainPayload>(
+  return useMutation<Domain, FormattedAPIError[], CloneDomainPayload>(
     (data) => cloneDomain(id, data),
     {
       onSuccess: (domain) => {
@@ -77,7 +79,7 @@ export const useCloneDomainMutation = (id: number) => {
 
 export const useImportZoneMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Domain, APIError[], ImportZonePayload>(
+  return useMutation<Domain, FormattedAPIError[], ImportZonePayload>(
     (data) => importZone(data),
     {
       onSuccess: (domain) => {
@@ -90,7 +92,7 @@ export const useImportZoneMutation = () => {
 
 export const useDeleteDomainMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteDomain(id), {
+  return useMutation<{}, FormattedAPIError[]>(() => deleteDomain(id), {
     onSuccess: () => {
       queryClient.invalidateQueries([queryKey, 'paginated']);
       queryClient.removeQueries([queryKey, 'domain', id]);
@@ -104,7 +106,7 @@ interface UpdateDomainPayloadWithId extends UpdateDomainPayload {
 
 export const useUpdateDomainMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Domain, APIError[], UpdateDomainPayloadWithId>(
+  return useMutation<Domain, FormattedAPIError[], UpdateDomainPayloadWithId>(
     (data) => {
       const { id, ...rest } = data;
       return updateDomain(id, rest);

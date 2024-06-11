@@ -63,11 +63,11 @@ import {
 } from './utils';
 
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
-import type { APIError } from '@linode/api-v4/lib/types';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface NodeBalancerConfigFieldsWithStatusAndErrors
   extends NodeBalancerConfigFieldsWithStatus {
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
 }
 
 interface NodeBalancerFieldsState {
@@ -123,7 +123,7 @@ const NodeBalancerCreate = () => {
     deleteConfigConfirmDialog,
     setDeleteConfigConfirmDialog,
   ] = React.useState<{
-    errors?: APIError[];
+    errors?: FormattedAPIError[];
     idxToDelete?: number;
     open: boolean;
     submitting: boolean;
@@ -252,7 +252,7 @@ const NodeBalancerCreate = () => {
     });
   };
 
-  const setNodeErrors = (errors: APIError[]) => {
+  const setNodeErrors = (errors: FormattedAPIError[]) => {
     /* Map the objects with this shape
         {
           path: ['configs', 2, 'nodes', 0, 'errors'],
@@ -303,7 +303,7 @@ const NodeBalancerCreate = () => {
       .catch((errorResponse) => {
         const errors = getAPIErrorOrDefault(errorResponse);
         setNodeErrors(
-          errors.map((e: APIError) => ({
+          errors.map((e) => ({
             ...e,
             ...(e.field && { field: e.field.replace(/(\[|\]\.)/g, '_') }),
           }))
@@ -405,7 +405,9 @@ const NodeBalancerCreate = () => {
     setDeleteConfigConfirmDialog(clone(defaultDeleteConfigConfirmDialogState));
 
   const confirmationConfigError = () =>
-    (deleteConfigConfirmDialog.errors || []).map((e) => e.reason).join(',');
+    (deleteConfigConfirmDialog.errors || [])
+      .map((e) => e.formattedReason)
+      .join(',');
 
   const hasErrorFor = getAPIErrorFor(errorResources, error ?? undefined);
   const generalError = hasErrorFor('none');
@@ -721,7 +723,7 @@ export interface FieldAndPath {
   path: any[];
 }
 
-export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
+export const fieldErrorsToNodePathErrors = (errors: FormattedAPIError[]) => {
   /**
    * Potentials;
    *  JOI error config_0_nodes_0_address
@@ -737,7 +739,7 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
         }
       }
   */
-  return errors.reduce((acc: any, error: APIError) => {
+  return errors.reduce((acc: any, error) => {
     const errorFields = pathOr('', ['field'], error).split('|');
     const pathErrors: FieldAndPath[] = errorFields.map((field: string) =>
       getPathAndFieldFromFieldString(field)
@@ -753,7 +755,7 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
         return {
           error: {
             field: err.field,
-            reason: error.reason,
+            reason: error.formattedReason,
           },
           path: [...err.path, 'errors'],
         };

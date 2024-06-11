@@ -96,7 +96,7 @@ export const LongviewLanding = (props: LongviewLandingProps) => {
             getAPIErrorOrDefault(
               errorResponse,
               'Error creating Longview client.'
-            )[0].reason,
+            )[0].formattedReason,
             { variant: 'error' }
           );
           setNewClientLoading(false);

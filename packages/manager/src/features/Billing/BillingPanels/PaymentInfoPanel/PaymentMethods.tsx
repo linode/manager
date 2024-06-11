@@ -1,5 +1,4 @@
 import { PaymentMethod } from '@linode/api-v4/lib/account/types';
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
@@ -8,8 +7,10 @@ import { PaymentMethodRow } from 'src/components/PaymentMethodRow/PaymentMethodR
 import { Typography } from 'src/components/Typography';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 interface Props {
-  error: APIError[] | null | undefined;
+  error: FormattedAPIError[] | null | undefined;
   isChildUser?: boolean | undefined;
   isRestrictedUser?: boolean | undefined;
   loading: boolean;
@@ -45,7 +46,7 @@ const PaymentMethods = ({
           getAPIErrorOrDefault(
             error,
             'There was an error retrieving your payment methods.'
-          )[0].reason
+          )[0].formattedReason
         }
       </Typography>
     );

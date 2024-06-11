@@ -1,5 +1,4 @@
 import { LinodeType, getLinodeTypes, getType } from '@linode/api-v4';
-import { APIError } from '@linode/api-v4/lib/types';
 import {
   QueryClient,
   UseQueryOptions,
@@ -11,6 +10,8 @@ import {
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const queryKey = 'types';
 
@@ -28,10 +29,14 @@ const getSingleType = async (type: string, queryClient: QueryClient) => {
 
 const allTypesQueryKey = [queryKey, 'all'];
 export const useAllTypes = (enabled = true) => {
-  return useQuery<LinodeType[], APIError[]>(allTypesQueryKey, getAllTypes, {
-    enabled,
-    ...queryPresets.oneTimeFetch,
-  });
+  return useQuery<LinodeType[], FormattedAPIError[]>(
+    allTypesQueryKey,
+    getAllTypes,
+    {
+      enabled,
+      ...queryPresets.oneTimeFetch,
+    }
+  );
 };
 
 const specificTypesQueryKey = (type: string) => [queryKey, 'detail', type];
@@ -44,12 +49,14 @@ const specificTypesQueryKey = (type: string) => [queryKey, 'detail', type];
 export const useSpecificTypes = (types: string[], enabled = true) => {
   const queryClient = useQueryClient();
   return useQueries({
-    queries: types.map<UseQueryOptions<LinodeType, APIError[]>>((type) => ({
-      enabled: Boolean(type) && enabled,
-      queryFn: () => getSingleType(type, queryClient),
-      queryKey: specificTypesQueryKey(type),
-      ...queryPresets.oneTimeFetch,
-    })),
+    queries: types.map<UseQueryOptions<LinodeType, FormattedAPIError[]>>(
+      (type) => ({
+        enabled: Boolean(type) && enabled,
+        queryFn: () => getSingleType(type, queryClient),
+        queryKey: specificTypesQueryKey(type),
+        ...queryPresets.oneTimeFetch,
+      })
+    ),
   });
 };
 

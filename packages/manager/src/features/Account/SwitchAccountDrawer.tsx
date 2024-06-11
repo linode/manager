@@ -15,8 +15,9 @@ import { getStorage, setStorage } from 'src/utilities/storage';
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 import { updateParentTokenInLocalStorage } from './SwitchAccounts/utils';
 
-import type { APIError, UserType } from '@linode/api-v4';
+import type { UserType } from '@linode/api-v4';
 import type { State as AuthState } from 'src/store/authentication';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   onClose: () => void;
@@ -36,7 +37,7 @@ export const SwitchAccountDrawer = (props: Props) => {
   const { onClose, open, userType } = props;
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [isParentTokenError, setIsParentTokenError] = React.useState<
-    APIError[]
+    FormattedAPIError[]
   >([]);
   const [query, setQuery] = React.useState<string>('');
 
@@ -53,7 +54,7 @@ export const SwitchAccountDrawer = (props: Props) => {
     validateParentToken,
   } = useParentChildAuthentication();
 
-  const createTokenErrorReason = createTokenError?.[0]?.reason;
+  const createTokenErrorReason = createTokenError?.[0]?.formattedReason;
 
   const handleSwitchToChildAccount = React.useCallback(
     async ({
@@ -98,8 +99,9 @@ export const SwitchAccountDrawer = (props: Props) => {
 
   const handleSwitchToParentAccount = React.useCallback(async () => {
     if (!validateParentToken()) {
-      const expiredTokenError: APIError = {
+      const expiredTokenError: FormattedAPIError = {
         field: 'token',
+        formattedReason: PARENT_USER_SESSION_EXPIRED,
         reason: PARENT_USER_SESSION_EXPIRED,
       };
 
@@ -128,10 +130,12 @@ export const SwitchAccountDrawer = (props: Props) => {
   return (
     <Drawer onClose={onClose} open={open} title="Switch Account">
       {createTokenErrorReason && (
-        <Notice text={createTokenErrorReason} variant="error" />
+        <Notice variant="error">{createTokenErrorReason}</Notice>
       )}
       {isParentTokenError.length > 0 && (
-        <Notice text={isParentTokenError[0].reason} variant="error" />
+        <Notice variant="error">
+          {isParentTokenError[0].formattedReason}{' '}
+        </Notice>
       )}
       <Typography
         sx={(theme) => ({

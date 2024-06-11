@@ -21,7 +21,6 @@ import {
 } from './requests';
 
 import type {
-  APIError,
   CreateDatabasePayload,
   Database,
   DatabaseBackup,
@@ -35,6 +34,7 @@ import type {
   ResourcePage,
   UpdateDatabasePayload,
 } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const databaseQueries = createQueryKeys('databases', {
   database: (engine: Engine, id: number) => ({
@@ -75,7 +75,7 @@ export const databaseQueries = createQueryKeys('databases', {
 });
 
 export const useDatabaseQuery = (engine: Engine, id: number) =>
-  useQuery<Database, APIError[]>({
+  useQuery<Database, FormattedAPIError[]>({
     ...databaseQueries.database(engine, id),
     // @TODO Consider removing polling
     // The refetchInterval will poll the API for this Database. We will do this
@@ -85,7 +85,7 @@ export const useDatabaseQuery = (engine: Engine, id: number) =>
   });
 
 export const useDatabasesQuery = (params: Params, filter: Filter) =>
-  useQuery<ResourcePage<DatabaseInstance>, APIError[]>({
+  useQuery<ResourcePage<DatabaseInstance>, FormattedAPIError[]>({
     ...databaseQueries.databases._ctx.paginated(params, filter),
     keepPreviousData: true,
     // @TODO Consider removing polling
@@ -93,14 +93,14 @@ export const useDatabasesQuery = (params: Params, filter: Filter) =>
   });
 
 export const useAllDatabasesQuery = (enabled: boolean = true) =>
-  useQuery<DatabaseInstance[], APIError[]>({
+  useQuery<DatabaseInstance[], FormattedAPIError[]>({
     ...databaseQueries.databases._ctx.all,
     enabled,
   });
 
 export const useDatabaseMutation = (engine: Engine, id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<Database, APIError[], UpdateDatabasePayload>({
+  return useMutation<Database, FormattedAPIError[], UpdateDatabasePayload>({
     mutationFn: (data) => updateDatabase(engine, id, data),
     onSuccess(database) {
       queryClient.invalidateQueries({
@@ -116,7 +116,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) => {
 
 export const useCreateDatabaseMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Database, APIError[], CreateDatabasePayload>({
+  return useMutation<Database, FormattedAPIError[], CreateDatabasePayload>({
     mutationFn: (data) =>
       createDatabase(data.engine?.split('/')[0] as Engine, data),
     onSuccess(database) {
@@ -135,7 +135,7 @@ export const useCreateDatabaseMutation = () => {
 
 export const useDeleteDatabaseMutation = (engine: Engine, id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: () => deleteDatabase(engine, id),
     onSuccess() {
       queryClient.invalidateQueries({
@@ -149,25 +149,25 @@ export const useDeleteDatabaseMutation = (engine: Engine, id: number) => {
 };
 
 export const useDatabaseBackupsQuery = (engine: Engine, id: number) =>
-  useQuery<ResourcePage<DatabaseBackup>, APIError[]>(
+  useQuery<ResourcePage<DatabaseBackup>, FormattedAPIError[]>(
     databaseQueries.database(engine, id)._ctx.backups
   );
 
 export const useDatabaseEnginesQuery = (enabled: boolean = false) =>
-  useQuery<DatabaseEngine[], APIError[]>({
+  useQuery<DatabaseEngine[], FormattedAPIError[]>({
     ...databaseQueries.engines,
     enabled,
   });
 
 export const useDatabaseTypesQuery = () =>
-  useQuery<DatabaseType[], APIError[]>(databaseQueries.types);
+  useQuery<DatabaseType[], FormattedAPIError[]>(databaseQueries.types);
 
 export const useDatabaseCredentialsQuery = (
   engine: Engine,
   id: number,
   enabled: boolean = false
 ) =>
-  useQuery<DatabaseCredentials, APIError[]>({
+  useQuery<DatabaseCredentials, FormattedAPIError[]>({
     ...databaseQueries.database(engine, id)._ctx.credentials,
     ...queryPresets.oneTimeFetch,
     enabled,
@@ -175,7 +175,7 @@ export const useDatabaseCredentialsQuery = (
 
 export const useDatabaseCredentialsMutation = (engine: Engine, id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: () => resetDatabaseCredentials(engine, id),
     onSuccess() {
       queryClient.removeQueries({
@@ -196,7 +196,7 @@ export const useRestoreFromBackupMutation = (
   backupId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: () => restoreWithBackup(engine, databaseId, backupId),
     onSuccess() {
       queryClient.invalidateQueries({

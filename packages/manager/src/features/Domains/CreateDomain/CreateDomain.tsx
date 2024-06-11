@@ -5,10 +5,9 @@ import {
   DomainType,
 } from '@linode/api-v4/lib/domains';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
-import { APIError } from '@linode/api-v4/lib/types';
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useFormik } from 'formik';
 import { path } from 'ramda';
 import * as React from 'react';
@@ -47,6 +46,8 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { generateDefaultDomainRecords } from '../domainUtils';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 type DefaultRecordsType = 'linode' | 'nodebalancer' | 'none';
 
 export const CreateDomain = () => {
@@ -59,7 +60,7 @@ export const CreateDomain = () => {
   const [mounted, setMounted] = React.useState<boolean>(false);
   // Errors for selecting Linode/NB for default records aren't part
   // of the payload and must be handled separately.
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const [errors, setErrors] = React.useState<FormattedAPIError[]>();
 
   const history = useHistory();
 
@@ -138,6 +139,7 @@ export const CreateDomain = () => {
       return setErrors([
         {
           field: 'defaultLinode',
+          formattedReason: 'Please select a Linode.',
           reason: 'Please select a Linode.',
         },
       ]);
@@ -150,6 +152,7 @@ export const CreateDomain = () => {
       return setErrors([
         {
           field: 'defaultNodeBalancer',
+          formattedReason: 'Please select a NodeBalancer.',
           reason: 'Please select a NodeBalancer.',
         },
       ]);
@@ -186,7 +189,7 @@ export const CreateDomain = () => {
               .then(() => {
                 return redirectToLandingOrDetail(type, domainData.id);
               })
-              .catch((e: APIError[]) => {
+              .catch((e: FormattedAPIError[]) => {
                 reportException(
                   `Default DNS Records couldn't be created from Linode: ${e[0].reason}`,
                   {
@@ -213,7 +216,7 @@ export const CreateDomain = () => {
               .then(() => {
                 return redirectToLandingOrDetail(type, domainData.id);
               })
-              .catch((e: APIError[]) => {
+              .catch((e: FormattedAPIError[]) => {
                 reportException(
                   `Default DNS Records couldn't be created from NodeBalancer: ${e[0].reason}`,
                   {

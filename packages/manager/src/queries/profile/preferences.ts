@@ -1,20 +1,15 @@
 import { updateUserPreferences } from '@linode/api-v4';
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
-
-import { ManagerPreferences } from 'src/types/ManagerPreferences';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { queryPresets } from '../base';
 import { profileQueries } from './profile';
 
-import type { APIError } from '@linode/api-v4';
+import type { QueryClient } from '@tanstack/react-query';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 export const usePreferences = (enabled = true) =>
-  useQuery<ManagerPreferences, APIError[]>({
+  useQuery<ManagerPreferences, FormattedAPIError[]>({
     ...profileQueries.preferences,
     ...queryPresets.oneTimeFetch,
     enabled,
@@ -26,7 +21,7 @@ export const useMutatePreferences = (replace = false) => {
 
   return useMutation<
     ManagerPreferences,
-    APIError[],
+    FormattedAPIError[],
     Partial<ManagerPreferences>
   >({
     mutationFn: (data) =>

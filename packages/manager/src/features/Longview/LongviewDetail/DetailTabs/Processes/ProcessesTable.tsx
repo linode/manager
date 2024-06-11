@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import OrderBy from 'src/components/OrderBy';
@@ -17,9 +16,11 @@ import { readableBytes } from 'src/utilities/unitConversions';
 import { StyledDiv, StyledTable } from './ProcessesTable.styles';
 import { Process } from './types';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 export interface ProcessesTableProps {
   error?: string;
-  lastUpdatedError?: APIError[];
+  lastUpdatedError?: FormattedAPIError[];
   processesData: ExtendedProcess[];
   processesLoading: boolean;
   selectedProcess: Process | null;

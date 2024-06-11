@@ -34,9 +34,9 @@ import { CloneDomainDrawer } from './CloneDomainDrawer';
 import { DisableDomainDialog } from './DisableDomainDialog';
 import { Handlers as DomainHandlers } from './DomainActionMenu';
 import { DomainBanner } from './DomainBanner';
+import { DomainsEmptyLandingState } from './DomainsEmptyLandingPage';
 import { DomainTableRow } from './DomainTableRow';
 import { DomainZoneImportDrawer } from './DomainZoneImportDrawer';
-import { DomainsEmptyLandingState } from './DomainsEmptyLandingPage';
 import { EditDomainDrawer } from './EditDomainDrawer';
 
 const DOMAIN_CREATE_ROUTE = '/domains/create';
@@ -157,7 +157,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
       }).catch((e) => {
         return enqueueSnackbar(
           getAPIErrorOrDefault(e, 'There was an issue enabling your domain')[0]
-            .reason,
+            .formattedReason,
           {
             variant: 'error',
           }

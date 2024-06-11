@@ -23,7 +23,8 @@ Because of Cloud Manager's complexity, we use [`@lukemorales/query-key-factory`]
 ```ts
 import { useQuery } from "@tanstack/react-query";
 import { getProfile } from "@linode/api-v4";
-import type { APIError, Profile } from "@linode/api-v4";
+import type { Profile } from "@linode/api-v4";
+import type { FormattedAPIError } from "src/types/FormattedAPIError";
 
 const profileQueries = createQueryKeys('profile', {
   profile: {
@@ -33,7 +34,7 @@ const profileQueries = createQueryKeys('profile', {
 });
 
 export const useProfile = () =>
-  useQuery<Profile, APIError[]>(profileQueries.profile);
+  useQuery<Profile, FormattedAPIError[]>(profileQueries.profile);
 ```
 
 #### Query with parameters
@@ -44,7 +45,8 @@ export const useProfile = () =>
 ```ts
 import { useQuery } from "@tanstack/react-query";
 import { getLinode } from "@linode/api-v4";
-import type { APIError, Linode } from "@linode/api-v4";
+import type { Linode } from "@linode/api-v4";
+import type { FormattedAPIError } from "src/types/FormattedAPIError";
 
 const linodeQueries = createQueryKeys('linodes', {
   linode: (id: number) => ({
@@ -54,7 +56,7 @@ const linodeQueries = createQueryKeys('linodes', {
 });
 
 export const useLinodeQuery = (id: number) =>
-  useQuery<Linode, APIError[]>(linodeQueries.linode(1));
+  useQuery<Linode, FormattedAPIError[]>(linodeQueries.linode(1));
 ```
 
 ### Additional Reading on Query Keys
@@ -97,7 +99,8 @@ on an entity.
 ```ts
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { getLinode, getLinodes, updateLinode, deleteLinode, createLinode } from "@linode/api-v4";
-import type { APIError, Linode, ResourcePage } from "@linode/api-v4";
+import type { Linode, ResourcePage } from "@linode/api-v4";
+import type { FormattedAPIError } from "src/types/FormattedAPIError";
 
 const linodeQueries = createQueryKeys('linodes', {
   linode: (id: number) => ({
@@ -111,11 +114,11 @@ const linodeQueries = createQueryKeys('linodes', {
 });
 
 export const useLinodeQuery = (id: number) =>
-  useQuery<Linode, APIError[]>(linodeQueries.linode(1));
+  useQuery<Linode, FormattedAPIError[]>(linodeQueries.linode(1));
 
 export const useLinodeUpdateMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<Linode, APIError[], Partial<Linode>>({
+  return useMutation<Linode, FormattedAPIError[], Partial<Linode>>({
     mutationFn: (data) => updateLinode(id, data),
     onSuccess(linode) {
       // Invalidate all paginated pages in the cache.
@@ -128,7 +131,7 @@ export const useLinodeUpdateMutation = (id: number) => {
 
 export const useDeleteLinodeMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: () => deleteLinode(id),
     onSuccess() {
       // Invalidate all paginated pages in the cache.
@@ -141,7 +144,7 @@ export const useDeleteLinodeMutation = (id: number) => {
 
 export const useCreateLinodeMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Linode, APIError[], CreateLinodeRequest>({
+  return useMutation<Linode, FormattedAPIError[], CreateLinodeRequest>({
     mutationFn: createLinode,
     onSuccess(linode) {
       // Invalidate all paginated pages in the cache. We don't know what page the new Linode will be on.

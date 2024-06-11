@@ -43,7 +43,7 @@ export const DeleteOAuthClientDialog = ({
           }}
         />
       }
-      error={error?.[0].reason}
+      error={error?.[0].formattedReason}
       onClose={onClose}
       open={open}
       title={`Delete ${label}?`}

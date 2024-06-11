@@ -35,7 +35,7 @@ import type {
   FirewallRuleType,
   FirewallRules,
 } from '@linode/api-v4/lib/firewalls';
-import type { APIError } from '@linode/api-v4/lib/types';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   disabled: boolean;
@@ -94,7 +94,7 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   // @todo fine-grained error handling.
   const [generalErrors, setGeneralErrors] = React.useState<
-    APIError[] | undefined
+    FormattedAPIError[] | undefined
   >();
   const [
     discardChangesModalOpen,
@@ -322,7 +322,9 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
       ) : null}
 
       {generalErrors?.length === 1 && (
-        <Notice spacingTop={8} text={generalErrors[0].reason} variant="error" />
+        <Notice spacingTop={8} variant="error">
+          {generalErrors[0].formattedReason}
+        </Notice>
       )}
 
       <StyledDiv>

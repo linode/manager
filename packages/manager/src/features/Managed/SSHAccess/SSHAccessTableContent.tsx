@@ -1,5 +1,4 @@
 import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
@@ -9,8 +8,10 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import SSHAccessRow from './SSHAccessRow';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 interface SSHAccessTableContentProps {
-  error?: APIError[] | null;
+  error?: FormattedAPIError[] | null;
   linodeSettings: ManagedLinodeSetting[];
   loading: boolean;
   openDrawer: (linodeId: number) => void;

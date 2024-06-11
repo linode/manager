@@ -335,7 +335,7 @@ export const BillingActivityPanel = (props: Props) => {
   }, [selectedTransactionType, combinedData]);
 
   return (
-    <Grid xs={12} data-qa-billing-activity-panel>
+    <Grid data-qa-billing-activity-panel xs={12}>
       <div className={classes.root}>
         <div className={classes.headerContainer}>
           <Typography className={classes.headline} variant="h2">
@@ -435,6 +435,8 @@ export const BillingActivityPanel = (props: Props) => {
                           accountPaymentsError || accountInvoicesError
                             ? [
                                 {
+                                  formattedReason:
+                                    'There was an error retrieving your billing activity.',
                                   reason:
                                     'There was an error retrieving your billing activity.',
                                 },

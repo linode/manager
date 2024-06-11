@@ -1,9 +1,9 @@
-import { APIError } from '@linode/api-v4/lib/types';
-
 import { reportException } from 'src/exceptionReporting';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 export const handleUnauthorizedErrors = (
-  e: APIError[],
+  e: FormattedAPIError[],
   unauthedMessage: string
 ) => {
   /**
@@ -16,14 +16,11 @@ export const handleUnauthorizedErrors = (
    * flag to true
    */
   let hasUnauthorizedError = false;
-  let filteredErrors: APIError[] = [];
+  let filteredErrors: FormattedAPIError[] = [];
 
   try {
     filteredErrors = e.filter((eachError) => {
-      if (
-        typeof eachError.reason === 'string' &&
-        eachError.reason.toLowerCase().includes('unauthorized')
-      ) {
+      if (eachError.reason.toLowerCase().includes('unauthorized')) {
         hasUnauthorizedError = true;
         return false;
       }

@@ -1,5 +1,4 @@
 import { ManagedIssue } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -10,8 +9,10 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { IssueCalendar } from './IssueCalendar';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 interface HistoryDrawerProps {
-  error?: APIError[] | null;
+  error?: FormattedAPIError[] | null;
   issues: ManagedIssue[] | undefined;
   loading: boolean;
   monitorLabel: string;
@@ -42,14 +43,14 @@ export const HistoryDrawer = (props: HistoryDrawerProps) => {
 const renderDrawerContent = (
   issues: ManagedIssue[] | undefined,
   loading: boolean,
-  error?: APIError[] | null
+  error?: FormattedAPIError[] | null
 ) => {
   if (error) {
     return (
       <ErrorState
         errorText={
           getAPIErrorOrDefault(error, 'Error loading your issue history')[0]
-            .reason
+            .formattedReason
         }
       />
     );

@@ -1,5 +1,6 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface DialogState<T> {
   entityID: T;
@@ -76,7 +77,7 @@ export const useDialog = <T extends number | string | undefined>(
         handleSuccess();
         return response;
       })
-      .catch((e: APIError[]) => {
+      .catch((e: FormattedAPIError[]) => {
         if (!mountedRef.current) {
           return;
         }

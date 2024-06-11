@@ -13,7 +13,7 @@ import {
 } from 'src/utilities/pricing/constants';
 
 interface Props {
-  error?: string;
+  error?: JSX.Element | string;
   linode: Linode;
 }
 

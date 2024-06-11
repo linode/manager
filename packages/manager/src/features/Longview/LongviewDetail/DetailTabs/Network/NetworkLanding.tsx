@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
@@ -14,10 +13,12 @@ import { StyledBox } from '../Disks/Disks.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { NetworkGraphs } from './NetworkGraphs';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 interface Props {
   clientAPIKey: string;
   lastUpdated?: number;
-  lastUpdatedError?: APIError[];
+  lastUpdatedError?: FormattedAPIError[];
   timezone: string;
 }
 

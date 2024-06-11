@@ -1,4 +1,4 @@
-import { APIError, LinodeType } from '@linode/api-v4';
+import { LinodeType } from '@linode/api-v4';
 import { UseQueryResult } from '@tanstack/react-query';
 
 import { LINODE_NETWORK_IN } from 'src/constants';
@@ -6,6 +6,8 @@ import { typeLabelDetails } from 'src/features/Linodes/presentation';
 
 import { formatStorageUnits } from './formatStorageUnits';
 import { isNotNullOrUndefined } from './nullOrUndefined';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface ExtendedType extends LinodeType {
   formattedLabel: string;
@@ -48,7 +50,7 @@ export const extendType = (type: LinodeType): ExtendedType => {
 };
 
 export const extendTypesQueryResult = (
-  results: UseQueryResult<LinodeType, APIError[]>[]
+  results: UseQueryResult<LinodeType, FormattedAPIError[]>[]
 ) =>
   results
     .map((result) => result.data)

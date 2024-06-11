@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
@@ -10,17 +9,19 @@ import { Typography } from 'src/components/Typography';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { WithStartAndEnd } from '../../../request.types';
-import { useGraphs } from '../OverviewGraphs/useGraphs';
 import {
   StyledTimeRangeSelect,
   StyledTypography,
 } from '../CommonStyles.styles';
+import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { ApacheGraphs } from './ApacheGraphs';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   clientAPIKey?: string;
   lastUpdated?: number;
-  lastUpdatedError?: APIError[];
+  lastUpdatedError?: FormattedAPIError[];
   timezone: string;
 }
 

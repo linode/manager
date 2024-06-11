@@ -2,13 +2,13 @@ import {
   ReplyRequest,
   SupportReply,
   SupportTicket,
+  TicketRequest,
   closeSupportTicket,
   createReply,
+  createSupportTicket,
   getTicket,
   getTicketReplies,
   getTickets,
-  createSupportTicket,
-  TicketRequest,
 } from '@linode/api-v4/lib/support';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
@@ -20,12 +20,8 @@ import {
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 
-import type {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
+import type { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const supportQueries = createQueryKeys('support', {
   ticket: (id: number) => ({
@@ -46,18 +42,18 @@ const supportQueries = createQueryKeys('support', {
 });
 
 export const useSupportTicketsQuery = (params: Params, filter: Filter) =>
-  useQuery<ResourcePage<SupportTicket>, APIError[]>({
+  useQuery<ResourcePage<SupportTicket>, FormattedAPIError[]>({
     ...supportQueries.tickets(params, filter),
     keepPreviousData: true,
   });
 
 export const useSupportTicketQuery = (id: number) =>
-  useQuery<SupportTicket, APIError[]>(supportQueries.ticket(id));
+  useQuery<SupportTicket, FormattedAPIError[]>(supportQueries.ticket(id));
 
 export const useCreateSupportTicketMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<SupportTicket, APIError[], TicketRequest>({
+  return useMutation<SupportTicket, FormattedAPIError[], TicketRequest>({
     mutationFn: createSupportTicket,
     onSuccess(ticket) {
       queryClient.invalidateQueries({ queryKey: supportQueries.tickets._def });
@@ -70,7 +66,7 @@ export const useCreateSupportTicketMutation = () => {
 };
 
 export const useInfiniteSupportTicketRepliesQuery = (id: number) =>
-  useInfiniteQuery<ResourcePage<SupportReply>, APIError[]>({
+  useInfiniteQuery<ResourcePage<SupportReply>, FormattedAPIError[]>({
     ...supportQueries.ticket(id)._ctx.replies,
     getNextPageParam: ({ page, pages }) => {
       if (page === pages) {
@@ -82,7 +78,7 @@ export const useInfiniteSupportTicketRepliesQuery = (id: number) =>
 
 export const useSupportTicketReplyMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<SupportReply, APIError[], ReplyRequest>({
+  return useMutation<SupportReply, FormattedAPIError[], ReplyRequest>({
     mutationFn: createReply,
     onSuccess(data, variables) {
       queryClient.invalidateQueries({
@@ -97,7 +93,7 @@ export const useSupportTicketReplyMutation = () => {
 
 export const useSupportTicketCloseMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: () => closeSupportTicket(id),
     onSuccess() {
       queryClient.invalidateQueries({

@@ -1,5 +1,4 @@
 import {
-  APIError,
   Disk,
   LinodeDiskCreationData,
   changeLinodeDiskPassword,
@@ -15,8 +14,10 @@ import { getAll } from 'src/utilities/getAll';
 
 import { queryKey } from './linodes';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 export const useAllLinodeDisksQuery = (id: number, enabled = true) => {
-  return useQuery<Disk[], APIError[]>(
+  return useQuery<Disk[], FormattedAPIError[]>(
     [queryKey, 'linode', id, 'disks', 'all'],
     () => getAllLinodeDisks(id),
     { enabled }
@@ -32,7 +33,7 @@ export const useLinodeDiskChangePasswordMutation = (
   linodeId: number,
   diskId: number
 ) =>
-  useMutation<Disk, APIError[], { password: string }>(({ password }) =>
+  useMutation<Disk, FormattedAPIError[], { password: string }>(({ password }) =>
     changeLinodeDiskPassword(linodeId, diskId, password)
   );
 
@@ -41,16 +42,19 @@ export const useLinodeDeleteDiskMutation = (
   diskId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteLinodeDisk(linodeId, diskId), {
-    onSuccess() {
-      queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'disks']);
-    },
-  });
+  return useMutation<{}, FormattedAPIError[]>(
+    () => deleteLinodeDisk(linodeId, diskId),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'disks']);
+      },
+    }
+  );
 };
 
 export const useLinodeDiskCreateMutation = (linodeId: number) => {
   const queryClient = useQueryClient();
-  return useMutation<Disk, APIError[], LinodeDiskCreationData>(
+  return useMutation<Disk, FormattedAPIError[], LinodeDiskCreationData>(
     (data) => createLinodeDisk(linodeId, data),
     {
       onSuccess() {
@@ -65,7 +69,7 @@ export const useLinodeDiskUpdateMutation = (
   diskId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<Disk, APIError[], { label: string }>(
+  return useMutation<Disk, FormattedAPIError[], { label: string }>(
     (data) => updateLinodeDisk(linodeId, diskId, data),
     {
       onSuccess() {
@@ -80,7 +84,7 @@ export const useLinodeDiskResizeMutation = (
   diskId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<Disk, APIError[], { size: number }>(
+  return useMutation<Disk, FormattedAPIError[], { size: number }>(
     ({ size }) => resizeLinodeDisk(linodeId, diskId, size),
     {
       onSuccess() {

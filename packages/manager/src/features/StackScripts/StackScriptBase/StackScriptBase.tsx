@@ -1,6 +1,6 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
-import { APIError, Filter, ResourcePage } from '@linode/api-v4/lib/types';
+import { Filter, ResourcePage } from '@linode/api-v4/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -40,6 +40,8 @@ import {
 } from './StackScriptBase.styles';
 import { StackScriptsEmptyLandingState } from './StackScriptsEmptyLandingPage';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 type CurrentFilter = 'deploys' | 'label' | 'revision';
 
 type SortOrder = 'asc' | 'desc';
@@ -58,8 +60,8 @@ export interface State {
   currentPage: number;
   currentSearchFilter: Filter;
   didSearch: boolean;
-  error?: APIError[];
-  fieldError: APIError | undefined;
+  error?: FormattedAPIError[];
+  fieldError: FormattedAPIError | undefined;
   getMoreStackScriptsFailed: boolean; // did our attempt to get the next page of stackscripts fail?
   gettingMoreStackScripts: boolean;
   isSearching: boolean;
@@ -174,8 +176,8 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
       return (
         <React.Fragment>
-          {fieldError && fieldError.reason && (
-            <Notice text={fieldError.reason} variant="error" />
+          {fieldError && fieldError.formattedReason && (
+            <Notice variant="error">{fieldError.formattedReason}</Notice>
           )}
           {successMessage && <Notice text={successMessage} variant="success" />}
           {/*

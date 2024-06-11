@@ -4,7 +4,6 @@ import {
   CreateNodePoolData,
   KubeNodePoolResponse,
 } from '@linode/api-v4/lib/kubernetes';
-import { APIError } from '@linode/api-v4/lib/types';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { pick, remove, update } from 'ramda';
@@ -58,13 +57,15 @@ import {
 import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 export const CreateCluster = () => {
   const { classes } = useStyles();
   const [selectedRegionID, setSelectedRegionID] = React.useState<string>('');
   const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
   const [version, setVersion] = React.useState<Item<string> | undefined>();
-  const [errors, setErrors] = React.useState<APIError[] | undefined>();
+  const [errors, setErrors] = React.useState<FormattedAPIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [hasAgreed, setAgreed] = React.useState<boolean>(false);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();

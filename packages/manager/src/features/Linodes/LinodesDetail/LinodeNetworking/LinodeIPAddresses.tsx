@@ -126,7 +126,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   }
 
   if (error) {
-    return <ErrorState errorText={error?.[0].reason} />;
+    return <ErrorState errorText={error?.[0].formattedReason} />;
   }
 
   if (!ips) {

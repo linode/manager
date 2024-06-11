@@ -1,5 +1,4 @@
 import { Engine } from '@linode/api-v4/lib/databases/types';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
 
@@ -19,6 +18,8 @@ import {
   useDatabaseTypesQuery,
 } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
@@ -55,7 +56,8 @@ export const DatabaseDetail = () => {
     return (
       <ErrorState
         errorText={
-          getAPIErrorOrDefault(error, 'Error loading your database.')[0].reason
+          getAPIErrorOrDefault(error, 'Error loading your database.')[0]
+            .formattedReason
         }
       />
     );
@@ -117,7 +119,7 @@ export const DatabaseDetail = () => {
         resetEditableLabel();
       })
       .catch((err) => {
-        const errors: APIError[] = getAPIErrorOrDefault(
+        const errors: FormattedAPIError[] = getAPIErrorOrDefault(
           err,
           'An error occurred while updating label',
           'label'

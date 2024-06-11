@@ -15,10 +15,11 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PLACEMENT_GROUP_LINODES_ERROR_MESSAGE } from '../../constants';
 import { PlacementGroupsLinodesTableRow } from './PlacementGroupsLinodesTableRow';
 
-import type { APIError, Linode } from '@linode/api-v4';
+import type { Linode } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface Props {
-  error?: APIError[];
+  error?: FormattedAPIError[];
   handleUnassignLinodeModal: (linode: Linode) => void;
   isFetchingLinodes: boolean;
   linodes: Linode[];

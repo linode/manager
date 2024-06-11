@@ -15,7 +15,6 @@ import {
 import { QUERY_KEY } from './loadbalancers';
 
 import type {
-  APIError,
   Filter,
   Params,
   ResourcePage,
@@ -23,13 +22,14 @@ import type {
   ServiceTargetPayload,
   ServiceTargetsEndpointHealth,
 } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const useLoadBalancerServiceTargetsQuery = (
   loadbalancerId: number,
   params: Params,
   filter: Filter
 ) => {
-  return useQuery<ResourcePage<ServiceTarget>, APIError[]>(
+  return useQuery<ResourcePage<ServiceTarget>, FormattedAPIError[]>(
     [QUERY_KEY, 'aclb', loadbalancerId, 'service-targets', params, filter],
     () => getLoadbalancerServiceTargets(loadbalancerId, params, filter),
     { keepPreviousData: true }
@@ -39,7 +39,7 @@ export const useLoadBalancerServiceTargetsQuery = (
 export const useLoadBalancerServiceTargetsEndpointHealthQuery = (
   loadbalancerId: number
 ) => {
-  return useQuery<ServiceTargetsEndpointHealth, APIError[]>({
+  return useQuery<ServiceTargetsEndpointHealth, FormattedAPIError[]>({
     queryFn: () => getServiceTargetsEndpointHealth(loadbalancerId),
     queryKey: [
       QUERY_KEY,
@@ -54,7 +54,7 @@ export const useLoadBalancerServiceTargetsEndpointHealthQuery = (
 
 export const useServiceTargetCreateMutation = (loadbalancerId: number) => {
   const queryClient = useQueryClient();
-  return useMutation<ServiceTarget, APIError[], ServiceTargetPayload>(
+  return useMutation<ServiceTarget, FormattedAPIError[], ServiceTargetPayload>(
     (data) => createLoadbalancerServiceTarget(loadbalancerId, data),
     {
       onSuccess() {
@@ -74,7 +74,7 @@ export const useServiceTargetUpdateMutation = (
   serviceTargetId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<ServiceTarget, APIError[], ServiceTargetPayload>(
+  return useMutation<ServiceTarget, FormattedAPIError[], ServiceTargetPayload>(
     (data) =>
       updateLoadbalancerServiceTarget(loadbalancerId, serviceTargetId, data),
     {
@@ -95,7 +95,7 @@ export const useLoadBalancerServiceTargetDeleteMutation = (
   serviceTargetId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(
+  return useMutation<{}, FormattedAPIError[]>(
     () => deleteLoadbalancerServiceTarget(loadbalancerId, serviceTargetId),
     {
       onSuccess() {
@@ -114,7 +114,7 @@ export const useLoadBalancerServiceTargetsInfiniteQuery = (
   id: number,
   filter: Filter = {}
 ) => {
-  return useInfiniteQuery<ResourcePage<ServiceTarget>, APIError[]>(
+  return useInfiniteQuery<ResourcePage<ServiceTarget>, FormattedAPIError[]>(
     [QUERY_KEY, 'aclb', id, 'service-targets', 'infinite', filter],
     ({ pageParam }) =>
       getLoadbalancerServiceTargets(

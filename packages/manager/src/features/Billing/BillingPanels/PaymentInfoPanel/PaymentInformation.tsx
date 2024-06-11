@@ -1,5 +1,4 @@
 import { PaymentMethod, deletePaymentMethod } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
@@ -22,9 +21,10 @@ import {
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
 
 import type { Profile } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
-  error?: APIError[] | null;
+  error?: FormattedAPIError[] | null;
   isAkamaiCustomer: boolean;
   loading: boolean;
   paymentMethods: PaymentMethod[] | undefined;
@@ -65,7 +65,7 @@ const PaymentInformation = (props: Props) => {
         closeDeleteDialog();
         queryClient.invalidateQueries(accountQueries.paymentMethods.queryKey);
       })
-      .catch((e: APIError[]) => {
+      .catch((e: FormattedAPIError[]) => {
         setDeleteLoading(false);
         setDeleteError(
           getAPIErrorOrDefault(e, 'Unable to delete payment method.')[0].reason

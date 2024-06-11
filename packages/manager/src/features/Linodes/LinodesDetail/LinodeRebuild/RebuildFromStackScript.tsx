@@ -1,6 +1,5 @@
 import { rebuildLinode } from '@linode/api-v4/lib/linodes';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
 import { RebuildLinodeFromStackScriptSchema } from '@linode/validation/lib/linodes.schema';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -34,6 +33,8 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   disabled: boolean;
@@ -106,9 +107,9 @@ export const RebuildFromStackScript = (props: Props) => {
   // In this component, most errors are handled by Formik. This is not
   // possible with UDFs, since they are dynamic. Their errors need to
   // be handled separately.
-  const [udfErrors, setUdfErrors] = React.useState<APIError[] | undefined>(
-    undefined
-  );
+  const [udfErrors, setUdfErrors] = React.useState<
+    FormattedAPIError[] | undefined
+  >(undefined);
 
   const handleFormSubmit = (
     { authorized_users, image, root_pass }: RebuildFromStackScriptForm,
@@ -159,10 +160,14 @@ export const RebuildFromStackScript = (props: Props) => {
            * we're listening for in Formik, and use a more helpful message.
            */
           if (thisError.field === 'script') {
-            const reason = thisError.reason.match(/invalid stackscript/i)
-              ? 'The selected StackScript is invalid.'
-              : thisError.reason;
-            return { field: 'stackscript_id', reason };
+            const reason =
+              thisError.reason.match(/invalid stackscript/i) &&
+              'The selected StackScript is invalid.';
+            return {
+              field: 'stackscript_id',
+              formattedReason: reason ?? thisError.formattedReason,
+              reason: reason ?? thisError.reason,
+            };
           } else {
             return thisError;
           }
@@ -179,16 +184,18 @@ export const RebuildFromStackScript = (props: Props) => {
   // to be validated separately. This functions checks if we've got values
   // for all REQUIRED UDFs, and sets errors appropriately.
   const validateUdfs = () => {
-    const maybeErrors: APIError[] = [];
+    const maybeErrors: FormattedAPIError[] = [];
 
     // Walk through the defined UDFs
     ss.user_defined_fields.forEach((eachUdf) => {
       // Is it required? Do we have a value?
       if (isUDFRequired(eachUdf) && !ss.udf_data[eachUdf.name]) {
         // If not, we've got an error.
+        const errorReason = `A value for the ${eachUdf.name} is required.`;
         maybeErrors.push({
           field: eachUdf.name,
-          reason: `A value for the ${eachUdf.name} is required.`,
+          formattedReason: errorReason,
+          reason: errorReason,
         });
       }
     });
@@ -361,7 +368,7 @@ export const RebuildFromStackScript = (props: Props) => {
 // Helpers
 // =============================================================================
 
-const getUDFErrors = (errors: APIError[] | undefined) => {
+const getUDFErrors = (errors: FormattedAPIError[] | undefined) => {
   const fixedErrorFields = ['stackscript_id', 'root_pass', 'image', 'none'];
 
   return errors

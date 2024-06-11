@@ -1,5 +1,4 @@
 import { addPaymentMethod } from '@linode/api-v4/lib/account/payments';
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import {
   BraintreePayPalButtons,
@@ -20,6 +19,8 @@ import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPa
 import { useClientToken } from 'src/queries/account/payment';
 import { accountQueries } from 'src/queries/account/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const useStyles = makeStyles()(() => ({
   disabled: {
@@ -123,17 +124,17 @@ export const PayPalChip = (props: Props) => {
           variant: 'success',
         });
       })
-      .catch((errors: APIError[]) => {
+      .catch((errors: FormattedAPIError[]) => {
         setProcessing(false);
 
         const error = getAPIErrorOrDefault(
           errors,
           'Unable to add payment method'
-        )[0].reason;
+        )[0];
 
-        enqueueSnackbar(error, { variant: 'error' });
+        enqueueSnackbar(error.formattedReason, { variant: 'error' });
 
-        reportException(error, {
+        reportException(error.reason, {
           message:
             'Failed to add PayPal as a payment method with Linode\u{2019}s API',
         });

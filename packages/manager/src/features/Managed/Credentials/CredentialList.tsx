@@ -1,5 +1,4 @@
 import { CredentialPayload } from '@linode/api-v4/lib/managed/types';
-import { APIError } from '@linode/api-v4/lib/types';
 import { FormikBag } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -38,6 +37,8 @@ import {
 import AddCredentialDrawer from './AddCredentialDrawer';
 import CredentialTableContent from './CredentialTableContent';
 import UpdateCredentialDrawer from './UpdateCredentialDrawer';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export type FormikProps = FormikBag<{}, CredentialPayload>;
 
@@ -90,7 +91,7 @@ export const CredentialList = () => {
   };
 
   const _handleError = (
-    e: APIError[],
+    e: FormattedAPIError[],
     setSubmitting: any,
     setErrors: any,
     setStatus: any,

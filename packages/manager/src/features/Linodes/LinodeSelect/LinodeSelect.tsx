@@ -1,4 +1,4 @@
-import { APIError, Filter, Linode } from '@linode/api-v4';
+import { Filter, Linode } from '@linode/api-v4';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { SxProps } from '@mui/system';
@@ -8,6 +8,8 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { CustomPopper } from 'src/components/Autocomplete/Autocomplete.styles';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface LinodeSelectProps {
   /** Determine whether isOptionEqualToValue prop should be defined for Autocomplete
@@ -190,7 +192,7 @@ export const LinodeSelect = (
 };
 
 const getDefaultNoOptionsMessage = (
-  error: APIError[] | null,
+  error: FormattedAPIError[] | null,
   loading: boolean
 ) => {
   if (error) {

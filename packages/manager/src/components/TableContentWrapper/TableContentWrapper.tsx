@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
@@ -8,11 +7,13 @@ import {
   TableRowLoadingProps,
 } from 'src/components/TableRowLoading/TableRowLoading';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 interface TableContentWrapperProps {
   children?: React.ReactNode;
   customFirstRow?: JSX.Element;
   emptyMessage?: string;
-  error?: APIError[];
+  error?: FormattedAPIError[];
   lastUpdated?: number;
   length: number;
   loading: boolean;
@@ -38,7 +39,7 @@ export const TableContentWrapper = (props: TableContentWrapperProps) => {
   }
 
   if (error && error.length > 0) {
-    return <TableRowError colSpan={6} message={error[0].reason} />;
+    return <TableRowError colSpan={6} message={error[0].formattedReason} />;
   }
 
   if (lastUpdated !== 0 && length === 0) {

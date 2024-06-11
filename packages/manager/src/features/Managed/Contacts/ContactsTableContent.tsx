@@ -1,5 +1,4 @@
 import { ManagedContact } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
 import { equals } from 'ramda';
 import * as React from 'react';
 
@@ -11,9 +10,11 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import ContactsRow from './ContactsRow';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 interface ContactsTableContentProps {
   contacts: ManagedContact[];
-  error?: APIError[] | null;
+  error?: FormattedAPIError[] | null;
   lastUpdated: number;
   loading: boolean;
   openDialog: (contactId: number) => void;

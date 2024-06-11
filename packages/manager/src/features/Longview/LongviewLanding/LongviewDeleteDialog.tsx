@@ -1,8 +1,9 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   closeDialog: () => void;
@@ -14,7 +15,9 @@ interface Props {
 
 export const LongviewDeleteDialog = React.memo((props: Props) => {
   const [isDeleting, setDeleting] = React.useState<boolean>(false);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const [errors, setErrors] = React.useState<FormattedAPIError[] | undefined>(
+    undefined
+  );
 
   const {
     closeDialog,
@@ -34,6 +37,7 @@ export const LongviewDeleteDialog = React.memo((props: Props) => {
     if (!selectedLongviewClientID) {
       return setErrors([
         {
+          formattedReason: 'There was an issue deleting this Longview Client.',
           reason: 'There was an issue deleting this Longview Client.',
         },
       ]);
@@ -47,7 +51,7 @@ export const LongviewDeleteDialog = React.memo((props: Props) => {
         setDeleting(false);
         closeDialog();
       })
-      .catch((e: APIError[]) => {
+      .catch((e: FormattedAPIError[]) => {
         setDeleting(false);
         setErrors(e);
       });
@@ -62,7 +66,7 @@ export const LongviewDeleteDialog = React.memo((props: Props) => {
           onSubmit={handleDelete}
         />
       }
-      error={errors ? errors[0].reason : ''}
+      error={errors ? errors[0].formattedReason : ''}
       onClose={props.closeDialog}
       open={open}
       title={`Delete ${label ? label : 'this Longview Client'}?`}

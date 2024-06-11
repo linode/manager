@@ -1,5 +1,4 @@
 import { Image } from '@linode/api-v4/lib/images';
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
@@ -19,6 +18,8 @@ import {
   StyledTextField,
 } from './StackScriptForm.styles';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 interface TextFieldHandler {
   handler: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value: string;
@@ -36,7 +37,7 @@ interface Props {
   description: TextFieldHandler;
   disableSubmit: boolean;
   disabled?: boolean;
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   images: Images;
   isSubmitting: boolean;
   label: TextFieldHandler;

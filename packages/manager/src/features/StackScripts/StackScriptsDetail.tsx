@@ -3,7 +3,6 @@ import {
   getStackScript,
   updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 
@@ -20,6 +19,8 @@ import {
   getStackScriptUrl,
 } from './stackScriptUtils';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 export const StackScriptsDetail = () => {
   const { _hasGrant, _isRestrictedUser, profile } = useAccountManagement();
   const { data: grants } = useGrants();
@@ -29,7 +30,9 @@ export const StackScriptsDetail = () => {
 
   const [label, setLabel] = React.useState<string | undefined>('');
   const [loading, setLoading] = React.useState<boolean>(true);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const [errors, setErrors] = React.useState<FormattedAPIError[] | undefined>(
+    undefined
+  );
   const [stackScript, setStackScript] = React.useState<StackScript | undefined>(
     undefined
   );

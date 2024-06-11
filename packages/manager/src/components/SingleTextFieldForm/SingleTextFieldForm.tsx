@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -6,6 +5,8 @@ import { Box } from 'src/components/Box';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField, TextFieldProps } from 'src/components/TextField';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props extends TextFieldProps {
   errorMessage?: string;
@@ -37,7 +38,7 @@ export const SingleTextFieldForm = React.memo((props: Props) => {
 
   const [value, setValue] = React.useState(initialValue ?? '');
   const [submitting, setSubmitting] = React.useState(false);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>();
+  const [errors, setErrors] = React.useState<FormattedAPIError[]>();
   const [success, setSuccess] = React.useState(false);
 
   const handleSubmit = () => {

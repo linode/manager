@@ -80,7 +80,7 @@ export const KubeConfigPanel = (props: Props) => {
       const errorText = getAPIErrorOrDefault(
         error,
         'Unable to download your kubeconfig'
-      )[0].reason;
+      )[0].formattedReason;
 
       enqueueSnackbar(errorText, { variant: 'error' });
     }

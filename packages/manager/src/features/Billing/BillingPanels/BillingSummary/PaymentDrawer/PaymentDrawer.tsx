@@ -1,6 +1,4 @@
-import { PaymentMethod } from '@linode/api-v4';
 import { makePayment } from '@linode/api-v4/lib/account';
-import { APIWarning } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
@@ -23,6 +21,7 @@ import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
+import { accountQueries } from 'src/queries/account/queries';
 import { useProfile } from 'src/queries/profile/profile';
 import { isCreditCardExpired } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -32,8 +31,10 @@ import GooglePayButton from './GooglePayButton';
 import { CreditCardDialog } from './PaymentBits/CreditCardDialog';
 import { PaymentMethodCard } from './PaymentMethodCard';
 import PayPalButton from './PayPalButton';
-import { SetSuccess } from './types';
-import { accountQueries } from 'src/queries/account/queries';
+
+import type { SetSuccess } from './types';
+import type { PaymentMethod } from '@linode/api-v4';
+import type { APIWarning } from '@linode/api-v4/lib/types';
 
 const useStyles = makeStyles()(() => ({
   button: {
@@ -107,7 +108,9 @@ export const PaymentDrawer = (props: Props) => {
   const [submitting, setSubmitting] = React.useState<boolean>(false);
 
   const [warning, setWarning] = React.useState<APIWarning | null>(null);
-  const [errorMessage, setErrorMessage] = React.useState<null | string>(null);
+  const [errorMessage, setErrorMessage] = React.useState<
+    JSX.Element | string
+  >();
 
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
 
@@ -128,7 +131,7 @@ export const PaymentDrawer = (props: Props) => {
   React.useEffect(() => {
     if (open) {
       setWarning(null);
-      setErrorMessage(null);
+      setErrorMessage(undefined);
       setIsProcessing(false);
     }
   }, [open, paymentMethods]);
@@ -167,13 +170,13 @@ export const PaymentDrawer = (props: Props) => {
 
   const handleOpenDialog = () => {
     setDialogOpen(true);
-    setErrorMessage(null);
+    setErrorMessage(undefined);
   };
 
   const confirmCardPayment = () => {
     setSubmitting(true);
     setSuccess(null);
-    setErrorMessage(null);
+    setErrorMessage(undefined);
 
     const makePaymentData = {
       payment_method_id: paymentMethodId,
@@ -197,7 +200,7 @@ export const PaymentDrawer = (props: Props) => {
           getAPIErrorOrDefault(
             errorResponse,
             'Unable to make a payment at this time.'
-          )[0].reason
+          )[0].formattedReason
         );
       });
   };
@@ -245,7 +248,7 @@ export const PaymentDrawer = (props: Props) => {
             variant="error"
           />
         )}
-        {errorMessage && <Notice text={errorMessage ?? ''} variant="error" />}
+        {errorMessage && <Notice variant="error">{errorMessage}</Notice>}
         {warning ? <Warning warning={warning} /> : null}
         {isProcessing ? <LinearProgress className={classes.progress} /> : null}
         {accountLoading ? (

@@ -1,13 +1,14 @@
 import { Image } from '@linode/api-v4';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 export interface WithImagesProps {
   imagesData: Record<string, Image>;
-  imagesError?: APIError[];
+  imagesError?: FormattedAPIError[];
   imagesLastUpdated: number;
   imagesLoading: boolean;
 }

@@ -5,6 +5,8 @@ import { wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { TableContentWrapper } from './TableContentWrapper';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 const children = [
   <tr key={1}>
     <td>A row!</td>
@@ -59,7 +61,9 @@ describe('TableContentWrapper component', () => {
   });
 
   it('should render an error row if an error is provided', () => {
-    const mockError = [{ reason: 'API is down' }];
+    const mockError: FormattedAPIError[] = [
+      { formattedReason: 'API is down', reason: 'API is down' },
+    ];
     const errorProps = {
       children,
       error: mockError,

@@ -1,5 +1,4 @@
 import { TicketSeverity, uploadAttachment } from '@linode/api-v4/lib/support';
-import { APIError } from '@linode/api-v4/lib/types';
 import { Theme } from '@mui/material/styles';
 import { update } from 'ramda';
 import * as React from 'react';
@@ -46,6 +45,8 @@ import SupportTicketSMTPFields, {
   smtpHelperText,
 } from './SupportTicketSMTPFields';
 import { severityLabelMap, useTicketSeverityCapability } from './ticketUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   expPanelSummary: {
@@ -221,7 +222,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const [files, setFiles] = React.useState<FileAttachment[]>([]);
 
-  const [errors, setErrors] = React.useState<APIError[] | undefined>();
+  const [errors, setErrors] = React.useState<FormattedAPIError[]>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
 
   const { classes } = useStyles();
@@ -435,10 +436,12 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     const _description =
       ticketType === 'smtp' ? formatDescription(smtpFields) : description;
     if (!['general', 'none'].includes(entityType) && !entityID) {
+      const errorReason = `Please select a ${entityIdToNameMap[entityType]}.`;
       setErrors([
         {
           field: 'input',
-          reason: `Please select a ${entityIdToNameMap[entityType]}.`,
+          formattedReason: errorReason,
+          reason: errorReason,
         },
       ]);
       return;
@@ -553,7 +556,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     volume_id: volumesLoading,
   };
 
-  const errorMap: Record<EntityType, APIError[] | null> = {
+  const errorMap: Record<EntityType, FormattedAPIError[] | null> = {
     database_id: databasesError,
     domain_id: domainsError,
     firewall_id: firewallsError,

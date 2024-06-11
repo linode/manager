@@ -3,7 +3,6 @@ import {
   Interface,
   LinodeConfigCreationData,
 } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
@@ -76,6 +75,8 @@ import {
   StyledFormGroup,
   StyledRadioGroup,
 } from './LinodeConfigDialog.styles';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Helpers {
   devtmpfs_automount: boolean;
@@ -429,12 +430,12 @@ export const LinodeConfigDialog = (props: Props) => {
       onClose();
     };
 
-    const handleError = (error: APIError[]) => {
+    const handleError = (error: FormattedAPIError[]) => {
       const mapErrorToStatus = (generalError: string) =>
         formik.setStatus({ generalError });
 
       // override 'disk_id' and 'volume_id' value for 'field' key with 'devices' to map and surface errors appropriately
-      const overrideFieldForDevices = (error: APIError[]) => {
+      const overrideFieldForDevices = (error: FormattedAPIError[]) => {
         error.forEach((err) => {
           if (err.field && ['disk_id', 'volume_id'].includes(err.field)) {
             err.field = 'devices';
@@ -1153,7 +1154,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
 interface ConfigFormProps {
   children: JSX.Element;
-  errors: APIError[] | null;
+  errors: FormattedAPIError[] | null;
   loading: boolean;
 }
 

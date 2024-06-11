@@ -75,7 +75,8 @@ const VPCLanding = () => {
     return (
       <ErrorState
         errorText={
-          getAPIErrorOrDefault(error, 'Error loading your VPCs.')[0].reason
+          getAPIErrorOrDefault(error, 'Error loading your VPCs.')[0]
+            .formattedReason
         }
       />
     );

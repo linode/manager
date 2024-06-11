@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -16,12 +15,13 @@ import {
 } from './VPCCreateForm.styles';
 
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   disabled?: boolean;
   isDrawer?: boolean;
   onChangeField: (field: string, value: SubnetFieldState[]) => void;
-  subnetErrors?: APIError[];
+  subnetErrors?: FormattedAPIError[];
   subnets: SubnetFieldState[];
 }
 
@@ -59,13 +59,10 @@ export const SubnetContent = (props: Props) => {
         .
       </StyledBodyTypography>
       {subnetErrors
-        ? subnetErrors.map((apiError: APIError) => (
-            <Notice
-              key={apiError.reason}
-              spacingBottom={8}
-              text={apiError.reason}
-              variant="error"
-            />
+        ? subnetErrors.map((apiError) => (
+            <Notice key={apiError.reason} spacingBottom={8} variant="error">
+              {apiError.formattedReason}
+            </Notice>
           ))
         : null}
       <MultipleSubnetInput

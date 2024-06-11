@@ -1,4 +1,4 @@
-import { APIError, Firewall, Linode } from '@linode/api-v4';
+import { Firewall, Linode } from '@linode/api-v4';
 import { Config, Interface } from '@linode/api-v4/lib/linodes/types';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import { useQueryClient } from '@tanstack/react-query';
@@ -43,6 +43,7 @@ import {
 
 import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   handlePowerActionsLinode: (linode: Linode, action: Action) => void;
@@ -255,7 +256,7 @@ export const SubnetLinodeRow = (props: Props) => {
 const getFirewallsCellString = (
   data: Firewall[],
   loading: boolean,
-  error?: APIError[]
+  error?: FormattedAPIError[]
 ): JSX.Element | string => {
   if (loading) {
     return 'Loading...';
@@ -276,7 +277,7 @@ const getSubnetLinodeIPv4CellString = (
   configs: Config[],
   loading: boolean,
   subnetId: number,
-  error?: APIError[]
+  error?: FormattedAPIError[]
 ): JSX.Element | string => {
   if (loading) {
     return 'Loading...';
@@ -308,7 +309,7 @@ const getIPRangesCellContents = (
   configs: Config[],
   loading: boolean,
   subnetId: number,
-  error?: APIError[]
+  error?: FormattedAPIError[]
 ): JSX.Element | string => {
   if (loading) {
     return 'Loading...';

@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { prop, sortBy } from 'ramda';
 import * as React from 'react';
@@ -16,15 +15,17 @@ import { isToday as _isToday } from 'src/utilities/isToday';
 import { StyledItemGrid } from '../CommonStyles.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { ProcessesGraphs } from './ProcessesGraphs';
-import { ProcessesTable, ExtendedProcess } from './ProcessesTable';
-import { Process } from './types';
 import { StyledBox, StyledTimeRangeSelect } from './ProcessesLanding.styles';
+import { ExtendedProcess, ProcessesTable } from './ProcessesTable';
+import { Process } from './types';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   clientAPIKey?: string;
   clientID?: number;
   lastUpdated?: number;
-  lastUpdatedError?: APIError[];
+  lastUpdatedError?: FormattedAPIError[];
   timezone: string;
 }
 

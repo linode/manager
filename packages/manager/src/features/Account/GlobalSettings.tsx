@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -18,6 +17,8 @@ import { EnableManaged } from './EnableManaged';
 import EnableObjectStorage from './EnableObjectStorage';
 import NetworkHelper from './NetworkHelper';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 const GlobalSettings = () => {
   const [isBackupsDrawerOpen, setIsBackupsDrawerOpen] = React.useState(false);
 
@@ -36,14 +37,14 @@ const GlobalSettings = () => {
 
   const { mutateAsync: updateAccount } = useMutateAccountSettings();
 
-  const displayError = (errors: APIError[] | undefined) => {
+  const displayError = (errors: FormattedAPIError[] | undefined) => {
     if (!errors) {
       return;
     }
     const errorText = getAPIErrorOrDefault(
       errors,
       'There was an error updating your account settings.'
-    )[0].reason;
+    )[0].formattedReason;
 
     return enqueueSnackbar(errorText, {
       variant: 'error',

@@ -3,7 +3,6 @@ import {
   getActiveLongviewPlan,
   updateActiveLongviewPlan,
 } from '@linode/api-v4/lib/longview';
-import { APIError } from '@linode/api-v4/lib/types';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -35,6 +34,8 @@ import {
   StyledTable,
   StyledTableRow,
 } from './LongviewPlans.styles';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 // If an account has the "free" Longview plan,
 // longview_subscription will be {}. We'd rather use
@@ -83,7 +84,9 @@ export const LongviewPlans = (props: LongviewPlansProps) => {
     currentSubscription || ''
   );
   const [updateLoading, setUpdateLoading] = React.useState<boolean>(false);
-  const [updateErrorMsg, setUpdateErrorMsg] = React.useState<string>('');
+  const [updateErrorMsg, setUpdateErrorMsg] = React.useState<
+    JSX.Element | string
+  >('');
   const [updateSuccessMsg, setUpdateSuccessMsg] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -141,7 +144,7 @@ export const LongviewPlans = (props: LongviewPlansProps) => {
           'There was an error updating your Longview Plan.'
         );
         setUpdateLoading(false);
-        setUpdateErrorMsg(normalizedError[0].reason);
+        setUpdateErrorMsg(normalizedError[0].formattedReason);
       });
   };
 
@@ -178,7 +181,7 @@ export const LongviewPlans = (props: LongviewPlansProps) => {
             paddingBottom: '4px',
           }}
         >
-          {updateErrorMsg && <Notice text={updateErrorMsg} variant="error" />}
+          {updateErrorMsg && <Notice variant="error">{updateErrorMsg}</Notice>}
           {updateSuccessMsg && (
             <Notice text={updateSuccessMsg} variant="success" />
           )}
@@ -187,7 +190,7 @@ export const LongviewPlans = (props: LongviewPlansProps) => {
       ) : (
         <>
           {mayUserModifyLVSubscription && updateErrorMsg && (
-            <Notice text={updateErrorMsg} variant="error" />
+            <Notice variant="error">{updateErrorMsg}</Notice>
           )}
           {!mayUserModifyLVSubscription && (
             <Notice
@@ -257,7 +260,7 @@ export default React.memo(LongviewPlans);
 interface LongviewPlansTableBodyProps {
   currentSubscriptionOnAccount?: string;
   disabled: boolean;
-  error: APIError[] | undefined;
+  error: FormattedAPIError[] | undefined;
   loading: boolean;
   onRadioSelect: (e: React.FormEvent<HTMLInputElement>) => void;
   onRowSelect: (plan: string) => void;
@@ -274,7 +277,7 @@ export const LongviewPlansTableBody = React.memo(
     }
 
     if (error && error.length > 0) {
-      return <TableRowError colSpan={12} message={error[0].reason} />;
+      return <TableRowError colSpan={12} message={error[0].formattedReason} />;
     }
 
     return (

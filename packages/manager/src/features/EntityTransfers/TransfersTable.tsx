@@ -2,7 +2,6 @@ import {
   EntityTransfer,
   TransferEntities,
 } from '@linode/api-v4/lib/entity-transfers';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { Accordion } from 'src/components/Accordion';
@@ -20,8 +19,10 @@ import { TransferDetailsDialog } from './EntityTransfersLanding/TransferDetailsD
 import { RenderTransferRow } from './RenderTransferRow';
 import { StyledDiv, StyledTable } from './TransfersTable.styles';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 interface Props {
-  error: APIError[] | null;
+  error: FormattedAPIError[] | null;
   handlePageChange: (v: number, showSpinner?: boolean | undefined) => void;
   handlePageSizeChange: (v: number) => void;
   isLoading: boolean;

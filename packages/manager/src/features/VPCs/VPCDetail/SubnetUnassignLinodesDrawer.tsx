@@ -23,12 +23,12 @@ import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import type {
-  APIError,
   DeleteLinodeConfigInterfacePayload,
   Interface,
   Linode,
   UpdateConfigInterfacePayload,
 } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   onClose: () => void;
@@ -174,7 +174,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
         } catch (error) {
           // Capture errors if the promise.all fails
           hasError.current = true;
-          setUnassignLinodesErrors(error as APIError[]);
+          setUnassignLinodesErrors(error as FormattedAPIError[]);
         }
       },
       [
@@ -229,7 +229,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             });
           } catch (error) {
             hasError.current = true;
-            setUnassignLinodesErrors((prevErrors: APIError[]) => [
+            setUnassignLinodesErrors((prevErrors: FormattedAPIError[]) => [
               ...prevErrors,
               ...error,
             ]);
@@ -289,7 +289,9 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           />
         )}
         {unassignLinodesErrors.length > 0 && (
-          <Notice text={unassignLinodesErrors[0].reason} variant="error" />
+          <Notice variant="error">
+            {unassignLinodesErrors[0].formattedReason}
+          </Notice>
         )}
         <Notice
           spacingBottom={singleLinodeToBeUnassigned ? 0 : 16}

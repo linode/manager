@@ -9,8 +9,8 @@ import type {
   NodeBalancerConfigFieldsWithStatus,
   NodeBalancerConfigNodeFields,
 } from './types';
-import type { APIError } from '@linode/api-v4';
 import type { NodeBalancerConfigNode } from '@linode/api-v4/lib/nodebalancers';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const clampNumericString = (low: number, hi: number) =>
   compose(toString, clamp(low, hi), (value: number) =>
@@ -163,7 +163,7 @@ export const shouldIncludeCheckBody = (config: NodeBalancerConfigFields) => {
 };
 
 // We don't want to end up with nodes[3].ip_address as errorMap.none
-const filteredErrors = (errors: APIError[]) =>
+const filteredErrors = (errors: FormattedAPIError[]) =>
   errors
     ? errors.filter(
         (thisError) =>
@@ -171,7 +171,7 @@ const filteredErrors = (errors: APIError[]) =>
       )
     : [];
 
-export const setErrorMap = (errors: APIError[]) =>
+export const setErrorMap = (errors: FormattedAPIError[]) =>
   getErrorMap(
     [
       'algorithm',

@@ -1,6 +1,5 @@
 import { User, getUser, updateUser } from '@linode/api-v4/lib/account';
 import { updateProfile } from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { clone } from 'ramda';
 import * as React from 'react';
@@ -26,6 +25,8 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import UserPermissions from './UserPermissions';
 import { UserProfile } from './UserProfile';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 export const UserDetail = () => {
   const { username: currentUsername } = useParams<{ username: string }>();
   const location = useLocation<{ newUsername: string; success: boolean }>();
@@ -36,7 +37,7 @@ export const UserDetail = () => {
 
   const queryClient = useQueryClient();
 
-  const [error, setError] = React.useState<string | undefined>();
+  const [error, setError] = React.useState<JSX.Element | string>();
   const [username, setUsername] = React.useState<string>('');
   const [createdUsername, setCreatedUsername] = React.useState<
     string | undefined
@@ -53,12 +54,12 @@ export const UserDetail = () => {
   const [accountSaving, setAccountSaving] = React.useState<boolean>(false);
   const [accountSuccess, setAccountSuccess] = React.useState<boolean>(false);
   const [accountErrors, setAccountErrors] = React.useState<
-    APIError[] | undefined
+    FormattedAPIError[] | undefined
   >();
   const [profileSaving, setProfileSaving] = React.useState<boolean>(false);
   const [profileSuccess, setProfileSuccess] = React.useState<boolean>(false);
   const [profileErrors, setProfileErrors] = React.useState<
-    APIError[] | undefined
+    FormattedAPIError[] | undefined
   >();
 
   const tabs = [
@@ -85,7 +86,7 @@ export const UserDetail = () => {
       .catch((errorResponse) => {
         setError(
           getAPIErrorOrDefault(errorResponse, 'Error loading user data.')[0]
-            .reason
+            .formattedReason
         );
       });
 

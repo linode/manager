@@ -4,7 +4,6 @@ import { Image } from '@linode/api-v4/lib/images';
 import { Region } from '@linode/api-v4/lib/regions';
 import { convertYupToLinodeErrors } from '@linode/api-v4/lib/request';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
 import { vpcsValidateIP } from '@linode/validation';
 import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -17,6 +16,10 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { Tag } from 'src/components/TagsInput/TagsInput';
+import {
+  WithAccountProps,
+  withAccount,
+} from 'src/containers/account.container';
 import {
   WithAccountSettingsProps,
   withAccountSettings,
@@ -63,11 +66,11 @@ import {
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { isEURegion } from 'src/utilities/formatRegion';
 import {
   getGDPRDetails,
   getSelectedRegionGroup,
 } from 'src/utilities/formatRegion';
-import { isEURegion } from 'src/utilities/formatRegion';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
@@ -91,10 +94,7 @@ import type {
   LinodeTypeClass,
   PriceObject,
 } from '@linode/api-v4/lib/linodes';
-import {
-  withAccount,
-  WithAccountProps,
-} from 'src/containers/account.container';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -110,7 +110,7 @@ interface State {
   customLabel?: string;
   disabledClasses?: LinodeTypeClass[];
   diskEncryptionEnabled?: boolean;
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   formIsSubmitting: boolean;
   password: string;
   placementGroupSelection?: PlacementGroup;
@@ -356,7 +356,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       // reset errors to default state
       this.setState({ errors: undefined, showApiAwarenessModal: true });
     } catch (error) {
-      const processedErrors = convertYupToLinodeErrors(error);
+      const processedErrors: FormattedAPIError[] = convertYupToLinodeErrors(
+        error
+      ).map((error) => ({ ...error, formattedReason: error.reason }));
       this.setState(() => ({
         errors: getAPIErrorOrDefault(processedErrors),
         formIsSubmitting: false,
@@ -746,6 +748,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           errors: [
             {
               field: 'root_pass',
+              formattedReason: passwordError,
               reason: passwordError,
             },
           ],
@@ -762,16 +765,17 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         )!,
       });
       if (error) {
+        const errorReason = `${this.state.placementGroupSelection?.label} (${
+          this.state.placementGroupSelection?.affinity_type === 'affinity:local'
+            ? 'Affinity'
+            : 'Anti-affinity'
+        }) doesn't have any capacity for this Linode.`;
         this.setState({
           errors: [
             {
               field: 'placement_group',
-              reason: `${this.state.placementGroupSelection?.label} (${
-                this.state.placementGroupSelection?.affinity_type ===
-                'affinity:local'
-                  ? 'Affinity'
-                  : 'Anti-affinity'
-              }) doesn't have any capacity for this Linode.`,
+              formattedReason: errorReason,
+              reason: errorReason,
             },
           ],
         });
@@ -797,6 +801,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           errors: [
             {
               field: 'ipv4.vpc',
+              formattedReason: 'Must be a valid IPv4 address, e.g. 192.168.2.0',
               reason: 'Must be a valid IPv4 address, e.g. 192.168.2.0',
             },
           ],
@@ -814,6 +819,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         errors: [
           {
             field: 'linode_id',
+            formattedReason: 'You must select a Linode to clone from',
             reason: 'You must select a Linode to clone from',
           },
         ],
@@ -823,7 +829,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (createType === 'fromBackup' && !this.state.selectedBackupID) {
       /* a backup selection is also required */
       this.setState({
-        errors: [{ field: 'backup_id', reason: 'You must select a Backup.' }],
+        errors: [
+          {
+            field: 'backup_id',
+            formattedReason: 'You must select a Backup.',
+            reason: 'You must select a Backup.',
+          },
+        ],
       });
       return;
     }
@@ -833,6 +845,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         errors: [
           {
             field: 'stackscript_id',
+            formattedReason: 'You must select a StackScript.',
             reason: 'You must select a StackScript.',
           },
         ],
@@ -844,6 +857,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         errors: [
           {
             field: 'stackscript_id',
+            formattedReason: 'You must select a Marketplace App.',
             reason: 'You must select a Marketplace App.',
           },
         ],

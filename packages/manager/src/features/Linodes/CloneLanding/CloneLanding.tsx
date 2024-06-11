@@ -4,9 +4,8 @@ import {
   cloneLinode,
   cloneLinodeDisk,
 } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { castDraft } from 'immer';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
@@ -45,6 +44,8 @@ import {
   curriedCloneLandingReducer,
   defaultState,
 } from './utilities';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));
@@ -163,7 +164,7 @@ const CloneLanding = () => {
     return dispatch({ type: 'setSubmitting', value });
   };
 
-  const setErrors = (errors?: APIError[]) => {
+  const setErrors = (errors?: FormattedAPIError[]) => {
     return dispatch({ errors, type: 'setErrors' });
   };
 

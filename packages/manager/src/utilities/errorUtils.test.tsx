@@ -1,12 +1,31 @@
+import React from 'react';
+
+import { Typography } from 'src/components/Typography';
 import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
 
 import { getAPIErrorOrDefault, getErrorStringOrDefault } from './errorUtils';
 
-const error = [{ field: 'a field', reason: 'a reason' }];
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
-const multiError = [
-  { field: 'field 1', reason: 'reason 1' },
-  { field: 'field 2', reason: 'reason 2' },
+const error: FormattedAPIError[] = [
+  {
+    field: 'a field',
+    formattedReason: <Typography>Formatted reason</Typography>,
+    reason: 'a reason',
+  },
+];
+
+const multiError: FormattedAPIError[] = [
+  {
+    field: 'field 1',
+    formattedReason: <Typography>reason 1</Typography>,
+    reason: 'reason 1',
+  },
+  {
+    field: 'field 2',
+    formattedReason: <Typography>reason 2</Typography>,
+    reason: 'reason 2',
+  },
 ];
 
 describe('Error handling utilities', () => {
@@ -14,10 +33,17 @@ describe('Error handling utilities', () => {
     it('should override a default error', () => {
       expect(
         getAPIErrorOrDefault(
-          [{ reason: DEFAULT_ERROR_MESSAGE }],
+          [
+            {
+              formattedReason: DEFAULT_ERROR_MESSAGE,
+              reason: DEFAULT_ERROR_MESSAGE,
+            },
+          ],
           'New error message'
         )
-      ).toEqual([{ reason: 'New error message' }]);
+      ).toEqual([
+        { formattedReason: 'New error message', reason: 'New error message' },
+      ]);
     });
   });
 

@@ -1,5 +1,4 @@
 import { User, createUser } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
@@ -12,6 +11,8 @@ import { Toggle } from 'src/components/Toggle/Toggle';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 interface Props {
   onClose: () => void;
   open: boolean;
@@ -20,7 +21,7 @@ interface Props {
 
 interface State {
   email: string;
-  errors: APIError[];
+  errors: FormattedAPIError[];
   restricted: boolean;
   submitting: boolean;
   username: string;

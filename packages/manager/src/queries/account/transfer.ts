@@ -2,7 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 
 import { accountQueries } from './queries';
 
-import type { APIError, RegionalNetworkUtilization } from '@linode/api-v4';
+import type { RegionalNetworkUtilization } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const useAccountNetworkTransfer = () =>
-  useQuery<RegionalNetworkUtilization, APIError[]>(accountQueries.transfer);
+  useQuery<RegionalNetworkUtilization, FormattedAPIError[]>(
+    accountQueries.transfer
+  );

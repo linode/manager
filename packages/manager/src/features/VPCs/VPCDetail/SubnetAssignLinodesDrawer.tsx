@@ -41,13 +41,13 @@ import { AssignIPRanges } from './AssignIPRanges';
 import { StyledButtonBox } from './SubnetAssignLinodesDrawer.styles';
 
 import type {
-  APIError,
   Config,
   Interface,
   InterfacePayload,
   Linode,
   Subnet,
 } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 // @TODO VPC: if all subnet action menu item related components use (most of) this as their props, might be worth
 // putting this in a common file and naming it something like SubnetActionMenuItemProps or something
@@ -246,7 +246,7 @@ export const SubnetAssignLinodesDrawer = (
         vpcId,
       });
     } catch (errors) {
-      setUnassignLinodesErrors(errors as APIError[]);
+      setUnassignLinodesErrors(errors as FormattedAPIError[]);
     }
   };
 
@@ -534,13 +534,10 @@ export const SubnetAssignLinodesDrawer = (
         </StyledButtonBox>
       </form>
       {unassignLinodesErrors
-        ? unassignLinodesErrors.map((apiError: APIError) => (
-            <Notice
-              key={apiError.reason}
-              spacingBottom={8}
-              text={apiError.reason}
-              variant="error"
-            />
+        ? unassignLinodesErrors.map((apiError: FormattedAPIError) => (
+            <Notice key={apiError.reason} spacingBottom={8} variant="error">
+              {apiError.formattedReason}
+            </Notice>
           ))
         : null}
       <RemovableSelectionsListTable

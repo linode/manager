@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -23,11 +22,13 @@ import { formatCPU } from '../../shared/formatters';
 import { StyledItemGrid } from './CommonStyles.styles';
 import { StyledLink } from './TopProcesses.styles';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 export interface Props {
   clientID: number;
-  lastUpdatedError?: APIError[];
+  lastUpdatedError?: FormattedAPIError[];
   topProcessesData: LongviewTopProcesses;
-  topProcessesError?: APIError[];
+  topProcessesError?: FormattedAPIError[];
   topProcessesLoading: boolean;
 }
 

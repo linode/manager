@@ -2,7 +2,6 @@ import {
   ManagedIssue,
   ManagedServiceMonitor,
 } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
@@ -11,8 +10,10 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 
 import MonitorRow from './MonitorRow';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 interface MonitorTableContentProps {
-  error?: APIError[] | null;
+  error?: FormattedAPIError[] | null;
   issues: ManagedIssue[];
   loading: boolean;
   monitors: ManagedServiceMonitor[];
@@ -37,7 +38,7 @@ export const MonitorTableContent = (props: MonitorTableContentProps) => {
   }
 
   if (error) {
-    return <TableRowError colSpan={4} message={error[0].reason} />;
+    return <TableRowError colSpan={4} message={error[0].formattedReason} />;
   }
 
   if (monitors.length === 0) {

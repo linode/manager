@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -18,8 +17,10 @@ import { PARENT_USER, RESTRICTED_FIELD_TOOLTIP } from '../Account/constants';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { StyledTitle, StyledWrapper } from './UserProfile.styles';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 interface UserProfileProps {
-  accountErrors?: APIError[];
+  accountErrors?: FormattedAPIError[];
   accountSaving: boolean;
   accountSuccess: boolean;
   changeEmail: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -31,7 +32,7 @@ interface UserProfileProps {
   email?: string;
   originalEmail?: string;
   originalUsername?: string;
-  profileErrors?: APIError[];
+  profileErrors?: FormattedAPIError[];
   profileSaving: boolean;
   profileSuccess: boolean;
   saveAccount: () => void;

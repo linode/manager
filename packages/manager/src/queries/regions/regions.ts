@@ -3,7 +3,6 @@ import {
   RegionAvailability,
   getRegionAvailability,
 } from '@linode/api-v4/lib/regions';
-import { APIError } from '@linode/api-v4/lib/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQuery } from '@tanstack/react-query';
 
@@ -12,6 +11,8 @@ import {
   getAllRegionAvailabilitiesRequest,
   getAllRegionsRequest,
 } from './requests';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const regionQueries = createQueryKeys('regions', {
   availability: {
@@ -34,13 +35,13 @@ export const regionQueries = createQueryKeys('regions', {
 });
 
 export const useRegionsQuery = () =>
-  useQuery<Region[], APIError[]>({
+  useQuery<Region[], FormattedAPIError[]>({
     ...regionQueries.regions,
     ...queryPresets.longLived,
   });
 
 export const useRegionsAvailabilitiesQuery = (enabled: boolean = true) =>
-  useQuery<RegionAvailability[], APIError[]>({
+  useQuery<RegionAvailability[], FormattedAPIError[]>({
     ...regionQueries.availability._ctx.all,
     enabled,
   });
@@ -49,7 +50,7 @@ export const useRegionAvailabilityQuery = (
   regionId: string,
   enabled: boolean = true
 ) => {
-  return useQuery<RegionAvailability[], APIError[]>({
+  return useQuery<RegionAvailability[], FormattedAPIError[]>({
     ...regionQueries.availability._ctx.region(regionId),
     enabled,
   });

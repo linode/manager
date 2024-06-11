@@ -1,9 +1,10 @@
-import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BetaDetailsList } from './BetaDetailsList';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 describe('BetaDetails', () => {
   it('should display the title supplied in the props as an h2 component', () => {
@@ -36,7 +37,8 @@ describe('BetaDetails', () => {
   });
 
   it("should display the error state component with the error's reason as the error text", () => {
-    const error: APIError = {
+    const error: FormattedAPIError = {
+      formattedReason: 'You do not have permissions to access this resource.',
       reason: 'You do not have permissions to access this resource.',
     };
     const betasList = renderWithTheme(

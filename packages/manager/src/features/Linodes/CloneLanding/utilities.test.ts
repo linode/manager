@@ -65,10 +65,12 @@ describe('utilities', () => {
 
     it('sets errors', () => {
       const newState = reducer(baseState, {
-        errors: [{ reason: 'ERROR' }],
+        errors: [{ formattedReason: 'ERROR', reason: 'ERROR' }],
         type: 'setErrors',
       });
-      expect(newState.errors).toEqual([{ reason: 'ERROR' }]);
+      expect(newState.errors).toEqual([
+        { formattedReason: 'ERROR', reason: 'ERROR' },
+      ]);
     });
 
     it('clears all', () => {
@@ -80,7 +82,7 @@ describe('utilities', () => {
             isSelected: true,
           },
         },
-        errors: [{ reason: 'ERROR' }],
+        errors: [{ formattedReason: 'ERROR', reason: 'ERROR' }],
         selectedLinodeId: 3000,
       };
 
@@ -162,7 +164,7 @@ describe('utilities', () => {
     it('clears errors after each type of input change', () => {
       const state: CloneLandingState = {
         ...baseState,
-        errors: [{ reason: 'ERROR' }],
+        errors: [{ formattedReason: 'ERROR', reason: 'ERROR' }],
       };
       expect(reducer(state, { id: 1000, type: 'toggleConfig' }).errors).toBe(
         undefined

@@ -175,7 +175,7 @@ export const LongviewDetail = (props: CombinedProps) => {
   if (longviewClientsError.read && longviewClientsLastUpdated === 0) {
     return (
       <Paper>
-        <ErrorState errorText={longviewClientsError.read[0].reason} />
+        <ErrorState errorText={longviewClientsError.read[0].formattedReason} />
       </Paper>
     );
   }

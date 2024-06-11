@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -7,8 +7,8 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { SubnetContent } from 'src/features/VPCs/VPCCreate/FormComponents/SubnetContent';
 import { VPC_GETTING_STARTED_LINK } from 'src/features/VPCs/constants';
+import { SubnetContent } from 'src/features/VPCs/VPCCreate/FormComponents/SubnetContent';
 import { useCreateVPC } from 'src/hooks/useCreateVPC';
 
 import { CannotCreateVPCNotice } from './FormComponents/CannotCreateVPCNotice';
@@ -49,7 +49,7 @@ const VPCCreate = () => {
       {userCannotAddVPC && CannotCreateVPCNotice}
       <Grid>
         {generalAPIError ? (
-          <Notice text={generalAPIError} variant="error" />
+          <Notice variant="error">{generalAPIError}</Notice>
         ) : null}
         <form onSubmit={handleSubmit}>
           <Paper>

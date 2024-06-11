@@ -1,9 +1,8 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
@@ -19,6 +18,8 @@ import {
   useVerifyPhoneVerificationCodeMutation,
 } from 'src/queries/profile/profile';
 
+import { countries } from './countries';
+import { getCountryFlag, getCountryName, getFormattedNumber } from './helpers';
 import {
   StyledButtonContainer,
   StyledCodeSentMessageBox,
@@ -29,14 +30,13 @@ import {
   StyledPhoneNumberTitle,
   StyledSelect,
 } from './PhoneVerification.styles';
-import { countries } from './countries';
-import { getCountryFlag, getCountryName, getFormattedNumber } from './helpers';
 
 import type {
   SendPhoneVerificationCodePayload,
   VerifyVerificationCodePayload,
 } from '@linode/api-v4/lib/profile/types';
 import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const PhoneVerification = ({
   phoneNumberRef,
@@ -159,8 +159,10 @@ export const PhoneVerification = ({
           variant: 'success',
         });
       })
-      .catch((e: APIError[]) =>
-        enqueueSnackbar(e?.[0].reason ?? 'Unable to resend verification code')
+      .catch((e: FormattedAPIError[]) =>
+        enqueueSnackbar(
+          e?.[0].formattedReason ?? 'Unable to resend verification code'
+        )
       );
   };
 

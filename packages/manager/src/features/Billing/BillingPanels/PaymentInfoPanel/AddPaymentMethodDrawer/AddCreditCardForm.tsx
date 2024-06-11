@@ -49,7 +49,7 @@ interface Values {
 
 const AddCreditCardForm = (props: Props) => {
   const { disabled, onClose } = props;
-  const [error, setError] = React.useState<string>();
+  const [error, setError] = React.useState<JSX.Element | string>();
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
@@ -163,7 +163,7 @@ const AddCreditCardForm = (props: Props) => {
     <form onSubmit={handleSubmit}>
       {error && (
         <Grid className={classes.error} xs={12}>
-          <Notice text={error} variant="error" />
+          <Notice variant="error">{error}</Notice>
         </Grid>
       )}
       <Grid container spacing={1}>

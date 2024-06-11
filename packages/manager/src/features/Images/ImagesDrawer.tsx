@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -13,6 +12,8 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { useImageAndLinodeGrantCheck } from './utils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface Props {
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -68,7 +69,9 @@ export const ImagesDrawer = (props: CombinedProps) => {
 
   const [notice, setNotice] = React.useState(undefined);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const [errors, setErrors] = React.useState<FormattedAPIError[] | undefined>(
+    undefined
+  );
 
   const { mutateAsync: updateImage } = useUpdateImageMutation();
 
@@ -94,7 +97,7 @@ export const ImagesDrawer = (props: CombinedProps) => {
 
         updateImage({ description: safeDescription, imageId, label, tags })
           .then(onClose)
-          .catch((errorResponse: APIError[]) => {
+          .catch((errorResponse: FormattedAPIError[]) => {
             setErrors(
               getAPIErrorOrDefault(errorResponse, 'Unable to edit Image')
             );
@@ -107,7 +110,13 @@ export const ImagesDrawer = (props: CombinedProps) => {
       case 'restore':
         if (!selectedLinode) {
           setSubmitting(false);
-          setErrors([{ field: 'linode_id', reason: 'Choose a Linode.' }]);
+          setErrors([
+            {
+              field: 'linode_id',
+              formattedReason: 'Choose a Linode.',
+              reason: 'Choose a Linode.',
+            },
+          ]);
           return;
         }
         close();

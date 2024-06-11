@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -10,6 +9,7 @@ import { PlacementGroupSelectOption } from './PlacementGroupSelectOption';
 
 import type { PlacementGroup, Region } from '@linode/api-v4';
 import type { SxProps } from '@mui/system';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface PlacementGroupsSelectProps {
   /**
@@ -132,7 +132,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
 };
 
 const getDefaultNoOptionsMessage = (
-  error: APIError[] | null,
+  error: FormattedAPIError[] | null,
   loading: boolean
 ) => {
   if (error) {

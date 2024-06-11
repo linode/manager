@@ -1,14 +1,15 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 export const useErrors = (): [
-  APIError[],
-  React.Dispatch<React.SetStateAction<APIError[]>>,
+  FormattedAPIError[],
+  React.Dispatch<React.SetStateAction<FormattedAPIError[]>>,
   () => void
 ] => {
-  const [errors, setErrors] = React.useState<APIError[]>([]);
+  const [errors, setErrors] = React.useState<FormattedAPIError[]>([]);
 
   // If there are errors, scroll them into view
   React.useEffect(() => {

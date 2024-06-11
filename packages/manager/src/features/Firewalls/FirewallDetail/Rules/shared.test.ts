@@ -1,14 +1,19 @@
 import { parseFirewallRuleError, sortPortString } from './shared';
 
-const generateError = (field: string) => ({
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
+const generateError = (field: string): FormattedAPIError => ({
   field,
+  formattedReason: 'An error occurred.',
   reason: 'An error occurred.',
 });
 
 describe('shared Firewall rule utilities', () => {
   describe('parseFirewallRuleError', () => {
     it('returns `null` when no field', () => {
-      expect(parseFirewallRuleError({ reason: 'Error!' })).toBeNull();
+      expect(
+        parseFirewallRuleError({ formattedReason: 'Error!', reason: 'Error!' })
+      ).toBeNull();
     });
 
     const error = generateError('rules.inbound[0].ports');

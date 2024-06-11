@@ -41,7 +41,7 @@ export const ResetOAuthClientDialog = ({
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
         />
       }
-      error={error?.[0].reason}
+      error={error?.[0].formattedReason}
       onClose={onClose}
       open={open}
       title={`Reset secret for ${label}?`}

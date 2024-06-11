@@ -1,5 +1,4 @@
 import { confirmTwoFactor } from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -10,6 +9,8 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { ConfirmToken } from './ConfirmToken';
 import { QRCodeForm } from './QRCodeForm';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   loading: boolean;
@@ -22,7 +23,9 @@ interface Props {
 }
 
 export const EnableTwoFactorForm = (props: Props) => {
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const [errors, setErrors] = React.useState<FormattedAPIError[] | undefined>(
+    undefined
+  );
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [token, setToken] = React.useState<string>('');
 
@@ -55,10 +58,10 @@ export const EnableTwoFactorForm = (props: Props) => {
           'Could not confirm code.',
           'tfa_code'
         );
-        APIErrors = APIErrors.filter((err: APIError) => {
+        APIErrors = APIErrors.filter((err) => {
           // Filter potentially confusing API error
           return (
-            err.reason !==
+            err.formattedReason !==
             'Invalid token. Two-factor auth not enabled. Please try again.'
           );
         });

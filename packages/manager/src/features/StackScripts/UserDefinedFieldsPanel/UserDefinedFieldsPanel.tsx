@@ -1,5 +1,4 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -13,8 +12,8 @@ import { Typography } from 'src/components/Typography';
 import {
   getIsUDFHeader,
   getIsUDFMultiSelect,
-  getIsUDFSingleSelect,
   getIsUDFPasswordField,
+  getIsUDFSingleSelect,
   separateUDFsByRequiredStatus,
 } from 'src/features/Linodes/LinodeCreatev2/Tabs/StackScripts/UserDefinedFields/utilities';
 
@@ -24,9 +23,11 @@ import { UserDefinedSelect } from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
 import { StyledBox, StyledPaper } from './UserDefinedFieldsPanel.styles';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 interface Props {
   appLogo?: JSX.Element;
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   handleChange: (key: string, value: any) => void;
   openDrawer?: (stackScriptLabel: string) => void;
   selectedLabel: string;
@@ -236,7 +237,7 @@ const UserDefinedFieldsPanel = (props: Props) => {
   );
 };
 
-const getError = (field: UserDefinedField, errors?: APIError[]) => {
+const getError = (field: UserDefinedField, errors?: FormattedAPIError[]) => {
   if (!errors) {
     return;
   }

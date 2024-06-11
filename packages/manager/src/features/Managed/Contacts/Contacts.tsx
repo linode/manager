@@ -23,14 +23,14 @@ import {
 } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import ContactDrawer from './ContactsDrawer';
-import ContactTableContact from './ContactsTableContent';
 import { ManagedContactGroup, Mode } from './common';
 import {
-  StyledWrapperGrid,
-  StyledTypography,
   StyledHeaderGrid,
+  StyledTypography,
+  StyledWrapperGrid,
 } from './Contacts.styles';
+import ContactDrawer from './ContactsDrawer';
+import ContactTableContact from './ContactsTableContent';
 
 const Contacts = () => {
   const { enqueueSnackbar } = useSnackbar();

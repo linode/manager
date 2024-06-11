@@ -5,12 +5,14 @@ import {
   getEntityTransfer,
   getEntityTransfers,
 } from '@linode/api-v4/lib/entity-transfers';
-import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
+import { Filter, Params } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useProfile } from 'src/queries/profile/profile';
 
 import { creationHandlers, listToItemsByID, queryPresets } from './base';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const queryKey = 'entity-transfers';
 
@@ -51,7 +53,7 @@ export const useEntityTransfersQuery = (
 ) => {
   const { data: profile } = useProfile();
 
-  return useQuery<EntityTransfersData, APIError[]>(
+  return useQuery<EntityTransfersData, FormattedAPIError[]>(
     [queryKey, params, filter],
     () => getAllEntityTransfersRequest(params, filter),
     {
@@ -62,7 +64,7 @@ export const useEntityTransfersQuery = (
 };
 
 export const useTransferQuery = (token: string, enabled: boolean = true) => {
-  return useQuery<EntityTransfer, APIError[]>(
+  return useQuery<EntityTransfer, FormattedAPIError[]>(
     [queryKey, token],
     () => getEntityTransfer(token),
     { ...queryPresets.shortLived, enabled, retry: false }
@@ -71,10 +73,11 @@ export const useTransferQuery = (token: string, enabled: boolean = true) => {
 
 export const useCreateTransfer = () => {
   const queryClient = useQueryClient();
-  return useMutation<EntityTransfer, APIError[], CreateTransferPayload>(
-    (createData) => {
-      return createEntityTransfer(createData);
-    },
-    creationHandlers([queryKey], 'token', queryClient)
-  );
+  return useMutation<
+    EntityTransfer,
+    FormattedAPIError[],
+    CreateTransferPayload
+  >((createData) => {
+    return createEntityTransfer(createData);
+  }, creationHandlers([queryKey], 'token', queryClient));
 };

@@ -1,17 +1,18 @@
 import {
-  APIError,
   NetworkTransfer,
   Stats,
   getLinodeStats,
   getLinodeStatsByDate,
   getLinodeTransferByDate,
 } from '@linode/api-v4';
-import { DateTime } from 'luxon';
 import { useQuery } from '@tanstack/react-query';
+import { DateTime } from 'luxon';
 
 import { parseAPIDate } from 'src/utilities/date';
 
 import { queryKey } from './linodes';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const STATS_NOT_READY_API_MESSAGE =
   'Stats are unavailable at this time.';
@@ -31,7 +32,7 @@ export const useLinodeStats = (
   enabled = true,
   linodeCreated?: string
 ) => {
-  return useQuery<Stats, APIError[]>(
+  return useQuery<Stats, FormattedAPIError[]>(
     [queryKey, 'linode', id, 'stats'],
     getIsTooEarlyForStats(linodeCreated)
       ? () => Promise.reject([{ reason: STATS_NOT_READY_MESSAGE }])
@@ -51,7 +52,7 @@ export const useLinodeStatsByDate = (
   enabled = true,
   linodeCreated?: string
 ) => {
-  return useQuery<Stats, APIError[]>(
+  return useQuery<Stats, FormattedAPIError[]>(
     [queryKey, 'linode', id, 'stats', 'date', year, month],
     getIsTooEarlyForStats(linodeCreated)
       ? () => Promise.reject([{ reason: STATS_NOT_READY_MESSAGE }])
@@ -70,7 +71,7 @@ export const useLinodeTransferByDate = (
   month: string,
   enabled = true
 ) => {
-  return useQuery<NetworkTransfer, APIError[]>(
+  return useQuery<NetworkTransfer, FormattedAPIError[]>(
     [queryKey, 'linode', id, 'transfer', year, month],
     () => getLinodeTransferByDate(id, year, month),
     { enabled }

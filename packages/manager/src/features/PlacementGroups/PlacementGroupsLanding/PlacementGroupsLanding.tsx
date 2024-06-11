@@ -153,7 +153,7 @@ export const PlacementGroupsLanding = React.memo(() => {
       <ErrorState
         errorText={
           getAPIErrorOrDefault(error, 'Error loading your Placement Groups.')[0]
-            .reason
+            .formattedReason
         }
       />
     );

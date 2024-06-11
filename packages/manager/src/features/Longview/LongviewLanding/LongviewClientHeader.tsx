@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -26,10 +25,12 @@ import {
 } from './LongviewClientHeader.styles';
 import { RestrictedUserLabel } from './RestrictedUserLabel';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 interface Props {
   clientID: number;
   clientLabel: string;
-  lastUpdatedError?: APIError[];
+  lastUpdatedError?: FormattedAPIError[];
   longviewClientLastUpdated?: number;
   openPackageDrawer: () => void;
   updateLongviewClient: DispatchProps['updateLongviewClient'];
@@ -69,7 +70,8 @@ export const LongviewClientHeader = enhanced(
         .catch((error) => {
           setUpdating(false);
           return Promise.reject(
-            getAPIErrorOrDefault(error, 'Error updating label')[0].reason
+            getAPIErrorOrDefault(error, 'Error updating label')[0]
+              .formattedReason
           );
         });
     };

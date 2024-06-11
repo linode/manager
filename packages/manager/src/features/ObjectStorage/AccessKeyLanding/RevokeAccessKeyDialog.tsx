@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -8,8 +7,10 @@ import { Typography } from 'src/components/Typography';
 
 import { CancelNotice } from '../CancelNotice';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 interface RevokeKeysDialogProps {
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   handleClose: () => void;
   handleSubmit: () => void;
   isLoading: boolean;
@@ -47,7 +48,7 @@ export const RevokeAccessKeyDialog = (props: RevokeKeysDialogProps) => {
   return (
     <ConfirmationDialog
       actions={actions}
-      error={(errors || []).map((e) => e.reason).join(',')}
+      error={(errors || []).map((e) => e.formattedReason).join(',')}
       onClose={handleClose}
       open={isOpen}
       title={`Revoking ${label}`}

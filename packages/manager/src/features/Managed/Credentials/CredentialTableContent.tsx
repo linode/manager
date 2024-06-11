@@ -1,5 +1,4 @@
 import { ManagedCredential } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
@@ -8,9 +7,11 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 
 import CredentialRow from './CredentialRow';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 interface CredentialTableContentProps {
   credentials: ManagedCredential[];
-  error?: APIError[] | null;
+  error?: FormattedAPIError[] | null;
   loading: boolean;
   openDialog: (id: number, label: string) => void;
   openForEdit: (id: number) => void;
@@ -23,7 +24,7 @@ export const CredentialTableContent = (props: CredentialTableContentProps) => {
   }
 
   if (error) {
-    return <TableRowError colSpan={3} message={error[0].reason} />;
+    return <TableRowError colSpan={3} message={error[0].formattedReason} />;
   }
 
   if (credentials.length === 0) {

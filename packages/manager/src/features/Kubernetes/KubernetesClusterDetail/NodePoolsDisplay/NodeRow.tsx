@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -13,6 +12,8 @@ import { useInProgressEvents } from 'src/queries/events/events';
 import NodeActionMenu from './NodeActionMenu';
 import { StyledCopyTooltip, StyledTableRow } from './NodeTable.styles';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 export interface NodeRow {
   instanceId?: number;
   instanceStatus?: string;
@@ -23,7 +24,7 @@ export interface NodeRow {
 }
 
 interface NodeRowProps extends NodeRow {
-  linodeError?: APIError[];
+  linodeError?: FormattedAPIError[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   typeLabel: string;
 }

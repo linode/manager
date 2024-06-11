@@ -1,6 +1,4 @@
-import { AccountSettings } from '@linode/api-v4/lib/account';
 import { cancelObjectStorage } from '@linode/api-v4/lib/object-storage';
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
@@ -14,6 +12,9 @@ import { Typography } from 'src/components/Typography';
 import { updateAccountSettingsData } from 'src/queries/account/settings';
 import { queryKey } from 'src/queries/objectStorage';
 import { useProfile } from 'src/queries/profile/profile';
+
+import type { AccountSettings } from '@linode/api-v4/lib/account';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 interface Props {
   object_storage: AccountSettings['object_storage'];
 }
@@ -66,7 +67,7 @@ export const ObjectStorageContent = (props: ContentProps) => {
 export const EnableObjectStorage = (props: Props) => {
   const { object_storage } = props;
   const [isOpen, setOpen] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string | undefined>();
+  const [error, setError] = React.useState<JSX.Element | string>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
   const { data: profile } = useProfile();
   const queryClient = useQueryClient();
@@ -77,8 +78,8 @@ export const EnableObjectStorage = (props: Props) => {
     setError(undefined);
   };
 
-  const handleError = (e: APIError[]) => {
-    setError(e[0].reason);
+  const handleError = (e: FormattedAPIError[]) => {
+    setError(e[0].formattedReason);
     setLoading(false);
   };
 
@@ -118,7 +119,7 @@ export const EnableObjectStorage = (props: Props) => {
         open={isOpen}
         title={`Cancel Object Storage`}
       >
-        {error ? <Notice text={error} variant="error" /> : null}
+        {error && <Notice variant="error">{error}</Notice>}
         <Notice variant="warning">
           <Typography sx={{ fontSize: '0.875rem' }}>
             <strong>Warning:</strong> Canceling Object Storage will permanently

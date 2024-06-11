@@ -7,7 +7,6 @@ import {
   createDomainRecord,
   updateDomainRecord,
 } from '@linode/api-v4/lib/domains';
-import { APIError } from '@linode/api-v4/lib/types';
 import produce from 'immer';
 import {
   cond,
@@ -43,6 +42,8 @@ import {
   isValidCNAME,
   isValidDomainRecord,
 } from './domainUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface UpdateDomainDataProps extends UpdateDomainPayload {
   id: number;
@@ -93,7 +94,7 @@ interface EditableDomainFields extends EditableSharedFields {
 }
 
 interface State {
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   fields: EditableDomainFields | EditableRecordFields;
   submitting: boolean;
 }
@@ -153,7 +154,7 @@ export class DomainRecordDrawer extends React.Component<
       >
         {otherErrors.length > 0 &&
           otherErrors.map((err, index) => {
-            return <Notice key={index} variant="error" text={err} />;
+            return <Notice key={index} text={err} variant="error" />;
           })}
         {!hasARecords && type === 'NS' && (
           <Notice

@@ -6,7 +6,6 @@ import {
   UpdateDomainPayload,
   deleteDomainRecord,
 } from '@linode/api-v4/lib/domains';
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import {
   compose,
@@ -48,6 +47,8 @@ import { DomainRecordActionMenu } from './DomainRecordActionMenu';
 import { DomainRecordDrawer } from './DomainRecordDrawer';
 import { StyledDiv, StyledGrid, StyledTableCell } from './DomainRecords.styles';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 interface UpdateDomainDataProps extends UpdateDomainPayload {
   id: number;
 }
@@ -60,7 +61,7 @@ interface Props {
 }
 
 interface ConfirmationState {
-  errors?: APIError[];
+  errors?: FormattedAPIError[];
   open: boolean;
   recordId?: number;
   submitting: boolean;

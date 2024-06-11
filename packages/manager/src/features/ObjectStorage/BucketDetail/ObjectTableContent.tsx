@@ -14,11 +14,11 @@ import type {
   ObjectStorageObject,
   ObjectStorageObjectListResponse,
 } from '@linode/api-v4';
-import type { APIError } from '@linode/api-v4/lib/types';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   data: ObjectStorageObjectListResponse[];
-  error?: APIError[];
+  error?: FormattedAPIError[];
   handleClickDelete: (objectName: string) => void;
   handleClickDetails: (object: ObjectStorageObject) => void;
   handleClickDownload: (objectName: string, newTab: boolean) => void;

@@ -2,10 +2,9 @@ import {
   TransferEntities,
   acceptEntityTransfer,
 } from '@linode/api-v4/lib/entity-transfers';
-import { APIError } from '@linode/api-v4/lib/types';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { Checkbox } from 'src/components/Checkbox';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -35,6 +34,8 @@ import {
   StyledUl,
 } from './ConfirmTransferDialog.styles';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 export interface ConfirmTransferDialogProps {
   onClose: () => void;
   open: boolean;
@@ -53,7 +54,7 @@ export const ConfirmTransferDialog = React.memo(
     const [hasConfirmed, setHasConfirmed] = React.useState(false);
     const [submitting, setSubmitting] = React.useState(false);
     const [submissionErrors, setSubmissionErrors] = React.useState<
-      APIError[] | null
+      FormattedAPIError[] | null
     >(null);
 
     const queryClient = useQueryClient();
@@ -61,11 +62,13 @@ export const ConfirmTransferDialog = React.memo(
     const isOwnAccount = Boolean(data?.is_sender);
 
     // If a user is trying to load their own account
+    const defaultReason =
+      'You cannot initiate a transfer to another user on your account.';
     const errors = isOwnAccount
       ? [
           {
-            reason:
-              'You cannot initiate a transfer to another user on your account.',
+            formattedReason: defaultReason,
+            reason: defaultReason,
           },
         ]
       : error;
@@ -150,7 +153,7 @@ export const ConfirmTransferDialog = React.memo(
 
 interface ContentProps {
   entities: TransferEntities;
-  errors: APIError[] | null;
+  errors: FormattedAPIError[] | null;
   expiry?: string;
   handleToggleConfirm: () => void;
   hasConfirmed?: boolean;
@@ -158,7 +161,7 @@ interface ContentProps {
   isLoading: boolean;
   onClose: () => void;
   onSubmit: () => void;
-  submissionErrors: APIError[] | null;
+  submissionErrors: FormattedAPIError[] | null;
 }
 
 export const DialogContent = React.memo((props: ContentProps) => {
@@ -191,7 +194,7 @@ export const DialogContent = React.memo((props: ContentProps) => {
             getAPIErrorOrDefault(
               errors ?? [],
               'Unable to load this transfer.'
-            )[0].reason
+            )[0].formattedReason
           }
         />
       </div>
@@ -206,11 +209,9 @@ export const DialogContent = React.memo((props: ContentProps) => {
         // There could be multiple errors here that are relevant.
         submissionErrors
           ? submissionErrors.map((thisError, idx) => (
-              <Notice
-                key={`form-submit-error-${idx}`}
-                text={thisError.reason}
-                variant="error"
-              />
+              <Notice key={`form-submit-error-${idx}`} variant="error">
+                {thisError.formattedReason}
+              </Notice>
             ))
           : null
       }

@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
@@ -38,6 +37,8 @@ import { HostMaintenance } from './HostMaintenance';
 import { MutationNotification } from './MutationNotification';
 import Notifications from './Notifications';
 import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const LinodeDetailHeader = () => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
@@ -136,7 +137,7 @@ const LinodeDetailHeader = () => {
     try {
       await updateLinode({ label });
     } catch (updateError) {
-      const errors: APIError[] = getAPIErrorOrDefault(
+      const errors: FormattedAPIError[] = getAPIErrorOrDefault(
         updateError,
         'An error occurred while updating label',
         'label'

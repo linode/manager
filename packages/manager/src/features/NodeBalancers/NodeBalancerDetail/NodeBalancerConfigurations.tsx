@@ -10,7 +10,7 @@ import {
   updateNodeBalancerConfig,
   updateNodeBalancerConfigNode,
 } from '@linode/api-v4/lib/nodebalancers';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { ResourcePage } from '@linode/api-v4/lib/types';
 import { styled } from '@mui/material/styles';
 import {
   Lens,
@@ -63,6 +63,7 @@ import type {
   NodeBalancerConfigNodeFields,
 } from '../types';
 import type { Grants } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const StyledPortsSpan = styled('span', {
   label: 'StyledPortsSpan',
@@ -106,11 +107,11 @@ interface PreloadedProps {
 }
 
 interface State {
-  configErrors: APIError[][];
+  configErrors: FormattedAPIError[][];
   configSubmitting: boolean[];
   configs: NodeBalancerConfigFieldsWithStatus[];
   deleteConfigConfirmDialog: {
-    errors?: APIError[];
+    errors?: FormattedAPIError[];
     idxToDelete?: number;
     open: boolean;
     portToDelete?: number;
@@ -309,7 +310,7 @@ class NodeBalancerConfigurations extends React.Component<
 
   confirmationConfigError = () =>
     (this.state.deleteConfigConfirmDialog.errors || [])
-      .map((e) => e.reason)
+      .map((e) => e.formattedReason)
       .join(',');
 
   createNode = (configIdx: number, nodeIdx: number) => {
@@ -491,7 +492,7 @@ class NodeBalancerConfigurations extends React.Component<
       });
   };
 
-  fieldErrorsToNodePathErrors = (errors: APIError[]) => {
+  fieldErrorsToNodePathErrors = (errors: FormattedAPIError[]) => {
     /* Return objects with this shape
         {
           path: [0, 'errors'],
@@ -501,7 +502,7 @@ class NodeBalancerConfigurations extends React.Component<
           }
         }
     */
-    return errors.reduce((acc: any, error: APIError) => {
+    return errors.reduce((acc: any, error) => {
       /**
        * Regex conditions are as follows:
        *
@@ -517,7 +518,7 @@ class NodeBalancerConfigurations extends React.Component<
           {
             error: {
               field: match[2],
-              reason: error.reason,
+              reason: error.formattedReason,
             },
             path: [+match[1], 'errors'],
           },
@@ -528,7 +529,7 @@ class NodeBalancerConfigurations extends React.Component<
   };
 
   handleNodeFailure = (
-    errResponse: APIError[],
+    errResponse: FormattedAPIError[],
     configIdx: number,
     nodeIdx: number
   ) => {
@@ -1040,7 +1041,7 @@ class NodeBalancerConfigurations extends React.Component<
       });
   };
 
-  setNodeErrors = (configIdx: number, error: APIError[]) => {
+  setNodeErrors = (configIdx: number, error: FormattedAPIError[]) => {
     /* Map the objects with this shape
         {
           path: [0, 'errors'],
@@ -1143,7 +1144,7 @@ class NodeBalancerConfigurations extends React.Component<
   updateNodeErrors = (
     configIdx: number,
     nodeIdx: number,
-    errors: APIError[]
+    errors: FormattedAPIError[]
   ) => {
     this.setState(
       set(lensPath(['configs', configIdx, 'nodes', nodeIdx, 'errors']), errors),

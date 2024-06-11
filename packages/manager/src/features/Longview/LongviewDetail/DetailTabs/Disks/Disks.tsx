@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -11,12 +10,14 @@ import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { DiskGraph } from './DiskGraph';
 import { StyledBox, StyledTimeRangeSelect } from './Disks.styles';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 interface Props {
   clientAPIKey: string;
   clientID: number;
   clientLastUpdated?: number;
   lastUpdated?: number;
-  lastUpdatedError?: APIError[];
+  lastUpdatedError?: FormattedAPIError[];
   timezone: string;
 }
 

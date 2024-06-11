@@ -7,7 +7,6 @@ import {
   DatabasePriceObject,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
-import { APIError } from '@linode/api-v4/lib/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -63,6 +62,7 @@ import {
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   btnCtn: {
@@ -217,8 +217,10 @@ const DatabaseCreate = () => {
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
   const [nodePricing, setNodePricing] = React.useState<NodePricing>();
-  const [createError, setCreateError] = React.useState<string>();
-  const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
+  const [createError, setCreateError] = React.useState<JSX.Element | string>();
+  const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<
+    FormattedAPIError[]
+  >();
 
   const engineOptions = React.useMemo(() => {
     if (!engines) {
@@ -278,7 +280,7 @@ const DatabaseCreate = () => {
       history.push(`/databases/${response.engine}/${response.id}`);
     } catch (errors) {
       const ipErrors = errors.filter(
-        (error: APIError) => error.field === 'allow_list'
+        (error: FormattedAPIError) => error.field === 'allow_list'
       );
       if (ipErrors) {
         setIPErrorsFromAPI(ipErrors);
@@ -461,7 +463,7 @@ const DatabaseCreate = () => {
         title="Create"
       />
       <Paper>
-        {createError ? <Notice text={createError} variant="error" /> : null}
+        {createError ? <Notice variant="error">{createError}</Notice> : null}
         <Grid>
           <Typography variant="h2">Name Your Cluster</Typography>
           <TextField
@@ -598,12 +600,11 @@ const DatabaseCreate = () => {
           </Typography>
           <Grid style={{ marginTop: 24, maxWidth: 450 }}>
             {ipErrorsFromAPI
-              ? ipErrorsFromAPI.map((apiError: APIError) => (
-                  <Notice
-                    key={apiError.reason}
-                    text={apiError.reason}
-                    variant="error"
-                  />
+              ? ipErrorsFromAPI.map((apiError) => (
+                  <Notice key={apiError.reason} variant="error">
+                    {' '}
+                    {apiError.formattedReason}
+                  </Notice>
                 ))
               : null}
             <MultipleIPInput

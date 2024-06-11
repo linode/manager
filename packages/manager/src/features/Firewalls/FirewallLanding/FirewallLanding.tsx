@@ -115,7 +115,8 @@ const FirewallLanding = () => {
     return (
       <ErrorState
         errorText={
-          getAPIErrorOrDefault(error, 'Error loading your Firewalls.')[0].reason
+          getAPIErrorOrDefault(error, 'Error loading your Firewalls.')[0]
+            .formattedReason
         }
       />
     );

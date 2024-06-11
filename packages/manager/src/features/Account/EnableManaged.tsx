@@ -1,8 +1,7 @@
 import { enableManaged } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
 
 import { Accordion } from 'src/components/Accordion';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -14,6 +13,8 @@ import { Typography } from 'src/components/Typography';
 import { updateAccountSettingsData } from 'src/queries/account/settings';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
 import { pluralize } from 'src/utilities/pluralize';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface Props {
   isManaged: boolean;
@@ -61,7 +62,7 @@ export const EnableManaged = (props: Props) => {
   const queryClient = useQueryClient();
   const { data: linodes } = useLinodesQuery();
   const [isOpen, setOpen] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string | undefined>();
+  const [error, setError] = React.useState<JSX.Element | string>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
 
   const linodeCount = linodes?.results ?? 0;
@@ -71,8 +72,8 @@ export const EnableManaged = (props: Props) => {
     setError(undefined);
   };
 
-  const handleError = (e: APIError[]) => {
-    setError(e[0].reason);
+  const handleError = (e: FormattedAPIError[]) => {
+    setError(e[0].formattedReason);
     setLoading(false);
   };
 

@@ -1,8 +1,10 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview';
-import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
+import { Filter, Params } from '@linode/api-v4/lib/types';
 import actionCreatorFactory from 'typescript-fsa';
 
 import { GetAllData } from 'src/utilities/getAll';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const actionCreator = actionCreatorFactory(`@@manager/longview`);
 
@@ -12,7 +14,7 @@ export const getLongviewClients = actionCreator.async<
     params?: Params;
   },
   GetAllData<LongviewClient>,
-  APIError[]
+  FormattedAPIError[]
 >(`get`);
 
 export const createLongviewClient = actionCreator.async<
@@ -20,7 +22,7 @@ export const createLongviewClient = actionCreator.async<
     label?: string;
   },
   LongviewClient,
-  APIError[]
+  FormattedAPIError[]
 >(`create`);
 
 export const deleteLongviewClient = actionCreator.async<
@@ -28,7 +30,7 @@ export const deleteLongviewClient = actionCreator.async<
     id: number;
   },
   {},
-  APIError[]
+  FormattedAPIError[]
 >(`delete`);
 
 export const updateLongviewClient = actionCreator.async<
@@ -37,5 +39,5 @@ export const updateLongviewClient = actionCreator.async<
     label: string;
   },
   LongviewClient,
-  APIError[]
+  FormattedAPIError[]
 >(`update`);

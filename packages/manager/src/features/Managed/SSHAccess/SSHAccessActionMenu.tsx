@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
@@ -8,6 +7,8 @@ import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export interface SSHAccessActionMenuProps {
   isEnabled: boolean;
@@ -27,9 +28,9 @@ export const SSHAccessActionMenu = (props: SSHAccessActionMenuProps) => {
     linodeId
   );
 
-  const handleError = (message: string, error: APIError[]) => {
+  const handleError = (message: string, error: FormattedAPIError[]) => {
     const errMessage = getAPIErrorOrDefault(error, message);
-    enqueueSnackbar(errMessage[0].reason, { variant: 'error' });
+    enqueueSnackbar(errMessage[0].formattedReason, { variant: 'error' });
   };
 
   const actions: Action[] = [

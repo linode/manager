@@ -5,17 +5,17 @@ import { queryPresets } from '../base';
 import { profileQueries } from './profile';
 
 import type {
-  APIError,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
 } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 export const useSecurityQuestions = ({
   enabled = true,
 }: {
   enabled?: boolean;
 } = {}) => {
-  return useQuery<SecurityQuestionsData, APIError[]>({
+  return useQuery<SecurityQuestionsData, FormattedAPIError[]>({
     ...profileQueries.securityQuestions,
     ...queryPresets.oneTimeFetch,
     enabled,
@@ -26,7 +26,7 @@ export const useMutateSecurityQuestions = () => {
   const queryClient = useQueryClient();
   return useMutation<
     SecurityQuestionsPayload,
-    APIError[],
+    FormattedAPIError[],
     SecurityQuestionsPayload
   >({
     mutationFn: updateSecurityQuestions,

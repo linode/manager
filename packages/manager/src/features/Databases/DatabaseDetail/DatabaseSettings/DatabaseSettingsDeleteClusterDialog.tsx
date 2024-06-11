@@ -25,7 +25,7 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
     databaseID
   );
   const defaultError = 'There was an error deleting this Database Cluster.';
-  const [error, setError] = React.useState('');
+  const [error, setError] = React.useState<JSX.Element | string>();
   const [isLoading, setIsLoading] = React.useState(false);
   const { push } = useHistory();
 
@@ -42,7 +42,7 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
       })
       .catch((e) => {
         setIsLoading(false);
-        setError(getAPIErrorOrDefault(e, defaultError)[0].reason);
+        setError(getAPIErrorOrDefault(e, defaultError)[0].formattedReason);
       });
   };
 
@@ -62,7 +62,7 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
       open={open}
       title={`Delete Database Cluster ${databaseLabel}`}
     >
-      {error ? <Notice text={error} variant="error" /> : null}
+      {error ? <Notice variant="error">{error}</Notice> : null}
       <Notice variant="warning">
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong> Deleting your entire database will delete

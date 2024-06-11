@@ -1,5 +1,4 @@
 import {
-  APIError,
   Filter,
   OAuthClient,
   OAuthClientRequest,
@@ -15,6 +14,8 @@ import { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 import { accountQueries } from './queries';
 
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
+
 export const useOAuthClientsQuery = (params?: Params, filter?: Filter) =>
   useQuery({
     ...accountQueries.oauthClients(params, filter),
@@ -26,13 +27,13 @@ interface OAuthClientWithSecret extends OAuthClient {
 }
 
 export const useResetOAuthClientMutation = (id: string) =>
-  useMutation<OAuthClientWithSecret, APIError[]>({
+  useMutation<OAuthClientWithSecret, FormattedAPIError[]>({
     mutationFn: () => resetOAuthClientSecret(id),
   });
 
 export const useDeleteOAuthClientMutation = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
+  return useMutation<{}, FormattedAPIError[]>({
     mutationFn: () => deleteOAuthClient(id),
     onSuccess() {
       queryClient.invalidateQueries(accountQueries.oauthClients._def);
@@ -46,7 +47,11 @@ interface OAuthClientWithSecret extends OAuthClient {
 
 export const useCreateOAuthClientMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<OAuthClientWithSecret, APIError[], OAuthClientRequest>({
+  return useMutation<
+    OAuthClientWithSecret,
+    FormattedAPIError[],
+    OAuthClientRequest
+  >({
     mutationFn: createOAuthClient,
     onSuccess() {
       queryClient.invalidateQueries(accountQueries.oauthClients._def);
@@ -56,7 +61,11 @@ export const useCreateOAuthClientMutation = () => {
 
 export const useUpdateOAuthClientMutation = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation<OAuthClient, APIError[], Partial<OAuthClientRequest>>({
+  return useMutation<
+    OAuthClient,
+    FormattedAPIError[],
+    Partial<OAuthClientRequest>
+  >({
     mutationFn: (data) => updateOAuthClient(id, data),
     onSuccess() {
       queryClient.invalidateQueries(accountQueries.oauthClients._def);

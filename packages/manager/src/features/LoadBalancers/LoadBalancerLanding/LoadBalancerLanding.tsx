@@ -85,7 +85,7 @@ export const LoadBalancerLanding = () => {
       <ErrorState
         errorText={
           getAPIErrorOrDefault(error, 'Error loading your Load Balancers.')[0]
-            .reason
+            .formattedReason
         }
       />
     );

@@ -66,7 +66,7 @@ export const LongviewList = React.memo((props: Props) => {
    * Only show an error if we haven't received data
    */
   if (longviewClientsError.read && longviewClientsLastUpdated === 0) {
-    const errorText = longviewClientsError.read[0].reason;
+    const errorText = longviewClientsError.read[0].formattedReason;
     return (
       <Paper>
         <ErrorState errorText={errorText} />

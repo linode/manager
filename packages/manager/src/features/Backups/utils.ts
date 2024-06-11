@@ -4,7 +4,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKey } from 'src/queries/linodes/linodes';
 import { pluralize } from 'src/utilities/pluralize';
 
-import type { APIError, Linode } from '@linode/api-v4';
+import type { Linode } from '@linode/api-v4';
+import type { FormattedAPIError } from 'src/types/FormattedAPIError';
 
 interface EnableBackupsFufilledResult extends PromiseFulfilledResult<{}> {
   linode: Linode;
@@ -12,7 +13,7 @@ interface EnableBackupsFufilledResult extends PromiseFulfilledResult<{}> {
 
 export interface EnableBackupsRejectedResult extends PromiseRejectedResult {
   linode: Linode;
-  reason: APIError[];
+  reason: FormattedAPIError[];
 }
 
 export const useEnableBackupsOnLinodesMutation = () => {
