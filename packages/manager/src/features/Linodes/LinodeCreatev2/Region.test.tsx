@@ -2,12 +2,20 @@ import { waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
-import { grantsFactory, profileFactory, regionFactory } from 'src/factories';
+import {
+  grantsFactory,
+  linodeFactory,
+  linodeTypeFactory,
+  profileFactory,
+  regionFactory,
+} from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { Region } from './Region';
+
+import type { LinodeCreateFormValues } from './utilities';
 
 describe('Region', () => {
   it('should render a heading', () => {
@@ -80,5 +88,89 @@ describe('Region', () => {
       // eslint-disable-next-line no-await-in-loop
       expect(await findByText(`${region.label} (${region.id})`)).toBeVisible();
     }
+  });
+
+  it('renders a warning if the user selects a region with different pricing when cloning', async () => {
+    const regionA = regionFactory.build({ capabilities: ['Linodes'] });
+    const regionB = regionFactory.build({ capabilities: ['Linodes'] });
+
+    const type = linodeTypeFactory.build({
+      region_prices: [{ hourly: 99, id: regionB.id, monthly: 999 }],
+    });
+
+    const linode = linodeFactory.build({ region: regionA.id, type: type.id });
+
+    server.use(
+      http.get('*/v4/linode/types/:id', () => {
+        return HttpResponse.json(type);
+      }),
+      http.get('*/v4/regions', () => {
+        return HttpResponse.json(makeResourcePage([regionA, regionB]));
+      })
+    );
+
+    const {
+      findByText,
+      getByPlaceholderText,
+    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+      component: <Region />,
+      options: {
+        MemoryRouter: { initialEntries: ['/linodes/create?type=Clone+Linode'] },
+      },
+      useFormOptions: {
+        defaultValues: {
+          linode,
+        },
+      },
+    });
+
+    const select = getByPlaceholderText('Select a Region');
+
+    await userEvent.click(select);
+
+    await userEvent.click(await findByText(`${regionB.label} (${regionB.id})`));
+
+    await findByText('The selected region has a different price structure.');
+  });
+
+  it('renders a warning if the user tries to clone across datacenters', async () => {
+    const regionA = regionFactory.build({ capabilities: ['Linodes'] });
+    const regionB = regionFactory.build({ capabilities: ['Linodes'] });
+
+    const linode = linodeFactory.build({ region: regionA.id });
+
+    server.use(
+      http.get('*/v4/regions', () => {
+        return HttpResponse.json(makeResourcePage([regionA, regionB]));
+      })
+    );
+
+    const {
+      findByText,
+      getByPlaceholderText,
+      getByText,
+    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+      component: <Region />,
+      options: {
+        MemoryRouter: { initialEntries: ['/linodes/create?type=Clone+Linode'] },
+      },
+      useFormOptions: {
+        defaultValues: {
+          linode,
+        },
+      },
+    });
+
+    const select = getByPlaceholderText('Select a Region');
+
+    await userEvent.click(select);
+
+    await userEvent.click(await findByText(`${regionB.label} (${regionB.id})`));
+
+    expect(
+      getByText(
+        'Cloning a powered off instance across data centers may cause long periods of down time.'
+      )
+    ).toBeVisible();
   });
 });
