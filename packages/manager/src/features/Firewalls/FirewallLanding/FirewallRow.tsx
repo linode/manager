@@ -89,17 +89,16 @@ export const getDeviceLinks = (entities: FirewallDeviceEntity[]) => {
   return (
     <>
       {firstThree.map((entity, idx) => (
-        <>
+        <React.Fragment key={entity.url}>
           {idx > 0 && ', '}
           <Link
             className="link secondaryLink"
             data-testid="firewall-row-link"
-            key={entity.url}
             to={`/${entity.type}s/${entity.id}`}
           >
             {entity.label}
           </Link>
-        </>
+        </React.Fragment>
       ))}
       {entities.length > 3 && <span>, plus {entities.length - 3} more.</span>}
     </>

@@ -406,7 +406,12 @@ export const firewallEventsHandler = ({
       // If a Linode is added or removed as a firewall device, invalidate it's firewalls
       if (event.secondary_entity && event.secondary_entity.type === 'linode') {
         queryClient.invalidateQueries({
-          queryKey: ['linodes', 'linode', event.entity.id, 'firewalls'],
+          queryKey: [
+            'linodes',
+            'linode',
+            event.secondary_entity.id,
+            'firewalls',
+          ],
         });
       }
 
@@ -419,7 +424,7 @@ export const firewallEventsHandler = ({
           queryKey: [
             'nodebalancers',
             'nodebalancer',
-            event.entity.id,
+            event.secondary_entity.id,
             'firewalls',
           ],
         });
