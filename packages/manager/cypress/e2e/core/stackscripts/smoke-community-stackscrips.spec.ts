@@ -11,7 +11,7 @@ import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { cleanUp } from 'support/util/cleanup';
 import { interceptCreateLinode } from 'support/intercepts/linodes';
-import { getProfile } from '@linode/api-v4/lib';
+import { getProfile } from '@linode/api-v4';
 import { Profile, StackScript } from '@linode/api-v4';
 import { formatDate } from '@src/utilities/formatDate';
 

@@ -44,6 +44,11 @@ const mockDedicatedLinodeTypes = [
     label: 'dedicated-3',
     class: 'dedicated',
   }),
+  linodeTypeFactory.build({
+    id: 'dedicated-4',
+    label: 'dedicated-4',
+    class: 'dedicated',
+  }),
 ];
 
 const mockSharedLinodeTypes = [
@@ -99,7 +104,17 @@ const mockRegionAvailability = [
     region: 'us-east',
   }),
   regionAvailabilityFactory.build({
+    plan: 'dedicated-4',
+    available: false,
+    region: 'us-east',
+  }),
+  regionAvailabilityFactory.build({
     plan: 'highmem-1',
+    available: false,
+    region: 'us-east',
+  }),
+  regionAvailabilityFactory.build({
+    plan: 'shared-3',
     available: false,
     region: 'us-east',
   }),
@@ -110,7 +125,7 @@ const k8PlansPanel = '[data-qa-tp="Add Node Pools"]';
 const planSelectionTable = 'List of Linode Plans';
 
 const notices = {
-  limitedAvailability: '[data-testid="disabled-plan-tooltip"]',
+  limitedAvailability: '[data-testid="limited-availability-banner"]',
   unavailable: '[data-testid="notice-error"]',
 };
 
@@ -136,15 +151,15 @@ describe('displays linode plans panel based on availability', () => {
     // Dedicated CPU tab
     // Should be selected/open by default
     // Should have the limited availability notice
-    // Should contain 4 plans (5 rows including the header row)
-    // Should have 2 plans disabled
-    // Should have tooltips for the disabled plans (not more than half disabled plans in the panel)
+    // Should contain 5 plans (6 rows including the header row)
+    // Should have 3 plans disabled
+    // Should not have tooltips for the disabled plans (more than half disabled plans in the panel)
     cy.get(linodePlansPanel).within(() => {
       cy.findAllByRole('alert').should('have.length', 1);
       cy.get(notices.limitedAvailability).should('be.visible');
 
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
-        cy.findAllByRole('row').should('have.length', 5);
+        cy.findAllByRole('row').should('have.length', 6);
         cy.get('[id="dedicated-1"]').should('be.enabled');
         cy.get('[id="dedicated-2"]').should('be.enabled');
         cy.get(
@@ -152,15 +167,15 @@ describe('displays linode plans panel based on availability', () => {
         );
         cy.get('[id="dedicated-3"]').should('be.disabled');
         cy.get('[id="g6-dedicated-64"]').should('be.disabled');
-        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 2);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
       });
     });
 
     // Shared CPU tab
     // Should have no notices
     // Should contain 3 plans (4 rows including the header row)
-    // Should have 0 disabled plan
-    // Should have no tooltip for the disabled plan
+    // Should have 1 disabled plan
+    // Should have one tooltip for the disabled plan
     cy.findByText('Shared CPU').click();
     cy.get(linodePlansPanel).within(() => {
       cy.findAllByRole('alert').should('have.length', 0);
@@ -169,8 +184,8 @@ describe('displays linode plans panel based on availability', () => {
         cy.findAllByRole('row').should('have.length', 4);
         cy.get('[id="shared-1"]').should('be.enabled');
         cy.get('[id="shared-2"]').should('be.enabled');
-        cy.get('[id="shared-3"]').should('be.enabled');
-        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
+        cy.get('[id="shared-3"]').should('be.disabled');
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 1);
       });
     });
 
@@ -178,7 +193,7 @@ describe('displays linode plans panel based on availability', () => {
     // Should have the limited availability notice
     // Should contain 1 plan (2 rows including the header row)
     // Should have one disabled plan
-    // Should have tooltip for the disabled plan (more than half disabled plans in the panel, but only one plan)
+    // Should have no tooltip for the disabled plan (more than half disabled plans in the panel)
     cy.findByText('High Memory').click();
     cy.get(linodePlansPanel).within(() => {
       cy.findAllByRole('alert').should('have.length', 1);
@@ -187,7 +202,7 @@ describe('displays linode plans panel based on availability', () => {
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
         cy.findAllByRole('row').should('have.length', 2);
         cy.get('[id="highmem-1"]').should('be.disabled');
-        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 1);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
       });
     });
 
@@ -232,9 +247,9 @@ describe('displays kubernetes plans panel based on availability', () => {
     // Dedicated CPU tab
     // Should be selected/open by default
     // Should have the limited availability notice
-    // Should contain 4 plans (5 rows including the header row)
-    // Should have 2 plans disabled
-    // Should have tooltips for the disabled plans (not more than half disabled plans in the panel)
+    // Should contain 5 plans (6 rows including the header row)
+    // Should have 3 plans disabled
+    // Should have no tooltips for the disabled plans (more than half disabled plans in the panel)
     // All inputs for a row should be enabled if row is enabled (only testing one row in suite)
     // All inputs for a disabled row should be disabled (only testing one row in suite)
     cy.get(k8PlansPanel).within(() => {
@@ -242,7 +257,7 @@ describe('displays kubernetes plans panel based on availability', () => {
       cy.get(notices.limitedAvailability).should('be.visible');
 
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
-        cy.findAllByRole('row').should('have.length', 5);
+        cy.findAllByRole('row').should('have.length', 6);
         cy.get('[data-qa-plan-row="dedicated-1"]').should(
           'not.have.attr',
           'disabled'
@@ -270,14 +285,14 @@ describe('displays kubernetes plans panel based on availability', () => {
             )
             .should('be.disabled');
         });
-        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 2);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
       });
     });
 
     // Shared CPU tab
     // Should have no notices
     // Should contain 3 plans (4 rows including the header row)
-    // Should have 1 disabled plan
+    // Should have 2 disabled plans
     // Should have tooltip for the disabled plan (not more than half disabled plans in the panel)
     cy.findByText('Shared CPU').click();
     cy.get(k8PlansPanel).within(() => {
@@ -293,11 +308,8 @@ describe('displays kubernetes plans panel based on availability', () => {
           'not.have.attr',
           'disabled'
         );
-        cy.get('[data-qa-plan-row="shared-3"]').should(
-          'not.have.attr',
-          'disabled'
-        );
-        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
+        cy.get('[data-qa-plan-row="shared-3"]').should('have.attr', 'disabled');
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 1);
       });
     });
 
@@ -305,7 +317,7 @@ describe('displays kubernetes plans panel based on availability', () => {
     // Should have the limited availability notice
     // Should contain 1 plan (2 rows including the header row)
     // Should have one disabled plan
-    // Should have tooltip for the disabled plan (more than half disabled plans in the panel, but only one plan)
+    // Should have no tooltip for the disabled plan (more than half disabled plans in the panel)
     cy.findByText('High Memory').click();
     cy.get(k8PlansPanel).within(() => {
       cy.findAllByRole('alert').should('have.length', 1);
@@ -317,7 +329,7 @@ describe('displays kubernetes plans panel based on availability', () => {
           'have.attr',
           'disabled'
         );
-        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 1);
+        cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
       });
     });
 

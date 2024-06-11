@@ -43,7 +43,7 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
         {isLoading ? (
           <>
             <Typography>Loading transfer data...</Typography>
-            <CircleProgress mini />
+            <CircleProgress size="sm" />
           </>
         ) : (
           <>

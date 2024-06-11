@@ -102,7 +102,7 @@ export const GooglePayChip = (props: Props) => {
   if (isLoading) {
     return (
       <Grid>
-        <CircleProgress mini />
+        <CircleProgress size="sm" />
       </Grid>
     );
   }

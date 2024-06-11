@@ -23,7 +23,7 @@ import {
   useLinodeStatsByDate,
   useLinodeTransferByDate,
 } from 'src/queries/linodes/stats';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { readableBytes } from 'src/utilities/unitConversions';
 
@@ -119,7 +119,7 @@ export const TransferHistory = React.memo((props: Props) => {
     if (statsLoading) {
       return (
         <StyledDiv>
-          <CircleProgress mini />
+          <CircleProgress size="sm" />
         </StyledDiv>
       );
     }

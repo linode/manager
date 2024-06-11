@@ -50,12 +50,7 @@ describe('trimOneClickFromLabel', () => {
 });
 
 describe('filterOneClickApps', () => {
-  const baseApps = {
-    1: 'Base App 1',
-    2: 'Base App 2',
-    3: 'Base App 3',
-    4: 'Base App 4',
-  };
+  const baseAppIds = [1, 2, 3, 4];
   const newApps = {
     5: 'New App 1',
     6: 'New App 2',
@@ -78,7 +73,7 @@ describe('filterOneClickApps', () => {
   it('filters OneClickApps and trims labels, excluding StackScripts with Helpers', () => {
     // feeding 4 Ids (1,2,3,4) getting 3 back
     const filteredOCAsWithHelpersLabel = filterOneClickApps({
-      baseApps,
+      baseAppIds,
       newApps,
       queryResults: queryResultsWithHelpers,
     });
@@ -86,7 +81,7 @@ describe('filterOneClickApps', () => {
 
     // feeding 4 Ids (5,6,7,8) getting 4 back
     const filteredOCAsWithoutHelpersLabel = filterOneClickApps({
-      baseApps,
+      baseAppIds,
       newApps,
       queryResults: queryResultsWithoutHelpers,
     });
@@ -97,7 +92,7 @@ describe('filterOneClickApps', () => {
   it('handles empty queryResults', () => {
     const emptyQueryResults: StackScript[] = [];
     const filteredOCAs = filterOneClickApps({
-      baseApps,
+      baseAppIds,
       newApps,
       queryResults: emptyQueryResults,
     });

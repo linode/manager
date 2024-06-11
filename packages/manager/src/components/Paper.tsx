@@ -30,6 +30,7 @@ export const Paper = (props: Props) => {
       <StyledPaper
         {...props}
         variant={props.error ? 'outlined' : props.variant}
+        data-qa-paper
       />
       {props.error && <StyledErrorText>{props.error}</StyledErrorText>}
     </React.Fragment>

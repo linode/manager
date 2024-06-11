@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -451,10 +450,4 @@ const sendGroupByAnalytic = (value: boolean) => {
   sendGroupByTagEnabledEvent(eventCategory, value);
 };
 
-export const enhanced = compose<CombinedProps, LinodesLandingProps>(
-  withRouter,
-  withProfile,
-  withFeatureFlags
-);
-
-export default enhanced(ListLinodes);
+export default withRouter(withProfile(withFeatureFlags(ListLinodes)));

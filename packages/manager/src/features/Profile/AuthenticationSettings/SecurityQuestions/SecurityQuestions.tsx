@@ -12,7 +12,7 @@ import { Typography } from 'src/components/Typography';
 import {
   useMutateSecurityQuestions,
   useSecurityQuestions,
-} from 'src/queries/securityQuestions';
+} from 'src/queries/profile/securityQuestions';
 
 import { QuestionAndAnswerPair } from './QuestionAndAnswerPair';
 import { getAnsweredQuestions, securityQuestionsToItems } from './utilities';

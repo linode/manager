@@ -131,7 +131,14 @@ const uploadImage = (label: string) => {
       mimeType: 'application/x-gzip',
     });
   });
+
   cy.intercept('POST', apiMatcher('images/upload')).as('imageUpload');
+
+  ui.button
+    .findByAttribute('type', 'submit')
+    .should('be.enabled')
+    .should('be.visible')
+    .click();
 };
 
 authenticate();

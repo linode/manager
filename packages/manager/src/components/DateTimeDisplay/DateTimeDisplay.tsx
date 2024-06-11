@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { TimeInterval, formatDate } from 'src/utilities/formatDate';
 
 export interface DateTimeDisplayProps {

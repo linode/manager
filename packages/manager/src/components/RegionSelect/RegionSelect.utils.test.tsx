@@ -38,21 +38,21 @@ const regions: Region[] = [
   }),
 ];
 
-const regionsWithEdge = [
+const distributedRegions = [
   ...regions,
   regionFactory.build({
     capabilities: ['Linodes'],
     country: 'us',
-    id: 'us-edge-1',
-    label: 'Gecko Edge Test',
-    site_type: 'edge',
+    id: 'us-den-10',
+    label: 'Gecko Distributed Region Test',
+    site_type: 'distributed',
   }),
   regionFactory.build({
     capabilities: ['Linodes'],
     country: 'us',
-    id: 'us-edge-2',
-    label: 'Gecko Edge Test 2',
-    site_type: 'edge',
+    id: 'us-den-11',
+    label: 'Gecko Distributed Region Test 2',
+    site_type: 'distributed',
   }),
 ];
 
@@ -89,24 +89,24 @@ const expectedRegions: RegionSelectOption[] = [
   },
 ];
 
-const expectedEdgeRegions = [
+const expectedDistributedRegions = [
   {
     data: { country: 'us', region: 'North America' },
     disabledProps: {
       disabled: false,
     },
-    label: 'Gecko Edge Test (us-edge-1)',
-    site_type: 'edge',
-    value: 'us-edge-1',
+    label: 'Gecko Distributed Region Test (us-den-10)',
+    site_type: 'distributed',
+    value: 'us-den-10',
   },
   {
     data: { country: 'us', region: 'North America' },
     disabledProps: {
       disabled: false,
     },
-    label: 'Gecko Edge Test 2 (us-edge-2)',
-    site_type: 'edge',
-    value: 'us-edge-2',
+    label: 'Gecko Distributed Region Test 2 (us-den-11)',
+    site_type: 'distributed',
+    value: 'us-den-11',
   },
 ];
 
@@ -152,42 +152,39 @@ describe('getRegionOptions', () => {
     expect(result).toEqual(expectedRegions);
   });
 
-  it('should filter out edge regions if regionFilter is core', () => {
+  it('should filter out distributed regions if regionFilter is core', () => {
     const result: RegionSelectOption[] = getRegionOptions({
       accountAvailabilityData,
       currentCapability: 'Linodes',
       regionFilter: 'core',
-      regions: regionsWithEdge,
+      regions: distributedRegions,
     });
 
     expect(result).toEqual(expectedRegions);
   });
 
-  it('should filter out core regions if regionFilter is edge', () => {
+  it('should filter out core regions if regionFilter is "distributed"', () => {
     const result: RegionSelectOption[] = getRegionOptions({
       accountAvailabilityData,
       currentCapability: 'Linodes',
-      regionFilter: 'edge',
-      regions: regionsWithEdge,
+      regionFilter: 'distributed',
+      regions: distributedRegions,
     });
 
-    expect(result).toEqual(expectedEdgeRegions);
+    expect(result).toEqual(expectedDistributedRegions);
   });
 
   it('should not filter out any regions if regionFilter is undefined', () => {
-    const expectedRegionsWithEdge = [
-      ...expectedEdgeRegions,
-      ...expectedRegions,
-    ];
+    const regions = [...expectedDistributedRegions, ...expectedRegions];
 
     const result: RegionSelectOption[] = getRegionOptions({
       accountAvailabilityData,
       currentCapability: 'Linodes',
       regionFilter: undefined,
-      regions: regionsWithEdge,
+      regions: distributedRegions,
     });
 
-    expect(result).toEqual(expectedRegionsWithEdge);
+    expect(result).toEqual(regions);
   });
 
   it('should have its option disabled if the region is unavailable', () => {

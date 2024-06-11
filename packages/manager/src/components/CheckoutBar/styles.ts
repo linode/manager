@@ -16,7 +16,7 @@ const StyledRoot = styled('div')(() => {
   return {
     minHeight: '24px',
     minWidth: '24px',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down(1280)]: {
       background: theme.color.white,
       bottom: '0 !important' as '0',
       left: '0 !important' as '0',

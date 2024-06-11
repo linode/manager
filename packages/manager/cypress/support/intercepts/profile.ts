@@ -13,6 +13,7 @@ import type {
   Profile,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
+  SSHKey,
   Token,
   UserPreferences,
 } from '@linode/api-v4';
@@ -386,5 +387,50 @@ export const mockResetOAuthApps = (
     'POST',
     apiMatcher(`account/oauth-clients/${appId}/reset-secret`),
     oauthApp
+  );
+};
+
+/**
+ * Intercepts GET request to fetch SSH keys and mocks the response.
+ *
+ * @param sshKeys - Array of SSH key objects with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetSSHKeys = (sshKeys: SSHKey[]): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('/profile/sshkeys*'),
+    paginateResponse(sshKeys)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch an SSH key and mocks the response.
+ *
+ * @param sshKey - SSH key object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetSSHKey = (sshKey: SSHKey): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`/profile/sshkeys/${sshKey.id}`),
+    makeResponse(sshKey)
+  );
+};
+
+/**
+ * Intercepts POST request to create an SSH key and mocks the response.
+ *
+ * @param sshKey - SSH key object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateSSHKey = (sshKey: SSHKey): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('/profile/sshkeys'),
+    makeResponse(sshKey)
   );
 };

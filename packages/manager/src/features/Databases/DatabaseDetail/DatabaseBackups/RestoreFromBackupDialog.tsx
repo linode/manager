@@ -7,8 +7,8 @@ import { DialogProps } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { useRestoreFromBackupMutation } from 'src/queries/databases';
-import { useProfile } from 'src/queries/profile';
+import { useRestoreFromBackupMutation } from 'src/queries/databases/databases';
+import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 

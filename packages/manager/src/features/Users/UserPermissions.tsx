@@ -16,7 +16,6 @@ import { QueryClient } from '@tanstack/react-query';
 import { enqueueSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
-import { compose as recompose } from 'recompose';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
@@ -828,7 +827,4 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 }
 
-export default recompose<CombinedProps, Props>(
-  withQueryClient,
-  withFeatureFlags
-)(UserPermissions);
+export default withQueryClient(withFeatureFlags(UserPermissions));

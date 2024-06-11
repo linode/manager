@@ -25,7 +25,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
 
-import { profileQueries } from './profile';
+import { profileQueries } from './profile/profile';
 
 export const queryKey = 'domains';
 

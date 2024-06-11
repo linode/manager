@@ -9,12 +9,13 @@ export const CloneWarning = () => {
     <Notice variant="warning">
       <List sx={{ listStyleType: 'disc', pl: 2.5 }}>
         <ListItem sx={{ display: 'list-item', pl: 1, py: 0.5 }}>
-          This newly created Linode will be created with the same password and
-          SSH Keys (if any) as the original Linode.
+          To help <strong>avoid data corruption</strong> during the cloning
+          process, we recommend powering off your Compute Instance prior to
+          cloning.
         </ListItem>
         <ListItem sx={{ display: 'list-item', pl: 1, py: 0.5 }}>
-          To help avoid data corruption during the cloning process, we recommend
-          powering off your Compute Instance prior to cloning.
+          This newly created Linode will be created with the same password and
+          SSH Keys (if any) as the original Linode.
         </ListItem>
       </List>
     </Notice>

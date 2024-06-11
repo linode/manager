@@ -10,7 +10,7 @@ import withLongviewClients, {
 import withClientStats, {
   Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
-import { useGrants } from 'src/queries/profile';
+import { useGrants } from 'src/queries/profile/profile';
 
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import { CPUGauge } from './Gauges/CPU';

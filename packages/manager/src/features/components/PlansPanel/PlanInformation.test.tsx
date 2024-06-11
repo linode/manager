@@ -11,7 +11,7 @@ import {
 import type { PlanInformationProps } from './PlanInformation';
 
 const mockProps: PlanInformationProps = {
-  hasDisabledPlans: false,
+  hasMajorityOfPlansDisabled: false,
   hasSelectedRegion: true,
   isSelectedRegionEligibleForPlan: false,
   planType: 'standard',
@@ -38,7 +38,7 @@ describe('PlanInformation', () => {
     renderWithTheme(
       <PlanInformation
         {...mockProps}
-        hasDisabledPlans={true}
+        hasMajorityOfPlansDisabled={true}
         isSelectedRegionEligibleForPlan={true}
         planType="dedicated"
       />

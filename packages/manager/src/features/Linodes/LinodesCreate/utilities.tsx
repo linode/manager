@@ -51,7 +51,7 @@ export const trimOneClickFromLabel = (stackScript: StackScript) => {
 };
 
 interface FilteredOCAs {
-  baseApps: Record<string, string>;
+  baseAppIds: number[];
   newApps: Record<string, string> | never[];
   queryResults: StackScript[];
 }
@@ -64,18 +64,17 @@ interface FilteredOCAs {
  * @returns an array of OCA StackScripts
  */
 export const filterOneClickApps = ({
-  baseApps,
+  baseAppIds,
   newApps,
   queryResults,
 }: FilteredOCAs) => {
-  const allowedApps = Object.keys({ ...baseApps, ...newApps });
+  const allowedAppIds = [...baseAppIds, ...Object.keys(newApps).map(Number)];
+
   // Don't display One-Click Helpers to the user
   // Filter out any apps that we don't have info for
   const filteredApps: StackScript[] = queryResults.filter(
     (app: StackScript) => {
-      return (
-        !app.label.match(/helpers/i) && allowedApps.includes(String(app.id))
-      );
+      return !app.label.match(/helpers/i) && allowedAppIds.includes(app.id);
     }
   );
   return filteredApps.map((app) => trimOneClickFromLabel(app));

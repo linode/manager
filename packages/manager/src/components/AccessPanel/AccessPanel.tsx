@@ -115,7 +115,7 @@ export const AccessPanel = (props: Props) => {
           disabled={!regionSupportsDiskEncryption}
           disabledReason={DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY}
           isEncryptDiskChecked={diskEncryptionEnabled ?? false}
-          toggleDiskEncryptionEnabled={toggleDiskEncryptionEnabled}
+          onChange={() => toggleDiskEncryptionEnabled()}
         />
       </>
     ) : null;

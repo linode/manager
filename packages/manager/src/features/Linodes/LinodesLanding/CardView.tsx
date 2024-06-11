@@ -7,7 +7,7 @@ import { Typography } from 'src/components/Typography';
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 
 import { RenderLinodesProps } from './DisplayLinodes';
 

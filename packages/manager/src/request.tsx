@@ -8,7 +8,6 @@ import {
 } from 'axios';
 import * as React from 'react';
 
-import { AccountActivationError } from 'src/components/AccountActivation';
 import { MigrateError } from 'src/components/MigrateError';
 import { VerificationError } from 'src/components/VerificationError';
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
@@ -62,6 +61,17 @@ export const handleError = (
     );
   }
 
+  if (
+    !!errors[0].reason.match(/account must be activated/i) &&
+    status === 403
+  ) {
+    store.dispatch(
+      setErrors({
+        account_unactivated: true,
+      })
+    );
+  }
+
   /** AxiosError contains the original POST data as stringified JSON */
   let requestData;
   try {
@@ -83,31 +93,6 @@ export const handleError = (
           }
         />
       ),
-    },
-    {
-      callback: () => {
-        if (store && !store.getState().globalErrors.account_unactivated) {
-          store.dispatch(
-            setErrors({
-              account_unactivated: true,
-            })
-          );
-        }
-      },
-      condition: (e) =>
-        !!e.reason.match(/account must be activated/i) && status === 403,
-      /**
-       * this component when rendered will set an account activation
-       * error in the globalErrors Redux state. The only issue here
-       * is that if a component is not rendering the actual error message
-       * that comes down, the Redux state will never be set.
-       *
-       * This means that we have 2 options
-       *
-       * 1. Dispatch the globalError Redux action somewhere in the interceptor.
-       * 2. Fix the Landing page components to display the actual error being passed.
-       */
-      replacementText: <AccountActivationError errors={errors} />,
     },
     {
       condition: (e) => {

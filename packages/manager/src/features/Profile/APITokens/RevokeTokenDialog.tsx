@@ -8,7 +8,7 @@ import { Typography } from 'src/components/Typography';
 import {
   useRevokeAppAccessTokenMutation,
   useRevokePersonalAccessTokenMutation,
-} from 'src/queries/tokens';
+} from 'src/queries/profile/tokens';
 
 import { APITokenType } from './APITokenTable';
 

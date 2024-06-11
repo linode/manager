@@ -427,7 +427,7 @@ export const TextField = (props: TextFieldProps) => {
             disableUnderline: true,
             endAdornment: loading && (
               <InputAdornment position="end">
-                <CircleProgress mini />
+                <CircleProgress size="sm" />
               </InputAdornment>
             ),
             ...InputProps,

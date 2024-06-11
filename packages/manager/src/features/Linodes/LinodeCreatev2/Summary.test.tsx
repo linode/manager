@@ -220,4 +220,17 @@ describe('Linode Create v2 Summary', () => {
 
     expect(getByText('VLAN Attached')).toBeVisible();
   });
+
+  it('should render "Encrypted" if disk encryption is enabled', async () => {
+    const {
+      getByText,
+    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+      component: <Summary />,
+      useFormOptions: {
+        defaultValues: { disk_encryption: 'enabled' },
+      },
+    });
+
+    expect(getByText('Encrypted')).toBeVisible();
+  });
 });

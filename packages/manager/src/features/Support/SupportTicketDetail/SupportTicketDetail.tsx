@@ -11,7 +11,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Stack } from 'src/components/Stack';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import {
   useInfiniteSupportTicketRepliesQuery,
   useSupportTicketQuery,
@@ -125,7 +125,7 @@ export const SupportTicketDetail = () => {
               ticketUpdated={ticket ? ticket.updated : ''}
             />
           ))}
-          {repliesLoading && <CircleProgress mini />}
+          {repliesLoading && <CircleProgress size="sm" />}
           {repliesError ? (
             <ErrorState errorText={repliesError?.[0].reason} />
           ) : null}

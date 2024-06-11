@@ -8,7 +8,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { useUpdateSSHKeyMutation } from 'src/queries/profile';
+import { useUpdateSSHKeyMutation } from 'src/queries/profile/profile';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 interface Props {

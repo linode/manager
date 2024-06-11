@@ -46,6 +46,8 @@ export const ListView = (props: RenderLinodesProps) => {
           ipv6={linode.ipv6 || ''}
           key={`linode-row-${idx}`}
           label={linode.label}
+          lke_cluster_id={linode.lke_cluster_id}
+          maintenance={linode.maintenance}
           placement_group={linode.placement_group}
           region={linode.region}
           specs={linode.specs}
@@ -54,7 +56,6 @@ export const ListView = (props: RenderLinodesProps) => {
           type={linode.type}
           updated={linode.updated}
           watchdog_enabled={linode.watchdog_enabled}
-          maintenance={linode.maintenance}
         />
       ))}
     </>

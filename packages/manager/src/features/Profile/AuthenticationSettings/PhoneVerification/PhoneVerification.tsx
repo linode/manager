@@ -17,7 +17,7 @@ import {
   useProfile,
   useSendPhoneVerificationCodeMutation,
   useVerifyPhoneVerificationCodeMutation,
-} from 'src/queries/profile';
+} from 'src/queries/profile/profile';
 
 import {
   StyledButtonContainer,

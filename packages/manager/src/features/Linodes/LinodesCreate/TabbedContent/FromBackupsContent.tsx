@@ -8,7 +8,7 @@ import * as React from 'react';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Paper } from 'src/components/Paper';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { reportException } from 'src/exceptionReporting';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -82,7 +82,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     const filterLinodesWithBackups = (linodes: Linode[]) =>
       linodes.filter(
         (linode) =>
-          linode.backups.enabled && !getIsEdgeRegion(regionsData, linode.region) // Hide linodes that are in an edge region
+          linode.backups.enabled &&
+          !getIsDistributedRegion(regionsData, linode.region) // Hide linodes that are in a distributed region
       );
 
     return (

@@ -127,6 +127,42 @@ export const mockUpdateDatabase = (
 };
 
 /**
+ * Intercepts POST request to reset an active database's password and mocks response.
+ *
+ * @param id - Database ID.
+ * @param engine - Database engine type.
+ *
+ * @returns Cypress chainable.
+ */
+
+export const mockResize = (
+  id: number,
+  engine: string,
+  responseData: any = {}
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`databases/${engine}/instances/${id}`),
+    responseData
+  );
+};
+
+export const mockResizeProvisioningDatabase = (
+  id: number,
+  engine: string,
+  responseErrorMessage?: string | undefined
+): Cypress.Chainable<null> => {
+  const error = makeErrorResponse(
+    responseErrorMessage || defaultErrorMessageProvisioning
+  );
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`databases/${engine}/instances/${id}`),
+    error
+  );
+};
+
+/**
  * Intercepts PUT request to update a provisioning database and mocks response.
  *
  * @param id - Database ID.

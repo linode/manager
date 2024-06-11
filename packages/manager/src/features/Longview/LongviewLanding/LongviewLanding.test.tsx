@@ -107,9 +107,10 @@ describe('Longview clients list view', () => {
     expect(props.getLongviewClients).toHaveBeenCalledTimes(1);
   });
 
-  it('should have an Add Client button', () => {
-    const { queryByText } = renderWithTheme(<LongviewLanding {...props} />);
-    expect(queryByText('Add Client')).toBeInTheDocument();
+  it('should have an Add Client button', async () => {
+    const { findByText } = renderWithTheme(<LongviewLanding {...props} />);
+    const addButton = await findByText('Add Client');
+    expect(addButton).toBeInTheDocument();
   });
 
   it('should attempt to add a new client when the Add Client button is clicked', async () => {

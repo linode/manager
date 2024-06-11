@@ -39,7 +39,7 @@ import {
   useAllAccountInvoices,
   useAllAccountPayments,
 } from 'src/queries/account/billing';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
