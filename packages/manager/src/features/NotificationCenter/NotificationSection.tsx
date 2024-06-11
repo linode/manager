@@ -149,7 +149,7 @@ const ContentBody = React.memo((props: BodyProps) => {
   if (loading) {
     return (
       <StyledLoadingContainer>
-        <CircleProgress mini />
+        <CircleProgress size="sm" />
       </StyledLoadingContainer>
     );
   }

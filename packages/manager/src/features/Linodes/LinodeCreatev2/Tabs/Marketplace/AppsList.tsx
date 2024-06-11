@@ -3,7 +3,7 @@ import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
 import { Box } from 'src/components/Box';
-import { CircularProgress } from 'src/components/CircularProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Stack } from 'src/components/Stack';
 import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
@@ -53,7 +53,7 @@ export const AppsList = ({ onOpenDetailsDrawer }: Props) => {
         justifyContent="center"
         width="100%"
       >
-        <CircularProgress />
+        <CircleProgress size="md" />
       </Box>
     );
   }

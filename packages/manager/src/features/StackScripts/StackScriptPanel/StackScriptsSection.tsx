@@ -9,7 +9,7 @@ import {
   StackScriptCategory,
   canUserModifyAccountStackScript,
 } from 'src/features/StackScripts/stackScriptUtils';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import { stripImageName } from 'src/utilities/stripImageName';
 
