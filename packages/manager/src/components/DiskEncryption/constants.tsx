@@ -11,11 +11,16 @@ export const DISK_ENCRYPTION_GENERAL_DESCRIPTION = (
   </>
 );
 
-// @TODO LDE: Update "Learn more" link
+const DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_DOCS_LINK =
+  'https://www.linode.com/docs/products/compute/compute-instances/guides/local-disk-encryption/';
+
 export const DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_COPY = (
   <>
-    Disk encryption is now standard on Linodes. <Link to="">Learn how</Link> to
-    update and protect your clusters.
+    Disk encryption is now standard on Linodes.{' '}
+    <Link to={DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_DOCS_LINK}>
+      Learn how
+    </Link>{' '}
+    to update and protect your clusters.
   </>
 );
 

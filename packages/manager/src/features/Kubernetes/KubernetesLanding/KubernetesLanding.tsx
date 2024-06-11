@@ -160,13 +160,6 @@ export const KubernetesLanding = () => {
   return (
     <>
       <DocumentTitleSegment segment="Kubernetes Clusters" />
-      <LandingHeader
-        docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
-        entity="Cluster"
-        onButtonClick={() => push('/kubernetes/create')}
-        removeCrumbX={1}
-        title="Kubernetes"
-      />
       {isDiskEncryptionFeatureEnabled && (
         <DismissibleBanner
           preferenceKey={DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_BANNER_KEY}
@@ -178,6 +171,13 @@ export const KubernetesLanding = () => {
           </Typography>
         </DismissibleBanner>
       )}
+      <LandingHeader
+        docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
+        entity="Cluster"
+        onButtonClick={() => push('/kubernetes/create')}
+        removeCrumbX={1}
+        title="Kubernetes"
+      />
       <Table aria-label="List of Your Kubernetes Clusters">
         <TableHead>
           <TableRow>
