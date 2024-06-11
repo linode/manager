@@ -22,7 +22,7 @@ export type RemovableItem = {
   // as 'any' because we do not know what types they could be.
   // Trying to type them as 'unknown' led to type errors.
   [key: string]: any;
-  id: number;
+  id: number | string;
   label: string;
 };
 
@@ -117,9 +117,9 @@ export const RemovableSelectionsList = (
   // used to determine when to display a box-shadow to indicate scrollability
   const listRef = React.useRef<HTMLUListElement>(null);
   const [listHeight, setListHeight] = React.useState<number>(0);
-  const [removingItemId, setRemovingItemId] = React.useState<null | number>(
-    null
-  );
+  const [removingItemId, setRemovingItemId] = React.useState<
+    null | number | string
+  >(null);
   const [isRemoving, setIsRemoving] = React.useState<boolean>(false);
 
   React.useEffect(() => {

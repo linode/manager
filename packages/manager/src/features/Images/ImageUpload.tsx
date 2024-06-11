@@ -32,7 +32,7 @@ import {
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
 import { useUploadImageMutation } from 'src/queries/images';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
@@ -256,13 +256,14 @@ export const ImageUpload = () => {
                     onBlur: field.onBlur,
                   }}
                   currentCapability={undefined}
+                  disableClearable
                   errorText={fieldState.error?.message}
-                  handleSelection={field.onChange}
                   helperText="For fastest initial upload, select the region that is geographically closest to you. Once uploaded, you will be able to deploy the image to other regions."
                   label="Region"
+                  onChange={(e, region) => field.onChange(region.id)}
                   regionFilter="core" // Images service will not be supported for Gecko Beta
                   regions={regions ?? []}
-                  selectedId={field.value ?? null}
+                  value={field.value ?? null}
                 />
               )}
               control={form.control}

@@ -222,7 +222,7 @@ export const PayPalButton = (props: Props) => {
         container
         justifyContent="center"
       >
-        <CircleProgress mini />
+        <CircleProgress size="sm" />
       </Grid>
     );
   }

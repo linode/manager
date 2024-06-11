@@ -15,7 +15,7 @@ describe('DiskEncryption', () => {
       <DiskEncryption
         descriptionCopy="Description for unit test"
         isEncryptDiskChecked={true}
-        toggleDiskEncryptionEnabled={vi.fn()}
+        onChange={vi.fn()}
       />
     );
 
@@ -30,7 +30,7 @@ describe('DiskEncryption', () => {
       <DiskEncryption
         descriptionCopy="Description for unit test"
         isEncryptDiskChecked={true}
-        toggleDiskEncryptionEnabled={vi.fn()}
+        onChange={vi.fn()}
       />
     );
 
@@ -44,7 +44,7 @@ describe('DiskEncryption', () => {
       <DiskEncryption
         descriptionCopy="Description for unit test"
         isEncryptDiskChecked={true}
-        toggleDiskEncryptionEnabled={vi.fn()}
+        onChange={vi.fn()}
       />
     );
 

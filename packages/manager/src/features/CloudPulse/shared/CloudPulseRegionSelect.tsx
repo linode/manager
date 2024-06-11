@@ -22,16 +22,14 @@ export const CloudPulseRegionSelect = React.memo(
 
     return (
       <RegionSelect
-        handleSelection={(value) => {
-          setRegion(value);
-        }}
         currentCapability={undefined}
+        disableClearable
         fullWidth
-        isClearable={false}
         label=""
         noMarginTop
+        onChange={(e, region) => setRegion(region.id)}
         regions={regions ? regions : []}
-        selectedId={null}
+        value={null}
       />
     );
   }
