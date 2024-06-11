@@ -1,11 +1,4 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Linode } from '@linode/api-v4';
-import {
-  CreateFirewallPayload,
-  Firewall,
-  FirewallDeviceEntityType,
-} from '@linode/api-v4/lib/firewalls';
-import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
@@ -27,11 +20,7 @@ import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import {
-  queryKey as firewallQueryKey,
-  useAllFirewallsQuery,
-  useCreateFirewall,
-} from 'src/queries/firewalls';
+import { useAllFirewallsQuery, useCreateFirewall } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { queryKey as nodebalancersQueryKey } from 'src/queries/nodebalancers';
 import { useGrants } from 'src/queries/profile/profile';
@@ -49,6 +38,13 @@ import {
   NODEBALANCER_CREATE_FLOW_TEXT,
 } from './constants';
 
+import type {
+  CreateFirewallPayload,
+  Firewall,
+  FirewallDeviceEntityType,
+  Linode,
+  NodeBalancer,
+} from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
@@ -81,7 +77,7 @@ export const CreateFirewallDrawer = React.memo(
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { data: grants } = useGrants();
     const { mutateAsync } = useCreateFirewall();
-    const { data } = useAllFirewallsQuery();
+    const { data } = useAllFirewallsQuery(open);
 
     const { enqueueSnackbar } = useSnackbar();
     const queryClient = useQueryClient();
@@ -132,7 +128,6 @@ export const CreateFirewallDrawer = React.memo(
         mutateAsync(payload)
           .then((response) => {
             setSubmitting(false);
-            queryClient.invalidateQueries([firewallQueryKey]);
             enqueueSnackbar(`Firewall ${payload.label} successfully created`, {
               variant: 'success',
             });

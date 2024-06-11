@@ -5,7 +5,6 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useDeleteFirewall, useMutateFirewall } from 'src/queries/firewalls';
-import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { queryKey as nodebalancersQueryKey } from 'src/queries/nodebalancers';
@@ -77,9 +76,6 @@ export const FirewallDialog = React.memo((props: Props) => {
         'firewalls',
       ]);
     });
-    if (mode === 'delete') {
-      queryClient.invalidateQueries([firewallQueryKey]);
-    }
     enqueueSnackbar(`Firewall ${label} successfully ${mode}d`, {
       variant: 'success',
     });

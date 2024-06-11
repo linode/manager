@@ -37,7 +37,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
   const isRestrictedUser = Boolean(profile?.restricted);
   const queryClient = useQueryClient();
 
-  const { data, error, isLoading } = useAllFirewallsQuery();
+  const { data, error, isLoading } = useAllFirewallsQuery(open);
 
   const firewall = data?.find((firewall) => firewall.id === Number(id));
 

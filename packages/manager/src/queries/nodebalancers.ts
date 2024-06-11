@@ -28,7 +28,6 @@ import {
 import { DateTime } from 'luxon';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
-import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAll } from 'src/utilities/getAll';
 
@@ -43,6 +42,7 @@ import type {
   PriceType,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
+import { firewallQueries } from './firewalls';
 
 export const queryKey = 'nodebalancers';
 
@@ -237,7 +237,7 @@ export const nodebalanacerEventHandler = ({
       'configs',
     ]);
   } else if (event.action.startsWith('nodebalancer_delete')) {
-    queryClient.invalidateQueries([firewallsQueryKey]);
+    queryClient.invalidateQueries({ queryKey: firewallQueries._def });
   } else {
     queryClient.invalidateQueries([queryKey, 'all']);
     queryClient.invalidateQueries([queryKey, 'paginated']);
