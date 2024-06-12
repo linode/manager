@@ -57,9 +57,6 @@ export const EnvironmentToggleTool = () => {
   return (
     <Grid container>
       <Grid xs={12}>
-        <h4 style={{ marginBottom: 8, marginTop: 0 }}>Environment</h4>
-      </Grid>
-      <Grid xs={12}>
         <select
           onBlur={(e) => {
             const selectedIndex = options.findIndex(
