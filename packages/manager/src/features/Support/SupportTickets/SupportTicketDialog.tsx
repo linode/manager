@@ -21,6 +21,7 @@ import {
   TICKET_SEVERITY_TOOLTIP_TEXT,
   TICKET_TYPE_MAP,
 } from './constants';
+import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
 import { SupportTicketSMTPFields } from './SupportTicketSMTPFields';
 import { severityLabelMap, useTicketSeverityCapability } from './ticketUtils';
 
@@ -30,7 +31,6 @@ import type { SMTPCustomFields } from './SupportTicketSMTPFields';
 import type { TicketSeverity } from '@linode/api-v4/lib/support';
 import type { Theme } from '@mui/material/styles';
 import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
-import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   expPanelSummary: {
