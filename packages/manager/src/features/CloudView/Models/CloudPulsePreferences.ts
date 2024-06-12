@@ -6,7 +6,7 @@ export interface AclpConfig {
   region: string;
   resources: string[];
   timeDuration: string;
-  widgets: AclpWidget[];
+  widgets: {[label: string] : AclpWidget} ;
 }
 
 export interface AclpWidget {

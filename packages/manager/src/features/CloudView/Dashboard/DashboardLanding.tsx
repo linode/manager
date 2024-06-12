@@ -7,22 +7,13 @@ import CloudViewIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
-import { FiltersObject } from '../Models/GlobalFilterProperties';
 import { GlobalFilters } from '../Overview/GlobalFilters';
+
 import {
-  DASHBOARD_ID,
-  INTERVAL,
-  REFRESH,
-  REGION,
-  RESOURCES,
-  TIME_DURATION,
-} from '../Utils/CloudPulseConstants';
-import {
-  fetchUserPrefObject,
   getUserPreference,
-  updateGlobalFilterPreference,
 } from '../Utils/UserPreference';
 import { CloudPulseDashboard } from './Dashboard';
+import { REFRESH, REGION, RESOURCES, TIME_DURATION } from '../Utils/CloudPulseConstants';
 
 const StyledPlaceholder = styled(Placeholder, {
   label: 'StyledPlaceholder',
@@ -31,95 +22,45 @@ const StyledPlaceholder = styled(Placeholder, {
 });
 
 export const DashBoardLanding = () => {
-  const generateStartTime = (modifier: string, nowInSeconds: number) => {
-    switch (modifier) {
-      case 'Past 30 Minutes':
-        return nowInSeconds - 30 * 60;
-      case 'Past 12 Hours':
-        return nowInSeconds - 12 * 60 * 60;
-      case 'Past 24 Hours':
-        return nowInSeconds - 24 * 60 * 60;
-      case 'Past 7 Days':
-        return nowInSeconds - 7 * 24 * 60 * 60;
-      default:
-        return nowInSeconds - 30 * 24 * 60 * 60;
-    }
-  };
 
+  // const [dashboardFilters, setDashboardFilters] = React.useState<FiltersObject>({} as FiltersObject);
+  // const dashboardRef = React.useRef({});
   const [timeDuration, setTimeDuration] = React.useState<TimeDuration>();
   const [region, setRegion] = React.useState<string>();
   const [resources, setResources] = React.useState<string[]>();
   const [timeStamp, setTimeStamp] = React.useState<number>();
-  const [serviceType, setServiceType] = React.useState<string>();
-  const [dashboard, selectedDashboard] = React.useState<Dashboard>();
-  const [preferences, setPreferences] = React.useState<any>();
+  // const [serviceType, setServiceType] = React.useState<string>();
+  const [dashboard, setDashboard] = React.useState<Dashboard>();
+  const [isPrefLoaded, setIsPrefLoaded] = React.useState<boolean>(false);
 
-  const handleGlobalFilterChange = (
-    globalFilter: FiltersObject,
-    changedFilter: string
+  const handleGlobalFilterChange = React.useCallback((
+    updatedData : any,
+    changedFilter : string
   ) => {
-    if (changedFilter === TIME_DURATION) {
-      setTimeDuration(globalFilter.duration);
-    }
-
-    if (changedFilter === REGION && region != globalFilter.region) {
-      setRegion(globalFilter.region);
-      setResources([]);
-    }
-
-    if (changedFilter === RESOURCES) {
-      setResources(globalFilter.resource);
-    }
-
-    if (changedFilter === REFRESH) {
-      setTimeStamp(globalFilter.timestamp);
-    }
-  };
-
-  const handleDashboardChange = (dashboard: Dashboard) => {
-    if (!dashboard) {
-      selectedDashboard(undefined);
-      updateGlobalFilterPreference({
-        [DASHBOARD_ID]: undefined,
-        [RESOURCES]: [],
-      });
-      return;
-    }
-
-    // update prefs if any
-    if (preferences && preferences.aclpPreference.widgets) {
-      for (let i = 0; i < dashboard.widgets.length; i++) {
-        for (let j = 0; j < preferences.aclpPreference.widgets.length; j++) {
-          if (
-            preferences.aclpPreference.widgets[j].label ==
-            dashboard.widgets[i].label
-          ) {
-            dashboard.widgets[i].size =
-              preferences.aclpPreference.widgets[j].size ??
-              dashboard.widgets[i].size;
-            dashboard.widgets[i].aggregate_function =
-              preferences.aclpPreference.widgets[j].aggregateFunction ??
-              dashboard.widgets[i].aggregate_function;
-            dashboard.widgets[i].time_granularity = preferences.aclpPreference
-              .widgets[j].time_granularity ?? {
-              ...dashboard.widgets[i].time_granularity,
-            };
-            break;
-          }
+      switch(changedFilter){
+        case REGION : {
+          setRegion(updatedData);
+          break;
+        }
+        case RESOURCES : {
+          setResources(updatedData);
+          break;
+        }
+        case TIME_DURATION : {
+          setTimeDuration(updatedData);
+          break
+        }
+        case REFRESH : {
+          setTimeStamp(updatedData);
+          break;
         }
       }
-    }
-    setServiceType(dashboard.service_type);
-    selectedDashboard(dashboard);
 
-    if (dashboard && dashboard.id) {
-      updateGlobalFilterPreference({
-        [DASHBOARD_ID]: dashboard.id,
-        [RESOURCES]: [],
-      });
-      setResources([]);
-    }
-  };
+  }, []);
+  const handleDashboardChange = React.useCallback((dashboard: Dashboard) => {    
+    setDashboard(dashboard);
+
+  }, []);
 
   const saveOrEditDashboard = (dashboard: Dashboard) => {
     // todo, implement save option
@@ -137,26 +78,23 @@ export const DashBoardLanding = () => {
     // todo, implement the reset view function
   };
 
-  const dashboardChange = (dashboardObj: Dashboard) => {
-    selectedDashboard(dashboardObj);
-  };
+  const dashboardChange = React.useCallback((dashboardObj: Dashboard) => {
+    setDashboard(dashboardObj);
+  }, []);
 
   // Fetch the data from preferences
   React.useEffect(() => {
     const fetchPreferences = async () => {
       const userPreference = await getUserPreference();
-      if (!userPreference || !userPreference.aclpPreference) {
-        setPreferences({ aclpPreference: {} });
-      } else {
-        setPreferences(userPreference);
-      }
+      setIsPrefLoaded(true);
     };
     fetchPreferences();
   }, []);
 
-  if (!preferences) {
+  if (!isPrefLoaded) {
     return <CircleProgress></CircleProgress>;
   }
+
 
   return (
     <>
@@ -164,26 +102,18 @@ export const DashBoardLanding = () => {
         <div style={{ display: 'flex' }}>
           <div style={{ width: '100%' }}>
             <GlobalFilters
-              handleAnyFilterChange={(
-                filters: FiltersObject,
-                changedFilter: string
-              ) => handleGlobalFilterChange(filters, changedFilter)}
-              handleDashboardChange={(dashboardObj: Dashboard) =>
-                handleDashboardChange(dashboardObj)
-              }
-              filterPreferences={preferences.aclpPreference}
-              globalFilters={{} as FiltersObject}
-              region={region}
-              serviceType={serviceType}
+              handleAnyFilterChange={handleGlobalFilterChange}
+              handleDashboardChange={handleDashboardChange}
             ></GlobalFilters>
           </div>
         </div>
       </Paper>
-      {dashboard &&
-        region &&
-        resources &&
-        resources.length > 0 &&
-        timeDuration && (
+      {
+      dashboard &&
+      region &&
+      resources &&
+      resources.length > 0 &&
+      timeDuration && (
           <CloudPulseDashboard
             dashboardId={dashboard.id}
             duration={timeDuration}
@@ -191,7 +121,7 @@ export const DashBoardLanding = () => {
             onDashboardChange={dashboardChange}
             region={region}
             resources={resources}
-            widgetPreferences={fetchUserPrefObject().widgets}
+            // widgetPreferences={fetchUserPrefObject().widgets}
           />
         )}
 
@@ -200,14 +130,14 @@ export const DashBoardLanding = () => {
         !resources ||
         resources.length == 0 ||
         !timeDuration) && (
-        <Paper>
-          <StyledPlaceholder
-            icon={CloudViewIcon}
-            subtitle="Select Service Type, Region and Resource to visualize metrics"
-            title=""
-          />
-        </Paper>
-      )}
+          <Paper>
+            <StyledPlaceholder
+              icon={CloudViewIcon}
+              subtitle="Select Service Type, Region and Resource to visualize metrics"
+              title=""
+            />
+          </Paper>
+        )}
     </>
   );
 };

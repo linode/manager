@@ -7,12 +7,11 @@ import { Box } from 'src/components/Box';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Typography } from 'src/components/Typography';
 import { useCloudViewDashboardsQuery } from 'src/queries/cloudview/dashboards';
-
+import { fetchUserPrefObject, updateGlobalFilterPreference } from '../Utils/UserPreference'
+import { DASHBOARD_ID, REGION, RESOURCES } from '../Utils/CloudPulseConstants';
 export interface CloudViewDashbboardSelectProps {
-  defaultValue?: number;
   handleDashboardChange: (
-    dashboard: Dashboard | undefined,
-    isClear: boolean
+    dashboard: Dashboard | undefined
   ) => void;
 }
 
@@ -24,20 +23,8 @@ export const CloudViewDashboardSelect = React.memo(
       isLoading,
     } = useCloudViewDashboardsQuery();
 
-    const [defaultSet, setDefaultSet] = React.useState<boolean>(
-      props.defaultValue ? false : true
-    );
 
     const errorText: string = error ? 'Error loading dashboards' : '';
-
-    const [selectedDashboard, setDashboard] = React.useState<
-      Dashboard | undefined
-    >();
-
-    React.useEffect(() => {
-      props.handleDashboardChange(selectedDashboard, !defaultSet);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedDashboard]);
 
     // sorts dashboards by service type. Required due to unexpected autocomplete grouping behaviour
     const getSortedDashboardsList = (options: Dashboard[]) => {
@@ -47,21 +34,19 @@ export const CloudViewDashboardSelect = React.memo(
     };
 
     const getPrefferedBoard = () => {
+      const defaultValue = fetchUserPrefObject()?.dashboardId
       if (
-        !selectedDashboard &&
-        dashboardsList?.data &&
-        props.defaultValue &&
-        !defaultSet
+        defaultValue
       ) {
         const match = dashboardsList?.data.find(
-          (obj) => obj.id == props.defaultValue
+          (obj) => obj.id == defaultValue
         );
-        setDashboard(match);
-        setDefaultSet(true);
+        props.handleDashboardChange(match);
         return match;
       }
 
-      return selectedDashboard;
+      props.handleDashboardChange(undefined);
+      return undefined;
     };
 
     if (!dashboardsList) {
@@ -79,8 +64,12 @@ export const CloudViewDashboardSelect = React.memo(
     return (
       <Autocomplete
         onChange={(_: any, dashboard: Dashboard) => {
-          setDashboard(dashboard);
-          //   props.handleDashboardChange(dashboard);
+          updateGlobalFilterPreference({
+            [DASHBOARD_ID]: dashboard?.id,
+            [REGION]: null,
+            [RESOURCES]: [],
+          });
+          props.handleDashboardChange(dashboard);
         }}
         options={
           !dashboardsList ? [] : getSortedDashboardsList(dashboardsList.data)
@@ -97,8 +86,6 @@ export const CloudViewDashboardSelect = React.memo(
           </Box>
         )}
         autoHighlight
-        // defaultValue={selectedDashboard}
-
         clearOnBlur
         data-testid="cloudview-dashboard-select"
         defaultValue={getPrefferedBoard()}

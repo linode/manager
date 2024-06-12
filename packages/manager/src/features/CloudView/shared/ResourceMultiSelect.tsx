@@ -6,11 +6,13 @@ import {
   useLinodeResourcesQuery,
   useLoadBalancerResourcesQuery,
 } from 'src/queries/cloudview/resources';
+import { fetchUserPrefObject, updateGlobalFilterPreference } from '../Utils/UserPreference';
+import { RESOURCES } from '../Utils/CloudPulseConstants';
 
 interface CloudViewResourceSelectProps {
-  defaultValue?: any[];
+  // defaultValue?: any[];
   disabled: boolean;
-  handleResourceChange: (resource: any, reason: string) => void;
+  handleResourceChange: (resource: any) => void;
   region: string | undefined;
   resourceType: string | undefined;
 }
@@ -20,7 +22,7 @@ export const CloudViewMultiResourceSelect = (
 ) => {
   const resourceOptions: any = {};
   const [selectedResource, setResource] = React.useState<any>([]);
-  const defaultCalls = React.useRef(false);
+  // const defaultCalls = React.useRef(false);
   const filterResourcesByRegion = (resourcesList: any[]) => {
     return resourcesList?.filter((resource: any) => {
       if (props.region == undefined) {
@@ -35,7 +37,6 @@ export const CloudViewMultiResourceSelect = (
       }
     });
   };
-
   const getResourceList = () => {
     return props.resourceType && resourceOptions[props.resourceType]
       ? filterResourcesByRegion(resourceOptions[props.resourceType]?.data)
@@ -49,32 +50,48 @@ export const CloudViewMultiResourceSelect = (
     props.resourceType === 'aclb'
   ));
 
-  const getSelectedResources = () => {
-    const selectedResourceObj = getResourceList().filter(
-      (obj) => props.defaultValue && props.defaultValue?.includes(obj.id)
-    );
 
-    defaultCalls.current = true;
-    setResource(selectedResourceObj);
-    props.handleResourceChange(selectedResourceObj, 'default');
+  const getSelectedResources = () => {
+    const defaultValue = fetchUserPrefObject()?.resources;
+    const selectedResourceObj = getResourceList().filter(
+      (obj) => defaultValue && defaultValue?.includes(obj.id)
+    );
+    // defaultCalls.current = true;
+    // setResource(selectedResourceObj);
+    props.handleResourceChange(selectedResourceObj);
+    return selectedResourceObj
   };
 
-  React.useEffect(() => {
-    setResource([]);
-  }, [props.region, props.resourceType]);
+  // React.useEffect(() => {
+  //   setResource([]);
+  // }, [props.region, props.resourceType]);
 
-  React.useEffect(() => {
-    if (!defaultCalls.current && resourceOptions[props.resourceType!]) {
-      getSelectedResources();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resourceOptions]);
+  // React.useEffect(() => {
+  //   if (!defaultCalls.current && resourceOptions[props.resourceType!]) {
+  //     getSelectedResources();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [resourceOptions]);
 
+  // if (!props.region || !props.resourceType || !resourceOptions[props.resourceType]) {
+  //   return (
+  //     <Select
+  //       disabled={true}
+  //       isClearable={true}
+  //       // eslint-disable-next-line @typescript-eslint/no-empty-function
+  //       onChange={() => { }}
+  //       placeholder="Select Resources"
+  //     />
+  //   );
+  // }
   return (
     <Autocomplete
       onChange={(_: any, resource: any, reason) => {
+        updateGlobalFilterPreference({
+          [RESOURCES]: resource.map((obj) => obj.id) ?? [],
+        });
         setResource(resource);
-        props.handleResourceChange(resource, reason);
+        props.handleResourceChange(resource);
       }}
       autoHighlight
       clearOnBlur
@@ -87,7 +104,7 @@ export const CloudViewMultiResourceSelect = (
       multiple
       options={getResourceList()}
       placeholder="Select a resource"
-      value={selectedResource ? selectedResource : []}
+      value={getSelectedResources()}
     />
   );
 };

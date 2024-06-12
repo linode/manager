@@ -26,6 +26,7 @@ import {
   CloudViewWidget,
   CloudViewWidgetProperties,
 } from '../Widget/CloudViewWidget';
+import { fetchUserPrefObject } from '../Utils/UserPreference';
 
 export interface DashboardProperties {
   dashboardId: number; // need to pass the dashboardId
@@ -36,7 +37,7 @@ export interface DashboardProperties {
   onDashboardChange?: (dashboard: Dashboard) => void;
   region?: string;
   resources: string[];
-  widgetPreferences?: AclpWidget[]; // this is optional
+  // widgetPreferences?: AclpWidget[]; // this is optional
 }
 
 export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
@@ -124,26 +125,22 @@ export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
   };
 
   const setPrefferedWidgetPlan = (widgetObj: Widgets) => {
-    if (props.widgetPreferences && props.widgetPreferences.length > 0) {
-      for (const pref of props.widgetPreferences) {
-        if (pref.label == widgetObj.label) {
-          widgetObj.size = pref.size;
-          widgetObj.aggregate_function = pref.aggregateFunction;
-          // interval from pref
-          widgetObj.time_granularity = { ...pref.time_granularity };
+    const widgetPreferences = fetchUserPrefObject().widgets;
+    if (widgetPreferences && widgetPreferences[widgetObj.label]) {
+      const pref = widgetPreferences[widgetObj.label];
+      widgetObj.size = pref.size;
+      widgetObj.aggregate_function = pref.aggregateFunction;
+      // interval from pref
+      widgetObj.time_granularity = { ...pref.time_granularity };
 
-          // update ref
-          dashboardRef.current?.widgets.forEach((obj) => {
-            if (obj.label == widgetObj.label) {
-              obj.size = widgetObj.size;
-              obj.aggregate_function = widgetObj.aggregate_function;
-              obj.time_granularity = { ...widgetObj.time_granularity };
-            }
-          });
-
-          break;
+      // update ref
+      dashboardRef.current?.widgets.forEach((obj) => {
+        if (obj.label == widgetObj.label) {
+          obj.size = widgetObj.size;
+          obj.aggregate_function = widgetObj.aggregate_function;
+          obj.time_granularity = { ...widgetObj.time_granularity };
         }
-      }
+      });
     }
   };
 
@@ -230,18 +227,18 @@ export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
       <RenderWidgets />;
     </>
   );
-}, compareProps);
+});
 
-function compareProps(
-  prevProps: DashboardProperties,
-  newProps: DashboardProperties
-) {
-  // this component should re-render only if the following properties changes
-  return (
-    prevProps.dashboardId == newProps.dashboardId &&
-    prevProps.duration == newProps.duration &&
-    prevProps.region == newProps.region &&
-    prevProps.resources == newProps.resources &&
-    prevProps.manualRefreshTimeStamp == newProps.manualRefreshTimeStamp
-  );
-}
+// function compareProps(
+//   prevProps: DashboardProperties,
+//   newProps: DashboardProperties
+// ) {
+//   // this component should re-render only if the following properties changes
+//   return (
+//     prevProps.dashboardId == newProps.dashboardId &&
+//     prevProps.duration == newProps.duration &&
+//     prevProps.region == newProps.region &&
+//     prevProps.resources == newProps.resources &&
+//     prevProps.manualRefreshTimeStamp == newProps.manualRefreshTimeStamp
+//   );
+// }

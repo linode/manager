@@ -5,11 +5,12 @@ import { AclpConfig, AclpWidget } from '../Models/CloudPulsePreferences';
 let userPreference: AclpConfig;
 
 export const getUserPreference = async () => {
-  if (userPreference) {
-    return { aclpPreference: { ...userPreference } };
-  }
   const data = await fetchUserPreference();
-  userPreference = { ...data.aclpPreference };
+  if(!data || !data.aclpPreference){
+    userPreference = {} as AclpConfig
+  }else{
+    userPreference = { ...data.aclpPreference };
+  }
   return data;
 };
 
@@ -38,29 +39,16 @@ export const updateWidgetPreference = (label: string, data: {}) => {
   if (!userPreference) {
     userPreference = {} as AclpConfig;
   }
-  console.log(label, data);
-  let widget = userPreference.widgets?.find((w) => {
-    return w.label === label;
-  });
-  if (!widget) {
-    widget = {
-      label,
-      ...data,
-    } as AclpWidget;
-    if (!userPreference.widgets) {
-      userPreference.widgets = [];
-    }
-    userPreference.widgets.push(widget);
-  } else {
-    widget = { ...widget, ...data };
-    userPreference.widgets = userPreference.widgets?.map((w) => {
-      if (w.label === label) {
-        return widget;
-      } else {
-        return w;
-      }
-    });
+  let widgets = userPreference.widgets;
+  if(!widgets) {
+    widgets = {}
+    userPreference.widgets = widgets;
   }
 
+  if(widgets[label]){
+    widgets[label] = {...widgets[label], ...data};
+  }else{
+    widgets[label] = {label: label, ...data} as AclpWidget;
+  }
   updateUserPreference(userPreference);
 };

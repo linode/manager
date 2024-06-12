@@ -14,16 +14,20 @@ import { CloudViewDashboardSelect } from '../shared/DashboardSelect';
 import { CloudViewRegionSelect } from '../shared/RegionSelect';
 import { CloudViewMultiResourceSelect } from '../shared/ResourceMultiSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/TimeRangeSelect';
-import { REGION, RESOURCES, TIME_DURATION } from '../Utils/CloudPulseConstants';
+import { REFRESH, REGION, RESOURCES, TIME_DURATION } from '../Utils/CloudPulseConstants';
 import { updateGlobalFilterPreference } from '../Utils/UserPreference';
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const emitGlobalFilterChange = (
-    updatedFilters: FiltersObject,
+    updatedData: any,
     changedFilter: string
   ) => {
-    props.handleAnyFilterChange(updatedFilters, changedFilter);
+    props.handleAnyFilterChange(updatedData, changedFilter);
   };
+
+  const [selectedDashboard, setSelectedDashboard] = React.useState<Dashboard | undefined>();
+
+  const [selectedRegion, setSelectedRegion] = React.useState<string | undefined>();
 
   const handleTimeRangeChange = React.useCallback(
     (
@@ -33,11 +37,11 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       timeRangeLabel?: string
     ) => {
       if (start > 0 && end > 0) {
-        const filterObj = { ...props.globalFilters };
+        const filterObj = {} as FiltersObject;
         filterObj.timeRange = { end, start };
         filterObj.duration = timeDuration;
         filterObj.durationLabel = timeRangeLabel!;
-        emitGlobalFilterChange(filterObj, TIME_DURATION);
+        emitGlobalFilterChange(filterObj.duration, TIME_DURATION);
         updateGlobalFilterPreference({
           [TIME_DURATION]: filterObj.durationLabel,
         });
@@ -47,96 +51,68 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   );
 
   const handleRegionChange = React.useCallback((region: string | undefined) => {
-    if (region) {
-      emitGlobalFilterChange({ ...props.globalFilters, region }, REGION);
-      updateGlobalFilterPreference({ [REGION]: region, [RESOURCES]: [] });
+    if (region && region === selectedRegion) {
+      return;
     }
+    setSelectedRegion(region);
+    emitGlobalFilterChange(region, REGION);
   }, []);
 
   const handleResourceChange = React.useCallback(
-    (resourceId: any[], reason: string) => {
-      if (
-        (resourceId && resourceId.length > 0) ||
-        reason == 'clear' ||
-        reason === 'removeOption'
-      ) {
-        updateGlobalFilterPreference({
-          [RESOURCES]: resourceId.map((obj) => obj.id),
-        });
-        emitGlobalFilterChange(
-          {
-            ...props.globalFilters,
-            resource: resourceId.map((obj) => obj.id),
-          },
-          RESOURCES
-        );
-      }
+    (resourceId: any[]) => {
+      emitGlobalFilterChange(
+        resourceId?.map((obj) => obj.id) ?? [],
+        RESOURCES
+      );
     },
     []
   );
 
   const handleDashboardChange = React.useCallback(
-    (dashboard: Dashboard | undefined, isClear: boolean) => {
-      if (dashboard || (!dashboard && !isClear)) {
-        props.handleDashboardChange(dashboard!);
+    (dashboard: Dashboard | undefined) => {
+      if (dashboard && selectedDashboard?.id === dashboard.id) {
+        return;
       }
+      setSelectedDashboard(dashboard);
+
+      props.handleDashboardChange(dashboard);
     },
     []
   );
 
   const handleGlobalRefresh = React.useCallback(() => {
     emitGlobalFilterChange(
-      {
-        ...props.globalFilters,
-        timestamp: Date.now(),
-      },
-      'refresh'
+      Date.now(),
+      REFRESH
     );
   }, []);
-
   return (
     <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
       <StyledGrid xs={12}>
         <Grid sx={{ width: 300 }}>
           <CloudViewDashboardSelect
-            defaultValue={
-              props.filterPreferences && props.filterPreferences.dashboardId
-                ? props.filterPreferences.dashboardId
-                : undefined
-            }
+
             handleDashboardChange={handleDashboardChange}
           />
         </Grid>
         <Grid sx={{ marginLeft: 4, width: 200 }}>
           <StyledCloudViewRegionSelect
-            defaultValue={
-              props.filterPreferences
-                ? props.filterPreferences.region
-                : undefined
-            }
+
             handleRegionChange={handleRegionChange}
+            selectedDashboard={selectedDashboard}
           />
         </Grid>
         <Grid sx={{ marginLeft: 4, width: 450 }}>
           <StyledCloudViewResourceSelect
-            defaultValue={
-              props.filterPreferences && props.filterPreferences.resources
-                ? props.filterPreferences.resources
-                : []
-            }
-            disabled={!props.region || !props.serviceType}
+
+            disabled={!selectedRegion || !selectedDashboard?.service_type}
             handleResourceChange={handleResourceChange}
-            region={props.region}
-            resourceType={props.serviceType}
+            region={selectedRegion}
+            resourceType={selectedDashboard?.service_type}
           />
         </Grid>
         <Grid sx={{ marginLeft: 3, width: 250 }}>
           <StyledCloudViewTimeRangeSelect
-            defaultValue={
-              props.filterPreferences && props.filterPreferences.timeDuration
-                ? props.filterPreferences.timeDuration
-                : 'Past 30 Minutes'
-            }
             handleStatsChange={handleTimeRangeChange}
             hideLabel
             label="Select Time Range"
