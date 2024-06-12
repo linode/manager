@@ -10,6 +10,75 @@
   left: 0;
   z-index: 1;
   color: white;
+  font-size: 11pt;
+}
+
+.dev-tools hr {
+  border: none;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.25);
+  margin-top: 12px;
+  margin-bottom: 16px;
+}
+
+.dev-tools__body button {
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 1000px;
+  color: white;
+  padding: 6px 18px;
+  font-weight: bold;
+  font-size: 10.5pt;
+}
+
+.dev-tools__body button:disabled,
+.dev-tools__body button:disabled:active {
+  background-color: rgb(150, 150, 150);
+  border-color: white;
+  color: black;
+  text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.5);
+  cursor: not-allowed;
+}
+
+.dev-tools__segmented-button button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.dev-tools__segmented-button button:first-child {
+  border-top-left-radius: 1000px;
+  border-bottom-left-radius: 1000px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-left: 2px solid rgba(255, 255, 255, 0.5);
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
+  padding-left: 24px;
+}
+
+.dev-tools__segmented-button button:last-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 1000px;
+  border-bottom-right-radius: 1000px;
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
+  border-right: 2px solid rgba(255, 255, 255, 0.5);
+  padding-right: 24px;
+}
+
+.dev-tools__button-list {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  justify-content: end;
+}
+
+.dev-tools__body button:active {
+  background: rgb(50, 50, 50);
+  border-color: rgba(255, 255, 255, 0.65);
 }
 
 .dev-tools__toggle {
@@ -42,7 +111,6 @@
   content: '';
   width: 8px;
   height: 8px;
-  /*background-color: white;*/
   border-right: 2px solid white;
   border-top: 2px solid white;
   display: inline-block;
@@ -87,23 +155,148 @@
   padding: 12px 12px;
   display: flex;
   flex-direction: column;
+  gap: 12px;
   width: 100%;
   height: 100%;
 }
 
 .dev-tools__status-bar {
-  border: 1px solid green;
+/*  border: 1px solid green;*/
   flex-basis: 0;
   flex-grow: 0;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
 }
 
 .dev-tools__main {
-  border: 1px solid red;
+/*  border: 1px solid red;*/
+  display: flex;
   flex-basis: 0;
   flex-grow: 1;
   flex-shrink: 1;
   overflow: auto;
+  gap: 24px;
+}
+
+.dev-tools__main__column {
+  flex-basis: 1;
+  flex-grow: 1;
+}
+
+.dev-tools__tool {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  gap: 12px;
+}
+
+.dev-tools__tool__header {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 0;
+}
+
+.dev-tools__tool__header span {
+  font-size: 13pt;
+  font-weight: bold;
+}
+
+.dev-tools__tool__body {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+  overflow: auto;
+}
+
+.dev-tools__tool__footer {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 0;
+}
+
+.dev-tools__list-box,
+.dev-tools__scroll-box {
+  padding: 4px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0px 5px 9px 0px rgba(0,0,0,0.35);
+  height: 100%;
+  overflow: auto;
+}
+
+.dev-tools__list-box ul {
+  padding-left: 0;
+  margin: 0;
+  height: 100%;
+}
+
+.dev-tools__list-box li {
+  padding-top: 3px;
+  padding-bottom: 4px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.dev-tools__list-box li:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  margin-left: -4px;
+  margin-right: -4px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.dev-tools__msw {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dev-tools__msw__presets {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.dev-tools__msw__extras {
+  display: flex;
+  flex-grow: 1;
+  gap: 12px;
+}
+
+.dev-tools__msw__column {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dev-tools__msw__column__heading {
+  flex-basis: 0;
+  flex-grow: 0;
+  flex-shrink: 0;
+  font-weight: bold;
+}
+
+.dev-tools__msw__column__body {
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+
+
+.dev-tools__msw__content {
+
+}
+
+.dev-tools__msw__handlers {
+
 }
 
 /*#dev-tools {

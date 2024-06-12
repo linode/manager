@@ -10,7 +10,8 @@ import { ApplicationStore } from 'src/store';
 import './dev-tools.css';
 import { EnvironmentToggleTool } from './EnvironmentToggleTool';
 import { FeatureFlagTool } from './FeatureFlagTool';
-// import { MockDataTool } from './MockDataTool';
+import { ServiceWorkerTool } from './ServiceWorkerTool';
+//import { MockDataTool } from './MockDataTool';
 // import { Preferences } from './Preferences';
 import { isMSWEnabled } from './ServiceWorkerTool';
 // import { ThemeSelector } from './ThemeSelector';
@@ -33,10 +34,29 @@ function install(store: ApplicationStore) {
         <div className="dev-tools__body">
           <div className="dev-tools__content">
             <div className="dev-tools__status-bar">
-              <EnvironmentToggleTool />
+              <div>
+                <EnvironmentToggleTool />
+              </div>
+              <div className="dev-tools__segmented-button">
+                <button>React Query</button>
+                <button
+                  onClick={() =>
+                    window.location.assign(
+                      '/profile/settings?preferenceEditor=true'
+                    )
+                  }
+                >
+                  Preferences
+                </button>
+              </div>
             </div>
             <div className="dev-tools__main">
-              <FeatureFlagTool />
+              <div className="dev-tools__main__column">
+                <FeatureFlagTool />
+              </div>
+              <div className="dev-tools__main__column">
+                <ServiceWorkerTool />
+              </div>
             </div>
           </div>
         </div>

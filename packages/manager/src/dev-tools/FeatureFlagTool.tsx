@@ -1,4 +1,3 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { useFlags as ldUseFlags } from 'launchdarkly-react-client-sdk';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
@@ -18,8 +17,12 @@ const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
  * It is required to have the `enabled` key if using a JSON object for on/off featured flags.
  * This requirement is both documented here and in our Docs since we don't have a way to enforce types from Launch Darkly objects.
  */
-const options: { flag: keyof Flags; label: string }[] = [
-  { flag: 'aclp', label: 'CloudPulse' },
+const options: { desc?: string; flag: keyof Flags; label: string }[] = [
+  {
+    desc: 'Enable CloudPulse monitoring feature',
+    flag: 'aclp',
+    label: 'CloudPulse',
+  },
   { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
   { flag: 'eventMessagesV2', label: 'Event Messages V2' },
@@ -35,6 +38,33 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'dbaasV2', label: 'Databases V2 Beta' },
   { flag: 'databaseResize', label: 'Database Resize' },
 ];
+
+const renderFlagItems = (
+  flags: Partial<Flags>,
+  onCheck: (e: React.ChangeEvent, flag: string) => void
+) => {
+  return options.map((option) => {
+    const flagValue = flags[option.flag];
+    const isChecked =
+      typeof flagValue === 'object' && 'enabled' in flagValue
+        ? Boolean(flagValue.enabled)
+        : Boolean(flagValue);
+
+    return (
+      <li key={option.flag}>
+        <input
+          style={{
+            marginRight: '12px',
+          }}
+          checked={isChecked}
+          onChange={(e) => onCheck(e, option.flag)}
+          type="checkbox"
+        />
+        <span title={option.desc || option.label}>{option.label}</span>
+      </li>
+    );
+  });
+};
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {
   const dispatch: Dispatch = useDispatch();
@@ -74,42 +104,58 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
   };
 
   return (
-    <Grid container>
-      <Grid xs={12}>
-        <h4 style={{ marginBottom: 8, marginTop: 0 }}>Feature Flags</h4>
-      </Grid>
-      <Grid xs={12}>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {options.map((thisOption) => {
-            const flagValue = flags[thisOption.flag];
-            const isChecked =
-              typeof flagValue === 'object' && 'enabled' in flagValue
-                ? Boolean(flagValue.enabled)
-                : Boolean(flagValue);
-            return (
-              <div
-                style={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-                key={thisOption.flag}
-              >
-                <span>{thisOption.label} </span>
-                <input
-                  checked={isChecked}
-                  onChange={(e) => handleCheck(e, thisOption.flag)}
-                  type="checkbox"
-                />
-              </div>
-            );
-          })}
-          <button onClick={resetFlags} style={{ marginTop: 8 }}>
-            Reset to LD default flags
-          </button>
+    <div className="dev-tools__tool">
+      <div className="dev-tools__tool__header">
+        <span title="Enable and disable Cloud Manager feature flags">
+          Feature Flags
+        </span>
+      </div>
+      <div className="dev-tools__tool__body">
+        <div className="dev-tools__list-box">
+          <ul>{renderFlagItems(flags, handleCheck)}</ul>
         </div>
-      </Grid>
-    </Grid>
+      </div>
+      <div className="dev-tools__tool__footer">
+        <div className="dev-tools__button-list">
+          <button onClick={resetFlags}>Reset to Default</button>
+        </div>
+      </div>
+    </div>
+    //    <Grid xs={12}>
+    // //     <h4 style={{ marginBottom: 8, marginTop: 0 }}>Feature Flags</h4>
+    // //   </Grid>
+    //   <Grid xs={12}>
+    //     <div style={{ display: 'flex', flexDirection: 'column' }}>
+    //       {options.map((thisOption) => {
+    //         const flagValue = flags[thisOption.flag];
+    //         const isChecked =
+    //           typeof flagValue === 'object' && 'enabled' in flagValue
+    //             ? Boolean(flagValue.enabled)
+    //             : Boolean(flagValue);
+    //         return (
+    //           <div
+    //             style={{
+    //               alignItems: 'center',
+    //               display: 'flex',
+    //               flexDirection: 'row',
+    //               justifyContent: 'space-between',
+    //             }}
+    //             key={thisOption.flag}
+    //           >
+    //             <span>{thisOption.label} </span>
+    //             <input
+    //               checked={isChecked}
+    //               onChange={(e) => handleCheck(e, thisOption.flag)}
+    //               type="checkbox"
+    //             />
+    //           </div>
+    //         );
+    //       })}
+    //       <button onClick={resetFlags} style={{ marginTop: 8 }}>
+    //         Reset to LD default flags
+    //       </button>
+    //     </div>
+    //   </Grid>
+    // </Grid>
   );
 });

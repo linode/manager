@@ -3,7 +3,7 @@ import { getMockPresetGroups } from 'src/mocks/mockPreset';
 import {
   baselineMockPresets,
   defaultBaselineMockPreset,
-  extraMockPresets,
+  // extraMockPresets,
 } from 'src/mocks/presets';
 
 const LOCAL_STORAGE_KEY = 'msw';
@@ -101,22 +101,22 @@ const renderBaselinePresetOptions = () =>
 //   return <option value={mockPreset.id}>{mockPreset.label}</option>;
 // });
 
-const renderExtraPresetOptions = () => {
-  return (
-    <div>
-      <form>
-        {extraMockPresets.map((extraMockPreset) => {
-          return (
-            <div key={extraMockPreset.id}>
-              <input type="checkbox" />
-              {extraMockPreset.label}
-            </div>
-          );
-        })}
-      </form>
-    </div>
-  );
-};
+// const renderExtraPresetOptions = () => {
+//   return (
+//     <div>
+//       <form>
+//         {extraMockPresets.map((extraMockPreset) => {
+//           return (
+//             <div key={extraMockPreset.id}>
+//               <input type="checkbox" />
+//               {extraMockPreset.label}
+//             </div>
+//           );
+//         })}
+//       </form>
+//     </div>
+//   );
+// };
 
 export const ServiceWorkerTool = () => {
   const [MSWPreset, setMSWPreset] = React.useState<string | null>(null);
@@ -132,31 +132,55 @@ export const ServiceWorkerTool = () => {
   }, [MSWPreset]);
 
   return (
-    <>
-      <input
-        checked={isMSWEnabled}
-        onChange={(e) => setMSWEnabled(e.target.checked)}
-        style={{ margin: 0 }}
-        type="checkbox"
-      />
-      <span style={{ marginLeft: 8 }}>
-        <span style={{ color: isMSWEnabled ? '#aaff00' : 'white' }}>
-          {isMSWEnabled ? 'Enabled' : 'Disabled'}
-        </span>
-      </span>
-      <hr />
-      <div style={{ marginBottom: 8 }}>
-        <span style={{ display: 'block' }}>Preset</span>
-        <select
-          value={MSWPreset || undefined}
-          onChange={(e) => setMSWPreset(e.target.value)}
-        >
-          {renderBaselinePresetOptions()}
-        </select>
+    <div className="dev-tools__tool">
+      <div className="dev-tools__tool__header">
+        <span title="Configure API mocking rules">API Mocks</span>
       </div>
-
-      <span style={{ display: 'block' }}>Extra Handlers</span>
-      {renderExtraPresetOptions()}
-    </>
+      <div className="dev-tools__tool__body dev-tools__msw">
+        <div className="dev-tools__msw__presets">
+          <div>
+            <input
+              checked={isMSWEnabled}
+              onChange={(e) => setMSWEnabled(e.target.checked)}
+              style={{ margin: 0 }}
+              type="checkbox"
+            />
+            <span style={{ marginLeft: 8 }}>
+              <span>Enable MSW</span>
+            </span>
+          </div>
+          <div>
+            <span style={{ marginRight: 8 }}>Base Preset</span>
+            <select
+              value={MSWPreset || undefined}
+              onChange={(e) => setMSWPreset(e.target.value)}
+            >
+              {renderBaselinePresetOptions()}
+            </select>
+          </div>
+        </div>
+        <div className="dev-tools__msw__extras">
+          <div className="dev-tools__msw__column">
+            <div className="dev-tools__msw__column__heading">Content</div>
+            <div className="dev-tools__msw__column__body">
+              <div className="dev-tools__list-box"></div>
+            </div>
+          </div>
+          <div className="dev-tools__msw__column">
+            <div className="dev-tools__msw__column__heading">Handlers</div>
+            <div className="dev-tools__msw__column__body">
+              <div className="dev-tools__list-box"></div>
+            </div>
+          </div>
+        </div>
+        {/*{renderExtraPresetOptions()}*/}
+      </div>
+      <div className="dev-tools__tool__footer">
+        <div className="dev-tools__button-list">
+          <button disabled>Discard Changes</button>
+          <button disabled>Apply</button>
+        </div>
+      </div>
+    </div>
   );
 };
