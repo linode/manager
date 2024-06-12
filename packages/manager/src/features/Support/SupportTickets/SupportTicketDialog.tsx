@@ -245,21 +245,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     }
   };
 
-  /**
-   * When variant ticketTypes include additional fields, fields must concat to one description string.
-   * For readability, replace field names with field labels and format the description in Markdown.
-   */
-  // const formatDescription = (fields: Record<string, string>) => {
-  //   return Object.entries(fields)
-  //     .map(
-  //       ([key, value]) =>
-  //         `**${SMTP_FIELD_NAME_TO_LABEL_MAP[key]}**\n${
-  //           value ? value : 'No response'
-  //         }`
-  //     )
-  //     .join('\n\n');
-  // };
-
   const close = () => {
     props.onClose();
     if (ticketType === 'smtp') {
@@ -272,11 +257,10 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     window.setTimeout(() => resetDrawer(true), 500);
   };
 
-  const onSubmit = form.handleSubmit(async () => {
+  const onSubmit = form.handleSubmit(async (values) => {
     // console.log(form.getValues());
     // const { onSuccess } = props;
-    const _description = description;
-    // ticketType === 'smtp' ? formatDescription() : description;
+    const _description = formatDescription(values, ticketType);
 
     if (!['general', 'none'].includes(entityType) && !entityId) {
       form.setError('entityId', {
