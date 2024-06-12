@@ -28,6 +28,10 @@ const defaultProps: PlansPanelProps = {
       ...planSelectionTypeFactory.build(),
       class: 'gpu',
     },
+    {
+      ...planSelectionTypeFactory.build(),
+      class: 'premium',
+    },
   ],
 };
 

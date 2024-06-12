@@ -86,9 +86,14 @@ export const PlansPanel = (props: PlansPanelProps) => {
     Boolean(flags.soldOutChips) && selectedRegionID !== undefined
   );
 
-  const _types = replaceOrAppendPlaceholder512GbPlans(types);
+  const _types = types.filter(
+    (type) =>
+      !type.id.includes('dedicated-edge') && !type.id.includes('nanode-edge')
+  );
   const _plans = getPlanSelectionsByPlanType(
-    flags.disableLargestGbPlans ? _types : types
+    flags.disableLargestGbPlans
+      ? replaceOrAppendPlaceholder512GbPlans(_types)
+      : _types
   );
 
   const hideDistributedRegions =
