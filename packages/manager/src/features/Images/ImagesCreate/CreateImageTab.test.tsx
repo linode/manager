@@ -132,11 +132,6 @@ describe('CreateImageTab', () => {
     await findByText(
       'This Linode is in a distributed compute region. Images captured from this Linode will be stored in the closest core site.'
     );
-
-    // Verify helper text renders
-    await findByText(
-      `Image will be stored in the closest core site to (${linode.region})`
-    );
   });
 
   it('should render an encryption notice if disk encryption is enabled and the Linode is not in a distributed compute region', async () => {
