@@ -86,7 +86,7 @@ describe('volume create flow', () => {
       regionLabel: region.label,
     };
 
-    cy.defer(createTestLinode(linodeRequest), 'creating Linode').then(
+    cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
       (linode) => {
         interceptCreateVolume().as('createVolume');
 
@@ -151,7 +151,7 @@ describe('volume create flow', () => {
       booted: false,
     });
 
-    cy.defer(createTestLinode(linodeRequest), 'creating Linode').then(
+    cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
       (linode: Linode) => {
         const volume = {
           label: randomLabel(),
