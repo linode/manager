@@ -22,7 +22,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
 
-import { profileQueries } from './profile';
+import { profileQueries } from './profile/profile';
 
 export const getAllImages = (
   passedParams: Params = {},
@@ -83,7 +83,7 @@ export const useUpdateImageMutation = () => {
     { description?: string; imageId: string; label?: string; tags?: string[] }
   >({
     mutationFn: ({ description, imageId, label, tags }) =>
-      updateImage(imageId, label, description, tags),
+      updateImage(imageId, { description, label, tags }),
     onSuccess(image) {
       queryClient.invalidateQueries(imageQueries.paginated._def);
       queryClient.setQueryData<Image>(

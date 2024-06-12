@@ -15,13 +15,12 @@ describe('RegionSelect', () => {
     currentCapability: 'Linodes',
     disabled: false,
     errorText: '',
-    handleSelection: vi.fn(),
+    onChange: vi.fn(),
     helperText: '',
-    isClearable: false,
     label: '',
     regions,
     required: false,
-    selectedId: '',
+    value: '',
     tooltipText: '',
     width: 100,
   };
@@ -66,21 +65,25 @@ describe('RegionSelect', () => {
     expect(getByTestId('textfield-input')).toBeDisabled();
   });
 
-  it('should render a Select component with edge region text', () => {
+  it('should render a Select component with distributed region text', () => {
     const newProps = {
       ...props,
-      showEdgeIconHelperText: true,
+      showDistributedRegionIconHelperText: true,
     };
     const { getByTestId } = renderWithTheme(<RegionSelect {...newProps} />);
-    expect(getByTestId('region-select-edge-text')).toBeInTheDocument();
+    expect(
+      getByTestId('region-select-distributed-region-text')
+    ).toBeInTheDocument();
   });
 
-  it('should render a Select component with no edge region text', () => {
+  it('should render a Select component with no distributed region text', () => {
     const newProps = {
       ...props,
-      showEdgeIconHelperText: false,
+      showDistributedRegionIconHelperText: false,
     };
     const { queryByTestId } = renderWithTheme(<RegionSelect {...newProps} />);
-    expect(queryByTestId('region-select-edge-text')).not.toBeInTheDocument();
+    expect(
+      queryByTestId('region-select-distributed-region-text')
+    ).not.toBeInTheDocument();
   });
 });

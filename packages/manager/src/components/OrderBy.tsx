@@ -5,7 +5,10 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import { usePrevious } from 'src/hooks/usePrevious';
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import {

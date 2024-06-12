@@ -10,7 +10,7 @@ import {
   TypeToConfirm,
   TypeToConfirmProps,
 } from 'src/components/TypeToConfirm/TypeToConfirm';
-import { usePreferences } from 'src/queries/preferences';
+import { usePreferences } from 'src/queries/profile/preferences';
 
 interface EntityInfo {
   action?:

@@ -214,8 +214,10 @@ export const EncryptedStatus = ({
     </>
   ) : encryptionStatus === 'disabled' ? (
     <>
-      <Unlock />
-      <StyledTypography>Not Encrypted</StyledTypography>
+      <Unlock style={{ minWidth: 16 }} />
+      <StyledTypography sx={{ whiteSpace: 'nowrap' }}>
+        Not Encrypted
+      </StyledTypography>
       {tooltipText ? <TooltipIcon status="help" text={tooltipText} /> : null}
     </>
   ) : null;

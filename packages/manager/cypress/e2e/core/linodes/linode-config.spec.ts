@@ -234,7 +234,10 @@ describe('Linode Config management', () => {
      */
     it('Boots a config', () => {
       cy.defer(
-        createLinodeAndGetConfig(null, { waitForBoot: true }),
+        createLinodeAndGetConfig(
+          { booted: true },
+          { waitForBoot: true, securityMethod: 'vlan_no_internet' }
+        ),
         'Creating and booting test Linode'
       ).then(([linode, config]: [Linode, Config]) => {
         const kernel = findKernelById(kernels, config.kernel);
@@ -281,8 +284,8 @@ describe('Linode Config management', () => {
       // Create clone source and destination Linodes.
       const createCloneTestLinodes = async () => {
         return Promise.all([
-          createTestLinode(null, { waitForBoot: true }),
-          createTestLinode(),
+          createTestLinode({ booted: true }, { waitForBoot: true }),
+          createTestLinode({ booted: true }),
         ]);
       };
 

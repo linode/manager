@@ -1,9 +1,9 @@
-import { CircularProgress } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Box } from 'src/components/Box';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
@@ -117,7 +117,7 @@ export const SizeField = (props: Props) => {
       />
       <div className={classes.priceDisplay}>
         {shouldShowPriceLoadingSpinner ? (
-          <CircularProgress size={16} />
+          <CircleProgress noPadding size="sm" />
         ) : hasSelectedRegion ? (
           priceDisplayText
         ) : (

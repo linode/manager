@@ -157,7 +157,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const allowMarketplacePrefetch =
     !oneClickApps && !oneClickAppsLoading && !oneClickAppsError;
-  
+
   const showCloudPulse = Boolean(flags.aclp?.enabled);
   // the followed comment is for later use, the showCloudPulse will be removed and isACLPEnabled will be used
   // const { isACLPEnabled } = useIsACLPEnabled();

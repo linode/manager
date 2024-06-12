@@ -75,7 +75,7 @@ export const TransferContent = (props: ContentProps) => {
     return (
       <Grid container justifyContent="center">
         <Grid>
-          <CircleProgress mini />
+          <CircleProgress size="sm" />
         </Grid>
       </Grid>
     );
