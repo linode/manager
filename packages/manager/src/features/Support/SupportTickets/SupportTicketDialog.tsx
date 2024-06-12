@@ -17,16 +17,19 @@ import { MarkdownReference } from '../SupportTicketDetail/TabbedReply/MarkdownRe
 import { TabbedReply } from '../SupportTicketDetail/TabbedReply/TabbedReply';
 import {
   ENTITY_ID_TO_NAME_MAP,
+  severityLabelMap,
   SEVERITY_OPTIONS,
   TICKET_SEVERITY_TOOLTIP_TEXT,
   TICKET_TYPE_MAP,
 } from './constants';
-import { SupportTicketSMTPFields } from './SupportTicketSMTPFields';
-import { severityLabelMap, useTicketSeverityCapability } from './ticketUtils';
+import {
+  SMTPCustomFields,
+  SupportTicketSMTPFields,
+} from './SupportTicketSMTPFields';
+import { formatDescription, useTicketSeverityCapability } from './ticketUtils';
 
 import type { FileAttachment } from '../index';
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
-import type { SMTPCustomFields } from './SupportTicketSMTPFields';
 import type { TicketSeverity } from '@linode/api-v4/lib/support';
 import type { Theme } from '@mui/material/styles';
 import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
@@ -93,8 +96,7 @@ export interface SupportTicketDialogProps {
   prefilledTitle?: string;
 }
 
-export interface SupportTicketFormData {
-  customFieldsByTicketType?: SMTPCustomFields;
+export interface SupportTicketFormFields {
   description: string;
   entityId: string;
   entityInputValue: string;
@@ -104,6 +106,9 @@ export interface SupportTicketFormData {
   summary: string;
   ticketType: TicketType;
 }
+
+export type AllSupportTicketFormFields = SupportTicketFormFields &
+  SMTPCustomFields;
 
 export const entitiesToItems = (type: string, entities: any) => {
   return entities.map((entity: any) => {
@@ -135,7 +140,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const valuesFromStorage = storage.supportText.get();
 
   // Ticket information
-  const form = useForm<SupportTicketFormData>({
+  const form = useForm<AllSupportTicketFormFields>({
     defaultValues: {
       description: getInitialValue(
         prefilledDescription,
@@ -147,6 +152,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       files: [],
       summary: getInitialValue(prefilledTitle, valuesFromStorage.title),
       ticketType: prefilledTicketType ?? 'general',
+      selectedSeverity: undefined,
     },
   });
 
@@ -200,21 +206,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     }
   };
 
-  /**
-   * When variant ticketTypes include additional fields, fields must concat to one description string.
-   * For readability, replace field names with field labels and format the description in Markdown.
-   */
-  // const formatDescription = (fields: Record<string, string>) => {
-  //   return Object.entries(fields)
-  //     .map(
-  //       ([key, value]) =>
-  //         `**${SMTP_FIELD_NAME_TO_LABEL_MAP[key]}**\n${
-  //           value ? value : 'No response'
-  //         }`
-  //     )
-  //     .join('\n\n');
-  // };
-
   const close = () => {
     props.onClose();
     if (ticketType === 'smtp') {
@@ -227,11 +218,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     window.setTimeout(() => resetDrawer(true), 500);
   };
 
-  const onSubmit = form.handleSubmit(async () => {
-    // console.log(form.getValues());
-    // const { onSuccess } = props;
-    const _description = description;
-    // ticketType === 'smtp' ? formatDescription() : description;
+  const onSubmit = form.handleSubmit(async (values) => {
+    form.setValue('description', formatDescription(values, ticketType));
 
     if (!['general', 'none'].includes(entityType) && !entityId) {
       form.setError('entityId', {
@@ -242,7 +230,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     }
     setSubmitting(true);
     createSupportTicket({
-      description: _description,
+      description: description,
       [entityType]: Number(entityId),
       severity: selectedSeverity,
       summary,
