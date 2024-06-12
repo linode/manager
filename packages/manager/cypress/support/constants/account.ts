@@ -12,3 +12,9 @@ may not be able be restored.';
 export const cancellationPaymentErrorMessage =
   'We were unable to charge your credit card for services rendered. \
 We cannot cancel this account until the balance has been paid.';
+
+/**
+ * Error message that appears when typing an error SSH key.
+ */
+export const sshFormatErrorMessage =
+  'SSH Key key-type must be ssh-dss, ssh-rsa, ecdsa-sha2-nistp, ssh-ed25519, or sk-ecdsa-sha2-nistp256.';
