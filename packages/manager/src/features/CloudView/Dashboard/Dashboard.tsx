@@ -21,7 +21,6 @@ import {
 import { useResourcesQuery } from 'src/queries/cloudview/resources';
 import { useGetCloudViewMetricDefinitionsByServiceType } from 'src/queries/cloudview/services';
 
-import { AclpWidget } from '../Models/CloudPulsePreferences';
 import {
   CloudViewWidget,
   CloudViewWidgetProperties,
@@ -38,6 +37,7 @@ export interface DashboardProperties {
   region?: string;
   resources: string[];
   // widgetPreferences?: AclpWidget[]; // this is optional
+  savePref? : boolean | undefined;
 }
 
 export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
@@ -54,12 +54,11 @@ export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
 
     return jweTokenPayload;
   };
-
   const {
     data: dashboard,
     isError: isDashboardFetchError,
     isSuccess: isDashboardSuccess,
-  } = useCloudViewDashboardByIdQuery(props.dashboardId!);
+  } = useCloudViewDashboardByIdQuery(props.dashboardId!, props.savePref);
 
   const { data: resources } = useResourcesQuery(
     dashboard && dashboard.service_type ? true : false,
@@ -112,7 +111,9 @@ export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
   const getCloudViewGraphProperties = (widget: Widgets) => {
     const graphProp: CloudViewWidgetProperties = {} as CloudViewWidgetProperties;
     graphProp.widget = { ...widget };
-    setPrefferedWidgetPlan(graphProp.widget);
+    if(props.savePref){
+      setPrefferedWidgetPlan(graphProp.widget);
+    }
     graphProp.serviceType = dashboard?.service_type ?? '';
     graphProp.resourceIds = props.resources;
     graphProp.duration = props.duration;
@@ -188,6 +189,7 @@ export const CloudPulseDashboard = React.memo((props: DashboardProperties) => {
                     availableMetrics={availMetrics}
                     handleWidgetChange={handleWidgetChange}
                     resources={resources.data}
+                    savePref = {props.savePref}
                   />
                 );
               } else {

@@ -60,6 +60,7 @@ export interface CloudViewWidgetProperties {
   unit: string; // this should come from dashboard, which maintains map for service types in a separate API call
   useColorIndex?: number;
   widget: Widgets; // this comes from dashboard, has inbuilt metrics, agg_func,group_by,filters,gridsize etc , also helpful in publishing any changes
+  savePref?: boolean;
 }
 
 const StyledZoomIcon = styled(ZoomIcon, {
@@ -123,8 +124,8 @@ export const CloudViewWidget = React.memo(
       return props.widget.service_type
         ? props.widget.service_type!
         : props.serviceType
-        ? props.serviceType
-        : '';
+          ? props.serviceType
+          : '';
     };
 
     const getLabelName = (metric: any, serviceType: string) => {
@@ -137,9 +138,9 @@ export const CloudViewWidget = React.memo(
       const results =
         flags.aclpResourceTypeMap && flags.aclpResourceTypeMap.length > 0
           ? flags.aclpResourceTypeMap.filter(
-              (obj: CloudPulseResourceTypeMap) =>
-                obj.serviceName === serviceType
-            )
+            (obj: CloudPulseResourceTypeMap) =>
+              obj.serviceName === serviceType
+          )
           : [];
 
       const flag = results && results.length > 0 ? results[0] : undefined;
@@ -157,16 +158,16 @@ export const CloudViewWidget = React.memo(
       getCloudViewMetricsRequest(),
       props,
       widget.aggregate_function +
-        '_' +
-        widget.group_by +
-        '_' +
-        widget.time_granularity +
-        '_' +
-        widget.metric +
-        '_' +
-        widget.label +
-        '_' +
-        props.timeStamp ?? '',
+      '_' +
+      widget.group_by +
+      '_' +
+      widget.time_granularity +
+      '_' +
+      widget.metric +
+      '_' +
+      widget.label +
+      '_' +
+      props.timeStamp ?? '',
       true
     ); // fetch the metrics on any property change
 
@@ -269,9 +270,11 @@ export const CloudViewWidget = React.memo(
     };
 
     const handleZoomToggle = React.useCallback((zoomInValue: boolean) => {
-      updateWidgetPreference(props.widget.label, {
-        [SIZE]: zoomInValue ? 12 : 6,
-      });
+      if (props.savePref) {
+        updateWidgetPreference(props.widget.label, {
+          [SIZE]: zoomInValue ? 12 : 6,
+        });
+      }
       setWidget((widget) => {
         return { ...widget, size: zoomInValue ? 12 : 6 };
       });
@@ -281,9 +284,11 @@ export const CloudViewWidget = React.memo(
     const handleAggregateFunctionChange = React.useCallback(
       (aggregateValue: string) => {
         if (aggregateValue !== widget.aggregate_function) {
-          updateWidgetPreference(widget.label, {
-            [AGGREGATE_FUNCTION]: aggregateValue,
-          });
+          if (props.savePref) {
+            updateWidgetPreference(widget.label, {
+              [AGGREGATE_FUNCTION]: aggregateValue,
+            });
+          }
 
           setWidget((currentWidget) => {
             return {
@@ -300,12 +305,15 @@ export const CloudViewWidget = React.memo(
     const handleIntervalChange = React.useCallback(
       (intervalValue: TimeGranularity) => {
         if (
+          !widget.time_granularity || 
           intervalValue.unit !== widget.time_granularity.unit ||
           intervalValue.value !== widget.time_granularity.value
         ) {
-          updateWidgetPreference(widget.label, {
-            [TIME_GRANULARITY]: { ...intervalValue },
-          });
+          if (props.savePref) {
+            updateWidgetPreference(widget.label, {
+              [TIME_GRANULARITY]: { ...intervalValue },
+            });
+          }
           setWidget((currentWidget) => {
             return {
               ...currentWidget,
@@ -329,13 +337,16 @@ export const CloudViewWidget = React.memo(
     const handleGranularityChange = (step: string) => {
       // todo, add implementation once component is ready
     };
-    React.useEffect(()=>{
-      const availableWidget = fetchUserPrefObject()?.widgets[widget.label]; 
-      if(!availableWidget){
+    React.useEffect(() => {
+      if(!props.savePref){
+        return;
+      }
+      const availableWidget = fetchUserPrefObject()?.widgets[widget.label];
+      if (!availableWidget) {
         updateWidgetPreference(widget.label, {
-          [SIZE] : widget.size,
-          [AGGREGATE_FUNCTION] : widget.aggregate_function,
-          [TIME_GRANULARITY] : widget.time_granularity
+          [SIZE]: widget.size,
+          [AGGREGATE_FUNCTION]: widget.aggregate_function,
+          [TIME_GRANULARITY]: widget.time_granularity
         })
       }
     }, [])
@@ -376,7 +387,7 @@ export const CloudViewWidget = React.memo(
               <Grid sx={{ marginRight: 5, width: 100 }}>
                 {props.availableMetrics?.scrape_interval && (
                   <IntervalSelectComponent
-                    default_interval={props.widget?.time_granularity}
+                    default_interval={widget?.time_granularity}
                     onIntervalChange={handleIntervalChange}
                     scrape_interval={props.availableMetrics.scrape_interval}
                   />
@@ -385,12 +396,12 @@ export const CloudViewWidget = React.memo(
               <Grid sx={{ marginRight: 5, width: 100 }}>
                 {props.availableMetrics?.available_aggregate_functions &&
                   props.availableMetrics.available_aggregate_functions.length >
-                    0 && (
+                  0 && (
                     <AggregateFunctionComponent
                       available_aggregate_func={
                         props.availableMetrics?.available_aggregate_functions
                       }
-                      default_aggregate_func={widget.aggregate_function}
+                      default_aggregate_func={widget?.aggregate_function}
                       onAggregateFuncChange={handleAggregateFunctionChange}
 
                     />
@@ -398,7 +409,7 @@ export const CloudViewWidget = React.memo(
               </Grid>
               <StyledZoomIcon
                 handleZoomToggle={handleZoomToggle}
-                zoomIn={widget.size == 12 ? true : false}
+                zoomIn={widget?.size == 12 ? true : false}
               />
             </div>
             <CloudViewLineGraph // rename where we have cloudview to cloudpulse

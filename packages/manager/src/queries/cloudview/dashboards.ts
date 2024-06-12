@@ -12,10 +12,11 @@ import { useQuery } from '@tanstack/react-query';
 export const queryKey = 'cloudview-dashboards';
 
 export const useCloudViewDashboardByIdQuery = (
-  dashboardId: number | undefined
+  dashboardId: number | undefined,
+  key :boolean | undefined
 ) => {
   return useQuery<Dashboard, APIError[]>(
-    [queryKey, dashboardId], // querykey and dashboardId makes this uniquely identifiable
+    [queryKey, dashboardId, key], // querykey and dashboardId makes this uniquely identifiable
     () => getDashboardById(dashboardId!),
     {
       enabled: dashboardId != undefined,

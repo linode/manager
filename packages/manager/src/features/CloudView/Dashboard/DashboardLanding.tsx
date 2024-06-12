@@ -122,6 +122,7 @@ export const DashBoardLanding = () => {
             region={region}
             resources={resources}
             // widgetPreferences={fetchUserPrefObject().widgets}
+            savePref={true}
           />
         )}
 
