@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
-import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -21,7 +20,6 @@ import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useAllFirewallsQuery, useCreateFirewall } from 'src/queries/firewalls';
-import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile/profile';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -45,7 +43,6 @@ import type {
   NodeBalancer,
 } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
-import { nodebalancerQueries } from 'src/queries/nodebalancers';
 
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
@@ -80,7 +77,6 @@ export const CreateFirewallDrawer = React.memo(
     const { data } = useAllFirewallsQuery(open);
 
     const { enqueueSnackbar } = useSnackbar();
-    const queryClient = useQueryClient();
 
     const location = useLocation();
     const isFromLinodeCreate = location.pathname.includes('/linodes/create');
@@ -131,28 +127,6 @@ export const CreateFirewallDrawer = React.memo(
             enqueueSnackbar(`Firewall ${payload.label} successfully created`, {
               variant: 'success',
             });
-
-            // Invalidate for Linodes
-            if (payload.devices?.linodes) {
-              payload.devices.linodes.forEach((linodeId) => {
-                queryClient.invalidateQueries([
-                  linodesQueryKey,
-                  'linode',
-                  linodeId,
-                  'firewalls',
-                ]);
-              });
-            }
-
-            // Invalidate for NodeBalancers
-            if (payload.devices?.nodebalancers) {
-              for (const id of payload.devices.nodebalancers) {
-                queryClient.invalidateQueries({
-                  queryKey: nodebalancerQueries.nodebalancer(id)._ctx.firewalls
-                    .queryKey,
-                });
-              }
-            }
 
             if (onFirewallCreated) {
               onFirewallCreated(response);

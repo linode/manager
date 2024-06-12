@@ -56,12 +56,9 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
 
     // Since the linode was removed as a device, invalidate the linode-specific firewall query
     if (deviceType === 'linode') {
-      queryClient.invalidateQueries([
-        linodesQueryKey,
-        deviceType,
-        device.entity.id,
-        'firewalls',
-      ]);
+      queryClient.invalidateQueries({
+        queryKey: [linodesQueryKey, deviceType, device.entity.id, 'firewalls'],
+      });
     }
 
     if (deviceType === 'nodebalancer') {

@@ -15,6 +15,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { getAll } from 'src/utilities/getAll';
 
+import { nodebalancerQueries } from './nodebalancers';
 import { profileQueries } from './profile/profile';
 
 import type {
@@ -170,17 +171,22 @@ export const useAddFirewallDeviceMutation = (id: number) => {
 
       // Refresh the cached result of the linode-specific firewalls query
       if (firewallDevice.entity.type === 'linode') {
-        queryClient.invalidateQueries([
-          linodesQueryKey,
-          'linode',
-          firewallDevice.entity.id,
-          'firewalls',
-        ]);
+        queryClient.invalidateQueries({
+          queryKey: [
+            linodesQueryKey,
+            'linode',
+            firewallDevice.entity.id,
+            'firewalls',
+          ],
+        });
       }
 
       // Refresh the cached result of the nodebalancer-specific firewalls query
       if (firewallDevice.entity.type === 'nodebalancer') {
-        // @todo: add this invalidation
+        queryClient.invalidateQueries({
+          queryKey: nodebalancerQueries.nodebalancer(firewallDevice.entity.id)
+            ._ctx.firewalls.queryKey,
+        });
       }
     },
   });
@@ -273,6 +279,23 @@ export const useCreateFirewall = () => {
       queryClient.invalidateQueries({
         queryKey: profileQueries.grants.queryKey,
       });
+
+      // For each entity attached to the firewall upon creation, invalidate
+      // the entity's firewall query so that firewalls are up to date
+      // on the entity's details/settings page.
+      for (const entity of firewall.entities) {
+        if (entity.type === 'linode') {
+          queryClient.invalidateQueries({
+            queryKey: [linodesQueryKey, 'linode', entity.id, 'firewalls'],
+          });
+        }
+        if (entity.type === 'nodebalancer') {
+          queryClient.invalidateQueries({
+            queryKey: nodebalancerQueries.nodebalancer(entity.id)._ctx.firewalls
+              .queryKey,
+          });
+        }
+      }
     },
   });
 };

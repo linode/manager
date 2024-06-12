@@ -68,12 +68,9 @@ export const FirewallDialog = React.memo((props: Props) => {
       }
 
       if (entity.type === 'linode') {
-        queryClient.invalidateQueries([
-          linodesQueryKey,
-          'linode',
-          entity.id,
-          'firewalls',
-        ]);
+        queryClient.invalidateQueries({
+          queryKey: [linodesQueryKey, 'linode', entity.id, 'firewalls'],
+        });
       }
     }
 
