@@ -37,7 +37,7 @@ export const DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY =
   'Disk encryption is not available in the selected region.';
 
 export const DISK_ENCRYPTION_DEFAULT_DISTRIBUTED_INSTANCES =
-  'Distributed instances are encrypted by default and the setting cannot be changed.';
+  'Distributed Compute Instances are encrypted. This setting can not be changed.';
 
 // Guidance
 export const DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY =
