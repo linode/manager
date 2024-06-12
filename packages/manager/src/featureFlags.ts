@@ -65,6 +65,7 @@ export interface Flags {
   aclbFullCreateFlow: boolean;
   aclp: AclpFlag;
   apiMaintenance: APIMaintenance;
+  apicliDxToolsAdditions: boolean;
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;

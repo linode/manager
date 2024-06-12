@@ -1,4 +1,3 @@
-import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 import { styled } from '@mui/material/styles';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -12,6 +11,7 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 
@@ -19,6 +19,8 @@ import { CurlTabPanel } from './CurlTabPanel';
 import { IntegrationsTabPanel } from './IntegrationsTabPanel';
 import { LinodeCLIPanel } from './LinodeCLIPanel';
 import { SDKTabPanel } from './SDKTabPanel';
+
+import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 
 export interface ApiAwarenessModalProps {
   isOpen: boolean;
@@ -29,6 +31,7 @@ export interface ApiAwarenessModalProps {
 export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
   const { isOpen, onClose, payLoad } = props;
 
+  const flags = useFlags();
   const history = useHistory();
   const { data: events } = useInProgressEvents();
 
@@ -41,7 +44,8 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
 
   const isLinodeCreated = linodeCreationEvent !== undefined;
 
-  const isFeatureEnabled = true;
+  const isFeatureEnabled = flags?.apicliDxToolsAdditions;
+  debugger;
 
   const tabs = isFeatureEnabled
     ? [
