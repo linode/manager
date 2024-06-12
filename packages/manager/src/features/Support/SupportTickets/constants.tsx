@@ -12,6 +12,13 @@ import type {
 } from './SupportTicketDialog';
 import type { TicketSeverity } from '@linode/api-v4';
 
+export interface CustomFields {
+  companyName: string;
+  customerName: string;
+  publicInfo: string;
+  useCase: string;
+}
+
 export const SMTP_DIALOG_TITLE = 'Contact Support: SMTP Restriction Removal';
 export const SMTP_HELPER_TEXT =
   'In an effort to fight spam, outbound connections are restricted on ports 25, 465, and 587. To have these restrictions removed, please provide us with the following information. A member of the Support team will review your request and follow up with you as soon as possible.';
@@ -66,6 +73,13 @@ export const CUSTOM_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
 
 export const TICKET_TYPE_TO_CUSTOM_FIELD_KEYS_MAP: Record<string, string[]> = {
   smtp: Object.keys(CUSTOM_FIELD_NAME_TO_LABEL_MAP),
+};
+
+export const SMTP_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
+  emailDomains: 'Domain(s) that will be sending emails',
+  useCase:
+    "A clear and detailed description of your email use case, including how you'll avoid sending unwanted emails",
+  ...CUSTOM_FIELD_NAME_TO_LABEL_MAP,
 };
 
 export const SEVERITY_OPTIONS: {

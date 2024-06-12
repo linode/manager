@@ -18,15 +18,13 @@ import { TabbedReply } from '../SupportTicketDetail/TabbedReply/TabbedReply';
 import {
   ENTITY_ID_TO_NAME_MAP,
   SEVERITY_OPTIONS,
+  SMTP_FIELD_NAME_TO_LABEL_MAP,
   TICKET_SEVERITY_TOOLTIP_TEXT,
   TICKET_TYPE_MAP,
   TICKET_TYPE_TO_CUSTOM_FIELD_KEYS_MAP,
 } from './constants';
 import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
-import {
-  SMTP_FIELD_NAME_TO_LABEL_MAP,
-  SupportTicketSMTPFields,
-} from './SupportTicketSMTPFields';
+import { SupportTicketSMTPFields } from './SupportTicketSMTPFields';
 import { severityLabelMap, useTicketSeverityCapability } from './ticketUtils';
 
 import type { FileAttachment } from '../index';
