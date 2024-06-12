@@ -84,9 +84,6 @@ export const VolumesLanding = () => {
   const [isUpgradeDialogOpen, setIsUpgradeDialogOpen] = React.useState(false);
 
   const selectedVolume = volumes?.data.find((v) => v.id === selectedVolumeId);
-  const selectedVolumeFromParams = volumes?.data.find(
-    (v) => v.id === Number(volumeParamId)
-  );
 
   const handleDetach = (volume: Volume) => {
     setSelectedVolumeId(volume.id);
@@ -129,10 +126,20 @@ export const VolumesLanding = () => {
   };
 
   React.useEffect(() => {
-    if (selectedVolumeFromParams) {
-      setQuery(selectedVolumeFromParams.label);
+    if (!volumeParamId) {
+      return;
     }
-  }, [selectedVolumeFromParams]);
+
+    const selectedVolumeFromParams = volumes?.data.find(
+      (v) => v.id === Number(volumeParamId)
+    );
+
+    if (!selectedVolumeFromParams) {
+      return;
+    }
+
+    setQuery(selectedVolumeFromParams.label);
+  }, [volumeParamId, volumes]);
 
   if (isLoading) {
     return <CircleProgress />;
