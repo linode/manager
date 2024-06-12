@@ -22,7 +22,6 @@ import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelec
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useAllFirewallsQuery, useCreateFirewall } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
-import { queryKey as nodebalancersQueryKey } from 'src/queries/nodebalancers';
 import { useGrants } from 'src/queries/profile/profile';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -46,6 +45,7 @@ import type {
   NodeBalancer,
 } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import { nodebalancerQueries } from 'src/queries/nodebalancers';
 
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
@@ -146,14 +146,12 @@ export const CreateFirewallDrawer = React.memo(
 
             // Invalidate for NodeBalancers
             if (payload.devices?.nodebalancers) {
-              payload.devices.nodebalancers.forEach((nodebalancerId) => {
-                queryClient.invalidateQueries([
-                  nodebalancersQueryKey,
-                  'nodebalancer',
-                  nodebalancerId,
-                  'firewalls',
-                ]);
-              });
+              for (const id of payload.devices.nodebalancers) {
+                queryClient.invalidateQueries({
+                  queryKey: nodebalancerQueries.nodebalancer(id)._ctx.firewalls
+                    .queryKey,
+                });
+              }
             }
 
             if (onFirewallCreated) {

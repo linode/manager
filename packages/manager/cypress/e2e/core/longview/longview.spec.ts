@@ -133,7 +133,7 @@ describe('longview', () => {
     };
 
     // Create Linode and Longview Client before loading Longview landing page.
-    cy.defer(createLinodeAndClient(), {
+    cy.defer(createLinodeAndClient, {
       label: 'Creating Linode and Longview Client...',
       timeout: linodeCreateTimeout,
     }).then(([linode, client]: [Linode, LongviewClient]) => {

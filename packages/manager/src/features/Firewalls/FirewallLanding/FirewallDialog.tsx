@@ -6,7 +6,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useDeleteFirewall, useMutateFirewall } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
-import { queryKey as nodebalancersQueryKey } from 'src/queries/nodebalancers';
+import { nodebalancerQueries } from 'src/queries/nodebalancers';
 import { capitalize } from 'src/utilities/capitalize';
 
 import type { Firewall } from '@linode/api-v4';
@@ -60,12 +60,21 @@ export const FirewallDialog = React.memo((props: Props) => {
 
     // Invalidate Firewalls assigned to NodeBalancers and Linodes when Firewall is enabled, disabled, or deleted.
     for (const entity of selectedFirewall.entities) {
-      queryClient.invalidateQueries([
-        entity.type === 'linode' ? linodesQueryKey : nodebalancersQueryKey,
-        entity.type,
-        entity.id,
-        'firewalls',
-      ]);
+      if (entity.type === 'nodebalancer') {
+        queryClient.invalidateQueries({
+          queryKey: nodebalancerQueries.nodebalancer(entity.id)._ctx.firewalls
+            .queryKey,
+        });
+      }
+
+      if (entity.type === 'linode') {
+        queryClient.invalidateQueries([
+          linodesQueryKey,
+          'linode',
+          entity.id,
+          'firewalls',
+        ]);
+      }
     }
 
     enqueueSnackbar(

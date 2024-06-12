@@ -89,7 +89,7 @@ describe('create NodeBalancer', () => {
       private_ip: true,
     };
 
-    cy.defer(createTestLinode(linodePayload)).then((linode) => {
+    cy.defer(() => createTestLinode(linodePayload)).then((linode) => {
       const nodeBal = nodeBalancerFactory.build({
         label: randomLabel(),
         region: region.id,
@@ -116,7 +116,7 @@ describe('create NodeBalancer', () => {
       // NodeBalancers require Linodes with private IPs.
       private_ip: true,
     };
-    cy.defer(createTestLinode(linodePayload)).then((linode) => {
+    cy.defer(() => createTestLinode(linodePayload)).then((linode) => {
       const nodeBal = nodeBalancerFactory.build({
         label: `${randomLabel()}-^`,
         ipv4: linode.ipv4[1],
@@ -165,7 +165,7 @@ describe('create NodeBalancer', () => {
       // NodeBalancers require Linodes with private IPs.
       private_ip: true,
     };
-    cy.defer(createTestLinode(linodePayload)).then((linode) => {
+    cy.defer(() => createTestLinode(linodePayload)).then((linode) => {
       const nodeBal = nodeBalancerFactory.build({
         label: randomLabel(),
         region: initialRegion.id,

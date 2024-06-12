@@ -24,7 +24,7 @@ describe('volume update flow', () => {
     const newLabel = randomLabel();
     const newTags = [randomLabel(5), randomLabel(5), randomLabel(5)];
 
-    cy.defer(createVolume(volumeRequest), 'creating volume').then(
+    cy.defer(() => createVolume(volumeRequest), 'creating volume').then(
       (volume: Volume) => {
         cy.visitWithLogin('/volumes', {
           // Temporarily force volume table to show up to 100 results per page.

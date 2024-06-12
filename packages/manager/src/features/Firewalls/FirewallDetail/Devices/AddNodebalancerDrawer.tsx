@@ -1,4 +1,4 @@
-import { NodeBalancer } from '@linode/api-v4';
+import type { NodeBalancer } from '@linode/api-v4';
 import { useTheme } from '@mui/material';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
@@ -16,7 +16,7 @@ import {
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
 } from 'src/queries/firewalls';
-import { queryKey } from 'src/queries/nodebalancers';
+import { nodebalancerQueries } from 'src/queries/nodebalancers';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
@@ -73,12 +73,10 @@ export const AddNodebalancerDrawer = (props: Props) => {
         enqueueSnackbar(`NodeBalancer ${label} successfully added`, {
           variant: 'success',
         });
-        queryClient.invalidateQueries([
-          queryKey,
-          'nodebalancer',
-          id,
-          'firewalls',
-        ]);
+        queryClient.invalidateQueries({
+          queryKey: nodebalancerQueries.nodebalancer(id)._ctx.firewalls
+            .queryKey,
+        });
         return;
       }
       failedNodebalancers.push(selectedNodebalancers[index]);
