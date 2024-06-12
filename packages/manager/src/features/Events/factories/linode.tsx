@@ -4,7 +4,7 @@ import { Link } from 'src/components/Link';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
-import { extendTypesQueryResult } from 'src/utilities/extendType';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 import { EventLink } from '../EventLink';
 
@@ -561,17 +561,18 @@ const LinodeResizeStartedMessage = ({ event }: { event: Event }) => {
   const { data: linode } = useLinodeQuery(event.entity?.id ?? -1);
   const type = useTypeQuery(linode?.type ?? '');
 
-  const extendedTypes = extendTypesQueryResult([type]);
-  const linodeType = extendedTypes.find((type) => type.id === linode?.type);
-
   return (
     <>
       Linode <EventLink event={event} to="entity" /> is{' '}
       <strong>resizing</strong>
-      {linodeType && (
+      {type && (
         <>
           {' '}
-          to the <strong>{linodeType.formattedLabel}</strong> Plan
+          to the{' '}
+          {type.data && (
+            <strong>{formatStorageUnits(type.data.label)}</strong>
+          )}{' '}
+          Plan
         </>
       )}
       .

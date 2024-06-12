@@ -1,7 +1,7 @@
 // TODO eventMessagesV2: Do we need to handle unwanted taxId events
 import * as React from 'react';
 
-import { EVENT_POLLING_FILTER } from 'src/features/Events/constants';
+import { EVENTS_LIST_FILTER } from 'src/features/Events/constants';
 import { formatProgressEvent } from 'src/features/Events/utils';
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
 
@@ -14,7 +14,7 @@ import type { Event } from '@linode/api-v4';
 export const useEventNotificationsV2 = () => {
   // `profile_update` is a noisy event
   // Any change to user preferences will trigger this event, so we filter it out at the API level
-  const { events } = useEventsInfiniteQuery(EVENT_POLLING_FILTER);
+  const { events } = useEventsInfiniteQuery(EVENTS_LIST_FILTER);
   const notificationContext = React.useContext(_notificationContext);
 
   const formattedEvents = events?.map((event) => {

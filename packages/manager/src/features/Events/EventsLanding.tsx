@@ -10,7 +10,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { EVENT_POLLING_FILTER } from 'src/features/Events/constants';
+import { EVENTS_LIST_FILTER } from 'src/features/Events/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
 
@@ -32,7 +32,7 @@ export const EventsLanding = (props: Props) => {
   const { emptyMessage, entityId } = props;
   const flags = useFlags();
 
-  const filter = EVENT_POLLING_FILTER;
+  const filter = EVENTS_LIST_FILTER;
 
   if (entityId) {
     filter['entity.id'] = entityId;

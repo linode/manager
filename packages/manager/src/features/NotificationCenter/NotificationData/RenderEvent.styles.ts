@@ -14,6 +14,7 @@ export const RenderEventStyledBox = styled(Box, {
     backgroundColor: theme.bg.app,
   },
   color: theme.textColors.tableHeader,
+  display: 'flex',
   gap: 16,
   paddingBottom: 12,
   paddingLeft: '20px',
@@ -27,6 +28,15 @@ export const RenderEventGravatar = styled(GravatarByUsername, {
 })(() => ({
   height: 40,
   minWidth: 40,
+}));
+
+export const RenderEventGravatarV2 = styled(GravatarByUsername, {
+  label: 'StyledGravatarByUsername',
+})(() => ({
+  height: 32,
+  marginTop: 2,
+  minWidth: 32,
+  width: 32,
 }));
 
 export const useRenderEventStyles = makeStyles()((theme: Theme) => ({

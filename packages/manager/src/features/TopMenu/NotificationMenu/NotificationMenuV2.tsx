@@ -145,24 +145,25 @@ export const NotificationMenuV2 = () => {
   );
 };
 
-const StyledChip = styled(Chip)<{ showPlus: boolean }>(
-  ({ theme, ...props }) => ({
-    '& .MuiChip-label': {
-      paddingLeft: 2,
-      paddingRight: 2,
-    },
-    borderRadius: props.showPlus ? 12 : '50%',
-    fontFamily: theme.font.bold,
-    fontSize: '0.72rem',
-    height: 18,
-    justifyContent: 'center',
-    left: 20,
-    padding: 0,
-    position: 'absolute',
-    top: 0,
-    width: props.showPlus ? 22 : 18,
-  })
-);
+const StyledChip = styled(Chip, {
+  label: 'StyledEventNotificationChip',
+  shouldForwardProp: (prop) => prop !== 'showPlus',
+})<{ showPlus: boolean }>(({ theme, ...props }) => ({
+  '& .MuiChip-label': {
+    paddingLeft: 2,
+    paddingRight: 2,
+  },
+  borderRadius: props.showPlus ? 12 : '50%',
+  fontFamily: theme.font.bold,
+  fontSize: '0.72rem',
+  height: 18,
+  justifyContent: 'center',
+  left: 20,
+  padding: 0,
+  position: 'absolute',
+  top: 0,
+  width: props.showPlus ? 22 : 18,
+}));
 
 const StyledAutorenewIcon = styled(AutorenewIcon)(({ theme }) => ({
   animation: `${rotate360} 2s linear infinite`,

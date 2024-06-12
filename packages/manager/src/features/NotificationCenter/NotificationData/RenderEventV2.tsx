@@ -10,7 +10,7 @@ import {
 } from 'src/features/Events/utils';
 
 import {
-  RenderEventGravatar,
+  RenderEventGravatarV2,
   RenderEventStyledBox,
   useRenderEventStyles,
 } from './RenderEvent.styles';
@@ -42,14 +42,10 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
   return (
     <>
       <RenderEventStyledBox
-        className={`yo ${unseenEventClass}`}
+        className={unseenEventClass}
         data-testid={event.action}
-        display="flex"
       >
-        <RenderEventGravatar
-          sx={{ height: 32, minWidth: 32, mt: '3px', width: 32 }}
-          username={event.username}
-        />
+        <RenderEventGravatarV2 username={event.username} />
         <Box sx={{ marginTop: '-2px', paddingRight: 1, width: '100%' }}>
           {message}
           {showProgress && (

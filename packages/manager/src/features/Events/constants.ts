@@ -154,6 +154,6 @@ export const ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS: Event['action'][] = [
   'database_resize',
 ];
 
-export const EVENT_POLLING_FILTER: Filter = {
+export const EVENTS_LIST_FILTER: Filter = {
   action: { '+neq': 'profile_update' },
 };
