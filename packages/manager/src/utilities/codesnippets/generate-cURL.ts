@@ -1,5 +1,5 @@
 // type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
-import { escapeStringForCLI } from './escapeStringForCLI';
+import { escapeStringForCLI } from '../escapeStringForCLI';
 
 const headers = [
   '-H "Content-Type: application/json" \\',

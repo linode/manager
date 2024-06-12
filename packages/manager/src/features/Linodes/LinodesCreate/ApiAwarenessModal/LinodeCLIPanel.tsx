@@ -1,13 +1,14 @@
-import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 import React, { useMemo } from 'react';
 
 import { Link } from 'src/components/Link';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Typography } from 'src/components/Typography';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { generateCLICommand } from 'src/utilities/generate-cli';
+import { generateCLICommand } from 'src/utilities/codesnippets/generate-cli';
 
 import { CodeBlock } from '../CodeBlock/CodeBlock';
+
+import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 
 export interface LinodeCLIPanelProps {
   index: number;

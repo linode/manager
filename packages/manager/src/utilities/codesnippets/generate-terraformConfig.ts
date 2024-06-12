@@ -1,6 +1,6 @@
-import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+import { escapeStringForCLI } from '../escapeStringForCLI';
 
-import { escapeStringForCLI } from './escapeStringForCLI';
+import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 
 /**
  * Generates a Terraform config to setup a Linode instance.

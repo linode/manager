@@ -1,4 +1,3 @@
-import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 import { useTheme } from '@mui/material/styles';
 import React, { useMemo } from 'react';
 
@@ -6,9 +5,11 @@ import { Link } from 'src/components/Link';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Typography } from 'src/components/Typography';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { generateCurlCommand } from 'src/utilities/generate-cURL';
+import { generateCurlCommand } from 'src/utilities/codesnippets/generate-cURL';
 
 import { CodeBlock } from '../CodeBlock/CodeBlock';
+
+import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 
 export interface CurlTabPanelProps {
   index: number;

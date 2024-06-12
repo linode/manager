@@ -1,17 +1,17 @@
-import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 import React, { useMemo, useState } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Typography } from 'src/components/Typography';
-import { generateGoLinodeSnippet } from 'src/utilities/generate-goSDKSnippet';
-import { generatePythonLinodeSnippet } from 'src/utilities/generate-pythonSDKSnippet';
+import { generateGoLinodeSnippet } from 'src/utilities/codesnippets/generate-goSDKSnippet';
+import { generatePythonLinodeSnippet } from 'src/utilities/codesnippets/generate-pythonSDKSnippet';
 
 import { CodeBlock } from '../CodeBlock/CodeBlock';
 import { GoSDKResources } from './GoSDKResources';
 import { PythonSDKResources } from './PythonSDKResources';
 
 import type { OptionType } from './IntegrationsTabPanel';
+import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 
 export interface SDKTabPanelProps {
   payLoad: CreateLinodeRequest;

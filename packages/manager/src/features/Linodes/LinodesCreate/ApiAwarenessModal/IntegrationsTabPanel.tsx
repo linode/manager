@@ -1,15 +1,16 @@
-import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 import React, { useMemo, useState } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Typography } from 'src/components/Typography';
-import { generateAnsibleConfig } from 'src/utilities/generate-ansibleConfig';
-import { generateTerraformConfig } from 'src/utilities/generate-terraformConfig';
+import { generateAnsibleConfig } from 'src/utilities/codesnippets/generate-ansibleConfig';
+import { generateTerraformConfig } from 'src/utilities/codesnippets/generate-terraformConfig';
 
 import { CodeBlock } from '../CodeBlock/CodeBlock';
 import { AnsibleIntegrationResources } from './AnsibleIntegrationResources';
 import { TerraformIntegrationResources } from './TerraformIntegrationResources';
+
+import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 
 export interface IntegrationsTabPanelProps {
   payLoad: CreateLinodeRequest;
