@@ -21,7 +21,7 @@ describe('Actions', () => {
       component: <Actions />,
     });
 
-    const button = getByText('Create Using Command Line').closest('button');
+    const button = getByText('View Code Snippets').closest('button');
 
     expect(button).toBeVisible();
     expect(button).toBeEnabled();

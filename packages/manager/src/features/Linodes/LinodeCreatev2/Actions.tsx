@@ -35,7 +35,7 @@ export const Actions = () => {
   return (
     <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
       <Button buttonType="outlined" onClick={onOpenAPIAwareness}>
-        Create Using Command Line
+        View Code Snippets
       </Button>
       <Button
         buttonType="primary"

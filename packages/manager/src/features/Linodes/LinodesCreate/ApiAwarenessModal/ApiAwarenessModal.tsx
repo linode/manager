@@ -45,7 +45,6 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
   const isLinodeCreated = linodeCreationEvent !== undefined;
 
   const isFeatureEnabled = flags?.apicliDxToolsAdditions;
-  debugger;
 
   const tabs = isFeatureEnabled
     ? [
@@ -182,7 +181,12 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
           label: 'Close',
           onClick: onClose,
         }}
-        sx={{ marginTop: '18px !important', paddingBottom: 0, paddingTop: 0 }}
+        sx={{
+          display: 'flex',
+          marginTop: '18px !important',
+          paddingBottom: 0,
+          paddingTop: 0,
+        }}
       />
     </Dialog>
   );
