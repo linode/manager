@@ -124,20 +124,11 @@ export const CreateImageTab = () => {
     selectedLinodeId !== null &&
     !linodeIsInDistributedRegion;
 
-  const linodeSelectHelperText = [
-    {
-      show: linodeIsInDistributedRegion,
-      text: `Image will be stored in the closest core site to (${linode?.region})`,
-    },
-    {
-      show: grants?.linode.some((grant) => grant.permissions === 'read_only'),
-      text:
-        'You can only create Images from Linodes you have read/write access to.',
-    },
-  ]
-    .filter((item) => item.show)
-    .map((item) => item.text)
-    .join('. ');
+  const linodeSelectHelperText = grants?.linode.some(
+    (grant) => grant.permissions === 'read_only'
+  )
+    ? 'You can only create Images from Linodes you have read/write access to.'
+    : undefined;
 
   return (
     <form onSubmit={onSubmit}>
