@@ -20,9 +20,13 @@ import {
   SEVERITY_OPTIONS,
   TICKET_SEVERITY_TOOLTIP_TEXT,
   TICKET_TYPE_MAP,
+  TICKET_TYPE_TO_CUSTOM_FIELD_KEYS_MAP,
 } from './constants';
 import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
-import { SupportTicketSMTPFields } from './SupportTicketSMTPFields';
+import {
+  SMTP_FIELD_NAME_TO_LABEL_MAP,
+  SupportTicketSMTPFields,
+} from './SupportTicketSMTPFields';
 import { severityLabelMap, useTicketSeverityCapability } from './ticketUtils';
 
 import type { FileAttachment } from '../index';
@@ -75,6 +79,9 @@ export type EntityType =
 
 export type TicketType = 'general' | 'smtp';
 
+export type AllSupportTicketFormFields = SupportTicketFormData &
+  SMTPCustomFields;
+
 export interface TicketTypeData {
   dialogTitle: string;
   helperText: JSX.Element | string;
@@ -119,6 +126,44 @@ export const getInitialValue = (
   fromStorage?: string
 ): string => {
   return fromProps ?? fromStorage ?? '';
+};
+
+/**
+ * formatDescription
+ *
+ * When variant ticketTypes include additional fields, fields must concat to one description string.
+ * For readability, replace field names with field labels and format the description in Markdown.
+ * @param values - the form payload, which can either be the general fields, or the general fields plus any custom fields
+ * @param ticketType - either 'general' or a custom ticket type (e.g. 'smtp')
+ *
+ * @returns a description string containing custom fields in Markdown format
+ */
+export const formatDescription = (
+  values: AllSupportTicketFormFields | SupportTicketFormData,
+  ticketType: TicketType
+) => {
+  type customFieldTuple = [string, string | undefined];
+  const customFields: customFieldTuple[] = Object.entries(
+    values
+  ).filter(([key, _value]: customFieldTuple) =>
+    TICKET_TYPE_TO_CUSTOM_FIELD_KEYS_MAP[ticketType]?.includes(key)
+  );
+
+  // If there are no custom fields, just return the initial description.
+  if (customFields.length === 0) {
+    return values.description;
+  }
+
+  // Add all custom fields to the description in the ticket body, to be viewed on ticket details page and by Customer Support.
+  return customFields
+    .map(([key, value]) => {
+      let label = key;
+      if (ticketType === 'smtp') {
+        label = SMTP_FIELD_NAME_TO_LABEL_MAP[key];
+      }
+      return `**${label}**\n${value ? value : 'No response'}`;
+    })
+    .join('\n\n');
 };
 
 export const SupportTicketDialog = (props: SupportTicketDialogProps) => {

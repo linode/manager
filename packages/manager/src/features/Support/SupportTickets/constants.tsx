@@ -56,6 +56,18 @@ export const ENTITY_ID_TO_NAME_MAP: Record<EntityType, string> = {
   volume_id: 'Volume',
 };
 
+export const CUSTOM_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
+  companyName: 'Business or company name',
+  customerName: 'First and last name',
+  publicInfo:
+    "Links to public information - e.g. your business or application's website, Twitter profile, GitHub, etc.",
+  useCase: 'A clear and detailed description of your use case',
+};
+
+export const TICKET_TYPE_TO_CUSTOM_FIELD_KEYS_MAP: Record<string, string[]> = {
+  smtp: Object.keys(CUSTOM_FIELD_NAME_TO_LABEL_MAP),
+};
+
 export const SEVERITY_OPTIONS: {
   label: string;
   value: TicketSeverity;
