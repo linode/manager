@@ -75,6 +75,7 @@ Cypress.Commands.add(
           );
         }
       },
+      failOnStatusCode: false,
     };
 
     if (resolvedLinodeOptions.preferenceOverrides) {
