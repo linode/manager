@@ -19,6 +19,7 @@ const Volumes = () => {
       <ProductInformationBanner bannerLocation="Volumes" />
       <Switch>
         <Route component={VolumesLanding} exact path={path} strict />
+        <Route component={VolumesLanding} exact path={`${path}/:id`} strict />
         <Route component={VolumeCreate} exact path={`${path}/create`} strict />
         <Redirect to={path} />
       </Switch>

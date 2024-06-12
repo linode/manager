@@ -1,9 +1,14 @@
+import CloseIcon from '@mui/icons-material/Close';
+import { debounce } from 'lodash';
 import * as React from 'react';
+import { useParams } from 'react-router-dom';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { IconButton } from 'src/components/IconButton';
+import { InputAdornment } from 'src/components/InputAdornment';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -11,7 +16,10 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { TextField } from 'src/components/TextField';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useVolumesQuery } from 'src/queries/volumes/volumes';
@@ -34,9 +42,9 @@ const preferenceKey = 'volumes';
 
 export const VolumesLanding = () => {
   const history = useHistory();
-
+  const { id: volumeParamId } = useParams<{ id?: string }>();
+  const [query, setQuery] = React.useState('');
   const location = useLocation<{ volume: Volume | undefined }>();
-
   const pagination = usePagination(1, preferenceKey);
 
   const { handleOrderChange, order, orderBy } = useOrder(
@@ -52,14 +60,17 @@ export const VolumesLanding = () => {
     ['+order_by']: orderBy,
   };
 
-  const { data: volumes, error, isLoading } = useVolumesQuery(
+  if (query !== '') {
+    filter['label'] = { '+contains': query };
+  }
+
+  const { data: volumes, error, isFetching, isLoading } = useVolumesQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
     filter
   );
-
   const [selectedVolumeId, setSelectedVolumeId] = React.useState<number>();
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = React.useState(
     Boolean(location.state?.volume)
@@ -73,6 +84,9 @@ export const VolumesLanding = () => {
   const [isUpgradeDialogOpen, setIsUpgradeDialogOpen] = React.useState(false);
 
   const selectedVolume = volumes?.data.find((v) => v.id === selectedVolumeId);
+  const selectedVolumeFromParams = volumes?.data.find(
+    (v) => v.id === Number(volumeParamId)
+  );
 
   const handleDetach = (volume: Volume) => {
     setSelectedVolumeId(volume.id);
@@ -114,6 +128,12 @@ export const VolumesLanding = () => {
     setIsUpgradeDialogOpen(true);
   };
 
+  React.useEffect(() => {
+    if (selectedVolumeFromParams) {
+      setQuery(selectedVolumeFromParams.label);
+    }
+  }, [selectedVolumeFromParams]);
+
   if (isLoading) {
     return <CircleProgress />;
   }
@@ -128,18 +148,52 @@ export const VolumesLanding = () => {
     );
   }
 
-  if (volumes?.results === 0) {
+  if (volumes?.results === 0 && query === '') {
     return <VolumesLandingEmptyState />;
   }
+
+  const resetSearch = () => {
+    history.push('/volumes');
+    pagination.handlePageChange(1);
+    setQuery('');
+  };
 
   return (
     <>
       <DocumentTitleSegment segment="Volumes" />
       <LandingHeader
+        breadcrumbProps={{
+          pathname: location.pathname,
+          removeCrumbX: 1,
+        }}
         docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
         entity="Volume"
         onButtonClick={() => history.push('/volumes/create')}
         title="Volumes"
+      />
+      <TextField
+        InputProps={{
+          endAdornment: query && (
+            <InputAdornment position="end">
+              {isFetching && <CircleProgress size="sm" />}
+
+              <IconButton
+                aria-label="Clear"
+                onClick={resetSearch}
+                size="small"
+                sx={{ padding: 'unset' }}
+              >
+                <CloseIcon sx={{ color: '#aaa !important' }} />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+        hideLabel
+        label="Search"
+        onChange={debounce((e) => setQuery(e.target.value), 400)}
+        placeholder="Search Volumes"
+        sx={{ mb: 2 }}
+        value={query}
       />
       <Table>
         <TableHead>
@@ -174,22 +228,27 @@ export const VolumesLanding = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {volumes?.data.map((volume) => (
-            <VolumeTableRow
-              handlers={{
-                handleAttach: () => handleAttach(volume),
-                handleClone: () => handleClone(volume),
-                handleDelete: () => handleDelete(volume),
-                handleDetach: () => handleDetach(volume),
-                handleDetails: () => handleDetails(volume),
-                handleEdit: () => handleEdit(volume),
-                handleResize: () => handleResize(volume),
-                handleUpgrade: () => handleUpgrade(volume),
-              }}
-              key={volume.id}
-              volume={volume}
-            />
-          ))}
+          {isFetching && <TableRowLoading columns={6} />}
+          {volumes?.data.length === 0 && (
+            <TableRowEmpty colSpan={6} message="No volume found" />
+          )}
+          {!isFetching &&
+            volumes?.data.map((volume) => (
+              <VolumeTableRow
+                handlers={{
+                  handleAttach: () => handleAttach(volume),
+                  handleClone: () => handleClone(volume),
+                  handleDelete: () => handleDelete(volume),
+                  handleDetach: () => handleDetach(volume),
+                  handleDetails: () => handleDetails(volume),
+                  handleEdit: () => handleEdit(volume),
+                  handleResize: () => handleResize(volume),
+                  handleUpgrade: () => handleUpgrade(volume),
+                }}
+                key={volume.id}
+                volume={volume}
+              />
+            ))}
         </TableBody>
       </Table>
       <PaginationFooter

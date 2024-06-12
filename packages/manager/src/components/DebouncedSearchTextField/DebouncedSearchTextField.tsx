@@ -67,7 +67,7 @@ export const DebouncedSearchTextField = React.memo(
       : managedValue;
 
     React.useEffect(() => {
-      if (textFieldValue != undefined) {
+      if (textFieldValue !== undefined) {
         const timeout = setTimeout(
           () => onSearch && onSearch(textFieldValue),
           debounceTime !== undefined ? debounceTime : 400
