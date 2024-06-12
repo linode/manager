@@ -36,7 +36,7 @@ export const Region = () => {
 
   const { params } = useLinodeCreateQueryParams();
 
-  const { control, setValue } = useFormContext<LinodeCreateFormValues>();
+  const { control, reset } = useFormContext<LinodeCreateFormValues>();
   const { field, fieldState } = useController({
     control,
     name: 'region',
@@ -56,33 +56,35 @@ export const Region = () => {
   const { data: regions } = useRegionsQuery();
 
   const onChange = (region: RegionType) => {
-    field.onChange(region.id);
+    const isDistributedRegion =
+      region.site_type === 'distributed' || region.site_type === 'edge';
 
-    // Reset interfaces because VPC and VLANs are region-sepecific
-    setValue('interfaces', defaultInterfaces);
+    const defaultDiskEncryptionValue = region.capabilities.includes(
+      'Disk Encryption'
+    )
+      ? 'enabled'
+      : 'disabled';
 
-    // Reset the placement group because they are region-specific
-    setValue('placement_group', undefined);
-
-    // Reset Cloud-init metadata because not all regions support it
-    setValue('metadata', undefined);
-
-    // If a distributed compute region gets selected, backups and private IP do not work.
-    if (region.site_type === 'distributed' || region.site_type === 'edge') {
-      setValue('backups_enabled', undefined);
-      setValue('private_ip', undefined);
-    }
-
-    // Enable disk encryption if the selected region supports it
-    if (isDiskEncryptionFeatureEnabled) {
-      const diskEncryptionStatus = region.capabilities.includes(
-        'Disk Encryption'
-      )
-        ? 'enabled'
-        : 'disabled';
-
-      setValue('disk_encryption', diskEncryptionStatus);
-    }
+    reset((prev) => ({
+      ...prev,
+      // Reset interfaces because VPC and VLANs are region-sepecific
+      interfaces: defaultInterfaces,
+      // Reset Cloud-init metadata because not all regions support it
+      metadata: undefined,
+      // Reset the placement group because they are region-specific
+      placement_group: undefined,
+      // Set the region
+      region: region.id,
+      // Backups and Private IP are not supported in distributed compute regions
+      ...(isDistributedRegion && {
+        backups_enabled: false,
+        private_ip: false,
+      }),
+      // If disk encryption is enabled, set the default value to "enabled" if the region supports it
+      ...(isDiskEncryptionFeatureEnabled && {
+        disk_encryption: defaultDiskEncryptionValue,
+      }),
+    }));
   };
 
   const showCrossDataCenterCloneWarning =
@@ -138,6 +140,7 @@ export const Region = () => {
         onChange={(e, region) => onChange(region)}
         regionFilter={hideDistributedRegions ? 'core' : undefined}
         regions={regions ?? []}
+        textFieldProps={{ onBlur: field.onBlur }}
         value={field.value}
       />
       {showClonePriceWarning && (

@@ -52,9 +52,11 @@ export const VLANSelect = (props: Props) => {
   const [inputValue, setInputValue] = useState<string>('');
 
   useEffect(() => {
-    if (!value) {
+    if (!value && inputValue) {
+      // If the value gets cleared, make sure the TextField's value also gets cleared.
       setInputValue('');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const apiFilter = getVLANSelectFilter({
