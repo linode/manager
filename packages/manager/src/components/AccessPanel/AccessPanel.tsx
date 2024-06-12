@@ -1,14 +1,16 @@
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import {
+  DISK_ENCRYPTION_DEFAULT_DISTRIBUTED_INSTANCES,
+  DISK_ENCRYPTION_DISTRIBUTED_DESCRIPTION,
   DISK_ENCRYPTION_GENERAL_DESCRIPTION,
   DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY,
 } from 'src/components/DiskEncryption/constants';
 import { DiskEncryption } from 'src/components/DiskEncryption/DiskEncryption';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
 import { Paper } from 'src/components/Paper';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -16,6 +18,8 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 
 import { Divider } from '../Divider';
 import UserSSHKeyPanel from './UserSSHKeyPanel';
+
+import type { Theme } from '@mui/material/styles';
 
 const PasswordInput = React.lazy(
   () => import('src/components/PasswordInput/PasswordInput')
@@ -94,6 +98,11 @@ export const AccessPanel = (props: Props) => {
     'Disk Encryption'
   );
 
+  const isDistributedRegion = getIsDistributedRegion(
+    regions ?? [],
+    selectedRegion ?? ''
+  );
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     _handleChange(e.target.value);
 
@@ -111,9 +120,17 @@ export const AccessPanel = (props: Props) => {
       <>
         <Divider spacingBottom={20} spacingTop={24} />
         <DiskEncryption
-          descriptionCopy={DISK_ENCRYPTION_GENERAL_DESCRIPTION}
+          descriptionCopy={
+            isDistributedRegion
+              ? DISK_ENCRYPTION_DISTRIBUTED_DESCRIPTION
+              : DISK_ENCRYPTION_GENERAL_DESCRIPTION
+          }
+          disabledReason={
+            isDistributedRegion
+              ? DISK_ENCRYPTION_DEFAULT_DISTRIBUTED_INSTANCES
+              : DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY
+          }
           disabled={!regionSupportsDiskEncryption}
-          disabledReason={DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY}
           isEncryptDiskChecked={diskEncryptionEnabled ?? false}
           onChange={() => toggleDiskEncryptionEnabled()}
         />

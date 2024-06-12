@@ -2,14 +2,20 @@ import React from 'react';
 
 import { Link } from 'src/components/Link';
 
-// @TODO LDE: Update "Learn more" link
+const DISK_ENCRYPTION_GUIDE_LINK =
+  'https://www.linode.com/docs/products/compute/compute-instances/guides/local-disk-encryption';
+
 export const DISK_ENCRYPTION_GENERAL_DESCRIPTION = (
   <>
     Secure this Linode using data at rest encryption. Data center systems take
     care of encrypting and decrypting for you. After the Linode is created, use
-    Rebuild to enable or disable this feature. <Link to="">Learn more</Link>.
+    Rebuild to enable or disable this feature.{' '}
+    <Link to={DISK_ENCRYPTION_GUIDE_LINK}>Learn more</Link>.
   </>
 );
+
+export const DISK_ENCRYPTION_DISTRIBUTED_DESCRIPTION =
+  'Distributed Compute Instances are secured using disk encryption. Encryption and decryption are automatically managed for you.';
 
 const DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_DOCS_LINK =
   'https://www.linode.com/docs/products/compute/compute-instances/guides/local-disk-encryption/';
@@ -29,6 +35,9 @@ export const DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_BANNER_KEY =
 
 export const DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY =
   'Disk encryption is not available in the selected region.';
+
+export const DISK_ENCRYPTION_DEFAULT_DISTRIBUTED_INSTANCES =
+  'Distributed instances are encrypted by default and the setting cannot be changed.';
 
 // Guidance
 export const DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY =
