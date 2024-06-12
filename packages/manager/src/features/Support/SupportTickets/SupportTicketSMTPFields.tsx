@@ -4,28 +4,27 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { TextField } from 'src/components/TextField';
 import { useAccount } from 'src/queries/account/account';
 
-import { SMTP_FIELD_NAME_TO_LABEL_MAP } from './constants';
-
-import type { CustomFields } from './constants';
-import type { SupportTicketFormFields } from './SupportTicketDialog';
-
-export interface SMTPCustomFields extends CustomFields {
+export interface SMTPCustomFields {
+  companyName: string;
+  customerName: string;
   emailDomains: string;
+  publicInfo: string;
+  useCase: string;
 }
 
+export const SMTP_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
+  companyName: 'Business or company name',
+  customerName: 'First and last name',
+  emailDomains: 'Domain(s) that will be sending emails',
+  publicInfo:
+    "Links to public information - e.g. your business or application's website, Twitter profile, GitHub, etc.",
+  useCase:
+    "A clear and detailed description of your email use case, including how you'll avoid sending unwanted emails",
+};
+
 export const SupportTicketSMTPFields = () => {
-  const form = useFormContext<SMTPCustomFields & SupportTicketFormFields>();
+  const form = useFormContext();
   const { data: account } = useAccount();
-
-  const defaultValues = {
-    companyName: account?.company,
-    customerName: `${account?.first_name} ${account?.last_name}`,
-    ...form.formState.defaultValues,
-  };
-
-  React.useEffect(() => {
-    form.reset(defaultValues);
-  }, []);
 
   return (
     <>

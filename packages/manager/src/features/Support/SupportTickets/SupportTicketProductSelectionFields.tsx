@@ -13,18 +13,11 @@ import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 
 import { ENTITY_ID_TO_NAME_MAP, ENTITY_MAP } from './constants';
 
-import type {
-  EntityType,
-  SupportTicketFormFields,
-} from './SupportTicketDialog';
+import type { EntityType, SupportTicketFormData } from './SupportTicketDialog';
 import type { APIError } from '@linode/api-v4';
 
 export const SupportTicketProductSelectionFields = () => {
-  const {
-    control,
-    setValue,
-    watch,
-  } = useFormContext<SupportTicketFormFields>();
+  const { control, setValue, watch } = useFormContext<SupportTicketFormData>();
 
   const { entityId, entityInputValue, entityType } = watch();
 

@@ -28,7 +28,7 @@ import {
   mockGetSupportTickets,
   mockGetSupportTicketReplies,
 } from 'support/intercepts/support';
-import { severityLabelMap } from 'src/features/Support/SupportTickets/constants';
+import { severityLabelMap } from 'src/features/Support/SupportTickets/ticketUtils';
 
 describe('help & support', () => {
   /*

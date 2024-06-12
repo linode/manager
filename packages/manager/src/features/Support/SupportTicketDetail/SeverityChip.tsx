@@ -1,11 +1,9 @@
+import { TicketSeverity } from '@linode/api-v4';
 import React from 'react';
 
-import { Chip } from 'src/components/Chip';
+import { Chip, ChipProps } from 'src/components/Chip';
 
-import { severityLabelMap } from '../SupportTickets/constants';
-
-import type { TicketSeverity } from '@linode/api-v4';
-import type { ChipProps } from 'src/components/Chip';
+import { severityLabelMap } from '../SupportTickets/ticketUtils';
 
 const severityColorMap: Record<TicketSeverity, ChipProps['color']> = {
   1: 'error',

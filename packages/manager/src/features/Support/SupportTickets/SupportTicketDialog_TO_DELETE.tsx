@@ -38,13 +38,12 @@ import {
   SMTP_DIALOG_TITLE,
   SMTP_HELPER_TEXT,
   TICKET_SEVERITY_TOOLTIP_TEXT,
-  severityLabelMap,
 } from './constants';
 import {
   // SMTP_FIELD_NAME_TO_LABEL_MAP,
   SupportTicketSMTPFields,
 } from './SupportTicketSMTPFields';
-import { useTicketSeverityCapability } from './ticketUtils';
+import { severityLabelMap, useTicketSeverityCapability } from './ticketUtils';
 
 import type { FileAttachment } from '../index';
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';

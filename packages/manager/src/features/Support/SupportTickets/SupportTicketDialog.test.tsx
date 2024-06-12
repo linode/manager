@@ -2,9 +2,10 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { SupportTicketDialog } from './SupportTicketDialog';
-
-import type { SupportTicketDialogProps } from './SupportTicketDialog';
+import {
+  SupportTicketDialog,
+  SupportTicketDialogProps,
+} from './SupportTicketDialog';
 
 const props: SupportTicketDialogProps = {
   onClose: vi.fn(),

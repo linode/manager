@@ -1,3 +1,4 @@
+import { SupportTicket } from '@linode/api-v4/lib/support';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -9,10 +10,7 @@ import { Typography } from 'src/components/Typography';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
-import { severityLabelMap } from './constants';
-import { useTicketSeverityCapability } from './ticketUtils';
-
-import type { SupportTicket } from '@linode/api-v4/lib/support';
+import { severityLabelMap, useTicketSeverityCapability } from './ticketUtils';
 
 interface Props {
   ticket: SupportTicket;

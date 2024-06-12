@@ -3,19 +3,14 @@ import React from 'react';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
+import { severityLabelMap } from './ticketUtils';
+
 import type {
   EntityType,
   TicketType,
   TicketTypeData,
 } from './SupportTicketDialog';
 import type { TicketSeverity } from '@linode/api-v4';
-
-export interface CustomFields {
-  companyName: string;
-  customerName: string;
-  publicInfo: string;
-  useCase: string;
-}
 
 export const SMTP_DIALOG_TITLE = 'Contact Support: SMTP Restriction Removal';
 export const SMTP_HELPER_TEXT =
@@ -39,18 +34,6 @@ export const TICKET_TYPE_MAP: Record<TicketType, TicketTypeData> = {
   },
 };
 
-export const CUSTOM_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
-  companyName: 'Business or company name',
-  customerName: 'First and last name',
-  publicInfo:
-    "Links to public information - e.g. your business or application's website, Twitter profile, GitHub, etc.",
-  useCase: 'A clear and detailed description of your use case',
-};
-
-export const TICKET_TYPE_TO_CUSTOM_FIELD_KEYS_MAP: Record<string, string[]> = {
-  smtp: Object.keys(CUSTOM_FIELD_NAME_TO_LABEL_MAP),
-};
-
 export const ENTITY_MAP: Record<string, EntityType> = {
   Databases: 'database_id',
   Domains: 'domain_id',
@@ -72,19 +55,6 @@ export const ENTITY_ID_TO_NAME_MAP: Record<EntityType, string> = {
   none: '',
   volume_id: 'Volume',
 };
-
-export const SMTP_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
-  emailDomains: 'Domain(s) that will be sending emails',
-  useCase:
-    "A clear and detailed description of your email use case, including how you'll avoid sending unwanted emails",
-  ...CUSTOM_FIELD_NAME_TO_LABEL_MAP,
-};
-
-export const severityLabelMap: Map<TicketSeverity, string> = new Map([
-  [1, '1-Major Impact'],
-  [2, '2-Moderate Impact'],
-  [3, '3-Low Impact'],
-]);
 
 export const SEVERITY_OPTIONS: {
   label: string;
