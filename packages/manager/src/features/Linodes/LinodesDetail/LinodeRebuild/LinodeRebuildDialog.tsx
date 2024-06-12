@@ -58,7 +58,7 @@ export const LinodeRebuildDialog = (props: Props) => {
   const disabled = hostMaintenance || unauthorized;
 
   // LDE-related checks
-  const isEncrypted = linode?.disk_encryption === 'enabled' ? true : false;
+  const isEncrypted = linode?.disk_encryption === 'enabled';
   const isLKELinode = Boolean(linode?.lke_cluster_id);
   const linodeIsInDistributedRegion = getIsDistributedRegion(
     regionsData ?? [],
