@@ -77,7 +77,7 @@ export type EntityType =
 
 export type TicketType = 'general' | 'smtp';
 
-export type AllSupportTicketFormFields = SupportTicketFormData &
+export type AllSupportTicketFormFields = SupportTicketFormFields &
   SMTPCustomFields;
 
 export interface TicketTypeData {
@@ -98,7 +98,7 @@ export interface SupportTicketDialogProps {
   prefilledTitle?: string;
 }
 
-export interface SupportTicketFormData {
+export interface SupportTicketFormFields {
   customFieldsByTicketType?: SMTPCustomFields;
   description: string;
   entityId: string;
@@ -137,7 +137,7 @@ export const getInitialValue = (
  * @returns a description string containing custom fields in Markdown format
  */
 export const formatDescription = (
-  values: AllSupportTicketFormFields | SupportTicketFormData,
+  values: AllSupportTicketFormFields | SupportTicketFormFields,
   ticketType: TicketType
 ) => {
   type customFieldTuple = [string, string | undefined];
@@ -178,7 +178,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const valuesFromStorage = storage.supportText.get();
 
   // Ticket information
-  const form = useForm<SupportTicketFormData>({
+  const form = useForm<SupportTicketFormFields>({
     defaultValues: {
       description: getInitialValue(
         prefilledDescription,

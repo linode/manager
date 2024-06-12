@@ -7,14 +7,25 @@ import { useAccount } from 'src/queries/account/account';
 import { SMTP_FIELD_NAME_TO_LABEL_MAP } from './constants';
 
 import type { CustomFields } from './constants';
+import type { SupportTicketFormFields } from './SupportTicketDialog';
 
 export interface SMTPCustomFields extends CustomFields {
   emailDomains: string;
 }
 
 export const SupportTicketSMTPFields = () => {
-  const form = useFormContext();
+  const form = useFormContext<SMTPCustomFields & SupportTicketFormFields>();
   const { data: account } = useAccount();
+
+  const defaultValues = {
+    companyName: account?.company,
+    customerName: `${account?.first_name} ${account?.last_name}`,
+    ...form.formState.defaultValues,
+  };
+
+  React.useEffect(() => {
+    form.reset(defaultValues);
+  }, []);
 
   return (
     <>
