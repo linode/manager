@@ -13,7 +13,12 @@ import { formatDate } from 'src/utilities/formatDate';
 import { ImagesActionMenu } from './ImagesActionMenu';
 
 import type { Handlers } from './ImagesActionMenu';
-import type { Event, Image } from '@linode/api-v4';
+import type { Event, Image, ImageCapabilities } from '@linode/api-v4';
+
+const capabilityMap: Record<ImageCapabilities, string> = {
+  'cloud-init': 'Cloud-init',
+  'distributed-images': 'Distributed',
+};
 
 interface Props {
   event?: Event;
@@ -24,7 +29,17 @@ interface Props {
 const ImageRow = (props: Props) => {
   const { event, image } = props;
 
-  const { created, expiry, id, label, regions, size, status } = image;
+  const {
+    capabilities,
+    created,
+    expiry,
+    id,
+    label,
+    regions,
+    size,
+    status,
+    total_size,
+  } = image;
 
   const { data: profile } = useProfile();
 
@@ -48,6 +63,10 @@ const ImageRow = (props: Props) => {
       )}
     </>
   );
+
+  const compatibilitiesList =
+    multiRegionsEnabled &&
+    capabilities.map((capability) => capabilityMap[capability]).join(', ');
 
   const getStatusForImage = (status: string) => {
     switch (status) {
@@ -88,8 +107,23 @@ const ImageRow = (props: Props) => {
         {status ? <TableCell>{getStatusForImage(status)}</TableCell> : null}
       </Hidden>
       {regionsList && (
+        <>
+          <Hidden smDown>
+            <TableCell>{regionsList}</TableCell>
+          </Hidden>
+          <Hidden smDown>
+            <TableCell>{compatibilitiesList}</TableCell>
+          </Hidden>
+        </>
+      )}
+      <TableCell data-qa-image-size>
+        {getSizeForImage(size, status, event?.status)}
+      </TableCell>
+      {regionsList && (
         <Hidden smDown>
-          <TableCell>{regionsList}</TableCell>
+          <TableCell>
+            {getSizeForImage(total_size, status, event?.status)}
+          </TableCell>
         </Hidden>
       )}
       <Hidden smDown>
@@ -99,9 +133,6 @@ const ImageRow = (props: Props) => {
           })}
         </TableCell>
       </Hidden>
-      <TableCell data-qa-image-size>
-        {getSizeForImage(size, status, event?.status)}
-      </TableCell>
       <Hidden smDown>
         {expiry ? (
           <TableCell data-qa-image-date>
@@ -110,6 +141,9 @@ const ImageRow = (props: Props) => {
             })}
           </TableCell>
         ) : null}
+      </Hidden>
+      <Hidden smDown>
+        <TableCell>{id}</TableCell>
       </Hidden>
       <TableCell actionCell>
         <ImagesActionMenu {...props} />

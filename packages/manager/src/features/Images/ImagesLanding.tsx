@@ -360,9 +360,8 @@ export const ImagesLanding = () => {
     return renderEmpty();
   }
 
-  // TODO update colSpan
   const noManualImages = (
-    <TableRowEmpty colSpan={5} message={`No Custom Images to display.`} />
+    <TableRowEmpty colSpan={9} message={`No Custom Images to display.`} />
   );
 
   const noAutomaticImages = (
@@ -401,10 +400,24 @@ export const ImagesLanding = () => {
                 <TableCell>Status</TableCell>
               </Hidden>
               {multiRegionsEnabled && (
+                <>
                 <Hidden smDown>
                   <TableCell>Region(s)</TableCell>
                 </Hidden>
+                  <Hidden smDown>
+                    <TableCell>Compatibility</TableCell>
+                  </Hidden>
+                </>
               )}
+              <TableSortCell
+                active={manualImagesOrderBy === 'size'}
+                direction={manualImagesOrder}
+                handleClick={handleManualImagesOrderChange}
+                label="size"
+              >
+                Size
+              </TableSortCell>
+              <TableCell>Total Size</TableCell>
               <Hidden smDown>
                 <TableSortCell
                   active={manualImagesOrderBy === 'created'}
@@ -415,14 +428,16 @@ export const ImagesLanding = () => {
                   Created
                 </TableSortCell>
               </Hidden>
+              <Hidden smDown>
               <TableSortCell
-                active={manualImagesOrderBy === 'size'}
+                  active={manualImagesOrderBy === 'id'}
                 direction={manualImagesOrder}
-                handleClick={handleManualImagesOrderChange}
-                label="size"
+                  handleClick={/* handleManualImagesOrderChange*/ () => {}} // TODO: sorting on id currently broken
+                  label="id"
               >
-                Size
+                  Image Id
               </TableSortCell>
+              </Hidden>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
