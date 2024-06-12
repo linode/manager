@@ -32,3 +32,14 @@ export const shuffleArray = <T>(unsortedArray: T[]): T[] => {
     .sort((a, b) => a.sort - b.sort)
     .map(({ value }) => value);
 };
+
+/**
+ * Returns a copy of an array with duplicate items removed.
+ *
+ * @param array - Array from which to create de-duplicated array.
+ *
+ * @returns Copy of `array` with duplicate items removed.
+ */
+export const removeDuplicates = <T>(array: T[]): T[] => {
+  return Array.from(new Set(array));
+};

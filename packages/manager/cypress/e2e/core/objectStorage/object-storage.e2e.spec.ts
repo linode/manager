@@ -216,7 +216,7 @@ describe('object storage end-to-end tests', () => {
     ];
 
     cy.defer(
-      setUpBucket(bucketLabel, bucketCluster),
+      () => setUpBucket(bucketLabel, bucketCluster),
       'creating Object Storage bucket'
     ).then(() => {
       interceptUploadBucketObjectS3(
@@ -409,7 +409,7 @@ describe('object storage end-to-end tests', () => {
     const bucketAccessPage = `/object-storage/buckets/${bucketCluster}/${bucketLabel}/access`;
 
     cy.defer(
-      setUpBucket(bucketLabel, bucketCluster),
+      () => setUpBucket(bucketLabel, bucketCluster),
       'creating Object Storage bucket'
     ).then(() => {
       interceptGetBucketAccess(bucketLabel, bucketCluster).as(

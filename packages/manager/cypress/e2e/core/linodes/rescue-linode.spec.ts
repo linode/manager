@@ -43,7 +43,7 @@ describe('Rescue Linodes', () => {
       region: chooseRegion().id,
     });
 
-    cy.defer(createTestLinode(linodePayload), 'creating Linode').then(
+    cy.defer(() => createTestLinode(linodePayload), 'creating Linode').then(
       (linode: Linode) => {
         interceptGetLinodeDetails(linode.id).as('getLinode');
         interceptRebootLinodeIntoRescueMode(linode.id).as(

@@ -162,7 +162,7 @@ describe('Billing Activity Feed', () => {
     mockGetPayments(paymentMocks6Months).as('getPayments');
     mockGetPaymentMethods([]);
 
-    cy.defer(getProfile()).then((profile: Profile) => {
+    cy.defer(() => getProfile()).then((profile: Profile) => {
       const timezone = profile.timezone;
       cy.visitWithLogin('/account/billing');
       cy.wait(['@getInvoices', '@getPayments']);

@@ -38,7 +38,7 @@ describe('Third party access tokens', () => {
       .closest('tr')
       .within(() => {
         cy.findByText(token.label).should('be.visible');
-        cy.defer(getProfile()).then((profile: Profile) => {
+        cy.defer(() => getProfile()).then((profile: Profile) => {
           const dateFormatOptions = { timezone: profile.timezone };
           cy.findByText(formatDate(token.created, dateFormatOptions)).should(
             'be.visible'
