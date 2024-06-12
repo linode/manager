@@ -15,9 +15,9 @@ describe('getLocalStorageOverrides', () => {
   };
 
   describe('built for development mode', () => {
-    // Stub `DEV` environment variable to be truthy.
+    // Stub `DEV` environment variable to be true.
     beforeEach(() => {
-      vi.stubEnv('DEV', '1');
+      vi.stubEnv('DEV', true);
     });
 
     it('returns overrides if overrides are defined', () => {
@@ -42,9 +42,9 @@ describe('getLocalStorageOverrides', () => {
   });
 
   describe('not built for development mode', () => {
-    // Stub `DEV` environment variable to be falsy.
+    // Stub `DEV` environment variable to be false.
     beforeEach(() => {
-      vi.stubEnv('DEV', '');
+      vi.stubEnv('DEV', false);
     });
 
     it('returns `undefined` when overrides are defined', () => {
