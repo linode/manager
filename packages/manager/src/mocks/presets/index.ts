@@ -1,6 +1,7 @@
 import { MockPreset } from '../mockPreset';
 import { baselineNoMocksPreset } from './baseline/baseline-no-mocks';
 import { baselineLegacyPreset } from './baseline/baseline-legacy';
+import { baselineAccountActivationPreset } from './baseline/baseline-account-review';
 import { baselineApiMaintenanceModePreset } from './baseline/baseline-api-maintenance-mode';
 import { baselineApiOfflinePreset } from './baseline/baseline-api-offline';
 import { baselineApiUnstablePreset } from './baseline/baseline-api-unstable';
@@ -14,6 +15,7 @@ export const baselineMockPresets: MockPreset[] = [
   baselineNoMocksPreset,
   baselineCrudPreset,
   baselineLegacyPreset,
+  baselineAccountActivationPreset,
   baselineApiMaintenanceModePreset,
   baselineApiOfflinePreset,
   baselineApiUnstablePreset,
