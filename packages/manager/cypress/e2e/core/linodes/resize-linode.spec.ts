@@ -97,7 +97,7 @@ describe('resize linode', () => {
     });
   });
 
-  it.only('resizes a linode by decreasing size', () => {
+  it('resizes a linode by decreasing size', () => {
     cy.defer(() =>
       createTestLinode({ booted: true, type: 'g6-standard-2' })
     ).then((linode) => {
