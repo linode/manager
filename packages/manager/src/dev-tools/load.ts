@@ -1,13 +1,24 @@
 import { ENABLE_DEV_TOOLS } from 'src/constants';
 import { ApplicationStore } from 'src/store';
 
-import { makeMockContext } from 'src/mocks/mockContext';
-import { manyLinodesPopulator } from 'src/mocks/context/populators/many-linodes-populator';
+import {
+  makeMockContext,
+  MockContextPopulator,
+  MockContext,
+} from 'src/mocks/mockContext';
 import { resolveMockPreset } from 'src/mocks/mockPreset';
 import { defaultBaselineMockPreset, allMockPresets } from 'src/mocks/presets';
-import { isMSWEnabled, getMSWPreset } from './ServiceWorkerTool';
+import {
+  isMSWEnabled,
+  getMSWPreset,
+  getMSWExtraPresets,
+  getMSWContextPopulators,
+} from './ServiceWorkerTool';
 import { setupWorker } from 'msw/browser';
 import { QueryClient } from '@tanstack/react-query';
+import { allContextPopulators } from 'src/mocks/context/populators';
+
+import type { MockPreset } from 'src/mocks/mockPreset';
 
 /**
  * Use this to dynamically import our custom dev-tools ONLY when they
@@ -27,12 +38,43 @@ export async function loadDevTools(
       allMockPresets.find((preset) => preset.id === mswPresetId) ??
       defaultBaselineMockPreset;
 
-    let mockContext = makeMockContext();
-    mockContext = manyLinodesPopulator.populator(mockContext);
+    const extraMswPresetIds = getMSWExtraPresets();
+    const extraMswPresets = extraMswPresetIds
+      .map((presetId) =>
+        allMockPresets.find((extraPreset) => extraPreset.id === presetId)
+      )
+      .filter((preset) => !!preset) as MockPreset[];
 
-    const handlers = resolveMockPreset(mswPreset, mockContext);
+    const mswContentPopulatorIds = getMSWContextPopulators();
+    const mswContentPopulators = mswContentPopulatorIds
+      .map((populatorId) =>
+        allContextPopulators.find((populator) => populator.id === populatorId)
+      )
+      .filter((populator) => !!populator) as MockContextPopulator[];
 
-    const worker = setupWorker(...handlers);
+    // Apply MSW context populators.
+    const mockContext = mswContentPopulators.reduce(
+      (acc: MockContext, cur: MockContextPopulator) => {
+        return cur.populator(acc);
+      },
+      makeMockContext()
+    );
+
+    const extraHandlers = extraMswPresets.reduce((acc, cur: MockPreset) => {
+      return [
+        // MSW applies the first handler that is set up for any given request,
+        // so we must apply extra handlers in the opposite order that they are
+        // specified.
+        ...resolveMockPreset(cur, mockContext),
+        ...acc,
+      ];
+    }, []);
+
+    const baseHandlers = resolveMockPreset(mswPreset, mockContext);
+
+    // Because MSW applies the first handler that is set up for any given request,
+    // we must apply extra request handlers before base handlers.
+    const worker = setupWorker(...extraHandlers, ...baseHandlers);
     await worker.start({ onUnhandledRequest: 'bypass' });
   }
 

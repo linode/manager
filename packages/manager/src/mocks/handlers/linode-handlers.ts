@@ -61,7 +61,7 @@ export const getLinodes = (mockContext: MockContext) => [
 
       const pageNumber = Number(url.searchParams.get('page')) || 1;
       const pageSize = Number(url.searchParams.get('page_size')) || 25;
-      const totalPages = Math.ceil(configs.length / pageSize);
+      const totalPages = Math.max(Math.ceil(configs.length / pageSize), 1);
 
       const pageSlice = getPaginatedSlice(configs, pageNumber, pageSize);
       return makePaginatedResponse(pageSlice, pageNumber, totalPages);
