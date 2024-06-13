@@ -67,7 +67,7 @@ export const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
     created: volume.created,
     description: volume.size + ' GB',
     icon: 'volume',
-    path: `/volumes?volumeId=${volume.id}`,
+    path: `/volumes?volumeId=${volume.id}&volumeLabel=${volume.label}`,
     region: volume.region,
     tags: volume.tags,
   },
@@ -87,7 +87,7 @@ export const imageToSearchableItem = (image: Image): SearchableItem => ({
     description: image.description || '',
     icon: 'image',
     /* TODO: Choose a real location for this to link to */
-    path: `/images?imageId=${image.id}`,
+    path: `/images?imageId=${image.id}&imageLabel=${image.label}`,
     tags: [],
   },
   entityType: 'image',

@@ -45,7 +45,7 @@ export const VolumesLanding = () => {
   const location = useLocation<{ volume: Volume | undefined }>();
   const pagination = usePagination(1, preferenceKey);
   const queryParams = new URLSearchParams(location.search);
-  const volumeIdFromParam = queryParams.get('volumeId');
+  const volumeLabelFromParam = queryParams.get('volumeLabel');
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -132,20 +132,12 @@ export const VolumesLanding = () => {
   };
 
   React.useEffect(() => {
-    if (!volumeIdFromParam) {
+    if (!volumeLabelFromParam) {
       return;
     }
 
-    const selectedVolumeFromParams = volumes?.data.find(
-      (v) => v.id === Number(volumeIdFromParam)
-    );
-
-    if (!selectedVolumeFromParams) {
-      return;
-    }
-
-    setQuery(selectedVolumeFromParams.label);
-  }, [volumeIdFromParam, volumes]);
+    setQuery(volumeLabelFromParam);
+  }, [volumeLabelFromParam]);
 
   if (isLoading) {
     return <CircleProgress />;

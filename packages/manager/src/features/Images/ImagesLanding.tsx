@@ -91,7 +91,7 @@ export const ImagesLanding = () => {
   const [query, setQuery] = React.useState('');
   const location = useLocation<{ image: Image | undefined }>();
   const queryParams = new URLSearchParams(location.search);
-  const imageIdFromParam = queryParams.get('imageId');
+  const imageLabelFromParam = queryParams.get('imageLabel');
 
   const queryClient = useQueryClient();
 
@@ -347,27 +347,12 @@ export const ImagesLanding = () => {
   };
 
   React.useEffect(() => {
-    if (!imageIdFromParam) {
+    if (!imageLabelFromParam) {
       return;
     }
 
-    const selectedManualImageFromParams = manualImages?.data.find(
-      (i) => i.id === imageIdFromParam
-    );
-
-    const selectedAutomaticFromParams = automaticImages?.data.find(
-      (i) => i.id === imageIdFromParam
-    );
-
-    const selectedImageFromParams =
-      selectedManualImageFromParams || selectedAutomaticFromParams;
-
-    if (!selectedImageFromParams) {
-      return;
-    }
-
-    setQuery(selectedImageFromParams.label);
-  }, [imageIdFromParam, manualImages, automaticImages]);
+    setQuery(imageLabelFromParam);
+  }, [imageLabelFromParam]);
 
   const renderError = (_: APIError[]) => {
     return (
