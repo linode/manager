@@ -7,6 +7,8 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
+import { ADD_NODE_POOLS_DESCRIPTION } from '../ClusterList/constants';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
 
 const DEFAULT_PLAN_COUNT = 3;
 
@@ -45,7 +47,7 @@ const RenderLoadingOrContent: React.FunctionComponent<NodePoolPanelProps> = (
   return <Panel {...props} />;
 };
 
-const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
+const Panel = (props: NodePoolPanelProps) => {
   const {
     addNodePool,
     apiError,
@@ -56,6 +58,10 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
     selectedRegionId,
     types,
   } = props;
+
+  const {
+    isDiskEncryptionFeatureEnabled,
+  } = useIsDiskEncryptionFeatureEnabled();
 
   const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
     new Map()
@@ -85,13 +91,17 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
     <Grid container direction="column">
       <Grid>
         <KubernetesPlansPanel
+          copy={
+            isDiskEncryptionFeatureEnabled
+              ? ADD_NODE_POOLS_DESCRIPTION
+              : 'Add groups of Linodes to your cluster. You can have a maximum of 100 Linodes per node pool.'
+          }
           getTypeCount={(planId) =>
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
           }
           types={extendedTypes.filter(
             (t) => t.class !== 'nanode' && t.class !== 'gpu'
           )} // No Nanodes or GPUs in clusters
-          copy="Add groups of Linodes to your cluster. You can have a maximum of 100 Linodes per node pool."
           error={apiError}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"
