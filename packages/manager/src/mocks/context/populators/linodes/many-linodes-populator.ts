@@ -10,7 +10,9 @@ import { linodeFactory, configFactory } from 'src/factories';
 export const manyLinodesPopulator: MockContextPopulator = {
   label: 'Many Linodes',
   id: 'many-linodes',
-  description: 'Populates context with 5,000 Linodes',
+  desc: 'Populates context with 5,000 Linodes',
+  group: 'Linodes',
+
   populator: (mockContext: MockContext) => {
     const linodes = linodeFactory.buildList(5000);
     const configs: [number, Config][] = linodes.map((linode) => {
