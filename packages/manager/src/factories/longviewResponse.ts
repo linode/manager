@@ -1,6 +1,7 @@
 import * as Factory from 'factory.ts';
 
 import { LongviewResponse } from 'src/features/Longview/request.types';
+import { AllData, LongviewPackage } from 'src/features/Longview/request.types';
 
 import {
   longviewDiskFactory,
@@ -35,8 +36,23 @@ const longviewResponseData = () => {
 export const longviewResponseFactory = Factory.Sync.makeFactory<LongviewResponse>(
   {
     ACTION: 'getLatestValue',
-    DATA: longviewResponseData(),
+    DATA: {},
     NOTIFICATIONS: [],
     VERSION: 0.4,
+  }
+);
+
+export const longviewLatestStatsFactory = Factory.Sync.makeFactory<
+  Partial<AllData>
+>({
+  ...longviewResponseData(),
+});
+
+export const longviewPackageFactory = Factory.Sync.makeFactory<LongviewPackage>(
+  {
+    current: Factory.each((i) => `${i + 1}.${i + 2}.${i + 3}`),
+    held: 0,
+    name: Factory.each((i) => `mock-package-${i}`),
+    new: Factory.each((i) => `${i + 1}.${i + 2}.${i + 3}`),
   }
 );
