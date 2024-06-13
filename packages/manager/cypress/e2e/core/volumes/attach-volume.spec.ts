@@ -74,7 +74,7 @@ describe('volume attach and detach flows', () => {
       createTestLinode(linodeRequest),
     ]);
 
-    cy.defer(entityPromise, 'creating Volume and Linode').then(
+    cy.defer(() => entityPromise, 'creating Volume and Linode').then(
       ([volume, linode]: [Volume, Linode]) => {
         interceptAttachVolume(volume.id).as('attachVolume');
         interceptGetLinodeConfigs(linode.id).as('getLinodeConfigs');
