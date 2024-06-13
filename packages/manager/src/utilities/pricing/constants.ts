@@ -1,17 +1,7 @@
-export interface ObjStoragePriceObject {
-  monthly: number;
-  storage_overage: number;
-  transfer_overage: number;
-}
-
 // These values will eventually come from the API, but for now they are hardcoded and
 // used to generate the region based dynamic pricing.
 export const LKE_HA_PRICE = 60;
-export const OBJ_STORAGE_PRICE: ObjStoragePriceObject = {
-  monthly: 5.0,
-  storage_overage: 0.02,
-  transfer_overage: 0.005,
-};
+
 export const UNKNOWN_PRICE = '--.--';
 export const PRICE_ERROR_TOOLTIP_TEXT = 'There was an error loading the price.';
 export const PRICES_RELOAD_ERROR_NOTICE_TEXT =

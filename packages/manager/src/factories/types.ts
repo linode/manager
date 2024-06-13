@@ -218,3 +218,40 @@ export const objectStorageOverageTypeFactory = Factory.Sync.makeFactory<PriceTyp
     transfer: 0,
   }
 );
+
+export const distributedNetworkTransferPriceTypeFactory = Factory.Sync.makeFactory<PriceType>(
+  {
+    id: 'distributed_network_transfer',
+    label: 'Distributed Network Transfer',
+    price: {
+      hourly: 0.01,
+      monthly: null,
+    },
+    region_prices: [],
+    transfer: 0,
+  }
+);
+
+export const networkTransferPriceTypeFactory = Factory.Sync.makeFactory<PriceType>(
+  {
+    id: 'network_transfer',
+    label: 'Network Transfer',
+    price: {
+      hourly: 0.005,
+      monthly: null,
+    },
+    region_prices: [
+      {
+        hourly: 0.015,
+        id: 'id-cgk',
+        monthly: null,
+      },
+      {
+        hourly: 0.007,
+        id: 'br-gru',
+        monthly: null,
+      },
+    ],
+    transfer: 0,
+  }
+);

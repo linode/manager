@@ -20,7 +20,7 @@ vi.mock('src/queries/cloudpulse/resources', async () => {
 
 const mockResourceHandler = vi.fn();
 const SELECT_ALL = 'Select All';
-const ARIA_SELECTED = 'aria-selected'
+const ARIA_SELECTED = 'aria-selected';
 
 describe('CloudPulseResourcesSelect component tests', () => {
   it('should render disabled component if the the props are undefined or regions and service type does not have any resources', () => {
