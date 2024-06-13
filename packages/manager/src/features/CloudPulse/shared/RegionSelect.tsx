@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
@@ -29,7 +28,7 @@ export const CloudPulseRegionSelect = React.memo(
         label=""
         noMarginTop
         regions={regions ? regions : []}
-        selectedId={null}
+        selectedId={undefined}
       />
     );
   }

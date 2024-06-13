@@ -15,7 +15,6 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useKubernetesClusterMutation,
   useKubernetesDashboardQuery,
-  useKubernetesTypesQuery,
   useResetKubeConfigMutation,
 } from 'src/queries/kubernetes';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -119,12 +118,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
   } = useKubernetesDashboardQuery(cluster.id);
 
   const {
-    data: kubernetesHighAvailabilityTypesData,
-    isError: isErrorKubernetesTypes,
-    isLoading: isLoadingKubernetesTypes,
-  } = useKubernetesTypesQuery();
-
-  const {
     error: resetKubeConfigError,
     isLoading: isResettingKubeConfig,
     mutateAsync: resetKubeConfig,
@@ -164,14 +157,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     <>
       <Paper className={classes.root}>
         <Grid className={classes.mainGridContainer} container spacing={2}>
-          <KubeClusterSpecs
-            kubernetesHighAvailabilityTypesData={
-              kubernetesHighAvailabilityTypesData
-            }
-            cluster={cluster}
-            isErrorKubernetesTypes={isErrorKubernetesTypes}
-            isLoadingKubernetesTypes={isLoadingKubernetesTypes}
-          />
+          <KubeClusterSpecs cluster={cluster} />
           <Grid container direction="column" lg={4} xs={12}>
             <KubeConfigDisplay
               clusterId={cluster.id}

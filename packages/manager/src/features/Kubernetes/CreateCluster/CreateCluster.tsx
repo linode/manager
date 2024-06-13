@@ -60,7 +60,9 @@ import type { Item } from 'src/components/EnhancedSelect/Select';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
-  const [selectedRegionID, setSelectedRegionID] = React.useState<string>('');
+  const [selectedRegionId, setSelectedRegionId] = React.useState<
+    string | undefined
+  >();
   const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
   const [version, setVersion] = React.useState<Item<string> | undefined>();
@@ -81,6 +83,10 @@ export const CreateCluster = () => {
     isError: isErrorKubernetesTypes,
     isLoading: isLoadingKubernetesTypes,
   } = useKubernetesTypesQuery();
+
+  const lkeHAType = kubernetesHighAvailabilityTypesData?.find(
+    (type) => type.id === 'lke-ha'
+  );
 
   const {
     data: allTypes,
@@ -127,7 +133,7 @@ export const CreateCluster = () => {
       k8s_version,
       label,
       node_pools,
-      region: selectedRegionID,
+      region: selectedRegionId,
     };
 
     createKubernetesCluster(payload)
@@ -170,19 +176,10 @@ export const CreateCluster = () => {
     setLabel(newLabel ? newLabel : undefined);
   };
 
-  const selectedId = selectedRegionID || null;
-
-  const getHighAvailabilityPrice = getDCSpecificPriceByType({
-    regionId: selectedId ? selectedId : undefined,
-    type: kubernetesHighAvailabilityTypesData?.find(
-      (type) => type.id === 'lke-ha'
-    ),
+  const highAvailabilityPrice = getDCSpecificPriceByType({
+    regionId: selectedRegionId,
+    type: lkeHAType,
   });
-
-  const dcSpecificPrice =
-    getHighAvailabilityPrice && !isErrorKubernetesTypes
-      ? getHighAvailabilityPrice
-      : UNKNOWN_PRICE;
 
   const errorMap = getErrorMap(
     ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
@@ -195,7 +192,7 @@ export const CreateCluster = () => {
     isSelectedRegionEligibleForPlan,
   } = plansNoticesUtils({
     regionsData,
-    selectedRegionID,
+    selectedRegionID: selectedRegionId,
   });
 
   if (typesError || regionsError || versionLoadError) {
@@ -228,7 +225,7 @@ export const CreateCluster = () => {
             <Stack>
               <RegionSelect
                 handleSelection={(regionID: string) =>
-                  setSelectedRegionID(regionID)
+                  setSelectedRegionId(regionID)
                 }
                 textFieldProps={{
                   helperText: <RegionHelperText mb={2} />,
@@ -237,7 +234,7 @@ export const CreateCluster = () => {
                 currentCapability="Kubernetes"
                 errorText={errorMap.region}
                 regions={regionsData}
-                selectedId={selectedId}
+                selectedId={selectedRegionId}
               />
             </Stack>
             <StyledDocsLinkContainer>
@@ -263,10 +260,12 @@ export const CreateCluster = () => {
           {showHighAvailability ? (
             <Box data-testid="ha-control-plane">
               <HAControlPlane
-                highAvailabilityPrice={dcSpecificPrice}
+                highAvailabilityPrice={
+                  isErrorKubernetesTypes ? UNKNOWN_PRICE : highAvailabilityPrice
+                }
                 isErrorKubernetesTypes={isErrorKubernetesTypes}
                 isLoadingKubernetesTypes={isLoadingKubernetesTypes}
-                selectedRegionId={selectedRegionID}
+                selectedRegionId={selectedRegionId}
                 setHighAvailability={setHighAvailability}
               />
             </Box>
@@ -287,7 +286,7 @@ export const CreateCluster = () => {
             isPlanPanelDisabled={isPlanPanelDisabled}
             isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
             regionsData={regionsData}
-            selectedRegionId={selectedRegionID}
+            selectedRegionId={selectedRegionId}
             types={typesData || []}
             typesLoading={typesLoading}
           />
@@ -298,10 +297,13 @@ export const CreateCluster = () => {
         data-testid="kube-checkout-bar"
       >
         <KubeCheckoutBar
+          highAvailabilityPrice={
+            isErrorKubernetesTypes ? UNKNOWN_PRICE : highAvailabilityPrice
+          }
           updateFor={[
             hasAgreed,
             highAvailability,
-            selectedRegionID,
+            selectedRegionId,
             nodePools,
             submitting,
             typesData,
@@ -313,9 +315,8 @@ export const CreateCluster = () => {
           createCluster={createCluster}
           hasAgreed={hasAgreed}
           highAvailability={highAvailability}
-          highAvailabilityPrice={dcSpecificPrice}
           pools={nodePools}
-          region={selectedRegionID}
+          region={selectedRegionId}
           regionsData={regionsData}
           removePool={removePool}
           showHighAvailability={showHighAvailability}

@@ -1,12 +1,18 @@
-import { KubeNodePoolResponse, LinodeTypeClass, Region } from '@linode/api-v4';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { extendType } from 'src/utilities/extendType';
 
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
+
+import type {
+  KubeNodePoolResponse,
+  LinodeTypeClass,
+  Region,
+} from '@linode/api-v4';
+import type { ExtendedType } from 'src/utilities/extendType';
 
 const DEFAULT_PLAN_COUNT = 3;
 
@@ -17,7 +23,7 @@ export interface NodePoolPanelProps {
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   regionsData: Region[];
-  selectedRegionId: Region['id'];
+  selectedRegionId: Region['id'] | undefined;
   types: ExtendedType[];
   typesError?: string;
   typesLoading: boolean;

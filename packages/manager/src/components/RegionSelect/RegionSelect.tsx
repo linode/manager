@@ -60,7 +60,7 @@ export const RegionSelect = React.memo((props: RegionSelectProps) => {
       accountAvailabilityData: accountAvailability,
       currentCapability,
       regions,
-      selectedRegionId: selectedId ?? '',
+      selectedRegionId: selectedId,
     }) ?? null;
 
   const [selectedRegion, setSelectedRegion] = React.useState<

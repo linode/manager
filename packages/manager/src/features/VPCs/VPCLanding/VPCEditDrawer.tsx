@@ -1,4 +1,3 @@
-import { UpdateVPCPayload, VPC } from '@linode/api-v4/lib/vpcs/types';
 import { updateVPCSchema } from '@linode/validation/lib/vpcs.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
@@ -12,6 +11,8 @@ import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useUpdateVPCMutation } from 'src/queries/vpcs/vpcs';
 import { getErrorMap } from 'src/utilities/errorUtils';
+
+import type { UpdateVPCPayload, VPC } from '@linode/api-v4/lib/vpcs/types';
 
 interface Props {
   onClose: () => void;
@@ -123,7 +124,7 @@ export const VPCEditDrawer = (props: Props) => {
             handleSelection={() => null}
             helperText={REGION_HELPER_TEXT}
             regions={regionsData}
-            selectedId={vpc?.region ?? null}
+            selectedId={vpc?.region}
           />
         )}
         <ActionsPanel

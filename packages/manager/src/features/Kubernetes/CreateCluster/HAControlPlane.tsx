@@ -14,7 +14,7 @@ export interface HAControlPlaneProps {
   highAvailabilityPrice?: string;
   isErrorKubernetesTypes: boolean;
   isLoadingKubernetesTypes: boolean;
-  selectedRegionId: null | string;
+  selectedRegionId: string | undefined;
   setHighAvailability: (ha: boolean | undefined) => void;
 }
 
@@ -65,7 +65,7 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
         <Typography variant="inherit">HA Control Plane</Typography>
       </FormLabel>
       <HACopy />
-      {isLoadingKubernetesTypes && selectedRegionId !== '' ? (
+      {isLoadingKubernetesTypes && selectedRegionId ? (
         <CircleProgress size="sm" sx={{ marginTop: 2 }} />
       ) : selectedRegionId && isErrorKubernetesTypes ? (
         <Notice spacingBottom={4} spacingTop={24} variant="error">

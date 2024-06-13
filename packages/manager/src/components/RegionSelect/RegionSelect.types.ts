@@ -1,5 +1,3 @@
-import React from 'react';
-
 import type {
   AccountAvailability,
   Capabilities,
@@ -7,6 +5,7 @@ import type {
   Region,
   RegionSite,
 } from '@linode/api-v4';
+import type React from 'react';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
 
 export interface RegionSelectOption {
@@ -47,7 +46,7 @@ export interface RegionSelectProps
   regionFilter?: RegionSite;
   regions: Region[];
   required?: boolean;
-  selectedId: null | string;
+  selectedId: string | undefined;
   showDistributedRegionIconHelperText?: boolean;
   tooltipText?: string;
   width?: number;
@@ -90,7 +89,7 @@ export interface GetRegionOptions extends RegionOptionAvailability {
 
 export interface GetSelectedRegionById extends RegionOptionAvailability {
   regions: Region[];
-  selectedRegionId: string;
+  selectedRegionId: string | undefined;
 }
 
 export interface GetRegionOptionAvailability extends RegionOptionAvailability {

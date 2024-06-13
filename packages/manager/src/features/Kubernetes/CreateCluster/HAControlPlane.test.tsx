@@ -24,7 +24,7 @@ describe('HAControlPlane', () => {
   });
 
   it('should not render an HA price when there is a price error', () => {
-    const { queryAllByText } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <HAControlPlane
         {...props}
         highAvailabilityPrice={UNKNOWN_PRICE}
@@ -32,7 +32,8 @@ describe('HAControlPlane', () => {
       />
     );
 
-    expect(queryAllByText(/\$60\.00/)).toHaveLength(0);
+    getByText(/The cost for HA control plane is not available at this time./);
+    getByText(/For this region, HA control plane costs \$--.--\/month./);
   });
 
   it('should render an HA price when the price is a number', async () => {

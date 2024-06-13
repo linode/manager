@@ -21,7 +21,6 @@ import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 
 import { HACopy } from '../CreateCluster/HAControlPlane';
 
-import type { Region } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -40,7 +39,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 interface Props {
   clusterID: number;
-
   onClose: () => void;
   open: boolean;
   regionID: string;
@@ -65,6 +63,10 @@ export const UpgradeKubernetesClusterToHADialog = React.memo((props: Props) => {
     isLoading: isLoadingKubernetesTypes,
   } = useKubernetesTypesQuery();
 
+  const lkeHAType = kubernetesHighAvailabilityTypesData?.find(
+    (type) => type.id === 'lke-ha'
+  );
+
   const onUpgrade = () => {
     setSubmitting(true);
     setError(undefined);
@@ -82,18 +84,10 @@ export const UpgradeKubernetesClusterToHADialog = React.memo((props: Props) => {
       });
   };
 
-  const getHighAvailabilityPrice = (regionId: Region['id'] | null) => {
-    const dcSpecificPrice = regionId
-      ? getDCSpecificPriceByType({
-          regionId,
-          type: kubernetesHighAvailabilityTypesData?.find(
-            (type) => type.id === 'lke-ha'
-          ),
-        })
-      : undefined;
-
-    return dcSpecificPrice ? parseFloat(dcSpecificPrice) : undefined;
-  };
+  const highAvailabilityPrice = getDCSpecificPriceByType({
+    regionId: regionID,
+    type: lkeHAType,
+  });
 
   const actions = (
     <ActionsPanel
@@ -136,7 +130,7 @@ export const UpgradeKubernetesClusterToHADialog = React.memo((props: Props) => {
                 variant="body1"
               >
                 For this region, pricing for the HA control plane is $
-                {getHighAvailabilityPrice(regionID)} per month per cluster.
+                {highAvailabilityPrice} per month per cluster.
               </Typography>
               <Notice spacingBottom={16} spacingTop={16} variant="warning">
                 <Typography className={classes.noticeHeader} variant="h3">

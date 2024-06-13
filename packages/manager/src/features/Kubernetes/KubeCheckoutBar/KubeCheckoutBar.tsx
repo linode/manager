@@ -1,4 +1,3 @@
-import { KubeNodePoolResponse, Region } from '@linode/api-v4';
 import { Typography, styled } from '@mui/material';
 import * as React from 'react';
 
@@ -23,13 +22,15 @@ import {
 import { nodeWarning } from '../kubeUtils';
 import { NodePoolSummary } from './NodePoolSummary';
 
+import type { KubeNodePoolResponse, Region } from '@linode/api-v4';
+
 export interface Props {
   createCluster: () => void;
   hasAgreed: boolean;
   highAvailability?: boolean;
-  highAvailabilityPrice?: string;
+  highAvailabilityPrice: string | undefined;
   pools: KubeNodePoolResponse[];
-  region: string;
+  region: string | undefined;
   regionsData: Region[];
   removePool: (poolIdx: number) => void;
   showHighAvailability: boolean | undefined;
@@ -80,7 +81,7 @@ export const KubeCheckoutBar = (props: Props) => {
     highAvailabilityPrice !== undefined;
 
   const disableCheckout = Boolean(
-    needsAPool || gdprConditions || haConditions || region === ''
+    needsAPool || gdprConditions || haConditions || !region
   );
 
   if (isLoading) {
@@ -95,7 +96,7 @@ export const KubeCheckoutBar = (props: Props) => {
         ) : undefined
       }
       calculatedPrice={
-        region !== ''
+        region
           ? getTotalClusterPrice({
               highAvailabilityPrice: highAvailability
                 ? Number(highAvailabilityPrice)
@@ -121,7 +122,7 @@ export const KubeCheckoutBar = (props: Props) => {
               types?.find((thisType) => thisType.id === thisPool.type) || null
             }
             price={
-              region !== ''
+              region
                 ? getKubernetesMonthlyPrice({
                     count: thisPool.count,
                     region,
@@ -147,7 +148,7 @@ export const KubeCheckoutBar = (props: Props) => {
             variant="warning"
           />
         )}
-        {region != '' && highAvailability ? (
+        {region && highAvailability ? (
           <StyledHABox>
             <StyledHAHeader>
               High Availability (HA) Control Plane
