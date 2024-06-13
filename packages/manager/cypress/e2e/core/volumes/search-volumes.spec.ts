@@ -31,7 +31,7 @@ describe('Search Volumes', () => {
       ]);
     };
 
-    cy.defer(createTwoVolumes(), 'creating volumes').then(
+    cy.defer(() => createTwoVolumes(), 'creating volumes').then(
       ([volume1, volume2]) => {
         cy.visitWithLogin('/volumes');
 

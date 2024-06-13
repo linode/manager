@@ -19,10 +19,11 @@ describe('Search Images', () => {
    */
   it('creates two images and make sure they show up in the table and are searchable', () => {
     cy.defer(
-      createTestLinode(
-        { image: 'linode/debian10', region: 'us-east' },
-        { waitForDisks: true }
-      ),
+      () =>
+        createTestLinode(
+          { image: 'linode/debian10', region: 'us-east' },
+          { waitForDisks: true }
+        ),
       'create linode'
     ).then((linode: Linode) => {
       interceptGetLinodeDisks(linode.id).as('getLinodeDisks');
@@ -45,7 +46,7 @@ describe('Search Images', () => {
           ]);
         };
 
-        cy.defer(createTwoImages(), 'creating images').then(
+        cy.defer(() => createTwoImages(), 'creating images').then(
           ([image1, image2]) => {
             cy.visitWithLogin('/images');
 
