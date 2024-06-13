@@ -6,6 +6,7 @@ import {
   DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY,
   ENCRYPT_DISK_DISABLED_REBUILD_DISTRIBUTED_REGION_REASON,
   ENCRYPT_DISK_DISABLED_REBUILD_LKE_REASON,
+  ENCRYPT_DISK_REBUILD_DISTRIBUTED_COPY,
 } from 'src/components/DiskEncryption/constants';
 import { DiskEncryption } from 'src/components/DiskEncryption/DiskEncryption';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
@@ -49,6 +50,7 @@ interface Props {
   handleChange: (value: string) => void;
   heading?: string;
   hideStrengthLabel?: boolean;
+  isInRebuildFlow?: boolean;
   isLKELinode?: boolean;
   isOptional?: boolean;
   label?: string;
@@ -74,6 +76,7 @@ export const AccessPanel = (props: Props) => {
     error,
     handleChange: _handleChange,
     hideStrengthLabel,
+    isInRebuildFlow,
     isLKELinode,
     isOptional,
     label,
@@ -142,6 +145,11 @@ export const AccessPanel = (props: Props) => {
       <>
         <Divider spacingBottom={20} spacingTop={24} />
         <DiskEncryption
+          descriptionCopy={
+            linodeIsInDistributedRegion && isInRebuildFlow
+              ? ENCRYPT_DISK_REBUILD_DISTRIBUTED_COPY
+              : DISK_ENCRYPTION_GENERAL_DESCRIPTION
+          }
           disabled={
             !regionSupportsDiskEncryption ||
             isLKELinode ||
@@ -152,7 +160,6 @@ export const AccessPanel = (props: Props) => {
             linodeIsInDistributedRegion,
             regionSupportsDiskEncryption,
           })}
-          descriptionCopy={DISK_ENCRYPTION_GENERAL_DESCRIPTION}
           isEncryptDiskChecked={diskEncryptionEnabled ?? false}
           onChange={() => toggleDiskEncryptionEnabled()}
         />

@@ -264,6 +264,7 @@ export const RebuildFromImage = (props: Props) => {
                 displayDiskEncryption
                 error={errors.root_pass}
                 handleChange={(input) => setFieldValue('root_pass', input)}
+                isInRebuildFlow
                 isLKELinode={isLKELinode}
                 linodeIsInDistributedRegion={linodeIsInDistributedRegion}
                 password={values.root_pass}

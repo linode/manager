@@ -333,6 +333,7 @@ export const RebuildFromStackScript = (props: Props) => {
                 displayDiskEncryption
                 error={errors.root_pass}
                 handleChange={(value) => setFieldValue('root_pass', value)}
+                isInRebuildFlow
                 isLKELinode={isLKELinode}
                 linodeIsInDistributedRegion={linodeIsInDistributedRegion}
                 password={values.root_pass}
