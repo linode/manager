@@ -1,8 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close';
-import { debounce } from 'lodash';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 import { useHistory, useLocation } from 'react-router-dom';
+import { debounce } from 'throttle-debounce';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -42,10 +41,11 @@ const preferenceKey = 'volumes';
 
 export const VolumesLanding = () => {
   const history = useHistory();
-  const { id: volumeParamId } = useParams<{ id?: string }>();
   const [query, setQuery] = React.useState('');
   const location = useLocation<{ volume: Volume | undefined }>();
   const pagination = usePagination(1, preferenceKey);
+  const queryParams = new URLSearchParams(location.search);
+  const volumeIdFromParam = queryParams.get('volumeId');
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -125,13 +125,19 @@ export const VolumesLanding = () => {
     setIsUpgradeDialogOpen(true);
   };
 
+  const resetSearch = () => {
+    queryParams.delete('volumeId');
+    history.push({ search: queryParams.toString() });
+    setQuery('');
+  };
+
   React.useEffect(() => {
-    if (!volumeParamId) {
+    if (!volumeIdFromParam) {
       return;
     }
 
     const selectedVolumeFromParams = volumes?.data.find(
-      (v) => v.id === Number(volumeParamId)
+      (v) => v.id === Number(volumeIdFromParam)
     );
 
     if (!selectedVolumeFromParams) {
@@ -139,7 +145,7 @@ export const VolumesLanding = () => {
     }
 
     setQuery(selectedVolumeFromParams.label);
-  }, [volumeParamId, volumes]);
+  }, [volumeIdFromParam, volumes]);
 
   if (isLoading) {
     return <CircleProgress />;
@@ -158,12 +164,6 @@ export const VolumesLanding = () => {
   if (volumes?.results === 0 && query === '') {
     return <VolumesLandingEmptyState />;
   }
-
-  const resetSearch = () => {
-    history.push('/volumes');
-    pagination.handlePageChange(1);
-    setQuery('');
-  };
 
   return (
     <>
@@ -197,7 +197,7 @@ export const VolumesLanding = () => {
         }}
         hideLabel
         label="Search"
-        onChange={debounce((e) => setQuery(e.target.value), 400)}
+        onChange={debounce(400, (e) => setQuery(e.target.value))}
         placeholder="Search Volumes"
         sx={{ mb: 2 }}
         value={query}
@@ -235,11 +235,12 @@ export const VolumesLanding = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {isFetching && <TableRowLoading columns={6} />}
           {volumes?.data.length === 0 && (
             <TableRowEmpty colSpan={6} message="No volume found" />
           )}
-          {!isFetching &&
+          {isFetching ? (
+            <TableRowLoading columns={6} />
+          ) : (
             volumes?.data.map((volume) => (
               <VolumeTableRow
                 handlers={{
@@ -255,7 +256,8 @@ export const VolumesLanding = () => {
                 key={volume.id}
                 volume={volume}
               />
-            ))}
+            ))
+          )}
         </TableBody>
       </Table>
       <PaginationFooter
