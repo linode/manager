@@ -435,6 +435,7 @@ export const ImagesLanding = () => {
 
               <IconButton
                 aria-label="Clear"
+                data-testid="clear-images-search"
                 onClick={resetSearch}
                 size="small"
                 sx={{ padding: 'unset' }}
@@ -447,7 +448,7 @@ export const ImagesLanding = () => {
         hideLabel
         label="Search"
         onChange={debounce(400, (e) => setQuery(e.target.value))}
-        placeholder="Search Volumes"
+        placeholder="Search Images"
         sx={{ mb: 2 }}
         value={query}
       />

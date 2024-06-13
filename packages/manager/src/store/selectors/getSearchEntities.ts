@@ -3,14 +3,16 @@ import { displayType } from 'src/features/Linodes/presentation';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { readableBytes } from 'src/utilities/unitConversions';
 
-import type { Domain } from '@linode/api-v4/lib/domains';
-import type { Image } from '@linode/api-v4/lib/images';
-import type { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
-import type { Linode } from '@linode/api-v4/lib/linodes';
-import type { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
-import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
-import type { Region } from '@linode/api-v4/lib/regions';
-import type { Volume } from '@linode/api-v4/lib/volumes';
+import type {
+  Domain,
+  Image,
+  KubernetesCluster,
+  Linode,
+  NodeBalancer,
+  ObjectStorageBucket,
+  Region,
+  Volume,
+} from '@linode/api-v4';
 import type { SearchableItem } from 'src/features/Search/search.interfaces';
 import type { ExtendedType } from 'src/utilities/extendType';
 

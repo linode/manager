@@ -186,6 +186,7 @@ export const VolumesLanding = () => {
 
               <IconButton
                 aria-label="Clear"
+                data-testid="clear-volumes-search"
                 onClick={resetSearch}
                 size="small"
                 sx={{ padding: 'unset' }}
