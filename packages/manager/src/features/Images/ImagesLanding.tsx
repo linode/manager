@@ -188,13 +188,12 @@ export const ImagesLanding = () => {
     imageEvents
   );
 
-  const [selectedImage, setSelectedImage] = React.useState<Image>();
-
-  const [editDrawerOpen, setEditDrawerOpen] = React.useState<boolean>(false);
-
-  const [rebuildDrawerOpen, setRebuildDrawerOpen] = React.useState<boolean>(
-    false
-  );
+  const [
+    manageRegionsDrawerImage,
+    setManageRegionsDrawerImage,
+  ] = React.useState<Image>();
+  const [editDrawerImage, setEditDrawerImage] = React.useState<Image>();
+  const [rebuildDrawerImage, setRebuildDrawerImage] = React.useState<Image>();
 
   const [dialog, setDialogState] = React.useState<ImageDialogState>(
     defaultDialogState
@@ -280,16 +279,6 @@ export const ImagesLanding = () => {
     queryClient.invalidateQueries(imageQueries.paginated._def);
   };
 
-  const openForEdit = (image: Image) => {
-    setSelectedImage(image);
-    setEditDrawerOpen(true);
-  };
-
-  const openForRestore = (image: Image) => {
-    setSelectedImage(image);
-    setRebuildDrawerOpen(true);
-  };
-
   const deployNewLinode = (imageID: string) => {
     history.push({
       pathname: `/linodes/create/`,
@@ -320,8 +309,9 @@ export const ImagesLanding = () => {
     onCancelFailed: onCancelFailedClick,
     onDelete: openDialog,
     onDeploy: deployNewLinode,
-    onEdit: openForEdit,
-    onRestore: openForRestore,
+    onEdit: setEditDrawerImage,
+    onManageRegions: setManageRegionsDrawerImage,
+    onRestore: setRebuildDrawerImage,
     onRetry: onRetryClick,
   };
 
@@ -401,9 +391,9 @@ export const ImagesLanding = () => {
               </Hidden>
               {multiRegionsEnabled && (
                 <>
-                <Hidden smDown>
-                  <TableCell>Region(s)</TableCell>
-                </Hidden>
+                  <Hidden smDown>
+                    <TableCell>Region(s)</TableCell>
+                  </Hidden>
                   <Hidden smDown>
                     <TableCell>Compatibility</TableCell>
                   </Hidden>
@@ -417,7 +407,11 @@ export const ImagesLanding = () => {
               >
                 Size
               </TableSortCell>
-              <TableCell>Total Size</TableCell>
+              {multiRegionsEnabled && (
+                <Hidden smDown>
+                  <TableCell>Total Size</TableCell>
+                </Hidden>
+              )}
               <Hidden smDown>
                 <TableSortCell
                   active={manualImagesOrderBy === 'created'}
@@ -428,16 +422,18 @@ export const ImagesLanding = () => {
                   Created
                 </TableSortCell>
               </Hidden>
-              <Hidden smDown>
-              <TableSortCell
-                  active={manualImagesOrderBy === 'id'}
-                direction={manualImagesOrder}
-                  handleClick={/* handleManualImagesOrderChange*/ () => {}} // TODO: sorting on id currently broken
-                  label="id"
-              >
-                  Image Id
-              </TableSortCell>
-              </Hidden>
+              {multiRegionsEnabled && (
+                <Hidden smDown>
+                  <TableSortCell
+                    active={manualImagesOrderBy === 'id'}
+                    direction={manualImagesOrder}
+                    handleClick={/* handleManualImagesOrderChange*/ () => {}} // TODO: sorting on id currently broken
+                    label="id"
+                  >
+                    Image Id
+                  </TableSortCell>
+                </Hidden>
+              )}
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
@@ -532,14 +528,12 @@ export const ImagesLanding = () => {
         />
       </Paper>
       <EditImageDrawer
-        image={selectedImage}
-        onClose={() => setEditDrawerOpen(false)}
-        open={editDrawerOpen}
+        image={editDrawerImage}
+        onClose={() => setEditDrawerImage(undefined)}
       />
       <RebuildImageDrawer
-        image={selectedImage}
-        onClose={() => setRebuildDrawerOpen(false)}
-        open={rebuildDrawerOpen}
+        image={rebuildDrawerImage}
+        onClose={() => setRebuildDrawerImage(undefined)}
       />
       <ConfirmationDialog
         title={

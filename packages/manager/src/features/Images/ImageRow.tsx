@@ -27,7 +27,7 @@ interface Props {
 }
 
 const ImageRow = (props: Props) => {
-  const { event, image } = props;
+  const { event, handlers, image } = props;
 
   const {
     capabilities,
@@ -56,7 +56,7 @@ const ImageRow = (props: Props) => {
       {regions.length > 1 && (
         <>
           ,{' '}
-          <StyledLinkButton /* onClick={openRegionsDrawer}*/>
+          <StyledLinkButton onClick={() => handlers.onManageRegions(image)}>
             +{regions.length - 1}
           </StyledLinkButton>
         </>
@@ -142,9 +142,11 @@ const ImageRow = (props: Props) => {
           </TableCell>
         ) : null}
       </Hidden>
-      <Hidden smDown>
-        <TableCell>{id}</TableCell>
-      </Hidden>
+      {regionsList && (
+        <Hidden smDown>
+          <TableCell>{id}</TableCell>
+        </Hidden>
+      )}
       <TableCell actionCell>
         <ImagesActionMenu {...props} />
       </TableCell>
