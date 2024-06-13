@@ -35,5 +35,11 @@ export const ENCRYPT_DISK_DISABLED_REBUILD_LKE_REASON =
 export const ENCRYPT_DISK_DISABLED_REBUILD_DISTRIBUTED_REGION_REASON =
   'The Encrypt Disk setting cannot be changed for distributed instances.';
 
+export const ENCRYPT_DISK_REBUILD_STANDARD_COPY =
+  'Secure this Linode using data at rest encryption.';
+
+export const ENCRYPT_DISK_REBUILD_LKE_COPY =
+  'Secure this Linode using data at rest encryption. The disk encryption setting for Linodes added to a node pool will not be changed after rebuild.';
+
 export const ENCRYPT_DISK_REBUILD_DISTRIBUTED_COPY =
   'Distributed Compute Instances are secured using disk encryption.';

@@ -7,6 +7,8 @@ import {
   ENCRYPT_DISK_DISABLED_REBUILD_DISTRIBUTED_REGION_REASON,
   ENCRYPT_DISK_DISABLED_REBUILD_LKE_REASON,
   ENCRYPT_DISK_REBUILD_DISTRIBUTED_COPY,
+  ENCRYPT_DISK_REBUILD_LKE_COPY,
+  ENCRYPT_DISK_REBUILD_STANDARD_COPY,
 } from 'src/components/DiskEncryption/constants';
 import { DiskEncryption } from 'src/components/DiskEncryption/DiskEncryption';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
@@ -107,6 +109,24 @@ export const AccessPanel = (props: Props) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     _handleChange(e.target.value);
 
+  const determineRebuildFlowDiskEncryptionDescription = ({
+    isLKELinode,
+    linodeIsInDistributedRegion,
+  }: {
+    isLKELinode: boolean | undefined;
+    linodeIsInDistributedRegion: boolean | undefined;
+  }) => {
+    if (isLKELinode) {
+      return ENCRYPT_DISK_REBUILD_LKE_COPY;
+    }
+
+    if (linodeIsInDistributedRegion) {
+      return ENCRYPT_DISK_REBUILD_DISTRIBUTED_COPY;
+    }
+
+    return ENCRYPT_DISK_REBUILD_STANDARD_COPY;
+  };
+
   const determineEncryptDiskDisabledReason = ({
     isLKELinode,
     linodeIsInDistributedRegion,
@@ -146,8 +166,11 @@ export const AccessPanel = (props: Props) => {
         <Divider spacingBottom={20} spacingTop={24} />
         <DiskEncryption
           descriptionCopy={
-            linodeIsInDistributedRegion && isInRebuildFlow
-              ? ENCRYPT_DISK_REBUILD_DISTRIBUTED_COPY
+            isInRebuildFlow
+              ? determineRebuildFlowDiskEncryptionDescription({
+                  isLKELinode,
+                  linodeIsInDistributedRegion,
+                })
               : DISK_ENCRYPTION_GENERAL_DESCRIPTION
           }
           disabled={
