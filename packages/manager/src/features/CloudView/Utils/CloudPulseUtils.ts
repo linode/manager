@@ -87,3 +87,14 @@ export const convertStringToCamelCasesWithSpaces = (
 
   return nonFormattedString;
 };
+
+export const removeObjectReference = (object: any)=> {
+  if (!object) {
+    return null;
+  }
+  try {
+    return JSON.parse(JSON.stringify(object));
+  } catch (e) {
+    return null;
+  }
+}

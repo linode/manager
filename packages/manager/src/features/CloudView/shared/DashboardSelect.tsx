@@ -8,7 +8,7 @@ import Select from 'src/components/EnhancedSelect/Select';
 import { Typography } from 'src/components/Typography';
 import { useCloudViewDashboardsQuery } from 'src/queries/cloudview/dashboards';
 import { fetchUserPrefObject, updateGlobalFilterPreference } from '../Utils/UserPreference'
-import { DASHBOARD_ID, REGION, RESOURCES } from '../Utils/CloudPulseConstants';
+import { DASHBOARD_ID, REGION, RESOURCES, WIDGETS } from '../Utils/CloudPulseConstants';
 export interface CloudViewDashbboardSelectProps {
   handleDashboardChange: (
     dashboard: Dashboard | undefined
@@ -68,6 +68,7 @@ export const CloudViewDashboardSelect = React.memo(
             [DASHBOARD_ID]: dashboard?.id,
             [REGION]: null,
             [RESOURCES]: [],
+            [WIDGETS]: {}
           });
           props.handleDashboardChange(dashboard);
         }}
