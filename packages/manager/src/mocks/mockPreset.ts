@@ -14,6 +14,9 @@ export type MockPreset = {
   /** Group to which preset belongs. Used to sort presets in dev tool UI. */
   group?: string;
 
+  /** Description of mock preset and its purpose. */
+  desc?: string;
+
   /** Array of MSW handler generator functions. */
   handlers: MockHandlerGenerator[];
 };
