@@ -14,7 +14,9 @@ export const CloudPulseRegionSelect = React.memo(
     const [selectedRegion, setRegion] = React.useState<string>();
 
     React.useEffect(() => {
-      props.handleRegionChange(selectedRegion);
+      if (selectedRegion) {
+        props.handleRegionChange(selectedRegion);
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedRegion]);
 
