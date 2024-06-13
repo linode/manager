@@ -205,12 +205,14 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
         if (devices) {
           for (const device of devices) {
             if (device.entity.type === 'linode') {
-              queryClient.invalidateQueries([
-                linodesQueryKey,
-                device.entity.type,
-                device.entity.id,
-                'firewalls',
-              ]);
+              queryClient.invalidateQueries({
+                queryKey: [
+                  linodesQueryKey,
+                  device.entity.type,
+                  device.entity.id,
+                  'firewalls',
+                ],
+              });
             }
             if (device.entity.type === 'nodebalancer') {
               queryClient.invalidateQueries({

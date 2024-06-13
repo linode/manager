@@ -20,10 +20,10 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
+import { firewallQueries } from './firewalls';
 import { profileQueries } from './profile/profile';
 
 import type {
@@ -158,7 +158,7 @@ export const useNodebalancerCreateMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<NodeBalancer, APIError[], CreateNodeBalancerPayload>({
     mutationFn: createNodeBalancer,
-    onSuccess(nodebalancer) {
+    onSuccess(nodebalancer, variables) {
       // Invalidate paginated stores
       queryClient.invalidateQueries({
         queryKey: nodebalancerQueries.nodebalancers.queryKey,
@@ -169,7 +169,23 @@ export const useNodebalancerCreateMutation = () => {
         nodebalancer
       );
       // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries(profileQueries.grants.queryKey);
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.grants.queryKey,
+      });
+
+      // If a NodeBalancer is assigned to a firewall upon creation, make sure we invalidate that firewall
+      // so it reflects the new entity.
+      if (variables.firewall_id) {
+        // Invalidate the paginated list of firewalls because GET /v4/networking/firewalls returns all firewall entities
+        queryClient.invalidateQueries({
+          queryKey: firewallQueries.firewalls.queryKey,
+        });
+
+        // Invalidate the affected firewall
+        queryClient.invalidateQueries({
+          queryKey: firewallQueries.firewall(variables.firewall_id).queryKey,
+        });
+      }
     },
   });
 };
@@ -320,12 +336,5 @@ export const nodebalancerEventHandler = ({
     queryClient.invalidateQueries({
       queryKey: nodebalancerQueries.nodebalancers.queryKey,
     });
-
-    if (event.action === 'nodebalancer_delete') {
-      // A deleted NodeBalancer may have been associated with a Firewall,
-      // so we want to invalidate Firewalls to reflect the device being removed.
-      // @tood: Optimize this heavy invalidation
-      queryClient.invalidateQueries({ queryKey: [firewallsQueryKey] });
-    }
   }
 };
