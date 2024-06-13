@@ -63,7 +63,7 @@ export const Region = () => {
       'Disk Encryption'
     )
       ? 'enabled'
-      : 'disabled';
+      : undefined;
 
     reset((prev) => ({
       ...prev,
