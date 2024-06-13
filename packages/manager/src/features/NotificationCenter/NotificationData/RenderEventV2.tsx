@@ -31,7 +31,7 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
   /**
    * Some event types may not be handled by our system (or new types or new ones may be added that we haven't caught yet).
    * Filter these out so we don't display blank messages to the user.
-   * We have sentry events being logged for these cases, so we can always go back and add support for them as soon as aware.
+   * We have Sentry events being logged for these cases, so we can always go back and add support for them as soon as we become aware.
    */
   if (message === null) {
     return null;

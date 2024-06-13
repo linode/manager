@@ -3,7 +3,6 @@ import { IconButton } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 
 import Bell from 'src/assets/icons/notification.svg';
 import { Chip } from 'src/components/Chip';
@@ -22,8 +21,6 @@ import { useMarkEventsAsSeen } from 'src/queries/events/events';
 import { rotate360 } from 'src/styles/keyframes';
 
 import { TopMenuTooltip, topMenuIconButtonSx } from '../TopMenuTooltip';
-
-import type { ThunkDispatch } from 'src/store/types';
 
 export const NotificationMenuV2 = () => {
   const { dismissNotifications } = useDismissibleNotifications();
@@ -46,8 +43,6 @@ export const NotificationMenuV2 = () => {
 
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const prevOpen = usePrevious(notificationContext.menuOpen);
-
-  const dispatch = useDispatch<ThunkDispatch>();
 
   const handleNotificationMenuToggle = () => {
     if (!notificationContext.menuOpen) {
@@ -74,7 +69,6 @@ export const NotificationMenuV2 = () => {
     dismissNotifications,
     eventNotifications,
     notifications,
-    dispatch,
     prevOpen,
     markEventsAsSeen,
   ]);

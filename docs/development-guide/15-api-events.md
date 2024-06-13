@@ -32,7 +32,7 @@ The convention to compose the message is as follows:
   - the primary action: (ex: `<strong>created</strong>`) 
   - its correlated negation for negative actions (ex: `could <strong>not</strong> be <strong>created</strong>.`)
 - The `message` should be also handled via the `<EventMessage message={e.message} />` in order to handle potential formatting from the API string (ticks to indicate code blocks).
-- The message composition can be enhanced by using custom components. If for instance we need to fetch extra data based on an event entity, we can simple write a new component to include in the message:
+- The message composition can be enhanced by using custom components. For instance, if we need to fetch extra data based on an event entity, we can simply write a new component to include in the message:
 
 ```Typescript
 export const linode: PartialEventMap<'linode'> = {
@@ -64,9 +64,9 @@ const LinodeMigrateDataCenterMessage = ({ event }: { event: Event }) => {
 
 ## In Progress Events
 
-Some events messages are meant to be displayed alongside a progress bar to show the user the percentage of the action's completion. When an action is in progress, the polling interval switches to every two seconds to provide the user with real-time feedback.
+Some event messages are meant to be displayed alongside a progress bar to show the user the percentage of the action's completion. When an action is in progress, the polling interval switches to every two seconds to provide real-time feedback.
 
-Despite receiving a `percent_complete` value from the API, not all actions are suitable for displaying visual progress, often time because they're too short, or we ony receive 0% and 100% from the endpoint. To allow only certain events to feature the progress bar, their action keys must be added to the `ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS` constant.
+Despite receiving a `percent_complete` value from the API, not all actions are suitable for displaying visual progress, often because they're too short, or we only receive 0% and 100% from the endpoint. To allow only certain events to feature the progress bar, their action keys must be added to the `ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS` constant.
 
 ## Displaying Events in snackbars
 

@@ -78,11 +78,11 @@ export const formatEventTimeRemaining = (time: null | string) => {
 };
 
 /**
- * Determines if the progress bar should be shown for an event (in the notification center or the event page).
+ * Determines if the progress bar should be shown for an event (in the notification center or on the event page).
  *
  * Progress events are determined based on `event.percent_complete` being defined and < 100.
- * However, some some events are not worth showing progress for, usually because they complete too quickly.
- * To that effect, we have an include for progress events.
+ * However, some events are not worth showing progress for, usually because they complete too quickly.
+ * To that effect, we have an `.includes` for progress events.
  * A new action should be added to `ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS` to ensure the display of the progress bar.
  *
  * Additionally, we only want to show the progress bar if the event is not in a scheduled state.
