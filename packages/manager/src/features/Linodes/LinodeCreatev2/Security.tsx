@@ -11,6 +11,7 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption
 import { Divider } from 'src/components/Divider';
 import { Paper } from 'src/components/Paper';
 import { Skeleton } from 'src/components/Skeleton';
+import { Typography } from 'src/components/Typography';
 import { inputMaxWidth } from 'src/foundations/themes/light';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -21,7 +22,7 @@ const PasswordInput = React.lazy(
   () => import('src/components/PasswordInput/PasswordInput')
 );
 
-export const Access = () => {
+export const Security = () => {
   const { control } = useFormContext<CreateLinodeRequest>();
 
   const {
@@ -43,6 +44,9 @@ export const Access = () => {
 
   return (
     <Paper>
+      <Typography sx={{ mb: 2 }} variant="h2">
+        Security
+      </Typography>
       <React.Suspense
         fallback={<Skeleton sx={{ height: '89px', maxWidth: inputMaxWidth }} />}
       >
