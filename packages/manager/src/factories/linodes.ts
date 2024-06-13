@@ -259,7 +259,7 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   disk_encryption: 'enabled',
   group: '',
   hypervisor: 'kvm',
-  id: Factory.each((i) => i),
+  id: Factory.each((i) => i + 1),
   image: 'linode/debian10',
   ipv4: ['50.116.6.212', '192.168.203.1'],
   ipv6: '2600:3c00::f03c:92ff:fee2:6c40/64',

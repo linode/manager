@@ -4,6 +4,7 @@ import type {
   Volume,
   Event,
   Notification,
+  Region,
 } from '@linode/api-v4';
 
 /**
@@ -17,6 +18,9 @@ export interface MockContext {
   // Volumes.
   volumes: Volume[];
 
+  // Environment.
+  regions: Region[];
+
   // Misc.
   eventQueue: Event[];
   notificationQueue: Notification[];
@@ -25,9 +29,21 @@ export interface MockContext {
 export interface MockContextPopulator {
   label: string;
   id: string;
-  description: string;
+  group?: string;
+  desc?: string;
   populator: (mockContext: MockContext) => MockContext;
 }
+
+export const getContextPopulatorGroups = (
+  populators: MockContextPopulator[]
+): Array<string | undefined> => {
+  return populators.reduce((acc: Array<string | undefined>, cur) => {
+    if (!acc.includes(cur.group)) {
+      acc.push(cur.group);
+    }
+    return acc;
+  }, []);
+};
 
 /**
  * Creates and returns an empty mock context.
@@ -39,6 +55,7 @@ export const makeMockContext = (): MockContext => {
     linodes: [],
     linodeConfigs: [],
     volumes: [],
+    regions: [],
     eventQueue: [],
     notificationQueue: [],
   };

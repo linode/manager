@@ -54,7 +54,7 @@ const renderFlagItems = (
       <li key={option.flag}>
         <input
           style={{
-            marginRight: '12px',
+            marginRight: 12,
           }}
           checked={isChecked}
           onChange={(e) => onCheck(e, option.flag)}
