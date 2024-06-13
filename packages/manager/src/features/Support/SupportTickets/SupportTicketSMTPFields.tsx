@@ -30,10 +30,11 @@ export const SupportTicketSMTPFields = () => {
   return (
     <>
       <Controller
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <TextField
             data-qa-ticket-customer-name
             defaultValue={`${account?.first_name} ${account?.last_name}`}
+            errorText={fieldState.error?.message}
             label={SMTP_FIELD_NAME_TO_LABEL_MAP.customerName}
             name="customerName"
             onChange={field.onChange}
@@ -45,9 +46,10 @@ export const SupportTicketSMTPFields = () => {
         name="customerName"
       />
       <Controller
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <TextField
             data-qa-ticket-company-name
+            errorText={fieldState.error?.message}
             label={SMTP_FIELD_NAME_TO_LABEL_MAP.companyName}
             name="companyName"
             onChange={field.onChange}
@@ -58,9 +60,10 @@ export const SupportTicketSMTPFields = () => {
         name="companyName"
       />
       <Controller
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <TextField
             data-qa-ticket-use-case
+            errorText={fieldState.error?.message}
             expand
             label={SMTP_FIELD_NAME_TO_LABEL_MAP.useCase}
             multiline
@@ -74,9 +77,10 @@ export const SupportTicketSMTPFields = () => {
         name="useCase"
       />
       <Controller
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <TextField
             data-qa-ticket-email-domains
+            errorText={fieldState.error?.message}
             expand
             label={SMTP_FIELD_NAME_TO_LABEL_MAP.emailDomains}
             multiline
@@ -90,9 +94,10 @@ export const SupportTicketSMTPFields = () => {
         name="emailDomains"
       />
       <Controller
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <TextField
             data-qa-ticket-public-info
+            errorText={fieldState.error?.message}
             expand
             label={SMTP_FIELD_NAME_TO_LABEL_MAP.publicInfo}
             multiline

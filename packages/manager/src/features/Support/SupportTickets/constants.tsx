@@ -1,3 +1,7 @@
+import {
+  createSMTPSupportTicketSchema,
+  createSupportTicketSchema,
+} from '@linode/validation';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -11,6 +15,7 @@ import type {
   TicketTypeData,
 } from './SupportTicketDialog';
 import type { TicketSeverity } from '@linode/api-v4';
+import type { AnyObjectSchema } from 'yup';
 
 export interface CustomFields {
   companyName: string;
@@ -39,6 +44,11 @@ export const TICKET_TYPE_MAP: Record<TicketType, TicketTypeData> = {
     dialogTitle: SMTP_DIALOG_TITLE,
     helperText: SMTP_HELPER_TEXT,
   },
+};
+
+export const SCHEMA_MAP: Record<string, AnyObjectSchema> = {
+  general: createSupportTicketSchema,
+  smtp: createSMTPSupportTicketSchema,
 };
 
 export const ENTITY_MAP: Record<string, EntityType> = {

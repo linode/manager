@@ -1,3 +1,4 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { debounce } from 'throttle-debounce';
@@ -17,6 +18,7 @@ import { MarkdownReference } from '../SupportTicketDetail/TabbedReply/MarkdownRe
 import { TabbedReply } from '../SupportTicketDetail/TabbedReply/TabbedReply';
 import {
   ENTITY_ID_TO_NAME_MAP,
+  SCHEMA_MAP,
   SEVERITY_OPTIONS,
   SMTP_FIELD_NAME_TO_LABEL_MAP,
   TICKET_SEVERITY_TOOLTIP_TEXT,
@@ -191,6 +193,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       summary: getInitialValue(prefilledTitle, valuesFromStorage.title),
       ticketType: prefilledTicketType ?? 'general',
     },
+    resolver: yupResolver(SCHEMA_MAP[prefilledTicketType ?? 'general']),
   });
 
   const {
@@ -413,7 +416,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
-              //   disabled: !requirementsMet,
               label: 'Open Ticket',
               loading: submitting,
               onClick: onSubmit,
