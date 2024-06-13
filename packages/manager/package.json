@@ -97,7 +97,7 @@
     "storybook": "storybook dev -p 6006",
     "storybook-static": "storybook build -c .storybook -o .out",
     "build-storybook": "storybook build",
-    "cy:run": "cypress run -b chrome -s \"cypress/e2e/core/linodes/rescue-linode.spec.ts,cypress/e2e/core/linodes/resize-linode.spec.ts,cypress/e2e/core/linodes/linode-config.spec.ts,cypress/e2e/core/linodes/switch-linode-state.spec.ts\"",
+    "cy:run": "cypress run -b chrome -s \"cypress/e2e/core/linodes/rescue-linode.spec.ts,cypress/e2e/core/linodes/resize-linode.spec.ts,cypress/e2e/core/linodes/linode-config.spec.ts,cypress/e2e/core/linodes/switch-linode-state.spec.ts,cypress/e2e/core/linodes/clone-linode.spec.ts\"",
     "cy:e2e": "cypress run --headless -b chrome",
     "cy:debug": "cypress open --e2e",
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",

@@ -242,11 +242,7 @@ describe('Linode Config management', () => {
      */
     it('Boots a config', () => {
       cy.defer(
-        () =>
-          createLinodeAndGetConfig(
-            { booted: true },
-            { waitForBoot: true, securityMethod: 'vlan_no_internet' }
-          ),
+        () => createLinodeAndGetConfig({ booted: true }, { waitForBoot: true }),
         'Creating and booting test Linode'
       ).then(([linode, config]: [Linode, Config]) => {
         const kernel = findKernelById(kernels, config.kernel);
