@@ -49,25 +49,25 @@ describe('Search Images', () => {
           ([image1, image2]) => {
             cy.visitWithLogin('/images');
 
-            // Confirm that both volumes are listed on the landing page.
+            // Confirm that both images are listed on the landing page.
             cy.contains(image1.label).should('be.visible');
             cy.contains(image2.label).should('be.visible');
 
-            // Search for the first volume by label, confirm it's the only one shown.
+            // Search for the first image by label, confirm it's the only one shown.
             cy.findByPlaceholderText('Search Images').type(image1.label);
             expect(cy.contains(image1.label).should('be.visible'));
             expect(cy.contains(image2.label).should('not.exist'));
 
-            // Clear search, confirm both volumes are shown.
+            // Clear search, confirm both images are shown.
             cy.findByTestId('clear-images-search').click();
             cy.contains(image1.label).should('be.visible');
             cy.contains(image2.label).should('be.visible');
 
-            // Use the main search bar to search and filter volumes
+            // Use the main search bar to search and filter images
             cy.get('[id="main-search"').type(image2.label);
             ui.autocompletePopper.findByTitle(image2.label).click();
 
-            // Confirm that only the second volume is shown.
+            // Confirm that only the second image is shown.
             cy.contains(image1.label).should('not.exist');
             cy.contains(image2.label).should('be.visible');
           }

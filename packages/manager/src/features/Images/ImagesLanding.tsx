@@ -438,9 +438,8 @@ export const ImagesLanding = () => {
                 data-testid="clear-images-search"
                 onClick={resetSearch}
                 size="small"
-                sx={{ padding: 'unset' }}
               >
-                <CloseIcon sx={{ color: '#aaa !important' }} />
+                <CloseIcon />
               </IconButton>
             </InputAdornment>
           ),
@@ -497,7 +496,7 @@ export const ImagesLanding = () => {
           </TableHead>
           <TableBody>
             {isFetching ? (
-              <TableRowLoading columns={6} />
+              <TableRowLoading columns={5} />
             ) : manualImages.data.length > 0 ? (
               manualImages.data.map((manualImage) => (
                 <ImageRow

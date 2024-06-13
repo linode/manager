@@ -189,9 +189,8 @@ export const VolumesLanding = () => {
                 data-testid="clear-volumes-search"
                 onClick={resetSearch}
                 size="small"
-                sx={{ padding: 'unset' }}
               >
-                <CloseIcon sx={{ color: '#aaa !important' }} />
+                <CloseIcon />
               </IconButton>
             </InputAdornment>
           ),
