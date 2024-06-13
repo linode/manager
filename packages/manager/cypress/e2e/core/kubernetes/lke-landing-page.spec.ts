@@ -32,13 +32,17 @@ describe('LKE landing page', () => {
       capabilities: ['Linodes', 'Disk Encryption'],
     });
 
+    const mockCluster = kubernetesClusterFactory.build();
+
     mockGetAccount(mockAccount).as('getAccount');
+    mockGetClusters([mockCluster]).as('getClusters');
 
     // Intercept request
     cy.visitWithLogin('/kubernetes/clusters');
-    cy.wait('@getAccount');
+    cy.wait(['@getClusters', '@getAccount']);
 
-    // Check if banner is visible
+    // Wait for page to load before confirming that banner is not present.
+    cy.findByText(mockCluster.label).should('be.visible');
     cy.findByText('Disk encryption is now standard on Linodes.').should(
       'not.exist'
     );
@@ -55,12 +59,14 @@ describe('LKE landing page', () => {
     const mockAccount = accountFactory.build({
       capabilities: ['Linodes', 'Disk Encryption'],
     });
+    const mockClusters = kubernetesClusterFactory.buildList(3);
 
     mockGetAccount(mockAccount).as('getAccount');
+    mockGetClusters(mockClusters).as('getClusters');
 
     // Intercept request
     cy.visitWithLogin('/kubernetes/clusters');
-    cy.wait('@getAccount');
+    cy.wait(['@getClusters', '@getAccount']);
 
     // Check if banner is visible
     cy.contains('Disk encryption is now standard on Linodes.').should(
