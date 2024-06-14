@@ -62,7 +62,10 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const location = useLocation();
   const theme = useTheme();
   const params = getQueryParamsFromQueryString(location.search);
-  const { data: regions } = useRegionsQuery();
+
+  const isGeckoGA = flags.gecko2?.enabled && flags.gecko2.ga;
+
+  const { data: regions } = useRegionsQuery(isGeckoGA);
 
   const isCloning = /clone/i.test(params.type);
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
@@ -88,8 +91,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const hideDistributedRegions =
     !flags.gecko2?.enabled ||
     !isDistributedRegionSupported(params.type as LinodeCreateType);
-
-  const isGeckoGA = flags.gecko2?.enabled && flags.gecko2.ga;
 
   const showDistributedRegionIconHelperText = Boolean(
     !hideDistributedRegions &&
@@ -169,8 +170,8 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           currentCapability={currentCapability}
           disabled={disabled}
           errorText={error}
-          handleSelection={handleRegionSelection}
           helperText={helperText}
+          onChange={(e, region) => handleRegionSelection(region.id)}
           regionFilter={hideDistributedRegions ? 'core' : undefined}
           regions={regions ?? []}
           selectedId={selectedId}

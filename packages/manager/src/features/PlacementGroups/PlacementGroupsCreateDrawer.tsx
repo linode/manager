@@ -10,7 +10,7 @@ import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { getRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
@@ -140,6 +140,8 @@ export const PlacementGroupsCreateDrawer = (
     selectedRegion
   )}`;
 
+  const isGeckoGa = flags.gecko2?.enabled && flags.gecko2?.ga;
+
   const disabledRegions = regions?.reduce<Record<string, DisableRegionOption>>(
     (acc, region) => {
       const isRegionAtCapacity = hasRegionReachedPlacementGroupCapacity({
@@ -191,11 +193,12 @@ export const PlacementGroupsCreateDrawer = (
             <DescriptionList
               items={[
                 {
-                  description: getRegionLabel({
-                    flags,
-                    includeSlug: true,
-                    region: selectedRegion,
-                  }),
+                  description: isGeckoGa
+                    ? getNewRegionLabel({
+                        includeSlug: true,
+                        region: selectedRegion,
+                      })
+                    : selectedRegion.label,
                   title: 'Region',
                 },
               ]}

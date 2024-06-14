@@ -69,12 +69,14 @@ export const RegionSelect = <
 
   const regionOptions = getRegionOptions({
     currentCapability,
-    // flags,
+    flags,
     regionFilter,
     regions,
   });
 
   const selectedRegion = regionOptions.find((r) => r.id === value) ?? null;
+  const isGeckoGA = flags.gecko2?.enabled && flags.gecko2?.ga;
+  const isGeckoBeta = flags.gecko2?.enabled && !flags.gecko2?.ga;
 
   const disabledRegions = regionOptions.reduce<
     Record<string, DisableRegionOption>
@@ -97,12 +99,38 @@ export const RegionSelect = <
     return acc;
   }, {});
 
+  const getEndAdornment = () => {
+    if (selectedRegion?.site_type === 'distributed' && isGeckoBeta) {
+      return (
+        <TooltipIcon
+          icon={<DistributedRegion />}
+          status="other"
+          sxTooltipIcon={sxDistributedRegionIcon}
+          text="This region is a distributed region."
+        />
+      );
+    }
+    if (selectedRegion && isGeckoGA) {
+      return `(${selectedRegion?.id})`;
+    }
+    return null;
+  };
+
   return (
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete<Region, false, DisableClearable>
+        getOptionLabel={(region) =>
+          isGeckoGA ? region.label : `${region.label} (${region.id})`
+        }
         renderOption={(props, region) => (
           <RegionOption
+            displayDistributedRegionIcon={
+              regionFilter !== 'core' &&
+              region.site_type === 'distributed' &&
+              isGeckoBeta
+            }
             disabledOptions={disabledRegions[region.id]}
+            flags={flags}
             key={region.id}
             props={props}
             region={region}
@@ -116,15 +144,7 @@ export const RegionSelect = <
         textFieldProps={{
           ...props.textFieldProps,
           InputProps: {
-            endAdornment: (selectedRegion?.site_type === 'distributed' ||
-              selectedRegion?.site_type === 'edge') && (
-              <TooltipIcon
-                icon={<DistributedRegion />}
-                status="other"
-                sxTooltipIcon={sxDistributedRegionIcon}
-                text="This region is a distributed region."
-              />
-            ),
+            endAdornment: getEndAdornment(),
             required,
             startAdornment: selectedRegion && (
               <StyledFlagContainer>
@@ -141,7 +161,6 @@ export const RegionSelect = <
         disabled={disabled}
         errorText={errorText}
         getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
-        getOptionLabel={(region) => `${region.label} (${region.id})`}
         groupBy={(option) => getRegionCountryGroup(option)}
         helperText={helperText}
         label={label ?? 'Region'}

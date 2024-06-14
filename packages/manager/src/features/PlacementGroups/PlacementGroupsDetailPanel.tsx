@@ -6,7 +6,7 @@ import { Button } from 'src/components/Button/Button';
 import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
-import { getRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
@@ -73,13 +73,17 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
   );
   const isPlacementGroupSelectDisabled =
     !selectedRegionId || !hasRegionPlacementGroupCapability;
+  const isGeckoGa = flags.gecko2?.enabled && flags.gecko2?.ga;
 
   const placementGroupSelectLabel = selectedRegion
-    ? `Placement Groups in ${getRegionLabel({
-        flags,
-        includeSlug: true,
-        region: selectedRegion,
-      })}`
+    ? `Placement Groups in ${
+        isGeckoGa
+          ? getNewRegionLabel({
+              includeSlug: true,
+              region: selectedRegion,
+            })
+          : selectedRegion.label
+      }`
     : 'Placement Group';
 
   return (

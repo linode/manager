@@ -1,8 +1,4 @@
-import {
-  CONTINENT_CODE_TO_CONTINENT,
-  Capabilities,
-  RegionSite,
-} from '@linode/api-v4';
+import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
 
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
@@ -11,22 +7,28 @@ import type {
   GetRegionOptionAvailability,
   SupportedDistributedRegionTypes,
 } from './RegionSelect.types';
-import type { AccountAvailability, Region } from '@linode/api-v4';
+import type {
+  AccountAvailability,
+  Capabilities,
+  Region,
+  RegionSite,
+} from '@linode/api-v4';
+import type { FlagSet } from 'src/featureFlags';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
 interface RegionSelectOptionsOptions {
   currentCapability: Capabilities | undefined;
+  flags?: FlagSet;
   regionFilter?: RegionSite;
   regions: Region[];
-
 }
 
 export const getRegionOptions = ({
   currentCapability,
+  flags,
   regionFilter,
-  // flags,
   regions,
 }: RegionSelectOptionsOptions) => {
   return regions
@@ -37,8 +39,18 @@ export const getRegionOptions = ({
       ) {
         return false;
       }
-      if (regionFilter && region.site_type !== regionFilter) {
-        return false;
+      if (regionFilter) {
+        const [, distributedContinentCode] = regionFilter.split('distributed-');
+        // Filter distributed regions by geographical area
+        if (distributedContinentCode && distributedContinentCode !== 'ALL') {
+          const group = getRegionCountryGroup(region);
+          return (
+            region.site_type === 'edge' ||
+            (region.site_type === 'distributed' &&
+              CONTINENT_CODE_TO_CONTINENT[distributedContinentCode] === group)
+          );
+        }
+        return regionFilter.includes(region.site_type);
       }
       return true;
     })
@@ -66,11 +78,14 @@ export const getRegionOptions = ({
       }
 
       // Then we group by country
-      if (region1.country < region2.country) {
-        return 1;
-      }
-      if (region1.country > region2.country) {
-        return -1;
+      if (flags?.gecko2?.enabled && !flags.gecko2.ga) {
+        // Display regions as normal for Gecko Beta
+        if (region1.country < region2.country) {
+          return 1;
+        }
+        if (region1.country > region2.country) {
+          return -1;
+        }
       }
 
       // Then we group by label
@@ -145,20 +160,13 @@ export const getIsDistributedRegion = (
   return region?.site_type === 'distributed' || region?.site_type === 'edge';
 };
 
-export const getRegionLabel = ({
-  flags,
+export const getNewRegionLabel = ({
   includeSlug,
   region,
-}: GetRegionLabel) => {
-  const isGeckoGa = flags?.gecko2?.enabled && flags.gecko2.ga;
-  // Display regions sorted by Country first
-  if (isGeckoGa) {
-    const [city] = region.label.split(', ');
-    if (includeSlug) {
-      return `${region.country.toUpperCase()}, ${city} ${`(${region.id})`}`;
-    }
-    return `${region.country.toUpperCase()}, ${city}`;
+}: Omit<GetRegionLabel, 'flags'>) => {
+  const [city] = region.label.split(', ');
+  if (includeSlug) {
+    return `${region.country.toUpperCase()}, ${city} ${`(${region.id})`}`;
   }
-
-  return `${region.label} (${region.id})`;
+  return `${region.country.toUpperCase()}, ${city}`;
 };

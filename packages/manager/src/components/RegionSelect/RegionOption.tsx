@@ -21,6 +21,7 @@ import type { FlagSet } from 'src/featureFlags';
 
 interface Props {
   disabledOptions?: DisableRegionOption;
+  displayDistributedRegionIcon?: boolean;
   flags?: FlagSet;
   props: React.HTMLAttributes<HTMLLIElement>;
   region: Region;
@@ -29,6 +30,7 @@ interface Props {
 
 export const RegionOption = ({
   disabledOptions,
+  displayDistributedRegionIcon,
   flags,
   props,
   region,
@@ -38,9 +40,6 @@ export const RegionOption = ({
   const isRegionDisabled = Boolean(disabledOptions);
   const isRegionDisabledReason = disabledOptions?.reason;
   const isGeckoGA = flags?.gecko2?.enabled && flags.gecko2.ga;
-
-  const displayDistributedRegionIcon =
-    region.site_type === 'edge' || region.site_type === 'distributed';
 
   return (
     <Tooltip
@@ -80,7 +79,7 @@ export const RegionOption = ({
             <StyledFlagContainer>
               <Flag country={region.country} />
             </StyledFlagContainer>
-            {region.label} ({region.id})
+            {isGeckoGA ? region.label : `${region.label} (${region.id})`}
             {displayDistributedRegionIcon && (
               <Box sx={visuallyHidden}>
                 &nbsp;(This region is a distributed region.)

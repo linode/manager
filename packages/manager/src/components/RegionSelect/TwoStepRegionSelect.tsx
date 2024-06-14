@@ -4,7 +4,6 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
-import { SelectRegionPanelProps } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
@@ -12,7 +11,8 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
-import { RegionFilterValue } from './RegionSelect.types';
+import type { RegionFilterValue } from './RegionSelect.types';
+import type { SelectRegionPanelProps } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 
 interface TwoStepRegionSelectProps
   extends Omit<SelectRegionPanelProps, 'selectedId'> {
@@ -63,8 +63,8 @@ export const TwoStepRegionSelect = React.memo(
       currentCapability,
       disabled,
       error,
-      handleSelection,
       helperText,
+      onChange,
       regions,
       selectedId,
     } = props;
@@ -88,14 +88,16 @@ export const TwoStepRegionSelect = React.memo(
             </Box>
             <RegionSelect
               currentCapability={currentCapability}
+              disableClearable
               disabled={disabled}
               errorText={error}
-              handleSelection={handleSelection}
               helperText={helperText}
+              onChange={onChange}
               regionFilter="core"
               regions={regions ?? []}
               selectedId={selectedId || null}
               showDistributedRegionIconHelperText={false}
+              value={selectedId || null}
               {...RegionSelectProps}
             />
           </SafeTabPanel>
@@ -107,19 +109,22 @@ export const TwoStepRegionSelect = React.memo(
                 }
               }}
               defaultValue={GEOGRAPHICAL_AREA_OPTIONS[0]}
+              disableClearable
               label="Geographical Area"
               options={GEOGRAPHICAL_AREA_OPTIONS}
             />
             <RegionSelect
               currentCapability={currentCapability}
+              disableClearable
               disabled={disabled}
               errorText={error}
-              handleSelection={handleSelection}
               helperText={helperText}
+              onChange={onChange}
               regionFilter={regionFilter}
               regions={regions ?? []}
               selectedId={selectedId || null}
               showDistributedRegionIconHelperText={false}
+              value={selectedId || null}
               {...RegionSelectProps}
             />
           </SafeTabPanel>

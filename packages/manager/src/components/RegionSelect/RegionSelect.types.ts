@@ -6,6 +6,7 @@ import type {
 } from '@linode/api-v4';
 import type React from 'react';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
+import type { FlagSet } from 'src/featureFlags';
 
 export interface DisableRegionOption {
   /**
@@ -30,6 +31,11 @@ export type RegionFilterValue =
   | 'distributed-SA'
   | RegionSite;
 
+export interface GetRegionLabel {
+  flags: FlagSet | undefined;
+  includeSlug?: boolean;
+  region: Region;
+}
 export interface RegionSelectProps<
   DisableClearable extends boolean | undefined = undefined
 > extends Omit<
