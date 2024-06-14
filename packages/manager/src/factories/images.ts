@@ -1,6 +1,5 @@
+import { Image } from '@linode/api-v4/lib/images/types';
 import * as Factory from 'factory.ts';
-
-import type { Image } from '@linode/api-v4/lib/images/types';
 
 export const imageFactory = Factory.Sync.makeFactory<Image>({
   capabilities: [],
