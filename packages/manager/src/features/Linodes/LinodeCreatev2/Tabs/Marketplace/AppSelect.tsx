@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
@@ -10,6 +10,8 @@ import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 
 import { AppsList } from './AppsList';
 import { categoryOptions } from './utilities';
+
+import type { AppCategory } from 'src/features/OneClickApps/types';
 
 interface Props {
   /**
@@ -23,12 +25,21 @@ export const AppSelect = (props: Props) => {
 
   const { isLoading } = useMarketplaceAppsQuery(true);
 
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState<AppCategory>();
+
   return (
     <Paper>
       <Stack spacing={2}>
         <Typography variant="h2">Select an App</Typography>
         <Stack direction="row" flexWrap="wrap" gap={1}>
           <DebouncedSearchTextField
+            onChange={(e) => {
+              if (category) {
+                setCategory(undefined);
+              }
+              setQuery(e.target.value);
+            }}
             InputProps={{ sx: { maxWidth: 'unset !important' } }}
             containerProps={{ flexGrow: 1 }}
             disabled={isLoading}
@@ -38,8 +49,15 @@ export const AppSelect = (props: Props) => {
             loading={isLoading}
             noMarginTop
             placeholder="Search for app name"
+            value={query}
           />
           <Autocomplete
+            onChange={(e, value) => {
+              if (query) {
+                setQuery('');
+              }
+              setCategory(value?.label);
+            }}
             textFieldProps={{
               containerProps: { sx: { minWidth: 250 } },
               hideLabel: true,
@@ -51,7 +69,11 @@ export const AppSelect = (props: Props) => {
           />
         </Stack>
         <Box height="500px" sx={{ overflowX: 'hidden', overflowY: 'auto' }}>
-          <AppsList onOpenDetailsDrawer={onOpenDetailsDrawer} />
+          <AppsList
+            category={category}
+            onOpenDetailsDrawer={onOpenDetailsDrawer}
+            query={query}
+          />
         </Box>
       </Stack>
     </Paper>
