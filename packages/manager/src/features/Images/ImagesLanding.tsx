@@ -88,7 +88,6 @@ export const ImagesLanding = () => {
   const { classes } = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
-  const [query, setQuery] = React.useState('');
   const location = useLocation<{ image: Image | undefined }>();
   const queryParams = new URLSearchParams(location.search);
   const imageLabelFromParam = queryParams.get('imageLabel');
@@ -115,8 +114,8 @@ export const ImagesLanding = () => {
     ['+order_by']: manualImagesOrderBy,
   };
 
-  if (query !== '') {
-    manualImagesFilter['label'] = { '+contains': query };
+  if (imageLabelFromParam && imageLabelFromParam !== '') {
+    manualImagesFilter['label'] = { '+contains': imageLabelFromParam };
   }
 
   const {
@@ -160,8 +159,8 @@ export const ImagesLanding = () => {
     ['+order_by']: automaticImagesOrderBy,
   };
 
-  if (query !== '') {
-    automaticImagesFilter['label'] = { '+contains': query };
+  if (imageLabelFromParam && imageLabelFromParam !== '') {
+    automaticImagesFilter['label'] = { '+contains': imageLabelFromParam };
   }
 
   const {
@@ -332,9 +331,8 @@ export const ImagesLanding = () => {
   };
 
   const resetSearch = () => {
-    queryParams.delete('imageId');
+    queryParams.delete('imageLabel');
     history.push({ search: queryParams.toString() });
-    setQuery('');
   };
 
   const handlers: ImageHandlers = {
@@ -345,14 +343,6 @@ export const ImagesLanding = () => {
     onRestore: openForRestore,
     onRetry: onRetryClick,
   };
-
-  React.useEffect(() => {
-    if (!imageLabelFromParam) {
-      return;
-    }
-
-    setQuery(imageLabelFromParam);
-  }, [imageLabelFromParam]);
 
   const renderError = (_: APIError[]) => {
     return (
@@ -388,7 +378,7 @@ export const ImagesLanding = () => {
   if (
     !manualImages.data.length &&
     !automaticImages.data.length &&
-    query === ''
+    imageLabelFromParam === ''
   ) {
     return renderEmpty();
   }
@@ -414,7 +404,7 @@ export const ImagesLanding = () => {
       />
       <TextField
         InputProps={{
-          endAdornment: query && (
+          endAdornment: imageLabelFromParam && (
             <InputAdornment position="end">
               {isFetching && <CircleProgress size="sm" />}
 
@@ -429,12 +419,17 @@ export const ImagesLanding = () => {
             </InputAdornment>
           ),
         }}
+        onChange={debounce(400, (e) => {
+          queryParams.delete('page');
+          queryParams.set('imageLabel', e.target.value);
+          history.push({ search: queryParams.toString() });
+        })}
         hideLabel
+        key={imageLabelFromParam ?? ''}
         label="Search"
-        onChange={debounce(400, (e) => setQuery(e.target.value))}
         placeholder="Search Images"
         sx={{ mb: 2 }}
-        value={query}
+        value={imageLabelFromParam}
       />
       <Paper className={classes.imageTable}>
         <div className={classes.imageTableHeader}>

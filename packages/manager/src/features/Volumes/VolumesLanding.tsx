@@ -41,7 +41,6 @@ const preferenceKey = 'volumes';
 
 export const VolumesLanding = () => {
   const history = useHistory();
-  const [query, setQuery] = React.useState('');
   const location = useLocation<{ volume: Volume | undefined }>();
   const pagination = usePagination(1, preferenceKey);
   const queryParams = new URLSearchParams(location.search);
@@ -60,8 +59,8 @@ export const VolumesLanding = () => {
     ['+order_by']: orderBy,
   };
 
-  if (query !== '') {
-    filter['label'] = { '+contains': query };
+  if (volumeLabelFromParam && volumeLabelFromParam !== '') {
+    filter['label'] = { '+contains': volumeLabelFromParam };
   }
 
   const { data: volumes, error, isFetching, isLoading } = useVolumesQuery(
@@ -126,18 +125,9 @@ export const VolumesLanding = () => {
   };
 
   const resetSearch = () => {
-    queryParams.delete('volumeId');
+    queryParams.delete('volumeLabel');
     history.push({ search: queryParams.toString() });
-    setQuery('');
   };
-
-  React.useEffect(() => {
-    if (!volumeLabelFromParam) {
-      return;
-    }
-
-    setQuery(volumeLabelFromParam);
-  }, [volumeLabelFromParam]);
 
   if (isLoading) {
     return <CircleProgress />;
@@ -153,7 +143,7 @@ export const VolumesLanding = () => {
     );
   }
 
-  if (volumes?.results === 0 && query === '') {
+  if (volumes?.results === 0 && volumeLabelFromParam === '') {
     return <VolumesLandingEmptyState />;
   }
 
@@ -172,7 +162,7 @@ export const VolumesLanding = () => {
       />
       <TextField
         InputProps={{
-          endAdornment: query && (
+          endAdornment: volumeLabelFromParam && (
             <InputAdornment position="end">
               {isFetching && <CircleProgress size="sm" />}
 
@@ -187,12 +177,17 @@ export const VolumesLanding = () => {
             </InputAdornment>
           ),
         }}
+        onChange={debounce(400, (e) => {
+          queryParams.delete('page');
+          queryParams.set('volumeLabel', e.target.value);
+          history.push({ search: queryParams.toString() });
+        })}
         hideLabel
+        key={volumeLabelFromParam ?? ''}
         label="Search"
-        onChange={debounce(400, (e) => setQuery(e.target.value))}
         placeholder="Search Volumes"
         sx={{ mb: 2 }}
-        value={query}
+        value={volumeLabelFromParam}
       />
       <Table>
         <TableHead>
