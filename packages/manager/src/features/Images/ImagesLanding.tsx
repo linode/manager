@@ -90,7 +90,7 @@ export const ImagesLanding = () => {
   const { classes } = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
-  const location = useLocation<{ image: Image | undefined }>();
+  const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const imageLabelFromParam = queryParams.get(searchQueryKey);
 
