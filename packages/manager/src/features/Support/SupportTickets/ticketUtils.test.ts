@@ -1,4 +1,4 @@
-import { formatDescription } from './SupportTicketDialog';
+import { formatDescription } from './ticketUtils';
 
 import type { EntityType, TicketType } from './SupportTicketDialog';
 
