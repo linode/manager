@@ -227,7 +227,7 @@ export const printInvoice = async (
       unit: 'px',
     });
 
-    const convertedInvoiceDate = invoice.date && dateConversion(invoice.date);
+    const convertedInvoiceDate = dateConversion(invoice.date);
     const TaxStartDate =
       taxes && taxes?.date ? dateConversion(taxes.date) : Infinity;
 

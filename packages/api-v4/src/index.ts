@@ -22,6 +22,8 @@ export * from './managed';
 
 export * from './networking';
 
+export * from './network-transfer';
+
 export * from './nodebalancers';
 
 export * from './object-storage';
