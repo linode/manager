@@ -1,4 +1,5 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { imageFactory } from 'src/factories';
@@ -8,13 +9,26 @@ import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import ImagesLanding from './ImagesLanding';
 
+const mockHistory = {
+  push: vi.fn(),
+  replace: vi.fn(),
+};
+
+// Mock useHistory
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual<any>('react-router-dom');
+  return {
+    ...actual,
+    useHistory: vi.fn(() => mockHistory),
+  };
+});
+
 beforeAll(() => mockMatchMedia());
 
 const loadingTestId = 'circle-progress';
 
 describe('Images Landing Table', () => {
   it('should render images landing table with items', async () => {
-    server.resetHandlers();
     server.use(
       http.get('*/images', () => {
         const images = imageFactory.buildList(3, {
@@ -100,5 +114,140 @@ describe('Images Landing Table', () => {
     expect(
       getByText((text) => text.includes('Store your own custom Linux images'))
     ).toBeInTheDocument();
+  });
+
+  it('should allow opening the Edit Image drawer', async () => {
+    const images = imageFactory.buildList(3, {
+      regions: [
+        { region: 'us-east', status: 'available' },
+        { region: 'us-southeast', status: 'pending' },
+      ],
+    });
+    server.use(
+      http.get('*/images', () => {
+        return HttpResponse.json(makeResourcePage(images));
+      })
+    );
+
+    const { getAllByLabelText, getByTestId, getByText } = renderWithTheme(
+      <ImagesLanding />
+    );
+
+    // Loading state should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    // Open action menu
+    const actionMenu = getAllByLabelText(
+      `Action menu for Image ${images[0].label}`
+    )[0];
+    await userEvent.click(actionMenu);
+
+    await userEvent.click(getByText('Edit'));
+
+    getByText('Edit Image');
+  });
+
+  it('should allow opening the Restore Image drawer', async () => {
+    const images = imageFactory.buildList(3, {
+      regions: [
+        { region: 'us-east', status: 'available' },
+        { region: 'us-southeast', status: 'pending' },
+      ],
+    });
+    server.use(
+      http.get('*/images', () => {
+        return HttpResponse.json(makeResourcePage(images));
+      })
+    );
+
+    const { getAllByLabelText, getByTestId, getByText } = renderWithTheme(
+      <ImagesLanding />
+    );
+
+    // Loading state should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    // Open action menu
+    const actionMenu = getAllByLabelText(
+      `Action menu for Image ${images[0].label}`
+    )[0];
+    await userEvent.click(actionMenu);
+
+    await userEvent.click(getByText('Rebuild an Existing Linode'));
+
+    getByText('Restore from Image');
+  });
+
+  it('should allow deploying to a new Linode', async () => {
+    const images = imageFactory.buildList(3, {
+      regions: [
+        { region: 'us-east', status: 'available' },
+        { region: 'us-southeast', status: 'pending' },
+      ],
+    });
+    server.use(
+      http.get('*/images', () => {
+        return HttpResponse.json(makeResourcePage(images));
+      })
+    );
+
+    const { getAllByLabelText, getByTestId, getByText } = renderWithTheme(
+      <ImagesLanding />
+    );
+
+    // Loading state should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    // Open action menu
+    const actionMenu = getAllByLabelText(
+      `Action menu for Image ${images[0].label}`
+    )[0];
+    await userEvent.click(actionMenu);
+
+    await userEvent.click(getByText('Deploy to New Linode'));
+    expect(mockHistory.push).toBeCalledWith({
+      pathname: '/linodes/create/',
+      search: `?type=Images&imageID=${images[0].id}`,
+      state: { selectedImageId: images[0].id },
+    });
+  });
+
+  it('should allow deleting an image', async () => {
+    const images = imageFactory.buildList(3, {
+      regions: [
+        { region: 'us-east', status: 'available' },
+        { region: 'us-southeast', status: 'pending' },
+      ],
+    });
+    server.use(
+      http.get('*/images', () => {
+        return HttpResponse.json(makeResourcePage(images));
+      })
+    );
+
+    const { getAllByLabelText, getByTestId, getByText } = renderWithTheme(
+      <ImagesLanding />
+    );
+
+    // Loading state should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    // Open action menu
+    const actionMenu = getAllByLabelText(
+      `Action menu for Image ${images[0].label}`
+    )[0];
+    await userEvent.click(actionMenu);
+
+    await userEvent.click(getByText('Delete'));
+
+    getByText(`Delete Image ${images[0].label}`);
   });
 });

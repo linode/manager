@@ -52,7 +52,8 @@ const ImageRow = (props: Props) => {
     multiRegionsEnabled &&
     (regions.length > 0 ? (
       <>
-        {regionsData?.find((region) => region.id == regions[0].region)?.label}
+        {regionsData?.find((region) => region.id == regions[0].region)?.label ??
+          regions[0].region}
         {regions.length > 1 && (
           <>
             ,{' '}
