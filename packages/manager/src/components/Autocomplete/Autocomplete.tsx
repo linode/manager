@@ -66,7 +66,7 @@ export const Autocomplete = <
   props: EnhancedAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>
 ) => {
   const {
-    clearOnBlur = false,
+    clearOnBlur,
     defaultValue,
     disablePortal = true,
     errorText = '',
