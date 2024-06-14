@@ -1,10 +1,14 @@
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import {
   DISK_ENCRYPTION_GENERAL_DESCRIPTION,
   DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY,
+  ENCRYPT_DISK_DISABLED_REBUILD_DISTRIBUTED_REGION_REASON,
+  ENCRYPT_DISK_DISABLED_REBUILD_LKE_REASON,
+  ENCRYPT_DISK_REBUILD_DISTRIBUTED_COPY,
+  ENCRYPT_DISK_REBUILD_LKE_COPY,
+  ENCRYPT_DISK_REBUILD_STANDARD_COPY,
 } from 'src/components/DiskEncryption/constants';
 import { DiskEncryption } from 'src/components/DiskEncryption/DiskEncryption';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
@@ -16,6 +20,8 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 
 import { Divider } from '../Divider';
 import UserSSHKeyPanel from './UserSSHKeyPanel';
+
+import type { Theme } from '@mui/material/styles';
 
 const PasswordInput = React.lazy(
   () => import('src/components/PasswordInput/PasswordInput')
@@ -46,8 +52,11 @@ interface Props {
   handleChange: (value: string) => void;
   heading?: string;
   hideStrengthLabel?: boolean;
+  isInRebuildFlow?: boolean;
+  isLKELinode?: boolean;
   isOptional?: boolean;
   label?: string;
+  linodeIsInDistributedRegion?: boolean;
   password: null | string;
   passwordHelperText?: string;
   placeholder?: string;
@@ -69,8 +78,11 @@ export const AccessPanel = (props: Props) => {
     error,
     handleChange: _handleChange,
     hideStrengthLabel,
+    isInRebuildFlow,
+    isLKELinode,
     isOptional,
     label,
+    linodeIsInDistributedRegion,
     password,
     passwordHelperText,
     placeholder,
@@ -97,6 +109,48 @@ export const AccessPanel = (props: Props) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     _handleChange(e.target.value);
 
+  const determineRebuildFlowDiskEncryptionDescription = ({
+    isLKELinode,
+    linodeIsInDistributedRegion,
+  }: {
+    isLKELinode: boolean | undefined;
+    linodeIsInDistributedRegion: boolean | undefined;
+  }) => {
+    if (isLKELinode) {
+      return ENCRYPT_DISK_REBUILD_LKE_COPY;
+    }
+
+    if (linodeIsInDistributedRegion) {
+      return ENCRYPT_DISK_REBUILD_DISTRIBUTED_COPY;
+    }
+
+    return ENCRYPT_DISK_REBUILD_STANDARD_COPY;
+  };
+
+  const determineEncryptDiskDisabledReason = ({
+    isLKELinode,
+    linodeIsInDistributedRegion,
+    regionSupportsDiskEncryption,
+  }: {
+    isLKELinode: boolean | undefined;
+    linodeIsInDistributedRegion: boolean | undefined;
+    regionSupportsDiskEncryption: boolean;
+  }) => {
+    if (isLKELinode) {
+      return ENCRYPT_DISK_DISABLED_REBUILD_LKE_REASON;
+    }
+
+    if (linodeIsInDistributedRegion) {
+      return ENCRYPT_DISK_DISABLED_REBUILD_DISTRIBUTED_REGION_REASON;
+    }
+
+    if (!regionSupportsDiskEncryption) {
+      return DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY;
+    }
+
+    return '';
+  };
+
   /**
    * Display the "Disk Encryption" section if:
    * 1) the feature is enabled
@@ -111,9 +165,24 @@ export const AccessPanel = (props: Props) => {
       <>
         <Divider spacingBottom={20} spacingTop={24} />
         <DiskEncryption
-          descriptionCopy={DISK_ENCRYPTION_GENERAL_DESCRIPTION}
-          disabled={!regionSupportsDiskEncryption}
-          disabledReason={DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY}
+          descriptionCopy={
+            isInRebuildFlow
+              ? determineRebuildFlowDiskEncryptionDescription({
+                  isLKELinode,
+                  linodeIsInDistributedRegion,
+                })
+              : DISK_ENCRYPTION_GENERAL_DESCRIPTION
+          }
+          disabled={
+            !regionSupportsDiskEncryption ||
+            isLKELinode ||
+            linodeIsInDistributedRegion
+          }
+          disabledReason={determineEncryptDiskDisabledReason({
+            isLKELinode,
+            linodeIsInDistributedRegion,
+            regionSupportsDiskEncryption,
+          })}
           isEncryptDiskChecked={diskEncryptionEnabled ?? false}
           onChange={() => toggleDiskEncryptionEnabled()}
         />

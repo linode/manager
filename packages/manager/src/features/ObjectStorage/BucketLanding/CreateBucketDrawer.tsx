@@ -15,13 +15,14 @@ import {
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
 import { useAccountSettings } from 'src/queries/account/settings';
+import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';
 import {
   useCreateBucketMutation,
   useObjectStorageBuckets,
   useObjectStorageClusters,
   useObjectStorageTypesQuery,
 } from 'src/queries/objectStorage';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { sendCreateBucketEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -77,12 +78,20 @@ export const CreateBucketDrawer = (props: Props) => {
   });
 
   const {
-    data: types,
-    isError: isErrorTypes,
-    isLoading: isLoadingTypes,
+    data: objTypes,
+    isError: isErrorObjTypes,
+    isInitialLoading: isLoadingObjTypes,
   } = useObjectStorageTypesQuery(isOpen);
+  const {
+    data: transferTypes,
+    isError: isErrorTransferTypes,
+    isInitialLoading: isLoadingTransferTypes,
+  } = useNetworkTransferPricesQuery(isOpen);
 
-  const isInvalidPrice = !types || isErrorTypes;
+  const isErrorTypes = isErrorTransferTypes || isErrorObjTypes;
+  const isLoadingTypes = isLoadingTransferTypes || isLoadingObjTypes;
+  const isInvalidPrice =
+    !objTypes || !transferTypes || isErrorTypes || isErrorTransferTypes;
 
   const {
     error,

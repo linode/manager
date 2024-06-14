@@ -543,7 +543,7 @@ export class LinodeCreate extends React.PureComponent<
                   <FromImageContent
                     accountBackupsEnabled={accountBackupsEnabled}
                     error={hasErrorFor.image}
-                    imagePanelTitle="Choose a Distribution"
+                    imagePanelTitle="Choose an OS"
                     imagesData={imagesData!}
                     regionsData={regionsData!}
                     typesData={typesData!}

@@ -48,6 +48,14 @@ export interface PlansPanelProps {
   types: PlanSelectionType[];
 }
 
+/**
+ * PlansPanel is a tabbed panel that displays a list of plans for a Linode.
+ * It is used in the Linode create, Kubernetes and Database create flows.
+ * It contains ample logic to determine which plans are available based on the selected region availability and display related visual indicators:
+ * - If the region is not supported, show an error notice and disable all plans.
+ * - If more than half the plans are disabled, show the limited availability banner and hide the limited availability tooltip
+ * - If less than half the plans are disabled, hide the limited availability banner and show the limited availability tooltip
+ */
 export const PlansPanel = (props: PlansPanelProps) => {
   const {
     className,
@@ -78,9 +86,14 @@ export const PlansPanel = (props: PlansPanelProps) => {
     Boolean(flags.soldOutChips) && selectedRegionID !== undefined
   );
 
-  const _types = replaceOrAppendPlaceholder512GbPlans(types);
+  const _types = types.filter(
+    (type) =>
+      !type.id.includes('dedicated-edge') && !type.id.includes('nanode-edge')
+  );
   const _plans = getPlanSelectionsByPlanType(
-    flags.disableLargestGbPlans ? _types : types
+    flags.disableLargestGbPlans
+      ? replaceOrAppendPlaceholder512GbPlans(_types)
+      : _types
   );
 
   const hideDistributedRegions =
@@ -119,7 +132,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
     const plansMap: PlanSelectionType[] = plans[plan];
     const {
       allDisabledPlans,
-      hasDisabledPlans,
       hasMajorityOfPlansDisabled,
       plansForThisLinodeTypeClass,
     } = extractPlansInformation({
@@ -138,13 +150,15 @@ export const PlansPanel = (props: PlansPanelProps) => {
           <>
             <PlanInformation
               hideLimitedAvailabilityBanner={
-                showDistributedRegionPlanTable || !flags.disableLargestGbPlans
+                showDistributedRegionPlanTable ||
+                !flags.disableLargestGbPlans ||
+                plan === 'metal' // Bare Metal plans handle their own limited availability banner since they are an special case
               }
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                 plan
               )}
               disabledClasses={disabledClasses}
-              hasDisabledPlans={hasDisabledPlans}
+              hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
               hasSelectedRegion={hasSelectedRegion}
               planType={plan}
               regionsData={regionsData || []}

@@ -1,6 +1,9 @@
 import React from 'react';
 
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
 export interface PreferencesStateProps {
   preferences?: ManagerPreferences;

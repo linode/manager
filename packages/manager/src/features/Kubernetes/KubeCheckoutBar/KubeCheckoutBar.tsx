@@ -11,7 +11,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { useAccountAgreements } from 'src/queries/account/agreements';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { getGDPRDetails } from 'src/utilities/formatRegion';

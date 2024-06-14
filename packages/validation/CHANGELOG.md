@@ -1,3 +1,11 @@
+## [2024-06-10] - v0.48.0
+
+
+### Added:
+
+- `tags` to `updateImageSchema` ([#10466](https://github.com/linode/manager/pull/10466))
+- `updateImageRegionsSchema` ([#10541](https://github.com/linode/manager/pull/10541))
+
 ## [2024-05-28] - v0.47.0
 
 
