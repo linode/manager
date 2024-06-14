@@ -24,10 +24,12 @@ const defaultUnwantedEvents: EventAction[] = [
 ];
 
 export const useEventNotifications = (
-  givenEvents?: Event[]
+  providedEvents?: Event[]
 ): NotificationItem[] => {
   const { events: fetchedEvents } = useEventsInfiniteQuery();
-  const relevantEvents = removeBlocklistedEvents(givenEvents ?? fetchedEvents);
+  const relevantEvents = removeBlocklistedEvents(
+    providedEvents ?? fetchedEvents
+  );
   const { isTaxIdEnabled } = useIsTaxIdEnabled();
   const notificationContext = React.useContext(_notificationContext);
 
