@@ -53,6 +53,8 @@ import type { Image, ImageStatus } from '@linode/api-v4';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { Theme } from '@mui/material/styles';
 
+const searchQueryKey = 'query';
+
 const useStyles = makeStyles()((theme: Theme) => ({
   imageTable: {
     marginBottom: theme.spacing(3),
@@ -90,7 +92,7 @@ export const ImagesLanding = () => {
   const { enqueueSnackbar } = useSnackbar();
   const location = useLocation<{ image: Image | undefined }>();
   const queryParams = new URLSearchParams(location.search);
-  const imageLabelFromParam = queryParams.get('imageLabel');
+  const imageLabelFromParam = queryParams.get(searchQueryKey);
 
   const queryClient = useQueryClient();
 
@@ -331,7 +333,7 @@ export const ImagesLanding = () => {
   };
 
   const resetSearch = () => {
-    queryParams.delete('imageLabel');
+    queryParams.delete(searchQueryKey);
     history.push({ search: queryParams.toString() });
   };
 
@@ -421,7 +423,7 @@ export const ImagesLanding = () => {
         }}
         onChange={debounce(400, (e) => {
           queryParams.delete('page');
-          queryParams.set('imageLabel', e.target.value);
+          queryParams.set(searchQueryKey, e.target.value);
           history.push({ search: queryParams.toString() });
         })}
         hideLabel

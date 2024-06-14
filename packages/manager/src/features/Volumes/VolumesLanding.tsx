@@ -38,13 +38,14 @@ import { VolumeTableRow } from './VolumeTableRow';
 import type { Volume } from '@linode/api-v4';
 
 const preferenceKey = 'volumes';
+const searchQueryKey = 'query';
 
 export const VolumesLanding = () => {
   const history = useHistory();
   const location = useLocation<{ volume: Volume | undefined }>();
   const pagination = usePagination(1, preferenceKey);
   const queryParams = new URLSearchParams(location.search);
-  const volumeLabelFromParam = queryParams.get('volumeLabel');
+  const volumeLabelFromParam = queryParams.get(searchQueryKey);
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -125,7 +126,7 @@ export const VolumesLanding = () => {
   };
 
   const resetSearch = () => {
-    queryParams.delete('volumeLabel');
+    queryParams.delete(searchQueryKey);
     history.push({ search: queryParams.toString() });
   };
 
@@ -179,7 +180,7 @@ export const VolumesLanding = () => {
         }}
         onChange={debounce(400, (e) => {
           queryParams.delete('page');
-          queryParams.set('volumeLabel', e.target.value);
+          queryParams.set(searchQueryKey, e.target.value);
           history.push({ search: queryParams.toString() });
         })}
         hideLabel
