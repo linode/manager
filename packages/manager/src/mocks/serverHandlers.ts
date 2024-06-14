@@ -1,11 +1,3 @@
-import {
-  NotificationType,
-  ObjectStorageKeyRequest,
-  SecurityQuestionsPayload,
-  TokenRequest,
-  User,
-  VolumeStatus,
-} from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { HttpResponse, http } from 'msw';
 
@@ -107,6 +99,15 @@ import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
 import { getStorage } from 'src/utilities/storage';
+
+import type {
+  NotificationType,
+  ObjectStorageKeyRequest,
+  SecurityQuestionsPayload,
+  TokenRequest,
+  User,
+  VolumeStatus,
+} from '@linode/api-v4';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -624,6 +625,16 @@ export const handlers = [
       status: 'available',
       type: 'manual',
     });
+    const multiRegionsImage = imageFactory.build({
+      id: 'multi-regions-test-image',
+      label: 'multi-regions-test-image',
+      regions: [
+        { region: 'us-southeast', status: 'available' },
+        { region: 'us-east', status: 'pending' },
+      ],
+      status: 'available',
+      type: 'manual',
+    });
     const creatingImages = imageFactory.buildList(2, {
       status: 'creating',
       type: 'manual',
@@ -640,6 +651,7 @@ export const handlers = [
     const images = [
       cloudinitCompatableDistro,
       cloudinitCompatableImage,
+      multiRegionsImage,
       ...automaticImages,
       ...privateImages,
       ...publicImages,

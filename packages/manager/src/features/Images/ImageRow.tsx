@@ -24,10 +24,11 @@ interface Props {
   event?: Event;
   handlers: Handlers;
   image: Image;
+  multiRegionsEnabled?: boolean; // TODO Image Service v2: delete after GA
 }
 
 const ImageRow = (props: Props) => {
-  const { event, handlers, image } = props;
+  const { event, handlers, image, multiRegionsEnabled } = props;
 
   const {
     capabilities,
@@ -47,26 +48,27 @@ const ImageRow = (props: Props) => {
 
   const isFailed = status === 'pending_upload' && event?.status === 'failed';
 
-  // TODO Image Service v2: delete after GA
-  const multiRegionsEnabled = regions.length > 0;
-
-  const regionsList = multiRegionsEnabled && (
-    <>
-      {regionsData?.find((region) => region.id == regions[0].region)?.label}
-      {regions.length > 1 && (
-        <>
-          ,{' '}
-          <StyledLinkButton onClick={() => handlers.onManageRegions(image)}>
-            +{regions.length - 1}
-          </StyledLinkButton>
-        </>
-      )}
-    </>
-  );
-
-  const compatibilitiesList =
+  const regionsList =
     multiRegionsEnabled &&
-    capabilities.map((capability) => capabilityMap[capability]).join(', ');
+    (regions.length > 0 ? (
+      <>
+        {regionsData?.find((region) => region.id == regions[0].region)?.label}
+        {regions.length > 1 && (
+          <>
+            ,{' '}
+            <StyledLinkButton onClick={() => handlers.onManageRegions?.(image)}>
+              +{regions.length - 1}
+            </StyledLinkButton>
+          </>
+        )}
+      </>
+    ) : (
+      ''
+    ));
+
+  const compatibilitiesList = multiRegionsEnabled
+    ? capabilities.map((capability) => capabilityMap[capability]).join(', ')
+    : '';
 
   const getStatusForImage = (status: string) => {
     switch (status) {
@@ -106,7 +108,7 @@ const ImageRow = (props: Props) => {
       <Hidden smDown>
         {status ? <TableCell>{getStatusForImage(status)}</TableCell> : null}
       </Hidden>
-      {regionsList && (
+      {multiRegionsEnabled && (
         <>
           <Hidden smDown>
             <TableCell>{regionsList}</TableCell>
@@ -119,7 +121,7 @@ const ImageRow = (props: Props) => {
       <TableCell data-qa-image-size>
         {getSizeForImage(size, status, event?.status)}
       </TableCell>
-      {regionsList && (
+      {multiRegionsEnabled && (
         <Hidden smDown>
           <TableCell>
             {getSizeForImage(total_size, status, event?.status)}
@@ -142,7 +144,7 @@ const ImageRow = (props: Props) => {
           </TableCell>
         ) : null}
       </Hidden>
-      {regionsList && (
+      {multiRegionsEnabled && (
         <Hidden smDown>
           <TableCell>{id}</TableCell>
         </Hidden>

@@ -10,7 +10,7 @@ export interface Handlers {
   onDelete?: (label: string, imageID: string, status?: ImageStatus) => void;
   onDeploy?: (imageID: string) => void;
   onEdit?: (image: Image) => void;
-  onManageRegions: (image: Image) => void;
+  onManageRegions?: (image: Image) => void;
   onRestore?: (image: Image) => void;
   onRetry?: (
     imageID: string,
@@ -64,11 +64,15 @@ export const ImagesActionMenu = (props: Props) => {
               ? 'Image is not yet available for use.'
               : undefined,
           },
-          {
-            disabled: isDisabled,
-            onClick: () => onManageRegions?.(image),
-            title: 'Manage Regions',
-          },
+          ...(onManageRegions
+            ? [
+                {
+                  disabled: isDisabled,
+                  onClick: () => onManageRegions(image),
+                  title: 'Manage Regions',
+                },
+              ]
+            : []),
           {
             disabled: isDisabled,
             onClick: () => onDeploy?.(id),

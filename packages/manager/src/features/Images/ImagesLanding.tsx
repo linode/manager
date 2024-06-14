@@ -178,9 +178,8 @@ export const ImagesLanding = () => {
   );
 
   // TODO Image Service V2: delete after GA
-  const multiRegionsEnabled = manualImages?.data.some(
-    (image) => image.regions.length
-  );
+  const multiRegionsEnabled =
+    manualImages?.data.some((image) => image.regions.length) ?? false;
 
   // Automatic images with the associated events tied in.
   const automaticImagesEvents = getEventsForImages(
@@ -310,7 +309,9 @@ export const ImagesLanding = () => {
     onDelete: openDialog,
     onDeploy: deployNewLinode,
     onEdit: setEditDrawerImage,
-    onManageRegions: setManageRegionsDrawerImage,
+    onManageRegions: multiRegionsEnabled
+      ? setManageRegionsDrawerImage
+      : undefined,
     onRestore: setRebuildDrawerImage,
     onRetry: onRetryClick,
   };
@@ -445,6 +446,7 @@ export const ImagesLanding = () => {
                     handlers={handlers}
                     image={manualImage}
                     key={manualImage.id}
+                    multiRegionsEnabled={multiRegionsEnabled}
                   />
                 ))
               : noManualImages}
