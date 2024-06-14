@@ -116,7 +116,7 @@ export const ImagesLanding = () => {
     ['+order_by']: manualImagesOrderBy,
   };
 
-  if (imageLabelFromParam && imageLabelFromParam !== '') {
+  if (imageLabelFromParam) {
     manualImagesFilter['label'] = { '+contains': imageLabelFromParam };
   }
 

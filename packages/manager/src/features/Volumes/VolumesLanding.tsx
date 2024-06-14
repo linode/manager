@@ -60,7 +60,7 @@ export const VolumesLanding = () => {
     ['+order_by']: orderBy,
   };
 
-  if (volumeLabelFromParam && volumeLabelFromParam !== '') {
+  if (volumeLabelFromParam) {
     filter['label'] = { '+contains': volumeLabelFromParam };
   }
 
