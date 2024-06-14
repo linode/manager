@@ -28,9 +28,7 @@ interface SortableTableHeadProps<T>
   extends Props,
     Omit<OrderByProps<T>, 'data'> {}
 
-export const SortableTableHead = <T extends unknown>(
-  props: SortableTableHeadProps<T>
-) => {
+export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
   const theme = useTheme();
 
   const {
