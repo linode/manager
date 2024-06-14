@@ -93,6 +93,7 @@ describe('create linode', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       linodeCreateRefactor: makeFeatureFlagData(false),
+      apicliDxToolsAdditions: makeFeatureFlagData(false),
     });
     mockGetFeatureFlagClientstream();
   });
@@ -466,6 +467,7 @@ describe('create linode', () => {
 
     mockAppendFeatureFlags({
       vpc: makeFeatureFlagData(true),
+      apicliDxToolsAdditions: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
@@ -535,6 +537,7 @@ describe('create linode', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
       linodeDiskEncryption: makeFeatureFlagData(false),
+      apicliDxToolsAdditions: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
@@ -557,6 +560,7 @@ describe('create linode', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
       linodeDiskEncryption: makeFeatureFlagData(true),
+      apicliDxToolsAdditions: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 

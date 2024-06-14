@@ -41,7 +41,7 @@ export const Actions = () => {
   return (
     <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
       <Button buttonType="outlined" onClick={onOpenAPIAwareness}>
-        {isFeatureEnabled ? 'View Code Snippets' : 'Create Using Command Line'}
+        {isFeatureEnabled ? 'View Code Snippets' : 'Create using command line'}
       </Button>
       <Button
         buttonType="primary"
