@@ -34,7 +34,7 @@ export const DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_BANNER_KEY =
   'disk-encryption-update-protect-clusters-banner';
 
 export const DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY =
-  'Disk encryption is not available in the selected region.';
+  'Disk encryption is not available in the selected region. Select another region to use Disk Encryption.';
 
 export const DISK_ENCRYPTION_DEFAULT_DISTRIBUTED_INSTANCES =
   'Distributed Compute Instances are encrypted. This setting can not be changed.';
@@ -55,3 +55,18 @@ export const DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY =
 
 export const DISK_ENCRYPTION_IMAGES_CAVEAT_COPY =
   'Virtual Machine Images are not encrypted.';
+
+export const ENCRYPT_DISK_DISABLED_REBUILD_LKE_REASON =
+  'The Encrypt Disk setting cannot be changed for a Linode attached to a node pool.';
+
+export const ENCRYPT_DISK_DISABLED_REBUILD_DISTRIBUTED_REGION_REASON =
+  'The Encrypt Disk setting cannot be changed for distributed instances.';
+
+export const ENCRYPT_DISK_REBUILD_STANDARD_COPY =
+  'Secure this Linode using data at rest encryption.';
+
+export const ENCRYPT_DISK_REBUILD_LKE_COPY =
+  'Secure this Linode using data at rest encryption. The disk encryption setting for Linodes added to a node pool will not be changed after rebuild.';
+
+export const ENCRYPT_DISK_REBUILD_DISTRIBUTED_COPY =
+  'Distributed Compute Instances are secured using disk encryption.';

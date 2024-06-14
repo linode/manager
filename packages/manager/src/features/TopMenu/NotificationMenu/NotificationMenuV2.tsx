@@ -1,58 +1,48 @@
-// TODO eventMessagesV2: delete when flag is removed
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { IconButton } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 
 import Bell from 'src/assets/icons/notification.svg';
 import { Chip } from 'src/components/Chip';
-import Events from 'src/features/NotificationCenter/Events';
+import { EventsV2 } from 'src/features/NotificationCenter/EventsV2';
 import {
   notificationContext as _notificationContext,
   menuButtonId,
 } from 'src/features/NotificationCenter/NotificationContext';
-import { useEventNotifications } from 'src/features/NotificationCenter/NotificationData/useEventNotifications';
+import { useEventNotificationsV2 } from 'src/features/NotificationCenter/NotificationData/useEventNotificationsV2';
 import { useFormattedNotifications } from 'src/features/NotificationCenter/NotificationData/useFormattedNotifications';
 import Notifications from 'src/features/NotificationCenter/Notifications';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { usePrevious } from 'src/hooks/usePrevious';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMarkEventsAsSeen } from 'src/queries/events/events';
-import { ThunkDispatch } from 'src/store/types';
+import { rotate360 } from 'src/styles/keyframes';
 
 import { TopMenuTooltip, topMenuIconButtonSx } from '../TopMenuTooltip';
 
-const StyledChip = styled(Chip)(() => ({
-  '& .MuiChip-label': {
-    paddingLeft: 2,
-    paddingRight: 2,
-  },
-  fontSize: '0.72rem',
-  height: '1rem',
-  justifyContent: 'center',
-  left: 20,
-  padding: 0,
-  position: 'absolute',
-  top: 4,
-}));
-
-export const NotificationMenu = () => {
+export const NotificationMenuV2 = () => {
   const { dismissNotifications } = useDismissibleNotifications();
   const { data: notifications } = useNotificationsQuery();
   const formattedNotifications = useFormattedNotifications();
-  const eventNotifications = useEventNotifications();
+  const eventNotifications = useEventNotificationsV2();
   const notificationContext = React.useContext(_notificationContext);
   const { mutateAsync: markEventsAsSeen } = useMarkEventsAsSeen();
 
   const numNotifications =
-    eventNotifications.filter((thisEvent) => thisEvent.countInTotal).length +
-    formattedNotifications.filter((thisEvent) => thisEvent.countInTotal).length;
+    eventNotifications.filter(
+      (notificationItem) => notificationItem.countInTotal
+    ).length +
+    formattedNotifications.filter(
+      (notificationItem) => notificationItem.countInTotal
+    ).length;
+  const showInProgressEventIcon = eventNotifications.some(
+    (notificationItem) => notificationItem.showProgress
+  );
 
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const prevOpen = usePrevious(notificationContext.menuOpen);
-
-  const dispatch = useDispatch<ThunkDispatch>();
 
   const handleNotificationMenuToggle = () => {
     if (!notificationContext.menuOpen) {
@@ -79,7 +69,6 @@ export const NotificationMenu = () => {
     dismissNotifications,
     eventNotifications,
     notifications,
-    dispatch,
     prevOpen,
     markEventsAsSeen,
   ]);
@@ -103,7 +92,16 @@ export const NotificationMenu = () => {
         >
           <Bell height="20px" width="20px" />
           {numNotifications > 0 && (
-            <StyledChip color="success" label={numNotifications} size="small" />
+            <StyledChip
+              color="primary"
+              data-testid="events-count-notification"
+              label={numNotifications > 9 ? '9+' : numNotifications}
+              showPlus={numNotifications > 9}
+              size="small"
+            />
+          )}
+          {showInProgressEventIcon && (
+            <StyledAutorenewIcon data-testid="in-progress-event-icon" />
           )}
         </IconButton>
       </TopMenuTooltip>
@@ -132,8 +130,40 @@ export const NotificationMenu = () => {
         open={notificationContext.menuOpen}
       >
         <Notifications />
-        <Events />
+        <EventsV2
+          eventNotifications={eventNotifications}
+          onCloseNotificationCenter={() => notificationContext.closeMenu()}
+        />
       </Popover>
     </>
   );
 };
+
+const StyledChip = styled(Chip, {
+  label: 'StyledEventNotificationChip',
+  shouldForwardProp: (prop) => prop !== 'showPlus',
+})<{ showPlus: boolean }>(({ theme, ...props }) => ({
+  '& .MuiChip-label': {
+    paddingLeft: 2,
+    paddingRight: 2,
+  },
+  borderRadius: props.showPlus ? 12 : '50%',
+  fontFamily: theme.font.bold,
+  fontSize: '0.72rem',
+  height: 18,
+  justifyContent: 'center',
+  left: 20,
+  padding: 0,
+  position: 'absolute',
+  top: 0,
+  width: props.showPlus ? 22 : 18,
+}));
+
+const StyledAutorenewIcon = styled(AutorenewIcon)(({ theme }) => ({
+  animation: `${rotate360} 2s linear infinite`,
+  bottom: 4,
+  color: theme.palette.primary.main,
+  fontSize: 18,
+  position: 'absolute',
+  right: 2,
+}));
