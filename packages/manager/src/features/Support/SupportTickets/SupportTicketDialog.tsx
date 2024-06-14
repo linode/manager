@@ -19,6 +19,7 @@ import { TabbedReply } from '../SupportTicketDetail/TabbedReply/TabbedReply';
 import {
   ENTITY_ID_TO_NAME_MAP,
   SCHEMA_MAP,
+  SEVERITY_LABEL_MAP,
   SEVERITY_OPTIONS,
   SMTP_FIELD_NAME_TO_LABEL_MAP,
   TICKET_SEVERITY_TOOLTIP_TEXT,
@@ -27,7 +28,7 @@ import {
 } from './constants';
 import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
 import { SupportTicketSMTPFields } from './SupportTicketSMTPFields';
-import { severityLabelMap, useTicketSeverityCapability } from './ticketUtils';
+import { useTicketSeverityCapability } from './ticketUtils';
 
 import type { FileAttachment } from '../index';
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
@@ -305,7 +306,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   });
 
   const selectedSeverityLabel =
-    selectedSeverity && severityLabelMap.get(selectedSeverity);
+    selectedSeverity && SEVERITY_LABEL_MAP.get(selectedSeverity);
   const selectedSeverityOption =
     selectedSeverity != undefined && selectedSeverityLabel != undefined
       ? {

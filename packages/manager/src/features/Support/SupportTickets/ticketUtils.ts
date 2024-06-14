@@ -1,9 +1,10 @@
-import { Filter, Params } from '@linode/api-v4';
-import { TicketSeverity, getTickets } from '@linode/api-v4/lib/support';
+import { getTickets } from '@linode/api-v4/lib/support';
 
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+
+import type { Filter, Params } from '@linode/api-v4';
 
 /**
  * getStatusFilter
@@ -59,9 +60,3 @@ export const useTicketSeverityCapability = () => {
     account?.capabilities ?? []
   );
 };
-
-export const severityLabelMap: Map<TicketSeverity, string> = new Map([
-  [1, '1-Major Impact'],
-  [2, '2-Moderate Impact'],
-  [3, '3-Low Impact'],
-]);

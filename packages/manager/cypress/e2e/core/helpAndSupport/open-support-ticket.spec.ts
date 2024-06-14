@@ -28,7 +28,7 @@ import {
   mockGetSupportTickets,
   mockGetSupportTicketReplies,
 } from 'support/intercepts/support';
-import { severityLabelMap } from 'src/features/Support/SupportTickets/ticketUtils';
+import { SEVERITY_LABEL_MAP } from 'src/features/Support/SupportTickets/constants';
 
 describe('help & support', () => {
   /*
@@ -117,7 +117,7 @@ describe('help & support', () => {
 
     // Get severity label for numeric severity level.
     // Bail out if we're unable to get a valid label -- this indicates a mismatch between the test and source.
-    const severityLabel = severityLabelMap.get(mockTicket.severity!);
+    const severityLabel = SEVERITY_LABEL_MAP.get(mockTicket.severity!);
     if (!severityLabel) {
       throw new Error(
         `Unable to retrieve label for severity level '${mockTicket.severity}'. Is this a valid support severity level?`

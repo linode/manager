@@ -7,8 +7,6 @@ import React from 'react';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
-import { severityLabelMap } from './ticketUtils';
-
 import type {
   EntityType,
   TicketType,
@@ -92,10 +90,16 @@ export const SMTP_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
   ...CUSTOM_FIELD_NAME_TO_LABEL_MAP,
 };
 
+export const SEVERITY_LABEL_MAP: Map<TicketSeverity, string> = new Map([
+  [1, '1-Major Impact'],
+  [2, '2-Moderate Impact'],
+  [3, '3-Low Impact'],
+]);
+
 export const SEVERITY_OPTIONS: {
   label: string;
   value: TicketSeverity;
-}[] = Array.from(severityLabelMap).map(([severity, label]) => ({
+}[] = Array.from(SEVERITY_LABEL_MAP).map(([severity, label]) => ({
   label,
   value: severity,
 }));

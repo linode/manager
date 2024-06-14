@@ -35,6 +35,7 @@ import { AttachFileForm } from '../AttachFileForm';
 import { MarkdownReference } from '../SupportTicketDetail/TabbedReply/MarkdownReference';
 import { TabbedReply } from '../SupportTicketDetail/TabbedReply/TabbedReply';
 import {
+  SEVERITY_LABEL_MAP,
   SMTP_DIALOG_TITLE,
   SMTP_HELPER_TEXT,
   TICKET_SEVERITY_TOOLTIP_TEXT,
@@ -43,7 +44,7 @@ import {
   // SMTP_FIELD_NAME_TO_LABEL_MAP,
   SupportTicketSMTPFields,
 } from './SupportTicketSMTPFields';
-import { severityLabelMap, useTicketSeverityCapability } from './ticketUtils';
+import { useTicketSeverityCapability } from './ticketUtils';
 
 import type { FileAttachment } from '../index';
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
@@ -155,7 +156,7 @@ const entityIdToNameMap: Record<EntityType, string> = {
 const severityOptions: {
   label: string;
   value: TicketSeverity;
-}[] = Array.from(severityLabelMap).map(([severity, label]) => ({
+}[] = Array.from(SEVERITY_LABEL_MAP).map(([severity, label]) => ({
   label,
   value: severity,
 }));
@@ -582,7 +583,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     null;
 
   const selectedSeverityLabel =
-    selectedSeverity && severityLabelMap.get(selectedSeverity);
+    selectedSeverity && SEVERITY_LABEL_MAP.get(selectedSeverity);
   const selectedSeverityOption =
     selectedSeverity != undefined && selectedSeverityLabel != undefined
       ? {
