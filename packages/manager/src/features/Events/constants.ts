@@ -1,4 +1,5 @@
-import type { Event } from '@linode/api-v4/lib/account';
+// TODO eventMessagesV2: delete when flag is removed
+import type { Event, Filter } from '@linode/api-v4';
 
 export const EVENT_ACTIONS: Event['action'][] = [
   'account_settings_update',
@@ -14,10 +15,10 @@ export const EVENT_ACTIONS: Event['action'][] = [
   'database_create',
   'database_credentials_reset',
   'database_delete',
+  'database_resize_create',
+  'database_resize',
   'database_update_failed',
   'database_update',
-  'database_resize',
-  'database_resize_create',
   'disk_create',
   'disk_delete',
   'disk_duplicate',
@@ -81,12 +82,12 @@ export const EVENT_ACTIONS: Event['action'][] = [
   'nodebalancer_update',
   'password_reset',
   'placement_group_assign',
-  'placement_group_became_non_compliant',
   'placement_group_became_compliant',
+  'placement_group_became_non_compliant',
   'placement_group_create',
+  'placement_group_delete',
   'placement_group_unassign',
   'placement_group_update',
-  'placement_group_delete',
   'profile_update',
   'stackscript_create',
   'stackscript_delete',
@@ -96,6 +97,7 @@ export const EVENT_ACTIONS: Event['action'][] = [
   'subnet_create',
   'subnet_delete',
   'subnet_update',
+  'tax_id_invalid',
   'tfa_disabled',
   'tfa_enabled',
   'ticket_attachment_upload',
@@ -127,3 +129,31 @@ export const EVENT_STATUSES: Event['status'][] = [
   'failed',
   'notification',
 ];
+
+export const ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS: Event['action'][] = [
+  'linode_resize',
+  'linode_migrate',
+  'linode_migrate_datacenter',
+  'disk_imagize',
+  'linode_boot',
+  'host_reboot',
+  'lassie_reboot',
+  'linode_reboot',
+  'linode_shutdown',
+  'linode_delete',
+  'linode_clone',
+  'disk_resize',
+  'disk_duplicate',
+  'backups_restore',
+  'linode_snapshot',
+  'linode_mutate',
+  'linode_rebuild',
+  'linode_create',
+  'image_upload',
+  'volume_migrate',
+  'database_resize',
+];
+
+export const EVENTS_LIST_FILTER: Filter = {
+  action: { '+neq': 'profile_update' },
+};

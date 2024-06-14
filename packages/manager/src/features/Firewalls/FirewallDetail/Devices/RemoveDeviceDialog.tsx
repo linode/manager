@@ -1,15 +1,15 @@
-import { FirewallDevice } from '@linode/api-v4';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
-import { queryKey as firewallQueryKey } from 'src/queries/firewalls';
 import { useRemoveFirewallDeviceMutation } from 'src/queries/firewalls';
 import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
-import { queryKey as nodeBalancerQueryKey } from 'src/queries/nodebalancers';
+import { nodebalancerQueries } from 'src/queries/nodebalancers';
+
+import type { FirewallDevice } from '@linode/api-v4';
 
 export interface Props {
   device: FirewallDevice | undefined;
@@ -36,10 +36,16 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
   const deviceDialog = deviceType === 'linode' ? 'Linode' : 'NodeBalancer';
 
   const onDelete = async () => {
+    if (!device) {
+      return;
+    }
+
     await mutateAsync();
+
     const toastMessage = onService
       ? `Firewall ${firewallLabel} successfully unassigned`
-      : `${deviceDialog} ${device?.entity.label} successfully removed`;
+      : `${deviceDialog} ${device.entity.label} successfully removed`;
+
     enqueueSnackbar(toastMessage, {
       variant: 'success',
     });
@@ -48,18 +54,19 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
       enqueueSnackbar(error[0].reason, { variant: 'error' });
     }
 
-    const querykey =
-      deviceType === 'linode' ? linodesQueryKey : nodeBalancerQueryKey;
-
     // Since the linode was removed as a device, invalidate the linode-specific firewall query
-    queryClient.invalidateQueries([
-      querykey,
-      deviceType,
-      device?.entity.id,
-      'firewalls',
-    ]);
+    if (deviceType === 'linode') {
+      queryClient.invalidateQueries({
+        queryKey: [linodesQueryKey, deviceType, device.entity.id, 'firewalls'],
+      });
+    }
 
-    queryClient.invalidateQueries([firewallQueryKey]);
+    if (deviceType === 'nodebalancer') {
+      queryClient.invalidateQueries({
+        queryKey: nodebalancerQueries.nodebalancer(device.entity.id)._ctx
+          .firewalls.queryKey,
+      });
+    }
 
     onClose();
   };

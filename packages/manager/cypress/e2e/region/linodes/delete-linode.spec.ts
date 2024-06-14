@@ -2,7 +2,6 @@ import { createLinodeRequestFactory } from '@src/factories';
 import { describeRegions } from 'support/util/regions';
 import { randomLabel, randomString } from 'support/util/random';
 import { Region } from '@linode/api-v4';
-import { createLinode } from '@linode/api-v4';
 import type { Linode } from '@linode/api-v4';
 import { ui } from 'support/ui';
 import { authenticate } from 'support/api/authentication';
@@ -11,6 +10,7 @@ import {
   interceptGetLinodes,
 } from 'support/intercepts/linodes';
 import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
 
 authenticate();
 describeRegions('Delete Linodes', (region: Region) => {
@@ -28,11 +28,12 @@ describeRegions('Delete Linodes', (region: Region) => {
       label: randomLabel(),
       region: region.id,
       root_pass: randomString(32),
+      booted: false,
     });
 
     // Create a Linode before navigating to its details page to delete it.
     cy.defer(
-      createLinode(linodeCreatePayload),
+      () => createTestLinode(linodeCreatePayload),
       `creating Linode in ${region.label}`
     ).then((linode: Linode) => {
       interceptGetLinodeDetails(linode.id).as('getLinode');

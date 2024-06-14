@@ -3,8 +3,8 @@ import React from 'react';
 import { useController, useWatch } from 'react-hook-form';
 
 import { Box } from 'src/components/Box';
-import { CircularProgress } from 'src/components/CircularProgress';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { LinearProgress } from 'src/components/LinearProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
@@ -38,11 +38,7 @@ export const BackupSelect = () => {
     }
 
     if (isFetching) {
-      return (
-        <Stack alignItems="center">
-          <CircularProgress />
-        </Stack>
-      );
+      return <LinearProgress />;
     }
 
     if (hasNoBackups) {

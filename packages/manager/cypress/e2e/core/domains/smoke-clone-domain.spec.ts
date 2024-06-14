@@ -34,7 +34,7 @@ describe('Clone a Domain', () => {
 
     const domainRecords = createDomainRecords();
 
-    cy.defer(createDomain(domainRequest), 'creating domain').then(
+    cy.defer(() => createDomain(domainRequest), 'creating domain').then(
       (domain: Domain) => {
         // Add records to the domain.
         cy.visitWithLogin(`/domains/${domain.id}`);

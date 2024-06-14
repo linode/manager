@@ -1,6 +1,6 @@
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 
-import type { Image, Linode } from '@linode/api-v4';
+import type { Event, Image, Linode } from '@linode/api-v4';
 
 export const useImageAndLinodeGrantCheck = () => {
   const { data: profile } = useProfile();
@@ -25,3 +25,16 @@ export const getImageLabelForLinode = (linode: Linode, images: Image[]) => {
   const image = images?.find((image) => image.id === linode.image);
   return image?.label ?? linode.image;
 };
+
+export const getEventsForImages = (images: Image[], events: Event[]) =>
+  Object.fromEntries(
+    images.map(({ id: imageId }) => [
+      imageId,
+      events.find(
+        (thisEvent) =>
+          `private/${thisEvent.secondary_entity?.id}` === imageId ||
+          (`private/${thisEvent.entity?.id}` === imageId &&
+            thisEvent.status === 'failed')
+      ),
+    ])
+  );

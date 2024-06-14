@@ -590,6 +590,9 @@ export const lightTheme: ThemeOptions = {
       },
     },
     MuiCircularProgress: {
+      defaultProps: {
+        disableShrink: true,
+      },
       styleOverrides: {
         circle: {
           strokeLinecap: 'inherit',

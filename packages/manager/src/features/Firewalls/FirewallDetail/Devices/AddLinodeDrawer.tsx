@@ -14,7 +14,7 @@ import {
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
 } from 'src/queries/firewalls';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';

@@ -18,7 +18,7 @@ import { Typography } from 'src/components/Typography';
 import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
 import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
 import { usePagination } from 'src/hooks/usePagination';
-import { useSSHKeysQuery } from 'src/queries/profile';
+import { useSSHKeysQuery } from 'src/queries/profile/profile';
 import { parseAPIDate } from 'src/utilities/date';
 import { getSSHKeyFingerprint } from 'src/utilities/ssh-fingerprint';
 

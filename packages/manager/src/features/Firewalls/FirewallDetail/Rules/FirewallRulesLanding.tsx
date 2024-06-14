@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -7,11 +8,15 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Notice } from 'src/components/Notice/Notice';
 import { Prompt } from 'src/components/Prompt/Prompt';
 import { Typography } from 'src/components/Typography';
-import { useUpdateFirewallRulesMutation } from 'src/queries/firewalls';
+import {
+  useAllFirewallDevicesQuery,
+  useUpdateFirewallRulesMutation,
+} from 'src/queries/firewalls';
+import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
+import { nodebalancerQueries } from 'src/queries/nodebalancers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';
-import { FirewallRuleTable } from './FirewallRuleTable';
 import {
   hasModified as _hasModified,
   curriedFirewallRuleEditorReducer,
@@ -20,6 +25,7 @@ import {
   prepareRules,
   stripExtendedFields,
 } from './firewallRuleEditor';
+import { FirewallRuleTable } from './FirewallRuleTable';
 import { parseFirewallRuleError } from './shared';
 
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
@@ -51,6 +57,8 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
   const { mutateAsync: updateFirewallRules } = useUpdateFirewallRulesMutation(
     firewallID
   );
+  const { data: devices } = useAllFirewallDevicesQuery(firewallID);
+  const queryClient = useQueryClient();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -193,6 +201,28 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
     updateFirewallRules(finalRules)
       .then((_rules) => {
         setSubmitting(false);
+        // Invalidate Firewalls assigned to NodeBalancers and Linodes.
+        if (devices) {
+          for (const device of devices) {
+            if (device.entity.type === 'linode') {
+              queryClient.invalidateQueries({
+                queryKey: [
+                  linodesQueryKey,
+                  device.entity.type,
+                  device.entity.id,
+                  'firewalls',
+                ],
+              });
+            }
+            if (device.entity.type === 'nodebalancer') {
+              queryClient.invalidateQueries({
+                queryKey: nodebalancerQueries.nodebalancer(device.entity.id)
+                  ._ctx.firewalls.queryKey,
+              });
+            }
+          }
+        }
+
         // Reset editor state.
         inboundDispatch({ rules: _rules.inbound ?? [], type: 'RESET' });
         outboundDispatch({ rules: _rules.outbound ?? [], type: 'RESET' });

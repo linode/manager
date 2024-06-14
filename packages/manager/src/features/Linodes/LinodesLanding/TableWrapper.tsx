@@ -19,7 +19,7 @@ interface Props {
 
 interface TableWrapperProps<T> extends Omit<OrderByProps<T>, 'data'>, Props {}
 
-const TableWrapper = <T extends unknown>(props: TableWrapperProps<T>) => {
+const TableWrapper = <T,>(props: TableWrapperProps<T>) => {
   const {
     dataLength,
     handleOrderChange,
