@@ -380,7 +380,7 @@ export const ImagesLanding = () => {
   if (
     !manualImages.data.length &&
     !automaticImages.data.length &&
-    imageLabelFromParam === ''
+    !imageLabelFromParam
   ) {
     return renderEmpty();
   }

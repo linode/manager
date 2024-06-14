@@ -144,7 +144,7 @@ export const VolumesLanding = () => {
     );
   }
 
-  if (volumes?.results === 0 && volumeLabelFromParam === '') {
+  if (volumes?.results === 0 && !volumeLabelFromParam) {
     return <VolumesLandingEmptyState />;
   }
 
