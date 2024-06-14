@@ -2,6 +2,8 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import {
+  DISK_ENCRYPTION_DEFAULT_DISTRIBUTED_INSTANCES,
+  DISK_ENCRYPTION_DISTRIBUTED_DESCRIPTION,
   DISK_ENCRYPTION_GENERAL_DESCRIPTION,
   DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY,
   ENCRYPT_DISK_DISABLED_REBUILD_DISTRIBUTED_REGION_REASON,
@@ -13,6 +15,7 @@ import {
 import { DiskEncryption } from 'src/components/DiskEncryption/DiskEncryption';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
 import { Paper } from 'src/components/Paper';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -67,6 +70,21 @@ interface Props {
   toggleDiskEncryptionEnabled?: () => void;
 }
 
+interface DiskEncryptionDescriptionDeterminants {
+  isDistributedRegion: boolean | undefined; // Linode Create flow (region selected for a not-yet-created linode)
+  isInRebuildFlow: boolean | undefined;
+  isLKELinode: boolean | undefined;
+  linodeIsInDistributedRegion: boolean | undefined; // Linode Rebuild flow (linode exists already)
+}
+
+interface DiskEncryptionDisabledReasonDeterminants {
+  isDistributedRegion: boolean | undefined; // Linode Create flow (region selected for a not-yet-created linode)
+  isInRebuildFlow: boolean | undefined;
+  isLKELinode: boolean | undefined;
+  linodeIsInDistributedRegion: boolean | undefined; // Linode Rebuild flow (linode exists already)
+  regionSupportsDiskEncryption: boolean;
+}
+
 export const AccessPanel = (props: Props) => {
   const {
     authorizedUsers,
@@ -106,49 +124,68 @@ export const AccessPanel = (props: Props) => {
     'Disk Encryption'
   );
 
+  const isDistributedRegion = getIsDistributedRegion(
+    regions ?? [],
+    selectedRegion ?? ''
+  );
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     _handleChange(e.target.value);
 
-  const determineRebuildFlowDiskEncryptionDescription = ({
+  const determineDiskEncryptionDescription = ({
+    isDistributedRegion,
+    isInRebuildFlow,
     isLKELinode,
     linodeIsInDistributedRegion,
-  }: {
-    isLKELinode: boolean | undefined;
-    linodeIsInDistributedRegion: boolean | undefined;
-  }) => {
-    if (isLKELinode) {
-      return ENCRYPT_DISK_REBUILD_LKE_COPY;
+  }: DiskEncryptionDescriptionDeterminants) => {
+    // Linode Rebuild flow descriptions
+    if (isInRebuildFlow) {
+      // the order is significant: all Distributed instances are encrypted (broadest)
+      if (linodeIsInDistributedRegion) {
+        return ENCRYPT_DISK_REBUILD_DISTRIBUTED_COPY;
+      }
+
+      if (isLKELinode) {
+        return ENCRYPT_DISK_REBUILD_LKE_COPY;
+      }
+
+      if (!isLKELinode && !linodeIsInDistributedRegion) {
+        return ENCRYPT_DISK_REBUILD_STANDARD_COPY;
+      }
     }
 
-    if (linodeIsInDistributedRegion) {
-      return ENCRYPT_DISK_REBUILD_DISTRIBUTED_COPY;
-    }
-
-    return ENCRYPT_DISK_REBUILD_STANDARD_COPY;
+    // Linode Create flow descriptions
+    return isDistributedRegion
+      ? DISK_ENCRYPTION_DISTRIBUTED_DESCRIPTION
+      : DISK_ENCRYPTION_GENERAL_DESCRIPTION;
   };
 
-  const determineEncryptDiskDisabledReason = ({
+  const determineDiskEncryptionDisabledReason = ({
+    isDistributedRegion,
+    isInRebuildFlow,
     isLKELinode,
     linodeIsInDistributedRegion,
     regionSupportsDiskEncryption,
-  }: {
-    isLKELinode: boolean | undefined;
-    linodeIsInDistributedRegion: boolean | undefined;
-    regionSupportsDiskEncryption: boolean;
-  }) => {
-    if (isLKELinode) {
-      return ENCRYPT_DISK_DISABLED_REBUILD_LKE_REASON;
+  }: DiskEncryptionDisabledReasonDeterminants) => {
+    if (isInRebuildFlow) {
+      // the order is significant: setting can't be changed for *any* Distributed instances (broadest)
+      if (linodeIsInDistributedRegion) {
+        return ENCRYPT_DISK_DISABLED_REBUILD_DISTRIBUTED_REGION_REASON;
+      }
+
+      if (isLKELinode) {
+        return ENCRYPT_DISK_DISABLED_REBUILD_LKE_REASON;
+      }
+
+      if (!regionSupportsDiskEncryption) {
+        return DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY;
+      }
     }
 
-    if (linodeIsInDistributedRegion) {
-      return ENCRYPT_DISK_DISABLED_REBUILD_DISTRIBUTED_REGION_REASON;
-    }
-
-    if (!regionSupportsDiskEncryption) {
-      return DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY;
-    }
-
-    return '';
+    // Linode Create flow disabled reasons
+    return isDistributedRegion
+      ? DISK_ENCRYPTION_DEFAULT_DISTRIBUTED_INSTANCES
+      : DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY;
   };
 
   /**
@@ -165,20 +202,20 @@ export const AccessPanel = (props: Props) => {
       <>
         <Divider spacingBottom={20} spacingTop={24} />
         <DiskEncryption
-          descriptionCopy={
-            isInRebuildFlow
-              ? determineRebuildFlowDiskEncryptionDescription({
-                  isLKELinode,
-                  linodeIsInDistributedRegion,
-                })
-              : DISK_ENCRYPTION_GENERAL_DESCRIPTION
-          }
+          descriptionCopy={determineDiskEncryptionDescription({
+            isDistributedRegion,
+            isInRebuildFlow,
+            isLKELinode,
+            linodeIsInDistributedRegion,
+          })}
           disabled={
             !regionSupportsDiskEncryption ||
             isLKELinode ||
             linodeIsInDistributedRegion
           }
-          disabledReason={determineEncryptDiskDisabledReason({
+          disabledReason={determineDiskEncryptionDisabledReason({
+            isDistributedRegion,
+            isInRebuildFlow,
             isLKELinode,
             linodeIsInDistributedRegion,
             regionSupportsDiskEncryption,

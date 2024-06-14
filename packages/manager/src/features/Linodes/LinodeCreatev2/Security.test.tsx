@@ -156,7 +156,7 @@ describe('Security', () => {
     });
 
     await findByLabelText(
-      'Disk encryption is not available in the selected region.'
+      'Disk encryption is not available in the selected region. Select another region to use Disk Encryption.'
     );
   });
 });
