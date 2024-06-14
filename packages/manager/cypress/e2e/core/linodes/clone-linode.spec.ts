@@ -33,7 +33,7 @@ const getLinodeCloneUrl = (linode: Linode): string => {
   return `/linodes/create?linodeID=${linode.id}${regionQuery}&type=Clone+Linode${typeQuery}`;
 };
 
-/* Timeout after 3 seconds while waiting for clone. */
+/* Timeout after 3 minutes while waiting for clone. */
 const CLONE_TIMEOUT = 180_000;
 
 authenticate();
