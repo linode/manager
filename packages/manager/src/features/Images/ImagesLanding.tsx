@@ -188,6 +188,7 @@ export const ImagesLanding = () => {
   );
 
   const [
+    // @ts-expect-error This will be unused until the regions drawer is implemented
     manageRegionsDrawerImage,
     setManageRegionsDrawerImage,
   ] = React.useState<Image>();
@@ -428,6 +429,7 @@ export const ImagesLanding = () => {
                   <TableSortCell
                     active={manualImagesOrderBy === 'id'}
                     direction={manualImagesOrder}
+                    // eslint-disable-next-line @typescript-eslint/no-empty-function
                     handleClick={/* handleManualImagesOrderChange*/ () => {}} // TODO: sorting on id currently broken
                     label="id"
                   >
