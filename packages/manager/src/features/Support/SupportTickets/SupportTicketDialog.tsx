@@ -1,4 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { uploadAttachment } from '@linode/api-v4/lib/support';
+import { update } from 'ramda';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { debounce } from 'throttle-debounce';
@@ -12,8 +14,11 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useCreateSupportTicketMutation } from 'src/queries/support';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { reduceAsync } from 'src/utilities/reduceAsync';
 import { storage } from 'src/utilities/storage';
 
+import { AttachFileForm } from '../AttachFileForm';
 import { MarkdownReference } from '../SupportTicketDetail/TabbedReply/MarkdownReference';
 import { TabbedReply } from '../SupportTicketDetail/TabbedReply/TabbedReply';
 import {
@@ -54,16 +59,15 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-// TODO:
-// interface Accumulator {
-//   errors: AttachmentError[];
-//   success: string[];
-// }
+interface Accumulator {
+  errors: AttachmentError[];
+  success: string[];
+}
 
-// interface AttachmentWithTarget {
-//   file: FormData;
-//   ticketId: number;
-// }
+interface AttachmentWithTarget {
+  file: FormData;
+  ticketId: number;
+}
 
 export type EntityType =
   | 'database_id'
@@ -105,7 +109,6 @@ export interface SupportTicketFormFields {
   entityId: string;
   entityInputValue: string;
   entityType: EntityType;
-  files: FileAttachment[];
   selectedSeverity: TicketSeverity | undefined;
   summary: string;
   ticketType: TicketType;
@@ -138,6 +141,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const hasSeverityCapability = useTicketSeverityCapability();
 
+  const [files, setFiles] = React.useState<FileAttachment[]>([]);
+
   const valuesFromStorage = storage.supportText.get();
 
   // Ticket information
@@ -150,7 +155,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       entityId: prefilledEntity ? String(prefilledEntity.id) : '',
       entityInputValue: '',
       entityType: prefilledEntity?.type ?? 'general',
-      files: [],
       summary: getInitialValue(prefilledTitle, valuesFromStorage.title),
       ticketType: prefilledTicketType ?? 'general',
     },
@@ -221,7 +225,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const onSubmit = form.handleSubmit(async (values) => {
     // console.log(form.getValues());
-    // const { onSuccess } = props;
+    const { onSuccess } = props;
+
     form.setValue('description', formatDescription(values, ticketType));
 
     if (!['general', 'none'].includes(entityType) && !entityId) {
@@ -232,6 +237,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       return;
     }
     setSubmitting(true);
+
     createSupportTicket({
       description,
       [entityType]: Number(entityId),
@@ -244,10 +250,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
         return response;
       })
       .then((response) => {
-        // TODO: handle file uploading
-        if (!props.keepOpenOnSuccess) {
-          close();
-        }
+        attachFiles(response!.id).then(({ errors: _errors }: Accumulator) => {
+          if (!props.keepOpenOnSuccess) {
+            close();
+          }
+          /* Errors will be an array of errors, or empty if all attachments succeeded. */
+          onSuccess(response!.id, _errors);
+        });
       })
       .catch((errResponse) => {
         /* This block will only handle errors in creating the actual ticket; attachment
@@ -264,6 +273,74 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
         // scrollErrorIntoView();
       });
   });
+
+  const updateFiles = (newFiles: FileAttachment[]) => {
+    setFiles(newFiles);
+  };
+
+  /* Reducer passed into reduceAsync (previously Bluebird.reduce) below.
+   * Unfortunately, this reducer has side effects. Uploads each file and accumulates a list of
+   * any upload errors. Also tracks loading state of each individual file. */
+  const attachFileReducer = (
+    accumulator: Accumulator,
+    attachment: AttachmentWithTarget,
+    idx: number
+  ) => {
+    return uploadAttachment(attachment.ticketId, attachment.file)
+      .then(() => {
+        /* null out an uploaded file after upload */
+        setFiles((oldFiles: FileAttachment[]) =>
+          update(
+            idx,
+            { file: null, name: '', uploaded: true, uploading: false },
+            oldFiles
+          )
+        );
+        return accumulator;
+      })
+      .catch((attachmentErrors) => {
+        /*
+         * Note! We want the first few uploads to succeed even if the last few
+         * fail! Don't try to aggregate errors!
+         */
+        setFiles((oldFiles) =>
+          update(idx, { ...oldFiles[idx], uploading: false }, oldFiles)
+        );
+        const newError = getErrorStringOrDefault(
+          attachmentErrors,
+          'There was an error attaching this file. Please try again.'
+        );
+        return {
+          ...accumulator,
+          errors: [
+            ...accumulator.errors,
+            { error: newError, file: attachment.file.get('name') },
+          ],
+        };
+      });
+  };
+
+  /* Called after the ticket is successfully completed. */
+  const attachFiles = (ticketId: number) => {
+    const filesWithTarget: AttachmentWithTarget[] = files
+      .filter((file) => !file.uploaded)
+      .map((file, idx) => {
+        setFiles((oldFiles) =>
+          update(idx, { ...oldFiles[idx], uploading: true }, oldFiles)
+        );
+        const formData = new FormData();
+        formData.append('file', file.file ?? ''); // Safety check for TS only
+        formData.append('name', file.name);
+        return { file: formData, ticketId };
+      });
+
+    /* Upload each file as an attachment, and return a Promise that will resolve to
+     *  an array of aggregated errors that may have occurred for individual uploads. */
+    return reduceAsync(filesWithTarget, attachFileReducer, {
+      errors: [],
+      success: [],
+    });
+  };
 
   const selectedSeverityLabel =
     selectedSeverity && SEVERITY_LABEL_MAP.get(selectedSeverity);
@@ -371,7 +448,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               >
                 <MarkdownReference />
               </Accordion>
-              {/* <AttachFileForm files={files} updateFiles={updateFiles} /> */}
+              <AttachFileForm files={files} updateFiles={updateFiles} />
             </>
           )}
           <ActionsPanel
