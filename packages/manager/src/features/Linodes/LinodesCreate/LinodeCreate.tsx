@@ -1,18 +1,9 @@
-import { PlacementGroup } from '@linode/api-v4';
-import {
-  CreateLinodePlacementGroupPayload,
-  EncryptionStatus,
-  InterfacePayload,
-  PriceObject,
-  restoreBackup,
-} from '@linode/api-v4/lib/linodes';
-import { Tag } from '@linode/api-v4/lib/tags/types';
+import { restoreBackup } from '@linode/api-v4/lib/linodes';
 import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import cloneDeep from 'lodash.clonedeep';
 import * as React from 'react';
-import { MapDispatchToProps, connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { v4 } from 'uuid';
 
 import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
@@ -33,12 +24,6 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
-import { WithAccountProps } from 'src/containers/account.container';
-import { WithFeatureFlagProps } from 'src/containers/flags.container';
-import { WithImagesProps as ImagesProps } from 'src/containers/images.container';
-import { RegionsProps } from 'src/containers/regions.container';
-import { WithTypesProps } from 'src/containers/types.container';
-import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
@@ -51,10 +36,7 @@ import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
-import {
-  CreateTypes,
-  handleChangeCreateType,
-} from 'src/store/linodeCreate/linodeCreate.actions';
+import { handleChangeCreateType } from 'src/store/linodeCreate/linodeCreate.actions';
 import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
 import {
   sendApiAwarenessClickEvent,
@@ -69,7 +51,6 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
-import { ExtendedIP } from 'src/utilities/ipUtils';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
@@ -93,7 +74,9 @@ import { FromImageContent } from './TabbedContent/FromImageContent';
 import { FromLinodeContent } from './TabbedContent/FromLinodeContent';
 import { FromStackScriptContent } from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
-import {
+import { VPCPanel } from './VPCPanel';
+
+import type {
   AllFormStateAndHandlers,
   AppsData,
   HandleSubmit,
@@ -105,10 +88,26 @@ import {
   WithDisplayData,
   WithTypesRegionsAndImages,
 } from './types';
-import { VPCPanel } from './VPCPanel';
-
+import type { PlacementGroup } from '@linode/api-v4';
+import type {
+  CreateLinodePlacementGroupPayload,
+  EncryptionStatus,
+  InterfacePayload,
+  PriceObject,
+} from '@linode/api-v4/lib/linodes';
+import type { Tag } from '@linode/api-v4/lib/tags/types';
+import type { MapDispatchToProps } from 'react-redux';
+import type { RouteComponentProps } from 'react-router-dom';
 import type { Tab } from 'src/components/Tabs/TabLinkList';
+import type { WithAccountProps } from 'src/containers/account.container';
+import type { WithFeatureFlagProps } from 'src/containers/flags.container';
+import type { WithImagesProps as ImagesProps } from 'src/containers/images.container';
+import type { RegionsProps } from 'src/containers/regions.container';
+import type { WithTypesProps } from 'src/containers/types.container';
+import type { WithLinodesProps } from 'src/containers/withLinodes.container';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export interface LinodeCreateProps {
   additionalIPv4RangesForVPC: ExtendedIP[];
@@ -323,6 +322,7 @@ export class LinodeCreate extends React.PureComponent<
 
     const hasErrorFor = getErrorMap(errorMap, errors);
     const generalError = getErrorMap(errorMap, errors).none;
+    const isDxToolsAdditionsEnabled = this.props.flags?.apicliDxToolsAdditions;
 
     if (regionsLoading || imagesLoading || linodesLoading || typesLoading) {
       return <CircleProgress />;
@@ -856,11 +856,17 @@ export class LinodeCreate extends React.PureComponent<
                 userCannotCreateLinode ||
                 (showGDPRCheckbox && !signedAgreement)
               }
+              onClick={() =>
+                this.handleClickCreateUsingCommandLine(
+                  isDxToolsAdditionsEnabled
+                )
+              }
               buttonType="outlined"
               data-qa-api-cli-linode
-              onClick={this.handleClickCreateUsingCommandLine}
             >
-              Create using command line
+              {isDxToolsAdditionsEnabled
+                ? 'View Code Snippets'
+                : 'Create using command line'}
             </StyledCreateButton>
             <StyledCreateButton
               disabled={
@@ -1101,7 +1107,9 @@ export class LinodeCreate extends React.PureComponent<
     }
   };
 
-  handleClickCreateUsingCommandLine = () => {
+  handleClickCreateUsingCommandLine = (
+    isDxToolsAdditionsEnabled: boolean | undefined
+  ) => {
     const payload = {
       authorized_users: this.props.authorized_users,
       backup_id: this.props.selectedBackupID,
@@ -1121,7 +1129,12 @@ export class LinodeCreate extends React.PureComponent<
         : [],
       type: this.props.selectedTypeID ?? '',
     };
-    sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
+    sendApiAwarenessClickEvent(
+      'Button',
+      isDxToolsAdditionsEnabled
+        ? 'View Code Snippets'
+        : 'Create Using Command Line'
+    );
     this.props.checkValidation(payload);
   };
 

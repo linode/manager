@@ -1,17 +1,23 @@
-import { CreateLinodeRequest } from '@linode/api-v4';
 import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { ApiAwarenessModal } from '../LinodesCreate/ApiAwarenessModal/ApiAwarenessModal';
 import { getLinodeCreatePayload } from './utilities';
 
+import type { CreateLinodeRequest } from '@linode/api-v4';
+
 export const Actions = () => {
+  const flags = useFlags();
+
   const [isAPIAwarenessModalOpen, setIsAPIAwarenessModalOpen] = useState(false);
+
+  const isFeatureEnabled = flags?.apicliDxToolsAdditions;
 
   const {
     formState,
@@ -35,7 +41,7 @@ export const Actions = () => {
   return (
     <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
       <Button buttonType="outlined" onClick={onOpenAPIAwareness}>
-        View Code Snippets
+        {isFeatureEnabled ? 'View Code Snippets' : 'Create Using Command Line'}
       </Button>
       <Button
         buttonType="primary"
