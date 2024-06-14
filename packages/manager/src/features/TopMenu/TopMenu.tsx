@@ -8,11 +8,13 @@ import { IconButton } from 'src/components/IconButton';
 import { Toolbar } from 'src/components/Toolbar';
 import { Typography } from 'src/components/Typography';
 import { useAuthentication } from 'src/hooks/useAuthentication';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { AddNewMenu } from './AddNewMenu/AddNewMenu';
 import { Community } from './Community';
 import { Help } from './Help';
 import { NotificationMenu } from './NotificationMenu/NotificationMenu';
+import { NotificationMenuV2 } from './NotificationMenu/NotificationMenuV2';
 import SearchBar from './SearchBar/SearchBar';
 import { TopMenuTooltip } from './TopMenuTooltip';
 import { UserMenu } from './UserMenu';
@@ -30,6 +32,8 @@ export interface TopMenuProps {
  */
 export const TopMenu = React.memo((props: TopMenuProps) => {
   const { desktopMenuToggle, isSideMenuOpen, openSideMenu, username } = props;
+  // TODO eventMessagesV2: delete when flag is removed
+  const flags = useFlags();
 
   const { loggedInAsCustomer } = useAuthentication();
 
@@ -92,7 +96,11 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           <SearchBar />
           <Help />
           <Community />
-          <NotificationMenu />
+          {flags.eventMessagesV2 ? (
+            <NotificationMenuV2 />
+          ) : (
+            <NotificationMenu />
+          )}
           <UserMenu />
         </Toolbar>
       </AppBar>
