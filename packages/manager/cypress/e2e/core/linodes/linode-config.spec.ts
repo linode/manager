@@ -291,10 +291,20 @@ describe('Linode Config management', () => {
      */
     it('Clones a config', () => {
       // Create clone source and destination Linodes.
+      // Use `vlan_no_internet` security method.
+      // This works around an issue where the Linode API responds with a 400
+      // when attempting to interact with it shortly after booting up when the
+      // Linode is attached to a Cloud Firewall.
       const createCloneTestLinodes = async () => {
         return Promise.all([
-          createTestLinode({ booted: true }, { waitForBoot: true }),
-          createTestLinode({ booted: true }),
+          createTestLinode(
+            { booted: true },
+            { securityMethod: 'vlan_no_internet', waitForBoot: true }
+          ),
+          createTestLinode(
+            { booted: true },
+            { securityMethod: 'vlan_no_internet' }
+          ),
         ]);
       };
 

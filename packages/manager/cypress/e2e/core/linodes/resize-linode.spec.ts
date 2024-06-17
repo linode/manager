@@ -15,7 +15,13 @@ describe('resize linode', () => {
   it('resizes a linode by increasing size: warm migration', () => {
     mockGetFeatureFlagClientstream().as('getClientStream');
 
-    cy.defer(() => createTestLinode({ booted: true })).then((linode) => {
+    // Use `vlan_no_internet` security method.
+    // This works around an issue where the Linode API responds with a 400
+    // when attempting to interact with it shortly after booting up when the
+    // Linode is attached to a Cloud Firewall.
+    cy.defer(() =>
+      createTestLinode({ booted: true }, { securityMethod: 'vlan_no_internet' })
+    ).then((linode) => {
       interceptLinodeResize(linode.id).as('linodeResize');
       cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
       cy.findByText('Shared CPU').click({ scrollBehavior: false });
@@ -35,7 +41,13 @@ describe('resize linode', () => {
 
   it('resizes a linode by increasing size: cold migration', () => {
     mockGetFeatureFlagClientstream().as('getClientStream');
-    cy.defer(() => createTestLinode({ booted: true })).then((linode) => {
+    // Use `vlan_no_internet` security method.
+    // This works around an issue where the Linode API responds with a 400
+    // when attempting to interact with it shortly after booting up when the
+    // Linode is attached to a Cloud Firewall.
+    cy.defer(() =>
+      createTestLinode({ booted: true }, { securityMethod: 'vlan_no_internet' })
+    ).then((linode) => {
       interceptLinodeResize(linode.id).as('linodeResize');
       cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
       cy.findByText('Shared CPU').click({ scrollBehavior: false });
@@ -56,7 +68,13 @@ describe('resize linode', () => {
 
   it('resizes a linode by increasing size when offline: cold migration', () => {
     mockGetFeatureFlagClientstream().as('getClientStream');
-    cy.defer(() => createTestLinode({ booted: true })).then((linode) => {
+    // Use `vlan_no_internet` security method.
+    // This works around an issue where the Linode API responds with a 400
+    // when attempting to interact with it shortly after booting up when the
+    // Linode is attached to a Cloud Firewall.
+    cy.defer(() =>
+      createTestLinode({ booted: true }, { securityMethod: 'vlan_no_internet' })
+    ).then((linode) => {
       cy.visitWithLogin(`/linodes/${linode.id}`);
 
       // Turn off the linode to resize the disk
@@ -97,9 +115,16 @@ describe('resize linode', () => {
     });
   });
 
-  it.only('resizes a linode by decreasing size', () => {
+  it('resizes a linode by decreasing size', () => {
+    // Use `vlan_no_internet` security method.
+    // This works around an issue where the Linode API responds with a 400
+    // when attempting to interact with it shortly after booting up when the
+    // Linode is attached to a Cloud Firewall.
     cy.defer(() =>
-      createTestLinode({ booted: true, type: 'g6-standard-2' })
+      createTestLinode(
+        { booted: true, type: 'g6-standard-2' },
+        { securityMethod: 'vlan_no_internet' }
+      )
     ).then((linode) => {
       const diskName = 'Debian 11 Disk';
       const size = '50000'; // 50 GB
