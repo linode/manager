@@ -319,7 +319,11 @@ export const updateEventsQuery = (
       if (newEvents.length > 0) {
         // For all events, that remain, append them to the top of the events list
         prev.pages[0].data = [...newEvents, ...prev.pages[0].data];
-        prev.pages[0].results = prev.pages[0].results + newEvents.length;
+
+        // Update the `results` value for all pages so it is up to date
+        for (const page of prev.pages) {
+          page.results += newEvents.length;
+        }
       }
 
       return {

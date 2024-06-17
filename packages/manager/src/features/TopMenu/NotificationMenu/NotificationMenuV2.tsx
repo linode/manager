@@ -35,8 +35,9 @@ export const NotificationMenuV2 = () => {
   const { dismissNotifications } = useDismissibleNotifications();
   const { data: notifications } = useNotificationsQuery();
   const formattedNotifications = useFormattedNotifications();
-  const { data, events } = useEventsInfiniteQuery();
   const notificationContext = React.useContext(_notificationContext);
+
+  const { data, events } = useEventsInfiniteQuery();
   const { mutateAsync: markEventsAsSeen } = useMarkEventsAsSeen();
 
   const numNotifications =
@@ -141,8 +142,8 @@ export const NotificationMenuV2 = () => {
               View all events
             </LinkButton>
           </Box>
-          <Divider />
-          {data?.pages[0].data.map((event) => (
+          <Divider spacingBottom={0} />
+          {data?.pages[0].data.slice(0, 20).map((event) => (
             <RenderEventV2 event={event} key={event.id} onClose={handleClose} />
           ))}
         </Box>
