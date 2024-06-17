@@ -26,19 +26,17 @@ export const isMSWEnabled =
   localStorage.getItem(LOCAL_STORAGE_KEY) === 'enabled';
 
 /**
- * Enables or disables MSW via local storage setting.
- *
- * Reloads page upon changing setting.
+ * Saves MSW enabled or disabled state to local storage.
  *
  * @param enabled - Whether or not to enable MSW.
  */
-export const setMSWEnabled = (enabled: boolean) => {
+export const saveMSWEnabled = (enabled: boolean) => {
   localStorage.setItem(LOCAL_STORAGE_KEY, enabled ? 'enabled' : 'disabled');
-  window.location.reload();
+  // window.location.reload();
 };
 
 /**
- * Returns the ID of the selected MSW preset.
+ * Returns the ID of the selected MSW preset that is stored in local storage.
  *
  * @returns ID of selected MSW preset, or `null` if no preset is saved.
  */
@@ -51,10 +49,8 @@ export const getMSWPreset = () => {
 
 /**
  * Saves ID of selected MSW preset in local storage.
- *
- * If MSW is enabled, changing the selected MSW preset will trigger a page reload.
  */
-export const setMSWPreset = (presetId: string) => {
+export const saveMSWPreset = (presetId: string) => {
   localStorage.setItem(LOCAL_STORAGE_PRESET_KEY, presetId);
 
   // if (presetId !== previousPreset && isMSWEnabled) {
@@ -62,6 +58,12 @@ export const setMSWPreset = (presetId: string) => {
   // }
 };
 
+/**
+ * Returns an array of enabled extra MSW presets that are stored in local storage.
+ *
+ * An empty array is returned when the expected data does not exist in local
+ * storage.
+ */
 export const getMSWExtraPresets = (): string[] => {
   const encodedPresets = localStorage.getItem(LOCAL_STORAGE_PRESET_EXTRAS_KEY);
   if (!encodedPresets) {
@@ -77,7 +79,7 @@ export const getMSWExtraPresets = (): string[] => {
   );
 };
 
-export const setMSWExtraPresets = (presets: string[]) => {
+export const saveMSWExtraPresets = (presets: string[]) => {
   localStorage.setItem(LOCAL_STORAGE_PRESET_EXTRAS_KEY, presets.join(','));
 };
 
@@ -96,7 +98,7 @@ export const getMSWContextPopulators = (): string[] => {
   );
 };
 
-export const setMSWContextPopulators = (populators: string[]) => {
+export const saveMSWContextPopulators = (populators: string[]) => {
   localStorage.setItem(LOCAL_STORAGE_POPULATORS_KEY, populators.join(','));
   //window.location.reload();
 };
@@ -229,6 +231,11 @@ export const ServiceWorkerTool = () => {
     });
   };
 
+  const handleToggleMSW = (e: React.ChangeEvent<HTMLInputElement>) => {
+    saveMSWEnabled(e.target.checked);
+    window.location.reload();
+  };
+
   const handleChangePopulator = (
     e: React.ChangeEvent<HTMLInputElement>,
     populatorId: string
@@ -279,9 +286,9 @@ export const ServiceWorkerTool = () => {
 
   const handleApplyChanges = () => {
     // Save base preset, extra presets, and content populators to local storage.
-    setMSWPreset(MSWBasePreset);
-    setMSWExtraPresets(MSWHandlers);
-    setMSWContextPopulators(MSWPopulators);
+    saveMSWPreset(MSWBasePreset);
+    saveMSWExtraPresets(MSWHandlers);
+    saveMSWContextPopulators(MSWPopulators);
 
     // Update save state to reflect saved changes if page does not refresh.
     setSaveState({
@@ -310,7 +317,7 @@ export const ServiceWorkerTool = () => {
           <div>
             <input
               checked={isMSWEnabled}
-              onChange={(e) => setMSWEnabled(e.target.checked)}
+              onChange={(e) => handleToggleMSW(e)}
               style={{ margin: 0 }}
               type="checkbox"
             />
