@@ -43,7 +43,10 @@ export const setMSWEnabled = (enabled: boolean) => {
  * @returns ID of selected MSW preset, or `null` if no preset is saved.
  */
 export const getMSWPreset = () => {
-  return localStorage.getItem(LOCAL_STORAGE_PRESET_KEY);
+  return (
+    localStorage.getItem(LOCAL_STORAGE_PRESET_KEY) ??
+    defaultBaselineMockPreset.id
+  );
 };
 
 /**
@@ -51,13 +54,12 @@ export const getMSWPreset = () => {
  *
  * If MSW is enabled, changing the selected MSW preset will trigger a page reload.
  */
-export const saveMSWPreset = (presetId: string) => {
-  const previousPreset = localStorage.getItem(LOCAL_STORAGE_PRESET_KEY);
+export const setMSWPreset = (presetId: string) => {
   localStorage.setItem(LOCAL_STORAGE_PRESET_KEY, presetId);
 
-  if (presetId !== previousPreset && isMSWEnabled) {
-    window.location.reload();
-  }
+  // if (presetId !== previousPreset && isMSWEnabled) {
+  //   window.location.reload();
+  // }
 };
 
 export const getMSWExtraPresets = (): string[] => {
@@ -186,28 +188,46 @@ const renderExtraPresetOptions = (
   );
 };
 
+interface ServiceWorkerSaveState {
+  hasUnsavedChanges: boolean;
+  hasSaved: boolean;
+}
+
 export const ServiceWorkerTool = () => {
+  const loadedBasePreset = getMSWPreset();
   const loadedPresets = getMSWExtraPresets();
   const loadedPopulators = getMSWContextPopulators();
 
-  const [MSWPreset, setMSWPreset] = React.useState<string | null>(null);
+  const [MSWBasePreset, setMSWBasePreset] = React.useState<string>(
+    loadedBasePreset
+  );
   const [MSWHandlers, setMSWHandlers] = React.useState<string[]>(loadedPresets);
   const [MSWPopulators, setMSWPopulators] = React.useState<string[]>(
     loadedPopulators
   );
-  const [hasUnsavedChanges, setHasUnsavedChanges] = React.useState<boolean>(
-    false
-  );
 
-  React.useEffect(() => {
-    if (!MSWPreset) {
-      const storedPreset = localStorage.getItem(LOCAL_STORAGE_PRESET_KEY);
-      const newPreset = storedPreset || defaultBaselineMockPreset.id;
-      setMSWPreset(newPreset);
-    } else {
-      saveMSWPreset(MSWPreset);
-    }
-  }, [MSWPreset]);
+  const [saveState, setSaveState] = React.useState<ServiceWorkerSaveState>({
+    hasUnsavedChanges: false,
+    hasSaved: false,
+  });
+
+  // React.useEffect(() => {
+  //   if (!MSWPreset) {
+  //     const storedPreset = localStorage.getItem(LOCAL_STORAGE_PRESET_KEY);
+  //     const newPreset = storedPreset || defaultBaselineMockPreset.id;
+  //     setMSWPreset(newPreset);
+  //   } else {
+  //     saveMSWPreset(MSWPreset);
+  //   }
+  // }, [MSWPreset]);
+
+  const handleChangeBasePreset = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setMSWBasePreset(e.target.value);
+    setSaveState({
+      hasSaved: false,
+      hasUnsavedChanges: true,
+    });
+  };
 
   const handleChangePopulator = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -216,14 +236,20 @@ export const ServiceWorkerTool = () => {
     const willEnable = e.target.checked;
     if (willEnable && !MSWPopulators.includes(populatorId)) {
       setMSWPopulators([...MSWPopulators, populatorId]);
-      setHasUnsavedChanges(true);
+      setSaveState({
+        hasSaved: false,
+        hasUnsavedChanges: true,
+      });
     } else if (!willEnable && MSWPopulators.includes(populatorId)) {
       setMSWPopulators(
         MSWPopulators.filter((populator) => {
           return populator !== populatorId;
         })
       );
-      setHasUnsavedChanges(true);
+      setSaveState({
+        hasSaved: false,
+        hasUnsavedChanges: true,
+      });
     }
   };
 
@@ -234,20 +260,34 @@ export const ServiceWorkerTool = () => {
     const willEnable = e.target.checked;
     if (willEnable && !MSWHandlers.includes(handlerPresetId)) {
       setMSWHandlers([...MSWHandlers, handlerPresetId]);
-      setHasUnsavedChanges(true);
+      setSaveState({
+        hasSaved: false,
+        hasUnsavedChanges: true,
+      });
     } else if (!willEnable && MSWHandlers.includes(handlerPresetId)) {
       setMSWHandlers(
         MSWHandlers.filter((handler) => {
           return handler !== handlerPresetId;
         })
       );
-      setHasUnsavedChanges(true);
+      setSaveState({
+        hasSaved: false,
+        hasUnsavedChanges: true,
+      });
     }
   };
 
   const handleApplyChanges = () => {
+    // Save base preset, extra presets, and content populators to local storage.
+    setMSWPreset(MSWBasePreset);
     setMSWExtraPresets(MSWHandlers);
     setMSWContextPopulators(MSWPopulators);
+
+    // Update save state to reflect saved changes if page does not refresh.
+    setSaveState({
+      hasUnsavedChanges: false,
+      hasSaved: true,
+    });
 
     // We only have to reload the window if MSW is already enabled. Otherwise,
     // the changes will automatically be picked up next time MSW is enabled.
@@ -281,8 +321,8 @@ export const ServiceWorkerTool = () => {
           <div>
             <span style={{ marginRight: 8 }}>Base Preset</span>
             <DevToolSelect
-              value={MSWPreset || undefined}
-              onChange={(e) => setMSWPreset(e.target.value)}
+              value={MSWBasePreset}
+              onChange={(e) => handleChangeBasePreset(e)}
             >
               {renderBaselinePresetOptions()}
             </DevToolSelect>
@@ -312,11 +352,12 @@ export const ServiceWorkerTool = () => {
       </div>
       <div className="dev-tools__tool__footer">
         <div className="dev-tools__button-list">
-          <button disabled={hasUnsavedChanges ? false : true}>
+          {saveState.hasSaved && <span>Your changes have been saved.</span>}
+          <button disabled={saveState.hasUnsavedChanges ? false : true}>
             Discard Changes
           </button>
           <button
-            disabled={hasUnsavedChanges ? false : true}
+            disabled={saveState.hasUnsavedChanges ? false : true}
             onClick={handleApplyChanges}
           >
             Apply
