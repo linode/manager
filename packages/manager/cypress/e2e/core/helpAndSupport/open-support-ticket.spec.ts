@@ -209,6 +209,7 @@ describe('help & support', () => {
 
   /*
    * - Opens a SMTP Restriction Removal ticket using mock API data.
+   * - Creates a new linode that will have SMTP restrictions and navigates to a SMTP support ticket via notice link.
    * - Confirms that the SMTP-specific fields are displayed and handled correctly.
    */
   it('can create an SMTP support ticket', () => {

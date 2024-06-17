@@ -74,12 +74,12 @@ export const useTicketSeverityCapability = () => {
 /**
  * formatDescription
  *
- * When variant ticketTypes include additional fields, fields must concat to one description string.
+ * When variant ticketTypes include additional fields, fields must concat to one description string to submit in the payload.
  * For readability, replace field names with field labels and format the description in Markdown.
  * @param values - the form payload, which can either be the general fields, or the general fields plus any custom fields
  * @param ticketType - either 'general' or a custom ticket type (e.g. 'smtp')
  *
- * @returns a description string containing custom fields in Markdown format
+ * @returns a description string
  */
 export const formatDescription = (
   values: AllSupportTicketFormFields | SupportTicketFormFields,
@@ -97,7 +97,7 @@ export const formatDescription = (
     return values.description;
   }
 
-  // Add all custom fields to the description in the ticket body, to be viewed on ticket details page and by Customer Support.
+  // Add all custom fields to the description in the ticket payload, to be viewed on ticket details page and by Customer Support.
   return customFields
     .map(([key, value]) => {
       let label = key;

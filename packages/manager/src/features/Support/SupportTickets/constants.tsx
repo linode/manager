@@ -44,6 +44,7 @@ export const TICKET_TYPE_MAP: Record<TicketType, TicketTypeData> = {
   },
 };
 
+// Validation
 export const SCHEMA_MAP: Record<string, AnyObjectSchema> = {
   general: createSupportTicketSchema,
   smtp: createSMTPSupportTicketSchema,
@@ -71,6 +72,7 @@ export const ENTITY_ID_TO_NAME_MAP: Record<EntityType, string> = {
   volume_id: 'Volume',
 };
 
+// General custom fields common to multiple custom ticket types.
 export const CUSTOM_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
   companyName: 'Business or company name',
   customerName: 'First and last name',
@@ -86,6 +88,7 @@ export const SMTP_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
     "A clear and detailed description of your email use case, including how you'll avoid sending unwanted emails",
 };
 
+// Used for finding specific custom fields within form data, based on the ticket type.
 export const TICKET_TYPE_TO_CUSTOM_FIELD_KEYS_MAP: Record<string, string[]> = {
   smtp: Object.keys(SMTP_FIELD_NAME_TO_LABEL_MAP),
 };

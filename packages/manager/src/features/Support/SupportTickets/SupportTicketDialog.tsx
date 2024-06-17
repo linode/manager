@@ -224,7 +224,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   };
 
   const onSubmit = form.handleSubmit(async (values) => {
-    // console.log(form.getValues());
     const { onSuccess } = props;
 
     const _description = formatDescription(values, ticketType);
