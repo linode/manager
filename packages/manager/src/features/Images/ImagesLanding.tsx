@@ -179,7 +179,7 @@ export const ImagesLanding = () => {
 
   // TODO Image Service V2: delete after GA
   const multiRegionsEnabled =
-    manualImages?.data.some((image) => image.regions.length) ?? false;
+    manualImages?.data.some((image) => image.regions?.length) ?? false;
 
   // Automatic images with the associated events tied in.
   const automaticImagesEvents = getEventsForImages(
