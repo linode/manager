@@ -11,6 +11,7 @@
   z-index: 1;
   color: white;
   font-size: 11pt;
+  scrollbar-color: rgba(255, 255, 255, .75) transparent;
 }
 
 .dev-tools hr {
@@ -21,14 +22,41 @@
   margin-bottom: 16px;
 }
 
-.dev-tools__body select {
+.dev-tools__select {
+  position: relative;
+  display: inline-block;
   background: transparent;
+  border-radius: 4px;
   border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.dev-tools__select:has(>select:focus),
+.dev-tools__select:has(>select:active) {
+  background: rgb(50, 50, 50);
+  border-color: rgba(255, 255, 255, 0.65);
+}
+
+.dev-tools__select::after {
+  position: absolute;
+  right: 8px;
+  top: 10px;
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid white;
+  border-top: 2px solid white;
+  transform: rotate(135deg);
+}
+
+.dev-tools__select select {
+  background: transparent;
+  border: none;
   color: white;
-  padding: 4px 4px 5px 4px;
+  padding: 4px 4px 5px 6px;
   font-family: inherit;
   font-size: 10.5pt;
-  border-radius: 4px;
+  appearance: none
 }
 
 .dev-tools__body button {

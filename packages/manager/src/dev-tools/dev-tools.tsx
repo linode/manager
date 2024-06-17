@@ -46,7 +46,7 @@ function install(store: ApplicationStore) {
                     )
                   }
                 >
-                  Preferences
+                  Go to Preferences
                 </button>
               </div>
             </div>
