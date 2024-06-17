@@ -199,10 +199,19 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const resetTicket = (clearValues: boolean = false) => {
     /**
      * Clear the drawer completely if clearValues is passed (as in when closing the drawer)
-     * or reset to the default values (from props or localStorage) otherwise.
+     * or reset to the default values (from localStorage) otherwise.
      */
-    // TODO: handle the prefilled from props/local storage case.
-    form.reset();
+    const _summary = clearValues ? '' : valuesFromStorage.title;
+    const _description = clearValues ? '' : valuesFromStorage.description;
+
+    form.reset({
+      ...form.formState.defaultValues,
+      description: _description,
+      entityId: '',
+      entityType: 'general',
+      summary: _summary,
+      ticketType: 'general',
+    });
   };
 
   const resetDrawer = (clearValues: boolean = false) => {
