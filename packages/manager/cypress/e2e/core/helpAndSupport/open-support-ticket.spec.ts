@@ -26,6 +26,7 @@ import {
 import {
   SEVERITY_LABEL_MAP,
   SMTP_DIALOG_TITLE,
+  SMTP_FIELD_NAME_TO_LABEL_MAP,
   SMTP_HELPER_TEXT,
 } from 'src/features/Support/SupportTickets/constants';
 import { formatDescription } from 'src/features/Support/SupportTickets/ticketUtils';
@@ -219,18 +220,18 @@ describe('help & support', () => {
     });
 
     const mockFormFields = {
-      useCase: randomString(),
-      publicInfo: randomString(),
       description: '',
       entityId: '',
       entityInputValue: '',
       entityType: 'general' as EntityType,
       selectedSeverity: undefined,
-      summary: 'SMTP Restriction Removal on',
+      summary: 'SMTP Restriction Removal on ',
       ticketType: 'smtp' as TicketType,
-      customerName: `${mockAccount.first_name} ${mockAccount.last_name}`,
       companyName: mockAccount.company,
+      customerName: `${mockAccount.first_name} ${mockAccount.last_name}`,
+      useCase: randomString(),
       emailDomains: randomString(),
+      publicInfo: randomString(),
     };
 
     const mockSMTPTicket = supportTicketFactory.build({
@@ -263,7 +264,7 @@ describe('help & support', () => {
           // Confirm summary, customer name, and company name fields are pre-populated with user account data.
           cy.findByLabelText('Title', { exact: false })
             .should('be.visible')
-            .should('contain.value', mockFormFields.summary);
+            .should('have.value', mockFormFields.summary + linode.label);
 
           cy.findByLabelText('First and last name', { exact: false })
             .should('be.visible')
@@ -313,18 +314,21 @@ describe('help & support', () => {
         });
 
       // Confirm that ticket create payload contains the expected data.
-      // TODO: fix this failure.
       cy.wait('@createTicket').then((xhr) => {
-        expect(xhr.request.body?.summary).to.eq(mockSMTPTicket.summary);
+        expect(xhr.request.body?.summary).to.eq(
+          mockSMTPTicket.summary + linode.label
+        );
         expect(xhr.request.body?.description).to.eq(mockSMTPTicket.description);
       });
 
       // Confirm the new ticket is listed with the expected information upon redirecting to the details page.
       cy.url().should('endWith', `support/tickets/${mockSMTPTicket.id}`);
-      cy.contains(`#${mockSMTPTicket}: ${mockSMTPTicket.summary}`).should(
+      cy.contains(`#${mockSMTPTicket.id}: SMTP Restriction Removal`).should(
         'be.visible'
       );
-      cy.contains(mockSMTPTicket.description).should('be.visible');
+      Object.values(SMTP_FIELD_NAME_TO_LABEL_MAP).forEach((fieldLabel) => {
+        cy.findByText(fieldLabel).should('be.visible');
+      });
     });
   });
 });

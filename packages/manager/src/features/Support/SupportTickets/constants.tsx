@@ -79,15 +79,15 @@ export const CUSTOM_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
   useCase: 'A clear and detailed description of your use case',
 };
 
-export const TICKET_TYPE_TO_CUSTOM_FIELD_KEYS_MAP: Record<string, string[]> = {
-  smtp: Object.keys(CUSTOM_FIELD_NAME_TO_LABEL_MAP),
-};
-
 export const SMTP_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
+  ...CUSTOM_FIELD_NAME_TO_LABEL_MAP,
   emailDomains: 'Domain(s) that will be sending emails',
   useCase:
     "A clear and detailed description of your email use case, including how you'll avoid sending unwanted emails",
-  ...CUSTOM_FIELD_NAME_TO_LABEL_MAP,
+};
+
+export const TICKET_TYPE_TO_CUSTOM_FIELD_KEYS_MAP: Record<string, string[]> = {
+  smtp: Object.keys(SMTP_FIELD_NAME_TO_LABEL_MAP),
 };
 
 export const SEVERITY_LABEL_MAP: Map<TicketSeverity, string> = new Map([

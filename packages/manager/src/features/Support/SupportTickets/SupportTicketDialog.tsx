@@ -227,7 +227,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     // console.log(form.getValues());
     const { onSuccess } = props;
 
-    form.setValue('description', formatDescription(values, ticketType));
+    const _description = formatDescription(values, ticketType);
 
     if (!['general', 'none'].includes(entityType) && !entityId) {
       form.setError('entityId', {
@@ -239,7 +239,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     setSubmitting(true);
 
     createSupportTicket({
-      description,
+      description: _description,
       [entityType]: Number(entityId),
       severity: selectedSeverity,
       summary,
