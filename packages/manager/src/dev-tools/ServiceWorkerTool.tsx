@@ -1,4 +1,7 @@
 import * as React from 'react';
+
+import { DevToolSelect } from './components/DevToolSelect';
+
 import { getMockPresetGroups } from 'src/mocks/mockPreset';
 import { getContextPopulatorGroups } from 'src/mocks/mockContext';
 import {
@@ -277,12 +280,12 @@ export const ServiceWorkerTool = () => {
           </div>
           <div>
             <span style={{ marginRight: 8 }}>Base Preset</span>
-            <select
+            <DevToolSelect
               value={MSWPreset || undefined}
               onChange={(e) => setMSWPreset(e.target.value)}
             >
               {renderBaselinePresetOptions()}
-            </select>
+            </DevToolSelect>
           </div>
         </div>
         <div className="dev-tools__msw__extras">
