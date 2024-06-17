@@ -16,7 +16,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
 import { useOrder } from 'src/hooks/useOrder';
@@ -45,7 +44,7 @@ export const VolumesLanding = () => {
   const location = useLocation<{ volume: Volume | undefined }>();
   const pagination = usePagination(1, preferenceKey);
   const queryParams = new URLSearchParams(location.search);
-  const volumeLabelFromParam = queryParams.get(searchQueryKey);
+  const volumeLabelFromParam = queryParams.get(searchQueryKey) ?? '';
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -184,7 +183,6 @@ export const VolumesLanding = () => {
           history.push({ search: queryParams.toString() });
         })}
         hideLabel
-        key={volumeLabelFromParam ?? ''}
         label="Search"
         placeholder="Search Volumes"
         sx={{ mb: 2 }}
@@ -226,26 +224,22 @@ export const VolumesLanding = () => {
           {volumes?.data.length === 0 && (
             <TableRowEmpty colSpan={6} message="No volume found" />
           )}
-          {isFetching ? (
-            <TableRowLoading columns={6} />
-          ) : (
-            volumes?.data.map((volume) => (
-              <VolumeTableRow
-                handlers={{
-                  handleAttach: () => handleAttach(volume),
-                  handleClone: () => handleClone(volume),
-                  handleDelete: () => handleDelete(volume),
-                  handleDetach: () => handleDetach(volume),
-                  handleDetails: () => handleDetails(volume),
-                  handleEdit: () => handleEdit(volume),
-                  handleResize: () => handleResize(volume),
-                  handleUpgrade: () => handleUpgrade(volume),
-                }}
-                key={volume.id}
-                volume={volume}
-              />
-            ))
-          )}
+          {volumes?.data.map((volume) => (
+            <VolumeTableRow
+              handlers={{
+                handleAttach: () => handleAttach(volume),
+                handleClone: () => handleClone(volume),
+                handleDelete: () => handleDelete(volume),
+                handleDetach: () => handleDetach(volume),
+                handleDetails: () => handleDetails(volume),
+                handleEdit: () => handleEdit(volume),
+                handleResize: () => handleResize(volume),
+                handleUpgrade: () => handleUpgrade(volume),
+              }}
+              key={volume.id}
+              volume={volume}
+            />
+          ))}
         </TableBody>
       </Table>
       <PaginationFooter

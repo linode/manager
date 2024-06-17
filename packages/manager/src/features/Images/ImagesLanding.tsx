@@ -92,7 +92,7 @@ export const ImagesLanding = () => {
   const { enqueueSnackbar } = useSnackbar();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const imageLabelFromParam = queryParams.get(searchQueryKey);
+  const imageLabelFromParam = queryParams.get(searchQueryKey) ?? '';
 
   const queryClient = useQueryClient();
 
@@ -161,7 +161,7 @@ export const ImagesLanding = () => {
     ['+order_by']: automaticImagesOrderBy,
   };
 
-  if (imageLabelFromParam && imageLabelFromParam !== '') {
+  if (imageLabelFromParam) {
     automaticImagesFilter['label'] = { '+contains': imageLabelFromParam };
   }
 
@@ -427,7 +427,6 @@ export const ImagesLanding = () => {
           history.push({ search: queryParams.toString() });
         })}
         hideLabel
-        key={imageLabelFromParam ?? ''}
         label="Search"
         placeholder="Search Images"
         sx={{ mb: 2 }}
@@ -477,20 +476,16 @@ export const ImagesLanding = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {isFetching ? (
-              <TableRowLoading columns={5} />
-            ) : manualImages.data.length > 0 ? (
-              manualImages.data.map((manualImage) => (
-                <ImageRow
-                  event={manualImagesEvents[manualImage.id]}
-                  handlers={handlers}
-                  image={manualImage}
-                  key={manualImage.id}
-                />
-              ))
-            ) : (
-              noManualImages
-            )}
+            {manualImages.data.length > 0
+              ? manualImages.data.map((manualImage) => (
+                  <ImageRow
+                    event={manualImagesEvents[manualImage.id]}
+                    handlers={handlers}
+                    image={manualImage}
+                    key={manualImage.id}
+                  />
+                ))
+              : noManualImages}
           </TableBody>
         </Table>
         <PaginationFooter
