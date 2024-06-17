@@ -2,14 +2,12 @@ import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import {
+  distributedNetworkTransferPriceTypeFactory,
+  networkTransferPriceTypeFactory,
   objectStorageOverageTypeFactory,
   objectStorageTypeFactory,
 } from 'src/factories';
-import {
-  OBJ_STORAGE_PRICE,
-  UNKNOWN_PRICE,
-} from 'src/utilities/pricing/constants';
-import { objectStoragePriceIncreaseMap } from 'src/utilities/pricing/dynamicPricing';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -23,7 +21,13 @@ const mockObjectStorageTypes = [
   objectStorageOverageTypeFactory.build(),
 ];
 
+const mockNetworkTransferTypes = [
+  distributedNetworkTransferPriceTypeFactory.build(),
+  networkTransferPriceTypeFactory.build(),
+];
+
 const queryMocks = vi.hoisted(() => ({
+  useNetworkTransferPricesQuery: vi.fn().mockReturnValue({}),
   useObjectStorageTypesQuery: vi.fn().mockReturnValue({}),
 }));
 
@@ -35,10 +39,21 @@ vi.mock('src/queries/objectStorage', async () => {
   };
 });
 
+vi.mock('src/queries/networkTransfer', async () => {
+  const actual = await vi.importActual('src/queries/networkTransfer');
+  return {
+    ...actual,
+    useNetworkTransferPricesQuery: queryMocks.useNetworkTransferPricesQuery,
+  };
+});
+
 describe('OveragePricing', async () => {
   beforeAll(() => {
     queryMocks.useObjectStorageTypesQuery.mockReturnValue({
       data: mockObjectStorageTypes,
+    });
+    queryMocks.useNetworkTransferPricesQuery.mockReturnValue({
+      data: mockNetworkTransferTypes,
     });
   });
 
@@ -49,7 +64,7 @@ describe('OveragePricing', async () => {
     getByText(`$${mockObjectStorageTypes[1].price.hourly?.toFixed(2)} per GB`, {
       exact: false,
     });
-    getByText(`$${OBJ_STORAGE_PRICE.transfer_overage} per GB`, {
+    getByText(`$${mockNetworkTransferTypes[1].price.hourly} per GB`, {
       exact: false,
     });
   });
@@ -60,7 +75,7 @@ describe('OveragePricing', async () => {
       exact: false,
     });
     getByText(
-      `$${objectStoragePriceIncreaseMap['br-gru'].transfer_overage} per GB`,
+      `$${mockNetworkTransferTypes[1].region_prices[1].hourly} per GB`,
       { exact: false }
     );
   });

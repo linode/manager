@@ -12,16 +12,16 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
-import { Access } from './Access';
+import { Security } from './Security';
 
 import type { LinodeCreateFormValues } from './utilities';
 
-describe('Access', () => {
+describe('Security', () => {
   it(
     'should render a root password input',
     async () => {
       const { findByLabelText } = renderWithThemeAndHookFormContext({
-        component: <Access />,
+        component: <Security />,
       });
 
       const rootPasswordInput = await findByLabelText('Root Password');
@@ -34,7 +34,7 @@ describe('Access', () => {
 
   it('should render a SSH Keys heading', async () => {
     const { getAllByText } = renderWithThemeAndHookFormContext({
-      component: <Access />,
+      component: <Security />,
     });
 
     const heading = getAllByText('SSH Keys')[0];
@@ -45,7 +45,7 @@ describe('Access', () => {
 
   it('should render an "Add An SSH Key" button', async () => {
     const { getByText } = renderWithThemeAndHookFormContext({
-      component: <Access />,
+      component: <Security />,
     });
 
     const addSSHKeyButton = getByText('Add an SSH Key');
@@ -70,7 +70,7 @@ describe('Access', () => {
     );
 
     const { findByLabelText } = renderWithThemeAndHookFormContext({
-      component: <Access />,
+      component: <Security />,
     });
 
     const rootPasswordInput = await findByLabelText('Root Password');
@@ -97,7 +97,7 @@ describe('Access', () => {
     );
 
     const { findByText, getByRole } = renderWithThemeAndHookFormContext({
-      component: <Access />,
+      component: <Security />,
     });
 
     // Make sure the restricted user's SSH keys are loaded
@@ -121,7 +121,7 @@ describe('Access', () => {
     );
 
     const { findByText } = renderWithThemeAndHookFormContext({
-      component: <Access />,
+      component: <Security />,
       options: { flags: { linodeDiskEncryption: true } },
     });
 
@@ -150,13 +150,13 @@ describe('Access', () => {
     const {
       findByLabelText,
     } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-      component: <Access />,
+      component: <Security />,
       options: { flags: { linodeDiskEncryption: true } },
       useFormOptions: { defaultValues: { region: region.id } },
     });
 
     await findByLabelText(
-      'Disk encryption is not available in the selected region.'
+      'Disk encryption is not available in the selected region. Select another region to use Disk Encryption.'
     );
   });
 });

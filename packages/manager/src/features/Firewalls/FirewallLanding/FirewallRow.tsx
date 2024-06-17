@@ -1,5 +1,3 @@
-import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
-import { APIError } from '@linode/api-v4/lib/types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -7,17 +5,17 @@ import { Hidden } from 'src/components/Hidden';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
-import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
+import { FirewallActionMenu } from './FirewallActionMenu';
+
+import type { ActionHandlers } from './FirewallActionMenu';
+import type { Firewall, FirewallDeviceEntity } from '@linode/api-v4';
 
 export interface FirewallRowProps extends Firewall, ActionHandlers {}
 
 export const FirewallRow = React.memo((props: FirewallRowProps) => {
-  const { id, label, rules, status, ...actionHandlers } = props;
-
-  const { data: devices, error, isLoading } = useAllFirewallDevicesQuery(id);
+  const { entities, id, label, rules, status, ...actionHandlers } = props;
 
   const count = getCountOfRules(rules);
 
@@ -34,9 +32,7 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
       </TableCell>
       <Hidden smDown>
         <TableCell>{getRuleString(count)}</TableCell>
-        <TableCell>
-          {getDevicesCellString(devices ?? [], isLoading, error ?? undefined)}
-        </TableCell>
+        <TableCell>{getDevicesCellString(entities)}</TableCell>
       </Hidden>
       <TableCell sx={{ textAlign: 'end', whiteSpace: 'nowrap' }}>
         <FirewallActionMenu
@@ -79,45 +75,32 @@ export const getCountOfRules = (rules: Firewall['rules']): [number, number] => {
   return [(rules.inbound || []).length, (rules.outbound || []).length];
 };
 
-const getDevicesCellString = (
-  data: FirewallDevice[],
-  loading: boolean,
-  error?: APIError[]
-): JSX.Element | string => {
-  if (loading) {
-    return 'Loading...';
-  }
-
-  if (error) {
-    return 'Error retrieving Linodes';
-  }
-
-  if (data.length === 0) {
+const getDevicesCellString = (entities: FirewallDeviceEntity[]) => {
+  if (entities.length === 0) {
     return 'None assigned';
   }
 
-  return getDeviceLinks(data);
+  return getDeviceLinks(entities);
 };
 
-export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
-  const firstThree = data.slice(0, 3);
+export const getDeviceLinks = (entities: FirewallDeviceEntity[]) => {
+  const firstThree = entities.slice(0, 3);
 
   return (
     <>
-      {firstThree.map((thisDevice, idx) => (
-        <>
+      {firstThree.map((entity, idx) => (
+        <React.Fragment key={entity.url}>
           {idx > 0 && ', '}
           <Link
             className="link secondaryLink"
             data-testid="firewall-row-link"
-            key={thisDevice.id}
-            to={`/${thisDevice.entity.type}s/${thisDevice.entity.id}`}
+            to={`/${entity.type}s/${entity.id}`}
           >
-            {thisDevice.entity.label}
+            {entity.label}
           </Link>
-        </>
+        </React.Fragment>
       ))}
-      {data.length > 3 && <span>, plus {data.length - 3} more.</span>}
+      {entities.length > 3 && <span>, plus {entities.length - 3} more.</span>}
     </>
   );
 };

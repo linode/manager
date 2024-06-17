@@ -1,5 +1,5 @@
 // TODO eventMessagesV2: delete when flag is removed
-import type { Event } from '@linode/api-v4/lib/account';
+import type { Event, Filter } from '@linode/api-v4';
 
 export const EVENT_ACTIONS: Event['action'][] = [
   'account_settings_update',
@@ -129,3 +129,31 @@ export const EVENT_STATUSES: Event['status'][] = [
   'failed',
   'notification',
 ];
+
+export const ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS: Event['action'][] = [
+  'linode_resize',
+  'linode_migrate',
+  'linode_migrate_datacenter',
+  'disk_imagize',
+  'linode_boot',
+  'host_reboot',
+  'lassie_reboot',
+  'linode_reboot',
+  'linode_shutdown',
+  'linode_delete',
+  'linode_clone',
+  'disk_resize',
+  'disk_duplicate',
+  'backups_restore',
+  'linode_snapshot',
+  'linode_mutate',
+  'linode_rebuild',
+  'linode_create',
+  'image_upload',
+  'volume_migrate',
+  'database_resize',
+];
+
+export const EVENTS_LIST_FILTER: Filter = {
+  action: { '+neq': 'profile_update' },
+};
