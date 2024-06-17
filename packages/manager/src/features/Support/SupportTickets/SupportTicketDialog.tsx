@@ -16,6 +16,7 @@ import { Typography } from 'src/components/Typography';
 import { useCreateSupportTicketMutation } from 'src/queries/support';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { reduceAsync } from 'src/utilities/reduceAsync';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 import { storage } from 'src/utilities/storage';
 
 import { AttachFileForm } from '../AttachFileForm';
@@ -104,7 +105,6 @@ export interface SupportTicketDialogProps {
 }
 
 export interface SupportTicketFormFields {
-  customFieldsByTicketType?: SMTPCustomFields;
   description: string;
   entityId: string;
   entityInputValue: string;
@@ -138,6 +138,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTicketType,
     prefilledTitle,
   } = props;
+
+  const formContainerRef = React.useRef<HTMLFormElement>(null);
 
   const hasSeverityCapability = useTicketSeverityCapability();
 
@@ -205,6 +207,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const resetDrawer = (clearValues: boolean = false) => {
     resetTicket(clearValues);
+    setFiles([]);
 
     if (clearValues) {
       saveText('', '');
@@ -269,7 +272,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
         }
 
         setSubmitting(false);
-        // scrollErrorIntoView();
+        scrollErrorIntoViewV2(formContainerRef);
       });
   });
 
@@ -353,7 +356,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} ref={formContainerRef}>
         <Dialog
           fullHeight
           fullWidth
