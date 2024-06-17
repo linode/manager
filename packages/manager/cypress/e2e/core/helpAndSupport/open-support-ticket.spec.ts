@@ -211,7 +211,7 @@ describe('help & support', () => {
    * - Opens a SMTP Restriction Removal ticket using mock API data.
    * - Confirms that the SMTP-specific fields are displayed and handled correctly.
    */
-  it.only('can create an SMTP support ticket', () => {
+  it('can create an SMTP support ticket', () => {
     const mockAccount = accountFactory.build({
       first_name: 'Jane',
       last_name: 'Doe',
