@@ -104,7 +104,11 @@ export const generatePollingFilter = (
   inIds: number[] = [],
   neqIds: number[] = []
 ) => {
-  let filter: Filter = { created: { '+gte': timestamp } };
+  let filter: Filter = {
+    '+order': 'desc',
+    '+order_by': 'id',
+    created: { '+gte': timestamp },
+  };
 
   if (neqIds.length > 0) {
     filter = {
