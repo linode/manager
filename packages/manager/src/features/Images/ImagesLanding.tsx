@@ -426,15 +426,7 @@ export const ImagesLanding = () => {
               </Hidden>
               {multiRegionsEnabled && (
                 <Hidden smDown>
-                  <TableSortCell
-                    active={manualImagesOrderBy === 'id'}
-                    direction={manualImagesOrder}
-                    // eslint-disable-next-line @typescript-eslint/no-empty-function
-                    handleClick={/* handleManualImagesOrderChange*/ () => {}} // TODO: sorting on id currently broken
-                    label="id"
-                  >
-                    Image Id
-                  </TableSortCell>
+                  <TableCell>Image Id</TableCell>
                 </Hidden>
               )}
               <TableCell></TableCell>
