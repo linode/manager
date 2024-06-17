@@ -129,6 +129,12 @@ export const VolumesLanding = () => {
     history.push({ search: queryParams.toString() });
   };
 
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    queryParams.delete('page');
+    queryParams.set(searchQueryKey, e.target.value);
+    history.push({ search: queryParams.toString() });
+  };
+
   if (isLoading) {
     return <CircleProgress />;
   }
@@ -178,9 +184,7 @@ export const VolumesLanding = () => {
           ),
         }}
         onChange={debounce(400, (e) => {
-          queryParams.delete('page');
-          queryParams.set(searchQueryKey, e.target.value);
-          history.push({ search: queryParams.toString() });
+          onSearch(e);
         })}
         hideLabel
         label="Search"
