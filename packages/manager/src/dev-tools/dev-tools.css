@@ -1,7 +1,11 @@
 .dev-tools {
+  --open-height-desktop: 375px;
+  --open-height-mobile: 600px;
+
   --background-color-closed: rgba(0, 0, 0, 0.55);
   --background-color-opened: rgba(0, 0, 0, 0.85);
   --background-blur: blur(7px);
+
   --open-close-transition: background-color 0.2s, height 0.075s;
 
   position: fixed;
@@ -183,7 +187,7 @@
   padding: 0;
 }
 .dev-tools.dev-tools--open .dev-tools__body {
-  height: 375px;
+  height: var(--open-height-mobile);
 }
 
 /*
@@ -211,6 +215,7 @@
 .dev-tools__main {
 /*  border: 1px solid red;*/
   display: flex;
+  flex-direction: column;
   flex-basis: 0;
   flex-grow: 1;
   flex-shrink: 1;
@@ -318,6 +323,7 @@
 
 .dev-tools__msw__extras {
   display: flex;
+  flex-direction: column;
   flex-grow: 1;
   gap: 12px;
 }
@@ -327,6 +333,7 @@
   flex-shrink: 1;
   flex-basis: 0;
   height: 100%;
+  min-height: 120px;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -399,3 +406,17 @@
   }
 }
 */
+
+@media only screen and (min-width: 600px) {
+  .dev-tools.dev-tools--open .dev-tools__body {
+    height: var(--open-height-desktop);
+  }
+
+  .dev-tools__main {
+    flex-direction: row;
+  }
+
+  .dev-tools__msw__extras {
+    flex-direction: row;
+  }
+}
