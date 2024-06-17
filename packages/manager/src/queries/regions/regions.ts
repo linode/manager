@@ -37,7 +37,8 @@ export const useRegionsQuery = (transformRegionLabel: boolean = false) =>
   useQuery<Region[], APIError[]>({
     ...regionQueries.regions,
     ...queryPresets.longLived,
-    select: (regions) => {
+    select: (regions: Region[]) => {
+      // Display Country, City instead of City, State
       if (transformRegionLabel) {
         return regions.map((region) => ({
           ...region,

@@ -29,9 +29,9 @@ export const useFlags = () => {
   return {
     ...flags,
     ...mockFlags,
-    gecko2: {
-      enabled: true,
-      ga: true,
-    },
+    // gecko2: {
+    //   enabled: true,
+    //   ga: true,
+    // },
   };
 };

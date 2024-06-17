@@ -100,7 +100,7 @@ export const RegionSelect = <
   }, {});
 
   const getEndAdornment = () => {
-    if (selectedRegion?.site_type === 'distributed' && isGeckoBeta) {
+    if (isGeckoBeta && selectedRegion?.site_type === 'distributed') {
       return (
         <TooltipIcon
           icon={<DistributedRegion />}
@@ -110,7 +110,7 @@ export const RegionSelect = <
         />
       );
     }
-    if (selectedRegion && isGeckoGA) {
+    if (isGeckoGA && selectedRegion) {
       return `(${selectedRegion?.id})`;
     }
     return null;
@@ -125,9 +125,7 @@ export const RegionSelect = <
         renderOption={(props, region) => (
           <RegionOption
             displayDistributedRegionIcon={
-              regionFilter !== 'core' &&
-              region.site_type === 'distributed' &&
-              isGeckoBeta
+              isGeckoBeta && region.site_type === 'distributed'
             }
             disabledOptions={disabledRegions[region.id]}
             flags={flags}

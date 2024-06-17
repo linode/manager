@@ -27,6 +27,8 @@ export const getRegionOptions = ({
   regionFilter,
   regions,
 }: RegionSelectOptionsOptions) => {
+  const isGeckoGA = flags?.gecko2?.enabled && flags.gecko2.ga;
+
   return regions
     .filter((region) => {
       if (
@@ -73,9 +75,9 @@ export const getRegionOptions = ({
         return 1;
       }
 
-      // Then we group by country
-      if (flags?.gecko2?.enabled && !flags.gecko2.ga) {
-        // Display regions as normal for Gecko Beta
+      // We want to group by label for Gecko GA
+      if (!isGeckoGA) {
+        // Then we group by country
         if (region1.country < region2.country) {
           return 1;
         }
@@ -156,10 +158,7 @@ export const getIsDistributedRegion = (
   return region?.site_type === 'distributed' || region?.site_type === 'edge';
 };
 
-export const getNewRegionLabel = ({
-  includeSlug,
-  region,
-}: Omit<GetRegionLabel, 'flags'>) => {
+export const getNewRegionLabel = ({ includeSlug, region }: GetRegionLabel) => {
   const [city] = region.label.split(', ');
   if (includeSlug) {
     return `${region.country.toUpperCase()}, ${city} ${`(${region.id})`}`;

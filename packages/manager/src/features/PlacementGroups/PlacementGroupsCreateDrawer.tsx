@@ -198,7 +198,7 @@ export const PlacementGroupsCreateDrawer = (
                         includeSlug: true,
                         region: selectedRegion,
                       })
-                    : selectedRegion.label,
+                    : `${selectedRegion.label} (${selectedRegion.id})`,
                   title: 'Region',
                 },
               ]}

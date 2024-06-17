@@ -63,7 +63,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const theme = useTheme();
   const params = getQueryParamsFromQueryString(location.search);
 
-  const isGeckoGA = flags.gecko2?.enabled && flags.gecko2.ga;
+  const isGeckoGA = flags.gecko2?.enabled && flags.gecko2?.ga;
 
   const { data: regions } = useRegionsQuery(isGeckoGA);
 

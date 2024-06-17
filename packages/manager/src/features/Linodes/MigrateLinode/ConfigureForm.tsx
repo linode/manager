@@ -148,6 +148,8 @@ export const ConfigureForm = React.memo((props: Props) => {
     currentActualRegion?.site_type === 'distributed' ||
     currentActualRegion?.site_type === 'edge';
 
+  const isGeckoBeta = flags.gecko2?.enabled && !flags.gecko2?.ga;
+
   return (
     <StyledPaper>
       <Typography variant="h3">Configure Migration</Typography>
@@ -159,7 +161,7 @@ export const ConfigureForm = React.memo((props: Props) => {
             <Typography>{`${getRegionCountryGroup(currentActualRegion)}: ${
               currentActualRegion?.label ?? currentRegion
             }`}</Typography>
-            {linodeIsInDistributedRegion && (
+            {isGeckoBeta && linodeIsInDistributedRegion && (
               <TooltipIcon
                 icon={<DistributedRegion />}
                 status="other"

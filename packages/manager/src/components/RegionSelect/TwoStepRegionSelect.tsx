@@ -12,11 +12,12 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import type { RegionFilterValue } from './RegionSelect.types';
+import type { Region } from '@linode/api-v4';
 import type { SelectRegionPanelProps } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 
 interface TwoStepRegionSelectProps
   extends Omit<SelectRegionPanelProps, 'selectedId'> {
-  regions: any;
+  regions: Region[];
   selectedId?: null | string;
 }
 
@@ -63,8 +64,8 @@ export const TwoStepRegionSelect = React.memo(
       currentCapability,
       disabled,
       error,
-      helperText,
       handleSelection,
+      helperText,
       regions,
       selectedId,
     } = props;
@@ -92,7 +93,7 @@ export const TwoStepRegionSelect = React.memo(
               disabled={disabled}
               errorText={error}
               helperText={helperText}
-              onChange={(e, region) => handleSelection(region.id)}
+              onChange={(e, region: Region) => handleSelection(region.id)}
               regionFilter="core"
               regions={regions ?? []}
               showDistributedRegionIconHelperText={false}
@@ -118,7 +119,7 @@ export const TwoStepRegionSelect = React.memo(
               disabled={disabled}
               errorText={error}
               helperText={helperText}
-              onChange={(e, region) => handleSelection(region.id)}
+              onChange={(e, region: Region) => handleSelection(region.id)}
               regionFilter={regionFilter}
               regions={regions ?? []}
               showDistributedRegionIconHelperText={false}

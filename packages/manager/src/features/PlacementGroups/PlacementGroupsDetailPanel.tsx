@@ -82,7 +82,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
               includeSlug: true,
               region: selectedRegion,
             })
-          : selectedRegion.label
+          : `${selectedRegion.label} (${selectedRegion.id})`
       }`
     : 'Placement Group';
 
