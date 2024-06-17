@@ -30,7 +30,7 @@ import type { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 import type { Capabilities } from '@linode/api-v4/lib/regions';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
-interface SelectRegionPanelProps {
+export interface SelectRegionPanelProps {
   RegionSelectProps?: Partial<RegionSelectProps<true>>;
   currentCapability: Capabilities;
   disabled?: boolean;
@@ -171,7 +171,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           disabled={disabled}
           errorText={error}
           helperText={helperText}
-          onChange={(e, region) => handleRegionSelection(region.id)}
+          handleSelection={handleRegionSelection}
           regionFilter={hideDistributedRegions ? 'core' : undefined}
           regions={regions ?? []}
           selectedId={selectedId}

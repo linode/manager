@@ -1,5 +1,4 @@
 import { useTheme } from '@mui/material';
-import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   append,
@@ -29,7 +28,7 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { SelectFirewallPanel } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Stack } from 'src/components/Stack';
-import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
+import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
@@ -54,8 +53,8 @@ import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics/customEvent
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
+import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import {
   getDCSpecificPriceByType,
   renderMonthlyPriceToCorrectDecimalPlace,
@@ -72,6 +71,8 @@ import {
 
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
 import type { APIError } from '@linode/api-v4/lib/types';
+import type { Theme } from '@mui/material/styles';
+import type { Tag } from 'src/components/TagsInput/TagsInput';
 
 interface NodeBalancerConfigFieldsWithStatusAndErrors
   extends NodeBalancerConfigFieldsWithStatus {
@@ -524,10 +525,11 @@ const NodeBalancerCreate = () => {
                 helperTextPosition: 'top',
               }}
               currentCapability="NodeBalancers"
+              disableClearable
               errorText={hasErrorFor('region')}
-              handleSelection={regionChange}
+              onChange={(e, region) => regionChange(region?.id ?? '')}
               regions={regions ?? []}
-              selectedId={nodeBalancerFields.region ?? ''}
+              value={nodeBalancerFields.region ?? ''}
             />
           </Stack>
           <StyledDocsLinkContainer>

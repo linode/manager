@@ -7,12 +7,8 @@ import type {
   GetRegionOptionAvailability,
   SupportedDistributedRegionTypes,
 } from './RegionSelect.types';
-import type {
-  AccountAvailability,
-  Capabilities,
-  Region,
-  RegionSite,
-} from '@linode/api-v4';
+import type { AccountAvailability, Capabilities, Region } from '@linode/api-v4';
+import type { RegionFilterValue } from 'src/components/RegionSelect/RegionSelect.types';
 import type { FlagSet } from 'src/featureFlags';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
@@ -21,7 +17,7 @@ const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 interface RegionSelectOptionsOptions {
   currentCapability: Capabilities | undefined;
   flags?: FlagSet;
-  regionFilter?: RegionSite;
+  regionFilter?: RegionFilterValue;
   regions: Region[];
 }
 

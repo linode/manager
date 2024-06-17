@@ -64,7 +64,7 @@ export const TwoStepRegionSelect = React.memo(
       disabled,
       error,
       helperText,
-      onChange,
+      handleSelection,
       regions,
       selectedId,
     } = props;
@@ -92,10 +92,9 @@ export const TwoStepRegionSelect = React.memo(
               disabled={disabled}
               errorText={error}
               helperText={helperText}
-              onChange={onChange}
+              onChange={(e, region) => handleSelection(region.id)}
               regionFilter="core"
               regions={regions ?? []}
-              selectedId={selectedId || null}
               showDistributedRegionIconHelperText={false}
               value={selectedId || null}
               {...RegionSelectProps}
@@ -119,10 +118,9 @@ export const TwoStepRegionSelect = React.memo(
               disabled={disabled}
               errorText={error}
               helperText={helperText}
-              onChange={onChange}
+              onChange={(e, region) => handleSelection(region.id)}
               regionFilter={regionFilter}
               regions={regions ?? []}
-              selectedId={selectedId || null}
               showDistributedRegionIconHelperText={false}
               value={selectedId || null}
               {...RegionSelectProps}
