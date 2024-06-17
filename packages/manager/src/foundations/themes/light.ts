@@ -6,10 +6,11 @@ import {
   Interaction,
   Select,
 } from '@linode/design-language-system';
-import { ThemeOptions } from '@mui/material/styles';
 
 import { breakpoints } from 'src/foundations/breakpoints';
 import { latoWeb } from 'src/foundations/fonts';
+
+import type { ThemeOptions } from '@mui/material/styles';
 
 export const inputMaxWidth = 416;
 
@@ -771,6 +772,9 @@ export const lightTheme: ThemeOptions = {
           },
         },
         input: {
+          '&::placeholder': {
+            color: Color.Neutrals[50],
+          },
           boxSizing: 'border-box',
           [breakpoints.only('xs')]: {
             fontSize: '1rem',
