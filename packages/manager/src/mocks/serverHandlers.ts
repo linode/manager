@@ -605,7 +605,7 @@ export const handlers = [
   http.get('*/regions', async () => {
     return HttpResponse.json(makeResourcePage(regions));
   }),
-  http.get('*/images', async () => {
+  http.get('*/images', async ({ request }) => {
     const privateImages = imageFactory.buildList(5, {
       status: 'available',
       type: 'manual',
@@ -658,7 +658,15 @@ export const handlers = [
       ...pendingImages,
       ...creatingImages,
     ];
-    return HttpResponse.json(makeResourcePage(images));
+    return HttpResponse.json(
+      makeResourcePage(
+        images.filter((image) =>
+          request.headers.get('x-filter')?.includes('manual')
+            ? image.type == 'manual'
+            : image.type == 'automatic'
+        )
+      )
+    );
   }),
 
   http.get('*/linode/types', () => {
