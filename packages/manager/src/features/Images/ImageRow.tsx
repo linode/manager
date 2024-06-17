@@ -1,16 +1,15 @@
 import * as React from 'react';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { ImagesActionMenu } from './ImagesActionMenu';
+import { RegionsList } from './RegionsList';
 
 import type { Handlers } from './ImagesActionMenu';
 import type { Event, Image, ImageCapabilities } from '@linode/api-v4';
@@ -44,28 +43,7 @@ const ImageRow = (props: Props) => {
 
   const { data: profile } = useProfile();
 
-  const { data: regionsData } = useRegionsQuery();
-
   const isFailed = status === 'pending_upload' && event?.status === 'failed';
-
-  const regionsList =
-    multiRegionsEnabled &&
-    (regions && regions.length > 0 ? (
-      <>
-        {regionsData?.find((region) => region.id == regions[0].region)?.label ??
-          regions[0].region}
-        {regions.length > 1 && (
-          <>
-            ,{' '}
-            <StyledLinkButton onClick={() => handlers.onManageRegions?.(image)}>
-              +{regions.length - 1}
-            </StyledLinkButton>
-          </>
-        )}
-      </>
-    ) : (
-      ''
-    ));
 
   const compatibilitiesList = multiRegionsEnabled
     ? capabilities.map((capability) => capabilityMap[capability]).join(', ')
@@ -112,7 +90,14 @@ const ImageRow = (props: Props) => {
       {multiRegionsEnabled && (
         <>
           <Hidden smDown>
-            <TableCell>{regionsList}</TableCell>
+            <TableCell>
+              {regions && regions.length > 0 && (
+                <RegionsList
+                  onManageRegions={() => handlers.onManageRegions?.(image)}
+                  regions={regions}
+                />
+              )}
+            </TableCell>
           </Hidden>
           <Hidden smDown>
             <TableCell>{compatibilitiesList}</TableCell>
