@@ -2,12 +2,12 @@
  * @file Cypress intercepts and mocks for Cloud Manager Linode operations.
  */
 
+import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 
-import type { Disk, Linode, LinodeType, Kernel, Volume } from '@linode/api-v4';
-import { makeErrorResponse } from 'support/util/errors';
+import type { Disk, Kernel, Linode, LinodeType, Volume } from '@linode/api-v4';
 
 /**
  * Intercepts POST request to create a Linode.
@@ -208,6 +208,19 @@ export const mockRebootLinodeIntoRescueModeError = (
     apiMatcher(`linode/instances/${linodeId}/rescue`),
     makeErrorResponse(errorMessage, statusCode)
   );
+};
+
+/**
+ * Intercepts GET request to retrieve a Linode's Disks
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetLinodeDisks = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher(`linode/instances/${linodeId}/disks*`));
 };
 
 /**
