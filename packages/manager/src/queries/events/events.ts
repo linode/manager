@@ -43,8 +43,13 @@ export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
     ['events', 'infinite', filter],
     ({ pageParam }) =>
       getEvents(
-        { page_size: 25 },
-        { ...filter, id: pageParam ? { '+lt': pageParam } : undefined }
+        {},
+        {
+          ...filter,
+          '+order': 'desc',
+          '+order_by': 'id',
+          id: pageParam ? { '+lt': pageParam } : undefined,
+        }
       ),
     {
       cacheTime: Infinity,
@@ -127,7 +132,7 @@ export const useEventsPoller = () => {
       const data = queryClient.getQueryData<InfiniteData<ResourcePage<Event>>>([
         'events',
         'infinite',
-        undefined,
+        EVENTS_LIST_FILTER,
       ]);
       const events = data?.pages.reduce(
         (events, page) => [...events, ...page.data],

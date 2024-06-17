@@ -1,4 +1,6 @@
-import { Event, EventAction, Filter } from '@linode/api-v4';
+import { EVENTS_LIST_FILTER } from 'src/features/Events/constants';
+
+import type { Event, EventAction, Filter } from '@linode/api-v4';
 
 export const isInProgressEvent = (event: Event) => {
   if (event.percent_complete === null) {
@@ -103,10 +105,8 @@ export const generatePollingFilter = (
   timestamp: string,
   inIds: number[] = [],
   neqIds: number[] = []
-) => {
+): Filter => {
   let filter: Filter = {
-    '+order': 'desc',
-    '+order_by': 'id',
     created: { '+gte': timestamp },
   };
 
@@ -122,7 +122,12 @@ export const generatePollingFilter = (
     };
   }
 
-  return filter;
+  return {
+    ...filter,
+    ...EVENTS_LIST_FILTER,
+    '+order': 'desc',
+    '+order_by': 'id',
+  };
 };
 
 /**
