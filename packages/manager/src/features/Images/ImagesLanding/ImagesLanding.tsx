@@ -46,7 +46,7 @@ import { EditImageDrawer } from './EditImageDrawer';
 import ImageRow from './ImageRow';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
-import { getEventsForImages } from './utils';
+import { getEventsForImages } from '../utils';
 
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
 import type { Image, ImageStatus } from '@linode/api-v4';

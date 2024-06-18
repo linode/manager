@@ -11,7 +11,7 @@ import { TextField } from 'src/components/TextField';
 import { usePrevious } from 'src/hooks/usePrevious';
 import { useUpdateImageMutation } from 'src/queries/images';
 
-import { useImageAndLinodeGrantCheck } from './utils';
+import { useImageAndLinodeGrantCheck } from '../utils';
 
 import type { APIError, Image, UpdateImagePayload } from '@linode/api-v4';
 

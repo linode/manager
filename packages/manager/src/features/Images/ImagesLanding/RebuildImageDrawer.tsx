@@ -7,8 +7,8 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 
-import { REBUILD_LINODE_IMAGE_PARAM_NAME } from '../Linodes/LinodesDetail/LinodeRebuild/RebuildFromImage';
-import { useImageAndLinodeGrantCheck } from './utils';
+import { REBUILD_LINODE_IMAGE_PARAM_NAME } from '../../Linodes/LinodesDetail/LinodeRebuild/RebuildFromImage';
+import { useImageAndLinodeGrantCheck } from '../utils';
 
 import type { Image } from '@linode/api-v4';
 
