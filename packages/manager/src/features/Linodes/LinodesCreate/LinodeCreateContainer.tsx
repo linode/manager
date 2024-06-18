@@ -1040,9 +1040,5 @@ const handleAnalytics = (details: {
       : undefined
   );
   // Send form event.
-  sendLinodeCreateFormSubmitEvent(
-    'Create Linode',
-    eventCreateType as LinodeCreateType,
-    'v1'
-  );
+  sendLinodeCreateFormSubmitEvent(eventCreateType as LinodeCreateType, 'v1');
 };

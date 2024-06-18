@@ -24,6 +24,7 @@ import { useGrants } from 'src/queries/profile/profile';
 import {
   sendLinodeCreateFormStepEvent,
   sendLinodeCreateFormInputEvent,
+  sendLinodeCreateFormErrorEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -135,6 +136,17 @@ export const CreateFirewallDrawer = React.memo(
               onFirewallCreated(response);
             }
             onClose();
+
+            // Fire analytics form submit upon successful creation from Linode Create flow.
+            if (isFromLinodeCreate) {
+              sendLinodeCreateFormStepEvent({
+                createType:
+                  (queryParams.type as LinodeCreateType) ?? 'Distributions',
+                paperName: 'VPC Branch',
+                labelName: 'Create VPC',
+                version: 'v1',
+              });
+            }
           })
           .catch((err) => {
             const mapErrorToStatus = () =>
@@ -162,6 +174,21 @@ export const CreateFirewallDrawer = React.memo(
         resetForm();
       }
     }, [open, resetForm]);
+
+    // Fire analytics form errors from Linode Create flow. Validation is performed before form submission.
+    React.useEffect(() => {
+      if (isFromLinodeCreate) {
+        let errorString = '';
+        Object.values(errors).forEach((error: string, index: number) => {
+          errorString += `${index > 0 ? '| ' : ''}${error}`;
+        });
+        sendLinodeCreateFormErrorEvent(
+          errorString,
+          (queryParams.type as LinodeCreateType) ?? 'Distributions',
+          'v1'
+        );
+      }
+    }, [errors]);
 
     const handleInboundPolicyChange = React.useCallback(
       (e: React.ChangeEvent<HTMLInputElement>, value: 'ACCEPT' | 'DROP') => {
@@ -375,15 +402,6 @@ export const CreateFirewallDrawer = React.memo(
               disabled: userCannotAddFirewall,
               label: 'Create Firewall',
               loading: isSubmitting,
-              onClick: () =>
-                isFromLinodeCreate &&
-                sendLinodeCreateFormStepEvent({
-                  paperName: 'Firewall Branch',
-                  createType:
-                    (queryParams.type as LinodeCreateType) ?? 'Distributions',
-                  labelName: 'Create Firewall',
-                  version: 'v1',
-                }),
               type: 'submit',
             }}
             secondaryButtonProps={{

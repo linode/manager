@@ -6,15 +6,21 @@ import {
 import { createVPCSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
+import { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useCreateVPCMutation } from 'src/queries/vpcs/vpcs';
 import {
+  sendLinodeCreateFormErrorEvent,
+  sendLinodeCreateFormStepEvent,
+} from 'src/utilities/analytics/formEventAnalytics';
+import {
   SubnetError,
   handleVPCAndSubnetErrors,
 } from 'src/utilities/formikErrorUtils';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
@@ -49,6 +55,10 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const userCannotAddVPC = profile?.restricted && !grants?.global.add_vpcs;
+
+  const location = useLocation();
+  const isFromLinodeCreate = location.pathname.includes('/linodes/create');
+  const queryParams = getQueryParamsFromQueryString(location.search);
 
   const { data: regions } = useRegionsQuery();
   const regionsData = regions ?? [];
@@ -140,6 +150,16 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
           onDrawerClose();
         }
       }
+
+      // Fire analytics form submit upon successful creation from Linode Create flow.
+      if (isFromLinodeCreate) {
+        sendLinodeCreateFormStepEvent({
+          createType: (queryParams.type as LinodeCreateType) ?? 'Distributions',
+          paperName: 'VPC Branch',
+          labelName: 'Create VPC',
+          version: 'v1',
+        });
+      }
     } catch (errors) {
       const generalSubnetErrors = errors.filter(
         (error: APIError) =>
@@ -175,6 +195,19 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
       formik.setFieldValue('subnets', subnetsAndErrors);
 
       scrollErrorIntoView();
+
+      // Fire analytics form errors from Linode Create flow.
+      if (isFromLinodeCreate) {
+        let errorString = '';
+        errors.forEach((error: APIError, index: number) => {
+          errorString += `${index > 0 ? '| ' : ''} ${error.reason}`;
+        });
+        sendLinodeCreateFormErrorEvent(
+          errorString,
+          (queryParams.type as LinodeCreateType) ?? 'Distributions',
+          'v1'
+        );
+      }
     }
 
     formik.setSubmitting(false);

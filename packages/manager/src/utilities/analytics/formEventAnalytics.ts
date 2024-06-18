@@ -17,7 +17,6 @@ import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types'
 // SelectFirewallPanel.tsx
 // CreateFirewallDrawer.tsx
 // VPCTopSectionContent.tsx
-// VPCCreateDrawer.tsx
 // VPCPanel.tsx
 // SubnetContent.tsx
 // LinodeCreate.tsx
@@ -37,6 +36,8 @@ export const sendLinodeCreateFormInputEvent = ({
   sendFormEvent(formPayload, 'formInput');
 };
 
+// CreateFirewallDrawer.tsx
+// VPCCreateDrawer.tsx
 export const sendLinodeCreateFormStepEvent = ({
   createType,
   paperName,
@@ -53,17 +54,18 @@ export const sendLinodeCreateFormStepEvent = ({
 
 // LinodeCreate.tsx
 export const sendLinodeCreateFormSubmitEvent = (
-  formEndName: string,
   createType: LinodeCreateType,
   version: LinodeCreateFlowVersion
 ) => {
   const formPayload: BasicFormEvent = {
-    formName: `Linode Create from ${createType} Form ${version} - Form End - ${formEndName}`,
+    formName: `Linode Create from ${createType} ${version}`,
   };
   sendFormEvent(formPayload, 'formSubmit');
 };
 
 // LinodeCreate.tsx
+// CreateFirewallDrawer.tsx
+// useCreateVPC.ts
 export const sendLinodeCreateFormErrorEvent = (
   formError: string,
   createType: LinodeCreateType,
@@ -71,7 +73,7 @@ export const sendLinodeCreateFormErrorEvent = (
 ) => {
   const formPayload: FormErrorEvent = {
     formError,
-    formName: `Linode Create from ${createType} Form ${version} - Form Error`,
+    formName: `Linode Create from ${createType} ${version}`,
   };
   sendFormEvent(formPayload, 'formError');
 };
