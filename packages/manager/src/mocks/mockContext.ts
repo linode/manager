@@ -5,6 +5,7 @@ import type {
   Event,
   Notification,
   Region,
+  RegionAvailability,
 } from '@linode/api-v4';
 
 /**
@@ -20,6 +21,7 @@ export interface MockContext {
 
   // Environment.
   regions: Region[];
+  regionAvailability: RegionAvailability[];
 
   // Misc.
   eventQueue: Event[];
@@ -56,6 +58,7 @@ export const makeMockContext = (): MockContext => {
     linodeConfigs: [],
     volumes: [],
     regions: [],
+    regionAvailability: [],
     eventQueue: [],
     notificationQueue: [],
   };
