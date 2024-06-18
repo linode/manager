@@ -1,4 +1,5 @@
 import {
+  lkeHighAvailabilityTypeFactory,
   nodeBalancerTypeFactory,
   volumeTypeFactory,
 } from 'src/factories/types';
@@ -49,6 +50,7 @@ describe('getDCSpecificPricingDisplay', () => {
 describe('getDCSpecificPricingByType', () => {
   const mockNodeBalancerType = nodeBalancerTypeFactory.build();
   const mockVolumeType = volumeTypeFactory.build();
+  const mockLKEHighAvailabilityType = lkeHighAvailabilityTypeFactory.build();
 
   it('calculates dynamic pricing for a region without an increase', () => {
     expect(
@@ -57,6 +59,13 @@ describe('getDCSpecificPricingByType', () => {
         type: mockNodeBalancerType,
       })
     ).toBe('10.00');
+
+    expect(
+      getDCSpecificPriceByType({
+        regionId: 'us-east',
+        type: mockLKEHighAvailabilityType,
+      })
+    ).toBe('60.00');
   });
 
   it('calculates dynamic pricing for a region with an increase', () => {
@@ -73,6 +82,20 @@ describe('getDCSpecificPricingByType', () => {
         type: mockNodeBalancerType,
       })
     ).toBe('14.00');
+
+    expect(
+      getDCSpecificPriceByType({
+        regionId: 'id-cgk',
+        type: mockLKEHighAvailabilityType,
+      })
+    ).toBe('72.00');
+
+    expect(
+      getDCSpecificPriceByType({
+        regionId: 'br-gru',
+        type: mockLKEHighAvailabilityType,
+      })
+    ).toBe('84.00');
   });
 
   it('calculates dynamic pricing for a region without an increase on an hourly interval to the specified decimal', () => {

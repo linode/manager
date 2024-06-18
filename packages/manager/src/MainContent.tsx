@@ -130,7 +130,11 @@ const Domains = React.lazy(() =>
   }))
 );
 const Images = React.lazy(() => import('src/features/Images'));
-const Kubernetes = React.lazy(() => import('src/features/Kubernetes'));
+const Kubernetes = React.lazy(() =>
+  import('src/features/Kubernetes').then((module) => ({
+    default: module.Kubernetes,
+  }))
+);
 const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
 const Profile = React.lazy(() => import('src/features/Profile/Profile'));
 const LoadBalancers = React.lazy(() =>

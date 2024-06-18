@@ -1,4 +1,3 @@
-import { Capabilities } from '@linode/api-v4/lib/regions';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -25,8 +24,9 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { Box } from '../Box';
 import { DocsLink } from '../DocsLink/DocsLink';
 import { Link } from '../Link';
-import { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 
+import type { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
+import type { Capabilities } from '@linode/api-v4/lib/regions';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 interface SelectRegionPanelProps {
@@ -158,7 +158,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         onChange={(e, region) => handleSelection(region.id)}
         regionFilter={hideDistributedRegions ? 'core' : undefined}
         regions={regions ?? []}
-        value={selectedId || null}
+        value={selectedId}
         {...RegionSelectProps}
       />
       {showClonePriceWarning && (

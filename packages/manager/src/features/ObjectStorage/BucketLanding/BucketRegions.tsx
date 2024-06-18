@@ -9,7 +9,7 @@ interface Props {
   onBlur: (e: any) => void;
   onChange: (value: string) => void;
   required?: boolean;
-  selectedRegion: null | string;
+  selectedRegion: string | undefined;
 }
 
 export const BucketRegions = (props: Props) => {

@@ -70,7 +70,9 @@ export const RegionSelect = <
     regions,
   });
 
-  const selectedRegion = regionOptions.find((r) => r.id === value) ?? null;
+  const selectedRegion = value
+    ? regionOptions.find((r) => r.id === value)
+    : null;
 
   const disabledRegions = regionOptions.reduce<
     Record<string, DisableRegionOption>

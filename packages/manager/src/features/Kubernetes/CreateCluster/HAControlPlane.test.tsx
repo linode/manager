@@ -1,13 +1,18 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { HAControlPlane, HAControlPlaneProps } from './HAControlPlane';
+import { HAControlPlane } from './HAControlPlane';
+
+import type { HAControlPlaneProps } from './HAControlPlane';
 
 const props: HAControlPlaneProps = {
-  highAvailabilityPrice: LKE_HA_PRICE,
+  highAvailabilityPrice: '60.00',
+  isErrorKubernetesTypes: false,
+  isLoadingKubernetesTypes: false,
+  selectedRegionId: 'us-southeast',
   setHighAvailability: vi.fn(),
 };
 
@@ -18,12 +23,17 @@ describe('HAControlPlane', () => {
     expect(getByTestId('ha-control-plane-form')).toBeVisible();
   });
 
-  it('should not render an HA price when the price is undefined', () => {
-    const { queryAllByText } = renderWithTheme(
-      <HAControlPlane {...props} highAvailabilityPrice={undefined} />
+  it('should not render an HA price when there is a price error', () => {
+    const { getByText } = renderWithTheme(
+      <HAControlPlane
+        {...props}
+        highAvailabilityPrice={UNKNOWN_PRICE}
+        isErrorKubernetesTypes={true}
+      />
     );
 
-    expect(queryAllByText(/\$60\.00/)).toHaveLength(0);
+    getByText(/The cost for HA control plane is not available at this time./);
+    getByText(/For this region, HA control plane costs \$--.--\/month./);
   });
 
   it('should render an HA price when the price is a number', async () => {
