@@ -71,8 +71,8 @@ describe('KubeCheckoutBar', () => {
   it('should display the total price of the cluster without High Availability', async () => {
     const { findByText } = renderWithTheme(<KubeCheckoutBar {...props} />);
 
-    // 5 node pools * 3 linodes per pool * 12 per linode
-    await findByText(/\$180\.00/);
+    // 5 node pools * 3 linodes per pool * 10 per linode
+    await findByText(/\$150\.00/);
   });
 
   it('should display the total price of the cluster with High Availability', async () => {
@@ -80,11 +80,20 @@ describe('KubeCheckoutBar', () => {
       <KubeCheckoutBar {...props} highAvailability />
     );
 
-    // 5 node pools * 3 linodes per pool * 12 per linode + 60 per month per cluster for HA
-    await findByText(/\$240\.00/);
+    // 5 node pools * 3 linodes per pool * 10 per linode + 60 per month per cluster for HA
+    await findByText(/\$210\.00/);
   });
 
-  it('should display the DC-Specific total price of the cluster for a region with a price increase', async () => {
+  it('should display the DC-Specific total price of the cluster for a region with a price increase without HA selection', async () => {
+    const { findByText } = renderWithTheme(
+      <KubeCheckoutBar {...props} region="id-cgk" />
+    );
+
+    // 5 node pools * 3 linodes per pool * 12 per linode * 20% increase for Jakarta + 72 per month per cluster for HA
+    await findByText(/\$180\.00/);
+  });
+
+  it('should display the DC-Specific total price of the cluster for a region with a price increase with HA selection', async () => {
     const { findByText } = renderWithTheme(
       <KubeCheckoutBar
         {...props}
@@ -94,8 +103,8 @@ describe('KubeCheckoutBar', () => {
       />
     );
 
-    // 5 node pools * 3 linodes per pool * 14.40 per linode * 20% increase for Jakarta
-    await findByText(/\$288\.00/);
+    // 5 node pools * 3 linodes per pool * 12 per linode * 20% increase for Jakarta + 72 per month per cluster for HA
+    await findByText(/\$252\.00/);
   });
 
   it('should display UNKNOWN_PRICE for HA when not available and show total price of cluster as the sum of the node pools', async () => {
@@ -108,9 +117,8 @@ describe('KubeCheckoutBar', () => {
       />
     );
 
-    // 5 node pools * 3 linodes per pool * 14.4 per linode * UNKNOWN_PRICE
-    await findByText(/\$216\.00/);
-
+    // 5 node pools * 3 linodes per pool * 12 per linode * 20% increase for Jakarta + UNKNOWN_PRICE
+    await findByText(/\$180\.00/);
     getByText(/\$--.--\/month/);
   });
 });

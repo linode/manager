@@ -177,18 +177,18 @@ export const linodeTypeFactory = Factory.Sync.makeFactory<LinodeType>({
   network_out: 2000,
   price: {
     hourly: 0.015,
-    monthly: 12.0,
+    monthly: 10.0,
   },
   region_prices: [
     {
       hourly: 0.021,
       id: 'br-gru',
-      monthly: 16.8,
+      monthly: 14,
     },
     {
       hourly: 0.018,
       id: 'id-cgk',
-      monthly: 14.4,
+      monthly: 12,
     },
   ],
   successor: null,

@@ -67,7 +67,7 @@ describe('helper functions', () => {
           region: 'id-cgk',
           types,
         })
-      ).toBe(57.6);
+      ).toBe(48);
     });
 
     it('should calculate the total cluster price with HA enabled', () => {

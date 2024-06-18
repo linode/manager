@@ -260,7 +260,9 @@ export const CreateCluster = () => {
             <Box data-testid="ha-control-plane">
               <HAControlPlane
                 highAvailabilityPrice={
-                  isErrorKubernetesTypes ? UNKNOWN_PRICE : highAvailabilityPrice
+                  isErrorKubernetesTypes || !highAvailabilityPrice
+                    ? UNKNOWN_PRICE
+                    : highAvailabilityPrice
                 }
                 isErrorKubernetesTypes={isErrorKubernetesTypes}
                 isLoadingKubernetesTypes={isLoadingKubernetesTypes}
@@ -297,7 +299,9 @@ export const CreateCluster = () => {
       >
         <KubeCheckoutBar
           highAvailabilityPrice={
-            isErrorKubernetesTypes ? UNKNOWN_PRICE : highAvailabilityPrice
+            isErrorKubernetesTypes || !highAvailabilityPrice
+              ? UNKNOWN_PRICE
+              : highAvailabilityPrice
           }
           updateFor={[
             hasAgreed,

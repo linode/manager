@@ -28,7 +28,7 @@ export interface Props {
   createCluster: () => void;
   hasAgreed: boolean;
   highAvailability?: boolean;
-  highAvailabilityPrice: string | undefined;
+  highAvailabilityPrice: string;
   pools: KubeNodePoolResponse[];
   region: string | undefined;
   regionsData: Region[];

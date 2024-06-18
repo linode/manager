@@ -11,7 +11,7 @@ import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
 
 export interface HAControlPlaneProps {
-  highAvailabilityPrice?: string;
+  highAvailabilityPrice: string;
   isErrorKubernetesTypes: boolean;
   isLoadingKubernetesTypes: boolean;
   selectedRegionId: string | undefined;
