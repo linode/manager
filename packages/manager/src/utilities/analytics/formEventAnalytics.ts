@@ -14,21 +14,6 @@ import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types'
  * Form Events
  */
 
-// AddNewMenu.tsx
-// LinodesLanding.tsx
-// LinodesLandingEmptyState.tsx
-// PrimaryNav.tsx
-// export const sendLinodeCreateFormStartEvent = (
-//   formStartName: string,
-//   createType: LinodeCreateType,
-//   version: LinodeCreateFlowVersion
-// ) => {
-//   const formPayload: BasicFormEvent = {
-//     formName: `Linode Create from ${createType} Form ${version} - Form Start - ${formStartName}`,
-//   };
-//   sendFormEvent(formPayload, 'formFocus');
-// };
-
 // SelectFirewallPanel.tsx
 // CreateFirewallDrawer.tsx
 // VPCTopSectionContent.tsx

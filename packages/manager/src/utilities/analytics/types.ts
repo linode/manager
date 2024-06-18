@@ -32,7 +32,6 @@ export interface AnalyticsEvent {
 
 export type FormEventType =
   | 'formError'
-  | 'formFocus' // Focus is used for Form Start
   | 'formInput'
   | 'formStepInteraction'
   | 'formSubmit';
