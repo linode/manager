@@ -177,6 +177,70 @@ describe('getRegionOptions', () => {
 
     expect(result).toEqual(regions);
   });
+
+  it('should filter out distributed regions by continent if the regionFilter includes continent', () => {
+    const regions2 = [
+      regionFactory.build({
+        id: 'us-1',
+        label: 'US Site 1',
+        site_type: 'distributed',
+      }),
+      regionFactory.build({
+        id: 'eu-2',
+        label: 'EU Site 2',
+        site_type: 'core',
+      }),
+    ];
+
+    const resultNA = getRegionOptions({
+      currentCapability: undefined,
+      regionFilter: 'distributed-NA',
+      regions: regions2,
+    });
+    const resultEU = getRegionOptions({
+      currentCapability: undefined,
+      regionFilter: 'distributed-EU',
+      regions: regions2,
+    });
+
+    expect(resultNA).toEqual([
+      regionFactory.build({
+        id: 'us-1',
+        label: 'US Site 1',
+        site_type: 'distributed',
+      }),
+    ]);
+    expect(resultEU).toEqual([
+      regionFactory.build({
+        id: 'eu-2',
+        label: 'EU Site 2',
+        site_type: 'core',
+      }),
+    ]);
+  });
+
+  it('should not filter out distributed regions by continent if the regionFilter includes all', () => {
+    const regions = [
+      regionFactory.build({
+        id: 'us-1',
+        label: 'US Site 1',
+        site_type: 'distributed',
+      }),
+      regionFactory.build({
+        id: 'eu-2',
+        label: 'EU Site 2',
+        site_type: 'core',
+      }),
+    ];
+
+    const resultAll = getRegionOptions({
+      currentCapability: undefined,
+      regionFilter: 'distributed-ALL',
+      regions,
+    });
+
+    expect(resultAll).toEqual(regions);
+  });
 });
 
 const accountAvailabilityData = [
