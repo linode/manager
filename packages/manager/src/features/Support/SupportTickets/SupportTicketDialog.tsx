@@ -143,8 +143,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const hasSeverityCapability = useTicketSeverityCapability();
 
-  const [files, setFiles] = React.useState<FileAttachment[]>([]);
-
   const valuesFromStorage = storage.supportText.get();
 
   // Ticket information
@@ -173,6 +171,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   } = form.watch();
 
   const { mutateAsync: createSupportTicket } = useCreateSupportTicketMutation();
+
+  const [files, setFiles] = React.useState<FileAttachment[]>([]);
 
   const [submitting, setSubmitting] = React.useState<boolean>(false);
 
@@ -321,14 +321,14 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       summary,
     })
       .then((response) => {
-        setSubmitting(false);
-        window.setTimeout(() => resetDrawer(true), 500);
         return response;
       })
       .then((response) => {
         attachFiles(response!.id).then(({ errors: _errors }: Accumulator) => {
+          setSubmitting(false);
           if (!props.keepOpenOnSuccess) {
-            close();
+            window.setTimeout(() => resetDrawer(true), 500);
+            props.onClose();
           }
           /* Errors will be an array of errors, or empty if all attachments succeeded. */
           onSuccess(response!.id, _errors);
