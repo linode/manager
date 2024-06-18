@@ -34,12 +34,6 @@ export const AppSelect = (props: Props) => {
         <Typography variant="h2">Select an App</Typography>
         <Stack direction="row" flexWrap="wrap" gap={1}>
           <DebouncedSearchTextField
-            onChange={(e) => {
-              if (category) {
-                setCategory(undefined);
-              }
-              setQuery(e.target.value);
-            }}
             InputProps={{ sx: { maxWidth: 'unset !important' } }}
             containerProps={{ flexGrow: 1 }}
             disabled={isLoading}
@@ -48,22 +42,18 @@ export const AppSelect = (props: Props) => {
             label="Search marketplace"
             loading={isLoading}
             noMarginTop
+            onSearch={setQuery}
             placeholder="Search for app name"
             value={query}
           />
           <Autocomplete
-            onChange={(e, value) => {
-              if (query) {
-                setQuery('');
-              }
-              setCategory(value?.label);
-            }}
             textFieldProps={{
               containerProps: { sx: { minWidth: 250 } },
               hideLabel: true,
             }}
             disabled={isLoading}
             label="Select category"
+            onChange={(e, value) => setCategory(value?.label)}
             options={categoryOptions}
             placeholder="Select category"
           />

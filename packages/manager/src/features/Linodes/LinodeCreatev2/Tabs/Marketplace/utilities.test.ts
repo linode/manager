@@ -2,10 +2,14 @@ import { stackScriptFactory } from 'src/factories';
 
 import { getFilteredApps } from './utilities';
 
+const mysql = stackScriptFactory.build({ id: 607026, label: 'MySQL' });
+const piHole = stackScriptFactory.build({ id: 970522, label: 'Pi-Hole' });
+const vault = stackScriptFactory.build({ id: 1037038, label: 'Vault' });
+
+const stackscripts = [mysql, piHole, vault];
+
 describe('getFilteredApps', () => {
   it('should not perform any filtering if the search is empty', () => {
-    const stackscripts = stackScriptFactory.buildList(10);
-
     const result = getFilteredApps({
       category: undefined,
       query: '',
@@ -16,12 +20,6 @@ describe('getFilteredApps', () => {
   });
 
   it('should allow a simple filter on label', () => {
-    const mysql = stackScriptFactory.build({ id: 607026, label: 'MySQL' });
-    const piHole = stackScriptFactory.build({ id: 970522, label: 'Pi-Hole' });
-    const vault = stackScriptFactory.build({ id: 1037038, label: 'Vault' });
-
-    const stackscripts = [mysql, piHole, vault];
-
     const result = getFilteredApps({
       category: undefined,
       query: 'mysql',
@@ -32,12 +30,6 @@ describe('getFilteredApps', () => {
   });
 
   it('should allow a filter on label and catergory', () => {
-    const mysql = stackScriptFactory.build({ id: 607026, label: 'MySQL' });
-    const piHole = stackScriptFactory.build({ id: 970522, label: 'Pi-Hole' });
-    const vault = stackScriptFactory.build({ id: 1037038, label: 'Vault' });
-
-    const stackscripts = [mysql, piHole, vault];
-
     const result = getFilteredApps({
       category: undefined,
       query: 'mysql, database',
@@ -48,12 +40,6 @@ describe('getFilteredApps', () => {
   });
 
   it('should allow filtering on StackScript id', () => {
-    const mysql = stackScriptFactory.build({ id: 607026, label: 'MySQL' });
-    const piHole = stackScriptFactory.build({ id: 970522, label: 'Pi-Hole' });
-    const vault = stackScriptFactory.build({ id: 1037038, label: 'Vault' });
-
-    const stackscripts = [mysql, piHole, vault];
-
     const result = getFilteredApps({
       category: undefined,
       query: '1037038',
@@ -64,12 +50,6 @@ describe('getFilteredApps', () => {
   });
 
   it('should allow filtering on alt description with many words', () => {
-    const mysql = stackScriptFactory.build({ id: 607026, label: 'MySQL' });
-    const piHole = stackScriptFactory.build({ id: 970522, label: 'Pi-Hole' });
-    const vault = stackScriptFactory.build({ id: 1037038, label: 'Vault' });
-
-    const stackscripts = [mysql, piHole, vault];
-
     const result = getFilteredApps({
       category: undefined,
       query: 'HashiCorp password',
@@ -80,12 +60,6 @@ describe('getFilteredApps', () => {
   });
 
   it('should filter if a category is selected in the category dropdown', () => {
-    const mysql = stackScriptFactory.build({ id: 607026, label: 'MySQL' });
-    const piHole = stackScriptFactory.build({ id: 970522, label: 'Pi-Hole' });
-    const vault = stackScriptFactory.build({ id: 1037038, label: 'Vault' });
-
-    const stackscripts = [mysql, piHole, vault];
-
     const result = getFilteredApps({
       category: 'Databases',
       query: '',
@@ -95,19 +69,23 @@ describe('getFilteredApps', () => {
     expect(result).toStrictEqual([mysql]);
   });
 
-  it('should ignore "category" if a search query is passed', () => {
-    const mysql = stackScriptFactory.build({ id: 607026, label: 'MySQL' });
-    const piHole = stackScriptFactory.build({ id: 970522, label: 'Pi-Hole' });
-    const vault = stackScriptFactory.build({ id: 1037038, label: 'Vault' });
+  it('should allow searching by both a query and a category', () => {
+    const result = getFilteredApps({
+      category: 'Databases',
+      query: 'My',
+      stackscripts,
+    });
 
-    const stackscripts = [mysql, piHole, vault];
+    expect(result).toStrictEqual([mysql]);
+  });
 
+  it('should return no matches if there are no results when searching by both query and category', () => {
     const result = getFilteredApps({
       category: 'Databases',
       query: 'HashiCorp',
       stackscripts,
     });
 
-    expect(result).toStrictEqual([vault]);
+    expect(result).toStrictEqual([]);
   });
 });

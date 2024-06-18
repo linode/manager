@@ -72,36 +72,44 @@ interface FilterdAppsOptions {
 export const getFilteredApps = (options: FilterdAppsOptions) => {
   const { category, query, stackscripts } = options;
 
-  if (query) {
-    return stackscripts.filter((stackscript) => {
-      const appDetails = oneClickApps[stackscript.id];
+  return stackscripts.filter((stackscript) => {
+    const appDetails = oneClickApps[stackscript.id];
 
-      const queryWords = query
-        .replace(/[,.-]/g, '')
-        .trim()
-        .toLocaleLowerCase()
-        .split(' ');
+    const queryWords = query
+      .replace(/[,.-]/g, '')
+      .trim()
+      .toLocaleLowerCase()
+      .split(' ');
 
-      const searchableAppFields = [
-        String(stackscript.id),
-        stackscript.label,
-        appDetails.name,
-        appDetails.alt_name,
-        appDetails.alt_description,
-        ...appDetails.categories,
-      ];
+    const searchableAppFields = [
+      String(stackscript.id),
+      stackscript.label,
+      appDetails.name,
+      appDetails.alt_name,
+      appDetails.alt_description,
+      ...appDetails.categories,
+    ];
 
-      return searchableAppFields.some((field) =>
-        queryWords.some((queryWord) => field.toLowerCase().includes(queryWord))
-      );
-    });
-  }
-
-  if (category) {
-    return stackscripts.filter((stackscript) =>
-      oneClickApps[stackscript.id].categories.includes(category)
+    const matchesSearchQuery = searchableAppFields.some((field) =>
+      queryWords.some((queryWord) => field.toLowerCase().includes(queryWord))
     );
-  }
 
-  return stackscripts;
+    if (query && category) {
+      const matchesCategory = oneClickApps[stackscript.id].categories.includes(
+        category
+      );
+
+      return matchesSearchQuery && matchesCategory;
+    }
+
+    if (query) {
+      return matchesSearchQuery;
+    }
+
+    if (category) {
+      return oneClickApps[stackscript.id].categories.includes(category);
+    }
+
+    return true;
+  });
 };
