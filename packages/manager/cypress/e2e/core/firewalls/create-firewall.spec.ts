@@ -75,7 +75,7 @@ describe('create firewall', () => {
     };
 
     cy.defer(
-      createTestLinode(linodeRequest, { securityMethod: 'powered_off' }),
+      () => createTestLinode(linodeRequest, { securityMethod: 'powered_off' }),
       'creating Linode'
     ).then((linode) => {
       interceptCreateFirewall().as('createFirewall');

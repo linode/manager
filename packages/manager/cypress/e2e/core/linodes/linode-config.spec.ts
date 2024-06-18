@@ -80,7 +80,7 @@ describe('Linode Config management', () => {
 
       // Fetch Linode kernel data from the API.
       // We'll use this data in the tests to confirm that config labels are rendered correctly.
-      cy.defer(fetchAllKernels(), 'Fetching Linode kernels...').then(
+      cy.defer(() => fetchAllKernels(), 'Fetching Linode kernels...').then(
         (fetchedKernels) => {
           kernels = fetchedKernels;
         }
@@ -95,61 +95,69 @@ describe('Linode Config management', () => {
      */
     it('Creates a config', () => {
       // Wait for Linode to be created for kernel data to be retrieved.
-      cy.defer(createTestLinode(), 'Creating Linode').then((linode: Linode) => {
-        interceptCreateLinodeConfigs(linode.id).as('postLinodeConfigs');
-        interceptGetLinodeConfigs(linode.id).as('getLinodeConfigs');
+      cy.defer(() => createTestLinode(), 'Creating Linode').then(
+        (linode: Linode) => {
+          interceptCreateLinodeConfigs(linode.id).as('postLinodeConfigs');
+          interceptGetLinodeConfigs(linode.id).as('getLinodeConfigs');
 
-        cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
+          cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
 
-        // Confirm that initial config is listed in Linode configurations table.
-        cy.wait('@getLinodeConfigs');
-        cy.defer(fetchLinodeConfigs(linode.id)).then((configs: Config[]) => {
-          cy.findByLabelText('List of Configurations').within(() => {
-            configs.forEach((config) => {
-              const kernel = findKernelById(kernels, config.kernel);
-              cy.findByText(`${config.label} – ${kernel.label}`).should(
-                'be.visible'
-              );
-            });
-          });
-        });
-
-        // Add new configuration.
-        cy.findByText('Add Configuration').click();
-        ui.dialog
-          .findByTitle('Add Configuration')
-          .should('be.visible')
-          .within(() => {
-            cy.get('#label').type(`${linode.id}-test-config`);
-            ui.buttonGroup
-              .findButtonByTitle('Add Configuration')
-              .scrollIntoView()
-              .should('be.visible')
-              .should('be.enabled')
-              .click();
-          });
-
-        // Confirm that config creation request was successful.
-        cy.wait('@postLinodeConfigs')
-          .its('response.statusCode')
-          .should('eq', 200);
-
-        // Confirm that new config and existing config are both listed.
-        cy.wait('@getLinodeConfigs');
-        cy.defer(fetchLinodeConfigs(linode.id)).then((configs: Config[]) => {
-          cy.findByLabelText('List of Configurations').within(() => {
-            configs.forEach((config) => {
-              const kernel = findKernelById(kernels, config.kernel);
-              cy.findByText(`${config.label} – ${kernel.label}`)
-                .should('be.visible')
-                .closest('tr')
-                .within(() => {
-                  cy.findByText('eth0 – Public Internet').should('be.visible');
+          // Confirm that initial config is listed in Linode configurations table.
+          cy.wait('@getLinodeConfigs');
+          cy.defer(() => fetchLinodeConfigs(linode.id)).then(
+            (configs: Config[]) => {
+              cy.findByLabelText('List of Configurations').within(() => {
+                configs.forEach((config) => {
+                  const kernel = findKernelById(kernels, config.kernel);
+                  cy.findByText(`${config.label} – ${kernel.label}`).should(
+                    'be.visible'
+                  );
                 });
+              });
+            }
+          );
+
+          // Add new configuration.
+          cy.findByText('Add Configuration').click();
+          ui.dialog
+            .findByTitle('Add Configuration')
+            .should('be.visible')
+            .within(() => {
+              cy.get('#label').type(`${linode.id}-test-config`);
+              ui.buttonGroup
+                .findButtonByTitle('Add Configuration')
+                .scrollIntoView()
+                .should('be.visible')
+                .should('be.enabled')
+                .click();
             });
-          });
-        });
-      });
+
+          // Confirm that config creation request was successful.
+          cy.wait('@postLinodeConfigs')
+            .its('response.statusCode')
+            .should('eq', 200);
+
+          // Confirm that new config and existing config are both listed.
+          cy.wait('@getLinodeConfigs');
+          cy.defer(() => fetchLinodeConfigs(linode.id)).then(
+            (configs: Config[]) => {
+              cy.findByLabelText('List of Configurations').within(() => {
+                configs.forEach((config) => {
+                  const kernel = findKernelById(kernels, config.kernel);
+                  cy.findByText(`${config.label} – ${kernel.label}`)
+                    .should('be.visible')
+                    .closest('tr')
+                    .within(() => {
+                      cy.findByText('eth0 – Public Internet').should(
+                        'be.visible'
+                      );
+                    });
+                });
+              });
+            }
+          );
+        }
+      );
     });
 
     /**
@@ -174,7 +182,7 @@ describe('Linode Config management', () => {
 
       // Create a Linode and wait for its Config to be fetched before proceeding.
       cy.defer(
-        createLinodeAndGetConfig({ interfaces }, { waitForDisks: true }),
+        () => createLinodeAndGetConfig({ interfaces }, { waitForDisks: true }),
         'creating a linode and getting its config'
       ).then(([linode, config]: [Linode, Config]) => {
         // Get kernel info for config.
@@ -234,10 +242,11 @@ describe('Linode Config management', () => {
      */
     it('Boots a config', () => {
       cy.defer(
-        createLinodeAndGetConfig(
-          { booted: true },
-          { waitForBoot: true, securityMethod: 'vlan_no_internet' }
-        ),
+        () =>
+          createLinodeAndGetConfig(
+            { booted: true },
+            { waitForBoot: true, securityMethod: 'vlan_no_internet' }
+          ),
         'Creating and booting test Linode'
       ).then(([linode, config]: [Linode, Config]) => {
         const kernel = findKernelById(kernels, config.kernel);
@@ -282,16 +291,26 @@ describe('Linode Config management', () => {
      */
     it('Clones a config', () => {
       // Create clone source and destination Linodes.
+      // Use `vlan_no_internet` security method.
+      // This works around an issue where the Linode API responds with a 400
+      // when attempting to interact with it shortly after booting up when the
+      // Linode is attached to a Cloud Firewall.
       const createCloneTestLinodes = async () => {
         return Promise.all([
-          createTestLinode({ booted: true }, { waitForBoot: true }),
-          createTestLinode({ booted: true }),
+          createTestLinode(
+            { booted: true },
+            { securityMethod: 'vlan_no_internet', waitForBoot: true }
+          ),
+          createTestLinode(
+            { booted: true },
+            { securityMethod: 'vlan_no_internet' }
+          ),
         ]);
       };
 
       // Create clone and source destination Linodes, then proceed with clone flow.
       cy.defer(
-        createCloneTestLinodes(),
+        () => createCloneTestLinodes(),
         'Waiting for 2 Linodes to be created'
       ).then(([sourceLinode, destLinode]: [Linode, Linode]) => {
         const kernel = findKernelById(kernels, 'linode/latest-64bit');
@@ -370,7 +389,7 @@ describe('Linode Config management', () => {
      */
     it('Deletes a config', () => {
       cy.defer(
-        createLinodeAndGetConfig(),
+        () => createLinodeAndGetConfig(),
         'creating a linode and getting its config'
       ).then(([linode, config]: [Linode, Config]) => {
         // Get kernel info for config to be deleted.
