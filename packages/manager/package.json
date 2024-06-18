@@ -92,7 +92,7 @@
     "build": "vite build",
     "build:analyze": "bunx vite-bundle-visualizer",
     "precommit": "lint-staged && yarn typecheck",
-    "test": "vitest run",
+    "test": "vitest run --reporter=hanging-process",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "storybook dev -p 6006",
     "storybook-static": "storybook build -c .storybook -o .out",
