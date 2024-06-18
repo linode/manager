@@ -1,9 +1,9 @@
-import { Typography } from '@mui/material';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
@@ -51,7 +51,7 @@ export const RebuildImageDrawer = (props: Props) => {
     });
   });
 
-  return (
+  return image ? (
     <Drawer
       onClose={onClose}
       onExited={reset}
@@ -67,9 +67,9 @@ export const RebuildImageDrawer = (props: Props) => {
           />
         )}
 
-        <Typography>
-          <strong>Image</strong> {image?.label}
-        </Typography>
+        <DescriptionList
+          items={[{ description: image?.label, title: 'Image' }]}
+        />
 
         <Divider spacingBottom={0} spacingTop={24} />
 
@@ -113,5 +113,5 @@ export const RebuildImageDrawer = (props: Props) => {
         />
       </Stack>
     </Drawer>
-  );
+  ) : null;
 };
