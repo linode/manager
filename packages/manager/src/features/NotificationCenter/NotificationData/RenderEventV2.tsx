@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
 import { Box } from 'src/components/Box';
-import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
 import {
   formatProgressEvent,
@@ -40,29 +39,26 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
   const { progressEventDisplay, showProgress } = formatProgressEvent(event);
 
   return (
-    <>
-      <RenderEventStyledBox
-        className={unseenEventClass}
-        data-testid={event.action}
-      >
-        <RenderEventGravatarV2 username={event.username} />
-        <Box sx={{ marginTop: '-2px', paddingRight: 1, width: '100%' }}>
-          {message}
-          {showProgress && (
-            <BarPercent
-              className={classes.bar}
-              max={100}
-              narrow
-              rounded
-              value={event.percent_complete ?? 0}
-            />
-          )}
-          <Typography sx={{ fontSize: '0.8rem' }}>
-            {progressEventDisplay} | {event.username ?? 'Linode'}
-          </Typography>
-        </Box>
-      </RenderEventStyledBox>
-      <Divider />
-    </>
+    <RenderEventStyledBox
+      className={unseenEventClass}
+      data-testid={event.action}
+    >
+      <RenderEventGravatarV2 username={event.username} />
+      <Box sx={{ marginTop: '-2px', paddingRight: 1, width: '100%' }}>
+        {message}
+        {showProgress && (
+          <BarPercent
+            className={classes.bar}
+            max={100}
+            narrow
+            rounded
+            value={event.percent_complete ?? 0}
+          />
+        )}
+        <Typography sx={{ fontSize: '0.8rem' }}>
+          {progressEventDisplay} | {event.username ?? 'Linode'}
+        </Typography>
+      </Box>
+    </RenderEventStyledBox>
   );
 });

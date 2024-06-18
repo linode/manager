@@ -32,7 +32,7 @@ export const EventsLanding = (props: Props) => {
   const { emptyMessage, entityId } = props;
   const flags = useFlags();
 
-  const filter = EVENTS_LIST_FILTER;
+  const filter = { ...EVENTS_LIST_FILTER };
 
   if (entityId) {
     filter['entity.id'] = entityId;
