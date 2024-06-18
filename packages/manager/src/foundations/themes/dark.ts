@@ -1,11 +1,12 @@
 import {
   Action,
   Badge,
-  Border,
   Button,
   Color,
+  Dropdown,
   Interaction,
   Select,
+  TextField,
 } from '@linode/design-language-system/themes/dark';
 
 import { breakpoints } from 'src/foundations/breakpoints';
@@ -290,7 +291,7 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&[aria-disabled="true"]': {
-            '&& .MuiSvgIcon-root': {
+            '& .MuiSvgIcon-root': {
               fill: Button.Primary.Disabled.Icon,
             },
             cursor: 'not-allowed',
@@ -319,38 +320,35 @@ export const darkTheme: ThemeOptions = {
         color: 'primary',
       },
       styleOverrides: {
-        clickable: {
-          '&:focus': {
-            backgroundColor: Badge.Subtle.Ultramarine.Background,
-          },
-          '&:hover': {
-            backgroundColor: Badge.Subtle.Ultramarine.Background,
-          },
-          backgroundColor: Badge.Subtle.Ultramarine.Background,
-          color: Badge.Subtle.Ultramarine.Text,
-        },
         colorError: {
-          backgroundColor: Badge.Subtle.Red.Background,
-          color: Badge.Subtle.Red.Text,
+          backgroundColor: Badge.Bold.Red.Background,
+          color: Badge.Bold.Red.Text,
         },
         colorInfo: {
-          backgroundColor: Badge.Subtle.Ultramarine.Background,
-          color: Badge.Subtle.Ultramarine.Text,
+          backgroundColor: Badge.Bold.Ultramarine.Background,
+          color: Badge.Bold.Ultramarine.Text,
         },
         colorPrimary: {
-          backgroundColor: Badge.Subtle.Ultramarine.Background,
-          color: Badge.Subtle.Ultramarine.Text,
+          backgroundColor: Badge.Bold.Ultramarine.Background,
+          color: Badge.Bold.Ultramarine.Text,
+        },
+        colorSecondary: {
+          '&.MuiChip-clickable': {
+            '&:hover': {
+              backgroundColor: Badge.Bold.Ultramarine.Background,
+              color: Badge.Bold.Ultramarine.Text,
+            },
+          },
+          backgroundColor: Badge.Bold.Ultramarine.Background,
+          color: Badge.Bold.Ultramarine.Text,
         },
         colorSuccess: {
-          backgroundColor: Badge.Subtle.Green.Background,
-          color: Badge.Subtle.Green.Text,
+          backgroundColor: Badge.Bold.Green.Background,
+          color: Badge.Bold.Green.Text,
         },
         colorWarning: {
-          backgroundColor: Badge.Subtle.Amber.Background,
-          color: Badge.Subtle.Amber.Text,
-        },
-        label: {
-          color: Badge.Subtle.Ultramarine.Text,
+          backgroundColor: Badge.Bold.Amber.Background,
+          color: Badge.Bold.Amber.Text,
         },
         outlined: {
           '& .MuiChip-label': {
@@ -463,47 +461,44 @@ export const darkTheme: ThemeOptions = {
         },
         root: {
           '& svg': {
-            color: Select.Default.Icon,
+            color: TextField.Default.InfoIcon,
           },
           '&.Mui-disabled': {
             '& svg': {
-              color: Select.Disabled.Icon,
+              color: TextField.Disabled.InfoIcon,
             },
-            backgroundColor: Select.Disabled.Background,
-            borderColor: Select.Disabled.Border,
-            color: Select.Disabled.Text,
+            backgroundColor: TextField.Disabled.Background,
+            borderColor: TextField.Disabled.Border,
+            color: TextField.Disabled.Text,
           },
           '&.Mui-error': {
             '& svg': {
-              color: Select.Error.Icon,
+              color: TextField.Error.Icon,
             },
-            backgroundColor: Select.Error.Background,
-            borderColor: Select.Error.Border,
-            color: Select.Error.Text,
+            backgroundColor: TextField.Error.Background,
+            borderColor: TextField.Error.Border,
+            color: TextField.Error.Text,
           },
           '&.Mui-focused': {
             '& svg': {
-              color: Select.Focus.Icon,
+              color: TextField.Focus.Icon,
             },
-            backgroundColor: Select.Focus.Background,
-            borderColor: Select.Focus.Border,
+            backgroundColor: TextField.Focus.Background,
+            borderColor: TextField.Focus.Border,
             boxShadow: `0 0 2px 1px ${Color.Neutrals[100]}`,
-            color: Select.Focus.Text,
+            color: TextField.Focus.Text,
           },
           '&.Mui-hover': {
             '& svg': {
-              color: Select.Hover.Icon,
+              color: TextField.Hover.Icon,
             },
-            backgroundColor: Select.Hover.Background,
-            borderColor: Select.Hover.Border,
-            color: Select.Hover.Text,
+            backgroundColor: TextField.Hover.Background,
+            borderColor: TextField.Hover.Border,
+            color: TextField.Hover.Text,
           },
-          backgroundColor: Select.Default.Background,
-          borderColor: Select.Default.Border,
-          // TODO: designTokens - figure out why:
-          // - Select.Default.Text and Select.Focus.Text would be different colors
-          // - Why Select.Default.Text (#a3a3ab) looks like a disabled color (maybe that's just the discrepancy)
-          color: Select.Focus.Text,
+          backgroundColor: TextField.Default.Background,
+          borderColor: TextField.Default.Border,
+          color: TextField.Filled.Text,
         },
       },
     },
@@ -534,27 +529,27 @@ export const darkTheme: ThemeOptions = {
             backgroundColor: primaryColors.text,
           },
           '&:active': {
-            backgroundColor: Button.Primary.Pressed.Background,
+            backgroundColor: Dropdown.Background.Default,
           },
           '&:disabled': {
-            backgroundColor: Button.Primary.Disabled.Background,
-            color: Button.Primary.Disabled.Text,
+            backgroundColor: Dropdown.Background.Default,
+            color: Dropdown.Text.Disabled,
+            opacity: 1,
           },
           '&:hover, &:focus': {
-            backgroundColor: Button.Primary.Hover.Background,
-            color: Button.Primary.Default.Text,
+            backgroundColor: Dropdown.Background.Hover,
+            color: Dropdown.Text.Default,
           },
-          '&:last-child)': {
+          '&:last-child': {
             borderBottom: 0,
           },
           '&[aria-disabled="true"]': {
-            backgroundColor: Button.Primary.Disabled.Background,
-            color: Button.Primary.Disabled.Text,
+            backgroundColor: Dropdown.Background.Default,
+            color: Dropdown.Text.Disabled,
             opacity: 1,
           },
-          backgroundColor: Button.Primary.Default.Background,
-          borderBottom: `1px solid ${Border.Normal}`,
-          color: Button.Primary.Default.Text,
+          backgroundColor: Dropdown.Background.Default,
+          color: Dropdown.Text.Default,
           padding: '10px 10px 10px 16px',
         },
         selected: {},
@@ -579,7 +574,7 @@ export const darkTheme: ThemeOptions = {
         paper: {
           background: Color.Neutrals[100],
           border: 0,
-          boxShadow: `0 0 5px ${Color.Neutrals.Black}`,
+          boxShadow: `0 2px 6px 0 rgba(0, 0, 0, 0.18)`, // TODO: Fix Elevation.S to remove `inset`
         },
       },
     },

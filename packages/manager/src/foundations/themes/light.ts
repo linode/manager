@@ -3,6 +3,7 @@ import {
   Border,
   Button,
   Color,
+  Dropdown,
   Interaction,
   Select,
 } from '@linode/design-language-system';
@@ -497,6 +498,12 @@ export const lightTheme: ThemeOptions = {
     MuiButtonBase: {
       styleOverrides: {
         root: {
+          '&[aria-disabled="true"]': {
+            '& .MuiSvgIcon-root': {
+              fill: Button.Primary.Disabled.Icon,
+            },
+            cursor: 'not-allowed',
+          },
           fontSize: '1rem',
         },
       },
@@ -977,26 +984,26 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: primaryColors.text,
           },
           '&:active': {
-            backgroundColor: Button.Primary.Pressed.Background,
+            backgroundColor: Dropdown.Background.Default,
           },
           '&:disabled': {
-            backgroundColor: Button.Primary.Disabled.Background,
-            color: Button.Primary.Disabled.Text,
+            backgroundColor: Dropdown.Background.Default,
+            color: Dropdown.Text.Disabled,
           },
           '&:hover, &:focus': {
-            backgroundColor: Button.Primary.Hover.Background,
-            color: Button.Primary.Default.Text,
+            backgroundColor: Dropdown.Background.Hover,
+            color: Dropdown.Text.Default,
           },
           '&:last-child)': {
             borderBottom: 0,
           },
           '&[aria-disabled="true"]': {
-            backgroundColor: Button.Primary.Disabled.Background,
-            color: Button.Primary.Disabled.Text,
+            backgroundColor: Dropdown.Background.Default,
+            color: Dropdown.Text.Disabled,
+            opacity: 1,
           },
-          backgroundColor: Button.Primary.Default.Background,
-          borderBottom: `1px solid ${Color.Brand[80]}`,
-          color: Button.Primary.Default.Text,
+          backgroundColor: Dropdown.Background.Default,
+          color: Dropdown.Text.Default,
           padding: '10px 10px 10px 16px',
         },
         selected: {},
@@ -1017,7 +1024,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         paper: {
           borderRadius: 0,
-          boxShadow: `0 0 5px ${Color.Neutrals[30]}`,
+          boxShadow: `0 2px 6px 0 rgba(0, 0, 0, 0.18)`, // TODO: Fix Elevation.S to remove `inset`
           [breakpoints.up('lg')]: {
             minWidth: 250,
           },

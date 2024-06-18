@@ -192,15 +192,11 @@ export const AddNewMenu = () => {
                 }}
               >
                 <ListItemIcon>
-                  <link.icon color={theme.color.white} height={20} width={20} />
+                  <link.icon height={20} width={20} />
                 </ListItemIcon>
                 <Stack>
-                  <Typography color={theme.color.white} variant="h3">
-                    {link.entity}
-                  </Typography>
-                  <Typography color={theme.color.white}>
-                    {link.description}
-                  </Typography>
+                  <Typography variant="h3">{link.entity}</Typography>
+                  <Typography>{link.description}</Typography>
                 </Stack>
               </MenuItem>,
             ]
