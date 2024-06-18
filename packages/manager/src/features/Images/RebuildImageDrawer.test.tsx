@@ -30,7 +30,7 @@ describe('RebuildImageDrawer', () => {
     const { getByText } = renderWithTheme(<RebuildImageDrawer {...props} />);
 
     // Verify title renders
-    getByText('Restore from Image');
+    getByText('Rebuild an Existing Linode from an Image');
   });
 
   it('should allow selecting a Linode to rebuild', async () => {
@@ -46,7 +46,7 @@ describe('RebuildImageDrawer', () => {
 
     await userEvent.click(getByRole('combobox'));
     await userEvent.click(await findByText('linode-1'));
-    await userEvent.click(getByText('Restore Image'));
+    await userEvent.click(getByText('Rebuild Linode'));
 
     expect(mockHistoryPush).toBeCalledWith({
       pathname: '/linodes/1/rebuild',

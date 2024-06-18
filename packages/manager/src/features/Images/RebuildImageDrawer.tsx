@@ -1,15 +1,19 @@
-import { Image } from '@linode/api-v4';
+import { Typography } from '@mui/material';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
+import { Stack } from 'src/components/Stack';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 
 import { REBUILD_LINODE_IMAGE_PARAM_NAME } from '../Linodes/LinodesDetail/LinodeRebuild/RebuildFromImage';
 import { useImageAndLinodeGrantCheck } from './utils';
+
+import type { Image } from '@linode/api-v4';
 
 interface Props {
   image: Image | undefined;
@@ -52,53 +56,62 @@ export const RebuildImageDrawer = (props: Props) => {
       onClose={onClose}
       onExited={reset}
       open={open}
-      title="Restore from Image"
+      title="Rebuild an Existing Linode from an Image"
     >
-      {formState.errors.root?.message && (
-        <Notice
-          data-qa-notice
-          text={formState.errors.root.message}
-          variant="error"
-        />
-      )}
-
-      <Controller
-        render={({ field, fieldState }) => (
-          <LinodeSelect
-            onSelectionChange={(linode) => {
-              field.onChange(linode?.id);
-            }}
-            optionsFilter={(linode) =>
-              availableLinodes ? availableLinodes.includes(linode.id) : true
-            }
-            clearable={true}
-            errorText={fieldState.error?.message}
-            onBlur={field.onBlur}
-            value={field.value}
+      <Stack marginTop={4}>
+        {formState.errors.root?.message && (
+          <Notice
+            data-qa-notice
+            text={formState.errors.root.message}
+            variant="error"
           />
         )}
-        rules={{
-          required: {
-            message: 'Select a Linode to restore.',
-            value: true,
-          },
-        }}
-        control={control}
-        name="linodeId"
-      />
 
-      <ActionsPanel
-        primaryButtonProps={{
-          label: 'Restore Image',
-          loading: formState.isSubmitting,
-          onClick: onSubmit,
-        }}
-        secondaryButtonProps={{
-          label: 'Cancel',
-          onClick: onClose,
-        }}
-        style={{ marginTop: 16 }}
-      />
+        <Typography>
+          <strong>Image</strong> {image?.label}
+        </Typography>
+
+        <Divider spacingBottom={0} spacingTop={24} />
+
+        <Controller
+          render={({ field, fieldState }) => (
+            <LinodeSelect
+              onSelectionChange={(linode) => {
+                field.onChange(linode?.id);
+              }}
+              optionsFilter={(linode) =>
+                availableLinodes ? availableLinodes.includes(linode.id) : true
+              }
+              clearable={true}
+              errorText={fieldState.error?.message}
+              onBlur={field.onBlur}
+              placeholder="Select Linode or Type to Search"
+              value={field.value}
+            />
+          )}
+          rules={{
+            required: {
+              message: 'Select a Linode to restore.',
+              value: true,
+            },
+          }}
+          control={control}
+          name="linodeId"
+        />
+
+        <ActionsPanel
+          primaryButtonProps={{
+            label: 'Rebuild Linode',
+            loading: formState.isSubmitting,
+            onClick: onSubmit,
+          }}
+          secondaryButtonProps={{
+            label: 'Cancel',
+            onClick: onClose,
+          }}
+          style={{ marginTop: 16 }}
+        />
+      </Stack>
     </Drawer>
   );
 };
