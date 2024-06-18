@@ -60,7 +60,7 @@ describe('Images Landing Table', () => {
     expect(getAllByText('Size').length).toBe(2);
     expect(getAllByText('Total Size').length).toBe(1);
     expect(getAllByText('Created').length).toBe(2);
-    expect(getAllByText('Image Id').length).toBe(1);
+    expect(getAllByText('Image ID').length).toBe(1);
   });
 
   it('should render custom images empty state', async () => {
