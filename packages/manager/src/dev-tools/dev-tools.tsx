@@ -14,17 +14,36 @@ import { ServiceWorkerTool } from './ServiceWorkerTool';
 //import { MockDataTool } from './MockDataTool';
 // import { Preferences } from './Preferences';
 import { isMSWEnabled } from './ServiceWorkerTool';
-// import {
-//   ReactQueryDevtools,
-//   ReactQueryDevtoolsPanel,
-// } from '@tanstack/react-query-devtools';
+import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
 import { QueryClientProvider } from '@tanstack/react-query';
 import type { QueryClient } from '@tanstack/react-query';
 // import { ThemeSelector } from './ThemeSelector';
 
+export type DevToolsView = 'mocks' | 'react-query';
+
+const reactQueryDevtoolsStyle = {
+  border: '1px solid rgba(255, 255, 255, 0.25)',
+  width: '100%',
+  height: '100%',
+};
+
 function install(store: ApplicationStore, queryClient: QueryClient) {
   function DevTools() {
     const [isOpen, setIsOpen] = React.useState<boolean>(false);
+    const [view, setView] = React.useState<DevToolsView>('mocks');
+    //const [isReactQueryOpen, setReactQueryOpen] = React.useState<boolean>(false);
+
+    const handleOpenReactQuery = () => {
+      setView('react-query');
+    };
+
+    const handleOpenMocks = () => {
+      setView('mocks');
+    };
+
+    const handleGoToPreferences = () => {
+      window.location.assign('/profile/settings?preferenceEditor=true');
+    };
 
     return (
       <>
@@ -45,31 +64,52 @@ function install(store: ApplicationStore, queryClient: QueryClient) {
                   <EnvironmentToggleTool />
                 </div>
                 <div className="dev-tools__segmented-button">
-                  <button>React Query</button>
                   <button
-                    onClick={() =>
-                      window.location.assign(
-                        '/profile/settings?preferenceEditor=true'
-                      )
-                    }
+                    className={`toggle-button ${
+                      view === 'mocks' && 'toggle-button--on'
+                    }`}
+                    onClick={handleOpenMocks}
                   >
+                    Mocks
+                  </button>
+                  <button
+                    className={`toggle-button ${
+                      view === 'react-query' && 'toggle-button--on'
+                    }`}
+                    onClick={handleOpenReactQuery}
+                  >
+                    React Query
+                  </button>
+                </div>
+                <div>
+                  <button onClick={handleGoToPreferences}>
                     Go to Preferences
                   </button>
                 </div>
               </div>
               <div className="dev-tools__main">
-                <div className="dev-tools__main__column">
-                  <FeatureFlagTool />
-                </div>
-                <div className="dev-tools__main__column">
-                  <ServiceWorkerTool />
-                </div>
+                {view === 'mocks' && (
+                  <>
+                    <div className="dev-tools__main__column">
+                      <FeatureFlagTool />
+                    </div>
+                    <div className="dev-tools__main__column">
+                      <ServiceWorkerTool />
+                    </div>
+                  </>
+                )}
+                {view === 'react-query' && (
+                  <QueryClientProvider client={queryClient}>
+                    <ReactQueryDevtoolsPanel
+                      setIsOpen={() => {}}
+                      onDragStart={() => {}}
+                      style={reactQueryDevtoolsStyle}
+                    />
+                  </QueryClientProvider>
+                )}
               </div>
             </div>
           </div>
-          <QueryClientProvider client={queryClient}>
-            {/*<ReactQueryDevtoolsPanel />*/}
-          </QueryClientProvider>
         </div>
       </>
       // <div className={isMSWEnabled ? 'mswEnabled' : ''} id="dev-tools">
