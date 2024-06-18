@@ -426,6 +426,7 @@ export const lightTheme: ThemeOptions = {
           },
           '&:hover, &:focus': {
             backgroundColor: Button.Primary.Hover.Background,
+            color: Button.Primary.Default.Text,
           },
           '&[aria-disabled="true"]': {
             backgroundColor: Button.Primary.Disabled.Background,

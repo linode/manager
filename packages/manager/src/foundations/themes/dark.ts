@@ -7,10 +7,11 @@ import {
   Interaction,
   Select,
 } from '@linode/design-language-system/themes/dark';
-import { ThemeOptions } from '@mui/material/styles';
 
 import { breakpoints } from 'src/foundations/breakpoints';
 import { latoWeb } from 'src/foundations/fonts';
+
+import type { ThemeOptions } from '@mui/material/styles';
 
 const primaryColors = {
   dark: Color.Brand[90],
@@ -213,6 +214,7 @@ export const darkTheme: ThemeOptions = {
           },
           '&:hover, &:focus': {
             backgroundColor: Button.Primary.Hover.Background,
+            color: Button.Primary.Default.Text,
           },
           '&[aria-disabled="true"]': {
             backgroundColor: Button.Primary.Disabled.Background,
@@ -347,7 +349,13 @@ export const darkTheme: ThemeOptions = {
           backgroundColor: Badge.Subtle.Amber.Background,
           color: Badge.Subtle.Amber.Text,
         },
+        label: {
+          color: Badge.Subtle.Ultramarine.Text,
+        },
         outlined: {
+          '& .MuiChip-label': {
+            color: primaryColors.text,
+          },
           backgroundColor: 'transparent',
           borderRadius: 1,
         },
@@ -492,7 +500,10 @@ export const darkTheme: ThemeOptions = {
           },
           backgroundColor: Select.Default.Background,
           borderColor: Select.Default.Border,
-          color: Select.Default.Text,
+          // TODO: designTokens - figure out why:
+          // - Select.Default.Text and Select.Focus.Text would be different colors
+          // - Why Select.Default.Text (#a3a3ab) looks like a disabled color (maybe that's just the discrepancy)
+          color: Select.Focus.Text,
         },
       },
     },
