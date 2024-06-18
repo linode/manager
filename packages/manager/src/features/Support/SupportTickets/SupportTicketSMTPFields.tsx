@@ -7,14 +7,14 @@ import { useAccount } from 'src/queries/account/account';
 import { SMTP_FIELD_NAME_TO_LABEL_MAP } from './constants';
 
 import type { CustomFields } from './constants';
-import type { SupportTicketFormFields } from './SupportTicketDialog';
 
-export interface SMTPCustomFields extends CustomFields {
+export interface SMTPCustomFields extends Omit<CustomFields, 'companyName'> {
+  companyName: string | undefined;
   emailDomains: string;
 }
 
 export const SupportTicketSMTPFields = () => {
-  const form = useFormContext<SMTPCustomFields & SupportTicketFormFields>();
+  const form = useFormContext<SMTPCustomFields>();
   const { data: account } = useAccount();
 
   const defaultValues = {

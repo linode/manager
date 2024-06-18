@@ -1,21 +1,25 @@
+import { SMTP_FIELD_NAME_TO_LABEL_MAP } from './constants';
 import { formatDescription } from './ticketUtils';
 
-import type { EntityType, TicketType } from './SupportTicketDialog';
+import type { SupportTicketFormFields } from './SupportTicketDialog';
+import type { SMTPCustomFields } from './SupportTicketSMTPFields';
 
-const mockSupportTicketFormFields = {
+const mockSupportTicketFormFields: SupportTicketFormFields = {
   description: 'Mock description.',
   entityId: '',
   entityInputValue: '',
-  entityType: 'general' as EntityType,
-  files: [],
+  entityType: 'general',
   selectedSeverity: undefined,
   summary: 'My Summary',
-  ticketType: 'general' as TicketType,
+  ticketType: 'general',
 };
 
-const mockSupportTicketCustomFormFields = {
+const mockSupportTicketCustomFormFields: SMTPCustomFields = {
   companyName: undefined,
   customerName: 'Jane Doe',
+  emailDomains: 'test@akamai.com',
+  publicInfo: 'public info',
+  useCase: 'use case',
 };
 
 describe('formatDescription', () => {
@@ -26,7 +30,11 @@ describe('formatDescription', () => {
   });
 
   it('returns the formatted description if there are custom fields in the payload', () => {
-    const expectedFormattedDescription = `**Business or company name**\nNo response\n\n**First and last name**\nJane Doe`;
+    const expectedFormattedDescription = `**${SMTP_FIELD_NAME_TO_LABEL_MAP['companyName']}**\nNo response\n\n\
+**${SMTP_FIELD_NAME_TO_LABEL_MAP['customerName']}**\n${mockSupportTicketCustomFormFields.customerName}\n\n\
+**${SMTP_FIELD_NAME_TO_LABEL_MAP['emailDomains']}**\n${mockSupportTicketCustomFormFields.emailDomains}\n\n\
+**${SMTP_FIELD_NAME_TO_LABEL_MAP['publicInfo']}**\n${mockSupportTicketCustomFormFields.publicInfo}\n\n\
+**${SMTP_FIELD_NAME_TO_LABEL_MAP['useCase']}**\n${mockSupportTicketCustomFormFields.useCase}`;
 
     expect(
       formatDescription(

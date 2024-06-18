@@ -223,67 +223,17 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     }
   };
 
-  const close = () => {
+  const handleClose = () => {
     props.onClose();
     if (ticketType === 'smtp') {
       window.setTimeout(() => resetDrawer(true), 500);
     }
   };
 
-  const onCancel = () => {
+  const handleCancel = () => {
     props.onClose();
     window.setTimeout(() => resetDrawer(true), 500);
   };
-
-  const onSubmit = form.handleSubmit(async (values) => {
-    const { onSuccess } = props;
-
-    const _description = formatDescription(values, ticketType);
-
-    if (!['general', 'none'].includes(entityType) && !entityId) {
-      form.setError('entityId', {
-        message: `Please select a ${ENTITY_ID_TO_NAME_MAP[entityType]}.`,
-      });
-
-      return;
-    }
-    setSubmitting(true);
-
-    createSupportTicket({
-      description: _description,
-      [entityType]: Number(entityId),
-      severity: selectedSeverity,
-      summary,
-    })
-      .then((response) => {
-        setSubmitting(false);
-        window.setTimeout(() => resetDrawer(true), 500);
-        return response;
-      })
-      .then((response) => {
-        attachFiles(response!.id).then(({ errors: _errors }: Accumulator) => {
-          if (!props.keepOpenOnSuccess) {
-            close();
-          }
-          /* Errors will be an array of errors, or empty if all attachments succeeded. */
-          onSuccess(response!.id, _errors);
-        });
-      })
-      .catch((errResponse) => {
-        /* This block will only handle errors in creating the actual ticket; attachment
-         * errors are handled above. */
-        for (const error of errResponse) {
-          if (error.field) {
-            form.setError(error.field, { message: error.reason });
-          } else {
-            form.setError('root', { message: error.reason });
-          }
-        }
-
-        setSubmitting(false);
-        scrollErrorIntoViewV2(formContainerRef);
-      });
-  });
 
   const updateFiles = (newFiles: FileAttachment[]) => {
     setFiles(newFiles);
@@ -353,6 +303,56 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     });
   };
 
+  const handleSubmit = form.handleSubmit(async (values) => {
+    const { onSuccess } = props;
+
+    const _description = formatDescription(values, ticketType);
+
+    if (!['general', 'none'].includes(entityType) && !entityId) {
+      form.setError('entityId', {
+        message: `Please select a ${ENTITY_ID_TO_NAME_MAP[entityType]}.`,
+      });
+
+      return;
+    }
+    setSubmitting(true);
+
+    createSupportTicket({
+      description: _description,
+      [entityType]: Number(entityId),
+      severity: selectedSeverity,
+      summary,
+    })
+      .then((response) => {
+        setSubmitting(false);
+        window.setTimeout(() => resetDrawer(true), 500);
+        return response;
+      })
+      .then((response) => {
+        attachFiles(response!.id).then(({ errors: _errors }: Accumulator) => {
+          if (!props.keepOpenOnSuccess) {
+            close();
+          }
+          /* Errors will be an array of errors, or empty if all attachments succeeded. */
+          onSuccess(response!.id, _errors);
+        });
+      })
+      .catch((errResponse) => {
+        /* This block will only handle errors in creating the actual ticket; attachment
+         * errors are handled above. */
+        for (const error of errResponse) {
+          if (error.field) {
+            form.setError(error.field, { message: error.reason });
+          } else {
+            form.setError('root', { message: error.reason });
+          }
+        }
+
+        setSubmitting(false);
+        scrollErrorIntoViewV2(formContainerRef);
+      });
+  });
+
   const selectedSeverityLabel =
     selectedSeverity && SEVERITY_LABEL_MAP.get(selectedSeverity);
   const selectedSeverityOption =
@@ -365,11 +365,11 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={onSubmit} ref={formContainerRef}>
+      <form onSubmit={handleSubmit} ref={formContainerRef}>
         <Dialog
           fullHeight
           fullWidth
-          onClose={close}
+          onClose={handleClose}
           open={open}
           title={TICKET_TYPE_MAP[ticketType].dialogTitle}
         >
@@ -467,12 +467,12 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               'data-testid': 'submit',
               label: 'Open Ticket',
               loading: submitting,
-              onClick: onSubmit,
+              onClick: handleSubmit,
             }}
             secondaryButtonProps={{
               'data-testid': 'cancel',
               label: 'Cancel',
-              onClick: onCancel,
+              onClick: handleCancel,
             }}
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           />
