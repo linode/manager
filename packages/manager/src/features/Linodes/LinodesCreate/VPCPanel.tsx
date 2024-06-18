@@ -191,14 +191,16 @@ export const VPCPanel = (props: VPCPanelProps) => {
           <Select
             onChange={(selectedVPC: Item<number, string>) => {
               handleSelectVPC(selectedVPC.value);
-              // TODO: confirm when firing
-              sendLinodeCreateFormInputEvent({
-                createType:
-                  (params.type as LinodeCreateType) ?? 'Distributions',
-                paperName: 'VPC',
-                labelName: 'Assign VPC',
-                version: 'v1',
-              });
+              // Track clearing the value once per form - this is configured on backend by inputValue.
+              if (selectedVPC.label === 'None') {
+                sendLinodeCreateFormInputEvent({
+                  createType:
+                    (params.type as LinodeCreateType) ?? 'Distributions',
+                  paperName: 'VPC',
+                  labelName: 'Assign VPC',
+                  version: 'v1',
+                });
+              }
             }}
             textFieldProps={{
               tooltipText: REGION_CAVEAT_HELPER_TEXT,

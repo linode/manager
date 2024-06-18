@@ -86,14 +86,16 @@ export const SelectFirewallPanel = (props: Props) => {
         <Autocomplete
           onChange={(_, selection) => {
             handleFirewallChange(selection?.value ?? -1);
-            // TODO: confirm we're firing this on clear only
-            sendLinodeCreateFormInputEvent({
-              createType:
-                (queryParams.type as LinodeCreateType) ?? 'Distributions',
-              paperName: 'Firewall',
-              labelName: 'Assign Firewall',
-              version: 'v1',
-            });
+            // Track clearing the value once per form - this is configured on backend by inputValue.
+            if (!selection) {
+              sendLinodeCreateFormInputEvent({
+                createType:
+                  (queryParams.type as LinodeCreateType) ?? 'Distributions',
+                paperName: 'Firewall',
+                labelName: 'Assign Firewall',
+                version: 'v1',
+              });
+            }
           }}
           disabled={disabled}
           errorText={error?.[0].reason}
