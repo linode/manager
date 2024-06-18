@@ -78,8 +78,9 @@ describe('LKE Cluster Creation', () => {
    * - Confirms that user is redirected to new LKE cluster summary page.
    * - Confirms that new LKE cluster summary page shows expected node pools.
    * - Confirms that new LKE cluster is shown on LKE clusters landing page.
+   * - Confirms that correct information is shown on the LKE cluster summary page
    */
-  it.only('can create an LKE cluster', () => {
+  it('can create an LKE cluster', () => {
     const clusterLabel = randomLabel();
     const clusterRegion = chooseRegion();
     const clusterVersion = '1.27';
@@ -156,6 +157,7 @@ describe('LKE Cluster Creation', () => {
           cy.findAllByText(checkoutName).first().should('be.visible');
         });
 
+      // Expected information on the LKE cluster summary page.
       if (clusterPlan.size == 2 && clusterPlan.type == 'Linode') {
         totalcpu = totalcpu + nodeCount * 1;
         totalmemory = totalmemory + nodeCount * 2;
@@ -175,7 +177,7 @@ describe('LKE Cluster Creation', () => {
         monthprice = monthprice + nodeCount * 36;
       }
     });
-
+    // $60.00/month for enabling HA control plane
     const totalprice = monthprice + 60;
 
     // Create LKE cluster.
