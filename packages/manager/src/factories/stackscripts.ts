@@ -29,7 +29,7 @@ export const stackScriptFactory = Factory.Sync.makeFactory<StackScript>({
 export const oneClickAppFactory = Factory.Sync.makeFactory<OCA>({
   alt_description: 'A test app',
   alt_name: 'Test App',
-  categories: ['App Creators'],
+  categories: ['Databases'],
   colors: {
     end: '#000000',
     start: '#000000',

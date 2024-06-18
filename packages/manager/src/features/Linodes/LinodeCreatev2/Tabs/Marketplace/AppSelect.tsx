@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
@@ -11,6 +11,8 @@ import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 import { AppsList } from './AppsList';
 import { categoryOptions } from './utilities';
 
+import type { AppCategory } from 'src/features/OneClickApps/types';
+
 interface Props {
   /**
    * Opens the Marketplace App details drawer for the given app
@@ -22,6 +24,9 @@ export const AppSelect = (props: Props) => {
   const { onOpenDetailsDrawer } = props;
 
   const { isLoading } = useMarketplaceAppsQuery(true);
+
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState<AppCategory>();
 
   return (
     <Paper>
@@ -37,7 +42,9 @@ export const AppSelect = (props: Props) => {
             label="Search marketplace"
             loading={isLoading}
             noMarginTop
+            onSearch={setQuery}
             placeholder="Search for app name"
+            value={query}
           />
           <Autocomplete
             textFieldProps={{
@@ -46,12 +53,17 @@ export const AppSelect = (props: Props) => {
             }}
             disabled={isLoading}
             label="Select category"
+            onChange={(e, value) => setCategory(value?.label)}
             options={categoryOptions}
             placeholder="Select category"
           />
         </Stack>
         <Box height="500px" sx={{ overflowX: 'hidden', overflowY: 'auto' }}>
-          <AppsList onOpenDetailsDrawer={onOpenDetailsDrawer} />
+          <AppsList
+            category={category}
+            onOpenDetailsDrawer={onOpenDetailsDrawer}
+            query={query}
+          />
         </Box>
       </Stack>
     </Paper>
