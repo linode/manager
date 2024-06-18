@@ -9,6 +9,18 @@ import type {
 } from '@linode/api-v4';
 
 /**
+ * Describes a function that executes on each request to the events endpoint.
+ *
+ * Can be used to simulate progress or update state in response to an event.
+ *
+ * @returns `true` if event is considered complete, `false` if callback should continue to be called.
+ */
+export type MockEventProgressHandler = (
+  event: Event,
+  context: MockContext
+) => boolean;
+
+/**
  * Contextual data shared among mocks.
  */
 export interface MockContext {
@@ -24,7 +36,7 @@ export interface MockContext {
   regionAvailability: RegionAvailability[];
 
   // Misc.
-  eventQueue: Event[];
+  eventQueue: [Event, MockEventProgressHandler | null][];
   notificationQueue: Notification[];
 }
 
