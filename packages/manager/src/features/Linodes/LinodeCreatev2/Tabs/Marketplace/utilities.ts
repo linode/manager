@@ -73,43 +73,68 @@ export const getFilteredApps = (options: FilterdAppsOptions) => {
   const { category, query, stackscripts } = options;
 
   return stackscripts.filter((stackscript) => {
-    const appDetails = oneClickApps[stackscript.id];
-
-    const queryWords = query
-      .replace(/[,.-]/g, '')
-      .trim()
-      .toLocaleLowerCase()
-      .split(' ');
-
-    const searchableAppFields = [
-      String(stackscript.id),
-      stackscript.label,
-      appDetails.name,
-      appDetails.alt_name,
-      appDetails.alt_description,
-      ...appDetails.categories,
-    ];
-
-    const matchesSearchQuery = searchableAppFields.some((field) =>
-      queryWords.some((queryWord) => field.toLowerCase().includes(queryWord))
-    );
-
     if (query && category) {
-      const matchesCategory = oneClickApps[stackscript.id].categories.includes(
-        category
+      return (
+        getDoesStackScriptMatchQuery(query, stackscript) &&
+        getDoesStackScriptMatchCategory(category, stackscript)
       );
-
-      return matchesSearchQuery && matchesCategory;
     }
 
     if (query) {
-      return matchesSearchQuery;
+      return getDoesStackScriptMatchQuery(query, stackscript);
     }
 
     if (category) {
-      return oneClickApps[stackscript.id].categories.includes(category);
+      return getDoesStackScriptMatchCategory(category, stackscript);
     }
 
     return true;
   });
+};
+
+/**
+ * Compares a StackScript's details to a given text search query
+ *
+ * @param query the current search query
+ * @param stackscript the StackScript to compare aginst
+ * @returns true if the StackScript matches the given query
+ */
+const getDoesStackScriptMatchQuery = (
+  query: string,
+  stackscript: StackScript
+) => {
+  const appDetails = oneClickApps[stackscript.id];
+
+  const queryWords = query
+    .replace(/[,.-]/g, '')
+    .trim()
+    .toLocaleLowerCase()
+    .split(' ');
+
+  const searchableAppFields = [
+    String(stackscript.id),
+    stackscript.label,
+    appDetails.name,
+    appDetails.alt_name,
+    appDetails.alt_description,
+    ...appDetails.categories,
+  ];
+
+  return searchableAppFields.some((field) =>
+    queryWords.some((queryWord) => field.toLowerCase().includes(queryWord))
+  );
+};
+
+/**
+ * Checks if the given StackScript has a category
+ *
+ * @param category The category to check for
+ * @param stackscript The StackScript to compare aginst
+ * @returns true if the given StackScript has the given category
+ */
+const getDoesStackScriptMatchCategory = (
+  category: AppCategory,
+  stackscript: StackScript
+) => {
+  return oneClickApps[stackscript.id].categories.includes(category);
 };
