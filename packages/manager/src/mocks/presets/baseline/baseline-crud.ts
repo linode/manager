@@ -2,6 +2,7 @@
  * @file Basic CRUD MSW preset.
  */
 
+import { getEvents, updateEvents } from 'src/mocks/handlers/event-handlers';
 import type { MockPreset } from '../../mockPreset';
 import { getLinodes, createLinodes } from 'src/mocks/handlers/linode-handlers';
 import {
@@ -25,5 +26,9 @@ export const baselineCrudPreset: MockPreset = {
     createVolumes,
     updateVolumes,
     deleteVolumes,
+
+    // Events.
+    getEvents,
+    updateEvents,
   ],
 };

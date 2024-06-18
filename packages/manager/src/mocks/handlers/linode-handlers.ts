@@ -10,7 +10,7 @@ import type { Config, Linode } from '@linode/api-v4';
 import type { MockContext } from 'src/mocks/mockContext';
 import type { APIErrorResponse } from 'src/mocks/utilities/response';
 import type { StrictResponse } from 'msw';
-import { configFactory, linodeFactory } from 'src/factories';
+import { configFactory, eventFactory, linodeFactory } from 'src/factories';
 import { DateTime } from 'luxon';
 import { getPaginatedSlice } from '../utilities/pagination';
 
@@ -97,6 +97,7 @@ export const createLinodes = (mockContext: MockContext) => [
       region: payload['region'],
       created: DateTime.now().toISO(),
       image: payload['image'],
+      status: 'provisioning',
     });
 
     // Mock default label behavior when one is not specified.
@@ -108,8 +109,40 @@ export const createLinodes = (mockContext: MockContext) => [
       created: DateTime.now().toISO(),
     });
 
+    const linodeEvent = eventFactory.build({
+      action: 'linode_create',
+      created: DateTime.local().toISO(),
+      seen: false,
+      read: false,
+      duration: null,
+      rate: null,
+      percent_complete: 0,
+      entity: {
+        label: linode.label,
+        id: linode.id,
+        type: 'linode',
+        url: `/v4/linode/instances/${linode.id}`,
+      },
+      status: 'scheduled',
+      message: '',
+    });
+
     mockContext.linodes.push(linode);
     mockContext.linodeConfigs.push([linode.id, linodeConfig]);
+    mockContext.eventQueue.push([
+      linodeEvent,
+      (e, context) => {
+        if (e.status === 'scheduled') {
+          e.status = 'started';
+          return false;
+        }
+        if (e.status === 'started') {
+          e.status = 'finished';
+          linode.status = 'booting';
+        }
+        return true;
+      },
+    ]);
 
     return makeResponse(linode);
   }),
