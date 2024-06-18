@@ -120,11 +120,10 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           onClick={() =>
             isFromLinodeCreate &&
             sendLinodeCreateFormInputEvent({
-              action: 'click',
-              category: 'link',
               createType: (params.type as LinodeCreateType) ?? 'Distributions',
-              label: DOCS_LINK_LABEL_DC_PRICING,
+              labelName: 'DC Pricing',
               version: 'v1',
+              paperName: 'Region',
             })
           }
           href="https://www.linode.com/pricing"

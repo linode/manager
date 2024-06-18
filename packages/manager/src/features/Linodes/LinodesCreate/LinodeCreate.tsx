@@ -663,13 +663,12 @@ export class LinodeCreate extends React.PureComponent<
                   onClick={() => {
                     sendLinodeCreateFlowDocsClickEvent('Choosing a Plan');
                     sendLinodeCreateFormInputEvent({
-                      action: 'click',
-                      category: 'link',
                       createType:
                         (this.tabs[selectedTab].title as LinodeCreateType) ??
                         'Distributions',
-                      label: 'Choosing a Plan',
+                      labelName: 'Choosing a Plan',
                       version: 'v1',
+                      paperName: 'Linode Plan',
                     });
                   }}
                   href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
@@ -766,13 +765,11 @@ export class LinodeCreate extends React.PureComponent<
                   <Link
                     onClick={() =>
                       sendLinodeCreateFormInputEvent({
-                        action: 'click',
-                        category: 'link',
                         createType:
                           (this.tabs[selectedTab].title as LinodeCreateType) ??
                           'Distributions',
-                        formName: 'Firewall Panel',
-                        label: 'Learn more',
+                        paperName: 'Firewall',
+                        labelName: 'Learn more',
                         version: 'v1',
                       })
                     }
@@ -1132,12 +1129,11 @@ export class LinodeCreate extends React.PureComponent<
     // Prevents a double-firing on Marketplace because we manually handle the tab change.
     if (prevTabIndex !== index) {
       sendLinodeCreateFormInputEvent({
-        action: 'click',
-        category: 'tab',
         createType:
           (this.tabs[prevTabIndex].title as LinodeCreateType) ??
           'Distributions',
-        label: `${this.tabs[index].title} Tab`,
+        labelName: `${this.tabs[index].title}`,
+        paperName: 'Tab',
         version: 'v1',
       });
     }

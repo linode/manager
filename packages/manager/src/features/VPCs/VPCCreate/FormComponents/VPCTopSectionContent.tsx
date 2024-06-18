@@ -38,12 +38,10 @@ export const VPCTopSectionContent = (props: Props) => {
           onClick={() =>
             isFromLinodeCreate &&
             sendLinodeCreateFormInputEvent({
-              action: 'click',
-              category: 'link',
               createType:
                 (queryParams.type as LinodeCreateType) ?? 'Distributions',
-              formName: 'Create VPC Drawer',
-              label: 'Learn more',
+              paperName: 'VPC',
+              labelName: 'Learn more',
               version: 'v1',
             })
           }

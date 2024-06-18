@@ -43,12 +43,10 @@ export const SubnetContent = (props: Props) => {
           onClick={() =>
             isFromLinodeCreate &&
             sendLinodeCreateFormInputEvent({
-              action: 'click',
-              category: 'link',
               createType:
                 (queryParams.type as LinodeCreateType) ?? 'Distributions',
-              formName: 'VPC Subnets',
-              label: 'Learn more',
+              paperName: 'VPC',
+              labelName: 'Learn more',
               version: 'v1',
             })
           }

@@ -43,11 +43,9 @@ export const SelectFirewallPanel = (props: Props) => {
     setIsDrawerOpen(true);
     if (isFromLinodeCreate) {
       sendLinodeCreateFormInputEvent({
-        action: 'click',
-        category: 'button',
         createType: (queryParams.type as LinodeCreateType) ?? 'Distributions',
-        formName: 'Firewall Panel',
-        label: 'Create Firewall',
+        paperName: 'Firewall',
+        labelName: 'Create Firewall',
         version: 'v1',
       });
     }
@@ -88,13 +86,12 @@ export const SelectFirewallPanel = (props: Props) => {
         <Autocomplete
           onChange={(_, selection) => {
             handleFirewallChange(selection?.value ?? -1);
+            // TODO: confirm we're firing this on clear only
             sendLinodeCreateFormInputEvent({
-              action: 'click',
-              category: 'select',
               createType:
                 (queryParams.type as LinodeCreateType) ?? 'Distributions',
-              formName: 'Firewall Panel',
-              label: 'Assign Firewall',
+              paperName: 'Firewall',
+              labelName: 'Assign Firewall',
               version: 'v1',
             });
           }}

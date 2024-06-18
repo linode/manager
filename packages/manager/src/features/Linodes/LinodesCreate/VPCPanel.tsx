@@ -150,11 +150,9 @@ export const VPCPanel = (props: VPCPanelProps) => {
           onClick={() =>
             fromLinodeCreate &&
             sendLinodeCreateFormInputEvent({
-              action: 'click',
-              category: 'link',
               createType: (params.type as LinodeCreateType) ?? 'Distributions',
-              formName: 'VPC Panel',
-              label: 'Learn more',
+              paperName: 'VPC',
+              labelName: 'Learn more',
               version: 'v1',
             })
           }
@@ -193,13 +191,12 @@ export const VPCPanel = (props: VPCPanelProps) => {
           <Select
             onChange={(selectedVPC: Item<number, string>) => {
               handleSelectVPC(selectedVPC.value);
+              // TODO: confirm when firing
               sendLinodeCreateFormInputEvent({
-                action: 'click',
-                category: 'select',
                 createType:
                   (params.type as LinodeCreateType) ?? 'Distributions',
-                formName: 'VPC Panel',
-                label: 'Assign VPC',
+                paperName: 'VPC',
+                labelName: 'Assign VPC',
                 version: 'v1',
               });
             }}
@@ -234,12 +231,10 @@ export const VPCPanel = (props: VPCPanelProps) => {
                   onClick={() => {
                     setIsVPCCreateDrawerOpen(true);
                     sendLinodeCreateFormInputEvent({
-                      action: 'click',
-                      category: 'button',
                       createType:
                         (params.type as LinodeCreateType) ?? 'Distributions',
-                      formName: 'VPC Panel',
-                      label: 'Create VPC',
+                      paperName: 'VPC',
+                      labelName: 'Create VPC',
                       version: 'v1',
                     });
                   }}

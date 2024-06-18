@@ -21,7 +21,10 @@ import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelec
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useAllFirewallsQuery, useCreateFirewall } from 'src/queries/firewalls';
 import { useGrants } from 'src/queries/profile/profile';
-import { sendLinodeCreateFormStepEvent, sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
+import {
+  sendLinodeCreateFormStepEvent,
+  sendLinodeCreateFormInputEvent,
+} from 'src/utilities/analytics/formEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -222,12 +225,10 @@ export const CreateFirewallDrawer = React.memo(
         onClick={() =>
           isFromLinodeCreate &&
           sendLinodeCreateFormInputEvent({
-            action: 'click',
-            category: 'link',
             createType:
               (queryParams.type as LinodeCreateType) ?? 'Distributions',
-            formName: 'Create Firewall Drawer',
-            label: 'Learn more',
+            paperName: 'Firewall',
+            labelName: 'Learn more',
             version: 'v1',
           })
         }
@@ -377,7 +378,7 @@ export const CreateFirewallDrawer = React.memo(
               onClick: () =>
                 isFromLinodeCreate &&
                 sendLinodeCreateFormStepEvent({
-                  paperName: 'Create Firewall',
+                  paperName: 'Firewall Branch',
                   createType:
                     (queryParams.type as LinodeCreateType) ?? 'Distributions',
                   labelName: 'Create Firewall',

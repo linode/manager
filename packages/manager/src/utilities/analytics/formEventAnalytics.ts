@@ -7,7 +7,6 @@ import type {
   FormStepEvent,
   LinodeCreateFlowVersion,
   LinodeCreateFormEventOptions,
-  LinodeCreateFormStepOptions,
 } from './types';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
@@ -40,18 +39,15 @@ import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types'
 // LinodeCreateContainer.tsx
 // SelectRegionPanel.tsx
 export const sendLinodeCreateFormInputEvent = ({
-  action,
-  category,
   createType,
-  formName,
-  label,
+  paperName,
+  labelName,
   version,
 }: LinodeCreateFormEventOptions) => {
   const formPayload: FormInputEvent = {
-    formName: `Linode Create from ${createType} Form ${version} - Form Input${
-      formName ? ` - ${formName}` : ''
-    }`,
-    inputValue: `${label} - ${action}:${category}`,
+    formName: `Linode Create from ${createType} ${version}`,
+    // Form Name - Paper Name - Label Name
+    inputValue: `Linode Create from ${createType} ${version} - ${paperName} - ${labelName}`,
   };
   sendFormEvent(formPayload, 'formInput');
 };
@@ -61,7 +57,7 @@ export const sendLinodeCreateFormStepEvent = ({
   paperName,
   labelName,
   version,
-}: LinodeCreateFormStepOptions) => {
+}: LinodeCreateFormEventOptions) => {
   const formPayload: FormStepEvent = {
     formName: `Linode Create from ${createType} ${version}`,
     // Form Name - Paper Name - Label Name
