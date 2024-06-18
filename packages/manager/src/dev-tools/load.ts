@@ -78,7 +78,7 @@ export async function loadDevTools(
     await worker.start({ onUnhandledRequest: 'bypass' });
   }
 
-  devTools.install(store);
+  devTools.install(store, client);
 }
 
 /**

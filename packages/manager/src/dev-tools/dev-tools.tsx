@@ -14,53 +14,64 @@ import { ServiceWorkerTool } from './ServiceWorkerTool';
 //import { MockDataTool } from './MockDataTool';
 // import { Preferences } from './Preferences';
 import { isMSWEnabled } from './ServiceWorkerTool';
+// import {
+//   ReactQueryDevtools,
+//   ReactQueryDevtoolsPanel,
+// } from '@tanstack/react-query-devtools';
+import { QueryClientProvider } from '@tanstack/react-query';
+import type { QueryClient } from '@tanstack/react-query';
 // import { ThemeSelector } from './ThemeSelector';
 
-function install(store: ApplicationStore) {
+function install(store: ApplicationStore, queryClient: QueryClient) {
   function DevTools() {
     const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
     return (
-      <div
-        className={`dev-tools ${isMSWEnabled && 'dev-tools--msw'} ${
-          isOpen && 'dev-tools--open'
-        }`}
-      >
-        <div className="dev-tools__toggle">
-          <button onClick={() => setIsOpen(!isOpen)}>
-            <Handyman />
-          </button>
-        </div>
-        <div className="dev-tools__body">
-          <div className="dev-tools__content">
-            <div className="dev-tools__status-bar">
-              <div>
-                <EnvironmentToggleTool />
+      <>
+        <div
+          className={`dev-tools ${isMSWEnabled && 'dev-tools--msw'} ${
+            isOpen && 'dev-tools--open'
+          }`}
+        >
+          <div className="dev-tools__toggle">
+            <button onClick={() => setIsOpen(!isOpen)}>
+              <Handyman />
+            </button>
+          </div>
+          <div className="dev-tools__body">
+            <div className="dev-tools__content">
+              <div className="dev-tools__status-bar">
+                <div>
+                  <EnvironmentToggleTool />
+                </div>
+                <div className="dev-tools__segmented-button">
+                  <button>React Query</button>
+                  <button
+                    onClick={() =>
+                      window.location.assign(
+                        '/profile/settings?preferenceEditor=true'
+                      )
+                    }
+                  >
+                    Go to Preferences
+                  </button>
+                </div>
               </div>
-              <div className="dev-tools__segmented-button">
-                <button>React Query</button>
-                <button
-                  onClick={() =>
-                    window.location.assign(
-                      '/profile/settings?preferenceEditor=true'
-                    )
-                  }
-                >
-                  Go to Preferences
-                </button>
-              </div>
-            </div>
-            <div className="dev-tools__main">
-              <div className="dev-tools__main__column">
-                <FeatureFlagTool />
-              </div>
-              <div className="dev-tools__main__column">
-                <ServiceWorkerTool />
+              <div className="dev-tools__main">
+                <div className="dev-tools__main__column">
+                  <FeatureFlagTool />
+                </div>
+                <div className="dev-tools__main__column">
+                  <ServiceWorkerTool />
+                </div>
               </div>
             </div>
           </div>
+          <QueryClientProvider client={queryClient}>
+            {/*<ReactQueryDevtoolsPanel />*/}
+          </QueryClientProvider>
         </div>
-      </div>
+      </>
       // <div className={isMSWEnabled ? 'mswEnabled' : ''} id="dev-tools">
       //   <div>
       //     <Handyman />
