@@ -82,7 +82,7 @@
   color: rgba(255, 255, 255, 0.25);
 }
 
-.dev-tools__segmented-button button {
+.dev-tools__segmented-button button:not(:only-child) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-top-right-radius: 0;
@@ -91,7 +91,7 @@
   border-right: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-.dev-tools__segmented-button button:first-child {
+.dev-tools__segmented-button button:first-child:not(:only-child) {
   border-top-left-radius: 1000px;
   border-bottom-left-radius: 1000px;
   border-top-right-radius: 0;
@@ -101,7 +101,7 @@
   padding-left: 24px;
 }
 
-.dev-tools__segmented-button button:last-child {
+.dev-tools__segmented-button button:last-child:not(:only-child) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-top-right-radius: 1000px;
@@ -116,6 +116,21 @@
   display: flex;
   gap: 8px;
   justify-content: end;
+}
+
+.dev-tools__body button.toggle-button { }
+.dev-tools__body button.toggle-button.toggle-button--on {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid white;
+  border-right: 2px solid white;
+  border-left: 2px solid white;
+  border-color: white;
+  border-left-color: white;
+  border-right-color: white;
+  border-top-color: white;
+  border-bottom-color: white;
+  color: white;
+  text-shadow: 0px -1px 0px black;
 }
 
 .dev-tools__body button:active {
@@ -259,6 +274,7 @@
   flex-grow: 0;
   flex-shrink: 0;
   flex-basis: 0;
+  align-items: center;
 }
 
 .dev-tools__list-box,
@@ -283,6 +299,7 @@
   padding-bottom: 4px;
   margin-top: 2px;
   margin-bottom: 2px;
+  list-style: none;
 }
 
 .dev-tools__list-box li:nth-child(even) {
