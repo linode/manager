@@ -196,20 +196,17 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     debouncedSave(summary, description);
   }, [summary, description]);
 
+  /**
+   * Clear the drawer completely if clearValues is passed (when canceling out of the drawer or successfully submitting)
+   * or reset to the default values (from localStorage) otherwise.
+   */
   const resetTicket = (clearValues: boolean = false) => {
-    /**
-     * Clear the drawer completely if clearValues is passed (as in when closing the drawer)
-     * or reset to the default values (from localStorage) otherwise.
-     */
-    const _summary = clearValues ? '' : valuesFromStorage.title;
-    const _description = clearValues ? '' : valuesFromStorage.description;
-
     form.reset({
       ...form.formState.defaultValues,
-      description: _description,
+      description: clearValues ? '' : valuesFromStorage.description,
       entityId: '',
       entityType: 'general',
-      summary: _summary,
+      summary: clearValues ? '' : valuesFromStorage.title,
       ticketType: 'general',
     });
   };
