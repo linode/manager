@@ -69,6 +69,7 @@ export const TextTooltip = (props: TextTooltipProps) => {
       data-qa-tooltip={dataQaTooltip}
       enterTouchDelay={0}
       placement={placement ? placement : 'bottom'}
+      tabIndex={0}
       title={tooltipText}
     >
       <Typography component="span" sx={sxTypography} variant={variant}>
