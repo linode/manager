@@ -108,13 +108,13 @@ const ImageRow = (props: Props) => {
         {getSizeForImage(size, status, event?.status)}
       </TableCell>
       {multiRegionsEnabled && (
-        <Hidden smDown>
+        <Hidden mdDown>
           <TableCell>
             {getSizeForImage(total_size, status, event?.status)}
           </TableCell>
         </Hidden>
       )}
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell data-qa-image-date>
           {formatDate(created, {
             timezone: profile?.timezone,
@@ -131,7 +131,7 @@ const ImageRow = (props: Props) => {
         ) : null}
       </Hidden>
       {multiRegionsEnabled && (
-        <Hidden smDown>
+        <Hidden mdDown>
           <TableCell>{id}</TableCell>
         </Hidden>
       )}

@@ -474,11 +474,11 @@ export const ImagesLanding = () => {
                 Size
               </TableSortCell>
               {multiRegionsEnabled && (
-                <Hidden smDown>
+                <Hidden mdDown>
                   <TableCell>Total Size</TableCell>
                 </Hidden>
               )}
-              <Hidden smDown>
+              <Hidden mdDown>
                 <TableSortCell
                   active={manualImagesOrderBy === 'created'}
                   direction={manualImagesOrder}
@@ -489,7 +489,7 @@ export const ImagesLanding = () => {
                 </TableSortCell>
               </Hidden>
               {multiRegionsEnabled && (
-                <Hidden smDown>
+                <Hidden mdDown>
                   <TableCell>Image ID</TableCell>
                 </Hidden>
               )}
