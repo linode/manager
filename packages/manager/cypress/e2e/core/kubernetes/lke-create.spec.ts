@@ -79,7 +79,7 @@ describe('LKE Cluster Creation', () => {
    * - Confirms that new LKE cluster summary page shows expected node pools.
    * - Confirms that new LKE cluster is shown on LKE clusters landing page.
    */
-  it('can create an LKE cluster', () => {
+  it.only('can create an LKE cluster', () => {
     const clusterLabel = randomLabel();
     const clusterRegion = chooseRegion();
     const clusterVersion = '1.27';
@@ -113,6 +113,11 @@ describe('LKE Cluster Creation', () => {
       .type(`${clusterVersion}{enter}`);
 
     cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
+
+    let totalcpu = 0;
+    let totalmemory = 0;
+    let totalstorage = 0;
+    let monthprice = 0;
 
     // Add a node pool for each randomly selected plan, and confirm that the
     // selected node pool plan is added to the checkout bar.
@@ -150,7 +155,28 @@ describe('LKE Cluster Creation', () => {
           // instance of the pool appears in the checkout bar.
           cy.findAllByText(checkoutName).first().should('be.visible');
         });
+
+      if (clusterPlan.size == 2 && clusterPlan.type == 'Linode') {
+        totalcpu = totalcpu + nodeCount * 1;
+        totalmemory = totalmemory + nodeCount * 2;
+        totalstorage = totalstorage + nodeCount * 50;
+        monthprice = monthprice + nodeCount * 12;
+      }
+      if (clusterPlan.size == 4 && clusterPlan.type == 'Linode') {
+        totalcpu = totalcpu + nodeCount * 2;
+        totalmemory = totalmemory + nodeCount * 4;
+        totalstorage = totalstorage + nodeCount * 80;
+        monthprice = monthprice + nodeCount * 24;
+      }
+      if (clusterPlan.size == 4 && clusterPlan.type == 'Dedicated') {
+        totalcpu = totalcpu + nodeCount * 2;
+        totalmemory = totalmemory + nodeCount * 4;
+        totalstorage = totalstorage + nodeCount * 80;
+        monthprice = monthprice + nodeCount * 36;
+      }
     });
+
+    const totalprice = monthprice + 60;
 
     // Create LKE cluster.
     cy.get('[data-testid="kube-checkout-bar"]')
@@ -183,6 +209,15 @@ describe('LKE Cluster Creation', () => {
       const nodePoolLabel = getLkePlanName(clusterPlan);
       const similarNodePoolCount = getSimilarPlans(clusterPlan, clusterPlans)
         .length;
+
+      //Confirm that the cluster created with the expected parameters.
+      cy.findAllByText(`${clusterRegion.label}`).should('be.visible');
+      cy.findAllByText(`${totalcpu} CPU Cores`).should('be.visible');
+      cy.findAllByText(`${totalmemory} GB RAM`).should('be.visible');
+      cy.findAllByText(`${totalstorage} GB Storage`).should('be.visible');
+      cy.findAllByText(`$${totalprice}.00/month`).should('be.visible');
+      cy.contains('Kubernetes API Endpoint').should('be.visible');
+      cy.contains('linodelke.net:443').should('be.visible');
 
       cy.findAllByText(nodePoolLabel, { selector: 'h2' })
         .should('have.length', similarNodePoolCount)
