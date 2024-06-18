@@ -59,7 +59,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     []
   );
 
-  const handleRegionChange = React.useCallback((region: string | undefined) => {
+  const handleRegionChange = React.useCallback((region: string | null) => {
     setRegion(region);
   }, []);
 

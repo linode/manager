@@ -14,7 +14,7 @@ export interface CloudPulseResourcesSelectProps {
   defaultSelection?: number[];
   handleResourcesSelection: (resources: CloudPulseResources[]) => void;
   placeholder?: string;
-  region: string | undefined;
+  region: string | null;
   resourceType: string | undefined;
 }
 
