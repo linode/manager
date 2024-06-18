@@ -173,7 +173,7 @@ describe('longview', () => {
 
     // Update mocks after initial Longview fetch to simulate client installation and data retrieval.
     // The next time Cloud makes a request to the fetch endpoint, data will start being returned.
-    cy.wait(['@fetchLongview', '@fetchLongview', '@fetchLongview']).then(() => {
+    cy.wait(['@fetchLongview']).then(() => {
       mockFetchLongviewStatus(
         client,
         'lastUpdated',
@@ -234,7 +234,7 @@ describe('longview', () => {
 
     // Update mocks after initial Longview fetch to simulate client installation and data retrieval.
     // The next time Cloud makes a request to the fetch endpoint, data will start being returned.
-    cy.wait(['@fetchLongview', '@fetchLongview', '@fetchLongview']).then(() => {
+    cy.wait(['@fetchLongview']).then(() => {
       mockFetchLongviewStatus(
         client,
         'lastUpdated',
