@@ -1,34 +1,31 @@
+/* eslint-disable no-console */
+import { Dashboard } from '@linode/api-v4';
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
 export interface CloudPulseRegionSelectProps {
-  handleRegionChange: (region: string | undefined) => void;
+  handleRegionChange: (region: string | null) => void;
+  selectedDashboard: Dashboard | undefined;
+  selectedRegion: string | null;
 }
 
 export const CloudPulseRegionSelect = React.memo(
   (props: CloudPulseRegionSelectProps) => {
     const { data: regions } = useRegionsQuery();
-    const [selectedRegion, setRegion] = React.useState<string>();
-
-    React.useEffect(() => {
-      if (selectedRegion) {
-        props.handleRegionChange(selectedRegion);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedRegion]);
 
     return (
       <RegionSelect
         currentCapability={undefined}
-        disableClearable
+        disableClearable={false}
         fullWidth
         label=""
         noMarginTop
-        onChange={(e, region) => setRegion(region.id)}
+        onChange={(e, region) => props.handleRegionChange(region?.id ?? null)}
         regions={regions ? regions : []}
-        value={undefined}
+        disabled={!props.selectedDashboard}
+        value={props.selectedRegion}
       />
     );
   }
