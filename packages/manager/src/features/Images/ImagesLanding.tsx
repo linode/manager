@@ -490,7 +490,7 @@ export const ImagesLanding = () => {
               </Hidden>
               {multiRegionsEnabled && (
                 <Hidden smDown>
-                  <TableCell>Image Id</TableCell>
+                  <TableCell>Image ID</TableCell>
                 </Hidden>
               )}
               <TableCell></TableCell>
