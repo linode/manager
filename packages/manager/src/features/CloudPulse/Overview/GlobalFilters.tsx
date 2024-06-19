@@ -30,7 +30,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   });
 
   const [selectedDashboard, setSelectedDashboard] = React.useState<Dashboard | undefined>();
-  const [selectedRegion, setRegion] = React.useState<string | null>(null);
+  const [selectedRegion, setRegion] = React.useState<string | undefined>();
   const [, setResources] = React.useState<CloudPulseResources[]>(); // removed the unused variable, this will be used later point of time
 
   React.useEffect(() => {
@@ -57,7 +57,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     []
   );
 
-  const handleRegionChange = React.useCallback((region: string | null) => {
+  const handleRegionChange = React.useCallback((region: string | undefined) => {
     setRegion(region);
   }, []);
 
@@ -70,7 +70,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
 
   const handleDashboardChange = React.useCallback((dashboard: Dashboard | undefined) => {
     setSelectedDashboard(dashboard);
-    setRegion(null);
+    setRegion(undefined);
   }, [])
 
   return (

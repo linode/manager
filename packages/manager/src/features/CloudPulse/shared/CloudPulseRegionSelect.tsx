@@ -6,9 +6,9 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
 export interface CloudPulseRegionSelectProps {
-  handleRegionChange: (region: string | null) => void;
+  handleRegionChange: (region: string | undefined) => void;
   selectedDashboard: Dashboard | undefined;
-  selectedRegion: string | null;
+  selectedRegion: string | undefined;
 }
 
 export const CloudPulseRegionSelect = React.memo(
@@ -22,10 +22,10 @@ export const CloudPulseRegionSelect = React.memo(
         fullWidth
         label=""
         noMarginTop
-        onChange={(e, region) => props.handleRegionChange(region?.id ?? null)}
+        onChange={(e, region) => props.handleRegionChange(region?.id)}
         regions={regions ? regions : []}
         disabled={!props.selectedDashboard}
-        value={props.selectedRegion}
+        value={props.selectedRegion ?? null}
       />
     );
   }

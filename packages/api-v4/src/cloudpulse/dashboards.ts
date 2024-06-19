@@ -1,15 +1,16 @@
 import { ResourcePage } from 'src/types';
 import Request, { setHeaders, setMethod, setURL } from '../request';
 import { Dashboard } from './types';
+import { API_ROOT } from 'src/constants';
 
 //Returns the list of all the dashboards available
 export const getDashboards = () =>
     Request<ResourcePage<Dashboard>>(
         setURL(
-            `http://blr-lhv95n.bangalore.corp.akamai.com:9000/v4/monitor/services/linode/dashboards`
+            `${API_ROOT}/monitor/services/linode/dashboards`
         ),
         setMethod('GET'),
         setHeaders({
-            Authorization: 'Bearer vagrant',
+            Authorization: '',  //Authorization will be updated once the end-point is ready, till then will use mock data
         })
     );

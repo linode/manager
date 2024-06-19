@@ -6,27 +6,32 @@ import { useQuery } from "@tanstack/react-query";
 export const queryKey = 'cloudview-dashboards';
 
 export const dashboardQueries = createQueryKeys('cloudview-dashboards', {
-  availability: {
+  lists: {
     contextQueries: {
-      dashboard: (dashboardId: number) => ({
-        queryFn: () => { }, //Todo: Add its implementation once ready
-        queryKey: [dashboardId],
-      }),
+      allDashboards: {
+        queryFn: getDashboards,
+        queryKey: null
+      }
     },
     queryKey: null
   },
-  dashboards: {
-    queryFn: getDashboards,
-    queryKey: null
-  }
+
+  dashboardById: (dashboardId: number) => ({
+    contextQueries: {
+      dashboard: {
+        queryFn: () => { }, //Todo: will be implemented later
+        queryKey: [dashboardId]
+      }
+    },
+    queryKey: [dashboardId]
+  })
+
 });
 
-export const useCloudViewDashboardsQuery = () => {
+//Fetch the list of all the dashboard available
+export const useCloudViewDashboardsQuery = (enabled: boolean) => {
   return useQuery<ResourcePage<Dashboard>, APIError[]>({
-    // querykey and dashboardId makes this uniquely identifiable
-    ...dashboardQueries.dashboards,
-    enabled: true
-
-  }
-  );
+    ...dashboardQueries.lists._ctx.allDashboards,
+    enabled
+  });
 };

@@ -19,7 +19,7 @@ export const CloudPulseDashboardSelect = React.memo((props: CloudPulseDashboardS
     data: dashboardsList,
     error,
     isLoading,
-  } = useCloudViewDashboardsQuery();  //Fetch the list of dashboards
+  } = useCloudViewDashboardsQuery(true);  //Fetch the list of dashboards
 
   const errorText: string = error ? 'Error loading dashboards' : '';
 
