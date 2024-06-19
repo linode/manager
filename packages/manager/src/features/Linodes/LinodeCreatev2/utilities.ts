@@ -209,23 +209,23 @@ export const getInterfacesPayload = (
   return undefined;
 };
 
-const defaultVPCInterface = {
-  ipam_address: '',
-  label: '',
-  purpose: 'vpc',
-} as const;
-
-const defaultVLANInterface = {
-  ipam_address: '',
-  label: '',
-  purpose: 'vlan',
-} as const;
-
-const defaultPublicInterface = {
-  ipam_address: '',
-  label: '',
-  purpose: 'public',
-} as const;
+export const defaultInterfaces: InterfacePayload[] = [
+  {
+    ipam_address: '',
+    label: '',
+    purpose: 'vpc',
+  },
+  {
+    ipam_address: '',
+    label: '',
+    purpose: 'vlan',
+  },
+  {
+    ipam_address: '',
+    label: '',
+    purpose: 'public',
+  },
+];
 
 /**
  * We extend the API's payload type so that we can hold some extra state
@@ -268,11 +268,7 @@ export const defaultValues = async (): Promise<LinodeCreateFormValues> => {
   return {
     backup_id: params.backupID,
     image: getDefaultImageId(params),
-    interfaces: [
-      defaultVPCInterface,
-      defaultVLANInterface,
-      defaultPublicInterface,
-    ],
+    interfaces: defaultInterfaces,
     linode,
     private_ip: privateIp,
     region: linode ? linode.region : '',
@@ -305,35 +301,23 @@ const getDefaultImageId = (params: ParsedLinodeCreateQueryParams) => {
 };
 
 const defaultValuesForImages = {
-  interfaces: [
-    defaultVPCInterface,
-    defaultVLANInterface,
-    defaultPublicInterface,
-  ],
+  interfaces: defaultInterfaces,
   region: '',
   type: '',
 };
 
 const defaultValuesForDistributions = {
   image: DEFAULT_DISTRIBUTION,
-  interfaces: [
-    defaultVPCInterface,
-    defaultVLANInterface,
-    defaultPublicInterface,
-  ],
+  interfaces: defaultInterfaces,
   region: '',
   type: '',
 };
 
 const defaultValuesForStackScripts = {
   image: undefined,
-  interfaces: [
-    defaultVPCInterface,
-    defaultVLANInterface,
-    defaultPublicInterface,
-  ],
+  interfaces: defaultInterfaces,
   region: '',
-  stackscript_id: null,
+  stackscript_id: undefined,
   type: '',
 };
 

@@ -2,7 +2,6 @@
  * @file Tests for service transfer functionality between accounts.
  */
 
-import { createLinode } from '@linode/api-v4/lib/linodes';
 import { getProfile } from '@linode/api-v4/lib/profile';
 import { EntityTransfer, Linode, Profile } from '@linode/api-v4';
 import { entityTransferFactory } from 'src/factories/entityTransfers';
@@ -19,6 +18,7 @@ import {
 } from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
+import { createTestLinode } from 'support/util/linodes';
 import { pollLinodeStatus } from 'support/util/polling';
 import { randomLabel, randomUuid } from 'support/util/random';
 import { visitUrlWithManagedEnabled } from 'support/api/managed';
@@ -175,7 +175,7 @@ describe('Account service transfers', () => {
     cy.wait(['@getTransfers', '@getTransfers', '@getTransfers']);
 
     // Confirm that pending transfers are displayed in "Pending Service Transfers" panel.
-    cy.defer(getProfile(), 'getting profile').then((profile: Profile) => {
+    cy.defer(() => getProfile(), 'getting profile').then((profile: Profile) => {
       const dateFormatOptions = { timezone: profile.timezone };
       cy.get('[data-qa-panel="Pending Service Transfers"]')
         .should('be.visible')
@@ -244,22 +244,25 @@ describe('Account service transfers', () => {
    * - Confirms that users can cancel a service transfer
    */
   it('can initiate and cancel a service transfer', () => {
-    // Create a Linode to transfer and wait for it to boot.
+    // Create a Linode to transfer.
     const setupLinode = async (): Promise<Linode> => {
       const payload = createLinodeRequestFactory.build({
         label: randomLabel(),
         region: chooseRegion().id,
       });
 
-      const linode: Linode = await createLinode(payload);
-      await pollLinodeStatus(linode.id, 'running', {
+      const linode: Linode = await createTestLinode(payload, {
+        securityMethod: 'powered_off',
+      });
+
+      await pollLinodeStatus(linode.id, 'offline', {
         initialDelay: 15000,
       });
 
       return linode;
     };
 
-    cy.defer(setupLinode(), 'creating and booting Linode').then(
+    cy.defer(() => setupLinode(), 'creating and booting Linode').then(
       (linode: Linode) => {
         interceptInitiateEntityTransfer().as('initiateTransfer');
 
@@ -320,7 +323,7 @@ describe('Account service transfers', () => {
               cy.get('[data-qa-close-drawer]').should('be.visible').click();
             });
 
-          // Attempt to receive the an invalid token.
+          // Attempt to receive an invalid token.
           redeemToken(randomUuid());
           assertReceiptError('Not found');
 

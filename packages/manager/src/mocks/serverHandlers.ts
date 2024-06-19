@@ -1,11 +1,3 @@
-import {
-  NotificationType,
-  ObjectStorageKeyRequest,
-  SecurityQuestionsPayload,
-  TokenRequest,
-  User,
-  VolumeStatus,
-} from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { HttpResponse, http } from 'msw';
 
@@ -55,6 +47,8 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
+  lkeHighAvailabilityTypeFactory,
+  lkeStandardAvailabilityTypeFactory,
   loadbalancerEndpointHealthFactory,
   loadbalancerFactory,
   longviewActivePlanFactory,
@@ -76,6 +70,8 @@ import {
   objectStorageBucketFactory,
   objectStorageClusterFactory,
   objectStorageKeyFactory,
+  objectStorageOverageTypeFactory,
+  objectStorageTypeFactory,
   paymentFactory,
   paymentMethodFactory,
   placementGroupFactory,
@@ -105,6 +101,15 @@ import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
 import { getStorage } from 'src/utilities/storage';
+
+import type {
+  NotificationType,
+  ObjectStorageKeyRequest,
+  SecurityQuestionsPayload,
+  TokenRequest,
+  User,
+  VolumeStatus,
+} from '@linode/api-v4';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -677,10 +682,10 @@ export const handlers = [
       label: 'metadata-test-region',
       region: 'eu-west',
     });
-    const linodeInEdgeRegion = linodeFactory.build({
-      image: 'edge-test-image',
-      label: 'Gecko Edge Test',
-      region: 'us-edge-1',
+    const linodeInDistributedRegion = linodeFactory.build({
+      image: 'distributed-region-test-image',
+      label: 'Gecko Distributed Region Test',
+      region: 'us-den-10',
     });
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
@@ -712,7 +717,7 @@ export const handlers = [
     const linodes = [
       metadataLinodeWithCompatibleImage,
       metadataLinodeWithCompatibleImageAndRegion,
-      linodeInEdgeRegion,
+      linodeInDistributedRegion,
       ...onlineLinodes,
       linodeWithEligibleVolumes,
       ...offlineLinodes,
@@ -769,8 +774,8 @@ export const handlers = [
       linodeFactory.build({
         backups: { enabled: false },
         id,
-        label: 'Gecko Edge Test',
-        region: 'us-edge-1',
+        label: 'Gecko Distributed Region Test',
+        region: 'us-den-10',
       })
     );
   }),
@@ -830,6 +835,13 @@ export const handlers = [
     const clusters = kubernetesAPIResponse.buildList(10);
     return HttpResponse.json(makeResourcePage(clusters));
   }),
+  http.get('*/lke/types', async () => {
+    const lkeTypes = [
+      lkeStandardAvailabilityTypeFactory.build(),
+      lkeHighAvailabilityTypeFactory.build(),
+    ];
+    return HttpResponse.json(makeResourcePage(lkeTypes));
+  }),
   http.get('*/lke/versions', async () => {
     const versions = kubernetesVersionFactory.buildList(1);
     return HttpResponse.json(makeResourcePage(versions));
@@ -849,9 +861,14 @@ export const handlers = [
     return HttpResponse.json(cluster);
   }),
   http.get('*/lke/clusters/:clusterId/pools', async () => {
-    const pools = nodePoolFactory.buildList(10);
+    const encryptedPools = nodePoolFactory.buildList(5);
+    const unencryptedPools = nodePoolFactory.buildList(5, {
+      disk_encryption: 'disabled',
+    });
     nodePoolFactory.resetSequenceNumber();
-    return HttpResponse.json(makeResourcePage(pools));
+    return HttpResponse.json(
+      makeResourcePage([...encryptedPools, ...unencryptedPools])
+    );
   }),
   http.get('*/lke/clusters/*/api-endpoints', async () => {
     const endpoints = kubeEndpointFactory.buildList(2);
@@ -918,6 +935,13 @@ export const handlers = [
       nodeBalancerConfigNodeFactory.build({ status: 'unknown' }),
     ];
     return HttpResponse.json(makeResourcePage(configs));
+  }),
+  http.get('*/v4/object-storage/types', () => {
+    const objectStorageTypes = [
+      objectStorageTypeFactory.build(),
+      objectStorageOverageTypeFactory.build(),
+    ];
+    return HttpResponse.json(makeResourcePage(objectStorageTypes));
   }),
   http.get('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);

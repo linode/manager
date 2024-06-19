@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import EdgeRegion from 'src/assets/icons/entityIcons/edge-region.svg';
+import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { Flag } from 'src/components/Flag';
 import { Notice } from 'src/components/Notice/Notice';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { sxEdgeIcon } from 'src/components/RegionSelect/RegionSelect.styles';
+import { sxDistributedRegionIcon } from 'src/components/RegionSelect/RegionSelect.styles';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
@@ -41,7 +41,7 @@ interface Props {
   handleSelectRegion: (id: string) => void;
   helperText?: string;
   linodeType: Linode['type'];
-  selectedRegion: null | string;
+  selectedRegion: string | undefined;
 }
 
 export type MigratePricePanelType = 'current' | 'new';
@@ -144,7 +144,9 @@ export const ConfigureForm = React.memo((props: Props) => {
     [backupEnabled, currentLinodeType]
   );
 
-  const linodeIsInEdgeRegion = currentActualRegion?.site_type === 'edge';
+  const linodeIsInDistributedRegion =
+    currentActualRegion?.site_type === 'distributed' ||
+    currentActualRegion?.site_type === 'edge';
 
   return (
     <StyledPaper>
@@ -157,12 +159,12 @@ export const ConfigureForm = React.memo((props: Props) => {
             <Typography>{`${getRegionCountryGroup(currentActualRegion)}: ${
               currentActualRegion?.label ?? currentRegion
             }`}</Typography>
-            {linodeIsInEdgeRegion && (
+            {linodeIsInDistributedRegion && (
               <TooltipIcon
-                icon={<EdgeRegion />}
+                icon={<DistributedRegion />}
                 status="other"
-                sxTooltipIcon={sxEdgeIcon}
-                text="This region is an edge region."
+                sxTooltipIcon={sxDistributedRegionIcon}
+                text="This region is a distributed region."
               />
             )}
           </StyledDiv>
@@ -175,7 +177,9 @@ export const ConfigureForm = React.memo((props: Props) => {
         <StyledMigrationBox>
           <RegionSelect
             regionFilter={
-              flags.gecko2?.enabled && linodeIsInEdgeRegion ? 'edge' : 'core'
+              flags.gecko2?.enabled && linodeIsInDistributedRegion
+                ? 'distributed'
+                : 'core'
             }
             regions={
               regions?.filter(
@@ -186,10 +190,11 @@ export const ConfigureForm = React.memo((props: Props) => {
               helperText,
             }}
             currentCapability="Linodes"
+            disableClearable
             errorText={errorText}
-            handleSelection={handleSelectRegion}
             label="New Region"
-            selectedId={selectedRegion}
+            onChange={(e, region) => handleSelectRegion(region.id)}
+            value={selectedRegion}
           />
           {shouldDisplayPriceComparison && selectedRegion && (
             <MigrationPricing

@@ -5,22 +5,17 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { ImageUploader } from './ImageUploader';
 
 const props = {
-  apiError: undefined,
-  dropzoneDisabled: false,
-  label: 'Upload files here',
-  onSuccess: vi.fn(),
-  region: 'us-east-1',
-  setCancelFn: vi.fn(),
-  setErrors: vi.fn(),
+  isUploading: false,
+  progress: undefined,
 };
 
 describe('File Uploader', () => {
   it('properly renders the File Uploader', () => {
     const screen = renderWithTheme(<ImageUploader {...props} />);
 
-    const browseFiles = screen.getByTestId('upload-button');
+    const browseFiles = screen.getByText('Browse Files').closest('button');
     expect(browseFiles).toBeVisible();
-    expect(browseFiles).toHaveAttribute('aria-disabled', 'false');
+    expect(browseFiles).toBeEnabled();
     const text = screen.getByText(
       'You can browse your device to upload an image file or drop it here.'
     );
@@ -28,16 +23,15 @@ describe('File Uploader', () => {
   });
 
   it('disables the dropzone', () => {
-    const screen = renderWithTheme(
-      <ImageUploader {...props} dropzoneDisabled={true} />
-    );
+    const screen = renderWithTheme(<ImageUploader {...props} disabled />);
 
-    const browseFiles = screen.getByTestId('upload-button');
+    const browseFiles = screen.getByText('Browse Files').closest('button');
     expect(browseFiles).toBeVisible();
+    expect(browseFiles).toBeDisabled();
     expect(browseFiles).toHaveAttribute('aria-disabled', 'true');
 
     const text = screen.getByText(
-      'To upload an image, complete the required fields.'
+      'You can browse your device to upload an image file or drop it here.'
     );
     expect(text).toBeVisible();
   });

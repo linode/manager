@@ -1,71 +1,32 @@
-import Grid from '@mui/material/Unstable_Grid2';
-import React from 'react';
-import { useController, useFormContext } from 'react-hook-form';
+import React, { useState } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
-import { CircularProgress } from 'src/components/CircularProgress';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 
-import { getDefaultUDFData } from '../StackScripts/UserDefinedFields/utilities';
-import { AppSelectionCard } from './AppSelectionCard';
+import { AppsList } from './AppsList';
 import { categoryOptions } from './utilities';
 
-import type { LinodeCreateFormValues } from '../../utilities';
+import type { AppCategory } from 'src/features/OneClickApps/types';
 
-export const AppSelect = () => {
-  const { setValue } = useFormContext<LinodeCreateFormValues>();
-  const { field } = useController<LinodeCreateFormValues, 'stackscript_id'>({
-    name: 'stackscript_id',
-  });
+interface Props {
+  /**
+   * Opens the Marketplace App details drawer for the given app
+   */
+  onOpenDetailsDrawer: (stackscriptId: number) => void;
+}
 
-  const { data: apps, error, isLoading } = useMarketplaceAppsQuery(true);
+export const AppSelect = (props: Props) => {
+  const { onOpenDetailsDrawer } = props;
 
-  const renderContent = () => {
-    if (isLoading) {
-      return (
-        <Box
-          alignItems="center"
-          display="flex"
-          height="100%"
-          justifyContent="center"
-          width="100%"
-        >
-          <CircularProgress />
-        </Box>
-      );
-    }
+  const { isLoading } = useMarketplaceAppsQuery(true);
 
-    if (error) {
-      return <ErrorState errorText={error?.[0].reason} />;
-    }
-
-    return (
-      <Grid container spacing={2}>
-        {apps?.map((app) => (
-          <AppSelectionCard
-            onSelect={() => {
-              setValue(
-                'stackscript_data',
-                getDefaultUDFData(app.user_defined_fields)
-              );
-              field.onChange(app.id);
-            }}
-            checked={field.value === app.id}
-            iconUrl={app.logo_url}
-            key={app.label}
-            label={app.label}
-            onOpenDetailsDrawer={() => alert('details')}
-          />
-        ))}
-      </Grid>
-    );
-  };
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState<AppCategory>();
 
   return (
     <Paper>
@@ -81,7 +42,9 @@ export const AppSelect = () => {
             label="Search marketplace"
             loading={isLoading}
             noMarginTop
+            onSearch={setQuery}
             placeholder="Search for app name"
+            value={query}
           />
           <Autocomplete
             textFieldProps={{
@@ -90,12 +53,17 @@ export const AppSelect = () => {
             }}
             disabled={isLoading}
             label="Select category"
+            onChange={(e, value) => setCategory(value?.label)}
             options={categoryOptions}
             placeholder="Select category"
           />
         </Stack>
         <Box height="500px" sx={{ overflowX: 'hidden', overflowY: 'auto' }}>
-          {renderContent()}
+          <AppsList
+            category={category}
+            onOpenDetailsDrawer={onOpenDetailsDrawer}
+            query={query}
+          />
         </Box>
       </Stack>
     </Paper>

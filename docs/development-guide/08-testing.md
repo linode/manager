@@ -43,29 +43,6 @@ yarn workspace linode-manager run test:debug
 
 Test execution will stop at the debugger statement, and you will be able to use Chrome's normal debugger to step through the tests (open `chrome://inspect/#devices` in Chrome).
 
-### Visual debugging
-
-Using `vite-preview`, you can view a preview of the tested component in the browser.
-
-First, add the following lines to your test:
-
-```
-import { debug } from 'vitest-preview';
-
-// Inside your tests
-describe('my test', () => {
-  render(<MyComponent />);
-  debug(); // 👈 Add this line
-}
-```
-
-Start the `vitest-preview` server:
-```
-yarn vitest-preview
-```
-
-Finally, run the test to view the component in the browser.
-
 ### React Testing Library
 
 This library provides a set of tools to render React components from within the Vitest environment. The library's philosophy is that components should be tested as closely as possible to how they are used.
@@ -209,9 +186,10 @@ These environment variables are specific to Cloud Manager UI tests. They can be 
 ###### General
 Environment variables related to the general operation of the Cloud Manager Cypress tests.
 
-| Environment Variable | Description                                                                                           | Example  | Default                         |
-|----------------------|-------------------------------------------------------------------------------------------------------|----------|---------------------------------|
-| `CY_TEST_SUITE`      | Name of the Cloud Manager UI test suite to run. Possible values are `core`, `region`, or `synthetic`. | `region` | Unset; defaults to `core` suite |
+| Environment Variable | Description                                                                                           | Example      | Default                         |
+|----------------------|-------------------------------------------------------------------------------------------------------|--------------|---------------------------------|
+| `CY_TEST_SUITE`      | Name of the Cloud Manager UI test suite to run. Possible values are `core`, `region`, or `synthetic`. | `region`     | Unset; defaults to `core` suite |
+| `CY_TEST_TAGS`       | Query identifying tests that should run by specifying allowed and disallowed tags.                    | `method:e2e` | Unset; all tests run by default |
 
 ###### Regions
 These environment variables are used by Cloud Manager's UI tests to override region selection behavior. This can be useful for testing Cloud Manager functionality against a specific region.

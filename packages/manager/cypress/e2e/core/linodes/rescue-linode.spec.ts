@@ -1,5 +1,4 @@
 import type { Linode } from '@linode/api-v4';
-import { createLinode } from '@linode/api-v4';
 import { createLinodeRequestFactory, linodeFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
@@ -12,6 +11,7 @@ import {
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
@@ -43,44 +43,50 @@ describe('Rescue Linodes', () => {
       region: chooseRegion().id,
     });
 
-    cy.defer(createLinode(linodePayload), 'creating Linode').then(
-      (linode: Linode) => {
-        interceptGetLinodeDetails(linode.id).as('getLinode');
-        interceptRebootLinodeIntoRescueMode(linode.id).as(
-          'rebootLinodeRescueMode'
-        );
+    // Use `vlan_no_internet` security method.
+    // This works around an issue where the Linode API responds with a 400
+    // when attempting to interact with it shortly after booting up when the
+    // Linode is attached to a Cloud Firewall.
+    cy.defer(
+      () =>
+        createTestLinode(linodePayload, { securityMethod: 'vlan_no_internet' }),
+      'creating Linode'
+    ).then((linode: Linode) => {
+      interceptGetLinodeDetails(linode.id).as('getLinode');
+      interceptRebootLinodeIntoRescueMode(linode.id).as(
+        'rebootLinodeRescueMode'
+      );
 
-        const rescueUrl = `/linodes/${linode.id}`;
-        cy.visitWithLogin(rescueUrl);
-        cy.wait('@getLinode');
+      const rescueUrl = `/linodes/${linode.id}`;
+      cy.visitWithLogin(rescueUrl);
+      cy.wait('@getLinode');
 
-        // Wait for Linode to boot.
-        cy.findByText('RUNNING').should('be.visible');
+      // Wait for Linode to boot.
+      cy.findByText('RUNNING').should('be.visible');
 
-        // Open rescue dialog using action menu..
-        ui.actionMenu
-          .findByTitle(`Action menu for Linode ${linode.label}`)
-          .should('be.visible')
-          .click();
+      // Open rescue dialog using action menu..
+      ui.actionMenu
+        .findByTitle(`Action menu for Linode ${linode.label}`)
+        .should('be.visible')
+        .click();
 
-        ui.actionMenuItem.findByTitle('Rescue').should('be.visible').click();
+      ui.actionMenuItem.findByTitle('Rescue').should('be.visible').click();
 
-        ui.dialog
-          .findByTitle(`Rescue Linode ${linode.label}`)
-          .should('be.visible')
-          .within(() => {
-            rebootInRescueMode();
-          });
+      ui.dialog
+        .findByTitle(`Rescue Linode ${linode.label}`)
+        .should('be.visible')
+        .within(() => {
+          rebootInRescueMode();
+        });
 
-        // Check intercepted response and make sure UI responded correctly.
-        cy.wait('@rebootLinodeRescueMode')
-          .its('response.statusCode')
-          .should('eq', 200);
+      // Check intercepted response and make sure UI responded correctly.
+      cy.wait('@rebootLinodeRescueMode')
+        .its('response.statusCode')
+        .should('eq', 200);
 
-        ui.toast.assertMessage('Linode rescue started.');
-        cy.findByText('REBOOTING').should('be.visible');
-      }
-    );
+      ui.toast.assertMessage('Linode rescue started.');
+      cy.findByText('REBOOTING').should('be.visible');
+    });
   });
 
   /*

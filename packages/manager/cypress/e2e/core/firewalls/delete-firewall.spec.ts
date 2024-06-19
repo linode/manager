@@ -23,7 +23,7 @@ describe('delete firewall', () => {
       label: randomLabel(),
     });
 
-    cy.defer(createFirewall(firewallRequest), 'creating firewalls').then(
+    cy.defer(() => createFirewall(firewallRequest), 'creating firewalls').then(
       (firewall: Firewall) => {
         cy.visitWithLogin('/firewalls');
 

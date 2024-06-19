@@ -22,6 +22,16 @@ export interface DataCenterPricingOptions {
 
 export interface DataCenterPricingByTypeOptions {
   /**
+   * The number of decimal places to return for the price.
+   *  @default 2
+   */
+  decimalPrecision?: number;
+  /**
+   * The time period for which to find pricing data for (hourly or monthly).
+   *  @default monthly
+   */
+  interval?: 'hourly' | 'monthly';
+  /**
    * The `id` of the region we intended to get the price for.
    * @example us-east
    */
@@ -41,17 +51,6 @@ export interface DataCenterPricingByTypeOptions {
 export const priceIncreaseMap = {
   'br-gru': 0.4, // Sao Paulo
   'id-cgk': 0.2, // Jakarta
-};
-
-export const objectStoragePriceIncreaseMap = {
-  'br-gru': {
-    storage_overage: 0.028,
-    transfer_overage: 0.007,
-  },
-  'id-cgk': {
-    storage_overage: 0.024,
-    transfer_overage: 0.015,
-  },
 };
 
 /**
@@ -94,6 +93,8 @@ export const getDCSpecificPrice = ({
  * @returns a data center specific price or undefined if this cannot be calculated
  */
 export const getDCSpecificPriceByType = ({
+  decimalPrecision = 2,
+  interval = 'monthly',
   regionId,
   size,
   type,
@@ -101,19 +102,18 @@ export const getDCSpecificPriceByType = ({
   if (!regionId || !type) {
     return undefined;
   }
-
   // Apply the DC-specific price if it exists; otherwise, use the base price.
   const price =
     type.region_prices.find((region_price: RegionPrice) => {
       return region_price.id === regionId;
-    })?.monthly ?? type.price.monthly;
+    })?.[interval] ?? type.price?.[interval];
 
   // If pricing is determined by size of the entity
   if (size && price) {
-    return (size * price).toFixed(2);
+    return (size * price).toFixed(decimalPrecision);
   }
 
-  return price?.toFixed(2) ?? undefined;
+  return price?.toFixed(decimalPrecision) ?? undefined;
 };
 
 export const renderMonthlyPriceToCorrectDecimalPlace = (

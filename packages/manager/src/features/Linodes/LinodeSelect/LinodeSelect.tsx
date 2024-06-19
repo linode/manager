@@ -104,7 +104,7 @@ export const LinodeSelect = (
     value,
   } = props;
 
-  const { data, error, isLoading } = useAllLinodesQuery({}, filter);
+  const { data, error, isFetching } = useAllLinodesQuery({}, filter, !options);
 
   const [inputValue, setInputValue] = React.useState('');
 
@@ -131,7 +131,7 @@ export const LinodeSelect = (
           : undefined
       }
       noOptionsText={
-        noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
+        noOptionsMessage ?? getDefaultNoOptionsMessage(error, isFetching)
       }
       onChange={(_, value) =>
         multiple && Array.isArray(value)
@@ -177,7 +177,7 @@ export const LinodeSelect = (
       id={id}
       inputValue={inputValue}
       label={label ? label : multiple ? 'Linodes' : 'Linode'}
-      loading={isLoading || loading}
+      loading={isFetching || loading}
       multiple={multiple}
       noMarginTop={noMarginTop}
       onBlur={onBlur}

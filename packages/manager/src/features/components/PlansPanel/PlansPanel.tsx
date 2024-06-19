@@ -2,15 +2,15 @@ import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Notice } from 'src/components/Notice/Notice';
-import { getIsLinodeCreateTypeEdgeSupported } from 'src/components/RegionSelect/RegionSelect.utils';
-import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionAvailabilityQuery } from 'src/queries/regions/regions';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import { EdgePlanTable } from './EdgePlanTable';
+import { DistributedRegionPlanTable } from './DistributedRegionPlanTable';
 import { PlanContainer } from './PlanContainer';
 import { PlanInformation } from './PlanInformation';
 import {
@@ -48,6 +48,14 @@ export interface PlansPanelProps {
   types: PlanSelectionType[];
 }
 
+/**
+ * PlansPanel is a tabbed panel that displays a list of plans for a Linode.
+ * It is used in the Linode create, Kubernetes and Database create flows.
+ * It contains ample logic to determine which plans are available based on the selected region availability and display related visual indicators:
+ * - If the region is not supported, show an error notice and disable all plans.
+ * - If more than half the plans are disabled, show the limited availability banner and hide the limited availability tooltip
+ * - If less than half the plans are disabled, hide the limited availability banner and show the limited availability tooltip
+ */
 export const PlansPanel = (props: PlansPanelProps) => {
   const {
     className,
@@ -78,49 +86,36 @@ export const PlansPanel = (props: PlansPanelProps) => {
     Boolean(flags.soldOutChips) && selectedRegionID !== undefined
   );
 
-  const _types = replaceOrAppendPlaceholder512GbPlans(types);
+  const _types = types.filter(
+    (type) =>
+      !type.id.includes('dedicated-edge') && !type.id.includes('nanode-edge')
+  );
   const _plans = getPlanSelectionsByPlanType(
-    flags.disableLargestGbPlans ? _types : types
+    flags.disableLargestGbPlans
+      ? replaceOrAppendPlaceholder512GbPlans(_types)
+      : _types
   );
 
-  const hideEdgeRegions =
+  const hideDistributedRegions =
     !flags.gecko2?.enabled ||
-    !getIsLinodeCreateTypeEdgeSupported(params.type as LinodeCreateType);
+    !isDistributedRegionSupported(params.type as LinodeCreateType);
 
-  const showEdgePlanTable =
-    !hideEdgeRegions &&
-    getIsEdgeRegion(regionsData ?? [], selectedRegionID ?? '');
+  const showDistributedRegionPlanTable =
+    !hideDistributedRegions &&
+    getIsDistributedRegion(regionsData ?? [], selectedRegionID ?? '');
 
-  const getDedicatedEdgePlanType = () => {
-    const edgePlans = types.filter((type) => type.class === 'edge');
-    if (edgePlans.length) {
-      return edgePlans;
-    }
-
-    // @TODO Remove fallback once edge plans are activated
-    // 256GB and 512GB plans will not be supported for Edge
-    const plansUpTo128GB = (_plans.dedicated ?? []).filter(
-      (planType) =>
-        !['Dedicated 256 GB', 'Dedicated 512 GB'].includes(
-          planType.formattedLabel
-        )
+  const getDedicatedDistributedRegionPlanType = () => {
+    return types.filter(
+      (type) =>
+        type.id.includes('dedicated-edge') ||
+        type.id.includes('nanode-edge') ||
+        type.class === 'edge'
     );
-
-    return plansUpTo128GB.map((plan) => {
-      delete plan.transfer;
-      return {
-        ...plan,
-        price: {
-          hourly: 0,
-          monthly: 0,
-        },
-      };
-    });
   };
 
-  const plans = showEdgePlanTable
+  const plans = showDistributedRegionPlanTable
     ? {
-        dedicated: getDedicatedEdgePlanType(),
+        dedicated: getDedicatedDistributedRegionPlanType(),
       }
     : _plans;
 
@@ -137,7 +132,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
     const plansMap: PlanSelectionType[] = plans[plan];
     const {
       allDisabledPlans,
-      hasDisabledPlans,
       hasMajorityOfPlansDisabled,
       plansForThisLinodeTypeClass,
     } = extractPlansInformation({
@@ -156,20 +150,22 @@ export const PlansPanel = (props: PlansPanelProps) => {
           <>
             <PlanInformation
               hideLimitedAvailabilityBanner={
-                showEdgePlanTable || !flags.disableLargestGbPlans
+                showDistributedRegionPlanTable ||
+                !flags.disableLargestGbPlans ||
+                plan === 'metal' // Bare Metal plans handle their own limited availability banner since they are an special case
               }
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                 plan
               )}
               disabledClasses={disabledClasses}
-              hasDisabledPlans={hasDisabledPlans}
+              hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
               hasSelectedRegion={hasSelectedRegion}
               planType={plan}
               regionsData={regionsData || []}
             />
-            {showEdgePlanTable && (
+            {showDistributedRegionPlanTable && (
               <Notice
-                text="Edge region pricing is temporarily $0 during the beta period, after which billing will begin."
+                text="Distributed region pricing is temporarily $0 during the beta period, after which billing will begin."
                 variant="warning"
               />
             )}
@@ -200,9 +196,9 @@ export const PlansPanel = (props: PlansPanelProps) => {
     currentPlanHeading
   );
 
-  if (showEdgePlanTable) {
+  if (showDistributedRegionPlanTable) {
     return (
-      <EdgePlanTable
+      <DistributedRegionPlanTable
         copy={copy}
         data-qa-select-plan
         docsLink={docsLink}

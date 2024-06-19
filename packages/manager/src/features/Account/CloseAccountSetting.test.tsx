@@ -16,8 +16,8 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/profile', async () => {
-  const actual = await vi.importActual('src/queries/profile');
+vi.mock('src/queries/profile/profile', async () => {
+  const actual = await vi.importActual('src/queries/profile/profile');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
@@ -35,6 +35,10 @@ describe('Close Account Settings', () => {
   });
 
   it('should render a Close Account Button', () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'default' }),
+    });
+
     const { getByTestId } = renderWithTheme(<CloseAccountSetting />);
     const button = getByTestId('close-account-button');
     const span = button.querySelector('span');
@@ -49,10 +53,7 @@ describe('Close Account Settings', () => {
     });
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <CloseAccountSetting />,
-      {
-        flags: { parentChildAccountAccess: true },
-      }
+      <CloseAccountSetting />
     );
     const button = getByTestId('close-account-button');
     fireEvent.mouseOver(button);
@@ -73,10 +74,7 @@ describe('Close Account Settings', () => {
     });
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <CloseAccountSetting />,
-      {
-        flags: { parentChildAccountAccess: true },
-      }
+      <CloseAccountSetting />
     );
     const button = getByTestId('close-account-button');
     fireEvent.mouseOver(button);
@@ -97,10 +95,7 @@ describe('Close Account Settings', () => {
     });
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <CloseAccountSetting />,
-      {
-        flags: { parentChildAccountAccess: true },
-      }
+      <CloseAccountSetting />
     );
     const button = getByTestId('close-account-button');
     fireEvent.mouseOver(button);

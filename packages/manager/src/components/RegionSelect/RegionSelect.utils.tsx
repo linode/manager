@@ -1,114 +1,72 @@
-import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
-
 import {
-  getRegionCountryGroup,
-  getSelectedRegion,
-} from 'src/utilities/formatRegion';
+  CONTINENT_CODE_TO_CONTINENT,
+  Capabilities,
+  RegionSite,
+} from '@linode/api-v4';
+
+import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import type {
   GetRegionOptionAvailability,
-  GetRegionOptions,
-  GetSelectedRegionById,
-  GetSelectedRegionsByIdsArgs,
-  RegionSelectOption,
-  SupportedEdgeTypes,
+  SupportedDistributedRegionTypes,
 } from './RegionSelect.types';
 import type { AccountAvailability, Region } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
-/**
- * Returns an array of OptionType objects for use in the RegionSelect component.
- * Handles the disabled state of each region based on the user's account availability or an optional custom handler.
- * Regions are sorted alphabetically by region, with North America first.
- *
- * @returns An array of RegionSelectOption objects
- */
+interface RegionSelectOptionsOptions {
+  currentCapability: Capabilities | undefined;
+  regionFilter?: RegionSite;
+  regions: Region[];
+}
+
 export const getRegionOptions = ({
-  accountAvailabilityData,
   currentCapability,
-  handleDisabledRegion,
   regionFilter,
   regions,
-}: GetRegionOptions): RegionSelectOption[] => {
-  const filteredRegionsByCapability = currentCapability
-    ? regions.filter((region) =>
-        region.capabilities.includes(currentCapability)
-      )
-    : regions;
-
-  const filteredRegionsByCapabilityAndSiteType = regionFilter
-    ? filteredRegionsByCapability.filter(
-        (region) => region.site_type === regionFilter
-      )
-    : filteredRegionsByCapability;
-
-  const isRegionUnavailable = (region: Region) =>
-    isRegionOptionUnavailable({
-      accountAvailabilityData,
-      currentCapability,
-      region,
-    });
-
-  return filteredRegionsByCapabilityAndSiteType
-    .map((region: Region) => {
-      const group = getRegionCountryGroup(region);
-
-      // The region availability is the first check we run, regardless of the handleDisabledRegion function.
-      // This check always runs, and if the region is unavailable, the region will be disabled.
-      const disabledProps = isRegionUnavailable(region)
-        ? {
-            disabled: true,
-            reason:
-              'This region is currently unavailable. For help, open a support ticket.',
-            tooltipWidth: 250,
-          }
-        : handleDisabledRegion?.(region)?.disabled
-        ? handleDisabledRegion(region)
-        : {
-            disabled: false,
-          };
-
-      return {
-        data: {
-          country: region.country,
-          region: group,
-        },
-        disabledProps,
-        label: `${region.label} (${region.id})`,
-        site_type: region.site_type,
-        value: region.id,
-      };
+}: RegionSelectOptionsOptions) => {
+  return regions
+    .filter((region) => {
+      if (
+        currentCapability &&
+        !region.capabilities.includes(currentCapability)
+      ) {
+        return false;
+      }
+      if (regionFilter && region.site_type !== regionFilter) {
+        return false;
+      }
+      return true;
     })
     .sort((region1, region2) => {
+      const region1Group = getRegionCountryGroup(region1);
+      const region2Group = getRegionCountryGroup(region2);
+
       // North America group comes first
       if (
-        region1.data.region === NORTH_AMERICA &&
-        region2.data.region !== NORTH_AMERICA
+        region1Group === 'North America' &&
+        region2Group !== 'North America'
       ) {
         return -1;
       }
-      if (
-        region1.data.region !== NORTH_AMERICA &&
-        region2.data.region === NORTH_AMERICA
-      ) {
+      if (region1Group !== NORTH_AMERICA && region2Group === NORTH_AMERICA) {
         return 1;
       }
 
       // Rest of the regions are sorted alphabetically
-      if (region1.data.region < region2.data.region) {
+      if (region1Group < region2Group) {
         return -1;
       }
-      if (region1.data.region > region2.data.region) {
+      if (region1Group > region2Group) {
         return 1;
       }
 
       // Then we group by country
-      if (region1.data.country < region2.data.country) {
+      if (region1.country < region2.country) {
         return 1;
       }
-      if (region1.data.country > region2.data.country) {
+      if (region1.country > region2.country) {
         return -1;
       }
 
@@ -119,34 +77,6 @@ export const getRegionOptions = ({
 
       return 1;
     });
-};
-
-/**
- * Util to map a region ID to an OptionType object.
- *
- * @returns an RegionSelectOption object for the currently selected region.
- */
-export const getSelectedRegionById = ({
-  regions,
-  selectedRegionId,
-}: GetSelectedRegionById): RegionSelectOption | undefined => {
-  const selectedRegion = getSelectedRegion(regions, selectedRegionId);
-
-  if (!selectedRegion) {
-    return undefined;
-  }
-
-  const group = getRegionCountryGroup(selectedRegion);
-
-  return {
-    data: {
-      country: selectedRegion?.country,
-      region: group,
-    },
-    label: `${selectedRegion.label} (${selectedRegion.id})`,
-    site_type: selectedRegion.site_type,
-    value: selectedRegion.id,
-  };
 };
 
 /**
@@ -178,59 +108,33 @@ export const isRegionOptionUnavailable = ({
 };
 
 /**
- * This utility function takes an array of region IDs and returns an array of corresponding RegionSelectOption objects.
+ * Util to determine whether a create type has support for distributed regions.
  *
- * @returns An array of RegionSelectOption objects corresponding to the selected region IDs.
+ * @returns a boolean indicating whether or not the create type supports distributed regions.
  */
-export const getSelectedRegionsByIds = ({
-  accountAvailabilityData,
-  currentCapability,
-  regions,
-  selectedRegionIds,
-}: GetSelectedRegionsByIdsArgs): RegionSelectOption[] => {
-  return selectedRegionIds
-    .map((selectedRegionId) =>
-      getSelectedRegionById({
-        accountAvailabilityData,
-        currentCapability,
-        regions,
-        selectedRegionId,
-      })
-    )
-    .filter((region): region is RegionSelectOption => !!region);
-};
-
-/**
- * Util to determine whether a create type has support for edge regions.
- *
- * @returns a boolean indicating whether or not the create type is edge supported.
- */
-export const getIsLinodeCreateTypeEdgeSupported = (
-  createType: LinodeCreateType
-) => {
-  const supportedEdgeTypes: SupportedEdgeTypes[] = [
+export const isDistributedRegionSupported = (createType: LinodeCreateType) => {
+  const supportedDistributedRegionTypes: SupportedDistributedRegionTypes[] = [
     'Distributions',
     'StackScripts',
   ];
   return (
-    supportedEdgeTypes.includes(createType as SupportedEdgeTypes) ||
-    typeof createType === 'undefined' // /linodes/create route
+    supportedDistributedRegionTypes.includes(
+      createType as SupportedDistributedRegionTypes
+    ) || typeof createType === 'undefined' // /linodes/create route
   );
 };
 
 /**
- * Util to determine whether a selected region is an edge region.
+ * Util to determine whether a selected region is a distributed region.
  *
- * @returns a boolean indicating whether or not the selected region is an edge region.
+ * @returns a boolean indicating whether or not the selected region is a distributed region.
  */
-export const getIsEdgeRegion = (
+export const getIsDistributedRegion = (
   regionsData: Region[],
   selectedRegion: string
 ) => {
-  return (
-    regionsData.find(
-      (region) =>
-        region.id === selectedRegion || region.label === selectedRegion
-    )?.site_type === 'edge'
+  const region = regionsData.find(
+    (region) => region.id === selectedRegion || region.label === selectedRegion
   );
+  return region?.site_type === 'distributed' || region?.site_type === 'edge';
 };

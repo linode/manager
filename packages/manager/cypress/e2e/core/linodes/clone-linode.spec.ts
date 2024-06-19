@@ -1,4 +1,3 @@
-import { Linode, createLinode } from '@linode/api-v4';
 import { linodeFactory, createLinodeRequestFactory } from '@src/factories';
 import {
   interceptCloneLinode,
@@ -18,6 +17,8 @@ import { chooseRegion, getRegionById } from 'support/util/regions';
 import { randomLabel } from 'support/util/random';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
+import type { Linode } from '@linode/api-v4';
 
 /**
  * Returns the Cloud Manager URL to clone a given Linode.
@@ -31,6 +32,9 @@ const getLinodeCloneUrl = (linode: Linode): string => {
   const typeQuery = `&typeID=${linode.type}`;
   return `/linodes/create?linodeID=${linode.id}${regionQuery}&type=Clone+Linode${typeQuery}`;
 };
+
+/* Timeout after 3 minutes while waiting for clone. */
+const CLONE_TIMEOUT = 180_000;
 
 authenticate();
 describe('clone linode', () => {
@@ -47,14 +51,19 @@ describe('clone linode', () => {
     const linodePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
       region: linodeRegion.id,
-      // Specifying no image allows the Linode to provision and clone faster.
-      image: undefined,
+      booted: false,
       type: 'g6-nanode-1',
     });
 
     const newLinodeLabel = `${linodePayload.label}-clone`;
 
-    cy.defer(createLinode(linodePayload)).then((linode: Linode) => {
+    // Use `vlan_no_internet` security method.
+    // This works around an issue where the Linode API responds with a 400
+    // when attempting to interact with it shortly after booting up when the
+    // Linode is attached to a Cloud Firewall.
+    cy.defer(() =>
+      createTestLinode(linodePayload, { securityMethod: 'vlan_no_internet' })
+    ).then((linode: Linode) => {
       const linodeRegion = getRegionById(linodePayload.region!);
 
       interceptCloneLinode(linode.id).as('cloneLinode');
@@ -99,7 +108,8 @@ describe('clone linode', () => {
 
       ui.toast.assertMessage(`Your Linode ${newLinodeLabel} is being created.`);
       ui.toast.assertMessage(
-        `Linode ${linode.label} successfully cloned to ${newLinodeLabel}.`
+        `Linode ${linode.label} successfully cloned to ${newLinodeLabel}.`,
+        { timeout: CLONE_TIMEOUT }
       );
     });
   });

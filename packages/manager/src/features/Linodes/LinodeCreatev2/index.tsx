@@ -1,4 +1,5 @@
-import React from 'react';
+import { isEmpty } from '@linode/api-v4';
+import React, { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
@@ -14,8 +15,9 @@ import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
 } from 'src/queries/linodes/linodes';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { Access } from './Access';
+import { Security } from './Security';
 import { Actions } from './Actions';
 import { Addons } from './Addons/Addons';
 import { Details } from './Details/Details';
@@ -48,11 +50,13 @@ import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreatev2 = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const methods = useForm<LinodeCreateFormValues>({
+  const form = useForm<LinodeCreateFormValues>({
     defaultValues,
     mode: 'onBlur',
     resolver: linodeCreateResolvers[params.type ?? 'Distributions'],
+    shouldFocusError: false, // We handle this ourselves with `scrollErrorIntoView`
   });
 
   const history = useHistory();
@@ -67,12 +71,12 @@ export const LinodeCreatev2 = () => {
     // Update tab "type" query param. (This changes the selected tab)
     setParams({ type: newTab });
     // Reset the form values
-    methods.reset(defaultValuesMap[newTab]);
+    form.reset(defaultValuesMap[newTab]);
   };
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
     const payload = getLinodeCreatePayload(values);
-    alert(JSON.stringify(payload, null, 2));
+
     try {
       const linode =
         params.type === 'Clone Linode'
@@ -86,23 +90,35 @@ export const LinodeCreatev2 = () => {
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
-          methods.setError(error.field, { message: error.reason });
+          form.setError(error.field, { message: error.reason });
         } else {
-          methods.setError('root', { message: error.reason });
+          form.setError('root', { message: error.reason });
         }
       }
     }
   };
 
+  const previousSubmitCount = useRef<number>(0);
+
+  useEffect(() => {
+    if (
+      !isEmpty(form.formState.errors) &&
+      form.formState.submitCount > previousSubmitCount.current
+    ) {
+      scrollErrorIntoView(undefined, { behavior: 'smooth' });
+    }
+    previousSubmitCount.current = form.formState.submitCount;
+  }, [form.formState]);
+
   return (
-    <FormProvider {...methods}>
+    <FormProvider {...form}>
       <DocumentTitleSegment segment="Create a Linode" />
       <LandingHeader
         docsLabel="Getting Started"
         docsLink="https://www.linode.com/docs/guides/platform/get-started/"
         title="Create"
       />
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} ref={formRef}>
         <Error />
         <Stack gap={3}>
           <Tabs index={currentTabIndex} onChange={onTabChange}>
@@ -138,7 +154,7 @@ export const LinodeCreatev2 = () => {
           {params.type !== 'Backups' && <Region />}
           <Plan />
           <Details />
-          {params.type !== 'Clone Linode' && <Access />}
+          {params.type !== 'Clone Linode' && <Security />}
           <VPC />
           <Firewall />
           {params.type !== 'Clone Linode' && <VLAN />}

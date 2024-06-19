@@ -5,7 +5,10 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import { usePrevious } from 'src/hooks/usePrevious';
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import {
@@ -95,7 +98,7 @@ export const getInitialValuesFromUserPreferences = (
   );
 };
 
-export const sortData = <T extends unknown>(orderBy: string, order: Order) => {
+export const sortData = <T,>(orderBy: string, order: Order) => {
   return sort<T>((a, b) => {
     /* If the column we're sorting on is an array (e.g. 'tags', which is string[]),
      *  we want to sort by the length of the array. Otherwise, do a simple comparison.
@@ -152,7 +155,7 @@ export const sortData = <T extends unknown>(orderBy: string, order: Order) => {
   });
 };
 
-export const OrderBy = <T extends unknown>(props: CombinedProps<T>) => {
+export const OrderBy = <T,>(props: CombinedProps<T>) => {
   const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
   const location = useLocation();

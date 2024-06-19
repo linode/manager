@@ -1,3 +1,24 @@
+## [2024-06-10] - v0.48.0
+
+
+### Added:
+
+- `tags` to `updateImageSchema` ([#10466](https://github.com/linode/manager/pull/10466))
+- `updateImageRegionsSchema` ([#10541](https://github.com/linode/manager/pull/10541))
+
+## [2024-05-28] - v0.47.0
+
+
+### Added:
+
+- `tags` to `createImageSchema` ([#10471](https://github.com/linode/manager/pull/10471))
+
+### Changed:
+
+- Adjust DiskEncryptionSchema so it is not an object ([#10462](https://github.com/linode/manager/pull/10462))
+- Improve Image `label` validation ([#10471](https://github.com/linode/manager/pull/10471))
+
+
 ## [2024-05-13] - v0.46.0
 
 

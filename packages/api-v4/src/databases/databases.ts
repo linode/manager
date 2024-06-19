@@ -22,7 +22,6 @@ import {
   Engine,
   SSLFields,
   UpdateDatabasePayload,
-  UpdateDatabaseResponse,
 } from './types';
 
 /**
@@ -153,7 +152,7 @@ export const updateDatabase = (
   databaseID: number,
   data: UpdateDatabasePayload
 ) =>
-  Request<UpdateDatabaseResponse>(
+  Request<Database>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
         engine

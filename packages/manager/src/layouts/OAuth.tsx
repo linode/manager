@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { CLIENT_ID, LOGIN_ROOT } from 'src/constants';
@@ -206,7 +205,4 @@ const mapDispatchToProps = (dispatch: any): DispatchProps => ({
 
 const connected = connect(undefined, mapDispatchToProps);
 
-export default compose<CombinedProps, {}>(
-  connected,
-  withRouter
-)(OAuthCallbackPage);
+export default connected(withRouter(OAuthCallbackPage));

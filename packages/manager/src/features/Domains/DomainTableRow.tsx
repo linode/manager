@@ -21,11 +21,7 @@ export const DomainTableRow = React.memo((props: DomainTableRowProps) => {
   const { domain, onClone, onDisableOrEnable, onEdit, onRemove } = props;
 
   return (
-    <TableRow
-      ariaLabel={`Domain ${domain.domain}`}
-      data-qa-domain-cell={domain.domain}
-      key={domain.id}
-    >
+    <TableRow data-qa-domain-cell={domain.domain} key={domain.id}>
       <TableCell data-qa-domain-label>
         <StyledDiv>
           {domain.type !== 'slave' ? (

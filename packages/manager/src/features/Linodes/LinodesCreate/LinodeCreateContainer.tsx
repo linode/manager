@@ -12,7 +12,6 @@ import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose as recompose } from 'recompose';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -61,18 +60,18 @@ import {
   sendCreateLinodeEvent,
   sendLinodeCreateFlowDocsClickEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
-import { isEURegion } from 'src/utilities/formatRegion';
 import {
   getGDPRDetails,
   getSelectedRegionGroup,
 } from 'src/utilities/formatRegion';
+import { isEURegion } from 'src/utilities/formatRegion';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
 
 import { deriveDefaultLabel } from './deriveDefaultLabel';
@@ -92,7 +91,10 @@ import type {
   LinodeTypeClass,
   PriceObject,
 } from '@linode/api-v4/lib/linodes';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import {
+  withAccount,
+  WithAccountProps,
+} from 'src/containers/account.container';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -107,6 +109,7 @@ interface State {
   backupsEnabled: boolean;
   customLabel?: string;
   disabledClasses?: LinodeTypeClass[];
+  diskEncryptionEnabled?: boolean;
   errors?: APIError[];
   formIsSubmitting: boolean;
   password: string;
@@ -135,6 +138,7 @@ interface State {
 }
 
 type CombinedProps = CreateType &
+  WithAccountProps &
   WithImagesProps &
   WithTypesProps &
   WithLinodesProps &
@@ -157,6 +161,7 @@ const defaultState: State = {
   backupsEnabled: false,
   customLabel: undefined,
   disabledClasses: [],
+  diskEncryptionEnabled: true,
   errors: undefined,
   formIsSubmitting: false,
   password: '',
@@ -293,6 +298,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             }
             autoassignIPv4WithinVPC={this.state.autoassignIPv4WithinVPCEnabled}
             checkValidation={this.checkValidation}
+            diskEncryptionEnabled={this.state.diskEncryptionEnabled ?? false}
             firewallId={this.state.selectedfirewallId}
             handleAgreementChange={this.handleAgreementChange}
             handleFirewallChange={this.handleFirewallChange}
@@ -319,6 +325,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             setSelectedVPC={this.handleVPCChange}
             toggleAssignPublicIPv4Address={this.toggleAssignPublicIPv4Address}
             toggleBackupsEnabled={this.toggleBackupsEnabled}
+            toggleDiskEncryptionEnabled={this.toggleDiskEncryptionEnabled}
             togglePrivateIPEnabled={this.togglePrivateIPEnabled}
             typeDisplayInfo={this.getTypeInfo()}
             typesData={extendedTypeData}
@@ -350,13 +357,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       this.setState({ errors: undefined, showApiAwarenessModal: true });
     } catch (error) {
       const processedErrors = convertYupToLinodeErrors(error);
-      this.setState(
-        () => ({
-          errors: getAPIErrorOrDefault(processedErrors),
-          formIsSubmitting: false,
-        }),
-        () => scrollErrorIntoView()
-      );
+      this.setState(() => ({
+        errors: getAPIErrorOrDefault(processedErrors),
+        formIsSubmitting: false,
+      }));
     }
   };
 
@@ -738,19 +742,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (payload.root_pass) {
       const passwordError = validatePassword(payload.root_pass);
       if (passwordError) {
-        this.setState(
-          {
-            errors: [
-              {
-                field: 'root_pass',
-                reason: passwordError,
-              },
-            ],
-          },
-          () => {
-            scrollErrorIntoView();
-          }
-        );
+        this.setState({
+          errors: [
+            {
+              field: 'root_pass',
+              reason: passwordError,
+            },
+          ],
+        });
         return;
       }
     }
@@ -763,24 +762,19 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         )!,
       });
       if (error) {
-        this.setState(
-          {
-            errors: [
-              {
-                field: 'placement_group',
-                reason: `${this.state.placementGroupSelection?.label} (${
-                  this.state.placementGroupSelection?.affinity_type ===
-                  'affinity:local'
-                    ? 'Affinity'
-                    : 'Anti-affinity'
-                }) doesn't have any capacity for this Linode.`,
-              },
-            ],
-          },
-          () => {
-            scrollErrorIntoView();
-          }
-        );
+        this.setState({
+          errors: [
+            {
+              field: 'placement_group',
+              reason: `${this.state.placementGroupSelection?.label} (${
+                this.state.placementGroupSelection?.affinity_type ===
+                'affinity:local'
+                  ? 'Affinity'
+                  : 'Anti-affinity'
+              }) doesn't have any capacity for this Linode.`,
+            },
+          ],
+        });
         return;
       }
     }
@@ -799,17 +793,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       // Situation: 'Auto-assign a VPC IPv4 address for this Linode in the VPC' checkbox
       // unchecked but a valid VPC IPv4 not provided
       if (!this.state.autoassignIPv4WithinVPCEnabled && !validVPCIPv4) {
-        return this.setState(
-          () => ({
-            errors: [
-              {
-                field: 'ipv4.vpc',
-                reason: 'Must be a valid IPv4 address, e.g. 192.168.2.0',
-              },
-            ],
-          }),
-          () => scrollErrorIntoView()
-        );
+        return this.setState(() => ({
+          errors: [
+            {
+              field: 'ipv4.vpc',
+              reason: 'Must be a valid IPv4 address, e.g. 192.168.2.0',
+            },
+          ],
+        }));
       }
     }
 
@@ -819,58 +810,44 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * if create, run create action
      */
     if (createType === 'fromLinode' && !linodeID) {
-      return this.setState(
-        () => ({
-          errors: [
-            {
-              field: 'linode_id',
-              reason: 'You must select a Linode to clone from',
-            },
-          ],
-        }),
-        () => scrollErrorIntoView()
-      );
+      return this.setState(() => ({
+        errors: [
+          {
+            field: 'linode_id',
+            reason: 'You must select a Linode to clone from',
+          },
+        ],
+      }));
     }
 
     if (createType === 'fromBackup' && !this.state.selectedBackupID) {
       /* a backup selection is also required */
-      this.setState(
-        {
-          errors: [{ field: 'backup_id', reason: 'You must select a Backup.' }],
-        },
-        () => {
-          scrollErrorIntoView();
-        }
-      );
+      this.setState({
+        errors: [{ field: 'backup_id', reason: 'You must select a Backup.' }],
+      });
       return;
     }
 
     if (createType === 'fromStackScript' && !this.state.selectedStackScriptID) {
-      return this.setState(
-        () => ({
-          errors: [
-            {
-              field: 'stackscript_id',
-              reason: 'You must select a StackScript.',
-            },
-          ],
-        }),
-        () => scrollErrorIntoView()
-      );
+      return this.setState(() => ({
+        errors: [
+          {
+            field: 'stackscript_id',
+            reason: 'You must select a StackScript.',
+          },
+        ],
+      }));
     }
 
     if (createType === 'fromApp' && !this.state.selectedStackScriptID) {
-      return this.setState(
-        () => ({
-          errors: [
-            {
-              field: 'stackscript_id',
-              reason: 'You must select a Marketplace App.',
-            },
-          ],
-        }),
-        () => scrollErrorIntoView()
-      );
+      return this.setState(() => ({
+        errors: [
+          {
+            field: 'stackscript_id',
+            reason: 'You must select a Marketplace App.',
+          },
+        ],
+      }));
     }
 
     const request =
@@ -938,13 +915,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         this.props.history.push(`/linodes/${response.id}`);
       })
       .catch((error) => {
-        this.setState(
-          () => ({
-            errors: getAPIErrorOrDefault(error),
-            formIsSubmitting: false,
-          }),
-          () => scrollErrorIntoView()
-        );
+        this.setState(() => ({
+          errors: getAPIErrorOrDefault(error),
+          formIsSubmitting: false,
+        }));
       });
   };
 
@@ -972,6 +946,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   toggleBackupsEnabled = () =>
     this.setState({ backupsEnabled: !this.state.backupsEnabled });
 
+  toggleDiskEncryptionEnabled = () => {
+    this.setState({ diskEncryptionEnabled: !this.state.diskEncryptionEnabled });
+  };
+
   togglePrivateIPEnabled = () =>
     this.setState({ privateIPEnabled: !this.state.privateIPEnabled });
 
@@ -990,20 +968,31 @@ const mapStateToProps: MapState<CreateType, CombinedProps> = (state) => ({
 
 const connected = connect(mapStateToProps);
 
-export default recompose<CombinedProps, {}>(
-  withImages,
-  withLinodes,
-  withRegions,
-  withTypes,
-  connected,
-  withFeatureFlags,
-  withProfile,
-  withAgreements,
-  withQueryClient,
-  withAccountSettings,
-  withMarketplaceApps,
-  withEventsPollingActions
-)(LinodeCreateContainer);
+export default withImages(
+  withAccount(
+    withLinodes(
+      withRegions(
+        withTypes(
+          connected(
+            withFeatureFlags(
+              withProfile(
+                withAgreements(
+                  withQueryClient(
+                    withAccountSettings(
+                      withMarketplaceApps(
+                        withEventsPollingActions(LinodeCreateContainer)
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+);
 
 const actionsAndLabels = {
   fromApp: { action: 'one-click', labelPayloadKey: 'stackscript_id' },
