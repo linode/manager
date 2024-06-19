@@ -23,6 +23,8 @@ export const CloudPulseDashboardSelect = React.memo((props: CloudPulseDashboardS
 
   const errorText: string = error ? 'Error loading dashboards' : '';
 
+  const placeHolder = "Select Dashboard";
+
   // sorts dashboards by service type. Required due to unexpected autocomplete grouping behaviour
   const getSortedDashboardsList = (options: Dashboard[]) => {
     return options.sort(
@@ -36,9 +38,10 @@ export const CloudPulseDashboardSelect = React.memo((props: CloudPulseDashboardS
         options={[]}
         label=''
         disabled={true}
-        onChange={() => {}}
+        onChange={() => { }}
         data-testid="cloudview-dashboard-select"
-        placeholder='Select Dashboard'
+        placeholder={placeHolder}
+        errorText={errorText}
       />
     )
   }
@@ -48,9 +51,7 @@ export const CloudPulseDashboardSelect = React.memo((props: CloudPulseDashboardS
       onChange={(_: any, dashboard: Dashboard) => {
         props.handleDashboardChange(dashboard);
       }}
-      options={
-        !dashboardsList ? [] : getSortedDashboardsList(dashboardsList.data)
-      }
+      options={ getSortedDashboardsList(dashboardsList.data) }
       renderGroup={(params) => (
         <Box key={params.key}>
           <Typography
@@ -72,7 +73,7 @@ export const CloudPulseDashboardSelect = React.memo((props: CloudPulseDashboardS
       label=""
       loading={isLoading}
       noMarginTop
-      placeholder="Select a Dashboard"
+      placeholder={placeHolder}
     />
   );
 });
