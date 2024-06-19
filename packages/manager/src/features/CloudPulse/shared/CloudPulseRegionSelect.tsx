@@ -25,7 +25,7 @@ export const CloudPulseRegionSelect = React.memo(
         onChange={(e, region) => props.handleRegionChange(region?.id)}
         regions={regions ? regions : []}
         disabled={!props.selectedDashboard}
-        value={props.selectedRegion}
+        value={props.selectedRegion ?? null}
       />
     );
   }
