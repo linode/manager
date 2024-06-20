@@ -21,10 +21,11 @@ import { distroIcons } from '../DistributionIcon';
 
 export type Variant = 'all' | 'private' | 'public';
 
-interface ImageItem extends Item<string> {
+export interface ImageItem extends Item<string> {
   className: string;
   created: string;
   isCloudInitCompatible: boolean;
+  isDistributedCompatible: boolean;
 }
 
 interface ImageSelectProps {
@@ -111,6 +112,9 @@ export const imagesToGroupedItems = (images: Image[]) => {
                     : `fl-tux`,
                   created,
                   isCloudInitCompatible: capabilities?.includes('cloud-init'),
+                  isDistributedCompatible: capabilities?.includes(
+                    'distributed-images'
+                  ),
                   // Add suffix 'deprecated' to the image at end of life.
                   label:
                     differenceInMonths > 0 ? `${label} (deprecated)` : label,
