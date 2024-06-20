@@ -23,13 +23,9 @@ const defaultUnwantedEvents: EventAction[] = [
   'volume_update',
 ];
 
-export const useEventNotifications = (
-  providedEvents?: Event[]
-): NotificationItem[] => {
+export const useEventNotifications = (): NotificationItem[] => {
   const { events: fetchedEvents } = useEventsInfiniteQuery();
-  const relevantEvents = removeBlocklistedEvents(
-    providedEvents ?? fetchedEvents
-  );
+  const relevantEvents = removeBlocklistedEvents(fetchedEvents);
   const { isTaxIdEnabled } = useIsTaxIdEnabled();
   const notificationContext = React.useContext(_notificationContext);
 
