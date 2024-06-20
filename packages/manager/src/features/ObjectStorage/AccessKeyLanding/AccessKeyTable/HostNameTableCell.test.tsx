@@ -2,27 +2,21 @@ import '@testing-library/jest-dom';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { regionFactory } from 'src/factories';
+import { objectStorageKeyFactory, regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { HostNameTableCell } from './HostNameTableCell';
 
-const storageKeyData = {
-  access_key: 'test_key',
-  bucket_access: null,
-  id: 12345,
-  label: 'this is regular key',
-  limited: false,
+const storageKeyData = objectStorageKeyFactory.build({
   regions: [
     {
       id: 'us-east',
       s3_endpoint: 'alpha.test.com',
     },
   ],
-  secret_key: '[test]',
-};
+});
 
 describe('HostNameTableCell', () => {
   it('should render  "None" when there are no regions', () => {
