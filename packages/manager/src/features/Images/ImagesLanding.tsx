@@ -1,10 +1,9 @@
-import { Image, ImageStatus } from '@linode/api-v4';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
+import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
+import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -13,6 +12,8 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
+import { IconButton } from 'src/components/IconButton';
+import { InputAdornment } from 'src/components/InputAdornment';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -23,7 +24,9 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
@@ -41,10 +44,16 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { EditImageDrawer } from './EditImageDrawer';
 import ImageRow from './ImageRow';
-import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
 import { getEventsForImages } from './utils';
+
+import type { Handlers as ImageHandlers } from './ImagesActionMenu';
+import type { Image, ImageStatus } from '@linode/api-v4';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Theme } from '@mui/material/styles';
+
+const searchQueryKey = 'query';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   imageTable: {
@@ -81,6 +90,9 @@ export const ImagesLanding = () => {
   const { classes } = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const imageLabelFromParam = queryParams.get(searchQueryKey) ?? '';
 
   const queryClient = useQueryClient();
 
@@ -104,9 +116,14 @@ export const ImagesLanding = () => {
     ['+order_by']: manualImagesOrderBy,
   };
 
+  if (imageLabelFromParam) {
+    manualImagesFilter['label'] = { '+contains': imageLabelFromParam };
+  }
+
   const {
     data: manualImages,
     error: manualImagesError,
+    isFetching: manualImagesIsFetching,
     isLoading: manualImagesLoading,
   } = useImagesQuery(
     {
@@ -144,9 +161,14 @@ export const ImagesLanding = () => {
     ['+order_by']: automaticImagesOrderBy,
   };
 
+  if (imageLabelFromParam) {
+    automaticImagesFilter['label'] = { '+contains': imageLabelFromParam };
+  }
+
   const {
     data: automaticImages,
     error: automaticImagesError,
+    isFetching: automaticImagesIsFetching,
     isLoading: automaticImagesLoading,
   } = useImagesQuery(
     {
@@ -310,6 +332,17 @@ export const ImagesLanding = () => {
     );
   };
 
+  const resetSearch = () => {
+    queryParams.delete(searchQueryKey);
+    history.push({ search: queryParams.toString() });
+  };
+
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    queryParams.delete('page');
+    queryParams.set(searchQueryKey, e.target.value);
+    history.push({ search: queryParams.toString() });
+  };
+
   const handlers: ImageHandlers = {
     onCancelFailed: onCancelFailedClick,
     onDelete: openDialog,
@@ -350,7 +383,11 @@ export const ImagesLanding = () => {
   }
 
   /** Empty States */
-  if (!manualImages.data.length && !automaticImages.data.length) {
+  if (
+    !manualImages.data.length &&
+    !automaticImages.data.length &&
+    !imageLabelFromParam
+  ) {
     return renderEmpty();
   }
 
@@ -362,6 +399,8 @@ export const ImagesLanding = () => {
     <TableRowEmpty colSpan={6} message={`No Recovery Images to display.`} />
   );
 
+  const isFetching = manualImagesIsFetching || automaticImagesIsFetching;
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
@@ -370,6 +409,32 @@ export const ImagesLanding = () => {
         entity="Image"
         onButtonClick={() => history.push('/images/create')}
         title="Images"
+      />
+      <TextField
+        InputProps={{
+          endAdornment: imageLabelFromParam && (
+            <InputAdornment position="end">
+              {isFetching && <CircleProgress size="sm" />}
+
+              <IconButton
+                aria-label="Clear"
+                data-testid="clear-images-search"
+                onClick={resetSearch}
+                size="small"
+              >
+                <CloseIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+        onChange={debounce(400, (e) => {
+          onSearch(e);
+        })}
+        hideLabel
+        label="Search"
+        placeholder="Search Images"
+        sx={{ mb: 2 }}
+        value={imageLabelFromParam}
       />
       <Paper className={classes.imageTable}>
         <div className={classes.imageTableHeader}>
@@ -483,16 +548,20 @@ export const ImagesLanding = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {automaticImages.data.length > 0
-              ? automaticImages.data.map((automaticImage) => (
-                  <ImageRow
-                    event={automaticImagesEvents[automaticImage.id]}
-                    handlers={handlers}
-                    image={automaticImage}
-                    key={automaticImage.id}
-                  />
-                ))
-              : noAutomaticImages}
+            {isFetching ? (
+              <TableRowLoading columns={6} />
+            ) : automaticImages.data.length > 0 ? (
+              automaticImages.data.map((automaticImage) => (
+                <ImageRow
+                  event={automaticImagesEvents[automaticImage.id]}
+                  handlers={handlers}
+                  image={automaticImage}
+                  key={automaticImage.id}
+                />
+              ))
+            ) : (
+              noAutomaticImages
+            )}
           </TableBody>
         </Table>
         <PaginationFooter

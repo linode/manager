@@ -42,7 +42,7 @@ interface Props {
   handleSelectRegion: (id: string) => void;
   helperText?: string;
   linodeType: Linode['type'];
-  selectedRegion: null | string;
+  selectedRegion: string | undefined;
 }
 
 export type MigratePricePanelType = 'current' | 'new';

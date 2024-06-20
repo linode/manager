@@ -20,7 +20,7 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 interface TwoStepRegionSelectProps
   extends Omit<SelectRegionPanelProps, 'selectedId'> {
   regions: Region[];
-  selectedId?: null | string;
+  value?: string;
 }
 
 interface GeographicalAreaOption {
@@ -59,81 +59,79 @@ const GEOGRAPHICAL_AREA_OPTIONS: GeographicalAreaOption[] = [
   },
 ];
 
-export const TwoStepRegionSelect = React.memo(
-  (props: TwoStepRegionSelectProps) => {
-    const {
-      RegionSelectProps,
-      currentCapability,
-      disabled,
-      error,
-      handleSelection,
-      helperText,
-      regions,
-      selectedId,
-    } = props;
+export const TwoStepRegionSelect = (props: TwoStepRegionSelectProps) => {
+  const {
+    RegionSelectProps,
+    currentCapability,
+    disabled,
+    error,
+    handleSelection,
+    helperText,
+    regions,
+    value,
+  } = props;
 
-    const [regionFilter, setRegionFilter] = React.useState<RegionFilterValue>(
-      'distributed'
-    );
+  const [regionFilter, setRegionFilter] = React.useState<RegionFilterValue>(
+    'distributed'
+  );
 
-    return (
-      <Tabs>
-        <TabList>
-          <Tab>Core</Tab>
-          <Tab>Distributed</Tab>
-        </TabList>
-        <TabPanels>
-          <SafeTabPanel index={0}>
-            <Box marginTop={2}>
-              <RegionHelperText
-                onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
-              />
-            </Box>
-            <RegionSelect
-              currentCapability={currentCapability}
-              disableClearable
-              disabled={disabled}
-              errorText={error}
-              helperText={helperText}
-              onChange={(e, region: Region) => handleSelection(region.id)}
-              regionFilter="core"
-              regions={regions ?? []}
-              showDistributedRegionIconHelperText={false}
-              value={selectedId || null}
-              {...RegionSelectProps}
+  return (
+    <Tabs>
+      <TabList>
+        <Tab>Core</Tab>
+        <Tab>Distributed</Tab>
+      </TabList>
+      <TabPanels>
+        <SafeTabPanel index={0}>
+          <Box marginTop={2}>
+            <RegionHelperText
+              onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
             />
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <Autocomplete
-              onChange={(_, selectedOption) => {
-                if (selectedOption?.value) {
-                  setRegionFilter(selectedOption.value);
-                }
-              }}
-              defaultValue={GEOGRAPHICAL_AREA_OPTIONS[0]}
-              disableClearable
-              label="Geographical Area"
-              options={GEOGRAPHICAL_AREA_OPTIONS}
-            />
-            <RegionSelect
-              currentCapability={currentCapability}
-              disableClearable
-              disabled={disabled}
-              errorText={error}
-              helperText={helperText}
-              onChange={(e, region: Region) => handleSelection(region.id)}
-              regionFilter={regionFilter}
-              regions={regions ?? []}
-              showDistributedRegionIconHelperText={false}
-              value={selectedId || null}
-              {...RegionSelectProps}
-            />
-          </SafeTabPanel>
-        </TabPanels>
-      </Tabs>
-    );
-  }
-);
+          </Box>
+          <RegionSelect
+            currentCapability={currentCapability}
+            disableClearable
+            disabled={disabled}
+            errorText={error}
+            helperText={helperText}
+            onChange={(e, region: Region) => handleSelection(region.id)}
+            regionFilter="core"
+            regions={regions ?? []}
+            showDistributedRegionIconHelperText={false}
+            value={value}
+            {...RegionSelectProps}
+          />
+        </SafeTabPanel>
+        <SafeTabPanel index={1}>
+          <Autocomplete
+            onChange={(_, selectedOption) => {
+              if (selectedOption?.value) {
+                setRegionFilter(selectedOption.value);
+              }
+            }}
+            defaultValue={GEOGRAPHICAL_AREA_OPTIONS[0]}
+            disableClearable
+            label="Geographical Area"
+            options={GEOGRAPHICAL_AREA_OPTIONS}
+          />
+          <RegionSelect
+            currentCapability={currentCapability}
+            disableClearable
+            disabled={disabled}
+            errorText={error}
+            helperText={helperText}
+            onChange={(e, region: Region) => handleSelection(region.id)}
+            regionFilter={regionFilter}
+            regions={regions ?? []}
+            showDistributedRegionIconHelperText={false}
+            value={value}
+            {...RegionSelectProps}
+          />
+        </SafeTabPanel>
+      </TabPanels>
+    </Tabs>
+  );
+};
 
 export const useIsGeckoEnabled = () => {
   const flags = useFlags();

@@ -1,11 +1,10 @@
-import { Account } from '@linode/api-v4/lib/account';
-import {
+import type { Account } from '@linode/api-v4/lib/account';
+import type {
   KubeNodePoolResponse,
   KubernetesCluster,
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
-import { Region } from '@linode/api-v4/lib/regions';
-
+import type { Region } from '@linode/api-v4/lib/regions';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;

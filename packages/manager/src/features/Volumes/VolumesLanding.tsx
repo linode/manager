@@ -1,9 +1,13 @@
+import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { debounce } from 'throttle-debounce';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { IconButton } from 'src/components/IconButton';
+import { InputAdornment } from 'src/components/InputAdornment';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -11,7 +15,9 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { TextField } from 'src/components/TextField';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useVolumesQuery } from 'src/queries/volumes/volumes';
@@ -31,13 +37,14 @@ import { VolumeTableRow } from './VolumeTableRow';
 import type { Volume } from '@linode/api-v4';
 
 const preferenceKey = 'volumes';
+const searchQueryKey = 'query';
 
 export const VolumesLanding = () => {
   const history = useHistory();
-
   const location = useLocation<{ volume: Volume | undefined }>();
-
   const pagination = usePagination(1, preferenceKey);
+  const queryParams = new URLSearchParams(location.search);
+  const volumeLabelFromParam = queryParams.get(searchQueryKey) ?? '';
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -52,14 +59,17 @@ export const VolumesLanding = () => {
     ['+order_by']: orderBy,
   };
 
-  const { data: volumes, error, isLoading } = useVolumesQuery(
+  if (volumeLabelFromParam) {
+    filter['label'] = { '+contains': volumeLabelFromParam };
+  }
+
+  const { data: volumes, error, isFetching, isLoading } = useVolumesQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
     filter
   );
-
   const [selectedVolumeId, setSelectedVolumeId] = React.useState<number>();
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = React.useState(
     Boolean(location.state?.volume)
@@ -114,6 +124,17 @@ export const VolumesLanding = () => {
     setIsUpgradeDialogOpen(true);
   };
 
+  const resetSearch = () => {
+    queryParams.delete(searchQueryKey);
+    history.push({ search: queryParams.toString() });
+  };
+
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    queryParams.delete('page');
+    queryParams.set(searchQueryKey, e.target.value);
+    history.push({ search: queryParams.toString() });
+  };
+
   if (isLoading) {
     return <CircleProgress />;
   }
@@ -128,7 +149,7 @@ export const VolumesLanding = () => {
     );
   }
 
-  if (volumes?.results === 0) {
+  if (volumes?.results === 0 && !volumeLabelFromParam) {
     return <VolumesLandingEmptyState />;
   }
 
@@ -136,10 +157,40 @@ export const VolumesLanding = () => {
     <>
       <DocumentTitleSegment segment="Volumes" />
       <LandingHeader
+        breadcrumbProps={{
+          pathname: location.pathname,
+          removeCrumbX: 1,
+        }}
         docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
         entity="Volume"
         onButtonClick={() => history.push('/volumes/create')}
         title="Volumes"
+      />
+      <TextField
+        InputProps={{
+          endAdornment: volumeLabelFromParam && (
+            <InputAdornment position="end">
+              {isFetching && <CircleProgress size="sm" />}
+
+              <IconButton
+                aria-label="Clear"
+                data-testid="clear-volumes-search"
+                onClick={resetSearch}
+                size="small"
+              >
+                <CloseIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+        onChange={debounce(400, (e) => {
+          onSearch(e);
+        })}
+        hideLabel
+        label="Search"
+        placeholder="Search Volumes"
+        sx={{ mb: 2 }}
+        value={volumeLabelFromParam}
       />
       <Table>
         <TableHead>
@@ -174,6 +225,9 @@ export const VolumesLanding = () => {
           </TableRow>
         </TableHead>
         <TableBody>
+          {volumes?.data.length === 0 && (
+            <TableRowEmpty colSpan={6} message="No volume found" />
+          )}
           {volumes?.data.map((volume) => (
             <VolumeTableRow
               handlers={{

@@ -175,7 +175,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           handleSelection={handleRegionSelection}
           regionFilter={hideDistributedRegions ? 'core' : undefined}
           regions={regions ?? []}
-          selectedId={selectedId}
+          value={selectedId}
           {...RegionSelectProps}
         />
       ) : (
@@ -191,7 +191,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           onChange={(e, region) => handleSelection(region.id)}
           regionFilter={hideDistributedRegions ? 'core' : undefined}
           regions={regions ?? []}
-          value={selectedId || null}
+          value={selectedId}
           {...RegionSelectProps}
         />
       )}
