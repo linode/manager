@@ -1,3 +1,5 @@
+import { sortByVersion } from 'src/utilities/sort-by';
+
 import type { Account } from '@linode/api-v4/lib/account';
 import type {
   KubeNodePoolResponse,
@@ -6,7 +8,6 @@ import type {
 } from '@linode/api-v4/lib/kubernetes';
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { ExtendedType } from 'src/utilities/extendType';
-
 export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
 export const nodesDeletionWarning = `All nodes will be deleted and new nodes will be created to replace them.`;
 export const localStorageWarning = `Any local storage (such as \u{2019}hostPath\u{2019} volumes) will be erased.`;
@@ -114,14 +115,10 @@ export const getKubeHighAvailability = (
 export const getLatestVersion = (
   versions: { label: string; value: string }[]
 ) => {
-  const versionsNumbersArray: number[] = [];
+  const sortedVersions = [...versions].sort((a, b) => {
+    return sortByVersion(a.value, b.value, 'asc');
+  });
 
-  for (const element of versions) {
-    versionsNumbersArray.push(parseFloat(element.value));
-  }
-  const latestVersionValue = Math.max
-    .apply(null, versionsNumbersArray)
-    .toFixed(2);
-
-  return { label: `${latestVersionValue}`, value: `${latestVersionValue}` };
+  const latestVersion = sortedVersions.pop();
+  return { label: `${latestVersion?.value}`, value: `${latestVersion?.value}` };
 };

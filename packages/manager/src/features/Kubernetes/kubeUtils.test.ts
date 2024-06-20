@@ -78,7 +78,7 @@ describe('helper functions', () => {
       expect(result).toEqual({ label: '2.00', value: '2.00' });
     });
 
-    it('should handle decimal values correctly', () => {
+    it('should handle latest version minor version correctly', () => {
       const versions = [
         { label: '1.22', value: '1.22' },
         { label: '1.23', value: '1.23' },
@@ -86,6 +86,16 @@ describe('helper functions', () => {
       ];
       const result = getLatestVersion(versions);
       expect(result).toEqual({ label: '1.30', value: '1.30' });
+    });
+    it('should handle latest path version correctly', () => {
+      const versions = [
+        { label: '1.22', value: '1.30' },
+        { label: '1.23', value: '1.15' },
+        { label: '1.30', value: '1.50.1' },
+        { label: '1.30', value: '1.50' },
+      ];
+      const result = getLatestVersion(versions);
+      expect(result).toEqual({ label: '1.50.1', value: '1.50.1' });
     });
   });
 });
