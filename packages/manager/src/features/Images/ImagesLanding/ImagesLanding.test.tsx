@@ -41,7 +41,9 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getAllByText, getByTestId } = renderWithTheme(<ImagesLanding />);
+    const { getAllByText, getByTestId } = renderWithTheme(<ImagesLanding />, {
+      flags: { imageServiceGen2: true },
+    });
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();

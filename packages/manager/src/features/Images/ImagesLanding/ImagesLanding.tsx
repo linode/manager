@@ -28,6 +28,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import {
@@ -42,11 +43,11 @@ import {
 } from 'src/queries/images';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
+import { getEventsForImages } from '../utils';
 import { EditImageDrawer } from './EditImageDrawer';
 import ImageRow from './ImageRow';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
-import { getEventsForImages } from '../utils';
 
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
 import type { Image, ImageStatus } from '@linode/api-v4';
@@ -90,6 +91,7 @@ export const ImagesLanding = () => {
   const { classes } = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
+  const flags = useFlags();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const imageLabelFromParam = queryParams.get(searchQueryKey) ?? '';
@@ -200,7 +202,9 @@ export const ImagesLanding = () => {
 
   // TODO Image Service V2: delete after GA
   const multiRegionsEnabled =
-    manualImages?.data.some((image) => image.regions?.length) ?? false;
+    (flags.imageServiceGen2 &&
+      manualImages?.data.some((image) => image.regions?.length)) ??
+    false;
 
   // Automatic images with the associated events tied in.
   const automaticImagesEvents = getEventsForImages(
