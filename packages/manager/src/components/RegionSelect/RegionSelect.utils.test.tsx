@@ -5,6 +5,8 @@ import {
   isRegionOptionUnavailable,
 } from './RegionSelect.utils';
 
+import type { Region } from '@linode/api-v4';
+
 describe('getRegionOptions', () => {
   it('should return an empty array if no regions are provided', () => {
     const result = getRegionOptions({
@@ -186,9 +188,15 @@ describe('getRegionOptions', () => {
         site_type: 'distributed',
       }),
       regionFactory.build({
+        id: 'us-1',
+        label: 'US Site 2',
+        site_type: 'core',
+      }),
+      regionFactory.build({
+        country: 'de',
         id: 'eu-2',
         label: 'EU Site 2',
-        site_type: 'core',
+        site_type: 'distributed',
       }),
     ];
 
@@ -212,24 +220,32 @@ describe('getRegionOptions', () => {
     ]);
     expect(resultEU).toEqual([
       regionFactory.build({
+        country: 'de',
         id: 'eu-2',
         label: 'EU Site 2',
-        site_type: 'core',
+        site_type: 'distributed',
       }),
     ]);
   });
 
   it('should not filter out distributed regions by continent if the regionFilter includes all', () => {
-    const regions = [
+    const regions: Region[] = [
       regionFactory.build({
         id: 'us-1',
         label: 'US Site 1',
+        site_type: 'core',
+      }),
+      regionFactory.build({
+        country: 'de',
+        id: 'eu-2',
+        label: 'EU Site 2',
         site_type: 'distributed',
       }),
       regionFactory.build({
-        id: 'eu-2',
-        label: 'EU Site 2',
-        site_type: 'core',
+        country: 'us',
+        id: 'us-2',
+        label: 'US Site 2',
+        site_type: 'distributed',
       }),
     ];
 
@@ -239,7 +255,20 @@ describe('getRegionOptions', () => {
       regions,
     });
 
-    expect(resultAll).toEqual(regions);
+    expect(resultAll).toEqual([
+      regionFactory.build({
+        country: 'us',
+        id: 'us-2',
+        label: 'US Site 2',
+        site_type: 'distributed',
+      }),
+      regionFactory.build({
+        country: 'de',
+        id: 'eu-2',
+        label: 'EU Site 2',
+        site_type: 'distributed',
+      }),
+    ]);
   });
 });
 
