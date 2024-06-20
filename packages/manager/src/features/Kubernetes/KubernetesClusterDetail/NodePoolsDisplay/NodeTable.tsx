@@ -88,7 +88,7 @@ export const NodeTable = React.memo((props: Props) => {
                     <TableSortCell
                       sx={(theme) => ({
                         ...theme.applyTableHeaderStyles,
-                        width: '35%',
+                        width: '25%',
                       })}
                       active={orderBy === 'instanceStatus'}
                       direction={order}
@@ -100,7 +100,7 @@ export const NodeTable = React.memo((props: Props) => {
                     <TableSortCell
                       sx={(theme) => ({
                         ...theme.applyTableHeaderStyles,
-                        width: '15%',
+                        width: '35%',
                       })}
                       active={orderBy === 'ip'}
                       direction={order}
