@@ -10,19 +10,18 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 
-import { REBUILD_LINODE_IMAGE_PARAM_NAME } from '../Linodes/LinodesDetail/LinodeRebuild/RebuildFromImage';
-import { useImageAndLinodeGrantCheck } from './utils';
+import { REBUILD_LINODE_IMAGE_PARAM_NAME } from '../../Linodes/LinodesDetail/LinodeRebuild/RebuildFromImage';
+import { useImageAndLinodeGrantCheck } from '../utils';
 
 import type { Image } from '@linode/api-v4';
 
 interface Props {
   image: Image | undefined;
   onClose: () => void;
-  open?: boolean;
 }
 
 export const RebuildImageDrawer = (props: Props) => {
-  const { image, onClose, open } = props;
+  const { image, onClose } = props;
 
   const history = useHistory();
   const {
@@ -55,7 +54,7 @@ export const RebuildImageDrawer = (props: Props) => {
     <Drawer
       onClose={onClose}
       onExited={reset}
-      open={open}
+      open={!!image}
       title="Rebuild an Existing Linode from an Image"
     >
       <Stack marginTop={4}>
