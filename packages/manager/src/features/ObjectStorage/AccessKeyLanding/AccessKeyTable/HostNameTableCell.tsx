@@ -37,7 +37,7 @@ export const HostNameTableCell = ({
 
   return (
     <TableCell>
-      {`${label}: ${s3Endpoint} `}
+      {label}: {s3Endpoint}
       {storageKeyData?.regions?.length === 1 && (
         <StyledCopyIcon text={s3Endpoint} />
       )}
