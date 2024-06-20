@@ -119,7 +119,6 @@ export const getLatestVersion = (
   for (const element of versions) {
     versionsNumbersArray.push(parseFloat(element.value));
   }
-  debugger;
   const latestVersionValue = Math.max
     .apply(null, versionsNumbersArray)
     .toFixed(2);
