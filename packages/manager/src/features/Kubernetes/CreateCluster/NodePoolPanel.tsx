@@ -27,7 +27,7 @@ export interface NodePoolPanelProps {
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   regionsData: Region[];
-  selectedRegionId: Region['id'];
+  selectedRegionId: Region['id'] | undefined;
   types: ExtendedType[];
   typesError?: string;
   typesLoading: boolean;
