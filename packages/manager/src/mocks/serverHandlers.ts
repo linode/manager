@@ -650,10 +650,16 @@ export const handlers = [
       type: 'automatic',
     });
     const publicImages = imageFactory.buildList(4, { is_public: true });
+    const distributedImage = imageFactory.build({
+      capabilities: ['cloud-init', 'distributed-images'],
+      label: 'distributed-image',
+      regions: [{ region: 'us-east', status: 'available' }],
+    });
     const images = [
       cloudinitCompatableDistro,
       cloudinitCompatableImage,
       multiRegionsImage,
+      distributedImage,
       ...automaticImages,
       ...privateImages,
       ...publicImages,
