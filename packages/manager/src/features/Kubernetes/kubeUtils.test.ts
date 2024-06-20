@@ -87,7 +87,7 @@ describe('helper functions', () => {
       const result = getLatestVersion(versions);
       expect(result).toEqual({ label: '1.30', value: '1.30' });
     });
-    it('should handle latest path version correctly', () => {
+    it('should handle latest patch version correctly', () => {
       const versions = [
         { label: '1.22', value: '1.30' },
         { label: '1.23', value: '1.15' },
