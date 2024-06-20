@@ -115,10 +115,10 @@ describe('LKE Cluster Creation', () => {
 
     cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
 
-    let totalcpu = 0;
-    let totalmemory = 0;
-    let totalstorage = 0;
-    let monthprice = 0;
+    let totalCpu = 0;
+    let totalMemory = 0;
+    let totalStorage = 0;
+    let monthPrice = 0;
 
     // Add a node pool for each randomly selected plan, and confirm that the
     // selected node pool plan is added to the checkout bar.
@@ -159,26 +159,26 @@ describe('LKE Cluster Creation', () => {
 
       // Expected information on the LKE cluster summary page.
       if (clusterPlan.size == 2 && clusterPlan.type == 'Linode') {
-        totalcpu = totalcpu + nodeCount * 1;
-        totalmemory = totalmemory + nodeCount * 2;
-        totalstorage = totalstorage + nodeCount * 50;
-        monthprice = monthprice + nodeCount * 12;
+        totalCpu = totalCpu + nodeCount * 1;
+        totalMemory = totalMemory + nodeCount * 2;
+        totalStorage = totalStorage + nodeCount * 50;
+        monthPrice = monthPrice + nodeCount * 12;
       }
       if (clusterPlan.size == 4 && clusterPlan.type == 'Linode') {
-        totalcpu = totalcpu + nodeCount * 2;
-        totalmemory = totalmemory + nodeCount * 4;
-        totalstorage = totalstorage + nodeCount * 80;
-        monthprice = monthprice + nodeCount * 24;
+        totalCpu = totalCpu + nodeCount * 2;
+        totalMemory = totalMemory + nodeCount * 4;
+        totalStorage = totalStorage + nodeCount * 80;
+        monthPrice = monthPrice + nodeCount * 24;
       }
       if (clusterPlan.size == 4 && clusterPlan.type == 'Dedicated') {
-        totalcpu = totalcpu + nodeCount * 2;
-        totalmemory = totalmemory + nodeCount * 4;
-        totalstorage = totalstorage + nodeCount * 80;
-        monthprice = monthprice + nodeCount * 36;
+        totalCpu = totalCpu + nodeCount * 2;
+        totalMemory = totalMemory + nodeCount * 4;
+        totalStorage = totalStorage + nodeCount * 80;
+        monthPrice = monthPrice + nodeCount * 36;
       }
     });
     // $60.00/month for enabling HA control plane
-    const totalprice = monthprice + 60;
+    const totalPrice = monthPrice + 60;
 
     // Create LKE cluster.
     cy.get('[data-testid="kube-checkout-bar"]')
@@ -214,10 +214,10 @@ describe('LKE Cluster Creation', () => {
 
       //Confirm that the cluster created with the expected parameters.
       cy.findAllByText(`${clusterRegion.label}`).should('be.visible');
-      cy.findAllByText(`${totalcpu} CPU Cores`).should('be.visible');
-      cy.findAllByText(`${totalmemory} GB RAM`).should('be.visible');
-      cy.findAllByText(`${totalstorage} GB Storage`).should('be.visible');
-      cy.findAllByText(`$${totalprice}.00/month`).should('be.visible');
+      cy.findAllByText(`${totalCpu} CPU Cores`).should('be.visible');
+      cy.findAllByText(`${totalMemory} GB RAM`).should('be.visible');
+      cy.findAllByText(`${totalStorage} GB Storage`).should('be.visible');
+      cy.findAllByText(`$${totalPrice}.00/month`).should('be.visible');
       cy.contains('Kubernetes API Endpoint').should('be.visible');
       cy.contains('linodelke.net:443').should('be.visible');
 
