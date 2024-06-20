@@ -33,7 +33,7 @@ export const HostNameTableCell = ({
     return <TableCell>None</TableCell>;
   }
   const label = regionsLookup[storageKeyData.regions[0].id]?.label;
-  const s3endPoint = storageKeyData?.regions[0]?.s3_endpoint;
+  const s3Endpoint = storageKeyData?.regions[0]?.s3_endpoint;
 
   return (
     <TableCell>
