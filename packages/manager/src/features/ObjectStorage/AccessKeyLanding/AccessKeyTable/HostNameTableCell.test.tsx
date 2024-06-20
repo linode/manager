@@ -5,7 +5,7 @@ import React from 'react';
 import { regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { HostNameTableCell } from './HostNameTableCell';
 
@@ -26,23 +26,21 @@ const storageKeyData = {
 
 describe('HostNameTableCell', () => {
   it('should render  "None" when there are no regions', () => {
-    const { getByText } = renderWithThemeAndHookFormContext({
-      component: (
-        <HostNameTableCell
-          storageKeyData={{
-            access_key: 'test_key',
-            bucket_access: null,
-            id: 0,
-            label: 'test',
-            limited: false,
-            regions: [],
-            secret_key: '',
-          }}
-          setHostNames={vi.fn()}
-          setShowHostNamesDrawers={vi.fn()}
-        />
-      ),
-    });
+    const { getByText } = renderWithTheme(
+      <HostNameTableCell
+        storageKeyData={{
+          access_key: 'test_key',
+          bucket_access: null,
+          id: 0,
+          label: 'test',
+          limited: false,
+          regions: [],
+          secret_key: '',
+        }}
+        setHostNames={vi.fn()}
+        setShowHostNamesDrawers={vi.fn()}
+      />
+    );
 
     expect(getByText('None')).toBeInTheDocument();
   });
@@ -59,15 +57,13 @@ describe('HostNameTableCell', () => {
         return HttpResponse.json(makeResourcePage([region]));
       })
     );
-    const { findByText } = renderWithThemeAndHookFormContext({
-      component: (
-        <HostNameTableCell
-          setHostNames={vi.fn()}
-          setShowHostNamesDrawers={vi.fn()}
-          storageKeyData={storageKeyData}
-        />
-      ),
-    });
+    const { findByText } = renderWithTheme(
+      <HostNameTableCell
+        setHostNames={vi.fn()}
+        setShowHostNamesDrawers={vi.fn()}
+        storageKeyData={storageKeyData}
+      />
+    );
 
     const hostname = await findByText('Newark, NJ: alpha.test.com');
 
@@ -85,27 +81,25 @@ describe('HostNameTableCell', () => {
         return HttpResponse.json(makeResourcePage([region]));
       })
     );
-    const { findByText } = renderWithThemeAndHookFormContext({
-      component: (
-        <HostNameTableCell
-          storageKeyData={{
-            ...storageKeyData,
-            regions: [
-              {
-                id: 'us-east',
-                s3_endpoint: 'alpha.test.com',
-              },
-              {
-                id: 'us-south',
-                s3_endpoint: 'alpha.test.com',
-              },
-            ],
-          }}
-          setHostNames={vi.fn()}
-          setShowHostNamesDrawers={vi.fn()}
-        />
-      ),
-    });
+    const { findByText } = renderWithTheme(
+      <HostNameTableCell
+        storageKeyData={{
+          ...storageKeyData,
+          regions: [
+            {
+              id: 'us-east',
+              s3_endpoint: 'alpha.test.com',
+            },
+            {
+              id: 'us-south',
+              s3_endpoint: 'alpha.test.com',
+            },
+          ],
+        }}
+        setHostNames={vi.fn()}
+        setShowHostNamesDrawers={vi.fn()}
+      />
+    );
     const hostname = await findByText('Newark, NJ: alpha.test.com');
     const moreButton = await findByText(/and\s+1\s+more\.\.\./);
     await waitFor(() => expect(hostname).toBeInTheDocument());
