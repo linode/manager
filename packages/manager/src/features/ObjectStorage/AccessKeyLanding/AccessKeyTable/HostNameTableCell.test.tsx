@@ -9,30 +9,16 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { HostNameTableCell } from './HostNameTableCell';
 
-const storageKeyData = objectStorageKeyFactory.build({
-  regions: [
-    {
-      id: 'us-east',
-      s3_endpoint: 'alpha.test.com',
-    },
-  ],
-});
-
 describe('HostNameTableCell', () => {
   it('should render  "None" when there are no regions', () => {
+    const storageKeyData = objectStorageKeyFactory.build({
+      regions: [],
+    });
     const { getByText } = renderWithTheme(
       <HostNameTableCell
-        storageKeyData={{
-          access_key: 'test_key',
-          bucket_access: null,
-          id: 0,
-          label: 'test',
-          limited: false,
-          regions: [],
-          secret_key: '',
-        }}
         setHostNames={vi.fn()}
         setShowHostNamesDrawers={vi.fn()}
+        storageKeyData={storageKeyData}
       />
     );
 
@@ -44,6 +30,14 @@ describe('HostNameTableCell', () => {
       capabilities: ['Object Storage'],
       id: 'us-east',
       label: 'Newark, NJ',
+    });
+    const storageKeyData = objectStorageKeyFactory.build({
+      regions: [
+        {
+          id: 'us-east',
+          s3_endpoint: 'alpha.test.com',
+        },
+      ],
     });
 
     server.use(
@@ -69,6 +63,18 @@ describe('HostNameTableCell', () => {
       id: 'us-east',
       label: 'Newark, NJ',
     });
+    const storageKeyData = objectStorageKeyFactory.build({
+      regions: [
+        {
+          id: 'us-east',
+          s3_endpoint: 'alpha.test.com',
+        },
+        {
+          id: 'us-south',
+          s3_endpoint: 'alpha.test.com',
+        },
+      ],
+    });
 
     server.use(
       http.get('*/v4/regions', () => {
@@ -77,21 +83,9 @@ describe('HostNameTableCell', () => {
     );
     const { findByText } = renderWithTheme(
       <HostNameTableCell
-        storageKeyData={{
-          ...storageKeyData,
-          regions: [
-            {
-              id: 'us-east',
-              s3_endpoint: 'alpha.test.com',
-            },
-            {
-              id: 'us-south',
-              s3_endpoint: 'alpha.test.com',
-            },
-          ],
-        }}
         setHostNames={vi.fn()}
         setShowHostNamesDrawers={vi.fn()}
+        storageKeyData={storageKeyData}
       />
     );
     const hostname = await findByText('Newark, NJ: alpha.test.com');
