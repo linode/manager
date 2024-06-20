@@ -1,8 +1,6 @@
 import {
-  CreateRoutePayload,
   createLoadbalancerRoute,
   deleteLoadbalancerRoute,
-  getLoadbalancerRoutes,
   updateLoadbalancerRoute,
 } from '@linode/api-v4';
 import {
@@ -13,10 +11,11 @@ import {
 } from '@tanstack/react-query';
 
 import { updateInPaginatedStore } from '../base';
-import { QUERY_KEY } from './loadbalancers';
+import { aclbQueries } from './queries';
 
 import type {
   APIError,
+  CreateRoutePayload,
   Filter,
   Params,
   ResourcePage,
@@ -29,28 +28,25 @@ export const useLoadBalancerRoutesQuery = (
   params: Params,
   filter: Filter
 ) => {
-  return useQuery<ResourcePage<Route>, APIError[]>(
-    [QUERY_KEY, 'loadbalancer', id, 'routes', 'paginated', params, filter],
-    () => getLoadbalancerRoutes(id, params, filter),
-    { keepPreviousData: true }
-  );
+  return useQuery<ResourcePage<Route>, APIError[]>({
+    ...aclbQueries
+      .loadbalancer(id)
+      ._ctx.routes._ctx.lists._ctx.paginated(params, filter),
+    keepPreviousData: true,
+  });
 };
 
 export const useLoadBalancerRouteCreateMutation = (loadbalancerId: number) => {
   const queryClient = useQueryClient();
-  return useMutation<Route, APIError[], CreateRoutePayload>(
-    (data) => createLoadbalancerRoute(loadbalancerId, data),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries([
-          QUERY_KEY,
-          'loadbalancer',
-          loadbalancerId,
-          'routes',
-        ]);
-      },
-    }
-  );
+  return useMutation<Route, APIError[], CreateRoutePayload>({
+    mutationFn: (data) => createLoadbalancerRoute(loadbalancerId, data),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.routes._ctx
+          .lists.queryKey,
+      });
+    },
+  });
 };
 
 export const useLoadBalancerRouteUpdateMutation = (
@@ -58,31 +54,30 @@ export const useLoadBalancerRouteUpdateMutation = (
   routeId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<Route, APIError[], UpdateRoutePayload>(
-    (data) => updateLoadbalancerRoute(loadbalancerId, routeId, data),
-    {
-      onError() {
-        // On error, refetch to keep the client in sync with the API
-        queryClient.invalidateQueries([
-          QUERY_KEY,
-          'loadbalancer',
-          loadbalancerId,
-          'routes',
-        ]);
-      },
-      onMutate(variables) {
-        const key = [
-          QUERY_KEY,
-          'loadbalancer',
-          loadbalancerId,
-          'routes',
-          'paginated',
-        ];
-        // Optimistically update the route on mutate
-        updateInPaginatedStore<Route>(key, routeId, variables, queryClient);
-      },
-    }
-  );
+  return useMutation<Route, APIError[], UpdateRoutePayload>({
+    mutationFn: (data) =>
+      updateLoadbalancerRoute(loadbalancerId, routeId, data),
+    onError() {
+      // On error, refetch to keep the client in sync with the API
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.routes._ctx
+          .lists.queryKey,
+      });
+    },
+    onMutate(variables) {
+      const key = aclbQueries.loadbalancer(loadbalancerId)._ctx.routes._ctx
+        .lists._ctx.paginated._def;
+      // Optimistically update the route on mutate
+      updateInPaginatedStore<Route>(key, routeId, variables, queryClient);
+    },
+    onSuccess() {
+      // Invalidate the infinite store (the paginated store is optimistically updated already)
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.routes._ctx
+          .lists._ctx.infinite._def,
+      });
+    },
+  });
 };
 
 export const useLoadBalancerRouteDeleteMutation = (
@@ -90,36 +85,30 @@ export const useLoadBalancerRouteDeleteMutation = (
   routeId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(
-    () => deleteLoadbalancerRoute(loadbalancerId, routeId),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries([
-          QUERY_KEY,
-          'loadbalancer',
-          loadbalancerId,
-          'routes',
-        ]);
-      },
-    }
-  );
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deleteLoadbalancerRoute(loadbalancerId, routeId),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.routes._ctx
+          .lists.queryKey,
+      });
+    },
+  });
 };
 
 export const useLoadBalancerRoutesInfiniteQuery = (
   id: number,
   filter: Filter = {}
 ) => {
-  return useInfiniteQuery<ResourcePage<Route>, APIError[]>(
-    [QUERY_KEY, 'loadbalancer', id, 'routes', 'infinite', filter],
-    ({ pageParam }) =>
-      getLoadbalancerRoutes(id, { page: pageParam, page_size: 25 }, filter),
-    {
-      getNextPageParam: ({ page, pages }) => {
-        if (page === pages) {
-          return undefined;
-        }
-        return page + 1;
-      },
-    }
-  );
+  return useInfiniteQuery<ResourcePage<Route>, APIError[]>({
+    ...aclbQueries
+      .loadbalancer(id)
+      ._ctx.routes._ctx.lists._ctx.infinite(filter),
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+  });
 };

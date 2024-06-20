@@ -5,7 +5,10 @@ import {
   getLoadbalancerConfigurations,
   getLoadbalancerConfigurationsEndpointHealth,
   getLoadbalancerEndpointHealth,
+  getLoadbalancerRoutes,
+  getLoadbalancerServiceTargets,
   getLoadbalancers,
+  getServiceTargetsEndpointHealth,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
@@ -73,6 +76,63 @@ export const aclbQueries = createQueryKeys('aclbs', {
       },
       endpointHealth: {
         queryFn: () => getLoadbalancerEndpointHealth(id),
+        queryKey: null,
+      },
+      routes: {
+        contextQueries: {
+          lists: {
+            contextQueries: {
+              infinite: (filter: Filter = {}) => ({
+                queryFn: ({ pageParam }) =>
+                  getLoadbalancerRoutes(
+                    id,
+                    {
+                      page: pageParam,
+                      page_size: 25,
+                    },
+                    filter
+                  ),
+                queryKey: [filter],
+              }),
+              paginated: (params: Params = {}, filter: Filter = {}) => ({
+                queryFn: () => getLoadbalancerRoutes(id, params, filter),
+                queryKey: [params, filter],
+              }),
+            },
+            queryKey: null,
+          },
+        },
+        queryKey: null,
+      },
+      serviceTargets: {
+        contextQueries: {
+          endpointHealth: {
+            queryFn: () => getServiceTargetsEndpointHealth(id),
+            queryKey: null,
+          },
+          lists: {
+            contextQueries: {
+              infinite: (filter: Filter = {}) => ({
+                queryFn: ({ pageParam }) =>
+                  getLoadbalancerServiceTargets(
+                    id,
+                    {
+                      page: pageParam,
+                      page_size: 25,
+                    },
+                    filter
+                  ),
+                queryKey: [filter],
+              }),
+              paginated: (params: Params = {}, filter: Filter = {}) => ({
+                queryFn: () =>
+                  getLoadbalancerServiceTargets(id, params, filter),
+                queryKey: [params, filter],
+              }),
+            },
+            queryKey: null,
+          },
+        },
         queryKey: null,
       },
     },

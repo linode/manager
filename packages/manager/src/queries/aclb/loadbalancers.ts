@@ -20,8 +20,6 @@ import type {
   UpdateLoadbalancerPayload,
 } from '@linode/api-v4';
 
-export const QUERY_KEY = 'aclbs';
-
 export const useLoadBalancersQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Loadbalancer>, APIError[]>({
     ...aclbQueries.paginated(params, filter),
