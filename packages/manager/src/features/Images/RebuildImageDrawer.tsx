@@ -51,7 +51,7 @@ export const RebuildImageDrawer = (props: Props) => {
     });
   });
 
-  return image ? (
+  return (
     <Drawer
       onClose={onClose}
       onExited={reset}
@@ -68,7 +68,7 @@ export const RebuildImageDrawer = (props: Props) => {
         )}
 
         <DescriptionList
-          items={[{ description: image?.label, title: 'Image' }]}
+          items={[{ description: image?.label ?? '', title: 'Image' }]}
         />
 
         <Divider spacingBottom={0} spacingTop={24} />
@@ -113,5 +113,5 @@ export const RebuildImageDrawer = (props: Props) => {
         />
       </Stack>
     </Drawer>
-  ) : null;
+  );
 };
