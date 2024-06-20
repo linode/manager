@@ -91,7 +91,8 @@ export const useLoadBalancerCreateMutation = () => {
 
 export const useLoadBalancerDeleteMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteLoadbalancer(id), {
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deleteLoadbalancer(id),
     onSuccess() {
       queryClient.removeQueries({
         queryKey: aclbQueries.loadbalancer(id).queryKey,
