@@ -21,6 +21,7 @@ import {
 } from 'src/utilities/pricing/constants';
 import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/TwoStepRegionSelect';
 
 import { Box } from '../Box';
 import { DocsLink } from '../DocsLink/DocsLink';
@@ -63,9 +64,9 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const theme = useTheme();
   const params = getQueryParamsFromQueryString(location.search);
 
-  const isGeckoGA = flags.gecko2?.enabled && flags.gecko2?.ga;
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
 
-  const { data: regions } = useRegionsQuery(isGeckoGA);
+  const { data: regions } = useRegionsQuery(isGeckoGAEnabled);
 
   const isCloning = /clone/i.test(params.type);
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
@@ -144,7 +145,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           label={DOCS_LINK_LABEL_DC_PRICING}
         />
       </Box>
-      {!isGeckoGA && (
+      {!isGeckoGAEnabled && (
         <RegionHelperText
           onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
         />
@@ -161,7 +162,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           </Typography>
         </Notice>
       ) : null}
-      {isGeckoGA &&
+      {isGeckoGAEnabled &&
       isDistributedRegionSupported(params.type as LinodeCreateType) ? (
         <TwoStepRegionSelect
           showDistributedRegionIconHelperText={

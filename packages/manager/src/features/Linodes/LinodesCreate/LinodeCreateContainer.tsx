@@ -465,12 +465,16 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const selectedRegion = this.props.regionsData.find(
       (region) => region.id === selectedRegionID
     );
-    const isGeckoGa =
-      this.props.flags.gecko2?.enabled && this.props.flags.gecko2?.ga;
+    const isGeckoGAEnabled =
+      this.props.flags.gecko2?.enabled &&
+      this.props.flags.gecko2?.ga &&
+      this.props.regionsData.some((region) =>
+        region.capabilities.includes('Distributed Plans')
+      );
 
     return (
       selectedRegion && {
-        title: isGeckoGa
+        title: isGeckoGAEnabled
           ? getNewRegionLabel({
               region: selectedRegion,
             })

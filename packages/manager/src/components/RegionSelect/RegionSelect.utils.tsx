@@ -9,26 +9,23 @@ import type {
 } from './RegionSelect.types';
 import type { AccountAvailability, Capabilities, Region } from '@linode/api-v4';
 import type { RegionFilterValue } from 'src/components/RegionSelect/RegionSelect.types';
-import type { FlagSet } from 'src/featureFlags';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
 interface RegionSelectOptionsOptions {
   currentCapability: Capabilities | undefined;
-  flags?: FlagSet;
+  isGeckoGAEnabled?: boolean;
   regionFilter?: RegionFilterValue;
   regions: Region[];
 }
 
 export const getRegionOptions = ({
   currentCapability,
-  flags,
+  isGeckoGAEnabled,
   regionFilter,
   regions,
 }: RegionSelectOptionsOptions) => {
-  const isGeckoGA = flags?.gecko2?.enabled && flags.gecko2.ga;
-
   return regions
     .filter((region) => {
       if (
@@ -76,7 +73,7 @@ export const getRegionOptions = ({
       }
 
       // We want to group by label for Gecko GA
-      if (!isGeckoGA) {
+      if (!isGeckoGAEnabled) {
         // Then we group by country
         if (region1.country < region2.country) {
           return 1;

@@ -11,11 +11,11 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/TwoStepRegionSelect';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useFlags } from 'src/hooks/useFlags';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import {
   useAllPlacementGroupsQuery,
@@ -62,7 +62,6 @@ export const PlacementGroupsCreateDrawer = (
     setHasFormBeenSubmitted,
   } = useFormValidateOnChange();
 
-  const flags = useFlags();
   const location = useLocation();
   const displayRegionHeaderText = location.pathname.includes('/linodes/create');
 
@@ -140,7 +139,7 @@ export const PlacementGroupsCreateDrawer = (
     selectedRegion
   )}`;
 
-  const isGeckoGa = flags.gecko2?.enabled && flags.gecko2?.ga;
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
 
   const disabledRegions = regions?.reduce<Record<string, DisableRegionOption>>(
     (acc, region) => {
@@ -193,7 +192,7 @@ export const PlacementGroupsCreateDrawer = (
             <DescriptionList
               items={[
                 {
-                  description: isGeckoGa
+                  description: isGeckoGAEnabled
                     ? getNewRegionLabel({
                         includeSlug: true,
                         region: selectedRegion,

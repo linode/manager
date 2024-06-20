@@ -4,6 +4,7 @@ import React from 'react';
 import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/TwoStepRegionSelect';
 import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 
@@ -17,12 +18,10 @@ import {
 import type { DisableRegionOption } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
 import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
-import type { FlagSet } from 'src/featureFlags';
 
 interface Props {
   disabledOptions?: DisableRegionOption;
   displayDistributedRegionIcon?: boolean;
-  flags?: FlagSet;
   props: React.HTMLAttributes<HTMLLIElement>;
   region: Region;
   selected?: boolean;
@@ -31,7 +30,6 @@ interface Props {
 export const RegionOption = ({
   disabledOptions,
   displayDistributedRegionIcon,
-  flags,
   props,
   region,
   selected,
@@ -39,7 +37,7 @@ export const RegionOption = ({
   const { className, onClick } = props;
   const isRegionDisabled = Boolean(disabledOptions);
   const isRegionDisabledReason = disabledOptions?.reason;
-  const isGeckoGA = flags?.gecko2?.enabled && flags.gecko2.ga;
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
 
   return (
     <Tooltip
@@ -79,7 +77,7 @@ export const RegionOption = ({
             <StyledFlagContainer>
               <Flag country={region.country} />
             </StyledFlagContainer>
-            {isGeckoGA ? region.label : `${region.label} (${region.id})`}
+            {isGeckoGAEnabled ? region.label : `${region.label} (${region.id})`}
             {displayDistributedRegionIcon && (
               <Box sx={visuallyHidden}>
                 &nbsp;(This region is a distributed region.)
@@ -89,7 +87,7 @@ export const RegionOption = ({
               <Box sx={visuallyHidden}>{isRegionDisabledReason}</Box>
             )}
           </Box>
-          {isGeckoGA && `(${region.id})`}
+          {isGeckoGAEnabled && `(${region.id})`}
           {selected && <SelectedIcon visible />}
           {displayDistributedRegionIcon && (
             <TooltipIcon

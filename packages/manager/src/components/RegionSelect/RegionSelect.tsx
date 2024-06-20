@@ -5,8 +5,8 @@ import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.s
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/TwoStepRegionSelect';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
@@ -60,7 +60,7 @@ export const RegionSelect = <
     width,
   } = props;
 
-  const flags = useFlags();
+  const { isGeckoBetaEnabled, isGeckoGAEnabled } = useIsGeckoEnabled();
 
   const {
     data: accountAvailability,
@@ -69,14 +69,12 @@ export const RegionSelect = <
 
   const regionOptions = getRegionOptions({
     currentCapability,
-    flags,
+    isGeckoGAEnabled,
     regionFilter,
     regions,
   });
 
   const selectedRegion = regionOptions.find((r) => r.id === value) ?? null;
-  const isGeckoGA = flags.gecko2?.enabled && flags.gecko2?.ga;
-  const isGeckoBeta = flags.gecko2?.enabled && !flags.gecko2?.ga;
 
   const disabledRegions = regionOptions.reduce<
     Record<string, DisableRegionOption>
@@ -100,7 +98,7 @@ export const RegionSelect = <
   }, {});
 
   const getEndAdornment = () => {
-    if (isGeckoBeta && selectedRegion?.site_type === 'distributed') {
+    if (isGeckoBetaEnabled && selectedRegion?.site_type === 'distributed') {
       return (
         <TooltipIcon
           icon={<DistributedRegion />}
@@ -110,7 +108,7 @@ export const RegionSelect = <
         />
       );
     }
-    if (isGeckoGA && selectedRegion) {
+    if (isGeckoGAEnabled && selectedRegion) {
       return `(${selectedRegion?.id})`;
     }
     return null;
@@ -120,15 +118,14 @@ export const RegionSelect = <
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete<Region, false, DisableClearable>
         getOptionLabel={(region) =>
-          isGeckoGA ? region.label : `${region.label} (${region.id})`
+          isGeckoGAEnabled ? region.label : `${region.label} (${region.id})`
         }
         renderOption={(props, region) => (
           <RegionOption
             displayDistributedRegionIcon={
-              isGeckoBeta && region.site_type === 'distributed'
+              isGeckoBetaEnabled && region.site_type === 'distributed'
             }
             disabledOptions={disabledRegions[region.id]}
-            flags={flags}
             key={region.id}
             props={props}
             region={region}
