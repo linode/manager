@@ -1,5 +1,4 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { CreateImagePayload } from '@linode/api-v4';
 import { createImageSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -28,21 +27,23 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useCreateImageMutation } from 'src/queries/images';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import {
+  useAllLinodesQuery,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
-export const CreateImageTab = () => {
-  const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
-    null
-  );
+import type { CreateImagePayload } from '@linode/api-v4';
 
+export const CreateImageTab = () => {
   const {
     control,
     formState,
     handleSubmit,
     resetField,
     setError,
+    setValue,
     watch,
   } = useForm<CreateImagePayload>({
     mode: 'onBlur',
@@ -89,6 +90,16 @@ export const CreateImageTab = () => {
     }
   });
 
+  const { data: linodes } = useAllLinodesQuery();
+
+  const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
+    null
+  );
+
+  const selectedLinode = linodes?.find(
+    (linode) => linode.id == selectedLinodeId
+  );
+
   const {
     data: disks,
     error: disksError,
@@ -98,6 +109,12 @@ export const CreateImageTab = () => {
   const selectedDiskId = watch('disk_id');
   const selectedDisk =
     disks?.find((disk) => disk.id === selectedDiskId) ?? null;
+
+  React.useEffect(() => {
+    if (selectedLinode && selectedDisk && !formState.touchedFields.label) {
+      setValue('label', `${selectedLinode.label}-${selectedDisk.label}`);
+    }
+  }, [selectedLinode, selectedDisk, formState.touchedFields.label, setValue]);
 
   const isRawDisk = selectedDisk?.filesystem === 'raw';
 
@@ -256,10 +273,10 @@ export const CreateImageTab = () => {
                   disabled={isImageCreateRestricted}
                   errorText={fieldState.error?.message}
                   inputRef={field.ref}
-                  label="Label"
+                  label="Image Label"
                   noMarginTop
                   onBlur={field.onBlur}
-                  value={field.value ?? ''}
+                  value={field.value}
                 />
               )}
               control={control}
