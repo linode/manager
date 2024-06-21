@@ -62,6 +62,10 @@ interface MatchParams {
 }
 
 export const BucketDetail = () => {
+  /**
+   * @note If `Object Storage Access Key Regions` is enabled, clusterId will actually contain
+   * the bucket's region id
+   */
   const match = useRouteMatch<MatchParams>(
     '/object-storage/buckets/:clusterId/:bucketName'
   );
@@ -76,6 +80,11 @@ export const BucketDetail = () => {
   const { data: clusters } = useObjectStorageClusters();
   const { data: buckets } = useObjectStorageBuckets({ clusters });
 
+  /**
+   * We need to fetch all buckets and find the bucket
+   * because we need to know the clusterId of the bucket.
+   * (If `Object Storage Access Key Regions` is enabled, we don't have the clusterId readily available)
+   */
   const bucket = buckets?.buckets.find(
     (b) => b.region === clusterId && b.label === bucketName
   );
