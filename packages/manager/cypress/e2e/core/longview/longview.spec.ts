@@ -173,7 +173,9 @@ describe('longview', () => {
 
     // Update mocks after initial Longview fetch to simulate client installation and data retrieval.
     // The next time Cloud makes a request to the fetch endpoint, data will start being returned.
-    cy.wait(['@fetchLongview']).then(() => {
+    // 3 fetches is necessary because the Longview landing page fires 3 requests to the Longview fetch endpoint for each client.
+    // See https://github.com/linode/manager/pull/10579#discussion_r1647945160
+    cy.wait(['@fetchLongview', '@fetchLongview', '@fetchLongview']).then(() => {
       mockFetchLongviewStatus(
         client,
         'lastUpdated',
@@ -234,7 +236,9 @@ describe('longview', () => {
 
     // Update mocks after initial Longview fetch to simulate client installation and data retrieval.
     // The next time Cloud makes a request to the fetch endpoint, data will start being returned.
-    cy.wait(['@fetchLongview']).then(() => {
+    // 3 fetches is necessary because the Longview landing page fires 3 requests to the Longview fetch endpoint for each client.
+    // See https://github.com/linode/manager/pull/10579#discussion_r1647945160
+    cy.wait(['@fetchLongview', '@fetchLongview', '@fetchLongview']).then(() => {
       mockFetchLongviewStatus(
         client,
         'lastUpdated',
