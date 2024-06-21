@@ -4,6 +4,66 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-06-24] - v1.122.0
+
+
+### :
+
+- Use dynamic HA pricing with `lke/types` endpoint ([#10505](https://github.com/linode/manager/pull/10505))
+
+### Added:
+
+- Informational notice about capturing an image from a Linode in a distributed compute region ([#10544](https://github.com/linode/manager/pull/10544))
+- Volume & Images landing pages search and filtering ([#10570](https://github.com/linode/manager/pull/10570))
+
+### Changed:
+
+- Rename to 'Choose a Distribution' to 'Choose an OS' in Linode Create flow ([#10554](https://github.com/linode/manager/pull/10554))
+- Use dynamic outbound transfer pricing with `network-transfer/prices` endpoint ([#10566](https://github.com/linode/manager/pull/10566))
+- Link Cloud Manager README to new documentation pages ([#10582](https://github.com/linode/manager/pull/10582))
+
+### Fixed:
+
+- Marketplace docs urls for Apache Kafka Cluster and Couchbase Cluster ([#10569](https://github.com/linode/manager/pull/10569))
+- Users must be an unrestricted User in order to add or modify tags on Linodes ([#10583](https://github.com/linode/manager/pull/10583))
+- CONTRIBUTING doc page commit type list markup ([#10587](https://github.com/linode/manager/pull/10587))
+- React Query Events `seen` behavior and other optimizations ([#10588](https://github.com/linode/manager/pull/10588))
+- Accessibility: Add tabindex to TextTooltip ([#10590](https://github.com/linode/manager/pull/10590))
+
+### Tech Stories:
+
+- Refactor and clean up ImagesDrawer ([#10514](https://github.com/linode/manager/pull/10514))
+- Event Messages Refactor: progress events ([#10550](https://github.com/linode/manager/pull/10550))
+- NodeBalancer Query Key Factory ([#10556](https://github.com/linode/manager/pull/10556))
+- Query Key Factory for Domains ([#10559](https://github.com/linode/manager/pull/10559))
+- Upgrade Vitest and related dependencies to 1.6.0 ([#10561](https://github.com/linode/manager/pull/10561))
+- Query Key Factory for Firewalls ([#10568](https://github.com/linode/manager/pull/10568))
+- Update TypeScript to latest ([#10573](https://github.com/linode/manager/pull/10573))
+
+### Tests:
+
+- Cypress integration test to add SSH key via Profile page ([#10477](https://github.com/linode/manager/pull/10477))
+- Add assertions regarding Disk Encryption info banner to lke-landing-page.spec.ts ([#10546](https://github.com/linode/manager/pull/10546))
+- Add Placement Group navigation integration tests ([#10552](https://github.com/linode/manager/pull/10552))
+- Improve Cypress test suite compatibility against alternative environments ([#10562](https://github.com/linode/manager/pull/10562))
+- Improve stability of StackScripts pagination test ([#10574](https://github.com/linode/manager/pull/10574))
+- Fix Linode/Firewall related E2E test flake ([#10581](https://github.com/linode/manager/pull/10581))
+- Mock profile request to improve security questions test stability ([#10585](https://github.com/linode/manager/pull/10585))
+- Fix hanging unit tests ([#10591](https://github.com/linode/manager/pull/10591))
+- Unit test coverage - HostNameTableCell ([#10596](https://github.com/linode/manager/pull/10596))
+
+### Upcoming Features:
+
+- Resources MultiSelect component in cloudpulse global filters view ([#10539](https://github.com/linode/manager/pull/10539))
+- Add Disk Encryption info banner to Kubernetes landing page ([#10546](https://github.com/linode/manager/pull/10546))
+- Add Disk Encryption section to Linode Rebuild modal ([#10549](https://github.com/linode/manager/pull/10549))
+- Obj fix for crashing accesskey page when relevant customer tags are not added ([#10555](https://github.com/linode/manager/pull/10555))
+- Linode Create v2 - Handle side-effects when changing the Region ([#10564](https://github.com/linode/manager/pull/10564))
+- Revise LDE copy in Linode Create flow when Distributed region is selected ([#10576](https://github.com/linode/manager/pull/10576))
+- Update description for Add Node Pools section in LKE Create flow ([#10578](https://github.com/linode/manager/pull/10578))
+- Linode Create v2 - Add Marketplace Searching / Filtering ([#10586](https://github.com/linode/manager/pull/10586))
+- Add Distributed Icon to ImageSelects for distributed compatible images ([#10592](https://github.com/linode/manager/pull/10592))
+
 ## [2024-06-11] - v1.121.1
 
 ### Fixed:

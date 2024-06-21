@@ -1,3 +1,12 @@
+## [2024-06-24] - v0.120.0
+
+
+### Added:
+
+- New endpoint for LKE HA types used in pricing ([#10505](https://github.com/linode/manager/pull/10505))
+- UpdateImagePayload type ([#10514](https://github.com/linode/manager/pull/10514))
+- New endpoint for `network-transfer/prices`` ([#10566](https://github.com/linode/manager/pull/10566))
+
 ## [2024-06-10] - v0.119.0
 
 
