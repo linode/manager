@@ -24,11 +24,18 @@ const primaryColors = {
   white: Color.Neutrals.Black,
 };
 
+// Eventually we'll probably want Color.Neutrals.Black once we fully migrate to CDS 2.0
+// We will need to consult with the design team to determine the correct dark shade handling for:
+// - appBar
+// - popoverPaper (create menu, notification center)
+// - MenuItem (create menu, action menu)
+// since Color.Neutrals.Black is pitch black and may not be the correct choice yet.
+const tempReplacementforColorNeutralsBlack = '#222';
+
 export const customDarkModeOptions = {
   bg: {
     app: Color.Neutrals[100],
-    // Eventually we'll probably want Color.Neutrals.Black once we fully migrate to CDS 2.0
-    appBar: '#222',
+    appBar: tempReplacementforColorNeutralsBlack,
     bgAccessRow: Color.Neutrals[80],
     bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
     bgPaper: Color.Neutrals[90],
@@ -173,8 +180,7 @@ export const darkTheme: ThemeOptions = {
           backgroundColor: 'transparent',
         },
         root: {
-          // Eventually we'll probably want Color.Neutrals.Black once we fully migrate to CDS 2.0
-          backgroundColor: '#222',
+          backgroundColor: tempReplacementforColorNeutralsBlack,
           border: 0,
         },
       },
@@ -551,7 +557,7 @@ export const darkTheme: ThemeOptions = {
             color: Dropdown.Text.Disabled,
             opacity: 1,
           },
-          backgroundColor: Dropdown.Background.Default,
+          backgroundColor: tempReplacementforColorNeutralsBlack,
           color: Dropdown.Text.Default,
           padding: '10px 10px 10px 16px',
         },
@@ -575,7 +581,7 @@ export const darkTheme: ThemeOptions = {
     MuiPopover: {
       styleOverrides: {
         paper: {
-          background: Color.Neutrals[100],
+          background: tempReplacementforColorNeutralsBlack,
           border: 0,
           boxShadow: `0 2px 6px 0 rgba(0, 0, 0, 0.18)`, // TODO: Fix Elevation.S to remove `inset`
         },
