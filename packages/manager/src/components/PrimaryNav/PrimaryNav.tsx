@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { Link, LinkProps, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import Account from 'src/assets/icons/account.svg';
 import CloudPulse from 'src/assets/icons/cloudpulse.svg';
@@ -42,6 +42,8 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import useStyles from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
+
+import type { LinkProps } from 'react-router-dom';
 
 type NavEntity =
   | 'Account'
@@ -343,7 +345,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       spacing={0}
       wrap="nowrap"
     >
-      <Grid>
+      <Grid sx={{ width: '100%' }}>
         <Box
           className={cx(classes.logoItemAkamai, {
             [classes.logoItemAkamaiCollapsed]: isCollapsed,
@@ -371,57 +373,54 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           </Link>
         </Box>
       </Grid>
-      <div
-        className={cx({
-          [classes.fadeContainer]: true,
-          ['fade-in-table']: true,
-        })}
-      >
-        {primaryLinkGroups.map((thisGroup, idx) => {
-          const filteredLinks = thisGroup.filter((thisLink) => !thisLink.hide);
-          if (filteredLinks.length === 0) {
-            return null;
-          }
-          return (
-            <div key={idx}>
-              <Divider
-                spacingTop={
-                  _isManagedAccount ? (idx === 0 ? 0 : 11) : idx === 1 ? 0 : 11
-                }
-                sx={(theme) => ({
-                  borderColor: theme.borderColors.dividerDark,
-                })}
-                className={classes.divider}
-                spacingBottom={11}
-              />
-              {filteredLinks.map((thisLink) => {
-                const props = {
-                  closeMenu,
-                  isCollapsed,
-                  key: thisLink.display,
-                  locationPathname: location.pathname,
-                  locationSearch: location.search,
-                  ...thisLink,
-                };
 
-                // PrefetchPrimaryLink and PrimaryLink are two separate components because invocation of
-                // hooks cannot be conditional. <PrefetchPrimaryLink /> is a wrapper around <PrimaryLink />
-                // that includes the usePrefetch hook.
-                return thisLink.prefetchRequestFn &&
-                  thisLink.prefetchRequestCondition !== undefined ? (
-                  <PrefetchPrimaryLink
-                    {...props}
-                    prefetchRequestCondition={thisLink.prefetchRequestCondition}
-                    prefetchRequestFn={thisLink.prefetchRequestFn}
-                  />
-                ) : (
-                  <PrimaryLink {...props} />
-                );
+      {primaryLinkGroups.map((thisGroup, idx) => {
+        const filteredLinks = thisGroup.filter((thisLink) => !thisLink.hide);
+        if (filteredLinks.length === 0) {
+          return null;
+        }
+        return (
+          <div key={idx}>
+            <Divider
+              spacingTop={
+                _isManagedAccount ? (idx === 0 ? 0 : 11) : idx === 1 ? 0 : 11
+              }
+              sx={(theme) => ({
+                borderColor:
+                  theme.name === 'light'
+                    ? theme.borderColors.dividerDark
+                    : 'rgba(0, 0, 0, 0.19)',
               })}
-            </div>
-          );
-        })}
-      </div>
+              className={classes.divider}
+              spacingBottom={11}
+            />
+            {filteredLinks.map((thisLink) => {
+              const props = {
+                closeMenu,
+                isCollapsed,
+                key: thisLink.display,
+                locationPathname: location.pathname,
+                locationSearch: location.search,
+                ...thisLink,
+              };
+
+              // PrefetchPrimaryLink and PrimaryLink are two separate components because invocation of
+              // hooks cannot be conditional. <PrefetchPrimaryLink /> is a wrapper around <PrimaryLink />
+              // that includes the usePrefetch hook.
+              return thisLink.prefetchRequestFn &&
+                thisLink.prefetchRequestCondition !== undefined ? (
+                <PrefetchPrimaryLink
+                  {...props}
+                  prefetchRequestCondition={thisLink.prefetchRequestCondition}
+                  prefetchRequestFn={thisLink.prefetchRequestFn}
+                />
+              ) : (
+                <PrimaryLink {...props} />
+              );
+            })}
+          </div>
+        );
+      })}
     </Grid>
   );
 };

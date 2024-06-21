@@ -27,7 +27,8 @@ const primaryColors = {
 export const customDarkModeOptions = {
   bg: {
     app: Color.Neutrals[100],
-    appBar: Color.Neutrals.Black,
+    // Eventually we'll probably want Color.Neutrals.Black once we fully migrate to CDS 2.0
+    appBar: '#222',
     bgAccessRow: Color.Neutrals[80],
     bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
     bgPaper: Color.Neutrals[90],
@@ -172,7 +173,9 @@ export const darkTheme: ThemeOptions = {
           backgroundColor: 'transparent',
         },
         root: {
-          backgroundColor: Color.Neutrals.Black,
+          // Eventually we'll probably want Color.Neutrals.Black once we fully migrate to CDS 2.0
+          backgroundColor: '#222',
+          border: 0,
         },
       },
     },
