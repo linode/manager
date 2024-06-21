@@ -55,6 +55,10 @@ import {
 import { CreateFolderDrawer } from './CreateFolderDrawer';
 import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
 import ObjectTableContent from './ObjectTableContent';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account/account';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 interface MatchParams {
   bucketName: string;
@@ -77,17 +81,35 @@ export const BucketDetail = () => {
   const prefix = getQueryParamFromQueryString(location.search, 'prefix');
   const queryClient = useQueryClient();
 
-  const { data: clusters } = useObjectStorageClusters();
-  const { data: buckets } = useObjectStorageBuckets({ clusters });
+  const flags = useFlags();
+  const { data: account } = useAccount();
+
+  const isObjMultiClusterEnabled = isFeatureEnabled(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
+
+  const { data: regions } = useRegionsQuery();
+  const { data: buckets } = useObjectStorageBuckets({
+    enabled: isObjMultiClusterEnabled,
+    isObjMultiClusterEnabled,
+    regions,
+  });
 
   /**
-   * We need to fetch all buckets and find the bucket
-   * because we need to know the clusterId of the bucket.
-   * (If `Object Storage Access Key Regions` is enabled, we don't have the clusterId readily available)
+   * If Multi Cluster is enabled:
+   *   - The path param called `clusterId` actually contains the region id of the bucket
+   *   - We need to fetch all buckets, find the bucket, then find the clusterId given the region and label
+   *
+   * If Multi Cluster is not enabled:
+   *   - Just use clusterId from the path params
    */
-  const bucket = buckets?.buckets.find(
-    (b) => b.region === clusterId && b.label === bucketName
-  );
+  const actualClusterId = isObjMultiClusterEnabled
+    ? buckets?.buckets.find(
+        (bucket) => bucket.label === bucketName && bucket.region === clusterId
+      )?.cluster ?? ''
+    : clusterId;
 
   const {
     data,
@@ -449,7 +471,7 @@ export const BucketDetail = () => {
         url={
           selectedObject
             ? generateObjectUrl(
-                bucket?.cluster ?? '',
+                actualClusterId,
                 bucketName,
                 selectedObject.name
               ).absolute
