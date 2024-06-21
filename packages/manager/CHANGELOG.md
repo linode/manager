@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-06-21] - v1.121.2
+
+### Fixed:
+
+- Object Storage showing incorrect object URLs ([#10603](https://github.com/linode/manager/pull/10603))
+
 ## [2024-06-11] - v1.121.1
 
 ### Fixed:
