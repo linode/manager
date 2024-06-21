@@ -97,5 +97,9 @@ describe('helper functions', () => {
       const result = getLatestVersion(versions);
       expect(result).toEqual({ label: '1.50.1', value: '1.50.1' });
     });
+    it('should return default fallback value when called with empty versions', () => {
+      const result = getLatestVersion([]);
+      expect(result).toEqual({ label: '', value: '' });
+    });
   });
 });

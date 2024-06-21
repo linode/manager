@@ -46,7 +46,38 @@ export const sortByArrayLength = (a: any[], b: any[], order: SortOrder) => {
   return order === 'asc' ? result : -result;
 };
 
-export const sortByVersion = (a: string, b: string, order: SortOrder) => {
+/**
+ * Compares two semantic version strings based on the specified order.
+ *
+ * This function splits each version string into its constituent parts (major, minor, patch),
+ * compares them numerically, and returns a positive number, zero, or a negative number
+ * based on the specified sorting order. If components are missing in either version,
+ * they are treated as zero.
+ *
+ * @param {string} a - The first version string to compare.
+ * @param {string} b - The second version string to compare.
+ * @param {SortOrder} order - The order to sort by, can be 'asc' for ascending or 'desc' for descending.
+ * @returns {number} Returns a positive number if version `a` is greater than `b` according to the sort order,
+ *                   zero if they are equal, and a negative number if `b` is greater than `a`.
+ *
+ * @example
+ * // returns a positive number
+ * sortByVersion('1.2.3', '1.2.2', 'asc');
+ *
+ * @example
+ * // returns zero
+ * sortByVersion('1.2.3', '1.2.3', 'asc');
+ *
+ * @example
+ * // returns a negative number
+ * sortByVersion('1.2.3', '1.2.4', 'asc');
+ */
+
+export const sortByVersion = (
+  a: string,
+  b: string,
+  order: SortOrder
+): number => {
   const aParts = a.split('.');
   const bParts = b.split('.');
 
