@@ -38,15 +38,15 @@ import { setPendingUpload } from 'src/store/pendingUpload';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { readableBytes } from 'src/utilities/unitConversions';
 
-import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
-import { getRestrictedResourceText } from '../Account/utils';
+import { EUAgreementCheckbox } from '../../Account/Agreements/EUAgreementCheckbox';
+import { getRestrictedResourceText } from '../../Account/utils';
 import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
 import {
   ImageUploadFormData,
   ImageUploadNavigationState,
 } from './ImageUpload.utils';
 import { ImageUploadCLIDialog } from './ImageUploadCLIDialog';
-import { uploadImageFile } from './requests';
+import { uploadImageFile } from '../requests';
 
 import type { AxiosError, AxiosProgressEvent } from 'axios';
 
