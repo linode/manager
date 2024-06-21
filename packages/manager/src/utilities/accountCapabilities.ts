@@ -36,5 +36,5 @@ export const isFeatureEnabled = (
   isFeatureFlagEnabled: boolean,
   capabilities: AccountCapability[]
 ) => {
-  return isFeatureFlagEnabled && capabilities.includes(featureName);
+  return isFeatureFlagEnabled || capabilities.includes(featureName);
 };
