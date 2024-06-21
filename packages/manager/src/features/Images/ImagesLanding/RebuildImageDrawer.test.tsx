@@ -31,6 +31,9 @@ describe('RebuildImageDrawer', () => {
 
     // Verify title renders
     getByText('Rebuild an Existing Linode from an Image');
+
+    // Verify image label is displayed
+    getByText(props.image.label);
   });
 
   it('should allow selecting a Linode to rebuild', async () => {
