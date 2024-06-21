@@ -25,10 +25,11 @@ import {
   randomString,
 } from 'support/util/random';
 import { ui } from 'support/ui';
-import { regionFactory } from 'src/factories';
+import { accountFactory, regionFactory } from 'src/factories';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { buildArray } from 'support/util/arrays';
 import { Scope } from '@linode/api-v4';
+import { mockGetAccount } from 'support/intercepts/account';
 
 describe('object storage access keys smoke tests', () => {
   /*
@@ -44,6 +45,7 @@ describe('object storage access keys smoke tests', () => {
       secret_key: randomString(39),
     });
 
+    mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
       objMultiCluster: makeFeatureFlagData(false),
     });
@@ -115,6 +117,7 @@ describe('object storage access keys smoke tests', () => {
       secret_key: randomString(39),
     });
 
+    mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
       objMultiCluster: makeFeatureFlagData(false),
     });
@@ -164,6 +167,11 @@ describe('object storage access keys smoke tests', () => {
     const mockRegions = [...mockRegionsObj, ...mockRegionsNoObj];
 
     beforeEach(() => {
+      mockGetAccount(
+        accountFactory.build({
+          capabilities: ['Object Storage Access Key Regions'],
+        })
+      );
       mockAppendFeatureFlags({
         objMultiCluster: makeFeatureFlagData(true),
       });
