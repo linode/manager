@@ -607,7 +607,7 @@ export const handlers = [
   http.get('*/regions', async () => {
     return HttpResponse.json(makeResourcePage(regions));
   }),
-  http.get('*/images', async () => {
+  http.get('*/images', async ({ request }) => {
     const privateImages = imageFactory.buildList(5, {
       status: 'available',
       type: 'manual',
@@ -624,6 +624,16 @@ export const handlers = [
       capabilities: ['cloud-init'],
       id: 'metadata-test-image',
       label: 'metadata-test-image',
+      status: 'available',
+      type: 'manual',
+    });
+    const multiRegionsImage = imageFactory.build({
+      id: 'multi-regions-test-image',
+      label: 'multi-regions-test-image',
+      regions: [
+        { region: 'us-southeast', status: 'available' },
+        { region: 'us-east', status: 'pending' },
+      ],
       status: 'available',
       type: 'manual',
     });
@@ -648,6 +658,7 @@ export const handlers = [
     const images = [
       cloudinitCompatableDistro,
       cloudinitCompatableImage,
+      multiRegionsImage,
       distributedImage,
       ...automaticImages,
       ...privateImages,
@@ -655,7 +666,15 @@ export const handlers = [
       ...pendingImages,
       ...creatingImages,
     ];
-    return HttpResponse.json(makeResourcePage(images));
+    return HttpResponse.json(
+      makeResourcePage(
+        images.filter((image) =>
+          request.headers.get('x-filter')?.includes('manual')
+            ? image.type == 'manual'
+            : image.type == 'automatic'
+        )
+      )
+    );
   }),
 
   http.get('*/linode/types', () => {
