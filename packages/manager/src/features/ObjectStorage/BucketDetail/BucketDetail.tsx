@@ -91,25 +91,19 @@ export const BucketDetail = () => {
   );
 
   const { data: regions } = useRegionsQuery();
+  const { data: clusters } = useObjectStorageClusters();
   const { data: buckets } = useObjectStorageBuckets({
-    enabled: isObjMultiClusterEnabled,
+    clusters,
     isObjMultiClusterEnabled,
     regions,
   });
 
-  /**
-   * If Multi Cluster is enabled:
-   *   - The path param called `clusterId` actually contains the region id of the bucket
-   *   - We need to fetch all buckets, find the bucket, then find the clusterId given the region and label
-   *
-   * If Multi Cluster is not enabled:
-   *   - Just use clusterId from the path params
-   */
-  const actualClusterId = isObjMultiClusterEnabled
-    ? buckets?.buckets.find(
-        (bucket) => bucket.label === bucketName && bucket.region === clusterId
-      )?.cluster ?? ''
-    : clusterId;
+  const bucket = buckets?.buckets.find((bucket) => {
+    if (isObjMultiClusterEnabled) {
+      return bucket.label === bucketName && bucket.region === clusterId;
+    }
+    return bucket.label === bucketName && bucket.cluster === clusterId;
+  });
 
   const {
     data,
@@ -469,12 +463,8 @@ export const BucketDetail = () => {
       </ConfirmationDialog>
       <ObjectDetailsDrawer
         url={
-          selectedObject
-            ? generateObjectUrl(
-                actualClusterId,
-                bucketName,
-                selectedObject.name
-              ).absolute
+          selectedObject && bucket
+            ? generateObjectUrl(bucket.hostname, selectedObject.name)
             : undefined
         }
         bucketName={bucketName}

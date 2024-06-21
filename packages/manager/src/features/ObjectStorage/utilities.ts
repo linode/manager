@@ -6,18 +6,10 @@ import {
 import { FormikProps } from 'formik';
 
 import { Item } from 'src/components/EnhancedSelect/Select';
-import { OBJECT_STORAGE_DELIMITER, OBJECT_STORAGE_ROOT } from 'src/constants';
+import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 
-export const generateObjectUrl = (
-  clusterId: string,
-  bucketName: string,
-  objectName: string
-) => {
-  const path = `${bucketName}.${clusterId}.${OBJECT_STORAGE_ROOT}/${objectName}`;
-  return {
-    absolute: 'https://' + path,
-    path,
-  };
+export const generateObjectUrl = (hostname: string, objectName: string) => {
+  return `https://${hostname}/${objectName}`;
 };
 
 // Objects ending with a / and having a size of 0 are often used to represent
