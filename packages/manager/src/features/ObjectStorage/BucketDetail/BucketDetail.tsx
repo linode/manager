@@ -29,6 +29,8 @@ import {
   queryKey,
   updateBucket,
   useObjectBucketDetailsInfiniteQuery,
+  useObjectStorageBuckets,
+  useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 import { sendDownloadObjectEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
@@ -70,6 +72,14 @@ export const BucketDetail = () => {
   const clusterId = match?.params.clusterId || '';
   const prefix = getQueryParamFromQueryString(location.search, 'prefix');
   const queryClient = useQueryClient();
+
+  const { data: clusters } = useObjectStorageClusters();
+  const { data: buckets } = useObjectStorageBuckets({ clusters });
+
+  const bucket = buckets?.buckets.find(
+    (b) => b.region === clusterId && b.label === bucketName
+  );
+
   const {
     data,
     error,
@@ -429,8 +439,11 @@ export const BucketDetail = () => {
       <ObjectDetailsDrawer
         url={
           selectedObject
-            ? generateObjectUrl(clusterId, bucketName, selectedObject.name)
-                .absolute
+            ? generateObjectUrl(
+                (bucket?.cluster ?? '') as ObjectStorageClusterID,
+                bucketName,
+                selectedObject.name
+              ).absolute
             : undefined
         }
         bucketName={bucketName}
