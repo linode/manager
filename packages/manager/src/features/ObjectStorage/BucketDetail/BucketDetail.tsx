@@ -440,7 +440,7 @@ export const BucketDetail = () => {
         url={
           selectedObject
             ? generateObjectUrl(
-                (bucket?.cluster ?? '') as ObjectStorageClusterID,
+                bucket?.cluster ?? '',
                 bucketName,
                 selectedObject.name
               ).absolute
