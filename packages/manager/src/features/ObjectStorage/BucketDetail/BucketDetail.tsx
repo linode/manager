@@ -91,11 +91,16 @@ export const BucketDetail = () => {
   );
 
   const { data: regions } = useRegionsQuery();
+
+  const regionsSupportingObjectStorage = regions?.filter((region) =>
+    region.capabilities.includes('Object Storage')
+  );
+
   const { data: clusters } = useObjectStorageClusters();
   const { data: buckets } = useObjectStorageBuckets({
     clusters,
     isObjMultiClusterEnabled,
-    regions,
+    regions: regionsSupportingObjectStorage,
   });
 
   const bucket = buckets?.buckets.find((bucket) => {
