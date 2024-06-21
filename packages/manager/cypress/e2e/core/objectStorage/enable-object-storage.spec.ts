@@ -14,8 +14,12 @@ import {
   profileFactory,
   regionFactory,
   objectStorageKeyFactory,
+  accountFactory,
 } from '@src/factories';
-import { mockGetAccountSettings } from 'support/intercepts/account';
+import {
+  mockGetAccount,
+  mockGetAccountSettings,
+} from 'support/intercepts/account';
 import {
   mockCancelObjectStorage,
   mockCreateAccessKey,
@@ -56,6 +60,7 @@ describe('Object Storage enrollment', () => {
    * - Confirms that consistent pricing information is shown for all regions in the enable modal.
    */
   it('can enroll in Object Storage', () => {
+    mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
       objMultiCluster: makeFeatureFlagData(false),
     });
