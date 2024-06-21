@@ -30,7 +30,7 @@ describe('CreateImageTab', () => {
 
     expect(getByText('Image Details')).toBeVisible();
 
-    expect(getByLabelText('Label')).toBeVisible();
+    expect(getByLabelText('Image Label')).toBeVisible();
     expect(getByLabelText('Add Tags')).toBeVisible();
     expect(getByLabelText('Description')).toBeVisible();
 
@@ -164,5 +164,69 @@ describe('CreateImageTab', () => {
 
     // Verify encryption notice renders
     await findByText('Virtual Machine Images are not encrypted.');
+  });
+
+  it('should auto-populate image label based on linode and disk', async () => {
+    const linode = linodeFactory.build();
+    const disk1 = linodeDiskFactory.build();
+    const disk2 = linodeDiskFactory.build();
+    const image = imageFactory.build();
+
+    server.use(
+      http.get('*/v4/linode/instances', () => {
+        return HttpResponse.json(makeResourcePage([linode]));
+      }),
+      http.get('*/v4/linode/instances/:id/disks', () => {
+        return HttpResponse.json(makeResourcePage([disk1, disk2]));
+      }),
+      http.post('*/v4/images', () => {
+        return HttpResponse.json(image);
+      })
+    );
+
+    const { findByText, getByLabelText, queryByText } = renderWithTheme(
+      <CreateImageTab />
+    );
+
+    const linodeSelect = getByLabelText('Linode');
+
+    await userEvent.click(linodeSelect);
+
+    const linodeOption = await findByText(linode.label);
+
+    await userEvent.click(linodeOption);
+
+    const diskSelect = getByLabelText('Disk');
+
+    // Once a Linode is selected, the Disk select should become enabled
+    expect(diskSelect).toBeEnabled();
+    expect(queryByText('Select a Linode to see available disks')).toBeNull();
+
+    await userEvent.click(diskSelect);
+
+    const diskOption = await findByText(disk1.label);
+
+    await userEvent.click(diskOption);
+
+    // Image label should auto-populate
+    const imageLabel = getByLabelText('Image Label');
+    expect(imageLabel).toHaveValue(`${linode.label}-${disk1.label}`);
+
+    // Image label should update
+    await userEvent.click(diskSelect);
+
+    const disk2Option = await findByText(disk2.label);
+    await userEvent.click(disk2Option);
+
+    expect(imageLabel).toHaveValue(`${linode.label}-${disk2.label}`);
+
+    // Image label should not override user input
+    const customLabel = 'custom-label';
+    await userEvent.clear(imageLabel);
+    await userEvent.type(imageLabel, customLabel);
+    expect(imageLabel).toHaveValue(customLabel);
+    await userEvent.click(diskSelect);
+    await userEvent.click(diskOption);
+    expect(imageLabel).toHaveValue(customLabel);
   });
 });
