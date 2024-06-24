@@ -61,7 +61,7 @@ describe('create image (e2e)', () => {
     const disk = 'Alpine 3.19 Disk';
 
     cy.defer(
-      createTestLinode({ image }, { waitForDisks: true }),
+      () => createTestLinode({ image }, { waitForDisks: true }),
       'create linode'
     ).then((linode: Linode) => {
       cy.visitWithLogin('/images/create');

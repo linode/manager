@@ -4,7 +4,7 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
-const ImagesLanding = React.lazy(() => import('./ImagesLanding'));
+const ImagesLanding = React.lazy(() => import('./ImagesLanding/ImagesLanding'));
 const ImageCreate = React.lazy(
   () => import('./ImagesCreate/ImageCreateContainer')
 );

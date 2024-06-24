@@ -2472,7 +2472,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/couchbase/',
+          'https://www.linode.com/docs/products/tools/marketplace/guides/couchbase-cluster/',
         title:
           'Deploy a Couchbase Enterprise Server cluster through the Linode Marketplace',
       },
@@ -2495,7 +2495,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/apache-kafka/',
+          'https://www.linode.com/docs/products/tools/marketplace/guides/apache-kafka-cluster/',
         title: 'Deploy an Apache Kafka cluster through the Linode Marketplace',
       },
     ],

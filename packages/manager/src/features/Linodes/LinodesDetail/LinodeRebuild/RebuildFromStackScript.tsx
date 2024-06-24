@@ -37,16 +37,22 @@ import { extendValidationSchema } from 'src/utilities/validatePassword';
 
 interface Props {
   disabled: boolean;
+  diskEncryptionEnabled: boolean;
   handleRebuildError: (status: string) => void;
+  isLKELinode: boolean;
   linodeId: number;
+  linodeIsInDistributedRegion: boolean;
   linodeLabel?: string;
+  linodeRegion?: string;
   onClose: () => void;
   passwordHelperText: string;
+  toggleDiskEncryptionEnabled: () => void;
   type: 'account' | 'community';
 }
 
 interface RebuildFromStackScriptForm {
   authorized_users: string[];
+  disk_encryption: string | undefined;
   image: string;
   root_pass: string;
   stackscript_id: string;
@@ -54,6 +60,7 @@ interface RebuildFromStackScriptForm {
 
 const initialValues: RebuildFromStackScriptForm = {
   authorized_users: [],
+  disk_encryption: 'enabled',
   image: '',
   root_pass: '',
   stackscript_id: '',
@@ -61,11 +68,16 @@ const initialValues: RebuildFromStackScriptForm = {
 
 export const RebuildFromStackScript = (props: Props) => {
   const {
+    diskEncryptionEnabled,
     handleRebuildError,
+    isLKELinode,
     linodeId,
+    linodeIsInDistributedRegion,
     linodeLabel,
+    linodeRegion,
     onClose,
     passwordHelperText,
+    toggleDiskEncryptionEnabled,
   } = props;
 
   const {
@@ -120,8 +132,18 @@ export const RebuildFromStackScript = (props: Props) => {
   ) => {
     setSubmitting(true);
 
+    // if the linode is part of an LKE cluster or is in a Distributed region, the disk_encryption value
+    // cannot be changed, so set it to undefined and the API will disregard it
+    const diskEncryptionPayloadValue =
+      isLKELinode || linodeIsInDistributedRegion
+        ? undefined
+        : diskEncryptionEnabled
+        ? 'enabled'
+        : 'disabled';
+
     rebuildLinode(linodeId, {
       authorized_users,
+      disk_encryption: diskEncryptionPayloadValue,
       image,
       root_pass,
       stackscript_data: ss.udf_data,
@@ -307,10 +329,17 @@ export const RebuildFromStackScript = (props: Props) => {
                 }
                 authorizedUsers={values.authorized_users}
                 data-qa-access-panel
+                diskEncryptionEnabled={diskEncryptionEnabled}
+                displayDiskEncryption
                 error={errors.root_pass}
                 handleChange={(value) => setFieldValue('root_pass', value)}
+                isInRebuildFlow
+                isLKELinode={isLKELinode}
+                linodeIsInDistributedRegion={linodeIsInDistributedRegion}
                 password={values.root_pass}
                 passwordHelperText={passwordHelperText}
+                selectedRegion={linodeRegion}
+                toggleDiskEncryptionEnabled={toggleDiskEncryptionEnabled}
               />
               <Grid
                 sx={(theme) => ({

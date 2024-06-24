@@ -73,7 +73,7 @@ describe('delete linode', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
     });
-    cy.defer(createTestLinode(linodeCreatePayload)).then((linode) => {
+    cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
       interceptDeleteLinode(linode.id).as('deleteLinode');
       cy.visitWithLogin(`/linodes/${linode.id}`);
@@ -120,7 +120,7 @@ describe('delete linode', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
     });
-    cy.defer(createTestLinode(linodeCreatePayload)).then((linode) => {
+    cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
       interceptDeleteLinode(linode.id).as('deleteLinode');
       cy.visitWithLogin(`/linodes/${linode.id}`);
@@ -171,7 +171,7 @@ describe('delete linode', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
     });
-    cy.defer(createTestLinode(linodeCreatePayload)).then((linode) => {
+    cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
       interceptDeleteLinode(linode.id).as('deleteLinode');
       cy.visitWithLogin(`/linodes`);
@@ -230,7 +230,7 @@ describe('delete linode', () => {
 
     mockGetAccountSettings(mockAccountSettings).as('getAccountSettings');
 
-    cy.defer(createTwoLinodes()).then(([linodeA, linodeB]) => {
+    cy.defer(() => createTwoLinodes()).then(([linodeA, linodeB]) => {
       interceptDeleteLinode(linodeA.id).as('deleteLinode');
       interceptDeleteLinode(linodeB.id).as('deleteLinode');
       cy.visitWithLogin('/linodes', { preferenceOverrides });

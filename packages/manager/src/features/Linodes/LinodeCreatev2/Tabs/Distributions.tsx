@@ -19,7 +19,7 @@ export const Distributions = () => {
 
   return (
     <Paper>
-      <Typography variant="h2">Choose a Distribution</Typography>
+      <Typography variant="h2">Choose an OS</Typography>
       <ImageSelectv2
         disabled={isCreateLinodeRestricted}
         errorText={fieldState.error?.message}

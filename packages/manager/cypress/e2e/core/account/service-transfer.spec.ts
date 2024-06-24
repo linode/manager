@@ -175,7 +175,7 @@ describe('Account service transfers', () => {
     cy.wait(['@getTransfers', '@getTransfers', '@getTransfers']);
 
     // Confirm that pending transfers are displayed in "Pending Service Transfers" panel.
-    cy.defer(getProfile(), 'getting profile').then((profile: Profile) => {
+    cy.defer(() => getProfile(), 'getting profile').then((profile: Profile) => {
       const dateFormatOptions = { timezone: profile.timezone };
       cy.get('[data-qa-panel="Pending Service Transfers"]')
         .should('be.visible')
@@ -262,7 +262,7 @@ describe('Account service transfers', () => {
       return linode;
     };
 
-    cy.defer(setupLinode(), 'creating and booting Linode').then(
+    cy.defer(() => setupLinode(), 'creating and booting Linode').then(
       (linode: Linode) => {
         interceptInitiateEntityTransfer().as('initiateTransfer');
 

@@ -1,17 +1,15 @@
 import { getEvents, markEventSeen } from '@linode/api-v4';
-import { DateTime } from 'luxon';
-import { useRef } from 'react';
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+import { DateTime } from 'luxon';
+import { useRef } from 'react';
 
 import { ISO_DATETIME_NO_TZ_FORMAT, POLLING_INTERVALS } from 'src/constants';
+import { EVENTS_LIST_FILTER } from 'src/features/Events/constants';
 import { useEventHandlers } from 'src/hooks/useEventHandlers';
 import { useToastNotifications } from 'src/hooks/useToastNotifications';
 import {
@@ -22,6 +20,11 @@ import {
 } from 'src/queries/events/event.helpers';
 
 import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
+import type {
+  InfiniteData,
+  QueryClient,
+  QueryKey,
+} from '@tanstack/react-query';
 
 /**
  * Gets an infinitely scrollable list of all Events
@@ -35,13 +38,18 @@ import type { APIError, Event, Filter, ResourcePage } from '@linode/api-v4';
  * We are doing this as opposed to page based pagination because we need an accurate way to get
  * the next set of events when the items returned by the server may have shifted.
  */
-export const useEventsInfiniteQuery = (filter?: Filter) => {
+export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>(
     ['events', 'infinite', filter],
     ({ pageParam }) =>
       getEvents(
         {},
-        { ...filter, id: pageParam ? { '+lt': pageParam } : undefined }
+        {
+          ...filter,
+          '+order': 'desc',
+          '+order_by': 'id',
+          id: pageParam ? { '+lt': pageParam } : undefined,
+        }
       ),
     {
       cacheTime: Infinity,
@@ -124,7 +132,7 @@ export const useEventsPoller = () => {
       const data = queryClient.getQueryData<InfiniteData<ResourcePage<Event>>>([
         'events',
         'infinite',
-        undefined,
+        EVENTS_LIST_FILTER,
       ]);
       const events = data?.pages.reduce(
         (events, page) => [...events, ...page.data],
@@ -199,8 +207,8 @@ export const useMarkEventsAsSeen = () => {
     (eventId) => markEventSeen(eventId),
     {
       onSuccess: (_, eventId) => {
-        queryClient.setQueryData<InfiniteData<ResourcePage<Event>>>(
-          ['events', 'infinite', undefined],
+        queryClient.setQueriesData<InfiniteData<ResourcePage<Event>>>(
+          ['events', 'infinite'],
           (prev) => {
             if (!prev) {
               return {
@@ -311,6 +319,11 @@ export const updateEventsQuery = (
       if (newEvents.length > 0) {
         // For all events, that remain, append them to the top of the events list
         prev.pages[0].data = [...newEvents, ...prev.pages[0].data];
+
+        // Update the `results` value for all pages so it is up to date
+        for (const page of prev.pages) {
+          page.results += newEvents.length;
+        }
       }
 
       return {

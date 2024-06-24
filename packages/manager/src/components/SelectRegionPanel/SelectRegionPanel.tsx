@@ -1,4 +1,3 @@
-import { Capabilities } from '@linode/api-v4/lib/regions';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -25,12 +24,13 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { Box } from '../Box';
 import { DocsLink } from '../DocsLink/DocsLink';
 import { Link } from '../Link';
-import { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 
+import type { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
+import type { Capabilities } from '@linode/api-v4/lib/regions';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 interface SelectRegionPanelProps {
-  RegionSelectProps?: Partial<RegionSelectProps>;
+  RegionSelectProps?: Partial<RegionSelectProps<true>>;
   currentCapability: Capabilities;
   disabled?: boolean;
   error?: string;
@@ -147,17 +147,18 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         </Notice>
       ) : null}
       <RegionSelect
-        currentCapability={currentCapability}
-        disabled={disabled}
-        errorText={error}
-        handleSelection={handleSelection}
-        helperText={helperText}
-        regionFilter={hideDistributedRegions ? 'core' : undefined}
-        regions={regions ?? []}
-        selectedId={selectedId || null}
         showDistributedRegionIconHelperText={
           showDistributedRegionIconHelperText
         }
+        currentCapability={currentCapability}
+        disableClearable
+        disabled={disabled}
+        errorText={error}
+        helperText={helperText}
+        onChange={(e, region) => handleSelection(region.id)}
+        regionFilter={hideDistributedRegions ? 'core' : undefined}
+        regions={regions ?? []}
+        value={selectedId}
         {...RegionSelectProps}
       />
       {showClonePriceWarning && (
