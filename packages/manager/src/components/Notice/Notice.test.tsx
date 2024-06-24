@@ -58,7 +58,7 @@ describe('Notice Component', () => {
   it('applies variant prop', () => {
     const { container } = renderWithTheme(<Notice variant="error" />);
 
-    expect(container.firstChild).toHaveStyle('border-left: 5px solid #ca0813;');
+    expect(container.firstChild).toHaveStyle('border-left: 5px solid #d63c42;');
   });
 
   it('displays icon for important notices', () => {

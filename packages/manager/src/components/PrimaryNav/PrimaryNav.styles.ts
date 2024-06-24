@@ -1,7 +1,8 @@
-import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
 import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
+
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles<void, 'linkItem'>()(
   (theme: Theme, _params, classes) => ({
@@ -10,7 +11,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
         opacity: 1,
       },
       '& svg': {
-        color: theme.color.teal,
+        color: theme.palette.success.dark,
       },
       backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
       textDecoration: 'none',
@@ -21,12 +22,6 @@ const useStyles = makeStyles<void, 'linkItem'>()(
     divider: {
       backgroundColor: 'rgba(0, 0, 0, 0.12)',
       color: '#222',
-    },
-    fadeContainer: {
-      display: 'flex',
-      flexDirection: 'column',
-      height: 'calc(100% - 90px)',
-      width: '100%',
     },
     linkItem: {
       '&.hiddenWhenCollapsed': {
@@ -70,8 +65,8 @@ const useStyles = makeStyles<void, 'linkItem'>()(
           opacity: 1,
         },
         '& svg': {
-          color: theme.color.teal,
-          fill: theme.color.teal,
+          color: theme.palette.success.dark,
+          fill: theme.palette.success.dark,
         },
         [`& .${classes.linkItem}`]: {
           color: 'white',
@@ -86,7 +81,6 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       minWidth: SIDEBAR_WIDTH,
       padding: '8px 13px',
       position: 'relative',
-      transition: theme.transitions.create(['background-color']),
     },
     logo: {
       '& .akamai-logo-name': {
@@ -96,7 +90,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       transition: 'width .1s linear',
     },
     logoAkamaiCollapsed: {
-      background: theme.bg.primaryNavPaper,
+      background: theme.bg.appBar,
       width: 83,
     },
     logoContainer: {
@@ -111,6 +105,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
     },
     logoItemAkamai: {
       alignItems: 'center',
+      backgroundColor: theme.name === 'dark' ? theme.bg.appBar : undefined,
       display: 'flex',
       height: 50,
       paddingLeft: 13,
