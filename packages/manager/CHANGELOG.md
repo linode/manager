@@ -15,6 +15,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Informational notice about capturing an image from a Linode in a distributed compute region ([#10544](https://github.com/linode/manager/pull/10544))
 - Volume & Images landing pages search and filtering ([#10570](https://github.com/linode/manager/pull/10570))
+- Standard Tax Rate for JP ([#10606](https://github.com/linode/manager/pull/10606))
+- B2B Tax ID for EU ([#10606](https://github.com/linode/manager/pull/10606))
 
 ### Changed:
 
