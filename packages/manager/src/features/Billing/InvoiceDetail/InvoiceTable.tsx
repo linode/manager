@@ -1,8 +1,6 @@
 import { InvoiceItem } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -21,18 +19,6 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { getInvoiceRegion } from '../PdfGenerator/utils';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  table: {
-    '& thead th': {
-      '&:last-of-type': {
-        paddingRight: 15,
-      },
-      borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-    },
-    border: `1px solid ${theme.borderColors.borderTable}`,
-  },
-}));
-
 interface Props {
   errors?: APIError[];
   items?: InvoiceItem[];
@@ -41,7 +27,6 @@ interface Props {
 }
 
 export const InvoiceTable = (props: Props) => {
-  const { classes } = useStyles();
   const MIN_PAGE_SIZE = 25;
 
   const {
@@ -157,7 +142,7 @@ export const InvoiceTable = (props: Props) => {
   };
 
   return (
-    <Table aria-label="Invoice Details" className={classes.table} noBorder>
+    <Table aria-label="Invoice Details">
       <TableHead>
         <TableRow>
           <TableCell>Description</TableCell>

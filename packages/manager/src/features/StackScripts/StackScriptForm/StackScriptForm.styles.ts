@@ -32,7 +32,7 @@ export const StyledTextField = styled(TextField, { label: 'StyledTextField' })({
 
 export const StyledNotice = styled(Notice, { label: 'StyledNotice' })(
   ({ theme }) => ({
-    backgroundColor: theme.palette.divider,
+    backgroundColor: theme.palette.background.default,
     marginLeft: theme.spacing(4),
     marginTop: `${theme.spacing(4)} !important`,
     padding: theme.spacing(4),

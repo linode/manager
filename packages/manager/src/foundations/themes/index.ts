@@ -58,6 +58,7 @@ declare module '@mui/material/styles/createTheme' {
     color: Colors;
     font: Fonts;
     graphs: any;
+    inputStyles: any;
     name: ThemeName;
     textColors: TextColors;
     visually: any;
@@ -74,6 +75,7 @@ declare module '@mui/material/styles/createTheme' {
     color?: DarkModeColors | LightModeColors;
     font?: Fonts;
     graphs?: any;
+    inputStyles?: any;
     name: ThemeName;
     textColors?: DarkModeTextColors | LightModeTextColors;
     visually?: any;

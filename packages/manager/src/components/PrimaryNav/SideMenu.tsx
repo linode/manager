@@ -66,7 +66,8 @@ const StyledDrawer = styled(Drawer, {
   shouldForwardProp: (prop) => prop !== 'collapse',
 })<{ collapse?: boolean }>(({ theme, ...props }) => ({
   '& .MuiDrawer-paper': {
-    backgroundColor: theme.bg.primaryNavPaper,
+    backgroundColor:
+      theme.name === 'dark' ? theme.bg.appBar : theme.bg.primaryNavPaper,
     borderRight: 'none',
     boxShadow: 'none',
     height: '100%',

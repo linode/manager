@@ -192,6 +192,7 @@ const StyledPanel = styled(Panel, { label: 'StyledPanel' })(({ theme }) => ({
 
 const StyledPaper = styled(Paper, { label: 'StyledPaper' })(({ theme }) => ({
   ...commonStyling(theme),
+  borderTop: 0,
 }));
 
 const StyledLoadingSpan = styled('span', { label: 'StyledLoadingSpan' })({

@@ -1,25 +1,30 @@
 import { styled } from '@mui/material/styles';
-import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
 import { MaterialDesignContent } from 'notistack';
+import { SnackbarProvider } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { CloseSnackbar } from './CloseSnackbar';
 
 import type { Theme } from '@mui/material/styles';
+import type { SnackbarProviderProps } from 'notistack';
 
 const StyledMaterialDesignContent = styled(MaterialDesignContent)(
   ({ theme }: { theme: Theme }) => ({
     '&.notistack-MuiContent-error': {
+      backgroundColor: theme.palette.error.light,
       borderLeft: `6px solid ${theme.palette.error.dark}`,
     },
     '&.notistack-MuiContent-info': {
+      backgroundColor: theme.palette.info.light,
       borderLeft: `6px solid ${theme.palette.primary.main}`,
     },
     '&.notistack-MuiContent-success': {
-      borderLeft: `6px solid ${theme.palette.success.main}`, // corrected to palette.success
+      backgroundColor: theme.palette.success.light,
+      borderLeft: `6px solid ${theme.palette.success.dark}`,
     },
     '&.notistack-MuiContent-warning': {
+      backgroundColor: theme.palette.warning.light,
       borderLeft: `6px solid ${theme.palette.warning.dark}`,
     },
   })
@@ -28,7 +33,7 @@ const StyledMaterialDesignContent = styled(MaterialDesignContent)(
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     '& div': {
-      backgroundColor: `${theme.bg.white} !important`,
+      backgroundColor: `transparent`,
       color: theme.palette.text.primary,
       fontSize: '0.875rem',
     },
