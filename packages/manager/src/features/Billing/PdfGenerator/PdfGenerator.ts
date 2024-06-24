@@ -123,9 +123,8 @@ const addLeftHeader = (
       addLine(qiRegistration);
     }
 
-    if (countryTax && countryTax.tax_name === countryTaxNames.JP) {
-      const flatTaxJP = 'Standard Tax is 10%';
-      addLine(flatTaxJP);
+    if (countryTax?.tax_name === countryTaxNames.JP && countryTax?.tax_info) {
+      addLine(countryTax.tax_info);
     }
 
     if (provincialTax) {

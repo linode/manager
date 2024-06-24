@@ -14,6 +14,7 @@ export interface TaxDetail {
       tax_name: string;
     }
   >;
+  tax_info?: string;
   tax_name: string;
 }
 

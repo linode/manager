@@ -51,7 +51,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
   ],
   city: 'Colorado',
   company: Factory.each((i) => `company-${i}`),
-  country: 'CA',
+  country: 'FR',
   credit_card: {
     expiry: '01/2018',
     last_four: '1111',
