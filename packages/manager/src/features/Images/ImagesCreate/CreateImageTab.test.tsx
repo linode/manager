@@ -176,6 +176,9 @@ describe('CreateImageTab', () => {
       http.get('*/v4/linode/instances', () => {
         return HttpResponse.json(makeResourcePage([linode]));
       }),
+      http.get('*/v4/linode/instances/:id', () => {
+        return HttpResponse.json(linode);
+      }),
       http.get('*/v4/linode/instances/:id/disks', () => {
         return HttpResponse.json(makeResourcePage([disk1, disk2]));
       }),
