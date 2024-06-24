@@ -91,9 +91,10 @@ describe('create image (e2e)', () => {
       ui.autocompletePopper.findByTitle(disk).should('be.visible').click();
 
       // Give the Image a label
-      cy.findByLabelText('Label')
+      cy.findByLabelText('Image Label')
         .should('be.enabled')
         .should('be.visible')
+        .clear()
         .type(label);
 
       // Give the Image a description

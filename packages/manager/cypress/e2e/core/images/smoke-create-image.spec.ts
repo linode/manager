@@ -69,9 +69,10 @@ describe('create image (using mocks)', () => {
       .click();
 
     // Give the Image a label
-    cy.findByLabelText('Label')
+    cy.findByLabelText('Image Label')
       .should('be.enabled')
       .should('be.visible')
+      .clear()
       .type(mockNewImage.label);
 
     // Give the Image a description
