@@ -7,6 +7,14 @@ import type { NoticeVariant } from 'src/components/Notice/Notice';
 export interface TaxDetail {
   qi_registration?: string;
   tax_id: string;
+  tax_ids?: Record<
+    'B2B' | 'B2C',
+    {
+      tax_id: string;
+      tax_name: string;
+    }
+  >;
+  tax_info?: string;
   tax_name: string;
 }
 
