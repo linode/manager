@@ -27,10 +27,7 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useCreateImageMutation } from 'src/queries/images';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import {
-  useAllLinodesQuery,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
@@ -90,14 +87,13 @@ export const CreateImageTab = () => {
     }
   });
 
-  const { data: linodes } = useAllLinodesQuery();
-
   const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
     null
   );
 
-  const selectedLinode = linodes?.find(
-    (linode) => linode.id == selectedLinodeId
+  const { data: selectedLinode } = useLinodeQuery(
+    selectedLinodeId ?? -1,
+    selectedLinodeId !== null
   );
 
   const {
@@ -111,23 +107,29 @@ export const CreateImageTab = () => {
     disks?.find((disk) => disk.id === selectedDiskId) ?? null;
 
   React.useEffect(() => {
-    if (selectedLinode && selectedDisk && !formState.touchedFields.label) {
-      setValue('label', `${selectedLinode.label}-${selectedDisk.label}`);
+    if (formState.touchedFields.label) {
+      return;
     }
-  }, [selectedLinode, selectedDisk, formState.touchedFields.label, setValue]);
+    if (selectedLinode) {
+      setValue('label', `${selectedLinode.label}-${selectedDisk?.label ?? ''}`);
+    } else {
+      resetField('label');
+    }
+  }, [
+    selectedLinode,
+    selectedDisk,
+    formState.touchedFields.label,
+    setValue,
+    resetField,
+  ]);
 
   const isRawDisk = selectedDisk?.filesystem === 'raw';
 
   const { data: regionsData } = useRegionsQuery();
 
-  const { data: linode } = useLinodeQuery(
-    selectedLinodeId ?? -1,
-    selectedLinodeId !== null
-  );
-
   const linodeIsInDistributedRegion = getIsDistributedRegion(
     regionsData ?? [],
-    linode?.region ?? ''
+    selectedLinode?.region ?? ''
   );
 
   /*
@@ -276,7 +278,7 @@ export const CreateImageTab = () => {
                   label="Image Label"
                   noMarginTop
                   onBlur={field.onBlur}
-                  value={field.value}
+                  value={field.value ?? ''}
                 />
               )}
               control={control}
