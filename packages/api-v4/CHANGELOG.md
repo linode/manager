@@ -1,14 +1,12 @@
 ## [2024-06-24] - v0.120.0
 
-
 ### Added:
 
 - New endpoint for LKE HA types used in pricing ([#10505](https://github.com/linode/manager/pull/10505))
 - UpdateImagePayload type ([#10514](https://github.com/linode/manager/pull/10514))
-- New endpoint for `network-transfer/prices`` ([#10566](https://github.com/linode/manager/pull/10566))
+- New endpoint for `network-transfer/prices` ([#10566](https://github.com/linode/manager/pull/10566))
 
 ## [2024-06-10] - v0.119.0
-
 
 ### Added:
 
@@ -28,7 +26,6 @@
 
 ## [2024-05-28] - v0.118.0
 
-
 ### Added:
 
 - New LKE events in `EventAction` type ([#10443](https://github.com/linode/manager/pull/10443))
@@ -37,9 +34,7 @@
 
 - Add Disk Encryption to AccountCapability type and region Capabilities type ([#10462](https://github.com/linode/manager/pull/10462))
 
-
 ## [2024-05-13] - v0.117.0
-
 
 ### Added:
 
@@ -55,16 +50,13 @@
 
 - Update Placement Group event types ([#10420](https://github.com/linode/manager/pull/10420))
 
-
 ## [2024-05-06] - v0.116.0
-
 
 ### Added:
 
 - 'edge' Linode type class ([#10441](https://github.com/linode/manager/pull/10441))
 
 ## [2024-04-29] - v0.115.0
-
 
 ### Added:
 
