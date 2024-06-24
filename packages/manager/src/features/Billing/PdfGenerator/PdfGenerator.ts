@@ -30,6 +30,7 @@ import type {
 import type { FlagSet, TaxDetail } from 'src/featureFlags';
 
 const countryTaxNames = {
+  EU: 'EU VAT',
   JP: 'Japan JCT',
 } as const;
 
@@ -103,6 +104,14 @@ const addLeftHeader = (
 
     if (countryTax) {
       addLine(`${countryTax.tax_name}: ${countryTax.tax_id}`);
+
+      const { tax_ids, tax_name } = countryTax;
+      const { EU } = countryTaxNames;
+
+      if (tax_name === EU && tax_ids?.B2B) {
+        const { tax_id: b2bTaxId, tax_name: b2bTaxName } = tax_ids.B2B;
+        addLine(`${b2bTaxName}: ${b2bTaxId}`);
+      }
     }
     /**
      * [M3-7847, M3-8008] Add Akamai's Japanese QI System ID to Japanese Invoices.
@@ -258,6 +267,7 @@ export const printInvoice = async (
      * as of 2/20/2020 we have the following cases:
      *
      * VAT: Applies only to EU countries; started from 6/1/2019 and we have an EU tax id
+     *  - [M3-8277] For EU customers, invoices will include VAT for B2C transactions and exclude VAT for B2B transactions. Both VAT numbers will be shown on the invoice template for EU countries.
      * GMT: Applies to both Australia and India, but we only have a tax ID for Australia.
      */
     const hasTax = !taxes?.date ? true : convertedInvoiceDate > TaxStartDate;
