@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - CONTRIBUTING doc page commit type list markup ([#10587](https://github.com/linode/manager/pull/10587))
 - React Query Events `seen` behavior and other optimizations ([#10588](https://github.com/linode/manager/pull/10588))
 - Accessibility: Add tabindex to TextTooltip ([#10590](https://github.com/linode/manager/pull/10590))
+- Fix parsing issue causing in Kubernetes Version field ([#10597](https://github.com/linode/manager/pull/10597))
 
 ### Tech Stories:
 
@@ -60,7 +61,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Revise LDE copy in Linode Create flow when Distributed region is selected ([#10576](https://github.com/linode/manager/pull/10576))
 - Update description for Add Node Pools section in LKE Create flow ([#10578](https://github.com/linode/manager/pull/10578))
 - Linode Create v2 - Add Marketplace Searching / Filtering ([#10586](https://github.com/linode/manager/pull/10586))
-- Add Distributed Icon to ImageSelects for distributed compatible images ([#10592](https://github.com/linode/manager/pull/10592))
+- Add Distributed Icon to ImageSelects for distributed compatible images ([#10592](https://github.com/linode/manager/pull/10592)
+- Update Images Landing table ([#10545](https://github.com/linode/manager/pull/10545))
 
 ## [2024-06-21] - v1.121.2
 
