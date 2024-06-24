@@ -175,55 +175,6 @@ describe('Region', () => {
     ).toBeVisible();
   });
 
-  it('should disable core regions if a distributed-capable image is selected', async () => {
-    const image = imageFactory.build({ capabilities: ['distributed-images'] });
-
-    const distributedRegion = regionFactory.build({
-      capabilities: ['Linodes'],
-      site_type: 'distributed',
-    });
-    const coreRegion = regionFactory.build({
-      capabilities: ['Linodes'],
-      site_type: 'core',
-    });
-
-    server.use(
-      http.get('*/v4/regions', () => {
-        return HttpResponse.json(
-          makeResourcePage([coreRegion, distributedRegion])
-        );
-      }),
-      http.get('*/v4/images/:id', () => {
-        return HttpResponse.json(image);
-      })
-    );
-
-    const {
-      findByText,
-      getByLabelText,
-    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-      component: <Region />,
-      options: {
-        MemoryRouter: { initialEntries: ['/linodes/create?type=Images'] },
-      },
-      useFormOptions: {
-        defaultValues: {
-          image: image.id,
-        },
-      },
-    });
-
-    const regionSelect = getByLabelText('Region');
-
-    await userEvent.click(regionSelect);
-
-    const coreRegionOption = await findByText(coreRegion.id, { exact: false });
-
-    expect(coreRegionOption.closest('li')?.textContent).toContain(
-      'The image selected cannot be deployed in core regions.'
-    );
-  });
-
   it('should disable distributed regions if the selected image does not have the `distributed-images` capability', async () => {
     const image = imageFactory.build({ capabilities: [] });
 
@@ -271,7 +222,7 @@ describe('Region', () => {
     });
 
     expect(distributedRegionOption.closest('li')?.textContent).toContain(
-      'The image selected cannot be deployed in distributed regions.'
+      'The selected image cannot be deployed in distributed regions.'
     );
   });
 });

@@ -30,16 +30,6 @@ export const Images = () => {
 
     const selectedRegion = regions?.find((r) => r.id === regionId);
 
-    // For now, you *must* deploy a "distributed compatible" Image to a distributed region.
-    // Clear the region field if the image is "distributed compatible" and the region is a core site.
-    if (
-      image &&
-      image.capabilities.includes('distributed-images') &&
-      selectedRegion?.site_type === 'core'
-    ) {
-      setValue('region', '');
-    }
-
     // Non-"distributed compatible" Images must only be deployed to core sites.
     // Clear the region field if the currently selected region is a distributed site and the Image is only core compatible.
     if (

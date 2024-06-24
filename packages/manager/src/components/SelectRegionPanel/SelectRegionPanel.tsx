@@ -112,21 +112,12 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     (disabledRegions, region) => {
       if (
         params.type === 'Images' &&
-        image?.capabilities.includes('distributed-images') &&
-        region.site_type === 'core'
-      ) {
-        disabledRegions[region.id] = {
-          reason: 'The image selected cannot be deployed in core regions.',
-        };
-      }
-      if (
-        params.type === 'Images' &&
         !image?.capabilities.includes('distributed-images') &&
         region.site_type === 'distributed'
       ) {
         disabledRegions[region.id] = {
           reason:
-            'The image selected cannot be deployed in distributed regions.',
+            'The selected image cannot be deployed in distributed regions.',
         };
       }
       return disabledRegions;
