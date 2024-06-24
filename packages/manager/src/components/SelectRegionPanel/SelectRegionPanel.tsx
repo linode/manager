@@ -110,8 +110,13 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
 
   const disabledRegions = regions?.reduce<Record<string, DisableRegionOption>>(
     (disabledRegions, region) => {
+      // Disable distributed regions if:
+      // - We are on the Images tab
+      // - An image is selected
+      // - The selected image does not have the `distributed-images` capability
       if (
         params.type === 'Images' &&
+        image &&
         !image?.capabilities.includes('distributed-images') &&
         region.site_type === 'distributed'
       ) {
