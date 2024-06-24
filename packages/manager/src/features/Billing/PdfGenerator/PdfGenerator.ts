@@ -1,22 +1,14 @@
-import {
-  Account,
-  Invoice,
-  InvoiceItem,
-  Payment,
-} from '@linode/api-v4/lib/account';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import { splitEvery } from 'ramda';
 
 import { ADDRESSES } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
-import { FlagSet, TaxDetail } from 'src/featureFlags';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import AkamaiLogo from './akamai-logo.png';
 import {
-  PdfResult,
   createFooter,
   createInvoiceItemsTable,
   createInvoiceTotalsTable,
@@ -27,7 +19,19 @@ import {
   pageMargin,
 } from './utils';
 
+import type { PdfResult } from './utils';
 import type { Region } from '@linode/api-v4';
+import type {
+  Account,
+  Invoice,
+  InvoiceItem,
+  Payment,
+} from '@linode/api-v4/lib/account';
+import type { FlagSet, TaxDetail } from 'src/featureFlags';
+
+const countryTaxNames = {
+  JP: 'Japan JCT',
+} as const;
 
 const baseFont = 'helvetica';
 
@@ -101,13 +105,15 @@ const addLeftHeader = (
       addLine(`${countryTax.tax_name}: ${countryTax.tax_id}`);
     }
     /**
-     * M3-7847 Add Akamai's Japanese QI System ID to Japanese Invoices.
+     * [M3-7847, M3-8008] Add Akamai's Japanese QI System ID to Japanese Invoices.
      * Since LD automatically serves Tax data based on the user's
      * we can check on qi_registration field to render QI Registration.
      * */
-    if (countryTax && countryTax.qi_registration) {
-      const line = `QI Registration # ${countryTax.qi_registration}`;
-      addLine(line);
+    if (countryTax && countryTax.tax_name === countryTaxNames.JP) {
+      const qiRegistration = `QI Registration # ${countryTax.qi_registration}`;
+      const flatTax = 'Standard Tax is 10%';
+      addLine(qiRegistration);
+      addLine(flatTax);
     }
     if (provincialTax) {
       addLine(`${provincialTax.tax_name}: ${provincialTax.tax_id}`);
