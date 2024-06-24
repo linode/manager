@@ -1,7 +1,8 @@
-import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
 import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
+
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles<void, 'linkItem'>()(
   (theme: Theme, _params, classes) => ({
@@ -10,9 +11,9 @@ const useStyles = makeStyles<void, 'linkItem'>()(
         opacity: 1,
       },
       '& svg': {
-        color: '#fff',
+        color: theme.palette.success.dark,
       },
-      backgroundColor: 'rgba(37, 117, 208, 0.4)',
+      backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
       textDecoration: 'none',
     },
     chip: {
@@ -75,13 +76,13 @@ const useStyles = makeStyles<void, 'linkItem'>()(
           opacity: 1,
         },
         '& svg': {
-          color: '#fff',
-          fill: '#fff',
+          color: theme.palette.success.dark,
+          fill: theme.palette.success.dark,
         },
         [`& .${classes.linkItem}`]: {
           color: 'white',
         },
-        backgroundColor: 'rgba(37, 117, 208, 0.4)',
+        backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
         border: 'red',
         textDecoration: 'none',
       },
