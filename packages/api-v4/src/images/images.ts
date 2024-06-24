@@ -17,6 +17,7 @@ import type {
   CreateImagePayload,
   Image,
   ImageUploadPayload,
+  UpdateImagePayload,
   UploadImageResponse,
 } from './types';
 
@@ -58,21 +59,9 @@ export const createImage = (data: CreateImagePayload) => {
  * Updates a private Image that you have permission to read_write.
  *
  * @param imageId { string } ID of the Image to look up.
- * @param label { string } A short description of the Image. Labels cannot contain special characters.
- * @param description { string } A detailed description of this Image.
+ * @param data { UpdateImagePayload } the updated image details
  */
-export const updateImage = (
-  imageId: string,
-  label?: string,
-  description?: string,
-  tags?: string[]
-) => {
-  const data = {
-    ...(label && { label }),
-    ...(description && { description }),
-    ...(tags && { tags }),
-  };
-
+export const updateImage = (imageId: string, data: UpdateImagePayload) => {
   return Request<Image>(
     setURL(`${API_ROOT}/images/${encodeURIComponent(imageId)}`),
     setMethod('PUT'),

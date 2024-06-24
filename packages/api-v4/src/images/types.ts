@@ -4,7 +4,7 @@ export type ImageStatus =
   | 'deleted'
   | 'pending_upload';
 
-type ImageCapabilities = 'cloud-init' | 'distributed-images';
+export type ImageCapabilities = 'cloud-init' | 'distributed-images';
 
 type ImageType = 'manual' | 'automatic';
 
@@ -147,6 +147,8 @@ export interface CreateImagePayload extends BaseImagePayload {
    */
   disk_id: number;
 }
+
+export type UpdateImagePayload = Omit<BaseImagePayload, 'cloud_init'>;
 
 export interface ImageUploadPayload extends BaseImagePayload {
   label: string;

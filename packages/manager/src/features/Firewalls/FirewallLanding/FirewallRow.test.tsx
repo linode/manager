@@ -68,21 +68,21 @@ describe('FirewallRow', () => {
   describe('getDeviceLinks', () => {
     it('should return a single Link if one Device is attached', () => {
       const device = firewallDeviceFactory.build();
-      const links = getDeviceLinks([device]);
+      const links = getDeviceLinks([device.entity]);
       const { getByText } = renderWithTheme(links);
       expect(getByText(device.entity.label));
     });
 
     it('should render up to three comma-separated links', () => {
       const devices = firewallDeviceFactory.buildList(3);
-      const links = getDeviceLinks(devices);
+      const links = getDeviceLinks(devices.map((device) => device.entity));
       const { queryAllByTestId } = renderWithTheme(links);
       expect(queryAllByTestId('firewall-row-link')).toHaveLength(3);
     });
 
     it('should render "plus N more" text for any devices over three', () => {
       const devices = firewallDeviceFactory.buildList(13);
-      const links = getDeviceLinks(devices);
+      const links = getDeviceLinks(devices.map((device) => device.entity));
       const { getByText, queryAllByTestId } = renderWithTheme(links);
       expect(queryAllByTestId('firewall-row-link')).toHaveLength(3);
       expect(getByText(/10 more/));

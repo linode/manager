@@ -10,7 +10,7 @@ describe('Distributions', () => {
       component: <Distributions />,
     });
 
-    const header = getByText('Choose a Distribution');
+    const header = getByText('Choose an OS');
 
     expect(header).toBeVisible();
     expect(header.tagName).toBe('H2');

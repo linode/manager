@@ -17,7 +17,7 @@ import {
 } from 'src/queries/linodes/linodes';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { Access } from './Access';
+import { Security } from './Security';
 import { Actions } from './Actions';
 import { Addons } from './Addons/Addons';
 import { Details } from './Details/Details';
@@ -154,7 +154,7 @@ export const LinodeCreatev2 = () => {
           {params.type !== 'Backups' && <Region />}
           <Plan />
           <Details />
-          {params.type !== 'Clone Linode' && <Access />}
+          {params.type !== 'Clone Linode' && <Security />}
           <VPC />
           <Firewall />
           {params.type !== 'Clone Linode' && <VLAN />}

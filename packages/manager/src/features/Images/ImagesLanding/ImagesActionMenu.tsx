@@ -1,20 +1,17 @@
-import { Event } from '@linode/api-v4/lib/account';
-import { ImageStatus } from '@linode/api-v4/lib/images/types';
 import * as React from 'react';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+
+import type { Event, Image, ImageStatus } from '@linode/api-v4';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface Handlers {
   onCancelFailed?: (imageID: string) => void;
   onDelete?: (label: string, imageID: string, status?: ImageStatus) => void;
   onDeploy?: (imageID: string) => void;
-  onEdit?: (
-    label: string,
-    description: string,
-    imageID: string,
-    tags: string[]
-  ) => void;
-  onRestore?: (imageID: string) => void;
+  onEdit?: (image: Image) => void;
+  onManageRegions?: (image: Image) => void;
+  onRestore?: (image: Image) => void;
   onRetry?: (
     imageID: string,
     label: string,
@@ -22,30 +19,26 @@ export interface Handlers {
   ) => void;
 }
 
-interface Props extends Handlers {
-  description: null | string;
-  event: Event | undefined;
-  id: string;
-  label: string;
-  status?: ImageStatus;
-  tags: string[];
+interface Props {
+  event?: Event;
+  handlers: Handlers;
+  image: Image;
 }
 
 export const ImagesActionMenu = (props: Props) => {
+  const { event, handlers, image } = props;
+
+  const { description, id, label, status } = image;
+
   const {
-    description,
-    event,
-    id,
-    label,
     onCancelFailed,
     onDelete,
     onDeploy,
     onEdit,
+    onManageRegions,
     onRestore,
     onRetry,
-    status,
-    tags,
-  } = props;
+  } = handlers;
 
   const actions: Action[] = React.useMemo(() => {
     const isDisabled = status && status !== 'available';
@@ -65,12 +58,21 @@ export const ImagesActionMenu = (props: Props) => {
       : [
           {
             disabled: isDisabled,
-            onClick: () => onEdit?.(label, description ?? ' ', id, tags),
+            onClick: () => onEdit?.(image),
             title: 'Edit',
             tooltip: isDisabled
               ? 'Image is not yet available for use.'
               : undefined,
           },
+          ...(onManageRegions
+            ? [
+                {
+                  disabled: isDisabled,
+                  onClick: () => onManageRegions(image),
+                  title: 'Manage Regions',
+                },
+              ]
+            : []),
           {
             disabled: isDisabled,
             onClick: () => onDeploy?.(id),
@@ -81,7 +83,7 @@ export const ImagesActionMenu = (props: Props) => {
           },
           {
             disabled: isDisabled,
-            onClick: () => onRestore?.(id),
+            onClick: () => onRestore?.(image),
             title: 'Rebuild an Existing Linode',
             tooltip: isDisabled
               ? 'Image is not yet available for use.'
@@ -94,23 +96,24 @@ export const ImagesActionMenu = (props: Props) => {
         ];
   }, [
     status,
-    description,
+    event,
+    onRetry,
     id,
     label,
-    onDelete,
-    onRestore,
-    onDeploy,
-    onEdit,
-    onRetry,
+    description,
     onCancelFailed,
-    event,
-    tags,
+    onEdit,
+    image,
+    onManageRegions,
+    onDeploy,
+    onRestore,
+    onDelete,
   ]);
 
   return (
     <ActionMenu
       actionsList={actions}
-      ariaLabel={`Action menu for Image ${props.label}`}
+      ariaLabel={`Action menu for Image ${image.label}`}
     />
   );
 };
