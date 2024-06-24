@@ -23,17 +23,6 @@ const useStyles = makeStyles<void, 'linkItem'>()(
       backgroundColor: 'rgba(0, 0, 0, 0.12)',
       color: '#222',
     },
-    fadeContainer: {
-      background: theme.palette.mode === 'dark' ? theme.bg.main : 'inherit',
-      borderRight:
-        theme.palette.mode === 'dark'
-          ? `1px solid ${theme.borderColors.divider}`
-          : 'none',
-      display: 'flex',
-      flexDirection: 'column',
-      height: 'calc(100% - 90px)',
-      width: '100%',
-    },
     linkItem: {
       '&.hiddenWhenCollapsed': {
         maxHeight: 36,
@@ -116,6 +105,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
     },
     logoItemAkamai: {
       alignItems: 'center',
+      backgroundColor: theme.name === 'dark' ? theme.bg.appBar : undefined,
       display: 'flex',
       height: 50,
       paddingLeft: 13,
