@@ -18,10 +18,12 @@ import { useFirewallsQuery } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CreateFirewallDrawer } from './CreateFirewallDrawer';
-import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
-import { FirewallDialog, Mode } from './FirewallDialog';
+import { FirewallDialog } from './FirewallDialog';
 import { FirewallLandingEmptyState } from './FirewallLandingEmptyState';
 import { FirewallRow } from './FirewallRow';
+
+import type { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
+import type { Mode } from './FirewallDialog';
 
 const preferenceKey = 'firewalls';
 
@@ -175,13 +177,12 @@ const FirewallLanding = () => {
         onClose={onCloseCreateDrawer}
         open={isCreateFirewallDrawerOpen}
       />
-      {selectedFirewallId && (
+      {selectedFirewall && (
         <FirewallDialog
           mode={dialogMode}
           onClose={() => setIsModalOpen(false)}
           open={isModalOpen}
-          selectedFirewallId={selectedFirewallId}
-          selectedFirewallLabel={selectedFirewall?.label ?? ''}
+          selectedFirewall={selectedFirewall}
         />
       )}
     </React.Fragment>

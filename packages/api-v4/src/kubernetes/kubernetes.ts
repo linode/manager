@@ -7,8 +7,8 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import {
+import type { Filter, Params, ResourcePage as Page, PriceType } from '../types';
+import type {
   CreateKubeClusterPayload,
   KubeConfigResponse,
   KubernetesCluster,
@@ -179,4 +179,16 @@ export const recycleClusterNodes = (clusterID: number) =>
   Request<{}>(
     setMethod('POST'),
     setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/recycle`)
+  );
+
+/**
+ * getKubernetesTypes
+ *
+ * Returns a paginated list of available Kubernetes types; used for dynamic pricing.
+ */
+export const getKubernetesTypes = (params?: Params) =>
+  Request<Page<PriceType>>(
+    setURL(`${API_ROOT}/lke/types`),
+    setMethod('GET'),
+    setParams(params)
   );

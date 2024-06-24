@@ -1,5 +1,3 @@
-import { Event } from '@linode/api-v4/lib/account';
-import { Image } from '@linode/api-v4/lib/images';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -10,32 +8,46 @@ import { useProfile } from 'src/queries/profile/profile';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 
-import { Handlers, ImagesActionMenu } from './ImagesActionMenu';
+import { ImagesActionMenu } from './ImagesActionMenu';
+import { RegionsList } from './RegionsList';
 
-export interface ImageWithEvent extends Image {
+import type { Handlers } from './ImagesActionMenu';
+import type { Event, Image, ImageCapabilities } from '@linode/api-v4';
+
+const capabilityMap: Record<ImageCapabilities, string> = {
+  'cloud-init': 'Cloud-init',
+  'distributed-images': 'Distributed',
+};
+
+interface Props {
   event?: Event;
+  handlers: Handlers;
+  image: Image;
+  multiRegionsEnabled?: boolean; // TODO Image Service v2: delete after GA
 }
 
-interface Props extends Handlers, ImageWithEvent {}
-
 const ImageRow = (props: Props) => {
+  const { event, handlers, image, multiRegionsEnabled } = props;
+
   const {
+    capabilities,
     created,
-    description,
-    event,
     expiry,
     id,
     label,
-    onCancelFailed,
-    onRetry,
+    regions,
     size,
     status,
-    ...rest
-  } = props;
+    total_size,
+  } = image;
 
   const { data: profile } = useProfile();
 
   const isFailed = status === 'pending_upload' && event?.status === 'failed';
+
+  const compatibilitiesList = multiRegionsEnabled
+    ? capabilities.map((capability) => capabilityMap[capability]).join(', ')
+    : '';
 
   const getStatusForImage = (status: string) => {
     switch (status) {
@@ -74,15 +86,41 @@ const ImageRow = (props: Props) => {
       <TableCell data-qa-image-label>{label}</TableCell>
       <Hidden smDown>
         {status ? <TableCell>{getStatusForImage(status)}</TableCell> : null}
+      </Hidden>
+      {multiRegionsEnabled && (
+        <>
+          <Hidden smDown>
+            <TableCell>
+              {regions && regions.length > 0 && (
+                <RegionsList
+                  onManageRegions={() => handlers.onManageRegions?.(image)}
+                  regions={regions}
+                />
+              )}
+            </TableCell>
+          </Hidden>
+          <Hidden smDown>
+            <TableCell>{compatibilitiesList}</TableCell>
+          </Hidden>
+        </>
+      )}
+      <TableCell data-qa-image-size>
+        {getSizeForImage(size, status, event?.status)}
+      </TableCell>
+      {multiRegionsEnabled && (
+        <Hidden mdDown>
+          <TableCell>
+            {getSizeForImage(total_size, status, event?.status)}
+          </TableCell>
+        </Hidden>
+      )}
+      <Hidden mdDown>
         <TableCell data-qa-image-date>
           {formatDate(created, {
             timezone: profile?.timezone,
           })}
         </TableCell>
       </Hidden>
-      <TableCell data-qa-image-size>
-        {getSizeForImage(size, status, event?.status)}
-      </TableCell>
       <Hidden smDown>
         {expiry ? (
           <TableCell data-qa-image-date>
@@ -92,17 +130,13 @@ const ImageRow = (props: Props) => {
           </TableCell>
         ) : null}
       </Hidden>
+      {multiRegionsEnabled && (
+        <Hidden mdDown>
+          <TableCell>{id}</TableCell>
+        </Hidden>
+      )}
       <TableCell actionCell>
-        <ImagesActionMenu
-          description={description}
-          event={event?.status === 'failed' ? event : undefined}
-          id={id}
-          label={label}
-          onCancelFailed={onCancelFailed}
-          onRetry={onRetry}
-          status={status}
-          {...rest}
-        />
+        <ImagesActionMenu {...props} />
       </TableCell>
     </TableRow>
   );

@@ -4,9 +4,12 @@
 
 import 'cypress-file-upload';
 import { createBucket } from '@linode/api-v4/lib/object-storage';
-import { objectStorageBucketFactory } from 'src/factories';
+import { accountFactory, objectStorageBucketFactory } from 'src/factories';
 import { authenticate } from 'support/api/authentication';
-import { interceptGetNetworkUtilization } from 'support/intercepts/account';
+import {
+  interceptGetNetworkUtilization,
+  mockGetAccount,
+} from 'support/intercepts/account';
 import {
   interceptCreateBucket,
   interceptDeleteBucket,
@@ -132,6 +135,7 @@ describe('object storage end-to-end tests', () => {
     interceptDeleteBucket(bucketLabel, bucketCluster).as('deleteBucket');
     interceptGetNetworkUtilization().as('getNetworkUtilization');
 
+    mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
       objMultiCluster: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
@@ -216,7 +220,7 @@ describe('object storage end-to-end tests', () => {
     ];
 
     cy.defer(
-      setUpBucket(bucketLabel, bucketCluster),
+      () => setUpBucket(bucketLabel, bucketCluster),
       'creating Object Storage bucket'
     ).then(() => {
       interceptUploadBucketObjectS3(
@@ -409,7 +413,7 @@ describe('object storage end-to-end tests', () => {
     const bucketAccessPage = `/object-storage/buckets/${bucketCluster}/${bucketLabel}/access`;
 
     cy.defer(
-      setUpBucket(bucketLabel, bucketCluster),
+      () => setUpBucket(bucketLabel, bucketCluster),
       'creating Object Storage bucket'
     ).then(() => {
       interceptGetBucketAccess(bucketLabel, bucketCluster).as(

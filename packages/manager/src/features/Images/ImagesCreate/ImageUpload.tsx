@@ -38,15 +38,15 @@ import { setPendingUpload } from 'src/store/pendingUpload';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { readableBytes } from 'src/utilities/unitConversions';
 
-import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
-import { getRestrictedResourceText } from '../Account/utils';
+import { EUAgreementCheckbox } from '../../Account/Agreements/EUAgreementCheckbox';
+import { getRestrictedResourceText } from '../../Account/utils';
 import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
 import {
   ImageUploadFormData,
   ImageUploadNavigationState,
 } from './ImageUpload.utils';
 import { ImageUploadCLIDialog } from './ImageUploadCLIDialog';
-import { uploadImageFile } from './requests';
+import { uploadImageFile } from '../requests';
 
 import type { AxiosError, AxiosProgressEvent } from 'axios';
 
@@ -256,13 +256,14 @@ export const ImageUpload = () => {
                     onBlur: field.onBlur,
                   }}
                   currentCapability={undefined}
+                  disableClearable
                   errorText={fieldState.error?.message}
-                  handleSelection={field.onChange}
                   helperText="For fastest initial upload, select the region that is geographically closest to you. Once uploaded, you will be able to deploy the image to other regions."
                   label="Region"
+                  onChange={(e, region) => field.onChange(region.id)}
                   regionFilter="core" // Images service will not be supported for Gecko Beta
                   regions={regions ?? []}
-                  selectedId={field.value ?? null}
+                  value={field.value ?? null}
                 />
               )}
               control={form.control}

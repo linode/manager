@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
@@ -14,22 +13,22 @@ export const CloudPulseRegionSelect = React.memo(
     const [selectedRegion, setRegion] = React.useState<string>();
 
     React.useEffect(() => {
-      props.handleRegionChange(selectedRegion);
+      if (selectedRegion) {
+        props.handleRegionChange(selectedRegion);
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedRegion]);
 
     return (
       <RegionSelect
-        handleSelection={(value) => {
-          setRegion(value);
-        }}
         currentCapability={undefined}
+        disableClearable
         fullWidth
-        isClearable={false}
         label=""
         noMarginTop
+        onChange={(e, region) => setRegion(region.id)}
         regions={regions ? regions : []}
-        selectedId={null}
+        value={undefined}
       />
     );
   }
