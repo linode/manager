@@ -109,12 +109,16 @@ const addLeftHeader = (
      * Since LD automatically serves Tax data based on the user's
      * we can check on qi_registration field to render QI Registration.
      * */
-    if (countryTax && countryTax.tax_name === countryTaxNames.JP) {
+    if (countryTax && countryTax.qi_registration) {
       const qiRegistration = `QI Registration # ${countryTax.qi_registration}`;
-      const flatTax = 'Standard Tax is 10%';
       addLine(qiRegistration);
+    }
+
+    if (countryTax && countryTax.tax_name === countryTaxNames.JP) {
+      const flatTax = 'Standard Tax is 10%';
       addLine(flatTax);
     }
+
     if (provincialTax) {
       addLine(`${provincialTax.tax_name}: ${provincialTax.tax_id}`);
     }
