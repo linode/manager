@@ -123,7 +123,7 @@ const addLeftHeader = (
       addLine(qiRegistration);
     }
 
-    if (countryTax?.tax_name === countryTaxNames.JP && countryTax?.tax_info) {
+    if (countryTax?.tax_info) {
       addLine(countryTax.tax_info);
     }
 
