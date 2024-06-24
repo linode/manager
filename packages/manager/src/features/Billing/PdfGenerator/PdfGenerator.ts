@@ -115,8 +115,8 @@ const addLeftHeader = (
     }
 
     if (countryTax && countryTax.tax_name === countryTaxNames.JP) {
-      const flatTax = 'Standard Tax is 10%';
-      addLine(flatTax);
+      const flatTaxJP = 'Standard Tax is 10%';
+      addLine(flatTaxJP);
     }
 
     if (provincialTax) {
