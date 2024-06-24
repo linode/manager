@@ -65,7 +65,6 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
             <TopMenuTooltip title={navHoverText}>
               <IconButton
                 aria-label="open menu"
-                color="inherit"
                 data-testid="open-nav-menu"
                 onClick={desktopMenuToggle}
                 size="large"
