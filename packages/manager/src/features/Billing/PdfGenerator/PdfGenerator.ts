@@ -29,11 +29,6 @@ import type {
 } from '@linode/api-v4/lib/account';
 import type { FlagSet, TaxDetail } from 'src/featureFlags';
 
-const countryTaxNames = {
-  EU: 'EU VAT',
-  JP: 'Japan JCT',
-} as const;
-
 const baseFont = 'helvetica';
 
 const addLeftHeader = (
@@ -103,12 +98,11 @@ const addLeftHeader = (
     doc.setFont(baseFont, 'normal');
 
     if (countryTax) {
-      addLine(`${countryTax.tax_name}: ${countryTax.tax_id}`);
+      const { tax_id, tax_ids, tax_name } = countryTax;
 
-      const { tax_ids, tax_name } = countryTax;
-      const { EU } = countryTaxNames;
+      addLine(`${tax_name}: ${tax_id}`);
 
-      if (tax_name === EU && tax_ids?.B2B) {
+      if (tax_ids?.B2B) {
         const { tax_id: b2bTaxId, tax_name: b2bTaxName } = tax_ids.B2B;
         addLine(`${b2bTaxName}: ${b2bTaxId}`);
       }
