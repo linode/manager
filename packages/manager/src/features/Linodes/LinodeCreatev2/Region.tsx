@@ -13,6 +13,7 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import {
@@ -26,6 +27,7 @@ import { defaultInterfaces, useLinodeCreateQueryParams } from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
+import type { DisableRegionOption } from 'src/components/RegionSelect/RegionSelect.types';
 
 export const Region = () => {
   const {
@@ -42,7 +44,15 @@ export const Region = () => {
     name: 'region',
   });
 
-  const selectedLinode = useWatch({ control, name: 'linode' });
+  const [selectedLinode, selectedImage] = useWatch({
+    control,
+    name: ['linode', 'image'],
+  });
+
+  const { data: image } = useImageQuery(
+    selectedImage ?? '',
+    Boolean(selectedImage)
+  );
 
   const { data: type } = useTypeQuery(
     selectedLinode?.type ?? '',
@@ -112,6 +122,34 @@ export const Region = () => {
         region.site_type === 'distributed' || region.site_type === 'edge'
     );
 
+  const disabledRegions = regions?.reduce<Record<string, DisableRegionOption>>(
+    (disabledRegions, region) => {
+      if (
+        params.type === 'Images' &&
+        image &&
+        image.capabilities.includes('distributed-images') &&
+        region.site_type === 'core'
+      ) {
+        disabledRegions[region.id] = {
+          reason: 'The image selected cannot be deployed in core regions.',
+        };
+      }
+      if (
+        params.type === 'Images' &&
+        image &&
+        !image.capabilities.includes('distributed-images') &&
+        region.site_type === 'distributed'
+      ) {
+        disabledRegions[region.id] = {
+          reason:
+            'The image selected cannot be deployed in distributed regions.',
+        };
+      }
+      return disabledRegions;
+    },
+    {}
+  );
+
   return (
     <Paper>
       <Box display="flex" justifyContent="space-between" mb={1}>
@@ -136,6 +174,7 @@ export const Region = () => {
         currentCapability="Linodes"
         disableClearable
         disabled={isLinodeCreateRestricted}
+        disabledRegions={disabledRegions}
         errorText={fieldState.error?.message}
         onChange={(e, region) => onChange(region)}
         regionFilter={hideDistributedRegions ? 'core' : undefined}

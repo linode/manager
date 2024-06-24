@@ -1,21 +1,55 @@
 import React from 'react';
-import { useController } from 'react-hook-form';
+import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { ImageSelectv2 } from 'src/components/ImageSelectv2/ImageSelectv2';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
-import type { CreateLinodeRequest } from '@linode/api-v4';
+import type { LinodeCreateFormValues } from '../utilities';
+import type { Image } from '@linode/api-v4';
 
 export const Images = () => {
-  const { field, fieldState } = useController<CreateLinodeRequest>({
+  const { control, setValue } = useFormContext<LinodeCreateFormValues>();
+  const { field, fieldState } = useController({
+    control,
     name: 'image',
   });
 
   const isCreateLinodeRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
   });
+
+  const regionId = useWatch({ control, name: 'region' });
+
+  const { data: regions } = useRegionsQuery();
+
+  const onChange = (image: Image | null) => {
+    field.onChange(image?.id ?? null);
+
+    const selectedRegion = regions?.find((r) => r.id === regionId);
+
+    // For now, you *must* deploy a "distributed compatible" Image to a distributed region.
+    // Clear the region field if the image is "distributed compatible" and the region is a core site.
+    if (
+      image &&
+      image.capabilities.includes('distributed-images') &&
+      selectedRegion?.site_type === 'core'
+    ) {
+      setValue('region', '');
+    }
+
+    // Non-"distributed compatible" Images must only be deployed to core sites.
+    // Clear the region field if the currently selected region is a distributed site and the Image is only core compatible.
+    if (
+      image &&
+      !image.capabilities.includes('distributed-images') &&
+      selectedRegion?.site_type === 'distributed'
+    ) {
+      setValue('region', '');
+    }
+  };
 
   return (
     <Paper>
@@ -24,7 +58,7 @@ export const Images = () => {
         disabled={isCreateLinodeRestricted}
         errorText={fieldState.error?.message}
         onBlur={field.onBlur}
-        onChange={(image) => field.onChange(image?.id ?? null)}
+        onChange={onChange}
         value={field.value}
         variant="private"
       />
