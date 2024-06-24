@@ -266,7 +266,7 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
     ui.regionSelect.find().type(`${dcSpecificPricingRegion.label}{enter}`);
 
     // Confirm that HA price updates dynamically once region selection is made.
-    cy.contains(/\(\$.*\/month\)/).should('be.visible');
+    cy.contains(/\$.*\/month/).should('be.visible');
 
     cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
 

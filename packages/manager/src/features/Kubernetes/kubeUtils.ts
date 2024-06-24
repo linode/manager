@@ -1,13 +1,13 @@
-import { Account } from '@linode/api-v4/lib/account';
-import {
+import { sortByVersion } from 'src/utilities/sort-by';
+
+import type { Account } from '@linode/api-v4/lib/account';
+import type {
   KubeNodePoolResponse,
   KubernetesCluster,
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
-import { Region } from '@linode/api-v4/lib/regions';
-
+import type { Region } from '@linode/api-v4/lib/regions';
 import type { ExtendedType } from 'src/utilities/extendType';
-
 export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
 export const nodesDeletionWarning = `All nodes will be deleted and new nodes will be created to replace them.`;
 export const localStorageWarning = `Any local storage (such as \u{2019}hostPath\u{2019} volumes) will be erased.`;
@@ -112,15 +112,40 @@ export const getKubeHighAvailability = (
   };
 };
 
+/**
+ * Retrieves the latest version from an array of version objects.
+ *
+ * This function sorts an array of objects containing version information and returns the object
+ * with the highest version number. The sorting is performed in ascending order based on the
+ * `value` property of each object, and the last element of the sorted array, which represents
+ * the latest version, is returned.
+ *
+ * @param {{label: string, value: string}[]} versions - An array of objects with `label` and `value`
+ *                                                      properties where `value` is a version string.
+ * @returns {{label: string, value: string}} Returns the object with the highest version number.
+ *                                           If the array is empty, returns an default fallback object.
+ *
+ * @example
+ * // Returns the latest version object
+ * getLatestVersion([
+ *   { label: 'Version 1.1', value: '1.1' },
+ *   { label: 'Version 2.0', value: '2.0' }
+ * ]);
+ * // Output: { label: '2.0', value: '2.0' }
+ */
 export const getLatestVersion = (
   versions: { label: string; value: string }[]
-) => {
-  const versionsNumbersArray: number[] = [];
+): { label: string; value: string } => {
+  const sortedVersions = versions.sort((a, b) => {
+    return sortByVersion(a.value, b.value, 'asc');
+  });
 
-  for (const element of versions) {
-    versionsNumbersArray.push(parseFloat(element.value));
+  const latestVersion = sortedVersions.pop();
+
+  if (!latestVersion) {
+    // Return a default fallback object
+    return { label: '', value: '' };
   }
-  const latestVersionValue = Math.max.apply(null, versionsNumbersArray);
 
-  return { label: `${latestVersionValue}`, value: `${latestVersionValue}` };
+  return { label: `${latestVersion.value}`, value: `${latestVersion.value}` };
 };

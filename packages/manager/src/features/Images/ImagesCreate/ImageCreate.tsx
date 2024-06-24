@@ -6,7 +6,7 @@ import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const ImageUpload = React.lazy(() =>
-  import('../ImageUpload').then((module) => ({ default: module.ImageUpload }))
+  import('./ImageUpload').then((module) => ({ default: module.ImageUpload }))
 );
 
 const CreateImageTab = React.lazy(() =>

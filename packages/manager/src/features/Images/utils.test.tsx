@@ -1,6 +1,6 @@
-import { imageFactory, linodeFactory } from 'src/factories';
+import { eventFactory, imageFactory, linodeFactory } from 'src/factories';
 
-import { getImageLabelForLinode } from './utils';
+import { getEventsForImages, getImageLabelForLinode } from './utils';
 
 describe('getImageLabelForLinode', () => {
   it('handles finding an image and getting the label', () => {
@@ -29,5 +29,25 @@ describe('getImageLabelForLinode', () => {
     });
     const images = imageFactory.buildList(3);
     expect(getImageLabelForLinode(linode, images)).toBe(null);
+  });
+});
+
+describe('getEventsForImages', () => {
+  it('sorts events by image', () => {
+    imageFactory.resetSequenceNumber();
+    const images = imageFactory.buildList(3);
+    const successfulEvent = eventFactory.build({ secondary_entity: { id: 0 } });
+    const failedEvent = eventFactory.build({
+      entity: { id: 1 },
+      status: 'failed',
+    });
+    const unrelatedEvent = eventFactory.build();
+
+    expect(
+      getEventsForImages(images, [successfulEvent, failedEvent, unrelatedEvent])
+    ).toEqual({
+      ['private/0']: successfulEvent,
+      ['private/1']: failedEvent,
+    });
   });
 });

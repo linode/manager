@@ -41,8 +41,7 @@ export interface Page {
 // List of Routes and validator of the route
 export const pages: Page[] = [
   {
-    assertIsLoaded: () =>
-      cy.findByText('Choose a Distribution').should('be.visible'),
+    assertIsLoaded: () => cy.findByText('Choose an OS').should('be.visible'),
     goWithUI: [
       {
         go: () => {

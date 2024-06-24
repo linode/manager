@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-import { generateStartTime } from './TimeRangeSelect';
+import { generateStartTime } from './CloudPulseTimeRangeSelect';
 
 describe('Utility Functions', () => {
   it('should create values as functions that return the correct datetime', () => {

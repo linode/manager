@@ -42,7 +42,6 @@ import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
-import { queryKey } from 'src/queries/nodebalancers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
@@ -63,6 +62,7 @@ import type {
   NodeBalancerConfigNodeFields,
 } from '../types';
 import type { Grants } from '@linode/api-v4';
+import { nodebalancerQueries } from 'src/queries/nodebalancers';
 
 const StyledPortsSpan = styled('span', {
   label: 'StyledPortsSpan',
@@ -411,12 +411,10 @@ class NodeBalancerConfigurations extends React.Component<
     // actually delete a real config
     deleteNodeBalancerConfig(Number(nodeBalancerId), config.id)
       .then((_) => {
-        this.props.queryClient.invalidateQueries([
-          queryKey,
-          'nodebalancer',
-          Number(nodeBalancerId),
-          'configs',
-        ]);
+        this.props.queryClient.invalidateQueries({
+          queryKey: nodebalancerQueries.nodebalancer(Number(nodeBalancerId))
+            ._ctx.configurations.queryKey,
+        });
         // update config data
         const newConfigs = clone(this.state.configs);
         newConfigs.splice(idxToDelete, 1);
@@ -827,12 +825,10 @@ class NodeBalancerConfigurations extends React.Component<
 
     createNodeBalancerConfig(Number(nodeBalancerId), configPayload)
       .then((nodeBalancerConfig) => {
-        this.props.queryClient.invalidateQueries([
-          queryKey,
-          'nodebalancer',
-          Number(nodeBalancerId),
-          'configs',
-        ]);
+        this.props.queryClient.invalidateQueries({
+          queryKey: nodebalancerQueries.nodebalancer(Number(nodeBalancerId))
+            ._ctx.configurations.queryKey,
+        });
         // update config data
         const newConfigs = clone(this.state.configs);
         newConfigs[idx] = { ...nodeBalancerConfig, nodes: [] };
@@ -941,12 +937,10 @@ class NodeBalancerConfigurations extends React.Component<
       configPayload
     )
       .then((nodeBalancerConfig) => {
-        this.props.queryClient.invalidateQueries([
-          queryKey,
-          'nodebalancer',
-          Number(nodeBalancerId),
-          'configs',
-        ]);
+        this.props.queryClient.invalidateQueries({
+          queryKey: nodebalancerQueries.nodebalancer(Number(nodeBalancerId))
+            ._ctx.configurations.queryKey,
+        });
         // update config data
         const newConfigs = clone(this.state.configs);
         newConfigs[idx] = { ...nodeBalancerConfig, nodes: [] };

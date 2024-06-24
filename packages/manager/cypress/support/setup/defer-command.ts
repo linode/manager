@@ -162,7 +162,7 @@ Cypress.Commands.add(
   'defer',
   { prevSubject: false },
   <T>(
-    promise: Promise<T>,
+    promiseGenerator: () => Promise<T>,
     labelOrOptions?:
       | Partial<Cypress.Loggable & Cypress.Timeoutable & Labelable>
       | string
@@ -205,7 +205,7 @@ Cypress.Commands.add(
     const wrapPromise = async (): Promise<T> => {
       let result: T;
       try {
-        result = await promise;
+        result = await promiseGenerator();
       } catch (e: any) {
         commandLog.error(e);
         // If we're getting rate limited, timeout for 15 seconds so that

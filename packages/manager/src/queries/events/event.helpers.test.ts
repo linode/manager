@@ -161,7 +161,12 @@ describe('requestFilters', () => {
 
     it('generates a simple filter when pollIDs is empty', () => {
       const result = generatePollingFilter(timestamp, []);
-      expect(result).toEqual({ created: { '+gte': timestamp } });
+      expect(result).toEqual({
+        '+order': 'desc',
+        '+order_by': 'id',
+        action: { '+neq': 'profile_update' },
+        created: { '+gte': timestamp },
+      });
     });
 
     it('handles "in" IDs', () => {
@@ -174,12 +179,18 @@ describe('requestFilters', () => {
           { id: 2 },
           { id: 3 },
         ],
+        '+order': 'desc',
+        '+order_by': 'id',
+        action: { '+neq': 'profile_update' },
       });
     });
 
     it('handles "+neq" IDs', () => {
       const result = generatePollingFilter(timestamp, [], [1, 2, 3]);
       expect(result).toEqual({
+        '+order': 'desc',
+        '+order_by': 'id',
+        action: { '+neq': 'profile_update' },
         '+and': [
           { created: { '+gte': timestamp } },
           { id: { '+neq': 1 } },
@@ -192,6 +203,9 @@ describe('requestFilters', () => {
     it('handles "in" and "+neq" IDs together', () => {
       const result = generatePollingFilter(timestamp, [1, 2, 3], [4, 5, 6]);
       expect(result).toEqual({
+        '+order': 'desc',
+        '+order_by': 'id',
+        action: { '+neq': 'profile_update' },
         '+or': [
           {
             '+and': [

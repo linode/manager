@@ -8,10 +8,10 @@ import { sortByString } from 'src/utilities/sort-by';
 import { RegionMultiSelect } from './RegionMultiSelect';
 
 import type { RegionMultiSelectProps } from './RegionSelect.types';
+import type { Region } from '@linode/api-v4';
 import type { Meta, StoryObj } from '@storybook/react';
-import type { RegionSelectOption } from 'src/components/RegionSelect/RegionSelect.types';
 
-const sortRegionOptions = (a: RegionSelectOption, b: RegionSelectOption) => {
+const sortRegionOptions = (a: Region, b: Region) => {
   return sortByString(a.label, b.label, 'asc');
 };
 
@@ -30,7 +30,7 @@ export const Default: StoryObj<RegionMultiSelectProps> = {
         <Box sx={{ minHeight: 500 }}>
           <RegionMultiSelect
             {...args}
-            handleSelection={handleSelectionChange}
+            onChange={handleSelectionChange}
             selectedIds={selectedRegionsIds}
           />
         </Box>

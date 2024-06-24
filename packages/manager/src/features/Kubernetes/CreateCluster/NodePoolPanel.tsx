@@ -1,12 +1,22 @@
-import { KubeNodePoolResponse, LinodeTypeClass, Region } from '@linode/api-v4';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
+import { extendType } from 'src/utilities/extendType';
 
+import { ADD_NODE_POOLS_DESCRIPTION } from '../ClusterList/constants';
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
+
+import type {
+  KubeNodePoolResponse,
+  LinodeTypeClass,
+  Region,
+} from '@linode/api-v4';
+import type { ExtendedType } from 'src/utilities/extendType';
 
 const DEFAULT_PLAN_COUNT = 3;
 
@@ -17,21 +27,17 @@ export interface NodePoolPanelProps {
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   regionsData: Region[];
-  selectedRegionId: Region['id'];
+  selectedRegionId: Region['id'] | undefined;
   types: ExtendedType[];
   typesError?: string;
   typesLoading: boolean;
 }
 
-export const NodePoolPanel: React.FunctionComponent<NodePoolPanelProps> = (
-  props
-) => {
+export const NodePoolPanel = (props: NodePoolPanelProps) => {
   return <RenderLoadingOrContent {...props} />;
 };
 
-const RenderLoadingOrContent: React.FunctionComponent<NodePoolPanelProps> = (
-  props
-) => {
+const RenderLoadingOrContent = (props: NodePoolPanelProps) => {
   const { typesError, typesLoading } = props;
 
   if (typesError) {
@@ -45,7 +51,7 @@ const RenderLoadingOrContent: React.FunctionComponent<NodePoolPanelProps> = (
   return <Panel {...props} />;
 };
 
-const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
+const Panel = (props: NodePoolPanelProps) => {
   const {
     addNodePool,
     apiError,
@@ -56,6 +62,12 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
     selectedRegionId,
     types,
   } = props;
+
+  const {
+    isDiskEncryptionFeatureEnabled,
+  } = useIsDiskEncryptionFeatureEnabled();
+
+  const regions = useRegionsQuery().data ?? [];
 
   const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
     new Map()
@@ -81,17 +93,27 @@ const Panel: React.FunctionComponent<NodePoolPanelProps> = (props) => {
     setSelectedType(planId);
   };
 
+  const regionSupportsDiskEncryption = doesRegionSupportFeature(
+    selectedRegionId ?? '',
+    regions,
+    'Disk Encryption'
+  );
+
   return (
     <Grid container direction="column">
       <Grid>
         <KubernetesPlansPanel
+          copy={
+            isDiskEncryptionFeatureEnabled && regionSupportsDiskEncryption
+              ? ADD_NODE_POOLS_DESCRIPTION
+              : 'Add groups of Linodes to your cluster. You can have a maximum of 100 Linodes per node pool.'
+          }
           getTypeCount={(planId) =>
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
           }
           types={extendedTypes.filter(
             (t) => t.class !== 'nanode' && t.class !== 'gpu'
           )} // No Nanodes or GPUs in clusters
-          copy="Add groups of Linodes to your cluster. You can have a maximum of 100 Linodes per node pool."
           error={apiError}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"

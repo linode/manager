@@ -104,7 +104,7 @@ describe('linode storage tab', () => {
 
   it('try to delete in use disk', () => {
     const diskName = 'Debian 11 Disk';
-    cy.defer(createTestLinode({ booted: true })).then((linode) => {
+    cy.defer(() => createTestLinode({ booted: true })).then((linode) => {
       cy.intercept(
         'DELETE',
         apiMatcher(`linode/instances/${linode.id}/disks/*`)
@@ -127,7 +127,7 @@ describe('linode storage tab', () => {
 
   it('delete disk', () => {
     const diskName = 'cy-test-disk';
-    cy.defer(createTestLinode({ image: null })).then((linode) => {
+    cy.defer(() => createTestLinode({ image: null })).then((linode) => {
       cy.intercept(
         'DELETE',
         apiMatcher(`linode/instances/${linode.id}/disks/*`)
@@ -157,7 +157,7 @@ describe('linode storage tab', () => {
 
   it('add a disk', () => {
     const diskName = 'cy-test-disk';
-    cy.defer(createTestLinode({ image: null })).then((linode: Linode) => {
+    cy.defer(() => createTestLinode({ image: null })).then((linode: Linode) => {
       cy.intercept(
         'POST',
         apiMatcher(`/linode/instances/${linode.id}/disks`)
@@ -171,7 +171,7 @@ describe('linode storage tab', () => {
 
   it('resize disk', () => {
     const diskName = 'Debian 10 Disk';
-    cy.defer(createTestLinode({ image: null })).then((linode: Linode) => {
+    cy.defer(() => createTestLinode({ image: null })).then((linode: Linode) => {
       cy.intercept(
         'POST',
         apiMatcher(`linode/instances/${linode.id}/disks`)

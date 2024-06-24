@@ -1,4 +1,4 @@
-import { Event } from '@linode/api-v4/lib/account/types';
+// TODO eventMessagesV2: delete when flag is removed
 import { Duration } from 'luxon';
 import * as React from 'react';
 
@@ -16,10 +16,12 @@ import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 import {
-  RenderEventGravatar,
+  RenderEventGravatarV2,
   RenderEventStyledBox,
   useRenderEventStyles,
 } from './RenderEvent.styles';
+
+import type { Event } from '@linode/api-v4/lib/account/types';
 
 interface Props {
   event: Event;
@@ -58,10 +60,7 @@ export const RenderProgressEvent = (props: Props) => {
   return (
     <>
       <RenderEventStyledBox data-test-id={event.action} display="flex">
-        <RenderEventGravatar
-          sx={{ height: 32, minWidth: 32, mt: '3px', width: 32 }}
-          username={event.username}
-        />
+        <RenderEventGravatarV2 username={event.username} />
         <Box
           data-test-id={event.action}
           sx={{ marginTop: '-2px', width: '100%' }}

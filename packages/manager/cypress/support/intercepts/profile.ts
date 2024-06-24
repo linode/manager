@@ -13,9 +13,9 @@ import type {
   Profile,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
-  SSHKey,
   Token,
   UserPreferences,
+  SSHKey,
 } from '@linode/api-v4';
 
 /**
@@ -421,16 +421,40 @@ export const mockGetSSHKey = (sshKey: SSHKey): Cypress.Chainable<null> => {
 };
 
 /**
- * Intercepts POST request to create an SSH key and mocks the response.
+ * Intercepts POST request to create an SSH key.
  *
- * @param sshKey - SSH key object with which to mock response.
+ * @returns Cypress chainable.
+ */
+export const interceptCreateSSHKey = (): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher(`profile/sshkeys*`));
+};
+
+/**
+ * Intercepts POST request to create an SSH key and mocks response.
+ *
+ * @param sshKey - An SSH key with which to create.
  *
  * @returns Cypress chainable.
  */
 export const mockCreateSSHKey = (sshKey: SSHKey): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher(`profile/sshkeys`), sshKey);
+};
+
+/**
+ * Intercepts POST request to create an SSH key and mocks an API error response.
+ *
+ * @param errorMessage - Error message to include in mock error response.
+ * @param status - HTTP status for mock error response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateSSHKeyError = (
+  errorMessage: string,
+  status: number = 400
+): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    apiMatcher('/profile/sshkeys'),
-    makeResponse(sshKey)
+    apiMatcher('profile/sshkeys'),
+    makeErrorResponse(errorMessage, status)
   );
 };

@@ -65,7 +65,7 @@ const cleanUpMap: CleanUpMap = {
  */
 export const cleanUp = (resources: CleanUpResource | CleanUpResource[]) => {
   const resourcesArray = Array.isArray(resources) ? resources : [resources];
-  const promise = async () => {
+  const promiseGenerator = async () => {
     for (const resource of resourcesArray) {
       const cleanFunction = cleanUpMap[resource];
       // Perform clean-up sequentially to avoid API rate limiting.
@@ -74,7 +74,7 @@ export const cleanUp = (resources: CleanUpResource | CleanUpResource[]) => {
     }
   };
   return cy.defer(
-    promise(),
+    promiseGenerator,
     `cleaning up test resources: ${resourcesArray.join(', ')}`
   );
 };
