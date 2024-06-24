@@ -4,6 +4,7 @@ import React from 'react';
 
 import {
   grantsFactory,
+  imageFactory,
   linodeFactory,
   linodeTypeFactory,
   profileFactory,
@@ -172,5 +173,105 @@ describe('Region', () => {
         'Cloning a powered off instance across data centers may cause long periods of down time.'
       )
     ).toBeVisible();
+  });
+
+  it('should disable core regions if a distributed-capable image is selected', async () => {
+    const image = imageFactory.build({ capabilities: ['distributed-images'] });
+
+    const distributedRegion = regionFactory.build({
+      capabilities: ['Linodes'],
+      site_type: 'distributed',
+    });
+    const coreRegion = regionFactory.build({
+      capabilities: ['Linodes'],
+      site_type: 'core',
+    });
+
+    server.use(
+      http.get('*/v4/regions', () => {
+        return HttpResponse.json(
+          makeResourcePage([coreRegion, distributedRegion])
+        );
+      }),
+      http.get('*/v4/images/:id', () => {
+        return HttpResponse.json(image);
+      })
+    );
+
+    const {
+      findByText,
+      getByLabelText,
+    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+      component: <Region />,
+      options: {
+        MemoryRouter: { initialEntries: ['/linodes/create?type=Images'] },
+      },
+      useFormOptions: {
+        defaultValues: {
+          image: image.id,
+        },
+      },
+    });
+
+    const regionSelect = getByLabelText('Region');
+
+    await userEvent.click(regionSelect);
+
+    const coreRegionOption = await findByText(coreRegion.id, { exact: false });
+
+    expect(coreRegionOption.closest('li')?.textContent).toContain(
+      'The image selected cannot be deployed in core regions.'
+    );
+  });
+
+  it('should disable distributed regions if the selected image does not have the `distributed-images` capability', async () => {
+    const image = imageFactory.build({ capabilities: [] });
+
+    const distributedRegion = regionFactory.build({
+      capabilities: ['Linodes'],
+      site_type: 'distributed',
+    });
+    const coreRegion = regionFactory.build({
+      capabilities: ['Linodes'],
+      site_type: 'core',
+    });
+
+    server.use(
+      http.get('*/v4/regions', () => {
+        return HttpResponse.json(
+          makeResourcePage([coreRegion, distributedRegion])
+        );
+      }),
+      http.get('*/v4/images/:id', () => {
+        return HttpResponse.json(image);
+      })
+    );
+
+    const {
+      findByText,
+      getByLabelText,
+    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+      component: <Region />,
+      options: {
+        MemoryRouter: { initialEntries: ['/linodes/create?type=Images'] },
+      },
+      useFormOptions: {
+        defaultValues: {
+          image: image.id,
+        },
+      },
+    });
+
+    const regionSelect = getByLabelText('Region');
+
+    await userEvent.click(regionSelect);
+
+    const distributedRegionOption = await findByText(distributedRegion.id, {
+      exact: false,
+    });
+
+    expect(distributedRegionOption.closest('li')?.textContent).toContain(
+      'The image selected cannot be deployed in distributed regions.'
+    );
   });
 });

@@ -168,6 +168,11 @@ export const Region = () => {
         </Notice>
       )}
       <RegionSelect
+        regionFilter={
+          hideDistributedRegions && params.type !== 'Images'
+            ? 'core'
+            : undefined
+        }
         showDistributedRegionIconHelperText={
           showDistributedRegionIconHelperText
         }
@@ -177,7 +182,6 @@ export const Region = () => {
         disabledRegions={disabledRegions}
         errorText={fieldState.error?.message}
         onChange={(e, region) => onChange(region)}
-        regionFilter={hideDistributedRegions ? 'core' : undefined}
         regions={regions ?? []}
         textFieldProps={{ onBlur: field.onBlur }}
         value={field.value}

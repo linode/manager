@@ -184,6 +184,11 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         </Notice>
       ) : null}
       <RegionSelect
+        regionFilter={
+          hideDistributedRegions && params.type !== 'Images'
+            ? 'core'
+            : undefined
+        }
         showDistributedRegionIconHelperText={
           showDistributedRegionIconHelperText
         }
@@ -194,7 +199,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         errorText={error}
         helperText={helperText}
         onChange={(e, region) => handleSelection(region.id)}
-        regionFilter={hideDistributedRegions ? 'core' : undefined}
         regions={regions ?? []}
         value={selectedId}
         {...RegionSelectProps}
