@@ -3,7 +3,7 @@ import { imageFactory, regionFactory } from 'src/factories';
 import { getDisabledRegions } from './Region.utils';
 
 describe('getDisabledRegions', () => {
-  it('disables distributed regions if the selected image does not the distributed capability', () => {
+  it('disables distributed regions if the selected image does not have the distributed capability', () => {
     const distributedRegion = regionFactory.build({ site_type: 'distributed' });
     const coreRegion = regionFactory.build({ site_type: 'core' });
 
