@@ -1,9 +1,15 @@
+import { getAPIFilterFromQuery } from '@linode/search';
+import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { Waypoint } from 'react-waypoint';
+import { debounce } from 'throttle-debounce';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { IconButton } from 'src/components/IconButton';
+import { InputAdornment } from 'src/components/InputAdornment';
 import { Stack } from 'src/components/Stack';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -13,6 +19,8 @@ import { TableRow } from 'src/components/TableRow/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { TextField } from 'src/components/TextField';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useOrder } from 'src/hooks/useOrder';
 import {
   useStackScriptQuery,
@@ -30,12 +38,15 @@ import {
 
 import type { StackScriptTabType } from './utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 
 interface Props {
   type: StackScriptTabType;
 }
 
 export const StackScriptSelectionList = ({ type }: Props) => {
+  const [query, setQuery] = useState<string>();
+
   const { handleOrderChange, order, orderBy } = useOrder({
     order: 'desc',
     orderBy: 'deployments_total',
@@ -65,16 +76,25 @@ export const StackScriptSelectionList = ({ type }: Props) => {
       : accountStackScriptFilter;
 
   const {
+    error: searchParseError,
+    filter: searchFilter,
+  } = getAPIFilterFromQuery(query, {
+    defaultSearchKeys: ['username', 'label', 'description'],
+  });
+
+  const {
     data,
     error,
     fetchNextPage,
     hasNextPage,
+    isFetching,
     isFetchingNextPage,
     isLoading,
   } = useStackScriptsInfiniteQuery(
     {
       ['+order']: order,
       ['+order_by']: orderBy,
+      ...searchFilter,
       ...filter,
     },
     !hasPreselectedStackScript
@@ -120,8 +140,37 @@ export const StackScriptSelectionList = ({ type }: Props) => {
   }
 
   return (
-    <Box sx={{ maxHeight: 500, overflow: 'auto' }}>
-      <Table>
+    <Box sx={{ height: 500, overflow: 'auto' }}>
+      <TextField
+        InputProps={{
+          endAdornment: query && (
+            <InputAdornment position="end">
+              {isFetching && <CircleProgress size="sm" />}
+              {searchParseError && (
+                <TooltipIcon status="error" text={searchParseError.message} />
+              )}
+              <IconButton
+                aria-label="Clear"
+                onClick={() => setQuery('')}
+                size="small"
+              >
+                <CloseIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+        tooltipText={
+          type === 'Community'
+            ? 'Hint: try searching for a specific item by prepending your search term with "username:", "label:", or "description:"'
+            : undefined
+        }
+        hideLabel
+        label="Search"
+        onChange={debounce(400, (e) => setQuery(e.target.value))}
+        placeholder="Search StackScripts"
+        value={query}
+      />
+      <Table sx={{ mt: 1 }}>
         <TableHead>
           <TableRow>
             <TableCell sx={{ width: 20 }}></TableCell>
@@ -153,6 +202,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
               stackscript={stackscript}
             />
           ))}
+          {data?.pages[0].results === 0 && <TableRowEmpty colSpan={3} />}
           {error && <TableRowError colSpan={3} message={error[0].reason} />}
           {isLoading && <TableRowLoading columns={3} rows={25} />}
           {(isFetchingNextPage || hasNextPage) && (
