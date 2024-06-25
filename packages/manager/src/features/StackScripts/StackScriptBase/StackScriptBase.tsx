@@ -24,6 +24,11 @@ import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
 import { StackScriptTableHead } from '../Partials/StackScriptTableHead';
+import {
+  AcceptedFilters,
+  generateCatchAllFilter,
+  generateSpecificFilter,
+} from '../stackScriptUtils';
 import { StackScriptsRequest } from '../types';
 import {
   StyledContentDiv,
@@ -34,7 +39,6 @@ import {
   StyledTable,
 } from './StackScriptBase.styles';
 import { StackScriptsEmptyLandingState } from './StackScriptsEmptyLandingPage';
-import { getAPIFilterFromQuery } from '@linode/search';
 
 type CurrentFilter = 'deploys' | 'label' | 'revision';
 
@@ -466,7 +470,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         return;
       }
       const { currentFilter } = this.state;
-      const { history, request } = this.props;
+      const { category, history, request } = this.props;
 
       const lowerCaseValue = value.toLowerCase().trim();
 
@@ -475,9 +479,42 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         updateQueryString(lowerCaseValue, history);
       }
 
-      const filter = getAPIFilterFromQuery(lowerCaseValue, {
-        defaultSearchKeys: ['label', 'username', 'description'],
-      }).filter;
+      let filter: Filter;
+
+      /**
+       * only allow for advanced search if we're on the community
+       * stackscripts tab
+       */
+      if (
+        category === 'community' &&
+        (lowerCaseValue.includes('username:') ||
+          lowerCaseValue.includes('label:') ||
+          lowerCaseValue.includes('description:'))
+      ) {
+        /**
+         * In this case, we have a search term that looks similar to the
+         * following: "username:hello world"
+         *
+         * In this case, we need to craft the filter so that the request is
+         * aware that we only want to search by username
+         */
+
+        const indexOfColon = lowerCaseValue.indexOf(':');
+        // everything before the colon is what we want to filter by
+        const filterKey = lowerCaseValue.substr(0, indexOfColon);
+        // everything after the colon is the term we want to search for
+        const searchTerm = lowerCaseValue.substr(indexOfColon + 1);
+        filter = generateSpecificFilter(
+          filterKey as AcceptedFilters,
+          searchTerm
+        );
+      } else {
+        /**
+         * Otherwise, just generate a catch-all filter for
+         * username, description, and label
+         */
+        filter = generateCatchAllFilter(lowerCaseValue);
+      }
 
       this.setState({
         didSearch: true, // table will show default empty state unless didSearch is true

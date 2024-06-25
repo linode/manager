@@ -66,6 +66,41 @@ export const getCommunityStackscripts: StackScriptsRequest = (
   });
 };
 
+export type AcceptedFilters = 'description' | 'label' | 'username';
+
+export const generateSpecificFilter = (
+  key: AcceptedFilters,
+  searchTerm: string
+) => {
+  return {
+    [key]: {
+      ['+contains']: searchTerm,
+    },
+  };
+};
+
+export const generateCatchAllFilter = (searchTerm: string) => {
+  return {
+    ['+or']: [
+      {
+        label: {
+          ['+contains']: searchTerm,
+        },
+      },
+      {
+        username: {
+          ['+contains']: searchTerm,
+        },
+      },
+      {
+        description: {
+          ['+contains']: searchTerm,
+        },
+      },
+    ],
+  };
+};
+
 export const getStackScriptUrl = (
   username: string,
   id: number,
