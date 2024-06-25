@@ -99,7 +99,7 @@ export const RegionSelect = <
     return acc;
   }, {});
 
-  const getEndAdornment = () => {
+  const EndAdornment = React.useMemo(() => {
     if (isGeckoBetaEnabled && selectedRegion?.site_type === 'distributed') {
       return (
         <TooltipIcon
@@ -114,7 +114,7 @@ export const RegionSelect = <
       return `(${selectedRegion?.id})`;
     }
     return null;
-  };
+  }, [isGeckoBetaEnabled, isGeckoGAEnabled, selectedRegion]);
 
   return (
     <StyledAutocompleteContainer sx={{ width }}>
@@ -141,7 +141,7 @@ export const RegionSelect = <
         textFieldProps={{
           ...props.textFieldProps,
           InputProps: {
-            endAdornment: getEndAdornment(),
+            endAdornment: EndAdornment,
             required,
             startAdornment: selectedRegion && (
               <StyledFlagContainer>
