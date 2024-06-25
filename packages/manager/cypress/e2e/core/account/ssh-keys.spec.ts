@@ -9,7 +9,7 @@ import { randomLabel, randomString } from 'support/util/random';
 
 describe('SSH keys', () => {
   /*
-   * - Vaildates SSH key update flow using mock data.
+   * - Validates SSH key update flow using mock data.
    * - Confirms that the drawer opens when clicking.
    * - Confirms that a form validation error appears when the label is not present.
    * - Confirms UI flow when user updates an SSH key.
@@ -34,7 +34,7 @@ describe('SSH keys', () => {
 
     mockGetSSHKeys([mockSSHKey]).as('getSSHKeys');
 
-    // Navigate to SSH key landing page, click the "Add an SSH Key" button.
+    // Navigate to SSH key landing page.
     cy.visitWithLogin('/profile/keys');
     cy.wait('@getSSHKeys');
 
@@ -113,7 +113,7 @@ describe('SSH keys', () => {
 
     mockGetSSHKeys(mockSSHKeys).as('getSSHKeys');
 
-    // Navigate to SSH key landing page, click the "Add an SSH Key" button.
+    // Navigate to SSH key landing page.
     cy.visitWithLogin('/profile/keys');
     cy.wait('@getSSHKeys');
 
