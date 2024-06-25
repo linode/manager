@@ -4,7 +4,7 @@ import {
   Payment,
   getInvoiceItems,
 } from '@linode/api-v4/lib/account';
-import { Theme } from '@mui/material/styles';
+import { Theme, styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
@@ -335,9 +335,11 @@ export const BillingActivityPanel = (props: Props) => {
   }, [selectedTransactionType, combinedData]);
 
   return (
-    <Grid xs={12} data-qa-billing-activity-panel>
+    <Grid data-qa-billing-activity-panel xs={12}>
       <div className={classes.root}>
-        <div className={classes.headerContainer}>
+        <StyledBillingAndPaymentHistoryHeader
+          className={classes.headerContainer}
+        >
           <Typography className={classes.headline} variant="h2">
             {`${isAkamaiCustomer ? 'Usage' : 'Billing & Payment'} History`}
           </Typography>
@@ -397,7 +399,7 @@ export const BillingActivityPanel = (props: Props) => {
               />
             </div>
           </div>
-        </div>
+        </StyledBillingAndPaymentHistoryHeader>
         <OrderBy
           data={selectedTransactionType === 'all' ? combinedData : filteredData}
           order={'desc'}
@@ -488,6 +490,13 @@ export const BillingActivityPanel = (props: Props) => {
     </Grid>
   );
 };
+
+const StyledBillingAndPaymentHistoryHeader = styled('div', {
+  name: 'BillingAndPaymentHistoryHeader',
+})(({ theme }) => ({
+  border: theme.name === 'dark' ? `1px solid ${theme.borderColors.divider}` : 0,
+  borderBottom: 0,
+}));
 
 // =============================================================================
 // <ActivityFeedItem />

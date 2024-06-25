@@ -1,5 +1,5 @@
 // TODO eventMessagesV2: delete when flag is removed
-import type { Event, Filter } from '@linode/api-v4';
+import type { Event } from '@linode/api-v4';
 
 export const EVENT_ACTIONS: Event['action'][] = [
   'account_settings_update',
@@ -154,6 +154,15 @@ export const ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS: Event['action'][] = [
   'database_resize',
 ];
 
-export const EVENTS_LIST_FILTER: Filter = {
+/**
+ * This is our base filter for GETing /v4/account/events.
+ *
+ * We exclude `profile_update` events because they are generated
+ * often (by updating user preferences for example) and we don't
+ * need them.
+ *
+ * @readonly Do not modify this object
+ */
+export const EVENTS_LIST_FILTER = Object.freeze({
   action: { '+neq': 'profile_update' },
-};
+});

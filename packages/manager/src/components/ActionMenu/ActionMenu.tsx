@@ -1,4 +1,4 @@
-import { IconButton, ListItemText, useTheme } from '@mui/material';
+import { IconButton, ListItemText } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import * as React from 'react';
@@ -37,7 +37,6 @@ export interface ActionMenuProps {
  */
 export const ActionMenu = React.memo((props: ActionMenuProps) => {
   const { actionsList, ariaLabel, onOpen } = props;
-  const theme = useTheme();
 
   const menuId = convertToKebabCase(ariaLabel);
   const buttonId = `${convertToKebabCase(ariaLabel)}-button`;
@@ -70,16 +69,6 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
   }
 
   const sxTooltipIcon = {
-    '& :hover': {
-      color: '#4d99f1',
-    },
-    '&& .MuiSvgIcon-root': {
-      fill: theme.color.disabledText,
-      height: '20px',
-      width: '20px',
-    },
-
-    color: '#fff',
     padding: '0 0 0 8px',
     pointerEvents: 'all', // Allows the tooltip to be hovered on a disabled MenuItem
   };
@@ -89,12 +78,12 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
       <IconButton
         sx={(theme) => ({
           ':hover': {
-            backgroundColor: theme.palette.primary.main,
-            color: '#fff',
+            backgroundColor: theme.color.buttonPrimaryHover,
+            color: theme.color.white,
           },
-          backgroundColor: open ? theme.palette.primary.main : undefined,
+          backgroundColor: open ? theme.color.buttonPrimaryHover : undefined,
           borderRadius: 'unset',
-          color: open ? '#fff' : theme.textColors.linkActiveLight,
+          color: open ? theme.color.white : theme.textColors.linkActiveLight,
           height: '100%',
           minWidth: '40px',
           padding: '10px',
@@ -122,7 +111,6 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
           paper: {
             sx: (theme) => ({
               backgroundColor: theme.palette.primary.main,
-              boxShadow: 'none',
             }),
           },
         }}
@@ -146,15 +134,6 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
                 handleClose();
                 a.onClick();
               }
-            }}
-            sx={{
-              '&:hover': {
-                background: '#226dc3',
-              },
-              background: '#3683dc',
-              borderBottom: '1px solid #5294e0',
-              color: '#fff',
-              padding: '10px 10px 10px 16px',
             }}
             data-qa-action-menu-item={a.title}
             data-testid={a.title}

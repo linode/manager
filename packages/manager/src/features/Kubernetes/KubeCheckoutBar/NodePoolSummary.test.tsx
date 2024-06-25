@@ -4,7 +4,7 @@ import * as React from 'react';
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import NodePoolSummary, { Props } from './NodePoolSummary';
+import { NodePoolSummary, Props } from './NodePoolSummary';
 
 const props: Props = {
   nodeCount: 3,

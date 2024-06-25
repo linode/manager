@@ -4,11 +4,12 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
-import { FlagSet, Flags } from 'src/featureFlags';
-import { Dispatch } from 'src/hooks/types';
 import { useFlags } from 'src/hooks/useFlags';
 import { setMockFeatureFlags } from 'src/store/mockFeatureFlags';
 import { getStorage, setStorage } from 'src/utilities/storage';
+
+import type { FlagSet, Flags } from 'src/featureFlags';
+import type { Dispatch } from 'src/hooks/types';
 const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 
 /**
@@ -24,6 +25,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
   { flag: 'eventMessagesV2', label: 'Event Messages V2' },
   { flag: 'gecko2', label: 'Gecko' },
+  { flag: 'imageServiceGen2', label: 'Image Service Gen2' },
   { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },

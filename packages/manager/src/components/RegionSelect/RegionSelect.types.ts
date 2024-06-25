@@ -1,11 +1,10 @@
-import React from 'react';
-
 import type {
   AccountAvailability,
   Capabilities,
   Region,
   RegionSite,
 } from '@linode/api-v4';
+import type React from 'react';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
 
 export interface DisableRegionOption {
@@ -49,7 +48,7 @@ export interface RegionSelectProps<
   /**
    * The ID of the selected region.
    */
-  value: null | string;
+  value: string | undefined;
   width?: number;
 }
 
@@ -80,5 +79,3 @@ export interface GetRegionOptionAvailability {
   currentCapability: Capabilities | undefined;
   region: Region;
 }
-
-export type SupportedDistributedRegionTypes = 'Distributions' | 'StackScripts';

@@ -21,17 +21,21 @@ import { distroIcons } from '../DistributionIcon';
 
 export type Variant = 'all' | 'private' | 'public';
 
-interface ImageItem extends Item<string> {
+export interface ImageItem extends Item<string> {
   className: string;
   created: string;
   isCloudInitCompatible: boolean;
+  isDistributedCompatible: boolean;
 }
 
 interface ImageSelectProps {
   classNames?: string;
   disabled?: boolean;
   error?: string;
-  handleSelectImage: (selection?: string) => void;
+  handleSelectImage: (
+    selection: string | undefined,
+    image: Image | undefined
+  ) => void;
   images: Image[];
   selectedImageID?: string;
   title: string;
@@ -111,6 +115,9 @@ export const imagesToGroupedItems = (images: Image[]) => {
                     : `fl-tux`,
                   created,
                   isCloudInitCompatible: capabilities?.includes('cloud-init'),
+                  isDistributedCompatible: capabilities?.includes(
+                    'distributed-images'
+                  ),
                   // Add suffix 'deprecated' to the image at end of life.
                   label:
                     differenceInMonths > 0 ? `${label} (deprecated)` : label,
@@ -188,10 +195,12 @@ export const ImageSelect = React.memo((props: ImageSelectProps) => {
 
   const onChange = (selection: ImageItem | null) => {
     if (selection === null) {
-      return handleSelectImage(undefined);
+      return handleSelectImage(undefined, undefined);
     }
 
-    return handleSelectImage(selection.value);
+    const selectedImage = images.find((i) => i.id === selection.value);
+
+    return handleSelectImage(selection.value, selectedImage);
   };
 
   return (

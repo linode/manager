@@ -12,24 +12,32 @@ import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 import { getDefaultUDFData } from '../StackScripts/UserDefinedFields/utilities';
 import { AppSection } from './AppSection';
 import { AppSelectionCard } from './AppSelectionCard';
-import { getAppSections } from './utilities';
+import { getAppSections, getFilteredApps } from './utilities';
 
 import type { LinodeCreateFormValues } from '../../utilities';
 import type { StackScript } from '@linode/api-v4';
+import type { AppCategory } from 'src/features/OneClickApps/types';
 
 interface Props {
+  /**
+   * The selected category to filter by
+   */
+  category: AppCategory | undefined;
   /**
    * Opens the Marketplace App details drawer for the given app
    */
   onOpenDetailsDrawer: (stackscriptId: number) => void;
+  /**
+   * The search query
+   */
+  query: string;
 }
 
-export const AppsList = ({ onOpenDetailsDrawer }: Props) => {
+export const AppsList = (props: Props) => {
+  const { category, onOpenDetailsDrawer, query } = props;
   const { data: stackscripts, error, isLoading } = useMarketplaceAppsQuery(
     true
   );
-
-  const filter = null;
 
   const { setValue } = useFormContext<LinodeCreateFormValues>();
   const { field } = useController<LinodeCreateFormValues, 'stackscript_id'>({
@@ -62,10 +70,16 @@ export const AppsList = ({ onOpenDetailsDrawer }: Props) => {
     return <ErrorState errorText={error?.[0].reason} />;
   }
 
-  if (filter) {
+  if (category || query) {
+    const filteredStackScripts = getFilteredApps({
+      category,
+      query,
+      stackscripts,
+    });
+
     return (
       <Grid container spacing={2}>
-        {stackscripts?.map((stackscript) => (
+        {filteredStackScripts?.map((stackscript) => (
           <AppSelectionCard
             checked={field.value === stackscript.id}
             iconUrl={`/assets/${oneClickApps[stackscript.id].logo_url}`}
