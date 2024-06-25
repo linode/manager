@@ -15,7 +15,7 @@ import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 
 export interface SDKTabPanelProps {
   payLoad: CreateLinodeRequest;
-  tabs: { title: string; type: string }[];
+  title: string;
 }
 
 const sdkOptions: OptionType[] = [
@@ -23,7 +23,7 @@ const sdkOptions: OptionType[] = [
   { label: 'Python (linode_api4-python)', value: 'python' },
 ];
 
-export const SDKTabPanel = ({ payLoad, tabs }: SDKTabPanelProps) => {
+export const SDKTabPanel = ({ payLoad, title }: SDKTabPanelProps) => {
   const [selectedSDK, setSelectedSDK] = useState<OptionType | null>(null);
 
   const linodegoSnippet = useMemo(() => generateGoLinodeSnippet(payLoad), [
@@ -64,7 +64,7 @@ export const SDKTabPanel = ({ payLoad, tabs }: SDKTabPanelProps) => {
             command={
               selectedSDK.value === 'go' ? linodegoSnippet : pythonLinodeSnippet
             }
-            commandType={tabs[3].title}
+            commandType={title}
             language={'bash'}
           />
         </>

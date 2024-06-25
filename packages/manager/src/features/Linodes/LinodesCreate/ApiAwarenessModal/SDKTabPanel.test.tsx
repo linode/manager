@@ -5,7 +5,9 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { gettingStartedGuides as goResources } from './GoSDKResources';
 import { gettingStartedGuides as pythonResources } from './PythonSDKResources';
-import { SDKTabPanel, SDKTabPanelProps } from './SDKTabPanel';
+import { SDKTabPanel } from './SDKTabPanel';
+
+import type { SDKTabPanelProps } from './SDKTabPanel';
 
 const defaultProps: SDKTabPanelProps = {
   payLoad: {
@@ -15,24 +17,7 @@ const defaultProps: SDKTabPanelProps = {
     root_pass: 'testpassword',
     type: 'g6-dedicated-2',
   },
-  tabs: [
-    {
-      title: 'Linode CLI',
-      type: 'CLI',
-    },
-    {
-      title: 'cURL',
-      type: 'API',
-    },
-    {
-      title: 'Integrations',
-      type: 'INTEGRATIONS',
-    },
-    {
-      title: `SDK's`,
-      type: 'INTEGRATIONS',
-    },
-  ],
+  title: `SDK's`,
 };
 
 vi.mock('@reach/tabs', async () => {

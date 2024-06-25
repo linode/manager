@@ -14,10 +14,10 @@ import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 export interface CurlTabPanelProps {
   index: number;
   payLoad: CreateLinodeRequest;
-  tabs: { title: string; type: string }[];
+  title: string;
 }
 
-export const CurlTabPanel = ({ index, payLoad, tabs }: CurlTabPanelProps) => {
+export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
   const theme = useTheme();
   const curlCommand = useMemo(
     () => generateCurlCommand(payLoad, '/linode/instances'),
@@ -59,11 +59,7 @@ export const CurlTabPanel = ({ index, payLoad, tabs }: CurlTabPanelProps) => {
         </Link>
         .
       </Typography>
-      <CodeBlock
-        command={curlCommand}
-        commandType={tabs[index].title}
-        language={'bash'}
-      />
+      <CodeBlock command={curlCommand} commandType={title} language={'bash'} />
     </SafeTabPanel>
   );
 };

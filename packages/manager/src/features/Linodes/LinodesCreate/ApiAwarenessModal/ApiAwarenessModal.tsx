@@ -28,6 +28,32 @@ export interface ApiAwarenessModalProps {
   payLoad: CreateLinodeRequest;
 }
 
+export const baseTabs = [
+  {
+    component: CurlTabPanel,
+    title: 'cURL',
+    type: 'API',
+  },
+  {
+    component: LinodeCLIPanel,
+    title: 'Linode CLI',
+    type: 'CLI',
+  },
+];
+
+export const additionalTabs = [
+  {
+    component: IntegrationsTabPanel,
+    title: 'Integrations',
+    type: 'INTEGRATIONS',
+  },
+  {
+    component: SDKTabPanel,
+    title: `SDK's`,
+    type: 'INTEGRATIONS',
+  },
+];
+
 export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
   const { isOpen, onClose, payLoad } = props;
 
@@ -44,37 +70,11 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
 
   const isLinodeCreated = linodeCreationEvent !== undefined;
 
-  const isFeatureEnabled = flags?.apicliDxToolsAdditions;
+  const isDxAdditionsFeatureEnabled = flags?.apicliDxToolsAdditions;
 
-  const tabs = isFeatureEnabled
-    ? [
-        {
-          title: 'Linode CLI',
-          type: 'CLI',
-        },
-        {
-          title: 'cURL',
-          type: 'API',
-        },
-        {
-          title: 'Integrations',
-          type: 'INTEGRATIONS',
-        },
-        {
-          title: `SDK's`,
-          type: 'INTEGRATIONS',
-        },
-      ]
-    : [
-        {
-          title: 'cURL',
-          type: 'API',
-        },
-        {
-          title: 'Linode CLI',
-          type: 'CLI',
-        },
-      ];
+  const tabs = isDxAdditionsFeatureEnabled
+    ? [...baseTabs.reverse(), ...additionalTabs]
+    : baseTabs;
 
   const handleTabChange = (index: number) => {
     sendApiAwarenessClickEvent(`${tabs[index].type} Tab`, tabs[index].type);
@@ -100,43 +100,28 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
       title="Create Linode"
     >
       <Typography sx={{ paddingBottom: '6px' }} variant="body1">
-        {isFeatureEnabled
+        {isDxAdditionsFeatureEnabled
           ? 'Create a Linode in the command line, powered by the Linode API. Select one of the methods below and paste the corresponding command into your local terminal. The values for each command have been populated with the selections made in the Cloud Manager create form.'
           : 'Create a Linode in the command line using either cURL or the Linode CLI — both of which are powered by the Linode API. Select one of the methods below and paste the corresponding command into your local terminal. The values for each command have been populated with the selections made in the Cloud Manager create form.'}
       </Typography>
       <StyledTabs defaultIndex={0} onChange={handleTabChange}>
         <TabList>
-          {isFeatureEnabled ? (
-            <>
-              <Tab>Linode CLI</Tab>
-              <Tab>cURL</Tab>
-              <Tab>Integrations</Tab>
-              <Tab>SDK&apos;s</Tab>
-            </>
-          ) : (
-            <>
-              <Tab>cURL</Tab>
-              <Tab>Linode CLI</Tab>
-            </>
-          )}
+          {tabs.map((tab) => (
+            <Tab key={tab.title}>{tab.title}</Tab>
+          ))}
         </TabList>
         <TabPanels>
-          {isFeatureEnabled ? (
-            <>
-              <LinodeCLIPanel index={0} payLoad={payLoad} tabs={tabs} />
-              <CurlTabPanel index={1} payLoad={payLoad} tabs={tabs} />
-              <IntegrationsTabPanel payLoad={payLoad} tabs={tabs} />
-              <SDKTabPanel payLoad={payLoad} tabs={tabs} />
-            </>
-          ) : (
-            <>
-              <CurlTabPanel index={0} payLoad={payLoad} tabs={tabs} />
-              <LinodeCLIPanel index={1} payLoad={payLoad} tabs={tabs} />
-            </>
-          )}
+          {tabs.map((tab, index) => (
+            <tab.component
+              index={index}
+              key={index}
+              payLoad={payLoad}
+              title={tab.title}
+            />
+          ))}
         </TabPanels>
       </StyledTabs>
-      {!isFeatureEnabled && (
+      {!isDxAdditionsFeatureEnabled && (
         <Notice spacingBottom={0} spacingTop={24} variant="marketing">
           <Typography
             sx={{

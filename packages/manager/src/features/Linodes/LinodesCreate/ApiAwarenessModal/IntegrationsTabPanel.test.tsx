@@ -4,11 +4,10 @@ import React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { gettingStartedGuides as ansibleResources } from './AnsibleIntegrationResources';
-import {
-  IntegrationsTabPanel,
-  IntegrationsTabPanelProps,
-} from './IntegrationsTabPanel';
+import { IntegrationsTabPanel } from './IntegrationsTabPanel';
 import { gettingStartedGuides as terraformResources } from './TerraformIntegrationResources';
+
+import type { IntegrationsTabPanelProps } from './IntegrationsTabPanel';
 
 const defaultProps: IntegrationsTabPanelProps = {
   payLoad: {
@@ -18,24 +17,7 @@ const defaultProps: IntegrationsTabPanelProps = {
     root_pass: 'testpassword',
     type: 'g6-dedicated-2',
   },
-  tabs: [
-    {
-      title: 'Linode CLI',
-      type: 'CLI',
-    },
-    {
-      title: 'cURL',
-      type: 'API',
-    },
-    {
-      title: 'Integrations',
-      type: 'INTEGRATIONS',
-    },
-    {
-      title: `SDK's`,
-      type: 'INTEGRATIONS',
-    },
-  ],
+  title: 'Integrations',
 };
 
 vi.mock('@reach/tabs', async () => {

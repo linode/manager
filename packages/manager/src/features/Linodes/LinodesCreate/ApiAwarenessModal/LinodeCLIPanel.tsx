@@ -13,13 +13,13 @@ import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 export interface LinodeCLIPanelProps {
   index: number;
   payLoad: CreateLinodeRequest;
-  tabs: { title: string; type: string }[];
+  title: string;
 }
 
 export const LinodeCLIPanel = ({
   index,
   payLoad,
-  tabs,
+  title,
 }: LinodeCLIPanelProps) => {
   const cliCommand = useMemo(() => generateCLICommand(payLoad), [payLoad]);
 
@@ -51,11 +51,7 @@ export const LinodeCLIPanel = ({
         </Link>
         .
       </Typography>
-      <CodeBlock
-        command={cliCommand}
-        commandType={tabs[index].title}
-        language={'bash'}
-      />
+      <CodeBlock command={cliCommand} commandType={title} language={'bash'} />
     </SafeTabPanel>
   );
 };

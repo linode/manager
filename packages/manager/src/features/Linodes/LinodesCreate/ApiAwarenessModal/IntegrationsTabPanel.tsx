@@ -14,7 +14,7 @@ import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 
 export interface IntegrationsTabPanelProps {
   payLoad: CreateLinodeRequest;
-  tabs: { title: string; type: string }[];
+  title: string;
 }
 export interface OptionType {
   label: string;
@@ -28,7 +28,7 @@ const integrationsOptions: OptionType[] = [
 
 export const IntegrationsTabPanel = ({
   payLoad,
-  tabs,
+  title,
 }: IntegrationsTabPanelProps) => {
   const [
     selectedIntegration,
@@ -72,7 +72,7 @@ export const IntegrationsTabPanel = ({
                 ? ansibleConfig
                 : terraformConfig
             }
-            commandType={tabs[2].title}
+            commandType={title}
             language={'bash'}
           />
         </>
