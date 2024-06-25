@@ -3,7 +3,6 @@ import { styled } from '@mui/material/styles';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import { Paper } from 'src/components/Paper';
 
 export const StyledActionButton = styled(Button, {
   label: 'StyledActionButton',
@@ -55,9 +54,10 @@ export const StyledSummaryTextTypography = styled(Typography, {
   whiteSpace: 'nowrap',
 }));
 
-export const StyledPaper = styled(Paper, {
-  label: 'StyledPaper',
+export const StyledBox = styled(Box, {
+  label: 'StyledBox',
 })(({ theme }) => ({
+  background: theme.bg.bgPaper,
   borderTop: `1px solid ${theme.borderColors.borderTable}`,
   display: 'flex',
   padding: theme.spacing(2),

@@ -181,7 +181,7 @@ describe('Images Landing Table', () => {
 
     await userEvent.click(getByText('Rebuild an Existing Linode'));
 
-    getByText('Restore from Image');
+    getByText('Rebuild an Existing Linode from an Image');
   });
 
   it('should allow deploying to a new Linode', async () => {
