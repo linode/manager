@@ -11,13 +11,13 @@ import {
 } from 'src/features/components/PlansPanel/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionAvailabilityQuery } from 'src/queries/regions/regions';
-import { ExtendedType } from 'src/utilities/extendType';
 
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 
 import type { CreateNodePoolData, Region } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
+import type { ExtendedType } from 'src/utilities/extendType';
 
 interface Props {
   addPool?: (pool?: CreateNodePoolData) => void;
@@ -67,16 +67,21 @@ export const KubernetesPlansPanel = (props: Props) => {
     Boolean(flags.soldOutChips) && selectedRegionId !== undefined
   );
 
-  const _types = replaceOrAppendPlaceholder512GbPlans(types);
+  const _types = types.filter(
+    (type) =>
+      !type.id.includes('dedicated-edge') && !type.id.includes('nanode-edge')
+  );
+
   const plans = getPlanSelectionsByPlanType(
-    flags.disableLargestGbPlans ? _types : types
+    flags.disableLargestGbPlans
+      ? replaceOrAppendPlaceholder512GbPlans(_types)
+      : _types
   );
 
   const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
     const plansMap: PlanSelectionType[] = plans[plan];
     const {
       allDisabledPlans,
-      hasDisabledPlans,
       hasMajorityOfPlansDisabled,
       plansForThisLinodeTypeClass,
     } = extractPlansInformation({
@@ -94,7 +99,7 @@ export const KubernetesPlansPanel = (props: Props) => {
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                 plan
               )}
-              hasDisabledPlans={hasDisabledPlans}
+              hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
               hasSelectedRegion={hasSelectedRegion}
               planType={plan}
               regionsData={regionsData}

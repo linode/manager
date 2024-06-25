@@ -134,7 +134,8 @@ const uploadImage = (label: string) => {
 
   cy.intercept('POST', apiMatcher('images/upload')).as('imageUpload');
 
-  ui.button.findByAttribute('type', 'submit')
+  ui.button
+    .findByAttribute('type', 'submit')
     .should('be.enabled')
     .should('be.visible')
     .click();

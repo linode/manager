@@ -14,7 +14,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccountUsers } from 'src/queries/account/users';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 
 import CreateUserDrawer from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';

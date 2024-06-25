@@ -51,7 +51,7 @@ describe('volume resize flow', () => {
       size: oldSize,
     });
 
-    cy.defer(createActiveVolume(volumeRequest), 'creating Volume').then(
+    cy.defer(() => createActiveVolume(volumeRequest), 'creating Volume').then(
       (volume: Volume) => {
         interceptResizeVolume(volume.id).as('resizeVolume');
         cy.visitWithLogin('/volumes', {

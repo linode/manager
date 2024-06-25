@@ -1,5 +1,4 @@
 import type { Linode } from '@linode/api-v4';
-import { createLinode } from '@linode/api-v4';
 import { createLinodeRequestFactory, linodeFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
@@ -12,6 +11,7 @@ import {
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
@@ -43,7 +43,7 @@ describe('Rescue Linodes', () => {
       region: chooseRegion().id,
     });
 
-    cy.defer(createLinode(linodePayload), 'creating Linode').then(
+    cy.defer(() => createTestLinode(linodePayload), 'creating Linode').then(
       (linode: Linode) => {
         interceptGetLinodeDetails(linode.id).as('getLinode');
         interceptRebootLinodeIntoRescueMode(linode.id).as(

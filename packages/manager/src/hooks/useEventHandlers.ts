@@ -7,11 +7,11 @@ import { firewallEventsHandler } from 'src/queries/firewalls';
 import { imageEventsHandler } from 'src/queries/images';
 import { diskEventHandler } from 'src/queries/linodes/events';
 import { linodeEventsHandler } from 'src/queries/linodes/events';
-import { nodebalanacerEventHandler } from 'src/queries/nodebalancers';
-import { sshKeyEventHandler } from 'src/queries/profile';
+import { nodebalancerEventHandler } from 'src/queries/nodebalancers';
+import { sshKeyEventHandler } from 'src/queries/profile/profile';
 import { stackScriptEventHandler } from 'src/queries/stackscripts';
 import { supportTicketEventHandler } from 'src/queries/support';
-import { tokenEventHandler } from 'src/queries/tokens';
+import { tokenEventHandler } from 'src/queries/profile/tokens';
 import { volumeEventsHandler } from 'src/queries/volumes/events';
 
 import type { Event } from '@linode/api-v4';
@@ -58,7 +58,7 @@ export const eventHandlers: {
   },
   {
     filter: (event) => event.action.startsWith('nodebalancer'),
-    handler: nodebalanacerEventHandler,
+    handler: nodebalancerEventHandler,
   },
   {
     filter: (event) => event.action.startsWith('oauth_client'),

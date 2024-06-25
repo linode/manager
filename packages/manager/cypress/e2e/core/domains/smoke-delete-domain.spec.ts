@@ -20,7 +20,7 @@ describe('Delete a Domain', () => {
       group: 'test-group',
     });
 
-    cy.defer(createDomain(domainRequest), 'creating domain').then(
+    cy.defer(() => createDomain(domainRequest), 'creating domain').then(
       (domain: Domain) => {
         cy.visitWithLogin('/domains');
 

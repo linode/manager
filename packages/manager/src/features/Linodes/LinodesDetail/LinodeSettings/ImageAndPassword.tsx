@@ -5,7 +5,7 @@ import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { ImageSelect } from 'src/features/Images/ImageSelect';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';

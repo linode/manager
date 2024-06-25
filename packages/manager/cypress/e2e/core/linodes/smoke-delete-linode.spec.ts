@@ -1,5 +1,5 @@
 import { authenticate } from 'support/api/authentication';
-import { createLinode } from '@linode/api-v4/lib/linodes';
+import { createTestLinode } from 'support/util/linodes';
 import { createLinodeRequestFactory } from '@src/factories/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
@@ -73,7 +73,7 @@ describe('delete linode', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
     });
-    cy.defer(createLinode(linodeCreatePayload)).then((linode) => {
+    cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
       interceptDeleteLinode(linode.id).as('deleteLinode');
       cy.visitWithLogin(`/linodes/${linode.id}`);
@@ -120,7 +120,7 @@ describe('delete linode', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
     });
-    cy.defer(createLinode(linodeCreatePayload)).then((linode) => {
+    cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
       interceptDeleteLinode(linode.id).as('deleteLinode');
       cy.visitWithLogin(`/linodes/${linode.id}`);
@@ -171,7 +171,7 @@ describe('delete linode', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
     });
-    cy.defer(createLinode(linodeCreatePayload)).then((linode) => {
+    cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
       interceptDeleteLinode(linode.id).as('deleteLinode');
       cy.visitWithLogin(`/linodes`);
@@ -219,10 +219,10 @@ describe('delete linode', () => {
 
     const createTwoLinodes = async (): Promise<[Linode, Linode]> => {
       return Promise.all([
-        createLinode(
+        createTestLinode(
           createLinodeRequestFactory.build({ label: randomLabel() })
         ),
-        createLinode(
+        createTestLinode(
           createLinodeRequestFactory.build({ label: randomLabel() })
         ),
       ]);
@@ -230,7 +230,7 @@ describe('delete linode', () => {
 
     mockGetAccountSettings(mockAccountSettings).as('getAccountSettings');
 
-    cy.defer(createTwoLinodes()).then(([linodeA, linodeB]) => {
+    cy.defer(() => createTwoLinodes()).then(([linodeA, linodeB]) => {
       interceptDeleteLinode(linodeA.id).as('deleteLinode');
       interceptDeleteLinode(linodeB.id).as('deleteLinode');
       cy.visitWithLogin('/linodes', { preferenceOverrides });
