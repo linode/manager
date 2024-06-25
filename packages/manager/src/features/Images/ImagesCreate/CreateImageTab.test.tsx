@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
@@ -12,6 +13,18 @@ import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateImageTab } from './CreateImageTab';
+
+// Mock useLocation
+const mockLocation = {
+  search: '',
+};
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual<any>('react-router-dom');
+  return {
+    ...actual,
+    useLocation: () => mockLocation,
+  };
+});
 
 describe('CreateImageTab', () => {
   it('should render fields, titles, and buttons in their default state', () => {
@@ -38,6 +51,29 @@ describe('CreateImageTab', () => {
 
     expect(submitButton).toBeVisible();
     expect(submitButton).toBeEnabled();
+  });
+
+  it('should pre-fill Linode and Disk from search params', async () => {
+    const linode = linodeFactory.build();
+    const disk = linodeDiskFactory.build();
+
+    mockLocation.search = `selectedLinode=${linode.id}&selectedDisk=${disk.id}`;
+
+    server.use(
+      http.get('*/v4/linode/instances', () => {
+        return HttpResponse.json(makeResourcePage([linode]));
+      }),
+      http.get('*/v4/linode/instances/:id/disks', () => {
+        return HttpResponse.json(makeResourcePage([disk]));
+      })
+    );
+
+    const { getByLabelText } = renderWithTheme(<CreateImageTab />);
+
+    await waitFor(() => {
+      expect(getByLabelText('Linode')).toHaveValue(linode.label);
+      expect(getByLabelText('Disk')).toHaveValue(disk.label);
+    });
   });
 
   it('should render client side validation errors', async () => {
