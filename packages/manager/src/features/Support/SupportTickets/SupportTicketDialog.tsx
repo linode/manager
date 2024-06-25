@@ -57,6 +57,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   rootReply: {
     marginBottom: theme.spacing(2),
     padding: 0,
+    marginTop: theme.spacing(2),
   },
 }));
 
