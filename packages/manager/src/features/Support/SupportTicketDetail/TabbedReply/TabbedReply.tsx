@@ -22,6 +22,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     backgroundColor: 'transparent',
     padding: 0,
+    marginTop: theme.spacing(2),
   },
 }));
 
