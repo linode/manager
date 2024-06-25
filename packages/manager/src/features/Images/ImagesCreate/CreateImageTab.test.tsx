@@ -1,6 +1,7 @@
 import { waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
+import { debug } from 'vitest-preview';
 
 import {
   imageFactory,
@@ -27,6 +28,10 @@ vi.mock('react-router-dom', async () => {
 });
 
 describe('CreateImageTab', () => {
+  beforeEach(() => {
+    mockLocation.search = '';
+  });
+
   it('should render fields, titles, and buttons in their default state', () => {
     const { getByLabelText, getByText } = renderWithTheme(<CreateImageTab />);
 
@@ -82,6 +87,8 @@ describe('CreateImageTab', () => {
     const submitButton = getByText('Create Image').closest('button');
 
     await userEvent.click(submitButton!);
+
+    debug();
 
     expect(getByText('Disk is required.')).toBeVisible();
   });
