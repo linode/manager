@@ -1,3 +1,4 @@
+import { getAPIFilterFromQuery } from '@linode/search';
 import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -16,8 +17,10 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useVolumesQuery } from 'src/queries/volumes/volumes';
@@ -44,7 +47,7 @@ export const VolumesLanding = () => {
   const location = useLocation<{ volume: Volume | undefined }>();
   const pagination = usePagination(1, preferenceKey);
   const queryParams = new URLSearchParams(location.search);
-  const volumeLabelFromParam = queryParams.get(searchQueryKey) ?? '';
+  const query = queryParams.get(searchQueryKey) ?? '';
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -54,13 +57,18 @@ export const VolumesLanding = () => {
     `${preferenceKey}-order`
   );
 
-  const filter = {
+  let filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
   };
 
-  if (volumeLabelFromParam) {
-    filter['label'] = { '+contains': volumeLabelFromParam };
+  const {
+    error: parseError,
+    filter: searchFilter,
+  } = getAPIFilterFromQuery(query, { defaultSearchKeys: ['label', 'tags'] });
+
+  if (query) {
+    filter = { ...filter, ...searchFilter };
   }
 
   const { data: volumes, error, isFetching, isLoading } = useVolumesQuery(
@@ -139,7 +147,7 @@ export const VolumesLanding = () => {
     return <CircleProgress />;
   }
 
-  if (error) {
+  if (error && !query) {
     return (
       <ErrorState
         errorText={
@@ -149,7 +157,7 @@ export const VolumesLanding = () => {
     );
   }
 
-  if (volumes?.results === 0 && !volumeLabelFromParam) {
+  if (volumes?.results === 0 && !query) {
     return <VolumesLandingEmptyState />;
   }
 
@@ -168,10 +176,12 @@ export const VolumesLanding = () => {
       />
       <TextField
         InputProps={{
-          endAdornment: volumeLabelFromParam && (
+          endAdornment: query && (
             <InputAdornment position="end">
               {isFetching && <CircleProgress size="sm" />}
-
+              {parseError && (
+                <TooltipIcon status="error" text={parseError.message} />
+              )}
               <IconButton
                 aria-label="Clear"
                 data-testid="clear-volumes-search"
@@ -190,7 +200,7 @@ export const VolumesLanding = () => {
         label="Search"
         placeholder="Search Volumes"
         sx={{ mb: 2 }}
-        value={volumeLabelFromParam}
+        value={query}
       />
       <Table>
         <TableHead>
@@ -221,12 +231,14 @@ export const VolumesLanding = () => {
               Size
             </TableSortCell>
             <TableCell>Attached To</TableCell>
+            <TableCell>ID</TableCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
+          {error && <TableRowError colSpan={7} message={error[0].reason} />}
           {volumes?.data.length === 0 && (
-            <TableRowEmpty colSpan={6} message="No volume found" />
+            <TableRowEmpty colSpan={7} message="No volume found" />
           )}
           {volumes?.data.map((volume) => (
             <VolumeTableRow

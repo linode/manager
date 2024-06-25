@@ -1,0 +1,23 @@
+{
+  "name": "@linode/search",
+  "version": "0.0.1",
+  "description": "Search query parser for Linode API filtering",
+  "type": "module",
+  "module": "src/search.ts",
+  "types": "src/search.ts",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "precommit": "tsc"
+  },
+  "dependencies": {
+    "peggy": "^4.0.3"
+  },
+  "peerDependencies": {
+    "@linode/api-v4": "*",
+    "vite": "*"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.0"
+  }
+}

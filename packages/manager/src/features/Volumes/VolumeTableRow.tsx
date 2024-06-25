@@ -151,6 +151,7 @@ export const VolumeTableRow = React.memo((props: Props) => {
           )}
         </TableCell>
       )}
+      <TableCell>{volume.id}</TableCell>
       <TableCell actionCell>
         <VolumesActionMenu
           handlers={handlers}
