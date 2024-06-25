@@ -31,9 +31,22 @@ export const queryPresets = {
   },
 };
 
-export const queryClientFactory = () => {
+/**
+ * Creates and returns a new TanStack Query query client instance.
+ *
+ * Allows the query client behavior to be configured by specifying a preset. The
+ * 'longLived' preset is most suitable for production use, while 'oneTimeFetch' is
+ * preferred for tests.
+ *
+ * @param preset - Optional query preset for client. Either 'longLived' or 'oneTimeFetch'.
+ *
+ * @returns New `QueryClient` instance.
+ */
+export const queryClientFactory = (
+  preset: 'longLived' | 'oneTimeFetch' = 'oneTimeFetch'
+) => {
   return new QueryClient({
-    defaultOptions: { queries: queryPresets.longLived },
+    defaultOptions: { queries: queryPresets[preset] },
   });
 };
 

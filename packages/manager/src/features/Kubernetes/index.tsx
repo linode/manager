@@ -7,21 +7,29 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 const KubernetesLanding = React.lazy(
   () => import('./KubernetesLanding/KubernetesLanding')
 );
+
 const ClusterCreate = React.lazy(() =>
   import('./CreateCluster/CreateCluster').then((module) => ({
     default: module.CreateCluster,
   }))
 );
-const ClusterDetail = React.lazy(() => import('./KubernetesClusterDetail'));
 
-const Kubernetes: React.FC = () => {
+const KubernetesClusterDetail = React.lazy(() =>
+  import('./KubernetesClusterDetail/KubernetesClusterDetail').then(
+    (module) => ({
+      default: module.KubernetesClusterDetail,
+    })
+  )
+);
+
+export const Kubernetes = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <ProductInformationBanner bannerLocation="Kubernetes" />
       <Switch>
         <Route component={ClusterCreate} path={`/kubernetes/create`} />
         <Route
-          component={ClusterDetail}
+          component={KubernetesClusterDetail}
           exact
           path={`/kubernetes/clusters/:clusterID/summary`}
         />
@@ -43,5 +51,3 @@ const Kubernetes: React.FC = () => {
     </React.Suspense>
   );
 };
-
-export default Kubernetes;

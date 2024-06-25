@@ -8,6 +8,7 @@ import {
 } from './utils';
 
 import type { Event } from '@linode/api-v4';
+import { DateTime } from 'luxon';
 
 describe('getEventMessage', () => {
   const mockEvent1: Event = eventFactory.build({
@@ -126,6 +127,10 @@ describe('formatProgressEvent', () => {
   });
 
   it('returns the correct format for a finished Event', () => {
+    const currentDateMock = DateTime.fromISO(mockEvent1.created).plus({
+      seconds: 1,
+    });
+    vi.setSystemTime(currentDateMock.toJSDate());
     const { progressEventDisplay, showProgress } = formatProgressEvent(
       mockEvent1
     );
@@ -135,6 +140,10 @@ describe('formatProgressEvent', () => {
   });
 
   it('returns the correct format for a "started" event without time remaining info', () => {
+    const currentDateMock = DateTime.fromISO(mockEvent2.created).plus({
+      seconds: 1,
+    });
+    vi.setSystemTime(currentDateMock.toJSDate());
     const { progressEventDisplay, showProgress } = formatProgressEvent(
       mockEvent2
     );

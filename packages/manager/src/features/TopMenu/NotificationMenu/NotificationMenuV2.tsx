@@ -3,43 +3,50 @@ import { IconButton } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import Bell from 'src/assets/icons/notification.svg';
+import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
-import { EventsV2 } from 'src/features/NotificationCenter/EventsV2';
+import { Divider } from 'src/components/Divider';
+import { LinkButton } from 'src/components/LinkButton';
+import { Typography } from 'src/components/Typography';
 import {
   notificationContext as _notificationContext,
   menuButtonId,
 } from 'src/features/NotificationCenter/NotificationContext';
-import { useEventNotificationsV2 } from 'src/features/NotificationCenter/NotificationData/useEventNotificationsV2';
+import { RenderEventV2 } from 'src/features/NotificationCenter/NotificationData/RenderEventV2';
 import { useFormattedNotifications } from 'src/features/NotificationCenter/NotificationData/useFormattedNotifications';
 import Notifications from 'src/features/NotificationCenter/Notifications';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { usePrevious } from 'src/hooks/usePrevious';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
-import { useMarkEventsAsSeen } from 'src/queries/events/events';
+import { isInProgressEvent } from 'src/queries/events/event.helpers';
+import {
+  useEventsInfiniteQuery,
+  useMarkEventsAsSeen,
+} from 'src/queries/events/events';
 import { rotate360 } from 'src/styles/keyframes';
 
 import { TopMenuTooltip, topMenuIconButtonSx } from '../TopMenuTooltip';
 
 export const NotificationMenuV2 = () => {
+  const history = useHistory();
   const { dismissNotifications } = useDismissibleNotifications();
   const { data: notifications } = useNotificationsQuery();
   const formattedNotifications = useFormattedNotifications();
-  const eventNotifications = useEventNotificationsV2();
   const notificationContext = React.useContext(_notificationContext);
+
+  const { data, events } = useEventsInfiniteQuery();
   const { mutateAsync: markEventsAsSeen } = useMarkEventsAsSeen();
 
   const numNotifications =
-    eventNotifications.filter(
-      (notificationItem) => notificationItem.countInTotal
-    ).length +
+    (events?.filter((event) => !event.seen).length ?? 0) +
     formattedNotifications.filter(
       (notificationItem) => notificationItem.countInTotal
     ).length;
-  const showInProgressEventIcon = eventNotifications.some(
-    (notificationItem) => notificationItem.showProgress
-  );
+
+  const showInProgressEventIcon = events?.some(isInProgressEvent);
 
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const prevOpen = usePrevious(notificationContext.menuOpen);
@@ -59,19 +66,12 @@ export const NotificationMenuV2 = () => {
   React.useEffect(() => {
     if (prevOpen && !notificationContext.menuOpen) {
       // Dismiss seen notifications after the menu has closed.
-      if (eventNotifications.length > 0) {
-        markEventsAsSeen(eventNotifications[0].eventId);
+      if (events && events.length >= 1 && !events[0].seen) {
+        markEventsAsSeen(events[0].id);
       }
       dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
     }
-  }, [
-    notificationContext.menuOpen,
-    dismissNotifications,
-    eventNotifications,
-    notifications,
-    prevOpen,
-    markEventsAsSeen,
-  ]);
+  }, [notificationContext.menuOpen]);
 
   const id = notificationContext.menuOpen ? 'notifications-popover' : undefined;
 
@@ -130,10 +130,23 @@ export const NotificationMenuV2 = () => {
         open={notificationContext.menuOpen}
       >
         <Notifications />
-        <EventsV2
-          eventNotifications={eventNotifications}
-          onCloseNotificationCenter={() => notificationContext.closeMenu()}
-        />
+        <Box>
+          <Box display="flex" justifyContent="space-between" px={2}>
+            <Typography variant="h3">Events</Typography>
+            <LinkButton
+              onClick={() => {
+                history.push('/events');
+                handleClose();
+              }}
+            >
+              View all events
+            </LinkButton>
+          </Box>
+          <Divider spacingBottom={0} />
+          {data?.pages[0].data.slice(0, 20).map((event) => (
+            <RenderEventV2 event={event} key={event.id} onClose={handleClose} />
+          ))}
+        </Box>
       </Popover>
     </>
   );

@@ -1,13 +1,16 @@
-import { Event, Image, ImageStatus } from '@linode/api-v4';
 import * as React from 'react';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+
+import type { Event, Image, ImageStatus } from '@linode/api-v4';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface Handlers {
   onCancelFailed?: (imageID: string) => void;
   onDelete?: (label: string, imageID: string, status?: ImageStatus) => void;
   onDeploy?: (imageID: string) => void;
   onEdit?: (image: Image) => void;
+  onManageRegions?: (image: Image) => void;
   onRestore?: (image: Image) => void;
   onRetry?: (
     imageID: string,
@@ -32,6 +35,7 @@ export const ImagesActionMenu = (props: Props) => {
     onDelete,
     onDeploy,
     onEdit,
+    onManageRegions,
     onRestore,
     onRetry,
   } = handlers;
@@ -60,6 +64,15 @@ export const ImagesActionMenu = (props: Props) => {
               ? 'Image is not yet available for use.'
               : undefined,
           },
+          ...(onManageRegions
+            ? [
+                {
+                  disabled: isDisabled,
+                  onClick: () => onManageRegions(image),
+                  title: 'Manage Regions',
+                },
+              ]
+            : []),
           {
             disabled: isDisabled,
             onClick: () => onDeploy?.(id),
@@ -91,6 +104,7 @@ export const ImagesActionMenu = (props: Props) => {
     onCancelFailed,
     onEdit,
     image,
+    onManageRegions,
     onDeploy,
     onRestore,
     onDelete,
