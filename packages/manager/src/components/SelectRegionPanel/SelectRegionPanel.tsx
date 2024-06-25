@@ -57,8 +57,8 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     handleSelection,
     helperText,
     selectedId,
-    selectedLinodeTypeId,
     selectedImageId,
+    selectedLinodeTypeId,
   } = props;
 
   const flags = useFlags();
@@ -122,7 +122,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       ) {
         disabledRegions[region.id] = {
           reason:
-            'The selected image cannot be deployed to distributed regions.',
+            'The selected image cannot be deployed to a distributed region.',
         };
       }
       return disabledRegions;
