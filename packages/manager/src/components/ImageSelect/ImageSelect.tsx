@@ -32,7 +32,10 @@ interface ImageSelectProps {
   classNames?: string;
   disabled?: boolean;
   error?: string;
-  handleSelectImage: (selection?: string) => void;
+  handleSelectImage: (
+    selection: string | undefined,
+    image: Image | undefined
+  ) => void;
   images: Image[];
   selectedImageID?: string;
   title: string;
@@ -192,10 +195,12 @@ export const ImageSelect = React.memo((props: ImageSelectProps) => {
 
   const onChange = (selection: ImageItem | null) => {
     if (selection === null) {
-      return handleSelectImage(undefined);
+      return handleSelectImage(undefined, undefined);
     }
 
-    return handleSelectImage(selection.value);
+    const selectedImage = images.find((i) => i.id === selection.value);
+
+    return handleSelectImage(selection.value, selectedImage);
   };
 
   return (

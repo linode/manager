@@ -65,17 +65,17 @@ export const EndpointTable = (props: Props) => {
               <TableCell>
                 {linode?.label ?? endpoint.ip}:{endpoint.port}
                 {fieldErrors.ip && (
-                  <Typography color={(theme) => theme.palette.error.main}>
+                  <Typography color={(theme) => theme.palette.error.dark}>
                     {fieldErrors.ip}
                   </Typography>
                 )}
                 {fieldErrors.port && (
-                  <Typography color={(theme) => theme.palette.error.main}>
+                  <Typography color={(theme) => theme.palette.error.dark}>
                     {fieldErrors.port}
                   </Typography>
                 )}
                 {fieldErrors.rate_capacity && (
-                  <Typography color={(theme) => theme.palette.error.main}>
+                  <Typography color={(theme) => theme.palette.error.dark}>
                     {fieldErrors.rate_capacity}
                   </Typography>
                 )}
@@ -83,7 +83,7 @@ export const EndpointTable = (props: Props) => {
               <TableCell>
                 {endpoint.host}
                 {fieldErrors.host && (
-                  <Typography color={(theme) => theme.palette.error.main}>
+                  <Typography color={(theme) => theme.palette.error.dark}>
                     {fieldErrors.host}
                   </Typography>
                 )}

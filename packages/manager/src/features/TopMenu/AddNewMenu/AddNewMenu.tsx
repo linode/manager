@@ -25,7 +25,6 @@ import PlacementGroupsIcon from 'src/assets/icons/entityIcons/placement-groups.s
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import VPCIcon from 'src/assets/icons/entityIcons/vpc.svg';
 import { Button } from 'src/components/Button/Button';
-import { Divider } from 'src/components/Divider';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
@@ -181,16 +180,7 @@ export const AddNewMenu = () => {
         {links.map(
           (link, i) =>
             !link.hide && [
-              i !== 0 && <Divider spacingBottom={0} spacingTop={0} />,
               <MenuItem
-                sx={{
-                  '&:hover': {
-                    // This MUI Menu gets special colors compared
-                    // to a standard menu such as the NodeBalancer Config Node Mode select menu
-                    backgroundColor: theme.bg.app,
-                  },
-                  paddingY: 1.5,
-                }}
                 component={Link}
                 key={link.entity}
                 onClick={handleClose}
@@ -202,19 +192,10 @@ export const AddNewMenu = () => {
                 }}
               >
                 <ListItemIcon>
-                  <link.icon
-                    color={theme.palette.text.primary}
-                    height={20}
-                    width={20}
-                  />
+                  <link.icon height={20} width={20} />
                 </ListItemIcon>
                 <Stack>
-                  <Typography
-                    color={theme.textColors.linkActiveLight}
-                    variant="h3"
-                  >
-                    {link.entity}
-                  </Typography>
+                  <Typography variant="h3">{link.entity}</Typography>
                   <Typography>{link.description}</Typography>
                 </Stack>
               </MenuItem>,
