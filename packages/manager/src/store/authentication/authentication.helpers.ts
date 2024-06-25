@@ -1,7 +1,7 @@
 import {
   authentication,
   stackScriptInProgress,
-  supportTicket,
+  supportText,
   ticketReply,
 } from 'src/utilities/storage';
 
@@ -16,7 +16,7 @@ export const clearUserInput = () => {
   // Add more things here as needed, right now we only cache
   // Support ticket title/description.
 
-  supportTicket.set(undefined);
+  supportText.set({ description: '', title: '' });
   ticketReply.set({ text: '', ticketId: -1 });
   stackScriptInProgress.set({
     description: '',

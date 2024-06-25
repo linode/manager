@@ -143,19 +143,19 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const hasSeverityCapability = useTicketSeverityCapability();
 
-  const valuesFromStorage = storage.supportTicket.get();
+  const valuesFromStorage = storage.supportText.get();
 
   // Ticket information
   const form = useForm<SupportTicketFormFields>({
     defaultValues: {
       description: getInitialValue(
         prefilledDescription,
-        valuesFromStorage?.description
+        valuesFromStorage.description
       ),
       entityId: prefilledEntity ? String(prefilledEntity.id) : '',
       entityInputValue: '',
       entityType: prefilledEntity?.type ?? 'general',
-      summary: getInitialValue(prefilledTitle, valuesFromStorage?.summary),
+      summary: getInitialValue(prefilledTitle, valuesFromStorage.title),
       ticketType: prefilledTicketType ?? 'general',
     },
     resolver: yupResolver(SCHEMA_MAP[prefilledTicketType ?? 'general']),
@@ -184,29 +184,17 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     }
   }, [open]);
 
-  /**
-   * Store 'general' support ticket data in local storage if it exists.
-   * Specific fields from other ticket types (e.g. smtp) will not be saved since the general form will render via 'Open New Ticket'.
-   */
-  const saveFormData = (values?: SupportTicketFormFields) => {
-    storage.supportTicket.set(values ?? undefined);
+  const saveText = (_title: string, _description: string) => {
+    storage.supportText.set({ description: _description, title: _title });
   };
 
   // Has to be a ref or else the timeout is redone with each render
-  const debouncedSave = React.useRef(debounce(500, false, saveFormData))
-    .current;
+  const debouncedSave = React.useRef(debounce(500, false, saveText)).current;
 
   React.useEffect(() => {
     // Store in-progress work to localStorage
-    debouncedSave(form.getValues());
-  }, [
-    summary,
-    description,
-    ticketType,
-    entityId,
-    entityType,
-    selectedSeverity,
-  ]);
+    debouncedSave(summary, description);
+  }, [summary, description]);
 
   /**
    * Clear the drawer completely if clearValues is passed (when canceling out of the drawer or successfully submitting)
@@ -215,20 +203,11 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const resetTicket = (clearValues: boolean = false) => {
     form.reset({
       ...form.formState.defaultValues,
-      description:
-        clearValues || !valuesFromStorage ? '' : valuesFromStorage.description,
-      entityId:
-        clearValues || !valuesFromStorage ? '' : valuesFromStorage.entityId,
-      entityType:
-        clearValues || !valuesFromStorage
-          ? 'general'
-          : valuesFromStorage.entityType,
-      summary:
-        clearValues || !valuesFromStorage ? '' : valuesFromStorage.summary,
+      description: clearValues ? '' : valuesFromStorage.description,
+      entityId: '',
+      entityType: 'general',
+      summary: clearValues ? '' : valuesFromStorage.title,
       ticketType: 'general',
-      selectedSeverity: clearValues
-        ? undefined
-        : valuesFromStorage?.selectedSeverity,
     });
   };
 
@@ -237,15 +216,15 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     setFiles([]);
 
     if (clearValues) {
-      saveFormData();
+      saveText('', '');
     }
   };
 
   const handleClose = () => {
+    props.onClose();
     if (ticketType === 'smtp') {
       window.setTimeout(() => resetDrawer(true), 500);
     }
-    props.onClose();
   };
 
   const handleCancel = () => {
