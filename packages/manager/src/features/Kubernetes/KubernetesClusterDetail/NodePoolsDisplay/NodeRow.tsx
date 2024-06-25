@@ -101,7 +101,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
           </>
         )}
       </TableCell>
-      <TableCell noWrap={true}>
+      <TableCell noWrap>
         {linodeError ? (
           <Typography
             sx={(theme) => ({
