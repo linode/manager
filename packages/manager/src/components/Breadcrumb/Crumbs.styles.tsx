@@ -4,11 +4,10 @@ import { Typography } from 'src/components/Typography';
 
 export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
-})(({ theme }) => ({
+})(({}) => ({
   '&:hover': {
     textDecoration: 'underline',
   },
-  color: theme.textColors.tableHeader,
   fontSize: '1.125rem',
   lineHeight: 'normal',
   textTransform: 'capitalize',

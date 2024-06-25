@@ -704,7 +704,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     selectedBackupID: isNaN(+this.params.backupID)
       ? undefined
       : +this.params.backupID,
-    selectedImageID: this.params.imageID ?? DEFAULT_IMAGE,
+    selectedImageID:
+      this.params.imageID ?? this.params.type !== 'Images'
+        ? DEFAULT_IMAGE
+        : undefined,
     // @todo: Abstract and test. UPDATE 5/21/20: lol what does this mean. UPDATE 3/16/23 lol what
     selectedLinodeID: isNaN(+this.params.linodeID)
       ? undefined

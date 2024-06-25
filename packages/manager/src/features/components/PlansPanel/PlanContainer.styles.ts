@@ -11,8 +11,6 @@ interface StyledTableCellPropsProps extends TableCellProps {
 export const StyledTable = styled(Table, {
   label: 'StyledTable',
 })(({ theme }) => ({
-  borderLeft: `1px solid ${theme.borderColors.borderTable}`,
-  borderRight: `1px solid ${theme.borderColors.borderTable}`,
   overflowX: 'hidden',
 }));
 

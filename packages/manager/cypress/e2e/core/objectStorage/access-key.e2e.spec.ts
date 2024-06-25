@@ -17,6 +17,8 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
+import { mockGetAccount } from 'support/intercepts/account';
+import { accountFactory } from 'src/factories';
 
 authenticate();
 describe('object storage access key end-to-end tests', () => {
@@ -37,6 +39,7 @@ describe('object storage access key end-to-end tests', () => {
     interceptGetAccessKeys().as('getKeys');
     interceptCreateAccessKey().as('createKey');
 
+    mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
       objMultiCluster: makeFeatureFlagData(false),
     });
@@ -131,6 +134,7 @@ describe('object storage access key end-to-end tests', () => {
     ).then(() => {
       const keyLabel = randomLabel();
 
+      mockGetAccount(accountFactory.build({ capabilities: [] }));
       mockAppendFeatureFlags({
         objMultiCluster: makeFeatureFlagData(false),
       });

@@ -5,12 +5,15 @@ import { useLocation } from 'react-router-dom';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TwoStepRegionSelect } from 'src/components/RegionSelect/TwoStepRegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
+import { getDisabledRegions } from 'src/features/Linodes/LinodeCreatev2/Region.utils';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/constants';
 import { useFlags } from 'src/hooks/useFlags';
+import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -21,7 +24,6 @@ import {
 } from 'src/utilities/pricing/constants';
 import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 
 import { Box } from '../Box';
 import { DocsLink } from '../DocsLink/DocsLink';
@@ -39,6 +41,7 @@ export interface SelectRegionPanelProps {
   handleSelection: (id: string) => void;
   helperText?: string;
   selectedId?: string;
+  selectedImageId?: string;
   /**
    * Include a `selectedLinodeTypeId` so we can tell if the region selection will have an affect on price
    */
@@ -55,6 +58,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     handleSelection,
     helperText,
     selectedId,
+    selectedImageId,
     selectedLinodeTypeId,
     updateTypeID,
   } = props;
@@ -74,6 +78,11 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const { data: type } = useTypeQuery(
     selectedLinodeTypeId ?? '',
     Boolean(selectedLinodeTypeId)
+  );
+
+  const { data: image } = useImageQuery(
+    selectedImageId ?? '',
+    Boolean(selectedImageId)
   );
 
   const currentLinodeRegion = params.regionID;
@@ -102,6 +111,12 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           region.capabilities.includes(currentCapability)
       )
   );
+
+  const disabledRegions = getDisabledRegions({
+    linodeCreateTab: params.type as LinodeCreateType,
+    regions: regions ?? [],
+    selectedImage: image,
+  });
 
   if (regions?.length === 0) {
     return null;
@@ -171,8 +186,8 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           currentCapability={currentCapability}
           disabled={disabled}
           errorText={error}
-          helperText={helperText}
           handleSelection={handleRegionSelection}
+          helperText={helperText}
           regionFilter={hideDistributedRegions ? 'core' : undefined}
           regions={regions ?? []}
           value={selectedId}
@@ -180,16 +195,22 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         />
       ) : (
         <RegionSelect
+          regionFilter={
+            // We don't want the Image Service Gen2 work to abide by Gecko feature flags
+            hideDistributedRegions && params.type !== 'Images'
+              ? 'core'
+              : undefined
+          }
           showDistributedRegionIconHelperText={
             showDistributedRegionIconHelperText
           }
           currentCapability={currentCapability}
           disableClearable
           disabled={disabled}
+          disabledRegions={disabledRegions}
           errorText={error}
           helperText={helperText}
           onChange={(e, region) => handleSelection(region.id)}
-          regionFilter={hideDistributedRegions ? 'core' : undefined}
           regions={regions ?? []}
           value={selectedId}
           {...RegionSelectProps}
