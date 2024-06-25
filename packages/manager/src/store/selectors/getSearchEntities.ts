@@ -67,7 +67,7 @@ export const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
     created: volume.created,
     description: volume.size + ' GB',
     icon: 'volume',
-    path: `/volumes?query=${encodeURIComponent(`label = ${volume.label}`)}`,
+    path: `/volumes?query=${volume.label}`,
     region: volume.region,
     tags: volume.tags,
   },
