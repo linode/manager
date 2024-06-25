@@ -5,6 +5,7 @@
   "type": "module",
   "module": "src/search.ts",
   "types": "src/search.ts",
+  "license": "Apache-2.0",
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
