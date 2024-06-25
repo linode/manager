@@ -79,5 +79,3 @@ export interface GetRegionOptionAvailability {
   currentCapability: Capabilities | undefined;
   region: Region;
 }
-
-export type SupportedDistributedRegionTypes = 'Distributions' | 'StackScripts';

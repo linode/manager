@@ -607,6 +607,20 @@ export const handlers = [
   http.get('*/regions', async () => {
     return HttpResponse.json(makeResourcePage(regions));
   }),
+  http.get<{ id: string }>('*/v4/images/:id', ({ params }) => {
+    const distributedImage = imageFactory.build({
+      capabilities: ['cloud-init', 'distributed-images'],
+      id: 'private/distributed-image',
+      label: 'distributed-image',
+      regions: [{ region: 'us-east', status: 'available' }],
+    });
+
+    if (params.id === distributedImage.id) {
+      return HttpResponse.json(distributedImage);
+    }
+
+    return HttpResponse.json(imageFactory.build());
+  }),
   http.get('*/images', async ({ request }) => {
     const privateImages = imageFactory.buildList(5, {
       status: 'available',
@@ -652,6 +666,7 @@ export const handlers = [
     const publicImages = imageFactory.buildList(4, { is_public: true });
     const distributedImage = imageFactory.build({
       capabilities: ['cloud-init', 'distributed-images'],
+      id: 'private/distributed-image',
       label: 'distributed-image',
       regions: [{ region: 'us-east', status: 'available' }],
     });
@@ -666,15 +681,21 @@ export const handlers = [
       ...pendingImages,
       ...creatingImages,
     ];
-    return HttpResponse.json(
-      makeResourcePage(
-        images.filter((image) =>
-          request.headers.get('x-filter')?.includes('manual')
-            ? image.type == 'manual'
-            : image.type == 'automatic'
-        )
-      )
-    );
+    const filter = request.headers.get('x-filter');
+
+    if (filter?.includes('manual')) {
+      return HttpResponse.json(
+        makeResourcePage(images.filter((image) => image.type === 'manual'))
+      );
+    }
+
+    if (filter?.includes('automatic')) {
+      return HttpResponse.json(
+        makeResourcePage(images.filter((image) => image.type === 'automatic'))
+      );
+    }
+
+    return HttpResponse.json(makeResourcePage(images));
   }),
 
   http.get('*/linode/types', () => {
