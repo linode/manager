@@ -50,6 +50,9 @@ const getNonEmptyBucketMessage = (bucketLabel: string) => {
 /**
  * Create a bucket with the given label and cluster.
  *
+ * This function assumes that OBJ Multicluster is not enabled. Use
+ * `setUpBucketMulticluster` to set up OBJ buckets when Multicluster is enabled.
+ *
  * @param label - Bucket label.
  * @param cluster - Bucket cluster.
  *
@@ -60,8 +63,36 @@ const setUpBucket = (label: string, cluster: string) => {
     objectStorageBucketFactory.build({
       label,
       cluster,
-      // Default factory sets `region`, but API does not accept it yet.
+
+      // API accepts either `cluster` or `region`, but not both. Our factory
+      // populates both fields, so we have to manually set `region` to `undefined`
+      // to avoid 400 responses from the API.
       region: undefined,
+    })
+  );
+};
+
+/**
+ * Create a bucket with the given label and cluster.
+ *
+ * This function assumes that OBJ Multicluster is enabled. Use
+ * `setUpBucket` to set up OBJ buckets when Multicluster is disabled.
+ *
+ * @param label - Bucket label.
+ * @param regionId - ID of Bucket region.
+ *
+ * @returns Promise that resolves to created Bucket.
+ */
+const setUpBucketMulticluster = (label: string, regionId: string) => {
+  return createBucket(
+    objectStorageBucketFactory.build({
+      label,
+      region: regionId,
+
+      // API accepts either `cluster` or `region`, but not both. Our factory
+      // populates both fields, so we have to manually set `cluster` to `undefined`
+      // to avoid 400 responses from the API.
+      cluster: undefined,
     })
   );
 };
@@ -211,7 +242,8 @@ describe('object storage end-to-end tests', () => {
   it('can upload, access, and delete objects', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-southeast-1';
-    const bucketPage = `/object-storage/buckets/${bucketCluster}/${bucketLabel}/objects`;
+    const bucketRegionId = 'us-southeast';
+    const bucketPage = `/object-storage/buckets/${bucketRegionId}/${bucketLabel}/objects`;
     const bucketFolderName = randomLabel();
 
     const bucketFiles = [
@@ -220,7 +252,7 @@ describe('object storage end-to-end tests', () => {
     ];
 
     cy.defer(
-      () => setUpBucket(bucketLabel, bucketCluster),
+      () => setUpBucketMulticluster(bucketLabel, bucketRegionId),
       'creating Object Storage bucket'
     ).then(() => {
       interceptUploadBucketObjectS3(
