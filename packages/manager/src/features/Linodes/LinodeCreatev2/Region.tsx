@@ -23,11 +23,11 @@ import {
 import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 
 import { CROSS_DATA_CENTER_CLONE_WARNING } from '../LinodesCreate/constants';
+import { getDisabledRegions } from './Region.utils';
 import { defaultInterfaces, useLinodeCreateQueryParams } from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
-import type { DisableRegionOption } from 'src/components/RegionSelect/RegionSelect.types';
 
 export const Region = () => {
   const {
@@ -122,27 +122,11 @@ export const Region = () => {
         region.site_type === 'distributed' || region.site_type === 'edge'
     );
 
-  const disabledRegions = regions?.reduce<Record<string, DisableRegionOption>>(
-    (disabledRegions, region) => {
-      // Disable distributed regions if:
-      // - We are on the Images tab
-      // - An image is selected
-      // - The selected image does not have the `distributed-images` capability
-      if (
-        params.type === 'Images' &&
-        image &&
-        !image.capabilities.includes('distributed-images') &&
-        region.site_type === 'distributed'
-      ) {
-        disabledRegions[region.id] = {
-          reason:
-            'The selected image cannot be deployed to a distributed region.',
-        };
-      }
-      return disabledRegions;
-    },
-    {}
-  );
+  const disabledRegions = getDisabledRegions({
+    linodeCreateTab: params.type,
+    regions: regions ?? [],
+    selectedImage: image,
+  });
 
   return (
     <Paper>
@@ -163,6 +147,7 @@ export const Region = () => {
       )}
       <RegionSelect
         regionFilter={
+          // We don't want the Image Service Gen2 work to abide by Gecko feature flags
           hideDistributedRegions && params.type !== 'Images'
             ? 'core'
             : undefined

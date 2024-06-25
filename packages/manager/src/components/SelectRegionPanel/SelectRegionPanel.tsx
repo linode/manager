@@ -8,6 +8,7 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
+import { getDisabledRegions } from 'src/features/Linodes/LinodeCreatev2/Region.utils';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useImageQuery } from 'src/queries/images';
@@ -26,10 +27,7 @@ import { Box } from '../Box';
 import { DocsLink } from '../DocsLink/DocsLink';
 import { Link } from '../Link';
 
-import type {
-  DisableRegionOption,
-  RegionSelectProps,
-} from '../RegionSelect/RegionSelect.types';
+import type { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 import type { Capabilities } from '@linode/api-v4/lib/regions';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
@@ -108,27 +106,11 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       )
   );
 
-  const disabledRegions = regions?.reduce<Record<string, DisableRegionOption>>(
-    (disabledRegions, region) => {
-      // Disable distributed regions if:
-      // - We are on the Images tab
-      // - An image is selected
-      // - The selected image does not have the `distributed-images` capability
-      if (
-        params.type === 'Images' &&
-        image &&
-        !image?.capabilities.includes('distributed-images') &&
-        region.site_type === 'distributed'
-      ) {
-        disabledRegions[region.id] = {
-          reason:
-            'The selected image cannot be deployed to a distributed region.',
-        };
-      }
-      return disabledRegions;
-    },
-    {}
-  );
+  const disabledRegions = getDisabledRegions({
+    linodeCreateTab: params.type as LinodeCreateType,
+    regions: regions ?? [],
+    selectedImage: image,
+  });
 
   if (regions?.length === 0) {
     return null;
@@ -181,6 +163,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       ) : null}
       <RegionSelect
         regionFilter={
+          // We don't want the Image Service Gen2 work to abide by Gecko feature flags
           hideDistributedRegions && params.type !== 'Images'
             ? 'core'
             : undefined
