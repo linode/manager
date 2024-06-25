@@ -200,7 +200,7 @@ export const ImageSelect = React.memo((props: ImageSelectProps) => {
 
     const selectedImage = images.find((i) => i.id === selection.value);
 
-    return handleSelectImage(selection.value, selectedImage!);
+    return handleSelectImage(selection.value, selectedImage);
   };
 
   return (
