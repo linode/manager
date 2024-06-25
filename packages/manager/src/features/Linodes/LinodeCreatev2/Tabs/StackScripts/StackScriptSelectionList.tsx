@@ -168,6 +168,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
         label="Search"
         onChange={debounce(400, (e) => setQuery(e.target.value))}
         placeholder="Search StackScripts"
+        spellCheck={false}
         value={query}
       />
       <Table sx={{ mt: 1 }}>

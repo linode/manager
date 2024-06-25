@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Search query parser for Linode API filtering",
   "type": "module",
+  "main": "src/search.ts",
   "module": "src/search.ts",
   "types": "src/search.ts",
   "license": "Apache-2.0",
