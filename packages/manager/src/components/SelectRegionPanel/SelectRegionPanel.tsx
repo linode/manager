@@ -21,7 +21,7 @@ import {
 } from 'src/utilities/pricing/constants';
 import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/TwoStepRegionSelect';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 
 import { Box } from '../Box';
 import { DocsLink } from '../DocsLink/DocsLink';

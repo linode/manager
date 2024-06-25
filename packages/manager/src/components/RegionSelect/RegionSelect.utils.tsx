@@ -1,5 +1,7 @@
 import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
 
+import { useFlags } from 'src/hooks/useFlags';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import type {
@@ -161,4 +163,19 @@ export const getNewRegionLabel = ({ includeSlug, region }: GetRegionLabel) => {
     return `${region.country.toUpperCase()}, ${city} ${`(${region.id})`}`;
   }
   return `${region.country.toUpperCase()}, ${city}`;
+};
+
+export const useIsGeckoEnabled = () => {
+  const flags = useFlags();
+  const isGeckoGA = flags?.gecko2?.enabled && flags.gecko2.ga;
+  const isGeckoBeta = flags.gecko2?.enabled && !flags.gecko2?.ga;
+  const { data: regions } = useRegionsQuery(isGeckoGA);
+
+  const hasDistributedRegionCapability = regions?.some((region: Region) =>
+    region.capabilities.includes('Distributed Plans')
+  );
+  const isGeckoGAEnabled = hasDistributedRegionCapability && isGeckoGA;
+  const isGeckoBetaEnabled = hasDistributedRegionCapability && isGeckoBeta;
+
+  return { isGeckoBetaEnabled, isGeckoGAEnabled };
 };

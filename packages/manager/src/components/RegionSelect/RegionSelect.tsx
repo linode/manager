@@ -5,7 +5,7 @@ import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.s
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/TwoStepRegionSelect';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
@@ -100,6 +100,7 @@ export const RegionSelect = <
   }, {});
 
   const EndAdornment = React.useMemo(() => {
+    // @TODO Gecko: Remove adornment after GA
     if (isGeckoBetaEnabled && selectedRegion?.site_type === 'distributed') {
       return (
         <TooltipIcon

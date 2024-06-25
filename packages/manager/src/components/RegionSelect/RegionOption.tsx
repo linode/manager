@@ -4,7 +4,7 @@ import React from 'react';
 import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/TwoStepRegionSelect';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 

@@ -14,8 +14,6 @@ import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAn
 import type { RegionFilterValue } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
 import type { SelectRegionPanelProps } from 'src/components/SelectRegionPanel/SelectRegionPanel';
-import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 
 interface TwoStepRegionSelectProps
   extends Omit<SelectRegionPanelProps, 'selectedId'> {
@@ -131,19 +129,4 @@ export const TwoStepRegionSelect = (props: TwoStepRegionSelectProps) => {
       </TabPanels>
     </Tabs>
   );
-};
-
-export const useIsGeckoEnabled = () => {
-  const flags = useFlags();
-  const isGeckoGA = flags?.gecko2?.enabled && flags.gecko2.ga;
-  const isGeckoBeta = flags.gecko2?.enabled && !flags.gecko2?.ga;
-  const { data: regions } = useRegionsQuery(isGeckoGA);
-
-  const hasDistributedRegionCapability = regions?.some((region) =>
-    region.capabilities.includes('Distributed Plans')
-  );
-  const isGeckoGAEnabled = hasDistributedRegionCapability && isGeckoGA;
-  const isGeckoBetaEnabled = hasDistributedRegionCapability && isGeckoBeta;
-
-  return { isGeckoGAEnabled, isGeckoBetaEnabled };
 };
