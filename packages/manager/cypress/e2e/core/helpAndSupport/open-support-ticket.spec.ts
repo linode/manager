@@ -15,7 +15,12 @@ import {
   randomPhrase,
   randomString,
 } from 'support/util/random';
-import { accountFactory, supportTicketFactory } from 'src/factories';
+import {
+  accountFactory,
+  domainFactory,
+  linodeFactory,
+  supportTicketFactory,
+} from 'src/factories';
 import {
   mockAttachSupportTicketFile,
   mockCreateSupportTicket,
@@ -39,6 +44,8 @@ import { createTestLinode } from 'support/util/linodes';
 import { cleanUp } from 'support/util/cleanup';
 import { authenticate } from 'support/api/authentication';
 import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
+import { mockGetLinodes } from 'support/intercepts/linodes';
+import { mockGetDomains } from 'support/intercepts/domains';
 
 describe('help & support', () => {
   after(() => {
@@ -51,7 +58,7 @@ describe('help & support', () => {
    * - Opens a Help & Support ticket using mock API data.
    * - Confirms that "Severity" field is not present when feature flag is disabled.
    */
-  it('open support ticket', () => {
+  it('can open a support ticket', () => {
     mockAppendFeatureFlags({
       supportTicketSeverity: makeFeatureFlagData(false),
     });
@@ -331,5 +338,102 @@ describe('help & support', () => {
         cy.findByText(fieldLabel).should('be.visible');
       });
     });
+  });
+
+  it('can create a support ticket with an entity', () => {
+    const mockLinodes = linodeFactory.buildList(2);
+    const mockDomains = domainFactory.buildList(1);
+
+    const mockTicket = supportTicketFactory.build({
+      id: randomNumber(),
+      summary: randomLabel(),
+      description: randomPhrase(),
+      status: 'new',
+    });
+
+    mockCreateSupportTicket(mockTicket).as('createTicket');
+    mockGetSupportTickets([]);
+    mockGetSupportTicket(mockTicket);
+    mockGetSupportTicketReplies(mockTicket.id, []);
+    mockGetLinodes(mockLinodes);
+    mockGetDomains(mockDomains);
+
+    cy.visitWithLogin('/support/tickets');
+
+    ui.button
+      .findByTitle('Open New Ticket')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // Fill out ticket form.
+    ui.dialog
+      .findByTitle('Open a Support Ticket')
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Title', { exact: false })
+          .should('be.visible')
+          .click()
+          .type(mockTicket.summary);
+
+        cy.get('[data-qa-ticket-description]')
+          .should('be.visible')
+          .click()
+          .type(mockTicket.description);
+
+        cy.get('[data-qa-ticket-entity-type]')
+          .click()
+          .type(`Linodes{downarrow}{enter}`);
+
+        // Attempt to submit the form without an entity selected and confirm validation error.
+        ui.button
+          .findByTitle('Open Ticket')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+        cy.findByText('Please select a Linode.').should('be.visible');
+
+        // Select an entity type for which there are no entities.
+        cy.get('[data-qa-ticket-entity-type]')
+          .click()
+          .type(`Kubernetes{downarrow}{enter}`);
+
+        // Confirm the validation error clears when a new entity type is selected.
+        cy.findByText('Please select a Linode.').should('not.exist');
+
+        // Confirm helper text appears and entity id field is disabled.
+        cy.findByText(
+          'You don’t have any Kubernetes Clusters on your account.'
+        ).should('be.visible');
+        cy.get('[data-qa-ticket-entity-id]')
+          .find('input')
+          .should('be.disabled');
+
+        // Select another entity type.
+        cy.get('[data-qa-ticket-entity-type]')
+          .click()
+          .type(`{selectall}{del}Domains{uparrow}{enter}`);
+
+        // Select an entity.
+        cy.get('[data-qa-ticket-entity-id]')
+          .should('be.visible')
+          .click()
+          .type('domain-0{downarrow}{enter}');
+
+        ui.button
+          .findByTitle('Open Ticket')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Confirm that ticket create payload contains the expected data.
+    cy.wait('@createTicket').then((xhr) => {
+      expect(xhr.request.body?.summary).to.eq(mockTicket.summary);
+      expect(xhr.request.body?.description).to.eq(mockTicket.description);
+    });
+
+    // Confirm redirect to details page and that severity level is displayed.
+    cy.url().should('endWith', `support/tickets/${mockTicket.id}`);
   });
 });

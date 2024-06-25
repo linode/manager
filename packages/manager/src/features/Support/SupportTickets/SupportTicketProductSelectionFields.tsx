@@ -24,6 +24,8 @@ export const SupportTicketProductSelectionFields = () => {
     control,
     setValue,
     watch,
+    formState: { errors },
+    clearErrors,
   } = useFormContext<SupportTicketFormFields>();
 
   const { entityId, entityInputValue, entityType } = watch();
@@ -168,6 +170,7 @@ export const SupportTicketProductSelectionFields = () => {
               field.onChange(type.value);
               setValue('entityId', '');
               setValue('entityInputValue', '');
+              clearErrors('entityId');
             }}
             data-qa-ticket-entity-type
             disableClearable
@@ -189,7 +192,11 @@ export const SupportTicketProductSelectionFields = () => {
                 }
                 data-qa-ticket-entity-id
                 disabled={entityOptions.length === 0}
-                errorText={entityError || fieldState.error?.message}
+                errorText={
+                  entityError ||
+                  fieldState.error?.message ||
+                  errors.entityId?.message
+                }
                 inputValue={entityInputValue}
                 label={ENTITY_ID_TO_NAME_MAP[entityType] ?? 'Entity Select'}
                 loading={areEntitiesLoading}
