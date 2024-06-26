@@ -10,6 +10,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { EVENTS_LIST_FILTER } from 'src/features/Events/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
 
@@ -22,8 +23,6 @@ import {
   StyledTypography,
 } from './EventsLanding.styles';
 
-import type { Filter } from '@linode/api-v4';
-
 interface Props {
   emptyMessage?: string; // Custom message for the empty state (i.e. no events).
   entityId?: number;
@@ -33,7 +32,7 @@ export const EventsLanding = (props: Props) => {
   const { emptyMessage, entityId } = props;
   const flags = useFlags();
 
-  const filter: Filter = { action: { '+neq': 'profile_update' } };
+  const filter = { ...EVENTS_LIST_FILTER };
 
   if (entityId) {
     filter['entity.id'] = entityId;
@@ -117,7 +116,7 @@ export const EventsLanding = (props: Props) => {
                 </TableCell>
               </Hidden>
             )}
-            <StyledTableCell sx={{ width: 150 }}>Relative Date</StyledTableCell>
+            <StyledTableCell sx={{ width: 175 }}>Relative Date</StyledTableCell>
             <Hidden mdDown>
               <StyledTableCell data-qa-events-time-header sx={{ width: 150 }}>
                 Absolute Date
