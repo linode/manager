@@ -25,7 +25,7 @@ import {
   mockGetSupportTickets,
   mockGetSupportTicketReplies,
 } from 'support/intercepts/support';
-import { severityLabelMap } from 'src/features/Support/SupportTickets/ticketUtils';
+import { severityLabelMap } from 'support/constants/tickets';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import {
   mockGetLinodeDetails,
