@@ -6,7 +6,7 @@ const parser = generate(grammar);
 
 interface Options {
   /**
-   * Defines the API fields filtered aginst (currently using +contains)
+   * Defines the API fields filtered against (currently using +contains)
    * when the search query contains no operators.
    * 
    * @example ['label', 'tags']
