@@ -429,11 +429,9 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               )}
             </>
           )}
-          {ticketType === 'smtp' && (
-            <SupportTicketSMTPFields />
-          )}
+          {ticketType === 'smtp' && <SupportTicketSMTPFields />}
           {ticketType === 'accountLimit' && (
-            <SupportTicketAccountLimitFields />
+            <SupportTicketAccountLimitFields entityType={entityType} />
           )}
           {(!ticketType || ticketType === 'general') && (
             <>

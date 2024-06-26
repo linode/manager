@@ -7,16 +7,27 @@ import {
 } from './constants';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useAccount } from 'src/queries/account/account';
+import { EntityType } from './SupportTicketDialog';
 
 export interface AccountLimitFields extends CustomFields {
-  numberOfLinodes: string;
+  numberOfEntities: string;
   linodePlan: string;
 }
 
-export const SupportTicketAccountLimitFields = () => {
+interface Props {
+  entityType: EntityType;
+}
+
+export const SupportTicketAccountLimitFields = (props: Props) => {
+  const { entityType } = props;
   const form = useFormContext<AccountLimitFields>();
 
   const { data: account } = useAccount();
+
+  // TODO: util?
+  const numCurrentEntities = 42;
+  const _entityType =
+    entityType !== 'general' && entityType !== 'none' ? entityType : 'entities';
 
   return (
     <>
@@ -44,7 +55,6 @@ export const SupportTicketAccountLimitFields = () => {
             label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.companyName}
             name="companyName"
             onChange={field.onChange}
-            required
             value={field.value}
           />
         )}
@@ -54,16 +64,18 @@ export const SupportTicketAccountLimitFields = () => {
       <Controller
         render={({ field, fieldState }) => (
           <TextField
-            data-qa-ticket-number-of-linodes
+            data-qa-ticket-number-of-entities
             errorText={fieldState.error?.message}
-            label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.numberOfLinodes}
-            name="numberOfLinodes"
+            label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.numberOfEntities}
+            helperText={`Current number of ${_entityType}: ${numCurrentEntities}`}
+            placeholder={`Enter total number of ${_entityType}`}
+            name="numberOfEntities"
             onChange={field.onChange}
             value={field.value}
           />
         )}
         control={form.control}
-        name="numberOfLinodes"
+        name="numberOfEntities"
       />
       <Controller
         render={({ field, fieldState }) => (
@@ -72,6 +84,7 @@ export const SupportTicketAccountLimitFields = () => {
             errorText={fieldState.error?.message}
             label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.linodePlan}
             name="linodePlan"
+            placeholder="Dedicated 4GB, Shared 8GB, High Memory 24GB, etc."
             onChange={field.onChange}
             value={field.value}
           />
@@ -89,6 +102,8 @@ export const SupportTicketAccountLimitFields = () => {
             onChange={field.onChange}
             value={field.value}
             required
+            multiline
+            expand
           />
         )}
         control={form.control}
@@ -104,6 +119,8 @@ export const SupportTicketAccountLimitFields = () => {
             onChange={field.onChange}
             value={field.value}
             required
+            multiline
+            expand
           />
         )}
         control={form.control}
