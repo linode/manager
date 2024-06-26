@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { updateImageRegionsSchema } from '@linode/validation';
-import React, { useEffect, useMemo } from 'react';
+import { useSnackbar } from 'notistack';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -31,8 +32,11 @@ export const ManageImageRegionsDrawer = (props: Props) => {
     [image]
   );
 
+  const { enqueueSnackbar } = useSnackbar();
   const { data: regions } = useRegionsQuery();
   const { mutateAsync } = useUpdateImageRegionsMutation(image?.id ?? '');
+
+  const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
 
   const {
     formState: { errors, isSubmitting },
@@ -55,6 +59,12 @@ export const ManageImageRegionsDrawer = (props: Props) => {
   const onSubmit = async (data: UpdateImageRegionsPayload) => {
     try {
       await mutateAsync(data);
+
+      enqueueSnackbar('Image regions successfully updated.', {
+        variant: 'success',
+      });
+
+      onClose();
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
@@ -83,12 +93,19 @@ export const ManageImageRegionsDrawer = (props: Props) => {
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <RegionMultiSelect
+          onClose={() => {
+            setValue('regions', [...selectedRegions, ...values.regions]);
+            setSelectedRegions([]);
+          }}
+          regions={(regions ?? []).filter(
+            (r) => !values.regions.includes(r.id)
+          )}
           currentCapability="Object Storage"
           errorText={errors.regions?.message}
           label="Add Regions"
-          onChange={(regionIds) => setValue('regions', regionIds)}
-          regions={regions ?? []}
-          selectedIds={values.regions}
+          onChange={setSelectedRegions}
+          placeholder="Select Regions"
+          selectedIds={selectedRegions}
         />
         <Typography sx={{ mb: 1, mt: 2 }}>
           Image will be available in these regions ({values.regions.length})
