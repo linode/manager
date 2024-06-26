@@ -1,7 +1,6 @@
 import { waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
-import { debug } from 'vitest-preview';
 
 import {
   imageFactory,
@@ -87,8 +86,6 @@ describe('CreateImageTab', () => {
     const submitButton = getByText('Create Image').closest('button');
 
     await userEvent.click(submitButton!);
-
-    debug();
 
     expect(getByText('Disk is required.')).toBeVisible();
   });
