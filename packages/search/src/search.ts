@@ -6,12 +6,12 @@ const parser = generate(grammar);
 
 interface Options {
   /**
-   * Allows you to set the default keys that get search when the user types
-   * a query without an operator. 
+   * Defines the API fields filtered aginst (currently using +contains)
+   * when the search query contains no operators.
    * 
    * @example ['label', 'tags']
    */
-  defaultSearchKeys: string[];
+  searchableFieldsWithoutOperator: string[];
 }
 
 /**
