@@ -73,7 +73,7 @@ describe('ObjectStorageLanding', () => {
     // Mock Buckets
     server.use(
       http.get(
-        '*/object-storage/buckets/cluster-0',
+        '*/object-storage/buckets/cluster-1',
         () => {
           return HttpResponse.json([{ reason: 'Cluster offline!' }], {
             status: 500,
