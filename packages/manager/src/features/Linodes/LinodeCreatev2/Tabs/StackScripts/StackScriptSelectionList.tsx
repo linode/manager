@@ -79,7 +79,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
     error: searchParseError,
     filter: searchFilter,
   } = getAPIFilterFromQuery(query, {
-    defaultSearchKeys: ['username', 'label', 'description'],
+    searchableFieldsWithoutOperator: ['username', 'label', 'description'],
   });
 
   const {
