@@ -543,7 +543,7 @@ export class LinodeCreate extends React.PureComponent<
                   <FromImageContent
                     accountBackupsEnabled={accountBackupsEnabled}
                     error={hasErrorFor.image}
-                    imagePanelTitle="Choose a Distribution"
+                    imagePanelTitle="Choose an OS"
                     imagesData={imagesData!}
                     regionsData={regionsData!}
                     typesData={typesData!}
@@ -615,6 +615,7 @@ export class LinodeCreate extends React.PureComponent<
                     typesData={typesData!}
                     userCannotCreateLinode={userCannotCreateLinode}
                     variant={'private'}
+                    selectedRegionID={selectedRegionID}
                     {...rest}
                   />
                 </SafeTabPanel>
@@ -655,6 +656,7 @@ export class LinodeCreate extends React.PureComponent<
                 handleSelection={this.props.updateRegionID}
                 helperText={this.props.regionHelperText}
                 selectedId={this.props.selectedRegionID}
+                selectedImageId={this.props.selectedImageID}
                 selectedLinodeTypeId={this.props.selectedTypeID}
               />
             )}

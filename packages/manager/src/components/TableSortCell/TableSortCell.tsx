@@ -18,7 +18,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     marginRight: 4,
   },
   label: {
-    color: theme.textColors.tableHeader,
     fontSize: '.875rem',
     minHeight: 20,
     transition: 'none',

@@ -1,16 +1,14 @@
-import {
-  CONTINENT_CODE_TO_CONTINENT,
-  Capabilities,
-  RegionSite,
-} from '@linode/api-v4';
+import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
 
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
+import type { GetRegionOptionAvailability } from './RegionSelect.types';
 import type {
-  GetRegionOptionAvailability,
-  SupportedDistributedRegionTypes,
-} from './RegionSelect.types';
-import type { AccountAvailability, Region } from '@linode/api-v4';
+  AccountAvailability,
+  Capabilities,
+  Region,
+  RegionSite,
+} from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
@@ -113,15 +111,12 @@ export const isRegionOptionUnavailable = ({
  * @returns a boolean indicating whether or not the create type supports distributed regions.
  */
 export const isDistributedRegionSupported = (createType: LinodeCreateType) => {
-  const supportedDistributedRegionTypes: SupportedDistributedRegionTypes[] = [
+  const supportedDistributedRegionTypes = [
     'Distributions',
     'StackScripts',
+    'Images',
   ];
-  return (
-    supportedDistributedRegionTypes.includes(
-      createType as SupportedDistributedRegionTypes
-    ) || typeof createType === 'undefined' // /linodes/create route
-  );
+  return supportedDistributedRegionTypes.includes(createType);
 };
 
 /**
