@@ -11,12 +11,16 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
-import type { RegionFilterValue } from './RegionSelect.types';
+import type {
+  DisableRegionOption,
+  RegionFilterValue,
+} from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
 import type { SelectRegionPanelProps } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 
 interface TwoStepRegionSelectProps
   extends Omit<SelectRegionPanelProps, 'selectedId'> {
+  disabledRegions: Record<string, DisableRegionOption>;
   regions: Region[];
   value?: string;
 }
@@ -62,6 +66,7 @@ export const TwoStepRegionSelect = (props: TwoStepRegionSelectProps) => {
     RegionSelectProps,
     currentCapability,
     disabled,
+    disabledRegions,
     error,
     handleSelection,
     helperText,
@@ -96,6 +101,7 @@ export const TwoStepRegionSelect = (props: TwoStepRegionSelectProps) => {
             regionFilter="core"
             regions={regions ?? []}
             showDistributedRegionIconHelperText={false}
+            disabledRegions={disabledRegions}
             value={value}
             {...RegionSelectProps}
           />
@@ -116,6 +122,7 @@ export const TwoStepRegionSelect = (props: TwoStepRegionSelectProps) => {
             currentCapability={currentCapability}
             disableClearable
             disabled={disabled}
+            disabledRegions={disabledRegions}
             errorText={error}
             helperText={helperText}
             onChange={(e, region: Region) => handleSelection(region.id)}

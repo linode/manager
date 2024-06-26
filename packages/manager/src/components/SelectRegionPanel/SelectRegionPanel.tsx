@@ -185,6 +185,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           }
           currentCapability={currentCapability}
           disabled={disabled}
+          disabledRegions={disabledRegions}
           errorText={error}
           handleSelection={handleRegionSelection}
           helperText={helperText}
