@@ -45,6 +45,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { getEventsForImages } from '../utils';
 import { EditImageDrawer } from './EditImageDrawer';
+import { ManageImageRegionsDrawer } from './ImageRegions/ManageImageRegionsDrawer';
 import { ImageRow } from './ImageRow';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
@@ -213,7 +214,6 @@ export const ImagesLanding = () => {
   );
 
   const [
-    // @ts-expect-error This will be unused until the regions drawer is implemented
     manageRegionsDrawerImage,
     setManageRegionsDrawerImage,
   ] = React.useState<Image>();
@@ -602,6 +602,10 @@ export const ImagesLanding = () => {
       <RebuildImageDrawer
         image={rebuildDrawerImage}
         onClose={() => setRebuildDrawerImage(undefined)}
+      />
+      <ManageImageRegionsDrawer
+        image={manageRegionsDrawerImage}
+        onClose={() => setManageRegionsDrawerImage(undefined)}
       />
       <ConfirmationDialog
         title={
