@@ -8,8 +8,9 @@ import {
 import { Controller, useFormContext } from 'react-hook-form';
 import { useAccount } from 'src/queries/account/account';
 import { EntityType } from './SupportTicketDialog';
+import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
 
-export interface AccountLimitFields extends CustomFields {
+export interface AccountLimitCustomFields extends CustomFields {
   numberOfEntities: string;
   linodePlan: string;
 }
@@ -19,16 +20,9 @@ interface Props {
 }
 
 export const SupportTicketAccountLimitFields = (props: Props) => {
-  const { entityType } = props;
-  const form = useFormContext<AccountLimitFields>();
+  const form = useFormContext<AccountLimitCustomFields>();
 
   const { data: account } = useAccount();
-
-  // TODO: util?
-  const numCurrentEntities = 42;
-  const _entityType =
-    entityType !== 'general' && entityType !== 'none' ? entityType : 'entities';
-
   return (
     <>
       <Controller
@@ -61,22 +55,7 @@ export const SupportTicketAccountLimitFields = (props: Props) => {
         control={form.control}
         name="companyName"
       />
-      <Controller
-        render={({ field, fieldState }) => (
-          <TextField
-            data-qa-ticket-number-of-entities
-            errorText={fieldState.error?.message}
-            label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.numberOfEntities}
-            helperText={`Current number of ${_entityType}: ${numCurrentEntities}`}
-            placeholder={`Enter total number of ${_entityType}`}
-            name="numberOfEntities"
-            onChange={field.onChange}
-            value={field.value}
-          />
-        )}
-        control={form.control}
-        name="numberOfEntities"
-      />
+      <SupportTicketProductSelectionFields ticketType="accountLimit" />
       <Controller
         render={({ field, fieldState }) => (
           <TextField
