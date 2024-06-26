@@ -1,7 +1,3 @@
-import {
-  MigrationTypes,
-  ResizeLinodePayload,
-} from '@linode/api-v4/lib/linodes';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -10,6 +6,7 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
+import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
@@ -41,6 +38,11 @@ import {
 } from './LinodeResize.utils';
 import { UnifiedMigrationPanel } from './LinodeResizeUnifiedMigrationPanel';
 
+import type {
+  MigrationTypes,
+  ResizeLinodePayload,
+} from '@linode/api-v4/lib/linodes';
+
 interface Props {
   linodeId?: number;
   linodeLabel?: string;
@@ -57,7 +59,7 @@ export const LinodeResize = (props: Props) => {
   const { linodeId, onClose, open } = props;
   const theme = useTheme();
 
-  const { data: linode } = useLinodeQuery(
+  const { data: linode, isLoading: isLinodeDataLoading } = useLinodeQuery(
     linodeId ?? -1,
     linodeId !== undefined && open
   );
@@ -190,148 +192,152 @@ export const LinodeResize = (props: Props) => {
       maxWidth="md"
       onClose={onClose}
       open={open}
-      title={`Resize Linode ${linode?.label}`}
+      title={`Resize Linode ${linode?.label ?? ''}`}
     >
-      <form onSubmit={formik.handleSubmit}>
-        {isLinodesGrantReadOnly && <LinodePermissionsError />}
-        {hostMaintenance && <HostMaintenanceError />}
-        {disksError && (
-          <Notice
-            text="There was an error loading your Linode&rsquo;s Disks."
-            variant="error"
-          />
-        )}
-        {hasResizeError && <Notice variant="error">{error}</Notice>}
-        <Typography data-qa-description>
-          If you&rsquo;re expecting a temporary burst of traffic to your
-          website, or if you&rsquo;re not using your Linode as much as you
-          thought, you can temporarily or permanently resize your Linode to a
-          different plan.{' '}
-          <Link to="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/">
-            Learn more.
-          </Link>
-        </Typography>
+      {isLinodeDataLoading ? (
+        <CircleProgress />
+      ) : (
+        <form onSubmit={formik.handleSubmit}>
+          {isLinodesGrantReadOnly && <LinodePermissionsError />}
+          {hostMaintenance && <HostMaintenanceError />}
+          {disksError && (
+            <Notice
+              text="There was an error loading your Linode&rsquo;s Disks."
+              variant="error"
+            />
+          )}
+          {hasResizeError && <Notice variant="error">{error}</Notice>}
+          <Typography data-qa-description>
+            If you&rsquo;re expecting a temporary burst of traffic to your
+            website, or if you&rsquo;re not using your Linode as much as you
+            thought, you can temporarily or permanently resize your Linode to a
+            different plan.{' '}
+            <Link to="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/">
+              Learn more.
+            </Link>
+          </Typography>
 
-        <Box
-          sx={{
-            '& > div': {
-              padding: 0,
-            },
-            marginBottom: theme.spacing(3),
-            marginTop: theme.spacing(5),
-          }}
-        >
-          <PlansPanel
-            currentPlanHeading={type ? extendType(type).heading : undefined} // lol, why make us pass the heading and not the plan id?
-            disabled={tableDisabled}
-            onSelect={(type) => formik.setFieldValue('type', type)}
-            regionsData={regionsData}
-            selectedId={formik.values.type}
-            selectedRegionID={linode?.region}
-            types={currentTypes.map(extendType)}
-          />
-        </Box>
-        <UnifiedMigrationPanel
-          formik={formik}
-          isLinodeOffline={isLinodeOffline}
-          migrationTypeOptions={migrationTypeOptions}
-        />
-        <Typography
-          sx={{ alignItems: 'center', display: 'flex', minHeight: '44px' }}
-          variant="h2"
-        >
-          Auto Resize Disk
-          {disksError ? (
-            <TooltipIcon
-              sxTooltipIcon={{
-                marginLeft: '-2px',
-              }}
-              status="help"
-              text={`There was an error loading your Linode&rsquo; disks.`}
-            />
-          ) : isSmaller ? (
-            <TooltipIcon
-              sxTooltipIcon={{
-                marginLeft: '-2px',
-              }}
-              status="help"
-              text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
-            />
-          ) : !_shouldEnableAutoResizeDiskOption ? (
-            <TooltipIcon
-              sxTooltipIcon={{
-                marginLeft: '-2px',
-              }}
-              text={`Your ext disk can only be automatically resized if you have one ext
-                    disk or one ext disk and one swap disk on this Linode.`}
-              status="help"
-            />
-          ) : null}
-        </Typography>
-        <Checkbox
-          checked={
-            !_shouldEnableAutoResizeDiskOption || isSmaller
-              ? false
-              : formik.values.allow_auto_disk_resize
-          }
-          onChange={(value, checked) =>
-            formik.setFieldValue('allow_auto_disk_resize', checked)
-          }
-          text={
-            <Typography>
-              Would you like{' '}
-              {_shouldEnableAutoResizeDiskOption ? (
-                <strong>{diskToResize}</strong>
-              ) : (
-                'your disk'
-              )}{' '}
-              to be automatically scaled with this Linode&rsquo;s new size?{' '}
-              <br />
-              We recommend you keep this option enabled when available.
-            </Typography>
-          }
-          disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
-        />
-        <Divider
-          sx={{
-            marginTop: theme.spacing(2),
-          }}
-        />
-        <Box marginTop={2}>
-          <TypeToConfirm
-            confirmationText={
-              <span>
-                To confirm these changes, type the label of the Linode (
-                <strong>{linode?.label}</strong>) in the field below:
-              </span>
-            }
-            hideLabel
-            label="Linode Label"
-            onChange={setConfirmationText}
-            textFieldStyle={{ marginBottom: 16 }}
-            title="Confirm"
-            typographyStyle={{ marginBottom: 8 }}
-            value={confirmationText}
-            visible={preferences?.type_to_confirm}
-          />
-        </Box>
-        <Box display="flex" justifyContent="flex-end">
-          <Button
-            disabled={
-              !formik.values.type ||
-              linodeInTransition(linode?.status || '') ||
-              tableDisabled ||
-              submitButtonDisabled
-            }
-            buttonType="primary"
-            data-qa-resize
-            loading={isLoading}
-            type="submit"
+          <Box
+            sx={{
+              '& > div': {
+                padding: 0,
+              },
+              marginBottom: theme.spacing(3),
+              marginTop: theme.spacing(5),
+            }}
           >
-            Resize Linode
-          </Button>
-        </Box>
-      </form>
+            <PlansPanel
+              currentPlanHeading={type ? extendType(type).heading : undefined} // lol, why make us pass the heading and not the plan id?
+              disabled={tableDisabled}
+              onSelect={(type) => formik.setFieldValue('type', type)}
+              regionsData={regionsData}
+              selectedId={formik.values.type}
+              selectedRegionID={linode?.region}
+              types={currentTypes.map(extendType)}
+            />
+          </Box>
+          <UnifiedMigrationPanel
+            formik={formik}
+            isLinodeOffline={isLinodeOffline}
+            migrationTypeOptions={migrationTypeOptions}
+          />
+          <Typography
+            sx={{ alignItems: 'center', display: 'flex', minHeight: '44px' }}
+            variant="h2"
+          >
+            Auto Resize Disk
+            {disksError ? (
+              <TooltipIcon
+                sxTooltipIcon={{
+                  marginLeft: '-2px',
+                }}
+                status="help"
+                text={`There was an error loading your Linode&rsquo; disks.`}
+              />
+            ) : isSmaller ? (
+              <TooltipIcon
+                sxTooltipIcon={{
+                  marginLeft: '-2px',
+                }}
+                status="help"
+                text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
+              />
+            ) : !_shouldEnableAutoResizeDiskOption ? (
+              <TooltipIcon
+                sxTooltipIcon={{
+                  marginLeft: '-2px',
+                }}
+                text={`Your ext disk can only be automatically resized if you have one ext
+                    disk or one ext disk and one swap disk on this Linode.`}
+                status="help"
+              />
+            ) : null}
+          </Typography>
+          <Checkbox
+            checked={
+              !_shouldEnableAutoResizeDiskOption || isSmaller
+                ? false
+                : formik.values.allow_auto_disk_resize
+            }
+            onChange={(value, checked) =>
+              formik.setFieldValue('allow_auto_disk_resize', checked)
+            }
+            text={
+              <Typography>
+                Would you like{' '}
+                {_shouldEnableAutoResizeDiskOption ? (
+                  <strong>{diskToResize}</strong>
+                ) : (
+                  'your disk'
+                )}{' '}
+                to be automatically scaled with this Linode&rsquo;s new size?{' '}
+                <br />
+                We recommend you keep this option enabled when available.
+              </Typography>
+            }
+            disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
+          />
+          <Divider
+            sx={{
+              marginTop: theme.spacing(2),
+            }}
+          />
+          <Box marginTop={2}>
+            <TypeToConfirm
+              confirmationText={
+                <span>
+                  To confirm these changes, type the label of the Linode (
+                  <strong>{linode?.label}</strong>) in the field below:
+                </span>
+              }
+              hideLabel
+              label="Linode Label"
+              onChange={setConfirmationText}
+              textFieldStyle={{ marginBottom: 16 }}
+              title="Confirm"
+              typographyStyle={{ marginBottom: 8 }}
+              value={confirmationText}
+              visible={preferences?.type_to_confirm}
+            />
+          </Box>
+          <Box display="flex" justifyContent="flex-end">
+            <Button
+              disabled={
+                !formik.values.type ||
+                linodeInTransition(linode?.status || '') ||
+                tableDisabled ||
+                submitButtonDisabled
+              }
+              buttonType="primary"
+              data-qa-resize
+              loading={isLoading}
+              type="submit"
+            >
+              Resize Linode
+            </Button>
+          </Box>
+        </form>
+      )}
     </Dialog>
   );
 };
