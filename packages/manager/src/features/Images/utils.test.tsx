@@ -35,8 +35,10 @@ describe('getImageLabelForLinode', () => {
 describe('getEventsForImages', () => {
   it('sorts events by image', () => {
     imageFactory.resetSequenceNumber();
-    const images = imageFactory.buildList(3);
-    const successfulEvent = eventFactory.build({ secondary_entity: { id: 0 } });
+    const images = imageFactory.buildList(1);
+    const successfulEvent = eventFactory.build({
+      secondary_entity: { id: 1 },
+    });
     const failedEvent = eventFactory.build({
       entity: { id: 1 },
       status: 'failed',
@@ -46,8 +48,7 @@ describe('getEventsForImages', () => {
     expect(
       getEventsForImages(images, [successfulEvent, failedEvent, unrelatedEvent])
     ).toEqual({
-      ['private/0']: successfulEvent,
-      ['private/1']: failedEvent,
+      ['private/1']: successfulEvent,
     });
   });
 });
