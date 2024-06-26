@@ -22,7 +22,7 @@ subQuery
   
 DefaultQuery
   = input:String {
-      const keys = options.defaultSearchKeys;
+      const keys = options.searchableFieldsWithoutOperator;
       return { "+or": keys.map((key) => ({ [key]: { "+contains": input } })) };
     }
 
