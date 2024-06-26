@@ -9,6 +9,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useAccount } from 'src/queries/account/account';
 import { EntityType } from './SupportTicketDialog';
 import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
+import { Link } from 'src/components/Link';
 
 export interface AccountLimitCustomFields extends CustomFields {
   numberOfEntities: string;
@@ -23,13 +24,23 @@ export const SupportTicketAccountLimitFields = (props: Props) => {
   const form = useFormContext<AccountLimitCustomFields>();
 
   const { data: account } = useAccount();
+
+  const defaultValues = {
+    companyName: account?.company,
+    customerName: `${account?.first_name} ${account?.last_name}`,
+    ...form.formState.defaultValues,
+  };
+
+  React.useEffect(() => {
+    form.reset(defaultValues);
+  }, []);
+
   return (
     <>
       <Controller
         render={({ field, fieldState }) => (
           <TextField
             data-qa-ticket-customer-name
-            defaultValue={`${account?.first_name} ${account?.last_name}`}
             errorText={fieldState.error?.message}
             label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.customerName}
             name="customerName"
@@ -66,6 +77,11 @@ export const SupportTicketAccountLimitFields = (props: Props) => {
             placeholder="Dedicated 4GB, Shared 8GB, High Memory 24GB, etc."
             onChange={field.onChange}
             value={field.value}
+            helperText={
+              <Link to="https://www.linode.com/pricing/">
+                View types of plans
+              </Link>
+            }
           />
         )}
         control={form.control}
