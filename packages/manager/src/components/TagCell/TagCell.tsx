@@ -1,7 +1,6 @@
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { IconButton } from 'src/components/IconButton';
@@ -12,6 +11,8 @@ import { omittedProps } from 'src/utilities/omittedProps';
 import { StyledPlusIcon, StyledTagButton } from '../Button/StyledTagButton';
 import { CircleProgress } from '../CircleProgress';
 import { AddTag } from './AddTag';
+
+import type { SxProps } from '@mui/system';
 
 export interface TagCellProps {
   /**
@@ -83,6 +84,11 @@ export const TagCell = (props: TagCellProps) => {
 
   const AddButton = (props: { panel?: boolean }) => (
     <StyledTagButton
+      tooltipText={`${
+        disabled
+          ? 'You must be an unrestricted User in order to add or modify tags on Linodes.'
+          : ''
+      }`}
       buttonType="outlined"
       disabled={disabled}
       endIcon={<StyledPlusIcon disabled={disabled} />}
@@ -132,7 +138,7 @@ export const TagCell = (props: TagCellProps) => {
           >
             {loading ? (
               <StyledCircleDiv>
-                <CircleProgress mini />
+                <CircleProgress size="sm" />
               </StyledCircleDiv>
             ) : null}
             {tags.map((thisTag) => (
@@ -219,7 +225,7 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     backgroundColor: theme.palette.primary.main,
     color: '#ffff',
   },
-  backgroundColor: theme.color.tagButton,
+  backgroundColor: theme.color.tagButtonBg,
   borderRadius: 0,
   color: theme.color.tagIcon,
   height: 30,

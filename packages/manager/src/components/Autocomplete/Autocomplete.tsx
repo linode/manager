@@ -66,7 +66,7 @@ export const Autocomplete = <
   props: EnhancedAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>
 ) => {
   const {
-    clearOnBlur = false,
+    clearOnBlur,
     defaultValue,
     disablePortal = true,
     errorText = '',
@@ -120,7 +120,7 @@ export const Autocomplete = <
               <>
                 {loading && (
                   <InputAdornment position="end">
-                    <CircleProgress mini={true} />
+                    <CircleProgress size="sm" />
                   </InputAdornment>
                 )}
                 {textFieldProps?.InputProps?.endAdornment}

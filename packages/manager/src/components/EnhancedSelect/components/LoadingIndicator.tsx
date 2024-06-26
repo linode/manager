@@ -1,13 +1,13 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { CircularProgress } from 'src/components/CircularProgress';
+import { CircleProgress } from 'src/components/CircleProgress';
 
 export const LoadingIndicator = () => {
-  return <StyledCircularProgress data-testid="input-loading" size={20} />;
+  return <StyledCircleProgress data-testid="input-loading" size="sm" />;
 };
 
-const StyledCircularProgress = styled(CircularProgress)(() => ({
+const StyledCircleProgress = styled(CircleProgress)(() => ({
   position: 'relative',
   right: 20,
 }));

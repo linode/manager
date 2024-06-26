@@ -73,7 +73,7 @@ describe('Delete Machine Images', () => {
     // Wait for machine image to become ready, then begin test.
     cy.fixture('machine-images/test-image.gz', null).then(
       (imageFileContents) => {
-        cy.defer(uploadMachineImage(region, imageFileContents), {
+        cy.defer(() => uploadMachineImage(region, imageFileContents), {
           label: 'uploading Machine Image',
           timeout: imageUploadProcessingTimeout,
         }).then((image: Image) => {

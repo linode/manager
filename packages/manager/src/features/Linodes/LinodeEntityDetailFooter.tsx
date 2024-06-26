@@ -4,6 +4,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { TagCell } from 'src/components/TagCell/TagCell';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -16,8 +17,8 @@ import {
   sxLastListItem,
   sxListItemFirstChild,
 } from './LinodeEntityDetail.styles';
-import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 
+import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
 import type { TypographyProps } from 'src/components/Typography';
 
@@ -58,6 +59,11 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
     linodeTags,
     openTagDrawer,
   } = props;
+
+  const isReadOnlyAccountAccess = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'account_access',
+    permittedGrantLevel: 'read_write',
+  });
 
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(linodeId);
 
@@ -157,7 +163,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
           sx={{
             width: '100%',
           }}
-          disabled={isLinodesGrantReadOnly}
+          disabled={isLinodesGrantReadOnly || isReadOnlyAccountAccess}
           listAllTags={openTagDrawer}
           tags={linodeTags}
           updateTags={updateTags}

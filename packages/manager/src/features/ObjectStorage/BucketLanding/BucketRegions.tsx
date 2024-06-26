@@ -9,7 +9,7 @@ interface Props {
   onBlur: (e: any) => void;
   onChange: (value: string) => void;
   required?: boolean;
-  selectedRegion: null | string;
+  selectedRegion: string | undefined;
 }
 
 export const BucketRegions = (props: Props) => {
@@ -23,16 +23,16 @@ export const BucketRegions = (props: Props) => {
   return (
     <RegionSelect
       currentCapability="Object Storage"
+      disableClearable
       disabled={disabled}
       errorText={errorText}
-      handleSelection={(id) => onChange(id)}
-      isClearable={false}
       label="Region"
       onBlur={onBlur}
+      onChange={(e, region) => onChange(region.id)}
       placeholder="Select a Region"
       regions={regions ?? []}
       required={required}
-      selectedId={selectedRegion}
+      value={selectedRegion}
     />
   );
 };

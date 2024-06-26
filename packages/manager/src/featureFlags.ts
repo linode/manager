@@ -7,6 +7,14 @@ import type { NoticeVariant } from 'src/components/Notice/Notice';
 export interface TaxDetail {
   qi_registration?: string;
   tax_id: string;
+  tax_ids?: Record<
+    'B2B' | 'B2C',
+    {
+      tax_id: string;
+      tax_name: string;
+    }
+  >;
+  tax_info?: string;
   tax_name: string;
 }
 
@@ -38,13 +46,15 @@ interface TaxCollectionBanner {
   regions?: TaxCollectionRegion[];
 }
 
-interface PlacementGroupsFlag {
-  beta: boolean;
+interface BaseFeatureFlag {
   enabled: boolean;
 }
 
-interface GeckoFlag {
-  enabled: boolean;
+interface BetaFeatureFlag extends BaseFeatureFlag {
+  beta: boolean;
+}
+
+interface GaFeatureFlag extends BaseFeatureFlag {
   ga: boolean;
 }
 
@@ -69,8 +79,9 @@ export interface Flags {
   disableLargestGbPlans: boolean;
   eventMessagesV2: boolean;
   gecko: boolean; // @TODO gecko: delete this after next release
-  gecko2: GeckoFlag;
+  gecko2: GaFeatureFlag;
   gpuv2: gpuV2;
+  imageServiceGen2: boolean;
   ipv6Sharing: boolean;
   linodeCreateRefactor: boolean;
   linodeCreateWithFirewall: boolean;
@@ -80,7 +91,7 @@ export interface Flags {
   objMultiCluster: boolean;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
-  placementGroups: PlacementGroupsFlag;
+  placementGroups: BetaFeatureFlag;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
@@ -90,6 +101,7 @@ export interface Flags {
   supportTicketSeverity: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
+  taxId: BaseFeatureFlag;
   taxes: Taxes;
   tpaProviders: Provider[];
 }

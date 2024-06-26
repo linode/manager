@@ -18,7 +18,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     marginRight: 4,
   },
   label: {
-    color: theme.textColors.tableHeader,
     fontSize: '.875rem',
     minHeight: 20,
     transition: 'none',
@@ -98,7 +97,7 @@ export const TableSortCell = (props: TableSortCellProps) => {
         {children}
         {!active && <Sort className={classes.initialIcon} />}
       </TableSortLabel>
-      {isLoading && <CircleProgress mini />}
+      {isLoading && <CircleProgress size="sm" />}
     </TableCell>
   );
 };

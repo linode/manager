@@ -1,58 +1,63 @@
+import _CircularProgress from '@mui/material/CircularProgress';
 import { SxProps, styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
-import {
-  CircularProgress,
-  CircularProgressProps,
-} from 'src/components/CircularProgress';
 import { omittedProps } from 'src/utilities/omittedProps';
 
-interface CircleProgressProps extends CircularProgressProps {
+import type { CircularProgressProps } from '@mui/material/CircularProgress';
+
+interface CircleProgressProps extends Omit<CircularProgressProps, 'size'> {
   /**
    * Additional child elements to pass in
    */
   children?: JSX.Element;
   /**
-   * Displays a smaller version of the circle progress.
-   */
-  mini?: boolean;
-  /**
-   * If true, will not show an inner circle beneath the spinning circle
-   */
-  noInner?: boolean;
-  /**
-   * Removes the padding for `mini` circle progresses only.
+   * Removes the padding
    */
   noPadding?: boolean;
   /**
-   * To be primarily used with mini and noPadding. Set spinner to a custom size.
+   * Sets the size of the spinner
+   * @default "lg"
    */
-  size?: number;
+  size?: 'lg' | 'md' | 'sm' | 'xs';
   /**
    * Additional styles to apply to the root element.
    */
   sx?: SxProps;
 }
 
+const SIZE_MAP = {
+  lg: 124,
+  md: 40,
+  sm: 20,
+  xs: 14,
+};
+
 /**
- * Use for short, indeterminate activities requiring user attention.
+ * Use for short, indeterminate activities requiring user attention. Defaults to large.
+ *
+ * sizes:
+ * xs = 14
+ * md = 20
+ * md = 40
+ * lg = 124
  */
 const CircleProgress = (props: CircleProgressProps) => {
-  const { children, mini, noInner, noPadding, size, sx, ...rest } = props;
+  const { children, noPadding, size, sx, ...rest } = props;
 
   const variant =
     typeof props.value === 'number' ? 'determinate' : 'indeterminate';
   const value = typeof props.value === 'number' ? props.value : 0;
 
-  if (mini) {
+  if (size) {
     return (
-      <StyledMiniCircularProgress
+      <StyledCustomCircularProgress
         aria-label="Content is loading"
         data-qa-circle-progress
         data-testid="circle-progress"
         noPadding={noPadding}
-        size={size ? size : noPadding ? 22 : 40}
+        size={noPadding ? SIZE_MAP[size] : SIZE_MAP[size] * 2}
         tabIndex={0}
       />
     );
@@ -63,16 +68,11 @@ const CircleProgress = (props: CircleProgressProps) => {
       {children !== undefined && (
         <Box sx={{ marginTop: 4, position: 'absolute' }}>{children}</Box>
       )}
-      {noInner !== true && (
-        <StyledTopWrapperDiv data-testid="inner-circle-progress">
-          <StyledTopDiv />
-        </StyledTopWrapperDiv>
-      )}
       <StyledCircularProgress
         {...rest}
         data-qa-circle-progress={value}
         data-testid="circle-progress"
-        size={124}
+        size={SIZE_MAP['lg']}
         thickness={2}
         value={value}
         variant={variant}
@@ -96,39 +96,17 @@ const StyledRootDiv = styled('div')(({ theme }) => ({
   width: '100%',
 }));
 
-const StyledTopWrapperDiv = styled('div')(({}) => ({
-  alignItems: 'center',
-  display: 'flex',
-  height: '100%',
-  justifyContent: 'center',
-  position: 'absolute',
-  width: '100%',
-}));
-
-const StyledTopDiv = styled('div')(({ theme }) => ({
-  border: '1px solid #999',
-  borderRadius: '50%',
-  height: 70,
-  [theme.breakpoints.up('sm')]: {
-    height: 120,
-    width: 120,
+const StyledCircularProgress = styled(_CircularProgress)(({ theme }) => ({
+  position: 'relative',
+  [theme.breakpoints.down('sm')]: {
+    height: '72px !important',
+    width: '72px !important',
   },
-  width: 70,
 }));
 
-const StyledCircularProgress = styled(CircularProgress)<CircleProgressProps>(
-  ({ theme }) => ({
-    position: 'relative',
-    [theme.breakpoints.down('sm')]: {
-      height: '72px !important',
-      width: '72px !important',
-    },
-  })
-);
-
-const StyledMiniCircularProgress = styled(CircularProgress, {
+const StyledCustomCircularProgress = styled(_CircularProgress, {
   shouldForwardProp: omittedProps(['noPadding']),
-})<CircleProgressProps>(({ theme, ...props }) => ({
+})<{ noPadding: boolean | undefined }>(({ theme, ...props }) => ({
   padding: `calc(${theme.spacing()} * 1.3)`,
   ...(props.noPadding && {
     padding: 0,

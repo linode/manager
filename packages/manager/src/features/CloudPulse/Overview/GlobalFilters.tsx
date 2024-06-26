@@ -2,10 +2,14 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { WithStartAndEnd } from 'src/features/Longview/request.types';
+import { CloudPulseRegionSelect } from '../shared/CloudPulseRegionSelect';
+import { CloudPulseResourcesSelect } from '../shared/CloudPulseResourcesSelect';
+import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
 
-import { CloudPulseRegionSelect } from '../shared/RegionSelect';
-import { CloudPulseTimeRangeSelect } from '../shared/TimeRangeSelect';
+import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
+import type { WithStartAndEnd } from 'src/features/Longview/request.types';
+import { Dashboard } from '@linode/api-v4';
+import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(filters: FiltersObject): undefined | void;
@@ -25,7 +29,10 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     start: 0,
   });
 
-  const [selectedRegion, setRegion] = React.useState<string>();
+  const [selectedDashboard, setSelectedDashboard] = React.useState<Dashboard | undefined>();
+  const [selectedRegion, setRegion] = React.useState<string | undefined>();
+  const [, setResources] = React.useState<CloudPulseResources[]>(); // removed the unused variable, this will be used later point of time
+
   React.useEffect(() => {
     const triggerGlobalFilterChange = () => {
       const globalFilters: FiltersObject = {
@@ -54,15 +61,42 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     setRegion(region);
   }, []);
 
+  const handleResourcesSelection = React.useCallback(
+    (resources: CloudPulseResources[]) => {
+      setResources(resources);
+    },
+    []
+  );
+
+  const handleDashboardChange = React.useCallback((dashboard: Dashboard | undefined) => {
+    setSelectedDashboard(dashboard);
+    setRegion(undefined);
+  }, [])
+
   return (
     <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
       <StyledGrid xs={12}>
+        <Grid sx={{ width: 300 }}>
+          <CloudPulseDashboardSelect
+            handleDashboardChange={handleDashboardChange}
+          />
+        </Grid>
         <Grid sx={{ marginLeft: 2, width: 250 }}>
           <StyledCloudPulseRegionSelect
             handleRegionChange={handleRegionChange}
+            selectedDashboard={selectedDashboard}
+            selectedRegion={selectedRegion}
           />
         </Grid>
-        <Grid sx={{ marginLeft: 12, width: 250 }}>
+
+        <Grid sx={{ marginLeft: 2, width: 350 }}>
+          <StyledCloudPulseResourcesSelect
+            handleResourcesSelection={handleResourcesSelection}
+            region={selectedRegion}
+            resourceType={selectedDashboard?.service_type}
+          />
+        </Grid>
+        <Grid sx={{ marginLeft: 2, width: 250 }}>
           <StyledCloudPulseTimeRangeSelect
             defaultValue={'Past 30 Minutes'}
             handleStatsChange={handleTimeRangeChange}
@@ -85,6 +119,12 @@ const StyledCloudPulseTimeRangeSelect = styled(CloudPulseTimeRangeSelect, {
   label: 'StyledCloudPulseTimeRangeSelect',
 })({
   width: 150,
+});
+
+const StyledCloudPulseResourcesSelect = styled(CloudPulseResourcesSelect, {
+  label: 'StyledCloudPulseResourcesSelect',
+})({
+  width: 250,
 });
 
 const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({

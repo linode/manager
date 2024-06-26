@@ -31,7 +31,7 @@ describe('BillingSummary', () => {
         <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
       </PayPalScriptProvider>
     );
-    within(screen.getByTestId(accountBalanceText)).getByText(/no balance/gi);
+    within(screen.getByTestId(accountBalanceText)).getByText(/no balance/i);
     within(screen.getByTestId(accountBalanceValue)).getByText('$0.00');
   });
 
@@ -45,7 +45,7 @@ describe('BillingSummary', () => {
         />
       </PayPalScriptProvider>
     );
-    within(screen.getByTestId(accountBalanceText)).getByText(/credit/gi);
+    within(screen.getByTestId(accountBalanceText)).getByText(/credit/i);
     within(screen.getByTestId(accountBalanceValue)).getByText('$10.00');
   });
 
@@ -59,7 +59,7 @@ describe('BillingSummary', () => {
         />
       </PayPalScriptProvider>
     );
-    within(screen.getByTestId(accountBalanceText)).getByText(/Balance/gi);
+    within(screen.getByTestId(accountBalanceText)).getByText(/Balance/i);
     within(screen.getByTestId(accountBalanceValue)).getByText('$10.00');
   });
 
