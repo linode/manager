@@ -9,7 +9,7 @@ describe('generateGoLinodeSnippet', () => {
       type: 'g6-nanode-1',
     };
 
-    const expectedOutput = `linodeClient.CreateInstance(\n    context.Background(),\n    linodego.InstanceCreateOptions{\n        Type: "g6-nanode-1",\n        Region: "us-central",\n        Label: "TestInstance",\n        root_pass: "securePassword123",\n    },\n)\n`;
+    const expectedOutput = `linodeClient.CreateInstance(\n    context.Background(),\n    linodego.InstanceCreateOptions{\n        Type: "g6-nanode-1",\n        Region: "us-central",\n        Label: "TestInstance",\n        RootPass: "securePassword123",\n    },\n)\n`;
 
     expect(generateGoLinodeSnippet(config)).toEqual(expectedOutput);
   });
@@ -22,7 +22,7 @@ describe('generateGoLinodeSnippet', () => {
       type: 'g6-"nanode-1',
     };
 
-    const expectedOutput = `linodeClient.CreateInstance(\n    context.Background(),\n    linodego.InstanceCreateOptions{\n        Type: "g6-\\"nanode-1",\n        Region: "us-\\"central",\n        Label: "Test\\"Instance",\n        root_pass: "secure\\"Password123",\n    },\n)\n`;
+    const expectedOutput = `linodeClient.CreateInstance(\n    context.Background(),\n    linodego.InstanceCreateOptions{\n        Type: "g6-\\"nanode-1",\n        Region: "us-\\"central",\n        Label: "Test\\"Instance",\n        RootPass: "secure\\"Password123",\n    },\n)\n`;
 
     expect(generateGoLinodeSnippet(config)).toEqual(expectedOutput);
   });
