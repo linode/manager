@@ -13,6 +13,9 @@ describe('StackScript', () => {
 
     expect(screen.getByText(stackScript.label)).toBeInTheDocument();
     expect(screen.getByText(stackScript.username)).toBeInTheDocument();
-    expect(screen.getByText(String(stackScript.id))).toBeInTheDocument();
+
+    const idSection = screen.getByText('StackScript ID:').closest('p');
+    expect(idSection).toBeInTheDocument();
+    expect(idSection).toHaveTextContent(`StackScript ID: ${stackScript.id}`);
   });
 });
