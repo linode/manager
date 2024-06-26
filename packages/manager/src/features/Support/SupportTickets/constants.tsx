@@ -26,6 +26,11 @@ export const SMTP_DIALOG_TITLE = 'Contact Support: SMTP Restriction Removal';
 export const SMTP_HELPER_TEXT =
   'In an effort to fight spam, outbound connections are restricted on ports 25, 465, and 587. To have these restrictions removed, please provide us with the following information. A member of the Support team will review your request and follow up with you as soon as possible.';
 
+export const ACCOUNT_LIMIT_DIALOG_TITLE =
+  'Contact Support: Account Limit Increase';
+export const ACCOUNT_LIMIT_HELPER_TEXT =
+  'To request access to more Linodes, LKE nodes, and/or larger plans, please provide us with the following information. Typically, we require a few months of positive billing history on an account before we will consider an account limit increase.';
+
 export const TICKET_TYPE_MAP: Record<TicketType, TicketTypeData> = {
   general: {
     dialogTitle: 'Open a Support Ticket',
@@ -41,6 +46,10 @@ export const TICKET_TYPE_MAP: Record<TicketType, TicketTypeData> = {
   smtp: {
     dialogTitle: SMTP_DIALOG_TITLE,
     helperText: SMTP_HELPER_TEXT,
+  },
+  accountLimit: {
+    dialogTitle: ACCOUNT_LIMIT_DIALOG_TITLE,
+    helperText: ACCOUNT_LIMIT_HELPER_TEXT,
   },
 };
 
@@ -86,6 +95,14 @@ export const SMTP_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
   emailDomains: 'Domain(s) that will be sending emails',
   useCase:
     "A clear and detailed description of your email use case, including how you'll avoid sending unwanted emails",
+};
+
+export const ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
+  ...CUSTOM_FIELD_NAME_TO_LABEL_MAP,
+  numberOfLinodes: 'Total number of Linodes you need?',
+  linodePlan: 'Which Linode plan do you need access to?',
+  useCase:
+    'A detailed description of your use case and why you need access to more/larger Linodes',
 };
 
 // Used for finding specific custom fields within form data, based on the ticket type.

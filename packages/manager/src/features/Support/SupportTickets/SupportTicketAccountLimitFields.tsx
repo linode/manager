@@ -1,70 +1,113 @@
 import * as React from 'react';
 
 import { TextField } from 'src/components/TextField';
+import {
+  ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP,
+  CustomFields,
+} from './constants';
+import { Controller, useFormContext } from 'react-hook-form';
+import { useAccount } from 'src/queries/account/account';
 
-// TODO: look into changing over to RHF
-export interface Props {
-  formState?: {
-    companyName: string;
-    customerName: string;
-    linodePlan: string;
-    numberOfLinodes: string;
-    useCase: string;
-  };
-  handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+export interface AccountLimitFields extends CustomFields {
+  numberOfLinodes: string;
+  linodePlan: string;
 }
 
-export const ACCOUNT_LIMIT_DIALOG_TITLE =
-  'Contact Support: Account Limit Increase';
-export const ACCOUNT_LIMIT_HELPER_TEXT =
-  'To request access to more Linodes, LKE nodes, and/or larger plans, please provide us with the following information. Typically, we require a few months of positive billing history on an account before we will consider an account limit increase.';
+export const SupportTicketAccountLimitFields = () => {
+  const form = useFormContext<AccountLimitFields>();
 
-// TODO: consider extending this from a base type to DRY this up
-const fieldNameToLabelMap: Record<string, string> = {
-  companyName: 'Business or company name',
-  customerName: 'First and last name',
-  linodePlan: 'Which Linode plan do you need access to?',
-  numberOfLinodes: 'Total number of Linodes you need?',
-  useCase:
-    'A detailed description of your use case and why you need access to more/larger Linodes',
-};
-
-export const SupportTicketAccountLimitFields = (props: Props) => {
-  const { formState, handleChange } = props;
+  const { data: account } = useAccount();
 
   return (
     <>
-      <TextField
-        label={fieldNameToLabelMap.customerName}
+      <Controller
+        render={({ field, fieldState }) => (
+          <TextField
+            data-qa-ticket-customer-name
+            defaultValue={`${account?.first_name} ${account?.last_name}`}
+            errorText={fieldState.error?.message}
+            label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.customerName}
+            name="customerName"
+            onChange={field.onChange}
+            required
+            value={field.value}
+          />
+        )}
+        control={form.control}
         name="customerName"
-        onChange={handleChange}
-        required
-        value={formState?.customerName}
       />
-      <TextField
-        label={fieldNameToLabelMap.companyName}
+      <Controller
+        render={({ field, fieldState }) => (
+          <TextField
+            data-qa-ticket-company-name
+            errorText={fieldState.error?.message}
+            label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.companyName}
+            name="companyName"
+            onChange={field.onChange}
+            required
+            value={field.value}
+          />
+        )}
+        control={form.control}
         name="companyName"
-        onChange={handleChange}
-        value={formState?.companyName}
       />
-      <TextField
-        label={fieldNameToLabelMap.numberOfLinodes}
-        onChange={handleChange}
-        value={formState?.numberOfLinodes}
-      />{' '}
-      <TextField
-        label={fieldNameToLabelMap.linodePlan}
-        onChange={handleChange}
-        value={formState?.linodePlan}
+      <Controller
+        render={({ field, fieldState }) => (
+          <TextField
+            data-qa-ticket-number-of-linodes
+            errorText={fieldState.error?.message}
+            label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.numberOfLinodes}
+            name="numberOfLinodes"
+            onChange={field.onChange}
+            value={field.value}
+          />
+        )}
+        control={form.control}
+        name="numberOfLinodes"
       />
-      <TextField
-        expand
-        label={fieldNameToLabelMap.useCase}
-        multiline
+      <Controller
+        render={({ field, fieldState }) => (
+          <TextField
+            data-qa-ticket-linode-plan
+            errorText={fieldState.error?.message}
+            label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.linodePlan}
+            name="linodePlan"
+            onChange={field.onChange}
+            value={field.value}
+          />
+        )}
+        control={form.control}
+        name="linodePlan"
+      />
+      <Controller
+        render={({ field, fieldState }) => (
+          <TextField
+            data-qa-ticket-use-case
+            errorText={fieldState.error?.message}
+            label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.useCase}
+            name="useCase"
+            onChange={field.onChange}
+            value={field.value}
+            required
+          />
+        )}
+        control={form.control}
         name="useCase"
-        onChange={handleChange}
-        required
-        value={formState?.useCase}
+      />
+      <Controller
+        render={({ field, fieldState }) => (
+          <TextField
+            data-qa-ticket-public-info
+            errorText={fieldState.error?.message}
+            label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.publicInfo}
+            name="publicInfo"
+            onChange={field.onChange}
+            value={field.value}
+            required
+          />
+        )}
+        control={form.control}
+        name="publicInfo"
       />
     </>
   );
