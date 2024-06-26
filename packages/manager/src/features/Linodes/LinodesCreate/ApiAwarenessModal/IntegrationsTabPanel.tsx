@@ -30,10 +30,9 @@ export const IntegrationsTabPanel = ({
   payLoad,
   title,
 }: IntegrationsTabPanelProps) => {
-  const [
-    selectedIntegration,
-    setSelectedIntegration,
-  ] = useState<OptionType | null>(null);
+  const [selectedIntegration, setSelectedIntegration] = useState<
+    OptionType | undefined
+  >();
 
   const terraformConfig = useMemo(() => generateTerraformConfig(payLoad), [
     payLoad,
@@ -53,8 +52,9 @@ export const IntegrationsTabPanel = ({
         manage your Linode resources.
       </Typography>
       <Autocomplete
+        disableClearable
         label="Integrations"
-        onChange={(_, option) => handleIntegrationChange(option!)}
+        onChange={(_, option) => handleIntegrationChange(option)}
         options={integrationsOptions}
         placeholder="Select Integration"
         value={selectedIntegration}

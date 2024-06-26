@@ -1,4 +1,5 @@
-import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+
 /**
  * Escapes special characters in a string for use in Go strings.
  * @param {string} value - The string to escape.
@@ -10,7 +11,7 @@ function escapeGoString(value: string): string {
 
 /**
  * Generates a Go code snippet using Linode Go SDK to create a Linode instance.
- * @param {Object} config - Configuration details for the instance.
+ * @param {CreateLinodeRequest} config - Configuration details for the instance.
  * @returns {string} - The Go code snippet.
  */
 export function generateGoLinodeSnippet(config: CreateLinodeRequest): string {
@@ -30,13 +31,19 @@ export function generateGoLinodeSnippet(config: CreateLinodeRequest): string {
     snippet += `        Image: "${escapeGoString(config.image)}",\n`;
   }
   if (config.root_pass) {
-    snippet += `        root_pass: "${escapeGoString(config.root_pass)}",\n`;
+    snippet += `        RootPass: "${escapeGoString(config.root_pass)}",\n`;
   }
   if (config.authorized_keys) {
     const keys = config.authorized_keys
       .map((key) => `"${escapeGoString(key)}"`)
       .join(', ');
     snippet += `        AuthorizedKeys: [${keys}],\n`;
+  }
+  if (config.authorized_users) {
+    const users = config.authorized_users
+      .map((user) => `"${escapeGoString(user)}"`)
+      .join(', ');
+    snippet += `        AuthorizedUsers: [${users}],\n`;
   }
   if (config.swap_size) {
     snippet += `        SwapSize: ${config.swap_size},\n`;
@@ -51,10 +58,24 @@ export function generateGoLinodeSnippet(config: CreateLinodeRequest): string {
     const tags = config.tags
       .map((tag) => `"${escapeGoString(tag)}"`)
       .join(', ');
-    snippet += `        Tags: [${tags}],\n`;
+    snippet += `        Tags: []string{${tags}},\n`;
   }
   if (config.booted !== undefined) {
     snippet += `        Booted: ${config.booted},\n`;
+  }
+  if (config.stackscript_id) {
+    snippet += `        StackScriptID: ${config.stackscript_id},\n`;
+  }
+  if (config.backup_id) {
+    snippet += `        BackupID: ${config.backup_id},\n`;
+  }
+  if (config.firewall_id) {
+    snippet += `        FirewallID: ${config.firewall_id},\n`;
+  }
+  if (config.metadata && config.metadata.user_data) {
+    snippet += `        Metadata: {"user_data": "${escapeGoString(
+      config.metadata.user_data
+    )}"},\n`;
   }
 
   snippet += '    },\n';

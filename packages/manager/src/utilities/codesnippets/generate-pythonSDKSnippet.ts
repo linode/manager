@@ -1,4 +1,4 @@
-import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 
 /**
  * Escapes special characters in a string for use in Python strings.

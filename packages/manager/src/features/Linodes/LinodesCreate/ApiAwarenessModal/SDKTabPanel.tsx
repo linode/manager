@@ -24,7 +24,7 @@ const sdkOptions: OptionType[] = [
 ];
 
 export const SDKTabPanel = ({ payLoad, title }: SDKTabPanelProps) => {
-  const [selectedSDK, setSelectedSDK] = useState<OptionType | null>(null);
+  const [selectedSDK, setSelectedSDK] = useState<OptionType | undefined>();
 
   const linodegoSnippet = useMemo(() => generateGoLinodeSnippet(payLoad), [
     payLoad,
@@ -47,8 +47,9 @@ export const SDKTabPanel = ({ payLoad, title }: SDKTabPanelProps) => {
         fully-documented REST API.
       </Typography>
       <Autocomplete
+        disableClearable
         label="Software Developer Kits(SDK)"
-        onChange={(_, option) => handleSDKChange(option!)}
+        onChange={(_, option) => handleSDKChange(option)}
         options={sdkOptions}
         placeholder="Select An SDK"
         value={selectedSDK}
