@@ -11,22 +11,34 @@ import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 
-import { ENTITY_ID_TO_NAME_MAP, ENTITY_MAP } from './constants';
+import {
+  ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP,
+  ENTITY_ID_TO_NAME_MAP,
+  ENTITY_MAP,
+} from './constants';
 
 import type {
   EntityType,
   SupportTicketFormFields,
+  TicketType,
 } from './SupportTicketDialog';
 import type { APIError } from '@linode/api-v4';
+import { TextField } from 'src/components/TextField';
+import { AccountLimitCustomFields } from './SupportTicketAccountLimitFields';
 
-export const SupportTicketProductSelectionFields = () => {
+interface Props {
+  ticketType?: TicketType;
+}
+
+export const SupportTicketProductSelectionFields = (props: Props) => {
+  const { ticketType } = props;
   const {
     control,
     setValue,
     watch,
     formState: { errors },
     clearErrors,
-  } = useFormContext<SupportTicketFormFields>();
+  } = useFormContext<SupportTicketFormFields & AccountLimitCustomFields>();
 
   const { entityId, entityInputValue, entityType } = watch();
 
@@ -157,64 +169,92 @@ export const SupportTicketProductSelectionFields = () => {
     return eachTopic.value === entityType;
   });
 
+  const _entityType =
+    entityType !== 'general' && entityType !== 'none'
+      ? `${ENTITY_ID_TO_NAME_MAP[entityType]}s`
+      : 'entities';
+
   return (
     <>
-      <Controller
-        render={({ field }) => (
-          <Autocomplete
-            onChange={(_e, type) => {
-              // Don't reset things if the type hasn't changed.
-              if (type.value === entityType) {
-                return;
-              }
-              field.onChange(type.value);
-              setValue('entityId', '');
-              setValue('entityInputValue', '');
-              clearErrors('entityId');
-            }}
-            data-qa-ticket-entity-type
-            disableClearable
-            label="What is this regarding?"
-            options={topicOptions}
-            value={selectedTopic}
-          />
-        )}
-        control={control}
-        name="entityType"
-      />
-      {!['general', 'none'].includes(entityType) && (
+      {ticketType === 'accountLimit' ? (
+        <Controller
+          render={({ field, fieldState }) => (
+            <TextField
+              data-qa-ticket-number-of-entities
+              errorText={fieldState.error?.message}
+              label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.numberOfEntities}
+              helperText={`Current number of ${_entityType}: ${entityOptions.length}`}
+              placeholder={`Enter total number of ${_entityType}`}
+              name="numberOfEntities"
+              onChange={field.onChange}
+              value={field.value}
+            />
+          )}
+          control={control}
+          name="numberOfEntities"
+        />
+      ) : (
         <>
           <Controller
-            render={({ field, fieldState }) => (
+            render={({ field }) => (
               <Autocomplete
-                onChange={(e, id) =>
-                  setValue('entityId', id ? String(id?.value) : '')
-                }
-                data-qa-ticket-entity-id
-                disabled={entityOptions.length === 0}
-                errorText={
-                  entityError ||
-                  fieldState.error?.message ||
-                  errors.entityId?.message
-                }
-                inputValue={entityInputValue}
-                label={ENTITY_ID_TO_NAME_MAP[entityType] ?? 'Entity Select'}
-                loading={areEntitiesLoading}
-                onInputChange={(e, value) => field.onChange(value ? value : '')}
-                options={entityOptions}
-                placeholder={`Select a ${ENTITY_ID_TO_NAME_MAP[entityType]}`}
-                value={selectedEntity}
+                onChange={(_e, type) => {
+                  // Don't reset things if the type hasn't changed.
+                  if (type.value === entityType) {
+                    return;
+                  }
+                  field.onChange(type.value);
+                  setValue('entityId', '');
+                  setValue('entityInputValue', '');
+                  clearErrors('entityId');
+                }}
+                data-qa-ticket-entity-type
+                disableClearable
+                label="What is this regarding?"
+                options={topicOptions}
+                value={selectedTopic}
               />
             )}
             control={control}
-            name="entityInputValue"
+            name="entityType"
           />
-          {!areEntitiesLoading && entityOptions.length === 0 ? (
-            <FormHelperText>
-              You don&rsquo;t have any {ENTITY_ID_TO_NAME_MAP[entityType]}s on
-              your account.
-            </FormHelperText>
-          ) : null}
+          {!['general', 'none'].includes(entityType) && (
+            <>
+              <Controller
+                render={({ field, fieldState }) => (
+                  <Autocomplete
+                    onChange={(e, id) =>
+                      setValue('entityId', id ? String(id?.value) : '')
+                    }
+                    data-qa-ticket-entity-id
+                    disabled={entityOptions.length === 0}
+                    errorText={
+                      entityError ||
+                      fieldState.error?.message ||
+                      errors.entityId?.message
+                    }
+                    inputValue={entityInputValue}
+                    label={ENTITY_ID_TO_NAME_MAP[entityType] ?? 'Entity Select'}
+                    loading={areEntitiesLoading}
+                    onInputChange={(e, value) =>
+                      field.onChange(value ? value : '')
+                    }
+                    options={entityOptions}
+                    placeholder={`Select a ${ENTITY_ID_TO_NAME_MAP[entityType]}`}
+                    value={selectedEntity}
+                  />
+                )}
+                control={control}
+                name="entityInputValue"
+              />
+              {!areEntitiesLoading && entityOptions.length === 0 ? (
+                <FormHelperText>
+                  You don&rsquo;t have any {ENTITY_ID_TO_NAME_MAP[entityType]}s
+                  on your account.
+                </FormHelperText>
+              ) : null}
+            </>
+          )}
         </>
       )}
     </>
