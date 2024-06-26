@@ -99,10 +99,10 @@ export const SMTP_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
 
 export const ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
   ...CUSTOM_FIELD_NAME_TO_LABEL_MAP,
-  numberOfLinodes: 'Total number of Linodes you need?',
+  numberOfEntities: 'Total number of entities you need?',
   linodePlan: 'Which Linode plan do you need access to?',
   useCase:
-    'A detailed description of your use case and why you need access to more/larger Linodes',
+    'A detailed description of your use case and why you need access to more/larger entities',
 };
 
 // Used for finding specific custom fields within form data, based on the ticket type.
