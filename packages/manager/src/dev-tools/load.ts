@@ -1,24 +1,20 @@
 import { ENABLE_DEV_TOOLS } from 'src/constants';
-import { ApplicationStore } from 'src/store';
-
-import {
-  makeMockContext,
-  MockContextPopulator,
-  MockContext,
-} from 'src/mocks/mockContext';
-import { resolveMockPreset } from 'src/mocks/mockPreset';
-import { defaultBaselineMockPreset, allMockPresets } from 'src/mocks/presets';
-import {
-  isMSWEnabled,
-  getMSWPreset,
-  getMSWExtraPresets,
-  getMSWContextPopulators,
-} from './ServiceWorkerTool';
-import { setupWorker } from 'msw/browser';
-import { QueryClient } from '@tanstack/react-query';
 import { allContextPopulators } from 'src/mocks/context/populators';
+import { makeMockContext } from 'src/mocks/mockContext';
+import { resolveMockPreset } from 'src/mocks/mockPreset';
+import { allMockPresets, defaultBaselineMockPreset } from 'src/mocks/presets';
 
+import {
+  getMSWContextPopulators,
+  getMSWExtraPresets,
+  getMSWPreset,
+  isMSWEnabled,
+} from './ServiceWorkerTool';
+
+import type { QueryClient } from '@tanstack/react-query';
+import type { MockContext, MockContextPopulator } from 'src/mocks/mockContext';
 import type { MockPreset } from 'src/mocks/mockPreset';
+import type { ApplicationStore } from 'src/store';
 
 /**
  * Use this to dynamically import our custom dev-tools ONLY when they
@@ -33,6 +29,7 @@ export async function loadDevTools(
   const devTools = await import('./dev-tools');
 
   if (isMSWEnabled) {
+    const { worker: mswWorker } = await import('../mocks/testBrowser');
     const mswPresetId = getMSWPreset() ?? defaultBaselineMockPreset.id;
     const mswPreset =
       allMockPresets.find((preset) => preset.id === mswPresetId) ??
@@ -43,14 +40,14 @@ export async function loadDevTools(
       .map((presetId) =>
         allMockPresets.find((extraPreset) => extraPreset.id === presetId)
       )
-      .filter((preset) => !!preset) as MockPreset[];
+      .filter((preset) => !!preset);
 
     const mswContentPopulatorIds = getMSWContextPopulators();
     const mswContentPopulators = mswContentPopulatorIds
       .map((populatorId) =>
         allContextPopulators.find((populator) => populator.id === populatorId)
       )
-      .filter((populator) => !!populator) as MockContextPopulator[];
+      .filter((populator) => !!populator);
 
     // Apply MSW context populators.
     const mockContext = mswContentPopulators.reduce(
@@ -74,7 +71,7 @@ export async function loadDevTools(
 
     // Because MSW applies the first handler that is set up for any given request,
     // we must apply extra request handlers before base handlers.
-    const worker = setupWorker(...extraHandlers, ...baseHandlers);
+    const worker = mswWorker({ ...extraHandlers, ...baseHandlers });
     await worker.start({ onUnhandledRequest: 'bypass' });
   }
 

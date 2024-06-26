@@ -10,7 +10,7 @@ export const volumeFactory = Factory.Sync.makeFactory<Volume>({
   encryption: 'enabled',
   filesystem_path: '/mnt',
   hardware_type: 'nvme',
-  id: Factory.each((id) => id + 1),
+  id: Factory.each((id) => id),
   label: Factory.each((id) => `volume-${id}`),
   linode_id: null,
   linode_label: null,

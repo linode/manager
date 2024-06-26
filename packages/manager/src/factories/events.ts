@@ -19,7 +19,7 @@ export const eventFactory = Factory.Sync.makeFactory<Event>({
     type: 'linode',
     url: '/v4/linode/instances/30499244',
   },
-  id: Factory.each((id) => id + 1),
+  id: Factory.each((id) => id),
   message: null,
   percent_complete: 10,
   rate: null,
