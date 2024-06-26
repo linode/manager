@@ -12,12 +12,11 @@ import {
 import { interceptCreateLinode } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { createLinodeRequestFactory } from 'src/factories';
-import { createLinode, getLinodeDisks } from '@linode/api-v4/lib/linodes';
-import { createImage } from '@linode/api-v4/lib/images';
+import { createImage, getLinodeDisks, resizeLinodeDisk } from '@linode/api-v4';
 import { chooseRegion } from 'support/util/regions';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { cleanUp } from 'support/util/cleanup';
-import { resizeLinodeDisk } from '@linode/api-v4/lib';
+import { createTestLinode } from 'support/util/linodes';
 
 // StackScript fixture paths.
 const stackscriptBasicPath = 'stackscripts/stackscript-basic.sh';
@@ -113,7 +112,7 @@ const createLinodeAndImage = async () => {
   // 1.5GB
   // Shout out to Debian for fitting on a 1.5GB disk.
   const resizedDiskSize = 1536;
-  const linode = await createLinode(
+  const linode = await createTestLinode(
     createLinodeRequestFactory.build({
       label: randomLabel(),
       region: chooseRegion().id,
@@ -132,7 +131,10 @@ const createLinodeAndImage = async () => {
   await resizeLinodeDisk(linode.id, diskId, resizedDiskSize);
   await pollLinodeDiskSize(linode.id, diskId, resizedDiskSize);
 
-  const image = await createImage(diskId, randomLabel(), randomPhrase());
+  const image = await createImage({
+    disk_id: diskId,
+    label: randomLabel(),
+  });
 
   await pollImageStatus(
     image.id,
@@ -163,8 +165,8 @@ describe('Create stackscripts', () => {
   it('creates a StackScript and deploys a Linode with it', () => {
     const stackscriptLabel = randomLabel();
     const stackscriptDesc = randomPhrase();
-    const stackscriptImage = 'Alpine 3.18';
-    const stackscriptImageTag = 'alpine3.18';
+    const stackscriptImage = 'Alpine 3.19';
+    const stackscriptImageTag = 'alpine3.19';
 
     const linodeLabel = randomLabel();
     const linodeRegion = chooseRegion();
@@ -294,20 +296,20 @@ describe('Create stackscripts', () => {
      */
     const imageSamples = [
       { label: 'AlmaLinux 9', sel: 'linode/almalinux9' },
-      { label: 'Alpine 3.18', sel: 'linode/alpine3.18' },
+      { label: 'Alpine 3.19', sel: 'linode/alpine3.19' },
       { label: 'Arch Linux', sel: 'linode/arch' },
       { label: 'CentOS Stream 9', sel: 'linode/centos-stream9' },
       { label: 'Debian 12', sel: 'linode/debian12' },
-      { label: 'Fedora 38', sel: 'linode/fedora38' },
+      { label: 'Fedora 40', sel: 'linode/fedora40' },
       { label: 'Rocky Linux 9', sel: 'linode/rocky9' },
-      { label: 'Ubuntu 23.10', sel: 'linode/ubuntu23.10' },
+      { label: 'Ubuntu 24.04 LTS', sel: 'linode/ubuntu24.04' },
     ];
 
     interceptCreateStackScript().as('createStackScript');
     interceptGetStackScripts().as('getStackScripts');
     interceptCreateLinode().as('createLinode');
 
-    cy.defer(createLinodeAndImage(), {
+    cy.defer(createLinodeAndImage, {
       label: 'creating Linode and Image',
       timeout: 360000,
     }).then((privateImage) => {

@@ -23,13 +23,13 @@ import {
   useDeleteBucketWithRegionMutation,
   useObjectStorageBuckets,
 } from 'src/queries/objectStorage';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
-} from 'src/utilities/analytics';
+} from 'src/utilities/analytics/customEventAnalytics';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 import { readableBytes } from 'src/utilities/unitConversions';
 

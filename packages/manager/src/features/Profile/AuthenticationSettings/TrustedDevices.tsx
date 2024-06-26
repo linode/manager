@@ -17,7 +17,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useTrustedDevicesQuery } from 'src/queries/profile';
+import { useTrustedDevicesQuery } from 'src/queries/profile/profile';
 
 import { RevokeTrustedDeviceDialog } from './RevokeTrustedDevicesDialog';
 
@@ -86,7 +86,7 @@ const TrustedDevices = () => {
 
     return data?.data.map((device) => {
       return (
-        <TableRow ariaLabel={`Device ${device.id}`} key={device.id}>
+        <TableRow key={device.id}>
           <TableCell>{device.user_agent}</TableCell>
           <TableCell>{device.last_remote_addr}</TableCell>
           <TableCell>

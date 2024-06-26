@@ -6,7 +6,6 @@ import {
   regionFactory,
 } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
-import { createLinode } from '@linode/api-v4';
 import {
   interceptCreateFirewall,
   interceptGetFirewalls,
@@ -23,6 +22,7 @@ import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomNumber } from 'support/util/random';
 import type { Linode, Region } from '@linode/api-v4';
 import { chooseRegions } from 'support/util/regions';
+import { createTestLinode } from 'support/util/linodes';
 
 const mockRegions: Region[] = [
   regionFactory.build({
@@ -66,7 +66,7 @@ const migrationNoticeSubstrings = [
 authenticate();
 describe('Migrate Linode With Firewall', () => {
   before(() => {
-    cleanUp('firewalls');
+    cleanUp(['firewalls', 'linodes']);
   });
 
   /*
@@ -144,7 +144,9 @@ describe('Migrate Linode With Firewall', () => {
     interceptGetFirewalls().as('getFirewalls');
 
     // Create a Linode, then navigate to the Firewalls landing page.
-    cy.defer(createLinode(linodePayload)).then((linode: Linode) => {
+    cy.defer(() =>
+      createTestLinode(linodePayload, { securityMethod: 'powered_off' })
+    ).then((linode: Linode) => {
       interceptMigrateLinode(linode.id).as('migrateLinode');
       cy.visitWithLogin('/firewalls');
       cy.wait('@getFirewalls');
@@ -194,7 +196,7 @@ describe('Migrate Linode With Firewall', () => {
 
       // Make sure Linode is running before attempting to migrate.
       cy.get('[data-qa-linode-status]').within(() => {
-        cy.findByText('RUNNING');
+        cy.findByText('OFFLINE');
       });
 
       ui.actionMenu

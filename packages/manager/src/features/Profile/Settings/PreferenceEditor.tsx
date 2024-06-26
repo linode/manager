@@ -6,7 +6,10 @@ import { Dialog, DialogProps } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 
 type Props = Pick<DialogProps, 'onClose' | 'open'>;
 

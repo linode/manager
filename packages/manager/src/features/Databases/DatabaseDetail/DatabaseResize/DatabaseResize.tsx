@@ -18,8 +18,8 @@ import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToCo
 import { Typography } from 'src/components/Typography';
 import { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
-import { useDatabaseTypesQuery } from 'src/queries/databases';
-import { useDatabaseMutation } from 'src/queries/databases';
+import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
+import { useDatabaseMutation } from 'src/queries/databases/databases';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 import {
@@ -202,8 +202,12 @@ export const DatabaseResize = ({ database }: Props) => {
   }, [database.cluster_size, dbTypes, selectedEngine]);
 
   const currentPlan = displayTypes?.find((type) => type.id === database.type);
-
   const currentPlanDisk = currentPlan ? currentPlan.disk : 0;
+  const disabledPlans = displayTypes?.filter((type) =>
+    type.class === 'dedicated'
+      ? type.disk < currentPlanDisk
+      : type.disk <= currentPlanDisk
+  );
 
   if (typesLoading) {
     return <CircleProgress />;
@@ -222,11 +226,9 @@ export const DatabaseResize = ({ database }: Props) => {
       </Paper>
       <Paper sx={{ marginTop: 2 }}>
         <StyledPlansPanel
-          disableSmallerPlans={{
-            selectedDiskSize: currentPlanDisk,
-          }}
           currentPlanHeading={currentPlan?.heading}
           data-qa-select-plan
+          disabledSmallerPlans={disabledPlans}
           header="Choose a Plan"
           onSelect={(selected: string) => setPlanSelected(selected)}
           selectedId={planSelected}

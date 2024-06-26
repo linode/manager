@@ -19,9 +19,8 @@ import {
 } from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { mapStackScriptLabelToOCA } from 'src/features/OneClickApps/utils';
-import { baseApps } from 'src/features/StackScripts/stackScriptUtils';
 import { stackScriptFactory } from 'src/factories/stackscripts';
-import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
+import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
 
 import type { StackScript } from '@linode/api-v4';
 import type { OCA } from '@src/features/OneClickApps/types';
@@ -42,7 +41,7 @@ describe('OneClick Apps (OCA)', () => {
       const stackScripts: StackScript[] = xhr.response?.body.data ?? [];
 
       const trimmedApps: StackScript[] = filterOneClickApps({
-        baseApps,
+        baseAppIds: Object.keys(oneClickApps).map(Number),
         newApps: {},
         queryResults: stackScripts,
       });
@@ -65,7 +64,7 @@ describe('OneClick Apps (OCA)', () => {
           // This is only true for the apps defined in `oneClickApps.ts`
           expect(
             mapStackScriptLabelToOCA({
-              oneClickApps,
+              oneClickApps: Object.values(oneClickApps),
               stackScriptLabel: decodedLabel,
             })
           ).to.not.be.undefined;
@@ -82,7 +81,7 @@ describe('OneClick Apps (OCA)', () => {
       stackScriptCandidate.should('exist').click();
 
       const app: OCA | undefined = mapStackScriptLabelToOCA({
-        oneClickApps,
+        oneClickApps: Object.values(oneClickApps),
         stackScriptLabel: candidateApp.label,
       });
 
@@ -131,7 +130,7 @@ describe('OneClick Apps (OCA)', () => {
       description: 'Minecraft OCA',
       ordinal: 10,
       logo_url: 'assets/Minecraft.svg',
-      images: ['linode/debian11', 'linode/ubuntu20.04'],
+      images: ['linode/debian11', 'linode/ubuntu22.04'],
       deployments_total: 18854,
       deployments_active: 412,
       is_public: true,
@@ -161,7 +160,7 @@ describe('OneClick Apps (OCA)', () => {
 
     const firstName = randomLabel();
     const password = randomString(16);
-    const image = 'linode/ubuntu20.04';
+    const image = 'linode/ubuntu22.04';
     const rootPassword = randomString(16);
     const region = chooseRegion();
     const linodeLabel = randomLabel();

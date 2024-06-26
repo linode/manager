@@ -25,13 +25,13 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import {
   useCreateVolumeMutation,
   useVolumeTypesQuery,
 } from 'src/queries/volumes/volumes';
-import { sendCreateVolumeEvent } from 'src/utilities/analytics';
+import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
   handleFieldErrors,
@@ -303,18 +303,17 @@ export const VolumeCreate = () => {
             />
             <Box alignItems="flex-end" display="flex">
               <RegionSelect
-                handleSelection={(value) => {
-                  setFieldValue('region', value);
+                onChange={(e, region) => {
+                  setFieldValue('region', region?.id ?? null);
                   setFieldValue('linode_id', null);
                 }}
                 currentCapability="Block Storage"
                 disabled={doesNotHavePermission}
                 errorText={touched.region ? errors.region : undefined}
-                isClearable
                 label="Region"
                 onBlur={handleBlur}
                 regions={regions ?? []}
-                selectedId={values.region}
+                value={values.region}
                 width={400}
               />
               {renderSelectTooltip(
@@ -364,7 +363,7 @@ export const VolumeCreate = () => {
                 )}
               </Box>
               <ConfigSelect
-                disabled={doesNotHavePermission}
+                disabled={doesNotHavePermission || config_id === null}
                 error={touched.config_id ? errors.config_id : undefined}
                 linodeId={linode_id}
                 name="configId"

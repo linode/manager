@@ -3,8 +3,7 @@ import * as React from 'react';
 
 import { Accordion } from 'src/components/Accordion';
 import { Button } from 'src/components/Button/Button';
-import { useFlags } from 'src/hooks/useFlags';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 
 import CloseAccountDialog from './CloseAccountDialog';
 import {
@@ -17,12 +16,9 @@ const CloseAccountSetting = () => {
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
   const { data: profile } = useProfile();
-  const flags = useFlags();
 
   // Disable the Close Account button for users with a Parent/Proxy/Child user type.
-  const isCloseAccountDisabled = Boolean(
-    flags.parentChildAccountAccess && profile?.user_type !== 'default'
-  );
+  const isCloseAccountDisabled = Boolean(profile?.user_type !== 'default');
 
   let closeAccountButtonTooltipText;
   const userType = profile?.user_type;

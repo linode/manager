@@ -1,4 +1,4 @@
-import { NodeBalancer } from '@linode/api-v4';
+import type { NodeBalancer } from '@linode/api-v4';
 import { useTheme } from '@mui/material';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
@@ -12,13 +12,12 @@ import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
 } from 'src/queries/firewalls';
-import { queryKey } from 'src/queries/nodebalancers';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { nodebalancerQueries } from 'src/queries/nodebalancers';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
@@ -37,7 +36,6 @@ export const AddNodebalancerDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const isRestrictedUser = Boolean(profile?.restricted);
   const queryClient = useQueryClient();
-  const flags = useFlags();
 
   const { data, error, isLoading } = useAllFirewallsQuery();
 
@@ -75,12 +73,10 @@ export const AddNodebalancerDrawer = (props: Props) => {
         enqueueSnackbar(`NodeBalancer ${label} successfully added`, {
           variant: 'success',
         });
-        queryClient.invalidateQueries([
-          queryKey,
-          'nodebalancer',
-          id,
-          'firewalls',
-        ]);
+        queryClient.invalidateQueries({
+          queryKey: nodebalancerQueries.nodebalancer(id)._ctx.firewalls
+            .queryKey,
+        });
         return;
       }
       failedNodebalancers.push(selectedNodebalancers[index]);
@@ -161,27 +157,17 @@ export const AddNodebalancerDrawer = (props: Props) => {
     ? getEntityIdsByPermission(grants, 'nodebalancer', 'read_only')
     : [];
 
-  const nodebalancerOptionsFilter = (() => {
-    // When `firewallNodebalancer` feature flag is disabled, no filtering
-    // occurs. In this case, pass a filter callback that always returns `true`.
-    if (!flags.firewallNodebalancer) {
-      return () => true;
-    }
+  const assignedNodeBalancers = data
+    ?.map((firewall) => firewall.entities)
+    .flat()
+    ?.filter((service) => service.type === 'nodebalancer');
 
-    const assignedNodeBalancers = data
-      ?.map((firewall) => firewall.entities)
-      .flat()
-      ?.filter((service) => service.type === 'nodebalancer');
-
-    return (nodebalancer: NodeBalancer) => {
-      return (
-        !readOnlyNodebalancerIds.includes(nodebalancer.id) &&
-        !assignedNodeBalancers?.some(
-          (service) => service.id === nodebalancer.id
-        )
-      );
-    };
-  })();
+  const nodebalancerOptionsFilter = (nodebalancer: NodeBalancer) => {
+    return (
+      !readOnlyNodebalancerIds.includes(nodebalancer.id) &&
+      !assignedNodeBalancers?.some((service) => service.id === nodebalancer.id)
+    );
+  };
 
   React.useEffect(() => {
     if (error) {

@@ -1,8 +1,8 @@
 import { APIError, Firewall, Linode } from '@linode/api-v4';
 import { Config, Interface } from '@linode/api-v4/lib/linodes/types';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -102,7 +102,7 @@ export const SubnetLinodeRow = (props: Props) => {
     return (
       <TableRow>
         <TableCell colSpan={6}>
-          <CircleProgress mini />
+          <CircleProgress size="sm" />
         </TableCell>
       </TableRow>
     );
@@ -148,7 +148,6 @@ export const SubnetLinodeRow = (props: Props) => {
           </Typography>
         }
         icon={<StyledWarningIcon />}
-        interactive
         status="other"
         sxTooltipIcon={{ paddingLeft: 0 }}
       />

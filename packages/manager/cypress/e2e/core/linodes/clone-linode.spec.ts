@@ -1,4 +1,3 @@
-import { Linode, createLinode } from '@linode/api-v4';
 import { linodeFactory, createLinodeRequestFactory } from '@src/factories';
 import {
   interceptCloneLinode,
@@ -18,6 +17,8 @@ import { chooseRegion, getRegionById } from 'support/util/regions';
 import { randomLabel } from 'support/util/random';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
+import type { Linode } from '@linode/api-v4';
 
 /**
  * Returns the Cloud Manager URL to clone a given Linode.
@@ -49,12 +50,13 @@ describe('clone linode', () => {
       region: linodeRegion.id,
       // Specifying no image allows the Linode to provision and clone faster.
       image: undefined,
+      booted: false,
       type: 'g6-nanode-1',
     });
 
     const newLinodeLabel = `${linodePayload.label}-clone`;
 
-    cy.defer(createLinode(linodePayload)).then((linode: Linode) => {
+    cy.defer(() => createTestLinode(linodePayload)).then((linode: Linode) => {
       const linodeRegion = getRegionById(linodePayload.region!);
 
       interceptCloneLinode(linode.id).as('cloneLinode');

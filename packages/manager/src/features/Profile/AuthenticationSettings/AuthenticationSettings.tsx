@@ -9,7 +9,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 
 import { PhoneVerification } from './PhoneVerification/PhoneVerification';
 import { ResetPassword } from './ResetPassword';

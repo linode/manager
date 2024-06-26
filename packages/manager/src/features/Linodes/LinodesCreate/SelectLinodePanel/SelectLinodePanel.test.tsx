@@ -197,21 +197,6 @@ describe('SelectLinodePanel (cards, mobile)', () => {
     ).toHaveTextContent(defaultProps.linodes[0].label);
   });
 
-  it('displays the heading, notices and error', () => {
-    const { getByText } = renderWithTheme(
-      <SelectLinodePanel
-        {...defaultProps}
-        error={'Example error'}
-        header={'Example header'}
-        notices={['Example notice']}
-      />
-    );
-
-    expect(getByText('Example error')).toBeInTheDocument();
-    expect(getByText('Example header')).toBeInTheDocument();
-    expect(getByText('Example notice')).toBeInTheDocument();
-  });
-
   it('prefills the search box when mounted with a selected linode', async () => {
     setupMocks();
 

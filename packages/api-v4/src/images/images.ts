@@ -1,5 +1,6 @@
 import {
   createImageSchema,
+  updateImageRegionsSchema,
   updateImageSchema,
   uploadImageSchema,
 } from '@linode/validation/lib/images.schema';
@@ -11,8 +12,14 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import { Image, ImageUploadPayload, UploadImageResponse } from './types';
+import type { Filter, Params, ResourcePage as Page } from '../types';
+import type {
+  CreateImagePayload,
+  Image,
+  ImageUploadPayload,
+  UpdateImagePayload,
+  UploadImageResponse,
+} from './types';
 
 /**
  * Get information about a single Image.
@@ -39,25 +46,8 @@ export const getImages = (params: Params = {}, filters: Filter = {}) =>
 
 /**
  * Create a private gold-master Image from a Linode Disk.
- *
- * @param diskId { number } The ID of the Linode Disk that this Image will be created from.
- * @param label { string } A short description of the Image. Labels cannot contain special characters.
- * @param description { string } A detailed description of this Image.
- * @param cloud_init { boolean } An indicator of whether Image supports cloud-init.
  */
-export const createImage = (
-  diskId: number,
-  label?: string,
-  description?: string,
-  cloud_init?: boolean
-) => {
-  const data = {
-    disk_id: diskId,
-    ...(label && { label }),
-    ...(description && { description }),
-    ...(cloud_init && { cloud_init }),
-  };
-
+export const createImage = (data: CreateImagePayload) => {
   return Request<Image>(
     setURL(`${API_ROOT}/images`),
     setMethod('POST'),
@@ -69,19 +59,9 @@ export const createImage = (
  * Updates a private Image that you have permission to read_write.
  *
  * @param imageId { string } ID of the Image to look up.
- * @param label { string } A short description of the Image. Labels cannot contain special characters.
- * @param description { string } A detailed description of this Image.
+ * @param data { UpdateImagePayload } the updated image details
  */
-export const updateImage = (
-  imageId: string,
-  label?: string,
-  description?: string
-) => {
-  const data = {
-    ...(label && { label }),
-    ...(description && { description }),
-  };
-
+export const updateImage = (imageId: string, data: UpdateImagePayload) => {
   return Request<Image>(
     setURL(`${API_ROOT}/images/${encodeURIComponent(imageId)}`),
     setMethod('PUT'),
@@ -115,5 +95,23 @@ export const uploadImage = (data: ImageUploadPayload) => {
     setURL(`${API_ROOT}/images/upload`),
     setMethod('POST'),
     setData(data, uploadImageSchema)
+  );
+};
+
+/**
+ * Selects the regions to which this image will be replicated.
+ *
+ * @param imageId { string } ID of the Image to look up.
+ * @param regions { string[] } ID of regions to replicate to. Must contain at least one valid region.
+ */
+export const updateImageRegions = (imageId: string, regions: string[]) => {
+  const data = {
+    regions,
+  };
+
+  return Request<Image>(
+    setURL(`${API_ROOT}/images/${encodeURIComponent(imageId)}/regions`),
+    setMethod('POST'),
+    setData(data, updateImageRegionsSchema)
   );
 };

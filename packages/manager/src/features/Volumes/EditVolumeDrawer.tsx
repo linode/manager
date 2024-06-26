@@ -8,7 +8,7 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
-import { useGrants } from 'src/queries/profile';
+import { useGrants } from 'src/queries/profile/profile';
 import { useUpdateVolumeMutation } from 'src/queries/volumes/volumes';
 import {
   handleFieldErrors,

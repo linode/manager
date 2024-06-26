@@ -1,43 +1,17 @@
-import type { CreateLinodeRequest, Disk, Linode } from '@linode/api-v4';
-import { createLinode, getLinodeDisks } from '@linode/api-v4';
+import type { Disk, Linode } from '@linode/api-v4';
+import { createTestLinode } from 'support/util/linodes';
 import { createLinodeRequestFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { imageCaptureProcessingTimeout } from 'support/constants/images';
 import { ui } from 'support/ui';
-import { SimpleBackoffMethod } from 'support/util/backoff';
 import { cleanUp } from 'support/util/cleanup';
-import { depaginate } from 'support/util/paginate';
-import { pollLinodeStatus } from 'support/util/polling';
 import { randomLabel, randomPhrase, randomString } from 'support/util/random';
 import { testRegions } from 'support/util/regions';
-
-/**
- * Creates a Linode, waits for it to boot, and returns the Linode and its disk.
- *
- * @param linodePayload - Linode create API request payload.
- *
- * @returns Promise that resolves to a tuple containing the created Linode and its disk.
- */
-const createAndBootLinode = async (
-  linodePayload: CreateLinodeRequest
-): Promise<[Linode, Disk]> => {
-  const linode = await createLinode(linodePayload);
-  // Wait 25 seconds to begin polling, then poll every 5 seconds until Linode boots.
-  await pollLinodeStatus(
-    linode.id,
-    'running',
-    new SimpleBackoffMethod(5000, {
-      initialDelay: 25000,
-    })
-  );
-  const disks = await depaginate((page) => getLinodeDisks(linode.id, { page }));
-  return [linode, disks[0]];
-};
 
 authenticate();
 describe('Capture Machine Images', () => {
   before(() => {
-    cleanUp('images');
+    cleanUp(['images', 'linodes']);
   });
 
   /*
@@ -54,10 +28,11 @@ describe('Capture Machine Images', () => {
       label: randomLabel(),
       root_pass: randomString(32),
       region: region.id,
+      booted: true,
     });
 
     cy.defer(
-      createAndBootLinode(linodePayload),
+      () => createTestLinode(linodePayload, { waitForBoot: true }),
       'creating and booting Linode'
     ).then(([linode, disk]: [Linode, Disk]) => {
       cy.visitWithLogin('/images/create/disk');

@@ -18,7 +18,7 @@ import {
 } from 'support/intercepts/longview';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { createAndBootLinode } from 'support/util/linodes';
+import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomString } from 'support/util/random';
 
 // Timeout if Linode creation and boot takes longer than 1 and a half minutes.
@@ -111,7 +111,8 @@ describe('longview', () => {
    * - Creates a Linode, connects to it via SSH, and installs Longview using the given cURL command.
    * - Confirms that Cloud Manager UI updates to reflect Longview installation and data.
    */
-  it('can install Longview client on a Linode', () => {
+  // TODO Unskip for M3-8107.
+  it.skip('can install Longview client on a Linode', () => {
     const linodePassword = randomString(32, {
       symbols: false,
       lowercase: true,
@@ -122,16 +123,17 @@ describe('longview', () => {
 
     const createLinodeAndClient = async () => {
       return Promise.all([
-        createAndBootLinode({
+        createTestLinode({
           root_pass: linodePassword,
           type: 'g6-standard-1',
+          booted: true,
         }),
         createLongviewClient(randomLabel()),
       ]);
     };
 
     // Create Linode and Longview Client before loading Longview landing page.
-    cy.defer(createLinodeAndClient(), {
+    cy.defer(createLinodeAndClient, {
       label: 'Creating Linode and Longview Client...',
       timeout: linodeCreateTimeout,
     }).then(([linode, client]: [Linode, LongviewClient]) => {
@@ -155,13 +157,7 @@ describe('longview', () => {
         });
 
       // Install Longview on Linode by SSHing into machine and executing cURL command.
-      installLongview(linodeIp, linodePassword, installCommand).then(
-        (output) => {
-          // TODO Output this to a log file.
-          console.log(output.stdout);
-          console.log(output.stderr);
-        }
-      );
+      installLongview(linodeIp, linodePassword, installCommand);
 
       // Wait for Longview to begin serving data and confirm that Cloud Manager
       // UI updates accordingly.

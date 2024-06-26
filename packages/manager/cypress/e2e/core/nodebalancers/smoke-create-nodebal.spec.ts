@@ -1,13 +1,6 @@
 import { entityTag } from 'support/constants/cypress';
-import { createLinode } from 'support/api/linodes';
-import {
-  containsClick,
-  fbtClick,
-  fbtVisible,
-  getClick,
-  getVisible,
-} from 'support/helpers';
-import { apiMatcher } from 'support/util/intercepts';
+import { createTestLinode } from 'support/util/linodes';
+
 import { randomLabel } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import {
@@ -25,6 +18,7 @@ const deployNodeBalancer = () => {
 };
 
 import { nodeBalancerFactory } from 'src/factories';
+import { interceptCreateNodeBalancer } from 'support/intercepts/nodebalancers';
 
 const createNodeBalancerWithUI = (
   nodeBal: NodeBalancer,
@@ -33,8 +27,12 @@ const createNodeBalancerWithUI = (
   const regionName = getRegionById(nodeBal.region).label;
 
   cy.visitWithLogin('/nodebalancers/create');
-  getVisible('[id="nodebalancer-label"]').click().clear().type(nodeBal.label);
-  containsClick('create a tag').type(entityTag);
+  cy.get('[id="nodebalancer-label"]')
+    .should('be.visible')
+    .click()
+    .clear()
+    .type(nodeBal.label);
+  cy.contains('create a tag').click().type(entityTag);
 
   if (isDcPricingTest) {
     const newRegion = getRegionById('br-gru');
@@ -65,7 +63,7 @@ const createNodeBalancerWithUI = (
   ui.regionSelect.find().click().clear().type(`${regionName}{enter}`);
 
   // node backend config
-  fbtClick('Label').type(randomLabel());
+  cy.findByText('Label').click().type(randomLabel());
 
   cy.findByLabelText('IP Address')
     .should('be.visible')
@@ -84,18 +82,22 @@ describe('create NodeBalancer', () => {
   });
 
   it('creates a NodeBalancer in a region with base pricing', () => {
-    // create a linode in NW where the NB will be created
     const region = chooseRegion();
-    createLinode({ region: region.id }).then((linode) => {
+    const linodePayload = {
+      region: region.id,
+      // NodeBalancers require Linodes with private IPs.
+      private_ip: true,
+    };
+
+    cy.defer(() => createTestLinode(linodePayload)).then((linode) => {
       const nodeBal = nodeBalancerFactory.build({
         label: randomLabel(),
         region: region.id,
         ipv4: linode.ipv4[1],
       });
       // catch request
-      cy.intercept('POST', apiMatcher('nodebalancers')).as(
-        'createNodeBalancer'
-      );
+      interceptCreateNodeBalancer().as('createNodeBalancer');
+
       createNodeBalancerWithUI(nodeBal);
       cy.wait('@createNodeBalancer')
         .its('response.statusCode')
@@ -109,26 +111,37 @@ describe('create NodeBalancer', () => {
    */
   it('displays API errors for NodeBalancer Create form fields', () => {
     const region = chooseRegion();
-    createLinode({ region: region.id }).then((linode) => {
-      // catch request
-      cy.intercept('POST', apiMatcher('nodebalancers')).as(
-        'createNodeBalancer'
-      );
+    const linodePayload = {
+      region: region.id,
+      // NodeBalancers require Linodes with private IPs.
+      private_ip: true,
+    };
+    cy.defer(() => createTestLinode(linodePayload)).then((linode) => {
       const nodeBal = nodeBalancerFactory.build({
         label: `${randomLabel()}-^`,
         ipv4: linode.ipv4[1],
         region: region.id,
       });
+
+      // catch request
+      interceptCreateNodeBalancer().as('createNodeBalancer');
+
       createNodeBalancerWithUI(nodeBal);
-      fbtVisible(`Label can't contain special characters or spaces.`);
-      getVisible('[id="nodebalancer-label"]')
+      cy.findByText(`Label can't contain special characters or spaces.`).should(
+        'be.visible'
+      );
+      cy.get('[id="nodebalancer-label"]')
+        .should('be.visible')
         .click()
         .clear()
         .type(randomLabel());
-      getClick('[data-qa-protocol-select="true"]').type('TCP{enter}');
-      getClick('[data-qa-session-stickiness-select]').type(
-        'HTTP Cookie{enter}'
-      );
+
+      cy.get('[data-qa-protocol-select="true"]').click().type('TCP{enter}');
+
+      cy.get('[data-qa-session-stickiness-select]')
+        .click()
+        .type('HTTP Cookie{enter}');
+
       deployNodeBalancer();
       const errMessage = `Stickiness http_cookie requires protocol 'http' or 'https'`;
       cy.wait('@createNodeBalancer')
@@ -136,7 +149,8 @@ describe('create NodeBalancer', () => {
         .should('deep.equal', {
           errors: [{ field: 'configs[0].stickiness', reason: errMessage }],
         });
-      fbtVisible(errMessage);
+
+      cy.findByText(errMessage).should('be.visible');
     });
   });
 
@@ -146,7 +160,12 @@ describe('create NodeBalancer', () => {
    */
   it('shows DC-specific pricing information when creating a NodeBalancer', () => {
     const initialRegion = getRegionById('us-west');
-    createLinode({ region: initialRegion.id }).then((linode) => {
+    const linodePayload = {
+      region: initialRegion.id,
+      // NodeBalancers require Linodes with private IPs.
+      private_ip: true,
+    };
+    cy.defer(() => createTestLinode(linodePayload)).then((linode) => {
       const nodeBal = nodeBalancerFactory.build({
         label: randomLabel(),
         region: initialRegion.id,
@@ -154,9 +173,7 @@ describe('create NodeBalancer', () => {
       });
 
       // catch request
-      cy.intercept('POST', apiMatcher('nodebalancers')).as(
-        'createNodeBalancer'
-      );
+      interceptCreateNodeBalancer().as('createNodeBalancer');
 
       createNodeBalancerWithUI(nodeBal, true);
     });

@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { Linode } from '@linode/api-v4';
 import { authenticate } from 'support/api/authentication';
-import { createLinode } from 'support/api/linodes';
+import { createTestLinode } from 'support/util/linodes';
 import { containsVisible, fbtClick, fbtVisible } from 'support/helpers';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
@@ -103,8 +103,8 @@ describe('linode storage tab', () => {
   });
 
   it('try to delete in use disk', () => {
-    const diskName = 'Debian 10 Disk';
-    createLinode().then((linode) => {
+    const diskName = 'Debian 11 Disk';
+    cy.defer(() => createTestLinode({ booted: true })).then((linode) => {
       cy.intercept(
         'DELETE',
         apiMatcher(`linode/instances/${linode.id}/disks/*`)
@@ -127,7 +127,7 @@ describe('linode storage tab', () => {
 
   it('delete disk', () => {
     const diskName = 'cy-test-disk';
-    createLinode({ image: null }).then((linode: Linode) => {
+    cy.defer(() => createTestLinode({ image: null })).then((linode) => {
       cy.intercept(
         'DELETE',
         apiMatcher(`linode/instances/${linode.id}/disks/*`)
@@ -157,7 +157,7 @@ describe('linode storage tab', () => {
 
   it('add a disk', () => {
     const diskName = 'cy-test-disk';
-    createLinode({ image: null }).then((linode: Linode) => {
+    cy.defer(() => createTestLinode({ image: null })).then((linode: Linode) => {
       cy.intercept(
         'POST',
         apiMatcher(`/linode/instances/${linode.id}/disks`)
@@ -171,7 +171,7 @@ describe('linode storage tab', () => {
 
   it('resize disk', () => {
     const diskName = 'Debian 10 Disk';
-    createLinode({ image: null }).then((linode: Linode) => {
+    cy.defer(() => createTestLinode({ image: null })).then((linode: Linode) => {
       cy.intercept(
         'POST',
         apiMatcher(`linode/instances/${linode.id}/disks`)

@@ -14,8 +14,8 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/profile', async () => {
-  const actual = await vi.importActual<any>('src/queries/profile');
+vi.mock('src/queries/profile/profile', async () => {
+  const actual = await vi.importActual<any>('src/queries/profile/profile');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
@@ -52,9 +52,7 @@ describe('View API Token Drawer', () => {
       data: profileFactory.build({ user_type: 'parent' }),
     });
 
-    const { getByTestId } = renderWithTheme(<ViewAPITokenDrawer {...props} />, {
-      flags: { parentChildAccountAccess: true },
-    });
+    const { getByTestId } = renderWithTheme(<ViewAPITokenDrawer {...props} />);
     for (const permissionName of basePerms) {
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
         ariaLabel,
@@ -70,8 +68,7 @@ describe('View API Token Drawer', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <ViewAPITokenDrawer {...props} token={limitedToken} />,
-      { flags: { parentChildAccountAccess: true } }
+      <ViewAPITokenDrawer {...props} token={limitedToken} />
     );
     for (const permissionName of basePerms) {
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
@@ -91,8 +88,7 @@ describe('View API Token Drawer', () => {
       <ViewAPITokenDrawer
         {...props}
         token={appTokenFactory.build({ scopes: 'account:read_write' })}
-      />,
-      { flags: { parentChildAccountAccess: true } }
+      />
     );
     for (const permissionName of basePerms) {
       // We only expect account to have read/write for this test
@@ -117,8 +113,7 @@ describe('View API Token Drawer', () => {
           scopes:
             'databases:read_only domains:read_write child_account:read_write events:read_write firewall:read_write images:read_write ips:read_write linodes:read_only lke:read_only longview:read_write nodebalancers:read_write object_storage:read_only stackscripts:read_write volumes:read_only vpc:read_write',
         })}
-      />,
-      { flags: { parentChildAccountAccess: true } }
+      />
     );
 
     const expectedScopeLevels = {
@@ -150,28 +145,19 @@ describe('View API Token Drawer', () => {
   });
 
   describe('Parent/Child: User Roles', () => {
-    const setupAndRender = (userType: UserType, enableFeatureFlag = true) => {
+    const setupAndRender = (userType: UserType) => {
       queryMocks.useProfile.mockReturnValue({
         data: profileFactory.build({ user_type: userType }),
       });
 
-      return renderWithTheme(<ViewAPITokenDrawer {...props} />, {
-        flags: { parentChildAccountAccess: enableFeatureFlag },
-      });
+      return renderWithTheme(<ViewAPITokenDrawer {...props} />);
     };
 
-    const testChildScopeNotDisplayed = (
-      userType: UserType,
-      enableFeatureFlag = true
-    ) => {
-      const { queryByText } = setupAndRender(userType, enableFeatureFlag);
+    const testChildScopeNotDisplayed = (userType: UserType) => {
+      const { queryByText } = setupAndRender(userType);
       const childScope = queryByText('Child Account Access');
       expect(childScope).not.toBeInTheDocument();
     };
-
-    it('should not display the Child Account Access when feature flag is disabled', () => {
-      testChildScopeNotDisplayed('parent', false);
-    });
 
     it('should not display the Child Account Access scope for a user account without a parent user type', () => {
       testChildScopeNotDisplayed('default');

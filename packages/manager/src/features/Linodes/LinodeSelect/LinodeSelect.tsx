@@ -23,6 +23,8 @@ interface LinodeSelectProps {
   errorText?: string;
   /** Filter sent to the API when retrieving account Linodes. */
   filter?: Filter;
+  /** Determines if the Linode option should be disabled. */
+  getOptionDisabled?: (linode: Linode) => boolean;
   /** Hint displayed in normal styling. */
   helperText?: string;
   /** The ID of the input. */
@@ -83,6 +85,7 @@ export const LinodeSelect = (
     disabled,
     errorText,
     filter,
+    getOptionDisabled,
     helperText,
     id,
     label,
@@ -101,7 +104,7 @@ export const LinodeSelect = (
     value,
   } = props;
 
-  const { data, error, isLoading } = useAllLinodesQuery({}, filter);
+  const { data, error, isFetching } = useAllLinodesQuery({}, filter, !options);
 
   const [inputValue, setInputValue] = React.useState('');
 
@@ -128,7 +131,7 @@ export const LinodeSelect = (
           : undefined
       }
       noOptionsText={
-        noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
+        noOptionsMessage ?? getDefaultNoOptionsMessage(error, isFetching)
       }
       onChange={(_, value) =>
         multiple && Array.isArray(value)
@@ -169,11 +172,12 @@ export const LinodeSelect = (
       disablePortal={true}
       disabled={disabled}
       errorText={error?.[0].reason ?? errorText}
+      getOptionDisabled={getOptionDisabled}
       helperText={helperText}
       id={id}
       inputValue={inputValue}
       label={label ? label : multiple ? 'Linodes' : 'Linode'}
-      loading={isLoading || loading}
+      loading={isFetching || loading}
       multiple={multiple}
       noMarginTop={noMarginTop}
       onBlur={onBlur}

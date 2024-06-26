@@ -1,33 +1,33 @@
-import { Theme, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import {
-  NodeBalancerConnectionsTimeData,
-  Point,
-} from 'src/components/AreaChart/types';
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { LineGraph } from 'src/components/LineGraph/LineGraph';
-import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
-import { useFlags } from 'src/hooks/useFlags';
 import {
-  NODEBALANCER_STATS_NOT_READY_API_MESSAGE,
   useNodeBalancerQuery,
-  useNodeBalancerStats,
+  useNodeBalancerStatsQuery,
 } from 'src/queries/nodebalancers';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getUserTimezone } from 'src/utilities/getUserTimezone';
 import { formatNumber, getMetrics } from 'src/utilities/statMetrics';
 
+import type { Theme } from '@mui/material/styles';
+import type {
+  NodeBalancerConnectionsTimeData,
+  Point,
+} from 'src/components/AreaChart/types';
+
+const NODEBALANCER_STATS_NOT_READY_API_MESSAGE =
+  'Stats are unavailable at this time.';
 const STATS_NOT_READY_TITLE =
   'Stats for this NodeBalancer are not available yet';
 
@@ -39,12 +39,9 @@ export const TablesPanel = () => {
   const id = Number(nodeBalancerId);
   const { data: nodebalancer } = useNodeBalancerQuery(id);
 
-  const { data: stats, error, isLoading } = useNodeBalancerStats(
-    nodebalancer?.id ?? -1,
-    nodebalancer?.created
+  const { data: stats, error, isLoading } = useNodeBalancerStatsQuery(
+    nodebalancer?.id ?? -1
   );
-
-  const flags = useFlags();
 
   const statsErrorString = error
     ? getAPIErrorOrDefault(error, 'Unable to load stats')[0].reason
@@ -89,82 +86,46 @@ export const TablesPanel = () => {
 
     const metrics = getMetrics(data);
 
-    // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
-    if (flags.recharts) {
-      const timeData = data.reduce(
-        (acc: NodeBalancerConnectionsTimeData[], point: Point) => {
-          acc.push({
-            Connections: point[1],
-            timestamp: point[0],
-          });
-          return acc;
-        },
-        []
-      );
-
-      return (
-        <Box marginLeft={-3}>
-          <AreaChart
-            areas={[
-              {
-                color: theme.graphs.purple,
-                dataKey: 'Connections',
-              },
-            ]}
-            legendRows={[
-              {
-                data: metrics,
-                format: formatNumber,
-                legendColor: 'purple',
-                legendTitle: 'Connections',
-              },
-            ]}
-            xAxis={{
-              tickFormat: 'hh a',
-              tickGap: 60,
-            }}
-            ariaLabel="Connections Graph"
-            data={timeData}
-            height={412}
-            showLegend
-            timezone={timezone}
-            unit={' CXN/s'}
-          />
-        </Box>
-      );
-    }
+    const timeData = data.reduce(
+      (acc: NodeBalancerConnectionsTimeData[], point: Point) => {
+        acc.push({
+          Connections: point[1],
+          timestamp: point[0],
+        });
+        return acc;
+      },
+      []
+    );
 
     return (
-      <>
-        <StyledChart>
-          <LineGraph
-            data={[
-              {
-                backgroundColor: theme.graphs.purple,
-                borderColor: 'transparent',
-                data,
-                label: 'Connections',
-              },
-            ]}
-            accessibleDataTable={{ unit: 'CXN/s' }}
-            ariaLabel="Connections Graph"
-            showToday={true}
-            timezone={timezone}
-          />
-        </StyledChart>
-        <StyledBottomLegend>
-          <MetricsDisplay
-            rows={[
-              {
-                data: metrics,
-                format: formatNumber,
-                legendColor: 'purple',
-                legendTitle: 'Connections',
-              },
-            ]}
-          />
-        </StyledBottomLegend>
-      </>
+      <Box marginLeft={-3}>
+        <AreaChart
+          areas={[
+            {
+              color: theme.graphs.purple,
+              dataKey: 'Connections',
+            },
+          ]}
+          legendRows={[
+            {
+              data: metrics,
+              format: formatNumber,
+              legendColor: 'purple',
+              legendTitle: 'Connections',
+            },
+          ]}
+          xAxis={{
+            tickFormat: 'hh a',
+            tickGap: 60,
+          }}
+          ariaLabel="Connections Graph"
+          data={timeData}
+          height={412}
+          showLegend
+          timezone={timezone}
+          unit={' CXN/s'}
+        />
+      </Box>
     );
   };
 
@@ -173,8 +134,7 @@ export const TablesPanel = () => {
     const trafficOut = stats?.data.traffic.out ?? [];
     const timeData = [];
 
-    // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
-    if (flags.recharts && trafficIn) {
+    if (trafficIn) {
       for (let i = 0; i < trafficIn.length; i++) {
         timeData.push({
           'Traffic In': trafficIn[i][1],
@@ -215,92 +175,45 @@ export const TablesPanel = () => {
       return <Loading />;
     }
 
-    if (flags.recharts) {
-      return (
-        <Box marginLeft={-3}>
-          <AreaChart
-            areas={[
-              {
-                color: theme.graphs.darkGreen,
-                dataKey: 'Traffic In',
-              },
-              {
-                color: theme.graphs.lightGreen,
-                dataKey: 'Traffic Out',
-              },
-            ]}
-            legendRows={[
-              {
-                data: getMetrics(trafficIn),
-                format: formatBitsPerSecond,
-                legendColor: 'darkGreen',
-                legendTitle: 'Traffic In',
-              },
-              {
-                data: getMetrics(trafficOut),
-                format: formatBitsPerSecond,
-                legendColor: 'lightGreen',
-                legendTitle: 'Traffic Out',
-              },
-            ]}
-            xAxis={{
-              tickFormat: 'hh a',
-              tickGap: 60,
-            }}
-            ariaLabel="Network Traffic Graph"
-            data={timeData}
-            height={412}
-            showLegend
-            timezone={timezone}
-            unit={' bits/s'}
-          />
-        </Box>
-      );
-    }
-
     return (
-      <React.Fragment>
-        <StyledChart>
-          <LineGraph
-            data={[
-              {
-                backgroundColor: theme.graphs.darkGreen,
-                borderColor: 'transparent',
-                data: trafficIn,
-                label: 'Traffic In',
-              },
-              {
-                backgroundColor: theme.graphs.lightGreen,
-                borderColor: 'transparent',
-                data: trafficOut,
-                label: 'Traffic Out',
-              },
-            ]}
-            accessibleDataTable={{ unit: 'bits/s' }}
-            ariaLabel="Traffic Graph"
-            showToday={true}
-            timezone={timezone}
-          />
-        </StyledChart>
-        <StyledBottomLegend>
-          <MetricsDisplay
-            rows={[
-              {
-                data: getMetrics(trafficIn),
-                format: formatBitsPerSecond,
-                legendColor: 'darkGreen',
-                legendTitle: 'Inbound',
-              },
-              {
-                data: getMetrics(trafficOut),
-                format: formatBitsPerSecond,
-                legendColor: 'lightGreen',
-                legendTitle: 'Outbound',
-              },
-            ]}
-          />
-        </StyledBottomLegend>
-      </React.Fragment>
+      <Box marginLeft={-3}>
+        <AreaChart
+          areas={[
+            {
+              color: theme.graphs.darkGreen,
+              dataKey: 'Traffic In',
+            },
+            {
+              color: theme.graphs.lightGreen,
+              dataKey: 'Traffic Out',
+            },
+          ]}
+          legendRows={[
+            {
+              data: getMetrics(trafficIn),
+              format: formatBitsPerSecond,
+              legendColor: 'darkGreen',
+              legendTitle: 'Traffic In',
+            },
+            {
+              data: getMetrics(trafficOut),
+              format: formatBitsPerSecond,
+              legendColor: 'lightGreen',
+              legendTitle: 'Traffic Out',
+            },
+          ]}
+          xAxis={{
+            tickFormat: 'hh a',
+            tickGap: 60,
+          }}
+          ariaLabel="Network Traffic Graph"
+          data={timeData}
+          height={412}
+          showLegend
+          timezone={timezone}
+          unit={' bits/s'}
+        />
+      </Box>
     );
   };
 
@@ -340,14 +253,6 @@ const StyledTitle = styled(Typography, {
   },
 }));
 
-const StyledChart = styled('div', {
-  label: 'StyledChart',
-})(({ theme }) => ({
-  paddingLeft: theme.spacing(1),
-  position: 'relative',
-  width: '100%',
-}));
-
 export const StyledBottomLegend = styled('div', {
   label: 'StyledBottomLegend',
 })(({ theme }) => ({
@@ -380,6 +285,6 @@ const Loading = () => (
       minHeight: 300,
     }}
   >
-    <CircleProgress mini />
+    <CircleProgress size="sm" />
   </div>
 );

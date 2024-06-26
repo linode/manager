@@ -20,8 +20,8 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useGrants } from 'src/queries/profile';
-import { sendEvent } from 'src/utilities/analytics';
+import { useGrants } from 'src/queries/profile/profile';
+import { sendEvent } from 'src/utilities/analytics/utils';
 
 import { CreateDiskDrawer } from './CreateDiskDrawer';
 import { CreateImageFromDiskDialog } from './CreateImageFromDiskDialog';

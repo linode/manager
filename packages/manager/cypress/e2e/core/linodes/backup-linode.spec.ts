@@ -1,6 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import type { Linode } from '@linode/api-v4';
-import { createLinode } from '@linode/api-v4';
 import {
   linodeFactory,
   linodeBackupsFactory,
@@ -27,6 +26,7 @@ import { randomLabel } from 'support/util/random';
 import { dcPricingMockLinodeTypesForBackups } from 'support/constants/dc-specific-pricing';
 import { chooseRegion } from 'support/util/regions';
 import { expectManagedDisabled } from 'support/api/managed';
+import { createTestLinode } from 'support/util/linodes';
 
 authenticate();
 describe('linode backups', () => {
@@ -53,52 +53,53 @@ describe('linode backups', () => {
       booted: false,
     });
 
-    cy.defer(createLinode(createLinodeRequest), 'creating Linode').then(
-      (linode: Linode) => {
-        interceptGetLinode(linode.id).as('getLinode');
-        interceptEnableLinodeBackups(linode.id).as('enableBackups');
+    cy.defer(
+      () => createTestLinode(createLinodeRequest),
+      'creating Linode'
+    ).then((linode: Linode) => {
+      interceptGetLinode(linode.id).as('getLinode');
+      interceptEnableLinodeBackups(linode.id).as('enableBackups');
 
-        // Navigate to Linode details page "Backups" tab.
-        cy.visitWithLogin(`linodes/${linode.id}/backup`);
-        cy.wait('@getLinode');
+      // Navigate to Linode details page "Backups" tab.
+      cy.visitWithLogin(`linodes/${linode.id}/backup`);
+      cy.wait('@getLinode');
 
-        // Wait for Linode to finish provisioning.
-        cy.findByText('OFFLINE').should('be.visible');
+      // Wait for Linode to finish provisioning.
+      cy.findByText('OFFLINE').should('be.visible');
 
-        // Confirm that enable backups prompt is shown.
-        cy.contains(
-          'Three backup slots are executed and rotated automatically'
-        ).should('be.visible');
+      // Confirm that enable backups prompt is shown.
+      cy.contains(
+        'Three backup slots are executed and rotated automatically'
+      ).should('be.visible');
 
-        ui.button
-          .findByTitle('Enable Backups')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+      ui.button
+        .findByTitle('Enable Backups')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
-        ui.dialog
-          .findByTitle('Enable backups?')
-          .should('be.visible')
-          .within(() => {
-            // Confirm that user is warned of additional backup charges.
-            cy.contains(/.* This will add .* to your monthly bill\./).should(
-              'be.visible'
-            );
-            ui.button
-              .findByTitle('Enable Backups')
-              .should('be.visible')
-              .should('be.enabled')
-              .click();
-          });
+      ui.dialog
+        .findByTitle('Enable backups?')
+        .should('be.visible')
+        .within(() => {
+          // Confirm that user is warned of additional backup charges.
+          cy.contains(/.* This will add .* to your monthly bill\./).should(
+            'be.visible'
+          );
+          ui.button
+            .findByTitle('Enable Backups')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
 
-        // Confirm that toast notification appears and UI updates to reflect enabled backups.
-        cy.wait('@enableBackups');
-        ui.toast.assertMessage('Backups are being enabled for this Linode.');
-        cy.findByText(
-          'Automatic and manual backups will be listed here'
-        ).should('be.visible');
-      }
-    );
+      // Confirm that toast notification appears and UI updates to reflect enabled backups.
+      cy.wait('@enableBackups');
+      ui.toast.assertMessage('Backups are being enabled for this Linode.');
+      cy.findByText('Automatic and manual backups will be listed here').should(
+        'be.visible'
+      );
+    });
   });
 
   /*
@@ -116,71 +117,70 @@ describe('linode backups', () => {
 
     const snapshotName = randomLabel();
 
-    cy.defer(createLinode(createLinodeRequest), 'creating Linode').then(
-      (linode: Linode) => {
-        interceptGetLinode(linode.id).as('getLinode');
-        interceptCreateLinodeSnapshot(linode.id).as('createSnapshot');
+    cy.defer(
+      () => createTestLinode(createLinodeRequest),
+      'creating Linode'
+    ).then((linode: Linode) => {
+      interceptGetLinode(linode.id).as('getLinode');
+      interceptCreateLinodeSnapshot(linode.id).as('createSnapshot');
 
-        // Navigate to Linode details page "Backups" tab.
-        cy.visitWithLogin(`/linodes/${linode.id}/backup`);
-        cy.wait('@getLinode');
+      // Navigate to Linode details page "Backups" tab.
+      cy.visitWithLogin(`/linodes/${linode.id}/backup`);
+      cy.wait('@getLinode');
 
-        // Wait for the Linode to finish provisioning.
-        cy.findByText('OFFLINE').should('be.visible');
+      // Wait for the Linode to finish provisioning.
+      cy.findByText('OFFLINE').should('be.visible');
 
-        cy.findByText('Manual Snapshot')
-          .should('be.visible')
-          .parent()
-          .within(() => {
-            // Confirm that "Take Snapshot" button is disabled until a name is entered.
-            ui.button
-              .findByTitle('Take Snapshot')
-              .should('be.visible')
-              .should('be.disabled');
+      cy.findByText('Manual Snapshot')
+        .should('be.visible')
+        .parent()
+        .within(() => {
+          // Confirm that "Take Snapshot" button is disabled until a name is entered.
+          ui.button
+            .findByTitle('Take Snapshot')
+            .should('be.visible')
+            .should('be.disabled');
 
-            // Enter a snapshot name, click "Take Snapshot".
-            cy.findByLabelText('Name Snapshot')
-              .should('be.visible')
-              .clear()
-              .type(snapshotName);
+          // Enter a snapshot name, click "Take Snapshot".
+          cy.findByLabelText('Name Snapshot')
+            .should('be.visible')
+            .clear()
+            .type(snapshotName);
 
-            ui.button
-              .findByTitle('Take Snapshot')
-              .should('be.visible')
-              .should('be.enabled')
-              .click();
-          });
+          ui.button
+            .findByTitle('Take Snapshot')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
 
-        // Submit confirmation, confirm that toast message appears.
-        ui.dialog
-          .findByTitle('Take a snapshot?')
-          .should('be.visible')
-          .within(() => {
-            // Confirm user is warned that previous snapshot will be replaced.
-            cy.contains('overriding your previous snapshot').should(
-              'be.visible'
-            );
-            cy.contains('Are you sure?').should('be.visible');
+      // Submit confirmation, confirm that toast message appears.
+      ui.dialog
+        .findByTitle('Take a snapshot?')
+        .should('be.visible')
+        .within(() => {
+          // Confirm user is warned that previous snapshot will be replaced.
+          cy.contains('overriding your previous snapshot').should('be.visible');
+          cy.contains('Are you sure?').should('be.visible');
 
-            ui.button
-              .findByTitle('Take Snapshot')
-              .should('be.visible')
-              .should('be.enabled')
-              .click();
-          });
+          ui.button
+            .findByTitle('Take Snapshot')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
 
-        cy.wait('@createSnapshot');
-        ui.toast.assertMessage('Starting to capture snapshot');
+      cy.wait('@createSnapshot');
+      ui.toast.assertMessage('Starting to capture snapshot');
 
-        // Confirm that new snapshot is listed in backups table.
-        cy.findByText(snapshotName)
-          .should('be.visible')
-          .closest('tr')
-          .within(() => {
-            cy.findByText('Pending').should('be.visible');
-          });
-      }
-    );
+      // Confirm that new snapshot is listed in backups table.
+      cy.findByText(snapshotName)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.findByText('Pending').should('be.visible');
+        });
+    });
   });
 });
 

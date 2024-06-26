@@ -137,7 +137,7 @@ describe('LongviewPlans', () => {
 
     renderWithTheme(<LongviewPlans {...props} />);
 
-    await waitForElementToBeRemoved(screen.getByTestId('loading'), {
+    await waitForElementToBeRemoved(screen.getByTestId('circle-progress'), {
       timeout: 5000,
     });
 

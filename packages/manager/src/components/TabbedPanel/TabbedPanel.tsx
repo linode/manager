@@ -22,8 +22,8 @@ export interface Tab {
 }
 
 interface TabbedPanelProps {
-  [index: string]: any;
   bodyClass?: string;
+  children?: React.ReactNode;
   copy?: string;
   docsLink?: JSX.Element;
   error?: JSX.Element | string;
@@ -117,7 +117,10 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
           </StyledTabList>
           <TabPanels>
             {tabs.map((tab, idx) => (
-              <TabPanel key={`tabs-panel-${tab.title}-${idx}`}>
+              <TabPanel
+                key={`tabs-panel-${tab.title}-${idx}`}
+                data-qa-tp-tab={tab.title}
+              >
                 {tab.render(rest.children)}
               </TabPanel>
             ))}

@@ -216,7 +216,7 @@ describe('object storage end-to-end tests', () => {
     ];
 
     cy.defer(
-      setUpBucket(bucketLabel, bucketCluster),
+      () => setUpBucket(bucketLabel, bucketCluster),
       'creating Object Storage bucket'
     ).then(() => {
       interceptUploadBucketObjectS3(
@@ -237,7 +237,7 @@ describe('object storage end-to-end tests', () => {
       cy.wait('@uploadObject');
       cy.reload();
 
-      cy.findByLabelText(bucketFiles[0].name).should('be.visible');
+      cy.findByText(bucketFiles[0].name).should('be.visible');
       ui.button.findByTitle('Delete').should('be.visible').click();
 
       ui.dialog
@@ -409,7 +409,7 @@ describe('object storage end-to-end tests', () => {
     const bucketAccessPage = `/object-storage/buckets/${bucketCluster}/${bucketLabel}/access`;
 
     cy.defer(
-      setUpBucket(bucketLabel, bucketCluster),
+      () => setUpBucket(bucketLabel, bucketCluster),
       'creating Object Storage bucket'
     ).then(() => {
       interceptGetBucketAccess(bucketLabel, bucketCluster).as(
