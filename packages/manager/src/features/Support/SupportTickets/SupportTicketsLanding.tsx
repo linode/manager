@@ -10,9 +10,10 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import { SupportTicketDialog } from './SupportTicketDialog';
 import TicketList from './TicketList';
+
+import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 
 const tabs = ['open', 'closed'];
 
