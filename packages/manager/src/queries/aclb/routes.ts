@@ -76,6 +76,11 @@ export const useLoadBalancerRouteUpdateMutation = (
         queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.routes._ctx
           .lists._ctx.infinite._def,
       });
+      // Invalidate configs because GET configs returns configuration labels
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.configurations
+          ._ctx.lists.queryKey,
+      });
     },
   });
 };

@@ -71,6 +71,11 @@ export const useServiceTargetUpdateMutation = (
         queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.serviceTargets
           ._ctx.lists.queryKey,
       });
+      // Invalidate routes because GET routes returns service target labels
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.routes._ctx
+          .lists.queryKey,
+      });
     },
   });
 };
