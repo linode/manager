@@ -1,4 +1,5 @@
 import {
+  createAccountLimitSupportTicketSchema,
   createSMTPSupportTicketSchema,
   createSupportTicketSchema,
 } from '@linode/validation';
@@ -57,6 +58,7 @@ export const TICKET_TYPE_MAP: Record<TicketType, TicketTypeData> = {
 export const SCHEMA_MAP: Record<string, AnyObjectSchema> = {
   general: createSupportTicketSchema,
   smtp: createSMTPSupportTicketSchema,
+  accountLimit: createAccountLimitSupportTicketSchema,
 };
 
 export const ENTITY_MAP: Record<string, EntityType> = {
