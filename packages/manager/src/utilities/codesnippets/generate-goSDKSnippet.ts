@@ -37,13 +37,13 @@ export function generateGoLinodeSnippet(config: CreateLinodeRequest): string {
     const keys = config.authorized_keys
       .map((key) => `"${escapeGoString(key)}"`)
       .join(', ');
-    snippet += `        AuthorizedKeys: [${keys}],\n`;
+    snippet += `        AuthorizedKeys: []string{${keys}},\n`;
   }
   if (config.authorized_users) {
     const users = config.authorized_users
       .map((user) => `"${escapeGoString(user)}"`)
       .join(', ');
-    snippet += `        AuthorizedUsers: [${users}],\n`;
+    snippet += `        AuthorizedUsers: []string{${users}},\n`;
   }
   if (config.swap_size) {
     snippet += `        SwapSize: ${config.swap_size},\n`;
@@ -54,7 +54,7 @@ export function generateGoLinodeSnippet(config: CreateLinodeRequest): string {
   if (config.private_ip) {
     snippet += `        PrivateIP: ${config.private_ip},\n`;
   }
-  if (config.tags) {
+  if (config.tags && config.tags?.length > 0) {
     const tags = config.tags
       .map((tag) => `"${escapeGoString(tag)}"`)
       .join(', ');
@@ -71,11 +71,6 @@ export function generateGoLinodeSnippet(config: CreateLinodeRequest): string {
   }
   if (config.firewall_id) {
     snippet += `        FirewallID: ${config.firewall_id},\n`;
-  }
-  if (config.metadata && config.metadata.user_data) {
-    snippet += `        Metadata: {"user_data": "${escapeGoString(
-      config.metadata.user_data
-    )}"},\n`;
   }
 
   snippet += '    },\n';
