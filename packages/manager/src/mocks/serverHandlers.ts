@@ -607,7 +607,7 @@ export const handlers = [
   http.get('*/regions', async () => {
     return HttpResponse.json(makeResourcePage(regions));
   }),
-  http.get('*/images', async () => {
+  http.get('*/images', async ({ request }) => {
     const privateImages = imageFactory.buildList(5, {
       status: 'available',
       type: 'manual',
@@ -627,6 +627,16 @@ export const handlers = [
       status: 'available',
       type: 'manual',
     });
+    const multiRegionsImage = imageFactory.build({
+      id: 'multi-regions-test-image',
+      label: 'multi-regions-test-image',
+      regions: [
+        { region: 'us-southeast', status: 'available' },
+        { region: 'us-east', status: 'pending' },
+      ],
+      status: 'available',
+      type: 'manual',
+    });
     const creatingImages = imageFactory.buildList(2, {
       status: 'creating',
       type: 'manual',
@@ -640,16 +650,31 @@ export const handlers = [
       type: 'automatic',
     });
     const publicImages = imageFactory.buildList(4, { is_public: true });
+    const distributedImage = imageFactory.build({
+      capabilities: ['cloud-init', 'distributed-images'],
+      label: 'distributed-image',
+      regions: [{ region: 'us-east', status: 'available' }],
+    });
     const images = [
       cloudinitCompatableDistro,
       cloudinitCompatableImage,
+      multiRegionsImage,
+      distributedImage,
       ...automaticImages,
       ...privateImages,
       ...publicImages,
       ...pendingImages,
       ...creatingImages,
     ];
-    return HttpResponse.json(makeResourcePage(images));
+    return HttpResponse.json(
+      makeResourcePage(
+        images.filter((image) =>
+          request.headers.get('x-filter')?.includes('manual')
+            ? image.type == 'manual'
+            : image.type == 'automatic'
+        )
+      )
+    );
   }),
 
   http.get('*/linode/types', () => {
@@ -2308,6 +2333,64 @@ export const handlers = [
         },
       ],
     });
+
+    return HttpResponse.json(response);
+  }),
+  http.get('*/v4/monitor/services/linode/dashboards', () => {
+    const response = {
+      "data": [
+        {
+          "id": 1,
+          "type": "standard",
+          "service_type": "linode",
+          "label": "Linode Service I/O Statistics",
+          "created": "2024-04-29T17:09:29",
+          "updated": null,
+          "widgets": [
+            {
+              "metric": "system_cpu_utilization_percent",
+              "unit": "%",
+              "label": "CPU utilization",
+              "color": "blue",
+              "size": 12,
+              "chart_type": "area",
+              "y_label": "system_cpu_utilization_ratio",
+              "aggregate_function": "avg"
+            },
+            {
+              "metric": "system_memory_usage_by_resource",
+              "unit": "Bytes",
+              "label": "Memory Usage",
+              "color": "red",
+              "size": 12,
+              "chart_type": "area",
+              "y_label": "system_memory_usage_bytes",
+              "aggregate_function": "avg"
+            },
+            {
+              "metric": "system_network_io_by_resource",
+              "unit": "Bytes",
+              "label": "Network Traffic",
+              "color": "green",
+              "size": 6,
+              "chart_type": "area",
+              "y_label": "system_network_io_bytes_total",
+              "aggregate_function": "avg"
+            },
+            {
+              "metric": "system_disk_OPS_total",
+              "unit": "OPS",
+              "label": "Disk I/O",
+              "color": "yellow",
+              "size": 6,
+              "chart_type": "area",
+              "y_label": "system_disk_operations_total",
+              "aggregate_function": "avg"
+            }
+          ]
+        }
+      ]
+    }
 
     return HttpResponse.json(response);
   }),

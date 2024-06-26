@@ -1,11 +1,11 @@
-// eslint-disable-next-line no-restricted-imports
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Typography } from 'src/components/Typography';
+
+import type { Theme } from '@mui/material/styles';
 
 interface Color {
   alias: string;
@@ -45,7 +45,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 /**
  * Add a new color to the palette, especially another tint of gray or blue, only after exhausting the option of using an existing color.
  *
- * - Colors used in light mode are located in `foundations/light.ts
+ * - Colors used in light mode are located in `foundations/light.ts`
  * - Colors used in dark mode are located in `foundations/dark.ts`
  *
  * If a color does not exist in the current palette and is only used once, consider applying the color conditionally:
@@ -102,7 +102,7 @@ export const ColorPalette = () => {
     { alias: 'theme.color.drawerBackdrop', color: theme.color.drawerBackdrop },
     { alias: 'theme.color.label', color: theme.color.label },
     { alias: 'theme.color.disabledText', color: theme.color.disabledText },
-    { alias: 'theme.color.tagButton', color: theme.color.tagButton },
+    { alias: 'theme.color.tagButton', color: theme.color.tagButtonBg },
     { alias: 'theme.color.tagIcon', color: theme.color.tagIcon },
   ];
 
