@@ -95,13 +95,13 @@ export const TwoStepRegionSelect = (props: TwoStepRegionSelectProps) => {
             currentCapability={currentCapability}
             disableClearable
             disabled={disabled}
+            disabledRegions={disabledRegions}
             errorText={error}
             helperText={helperText}
             onChange={(e, region: Region) => handleSelection(region.id)}
             regionFilter="core"
             regions={regions ?? []}
             showDistributedRegionIconHelperText={false}
-            disabledRegions={disabledRegions}
             value={value}
             {...RegionSelectProps}
           />

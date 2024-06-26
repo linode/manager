@@ -125,9 +125,6 @@ export const RegionSelect = <
         }
         renderOption={(props, region) => (
           <RegionOption
-            displayDistributedRegionIcon={
-              isGeckoBetaEnabled && region.site_type === 'distributed'
-            }
             disabledOptions={disabledRegions[region.id]}
             key={region.id}
             props={props}
