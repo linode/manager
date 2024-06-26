@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { imageFactory } from 'src/factories';
+import { imageFactory, regionFactory } from 'src/factories';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ManageImageRegionsDrawer } from './ManageImageRegionsDrawer';
@@ -23,12 +25,36 @@ describe('ManageImageRegionsDrawer', () => {
     expect(getByText(`Manage Regions for ${image.label}`)).toBeVisible();
   });
 
-  it('should render a header', () => {
-    const image = imageFactory.build();
-    const { getByText } = renderWithTheme(
+  it('should render existing regions and their statuses', async () => {
+    const region1 = regionFactory.build({ id: 'us-east', label: 'Newark, NJ' });
+    const region2 = regionFactory.build({ id: 'us-west', label: 'Place, CA' });
+
+    const image = imageFactory.build({
+      regions: [
+        {
+          region: 'us-east',
+          status: 'available',
+        },
+        {
+          region: 'us-west',
+          status: 'pending replication',
+        },
+      ],
+    });
+
+    server.use(
+      http.get('*/v4/regions', () => {
+        return HttpResponse.json(makeResourcePage([region1, region2]));
+      })
+    );
+
+    const { findByText } = renderWithTheme(
       <ManageImageRegionsDrawer image={image} onClose={vi.fn()} />
     );
 
-    expect(getByText(`Manage Regions for ${image.label}`)).toBeVisible();
+    await findByText('Newark, NJ');
+    await findByText('available');
+    await findByText('Place, CA');
+    await findByText('pending replication');
   });
 });
