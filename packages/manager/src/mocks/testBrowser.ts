@@ -2,4 +2,7 @@ import { setupWorker } from 'msw/browser';
 
 import { handlers } from './serverHandlers';
 
-export const worker = setupWorker(...handlers);
+import type { HttpHandler } from 'msw';
+
+export const worker = (customHandlers?: HttpHandler[]) =>
+  setupWorker(...(customHandlers ?? handlers));
