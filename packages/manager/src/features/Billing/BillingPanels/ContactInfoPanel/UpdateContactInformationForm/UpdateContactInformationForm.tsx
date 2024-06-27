@@ -5,7 +5,7 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import EnhancedSelect from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import {
@@ -16,8 +16,11 @@ import { TAX_ID_HELPER_TEXT } from 'src/features/Billing/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount, useMutateAccount } from 'src/queries/account/account';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { useProfile } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
+
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 interface Props {
   focusEmail: boolean;
@@ -30,6 +33,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { data: account } = useAccount();
   const { error, isLoading, mutateAsync } = useMutateAccount();
   const { data: notifications, refetch } = useNotificationsQuery();
+  const { checkForNewEvents } = useEventsPollingActions();
   const { classes } = useStyles();
   const emailRef = React.useRef<HTMLInputElement>();
   const { data: profile } = useProfile();
@@ -78,6 +82,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
       if (hasBillingEmailBounceNotification) {
         refetch();
       }
+      checkForNewEvents();
       onClose();
     },
   });

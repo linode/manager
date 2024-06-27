@@ -237,11 +237,7 @@ const ContactInformation = (props: Props) => {
                   <strong>Tax ID</strong> {taxId}
                 </StyledTypography>
                 {invalidTaxId && (
-                  <TooltipIcon
-                    status="warning"
-                    style={{ paddingBottom: 0, paddingTop: 0 }}
-                    text={invalidTaxId.label}
-                  />
+                  <TooltipIcon status="warning" text={invalidTaxId.label} />
                 )}
               </Box>
             )}
