@@ -9,30 +9,31 @@ import { ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP } from './constants';
 import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
 
 import type { CustomFields } from './constants';
-import type { EntityType } from './SupportTicketDialog';
+import type { SupportTicketFormFields } from './SupportTicketDialog';
 
 export interface AccountLimitCustomFields extends CustomFields {
   linodePlan: string;
   numberOfEntities: string;
 }
 
-interface Props {
-  entityType: EntityType;
-}
+export const SupportTicketAccountLimitFields = () => {
+  const { control, formState, reset } = useFormContext<
+    AccountLimitCustomFields & SupportTicketFormFields
+  >();
 
-export const SupportTicketAccountLimitFields = (props: Props) => {
-  const form = useFormContext<AccountLimitCustomFields>();
+  // const { entityType } = watch();
+  // console.log({ entityType });
 
   const { data: account } = useAccount();
 
   const defaultValues = {
     companyName: account?.company,
     customerName: `${account?.first_name} ${account?.last_name}`,
-    ...form.formState.defaultValues,
+    ...formState.defaultValues,
   };
 
   React.useEffect(() => {
-    form.reset(defaultValues);
+    reset(defaultValues);
   }, []);
 
   return (
@@ -49,7 +50,7 @@ export const SupportTicketAccountLimitFields = (props: Props) => {
             value={field.value}
           />
         )}
-        control={form.control}
+        control={control}
         name="customerName"
       />
       <Controller
@@ -63,7 +64,7 @@ export const SupportTicketAccountLimitFields = (props: Props) => {
             value={field.value}
           />
         )}
-        control={form.control}
+        control={control}
         name="companyName"
       />
       <SupportTicketProductSelectionFields ticketType="accountLimit" />
@@ -84,7 +85,7 @@ export const SupportTicketAccountLimitFields = (props: Props) => {
             value={field.value}
           />
         )}
-        control={form.control}
+        control={control}
         name="linodePlan"
       />
       <Controller
@@ -101,7 +102,7 @@ export const SupportTicketAccountLimitFields = (props: Props) => {
             value={field.value}
           />
         )}
-        control={form.control}
+        control={control}
         name="useCase"
       />
       <Controller
@@ -118,7 +119,7 @@ export const SupportTicketAccountLimitFields = (props: Props) => {
             value={field.value}
           />
         )}
-        control={form.control}
+        control={control}
         name="publicInfo"
       />
     </>

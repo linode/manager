@@ -1,10 +1,11 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
 import { capitalize } from 'src/utilities/capitalize';
+
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
   errors: APIError[];
@@ -16,10 +17,6 @@ export const SupportError = (props: Props) => {
   const supportTextRegex = new RegExp(
     /(open a support ticket|contact Support)/i
   );
-
-  // Determine whether we'll need to link to a specific support ticket form based on ticketType.
-  const accountLimitRegex = new RegExp(/limit on your account/i);
-  const isAccountLimitSupportTicket = errors[0].reason.match(accountLimitRegex);
 
   const errorMsg = errors[0].reason.split(supportTextRegex);
 
@@ -41,9 +38,6 @@ export const SupportError = (props: Props) => {
                 substring.match(/^[A-Z]/)
                   ? capitalize(openTicket[0])
                   : openTicket[0]
-              }
-              ticketType={
-                isAccountLimitSupportTicket ? 'accountLimit' : 'general'
               }
               key={`${substring}-${idx}`}
             />
