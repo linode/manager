@@ -38,9 +38,6 @@ export function generateAnsibleConfig(config: CreateLinodeRequest): string {
   if (config.stackscript_id) {
     configStr += `    stackscript_id: ${config.stackscript_id}\n`;
   }
-  if (config.hasOwnProperty('private_ip')) {
-    configStr += `    private_ip: ${config.private_ip}\n`;
-  }
   if (config.stackscript_data) {
     configStr += `    stackscript_data:\n`;
     Object.keys(config.stackscript_data).forEach((key) => {

@@ -9,7 +9,7 @@ describe('generatePythonLinodeSnippet', () => {
       type: 'g6-standard-1',
     };
 
-    const expectedOutput = `client = LinodeClient(token=os.getenv(\'LINODE_TOKEN\'))\nnew_linode, root_pass = client.linode.instance_create(\n    ltype="g6-standard-1",\n    region="us-central",\n    image="linode/ubuntu20.04",\n    label="MyTestLinode"\n)\n`;
+    const expectedOutput = `client = LinodeClient(token=os.getenv(\'LINODE_TOKEN\'))\nnew_linode = client.linode.instance_create(\n    ltype="g6-standard-1",\n    region="us-central",\n    image="linode/ubuntu20.04",\n    label="MyTestLinode"\n)\n`;
     expect(generatePythonLinodeSnippet(config)).toEqual(expectedOutput);
   });
 
@@ -21,7 +21,7 @@ describe('generatePythonLinodeSnippet', () => {
       type: 'g6-"nanode-1',
     };
 
-    const expectedOutput = `client = LinodeClient(token=os.getenv(\'LINODE_TOKEN\'))\nnew_linode, root_pass = client.linode.instance_create(\n    ltype="g6-\\"nanode-1",\n    region="us-\\"central",\n    image="linode/ubuntu20.04",\n    label="Test\\"Instance"\n)\n`;
+    const expectedOutput = `client = LinodeClient(token=os.getenv(\'LINODE_TOKEN\'))\nnew_linode = client.linode.instance_create(\n    ltype="g6-\\"nanode-1",\n    region="us-\\"central",\n    image="linode/ubuntu20.04",\n    label="Test\\"Instance"\n)\n`;
     expect(generatePythonLinodeSnippet(config)).toEqual(expectedOutput);
   });
 });
