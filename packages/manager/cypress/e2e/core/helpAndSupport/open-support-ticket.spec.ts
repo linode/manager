@@ -46,6 +46,7 @@ import { authenticate } from 'support/api/authentication';
 import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetDomains } from 'support/intercepts/domains';
+import { mockGetClusters } from 'support/intercepts/lke';
 
 describe('help & support', () => {
   after(() => {
@@ -342,7 +343,7 @@ describe('help & support', () => {
 
   it('can create a support ticket with an entity', () => {
     const mockLinodes = linodeFactory.buildList(2);
-    const mockDomains = domainFactory.buildList(1);
+    const mockDomain = domainFactory.build();
 
     const mockTicket = supportTicketFactory.build({
       id: randomNumber(),
@@ -352,11 +353,12 @@ describe('help & support', () => {
     });
 
     mockCreateSupportTicket(mockTicket).as('createTicket');
+    mockGetClusters([]);
     mockGetSupportTickets([]);
     mockGetSupportTicket(mockTicket);
     mockGetSupportTicketReplies(mockTicket.id, []);
     mockGetLinodes(mockLinodes);
-    mockGetDomains(mockDomains);
+    mockGetDomains([mockDomain]);
 
     cy.visitWithLogin('/support/tickets');
 
@@ -418,7 +420,7 @@ describe('help & support', () => {
         cy.get('[data-qa-ticket-entity-id]')
           .should('be.visible')
           .click()
-          .type('domain-0{downarrow}{enter}');
+          .type(`${mockDomain.domain}{downarrow}{enter}`);
 
         ui.button
           .findByTitle('Open Ticket')
