@@ -52,11 +52,9 @@ export const ManageImageRegionsDrawer = (props: Props) => {
   });
 
   useEffect(() => {
-    if (open) {
-      resetForm({ regions: imageRegionIds });
-      reset();
-    }
-  }, [open]);
+    resetForm({ regions: imageRegionIds });
+    reset();
+  }, [imageRegionIds, open]);
 
   const onSubmit = async (data: UpdateImageRegionsPayload) => {
     try {
@@ -65,8 +63,6 @@ export const ManageImageRegionsDrawer = (props: Props) => {
       enqueueSnackbar('Image regions successfully updated.', {
         variant: 'success',
       });
-
-      onClose();
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
@@ -99,7 +95,7 @@ export const ManageImageRegionsDrawer = (props: Props) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <RegionMultiSelect
           onClose={() => {
-            setValue('regions', [...selectedRegions, ...values.regions], {
+            setValue('regions', [...values.regions, ...selectedRegions], {
               shouldDirty: true,
               shouldValidate: true,
             });
