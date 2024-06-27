@@ -17,17 +17,17 @@ describe('Creates Domains records with Form', () => {
 
     createDomainRecords().forEach((rec) => {
       cy.findByText(rec.name).click();
-      rec.fields.forEach((f) => {
-        cy.get(f.name).type(f.value);
+      rec.fields.forEach((field) => {
+        cy.get(field.name).type(field.value);
       });
       cy.findByText('Save').click();
       cy.wait('@apiCreateRecord').its('response.statusCode').should('eq', 200);
       cy.get(`[aria-label="${rec.tableAriaLabel}"]`).within((_table) => {
-        rec.fields.forEach((f) => {
-          if (f.skipCheck) {
+        rec.fields.forEach((field) => {
+          if (field.skipCheck) {
             return;
           }
-          cy.findByText(f.value, { exact: !f.approximate });
+          cy.findByText(field.value, { exact: !field.approximate });
         });
       });
     });

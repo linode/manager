@@ -18,7 +18,7 @@ export const createDomainRecords = () => [
       {
         name: '[data-qa-target="IP Address"]',
         skipCheck: false,
-        value: `${randomIp()}`,
+        value: randomIp(),
       },
     ],
     name: 'Add an A/AAAA Record',
