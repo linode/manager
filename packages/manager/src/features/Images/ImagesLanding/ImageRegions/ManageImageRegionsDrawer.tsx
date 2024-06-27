@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
@@ -39,7 +40,7 @@ export const ManageImageRegionsDrawer = (props: Props) => {
   const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
 
   const {
-    formState: { errors, isSubmitting },
+    formState: { errors, isDirty, isSubmitting },
     handleSubmit,
     reset: resetForm,
     setError,
@@ -89,13 +90,17 @@ export const ManageImageRegionsDrawer = (props: Props) => {
         <Notice text={errors.root.message} variant="error" />
       )}
       <Typography>
-        Custom images are billed monthly, at $.10/GB. Check out this guide for
-        details on managing your Linux system's disk space.
+        Custom images are billed monthly, at $.10/GB. Check out{' '}
+        <Link to="https://www.linode.com/docs/guides/check-and-clean-linux-disk-space/">
+          this guide
+        </Link>{' '}
+        for details on managing your Linux system's disk space.
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <RegionMultiSelect
           onClose={() => {
             setValue('regions', [...selectedRegions, ...values.regions], {
+              shouldDirty: true,
               shouldValidate: true,
             });
             setSelectedRegions([]);
@@ -132,7 +137,8 @@ export const ManageImageRegionsDrawer = (props: Props) => {
                 onRemove={() =>
                   setValue(
                     'regions',
-                    values.regions.filter((r) => r !== regionId)
+                    values.regions.filter((r) => r !== regionId),
+                    { shouldDirty: true, shouldValidate: true }
                   )
                 }
                 status={
@@ -148,6 +154,7 @@ export const ManageImageRegionsDrawer = (props: Props) => {
         </Paper>
         <ActionsPanel
           primaryButtonProps={{
+            disabled: !isDirty,
             label: 'Save',
             loading: isSubmitting,
             type: 'submit',
