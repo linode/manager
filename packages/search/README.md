@@ -2,7 +2,7 @@
 
 Search is a parser written with [Peggy](https://peggyjs.org) that takes a human readable search query and transforms it into a [Linode API v4 filter](https://techdocs.akamai.com/linode-api/reference/filtering-and-sorting). 
 
-The goal of this package is to provide a shared utility that enables a powerful, scalable, and consistent search experience throughout Linode Cloud Manager.
+The goal of this package is to provide a shared utility that enables a powerful, scalable, and consistent search experience throughout Akamai Connected Cloud Manager.
 
 ## Example
 
