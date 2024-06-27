@@ -5,10 +5,10 @@ import { useLocation } from 'react-router-dom';
 import GridView from 'src/assets/icons/grid-view.svg';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
+import { Paper } from 'src/components/Paper';
 import { TableBody } from 'src/components/TableBody';
 import { Tooltip } from 'src/components/Tooltip';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
@@ -57,7 +57,7 @@ interface DisplayLinodesProps extends OrderByProps<LinodeWithMaintenance> {
 const regionFilterOptions = [
   {
     label: 'All',
-    value: undefined,
+    value: 'all',
   },
   {
     label: 'Core',
@@ -87,8 +87,8 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
 
   const displayViewDescriptionId = React.useId();
   const groupByDescriptionId = React.useId();
-
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
+
   const numberOfLinodesWithMaintenance = React.useMemo(() => {
     return data.reduce((acc, thisLinode) => {
       if (thisLinode.maintenance) {
@@ -97,7 +97,9 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
       return acc;
     }, 0);
   }, [JSON.stringify(data)]);
+
   const count = data.length;
+
   const pageSize =
     numberOfLinodesWithMaintenance > infinitePageSize
       ? getMinimumPageSizeForNumberOfItems(numberOfLinodesWithMaintenance)
@@ -112,9 +114,16 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
     undefined
   );
 
+  let filteredData: LinodeWithMaintenance[] = [];
+  if (regionFilter === 'core' || 'distributed') {
+    filteredData = data.filter((linode) => linode.site_type === regionFilter);
+  } else {
+    filteredData = [];
+  }
+
   return (
     <Paginate
-      data={data}
+      data={filteredData.length > 0 ? filteredData : data}
       page={queryPage}
       // If there are more Linodes with maintenance than the current page size, show the minimum
       // page size needed to show ALL Linodes with maintenance.
@@ -149,7 +158,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
           <React.Fragment>
             {display === 'list' && (
               <>
-                <Box sx={{ background: 'white', padding: 1 }}>
+                <Paper sx={{ padding: 1 }}>
                   <label style={{ alignItems: 'center', display: 'flex' }}>
                     <span style={{ marginLeft: 8, marginRight: 8 }}>
                       Region Type:
@@ -172,7 +181,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                       options={regionFilterOptions}
                     />
                   </label>
-                </Box>
+                </Paper>
                 <TableWrapper
                   {...tableWrapperProps}
                   linodeViewPreference={linodeViewPreference}
@@ -234,7 +243,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
             <Grid xs={12}>
               {
                 <PaginationFooter
-                  count={data.length}
+                  count={filteredData?.length || data.length}
                   eventCategory={'linodes landing'}
                   handlePageChange={handlePageChange}
                   handleSizeChange={handlePageSizeChange}
