@@ -2,7 +2,7 @@ export * from './account';
 
 export * from './aclb';
 
-export * from './cloudpulse'
+export * from './cloudpulse';
 
 export * from './databases';
 

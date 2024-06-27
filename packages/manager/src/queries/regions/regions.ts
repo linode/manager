@@ -1,17 +1,17 @@
-import {
-  Region,
-  RegionAvailability,
-  getRegionAvailability,
-} from '@linode/api-v4/lib/regions';
-import { APIError } from '@linode/api-v4/lib/types';
+import { getRegionAvailability } from '@linode/api-v4/lib/regions';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQuery } from '@tanstack/react-query';
+
+import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 
 import { queryPresets } from '../base';
 import {
   getAllRegionAvailabilitiesRequest,
   getAllRegionsRequest,
 } from './requests';
+
+import type { Region, RegionAvailability } from '@linode/api-v4/lib/regions';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export const regionQueries = createQueryKeys('regions', {
   availability: {
@@ -33,10 +33,20 @@ export const regionQueries = createQueryKeys('regions', {
   },
 });
 
-export const useRegionsQuery = () =>
+export const useRegionsQuery = (transformRegionLabel: boolean = false) =>
   useQuery<Region[], APIError[]>({
     ...regionQueries.regions,
     ...queryPresets.longLived,
+    select: (regions: Region[]) => {
+      // Display Country, City instead of City, State
+      if (transformRegionLabel) {
+        return regions.map((region) => ({
+          ...region,
+          label: getNewRegionLabel({ region }),
+        }));
+      }
+      return regions;
+    },
   });
 
 export const useRegionsAvailabilitiesQuery = (enabled: boolean = true) =>

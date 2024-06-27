@@ -1,3 +1,3 @@
-export * from './types'
+export * from './types';
 
-export * from './dashboards'
+export * from './dashboards';

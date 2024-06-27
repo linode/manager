@@ -15,7 +15,7 @@ describe('sortByVersion', () => {
     const result = sortByVersion('1.1.2', '1.1.1', 'asc');
     expect(result).toBeGreaterThan(0);
   });
-  
+
   it('should identify the later minor version with differing number of digits', () => {
     const result = sortByVersion('1.30', '1.3', 'asc');
     expect(result).toBeGreaterThan(0);

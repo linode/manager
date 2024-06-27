@@ -29,7 +29,9 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     start: 0,
   });
 
-  const [selectedDashboard, setSelectedDashboard] = React.useState<Dashboard | undefined>();
+  const [selectedDashboard, setSelectedDashboard] = React.useState<
+    Dashboard | undefined
+  >();
   const [selectedRegion, setRegion] = React.useState<string | undefined>();
   const [, setResources] = React.useState<CloudPulseResources[]>(); // removed the unused variable, this will be used later point of time
 
@@ -68,10 +70,13 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     []
   );
 
-  const handleDashboardChange = React.useCallback((dashboard: Dashboard | undefined) => {
-    setSelectedDashboard(dashboard);
-    setRegion(undefined);
-  }, [])
+  const handleDashboardChange = React.useCallback(
+    (dashboard: Dashboard | undefined) => {
+      setSelectedDashboard(dashboard);
+      setRegion(undefined);
+    },
+    []
+  );
 
   return (
     <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
