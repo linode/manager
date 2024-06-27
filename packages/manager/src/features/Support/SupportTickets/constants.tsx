@@ -33,6 +33,10 @@ export const ACCOUNT_LIMIT_HELPER_TEXT =
   'To request access to more Linodes, LKE nodes, and/or larger plans, please provide us with the following information. Typically, we require a few months of positive billing history on an account before we will consider an account limit increase.';
 
 export const TICKET_TYPE_MAP: Record<TicketType, TicketTypeData> = {
+  accountLimit: {
+    dialogTitle: ACCOUNT_LIMIT_DIALOG_TITLE,
+    helperText: ACCOUNT_LIMIT_HELPER_TEXT,
+  },
   general: {
     dialogTitle: 'Open a Support Ticket',
     helperText: (
@@ -48,17 +52,13 @@ export const TICKET_TYPE_MAP: Record<TicketType, TicketTypeData> = {
     dialogTitle: SMTP_DIALOG_TITLE,
     helperText: SMTP_HELPER_TEXT,
   },
-  accountLimit: {
-    dialogTitle: ACCOUNT_LIMIT_DIALOG_TITLE,
-    helperText: ACCOUNT_LIMIT_HELPER_TEXT,
-  },
 };
 
 // Validation
 export const SCHEMA_MAP: Record<string, AnyObjectSchema> = {
+  accountLimit: createAccountLimitSupportTicketSchema,
   general: createSupportTicketSchema,
   smtp: createSMTPSupportTicketSchema,
-  accountLimit: createAccountLimitSupportTicketSchema,
 };
 
 export const ENTITY_MAP: Record<string, EntityType> = {
@@ -101,8 +101,8 @@ export const SMTP_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
 
 export const ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
   ...CUSTOM_FIELD_NAME_TO_LABEL_MAP,
-  numberOfEntities: 'Total number of entities you need?',
   linodePlan: 'Which Linode plan do you need access to?',
+  numberOfEntities: 'Total number of entities you need?',
   useCase:
     'A detailed description of your use case and why you need access to more/larger entities',
 };
