@@ -4,16 +4,14 @@ import { useLocation } from 'react-router-dom';
 
 import GridView from 'src/assets/icons/grid-view.svg';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import { OrderByProps } from 'src/components/OrderBy';
-import Paginate, { PaginationProps } from 'src/components/Paginate';
-import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { Box } from 'src/components/Box';
+import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
 import { TableBody } from 'src/components/TableBody';
 import { Tooltip } from 'src/components/Tooltip';
-import { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
-import { DialogType } from 'src/features/Linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
-import { LinodeWithMaintenance } from 'src/utilities/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import {
@@ -23,6 +21,11 @@ import {
 import TableWrapper from './TableWrapper';
 
 import type { Config } from '@linode/api-v4/lib/linodes';
+import type { OrderByProps } from 'src/components/OrderBy';
+import type { PaginationProps } from 'src/components/Paginate';
+import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
+import type { DialogType } from 'src/features/Linodes/types';
+import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 export interface RenderLinodesProps
   extends PaginationProps<LinodeWithMaintenance> {
@@ -50,6 +53,21 @@ interface DisplayLinodesProps extends OrderByProps<LinodeWithMaintenance> {
   toggleLinodeView: () => 'grid' | 'list';
   updatePageUrl: (page: number) => void;
 }
+
+const regionFilterOptions = [
+  {
+    label: 'All',
+    value: undefined,
+  },
+  {
+    label: 'Core',
+    value: 'core',
+  },
+  {
+    label: 'Distributed',
+    value: 'distributed',
+  },
+];
 
 export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const {
@@ -90,6 +108,10 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const params = getQueryParamsFromQueryString(search);
   const queryPage = Math.min(Number(params.page), maxPageNumber) || 1;
 
+  const [regionFilter, setRegionFilter] = React.useState<string | undefined>(
+    undefined
+  );
+
   return (
     <Paginate
       data={data}
@@ -126,17 +148,43 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
         return (
           <React.Fragment>
             {display === 'list' && (
-              <TableWrapper
-                {...tableWrapperProps}
-                linodeViewPreference={linodeViewPreference}
-                linodesAreGrouped={linodesAreGrouped}
-                toggleGroupLinodes={toggleGroupLinodes}
-                toggleLinodeView={toggleLinodeView}
-              >
-                <TableBody>
-                  <Component showHead {...componentProps} />
-                </TableBody>
-              </TableWrapper>
+              <>
+                <Box sx={{ background: 'white', padding: 1 }}>
+                  <label style={{ alignItems: 'center', display: 'flex' }}>
+                    <span style={{ marginLeft: 8, marginRight: 8 }}>
+                      Region Type:
+                    </span>{' '}
+                    <Autocomplete
+                      onChange={(_, selectedOption) => {
+                        if (selectedOption?.value) {
+                          setRegionFilter(selectedOption.value);
+                        }
+                      }}
+                      sx={{
+                        display: 'inline-block',
+                      }}
+                      textFieldProps={{
+                        hideLabel: true,
+                      }}
+                      defaultValue={regionFilterOptions[0]}
+                      disableClearable
+                      label="Region Type"
+                      options={regionFilterOptions}
+                    />
+                  </label>
+                </Box>
+                <TableWrapper
+                  {...tableWrapperProps}
+                  linodeViewPreference={linodeViewPreference}
+                  linodesAreGrouped={linodesAreGrouped}
+                  toggleGroupLinodes={toggleGroupLinodes}
+                  toggleLinodeView={toggleLinodeView}
+                >
+                  <TableBody>
+                    <Component showHead {...componentProps} />
+                  </TableBody>
+                </TableWrapper>
+              </>
             )}
             {display === 'grid' && (
               <>
