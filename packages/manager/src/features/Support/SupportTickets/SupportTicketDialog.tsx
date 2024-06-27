@@ -30,10 +30,9 @@ import {
   TICKET_SEVERITY_TOOLTIP_TEXT,
   TICKET_TYPE_MAP,
 } from './constants';
+import { SupportTicketAccountLimitFields } from './SupportTicketAccountLimitFields';
 import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
 import { SupportTicketSMTPFields } from './SupportTicketSMTPFields';
-import { SupportTicketAccountLimitFields } from './SupportTicketAccountLimitFields';
-
 import { formatDescription, useTicketSeverityCapability } from './ticketUtils';
 
 import type { FileAttachment } from '../index';
@@ -58,8 +57,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   rootReply: {
     marginBottom: theme.spacing(2),
-    padding: 0,
     marginTop: theme.spacing(2),
+    padding: 0,
   },
 }));
 

@@ -3,6 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormHelperText } from 'src/components/FormHelperText';
+import { TextField } from 'src/components/TextField';
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
@@ -17,14 +18,13 @@ import {
   ENTITY_MAP,
 } from './constants';
 
+import type { AccountLimitCustomFields } from './SupportTicketAccountLimitFields';
 import type {
   EntityType,
   SupportTicketFormFields,
   TicketType,
 } from './SupportTicketDialog';
 import type { APIError } from '@linode/api-v4';
-import { TextField } from 'src/components/TextField';
-import { AccountLimitCustomFields } from './SupportTicketAccountLimitFields';
 
 interface Props {
   ticketType?: TicketType;
@@ -33,11 +33,11 @@ interface Props {
 export const SupportTicketProductSelectionFields = (props: Props) => {
   const { ticketType } = props;
   const {
+    clearErrors,
     control,
+    formState: { errors },
     setValue,
     watch,
-    formState: { errors },
-    clearErrors,
   } = useFormContext<SupportTicketFormFields & AccountLimitCustomFields>();
 
   const { entityId, entityInputValue, entityType } = watch();
@@ -175,6 +175,7 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
       : 'entities';
 
   return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {ticketType === 'accountLimit' ? (
         <Controller
@@ -182,11 +183,11 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
             <TextField
               data-qa-ticket-number-of-entities
               errorText={fieldState.error?.message}
-              label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.numberOfEntities}
               helperText={`Current number of ${_entityType}: ${entityOptions.length}`}
-              placeholder={`Enter total number of ${_entityType}`}
+              label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.numberOfEntities}
               name="numberOfEntities"
               onChange={field.onChange}
+              placeholder={`Enter total number of ${_entityType}`}
               value={field.value}
             />
           )}
@@ -223,22 +224,22 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
               <Controller
                 render={({ field, fieldState }) => (
                   <Autocomplete
-                    onChange={(e, id) =>
-                      setValue('entityId', id ? String(id?.value) : '')
-                    }
-                    data-qa-ticket-entity-id
-                    disabled={entityOptions.length === 0}
                     errorText={
                       entityError ||
                       fieldState.error?.message ||
                       errors.entityId?.message
                     }
-                    inputValue={entityInputValue}
-                    label={ENTITY_ID_TO_NAME_MAP[entityType] ?? 'Entity Select'}
-                    loading={areEntitiesLoading}
+                    onChange={(e, id) =>
+                      setValue('entityId', id ? String(id?.value) : '')
+                    }
                     onInputChange={(e, value) =>
                       field.onChange(value ? value : '')
                     }
+                    data-qa-ticket-entity-id
+                    disabled={entityOptions.length === 0}
+                    inputValue={entityInputValue}
+                    label={ENTITY_ID_TO_NAME_MAP[entityType] ?? 'Entity Select'}
+                    loading={areEntitiesLoading}
                     options={entityOptions}
                     placeholder={`Select a ${ENTITY_ID_TO_NAME_MAP[entityType]}`}
                     value={selectedEntity}
