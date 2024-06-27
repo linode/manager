@@ -27,7 +27,7 @@ import { usePreferences } from 'src/queries/profile/preferences';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { HostMaintenanceError } from '../HostMaintenanceError';
 import { LinodePermissionsError } from '../LinodePermissionsError';
@@ -79,6 +79,8 @@ export const LinodeResize = (props: Props) => {
 
   const [hasResizeError, setHasResizeError] = React.useState<boolean>(false);
 
+  const formRef = React.useRef<HTMLFormElement>(null);
+
   const {
     error: resizeError,
     isLoading,
@@ -127,6 +129,7 @@ export const LinodeResize = (props: Props) => {
       });
       onClose();
     },
+    validate: () => scrollErrorIntoViewV2(formRef),
   });
 
   React.useEffect(() => {
@@ -156,8 +159,6 @@ export const LinodeResize = (props: Props) => {
   React.useEffect(() => {
     if (resizeError) {
       setHasResizeError(true);
-      // Set to "block: end" since the sticky header would otherwise interfere.
-      scrollErrorIntoView(undefined, { block: 'end' });
     }
   }, [resizeError]);
 
@@ -197,7 +198,7 @@ export const LinodeResize = (props: Props) => {
       {isLinodeDataLoading ? (
         <CircleProgress />
       ) : (
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit} ref={formRef}>
           {isLinodesGrantReadOnly && <LinodePermissionsError />}
           {hostMaintenance && <HostMaintenanceError />}
           {disksError && (
