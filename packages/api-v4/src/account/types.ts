@@ -434,6 +434,7 @@ export const EventActionKeys = [
   'tag_create',
   'tag_delete',
   'tax_id_invalid',
+  'tax_id_valid',
   'tfa_disabled',
   'tfa_enabled',
   'ticket_attachment_upload',

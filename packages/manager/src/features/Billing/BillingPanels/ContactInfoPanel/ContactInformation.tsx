@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+// import { useQueryClient } from '@tanstack/react-query';
 import { allCountries } from 'country-region-data';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
@@ -77,10 +78,24 @@ const ContactInformation = (props: Props) => {
     setEditContactDrawerOpen,
   ] = React.useState<boolean>(false);
 
-  const { data: notifications } = useNotificationsQuery();
+  const {
+    data: notifications,
+    refetch: refetchNotifications,
+  } = useNotificationsQuery();
   const [focusEmail, setFocusEmail] = React.useState(false);
 
   const isChildUser = Boolean(profile?.user_type === 'child');
+  // const queryClient = useQueryClient();
+
+  React.useEffect(() => {
+    const taxIdValidNotification = notifications?.find((notification: any) => {
+      return notification.type === 'tax_id_valid';
+    });
+
+    if (taxIdValidNotification) {
+      refetchNotifications();
+    }
+  }, [notifications, refetchNotifications]);
 
   const invalidTaxId = notifications?.find((notification: any) => {
     return notification.type === 'tax_id_invalid';
