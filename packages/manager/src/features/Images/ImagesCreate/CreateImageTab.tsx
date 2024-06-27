@@ -1,5 +1,4 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { CreateImagePayload } from '@linode/api-v4';
 import { createImageSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -32,17 +31,16 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
-export const CreateImageTab = () => {
-  const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
-    null
-  );
+import type { CreateImagePayload } from '@linode/api-v4';
 
+export const CreateImageTab = () => {
   const {
     control,
     formState,
     handleSubmit,
     resetField,
     setError,
+    setValue,
     watch,
   } = useForm<CreateImagePayload>({
     mode: 'onBlur',
@@ -89,6 +87,15 @@ export const CreateImageTab = () => {
     }
   });
 
+  const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
+    null
+  );
+
+  const { data: selectedLinode } = useLinodeQuery(
+    selectedLinodeId ?? -1,
+    selectedLinodeId !== null
+  );
+
   const {
     data: disks,
     error: disksError,
@@ -99,18 +106,30 @@ export const CreateImageTab = () => {
   const selectedDisk =
     disks?.find((disk) => disk.id === selectedDiskId) ?? null;
 
+  React.useEffect(() => {
+    if (formState.touchedFields.label) {
+      return;
+    }
+    if (selectedLinode) {
+      setValue('label', `${selectedLinode.label}-${selectedDisk?.label ?? ''}`);
+    } else {
+      resetField('label');
+    }
+  }, [
+    selectedLinode,
+    selectedDisk,
+    formState.touchedFields.label,
+    setValue,
+    resetField,
+  ]);
+
   const isRawDisk = selectedDisk?.filesystem === 'raw';
 
   const { data: regionsData } = useRegionsQuery();
 
-  const { data: linode } = useLinodeQuery(
-    selectedLinodeId ?? -1,
-    selectedLinodeId !== null
-  );
-
   const linodeIsInDistributedRegion = getIsDistributedRegion(
     regionsData ?? [],
-    linode?.region ?? ''
+    selectedLinode?.region ?? ''
   );
 
   /*
