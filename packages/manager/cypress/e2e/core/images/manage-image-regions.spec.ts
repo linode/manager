@@ -153,7 +153,7 @@ describe('Manage Image Regions', () => {
         cy.findByText(region4.label).should('be.visible');
         cy.findAllByText('unsaved').should('be.visible');
 
-        // Verify the count in now 3
+        // Verify the count is now 3
         cy.findByText('Image will be available in these regions (4)').should(
           'be.visible'
         );
