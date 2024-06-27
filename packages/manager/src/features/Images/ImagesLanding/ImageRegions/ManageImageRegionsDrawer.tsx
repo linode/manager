@@ -101,9 +101,9 @@ export const ManageImageRegionsDrawer = (props: Props) => {
             setSelectedRegions([]);
           }}
           regions={(regions ?? []).filter(
-            (r) => !values.regions.includes(r.id)
+            (r) => !values.regions.includes(r.id) && r.site_type === 'core'
           )}
-          currentCapability="Object Storage"
+          currentCapability={undefined}
           errorText={errors.regions?.message}
           label="Add Regions"
           onChange={setSelectedRegions}
