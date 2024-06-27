@@ -39,25 +39,6 @@ export function generateTerraformConfig(config: CreateLinodeRequest): string {
       ?.join(', ');
     terraformConfig += `  tags = [${tagsFormatted}]\n`;
   }
-  if (config.interfaces) {
-    terraformConfig += `  interfaces = [\n`;
-    config.interfaces.forEach((iface) => {
-      terraformConfig += `    {\n`;
-      terraformConfig += `      purpose = "${escapeStringForCLI(
-        iface.purpose
-      )}"\n`;
-      if (iface.ip_ranges) {
-        terraformConfig += `      ip_ranges = ${JSON.stringify(
-          iface.ip_ranges.map((ip) => escapeStringForCLI(ip))
-        )}\n`;
-      }
-      if (iface.subnet_id) {
-        terraformConfig += `      subnet_id = ${iface.subnet_id}\n`;
-      }
-      terraformConfig += `    },\n`;
-    });
-    terraformConfig += `  ]\n`;
-  }
   if (config.swap_size) {
     terraformConfig += `  swap_size = ${config.swap_size}\n`;
   }
