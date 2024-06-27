@@ -11,6 +11,8 @@ const isCypress = typeof window !== 'undefined' && (window as any).Cypress;
  * Monkey patching here in oder to avoid patching the library itself.
  * While not ideal, it prevents us from having to maintain a fork of the library,
  * or having to modify and remember to increment every `each` at the factory level.
+ *
+ * Excluding this from Cypress tests which prevents overriding Factory.each
  */
 if (!isCypress) {
   Object.defineProperty(Factory, 'each', {
