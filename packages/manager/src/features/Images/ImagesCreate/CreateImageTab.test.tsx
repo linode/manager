@@ -30,7 +30,7 @@ describe('CreateImageTab', () => {
 
     expect(getByText('Image Details')).toBeVisible();
 
-    expect(getByLabelText('Image Label')).toBeVisible();
+    expect(getByLabelText('Label')).toBeVisible();
     expect(getByLabelText('Add Tags')).toBeVisible();
     expect(getByLabelText('Description')).toBeVisible();
 
@@ -212,7 +212,7 @@ describe('CreateImageTab', () => {
     await userEvent.click(diskOption);
 
     // Image label should auto-populate
-    const imageLabel = getByLabelText('Image Label');
+    const imageLabel = getByLabelText('Label');
     expect(imageLabel).toHaveValue(`${linode.label}-${disk1.label}`);
 
     // Image label should update

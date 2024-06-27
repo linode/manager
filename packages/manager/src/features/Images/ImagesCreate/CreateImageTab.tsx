@@ -275,7 +275,7 @@ export const CreateImageTab = () => {
                   disabled={isImageCreateRestricted}
                   errorText={fieldState.error?.message}
                   inputRef={field.ref}
-                  label="Image Label"
+                  label="Label"
                   noMarginTop
                   onBlur={field.onBlur}
                   value={field.value ?? ''}
