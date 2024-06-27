@@ -14,6 +14,8 @@ import {
   WithTypesRegionsAndImages,
 } from '../types';
 import { StyledGrid } from './CommonTabbedContent.styles';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+import type { Image } from '@linode/api-v4';
 
 interface Props extends BasicFromContentProps {
   error?: string;
@@ -37,6 +39,8 @@ export const FromImageContent = (props: CombinedProps) => {
 
   const privateImages = filterImagesByType(imagesData, 'private');
 
+  const { data: regions } = useRegionsQuery();
+
   if (variant === 'private' && Object.keys(privateImages).length === 0) {
     return (
       <StyledGrid>
@@ -53,13 +57,31 @@ export const FromImageContent = (props: CombinedProps) => {
     );
   }
 
+  const onChange = (image: Image | null) => {
+    props.updateImageID(image?.id ?? '');
+
+    const selectedRegion = regions?.find(
+      (r) => r.id === props.selectedRegionID
+    );
+
+    // Non-"distributed compatible" Images must only be deployed to core sites.
+    // Clear the region field if the currently selected region is a distributed site and the Image is only core compatible.
+    if (
+      image &&
+      !image.capabilities.includes('distributed-images') &&
+      selectedRegion?.site_type === 'distributed'
+    ) {
+      props.updateRegionID('');
+    }
+  };
+
   return (
     <StyledGrid>
       <ImageSelect
         data-qa-select-image-panel
         disabled={userCannotCreateLinode}
         error={error}
-        handleSelectImage={props.updateImageID}
+        handleSelectImage={(_, image) => onChange(image ?? null)}
         images={Object.keys(imagesData).map((eachKey) => imagesData[eachKey])}
         selectedImageID={props.selectedImageID}
         title={imagePanelTitle || 'Choose an Image'}
