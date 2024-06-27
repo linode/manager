@@ -6,8 +6,6 @@ import { API_ROOT } from 'src/constants';
 //Returns the list of all the dashboards available
 export const getDashboards = () =>
   Request<ResourcePage<Dashboard>>(
-    setURL(
-      `${API_ROOT}/monitor/services/linode/dashboards`
-    ),
-    setMethod('GET'),
+    setURL(`${API_ROOT}/monitor/services/linode/dashboards`),
+    setMethod('GET')
   );

@@ -42,16 +42,13 @@ export const CreateImageTab = () => {
     [location.search]
   );
 
-  const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
-    queryParams.selectedLinode ? +queryParams.selectedLinode : null
-  );
-
   const {
     control,
     formState,
     handleSubmit,
     resetField,
     setError,
+    setValue,
     watch,
   } = useForm<CreateImagePayload>({
     defaultValues: {
@@ -101,6 +98,15 @@ export const CreateImageTab = () => {
     }
   });
 
+  const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
+    queryParams.selectedLinode ? +queryParams.selectedLinode : null
+  );
+
+  const { data: selectedLinode } = useLinodeQuery(
+    selectedLinodeId ?? -1,
+    selectedLinodeId !== null
+  );
+
   const {
     data: disks,
     error: disksError,
@@ -111,18 +117,30 @@ export const CreateImageTab = () => {
   const selectedDisk =
     disks?.find((disk) => disk.id === selectedDiskId) ?? null;
 
+  React.useEffect(() => {
+    if (formState.touchedFields.label) {
+      return;
+    }
+    if (selectedLinode) {
+      setValue('label', `${selectedLinode.label}-${selectedDisk?.label ?? ''}`);
+    } else {
+      resetField('label');
+    }
+  }, [
+    selectedLinode,
+    selectedDisk,
+    formState.touchedFields.label,
+    setValue,
+    resetField,
+  ]);
+
   const isRawDisk = selectedDisk?.filesystem === 'raw';
 
   const { data: regionsData } = useRegionsQuery();
 
-  const { data: linode } = useLinodeQuery(
-    selectedLinodeId ?? -1,
-    selectedLinodeId !== null
-  );
-
   const linodeIsInDistributedRegion = getIsDistributedRegion(
     regionsData ?? [],
-    linode?.region ?? ''
+    selectedLinode?.region ?? ''
   );
 
   /*

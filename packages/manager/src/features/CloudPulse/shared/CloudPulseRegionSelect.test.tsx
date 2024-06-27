@@ -8,7 +8,7 @@ import { CloudPulseRegionSelect } from './CloudPulseRegionSelect';
 const props: CloudPulseRegionSelectProps = {
   handleRegionChange: vi.fn(),
   selectedDashboard: undefined,
-  selectedRegion: undefined
+  selectedRegion: undefined,
 };
 
 describe('CloudViewRegionSelect', () => {
