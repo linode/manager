@@ -1,8 +1,6 @@
 import {
   createLoadbalancerConfiguration,
   deleteLoadbalancerConfiguration,
-  getLoadbalancerConfigurations,
-  getLoadbalancerConfigurationsEndpointHealth,
   updateLoadbalancerConfiguration,
 } from '@linode/api-v4';
 import {
@@ -12,7 +10,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { QUERY_KEY } from './loadbalancers';
+import { aclbQueries } from './queries';
 
 import type {
   APIError,
@@ -30,25 +28,20 @@ export const useLoadBalancerConfigurationsQuery = (
   params?: Params,
   filter?: Filter
 ) => {
-  return useQuery<ResourcePage<Configuration>, APIError[]>(
-    [QUERY_KEY, 'aclb', loadbalancerId, 'configurations', params, filter],
-    () => getLoadbalancerConfigurations(loadbalancerId, params, filter),
-    { keepPreviousData: true }
-  );
+  return useQuery<ResourcePage<Configuration>, APIError[]>({
+    ...aclbQueries
+      .loadbalancer(loadbalancerId)
+      ._ctx.configurations._ctx.lists._ctx.paginated(params, filter),
+    keepPreviousData: true,
+  });
 };
 
 export const useLoadBalancerConfigurationsEndpointsHealth = (
   loadbalancerId: number
 ) => {
   return useQuery<ConfigurationsEndpointHealth, APIError[]>({
-    queryFn: () => getLoadbalancerConfigurationsEndpointHealth(loadbalancerId),
-    queryKey: [
-      QUERY_KEY,
-      'aclb',
-      loadbalancerId,
-      'configurations',
-      'endpoint-health',
-    ],
+    ...aclbQueries.loadbalancer(loadbalancerId)._ctx.configurations._ctx
+      .endpointHealth,
     refetchInterval: 10_000,
   });
 };
@@ -56,22 +49,16 @@ export const useLoadBalancerConfigurationsEndpointsHealth = (
 export const useLoabalancerConfigurationsInfiniteQuery = (
   loadbalancerId: number
 ) => {
-  return useInfiniteQuery<ResourcePage<Configuration>, APIError[]>(
-    [QUERY_KEY, 'aclb', loadbalancerId, 'configurations', 'infinite'],
-    ({ pageParam }) =>
-      getLoadbalancerConfigurations(loadbalancerId, {
-        page: pageParam,
-        page_size: 25,
-      }),
-    {
-      getNextPageParam: ({ page, pages }) => {
-        if (page === pages) {
-          return undefined;
-        }
-        return page + 1;
-      },
-    }
-  );
+  return useInfiniteQuery<ResourcePage<Configuration>, APIError[]>({
+    ...aclbQueries.loadbalancer(loadbalancerId)._ctx.configurations._ctx.lists
+      ._ctx.infinite,
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+  });
 };
 
 export const useLoadBalancerConfigurationMutation = (
@@ -80,23 +67,23 @@ export const useLoadBalancerConfigurationMutation = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<Configuration, APIError[], UpdateConfigurationPayload>(
-    (data) =>
+  return useMutation<Configuration, APIError[], UpdateConfigurationPayload>({
+    mutationFn: (data) =>
       updateLoadbalancerConfiguration(loadbalancerId, configurationId, data),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries([
-          QUERY_KEY,
-          'aclb',
-          loadbalancerId,
-          'configurations',
-        ]);
-        // The GET /v4/aclb endpoint also returns configuration data that we must update
-        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
-        queryClient.invalidateQueries([QUERY_KEY, 'aclb', loadbalancerId]);
-      },
-    }
-  );
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.configurations
+          ._ctx.lists.queryKey,
+      });
+      // The GET /v4/aclb endpoint also returns configuration data that we must update
+      // the paginated list and the ACLB object
+      queryClient.invalidateQueries({ queryKey: aclbQueries.paginated._def });
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: aclbQueries.loadbalancer(loadbalancerId).queryKey,
+      });
+    },
+  });
 };
 
 export const useLoadBalancerConfigurationCreateMutation = (
@@ -104,22 +91,22 @@ export const useLoadBalancerConfigurationCreateMutation = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<Configuration, APIError[], ConfigurationPayload>(
-    (data) => createLoadbalancerConfiguration(loadbalancerId, data),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries([
-          QUERY_KEY,
-          'aclb',
-          loadbalancerId,
-          'configurations',
-        ]);
-        // The GET /v4/aclb endpoint also returns configuration data that we must update
-        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
-        queryClient.invalidateQueries([QUERY_KEY, 'aclb', loadbalancerId]);
-      },
-    }
-  );
+  return useMutation<Configuration, APIError[], ConfigurationPayload>({
+    mutationFn: (data) => createLoadbalancerConfiguration(loadbalancerId, data),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.configurations
+          ._ctx.lists.queryKey,
+      });
+      // The GET /v4/aclb endpoint also returns configuration data that we must update
+      // the paginated list and the ACLB object
+      queryClient.invalidateQueries({ queryKey: aclbQueries.paginated._def });
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: aclbQueries.loadbalancer(loadbalancerId).queryKey,
+      });
+    },
+  });
 };
 
 export const useLoadBalancerConfigurationDeleteMutation = (
@@ -128,20 +115,21 @@ export const useLoadBalancerConfigurationDeleteMutation = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<{}, APIError[]>(
-    () => deleteLoadbalancerConfiguration(loadbalancerId, configurationId),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries([
-          QUERY_KEY,
-          'aclb',
-          loadbalancerId,
-          'configurations',
-        ]);
-        // The GET /v4/aclb endpoint also returns configuration data that we must update
-        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
-        queryClient.invalidateQueries([QUERY_KEY, 'aclb', loadbalancerId]);
-      },
-    }
-  );
+  return useMutation<{}, APIError[]>({
+    mutationFn: () =>
+      deleteLoadbalancerConfiguration(loadbalancerId, configurationId),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.configurations
+          ._ctx.lists.queryKey,
+      });
+      // The GET /v4/aclb endpoint also returns configuration data that we must update
+      // the paginated list and the ACLB object
+      queryClient.invalidateQueries({ queryKey: aclbQueries.paginated._def });
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: aclbQueries.loadbalancer(loadbalancerId).queryKey,
+      });
+    },
+  });
 };
