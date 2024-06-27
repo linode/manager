@@ -21,11 +21,11 @@ import type { Image, UpdateImageRegionsPayload } from '@linode/api-v4';
 interface Props {
   image: Image | undefined;
   onClose: () => void;
+  open: boolean;
 }
 
 export const ManageImageRegionsDrawer = (props: Props) => {
-  const { image, onClose } = props;
-  const open = image !== undefined;
+  const { image, onClose, open } = props;
 
   const imageRegionIds = useMemo(
     () => image?.regions.map(({ region }) => region) ?? [],
@@ -34,14 +34,14 @@ export const ManageImageRegionsDrawer = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
   const { data: regions } = useRegionsQuery();
-  const { mutateAsync } = useUpdateImageRegionsMutation(image?.id ?? '');
+  const { mutateAsync, reset } = useUpdateImageRegionsMutation(image?.id ?? '');
 
   const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
 
   const {
     formState: { errors, isSubmitting },
     handleSubmit,
-    reset,
+    reset: resetForm,
     setError,
     setValue,
     watch,
@@ -51,10 +51,11 @@ export const ManageImageRegionsDrawer = (props: Props) => {
   });
 
   useEffect(() => {
-    if (imageRegionIds) {
-      reset({ regions: imageRegionIds });
+    if (open) {
+      resetForm({ regions: imageRegionIds });
+      reset();
     }
-  }, [imageRegionIds]);
+  }, [open]);
 
   const onSubmit = async (data: UpdateImageRegionsPayload) => {
     try {
@@ -94,7 +95,9 @@ export const ManageImageRegionsDrawer = (props: Props) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <RegionMultiSelect
           onClose={() => {
-            setValue('regions', [...selectedRegions, ...values.regions]);
+            setValue('regions', [...selectedRegions, ...values.regions], {
+              shouldValidate: true,
+            });
             setSelectedRegions([]);
           }}
           regions={(regions ?? []).filter(
@@ -110,8 +113,20 @@ export const ManageImageRegionsDrawer = (props: Props) => {
         <Typography sx={{ mb: 1, mt: 2 }}>
           Image will be available in these regions ({values.regions.length})
         </Typography>
-        <Paper sx={{ p: 2 }}>
+        <Paper
+          sx={(theme) => ({
+            backgroundColor: theme.palette.background.paper,
+            p: 2,
+            py: 1,
+          })}
+          variant="outlined"
+        >
           <Stack spacing={1}>
+            {values.regions.length === 0 && (
+              <Typography py={1} textAlign="center">
+                No Regions Selected
+              </Typography>
+            )}
             {values.regions.map((regionId) => (
               <ImageRegionRow
                 onRemove={() =>
@@ -123,7 +138,7 @@ export const ManageImageRegionsDrawer = (props: Props) => {
                 status={
                   image?.regions.find(
                     (regionItem) => regionItem.region === regionId
-                  )?.status ?? 'pending replication'
+                  )?.status ?? 'unsaved'
                 }
                 key={regionId}
                 region={regionId}

@@ -9,11 +9,15 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
-import type { ImageRegion, ImageRegionStatus } from '@linode/api-v4';
+import type { ImageRegionStatus } from '@linode/api-v4';
 import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
-interface Props extends ImageRegion {
+type ExtendedImageRegionStatus = 'unsaved' | ImageRegionStatus;
+
+interface Props {
   onRemove: () => void;
+  region: string;
+  status: ExtendedImageRegionStatus;
 }
 
 export const ImageRegionRow = (props: Props) => {
@@ -47,14 +51,15 @@ export const ImageRegionRow = (props: Props) => {
 };
 
 const IMAGE_REGION_STATUS_TO_STATUS_ICON_STATUS: Record<
-  ImageRegionStatus,
+  ExtendedImageRegionStatus,
   Status
 > = {
   available: 'active',
   creating: 'other',
   pending: 'other',
   'pending deletion': 'other',
-  'pending replication': 'other',
+  'pending replication': 'inactive',
   replicating: 'other',
   timedout: 'inactive',
+  unsaved: 'inactive',
 };

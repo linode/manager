@@ -24,7 +24,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
@@ -51,8 +50,7 @@ import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
 
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
-import type { Image, ImageStatus } from '@linode/api-v4';
-import type { APIError } from '@linode/api-v4/lib/types';
+import type { ImageStatus } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 
 const searchQueryKey = 'query';
@@ -213,12 +211,18 @@ export const ImagesLanding = () => {
     imageEvents
   );
 
+  const [selectedImageId, setSelectedImageId] = React.useState<string>();
+
   const [
-    manageRegionsDrawerImage,
-    setManageRegionsDrawerImage,
-  ] = React.useState<Image>();
-  const [editDrawerImage, setEditDrawerImage] = React.useState<Image>();
-  const [rebuildDrawerImage, setRebuildDrawerImage] = React.useState<Image>();
+    isManageRegionsDrawerOpen,
+    setIsManageRegionsDrawerOpen,
+  ] = React.useState(false);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
+  const [isRebuildDrawerOpen, setIsRebuildDrawerOpen] = React.useState(false);
+
+  const selectedImage =
+    manualImages?.data.find((i) => i.id === selectedImageId) ??
+    automaticImages?.data.find((i) => i.id === selectedImageId);
 
   const [dialog, setDialogState] = React.useState<ImageDialogState>(
     defaultDialogState
@@ -312,24 +316,6 @@ export const ImagesLanding = () => {
     });
   };
 
-  const getActions = () => {
-    return (
-      <ActionsPanel
-        primaryButtonProps={{
-          'data-testid': 'submit',
-          label: dialogAction === 'cancel' ? 'Cancel Upload' : 'Delete Image',
-          loading: dialog.submitting,
-          onClick: handleRemoveImage,
-        }}
-        secondaryButtonProps={{
-          'data-testid': 'cancel',
-          label: dialogAction === 'cancel' ? 'Keep Image' : 'Cancel',
-          onClick: closeDialog,
-        }}
-      />
-    );
-  };
-
   const resetSearch = () => {
     queryParams.delete(searchQueryKey);
     history.push({ search: queryParams.toString() });
@@ -345,60 +331,43 @@ export const ImagesLanding = () => {
     onCancelFailed: onCancelFailedClick,
     onDelete: openDialog,
     onDeploy: deployNewLinode,
-    onEdit: setEditDrawerImage,
+    onEdit: (image) => {
+      setSelectedImageId(image.id);
+      setIsEditDrawerOpen(true);
+    },
     onManageRegions: multiRegionsEnabled
-      ? setManageRegionsDrawerImage
+      ? (image) => {
+          setSelectedImageId(image.id);
+          setIsManageRegionsDrawerOpen(true);
+        }
       : undefined,
-    onRestore: setRebuildDrawerImage,
+    onRestore: (image) => {
+      setSelectedImageId(image.id);
+      setIsRebuildDrawerOpen(true);
+    },
     onRetry: onRetryClick,
   };
 
-  const renderError = (_: APIError[]) => {
+  if (manualImagesLoading || automaticImagesLoading) {
+    return <CircleProgress />;
+  }
+
+  if (manualImagesError || automaticImagesError) {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Images" />
         <ErrorState errorText="There was an error retrieving your images. Please reload and try again." />
       </React.Fragment>
     );
-  };
-
-  const renderLoading = () => {
-    return <CircleProgress />;
-  };
-
-  const renderEmpty = () => {
-    return <ImagesLandingEmptyState />;
-  };
-
-  if (manualImagesLoading || automaticImagesLoading) {
-    return renderLoading();
   }
 
-  /** Error State */
-  if (manualImagesError) {
-    return renderError(manualImagesError);
-  }
-
-  if (automaticImagesError) {
-    return renderError(automaticImagesError);
-  }
-
-  /** Empty States */
   if (
-    !manualImages.data.length &&
-    !automaticImages.data.length &&
+    manualImages.results === 0 &&
+    automaticImages.results === 0 &&
     !imageLabelFromParam
   ) {
-    return renderEmpty();
+    return <ImagesLandingEmptyState />;
   }
-
-  const noManualImages = (
-    <TableRowEmpty colSpan={9} message={`No Custom Images to display.`} />
-  );
-
-  const noAutomaticImages = (
-    <TableRowEmpty colSpan={6} message={`No Recovery Images to display.`} />
-  );
 
   const isFetching = manualImagesIsFetching || automaticImagesIsFetching;
 
@@ -501,17 +470,21 @@ export const ImagesLanding = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {manualImages.data.length > 0
-              ? manualImages.data.map((manualImage) => (
-                  <ImageRow
-                    event={manualImagesEvents[manualImage.id]}
-                    handlers={handlers}
-                    image={manualImage}
-                    key={manualImage.id}
-                    multiRegionsEnabled={multiRegionsEnabled}
-                  />
-                ))
-              : noManualImages}
+            {manualImages.results === 0 && (
+              <TableRowEmpty
+                colSpan={9}
+                message={`No Custom Images to display.`}
+              />
+            )}
+            {manualImages.data.map((manualImage) => (
+              <ImageRow
+                event={manualImagesEvents[manualImage.id]}
+                handlers={handlers}
+                image={manualImage}
+                key={manualImage.id}
+                multiRegionsEnabled={multiRegionsEnabled}
+              />
+            ))}
           </TableBody>
         </Table>
         <PaginationFooter
@@ -570,20 +543,20 @@ export const ImagesLanding = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {isFetching ? (
-              <TableRowLoading columns={6} />
-            ) : automaticImages.data.length > 0 ? (
-              automaticImages.data.map((automaticImage) => (
-                <ImageRow
-                  event={automaticImagesEvents[automaticImage.id]}
-                  handlers={handlers}
-                  image={automaticImage}
-                  key={automaticImage.id}
-                />
-              ))
-            ) : (
-              noAutomaticImages
+            {automaticImages.results === 0 && (
+              <TableRowEmpty
+                colSpan={6}
+                message={`No Recovery Images to display.`}
+              />
             )}
+            {automaticImages.data.map((automaticImage) => (
+              <ImageRow
+                event={automaticImagesEvents[automaticImage.id]}
+                handlers={handlers}
+                image={automaticImage}
+                key={automaticImage.id}
+              />
+            ))}
           </TableBody>
         </Table>
         <PaginationFooter
@@ -596,24 +569,42 @@ export const ImagesLanding = () => {
         />
       </Paper>
       <EditImageDrawer
-        image={editDrawerImage}
-        onClose={() => setEditDrawerImage(undefined)}
+        image={selectedImage}
+        onClose={() => setIsEditDrawerOpen(false)}
+        open={isEditDrawerOpen}
       />
       <RebuildImageDrawer
-        image={rebuildDrawerImage}
-        onClose={() => setRebuildDrawerImage(undefined)}
+        image={selectedImage}
+        onClose={() => setIsRebuildDrawerOpen(false)}
+        open={isRebuildDrawerOpen}
       />
       <ManageImageRegionsDrawer
-        image={manageRegionsDrawerImage}
-        onClose={() => setManageRegionsDrawerImage(undefined)}
+        image={selectedImage}
+        onClose={() => setIsManageRegionsDrawerOpen(false)}
+        open={isManageRegionsDrawerOpen}
       />
       <ConfirmationDialog
+        actions={
+          <ActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'submit',
+              label:
+                dialogAction === 'cancel' ? 'Cancel Upload' : 'Delete Image',
+              loading: dialog.submitting,
+              onClick: handleRemoveImage,
+            }}
+            secondaryButtonProps={{
+              'data-testid': 'cancel',
+              label: dialogAction === 'cancel' ? 'Keep Image' : 'Cancel',
+              onClick: closeDialog,
+            }}
+          />
+        }
         title={
           dialogAction === 'cancel'
             ? 'Cancel Upload'
             : `Delete Image ${dialog.image}`
         }
-        actions={getActions}
         onClose={closeDialog}
         open={dialog.open}
       >

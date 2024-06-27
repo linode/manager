@@ -8,9 +8,13 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { ManageImageRegionsDrawer } from './ManageImageRegionsDrawer';
 
 describe('ManageImageRegionsDrawer', () => {
-  it('should not render when no image is passed via props', () => {
+  it('should not render when open is false', () => {
     const { container } = renderWithTheme(
-      <ManageImageRegionsDrawer image={undefined} onClose={vi.fn()} />
+      <ManageImageRegionsDrawer
+        image={undefined}
+        onClose={vi.fn()}
+        open={false}
+      />
     );
 
     expect(container).toBeEmptyDOMElement();
@@ -19,7 +23,7 @@ describe('ManageImageRegionsDrawer', () => {
   it('should render a header', () => {
     const image = imageFactory.build();
     const { getByText } = renderWithTheme(
-      <ManageImageRegionsDrawer image={image} onClose={vi.fn()} />
+      <ManageImageRegionsDrawer image={image} onClose={vi.fn()} open />
     );
 
     expect(getByText(`Manage Regions for ${image.label}`)).toBeVisible();
@@ -49,7 +53,7 @@ describe('ManageImageRegionsDrawer', () => {
     );
 
     const { findByText } = renderWithTheme(
-      <ManageImageRegionsDrawer image={image} onClose={vi.fn()} />
+      <ManageImageRegionsDrawer image={image} onClose={vi.fn()} open />
     );
 
     await findByText('Newark, NJ');
