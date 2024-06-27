@@ -30,6 +30,22 @@ describe('ManageImageRegionsDrawer', () => {
     expect(getByText(`Manage Regions for ${image.label}`)).toBeVisible();
   });
 
+  it('should render a save button and a cancel button', () => {
+    const image = imageFactory.build();
+    const { getByText } = renderWithTheme(
+      <ManageImageRegionsDrawer image={image} onClose={vi.fn()} open />
+    );
+
+    const cancelButton = getByText('Cancel').closest('button');
+    const saveButton = getByText('Save').closest('button');
+
+    expect(cancelButton).toBeVisible();
+    expect(cancelButton).toBeEnabled();
+
+    expect(saveButton).toBeVisible();
+    expect(saveButton).toBeDisabled(); // The save button should become enabled when regions are changed
+  });
+
   it('should render existing regions and their statuses', async () => {
     const region1 = regionFactory.build({ id: 'us-east', label: 'Newark, NJ' });
     const region2 = regionFactory.build({ id: 'us-west', label: 'Place, CA' });
@@ -86,6 +102,13 @@ describe('ManageImageRegionsDrawer', () => {
       <ManageImageRegionsDrawer image={image} onClose={vi.fn()} open />
     );
 
+    const saveButton = getByText('Save').closest('button');
+
+    expect(saveButton).toBeVisible();
+
+    // Verify the save button is disabled because no changes have been made
+    expect(saveButton).toBeDisabled();
+
     const regionSelect = getByLabelText('Add Regions');
 
     // Open the Region Select
@@ -99,5 +122,8 @@ describe('ManageImageRegionsDrawer', () => {
 
     expect(getByText('Place, CA')).toBeVisible();
     expect(getByText('unsaved')).toBeVisible();
+
+    // Verify the save button is enabled because changes have been made
+    expect(saveButton).toBeEnabled();
   });
 });
