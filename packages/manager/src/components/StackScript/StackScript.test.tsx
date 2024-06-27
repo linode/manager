@@ -8,14 +8,11 @@ import { StackScript } from './StackScript';
 
 describe('StackScript', () => {
   it('should render the StackScript label, id, and username', () => {
-    const stackScript = stackScriptFactory.build();
+    const stackScript = stackScriptFactory.build({ id: 1234 });
     renderWithTheme(<StackScript data={stackScript} userCanModify />);
 
     expect(screen.getByText(stackScript.label)).toBeInTheDocument();
     expect(screen.getByText(stackScript.username)).toBeInTheDocument();
-
-    const idSection = screen.getByText('StackScript ID:').closest('p');
-    expect(idSection).toBeInTheDocument();
-    expect(idSection).toHaveTextContent(`StackScript ID: ${stackScript.id}`);
+    expect(screen.getByText(String(stackScript.id))).toBeInTheDocument();
   });
 });

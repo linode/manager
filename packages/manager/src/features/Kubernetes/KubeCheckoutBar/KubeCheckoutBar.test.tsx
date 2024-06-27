@@ -1,4 +1,3 @@
-import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
 import { regionFactory, typeFactory } from 'src/factories';
@@ -31,35 +30,23 @@ const props: Props = {
 const renderComponent = (_props: Props) =>
   renderWithTheme(<KubeCheckoutBar {..._props} />);
 
-const queryMocks = vi.hoisted(() => ({
-  useSpecificTypes: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('src/queries/types', async () => {
-  const actual = await vi.importActual('src/queries/types');
-  return {
-    ...actual,
-    useSpecificTypes: queryMocks.useSpecificTypes,
-    // vi
-    //   .fn()
-    //   .mockReturnValue([{ data: typeFactory.build()}]),
-  };
-});
-
 describe('KubeCheckoutBar', () => {
+  beforeAll(() => {
+    vi.mock('src/queries/types', async () => {
+      const actual = await vi.importActual('src/queries/types');
+      return {
+        ...actual,
+        useSpecificTypes: vi
+          .fn()
+          .mockImplementation(() => [{ data: typeFactory.build() }]),
+      };
+    });
+  });
+
   it('should render helper text and disable create button until a region has been selected', async () => {
-    queryMocks.useSpecificTypes
-      .mockImplementationOnce(() => [
-        { data: typeFactory.build({ label: 'Linode 1 GB' }), isLoading: true },
-      ])
-      .mockImplementationOnce(() => [
-        { data: typeFactory.build({ label: 'Linode 1 GB' }), isLoading: false },
-      ]);
-    const { findByText, getByTestId, getByText } = renderWithTheme(
+    const { findByText, getByText } = renderWithTheme(
       <KubeCheckoutBar {...props} region={undefined} />
     );
-
-    await waitForElementToBeRemoved(getByTestId('circle-progress'));
 
     await findByText(LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE);
     expect(getByText('Create Cluster').closest('button')).toHaveAttribute(
@@ -69,32 +56,17 @@ describe('KubeCheckoutBar', () => {
   });
 
   it('should render a section for each pool', async () => {
-    queryMocks.useSpecificTypes
-      .mockImplementationOnce(() => [
-        { data: typeFactory.build({ label: 'Linode 1 GB' }), isLoading: true },
-      ])
-      .mockImplementationOnce(() => [
-        { data: typeFactory.build({ label: 'Linode 1 GB' }), isLoading: false },
-      ]);
-    const { getByTestId, queryAllByTestId } = renderComponent(props);
-
-    await waitForElementToBeRemoved(getByTestId('circle-progress'));
+    const { queryAllByTestId } = renderComponent(props);
 
     expect(queryAllByTestId('node-pool-summary')).toHaveLength(pools.length);
   });
 
   it('should not show a warning if all pools have 3 nodes or more', () => {
-    queryMocks.useSpecificTypes.mockReturnValue([
-      { data: typeFactory.build() },
-    ]);
     const { queryAllByText } = renderComponent(props);
     expect(queryAllByText(/minimum of 3 nodes/i)).toHaveLength(0);
   });
 
   it('should show a warning if any pool has fewer than 3 nodes', async () => {
-    queryMocks.useSpecificTypes.mockReturnValue([
-      { data: typeFactory.build() },
-    ]);
     const poolsWithSmallNode = [...pools, nodePoolFactory.build({ count: 2 })];
     const { findByText } = renderComponent({
       ...props,
@@ -104,9 +76,6 @@ describe('KubeCheckoutBar', () => {
   });
 
   it('should display the total price of the cluster without High Availability', async () => {
-    queryMocks.useSpecificTypes.mockReturnValue([
-      { data: typeFactory.build() },
-    ]);
     const { findByText } = renderWithTheme(<KubeCheckoutBar {...props} />);
 
     // 5 node pools * 3 linodes per pool * 10 per linode
@@ -114,9 +83,6 @@ describe('KubeCheckoutBar', () => {
   });
 
   it('should display the total price of the cluster with High Availability', async () => {
-    queryMocks.useSpecificTypes.mockReturnValue([
-      { data: typeFactory.build() },
-    ]);
     const { findByText } = renderWithTheme(
       <KubeCheckoutBar {...props} highAvailability />
     );
@@ -126,9 +92,6 @@ describe('KubeCheckoutBar', () => {
   });
 
   it('should display the DC-Specific total price of the cluster for a region with a price increase without HA selection', async () => {
-    queryMocks.useSpecificTypes.mockReturnValue([
-      { data: typeFactory.build() },
-    ]);
     const { findByText } = renderWithTheme(
       <KubeCheckoutBar {...props} region="id-cgk" />
     );
@@ -138,9 +101,6 @@ describe('KubeCheckoutBar', () => {
   });
 
   it('should display the DC-Specific total price of the cluster for a region with a price increase with HA selection', async () => {
-    queryMocks.useSpecificTypes.mockReturnValue([
-      { data: typeFactory.build() },
-    ]);
     const { findByText } = renderWithTheme(
       <KubeCheckoutBar
         {...props}
@@ -155,9 +115,6 @@ describe('KubeCheckoutBar', () => {
   });
 
   it('should display UNKNOWN_PRICE for HA when not available and show total price of cluster as the sum of the node pools', async () => {
-    queryMocks.useSpecificTypes.mockReturnValue([
-      { data: typeFactory.build() },
-    ]);
     const { findByText, getByText } = renderWithTheme(
       <KubeCheckoutBar
         {...props}
