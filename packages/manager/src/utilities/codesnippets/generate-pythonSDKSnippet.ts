@@ -18,10 +18,10 @@ export function generatePythonLinodeSnippet(
   config: CreateLinodeRequest
 ): string {
   let snippet = "client = LinodeClient(token=os.getenv('LINODE_TOKEN'))\n";
-  snippet += 'new_linode, root_pass = client.linode.instance_create(\n';
+  snippet += 'new_linode = client.linode.instance_create(\n';
 
   // Required fields
-  snippet += `    type="${escapePythonString(config.type)}",\n`;
+  snippet += `    ltype="${escapePythonString(config.type)}",\n`;
   snippet += `    region="${escapePythonString(config.region)}",\n`;
 
   // Optional fields
@@ -31,6 +31,9 @@ export function generatePythonLinodeSnippet(
   if (config.label) {
     snippet += `    label="${escapePythonString(config.label)}",\n`;
   }
+  if (config.root_pass) {
+    snippet += `    root_pass="${escapePythonString(config.root_pass)}",\n`;
+  }
   // Handling other optional fields like authorized_keys, stackscript_id, etc.
   if (config.authorized_keys && config.authorized_keys.length > 0) {
     const keys = config.authorized_keys
@@ -38,8 +41,53 @@ export function generatePythonLinodeSnippet(
       .join(', ');
     snippet += `    authorized_keys=[${keys}],\n`;
   }
+  // Handling interfaces
+  if (config.interfaces && config.interfaces.length > 0) {
+    snippet += '    interfaces=[\n';
+    config.interfaces.forEach((iface) => {
+      snippet += `        {\n`;
+      if (iface.label) {
+        snippet += `            "label": "${escapePythonString(
+          iface.label
+        )}",\n`;
+      }
+      if (iface.purpose) {
+        snippet += `            "purpose": "${escapePythonString(
+          iface.purpose
+        )}",\n`;
+      }
+      if (iface.ipam_address) {
+        snippet += `            "ipam_address": "${escapePythonString(
+          iface.ipam_address
+        )}",\n`;
+      }
+      if (iface.subnet_id) {
+        snippet += `            "subnet_id": ${iface.subnet_id},\n`;
+      }
+      if (iface.ip_ranges && iface.ip_ranges.length > 0) {
+        const ipRanges = iface.ip_ranges
+          .map((range) => `"${escapePythonString(range)}"`)
+          .join(', ');
+        snippet += `            "ip_ranges": [${ipRanges}],\n`;
+      }
+      snippet += '        },\n';
+    });
+    snippet += '    ],\n';
+  }
   if (config.backups_enabled) {
     snippet += `    backups_enabled=${config.backups_enabled},\n`;
+  }
+  if (config.stackscript_id) {
+    snippet += `    stackscript_id=${config.stackscript_id},\n`;
+  }
+  if (config.tags && config.tags.length > 0) {
+    const tags = config.tags
+      .map((tag) => `"${escapePythonString(tag)}"`)
+      .join(', ');
+    snippet += `    tags=[${tags}],\n`;
+  }
+  if (config.private_ip) {
+    snippet += `    private_ip=${config.private_ip},\n`;
   }
   // Trim the last comma if any optional fields were added
   if (snippet[snippet.length - 2] === ',') {
