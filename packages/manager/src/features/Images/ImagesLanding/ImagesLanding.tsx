@@ -10,6 +10,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Drawer } from 'src/components/Drawer';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { IconButton } from 'src/components/IconButton';
@@ -44,7 +45,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { getEventsForImages } from '../utils';
 import { EditImageDrawer } from './EditImageDrawer';
-import { ManageImageRegionsDrawer } from './ImageRegions/ManageImageRegionsDrawer';
+import { ManageImageRegionsForm } from './ImageRegions/ManageImageRegionsForm';
 import { ImageRow } from './ImageRow';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
@@ -578,11 +579,16 @@ export const ImagesLanding = () => {
         onClose={() => setIsRebuildDrawerOpen(false)}
         open={isRebuildDrawerOpen}
       />
-      <ManageImageRegionsDrawer
-        image={selectedImage}
+      <Drawer
         onClose={() => setIsManageRegionsDrawerOpen(false)}
         open={isManageRegionsDrawerOpen}
-      />
+        title={`Manage Regions for ${selectedImage?.label}`}
+      >
+        <ManageImageRegionsForm
+          image={selectedImage}
+          onClose={() => setIsManageRegionsDrawerOpen(false)}
+        />
+      </Drawer>
       <ConfirmationDialog
         actions={
           <ActionsPanel

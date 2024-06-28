@@ -6,25 +6,13 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ManageImageRegionsDrawer } from './ManageImageRegionsDrawer';
+import { ManageImageRegionsForm } from './ManageImageRegionsForm';
 
 describe('ManageImageRegionsDrawer', () => {
-  it('should not render when open is false', () => {
-    const { container } = renderWithTheme(
-      <ManageImageRegionsDrawer
-        image={undefined}
-        onClose={vi.fn()}
-        open={false}
-      />
-    );
-
-    expect(container).toBeEmptyDOMElement();
-  });
-
   it('should render a header', () => {
     const image = imageFactory.build();
     const { getByText } = renderWithTheme(
-      <ManageImageRegionsDrawer image={image} onClose={vi.fn()} open />
+      <ManageImageRegionsForm image={image} onClose={vi.fn()} />
     );
 
     expect(getByText(`Manage Regions for ${image.label}`)).toBeVisible();
@@ -33,7 +21,7 @@ describe('ManageImageRegionsDrawer', () => {
   it('should render a save button and a cancel button', () => {
     const image = imageFactory.build();
     const { getByText } = renderWithTheme(
-      <ManageImageRegionsDrawer image={image} onClose={vi.fn()} open />
+      <ManageImageRegionsForm image={image} onClose={vi.fn()} />
     );
 
     const cancelButton = getByText('Cancel').closest('button');
@@ -70,7 +58,7 @@ describe('ManageImageRegionsDrawer', () => {
     );
 
     const { findByText } = renderWithTheme(
-      <ManageImageRegionsDrawer image={image} onClose={vi.fn()} open />
+      <ManageImageRegionsForm image={image} onClose={vi.fn()} />
     );
 
     await findByText('Newark, NJ');
@@ -99,7 +87,7 @@ describe('ManageImageRegionsDrawer', () => {
     );
 
     const { findByText, getByLabelText, getByText } = renderWithTheme(
-      <ManageImageRegionsDrawer image={image} onClose={vi.fn()} open />
+      <ManageImageRegionsForm image={image} onClose={vi.fn()} />
     );
 
     const saveButton = getByText('Save').closest('button');
