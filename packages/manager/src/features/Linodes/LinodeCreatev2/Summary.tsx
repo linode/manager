@@ -35,6 +35,7 @@ export const Summary = () => {
     vlanLabel,
     vpcId,
     diskEncryption,
+    clusterSize,
   ] = useWatch({
     control,
     name: [
@@ -49,6 +50,7 @@ export const Summary = () => {
       'interfaces.1.label',
       'interfaces.0.vpc_id',
       'disk_encryption',
+      'stackscript_data.cluster_size',
     ],
   });
 
@@ -60,6 +62,9 @@ export const Summary = () => {
 
   // @todo handle marketplace cluster pricing (support many nodes by looking at UDF data)
   const price = getLinodeRegionPrice(type, regionId);
+
+  const numberOfNodes = clusterSize as number | undefined;
+  const isCluster = clusterSize !== undefined;
 
   const backupsPrice = renderMonthlyPriceToCorrectDecimalPlace(
     getMonthlyBackupsPrice({ region: regionId, type })
@@ -80,7 +85,11 @@ export const Summary = () => {
     },
     {
       item: {
-        details: `$${price?.monthly}/month`,
+        details: isCluster
+          ? `${numberOfNodes} Nodes - $${
+              (price?.monthly ?? 0) * (numberOfNodes ?? 0)
+            }/month $${(price?.hourly ?? 0) * (numberOfNodes ?? 0)}/hr`
+          : `$${price?.monthly}/month`,
         title: type ? formatStorageUnits(type.label) : typeId,
       },
       show: Boolean(typeId),

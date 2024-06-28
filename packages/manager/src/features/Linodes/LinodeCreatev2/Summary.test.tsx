@@ -233,4 +233,33 @@ describe('Linode Create v2 Summary', () => {
 
     expect(getByText('Encrypted')).toBeVisible();
   });
+
+  it('should render correct pricing for Marketplace app cluster deployments', async () => {
+    const type = typeFactory.build({
+      price: { hourly: 0.5, monthly: 2 },
+    });
+
+    server.use(
+      http.get('*/v4/linode/types/*', () => {
+        return HttpResponse.json(type);
+      })
+    );
+
+    const {
+      findByText,
+    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+      component: <Summary />,
+      useFormOptions: {
+        defaultValues: {
+          region: 'fake-region',
+          stackscript_data: {
+            cluster_size: 5,
+          },
+          type: type.id,
+        },
+      },
+    });
+
+    await findByText(`5 Nodes - $10/month $2.5/hr`);
+  });
 });
