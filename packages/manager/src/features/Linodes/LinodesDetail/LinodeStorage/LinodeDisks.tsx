@@ -1,4 +1,3 @@
-import { Disk } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -23,17 +22,18 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile/profile';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
+import {
+  StyledRootGrid,
+  StyledTypography,
+  StyledWrapperGrid,
+} from './CommonLinodeStorage.styles';
 import { CreateDiskDrawer } from './CreateDiskDrawer';
-import { CreateImageFromDiskDialog } from './CreateImageFromDiskDialog';
 import { DeleteDiskDialog } from './DeleteDiskDialog';
 import { LinodeDiskRow } from './LinodeDiskRow';
 import { RenameDiskDrawer } from './RenameDiskDrawer';
 import { ResizeDiskDrawer } from './ResizeDiskDrawer';
-import {
-  StyledTypography,
-  StyledRootGrid,
-  StyledWrapperGrid,
-} from './CommonLinodeStorage.styles';
+
+import type { Disk } from '@linode/api-v4/lib/linodes';
 
 export const LinodeDisks = () => {
   const disksHeaderRef = React.useRef(null);
@@ -48,7 +48,6 @@ export const LinodeDisks = () => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState(false);
   const [isRenameDrawerOpen, setIsRenameDrawerOpen] = React.useState(false);
   const [isResizeDrawerOpen, setIsResizeDrawerOpen] = React.useState(false);
-  const [isImageDialogOpen, setIsImageDialogOpen] = React.useState(false);
 
   const [selectedDiskId, setSelectedDiskId] = React.useState<number>();
   const selectedDisk = disks?.find((d) => d.id === selectedDiskId);
@@ -81,11 +80,6 @@ export const LinodeDisks = () => {
     setIsDeleteDialogOpen(true);
   };
 
-  const onImagize = (disk: Disk) => {
-    setSelectedDiskId(disk.id);
-    setIsImageDialogOpen(true);
-  };
-
   const renderTableContent = (disks: Disk[] | undefined) => {
     if (error) {
       return <TableRowError colSpan={5} message={error[0]?.reason} />;
@@ -106,7 +100,6 @@ export const LinodeDisks = () => {
         linodeId={id}
         linodeStatus={linode?.status ?? 'offline'}
         onDelete={() => onDelete(disk)}
-        onImagize={() => onImagize(disk)}
         onRename={() => onRename(disk)}
         onResize={() => onResize(disk)}
         readOnly={readOnly}
@@ -246,12 +239,6 @@ export const LinodeDisks = () => {
         linodeId={id}
         onClose={() => setIsResizeDrawerOpen(false)}
         open={isResizeDrawerOpen}
-      />
-      <CreateImageFromDiskDialog
-        disk={selectedDisk}
-        linodeId={id}
-        onClose={() => setIsImageDialogOpen(false)}
-        open={isImageDialogOpen}
       />
     </React.Fragment>
   );

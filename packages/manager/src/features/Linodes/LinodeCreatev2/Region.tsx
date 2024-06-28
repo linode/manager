@@ -14,6 +14,7 @@ import { Typography } from 'src/components/Typography';
 import { formAnalyticsContext as _formAnalyticsContext } from 'src/context/formAnalyticsContext';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import {
@@ -23,6 +24,7 @@ import {
 import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 
 import { CROSS_DATA_CENTER_CLONE_WARNING } from '../LinodesCreate/constants';
+import { getDisabledRegions } from './Region.utils';
 import { defaultInterfaces, useLinodeCreateQueryParams } from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
@@ -44,7 +46,15 @@ export const Region = () => {
     name: 'region',
   });
 
-  const selectedLinode = useWatch({ control, name: 'linode' });
+  const [selectedLinode, selectedImage] = useWatch({
+    control,
+    name: ['linode', 'image'],
+  });
+
+  const { data: image } = useImageQuery(
+    selectedImage ?? '',
+    Boolean(selectedImage)
+  );
 
   const { data: type } = useTypeQuery(
     selectedLinode?.type ?? '',
@@ -119,6 +129,12 @@ export const Region = () => {
         region.site_type === 'distributed' || region.site_type === 'edge'
     );
 
+  const disabledRegions = getDisabledRegions({
+    linodeCreateTab: params.type,
+    regions: regions ?? [],
+    selectedImage: image,
+  });
+
   return (
     <Paper>
       <Box display="flex" justifyContent="space-between" mb={1}>
@@ -144,15 +160,21 @@ export const Region = () => {
         </Notice>
       )}
       <RegionSelect
+        regionFilter={
+          // We don't want the Image Service Gen2 work to abide by Gecko feature flags
+          hideDistributedRegions && params.type !== 'Images'
+            ? 'core'
+            : undefined
+        }
         showDistributedRegionIconHelperText={
           showDistributedRegionIconHelperText
         }
         currentCapability="Linodes"
         disableClearable
         disabled={isLinodeCreateRestricted}
+        disabledRegions={disabledRegions}
         errorText={fieldState.error?.message}
         onChange={(e, region) => onChange(region)}
-        regionFilter={hideDistributedRegions ? 'core' : undefined}
         regions={regions ?? []}
         textFieldProps={{ onBlur: field.onBlur }}
         value={field.value}

@@ -400,7 +400,7 @@ export class LinodeCreate extends React.PureComponent<
         )}/month $${hourlyPrice ?? UNKNOWN_PRICE}/hr`;
       }
 
-      // @TODO Gecko: Remove $0 hardcoding once plan data is returned from API
+      // @TODO Gecko: Remove $0 hardcoding once Gecko is in GA
       if (linodeIsInDistributedRegion) {
         displaySections.push({
           ...typeDisplayInfoCopy,
@@ -614,6 +614,7 @@ export class LinodeCreate extends React.PureComponent<
                     typesData={typesData!}
                     userCannotCreateLinode={userCannotCreateLinode}
                     variant={'private'}
+                    selectedRegionID={selectedRegionID}
                     {...rest}
                   />
                 </SafeTabPanel>
@@ -654,7 +655,9 @@ export class LinodeCreate extends React.PureComponent<
                 handleSelection={this.props.updateRegionID}
                 helperText={this.props.regionHelperText}
                 selectedId={this.props.selectedRegionID}
+                selectedImageId={this.props.selectedImageID}
                 selectedLinodeTypeId={this.props.selectedTypeID}
+                updateTypeID={this.props.updateTypeID}
               />
             )}
             <PlansPanel

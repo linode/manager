@@ -1,61 +1,31 @@
-import { PlacementGroup } from '@linode/api-v4';
-import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
-import { Image } from '@linode/api-v4/lib/images';
-import { Region } from '@linode/api-v4/lib/regions';
+import { signAgreement } from '@linode/api-v4/lib/account';
 import { convertYupToLinodeErrors } from '@linode/api-v4/lib/request';
-import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
 import { vpcsValidateIP } from '@linode/validation';
 import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
-import { Tag } from 'src/components/TagsInput/TagsInput';
-import {
-  WithAccountSettingsProps,
-  withAccountSettings,
-} from 'src/containers/accountSettings.container';
-import {
-  WithEventsPollingActionProps,
-  withEventsPollingActions,
-} from 'src/containers/events.container';
-import {
-  WithFeatureFlagProps,
-  withFeatureFlags,
-} from 'src/containers/flags.container';
-import { WithImagesProps, withImages } from 'src/containers/images.container';
-import {
-  WithProfileProps,
-  withProfile,
-} from 'src/containers/profile.container';
-import { RegionsProps, withRegions } from 'src/containers/regions.container';
-import { WithTypesProps, withTypes } from 'src/containers/types.container';
-import {
-  WithLinodesProps,
-  withLinodes,
-} from 'src/containers/withLinodes.container';
-import {
-  WithMarketplaceAppsProps,
-  withMarketplaceApps,
-} from 'src/containers/withMarketplaceApps';
-import {
-  WithQueryClientProps,
-  withQueryClient,
-} from 'src/containers/withQueryClient.container';
-import withAgreements, {
-  AgreementsProps,
-} from 'src/features/Account/Agreements/withAgreements';
+import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
+import { withAccount } from 'src/containers/account.container';
+import { withAccountSettings } from 'src/containers/accountSettings.container';
+import { withEventsPollingActions } from 'src/containers/events.container';
+import { withFeatureFlags } from 'src/containers/flags.container';
+import { withImages } from 'src/containers/images.container';
+import { withProfile } from 'src/containers/profile.container';
+import { withRegions } from 'src/containers/regions.container';
+import { withTypes } from 'src/containers/types.container';
+import { withLinodes } from 'src/containers/withLinodes.container';
+import { withMarketplaceApps } from 'src/containers/withMarketplaceApps';
+import { withQueryClient } from 'src/containers/withQueryClient.container';
+import withAgreements from 'src/features/Account/Agreements/withAgreements';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import { reportAgreementSigningError } from 'src/queries/account/agreements';
 import { vpcQueries } from 'src/queries/vpcs/vpcs';
-import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
-import { MapState } from 'src/store/types';
 import {
   sendCreateLinodeEvent,
   sendLinodeCreateFlowDocsClickEvent,
@@ -66,13 +36,12 @@ import {
 } from 'src/utilities/analytics/formEventAnalytics';
 import { capitalize } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { extendType } from 'src/utilities/extendType';
+import { isEURegion } from 'src/utilities/formatRegion';
 import {
   getGDPRDetails,
   getSelectedRegionGroup,
 } from 'src/utilities/formatRegion';
-import { isEURegion } from 'src/utilities/formatRegion';
-import { ExtendedIP } from 'src/utilities/ipUtils';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -80,14 +49,17 @@ import { validatePassword } from 'src/utilities/validatePassword';
 
 import { deriveDefaultLabel } from './deriveDefaultLabel';
 import LinodeCreate from './LinodeCreate';
-import {
+
+import type {
   HandleSubmit,
   Info,
   LinodeCreateType,
   LinodeCreateValidation,
   TypeInfo,
 } from './types';
-
+import type { PlacementGroup } from '@linode/api-v4';
+import type { Agreements } from '@linode/api-v4/lib/account';
+import type { Image } from '@linode/api-v4/lib/images';
 import type {
   CreateLinodeRequest,
   Interface,
@@ -95,10 +67,27 @@ import type {
   LinodeTypeClass,
   PriceObject,
 } from '@linode/api-v4/lib/linodes';
-import {
-  withAccount,
-  WithAccountProps,
-} from 'src/containers/account.container';
+import type { Region } from '@linode/api-v4/lib/regions';
+import type { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { RouteComponentProps } from 'react-router-dom';
+import type { Tag } from 'src/components/TagsInput/TagsInput';
+import type { WithAccountProps } from 'src/containers/account.container';
+import type { WithAccountSettingsProps } from 'src/containers/accountSettings.container';
+import type { WithEventsPollingActionProps } from 'src/containers/events.container';
+import type { WithFeatureFlagProps } from 'src/containers/flags.container';
+import type { WithImagesProps } from 'src/containers/images.container';
+import type { WithProfileProps } from 'src/containers/profile.container';
+import type { RegionsProps } from 'src/containers/regions.container';
+import type { WithTypesProps } from 'src/containers/types.container';
+import type { WithLinodesProps } from 'src/containers/withLinodes.container';
+import type { WithMarketplaceAppsProps } from 'src/containers/withMarketplaceApps';
+import type { WithQueryClientProps } from 'src/containers/withQueryClient.container';
+import type { AgreementsProps } from 'src/features/Account/Agreements/withAgreements';
+import type { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
+import type { MapState } from 'src/store/types';
+import type { ExtendedType } from 'src/utilities/extendType';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -479,10 +468,20 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const selectedRegion = this.props.regionsData.find(
       (region) => region.id === selectedRegionID
     );
+    const isGeckoGAEnabled =
+      this.props.flags.gecko2?.enabled &&
+      this.props.flags.gecko2?.ga &&
+      this.props.regionsData.some((region) =>
+        region.capabilities.includes('Distributed Plans')
+      );
 
     return (
       selectedRegion && {
-        title: selectedRegion.label,
+        title: isGeckoGAEnabled
+          ? getNewRegionLabel({
+              region: selectedRegion,
+            })
+          : selectedRegion.label,
       }
     );
   };
@@ -708,7 +707,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     selectedBackupID: isNaN(+this.params.backupID)
       ? undefined
       : +this.params.backupID,
-    selectedImageID: this.params.imageID ?? DEFAULT_IMAGE,
+    selectedImageID:
+      this.params.imageID ?? this.params.type !== 'Images'
+        ? DEFAULT_IMAGE
+        : undefined,
     // @todo: Abstract and test. UPDATE 5/21/20: lol what does this mean. UPDATE 3/16/23 lol what
     selectedLinodeID: isNaN(+this.params.linodeID)
       ? undefined
