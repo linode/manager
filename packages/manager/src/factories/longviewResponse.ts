@@ -1,4 +1,4 @@
-import * as Factory from 'factory.ts';
+import Factory from '@factory';
 
 import { LongviewResponse } from 'src/features/Longview/request.types';
 import { AllData, LongviewPackage } from 'src/features/Longview/request.types';

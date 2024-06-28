@@ -5,7 +5,7 @@ import {
   FirewallRuleType,
   FirewallRules,
 } from '@linode/api-v4/lib/firewalls/types';
-import * as Factory from 'factory.ts';
+import Factory from '@factory';
 
 export const firewallRuleFactory = Factory.Sync.makeFactory<FirewallRuleType>({
   action: 'DROP',

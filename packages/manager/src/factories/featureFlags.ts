@@ -1,4 +1,4 @@
-import * as Factory from 'factory.ts';
+import Factory from '@factory';
 
 import { ProductInformationBannerFlag } from 'src/featureFlags';
 

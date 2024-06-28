@@ -3,7 +3,7 @@ import {
   ActivePromotion,
   RegionalNetworkUtilization,
 } from '@linode/api-v4/lib/account/types';
-import * as Factory from 'factory.ts';
+import Factory from '@factory';
 
 export const promoFactory = Factory.Sync.makeFactory<ActivePromotion>({
   credit_monthly_cap: '20.00',

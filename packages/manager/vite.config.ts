@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react-swc';
+import { URL } from 'url';
 import svgr from 'vite-plugin-svgr';
 import { defineConfig } from 'vitest/config';
-import { URL } from 'url';
 
 // ESM-friendly alternative to `__dirname`.
 const DIRNAME = new URL('.', import.meta.url).pathname;
@@ -14,6 +14,7 @@ export default defineConfig({
   plugins: [react(), svgr({ exportAsDefault: true })],
   resolve: {
     alias: {
+      '@factory': `${DIRNAME}src/factories/factoryProxy.ts`,
       src: `${DIRNAME}/src`,
     },
   },
@@ -35,9 +36,9 @@ export default defineConfig({
         'src/**/*.utils.{js,jsx,ts,tsx}',
       ],
     },
-    pool: 'forks',
     environment: 'jsdom',
     globals: true,
+    pool: 'forks',
     setupFiles: './src/testSetup.ts',
   },
 });

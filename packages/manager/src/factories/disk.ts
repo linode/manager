@@ -1,5 +1,5 @@
 import { Disk } from '@linode/api-v4/lib/linodes/types';
-import * as Factory from 'factory.ts';
+import Factory from '@factory';
 
 export const linodeDiskFactory = Factory.Sync.makeFactory<Disk>({
   created: '2018-01-01',

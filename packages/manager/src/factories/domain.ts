@@ -4,7 +4,7 @@ import {
   DomainRecord,
   ZoneFile,
 } from '@linode/api-v4/lib/domains/types';
-import * as Factory from 'factory.ts';
+import Factory from '@factory';
 
 export const domainFactory = Factory.Sync.makeFactory<Domain>({
   axfr_ips: [],

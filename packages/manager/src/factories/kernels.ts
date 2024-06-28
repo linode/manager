@@ -1,5 +1,5 @@
 import { Kernel } from '@linode/api-v4';
-import * as Factory from 'factory.ts';
+import Factory from '@factory';
 
 export const kernelFactory = Factory.Sync.makeFactory<Kernel>({
   id: Factory.each((i) => `kernel-${i}`),

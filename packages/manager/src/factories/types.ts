@@ -1,4 +1,4 @@
-import * as Factory from 'factory.ts';
+import Factory from '@factory';
 
 import type { LinodeType } from '@linode/api-v4/lib/linodes/types';
 import type { PriceType } from '@linode/api-v4/src/types';
