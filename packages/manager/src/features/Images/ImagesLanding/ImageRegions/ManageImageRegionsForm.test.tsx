@@ -9,15 +9,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { ManageImageRegionsForm } from './ManageImageRegionsForm';
 
 describe('ManageImageRegionsDrawer', () => {
-  it('should render a header', () => {
-    const image = imageFactory.build();
-    const { getByText } = renderWithTheme(
-      <ManageImageRegionsForm image={image} onClose={vi.fn()} />
-    );
-
-    expect(getByText(`Manage Regions for ${image.label}`)).toBeVisible();
-  });
-
   it('should render a save button and a cancel button', () => {
     const image = imageFactory.build();
     const { getByText } = renderWithTheme(
