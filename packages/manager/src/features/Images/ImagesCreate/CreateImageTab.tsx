@@ -3,7 +3,7 @@ import { createImageSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
@@ -30,10 +30,18 @@ import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import type { CreateImagePayload } from '@linode/api-v4';
 
 export const CreateImageTab = () => {
+  const location = useLocation();
+
+  const queryParams = React.useMemo(
+    () => getQueryParamsFromQueryString(location.search),
+    [location.search]
+  );
+
   const {
     control,
     formState,
@@ -43,6 +51,9 @@ export const CreateImageTab = () => {
     setValue,
     watch,
   } = useForm<CreateImagePayload>({
+    defaultValues: {
+      disk_id: +queryParams.selectedDisk,
+    },
     mode: 'onBlur',
     resolver: yupResolver(createImageSchema),
   });
@@ -88,7 +99,7 @@ export const CreateImageTab = () => {
   });
 
   const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
-    null
+    queryParams.selectedLinode ? +queryParams.selectedLinode : null
   );
 
   const { data: selectedLinode } = useLinodeQuery(
