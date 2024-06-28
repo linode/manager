@@ -1,4 +1,4 @@
-import Factory from '@factory';
+import Factory from 'src/factories/factoryProxy';
 import { v4 } from 'uuid';
 
 import {

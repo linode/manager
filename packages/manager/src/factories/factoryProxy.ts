@@ -8,8 +8,8 @@ const originalEach = Factory.each;
  * We Override the `each` method of the factory.ts library to start the index from 1
  * This prevents a a variety of issues with entity IDs being falsy when starting from 0.
  *
- * As a result, `Factory` must be imported from the `@factory` alias. ex:
- * `import Factory from '@factory';`
+ * As a result, `Factory` must be imported from the `factoryProxy` file. ex:
+ * `import Factory from 'src/factories/factoryProxy';`
  */
 const factoryProxyHandler = {
   get(

@@ -5,7 +5,6 @@
     "paths": {
       "src/*": ["./src/*"],
       "@src/*": ["./src/*"],
-      "@factory": ["./src/factories/factoryProxy.ts"],
       "support/*": ["cypress/support/*"],
     },
     "types": [

@@ -4,7 +4,7 @@ import {
   ObjectStorageKey,
   ObjectStorageObject,
 } from '@linode/api-v4/lib/object-storage/types';
-import Factory from '@factory';
+import Factory from 'src/factories/factoryProxy';
 
 export const objectStorageBucketFactory = Factory.Sync.makeFactory<ObjectStorageBucket>(
   {

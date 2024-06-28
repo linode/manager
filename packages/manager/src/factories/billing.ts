@@ -5,7 +5,7 @@ import {
   PaymentResponse,
 } from '@linode/api-v4/lib/account';
 import { APIWarning } from '@linode/api-v4/lib/types';
-import Factory from '@factory';
+import Factory from 'src/factories/factoryProxy';
 
 export const invoiceItemFactory = Factory.Sync.makeFactory<InvoiceItem>({
   amount: 5,

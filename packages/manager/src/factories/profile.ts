@@ -4,7 +4,7 @@ import {
   SecurityQuestionsData,
   UserPreferences,
 } from '@linode/api-v4/lib/profile';
-import Factory from '@factory';
+import Factory from 'src/factories/factoryProxy';
 
 export const profileFactory = Factory.Sync.makeFactory<Profile>({
   authentication_type: 'password',

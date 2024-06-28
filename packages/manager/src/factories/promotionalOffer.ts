@@ -1,4 +1,4 @@
-import Factory from '@factory';
+import Factory from 'src/factories/factoryProxy';
 
 import { PromotionalOffer } from 'src/featureFlags';
 

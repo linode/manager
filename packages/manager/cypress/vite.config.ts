@@ -1,12 +1,13 @@
 import react from '@vitejs/plugin-react-swc';
-import { URL } from 'url';
-import { defineConfig } from 'vite';
 import svgr from 'vite-plugin-svgr';
+import { defineConfig } from 'vite';
+import { URL } from 'url';
 
 // ESM-friendly alternative to `__dirname`.
 const DIRNAME = new URL('.', import.meta.url).pathname;
 
 export default defineConfig({
+  plugins: [react(), svgr({ exportAsDefault: true })],
   build: {
     rollupOptions: {
       // Suppress "SOURCEMAP_ERROR" warnings.
@@ -30,10 +31,8 @@ export default defineConfig({
       },
     },
   },
-  plugins: [react(), svgr({ exportAsDefault: true })],
   resolve: {
     alias: {
-      '@factory': `${DIRNAME}/../src/factories/factoryProxy.ts`,
       '@src': `${DIRNAME}/../src`,
       src: `${DIRNAME}/../src`,
       support: `${DIRNAME}/../cypress/support`,

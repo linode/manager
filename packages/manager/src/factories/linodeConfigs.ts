@@ -1,5 +1,5 @@
 import { Config } from '@linode/api-v4/lib/linodes/types';
-import Factory from '@factory';
+import Factory from 'src/factories/factoryProxy';
 
 import {
   LinodeConfigInterfaceFactory,

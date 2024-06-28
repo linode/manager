@@ -8,7 +8,7 @@ import {
   MySQLReplicationType,
   PostgresReplicationType,
 } from '@linode/api-v4/lib/databases/types';
-import Factory from '@factory';
+import Factory from 'src/factories/factoryProxy';
 import { v4 } from 'uuid';
 
 import { pickRandom, randomDate } from 'src/utilities/random';

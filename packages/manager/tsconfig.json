@@ -10,7 +10,6 @@
     "moduleResolution": "node",
     "paths": {
       "src/*": ["src/*"],
-      "@factory": ["src/factories/factoryProxy.ts"],
     },
     "resolveJsonModule": true,
     "rootDir": ".",

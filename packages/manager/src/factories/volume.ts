@@ -1,5 +1,5 @@
 import { Volume, VolumeRequestPayload } from '@linode/api-v4/lib/volumes/types';
-import Factory from '@factory';
+import Factory from 'src/factories/factoryProxy';
 
 export const volumeFactory = Factory.Sync.makeFactory<Volume>({
   created: '2018-01-01',
