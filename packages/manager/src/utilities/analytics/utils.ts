@@ -106,6 +106,7 @@ export const handleFormFocusEvent = (
       firstTouchedInputName,
       formName,
     });
+    // eslint-disable-next-line no-console
     console.log(`Fire a formFocus event on ${firstTouchedInputName}!`);
     // TODO: call the actual formFocus event here.
   }
