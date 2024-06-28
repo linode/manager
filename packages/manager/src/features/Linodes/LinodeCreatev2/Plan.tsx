@@ -2,6 +2,7 @@ import React from 'react';
 import { useController, useWatch } from 'react-hook-form';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
+import { formAnalyticsContext as _formAnalyticsContext } from 'src/context/formAnalyticsContext';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -11,6 +12,7 @@ import { extendType } from 'src/utilities/extendType';
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
+import { handleFormFocusEvent } from 'src/utilities/analytics/utils';
 
 export const Plan = () => {
   const regionId = useWatch<CreateLinodeRequest, 'region'>({ name: 'region' });
@@ -27,12 +29,19 @@ export const Plan = () => {
     globalGrantType: 'add_linodes',
   });
 
+  const formAnalyticsContext = React.useContext(_formAnalyticsContext);
+
   return (
     <PlansPanel
       docsLink={
         <DocsLink
           onClick={() => {
             sendLinodeCreateFlowDocsClickEvent('Choosing a Plan');
+            handleFormFocusEvent(
+              'Linode Create',
+              'Choosing a Plan',
+              formAnalyticsContext
+            );
           }}
           href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
           label="Choosing a Plan"
