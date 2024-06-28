@@ -128,9 +128,9 @@ export const mockDeleteImage = (id: string): Cypress.Chainable<null> => {
 };
 
 /**
- * Intercepts PUT request to update an image and mocks the response.
+ * Intercepts POST request to update an image's regions and mocks the response.
  *
- * @param id - ID of image being updated.
+ * @param id - ID of image
  * @param updatedImage - Updated image with which to mock response.
  *
  * @returns Cypress chainable.
