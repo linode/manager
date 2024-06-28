@@ -58,13 +58,13 @@ describe('Linode Landing Utilites', () => {
 
     it('returns unique vpc ids (no duplicates)', () => {
       const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
-        vpc_id: 2,
+        vpc_id: 3,
       });
       const config = configFactory.build({
         interfaces: [...vpcInterfaceList, vpcInterface],
       });
       const vpcIds = getVPCsFromLinodeConfigs([config]);
-      expect(vpcIds).toEqual([3, 4, 2]);
+      expect(vpcIds).toEqual([3, 4]);
     });
   });
 });
