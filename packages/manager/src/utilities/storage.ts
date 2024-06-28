@@ -1,7 +1,7 @@
-import { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
-
 import { shouldEnableDevTools } from 'src/dev-tools/load';
 
+import type { RegionSite } from '@linode/api-v4';
+import type { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
 const localStorageCache = {};
 
 export const getStorage = (key: string, fallback?: any) => {
@@ -53,8 +53,10 @@ const SUPPORT = 'support';
 const TICKET = 'ticket';
 const STACKSCRIPT = 'stackscript';
 const DEV_TOOLS_ENV = 'devTools/env';
+const REGION_FILTER = 'regionFilter';
 
 export type PageSize = number;
+export type RegionFilter = 'all' | RegionSite;
 
 interface AuthGetAndSet {
   get: () => any;
@@ -105,6 +107,10 @@ export interface Storage {
   pageSize: {
     get: () => PageSize;
     set: (perPage: PageSize) => void;
+  };
+  regionFilter: {
+    get: () => RegionFilter;
+    set: (v: RegionFilter) => void;
   };
   stackScriptInProgress: {
     get: () => StackScriptData;
@@ -173,6 +179,10 @@ export const storage: Storage = {
       return parseInt(getStorage(PAGE_SIZE, '25'), 10);
     },
     set: (v) => setStorage(PAGE_SIZE, `${v}`),
+  },
+  regionFilter: {
+    get: () => getStorage(REGION_FILTER),
+    set: (v) => setStorage(REGION_FILTER, v),
   },
   stackScriptInProgress: {
     get: () =>

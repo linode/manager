@@ -6,13 +6,14 @@ import GridView from 'src/assets/icons/grid-view.svg';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import Paginate from 'src/components/Paginate';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Paper } from 'src/components/Paper';
 import { TableBody } from 'src/components/TableBody';
 import { Tooltip } from 'src/components/Tooltip';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
+import { storage } from 'src/utilities/storage';
 
 import {
   StyledControlHeader,
@@ -26,6 +27,7 @@ import type { PaginationProps } from 'src/components/Paginate';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import type { DialogType } from 'src/features/Linodes/types';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
+import type { RegionFilter } from 'src/utilities/storage';
 
 export interface RenderLinodesProps
   extends PaginationProps<LinodeWithMaintenance> {
@@ -54,7 +56,12 @@ interface DisplayLinodesProps extends OrderByProps<LinodeWithMaintenance> {
   updatePageUrl: (page: number) => void;
 }
 
-const regionFilterOptions = [
+interface RegionFilterOption {
+  label: string;
+  value: RegionFilter;
+}
+
+const regionFilterOptions: RegionFilterOption[] = [
   {
     label: 'All',
     value: 'all',
@@ -110,9 +117,9 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const params = getQueryParamsFromQueryString(search);
   const queryPage = Math.min(Number(params.page), maxPageNumber) || 1;
 
-  const [regionFilter, setRegionFilter] = React.useState<string | undefined>(
-    undefined
-  );
+  const [regionFilter, setRegionFilter] = React.useState<
+    RegionFilter | undefined
+  >(storage.regionFilter.get());
 
   let filteredData: LinodeWithMaintenance[] = [];
   if (regionFilter === 'core' || 'distributed') {
@@ -164,9 +171,13 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                       Region Type:
                     </span>{' '}
                     <Autocomplete
+                      defaultValue={regionFilterOptions.find(
+                        (filter) => filter.value === storage.regionFilter.get()
+                      )}
                       onChange={(_, selectedOption) => {
                         if (selectedOption?.value) {
                           setRegionFilter(selectedOption.value);
+                          storage.regionFilter.set(selectedOption.value);
                         }
                       }}
                       sx={{
@@ -175,7 +186,6 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                       textFieldProps={{
                         hideLabel: true,
                       }}
-                      defaultValue={regionFilterOptions[0]}
                       disableClearable
                       label="Region Type"
                       options={regionFilterOptions}
