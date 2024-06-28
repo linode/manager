@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
@@ -38,6 +39,33 @@ describe('CreateImageTab', () => {
 
     expect(submitButton).toBeVisible();
     expect(submitButton).toBeEnabled();
+  });
+
+  it('should pre-fill Linode and Disk from search params', async () => {
+    const linode = linodeFactory.build();
+    const disk = linodeDiskFactory.build();
+
+    server.use(
+      http.get('*/v4/linode/instances', () => {
+        return HttpResponse.json(makeResourcePage([linode]));
+      }),
+      http.get('*/v4/linode/instances/:id/disks', () => {
+        return HttpResponse.json(makeResourcePage([disk]));
+      })
+    );
+
+    const { getByLabelText } = renderWithTheme(<CreateImageTab />, {
+      MemoryRouter: {
+        initialEntries: [
+          `/images/create/disk?selectedLinode=${linode.id}&selectedDisk=${disk.id}`,
+        ],
+      },
+    });
+
+    await waitFor(() => {
+      expect(getByLabelText('Linode')).toHaveValue(linode.label);
+      expect(getByLabelText('Disk')).toHaveValue(disk.label);
+    });
   });
 
   it('should render client side validation errors', async () => {
