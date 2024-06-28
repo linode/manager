@@ -6,6 +6,7 @@ export type Capabilities =
   | 'Block Storage Migrations'
   | 'Cloud Firewall'
   | 'Disk Encryption'
+  | 'Distributed Plans'
   | 'GPU Linodes'
   | 'Kubernetes'
   | 'Linodes'
