@@ -50,9 +50,8 @@ export const ImageRegionRow = (props: Props) => {
   );
 };
 
-const IMAGE_REGION_STATUS_TO_STATUS_ICON_STATUS: Record<
-  ExtendedImageRegionStatus,
-  Status
+const IMAGE_REGION_STATUS_TO_STATUS_ICON_STATUS: Readonly<
+  Record<ExtendedImageRegionStatus, Status>
 > = {
   available: 'active',
   creating: 'other',
