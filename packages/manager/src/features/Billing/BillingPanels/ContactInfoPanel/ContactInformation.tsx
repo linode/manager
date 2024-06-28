@@ -11,7 +11,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
-import { useEventsInfiniteQuery } from 'src/queries/events/events';
 
 import {
   BillingActionButton,
@@ -78,24 +77,7 @@ const ContactInformation = (props: Props) => {
     setEditContactDrawerOpen,
   ] = React.useState<boolean>(false);
 
-  const {
-    data: notifications,
-    refetch: refetchNotifications,
-  } = useNotificationsQuery();
-
-  const { events } = useEventsInfiniteQuery();
-
-  // If a tax_id_valid event has occurred, refetch notifications
-  // to potentially clear the tax_id_invalid notification.
-  const handleTaxEventRefetching = () => {
-    const recentTaxIdValidEvent = events?.find((event) => {
-      return event.action === 'tax_id_valid';
-    });
-
-    if (recentTaxIdValidEvent) {
-      refetchNotifications();
-    }
-  };
+  const { data: notifications } = useNotificationsQuery();
 
   const [focusEmail, setFocusEmail] = React.useState(false);
 
@@ -268,7 +250,6 @@ const ContactInformation = (props: Props) => {
           history.replace('/account/billing', { contactDrawerOpen: false });
           setEditContactDrawerOpen(false);
           setFocusEmail(false);
-          handleTaxEventRefetching();
         }}
         focusEmail={focusEmail}
         open={editContactDrawerOpen}
