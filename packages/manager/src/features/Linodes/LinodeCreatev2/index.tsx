@@ -110,6 +110,14 @@ export const LinodeCreatev2 = () => {
     previousSubmitCount.current = form.formState.submitCount;
   }, [form.formState]);
 
+  useEffect(() => {
+    const touchedFieldKeys = Object.keys(form.formState.touchedFields);
+    // Only track the first field that the user has touched as the form start.
+    if (touchedFieldKeys.length === 1) {
+      // Would fire a formFocus analytics event here.
+    }
+  }, [form.formState]);
+
   return (
     <FormProvider {...form}>
       <DocumentTitleSegment segment="Create a Linode" />

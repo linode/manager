@@ -65,26 +65,29 @@ export const Region = () => {
       ? 'enabled'
       : undefined;
 
-    reset((prev) => ({
-      ...prev,
-      // Reset interfaces because VPC and VLANs are region-sepecific
-      interfaces: defaultInterfaces,
-      // Reset Cloud-init metadata because not all regions support it
-      metadata: undefined,
-      // Reset the placement group because they are region-specific
-      placement_group: undefined,
-      // Set the region
-      region: region.id,
-      // Backups and Private IP are not supported in distributed compute regions
-      ...(isDistributedRegion && {
-        backups_enabled: false,
-        private_ip: false,
+    reset(
+      (prev) => ({
+        ...prev,
+        // Reset interfaces because VPC and VLANs are region-sepecific
+        interfaces: defaultInterfaces,
+        // Reset Cloud-init metadata because not all regions support it
+        metadata: undefined,
+        // Reset the placement group because they are region-specific
+        placement_group: undefined,
+        // Set the region
+        region: region.id,
+        // Backups and Private IP are not supported in distributed compute regions
+        ...(isDistributedRegion && {
+          backups_enabled: false,
+          private_ip: false,
+        }),
+        // If disk encryption is enabled, set the default value to "enabled" if the region supports it
+        ...(isDiskEncryptionFeatureEnabled && {
+          disk_encryption: defaultDiskEncryptionValue,
+        }),
       }),
-      // If disk encryption is enabled, set the default value to "enabled" if the region supports it
-      ...(isDiskEncryptionFeatureEnabled && {
-        disk_encryption: defaultDiskEncryptionValue,
-      }),
-    }));
+      { keepTouched: true }
+    );
   };
 
   const showCrossDataCenterCloneWarning =
