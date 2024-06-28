@@ -1,6 +1,5 @@
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-// import { useQueryClient } from '@tanstack/react-query';
 import { allCountries } from 'country-region-data';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
@@ -12,6 +11,7 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { useEventsInfiniteQuery } from 'src/queries/events/events';
 
 import {
   BillingActionButton,
@@ -82,20 +82,24 @@ const ContactInformation = (props: Props) => {
     data: notifications,
     refetch: refetchNotifications,
   } = useNotificationsQuery();
+
+  const { events } = useEventsInfiniteQuery();
+
+  // If a tax_id_valid event has occurred, refetch notifications
+  // to potentially clear the tax_id_invalid notification.
+  const handleTaxEventRefetching = () => {
+    const recentTaxIdValidEvent = events?.find((event) => {
+      return event.action === 'tax_id_valid';
+    });
+
+    if (recentTaxIdValidEvent) {
+      refetchNotifications();
+    }
+  };
+
   const [focusEmail, setFocusEmail] = React.useState(false);
 
   const isChildUser = Boolean(profile?.user_type === 'child');
-  // const queryClient = useQueryClient();
-
-  React.useEffect(() => {
-    const taxIdValidNotification = notifications?.find((notification: any) => {
-      return notification.type === 'tax_id_valid';
-    });
-
-    if (taxIdValidNotification) {
-      refetchNotifications();
-    }
-  }, [notifications, refetchNotifications]);
 
   const invalidTaxId = notifications?.find((notification: any) => {
     return notification.type === 'tax_id_invalid';
@@ -264,6 +268,7 @@ const ContactInformation = (props: Props) => {
           history.replace('/account/billing', { contactDrawerOpen: false });
           setEditContactDrawerOpen(false);
           setFocusEmail(false);
+          handleTaxEventRefetching();
         }}
         focusEmail={focusEmail}
         open={editContactDrawerOpen}

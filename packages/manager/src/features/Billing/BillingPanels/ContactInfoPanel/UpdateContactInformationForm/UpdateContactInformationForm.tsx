@@ -16,7 +16,6 @@ import { TAX_ID_HELPER_TEXT } from 'src/features/Billing/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount, useMutateAccount } from 'src/queries/account/account';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
-// import { useEventsPollingActions } from 'src/queries/events/events';
 import { useProfile } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -33,7 +32,6 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { data: account } = useAccount();
   const { error, isLoading, mutateAsync } = useMutateAccount();
   const { data: notifications, refetch } = useNotificationsQuery();
-  // const { checkForNewEvents } = useEventsPollingActions();
   const { classes } = useStyles();
   const emailRef = React.useRef<HTMLInputElement>();
   const { data: profile } = useProfile();
@@ -82,7 +80,6 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
       if (hasBillingEmailBounceNotification) {
         refetch();
       }
-      // checkForNewEvents();
       onClose();
     },
   });
