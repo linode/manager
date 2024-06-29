@@ -52,7 +52,7 @@ describe('EditImageDrawer', () => {
     fireEvent.click(getByText('Save Changes'));
 
     await waitFor(() => {
-      expect(mockUpdateImage).toHaveBeenCalledWith('private/0', {
+      expect(mockUpdateImage).toHaveBeenCalledWith('private/1', {
         description: 'test description',
         label: 'test-image-label',
         tags: ['new-tag'],

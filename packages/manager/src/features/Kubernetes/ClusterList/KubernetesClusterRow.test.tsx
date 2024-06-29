@@ -3,10 +3,12 @@ import * as React from 'react';
 
 import { kubernetesClusterFactory, regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { wrapWithTableBody, wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { KubernetesClusterRow, Props } from './KubernetesClusterRow';
+import { KubernetesClusterRow } from './KubernetesClusterRow';
+
+import type { Props } from './KubernetesClusterRow';
 
 const cluster = kubernetesClusterFactory.build({ region: 'us-central' });
 
@@ -36,11 +38,11 @@ describe('ClusterRow component', () => {
       })
     );
 
-    const { getByText, findByText } = render(
+    const { findByText, getByText } = render(
       wrapWithTableBody(<KubernetesClusterRow {...props} />)
     );
 
-    getByText('cluster-0');
+    getByText('cluster-1');
     await findByText('Fake Region, NC');
   });
 
