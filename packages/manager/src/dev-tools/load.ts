@@ -29,7 +29,7 @@ export async function loadDevTools(
   const devTools = await import('./dev-tools');
 
   if (isMSWEnabled) {
-    const { worker: mswWorker } = await import('../mocks/testBrowser');
+    const { worker: mswWorker } = await import('../mocks/mswWorkers');
     const mswPresetId = getMSWPreset() ?? defaultBaselineMockPreset.id;
     const mswPreset =
       allMockPresets.find((preset) => preset.id === mswPresetId) ??
@@ -71,7 +71,7 @@ export async function loadDevTools(
 
     // Because MSW applies the first handler that is set up for any given request,
     // we must apply extra request handlers before base handlers.
-    const worker = mswWorker({ ...extraHandlers, ...baseHandlers });
+    const worker = mswWorker(extraHandlers, baseHandlers);
     await worker.start({ onUnhandledRequest: 'bypass' });
   }
 

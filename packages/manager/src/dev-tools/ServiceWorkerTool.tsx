@@ -1,16 +1,15 @@
 import * as React from 'react';
 
-import { DevToolSelect } from './components/DevToolSelect';
-
-import { getMockPresetGroups } from 'src/mocks/mockPreset';
+import { allContextPopulators } from 'src/mocks/context/populators';
 import { getContextPopulatorGroups } from 'src/mocks/mockContext';
+import { getMockPresetGroups } from 'src/mocks/mockPreset';
 import {
   baselineMockPresets,
   defaultBaselineMockPreset,
   extraMockPresets,
 } from 'src/mocks/presets';
 
-import { allContextPopulators } from 'src/mocks/context/populators';
+import { DevToolSelect } from './components/DevToolSelect';
 
 const LOCAL_STORAGE_KEY = 'msw';
 const LOCAL_STORAGE_POPULATORS_KEY = 'msw-populators';
@@ -100,18 +99,18 @@ export const getMSWContextPopulators = (): string[] => {
 
 export const saveMSWContextPopulators = (populators: string[]) => {
   localStorage.setItem(LOCAL_STORAGE_POPULATORS_KEY, populators.join(','));
-  //window.location.reload();
+  // window.location.reload();
 };
 
 const renderBaselinePresetOptions = () =>
   getMockPresetGroups(baselineMockPresets).map((group) => {
     return (
-      <optgroup label={group || 'Uncategorized'} key={group || 'Uncategorized'}>
+      <optgroup key={group} label={group}>
         {baselineMockPresets
           .filter((mockPreset) => mockPreset.group === group)
           .map((mockPreset) => {
             return (
-              <option value={mockPreset.id} key={mockPreset.id}>
+              <option key={mockPreset.id} value={mockPreset.id}>
                 {mockPreset.label}
               </option>
             );
@@ -127,29 +126,24 @@ const renderContentPopulatorOptions = (
   return (
     <ul>
       {getContextPopulatorGroups(allContextPopulators).map((group) => (
-        <>
-          <li
-            key={group || 'Uncategorized'}
-            className="dev-tools__list-box__separator"
-          >
-            {group || 'Uncategorized'}
-          </li>
+        <div key={group}>
+          <li className="dev-tools__list-box__separator">{group}</li>
           {allContextPopulators
             .filter((contextPopulator) => contextPopulator.group === group)
             .map((contextPopulator) => (
               <li key={contextPopulator.id}>
                 <input
-                  type="checkbox"
-                  style={{ marginRight: 12 }}
                   checked={populators.includes(contextPopulator.id)}
                   onChange={(e) => onChange(e, contextPopulator.id)}
+                  style={{ marginRight: 12 }}
+                  type="checkbox"
                 />
                 <span title={contextPopulator.desc || contextPopulator.label}>
                   {contextPopulator.label}
                 </span>
               </li>
             ))}
-        </>
+        </div>
       ))}
     </ul>
   );
@@ -162,37 +156,32 @@ const renderExtraPresetOptions = (
   return (
     <ul>
       {getMockPresetGroups(extraMockPresets).map((group) => (
-        <>
-          <li
-            key={group || 'Uncategorized'}
-            className="dev-tools__list-box__separator"
-          >
-            {group || 'Uncategorized'}
-          </li>
+        <div key={group}>
+          <li className="dev-tools__list-box__separator">{group}</li>
           {extraMockPresets
             .filter((extraMockPreset) => extraMockPreset.group === group)
             .map((extraMockPreset) => (
               <li key={extraMockPreset.id}>
                 <input
-                  type="checkbox"
-                  style={{ marginRight: 12 }}
                   checked={handlers.includes(extraMockPreset.id)}
                   onChange={(e) => onChange(e, extraMockPreset.id)}
+                  style={{ marginRight: 12 }}
+                  type="checkbox"
                 />
                 <span title={extraMockPreset.desc || extraMockPreset.label}>
                   {extraMockPreset.label}
                 </span>
               </li>
             ))}
-        </>
+        </div>
       ))}
     </ul>
   );
 };
 
 interface ServiceWorkerSaveState {
-  hasUnsavedChanges: boolean;
   hasSaved: boolean;
+  hasUnsavedChanges: boolean;
 }
 
 export const ServiceWorkerTool = () => {
@@ -209,8 +198,8 @@ export const ServiceWorkerTool = () => {
   );
 
   const [saveState, setSaveState] = React.useState<ServiceWorkerSaveState>({
-    hasUnsavedChanges: false,
     hasSaved: false,
+    hasUnsavedChanges: false,
   });
 
   // React.useEffect(() => {
@@ -292,8 +281,8 @@ export const ServiceWorkerTool = () => {
 
     // Update save state to reflect saved changes if page does not refresh.
     setSaveState({
-      hasUnsavedChanges: false,
       hasSaved: true,
+      hasUnsavedChanges: false,
     });
 
     // We only have to reload the window if MSW is already enabled. Otherwise,
@@ -328,8 +317,8 @@ export const ServiceWorkerTool = () => {
           <div>
             <span style={{ marginRight: 8 }}>Base Preset</span>
             <DevToolSelect
-              value={MSWBasePreset}
               onChange={(e) => handleChangeBasePreset(e)}
+              value={MSWBasePreset}
             >
               {renderBaselinePresetOptions()}
             </DevToolSelect>

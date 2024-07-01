@@ -1,19 +1,19 @@
-import { MockPreset } from '../mockPreset';
-import { baselineNoMocksPreset } from './baseline/baseline-no-mocks';
-import { baselineLegacyPreset } from './baseline/baseline-legacy';
 import { baselineAccountActivationPreset } from './baseline/baseline-account-review';
 import { baselineApiMaintenanceModePreset } from './baseline/baseline-api-maintenance-mode';
 import { baselineApiOfflinePreset } from './baseline/baseline-api-offline';
 import { baselineApiUnstablePreset } from './baseline/baseline-api-unstable';
 import { baselineCrudPreset } from './baseline/baseline-crud';
-
+import { baselineLegacyPreset } from './baseline/baseline-legacy';
+import { baselineNoMocksPreset } from './baseline/baseline-no-mocks';
 import { childAccountPreset } from './extra/account/child-account';
+import { managedDisabledPreset } from './extra/account/managed-disabled';
+import { managedEnabledPreset } from './extra/account/managed-enabled';
 import { parentAccountPreset } from './extra/account/parent-account';
+import { regionsPreset } from './extra/environment/regions';
 import { linodeCrudPreset } from './extra/linodes/linodes-crud';
 import { volumeCrudPreset } from './extra/volumes/volumes-crud';
-import { managedEnabledPreset } from './extra/account/managed-enabled';
-import { managedDisabledPreset } from './extra/account/managed-disabled';
-import { regionsPreset } from './extra/environment/regions';
+
+import type { MockPreset } from '../mockPreset';
 
 /** The preset that we fall back on if the local storage value is unset or invalid. */
 export const defaultBaselineMockPreset = baselineNoMocksPreset;
