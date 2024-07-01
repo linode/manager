@@ -60,7 +60,7 @@ export const VLANSelect = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
-  const debouncedInputValue = useDebouncedValue(inputValue, 800);
+  const debouncedInputValue = useDebouncedValue(inputValue);
 
   const apiFilter = getVLANSelectFilter({
     defaultFilter: filter,
