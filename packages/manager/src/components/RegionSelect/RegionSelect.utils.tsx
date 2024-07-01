@@ -134,6 +134,7 @@ export const isDistributedRegionSupported = (createType: LinodeCreateType) => {
     'Distributions',
     'StackScripts',
     'Images',
+    undefined, // /linodes/create route
   ];
   return supportedDistributedRegionTypes.includes(createType);
 };
