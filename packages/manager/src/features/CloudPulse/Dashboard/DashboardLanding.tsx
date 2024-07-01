@@ -6,7 +6,7 @@ import { loadUserPreference } from '../Utils/UserPreference';
 
 export const DashboardLanding = () => {
 
-  const [isPrefLoading, setIsPrefLoading] = React.useState<boolean>(true);
+  const [isPreferenceLoaded, setIsPreferenceLoaded] = React.useState<boolean>(false);
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const onFilterChange = React.useCallback((_filters: FiltersObject) => {}, []);
@@ -15,13 +15,13 @@ export const DashboardLanding = () => {
   React.useEffect(()=>{
     const fetchUserPreference = async () =>{
         await loadUserPreference();
-        setIsPrefLoading(false);
+        setIsPreferenceLoaded(true);
     }
 
     fetchUserPreference();
   }, [])
 
-  if(isPrefLoading){
+  if(!isPreferenceLoaded){
     return <CircleProgress/>
   }
 

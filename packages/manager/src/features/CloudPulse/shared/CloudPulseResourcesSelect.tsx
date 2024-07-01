@@ -46,8 +46,6 @@ export const CloudPulseResourcesSelect = React.memo(
       return selectedResources;
     }
 
-
-
     if (!resources) {
       return (<Select
         disabled={true}
