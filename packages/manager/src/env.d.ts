@@ -43,7 +43,7 @@ declare module '*.svg' {
   export default src;
 }
 
-declare module '*.css?raw' {
+declare module '*?raw' {
   const src: string;
   export default src;
 }
