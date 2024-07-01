@@ -48,7 +48,7 @@ export const SDKTabPanel = ({ payLoad, title }: SDKTabPanelProps) => {
       </Typography>
       <Autocomplete
         disableClearable
-        label="Software Developer Kits(SDK)"
+        label="Software Developer Kits (SDK)"
         onChange={(_, option) => handleSDKChange(option)}
         options={sdkOptions}
         placeholder="Select An SDK"
