@@ -17,7 +17,7 @@ export const Actions = () => {
 
   const [isAPIAwarenessModalOpen, setIsAPIAwarenessModalOpen] = useState(false);
 
-  const isFeatureEnabled = flags?.apicliDxToolsAdditions;
+  const isDxToolsAdditionsEnabled = flags?.apicliDxToolsAdditions;
 
   const {
     formState,
@@ -41,7 +41,9 @@ export const Actions = () => {
   return (
     <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
       <Button buttonType="outlined" onClick={onOpenAPIAwareness}>
-        {isFeatureEnabled ? 'View Code Snippets' : 'Create using command line'}
+        {isDxToolsAdditionsEnabled
+          ? 'View Code Snippets'
+          : 'Create using command line'}
       </Button>
       <Button
         buttonType="primary"
