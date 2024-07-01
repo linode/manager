@@ -1,16 +1,17 @@
-import { StrictResponse, http } from 'msw';
+import { DateTime } from 'luxon';
+import { http } from 'msw';
+
 import { getPaginatedSlice } from '../utilities/pagination';
 import {
   makeNotFoundResponse,
   makePaginatedResponse,
   makeResponse,
 } from '../utilities/response';
-import { DateTime } from 'luxon';
 
 import type { APIErrorResponse } from '../utilities/response';
-import type { MockContext } from '../mockContext';
 import type { Event } from '@linode/api-v4';
-import type { MockEventProgressHandler } from '../mockContext';
+import type { StrictResponse } from 'msw';
+import type { MockContext, MockEventProgressHandler } from 'src/mocks/types';
 
 /**
  * Filters events by their `created` date.
@@ -68,7 +69,7 @@ export const getEvents = (mockContext: MockContext) => [
   }),
   http.get(
     '*/v4*/events/:id',
-    ({ params }): StrictResponse<Event | APIErrorResponse> => {
+    ({ params }): StrictResponse<APIErrorResponse | Event> => {
       const id = Number(params.id);
       const event = mockContext.eventQueue.find(
         (eventQueueItem) => eventQueueItem[0].id === id

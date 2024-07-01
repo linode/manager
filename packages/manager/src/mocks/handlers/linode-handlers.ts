@@ -1,18 +1,22 @@
+import { DateTime } from 'luxon';
 import { http } from 'msw';
+
+import { configFactory, eventFactory, linodeFactory } from 'src/factories';
 import {
-  APIPaginatedResponse,
   makeNotFoundResponse,
   makePaginatedResponse,
   makeResponse,
-} from '../utilities/response';
+} from 'src/mocks/utilities/response';
+
+import { getPaginatedSlice } from '../utilities/pagination';
 
 import type { Config, Linode } from '@linode/api-v4';
-import type { MockContext } from 'src/mocks/mockContext';
-import type { APIErrorResponse } from 'src/mocks/utilities/response';
 import type { StrictResponse } from 'msw';
-import { configFactory, eventFactory, linodeFactory } from 'src/factories';
-import { DateTime } from 'luxon';
-import { getPaginatedSlice } from '../utilities/pagination';
+import type { MockContext } from 'src/mocks/types';
+import type {
+  APIErrorResponse,
+  APIPaginatedResponse,
+} from 'src/mocks/utilities/response';
 
 /**
  * HTTP handlers to fetch Linodes.
@@ -23,7 +27,7 @@ export const getLinodes = (mockContext: MockContext) => [
   // Otherwise, a 404 response is mocked.
   http.get(
     '*/v4/linode/instances/:id',
-    ({ params }): StrictResponse<Linode | APIErrorResponse> => {
+    ({ params }): StrictResponse<APIErrorResponse | Linode> => {
       const id = Number(params.id);
       const linode = mockContext.linodes.find(
         (contextLinode) => contextLinode.id === id
@@ -44,7 +48,7 @@ export const getLinodes = (mockContext: MockContext) => [
     ({
       params,
       request,
-    }): StrictResponse<APIPaginatedResponse<Config> | APIErrorResponse> => {
+    }): StrictResponse<APIErrorResponse | APIPaginatedResponse<Config>> => {
       const id = Number(params.id);
       const linode = mockContext.linodes.find(
         (contextLinode) => contextLinode.id === id
@@ -93,10 +97,10 @@ export const createLinodes = (mockContext: MockContext) => [
   http.post('*/v4/linode/instances', async ({ request }) => {
     const payload = await request.clone().json();
     const linode = linodeFactory.build({
-      label: payload['label'],
-      region: payload['region'],
       created: DateTime.now().toISO(),
       image: payload['image'],
+      label: payload['label'],
+      region: payload['region'],
       status: 'provisioning',
     });
 
@@ -112,19 +116,19 @@ export const createLinodes = (mockContext: MockContext) => [
     const linodeEvent = eventFactory.build({
       action: 'linode_create',
       created: DateTime.local().toISO(),
-      seen: false,
-      read: false,
       duration: null,
-      rate: null,
-      percent_complete: 0,
       entity: {
-        label: linode.label,
         id: linode.id,
+        label: linode.label,
         type: 'linode',
         url: `/v4/linode/instances/${linode.id}`,
       },
-      status: 'scheduled',
       message: '',
+      percent_complete: 0,
+      rate: null,
+      read: false,
+      seen: false,
+      status: 'scheduled',
     });
 
     mockContext.linodes.push(linode);

@@ -1,20 +1,20 @@
-import { MockContext } from 'src/mocks/mockContext';
+import { DateTime } from 'luxon';
 import { http } from 'msw';
-import {
-  APIErrorResponse,
-  APIPaginatedResponse,
-  makePaginatedResponse,
-} from 'src/mocks/utilities/response';
+
+import { volumeFactory } from 'src/factories';
 import {
   makeNotFoundResponse,
+  makePaginatedResponse,
   makeResponse,
 } from 'src/mocks/utilities/response';
 
-import { volumeFactory } from 'src/factories';
-import { DateTime } from 'luxon';
-
-import type { StrictResponse } from 'msw';
 import type { Volume } from '@linode/api-v4';
+import type { StrictResponse } from 'msw';
+import type { MockContext } from 'src/mocks/types';
+import type {
+  APIErrorResponse,
+  APIPaginatedResponse,
+} from 'src/mocks/utilities/response';
 
 export const getVolumes = (mockContext: MockContext) => [
   http.get('*/v4/volumes', () => {
@@ -27,7 +27,7 @@ export const getVolumes = (mockContext: MockContext) => [
    */
   http.get(
     '*/v4/volumes/:id',
-    ({ params }): StrictResponse<Volume | APIErrorResponse> => {
+    ({ params }): StrictResponse<APIErrorResponse | Volume> => {
       const id = Number(params.id);
       const volume = mockContext.volumes.find(
         (contextVolume) => contextVolume.id === id
@@ -49,7 +49,7 @@ export const getVolumes = (mockContext: MockContext) => [
     '*/v4/linode/instances/:linodeId/volumes',
     ({
       params,
-    }): StrictResponse<APIPaginatedResponse<Volume> | APIErrorResponse> => {
+    }): StrictResponse<APIErrorResponse | APIPaginatedResponse<Volume>> => {
       const linodeId = Number(params.linodeId);
       const linode = mockContext.linodes.find(
         (contextLinode) => contextLinode.id === linodeId
@@ -75,7 +75,7 @@ export const createVolumes = (mockContext: MockContext) => [
    */
   http.post(
     '*/v4/volumes',
-    async ({ request }): Promise<StrictResponse<Volume | APIErrorResponse>> => {
+    async ({ request }): Promise<StrictResponse<APIErrorResponse | Volume>> => {
       const payload = await request.clone().json();
       const linodeId = payload['linode_id'];
 
@@ -101,10 +101,10 @@ export const createVolumes = (mockContext: MockContext) => [
 
       const volume = volumeFactory.build({
         created: DateTime.now().toISO(),
-        updated: DateTime.now().toISO(),
         label: payload['label'],
-        size: payload['size'],
         region: payload['region'],
+        size: payload['size'],
+        updated: DateTime.now().toISO(),
         ...volumeLinodePayloadData,
       });
 
