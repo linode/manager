@@ -19,6 +19,7 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   reportAgreementSigningError,
@@ -254,6 +255,18 @@ export const VolumeCreate = () => {
         }}
         title="Create"
       />
+      {error && <Notice spacingTop={8} text={error} variant="error" />}
+      {doesNotHavePermission && (
+        <Notice
+          text={getRestrictedResourceText({
+            action: 'create',
+            resourceType: 'Volumes',
+          })}
+          important
+          spacingTop={16}
+          variant="error"
+        />
+      )}
       <form onSubmit={handleSubmit}>
         <Box display="flex" flexDirection="column">
           <Paper>
@@ -268,24 +281,6 @@ export const VolumeCreate = () => {
                 Select a region to see cost per GB.
               </span>
             </Typography>
-            {error && (
-              <Notice
-                spacingBottom={0}
-                spacingTop={12}
-                text={error}
-                variant="error"
-              />
-            )}
-            {doesNotHavePermission && (
-              <Notice
-                text={
-                  "You don't have permissions to create a new Volume. Please contact an account administrator for details."
-                }
-                important
-                spacingBottom={0}
-                variant="error"
-              />
-            )}
             <TextField
               tooltipText="Use only ASCII letters, numbers,
                   underscores, and dashes."
