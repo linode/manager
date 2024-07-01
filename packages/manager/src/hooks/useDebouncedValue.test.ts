@@ -3,7 +3,7 @@ import { act, renderHook } from '@testing-library/react';
 import { useDebouncedValue } from './useDebouncedValue';
 
 describe('useDebouncedValue', () => {
-  it('debounced the provided value by the given time', () => {
+  it('debounces the provided value by the given delay', () => {
     vi.useFakeTimers();
 
     const { rerender, result } = renderHook(
