@@ -1,24 +1,24 @@
-import type { HttpHandler } from 'msw';
 import type { MockContext } from './mockContext';
+import type { HttpHandler } from 'msw';
 
 export type MockHandlerGenerator = (mockContext: MockContext) => HttpHandler[];
 
 /** Describes a collection of HTTP handlers that collectively form a MSW preset. */
 export type MockPreset = {
+  /** Description of mock preset and its purpose. */
+  desc?: string;
+
+  /** Group to which preset belongs. Used to sort presets in dev tool UI. */
+  group: string;
+
+  /** Array of MSW handler generator functions. */
+  handlers: MockHandlerGenerator[];
+
   /** Unique ID of mock preset, used to keep track of user preset selections. */
   id: string;
 
   /** Human-readable label for mock preset. */
   label: string;
-
-  /** Group to which preset belongs. Used to sort presets in dev tool UI. */
-  group?: string;
-
-  /** Description of mock preset and its purpose. */
-  desc?: string;
-
-  /** Array of MSW handler generator functions. */
-  handlers: MockHandlerGenerator[];
 };
 
 /**
@@ -34,20 +34,14 @@ export const resolveMockPreset = (
 ): HttpHandler[] => {
   return preset.handlers.reduce(
     (acc: HttpHandler[], cur: MockHandlerGenerator) => {
-      return [
-        //...acc,
-        ...cur(context),
-        ...acc,
-      ];
+      return [...cur(context), ...acc];
     },
     []
   );
 };
 
-export const getMockPresetGroups = (
-  presets: MockPreset[]
-): Array<string | undefined> => {
-  return presets.reduce((acc: Array<string | undefined>, cur) => {
+export const getMockPresetGroups = (presets: MockPreset[]): string[] => {
+  return presets.reduce((acc: string[], cur) => {
     if (!acc.includes(cur.group)) {
       acc.push(cur.group);
     }
