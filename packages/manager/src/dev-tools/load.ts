@@ -12,8 +12,11 @@ import {
 } from './ServiceWorkerTool';
 
 import type { QueryClient } from '@tanstack/react-query';
-import type { MockContext, MockContextPopulator } from 'src/mocks/mockContext';
-import type { MockPreset } from 'src/mocks/mockPreset';
+import type {
+  MockContext,
+  MockContextPopulator,
+  MockPreset,
+} from 'src/mocks/types';
 import type { ApplicationStore } from 'src/store';
 
 /**

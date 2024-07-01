@@ -1,14 +1,15 @@
 import {
   createVolumes,
   deleteVolumes,
-  updateVolumes,
   getVolumes,
+  updateVolumes,
 } from 'src/mocks/handlers/volume-handlers';
-import { MockPreset } from 'src/mocks/mockPreset';
+
+import type { MockPreset } from 'src/mocks/types';
 
 export const volumeCrudPreset: MockPreset = {
-  label: 'Volumes CRUD',
-  id: 'volumes-crud',
   group: 'Volumes',
   handlers: [createVolumes, deleteVolumes, updateVolumes, getVolumes],
+  id: 'volumes-crud',
+  label: 'Volumes CRUD',
 };

@@ -1,5 +1,6 @@
-import type { MockPreset } from '../../mockPreset';
-import { http, HttpResponse } from 'msw';
+import { HttpResponse, http } from 'msw';
+
+import type { MockPreset } from 'src/mocks/types';
 
 /**
  * Mock all requests to Linode API v4 to mock HTTP request failure.
@@ -13,8 +14,8 @@ const respondWithFailure = () => {
 };
 
 export const baselineApiOfflinePreset: MockPreset = {
-  label: 'API Offline',
-  id: 'baseline-api-offline',
   group: 'API State',
   handlers: [respondWithFailure],
+  id: 'baseline-api-offline',
+  label: 'API Offline',
 };

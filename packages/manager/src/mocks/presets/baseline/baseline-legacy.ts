@@ -3,14 +3,15 @@
  */
 
 import { handlers } from '../../serverHandlers';
-import type { MockPreset } from '../../mockPreset';
+
+import type { MockPreset } from 'src/mocks/types';
 
 /**
  * Baseline mock preset that uses our legacy MSW handlers.
  */
 export const baselineLegacyPreset: MockPreset = {
-  label: 'Legacy MSW Handlers',
-  id: 'baseline-legacy',
   group: 'General',
   handlers: [() => handlers],
+  id: 'baseline-legacy',
+  label: 'Legacy MSW Handlers',
 };

@@ -1,17 +1,17 @@
-import type { MockContext, MockContextPopulator } from 'src/mocks/mockContext';
-import type { Config } from '@linode/api-v4';
+import { configFactory, linodeFactory } from 'src/factories';
 
-import { linodeFactory, configFactory } from 'src/factories';
+import type { Config } from '@linode/api-v4';
+import type { MockContext, MockContextPopulator } from 'src/mocks/types';
 
 /**
  * Populates context with 5,000 Linodes.
  * Useful for testing landing page pagination, list and search performance, etc.
  */
 export const manyLinodesPopulator: MockContextPopulator = {
-  label: 'Many Linodes',
-  id: 'many-linodes',
   desc: 'Populates context with 5,000 Linodes',
   group: 'Linodes',
+  id: 'many-linodes',
+  label: 'Many Linodes',
 
   populator: (mockContext: MockContext) => {
     const linodes = linodeFactory.buildList(5000);

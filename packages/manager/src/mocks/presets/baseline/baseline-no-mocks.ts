@@ -1,7 +1,7 @@
 /**
  * @file No mock MSW preset.
  */
-import type { MockPreset } from '../../mockPreset';
+import type { MockPreset } from 'src/mocks/types';
 
 /**
  * Baseline mock preset that does not mock any HTTP requests.
@@ -9,8 +9,8 @@ import type { MockPreset } from '../../mockPreset';
  * Useful in cases where only specific functionality needs to be mocked.
  */
 export const baselineNoMocksPreset: MockPreset = {
-  label: 'No Mocks',
-  id: 'baseline-no-mocks',
   group: 'General',
   handlers: [],
+  id: 'baseline-no-mocks',
+  label: 'No Mocks',
 };

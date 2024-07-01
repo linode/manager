@@ -13,7 +13,7 @@ import { regionsPreset } from './extra/environment/regions';
 import { linodeCrudPreset } from './extra/linodes/linodes-crud';
 import { volumeCrudPreset } from './extra/volumes/volumes-crud';
 
-import type { MockPreset } from '../mockPreset';
+import type { MockPreset } from '../types';
 
 /** The preset that we fall back on if the local storage value is unset or invalid. */
 export const defaultBaselineMockPreset = baselineNoMocksPreset;
