@@ -85,7 +85,7 @@ describe('Linode Create v2 Summary', () => {
     await findByText(region.label);
   });
 
-  it('should render a plan (type) label if a type is selected', async () => {
+  it('should render a plan (type) label if a region and type are selected', async () => {
     const type = typeFactory.build();
 
     server.use(
@@ -96,7 +96,9 @@ describe('Linode Create v2 Summary', () => {
 
     const { findByText } = renderWithThemeAndHookFormContext({
       component: <Summary />,
-      useFormOptions: { defaultValues: { type: type.id } },
+      useFormOptions: {
+        defaultValues: { region: 'fake-region', type: type.id },
+      },
     });
 
     await findByText(type.label);
@@ -260,6 +262,6 @@ describe('Linode Create v2 Summary', () => {
       },
     });
 
-    await findByText(`5 Nodes - $10/month $2.5/hr`);
+    await findByText(`5 Nodes - $10/month $2.50/hr`);
   });
 });

@@ -13,7 +13,8 @@ import { useTypeQuery } from 'src/queries/types';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+
+import { getLinodePrice } from './utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
@@ -60,15 +61,11 @@ export const Summary = () => {
 
   const region = regions?.find((r) => r.id === regionId);
 
-  // @todo handle marketplace cluster pricing (support many nodes by looking at UDF data)
-  const price = getLinodeRegionPrice(type, regionId);
-
-  const numberOfNodes = clusterSize as number | undefined;
-  const isCluster = clusterSize !== undefined;
-
   const backupsPrice = renderMonthlyPriceToCorrectDecimalPlace(
     getMonthlyBackupsPrice({ region: regionId, type })
   );
+
+  const price = getLinodePrice({ type, regionId, clusterSize });
 
   const summaryItems = [
     {
@@ -85,14 +82,10 @@ export const Summary = () => {
     },
     {
       item: {
-        details: isCluster
-          ? `${numberOfNodes} Nodes - $${
-              (price?.monthly ?? 0) * (numberOfNodes ?? 0)
-            }/month $${(price?.hourly ?? 0) * (numberOfNodes ?? 0)}/hr`
-          : `$${price?.monthly}/month`,
+        details: price,
         title: type ? formatStorageUnits(type.label) : typeId,
       },
-      show: Boolean(typeId),
+      show: price,
     },
     {
       item: {
