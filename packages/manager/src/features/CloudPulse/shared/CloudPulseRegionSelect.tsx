@@ -4,6 +4,9 @@ import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+import { updateGlobalFilterPreference } from '../Utils/UserPreference';
+import { REGION, RESOURCES } from '../Utils/CloudPulseConstants';
+import Select from 'src/components/EnhancedSelect/Select';
 
 export interface CloudPulseRegionSelectProps {
   handleRegionChange: (region: string | undefined) => void;
@@ -15,6 +18,17 @@ export const CloudPulseRegionSelect = React.memo(
   (props: CloudPulseRegionSelectProps) => {
     const { data: regions } = useRegionsQuery();
 
+    if(!regions){
+      return (
+        <Select
+          disabled={true}
+          isClearable={true}
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          onChange={() => { }}
+          placeholder="Select a Region"
+        />
+      )
+    }
     return (
       <RegionSelect
         currentCapability={undefined}
@@ -22,7 +36,13 @@ export const CloudPulseRegionSelect = React.memo(
         fullWidth
         label=""
         noMarginTop
-        onChange={(e, region) => props.handleRegionChange(region?.id)}
+        onChange={(e, region) => {
+          updateGlobalFilterPreference({
+            [REGION] : region?.id,
+            [RESOURCES] : []
+          });
+          props.handleRegionChange(region?.id);
+        }}
         regions={regions ? regions : []}
         disabled={!props.selectedDashboard}
         value={props.selectedRegion}

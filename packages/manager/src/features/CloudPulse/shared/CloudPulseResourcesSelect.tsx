@@ -2,16 +2,18 @@ import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
+import { getUserPreferenceObject, updateGlobalFilterPreference } from '../Utils/UserPreference';
+import { RESOURCES } from '../Utils/CloudPulseConstants';
+import Select from 'src/components/EnhancedSelect/Select';
 
 export interface CloudPulseResources {
-  id: number;
+  id: string;
   label: string;
   region?: string; // usually linodes are associated with only one region
   regions?: string[]; // aclb are associated with multiple regions
 }
 
 export interface CloudPulseResourcesSelectProps {
-  defaultSelection?: number[];
   handleResourcesSelection: (resources: CloudPulseResources[]) => void;
   placeholder?: string;
   region: string | undefined;
@@ -20,9 +22,7 @@ export interface CloudPulseResourcesSelectProps {
 
 export const CloudPulseResourcesSelect = React.memo(
   (props: CloudPulseResourcesSelectProps) => {
-    const [selectedResource, setResources] = React.useState<
-      CloudPulseResources[]
-    >([]);
+
     const { data: resources, isLoading } = useResourcesQuery(
       props.region && props.resourceType ? true : false,
       props.resourceType,
@@ -30,52 +30,55 @@ export const CloudPulseResourcesSelect = React.memo(
       { region: props.region }
     );
 
+    const [, setSelectedResources] = React.useState();  //state variable is used to re-render this component on changing the value.
+
     const getResourcesList = (): CloudPulseResources[] => {
       return resources && resources.length > 0 ? resources : [];
     };
 
-    React.useEffect(() => {
-      const defaultResources = resources?.filter((instance) =>
-        props.defaultSelection?.includes(instance.id)
-      );
+    const getSelectedResource = (): CloudPulseResources[] | undefined => {
+      const defaultResources = getUserPreferenceObject()?.resources
+      let selectedResources = undefined;
 
-      if (defaultResources && defaultResources.length > 0) {
-        setResources(defaultResources);
-        props.handleResourcesSelection(defaultResources!);
+      if (defaultResources) {
+        selectedResources = getResourcesList().filter(resource => defaultResources.includes(String(resource.id)))
       }
+      return selectedResources;
+    }
 
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resources, props.region]); // only on any resources or region change, select defaults if any
+
+
+    if (!resources) {
+      return (<Select
+        disabled={true}
+        isClearable={true}
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        onChange={() => { }}
+        placeholder="Select Resources"
+      />)
+    }
 
     return (
       <Autocomplete
         onChange={(_: any, resourceSelections: any) => {
-          setResources(resourceSelections);
+          updateGlobalFilterPreference({
+            [RESOURCES]: resourceSelections.map((resource: { id: any; }) => String(resource.id))
+          });
+          setSelectedResources(resourceSelections);
           props.handleResourcesSelection(resourceSelections);
         }}
         autoHighlight
         clearOnBlur
         data-testid={'Resource-select'}
         disabled={!props.region || !props.resourceType || isLoading}
-        isOptionEqualToValue={(option, value) => option.label === value.label}
+        isOptionEqualToValue={(option, value) => option.id === value.id}
         label=""
         limitTags={2}
         multiple
         options={getResourcesList()}
         placeholder={props.placeholder ? props.placeholder : 'Select Resources'}
-        value={selectedResource ? selectedResource : []}
+        value={getSelectedResource()}
       />
     );
-  },
-  compareProps // we can re-render this component, on only region and resource type changes
+  }
 );
-
-function compareProps(
-  oldProps: CloudPulseResourcesSelectProps,
-  newProps: CloudPulseResourcesSelectProps
-) {
-  return (
-    oldProps.region == newProps.region &&
-    oldProps.resourceType == newProps.resourceType
-  );
-}
