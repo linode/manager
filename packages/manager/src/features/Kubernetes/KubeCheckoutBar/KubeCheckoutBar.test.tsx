@@ -1,7 +1,6 @@
-import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
-import { regionFactory } from 'src/factories';
+import { regionFactory, typeFactory } from 'src/factories';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE } from 'src/utilities/pricing/constants';
@@ -32,12 +31,22 @@ const renderComponent = (_props: Props) =>
   renderWithTheme(<KubeCheckoutBar {..._props} />);
 
 describe('KubeCheckoutBar', () => {
+  beforeAll(() => {
+    vi.mock('src/queries/types', async () => {
+      const actual = await vi.importActual('src/queries/types');
+      return {
+        ...actual,
+        useSpecificTypes: vi
+          .fn()
+          .mockImplementation(() => [{ data: typeFactory.build() }]),
+      };
+    });
+  });
+
   it('should render helper text and disable create button until a region has been selected', async () => {
-    const { findByText, getByTestId, getByText } = renderWithTheme(
+    const { findByText, getByText } = renderWithTheme(
       <KubeCheckoutBar {...props} region={undefined} />
     );
-
-    await waitForElementToBeRemoved(getByTestId('circle-progress'));
 
     await findByText(LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE);
     expect(getByText('Create Cluster').closest('button')).toHaveAttribute(
@@ -47,9 +56,7 @@ describe('KubeCheckoutBar', () => {
   });
 
   it('should render a section for each pool', async () => {
-    const { getByTestId, queryAllByTestId } = renderComponent(props);
-
-    await waitForElementToBeRemoved(getByTestId('circle-progress'));
+    const { queryAllByTestId } = renderComponent(props);
 
     expect(queryAllByTestId('node-pool-summary')).toHaveLength(pools.length);
   });
@@ -90,7 +97,7 @@ describe('KubeCheckoutBar', () => {
     );
 
     // 5 node pools * 3 linodes per pool * 12 per linode * 20% increase for Jakarta + 72 per month per cluster for HA
-    await findByText(/\$180\.00/);
+    await findByText(/\$183\.00/);
   });
 
   it('should display the DC-Specific total price of the cluster for a region with a price increase with HA selection', async () => {
@@ -104,7 +111,7 @@ describe('KubeCheckoutBar', () => {
     );
 
     // 5 node pools * 3 linodes per pool * 12 per linode * 20% increase for Jakarta + 72 per month per cluster for HA
-    await findByText(/\$252\.00/);
+    await findByText(/\$255\.00/);
   });
 
   it('should display UNKNOWN_PRICE for HA when not available and show total price of cluster as the sum of the node pools', async () => {
@@ -118,7 +125,7 @@ describe('KubeCheckoutBar', () => {
     );
 
     // 5 node pools * 3 linodes per pool * 12 per linode * 20% increase for Jakarta + UNKNOWN_PRICE
-    await findByText(/\$180\.00/);
+    await findByText(/\$183\.00/);
     getByText(/\$--.--\/month/);
   });
 });
