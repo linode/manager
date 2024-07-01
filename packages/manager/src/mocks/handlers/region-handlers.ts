@@ -1,14 +1,17 @@
 import { http } from 'msw';
-import type { MockContext } from 'src/mocks/mockContext';
-import { getPaginatedSlice } from '../utilities/pagination';
+
 import {
-  makeResponse,
   makeNotFoundResponse,
   makePaginatedResponse,
-  APIErrorResponse,
-} from '../utilities/response';
-import type { StrictResponse } from 'msw';
+  makeResponse,
+} from 'src/mocks/utilities/response';
+
+import { getPaginatedSlice } from '../utilities/pagination';
+
 import type { Region, RegionAvailability } from '@linode/api-v4';
+import type { StrictResponse } from 'msw';
+import type { MockContext } from 'src/mocks/types';
+import type { APIErrorResponse } from 'src/mocks/utilities/response';
 
 /**
  * HTTP handlers to fetch Regions.
@@ -40,7 +43,7 @@ export const getRegions = (mockContext: MockContext) => [
   // Otherwise, a 404 response is mocked.
   http.get(
     '*/v4*/regions/:id',
-    ({ params }): StrictResponse<Region | APIErrorResponse> => {
+    ({ params }): StrictResponse<APIErrorResponse | Region> => {
       const region = mockContext.regions.find(
         (contextRegion) => contextRegion.id === params.id
       );
@@ -79,7 +82,7 @@ export const getRegions = (mockContext: MockContext) => [
   // If no region with the given ID exists in context, a 404 response is mocked.
   http.get(
     '*/v4*/regions/:id/availability',
-    ({ params }): StrictResponse<RegionAvailability[] | APIErrorResponse> => {
+    ({ params }): StrictResponse<APIErrorResponse | RegionAvailability[]> => {
       const region = mockContext.regions.find(
         (contextRegion) => contextRegion.id === params.id
       );

@@ -1,12 +1,13 @@
 import { http } from 'msw';
 
-import { MockPreset } from 'src/mocks/mockPreset';
 import {
   accountFactory,
-  profileFactory,
   accountUserFactory,
+  profileFactory,
 } from 'src/factories';
 import { makeResponse } from 'src/mocks/utilities/response';
+
+import type { MockPreset } from 'src/mocks/types';
 
 /**
  * Mocks account, profile, and user requests to simulate a Parent/Child parent account user.
@@ -23,16 +24,16 @@ const mockParentAccount = () => {
     http.get('*/v4*/profile', () => {
       return makeResponse(
         profileFactory.build({
-          username: 'Parent Account User',
           user_type: 'parent',
+          username: 'Parent Account User',
         })
       );
     }),
     http.get(`*/v4*/account/users/Parent Account User`, () => {
       return makeResponse(
         accountUserFactory.build({
-          username: 'Parent Account User',
           user_type: 'parent',
+          username: 'Parent Account User',
         })
       );
     }),
@@ -40,9 +41,9 @@ const mockParentAccount = () => {
 };
 
 export const parentAccountPreset: MockPreset = {
-  label: 'Parent Account User',
-  id: 'parent-child-parent-account-user',
   desc: 'Mock a Parent/Child parent account user',
   group: 'Account',
   handlers: [mockParentAccount],
+  id: 'parent-child-parent-account-user',
+  label: 'Parent Account User',
 };

@@ -1,6 +1,8 @@
 import { http } from 'msw';
+
 import { makeErrorResponse } from 'src/mocks/utilities/response';
-import type { MockPreset } from 'src/mocks/mockPreset';
+
+import type { MockPreset } from 'src/mocks/types';
 
 const respondWithAccountActivation = () => {
   return [
@@ -14,8 +16,8 @@ const respondWithAccountActivation = () => {
 };
 
 export const baselineAccountActivationPreset: MockPreset = {
-  label: 'Account Activation Required',
-  id: 'baseline-account-activation',
   group: 'Account State',
   handlers: [respondWithAccountActivation],
+  id: 'baseline-account-activation',
+  label: 'Account Activation Required',
 };

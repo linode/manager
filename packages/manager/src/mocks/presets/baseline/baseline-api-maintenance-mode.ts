@@ -1,6 +1,8 @@
-import type { MockPreset } from '../../mockPreset';
 import { http } from 'msw';
+
 import { makeErrorResponse } from 'src/mocks/utilities/response';
+
+import type { MockPreset } from 'src/mocks/types';
 
 /**
  * Mock all requests to Linode API v4 to respond with maintenance mode status and header.
@@ -17,8 +19,8 @@ const respondWithMaintenanceMode = () => {
 };
 
 export const baselineApiMaintenanceModePreset: MockPreset = {
-  label: 'API Maintenance Mode',
-  id: 'baseline-api-maintenance',
   group: 'API State',
   handlers: [respondWithMaintenanceMode],
+  id: 'baseline-api-maintenance',
+  label: 'API Maintenance Mode',
 };

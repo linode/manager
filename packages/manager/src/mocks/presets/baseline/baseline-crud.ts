@@ -3,8 +3,7 @@
  */
 
 import { getEvents, updateEvents } from 'src/mocks/handlers/event-handlers';
-import type { MockPreset } from '../../mockPreset';
-import { getLinodes, createLinodes } from 'src/mocks/handlers/linode-handlers';
+import { createLinodes, getLinodes } from 'src/mocks/handlers/linode-handlers';
 import {
   createVolumes,
   deleteVolumes,
@@ -12,9 +11,9 @@ import {
   updateVolumes,
 } from 'src/mocks/handlers/volume-handlers';
 
+import type { MockPreset } from 'src/mocks/types';
+
 export const baselineCrudPreset: MockPreset = {
-  label: 'Basic CRUD',
-  id: 'baseline-crud',
   group: 'General',
   handlers: [
     // Linode CRUD handlers.
@@ -31,4 +30,6 @@ export const baselineCrudPreset: MockPreset = {
     getEvents,
     updateEvents,
   ],
+  id: 'baseline-crud',
+  label: 'Basic CRUD',
 };

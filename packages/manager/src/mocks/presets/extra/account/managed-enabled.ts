@@ -1,8 +1,9 @@
 import { http } from 'msw';
-import { accountSettingsFactory } from 'src/factories';
 
-import { MockPreset } from 'src/mocks/mockPreset';
+import { accountSettingsFactory } from 'src/factories';
 import { makeResponse } from 'src/mocks/utilities/response';
+
+import type { MockPreset } from 'src/mocks/types';
 
 const mockManagedEnabledAccount = () => {
   return [
@@ -17,9 +18,9 @@ const mockManagedEnabledAccount = () => {
 };
 
 export const managedEnabledPreset: MockPreset = {
-  label: 'Managed Enabled',
-  id: 'account-managed-enabled',
   desc: 'Mock account settings to enable Linode Managed',
   group: 'Account',
   handlers: [mockManagedEnabledAccount],
+  id: 'account-managed-enabled',
+  label: 'Managed Enabled',
 };

@@ -9,6 +9,7 @@ import { getStorage, setStorage } from 'src/utilities/storage';
 
 import type { FlagSet, Flags } from 'src/featureFlags';
 import type { Dispatch } from 'src/hooks/types';
+
 const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 
 /**
@@ -117,45 +118,9 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
       </div>
       <div className="dev-tools__tool__footer">
         <div className="dev-tools__button-list">
-          <button onClick={resetFlags}>Reset to Default</button>
+          <button onClick={resetFlags}>Reset to LD Defaults (dev)</button>
         </div>
       </div>
     </div>
-    //    <Grid xs={12}>
-    // //     <h4 style={{ marginBottom: 8, marginTop: 0 }}>Feature Flags</h4>
-    // //   </Grid>
-    //   <Grid xs={12}>
-    //     <div style={{ display: 'flex', flexDirection: 'column' }}>
-    //       {options.map((thisOption) => {
-    //         const flagValue = flags[thisOption.flag];
-    //         const isChecked =
-    //           typeof flagValue === 'object' && 'enabled' in flagValue
-    //             ? Boolean(flagValue.enabled)
-    //             : Boolean(flagValue);
-    //         return (
-    //           <div
-    //             style={{
-    //               alignItems: 'center',
-    //               display: 'flex',
-    //               flexDirection: 'row',
-    //               justifyContent: 'space-between',
-    //             }}
-    //             key={thisOption.flag}
-    //           >
-    //             <span>{thisOption.label} </span>
-    //             <input
-    //               checked={isChecked}
-    //               onChange={(e) => handleCheck(e, thisOption.flag)}
-    //               type="checkbox"
-    //             />
-    //           </div>
-    //         );
-    //       })}
-    //       <button onClick={resetFlags} style={{ marginTop: 8 }}>
-    //         Reset to LD default flags
-    //       </button>
-    //     </div>
-    //   </Grid>
-    // </Grid>
   );
 });

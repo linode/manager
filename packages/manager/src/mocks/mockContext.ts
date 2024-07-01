@@ -1,12 +1,4 @@
-import type {
-  Linode,
-  Config,
-  Volume,
-  Event,
-  Notification,
-  Region,
-  RegionAvailability,
-} from '@linode/api-v4';
+import type { MockContext, MockContextPopulator } from './types';
 
 /**
  * Describes a function that executes on each request to the events endpoint.
@@ -15,39 +7,6 @@ import type {
  *
  * @returns `true` if event is considered complete, `false` if callback should continue to be called.
  */
-export type MockEventProgressHandler = (
-  event: Event,
-  context: MockContext
-) => boolean;
-
-/**
- * Contextual data shared among mocks.
- */
-export interface MockContext {
-  // Linodes and related data.
-  linodes: Linode[];
-  linodeConfigs: [number, Config][];
-
-  // Volumes.
-  volumes: Volume[];
-
-  // Environment.
-  regions: Region[];
-  regionAvailability: RegionAvailability[];
-
-  // Misc.
-  eventQueue: [Event, MockEventProgressHandler | null][];
-  notificationQueue: Notification[];
-}
-
-export interface MockContextPopulator {
-  label: string;
-  id: string;
-  group?: string;
-  desc?: string;
-  populator: (mockContext: MockContext) => MockContext;
-}
-
 export const getContextPopulatorGroups = (
   populators: MockContextPopulator[]
 ): Array<string | undefined> => {
@@ -66,12 +25,12 @@ export const getContextPopulatorGroups = (
  */
 export const makeMockContext = (): MockContext => {
   return {
-    linodes: [],
-    linodeConfigs: [],
-    volumes: [],
-    regions: [],
-    regionAvailability: [],
     eventQueue: [],
+    linodeConfigs: [],
+    linodes: [],
     notificationQueue: [],
+    regionAvailability: [],
+    regions: [],
+    volumes: [],
   };
 };
