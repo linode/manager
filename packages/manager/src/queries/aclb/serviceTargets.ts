@@ -1,8 +1,6 @@
 import {
   createLoadbalancerServiceTarget,
   deleteLoadbalancerServiceTarget,
-  getLoadbalancerServiceTargets,
-  getServiceTargetsEndpointHealth,
   updateLoadbalancerServiceTarget,
 } from '@linode/api-v4';
 import {
@@ -12,7 +10,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { QUERY_KEY } from './loadbalancers';
+import { aclbQueries } from './queries';
 
 import type {
   APIError,
@@ -29,44 +27,35 @@ export const useLoadBalancerServiceTargetsQuery = (
   params: Params,
   filter: Filter
 ) => {
-  return useQuery<ResourcePage<ServiceTarget>, APIError[]>(
-    [QUERY_KEY, 'aclb', loadbalancerId, 'service-targets', params, filter],
-    () => getLoadbalancerServiceTargets(loadbalancerId, params, filter),
-    { keepPreviousData: true }
-  );
+  return useQuery<ResourcePage<ServiceTarget>, APIError[]>({
+    ...aclbQueries
+      .loadbalancer(loadbalancerId)
+      ._ctx.serviceTargets._ctx.lists._ctx.paginated(params, filter),
+    keepPreviousData: true,
+  });
 };
 
 export const useLoadBalancerServiceTargetsEndpointHealthQuery = (
   loadbalancerId: number
 ) => {
   return useQuery<ServiceTargetsEndpointHealth, APIError[]>({
-    queryFn: () => getServiceTargetsEndpointHealth(loadbalancerId),
-    queryKey: [
-      QUERY_KEY,
-      'aclb',
-      loadbalancerId,
-      'service-targets',
-      'endpoint-health',
-    ],
+    ...aclbQueries.loadbalancer(loadbalancerId)._ctx.serviceTargets._ctx
+      .endpointHealth,
     refetchInterval: 10_000,
   });
 };
 
 export const useServiceTargetCreateMutation = (loadbalancerId: number) => {
   const queryClient = useQueryClient();
-  return useMutation<ServiceTarget, APIError[], ServiceTargetPayload>(
-    (data) => createLoadbalancerServiceTarget(loadbalancerId, data),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries([
-          QUERY_KEY,
-          'aclb',
-          loadbalancerId,
-          'service-targets',
-        ]);
-      },
-    }
-  );
+  return useMutation<ServiceTarget, APIError[], ServiceTargetPayload>({
+    mutationFn: (data) => createLoadbalancerServiceTarget(loadbalancerId, data),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.serviceTargets
+          ._ctx.lists.queryKey,
+      });
+    },
+  });
 };
 
 export const useServiceTargetUpdateMutation = (
@@ -74,20 +63,21 @@ export const useServiceTargetUpdateMutation = (
   serviceTargetId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<ServiceTarget, APIError[], ServiceTargetPayload>(
-    (data) =>
+  return useMutation<ServiceTarget, APIError[], ServiceTargetPayload>({
+    mutationFn: (data) =>
       updateLoadbalancerServiceTarget(loadbalancerId, serviceTargetId, data),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries([
-          QUERY_KEY,
-          'aclb',
-          loadbalancerId,
-          'service-targets',
-        ]);
-      },
-    }
-  );
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.serviceTargets
+          ._ctx.lists.queryKey,
+      });
+      // Invalidate routes because GET routes returns service target labels
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.routes._ctx
+          .lists.queryKey,
+      });
+    },
+  });
 };
 
 export const useLoadBalancerServiceTargetDeleteMutation = (
@@ -95,40 +85,31 @@ export const useLoadBalancerServiceTargetDeleteMutation = (
   serviceTargetId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(
-    () => deleteLoadbalancerServiceTarget(loadbalancerId, serviceTargetId),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries([
-          QUERY_KEY,
-          'aclb',
-          loadbalancerId,
-          'service-targets',
-        ]);
-      },
-    }
-  );
+  return useMutation<{}, APIError[]>({
+    mutationFn: () =>
+      deleteLoadbalancerServiceTarget(loadbalancerId, serviceTargetId),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.serviceTargets
+          ._ctx.lists.queryKey,
+      });
+    },
+  });
 };
 
 export const useLoadBalancerServiceTargetsInfiniteQuery = (
   id: number,
   filter: Filter = {}
 ) => {
-  return useInfiniteQuery<ResourcePage<ServiceTarget>, APIError[]>(
-    [QUERY_KEY, 'aclb', id, 'service-targets', 'infinite', filter],
-    ({ pageParam }) =>
-      getLoadbalancerServiceTargets(
-        id,
-        { page: pageParam, page_size: 25 },
-        filter
-      ),
-    {
-      getNextPageParam: ({ page, pages }) => {
-        if (page === pages) {
-          return undefined;
-        }
-        return page + 1;
-      },
-    }
-  );
+  return useInfiniteQuery<ResourcePage<ServiceTarget>, APIError[]>({
+    ...aclbQueries
+      .loadbalancer(id)
+      ._ctx.serviceTargets._ctx.lists._ctx.infinite(filter),
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+  });
 };
