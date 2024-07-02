@@ -121,16 +121,16 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
     RegionFilter | undefined
   >(storage.regionFilter.get());
 
-  let filteredData: LinodeWithMaintenance[] = [];
-  if (regionFilter === 'core' || 'distributed') {
+  let filteredData: LinodeWithMaintenance[] | null = null;
+  if (regionFilter === 'core' || regionFilter === 'distributed') {
     filteredData = data.filter((linode) => linode.site_type === regionFilter);
   } else {
-    filteredData = [];
+    filteredData = null;
   }
 
   return (
     <Paginate
-      data={filteredData.length > 0 ? filteredData : data}
+      data={filteredData !== null ? filteredData : data}
       page={queryPage}
       // If there are more Linodes with maintenance than the current page size, show the minimum
       // page size needed to show ALL Linodes with maintenance.
@@ -253,7 +253,9 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
             <Grid xs={12}>
               {
                 <PaginationFooter
-                  count={filteredData?.length || data.length}
+                  count={
+                    filteredData !== null ? filteredData.length : data.length
+                  }
                   eventCategory={'linodes landing'}
                   handlePageChange={handlePageChange}
                   handleSizeChange={handlePageSizeChange}
