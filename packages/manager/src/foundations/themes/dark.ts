@@ -599,7 +599,7 @@ export const darkTheme: ThemeOptions = {
         root: {
           backgroundColor: Color.Neutrals[90],
           backgroundImage: 'none', // I have no idea why MUI defaults to setting a background image...
-          border: `1px solid ${Color.Neutrals[80]}`,
+          border: 0,
         },
       },
     },
