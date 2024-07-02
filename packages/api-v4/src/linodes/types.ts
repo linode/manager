@@ -1,4 +1,4 @@
-import type { Region } from '../regions';
+import type { Region, RegionSite } from '../regions';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { SSHKey } from '../profile/types';
 import type { PlacementGroupPayload } from '../placement-groups/types';
@@ -36,6 +36,7 @@ export interface Linode {
   specs: LinodeSpecs;
   watchdog_enabled: boolean;
   tags: string[];
+  site_type: RegionSite;
 }
 
 export interface LinodeAlerts {
