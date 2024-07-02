@@ -255,7 +255,6 @@ export const VolumeCreate = () => {
         }}
         title="Create"
       />
-      {error && <Notice spacingTop={8} text={error} variant="error" />}
       {doesNotHavePermission && (
         <Notice
           text={getRestrictedResourceText({
@@ -281,6 +280,14 @@ export const VolumeCreate = () => {
                 Select a region to see cost per GB.
               </span>
             </Typography>
+            {error && (
+              <Notice
+                spacingBottom={0}
+                spacingTop={12}
+                text={'Hello there'}
+                variant="error"
+              />
+            )}
             <TextField
               tooltipText="Use only ASCII letters, numbers,
                   underscores, and dashes."
