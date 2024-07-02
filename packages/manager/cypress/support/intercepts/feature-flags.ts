@@ -2,8 +2,9 @@
  * @file Cypress intercepts and mocks for Cloud Manager feature flags.
  */
 
-import type { FeatureFlagMockData } from 'support/util/feature-flags';
 import { getResponseDataFromMockData } from 'support/util/feature-flags';
+
+import type { FeatureFlagMockData } from 'support/util/feature-flags';
 
 // LaunchDarkly URL pattern for feature flag retrieval.
 const launchDarklyUrlPattern =
