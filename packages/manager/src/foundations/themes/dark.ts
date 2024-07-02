@@ -5,6 +5,7 @@ import {
   Color,
   Dropdown,
   Interaction,
+  NotificationToast,
   Select,
   TextField,
 } from '@linode/design-language-system/themes/dark';
@@ -93,6 +94,30 @@ export const customDarkModeOptions = {
     tableHeader: Color.Neutrals[60],
     tableStatic: Color.Neutrals[20],
     textAccessTable: Color.Neutrals[50],
+  },
+} as const;
+
+export const notificationToast = {
+  default: {
+    backgroundColor: NotificationToast.Informative.Background,
+    borderLeft: `6px solid ${NotificationToast.Informative.Border}`,
+    color: NotificationToast.Text,
+  },
+  error: {
+    backgroundColor: NotificationToast.Error.Background,
+    borderLeft: `6px solid ${NotificationToast.Error.Border}`,
+  },
+  info: {
+    backgroundColor: NotificationToast.Informative.Background,
+    borderLeft: `6px solid ${NotificationToast.Informative.Border}`,
+  },
+  success: {
+    backgroundColor: NotificationToast.Success.Background,
+    borderLeft: `6px solid ${NotificationToast.Success.Border}`,
+  },
+  warning: {
+    backgroundColor: NotificationToast.Warning.Background,
+    borderLeft: `6px solid ${NotificationToast.Warning.Border}`,
   },
 } as const;
 
@@ -826,6 +851,7 @@ export const darkTheme: ThemeOptions = {
     },
   },
   name: 'dark',
+  notificationToast,
   palette: {
     background: {
       default: customDarkModeOptions.bg.app,
