@@ -232,6 +232,7 @@ export const DatabaseResize = ({ database }: Props) => {
           header="Choose a Plan"
           onSelect={(selected: string) => setPlanSelected(selected)}
           selectedId={planSelected}
+          sx={{ border: 0 }}
           types={displayTypes}
         />
       </Paper>
