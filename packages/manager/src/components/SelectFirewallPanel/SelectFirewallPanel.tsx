@@ -9,7 +9,7 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { useFirewallsQuery } from 'src/queries/firewalls';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { Autocomplete } from '../Autocomplete/Autocomplete';
@@ -42,12 +42,10 @@ export const SelectFirewallPanel = (props: Props) => {
   const handleCreateFirewallClick = () => {
     setIsDrawerOpen(true);
     if (isFromLinodeCreate) {
-      sendLinodeCreateFormStepEvent({
-        action: 'click',
-        category: 'button',
+      sendLinodeCreateFormInputEvent({
         createType: (queryParams.type as LinodeCreateType) ?? 'Distributions',
-        formStepName: 'Firewall Panel',
-        label: 'Create Firewall',
+        paperName: 'Firewall',
+        labelName: 'Create Firewall',
         version: 'v1',
       });
     }
@@ -88,15 +86,16 @@ export const SelectFirewallPanel = (props: Props) => {
         <Autocomplete
           onChange={(_, selection) => {
             handleFirewallChange(selection?.value ?? -1);
-            sendLinodeCreateFormStepEvent({
-              action: 'click',
-              category: 'select',
-              createType:
-                (queryParams.type as LinodeCreateType) ?? 'Distributions',
-              formStepName: 'Firewall Panel',
-              label: 'Assign Firewall',
-              version: 'v1',
-            });
+            // Track clearing the value once per form - this is configured on backend by inputValue.
+            if (!selection) {
+              sendLinodeCreateFormInputEvent({
+                createType:
+                  (queryParams.type as LinodeCreateType) ?? 'Distributions',
+                paperName: 'Firewall',
+                labelName: 'Assign Firewall',
+                version: 'v1',
+              });
+            }
           }}
           disabled={disabled}
           errorText={error?.[0].reason}

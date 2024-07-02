@@ -17,7 +17,7 @@ import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import {
   DIFFERENT_PRICE_STRUCTURE_WARNING,
   DOCS_LINK_LABEL_DC_PRICING,
@@ -148,12 +148,11 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         <DocsLink
           onClick={() =>
             isFromLinodeCreate &&
-            sendLinodeCreateFormStepEvent({
-              action: 'click',
-              category: 'link',
+            sendLinodeCreateFormInputEvent({
               createType: (params.type as LinodeCreateType) ?? 'Distributions',
-              label: DOCS_LINK_LABEL_DC_PRICING,
+              labelName: 'DC Pricing',
               version: 'v1',
+              paperName: 'Region',
             })
           }
           href="https://www.linode.com/pricing"

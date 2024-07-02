@@ -11,13 +11,13 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { formAnalyticsContext as _formAnalyticsContext } from 'src/context/formAnalyticsContext';
 import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
 } from 'src/queries/linodes/linodes';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { Security } from './Security';
 import { Actions } from './Actions';
 import { Addons } from './Addons/Addons';
 import { Details } from './Details/Details';
@@ -26,6 +26,7 @@ import { Firewall } from './Firewall';
 import { Plan } from './Plan';
 import { Region } from './Region';
 import { linodeCreateResolvers } from './resolvers';
+import { Security } from './Security';
 import { Summary } from './Summary';
 import { Backups } from './Tabs/Backups/Backups';
 import { Clone } from './Tabs/Clone/Clone';
@@ -47,6 +48,7 @@ import { VLAN } from './VLAN';
 import { VPC } from './VPC/VPC';
 
 import type { SubmitHandler } from 'react-hook-form';
+import { handleFormFocusEvent } from 'src/utilities/analytics/utils';
 
 export const LinodeCreatev2 = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
@@ -65,6 +67,8 @@ export const LinodeCreatev2 = () => {
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
 
   const currentTabIndex = getTabIndex(params.type);
+
+  const formAnalyticsContext = React.useContext(_formAnalyticsContext);
 
   const onTabChange = (index: number) => {
     const newTab = tabs[index];
@@ -109,6 +113,19 @@ export const LinodeCreatev2 = () => {
     }
     previousSubmitCount.current = form.formState.submitCount;
   }, [form.formState]);
+
+  useEffect(() => {
+    const touchedFieldKeys = Object.keys(form.formState.touchedFields);
+    // Only track the first field that the user has touched as the form start.
+    if (touchedFieldKeys.length === 1) {
+      // Would fire a formFocus analytics event here.
+      handleFormFocusEvent(
+        'Linode Create',
+        touchedFieldKeys[0],
+        formAnalyticsContext
+      );
+    }
+  }, [form.formState, formAnalyticsContext]);
 
   return (
     <FormProvider {...form}>

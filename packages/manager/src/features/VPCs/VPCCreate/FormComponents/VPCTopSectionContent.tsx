@@ -7,7 +7,7 @@ import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
 import { CreateVPCFieldState } from 'src/hooks/useCreateVPC';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { VPC_CREATE_FORM_VPC_HELPER_TEXT } from '../../constants';
@@ -37,13 +37,11 @@ export const VPCTopSectionContent = (props: Props) => {
         <Link
           onClick={() =>
             isFromLinodeCreate &&
-            sendLinodeCreateFormStepEvent({
-              action: 'click',
-              category: 'link',
+            sendLinodeCreateFormInputEvent({
               createType:
                 (queryParams.type as LinodeCreateType) ?? 'Distributions',
-              formStepName: 'Create VPC Drawer',
-              label: 'Learn more',
+              paperName: 'VPC',
+              labelName: 'Learn more',
               version: 'v1',
             })
           }

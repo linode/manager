@@ -32,7 +32,6 @@ export interface AnalyticsEvent {
 
 export type FormEventType =
   | 'formError'
-  | 'formFocus' // Focus is used for Form Start
   | 'formInput'
   | 'formStepInteraction'
   | 'formSubmit';
@@ -61,17 +60,14 @@ export interface FormErrorEvent extends BasicFormEvent {
   formError: string;
 }
 
-// To be used with form step events for consistent event formatting.
-export interface FormStepOptions {
-  action: string;
-  category: string;
-  formStepName?: string;
-  label: string;
+// To be used with form input and step events for consistent event formatting.
+export interface FormEventOptions {
+  paperName: string | undefined; // For steps, this may be the name of the branch of the flow.
+  labelName: string;
 }
-
-export interface LinodeCreateFormStepOptions extends FormStepOptions {
+export interface LinodeCreateFormEventOptions extends FormEventOptions {
   createType: LinodeCreateType;
-  // Used to distinguish between the Linode Create pre and post-refactor.
+  // Used to distinguish between the Linode Create flow pre and post-refactor.
   version: LinodeCreateFlowVersion;
 }
 

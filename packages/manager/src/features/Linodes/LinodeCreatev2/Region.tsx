@@ -11,6 +11,7 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
+import { formAnalyticsContext as _formAnalyticsContext } from 'src/context/formAnalyticsContext';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useImageQuery } from 'src/queries/images';
@@ -28,6 +29,7 @@ import { defaultInterfaces, useLinodeCreateQueryParams } from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
+import { handleFormFocusEvent } from 'src/utilities/analytics/utils';
 
 export const Region = () => {
   const {
@@ -65,6 +67,8 @@ export const Region = () => {
 
   const { data: regions } = useRegionsQuery();
 
+  const formAnalyticsContext = React.useContext(_formAnalyticsContext);
+
   const onChange = (region: RegionType) => {
     const isDistributedRegion =
       region.site_type === 'distributed' || region.site_type === 'edge';
@@ -75,26 +79,29 @@ export const Region = () => {
       ? 'enabled'
       : undefined;
 
-    reset((prev) => ({
-      ...prev,
-      // Reset interfaces because VPC and VLANs are region-sepecific
-      interfaces: defaultInterfaces,
-      // Reset Cloud-init metadata because not all regions support it
-      metadata: undefined,
-      // Reset the placement group because they are region-specific
-      placement_group: undefined,
-      // Set the region
-      region: region.id,
-      // Backups and Private IP are not supported in distributed compute regions
-      ...(isDistributedRegion && {
-        backups_enabled: false,
-        private_ip: false,
+    reset(
+      (prev) => ({
+        ...prev,
+        // Reset interfaces because VPC and VLANs are region-sepecific
+        interfaces: defaultInterfaces,
+        // Reset Cloud-init metadata because not all regions support it
+        metadata: undefined,
+        // Reset the placement group because they are region-specific
+        placement_group: undefined,
+        // Set the region
+        region: region.id,
+        // Backups and Private IP are not supported in distributed compute regions
+        ...(isDistributedRegion && {
+          backups_enabled: false,
+          private_ip: false,
+        }),
+        // If disk encryption is enabled, set the default value to "enabled" if the region supports it
+        ...(isDiskEncryptionFeatureEnabled && {
+          disk_encryption: defaultDiskEncryptionValue,
+        }),
       }),
-      // If disk encryption is enabled, set the default value to "enabled" if the region supports it
-      ...(isDiskEncryptionFeatureEnabled && {
-        disk_encryption: defaultDiskEncryptionValue,
-      }),
-    }));
+      { keepTouched: true }
+    );
   };
 
   const showCrossDataCenterCloneWarning =
@@ -133,6 +140,13 @@ export const Region = () => {
       <Box display="flex" justifyContent="space-between" mb={1}>
         <Typography variant="h2">Region</Typography>
         <DocsLink
+          onClick={() =>
+            handleFormFocusEvent(
+              'Linode Create',
+              'DC Pricing',
+              formAnalyticsContext
+            )
+          }
           href="https://www.linode.com/pricing"
           label={DOCS_LINK_LABEL_DC_PRICING}
         />

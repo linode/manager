@@ -1,6 +1,7 @@
 import { ADOBE_ANALYTICS_URL } from 'src/constants';
 
-import { AnalyticsEvent, FormEventType, FormPayload } from './types';
+import type { AnalyticsEvent, FormEventType, FormPayload } from './types';
+import type { FormAnalyticsContextProps } from 'src/context/useFormAnalyticsContext';
 
 /**
  * Sends a direct call rule events to Adobe for a Component Click (and optionally, with `data`, Component Details).
@@ -55,9 +56,9 @@ export const sendFormEvent = (
     ) {
       formEventPayload['stepName'] = eventPayload.stepName.replace(/\|/g, '');
     } else if (eventType === 'formError' && 'formError' in eventPayload) {
-      formEventPayload['formError'] = eventPayload.formError.replace(/\|/g, '');
+      formEventPayload['formError'] = eventPayload;
     }
-    // window._satellite.track(eventType, formEventPayload);
+    window._satellite.track(eventType, formEventPayload);
   }
 };
 
@@ -84,3 +85,29 @@ export const waitForAdobeAnalyticsToBeLoaded = () =>
       }
     }, 1000);
   });
+
+/**
+ * Sends a formFocus event to indicate the user's first point of contact with the form (e.g. the start).
+ * This must only be fired *once* per form, so we use context to keep track of the first touched form input.
+ * For analytics purposes, "form input" might mean a form field, docs link, tab, button, etc.
+ * @param formName
+ * @param firstTouchedInputName
+ * @param context
+ */
+export const handleFormFocusEvent = (
+  formName: string,
+  firstTouchedInputName: string,
+  context: FormAnalyticsContextProps
+) => {
+  // Update the first touched input once per form.
+  // It will be undefined at context initialization, indicating that a user has not yet interacted with the form.
+  if (!context.firstTouchedInputName) {
+    context.updateState({
+      firstTouchedInputName,
+      formName,
+    });
+    // eslint-disable-next-line no-console
+    console.log(`Fire a formFocus event on ${firstTouchedInputName}!`);
+    // TODO: call the actual formFocus event here.
+  }
+};
