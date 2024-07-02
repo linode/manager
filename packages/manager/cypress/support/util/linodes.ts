@@ -7,8 +7,25 @@ import { chooseRegion } from 'support/util/regions';
 import { depaginate } from './paginate';
 import { pageSize } from 'support/constants/api';
 
-import type { Config, CreateLinodeRequest, Linode } from '@linode/api-v4';
+import type {
+  Config,
+  CreateLinodeRequest,
+  InterfacePayload,
+  Linode,
+} from '@linode/api-v4';
 import { findOrCreateDependencyFirewall } from 'support/api/firewalls';
+
+/**
+ * Linode create interface to configure a Linode with no public internet access.
+ */
+export const linodeVlanNoInternetConfig: InterfacePayload[] = [
+  {
+    purpose: 'vlan',
+    primary: false,
+    label: randomLabel(),
+    ipam_address: null,
+  },
+];
 
 /**
  * Methods used to secure test Linodes.
@@ -77,14 +94,7 @@ export const createTestLinode = async (
 
       case 'vlan_no_internet':
         return {
-          interfaces: [
-            {
-              purpose: 'vlan',
-              primary: false,
-              label: randomLabel(),
-              ipam_address: null,
-            },
-          ],
+          interfaces: linodeVlanNoInternetConfig,
         };
 
       case 'powered_off':
