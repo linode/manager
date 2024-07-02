@@ -35,7 +35,7 @@ export const updateGlobalFilterPreference = (data: {}) => {
 };
 
 
-const debounce = (updatedData : AclpConfig) =>{   //to avoid frequent preference update calls within 1 sec interval
+const debounce = (updatedData : AclpConfig) =>{   //to avoid frequent preference update calls within 500 ms interval
 
   if(timerId){
     clearTimeout(timerId);

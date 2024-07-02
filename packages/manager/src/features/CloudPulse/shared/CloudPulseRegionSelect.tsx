@@ -26,6 +26,7 @@ export const CloudPulseRegionSelect = React.memo(
           // eslint-disable-next-line @typescript-eslint/no-empty-function
           onChange={() => { }}
           placeholder="Select a Region"
+          data-testid={"region-select"}
         />
       )
     }
@@ -46,6 +47,7 @@ export const CloudPulseRegionSelect = React.memo(
         regions={regions ? regions : []}
         disabled={!props.selectedDashboard}
         value={props.selectedRegion}
+        data-testid={"region-select"}
       />
     );
   }
