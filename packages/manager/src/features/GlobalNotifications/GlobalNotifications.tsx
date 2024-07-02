@@ -17,7 +17,9 @@ import { ComplianceUpdateModal } from './ComplianceUpdateModal';
 import { EmailBounceNotificationSection } from './EmailBounce';
 import { RegionStatusBanner } from './RegionStatusBanner';
 import { TaxCollectionBanner } from './TaxCollectionBanner';
+import { TokensUpdateBanner } from './TokensUpdateBanner';
 import { VerificationDetailsBanner } from './VerificationDetailsBanner';
+
 export const GlobalNotifications = () => {
   const flags = useFlags();
   const { data: profile } = useProfile();
@@ -51,6 +53,7 @@ export const GlobalNotifications = () => {
 
   return (
     <>
+      <TokensUpdateBanner />
       <EmailBounceNotificationSection />
       <RegionStatusBanner />
       <AbuseTicketBanner />
