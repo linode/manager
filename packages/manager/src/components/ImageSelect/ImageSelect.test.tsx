@@ -5,7 +5,6 @@ import { imageFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ImageSelect, imagesToGroupedItems } from './ImageSelect';
-import { Image } from '@linode/api-v4';
 
 describe('imagesToGroupedItems', () => {
   it('should filter deprecated images when end of life is past beyond 6 months ', () => {
