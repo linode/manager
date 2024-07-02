@@ -284,7 +284,7 @@ export const VolumeCreate = () => {
               <Notice
                 spacingBottom={0}
                 spacingTop={12}
-                text={'Hello there'}
+                text={error}
                 variant="error"
               />
             )}
