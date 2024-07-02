@@ -107,6 +107,7 @@ import type {
   ObjectStorageKeyRequest,
   SecurityQuestionsPayload,
   TokenRequest,
+  UpdateImageRegionsPayload,
   User,
   VolumeStatus,
 } from '@linode/api-v4';
@@ -697,6 +698,21 @@ export const handlers = [
 
     return HttpResponse.json(makeResourcePage(images));
   }),
+  http.post<any, UpdateImageRegionsPayload>(
+    '*/v4/images/:id/regions',
+    async ({ request }) => {
+      const data = await request.json();
+
+      const image = imageFactory.build();
+
+      image.regions = data.regions.map((regionId) => ({
+        region: regionId,
+        status: 'pending replication',
+      }));
+
+      return HttpResponse.json(image);
+    }
+  ),
 
   http.get('*/linode/types', () => {
     return HttpResponse.json(

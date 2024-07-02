@@ -54,9 +54,7 @@ export const mockGetCustomImages = (
     const filters = getFilters(req);
     if (filters?.type === 'manual') {
       req.reply(paginateResponse(images));
-      return;
     }
-    req.continue();
   });
 };
 
@@ -74,9 +72,7 @@ export const mockGetRecoveryImages = (
     const filters = getFilters(req);
     if (filters?.type === 'automatic') {
       req.reply(paginateResponse(images));
-      return;
     }
-    req.continue();
   });
 };
 
@@ -129,4 +125,24 @@ export const mockUpdateImage = (
 export const mockDeleteImage = (id: string): Cypress.Chainable<null> => {
   const encodedId = encodeURIComponent(id);
   return cy.intercept('DELETE', apiMatcher(`images/${encodedId}`), {});
+};
+
+/**
+ * Intercepts POST request to update an image's regions and mocks the response.
+ *
+ * @param id - ID of image
+ * @param updatedImage - Updated image with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateImageRegions = (
+  id: string,
+  updatedImage: Image
+): Cypress.Chainable<null> => {
+  const encodedId = encodeURIComponent(id);
+  return cy.intercept(
+    'POST',
+    apiMatcher(`images/${encodedId}/regions`),
+    updatedImage
+  );
 };

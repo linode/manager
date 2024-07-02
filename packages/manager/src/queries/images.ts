@@ -2,12 +2,14 @@ import {
   CreateImagePayload,
   Image,
   ImageUploadPayload,
+  UpdateImageRegionsPayload,
   UploadImageResponse,
   createImage,
   deleteImage,
   getImage,
   getImages,
   updateImage,
+  updateImageRegions,
   uploadImage,
 } from '@linode/api-v4';
 import {
@@ -129,6 +131,21 @@ export const useUploadImageMutation = () => {
       queryClient.setQueryData<Image>(
         imageQueries.image(data.image.id).queryKey,
         data.image
+      );
+    },
+  });
+};
+
+export const useUpdateImageRegionsMutation = (imageId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation<Image, APIError[], UpdateImageRegionsPayload>({
+    mutationFn: (data) => updateImageRegions(imageId, data),
+    onSuccess(image) {
+      queryClient.invalidateQueries(imageQueries.paginated._def);
+      queryClient.invalidateQueries(imageQueries.all._def);
+      queryClient.setQueryData<Image>(
+        imageQueries.image(image.id).queryKey,
+        image
       );
     },
   });

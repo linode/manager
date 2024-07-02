@@ -18,10 +18,11 @@ import type { Image } from '@linode/api-v4';
 interface Props {
   image: Image | undefined;
   onClose: () => void;
+  open: boolean;
 }
 
 export const RebuildImageDrawer = (props: Props) => {
-  const { image, onClose } = props;
+  const { image, onClose, open } = props;
 
   const history = useHistory();
   const {
@@ -54,7 +55,7 @@ export const RebuildImageDrawer = (props: Props) => {
     <Drawer
       onClose={onClose}
       onExited={reset}
-      open={!!image}
+      open={open}
       title="Rebuild an Existing Linode from an Image"
     >
       <Stack marginTop={4}>
