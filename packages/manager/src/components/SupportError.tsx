@@ -1,10 +1,11 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
 import { capitalize } from 'src/utilities/capitalize';
+
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
   errors: APIError[];
@@ -16,6 +17,7 @@ export const SupportError = (props: Props) => {
   const supportTextRegex = new RegExp(
     /(open a support ticket|contact Support)/i
   );
+
   const errorMsg = errors[0].reason.split(supportTextRegex);
 
   return (
@@ -28,6 +30,7 @@ export const SupportError = (props: Props) => {
     >
       {errorMsg.map((substring: string, idx) => {
         const openTicket = substring.match(supportTextRegex);
+
         if (openTicket) {
           return (
             <SupportLink

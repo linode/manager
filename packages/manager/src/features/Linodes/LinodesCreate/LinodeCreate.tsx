@@ -109,6 +109,9 @@ import { VPCPanel } from './VPCPanel';
 
 import type { Tab } from 'src/components/Tabs/TabLinkList';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import { EntityType } from 'src/features/Support/SupportTickets/SupportTicketDialog';
+import { SupportLink } from 'src/components/SupportLink';
+import { capitalize } from 'src/utilities/capitalize';
 
 export interface LinodeCreateProps {
   additionalIPv4RangesForVPC: ExtendedIP[];
@@ -519,9 +522,14 @@ export class LinodeCreate extends React.PureComponent<
           {hasErrorFor.none && !!showGeneralError && (
             <Notice spacingTop={8} text={hasErrorFor.none} variant="error" />
           )}
-          {generalError && (
+          {generalError && typeof generalError === 'string' ? (
             <Notice spacingTop={8} text={generalError} variant="error" />
-          )}
+          ) : generalError && typeof generalError !== 'string' ? (
+            <SupportTicketGeneralError
+              entityType="linode_id"
+              generalError={generalError}
+            />
+          ) : undefined}
           {userCannotCreateLinode && (
             <Notice
               text={
@@ -1232,3 +1240,51 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, CombinedProps> = (
 const connected = connect(undefined, mapDispatchToProps);
 
 export default connected(LinodeCreate);
+
+interface SupportTicketGeneralErrorProps {
+  entityType: EntityType;
+  generalError: JSX.Element;
+}
+
+// TODO: move to own file or try to consolidate with SupportError.tsx
+const SupportTicketGeneralError = (props: SupportTicketGeneralErrorProps) => {
+  const { entityType, generalError } = props;
+  const supportTextRegex = new RegExp(
+    /(open a support ticket|contact Support)/i
+  );
+  const reason: string = generalError.props.errors[0].reason;
+  const limitError = reason.split(supportTextRegex);
+
+  // Determine whether we'll need to link to a specific support ticket form based on ticketType.
+  const accountLimitRegex = new RegExp(
+    /(limit|limit for the number of active services) on your account/i
+  );
+  const isAccountLimitSupportTicket = reason.match(accountLimitRegex);
+
+  return (
+    <Notice variant="error">
+      {limitError.map((substring: string, idx: number) => {
+        const openTicket = substring.match(supportTextRegex);
+
+        if (openTicket) {
+          return (
+            <SupportLink
+              text={
+                substring.match(/^[A-Z]/)
+                  ? capitalize(openTicket[0])
+                  : openTicket[0]
+              }
+              ticketType={
+                isAccountLimitSupportTicket ? 'accountLimit' : 'general'
+              }
+              entity={{ id: undefined, type: entityType }}
+              key={`${substring}-${idx}`}
+            />
+          );
+        } else {
+          return substring;
+        }
+      })}
+    </Notice>
+  );
+};

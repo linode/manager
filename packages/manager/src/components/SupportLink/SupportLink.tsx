@@ -16,9 +16,13 @@ interface SupportLinkProps {
 }
 
 export interface EntityForTicketDetails {
-  id: number;
+  id: number | undefined;
   type: EntityType;
 }
+
+const supportTicketTypeToTitleMap = {
+  accountLimit: 'Account Limit Increase',
+};
 
 const SupportLink = (props: SupportLinkProps) => {
   const { description, entity, onClick, text, ticketType, title } = props;
@@ -31,7 +35,8 @@ const SupportLink = (props: SupportLinkProps) => {
           entity,
           open: true,
           ticketType,
-          title,
+          title:
+            (ticketType && supportTicketTypeToTitleMap[ticketType]) ?? title,
         },
       }}
       onClick={onClick}
