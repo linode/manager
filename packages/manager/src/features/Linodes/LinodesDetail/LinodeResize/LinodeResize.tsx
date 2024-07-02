@@ -1,7 +1,3 @@
-import {
-  MigrationTypes,
-  ResizeLinodePayload,
-} from '@linode/api-v4/lib/linodes';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -40,6 +36,11 @@ import {
   shouldEnableAutoResizeDiskOption,
 } from './LinodeResize.utils';
 import { UnifiedMigrationPanel } from './LinodeResizeUnifiedMigrationPanel';
+
+import type {
+  MigrationTypes,
+  ResizeLinodePayload,
+} from '@linode/api-v4/lib/linodes';
 
 interface Props {
   linodeId?: number;
@@ -228,6 +229,7 @@ export const LinodeResize = (props: Props) => {
             regionsData={regionsData}
             selectedId={formik.values.type}
             selectedRegionID={linode?.region}
+            sx={{ border: 0 }}
             types={currentTypes.map(extendType)}
           />
         </Box>
