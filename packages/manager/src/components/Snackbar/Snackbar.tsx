@@ -12,30 +12,33 @@ import type { SnackbarProviderProps } from 'notistack';
 const StyledMaterialDesignContent = styled(MaterialDesignContent)(
   ({ theme }: { theme: Theme }) => ({
     '&.notistack-MuiContent-error': {
-      backgroundColor: theme.palette.error.light,
-      borderLeft: `6px solid ${theme.palette.error.dark}`,
+      backgroundColor: theme.notificationToast.error.backgroundColor,
+      borderLeft: theme.notificationToast.error.borderLeft,
     },
     '&.notistack-MuiContent-info': {
-      backgroundColor: theme.palette.info.light,
-      borderLeft: `6px solid ${theme.palette.primary.main}`,
+      backgroundColor: theme.notificationToast.info.backgroundColor,
+      borderLeft: theme.notificationToast.info.borderLeft,
     },
     '&.notistack-MuiContent-success': {
-      backgroundColor: theme.palette.success.light,
-      borderLeft: `6px solid ${theme.palette.success.dark}`,
+      backgroundColor: theme.notificationToast.success.backgroundColor,
+      borderLeft: theme.notificationToast.success.borderLeft,
     },
     '&.notistack-MuiContent-warning': {
-      backgroundColor: theme.palette.warning.light,
-      borderLeft: `6px solid ${theme.palette.warning.dark}`,
+      backgroundColor: theme.notificationToast.warning.backgroundColor,
+      borderLeft: theme.notificationToast.warning.borderLeft,
     },
   })
 );
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {
-    '& div': {
-      backgroundColor: `transparent`,
-      color: theme.palette.text.primary,
+    '& .notistack-MuiContent': {
+      color: theme.notificationToast.default.color,
       fontSize: '0.875rem',
+    },
+    '& .notistack-MuiContent-default': {
+      backgroundColor: theme.notificationToast.default.backgroundColor,
+      borderLeft: theme.notificationToast.default.borderLeft,
     },
     [theme.breakpoints.down('md')]: {
       '& .SnackbarItem-contentRoot': {
