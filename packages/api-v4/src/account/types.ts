@@ -257,7 +257,8 @@ export type NotificationType =
   | 'promotion'
   | 'user_email_bounce'
   | 'volume_migration_scheduled'
-  | 'volume_migration_imminent';
+  | 'volume_migration_imminent'
+  | 'tax_id_invalid';
 
 export type NotificationSeverity = 'minor' | 'major' | 'critical';
 
@@ -433,6 +434,7 @@ export const EventActionKeys = [
   'tag_create',
   'tag_delete',
   'tax_id_invalid',
+  'tax_id_valid',
   'tfa_disabled',
   'tfa_enabled',
   'ticket_attachment_upload',
