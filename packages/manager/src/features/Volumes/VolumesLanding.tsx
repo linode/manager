@@ -18,8 +18,10 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useVolumesQuery } from 'src/queries/volumes/volumes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -43,6 +45,9 @@ export const VolumesLanding = () => {
   const history = useHistory();
   const location = useLocation<{ volume: Volume | undefined }>();
   const pagination = usePagination(1, preferenceKey);
+  const isRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_volumes',
+  });
   const queryParams = new URLSearchParams(location.search);
   const volumeLabelFromParam = queryParams.get(searchQueryKey) ?? '';
 
@@ -161,6 +166,14 @@ export const VolumesLanding = () => {
           pathname: location.pathname,
           removeCrumbX: 1,
         }}
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Volumes',
+          }),
+        }}
+        disabledCreateButton={isRestricted}
         docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
         entity="Volume"
         onButtonClick={() => history.push('/volumes/create')}
