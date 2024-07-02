@@ -130,8 +130,10 @@ export const VolumesActionMenu = (props: Props) => {
           return (
             <InlineMenuAction
               actionText={action.title}
+              disabled={action.disabled}
               key={action.title}
               onClick={action.onClick}
+              tooltip={action.tooltip}
             />
           );
         })}
