@@ -2502,6 +2502,13 @@
   dependencies:
     hi-base32 "^0.5.0"
 
+"@peggyjs/from-mem@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@peggyjs/from-mem/-/from-mem-1.3.0.tgz#16470cf7dfa22fc75ca217a4e064a5f0c4e1111b"
+  integrity sha512-kzGoIRJjkg3KuGI4bopz9UvF3KguzfxalHRDEIdqEZUe45xezsQ6cx30e0RKuxPUexojQRBfu89Okn7f4/QXsw==
+  dependencies:
+    semver "7.6.0"
+
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
@@ -6003,6 +6010,11 @@ commander@11.0.0:
   version "11.0.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-11.0.0.tgz#43e19c25dbedc8256203538e8d7e9346877a6f67"
   integrity sha512-9HMlXtt/BNoYr8ooyjjNRdIilOTkVJXB+GhxMTtOKwk0R4j4lS4NpjuqmRxroBfnfTSHQIHQB7wryHhXarNjmQ==
+
+commander@^12.1.0:
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-12.1.0.tgz#01423b36f501259fdaac4d0e4d60c96c991585d3"
+  integrity sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==
 
 commander@^4.0.0:
   version "4.1.1"
@@ -11144,6 +11156,15 @@ peek-stream@^1.1.0:
     duplexify "^3.5.0"
     through2 "^2.0.3"
 
+peggy@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/peggy/-/peggy-4.0.3.tgz#7bcd47718483ab405c960350c5250e3e487dec74"
+  integrity sha512-v7/Pt6kGYsfXsCrfb52q7/yg5jaAwiVaUMAPLPvy4DJJU6Wwr72t6nDIqIDkGfzd1B4zeVuTnQT0RGeOhe/uSA==
+  dependencies:
+    "@peggyjs/from-mem" "1.3.0"
+    commander "^12.1.0"
+    source-map-generator "0.8.0"
+
 pend@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/pend/-/pend-1.2.0.tgz#7a57eb550a6783f9115331fcf4663d5c8e007a50"
@@ -12451,7 +12472,7 @@ semver-compare@^1.0.0:
   resolved "https://registry.yarnpkg.com/semver-compare/-/semver-compare-1.0.0.tgz#0dee216a1c941ab37e9efb1788f6afc5ff5537fc"
   integrity sha512-YM3/ITh2MJ5MtzaM429anh+x2jiLVjqILF4m4oyQB18W7Ggea7BfqdH/wGMK7dDiMghv/6WG7znWMwUDzJiXow==
 
-"semver@2 || 3 || 4 || 5", semver@^5.5.0, semver@^5.6.0, semver@^6.0.0, semver@^6.1.0, semver@^6.1.2, semver@^6.3.1, semver@^7.2.1, semver@^7.3.2, semver@^7.3.7, semver@^7.5.2, semver@^7.5.3, semver@^7.5.4:
+"semver@2 || 3 || 4 || 5", semver@7.6.0, semver@^5.5.0, semver@^5.6.0, semver@^6.0.0, semver@^6.1.0, semver@^6.1.2, semver@^6.3.1, semver@^7.2.1, semver@^7.3.2, semver@^7.3.7, semver@^7.5.2, semver@^7.5.3, semver@^7.5.4:
   version "7.6.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.2.tgz#1e3b34759f896e8f14d6134732ce798aeb0c6e13"
   integrity sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==
@@ -12722,6 +12743,11 @@ sonic-forest@^1.0.0:
   integrity sha512-dtwajos6IWMEWXdEbW1IkEkyL2gztCAgDplRIX+OT5aRKnEd5e7r7YCxRgXZdhRP1FBdOBf8axeTPhzDv8T4wQ==
   dependencies:
     tree-dump "^1.0.0"
+
+source-map-generator@0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/source-map-generator/-/source-map-generator-0.8.0.tgz#10d5ca0651e2c9302ea338739cbd4408849c5d00"
+  integrity sha512-psgxdGMwl5MZM9S3FWee4EgsEaIjahYV5AzGnwUvPhWeITz/j6rKpysQHlQ4USdxvINlb8lKfWGIXwfkrgtqkA==
 
 source-map-js@^1.0.2:
   version "1.0.2"

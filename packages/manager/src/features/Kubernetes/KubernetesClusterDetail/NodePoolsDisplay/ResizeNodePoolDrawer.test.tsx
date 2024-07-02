@@ -1,15 +1,27 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { nodePoolFactory } from 'src/factories/kubernetesCluster';
+import { nodePoolFactory, typeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { Props, ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
+import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
+
+import type { Props } from './ResizeNodePoolDrawer';
 
 const pool = nodePoolFactory.build({
   type: 'g6-standard-1',
 });
 const smallPool = nodePoolFactory.build({ count: 2 });
+
+vi.mock('src/queries/types', async () => {
+  const actual = await vi.importActual('src/queries/types');
+  return {
+    ...actual,
+    useSpecificTypes: vi
+      .fn()
+      .mockReturnValue([{ data: typeFactory.build({ label: 'Linode 1 GB' }) }]),
+  };
+});
 
 const props: Props = {
   kubernetesClusterId: 1,
