@@ -9,6 +9,7 @@ import Paginate from 'src/components/Paginate';
 import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Paper } from 'src/components/Paper';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableBody } from 'src/components/TableBody';
 import { Tooltip } from 'src/components/Tooltip';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
@@ -117,12 +118,16 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const params = getQueryParamsFromQueryString(search);
   const queryPage = Math.min(Number(params.page), maxPageNumber) || 1;
 
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
   const [regionFilter, setRegionFilter] = React.useState<
     RegionFilter | undefined
   >(storage.regionFilter.get());
 
   let filteredData: LinodeWithMaintenance[] | null = null;
-  if (regionFilter === 'core' || regionFilter === 'distributed') {
+  if (
+    isGeckoGAEnabled &&
+    (regionFilter === 'core' || regionFilter === 'distributed')
+  ) {
     filteredData = data.filter((linode) => linode.site_type === regionFilter);
   } else {
     filteredData = null;
@@ -165,33 +170,36 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
           <React.Fragment>
             {display === 'list' && (
               <>
-                <Paper sx={{ padding: 1 }}>
-                  <label style={{ alignItems: 'center', display: 'flex' }}>
-                    <span style={{ marginLeft: 8, marginRight: 8 }}>
-                      Region Type:
-                    </span>{' '}
-                    <Autocomplete
-                      defaultValue={regionFilterOptions.find(
-                        (filter) => filter.value === storage.regionFilter.get()
-                      )}
-                      onChange={(_, selectedOption) => {
-                        if (selectedOption?.value) {
-                          setRegionFilter(selectedOption.value);
-                          storage.regionFilter.set(selectedOption.value);
-                        }
-                      }}
-                      sx={{
-                        display: 'inline-block',
-                      }}
-                      textFieldProps={{
-                        hideLabel: true,
-                      }}
-                      disableClearable
-                      label="Region Type"
-                      options={regionFilterOptions}
-                    />
-                  </label>
-                </Paper>
+                {isGeckoGAEnabled && (
+                  <Paper sx={{ padding: 1 }}>
+                    <label style={{ alignItems: 'center', display: 'flex' }}>
+                      <span style={{ marginLeft: 8, marginRight: 8 }}>
+                        Region Type:
+                      </span>{' '}
+                      <Autocomplete
+                        defaultValue={regionFilterOptions.find(
+                          (filter) =>
+                            filter.value === storage.regionFilter.get()
+                        )}
+                        onChange={(_, selectedOption) => {
+                          if (selectedOption?.value) {
+                            setRegionFilter(selectedOption.value);
+                            storage.regionFilter.set(selectedOption.value);
+                          }
+                        }}
+                        sx={{
+                          display: 'inline-block',
+                        }}
+                        textFieldProps={{
+                          hideLabel: true,
+                        }}
+                        disableClearable
+                        label="Region Type"
+                        options={regionFilterOptions}
+                      />
+                    </label>
+                  </Paper>
+                )}
                 <TableWrapper
                   {...tableWrapperProps}
                   linodeViewPreference={linodeViewPreference}
