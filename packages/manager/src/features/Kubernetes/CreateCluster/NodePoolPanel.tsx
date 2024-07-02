@@ -16,7 +16,6 @@ import type {
   LinodeTypeClass,
   Region,
 } from '@linode/api-v4';
-import type { SxProps } from '@mui/material';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 const DEFAULT_PLAN_COUNT = 3;
@@ -29,7 +28,6 @@ export interface NodePoolPanelProps {
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   regionsData: Region[];
   selectedRegionId: Region['id'] | undefined;
-  sx?: SxProps;
   types: ExtendedType[];
   typesError?: string;
   typesLoading: boolean;
@@ -62,7 +60,6 @@ const Panel = (props: NodePoolPanelProps) => {
     isSelectedRegionEligibleForPlan,
     regionsData,
     selectedRegionId,
-    sx,
     types,
   } = props;
 
@@ -128,7 +125,6 @@ const Panel = (props: NodePoolPanelProps) => {
           resetValues={() => null} // In this flow we don't want to clear things on tab changes
           selectedId={selectedType}
           selectedRegionId={selectedRegionId}
-          sx={sx}
           updatePlanCount={updatePlanCount}
         />
       </Grid>

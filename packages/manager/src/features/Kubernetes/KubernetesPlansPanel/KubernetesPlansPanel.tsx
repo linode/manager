@@ -16,7 +16,6 @@ import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 
 import type { CreateNodePoolData, Region } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
-import type { SxProps } from '@mui/material';
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
@@ -37,7 +36,6 @@ interface Props {
   resetValues: () => void;
   selectedId?: string;
   selectedRegionId?: Region['id'] | string;
-  sx?: SxProps;
   types: ExtendedType[];
   updatePlanCount: (planId: string, newCount: number) => void;
 }
@@ -58,7 +56,6 @@ export const KubernetesPlansPanel = (props: Props) => {
     resetValues,
     selectedId,
     selectedRegionId,
-    sx,
     types,
     updatePlanCount,
   } = props;
@@ -139,7 +136,7 @@ export const KubernetesPlansPanel = (props: Props) => {
       handleTabChange={() => resetValues()}
       header={header || ' '}
       initTab={initialTab >= 0 ? initialTab : 0}
-      sx={{ padding: 0, ...sx }}
+      sx={{ padding: 0 }}
       tabs={tabs}
     />
   );
