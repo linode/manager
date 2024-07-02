@@ -5,6 +5,9 @@ import {
 } from './CloudPulseDashboardSelect';
 import React from 'react';
 import { fireEvent, screen } from '@testing-library/react';
+import { DASHBOARD_ID } from '../Utils/CloudPulseConstants';
+import * as preferences from '../Utils/UserPreference';
+import { AclpConfig } from '@linode/api-v4';
 
 const props: CloudPulseDashboardSelectProps = {
   handleDashboardChange: vi.fn(),
@@ -68,5 +71,17 @@ describe('CloudPulse Dashboard select', () => {
         'value',
         'Dashboard 1'
       );
+    }),
+
+    it('Should select the default value from preferences', () =>{
+      const mockFunction = vi.spyOn(preferences, 'getUserPreferenceObject');
+      mockFunction.mockReturnValue({[DASHBOARD_ID] : 1} as AclpConfig);
+
+      renderWithTheme(<CloudPulseDashboardSelect {...props} />);
+
+      expect(screen.getByRole('combobox')).toHaveAttribute(
+        'value',
+        'Dashboard 1'
+      )
     });
 });
