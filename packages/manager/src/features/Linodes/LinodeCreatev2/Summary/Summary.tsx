@@ -13,7 +13,8 @@ import { useTypeQuery } from 'src/queries/types';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+
+import { getLinodePrice } from './utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
@@ -35,6 +36,7 @@ export const Summary = () => {
     vlanLabel,
     vpcId,
     diskEncryption,
+    clusterSize,
   ] = useWatch({
     control,
     name: [
@@ -49,6 +51,7 @@ export const Summary = () => {
       'interfaces.1.label',
       'interfaces.0.vpc_id',
       'disk_encryption',
+      'stackscript_data.cluster_size',
     ],
   });
 
@@ -58,12 +61,11 @@ export const Summary = () => {
 
   const region = regions?.find((r) => r.id === regionId);
 
-  // @todo handle marketplace cluster pricing (support many nodes by looking at UDF data)
-  const price = getLinodeRegionPrice(type, regionId);
-
   const backupsPrice = renderMonthlyPriceToCorrectDecimalPlace(
     getMonthlyBackupsPrice({ region: regionId, type })
   );
+
+  const price = getLinodePrice({ type, regionId, clusterSize });
 
   const summaryItems = [
     {
@@ -80,10 +82,10 @@ export const Summary = () => {
     },
     {
       item: {
-        details: `$${price?.monthly}/month`,
+        details: price,
         title: type ? formatStorageUnits(type.label) : typeId,
       },
-      show: Boolean(typeId),
+      show: price,
     },
     {
       item: {
