@@ -1,15 +1,4 @@
-import {
-  ClusterSize,
-  ComprehensiveReplicationType,
-  CreateDatabasePayload,
-  DatabaseClusterSizeObject,
-  DatabaseEngine,
-  DatabasePriceObject,
-  Engine,
-} from '@linode/api-v4/lib/databases/types';
-import { APIError } from '@linode/api-v4/lib/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
-import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useFormik } from 'formik';
 import { groupBy } from 'ramda';
@@ -25,7 +14,7 @@ import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
 import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -55,14 +44,23 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
-import {
-  ExtendedIP,
-  ipFieldPlaceholder,
-  validateIPs,
-} from 'src/utilities/ipUtils';
+import { ipFieldPlaceholder, validateIPs } from 'src/utilities/ipUtils';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
+import type {
+  ClusterSize,
+  ComprehensiveReplicationType,
+  CreateDatabasePayload,
+  DatabaseClusterSizeObject,
+  DatabaseEngine,
+  DatabasePriceObject,
+  Engine,
+} from '@linode/api-v4/lib/databases/types';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Theme } from '@mui/material/styles';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   btnCtn: {
@@ -519,6 +517,7 @@ const DatabaseCreate = () => {
             regionsData={regionsData}
             selectedId={values.type}
             selectedRegionID={values.region}
+            sx={{ border: 0 }}
             types={displayTypes}
           />
         </Grid>
