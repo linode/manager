@@ -155,6 +155,7 @@ export const ImageSelect = React.memo((props: ImageSelectProps) => {
   const {
     classNames,
     disabled,
+    error: errorText,
     handleSelectImage,
     images,
     selectedImageID,
@@ -231,7 +232,7 @@ export const ImageSelect = React.memo((props: ImageSelectProps) => {
           className={classNames}
           components={{ Option: ImageOption, SingleValue: _SingleValue }}
           disabled={disabled}
-          errorText={imageError}
+          errorText={errorText ?? imageError}
           isLoading={_loading}
           label="Images"
           onChange={onChange}
