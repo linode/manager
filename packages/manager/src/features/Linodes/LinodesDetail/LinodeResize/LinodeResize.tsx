@@ -234,6 +234,7 @@ export const LinodeResize = (props: Props) => {
               regionsData={regionsData}
               selectedId={formik.values.type}
               selectedRegionID={linode?.region}
+              sx={{ border: 0}}
               types={currentTypes.map(extendType)}
             />
           </Box>

@@ -23,6 +23,7 @@ import {
 
 import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
+import type { SxProps } from '@mui/material';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 export interface PlansPanelProps {
@@ -43,6 +44,7 @@ export interface PlansPanelProps {
   selectedId?: string;
   selectedRegionID?: string;
   showLimits?: boolean;
+  sx?: SxProps;
   tabDisabledMessage?: string;
   tabbedPanelInnerClass?: string;
   types: PlanSelectionType[];
@@ -222,7 +224,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
       initTab={initialTab >= 0 ? initialTab : 0}
       innerClass={props.tabbedPanelInnerClass}
       rootClass={`${className} tabbedPanel`}
-      sx={{ width: '100%' }}
+      sx={{ width: '100%', ...props.sx }}
       tabDisabledMessage={props.tabDisabledMessage}
       tabs={tabs}
     />
