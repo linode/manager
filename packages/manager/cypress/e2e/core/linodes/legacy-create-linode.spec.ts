@@ -12,7 +12,6 @@ import {
   getVisible,
 } from 'support/helpers';
 import { ui } from 'support/ui';
-import { apiMatcher } from 'support/util/intercepts';
 import { randomString, randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { getRegionById } from 'support/util/regions';
@@ -39,6 +38,7 @@ import {
 import { mockGetVLANs } from 'support/intercepts/vlans';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import {
+  interceptCreateLinode,
   mockCreateLinode,
   mockGetLinodeType,
   mockGetLinodeTypes,
@@ -156,10 +156,14 @@ describe('create linode', () => {
     // intercept request
     cy.visitWithLogin('/linodes/create');
     cy.get('[data-qa-deploy-linode]');
-    cy.intercept('POST', apiMatcher('linode/instances')).as('linodeCreated');
+    interceptCreateLinode().as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(chooseRegion().label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(
+        chooseRegion({ capabilities: ['Vlans', 'Linodes'] }).label
+      )
+      .click();
     fbtClick('Shared CPU');
     getClick('[id="g6-nanode-1"]');
     getClick('#linode-label').clear().type(linodeLabel);
