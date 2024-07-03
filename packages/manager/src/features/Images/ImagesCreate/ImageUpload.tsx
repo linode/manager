@@ -258,7 +258,6 @@ export const ImageUpload = () => {
                   currentCapability={undefined}
                   disableClearable
                   errorText={fieldState.error?.message}
-                  helperText="For fastest initial upload, select the region that is geographically closest to you. Once uploaded, you will be able to deploy the image to other regions."
                   label="Region"
                   onChange={(e, region) => field.onChange(region.id)}
                   regionFilter="core" // Images service will not be supported for Gecko Beta
