@@ -8,6 +8,13 @@ export interface LinodeCreateQueryParams extends BaseQueryParams {
   type: LinodeCreateType;
 }
 
+export interface LinodeConfigAndDiskQueryParams extends BaseQueryParams {
+  selectedDisk: string;
+  selectedLinode: string;
+}
+
+export type BooleanString = 'false' | 'true';
+
 /**
  * Parses a query string (aka search string) and returns its values
  * as key value pairs.

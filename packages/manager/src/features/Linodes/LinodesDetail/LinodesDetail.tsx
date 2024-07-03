@@ -14,6 +14,8 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
+import type { LinodeConfigAndDiskQueryParams } from 'src/utilities/queryParams';
+
 const LinodesDetailHeader = React.lazy(
   () => import('./LinodesDetailHeader/LinodeDetailHeader')
 );
@@ -27,7 +29,9 @@ const LinodeDetail = () => {
   const { linodeId } = useParams<{ linodeId: string }>();
   const location = useLocation();
 
-  const queryParams = getQueryParamsFromQueryString(location.search);
+  const queryParams = getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
+    location.search
+  );
 
   const id = Number(linodeId);
 
