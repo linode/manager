@@ -17,6 +17,7 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
+import { handleFormFocusEvent } from 'src/utilities/analytics/utils';
 import {
   DIFFERENT_PRICE_STRUCTURE_WARNING,
   DOCS_LINK_LABEL_DC_PRICING,
@@ -29,7 +30,7 @@ import { defaultInterfaces, useLinodeCreateQueryParams } from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
-import { handleFormFocusEvent } from 'src/utilities/analytics/utils';
+
 
 export const Region = () => {
   const {

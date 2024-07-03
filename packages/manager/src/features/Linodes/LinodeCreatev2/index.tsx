@@ -16,6 +16,7 @@ import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
 } from 'src/queries/linodes/linodes';
+import { handleFormFocusEvent } from 'src/utilities/analytics/utils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { Actions } from './Actions';
@@ -23,7 +24,7 @@ import { Addons } from './Addons/Addons';
 import { Details } from './Details/Details';
 import { Error } from './Error';
 import { Firewall } from './Firewall';
-import { Plan, handleFormFocusEvent } from './Plan';
+import { Plan } from './Plan';
 import { Region } from './Region';
 import { linodeCreateResolvers } from './resolvers';
 import { Security } from './Security';
@@ -48,6 +49,7 @@ import { VLAN } from './VLAN';
 import { VPC } from './VPC/VPC';
 
 import type { SubmitHandler } from 'react-hook-form';
+
 
 export const LinodeCreatev2 = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
