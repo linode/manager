@@ -1,16 +1,16 @@
 import { getUserPreferences, updateUserPreferences } from '@linode/api-v4';
 
-import { AclpConfig } from '@linode/api-v4';
+import type { AclpConfig } from '@linode/api-v4';
 
 let userPreference: AclpConfig;
-let timerId : ReturnType<typeof setTimeout>;
+let timerId: ReturnType<typeof setTimeout>;
 
 export const loadUserPreference = async () => {
   const data = await getUserPreferences();
 
-  if(!data || !data.aclpPreference){
-    userPreference = {} as AclpConfig
-  }else{
+  if (!data || !data.aclpPreference) {
+    userPreference = {} as AclpConfig;
+  } else {
     userPreference = { ...data.aclpPreference };
   }
   return data;
@@ -33,14 +33,11 @@ export const updateGlobalFilterPreference = (data: {}) => {
 
   debounce(userPreference);
 };
-
-
-const debounce = (updatedData : AclpConfig) =>{   //to avoid frequent preference update calls within 500 ms interval
-
-  if(timerId){
+// to avoid frequent preference update calls within 500 ms interval
+const debounce = (updatedData: AclpConfig) => {
+  if (timerId) {
     clearTimeout(timerId);
   }
 
   timerId = setTimeout(() => updateUserPreference(updatedData), 500);
-
-}
+};

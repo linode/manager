@@ -50,12 +50,12 @@ export interface AclpConfig {
   region: string;
   resources: string[];
   timeDuration: string;
-  widgets: {[label: string] : AclpWidget} ;
+  widgets: { [label: string]: AclpWidget };
 }
 
 export interface AclpWidget {
   aggregateFunction: string;
-  time_granularity: TimeGranularity;
+  timeGranularity: TimeGranularity;
   label: string;
   size: number;
 }

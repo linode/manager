@@ -1,11 +1,17 @@
 import * as React from 'react';
 
-import Select, {
+import Select from 'src/components/EnhancedSelect/Select';
+
+import { TIME_DURATION } from '../Utils/constants';
+import {
+  getUserPreferenceObject,
+  updateGlobalFilterPreference,
+} from '../Utils/userPreference';
+
+import type {
   BaseSelectProps,
   Item,
 } from 'src/components/EnhancedSelect/Select';
-import { getUserPreferenceObject, updateGlobalFilterPreference } from '../Utils/UserPreference';
-import { TIME_DURATION } from '../Utils/CloudPulseConstants';
 
 interface Props
   extends Omit<
@@ -30,20 +36,19 @@ export type Labels =
 export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
   const { handleStatsChange, ...restOfSelectProps } = props;
 
-  //To set the default value fetched from preferences.
+  // To set the default value fetched from preferences.
   const getPreferredValue = () => {
     const defaultValue = getUserPreferenceObject().timeDuration;
 
-    return options.find((o) => o.label === defaultValue) || options[0]
-  }
+    return options.find((o) => o.label === defaultValue) || options[0];
+  };
 
   const options = generateSelectOptions();
 
   const handleChange = (item: Item<Labels, Labels>) => {
     updateGlobalFilterPreference({
-      [TIME_DURATION]: item.value
+      [TIME_DURATION]: item.value,
     });
-
 
     /*
       Why division by 1000?
@@ -65,12 +70,12 @@ export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
   return (
     <Select
       {...restOfSelectProps}
+      defaultValue={getPreferredValue()}
       isClearable={false}
       isSearchable={false}
       onChange={handleChange}
       options={options}
       small
-      defaultValue={getPreferredValue()}
     />
   );
 });

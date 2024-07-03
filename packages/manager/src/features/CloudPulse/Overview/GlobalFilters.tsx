@@ -2,15 +2,15 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
+import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseRegionSelect } from '../shared/CloudPulseRegionSelect';
 import { CloudPulseResourcesSelect } from '../shared/CloudPulseResourcesSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
+import { getUserPreferenceObject } from '../Utils/userPreference';
 
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
+import type { Dashboard } from '@linode/api-v4';
 import type { WithStartAndEnd } from 'src/features/Longview/request.types';
-import { Dashboard } from '@linode/api-v4';
-import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
-import { getUserPreferenceObject } from '../Utils/UserPreference';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(filters: FiltersObject): undefined | void;
@@ -30,8 +30,10 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     start: 0,
   });
 
-  const [selectedDashboard, setSelectedDashboard] = React.useState<Dashboard | undefined>();
-  const [selectedRegion, setRegion] = React.useState<string | undefined>(getUserPreferenceObject()?.region); //fetch the default region from preference
+  const [selectedDashboard, setSelectedDashboard] = React.useState<
+    Dashboard | undefined
+  >();
+  const [selectedRegion, setRegion] = React.useState<string>(); // fetch the default region from preference
   const [, setResources] = React.useState<CloudPulseResources[]>(); // removed the unused variable, this will be used later point of time
 
   React.useEffect(() => {
@@ -69,12 +71,16 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     []
   );
 
-  const handleDashboardChange = React.useCallback((dashboard: Dashboard | undefined, isDefault: boolean = false) => {
-    setSelectedDashboard(dashboard);
-    if (!isDefault) { //only update the region state when it is not a preference (default) call
-      setRegion(undefined);
-    }
-  }, [])
+  const handleDashboardChange = React.useCallback(
+    (dashboard: Dashboard | undefined, isDefault: boolean = false) => {
+      setSelectedDashboard(dashboard);
+      if (!isDefault) {
+        // only update the region state when it is not a preference (default) call
+        setRegion(undefined);
+      }
+    },
+    []
+  );
 
   return (
     <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
@@ -88,7 +94,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           <StyledCloudPulseRegionSelect
             handleRegionChange={handleRegionChange}
             selectedDashboard={selectedDashboard}
-            selectedRegion={selectedRegion}
           />
         </Grid>
 

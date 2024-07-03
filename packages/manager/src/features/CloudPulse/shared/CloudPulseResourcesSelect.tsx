@@ -2,9 +2,12 @@ import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
-import { getUserPreferenceObject, updateGlobalFilterPreference } from '../Utils/UserPreference';
-import { RESOURCES } from '../Utils/CloudPulseConstants';
-import Select from 'src/components/EnhancedSelect/Select';
+
+import { RESOURCES } from '../Utils/constants';
+import {
+  getUserPreferenceObject,
+  updateGlobalFilterPreference,
+} from '../Utils/userPreference';
 
 export interface CloudPulseResources {
   id: string;
@@ -22,7 +25,6 @@ export interface CloudPulseResourcesSelectProps {
 
 export const CloudPulseResourcesSelect = React.memo(
   (props: CloudPulseResourcesSelectProps) => {
-
     const { data: resources, isLoading } = useResourcesQuery(
       props.region && props.resourceType ? true : false,
       props.resourceType,
@@ -30,44 +32,47 @@ export const CloudPulseResourcesSelect = React.memo(
       { region: props.region }
     );
 
-    const [, setSelectedResources] = React.useState();  //state variable is used to re-render this component on changing the value.
+    const [selectedResources, setSelectedResources] = React.useState<any>();
 
-    const getResourcesList = (): CloudPulseResources[] => {
+    const getResourcesList = (): any[] => {
       return resources && resources.length > 0 ? resources : [];
     };
 
-    const getSelectedResource = (): CloudPulseResources[] | undefined => {
-      const defaultResources = getUserPreferenceObject()?.resources
-      let selectedResources = undefined;
+    // Once the data is loaded, set the state variable with value stored in preferences
+    React.useEffect(() => {
+      const defaultResources = getUserPreferenceObject()?.resources;
+      if (resources) {
+        if (defaultResources) {
+          const resource = getResourcesList().filter((resource) =>
+            defaultResources.includes(String(resource.id))
+          );
 
-      if (defaultResources) {
-        selectedResources = getResourcesList().filter(resource => defaultResources.includes(String(resource.id)))
+          props.handleResourcesSelection(resource);
+          setSelectedResources(resource);
+        } else {
+          setSelectedResources(undefined);
+          props.handleResourcesSelection([]);
+        }
+      } else {
+        setSelectedResources(undefined);
       }
-      return selectedResources;
-    }
-
-    if (!resources) {
-      return (<Select
-        disabled={true}
-        isClearable={true}
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onChange={() => { }}
-        placeholder="Select Resources"
-      />)
-    }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resources, props.region, props.resourceType]);
 
     return (
       <Autocomplete
         onChange={(_: any, resourceSelections: any) => {
           updateGlobalFilterPreference({
-            [RESOURCES]: resourceSelections.map((resource: { id: any; }) => String(resource.id))
+            [RESOURCES]: resourceSelections.map((resource: { id: any }) =>
+              String(resource.id)
+            ),
           });
           setSelectedResources(resourceSelections);
           props.handleResourcesSelection(resourceSelections);
         }}
         autoHighlight
         clearOnBlur
-        data-testid={'Resource-select'}
+        data-testid="Resource-select"
         disabled={!props.region || !props.resourceType || isLoading}
         isOptionEqualToValue={(option, value) => option.id === value.id}
         label=""
@@ -75,7 +80,7 @@ export const CloudPulseResourcesSelect = React.memo(
         multiple
         options={getResourcesList()}
         placeholder={props.placeholder ? props.placeholder : 'Select Resources'}
-        value={getSelectedResource()}
+        value={selectedResources ?? []}
       />
     );
   }
