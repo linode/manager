@@ -2,6 +2,8 @@
  * @file Types and utilities related to Cloud Manager feature flags.
  */
 
+import type { Flags } from 'src/featureFlags';
+
 const defaultFeatureFlagData = {
   flagVersion: 1,
   trackEvents: false,
@@ -29,9 +31,12 @@ export interface FeatureFlagData<T> {
  *
  * See also `getResponseDataFromMockData()`.
  */
-export interface FeatureFlagMockData {
-  [key: string]: any | Partial<FeatureFlagData<any>>;
-}
+export type FeatureFlagMockData = Partial<
+  Record<
+    keyof Flags,
+    Partial<FeatureFlagData<Partial<Flags[keyof Flags]>> | Flags[keyof Flags]>
+  >
+>;
 
 /**
  * Cloud Manager feature flag response.
