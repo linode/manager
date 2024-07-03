@@ -251,7 +251,6 @@ export const ImageUpload = () => {
                     isImageCreateRestricted || form.formState.isSubmitting
                   }
                   textFieldProps={{
-                    helperTextPosition: 'top',
                     inputRef: field.ref,
                     onBlur: field.onBlur,
                   }}
