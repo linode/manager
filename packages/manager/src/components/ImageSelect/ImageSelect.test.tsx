@@ -98,7 +98,7 @@ describe('imagesToGroupedItems', () => {
 });
 
 describe('ImageSelect', () => {
-  it('renders a "Indicates compatibility with distributed compute regions." notice if the user has atleast one image with the distributed capability', async () => {
+  it('renders a "Indicates compatibility with distributed compute regions." notice if the user has at least one image with the distributed capability', async () => {
     const images = [
       imageFactory.build({ capabilities: [] }),
       imageFactory.build({ capabilities: ['distributed-images'] }),
@@ -109,7 +109,7 @@ describe('ImageSelect', () => {
       <ImageSelect
         handleSelectImage={vi.fn()}
         images={images}
-        title={'Images'}
+        title="Images"
         variant="private"
       />
     );

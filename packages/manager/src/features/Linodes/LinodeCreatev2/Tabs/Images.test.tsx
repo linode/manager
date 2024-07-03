@@ -31,7 +31,7 @@ describe('Images', () => {
     expect(getByPlaceholderText('Choose an image')).toBeVisible();
   });
 
-  it('renders a "Indicates compatibility with distributed compute regions." notice if the user has atleast one image with the distributed capability', async () => {
+  it('renders a "Indicates compatibility with distributed compute regions." notice if the user has at least one image with the distributed capability', async () => {
     server.use(
       http.get('*/v4/images', () => {
         const images = [
