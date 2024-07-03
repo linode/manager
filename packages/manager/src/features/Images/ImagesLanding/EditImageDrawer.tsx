@@ -8,7 +8,6 @@ import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
-import { usePrevious } from 'src/hooks/usePrevious';
 import { useUpdateImageMutation } from 'src/queries/images';
 
 import { useImageAndLinodeGrantCheck } from '../utils';
@@ -18,18 +17,17 @@ import type { APIError, Image, UpdateImagePayload } from '@linode/api-v4';
 interface Props {
   image: Image | undefined;
   onClose: () => void;
+  open: boolean;
 }
 export const EditImageDrawer = (props: Props) => {
-  const { image, onClose } = props;
+  const { image, onClose, open } = props;
 
   const { canCreateImage } = useImageAndLinodeGrantCheck();
 
-  // Prevent content from disappearing when closing drawer
-  const prevImage = usePrevious(image);
   const defaultValues = {
-    description: image?.description ?? prevImage?.description ?? undefined,
-    label: image?.label ?? prevImage?.label,
-    tags: image?.tags ?? prevImage?.tags,
+    description: image?.description ?? undefined,
+    label: image?.label,
+    tags: image?.tags,
   };
 
   const {
@@ -78,12 +76,7 @@ export const EditImageDrawer = (props: Props) => {
   });
 
   return (
-    <Drawer
-      onClose={onClose}
-      onExited={reset}
-      open={!!image}
-      title="Edit Image"
-    >
+    <Drawer onClose={onClose} onExited={reset} open={open} title="Edit Image">
       {!canCreateImage && (
         <Notice
           text="You don't have permissions to edit images. Please contact an account administrator for details."
