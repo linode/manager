@@ -13,7 +13,7 @@ import { useCreateVPC } from 'src/hooks/useCreateVPC';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import type { LinodeCreateType } from './types';
+import type { LinodeCreateQueryParams } from 'src/utilities/queryParams';
 
 interface Props {
   handleSelectVPC: (vpcId: number) => void;
@@ -25,7 +25,9 @@ interface Props {
 export const VPCCreateDrawer = (props: Props) => {
   const theme = useTheme();
   const { handleSelectVPC, onClose, open, selectedRegion } = props;
-  const queryParams = getQueryParamsFromQueryString(location.search);
+  const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+    location.search
+  );
 
   const {
     formik,
@@ -85,8 +87,7 @@ export const VPCCreateDrawer = (props: Props) => {
                 sendLinodeCreateFormStepEvent({
                   action: 'click',
                   category: 'button',
-                  createType:
-                    (queryParams.type as LinodeCreateType) ?? 'Distributions',
+                  createType: queryParams.type ?? 'Distributions',
                   formStepName: 'Create VPC Drawer',
                   label: 'Create VPC',
                   version: 'v1',

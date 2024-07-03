@@ -5,8 +5,8 @@ import { useLocation } from 'react-router-dom';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TwoStepRegionSelect } from 'src/components/RegionSelect/TwoStepRegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
@@ -31,7 +31,7 @@ import { Link } from '../Link';
 
 import type { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 import type { Capabilities } from '@linode/api-v4/lib/regions';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateQueryParams } from 'src/utilities/queryParams';
 
 export interface SelectRegionPanelProps {
   RegionSelectProps?: Partial<RegionSelectProps<true>>;
@@ -66,7 +66,9 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const flags = useFlags();
   const location = useLocation();
   const theme = useTheme();
-  const params = getQueryParamsFromQueryString(location.search);
+  const params = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+    location.search
+  );
 
   const { isGeckoGAEnabled } = useIsGeckoEnabled();
 
@@ -99,8 +101,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     });
 
   const hideDistributedRegions =
-    !flags.gecko2?.enabled ||
-    !isDistributedRegionSupported(params.type as LinodeCreateType);
+    !flags.gecko2?.enabled || !isDistributedRegionSupported(params.type);
 
   const showDistributedRegionIconHelperText = Boolean(
     !hideDistributedRegions &&
@@ -113,7 +114,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   );
 
   const disabledRegions = getDisabledRegions({
-    linodeCreateTab: params.type as LinodeCreateType,
+    linodeCreateTab: params.type,
     regions: regions ?? [],
     selectedImage: image,
   });
@@ -151,7 +152,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
             sendLinodeCreateFormStepEvent({
               action: 'click',
               category: 'link',
-              createType: (params.type as LinodeCreateType) ?? 'Distributions',
+              createType: params.type ?? 'Distributions',
               label: DOCS_LINK_LABEL_DC_PRICING,
               version: 'v1',
             })
@@ -177,8 +178,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           </Typography>
         </Notice>
       ) : null}
-      {isGeckoGAEnabled &&
-      isDistributedRegionSupported(params.type as LinodeCreateType) ? (
+      {isGeckoGAEnabled && isDistributedRegionSupported(params.type) ? (
         <TwoStepRegionSelect
           showDistributedRegionIconHelperText={
             showDistributedRegionIconHelperText

@@ -1,3 +1,13 @@
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+
+export interface BaseQueryParams {
+  [key: string]: string;
+}
+
+export interface LinodeCreateQueryParams extends BaseQueryParams {
+  type: LinodeCreateType;
+}
+
 /**
  * Parses a query string (aka search string) and returns its values
  * as key value pairs.
@@ -11,8 +21,9 @@
  * getQueryParamsFromQueryString('?query=false&this=that')
  * // { query: 'false', this: 'that' }
  */
-export const getQueryParamsFromQueryString = (queryString: string) =>
-  Object.fromEntries(new URLSearchParams(queryString));
+export const getQueryParamsFromQueryString = <T extends BaseQueryParams>(
+  queryString: string
+): T => Object.fromEntries(new URLSearchParams(queryString)) as T;
 
 /**
  * Gets the value of a single query parameter by its name

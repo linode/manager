@@ -23,7 +23,7 @@ import {
 
 import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateQueryParams } from 'src/utilities/queryParams';
 
 export interface PlansPanelProps {
   className?: string;
@@ -79,7 +79,9 @@ export const PlansPanel = (props: PlansPanelProps) => {
 
   const flags = useFlags();
   const location = useLocation();
-  const params = getQueryParamsFromQueryString(location.search);
+  const params = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+    location.search
+  );
 
   const { data: regionAvailabilities } = useRegionAvailabilityQuery(
     selectedRegionID || '',
@@ -97,8 +99,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
   );
 
   const hideDistributedRegions =
-    !flags.gecko2?.enabled ||
-    !isDistributedRegionSupported(params.type as LinodeCreateType);
+    !flags.gecko2?.enabled || !isDistributedRegionSupported(params.type);
 
   const showDistributedRegionPlanTable =
     !hideDistributedRegions &&
