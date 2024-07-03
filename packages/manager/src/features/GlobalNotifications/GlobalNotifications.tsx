@@ -17,7 +17,7 @@ import { ComplianceUpdateModal } from './ComplianceUpdateModal';
 import { EmailBounceNotificationSection } from './EmailBounce';
 import { RegionStatusBanner } from './RegionStatusBanner';
 import { TaxCollectionBanner } from './TaxCollectionBanner';
-import { TokensUpdateBanner } from './TokensUpdateBanner';
+import { DesignUpdateBanner } from './TokensUpdateBanner';
 import { VerificationDetailsBanner } from './VerificationDetailsBanner';
 
 export const GlobalNotifications = () => {
@@ -53,7 +53,7 @@ export const GlobalNotifications = () => {
 
   return (
     <>
-      <TokensUpdateBanner />
+      <DesignUpdateBanner />
       <EmailBounceNotificationSection />
       <RegionStatusBanner />
       <AbuseTicketBanner />
