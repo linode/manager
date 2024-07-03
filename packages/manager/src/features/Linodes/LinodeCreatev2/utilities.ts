@@ -265,7 +265,7 @@ export const defaultValues = async (): Promise<LinodeCreateFormValues> => {
   const privateIp =
     linode?.ipv4.some((ipv4) => privateIPRegex.test(ipv4)) ?? false;
 
-  return {
+  const values: LinodeCreateFormValues = {
     backup_id: params.backupID,
     image: getDefaultImageId(params),
     interfaces: defaultInterfaces,
@@ -278,6 +278,10 @@ export const defaultValues = async (): Promise<LinodeCreateFormValues> => {
     stackscript_id: stackscriptId,
     type: linode?.type ? linode.type : '',
   };
+
+  values.label = getGeneratedLinodeLabel({ values, tab: params.type });
+
+  return values
 };
 
 const getDefaultImageId = (params: ParsedLinodeCreateQueryParams) => {
@@ -300,35 +304,13 @@ const getDefaultImageId = (params: ParsedLinodeCreateQueryParams) => {
   return null;
 };
 
-const defaultValuesForImages = {
-  interfaces: defaultInterfaces,
-  region: '',
-  type: '',
-};
+interface GeneratedLinodeLabelOptions {
+  tab: LinodeCreateType | undefined;
+  values: LinodeCreateFormValues;
+}
 
-const defaultValuesForDistributions = {
-  image: DEFAULT_DISTRIBUTION,
-  interfaces: defaultInterfaces,
-  region: '',
-  type: '',
-};
+export const getGeneratedLinodeLabel = (options: GeneratedLinodeLabelOptions) => {
+  const { tab, values } = options;
 
-const defaultValuesForStackScripts = {
-  image: undefined,
-  interfaces: defaultInterfaces,
-  region: '',
-  stackscript_id: undefined,
-  type: '',
-};
-
-/**
- * A map that conatins default values for each Tab of the Linode Create flow.
- */
-export const defaultValuesMap: Record<LinodeCreateType, CreateLinodeRequest> = {
-  Backups: defaultValuesForImages,
-  'Clone Linode': defaultValuesForImages,
-  Distributions: defaultValuesForDistributions,
-  Images: defaultValuesForImages,
-  'One-Click': defaultValuesForStackScripts,
-  StackScripts: defaultValuesForStackScripts,
+  return [values.image, values.region].filter(Boolean).join('-');
 };

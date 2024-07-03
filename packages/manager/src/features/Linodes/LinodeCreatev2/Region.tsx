@@ -24,7 +24,11 @@ import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricin
 
 import { CROSS_DATA_CENTER_CLONE_WARNING } from '../LinodesCreate/constants';
 import { getDisabledRegions } from './Region.utils';
-import { defaultInterfaces, useLinodeCreateQueryParams } from './utilities';
+import {
+  defaultInterfaces,
+  getGeneratedLinodeLabel,
+  useLinodeCreateQueryParams,
+} from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
@@ -38,7 +42,13 @@ export const Region = () => {
 
   const { params } = useLinodeCreateQueryParams();
 
-  const { control, reset } = useFormContext<LinodeCreateFormValues>();
+  const {
+    control,
+    formState: {
+      dirtyFields: { label: isLabelFieldDirty },
+    },
+    reset,
+  } = useFormContext<LinodeCreateFormValues>();
   const { field, fieldState } = useController({
     control,
     name: 'region',
@@ -75,26 +85,42 @@ export const Region = () => {
       ? 'enabled'
       : undefined;
 
-    reset((prev) => ({
-      ...prev,
-      // Reset interfaces because VPC and VLANs are region-sepecific
-      interfaces: defaultInterfaces,
-      // Reset Cloud-init metadata because not all regions support it
-      metadata: undefined,
-      // Reset the placement group because they are region-specific
-      placement_group: undefined,
-      // Set the region
-      region: region.id,
-      // Backups and Private IP are not supported in distributed compute regions
-      ...(isDistributedRegion && {
-        backups_enabled: false,
-        private_ip: false,
+    reset(
+      (prev) => ({
+        ...prev,
+        // Reset interfaces because VPC and VLANs are region-sepecific
+        interfaces: defaultInterfaces,
+        // Reset Cloud-init metadata because not all regions support it
+        metadata: undefined,
+        // Reset the placement group because they are region-specific
+        placement_group: undefined,
+        // Set the region
+        region: region.id,
+        // Backups and Private IP are not supported in distributed compute regions
+        ...(isDistributedRegion && {
+          backups_enabled: false,
+          private_ip: false,
+        }),
+        // If disk encryption is enabled, set the default value to "enabled" if the region supports it
+        ...(isDiskEncryptionFeatureEnabled && {
+          disk_encryption: defaultDiskEncryptionValue,
+        }),
+        // If the user hasn't changed the label, auto-generate one
+        ...(!isLabelFieldDirty && {
+          label: getGeneratedLinodeLabel({
+            tab: params.type,
+            values: { ...prev, region: region.id },
+          }),
+        }),
       }),
-      // If disk encryption is enabled, set the default value to "enabled" if the region supports it
-      ...(isDiskEncryptionFeatureEnabled && {
-        disk_encryption: defaultDiskEncryptionValue,
-      }),
-    }));
+      {
+        keepDirty: true,
+        keepDirtyValues: true,
+        keepErrors: true,
+        keepSubmitCount: true,
+        keepTouched: true,
+      }
+    );
   };
 
   const showCrossDataCenterCloneWarning =
