@@ -6,7 +6,7 @@ import { TIME_DURATION } from '../Utils/constants';
 import {
   getUserPreferenceObject,
   updateGlobalFilterPreference,
-} from '../Utils/userPreference';
+} from '../Utils/UserPreference';
 
 import type {
   BaseSelectProps,

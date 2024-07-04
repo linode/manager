@@ -5,7 +5,7 @@ import { linodeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RESOURCES } from '../Utils/constants';
-import * as preferences from '../Utils/userPreference';
+import * as preferences from '../Utils/UserPreference';
 import { CloudPulseResourcesSelect } from './CloudPulseResourcesSelect';
 
 import type { AclpConfig } from '@linode/api-v4';

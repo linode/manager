@@ -4,7 +4,7 @@ import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 
 import { GlobalFilters } from '../Overview/GlobalFilters';
-import { loadUserPreference } from '../Utils/userPreference';
+import { loadUserPreference } from '../Utils/UserPreference';
 
 import type { FiltersObject } from '../Overview/GlobalFilters';
 

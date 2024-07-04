@@ -7,7 +7,7 @@ import { RESOURCES } from '../Utils/constants';
 import {
   getUserPreferenceObject,
   updateGlobalFilterPreference,
-} from '../Utils/userPreference';
+} from '../Utils/UserPreference';
 
 export interface CloudPulseResources {
   id: string;

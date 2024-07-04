@@ -6,7 +6,6 @@ import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseRegionSelect } from '../shared/CloudPulseRegionSelect';
 import { CloudPulseResourcesSelect } from '../shared/CloudPulseResourcesSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
-import { getUserPreferenceObject } from '../Utils/userPreference';
 
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { Dashboard } from '@linode/api-v4';

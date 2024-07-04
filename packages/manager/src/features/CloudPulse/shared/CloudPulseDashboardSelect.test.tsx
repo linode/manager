@@ -4,7 +4,7 @@ import React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DASHBOARD_ID } from '../Utils/constants';
-import * as preferences from '../Utils/userPreference';
+import * as preferences from '../Utils/UserPreference';
 import { CloudPulseDashboardSelect } from './CloudPulseDashboardSelect';
 
 import type { CloudPulseDashboardSelectProps } from './CloudPulseDashboardSelect';

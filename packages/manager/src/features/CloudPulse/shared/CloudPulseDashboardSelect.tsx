@@ -9,7 +9,7 @@ import { DASHBOARD_ID, REGION, RESOURCES } from '../Utils/constants';
 import {
   getUserPreferenceObject,
   updateGlobalFilterPreference,
-} from '../Utils/userPreference';
+} from '../Utils/UserPreference';
 
 import type { Dashboard } from '@linode/api-v4';
 

@@ -11,7 +11,6 @@ import type { Region } from '@linode/api-v4';
 const props: CloudPulseRegionSelectProps = {
   handleRegionChange: vi.fn(),
   selectedDashboard: undefined,
-  selectedRegion: undefined,
 };
 
 describe('CloudViewRegionSelect', () => {
