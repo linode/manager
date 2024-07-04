@@ -89,8 +89,11 @@ export const VolumesActionMenu = (props: Props) => {
       onClick: handlers.handleAttach,
       title: 'Attach',
       tooltip: isVolumeReadOnly
-        ? "You don't have permissions to attach this Volume. \
-        Please contact your account administrator to request the necessary permissions."
+        ? getRestrictedResourceText({
+            action: 'attach',
+            isSingular: true,
+            resourceType: 'Volumes',
+          })
         : undefined,
     });
   } else {
@@ -99,8 +102,11 @@ export const VolumesActionMenu = (props: Props) => {
       onClick: handlers.handleDetach,
       title: 'Detach',
       tooltip: isVolumeReadOnly
-        ? "You don't have permissions to detach this Volume. \
-        Please contact your account administrator to request the necessary permissions."
+        ? getRestrictedResourceText({
+            action: 'detach',
+            isSingular: true,
+            resourceType: 'Volumes',
+          })
         : undefined,
     });
   }
