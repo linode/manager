@@ -109,6 +109,7 @@ export const ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
 
 // Used for finding specific custom fields within form data, based on the ticket type.
 export const TICKET_TYPE_TO_CUSTOM_FIELD_KEYS_MAP: Record<string, string[]> = {
+  accountLimit: Object.keys(ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP),
   smtp: Object.keys(SMTP_FIELD_NAME_TO_LABEL_MAP),
 };
 

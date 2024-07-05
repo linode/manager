@@ -21,9 +21,6 @@ export const SupportTicketAccountLimitFields = () => {
     AccountLimitCustomFields & SupportTicketFormFields
   >();
 
-  // const { entityType } = watch();
-  // console.log({ entityType });
-
   const { data: account } = useAccount();
 
   const defaultValues = {

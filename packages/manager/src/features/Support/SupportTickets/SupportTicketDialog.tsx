@@ -37,6 +37,7 @@ import { formatDescription, useTicketSeverityCapability } from './ticketUtils';
 
 import type { FileAttachment } from '../index';
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
+import type { AccountLimitCustomFields } from './SupportTicketAccountLimitFields';
 import type { SMTPCustomFields } from './SupportTicketSMTPFields';
 import type { TicketSeverity } from '@linode/api-v4/lib/support';
 import type { Theme } from '@mui/material/styles';
@@ -86,7 +87,8 @@ export type EntityType =
 export type TicketType = 'accountLimit' | 'general' | 'smtp';
 
 export type AllSupportTicketFormFields = SupportTicketFormFields &
-  SMTPCustomFields;
+  SMTPCustomFields &
+  AccountLimitCustomFields;
 
 export interface TicketTypeData {
   dialogTitle: string;
@@ -154,7 +156,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
         prefilledDescription,
         valuesFromStorage.description
       ),
-      entityId: prefilledEntity ? String(prefilledEntity.id) : '',
+      entityId: prefilledEntity?.id ? String(prefilledEntity.id) : '',
       entityInputValue: '',
       entityType: prefilledEntity?.type ?? 'general',
       summary: getInitialValue(prefilledTitle, valuesFromStorage.title),
