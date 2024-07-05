@@ -123,10 +123,6 @@ const toasts: Toasts = {
     failure: (e) => `Error creating Longview Client ${getLabel(e)}.`,
     success: (e) => `Longview Client ${getLabel(e)} successfully created.`,
   },
-  tax_id_invalid: {
-    failure: 'Tax Identification Number could not be verified.',
-    success: 'Tax Identification Number has been verified.',
-  },
   volume_attach: {
     failure: (e) => `Error attaching Volume ${getLabel(e)}.`,
     success: (e) => `Volume ${getLabel(e)} successfully attached.`,

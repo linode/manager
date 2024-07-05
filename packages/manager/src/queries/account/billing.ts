@@ -30,7 +30,7 @@ export const useAllAccountPayments = (
 };
 
 export const taxIdEventHandler = ({ event, queryClient }: EventHandlerData) => {
-  if (event.action === 'tax_id_valid') {
+  if (event.action === 'tax_id_invalid' || event.action === 'tax_id_valid') {
     queryClient.invalidateQueries({
       queryKey: accountQueries.notifications.queryKey,
     });
