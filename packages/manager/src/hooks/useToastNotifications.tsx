@@ -1,10 +1,11 @@
-import { Event, EventAction } from '@linode/api-v4/lib/account/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
 import { sendLinodeDiskEvent } from 'src/utilities/analytics/customEventAnalytics';
+
+import type { Event, EventAction } from '@linode/api-v4/lib/account/types';
 
 export const getLabel = (event: Event) => event.entity?.label ?? '';
 export const getSecondaryLabel = (event: Event) =>
@@ -121,6 +122,10 @@ const toasts: Toasts = {
   longviewclient_create: {
     failure: (e) => `Error creating Longview Client ${getLabel(e)}.`,
     success: (e) => `Longview Client ${getLabel(e)} successfully created.`,
+  },
+  tax_id_invalid: {
+    failure: 'Tax Identification Number could not be verified.',
+    success: 'Tax Identification Number has been verified.',
   },
   volume_attach: {
     failure: (e) => `Error attaching Volume ${getLabel(e)}.`,
