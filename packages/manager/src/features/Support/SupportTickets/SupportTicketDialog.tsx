@@ -310,6 +310,11 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     const _description = formatDescription(values, ticketType);
 
     if (!['general', 'none'].includes(entityType) && !entityId) {
+      // If it's an account limit ticket, we won't have a valid entity, so reset the ticket type back to general.
+      if (ticketType === 'accountLimit') {
+        form.setValue('entityType', 'general');
+      }
+      // Otherwise, require an entity selection.
       form.setError('entityId', {
         message: `Please select a ${ENTITY_ID_TO_NAME_MAP[entityType]}.`,
       });

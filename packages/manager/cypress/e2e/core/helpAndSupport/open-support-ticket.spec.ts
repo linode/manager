@@ -30,6 +30,7 @@ import {
 } from 'support/intercepts/support';
 import {
   ACCOUNT_LIMIT_DIALOG_TITLE,
+  ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP,
   ACCOUNT_LIMIT_HELPER_TEXT,
   SEVERITY_LABEL_MAP,
   SMTP_DIALOG_TITLE,
@@ -468,12 +469,12 @@ describe('help & support', () => {
         cy.findByText('Links to public information are required.');
 
         // Complete the rest of the form.
-        cy.get('[data-qa-ticket-public-info]')
+        cy.findByLabelText('Total number of entities you need?')
           .should('be.visible')
           .click()
           .type(mockFormFields.numberOfEntities);
 
-        cy.get('[data-qa-ticket-public-info]')
+        cy.findByLabelText('Which Linode plan do you need access to?')
           .should('be.visible')
           .click()
           .type(mockFormFields.linodePlan);
@@ -512,6 +513,11 @@ describe('help & support', () => {
     cy.contains(
       `#${mockAccountLimitTicket.id}: ${mockAccountLimitTicket.summary}`
     ).should('be.visible');
+    Object.values(ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP).forEach(
+      (fieldLabel) => {
+        cy.findByText(fieldLabel).should('be.visible');
+      }
+    );
   });
 
   /*
