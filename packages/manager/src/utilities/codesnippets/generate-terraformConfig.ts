@@ -22,6 +22,42 @@ export function generateTerraformConfig(config: CreateLinodeRequest): string {
   if (config.type) {
     terraformConfig += `  type = "${escapeStringForCLI(config.type)}"\n`;
   }
+  if (config.firewall_id) {
+    terraformConfig += `  firewall_id = ${config.firewall_id}\n`;
+  }
+
+  if (config.placement_group && config.placement_group.id) {
+    terraformConfig += `  placement_group {\n    id = ${config.placement_group.id}\n  }\n`;
+  }
+
+  if (config.metadata && config.metadata.user_data) {
+    terraformConfig += `  metadata {\n    user_data = "${config.metadata.user_data}"\n  }\n`;
+  }
+
+  if (config.interfaces && config.interfaces.length > 0) {
+    config.interfaces.forEach((interfaceConfig) => {
+      terraformConfig += `  interface {\n    purpose = "${interfaceConfig.purpose}"\n`;
+      if (interfaceConfig.subnet_id) {
+        terraformConfig += `    subnet_id = ${interfaceConfig.subnet_id}\n`;
+      }
+      if (interfaceConfig.ip_ranges && interfaceConfig.ip_ranges.length > 0) {
+        const ip_rangesFormatted = interfaceConfig.ip_ranges
+          ?.map((ip_range) => `"${ip_range}"`)
+          ?.join(', ');
+        terraformConfig += `    ip_ranges = [${ip_rangesFormatted}]\n`;
+      }
+      if (interfaceConfig.ipv4) {
+        if (interfaceConfig.ipv4.nat_1_1) {
+          terraformConfig += `    ipv4 {\n      nat_1_1 = "${interfaceConfig.ipv4.nat_1_1}"\n`;
+        }
+        if (interfaceConfig.ipv4.vpc) {
+          terraformConfig += `      vpc = "${interfaceConfig.ipv4.vpc}"\n    }\n`;
+        }
+      }
+      terraformConfig += `  }\n`;
+    });
+  }
+
   if (config.authorized_keys && config.authorized_keys.length > 0) {
     const authorizedKeysFormatted = config.authorized_keys
       ?.map((key) => `"${escapeStringForCLI(key)}"`)

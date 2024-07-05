@@ -34,6 +34,12 @@ export function generatePythonLinodeSnippet(
   if (config.root_pass) {
     snippet += `    root_pass="${escapePythonString(config.root_pass)}",\n`;
   }
+  if (config.placement_group && config.placement_group.id) {
+    snippet += `    placement_group= {\n        "id" = ${config.placement_group.id},\n    },\n`;
+  }
+  if (config.metadata && config.metadata.user_data) {
+    snippet += `    metadata= {\n        "user_data" = "${config.metadata.user_data}",\n    },\n`;
+  }
   // Handling other optional fields like authorized_keys, stackscript_id, etc.
   if (config.authorized_keys && config.authorized_keys.length > 0) {
     const keys = config.authorized_keys
@@ -75,7 +81,10 @@ export function generatePythonLinodeSnippet(
     snippet += '    ],\n';
   }
   if (config.backups_enabled) {
-    snippet += `    backups_enabled=${config.backups_enabled},\n`;
+    snippet += `    backups_enabled=True,\n`;
+  }
+  if (config.firewall_id) {
+    snippet += `    firewall_id=${config.firewall_id},\n`;
   }
   if (config.stackscript_id) {
     snippet += `    stackscript_id=${config.stackscript_id},\n`;
@@ -87,7 +96,7 @@ export function generatePythonLinodeSnippet(
     snippet += `    tags=[${tags}],\n`;
   }
   if (config.private_ip) {
-    snippet += `    private_ip=${config.private_ip},\n`;
+    snippet += `    private_ip=True,\n`;
   }
   // Trim the last comma if any optional fields were added
   if (snippet[snippet.length - 2] === ',') {
