@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { Tooltip } from 'src/components/Tooltip';
 import { allContextPopulators } from 'src/mocks/context/populators';
 import { getContextPopulatorGroups } from 'src/mocks/mockContext';
 import { getMockPresetGroups } from 'src/mocks/mockPreset';
@@ -121,7 +122,8 @@ const renderBaselinePresetOptions = () =>
 
 const renderContentPopulatorOptions = (
   populators: string[],
-  onChange: (e: React.ChangeEvent, populatorId: string) => void
+  onChange: (e: React.ChangeEvent, populatorId: string) => void,
+  disabled: boolean
 ) => {
   return (
     <ul>
@@ -134,6 +136,7 @@ const renderContentPopulatorOptions = (
               <li key={contextPopulator.id}>
                 <input
                   checked={populators.includes(contextPopulator.id)}
+                  disabled={disabled}
                   onChange={(e) => onChange(e, contextPopulator.id)}
                   style={{ marginRight: 12 }}
                   type="checkbox"
@@ -151,7 +154,8 @@ const renderContentPopulatorOptions = (
 
 const renderExtraPresetOptions = (
   handlers: string[],
-  onChange: (e: React.ChangeEvent, presetId: string) => void
+  onChange: (e: React.ChangeEvent, presetId: string) => void,
+  disabled: boolean
 ) => {
   return (
     <ul>
@@ -164,6 +168,7 @@ const renderExtraPresetOptions = (
               <li key={extraMockPreset.id}>
                 <input
                   checked={handlers.includes(extraMockPreset.id)}
+                  disabled={disabled}
                   onChange={(e) => onChange(e, extraMockPreset.id)}
                   style={{ marginRight: 12 }}
                   type="checkbox"
@@ -292,9 +297,15 @@ export const ServiceWorkerTool = () => {
     }
   };
 
-  // const saveContentAndHandlers = () => {
-
-  // };
+  const discardChanges = () => {
+    setMSWBasePreset(getMSWPreset());
+    setMSWHandlers(getMSWExtraPresets());
+    setMSWPopulators(getMSWContextPopulators());
+    setSaveState({
+      hasSaved: false,
+      hasUnsavedChanges: false,
+    });
+  };
 
   return (
     <div className="dev-tools__tool">
@@ -315,41 +326,70 @@ export const ServiceWorkerTool = () => {
             </span>
           </div>
           <div>
-            <span style={{ marginRight: 8 }}>Base Preset</span>
-            <DevToolSelect
-              onChange={(e) => handleChangeBasePreset(e)}
-              value={MSWBasePreset}
+            <Tooltip
+              placement="top"
+              title={!isMSWEnabled ? 'Enable MSW to select a preset' : ''}
             >
-              {renderBaselinePresetOptions()}
-            </DevToolSelect>
+              <div>
+                <span
+                  style={{ marginRight: 8, opacity: !isMSWEnabled ? 0.5 : 1 }}
+                >
+                  Base Preset
+                </span>
+                <DevToolSelect
+                  disabled={!isMSWEnabled}
+                  onChange={(e) => handleChangeBasePreset(e)}
+                  value={MSWBasePreset}
+                >
+                  {renderBaselinePresetOptions()}
+                </DevToolSelect>
+              </div>
+            </Tooltip>
           </div>
         </div>
-        <div className="dev-tools__msw__extras">
-          <div className="dev-tools__msw__column">
-            <div className="dev-tools__msw__column__heading">Content</div>
-            <div className="dev-tools__msw__column__body">
-              <div className="dev-tools__list-box">
-                {renderContentPopulatorOptions(
-                  MSWPopulators,
-                  handleChangePopulator
-                )}
+        <Tooltip
+          placement="top"
+          title={!isMSWEnabled ? 'Enable MSW to select a preset' : ''}
+        >
+          <div
+            className={`dev-tools__msw__extras ${
+              !isMSWEnabled ? 'disabled' : ''
+            }`}
+          >
+            <div className="dev-tools__msw__column">
+              <div className="dev-tools__msw__column__heading">Content</div>
+              <div className="dev-tools__msw__column__body">
+                <div className="dev-tools__list-box">
+                  {renderContentPopulatorOptions(
+                    MSWPopulators,
+                    handleChangePopulator,
+                    !isMSWEnabled
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="dev-tools__msw__column">
+              <div className="dev-tools__msw__column__heading">Presets</div>
+              <div className="dev-tools__msw__column__body">
+                <div className="dev-tools__list-box">
+                  {renderExtraPresetOptions(
+                    MSWHandlers,
+                    handleChangeHandler,
+                    !isMSWEnabled
+                  )}
+                </div>
               </div>
             </div>
           </div>
-          <div className="dev-tools__msw__column">
-            <div className="dev-tools__msw__column__heading">Presets</div>
-            <div className="dev-tools__msw__column__body">
-              <div className="dev-tools__list-box">
-                {renderExtraPresetOptions(MSWHandlers, handleChangeHandler)}
-              </div>
-            </div>
-          </div>
-        </div>
+        </Tooltip>
       </div>
       <div className="dev-tools__tool__footer">
         <div className="dev-tools__button-list">
           {saveState.hasSaved && <span>Your changes have been saved.</span>}
-          <button disabled={saveState.hasUnsavedChanges ? false : true}>
+          <button
+            disabled={saveState.hasUnsavedChanges ? false : true}
+            onClick={discardChanges}
+          >
             Discard Changes
           </button>
           <button

@@ -68,6 +68,7 @@
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 1000px;
   color: white;
+  cursor: pointer;
   padding: 5px 18px 7px 18px;
   font-weight: bold;
   font-size: 10.5pt;
@@ -343,6 +344,10 @@
   flex-direction: column;
   flex-grow: 1;
   gap: 12px;
+
+  &.disabled {
+    opacity: 0.5;
+  }
 }
 
 .dev-tools__msw__column {
