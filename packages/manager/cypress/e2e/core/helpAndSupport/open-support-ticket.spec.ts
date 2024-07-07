@@ -371,10 +371,10 @@ describe('help & support', () => {
       ticketType: 'accountLimit' as TicketType,
       companyName: mockAccount.company,
       customerName: `${mockAccount.first_name} ${mockAccount.last_name}`,
-      useCase: randomString(),
-      publicInfo: randomString(),
       numberOfEntities: '2',
       linodePlan: 'Nanode 1 GB',
+      useCase: randomString(),
+      publicInfo: randomString(),
     };
 
     const mockAccountLimitTicket = supportTicketFactory.build({
@@ -385,7 +385,6 @@ describe('help & support', () => {
     });
 
     const mockRegion = chooseRegion();
-    // const linodeLabel = randomLabel();
     const mockPlan = {
       planType: 'Shared CPU',
       planLabel: 'Nanode 1 GB',
