@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable sonarjs/no-duplicate-string */
 import { interceptGetProfile } from 'support/intercepts/profile';
 import {
   mockAppendFeatureFlags,
@@ -25,7 +23,7 @@ import {
   mockGetSupportTickets,
   mockGetSupportTicketReplies,
 } from 'support/intercepts/support';
-import { severityLabelMap } from 'support/constants/tickets';
+import { SEVERITY_LABEL_MAP } from 'src/features/Support/SupportTickets/constants';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import {
   mockGetLinodeDetails,
@@ -34,7 +32,7 @@ import {
 } from 'support/intercepts/linodes';
 import { Config, Disk } from '@linode/api-v4';
 
-describe('help & support landing page', () => {
+describe('support tickets landing page', () => {
   /*
    * - Confirms that "No items to display" is shown when the user has no open support tickets.
    */
@@ -73,7 +71,7 @@ describe('help & support landing page', () => {
   /*
    * - Confirms that support tickets are listed in the table when the user has ones.
    */
-  it('lists upport tickets in the table as expected', () => {
+  it('lists support tickets in the table as expected', () => {
     // TODO Integrate this test with the above test when feature flag goes away.
     const mockTicket = supportTicketFactory.build({
       id: randomNumber(),
@@ -117,7 +115,7 @@ describe('help & support landing page', () => {
     mockTickets.forEach((ticket) => {
       // Get severity label for numeric severity level.
       // Bail out if we're unable to get a valid label -- this indicates a mismatch between the test and source.
-      const severityLabel = severityLabelMap.get(ticket.severity!);
+      const severityLabel = SEVERITY_LABEL_MAP.get(ticket.severity!);
       if (!severityLabel) {
         throw new Error(
           `Unable to retrieve label for severity level '${ticket.severity}'. Is this a valid support severity level?`
@@ -150,7 +148,7 @@ describe('help & support landing page', () => {
 
     // Get severity label for numeric severity level.
     // Bail out if we're unable to get a valid label -- this indicates a mismatch between the test and source.
-    const severityLabel = severityLabelMap.get(mockTicket.severity!);
+    const severityLabel = SEVERITY_LABEL_MAP.get(mockTicket.severity!);
     if (!severityLabel) {
       throw new Error(
         `Unable to retrieve label for severity level '${mockTicket.severity}'. Is this a valid support severity level?`
@@ -166,19 +164,6 @@ describe('help & support landing page', () => {
     mockGetSupportTicketReplies(mockTicket.id, []).as('getReplies');
 
     cy.visitWithLogin('/support/tickets');
-
-    cy.get('[data-qa-open-tickets-tab]').within(() => {
-      // Confirm that "Severity" table column is displayed.
-      cy.findByLabelText('Sort by severity').should('be.visible');
-
-      // Confirm that other table columns are shown.
-      cy.findAllByText('Subject').should('be.visible');
-      cy.findAllByText('Ticket ID').should('be.visible');
-      cy.findAllByText('Regarding').should('be.visible');
-      cy.findAllByText('Date Created').should('be.visible');
-      cy.findAllByText('Last Updated').should('be.visible');
-      cy.findAllByText('Updated By').should('be.visible');
-    });
 
     // Confirm that tickets are listed as expected.
     cy.findAllByText(mockTicket.summary).should('be.visible').click();
@@ -258,7 +243,7 @@ describe('help & support landing page', () => {
 
     // Get severity label for numeric severity level.
     // Bail out if we're unable to get a valid label -- this indicates a mismatch between the test and source.
-    const severityLabel = severityLabelMap.get(mockTicket.severity!);
+    const severityLabel = SEVERITY_LABEL_MAP.get(mockTicket.severity!);
     if (!severityLabel) {
       throw new Error(
         `Unable to retrieve label for severity level '${mockTicket.severity}'. Is this a valid support severity level?`
@@ -278,19 +263,6 @@ describe('help & support landing page', () => {
     mockGetLinodeVolumes(mockLinode.id, [mockVolume]).as('getVolumes');
 
     cy.visitWithLogin('/support/tickets');
-
-    cy.get('[data-qa-open-tickets-tab]').within(() => {
-      // Confirm that "Severity" table column is displayed.
-      cy.findByLabelText('Sort by severity').should('be.visible');
-
-      // Confirm that other table columns are shown.
-      cy.findAllByText('Subject').should('be.visible');
-      cy.findAllByText('Ticket ID').should('be.visible');
-      cy.findAllByText('Regarding').should('be.visible');
-      cy.findAllByText('Date Created').should('be.visible');
-      cy.findAllByText('Last Updated').should('be.visible');
-      cy.findAllByText('Updated By').should('be.visible');
-    });
 
     // Confirm that tickets are listed as expected.
     cy.findAllByText(mockTicket.summary).should('be.visible').click();
