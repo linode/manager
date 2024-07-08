@@ -4,21 +4,11 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 
 import type {
-  AffinityTypeEnforcement,
   CreatePlacementGroupPayload,
   Linode,
   PlacementGroup,
   Region,
 } from '@linode/api-v4';
-
-/**
- * Helper to get the affinity type enforcement readable string.
- */
-export const getAffinityTypeEnforcement = (
-  is_strict: boolean
-): AffinityTypeEnforcement => {
-  return is_strict ? 'Strict' : 'Flexible';
-};
 
 /**
  * Helper to get the full linodes objects assigned to a Placement Group.
@@ -95,13 +85,13 @@ export const hasRegionReachedPlacementGroupCapacity = ({
 };
 
 /**
- * Helper to populate the affinity_type select options.
+ * Helper to populate the placement_group_type select options.
  */
 export const affinityTypeOptions = Object.entries(AFFINITY_TYPES).map(
   ([key, value]) => ({
     disabled: false,
     label: value,
-    value: key as CreatePlacementGroupPayload['affinity_type'],
+    value: key as CreatePlacementGroupPayload['placement_group_type'],
   })
 );
 

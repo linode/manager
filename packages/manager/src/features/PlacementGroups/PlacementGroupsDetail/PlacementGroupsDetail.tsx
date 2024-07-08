@@ -75,10 +75,10 @@ export const PlacementGroupsDetail = () => {
     placementGroup?.members.some((pgLinode) => pgLinode.linode_id === linode.id)
   );
 
-  const { affinity_type, label } = placementGroup;
+  const { placement_group_type, label } = placementGroup;
 
   const resetEditableLabel = () => {
-    return `${label} (${AFFINITY_TYPES[affinity_type]})`;
+    return `${label} (${AFFINITY_TYPES[placement_group_type]})`;
   };
 
   const handleLabelEdit = (newLabel: string) => {

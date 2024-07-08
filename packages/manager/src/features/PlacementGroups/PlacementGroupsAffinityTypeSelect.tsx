@@ -25,7 +25,7 @@ export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
         (option) => option.value === 'anti_affinity:local'
       )}
       onChange={(_, value) => {
-        setFieldValue('affinity_type', value?.value ?? '');
+        setFieldValue('placement_group_type', value?.value ?? '');
       }}
       renderOption={(props, option) => {
         const isDisabledMenuItem = option.value === 'affinity:local';

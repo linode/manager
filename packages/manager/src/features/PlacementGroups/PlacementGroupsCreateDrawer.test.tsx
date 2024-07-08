@@ -107,8 +107,8 @@ describe('PlacementGroupsCreateDrawer', () => {
       expect(
         queryMocks.useCreatePlacementGroup().mutateAsync
       ).toHaveBeenCalledWith({
-        affinity_type: 'anti_affinity:local',
-        is_strict: true,
+        placement_group_type: 'anti_affinity:local',
+        placement_group_policy: 'strict',
         label: 'my-label',
         region: 'us-east',
       });

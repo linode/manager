@@ -34,7 +34,11 @@ import {
 } from './utils';
 
 import type { PlacementGroupsCreateDrawerProps } from './types';
-import type { CreatePlacementGroupPayload, Region } from '@linode/api-v4';
+import type {
+  CreatePlacementGroupPayload,
+  Region,
+  PlacementGroup,
+} from '@linode/api-v4';
 import type { FormikHelpers } from 'formik';
 import type { DisableRegionOption } from 'src/components/RegionSelect/RegionSelect.types';
 
@@ -117,9 +121,9 @@ export const PlacementGroupsCreateDrawer = (
   } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      affinity_type: 'anti_affinity:local',
-      is_strict: true,
       label: '',
+      placement_group_policy: 'strict' as PlacementGroup['placement_group_policy'],
+      placement_group_type: 'anti_affinity:local' as PlacementGroup['placement_group_type'],
       region: selectedRegionId ?? '',
     },
     onSubmit: handleFormSubmit,
@@ -237,7 +241,7 @@ export const PlacementGroupsCreateDrawer = (
             disabledPlacementGroupCreateButton={
               disabledPlacementGroupCreateButton
             }
-            error={errors.affinity_type}
+            error={errors.placement_group_type}
             setFieldValue={setFieldValue}
           />
           <PlacementGroupsAffinityTypeEnforcementRadioGroup
@@ -246,7 +250,7 @@ export const PlacementGroupsCreateDrawer = (
             }
             handleChange={handleChange}
             setFieldValue={setFieldValue}
-            value={values.is_strict}
+            value={values.placement_group_policy}
           />
           <ActionsPanel
             primaryButtonProps={{

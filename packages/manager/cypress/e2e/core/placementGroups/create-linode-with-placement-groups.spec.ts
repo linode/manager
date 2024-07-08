@@ -119,8 +119,8 @@ describe('Linode create flow with Placement Group', () => {
     const mockPlacementGroup = placementGroupFactory.build({
       label: 'pg-1-us-east',
       region: mockRegions[0].id,
-      affinity_type: 'anti_affinity:local',
-      is_strict: true,
+      placement_group_type: 'anti_affinity:local',
+      placement_group_policy: 'strict',
       is_compliant: true,
     });
 
@@ -156,8 +156,10 @@ describe('Linode create flow with Placement Group', () => {
     // Wait for outgoing API request and confirm that payload contains expected data.
     cy.wait('@createPlacementGroup').then((xhr) => {
       const requestPayload = xhr.request?.body;
-      expect(requestPayload['affinity_type']).to.equal('anti_affinity:local');
-      expect(requestPayload['is_strict']).to.equal(true);
+      expect(requestPayload['placement_group_type']).to.equal(
+        'anti_affinity:local'
+      );
+      expect(requestPayload['placement_group_policy']).to.equal('strict');
       expect(requestPayload['label']).to.equal(mockPlacementGroup.label);
       expect(requestPayload['region']).to.equal(mockRegions[0].id);
     });

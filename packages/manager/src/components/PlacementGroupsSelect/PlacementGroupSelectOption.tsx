@@ -73,7 +73,7 @@ export const PlacementGroupSelectOption = ({
                 right: selected ? 14 : 34,
               }}
             >
-              ({AFFINITY_TYPES[value.affinity_type]})
+              ({AFFINITY_TYPES[value.placement_group_type]})
             </Stack>
           </Stack>
           {disabled && (

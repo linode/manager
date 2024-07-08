@@ -10,7 +10,7 @@ describe('PlacementGroups Summary', () => {
     const { getByTestId, getByText } = renderWithTheme(
       <PlacementGroupsSummary
         placementGroup={placementGroupFactory.build({
-          affinity_type: 'affinity:local',
+          placement_group_type: 'affinity:local',
           id: 3,
           is_compliant: true,
           label: 'pg-3',

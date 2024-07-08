@@ -202,7 +202,7 @@ describe('Placement Groups Linode assignment', () => {
       members: [],
       region: mockPlacementGroupRegion.id,
       is_compliant: true,
-      is_strict: false,
+      placement_group_policy: 'flexible',
     });
 
     const mockPlacementGroupAfterAssignment = {
@@ -304,7 +304,7 @@ describe('Placement Groups Linode assignment', () => {
       members: [],
       region: mockPlacementGroupRegion.id,
       is_compliant: true,
-      is_strict: true,
+      placement_group_policy: 'strict',
     });
 
     const complianceErrorMessage = `Assignment would break Placement Group's compliance, non compliant Linode IDs: [${mockLinode.id}]`;

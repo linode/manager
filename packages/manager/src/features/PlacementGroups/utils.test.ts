@@ -8,7 +8,6 @@ import {
 
 import {
   affinityTypeOptions,
-  getAffinityTypeEnforcement,
   getLinodesFromAllPlacementGroups,
   getMaxPGsPerCustomer,
   getPlacementGroupLinodes,
@@ -125,16 +124,6 @@ describe('getLinodesFromAllPlacementGroups', () => {
 
   it('returns an empty array if no placement groups are provided', () => {
     expect(getLinodesFromAllPlacementGroups(undefined)).toEqual([]);
-  });
-});
-
-describe('getAffinityTypeEnforcement', () => {
-  it('returns "Strict" if `is_strict` is true', () => {
-    expect(getAffinityTypeEnforcement(true)).toBe('Strict');
-  });
-
-  it('returns "Flexible" if `is_strict` is false', () => {
-    expect(getAffinityTypeEnforcement(false)).toBe('Flexible');
   });
 });
 

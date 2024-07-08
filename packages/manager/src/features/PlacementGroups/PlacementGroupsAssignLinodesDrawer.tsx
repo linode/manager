@@ -1,4 +1,4 @@
-import { AFFINITY_TYPES } from '@linode/api-v4';
+import { AFFINITY_TYPES, PLACEMENT_GROUP_POLICIES } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -20,7 +20,6 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';
 import {
-  getAffinityTypeEnforcement,
   getLinodesFromAllPlacementGroups,
   hasPlacementGroupReachedCapacity,
 } from './utils';
@@ -96,7 +95,11 @@ export const PlacementGroupsAssignLinodesDrawer = (
     return null;
   }
 
-  const { affinity_type, is_strict, label } = selectedPlacementGroup;
+  const {
+    label,
+    placement_group_policy,
+    placement_group_type,
+  } = selectedPlacementGroup;
   const linodeSelectLabel = region
     ? `Linodes in ${region.label} (${region.id})`
     : 'Linodes';
@@ -142,11 +145,11 @@ export const PlacementGroupsAssignLinodesDrawer = (
       <DescriptionList
         items={[
           {
-            description: AFFINITY_TYPES[affinity_type],
+            description: AFFINITY_TYPES[placement_group_type],
             title: 'Affinity Type',
           },
           {
-            description: getAffinityTypeEnforcement(is_strict),
+            description: PLACEMENT_GROUP_POLICIES[placement_group_policy],
             title: 'Affinity Type Enforcement',
           },
         ]}

@@ -10,13 +10,14 @@ import { Typography } from 'src/components/Typography';
 
 import { CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE } from './constants';
 
+import type { PlacementGroup } from '@linode/api-v4';
 import type { FormikHelpers } from 'formik';
 
 interface Props {
   disabledPlacementGroupCreateButton: boolean;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setFieldValue: FormikHelpers<any>['setFieldValue'];
-  value: boolean;
+  value: PlacementGroup['placement_group_policy'];
 }
 
 export const PlacementGroupsAffinityTypeEnforcementRadioGroup = (
@@ -40,10 +41,10 @@ export const PlacementGroupsAffinityTypeEnforcementRadioGroup = (
       <RadioGroup
         onChange={(event) => {
           handleChange(event);
-          setFieldValue('is_strict', event.target.value === 'true');
+          setFieldValue('placement_group_policy', event.target.value);
         }}
         id="affinity-type-enforcement-radio-group"
-        name="is_strict"
+        name="placement_group_policy"
         value={value}
       >
         <FormControlLabel
