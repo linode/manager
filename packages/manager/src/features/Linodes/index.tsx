@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
@@ -25,13 +25,16 @@ const LinodesCreatev2 = React.lazy(() =>
 
 const LinodesRoutes = () => {
   const flags = useFlags();
+
+  // Hold this feature flag in state so that the user's Linode creation
+  // isn't interupted when the flag is toggled.
+  const [isLinodeCreateV2Enabled] = useState(flags.linodeCreateRefactor);
+
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
         <Route
-          component={
-            flags.linodeCreateRefactor ? LinodesCreatev2 : LinodesCreate
-          }
+          component={isLinodeCreateV2Enabled ? LinodesCreatev2 : LinodesCreate}
           path="/linodes/create"
         />
         <Route component={LinodesDetail} path="/linodes/:linodeId" />
