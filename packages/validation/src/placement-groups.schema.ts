@@ -7,7 +7,7 @@ const labelValidation = string()
 
 export const createPlacementGroupSchema = object({
   label: labelValidation,
-  placement_group_type: string().required('Affinity type is required.'),
+  placement_group_type: string().required('Placement Group type is required.'),
   region: string().required('Region is required.'),
   placement_group_policy: string().required('Is strict is required.'),
 });

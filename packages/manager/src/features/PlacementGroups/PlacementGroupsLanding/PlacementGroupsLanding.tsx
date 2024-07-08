@@ -220,7 +220,7 @@ export const PlacementGroupsLanding = React.memo(() => {
                 handleClick={handleOrderChange}
                 label="placement_group_type"
               >
-                Affinity Type
+                Placement Group Type
               </TableSortCell>
             </Hidden>
             <Hidden smDown>
@@ -231,7 +231,7 @@ export const PlacementGroupsLanding = React.memo(() => {
                 label="placement_group_policy"
                 sx={{ width: '20%' }}
               >
-                Affinity Type Enforcement
+                Placement Group Policy
               </TableSortCell>
             </Hidden>
             <TableCell>Linodes</TableCell>

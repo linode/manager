@@ -20,6 +20,8 @@ interface Props {
   value: PlacementGroup['placement_group_policy'];
 }
 
+const ariaIdentifier = 'placement-group-policy-radio-group';
+
 export const PlacementGroupsAffinityTypeEnforcementRadioGroup = (
   props: Props
 ) => {
@@ -35,15 +37,13 @@ export const PlacementGroupsAffinityTypeEnforcementRadioGroup = (
         text={CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE}
         variant="warning"
       />
-      <FormLabel htmlFor="affinity-type-enforcement-radio-group">
-        Affinity Type Enforcement
-      </FormLabel>
+      <FormLabel htmlFor={ariaIdentifier}>Placement Group Policy</FormLabel>
       <RadioGroup
         onChange={(event) => {
           handleChange(event);
           setFieldValue('placement_group_policy', event.target.value);
         }}
-        id="affinity-type-enforcement-radio-group"
+        id={ariaIdentifier}
         name="placement_group_policy"
         value={value}
       >
@@ -51,8 +51,8 @@ export const PlacementGroupsAffinityTypeEnforcementRadioGroup = (
           label={
             <Typography>
               <strong>Strict.</strong> You can’t assign Linodes if the preferred
-              container defined by your Affinity Type lacks capacity or is
-              unavailable (best practice).
+              container defined by your Placement Group Type lacks capacity or
+              is unavailable (best practice).
             </Typography>
           }
           control={<Radio />}
@@ -63,8 +63,8 @@ export const PlacementGroupsAffinityTypeEnforcementRadioGroup = (
           label={
             <Typography>
               <strong>Flexible.</strong> You can assign Linodes, even if they’re
-              not in the preferred container defined by your Affinity Type, but
-              your placement group will be non-compliant.
+              not in the preferred container defined by your Placement Group
+              Type, but your placement group will be non-compliant.
             </Typography>
           }
           control={<Radio />}

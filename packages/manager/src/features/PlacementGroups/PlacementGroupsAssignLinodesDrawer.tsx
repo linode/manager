@@ -146,11 +146,11 @@ export const PlacementGroupsAssignLinodesDrawer = (
         items={[
           {
             description: AFFINITY_TYPES[placement_group_type],
-            title: 'Affinity Type',
+            title: 'Placement Group Type',
           },
           {
             description: PLACEMENT_GROUP_POLICIES[placement_group_policy],
-            title: 'Affinity Type Enforcement',
+            title: 'Placement Group Policy',
           },
         ]}
         sx={{ my: 2 }}

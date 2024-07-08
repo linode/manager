@@ -133,7 +133,7 @@ describe('Linode create flow with Placement Group', () => {
       .within(() => {
         // Confirm that the drawer contains the expected default information.
         // - A selection region
-        // - An Affinity Type Enforcement message
+        // - An Placement Group Type Enforcement message
         // - a disabled "Create Placement Group" button.
         cy.findByText('Newark, NJ (us-east)').should('be.visible');
         cy.findByText(CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE).should(

@@ -86,9 +86,9 @@ export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
       disableClearable={true}
       disabled={disabledPlacementGroupCreateButton}
       errorText={error}
-      label="Affinity Type"
+      label="Placement Group Type"
       options={affinityTypeOptions}
-      placeholder="Select an Affinity Type"
+      placeholder="Select an Placement Group Type"
     />
   );
 };

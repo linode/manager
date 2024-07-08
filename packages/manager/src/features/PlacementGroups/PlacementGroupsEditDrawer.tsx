@@ -142,14 +142,14 @@ export const PlacementGroupsEditDrawer = (
               {
                 description:
                   AFFINITY_TYPES[placementGroup.placement_group_type],
-                title: 'Affinity Type',
+                title: 'Placement Group Type',
               },
               {
                 description:
                   PLACEMENT_GROUP_POLICIES[
                     placementGroup.placement_group_policy
                   ],
-                title: 'Affinity Type Enforcement',
+                title: 'Placement Group Policy',
               },
             ]}
             sx={{

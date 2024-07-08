@@ -36,8 +36,8 @@ import {
 import type { PlacementGroupsCreateDrawerProps } from './types';
 import type {
   CreatePlacementGroupPayload,
-  Region,
   PlacementGroup,
+  Region,
 } from '@linode/api-v4';
 import type { FormikHelpers } from 'formik';
 import type { DisableRegionOption } from 'src/components/RegionSelect/RegionSelect.types';
