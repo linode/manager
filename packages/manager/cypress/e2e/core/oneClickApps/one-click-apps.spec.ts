@@ -162,7 +162,7 @@ describe('OneClick Apps (OCA)', () => {
     const password = randomString(16);
     const image = 'linode/ubuntu22.04';
     const rootPassword = randomString(16);
-    const region = chooseRegion();
+    const region = chooseRegion({ capabilities: ['Vlans'] });
     const linodeLabel = randomLabel();
     const levelName = 'Get the enderman!';
 

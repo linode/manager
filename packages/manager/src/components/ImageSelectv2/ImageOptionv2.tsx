@@ -40,7 +40,7 @@ export const ImageOptionv2 = ({ image, isSelected, listItemProps }: Props) => {
       </Stack>
       <Stack alignItems="center" direction="row" spacing={1}>
         {image.capabilities.includes('distributed-images') && (
-          <Tooltip title="This image is compatible with distributed regions.">
+          <Tooltip title="This image is compatible with distributed compute regions.">
             <div style={{ display: 'flex' }}>
               <DistributedRegionIcon height="24px" width="24px" />
             </div>

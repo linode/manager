@@ -225,7 +225,7 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     backgroundColor: theme.palette.primary.main,
     color: '#ffff',
   },
-  backgroundColor: theme.color.tagButton,
+  backgroundColor: theme.color.tagButtonBg,
   borderRadius: 0,
   color: theme.color.tagIcon,
   height: 30,

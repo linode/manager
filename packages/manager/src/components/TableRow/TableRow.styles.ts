@@ -9,9 +9,6 @@ export const StyledTableRow = styled(_TableRow, {
   label: 'StyledTableRow',
   shouldForwardProp: omittedProps(['forceIndex']),
 })<TableRowProps>(({ theme, ...props }) => ({
-  backgroundColor: theme.bg.bgPaper,
-  borderLeft: `1px solid ${theme.borderColors.borderTable}`,
-  borderRight: `1px solid ${theme.borderColors.borderTable}`,
   [theme.breakpoints.up('md')]: {
     boxShadow: `inset 3px 0 0 transparent`,
   },
@@ -38,14 +35,14 @@ export const StyledTableRow = styled(_TableRow, {
   ...(props.selected && {
     '& td': {
       '&:first-of-type': {
-        borderLeft: `1px solid ${theme.palette.primary.light}`,
+        borderLeft: `1px solid ${theme.borderColors.borderTable}`,
       },
-      borderBottomColor: theme.palette.primary.light,
-      borderTop: `1px solid ${theme.palette.primary.light}`,
+      borderBottomColor: theme.borderColors.borderTable,
+      borderTop: `1px solid ${theme.borderColors.borderTable}`,
       position: 'relative',
       [theme.breakpoints.down('lg')]: {
         '&:last-child': {
-          borderRight: `1px solid ${theme.palette.primary.light}`,
+          borderRight: `1px solid ${theme.borderColors.borderTable}`,
         },
       },
     },

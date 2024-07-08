@@ -8,6 +8,8 @@ import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
 
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { WithStartAndEnd } from 'src/features/Longview/request.types';
+import { Dashboard } from '@linode/api-v4';
+import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(filters: FiltersObject): undefined | void;
@@ -27,8 +29,12 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     start: 0,
   });
 
-  const [selectedRegion, setRegion] = React.useState<string>();
+  const [selectedDashboard, setSelectedDashboard] = React.useState<
+    Dashboard | undefined
+  >();
+  const [selectedRegion, setRegion] = React.useState<string | undefined>();
   const [, setResources] = React.useState<CloudPulseResources[]>(); // removed the unused variable, this will be used later point of time
+
   React.useEffect(() => {
     const triggerGlobalFilterChange = () => {
       const globalFilters: FiltersObject = {
@@ -64,12 +70,27 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     []
   );
 
+  const handleDashboardChange = React.useCallback(
+    (dashboard: Dashboard | undefined) => {
+      setSelectedDashboard(dashboard);
+      setRegion(undefined);
+    },
+    []
+  );
+
   return (
     <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
       <StyledGrid xs={12}>
+        <Grid sx={{ width: 300 }}>
+          <CloudPulseDashboardSelect
+            handleDashboardChange={handleDashboardChange}
+          />
+        </Grid>
         <Grid sx={{ marginLeft: 2, width: 250 }}>
           <StyledCloudPulseRegionSelect
             handleRegionChange={handleRegionChange}
+            selectedDashboard={selectedDashboard}
+            selectedRegion={selectedRegion}
           />
         </Grid>
 
@@ -77,7 +98,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           <StyledCloudPulseResourcesSelect
             handleResourcesSelection={handleResourcesSelection}
             region={selectedRegion}
-            resourceType={'linode'} // for now passing this static value, will be made dynamic once resource selection component is ready
+            resourceType={selectedDashboard?.service_type}
           />
         </Grid>
         <Grid sx={{ marginLeft: 2, width: 250 }}>
