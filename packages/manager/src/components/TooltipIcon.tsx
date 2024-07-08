@@ -134,7 +134,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       renderIcon = <ErrorOutline style={{ color: theme.color.red }} />;
       break;
     case 'warning':
-      renderIcon = <WarningSolid style={{ color: theme.color.yellow }} />;
+      renderIcon = <WarningSolid style={{ color: theme.color.orange }} />;
       break;
     case 'info':
       renderIcon = <InfoOutline style={{ color: theme.color.black }} />;
