@@ -61,9 +61,9 @@ export type BillingSource = 'linode' | 'akamai';
 
 export type AccountCapability =
   | 'Akamai Cloud Load Balancer'
-  | 'CloudPulse'
   | 'Block Storage'
   | 'Cloud Firewall'
+  | 'CloudPulse'
   | 'Disk Encryption'
   | 'Kubernetes'
   | 'Linodes'
@@ -72,6 +72,7 @@ export type AccountCapability =
   | 'Managed Databases'
   | 'NodeBalancers'
   | 'Object Storage Access Key Regions'
+  | 'Object Storage Endpoint Types'
   | 'Object Storage'
   | 'Placement Group'
   | 'Support Ticket Severity'
