@@ -1,4 +1,4 @@
-import { AFFINITY_TYPES } from '@linode/api-v4/lib/placement-groups';
+import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4/lib/placement-groups';
 
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
@@ -87,13 +87,13 @@ export const hasRegionReachedPlacementGroupCapacity = ({
 /**
  * Helper to populate the placement_group_type select options.
  */
-export const affinityTypeOptions = Object.entries(AFFINITY_TYPES).map(
-  ([key, value]) => ({
-    disabled: false,
-    label: value,
-    value: key as CreatePlacementGroupPayload['placement_group_type'],
-  })
-);
+export const placementGroupTypeOptions = Object.entries(
+  PLACEMENT_GROUP_TYPES
+).map(([key, value]) => ({
+  disabled: false,
+  label: value,
+  value: key as CreatePlacementGroupPayload['placement_group_type'],
+}));
 
 /**
  * Helper to get all linodes assigned to any placement group. (and reduce to unique linodes)

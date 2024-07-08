@@ -7,7 +7,7 @@ import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 
 import { PLACEMENT_GROUPS_DOCS_LINK } from './constants';
-import { affinityTypeOptions } from './utils';
+import { placementGroupTypeOptions } from './utils';
 
 import type { FormikHelpers } from 'formik';
 
@@ -17,11 +17,11 @@ interface Props {
   setFieldValue: FormikHelpers<any>['setFieldValue'];
 }
 
-export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
+export const PlacementGroupTypeSelect = (props: Props) => {
   const { disabledPlacementGroupCreateButton, error, setFieldValue } = props;
   return (
     <Autocomplete
-      defaultValue={affinityTypeOptions.find(
+      defaultValue={placementGroupTypeOptions.find(
         (option) => option.value === 'anti_affinity:local'
       )}
       onChange={(_, value) => {
@@ -87,7 +87,7 @@ export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
       disabled={disabledPlacementGroupCreateButton}
       errorText={error}
       label="Placement Group Type"
-      options={affinityTypeOptions}
+      options={placementGroupTypeOptions}
       placeholder="Select an Placement Group Type"
     />
   );

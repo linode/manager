@@ -1,4 +1,7 @@
-import { AFFINITY_TYPES, PLACEMENT_GROUP_POLICIES } from '@linode/api-v4';
+import {
+  PLACEMENT_GROUP_TYPES,
+  PLACEMENT_GROUP_POLICIES,
+} from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -145,7 +148,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
       <DescriptionList
         items={[
           {
-            description: AFFINITY_TYPES[placement_group_type],
+            description: PLACEMENT_GROUP_TYPES[placement_group_type],
             title: 'Placement Group Type',
           },
           {

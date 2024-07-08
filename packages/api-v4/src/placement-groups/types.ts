@@ -1,6 +1,6 @@
 import type { Region } from '../regions/types';
 
-export const AFFINITY_TYPES = {
+export const PLACEMENT_GROUP_TYPES = {
   'affinity:local': 'Affinity',
   'anti_affinity:local': 'Anti-affinity',
 } as const;
@@ -10,7 +10,7 @@ export const PLACEMENT_GROUP_POLICIES = {
   flexible: 'Flexible',
 } as const;
 
-export type PlacementGroupType = keyof typeof AFFINITY_TYPES;
+export type PlacementGroupType = keyof typeof PLACEMENT_GROUP_TYPES;
 export type PlacementGroupPolicy = keyof typeof PLACEMENT_GROUP_POLICIES;
 
 export interface PlacementGroup {

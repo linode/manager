@@ -1,4 +1,7 @@
-import { AFFINITY_TYPES, PLACEMENT_GROUP_POLICIES } from '@linode/api-v4';
+import {
+  PLACEMENT_GROUP_TYPES,
+  PLACEMENT_GROUP_POLICIES,
+} from '@linode/api-v4';
 import { useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -62,7 +65,7 @@ export const PlacementGroupsSummary = (props: Props) => {
               },
               {
                 description:
-                  AFFINITY_TYPES[placementGroup?.placement_group_type],
+                  PLACEMENT_GROUP_TYPES[placementGroup?.placement_group_type],
                 title: 'Placement Group Type',
               },
               {

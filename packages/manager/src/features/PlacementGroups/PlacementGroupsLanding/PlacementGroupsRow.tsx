@@ -1,4 +1,7 @@
-import { AFFINITY_TYPES, PLACEMENT_GROUP_POLICIES } from '@linode/api-v4';
+import {
+  PLACEMENT_GROUP_TYPES,
+  PLACEMENT_GROUP_POLICIES,
+} from '@linode/api-v4';
 import React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -71,7 +74,7 @@ export const PlacementGroupsRow = React.memo(
           )}
         </TableCell>
         <Hidden smDown>
-          <TableCell>{AFFINITY_TYPES[placement_group_type]}</TableCell>
+          <TableCell>{PLACEMENT_GROUP_TYPES[placement_group_type]}</TableCell>
         </Hidden>
         <Hidden smDown>
           <TableCell>

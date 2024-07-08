@@ -8,7 +8,7 @@ import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
 
-import { CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE } from './constants';
+import { CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE } from './constants';
 
 import type { PlacementGroup } from '@linode/api-v4';
 import type { FormikHelpers } from 'formik';
@@ -22,9 +22,7 @@ interface Props {
 
 const ariaIdentifier = 'placement-group-policy-radio-group';
 
-export const PlacementGroupsAffinityTypeEnforcementRadioGroup = (
-  props: Props
-) => {
+export const PlacementGroupPolicyRadioGroup = (props: Props) => {
   const {
     disabledPlacementGroupCreateButton,
     handleChange,
@@ -34,7 +32,7 @@ export const PlacementGroupsAffinityTypeEnforcementRadioGroup = (
   return (
     <Box sx={{ pt: 2 }}>
       <Notice
-        text={CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE}
+        text={CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE}
         variant="warning"
       />
       <FormLabel htmlFor={ariaIdentifier}>Placement Group Policy</FormLabel>

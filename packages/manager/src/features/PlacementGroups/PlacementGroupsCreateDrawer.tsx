@@ -26,8 +26,8 @@ import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION } from './constants';
-import { PlacementGroupsAffinityTypeEnforcementRadioGroup } from './PlacementGroupsAffinityEnforcementRadioGroup';
-import { PlacementGroupsAffinityTypeSelect } from './PlacementGroupsAffinityTypeSelect';
+import { PlacementGroupPolicyRadioGroup } from './PlacementGroupPolicyRadioGroup';
+import { PlacementGroupTypeSelect } from './PlacementGroupTypeSelect';
 import {
   getMaxPGsPerCustomer,
   hasRegionReachedPlacementGroupCapacity,
@@ -237,14 +237,14 @@ export const PlacementGroupsCreateDrawer = (
               value={selectedRegionId ?? values.region}
             />
           )}
-          <PlacementGroupsAffinityTypeSelect
+          <PlacementGroupTypeSelect
             disabledPlacementGroupCreateButton={
               disabledPlacementGroupCreateButton
             }
             error={errors.placement_group_type}
             setFieldValue={setFieldValue}
           />
-          <PlacementGroupsAffinityTypeEnforcementRadioGroup
+          <PlacementGroupPolicyRadioGroup
             disabledPlacementGroupCreateButton={
               disabledPlacementGroupCreateButton
             }

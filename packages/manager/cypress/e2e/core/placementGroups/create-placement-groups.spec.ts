@@ -17,7 +17,7 @@ import {
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE } from 'src/features/PlacementGroups/constants';
+import { CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE } from 'src/features/PlacementGroups/constants';
 
 const mockAccount = accountFactory.build();
 
@@ -103,7 +103,7 @@ describe('Placement Group create flow', () => {
           .type(`${mockPlacementGroupRegion.label}{enter}`);
 
         cy.findByText(placementGroupLimitMessage).should('be.visible');
-        cy.findByText(CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE).should(
+        cy.findByText(CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE).should(
           'be.visible'
         );
 

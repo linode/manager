@@ -7,12 +7,12 @@ import {
 } from 'src/factories';
 
 import {
-  affinityTypeOptions,
   getLinodesFromAllPlacementGroups,
   getMaxPGsPerCustomer,
   getPlacementGroupLinodes,
   hasPlacementGroupReachedCapacity,
   hasRegionReachedPlacementGroupCapacity,
+  placementGroupTypeOptions,
   useIsPlacementGroupsEnabled,
 } from './utils';
 
@@ -54,7 +54,7 @@ const initialLinodeData = [
 
 describe('affinityTypeOptions', () => {
   it('returns an array of objects with label and value properties', () => {
-    expect(affinityTypeOptions).toEqual(
+    expect(placementGroupTypeOptions).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           label: expect.any(String),

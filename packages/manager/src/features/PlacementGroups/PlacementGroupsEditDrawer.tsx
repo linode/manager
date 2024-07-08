@@ -1,4 +1,7 @@
-import { AFFINITY_TYPES, PLACEMENT_GROUP_POLICIES } from '@linode/api-v4';
+import {
+  PLACEMENT_GROUP_TYPES,
+  PLACEMENT_GROUP_POLICIES,
+} from '@linode/api-v4';
 import { updatePlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -141,7 +144,7 @@ export const PlacementGroupsEditDrawer = (
               },
               {
                 description:
-                  AFFINITY_TYPES[placementGroup.placement_group_type],
+                  PLACEMENT_GROUP_TYPES[placementGroup.placement_group_type],
                 title: 'Placement Group Type',
               },
               {

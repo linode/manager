@@ -1,4 +1,4 @@
-import { AFFINITY_TYPES } from '@linode/api-v4';
+import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -78,7 +78,7 @@ export const PlacementGroupsDetail = () => {
   const { placement_group_type, label } = placementGroup;
 
   const resetEditableLabel = () => {
-    return `${label} (${AFFINITY_TYPES[placement_group_type]})`;
+    return `${label} (${PLACEMENT_GROUP_TYPES[placement_group_type]})`;
   };
 
   const handleLabelEdit = (newLabel: string) => {

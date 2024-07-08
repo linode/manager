@@ -25,7 +25,7 @@ export const NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE =
 export const NO_REGIONS_SUPPORT_PLACEMENT_GROUPS_MESSAGE =
   'No regions currently support Placement Groups.';
 
-export const CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE =
+export const CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE =
   'Once you create a placement group, you cannot change its Placement Group Policy.';
 
 // Links
