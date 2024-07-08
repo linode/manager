@@ -42,7 +42,7 @@ import type {
   Linode,
   NodeBalancer,
 } from '@linode/api-v4';
-import type { LinodeCreateQueryParams } from 'src/utilities/queryParams';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';

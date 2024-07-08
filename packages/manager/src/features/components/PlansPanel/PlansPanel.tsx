@@ -23,7 +23,7 @@ import {
 
 import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
-import type { LinodeCreateQueryParams } from 'src/utilities/queryParams';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
 export interface PlansPanelProps {
   className?: string;

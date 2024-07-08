@@ -14,7 +14,7 @@ import {
 } from './VPCCreateForm.styles';
 
 import type { APIError } from '@linode/api-v4';
-import type { LinodeCreateQueryParams } from 'src/utilities/queryParams';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { SubnetFieldState } from 'src/utilities/subnets';
 
 interface Props {

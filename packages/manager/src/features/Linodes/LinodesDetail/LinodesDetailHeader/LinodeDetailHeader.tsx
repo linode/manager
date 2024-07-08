@@ -37,7 +37,8 @@ import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
-import type { BaseQueryParams, BooleanString } from 'src/utilities/queryParams';
+import type { BooleanString } from 'src/features/Linodes/types';
+import type { BaseQueryParams } from 'src/utilities/queryParams';
 
 interface QueryParams extends BaseQueryParams {
   delete: BooleanString;

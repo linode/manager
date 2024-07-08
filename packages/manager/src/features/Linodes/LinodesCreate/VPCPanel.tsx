@@ -28,8 +28,8 @@ import { REGION_CAVEAT_HELPER_TEXT } from './constants';
 import { VPCCreateDrawer } from './VPCCreateDrawer';
 
 import type { Item } from 'src/components/EnhancedSelect';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import type { LinodeCreateQueryParams } from 'src/utilities/queryParams';
 
 export interface VPCPanelProps {
   additionalIPv4RangesForVPC: ExtendedIP[];

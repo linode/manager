@@ -31,7 +31,7 @@ import { Link } from '../Link';
 
 import type { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 import type { Capabilities } from '@linode/api-v4/lib/regions';
-import type { LinodeCreateQueryParams } from 'src/utilities/queryParams';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
 export interface SelectRegionPanelProps {
   RegionSelectProps?: Partial<RegionSelectProps<true>>;

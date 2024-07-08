@@ -15,7 +15,7 @@ import { Autocomplete } from '../Autocomplete/Autocomplete';
 import { LinkButton } from '../LinkButton';
 
 import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
-import type { LinodeCreateQueryParams } from 'src/utilities/queryParams';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
 interface Props {
   disabled?: boolean;

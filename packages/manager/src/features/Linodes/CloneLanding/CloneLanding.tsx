@@ -42,7 +42,7 @@ import {
 
 import type { Disk, Linode } from '@linode/api-v4/lib/linodes';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { LinodeConfigAndDiskQueryParams } from 'src/utilities/queryParams';
+import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
 
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));

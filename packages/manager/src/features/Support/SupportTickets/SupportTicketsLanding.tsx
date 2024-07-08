@@ -14,7 +14,8 @@ import { SupportTicketDialog } from './SupportTicketDialog';
 import TicketList from './TicketList';
 
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
-import type { BaseQueryParams, BooleanString } from 'src/utilities/queryParams';
+import type { BooleanString } from 'src/features/Linodes/types';
+import type { BaseQueryParams } from 'src/utilities/queryParams';
 
 interface QueryParams extends BaseQueryParams {
   drawerOpen: BooleanString;

@@ -12,8 +12,8 @@ import { StyledBodyTypography } from './VPCCreateForm.styles';
 
 import type { Region } from '@linode/api-v4';
 import type { FormikErrors } from 'formik';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { CreateVPCFieldState } from 'src/hooks/useCreateVPC';
-import type { LinodeCreateQueryParams } from 'src/utilities/queryParams';
 
 interface Props {
   disabled?: boolean;

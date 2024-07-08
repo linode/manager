@@ -1,19 +1,6 @@
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
-
 export interface BaseQueryParams {
   [key: string]: string;
 }
-
-export interface LinodeCreateQueryParams extends BaseQueryParams {
-  type: LinodeCreateType;
-}
-
-export interface LinodeConfigAndDiskQueryParams extends BaseQueryParams {
-  selectedDisk: string;
-  selectedLinode: string;
-}
-
-export type BooleanString = 'false' | 'true';
 
 /**
  * Parses a query string (aka search string) and returns its values
