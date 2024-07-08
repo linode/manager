@@ -8,14 +8,6 @@ export const lishLaunch = (linodeId: number) => {
   );
 };
 
-export const getLishSchemeAndHostname = (region: string): string => {
-  if (LISH_ROOT.includes('dev')) {
-    /* Note: This is only the case for pre-production environments! */
-    return `wss://${LISH_ROOT}`;
-  }
-  return `wss://${region}.${LISH_ROOT}`;
-};
-
 export const resizeViewPort = (width: number, height: number) => {
   if (window.outerWidth) {
     window.resizeTo(

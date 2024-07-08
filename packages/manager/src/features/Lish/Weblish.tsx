@@ -7,12 +7,13 @@ import { Box } from 'src/components/Box';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { StyledCircleProgress } from 'src/features/Lish/Lish';
 
-import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
+import { resizeViewPort } from './lishUtils';
 
 interface Props {
   linode: Linode;
   refreshToken: () => Promise<void>;
-  token: string;
+  weblish_url: string;
+  ws_protocols: string[];
 }
 
 interface State {
@@ -32,7 +33,8 @@ export class Weblish extends React.Component<Props, State> {
      * If we have a new token, refresh the webosocket connection
      * and console with the new token
      */
-    if (this.props.token !== prevProps.token) {
+    if (this.props.weblish_url !== prevProps.weblish_url ||
+        JSON.stringify(this.props.ws_protocols) !== JSON.stringify(prevProps.ws_protocols)) {
       this.socket.close();
       this.terminal.dispose();
       this.connect();
@@ -43,12 +45,9 @@ export class Weblish extends React.Component<Props, State> {
   }
 
   connect() {
-    const { linode, token } = this.props;
-    const { region } = linode;
+    const { weblish_url, ws_protocols } = this.props;
 
-    this.socket = new WebSocket(
-      `${getLishSchemeAndHostname(region)}:8181/${token}/weblish`
-    );
+    this.socket = new WebSocket(weblish_url, ws_protocols);
 
     this.socket.addEventListener('open', () => {
       if (!this.mounted) {

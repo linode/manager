@@ -29,16 +29,17 @@ export const getLinode = (linodeId: number) =>
   );
 
 /**
- * getLinodeLishToken
+ * getLinodeLish
  *
- * Generates a token which can be used to authenticate with LISH.
+ * Generates urls and websockets protocols to authenticate with LISH.
  *
  * @param linodeId { number } The id of the Linode.
  */
-export const getLinodeLishToken = (linodeId: number) =>
-  Request<{ lish_token: string }>(
+export const getLinodeLish = (linodeId: number) =>
+  Request<{ weblish_url: string, glish_url: string, monitor_url: string,
+            ws_protocols: string[] }>(
     setURL(
-      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/lish_token`
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/lish`
     ),
     setMethod('POST')
   );

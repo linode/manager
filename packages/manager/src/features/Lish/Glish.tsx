@@ -7,7 +7,7 @@ import { VncScreen, VncScreenHandle } from 'react-vnc';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { StyledCircleProgress } from 'src/features/Lish/Lish';
 
-import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
+import { resizeViewPort } from './lishUtils';
 
 const useStyles = makeStyles()(() => ({
   container: {
@@ -26,16 +26,17 @@ const useStyles = makeStyles()(() => ({
 interface Props {
   linode: Linode;
   refreshToken: () => Promise<void>;
-  token: string;
+  glish_url: string;
+  monitor_url: string;
+  ws_protocols: string[];
 }
 
 let monitor: WebSocket;
 
 const Glish = (props: Props) => {
   const { classes } = useStyles();
-  const { linode, refreshToken, token } = props;
+  const { linode, refreshToken, glish_url, monitor_url, ws_protocols } = props;
   const ref = React.useRef<VncScreenHandle>(null);
-  const region = linode.region;
   const [powered, setPowered] = React.useState(linode.status === 'running');
 
   React.useEffect(() => {
@@ -69,7 +70,7 @@ const Glish = (props: Props) => {
     // If the Lish token (from props) ever changes, we need to reconnect the monitor websocket
     connectMonitor();
     ref.current?.connect();
-  }, [token]);
+  }, [glish_url, monitor_url, ws_protocols]);
 
   const handlePaste = (event: ClipboardEvent) => {
     event.preventDefault();
@@ -93,9 +94,7 @@ const Glish = (props: Props) => {
       monitor.close();
     }
 
-    const url = `${getLishSchemeAndHostname(region)}:8080/${token}/monitor`;
-
-    monitor = new WebSocket(url);
+    monitor = new WebSocket(monitor_url, ws_protocols);
 
     // eslint-disable-next-line scanjs-rules/call_addEventListener
     monitor.addEventListener('message', (ev) => {
@@ -130,13 +129,16 @@ const Glish = (props: Props) => {
     );
   }
 
+  const rfbOptions = { wsProtocols: ws_protocols };
+
   return (
     <VncScreen
       autoConnect={false}
       loadingUI={<StyledCircleProgress />}
       ref={ref}
       showDotCursor
-      url={`${getLishSchemeAndHostname(region)}:8080/${token}`}
+      url={glish_url}
+      rfbOptions={rfbOptions}
     />
   );
 };
