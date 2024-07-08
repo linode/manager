@@ -1,8 +1,10 @@
+import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
-import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
 import { capitalize } from 'src/utilities/capitalize';
+
+import { Typography } from './Typography';
 
 import type { EntityType } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
@@ -11,10 +13,10 @@ interface SupportTicketGeneralErrorProps {
   generalError: JSX.Element;
 }
 
-export const SupportTicketErrorNotice = (
-  props: SupportTicketGeneralErrorProps
-) => {
+export const SupportTicketError = (props: SupportTicketGeneralErrorProps) => {
   const { entityType, generalError } = props;
+  const theme = useTheme();
+
   const supportTextRegex = new RegExp(
     /(open a support ticket|contact Support)/i
   );
@@ -28,7 +30,13 @@ export const SupportTicketErrorNotice = (
   const isAccountLimitSupportTicket = reason.match(accountLimitRegex);
 
   return (
-    <Notice variant="error">
+    <Typography
+      sx={{
+        fontFamily: theme.font.bold,
+        fontSize: '1rem',
+        lineHeight: '20px',
+      }}
+    >
       {limitError.map((substring: string, idx: number) => {
         const openTicket = substring.match(supportTextRegex);
 
@@ -51,6 +59,6 @@ export const SupportTicketErrorNotice = (
           return substring;
         }
       })}
-    </Notice>
+    </Typography>
   );
 };

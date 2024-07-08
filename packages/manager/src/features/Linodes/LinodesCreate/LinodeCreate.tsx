@@ -27,7 +27,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { Stack } from 'src/components/Stack';
-import { SupportTicketErrorNotice } from 'src/components/SupportTicketGeneralError';
+import { SupportTicketError } from 'src/components/SupportTicketGeneralError';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
@@ -523,10 +523,12 @@ export class LinodeCreate extends React.PureComponent<
           {generalError && typeof generalError === 'string' ? (
             <Notice spacingTop={8} text={generalError} variant="error" />
           ) : generalError && typeof generalError !== 'string' ? (
-            <SupportTicketErrorNotice
-              entityType="linode_id"
-              generalError={generalError}
-            />
+            <Notice spacingTop={8} variant="error">
+              <SupportTicketError
+                entityType="linode_id"
+                generalError={generalError}
+              />
+            </Notice>
           ) : undefined}
           {userCannotCreateLinode && (
             <Notice
