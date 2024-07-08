@@ -17,7 +17,6 @@ import {
 } from 'src/queries/linodes/linodes';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { Security } from './Security';
 import { Actions } from './Actions';
 import { Addons } from './Addons/Addons';
 import { Details } from './Details/Details';
@@ -26,7 +25,8 @@ import { Firewall } from './Firewall';
 import { Plan } from './Plan';
 import { Region } from './Region';
 import { linodeCreateResolvers } from './resolvers';
-import { Summary } from './Summary';
+import { Security } from './Security';
+import { Summary } from './Summary/Summary';
 import { Backups } from './Tabs/Backups/Backups';
 import { Clone } from './Tabs/Clone/Clone';
 import { Distributions } from './Tabs/Distributions';
@@ -35,7 +35,6 @@ import { Marketplace } from './Tabs/Marketplace/Marketplace';
 import { StackScripts } from './Tabs/StackScripts/StackScripts';
 import { UserData } from './UserData/UserData';
 import {
-  LinodeCreateFormValues,
   defaultValues,
   defaultValuesMap,
   getLinodeCreatePayload,
@@ -46,6 +45,7 @@ import {
 import { VLAN } from './VLAN';
 import { VPC } from './VPC/VPC';
 
+import type { LinodeCreateFormValues } from './utilities';
 import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreatev2 = () => {

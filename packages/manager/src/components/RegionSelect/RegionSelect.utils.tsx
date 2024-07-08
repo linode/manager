@@ -1,26 +1,29 @@
 import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
 
+import { useFlags } from 'src/hooks/useFlags';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
-import type { GetRegionOptionAvailability } from './RegionSelect.types';
 import type {
-  AccountAvailability,
-  Capabilities,
-  Region,
-  RegionSite,
-} from '@linode/api-v4';
+  GetRegionLabel,
+  GetRegionOptionAvailability,
+  RegionFilterValue,
+} from './RegionSelect.types';
+import type { AccountAvailability, Capabilities, Region } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
 interface RegionSelectOptionsOptions {
   currentCapability: Capabilities | undefined;
-  regionFilter?: RegionSite;
+  isGeckoGAEnabled?: boolean;
+  regionFilter?: RegionFilterValue;
   regions: Region[];
 }
 
 export const getRegionOptions = ({
   currentCapability,
+  isGeckoGAEnabled,
   regionFilter,
   regions,
 }: RegionSelectOptionsOptions) => {
@@ -32,8 +35,18 @@ export const getRegionOptions = ({
       ) {
         return false;
       }
-      if (regionFilter && region.site_type !== regionFilter) {
-        return false;
+      if (regionFilter) {
+        const [, distributedContinentCode] = regionFilter.split('distributed-');
+        // Filter distributed regions by geographical area
+        if (distributedContinentCode && distributedContinentCode !== 'ALL') {
+          const group = getRegionCountryGroup(region);
+          return (
+            region.site_type === 'edge' ||
+            (region.site_type === 'distributed' &&
+              CONTINENT_CODE_TO_CONTINENT[distributedContinentCode] === group)
+          );
+        }
+        return regionFilter.includes(region.site_type);
       }
       return true;
     })
@@ -60,17 +73,23 @@ export const getRegionOptions = ({
         return 1;
       }
 
-      // Then we group by country
-      if (region1.country < region2.country) {
-        return 1;
-      }
-      if (region1.country > region2.country) {
-        return -1;
+      // We want to group by label for Gecko GA
+      if (!isGeckoGAEnabled) {
+        // Then we group by country
+        if (region1.country < region2.country) {
+          return 1;
+        }
+        if (region1.country > region2.country) {
+          return -1;
+        }
       }
 
-      // If regions are in the same group or country, sort alphabetically by label
+      // Then we group by label
       if (region1.label < region2.label) {
         return -1;
+      }
+      if (region1.label > region2.label) {
+        return 1;
       }
 
       return 1;
@@ -115,6 +134,7 @@ export const isDistributedRegionSupported = (createType: LinodeCreateType) => {
     'Distributions',
     'StackScripts',
     'Images',
+    undefined, // /linodes/create route
   ];
   return supportedDistributedRegionTypes.includes(createType);
 };
@@ -132,4 +152,27 @@ export const getIsDistributedRegion = (
     (region) => region.id === selectedRegion || region.label === selectedRegion
   );
   return region?.site_type === 'distributed' || region?.site_type === 'edge';
+};
+
+export const getNewRegionLabel = ({ includeSlug, region }: GetRegionLabel) => {
+  const [city] = region.label.split(', ');
+  if (includeSlug) {
+    return `${region.country.toUpperCase()}, ${city} ${`(${region.id})`}`;
+  }
+  return `${region.country.toUpperCase()}, ${city}`;
+};
+
+export const useIsGeckoEnabled = () => {
+  const flags = useFlags();
+  const isGeckoGA = flags?.gecko2?.enabled && flags.gecko2.ga;
+  const isGeckoBeta = flags.gecko2?.enabled && !flags.gecko2?.ga;
+  const { data: regions } = useRegionsQuery(isGeckoGA);
+
+  const hasDistributedRegionCapability = regions?.some((region: Region) =>
+    region.capabilities.includes('Distributed Plans')
+  );
+  const isGeckoGAEnabled = hasDistributedRegionCapability && isGeckoGA;
+  const isGeckoBetaEnabled = hasDistributedRegionCapability && isGeckoBeta;
+
+  return { isGeckoBetaEnabled, isGeckoGAEnabled };
 };

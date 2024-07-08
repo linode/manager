@@ -1,4 +1,3 @@
-import { Disk } from '@linode/api-v4/lib/linodes';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -11,12 +10,13 @@ import { useInProgressEvents } from 'src/queries/events/events';
 
 import { LinodeDiskActionMenu } from './LinodeDiskActionMenu';
 
+import type { Disk, Linode } from '@linode/api-v4';
+
 interface Props {
   disk: Disk;
-  linodeId?: number;
-  linodeStatus: string;
+  linodeId: number;
+  linodeStatus: Linode['status'];
   onDelete: () => void;
-  onImagize: () => void;
   onRename: () => void;
   onResize: () => void;
   readOnly: boolean;
@@ -30,7 +30,6 @@ export const LinodeDiskRow = React.memo((props: Props) => {
     linodeId,
     linodeStatus,
     onDelete,
-    onImagize,
     onRename,
     onResize,
     readOnly,
@@ -86,12 +85,10 @@ export const LinodeDiskRow = React.memo((props: Props) => {
       </Hidden>
       <TableCell>
         <LinodeDiskActionMenu
-          diskId={disk.id}
-          label={disk.label}
+          disk={disk}
           linodeId={linodeId}
           linodeStatus={linodeStatus || 'offline'}
           onDelete={onDelete}
-          onImagize={onImagize}
           onRename={onRename}
           onResize={onResize}
           readOnly={readOnly}
