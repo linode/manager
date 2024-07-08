@@ -96,9 +96,9 @@ export const LinodeCreatev2 = () => {
       });
 
       captureLinodeCreateAnalyticsEvent({
-        values,
         queryClient,
         type: params.type ?? 'Distributions',
+        values,
       });
     } catch (errors) {
       for (const error of errors) {
