@@ -5,7 +5,9 @@ import { useLocation } from 'react-router-dom';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
+import { TwoStepRegionSelect } from 'src/components/RegionSelect/TwoStepRegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
 import { getDisabledRegions } from 'src/features/Linodes/LinodeCreatev2/Region.utils';
@@ -31,7 +33,7 @@ import type { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 import type { Capabilities } from '@linode/api-v4/lib/regions';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
-interface SelectRegionPanelProps {
+export interface SelectRegionPanelProps {
   RegionSelectProps?: Partial<RegionSelectProps<true>>;
   currentCapability: Capabilities;
   disabled?: boolean;
@@ -44,6 +46,7 @@ interface SelectRegionPanelProps {
    * Include a `selectedLinodeTypeId` so we can tell if the region selection will have an affect on price
    */
   selectedLinodeTypeId?: string;
+  updateTypeID?: (key: string) => void;
 }
 
 export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
@@ -57,13 +60,17 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     selectedId,
     selectedImageId,
     selectedLinodeTypeId,
+    updateTypeID,
   } = props;
 
   const flags = useFlags();
   const location = useLocation();
   const theme = useTheme();
   const params = getQueryParamsFromQueryString(location.search);
-  const { data: regions } = useRegionsQuery();
+
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+
+  const { data: regions } = useRegionsQuery(isGeckoGAEnabled);
 
   const isCloning = /clone/i.test(params.type);
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
@@ -93,7 +100,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
 
   const hideDistributedRegions =
     !flags.gecko2?.enabled ||
-    flags.gecko2?.ga ||
     !isDistributedRegionSupported(params.type as LinodeCreateType);
 
   const showDistributedRegionIconHelperText = Boolean(
@@ -115,6 +121,14 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   if (regions?.length === 0) {
     return null;
   }
+
+  const handleRegionSelection = (regionId: string) => {
+    handleSelection(regionId);
+    // Reset plan selection on region change to prevent creation of an edge plan in a core region and vice versa
+    if (updateTypeID) {
+      updateTypeID('');
+    }
+  };
 
   return (
     <Paper
@@ -146,9 +160,11 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           label={DOCS_LINK_LABEL_DC_PRICING}
         />
       </Box>
-      <RegionHelperText
-        onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
-      />
+      {!isGeckoGAEnabled && (
+        <RegionHelperText
+          onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
+        />
+      )}
       {showCrossDataCenterCloneWarning ? (
         <Notice
           dataTestId="cross-data-center-notice"
@@ -161,27 +177,46 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           </Typography>
         </Notice>
       ) : null}
-      <RegionSelect
-        regionFilter={
-          // We don't want the Image Service Gen2 work to abide by Gecko feature flags
-          hideDistributedRegions && params.type !== 'Images'
-            ? 'core'
-            : undefined
-        }
-        showDistributedRegionIconHelperText={
-          showDistributedRegionIconHelperText
-        }
-        currentCapability={currentCapability}
-        disableClearable
-        disabled={disabled}
-        disabledRegions={disabledRegions}
-        errorText={error}
-        helperText={helperText}
-        onChange={(e, region) => handleSelection(region.id)}
-        regions={regions ?? []}
-        value={selectedId}
-        {...RegionSelectProps}
-      />
+      {isGeckoGAEnabled &&
+      isDistributedRegionSupported(params.type as LinodeCreateType) ? (
+        <TwoStepRegionSelect
+          showDistributedRegionIconHelperText={
+            showDistributedRegionIconHelperText
+          }
+          currentCapability={currentCapability}
+          disabled={disabled}
+          disabledRegions={disabledRegions}
+          errorText={error}
+          handleSelection={handleRegionSelection}
+          helperText={helperText}
+          regionFilter={hideDistributedRegions ? 'core' : undefined}
+          regions={regions ?? []}
+          value={selectedId}
+          {...RegionSelectProps}
+        />
+      ) : (
+        <RegionSelect
+          regionFilter={
+            // We don't want the Image Service Gen2 work to abide by Gecko feature flags
+            hideDistributedRegions && params.type !== 'Images'
+              ? 'core'
+              : undefined
+          }
+          showDistributedRegionIconHelperText={
+            showDistributedRegionIconHelperText
+          }
+          currentCapability={currentCapability}
+          disableClearable
+          disabled={disabled}
+          disabledRegions={disabledRegions}
+          errorText={error}
+          helperText={helperText}
+          onChange={(e, region) => handleSelection(region.id)}
+          regions={regions ?? []}
+          value={selectedId}
+          {...RegionSelectProps}
+        />
+      )}
       {showClonePriceWarning && (
         <Notice
           dataTestId="different-price-structure-notice"

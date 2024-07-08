@@ -27,3 +27,12 @@ export const CreateLinodeFromStackScriptSchema = CreateLinodeSchema.concat(
     stackscript_id: number().required('You must select a StackScript.'),
   })
 );
+
+/**
+ * Extends the Linode Create schema to make stackscript_id required for the Marketplace tab
+ */
+export const CreateLinodeFromMarketplaceAppSchema = CreateLinodeSchema.concat(
+  object({
+    stackscript_id: number().required('You must select a Marketplace App.'),
+  })
+);

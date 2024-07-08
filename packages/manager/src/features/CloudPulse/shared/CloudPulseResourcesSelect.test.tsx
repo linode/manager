@@ -51,12 +51,12 @@ describe('CloudPulseResourcesSelect component tests', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Open' }));
       expect(
         screen.getByRole('option', {
-          name: 'linode-0',
+          name: 'linode-1',
         })
       ).toBeInTheDocument();
       expect(
         screen.getByRole('option', {
-          name: 'linode-1',
+          name: 'linode-2',
         })
       ).toBeInTheDocument();
     });
@@ -79,12 +79,12 @@ describe('CloudPulseResourcesSelect component tests', () => {
     fireEvent.click(screen.getByRole('option', { name: SELECT_ALL }));
     expect(
       screen.getByRole('option', {
-        name: 'linode-2',
+        name: 'linode-3',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
     expect(
       screen.getByRole('option', {
-        name: 'linode-3',
+        name: 'linode-4',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
   });
@@ -108,12 +108,12 @@ describe('CloudPulseResourcesSelect component tests', () => {
     fireEvent.click(screen.getByRole('option', { name: 'Deselect All' }));
     expect(
       screen.getByRole('option', {
-        name: 'linode-4',
+        name: 'linode-5',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
     expect(
       screen.getByRole('option', {
-        name: 'linode-5',
+        name: 'linode-6',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
   });
@@ -133,14 +133,9 @@ describe('CloudPulseResourcesSelect component tests', () => {
       />
     );
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    fireEvent.click(screen.getByRole('option', { name: 'linode-6' }));
     fireEvent.click(screen.getByRole('option', { name: 'linode-7' }));
+    fireEvent.click(screen.getByRole('option', { name: 'linode-8' }));
 
-    expect(
-      screen.getByRole('option', {
-        name: 'linode-6',
-      })
-    ).toHaveAttribute(ARIA_SELECTED, 'true');
     expect(
       screen.getByRole('option', {
         name: 'linode-7',
@@ -149,6 +144,11 @@ describe('CloudPulseResourcesSelect component tests', () => {
     expect(
       screen.getByRole('option', {
         name: 'linode-8',
+      })
+    ).toHaveAttribute(ARIA_SELECTED, 'true');
+    expect(
+      screen.getByRole('option', {
+        name: 'linode-9',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
     expect(

@@ -107,6 +107,7 @@ import type {
   ObjectStorageKeyRequest,
   SecurityQuestionsPayload,
   TokenRequest,
+  UpdateImageRegionsPayload,
   User,
   VolumeStatus,
 } from '@linode/api-v4';
@@ -697,6 +698,21 @@ export const handlers = [
 
     return HttpResponse.json(makeResourcePage(images));
   }),
+  http.post<any, UpdateImageRegionsPayload>(
+    '*/v4/images/:id/regions',
+    async ({ request }) => {
+      const data = await request.json();
+
+      const image = imageFactory.build();
+
+      image.regions = data.regions.map((regionId) => ({
+        region: regionId,
+        status: 'pending replication',
+      }));
+
+      return HttpResponse.json(image);
+    }
+  ),
 
   http.get('*/linode/types', () => {
     return HttpResponse.json(
@@ -2359,59 +2375,59 @@ export const handlers = [
   }),
   http.get('*/v4/monitor/services/linode/dashboards', () => {
     const response = {
-      "data": [
+      data: [
         {
-          "id": 1,
-          "type": "standard",
-          "service_type": "linode",
-          "label": "Linode Service I/O Statistics",
-          "created": "2024-04-29T17:09:29",
-          "updated": null,
-          "widgets": [
+          id: 1,
+          type: 'standard',
+          service_type: 'linode',
+          label: 'Linode Service I/O Statistics',
+          created: '2024-04-29T17:09:29',
+          updated: null,
+          widgets: [
             {
-              "metric": "system_cpu_utilization_percent",
-              "unit": "%",
-              "label": "CPU utilization",
-              "color": "blue",
-              "size": 12,
-              "chart_type": "area",
-              "y_label": "system_cpu_utilization_ratio",
-              "aggregate_function": "avg"
+              metric: 'system_cpu_utilization_percent',
+              unit: '%',
+              label: 'CPU utilization',
+              color: 'blue',
+              size: 12,
+              chart_type: 'area',
+              y_label: 'system_cpu_utilization_ratio',
+              aggregate_function: 'avg',
             },
             {
-              "metric": "system_memory_usage_by_resource",
-              "unit": "Bytes",
-              "label": "Memory Usage",
-              "color": "red",
-              "size": 12,
-              "chart_type": "area",
-              "y_label": "system_memory_usage_bytes",
-              "aggregate_function": "avg"
+              metric: 'system_memory_usage_by_resource',
+              unit: 'Bytes',
+              label: 'Memory Usage',
+              color: 'red',
+              size: 12,
+              chart_type: 'area',
+              y_label: 'system_memory_usage_bytes',
+              aggregate_function: 'avg',
             },
             {
-              "metric": "system_network_io_by_resource",
-              "unit": "Bytes",
-              "label": "Network Traffic",
-              "color": "green",
-              "size": 6,
-              "chart_type": "area",
-              "y_label": "system_network_io_bytes_total",
-              "aggregate_function": "avg"
+              metric: 'system_network_io_by_resource',
+              unit: 'Bytes',
+              label: 'Network Traffic',
+              color: 'green',
+              size: 6,
+              chart_type: 'area',
+              y_label: 'system_network_io_bytes_total',
+              aggregate_function: 'avg',
             },
             {
-              "metric": "system_disk_OPS_total",
-              "unit": "OPS",
-              "label": "Disk I/O",
-              "color": "yellow",
-              "size": 6,
-              "chart_type": "area",
-              "y_label": "system_disk_operations_total",
-              "aggregate_function": "avg"
-            }
-          ]
-        }
-      ]
-    }
+              metric: 'system_disk_OPS_total',
+              unit: 'OPS',
+              label: 'Disk I/O',
+              color: 'yellow',
+              size: 6,
+              chart_type: 'area',
+              y_label: 'system_disk_operations_total',
+              aggregate_function: 'avg',
+            },
+          ],
+        },
+      ],
+    };
 
     return HttpResponse.json(response);
   }),
