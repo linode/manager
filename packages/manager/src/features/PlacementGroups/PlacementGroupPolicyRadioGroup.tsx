@@ -55,7 +55,7 @@ export const PlacementGroupPolicyRadioGroup = (props: Props) => {
           }
           control={<Radio />}
           disabled={disabledPlacementGroupCreateButton}
-          value={true}
+          value={'strict'}
         />
         <FormControlLabel
           label={
@@ -68,7 +68,7 @@ export const PlacementGroupPolicyRadioGroup = (props: Props) => {
           control={<Radio />}
           disabled={disabledPlacementGroupCreateButton}
           sx={{ mt: 2 }}
-          value={false}
+          value={'flexible'}
         />
       </RadioGroup>
     </Box>
