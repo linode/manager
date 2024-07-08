@@ -355,9 +355,6 @@ export const darkTheme: ThemeOptions = {
       },
       styleOverrides: {
         clickable: {
-          '&:hover': {
-            backgroundColor: Color.Brand[30],
-          },
           color: Color.Brand[100],
         },
         colorError: {
