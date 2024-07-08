@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Link, LinkProps } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import {
+import type { LinkProps } from 'react-router-dom';
+import type {
   EntityType,
   TicketType,
 } from 'src/features/Support/SupportTickets/SupportTicketDialog';
@@ -20,10 +21,6 @@ export interface EntityForTicketDetails {
   type: EntityType;
 }
 
-const supportTicketTypeToTitleMap = {
-  accountLimit: 'Account Limit Increase',
-};
-
 const SupportLink = (props: SupportLinkProps) => {
   const { description, entity, onClick, text, ticketType, title } = props;
   return (
@@ -35,8 +32,7 @@ const SupportLink = (props: SupportLinkProps) => {
           entity,
           open: true,
           ticketType,
-          title:
-            (ticketType && supportTicketTypeToTitleMap[ticketType]) ?? title,
+          title,
         },
       }}
       onClick={onClick}

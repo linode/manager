@@ -17,7 +17,6 @@ export const SupportError = (props: Props) => {
   const supportTextRegex = new RegExp(
     /(open a support ticket|contact Support)/i
   );
-
   const errorMsg = errors[0].reason.split(supportTextRegex);
 
   return (
@@ -30,7 +29,6 @@ export const SupportError = (props: Props) => {
     >
       {errorMsg.map((substring: string, idx) => {
         const openTicket = substring.match(supportTextRegex);
-
         if (openTicket) {
           return (
             <SupportLink

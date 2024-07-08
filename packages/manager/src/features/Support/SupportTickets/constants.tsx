@@ -36,6 +36,7 @@ export const TICKET_TYPE_MAP: Record<TicketType, TicketTypeData> = {
   accountLimit: {
     dialogTitle: ACCOUNT_LIMIT_DIALOG_TITLE,
     helperText: ACCOUNT_LIMIT_HELPER_TEXT,
+    ticketTitle: 'Account Limit Increase',
   },
   general: {
     dialogTitle: 'Open a Support Ticket',

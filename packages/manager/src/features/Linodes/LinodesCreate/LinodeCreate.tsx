@@ -27,6 +27,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { Stack } from 'src/components/Stack';
+import { SupportTicketErrorNotice } from 'src/components/SupportTicketGeneralError';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
@@ -41,11 +42,11 @@ import { WithTypesProps } from 'src/containers/types.container';
 import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
-import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import {
   getMonthlyAndHourlyNodePricing,
   utoa,
 } from 'src/features/Linodes/LinodesCreate/utilities';
+import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
@@ -109,9 +110,6 @@ import { VPCPanel } from './VPCPanel';
 
 import type { Tab } from 'src/components/Tabs/TabLinkList';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
-import { EntityType } from 'src/features/Support/SupportTickets/SupportTicketDialog';
-import { SupportLink } from 'src/components/SupportLink';
-import { capitalize } from 'src/utilities/capitalize';
 
 export interface LinodeCreateProps {
   additionalIPv4RangesForVPC: ExtendedIP[];
@@ -525,7 +523,7 @@ export class LinodeCreate extends React.PureComponent<
           {generalError && typeof generalError === 'string' ? (
             <Notice spacingTop={8} text={generalError} variant="error" />
           ) : generalError && typeof generalError !== 'string' ? (
-            <SupportTicketGeneralError
+            <SupportTicketErrorNotice
               entityType="linode_id"
               generalError={generalError}
             />
@@ -1240,51 +1238,3 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, CombinedProps> = (
 const connected = connect(undefined, mapDispatchToProps);
 
 export default connected(LinodeCreate);
-
-interface SupportTicketGeneralErrorProps {
-  entityType: EntityType;
-  generalError: JSX.Element;
-}
-
-// TODO: move to own file or try to consolidate with SupportError.tsx
-const SupportTicketGeneralError = (props: SupportTicketGeneralErrorProps) => {
-  const { entityType, generalError } = props;
-  const supportTextRegex = new RegExp(
-    /(open a support ticket|contact Support)/i
-  );
-  const reason: string = generalError.props.errors[0].reason;
-  const limitError = reason.split(supportTextRegex);
-
-  // Determine whether we'll need to link to a specific support ticket form based on ticketType.
-  const accountLimitRegex = new RegExp(
-    /(limit|limit for the number of active services) on your account/i
-  );
-  const isAccountLimitSupportTicket = reason.match(accountLimitRegex);
-
-  return (
-    <Notice variant="error">
-      {limitError.map((substring: string, idx: number) => {
-        const openTicket = substring.match(supportTextRegex);
-
-        if (openTicket) {
-          return (
-            <SupportLink
-              text={
-                substring.match(/^[A-Z]/)
-                  ? capitalize(openTicket[0])
-                  : openTicket[0]
-              }
-              ticketType={
-                isAccountLimitSupportTicket ? 'accountLimit' : 'general'
-              }
-              entity={{ id: undefined, type: entityType }}
-              key={`${substring}-${idx}`}
-            />
-          );
-        } else {
-          return substring;
-        }
-      })}
-    </Notice>
-  );
-};

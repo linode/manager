@@ -93,6 +93,7 @@ export type AllSupportTicketFormFields = SupportTicketFormFields &
 export interface TicketTypeData {
   dialogTitle: string;
   helperText: JSX.Element | string;
+  ticketTitle?: string;
 }
 
 export interface SupportTicketDialogProps {
@@ -149,6 +150,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const valuesFromStorage = storage.supportText.get();
 
+  // Use a prefilled title if one is given, otherwise, use any default prefill titles by ticket type, if extant.
+  const _prefilledTitle = prefilledTitle
+    ? prefilledTitle
+    : prefilledTicketType && TICKET_TYPE_MAP[prefilledTicketType]
+    ? TICKET_TYPE_MAP[prefilledTicketType].ticketTitle
+    : undefined;
+
   // Ticket information
   const form = useForm<SupportTicketFormFields>({
     defaultValues: {
@@ -159,7 +167,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       entityId: prefilledEntity?.id ? String(prefilledEntity.id) : '',
       entityInputValue: '',
       entityType: prefilledEntity?.type ?? 'general',
-      summary: getInitialValue(prefilledTitle, valuesFromStorage.title),
+      summary: getInitialValue(_prefilledTitle, valuesFromStorage.title),
       ticketType: prefilledTicketType ?? 'general',
     },
     resolver: yupResolver(SCHEMA_MAP[prefilledTicketType ?? 'general']),
