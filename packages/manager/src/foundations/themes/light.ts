@@ -555,10 +555,10 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         clickable: {
           '&:focus': {
-            bbackgroundColor: Color.Brand[40], // TODO: This was the closest color according to our palette
+            backgroundColor: Color.Brand[30], // TODO: This was the closest color according to our palette
           },
           '&:hover': {
-            bbackgroundColor: Color.Brand[40], // TODO: This was the closest color according to our palette
+            backgroundColor: Color.Brand[30], // TODO: This was the closest color according to our palette
           },
           backgroundColor: Color.Brand[10], // TODO: This was the closest color according to our palette
         },
