@@ -96,6 +96,7 @@ export interface Flags {
   mainContentBanner: MainContentBanner;
   metadata: boolean;
   objMultiCluster: boolean;
+  objectStorageGen2: BaseFeatureFlag;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
   placementGroups: BetaFeatureFlag;
