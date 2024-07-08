@@ -70,7 +70,7 @@ export const TagCell = (props: TagCellProps) => {
 
   const [hasOverflow, setHasOverflow] = React.useState(false);
   React.useLayoutEffect(() => {
-    setHasOverflow(!!elRef && checkOverflow(elRef));
+    setHasOverflow(!!elRef && tags.length > 0 && checkOverflow(elRef));
   }, [windowDimensions, tags, elRef]);
 
   const handleUpdateTag = (updatedTags: string[]) => {
