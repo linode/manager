@@ -7,6 +7,14 @@ import type { NoticeVariant } from 'src/components/Notice/Notice';
 export interface TaxDetail {
   qi_registration?: string;
   tax_id: string;
+  tax_ids?: Record<
+    'B2B' | 'B2C',
+    {
+      tax_id: string;
+      tax_name: string;
+    }
+  >;
+  tax_info?: string;
   tax_name: string;
 }
 
@@ -58,13 +66,20 @@ interface AclpFlag {
 interface gpuV2 {
   planDivider: boolean;
 }
+
 type OneClickApp = Record<string, string>;
+
+interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
+  key: string;
+  link: string;
+}
 
 export interface Flags {
   aclb: boolean;
   aclbFullCreateFlow: boolean;
   aclp: AclpFlag;
   apiMaintenance: APIMaintenance;
+  cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;
@@ -73,6 +88,7 @@ export interface Flags {
   gecko: boolean; // @TODO gecko: delete this after next release
   gecko2: GaFeatureFlag;
   gpuv2: gpuV2;
+  imageServiceGen2: boolean;
   ipv6Sharing: boolean;
   linodeCreateRefactor: boolean;
   linodeCreateWithFirewall: boolean;
@@ -80,6 +96,7 @@ export interface Flags {
   mainContentBanner: MainContentBanner;
   metadata: boolean;
   objMultiCluster: boolean;
+  objectStorageGen2: BaseFeatureFlag;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
   placementGroups: BetaFeatureFlag;

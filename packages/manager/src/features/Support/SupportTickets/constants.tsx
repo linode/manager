@@ -1,5 +1,111 @@
-import { Typography } from '@mui/material';
+import {
+  createSMTPSupportTicketSchema,
+  createSupportTicketSchema,
+} from '@linode/validation';
 import React from 'react';
+
+import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
+
+import type {
+  EntityType,
+  TicketType,
+  TicketTypeData,
+} from './SupportTicketDialog';
+import type { TicketSeverity } from '@linode/api-v4';
+import type { AnyObjectSchema } from 'yup';
+
+export interface CustomFields {
+  companyName: string;
+  customerName: string;
+  publicInfo: string;
+  useCase: string;
+}
+
+export const SMTP_DIALOG_TITLE = 'Contact Support: SMTP Restriction Removal';
+export const SMTP_HELPER_TEXT =
+  'In an effort to fight spam, outbound connections are restricted on ports 25, 465, and 587. To have these restrictions removed, please provide us with the following information. A member of the Support team will review your request and follow up with you as soon as possible.';
+
+export const TICKET_TYPE_MAP: Record<TicketType, TicketTypeData> = {
+  general: {
+    dialogTitle: 'Open a Support Ticket',
+    helperText: (
+      <>
+        {`We love our customers, and we\u{2019}re here to help if you need us.
+        Please keep in mind that not all topics are within the scope of our support.
+        For overall system status, please see `}
+        <Link to="https://status.linode.com">status.linode.com</Link>.
+      </>
+    ),
+  },
+  smtp: {
+    dialogTitle: SMTP_DIALOG_TITLE,
+    helperText: SMTP_HELPER_TEXT,
+  },
+};
+
+// Validation
+export const SCHEMA_MAP: Record<string, AnyObjectSchema> = {
+  general: createSupportTicketSchema,
+  smtp: createSMTPSupportTicketSchema,
+};
+
+export const ENTITY_MAP: Record<string, EntityType> = {
+  Databases: 'database_id',
+  Domains: 'domain_id',
+  Firewalls: 'firewall_id',
+  Kubernetes: 'lkecluster_id',
+  Linodes: 'linode_id',
+  NodeBalancers: 'nodebalancer_id',
+  Volumes: 'volume_id',
+};
+
+export const ENTITY_ID_TO_NAME_MAP: Record<EntityType, string> = {
+  database_id: 'Database Cluster',
+  domain_id: 'Domain',
+  firewall_id: 'Firewall',
+  general: '',
+  linode_id: 'Linode',
+  lkecluster_id: 'Kubernetes Cluster',
+  nodebalancer_id: 'NodeBalancer',
+  none: '',
+  volume_id: 'Volume',
+};
+
+// General custom fields common to multiple custom ticket types.
+export const CUSTOM_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
+  companyName: 'Business or company name',
+  customerName: 'First and last name',
+  publicInfo:
+    "Links to public information - e.g. your business or application's website, Twitter profile, GitHub, etc.",
+  useCase: 'A clear and detailed description of your use case',
+};
+
+export const SMTP_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
+  ...CUSTOM_FIELD_NAME_TO_LABEL_MAP,
+  emailDomains: 'Domain(s) that will be sending emails',
+  useCase:
+    "A clear and detailed description of your email use case, including how you'll avoid sending unwanted emails",
+};
+
+// Used for finding specific custom fields within form data, based on the ticket type.
+export const TICKET_TYPE_TO_CUSTOM_FIELD_KEYS_MAP: Record<string, string[]> = {
+  smtp: Object.keys(SMTP_FIELD_NAME_TO_LABEL_MAP),
+};
+
+export const SEVERITY_LABEL_MAP: Map<TicketSeverity, string> = new Map([
+  [1, '1-Major Impact'],
+  [2, '2-Moderate Impact'],
+  [3, '3-Low Impact'],
+]);
+
+export const SEVERITY_OPTIONS: {
+  label: string;
+  value: TicketSeverity;
+}[] = Array.from(SEVERITY_LABEL_MAP).map(([severity, label]) => ({
+  label,
+  value: severity,
+}));
 
 export const TICKET_SEVERITY_TOOLTIP_TEXT = (
   <>

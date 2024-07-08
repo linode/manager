@@ -11,7 +11,7 @@ We use [ESLint](https://eslint.org/) to enforce coding and formatting standards.
 - **prettier** (code formatting)
 - **scanjs** (security)
 
-If you are using VSCode it is highly recommended to use the ESlint extension. The Prettier extension is also recommended, as it can be configured to format your code on save.
+If you are using VSCode it is **highly** recommended to use the [ESlint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint). The [Prettier extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) is also recommended, as it can be configured to format your code on save.
 
 ## React
 

@@ -1,11 +1,3 @@
-import {
-  NotificationType,
-  ObjectStorageKeyRequest,
-  SecurityQuestionsPayload,
-  TokenRequest,
-  User,
-  VolumeStatus,
-} from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { HttpResponse, http } from 'msw';
 
@@ -55,6 +47,8 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
+  lkeHighAvailabilityTypeFactory,
+  lkeStandardAvailabilityTypeFactory,
   loadbalancerEndpointHealthFactory,
   loadbalancerFactory,
   longviewActivePlanFactory,
@@ -107,6 +101,16 @@ import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
 import { getStorage } from 'src/utilities/storage';
+
+import type {
+  NotificationType,
+  ObjectStorageKeyRequest,
+  SecurityQuestionsPayload,
+  TokenRequest,
+  UpdateImageRegionsPayload,
+  User,
+  VolumeStatus,
+} from '@linode/api-v4';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -604,7 +608,21 @@ export const handlers = [
   http.get('*/regions', async () => {
     return HttpResponse.json(makeResourcePage(regions));
   }),
-  http.get('*/images', async () => {
+  http.get<{ id: string }>('*/v4/images/:id', ({ params }) => {
+    const distributedImage = imageFactory.build({
+      capabilities: ['cloud-init', 'distributed-images'],
+      id: 'private/distributed-image',
+      label: 'distributed-image',
+      regions: [{ region: 'us-east', status: 'available' }],
+    });
+
+    if (params.id === distributedImage.id) {
+      return HttpResponse.json(distributedImage);
+    }
+
+    return HttpResponse.json(imageFactory.build());
+  }),
+  http.get('*/images', async ({ request }) => {
     const privateImages = imageFactory.buildList(5, {
       status: 'available',
       type: 'manual',
@@ -624,6 +642,16 @@ export const handlers = [
       status: 'available',
       type: 'manual',
     });
+    const multiRegionsImage = imageFactory.build({
+      id: 'multi-regions-test-image',
+      label: 'multi-regions-test-image',
+      regions: [
+        { region: 'us-southeast', status: 'available' },
+        { region: 'us-east', status: 'pending' },
+      ],
+      status: 'available',
+      type: 'manual',
+    });
     const creatingImages = imageFactory.buildList(2, {
       status: 'creating',
       type: 'manual',
@@ -637,17 +665,54 @@ export const handlers = [
       type: 'automatic',
     });
     const publicImages = imageFactory.buildList(4, { is_public: true });
+    const distributedImage = imageFactory.build({
+      capabilities: ['cloud-init', 'distributed-images'],
+      id: 'private/distributed-image',
+      label: 'distributed-image',
+      regions: [{ region: 'us-east', status: 'available' }],
+    });
     const images = [
       cloudinitCompatableDistro,
       cloudinitCompatableImage,
+      multiRegionsImage,
+      distributedImage,
       ...automaticImages,
       ...privateImages,
       ...publicImages,
       ...pendingImages,
       ...creatingImages,
     ];
+    const filter = request.headers.get('x-filter');
+
+    if (filter?.includes('manual')) {
+      return HttpResponse.json(
+        makeResourcePage(images.filter((image) => image.type === 'manual'))
+      );
+    }
+
+    if (filter?.includes('automatic')) {
+      return HttpResponse.json(
+        makeResourcePage(images.filter((image) => image.type === 'automatic'))
+      );
+    }
+
     return HttpResponse.json(makeResourcePage(images));
   }),
+  http.post<any, UpdateImageRegionsPayload>(
+    '*/v4/images/:id/regions',
+    async ({ request }) => {
+      const data = await request.json();
+
+      const image = imageFactory.build();
+
+      image.regions = data.regions.map((regionId) => ({
+        region: regionId,
+        status: 'pending replication',
+      }));
+
+      return HttpResponse.json(image);
+    }
+  ),
 
   http.get('*/linode/types', () => {
     return HttpResponse.json(
@@ -831,6 +896,13 @@ export const handlers = [
   http.get('*/lke/clusters', async () => {
     const clusters = kubernetesAPIResponse.buildList(10);
     return HttpResponse.json(makeResourcePage(clusters));
+  }),
+  http.get('*/lke/types', async () => {
+    const lkeTypes = [
+      lkeStandardAvailabilityTypeFactory.build(),
+      lkeHighAvailabilityTypeFactory.build(),
+    ];
+    return HttpResponse.json(makeResourcePage(lkeTypes));
   }),
   http.get('*/lke/versions', async () => {
     const versions = kubernetesVersionFactory.buildList(1);
@@ -2298,6 +2370,64 @@ export const handlers = [
         },
       ],
     });
+
+    return HttpResponse.json(response);
+  }),
+  http.get('*/v4/monitor/services/linode/dashboards', () => {
+    const response = {
+      data: [
+        {
+          id: 1,
+          type: 'standard',
+          service_type: 'linode',
+          label: 'Linode Service I/O Statistics',
+          created: '2024-04-29T17:09:29',
+          updated: null,
+          widgets: [
+            {
+              metric: 'system_cpu_utilization_percent',
+              unit: '%',
+              label: 'CPU utilization',
+              color: 'blue',
+              size: 12,
+              chart_type: 'area',
+              y_label: 'system_cpu_utilization_ratio',
+              aggregate_function: 'avg',
+            },
+            {
+              metric: 'system_memory_usage_by_resource',
+              unit: 'Bytes',
+              label: 'Memory Usage',
+              color: 'red',
+              size: 12,
+              chart_type: 'area',
+              y_label: 'system_memory_usage_bytes',
+              aggregate_function: 'avg',
+            },
+            {
+              metric: 'system_network_io_by_resource',
+              unit: 'Bytes',
+              label: 'Network Traffic',
+              color: 'green',
+              size: 6,
+              chart_type: 'area',
+              y_label: 'system_network_io_bytes_total',
+              aggregate_function: 'avg',
+            },
+            {
+              metric: 'system_disk_OPS_total',
+              unit: 'OPS',
+              label: 'Disk I/O',
+              color: 'yellow',
+              size: 6,
+              chart_type: 'area',
+              y_label: 'system_disk_operations_total',
+              aggregate_function: 'avg',
+            },
+          ],
+        },
+      ],
+    };
 
     return HttpResponse.json(response);
   }),

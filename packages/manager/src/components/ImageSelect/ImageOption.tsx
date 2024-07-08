@@ -1,14 +1,18 @@
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import { OptionProps } from 'react-select';
 import { makeStyles } from 'tss-react/mui';
 
+import DistributedRegionIcon from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { Box } from 'src/components/Box';
-import { Item } from 'src/components/EnhancedSelect';
 import { Option } from 'src/components/EnhancedSelect/components/Option';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useFlags } from 'src/hooks/useFlags';
+
+import { Stack } from '../Stack';
+import { Tooltip } from '../Tooltip';
+
+import type { ImageItem } from './ImageSelect';
+import type { Theme } from '@mui/material/styles';
+import type { OptionProps } from 'react-select';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   distroIcon: {
@@ -33,8 +37,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
     '& g': {
       fill: theme.name === 'dark' ? 'white' : '#888f91',
     },
-    display: 'flex',
-    padding: `2px !important`, // Revisit use of important when we refactor the Select component
+    display: 'flex !important',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: '2px 8px !important', // Revisit use of important when we refactor the Select component
   },
   selected: {
     '& g': {
@@ -42,11 +48,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
 }));
-
-interface ImageItem extends Item<string> {
-  className?: string;
-  isCloudInitCompatible: boolean;
-}
 
 interface ImageOptionProps extends OptionProps<any, any> {
   data: ImageItem;
@@ -59,48 +60,32 @@ export const ImageOption = (props: ImageOptionProps) => {
 
   return (
     <Option
-      className={cx({
+      className={cx(classes.root, {
         [classes.focused]: isFocused,
-        [classes.root]: true,
         [classes.selected]: isSelected,
       })}
       attrs={{ ['data-qa-image-select-item']: data.value }}
       value={data.value}
       {...props}
     >
-      <Box
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-        }}
-      >
+      <Stack alignItems="center" direction="row" spacing={1.5}>
         <span className={`${data.className} ${classes.distroIcon}`} />
         <Box>{label}</Box>
-        {flags.metadata && data.isCloudInitCompatible ? (
-          <TooltipIcon
-            icon={<DescriptionOutlinedIcon />}
-            status="other"
-            sxTooltipIcon={sxCloudInitTooltipIcon}
-            text="This image is compatible with cloud-init."
-          />
-        ) : null}
-      </Box>
+      </Stack>
+      <Stack alignItems="center" direction="row" spacing={1}>
+        {data.isDistributedCompatible && (
+          <Tooltip title="This image is compatible with distributed compute regions.">
+            <div style={{ display: 'flex' }}>
+              <DistributedRegionIcon height="24px" width="24px" />
+            </div>
+          </Tooltip>
+        )}
+        {flags.metadata && data.isCloudInitCompatible && (
+          <Tooltip title="This image is compatible with cloud-init.">
+            <DescriptionOutlinedIcon />
+          </Tooltip>
+        )}
+      </Stack>
     </Option>
   );
-};
-
-const sxCloudInitTooltipIcon = {
-  '& svg': {
-    height: 20,
-    width: 20,
-  },
-  '&:hover': {
-    color: 'inherit',
-  },
-  color: 'inherit',
-  marginLeft: 'auto',
-  padding: 0,
-  paddingRight: 1,
 };

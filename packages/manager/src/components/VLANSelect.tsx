@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
+import { useDebouncedValue } from 'src/hooks/useDebouncedValue';
 import { useVLANsInfiniteQuery } from 'src/queries/vlans';
 
 import { Autocomplete } from './Autocomplete/Autocomplete';
@@ -51,9 +52,19 @@ export const VLANSelect = (props: Props) => {
   const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = useState<string>('');
 
+  useEffect(() => {
+    if (!value && inputValue) {
+      // If the value gets cleared, make sure the TextField's value also gets cleared.
+      setInputValue('');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+
+  const debouncedInputValue = useDebouncedValue(inputValue);
+
   const apiFilter = getVLANSelectFilter({
     defaultFilter: filter,
-    inputValue,
+    inputValue: debouncedInputValue,
   });
 
   const {

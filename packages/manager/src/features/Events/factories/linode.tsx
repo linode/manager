@@ -1,10 +1,15 @@
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useTypeQuery } from 'src/queries/types';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
+import type { Event } from '@linode/api-v4';
 
 export const linode: PartialEventMap<'linode'> = {
   linode_addip: {
@@ -285,12 +290,7 @@ export const linode: PartialEventMap<'linode'> = {
         <strong>migrated</strong>.
       </>
     ),
-    started: (e) => (
-      <>
-        Linode <EventLink event={e} to="entity" /> is being{' '}
-        <strong>migrated</strong>.
-      </>
-    ),
+    started: (e) => <LinodeMigrateDataCenterMessage event={e} />,
   },
   linode_migrate_datacenter_create: {
     notification: (e) => (
@@ -453,11 +453,7 @@ export const linode: PartialEventMap<'linode'> = {
         <strong>resizing</strong>.
       </>
     ),
-    started: (e) => (
-      <>
-        Linode <EventLink event={e} to="entity" /> is <strong>resizing</strong>.
-      </>
-    ),
+    started: (e) => <LinodeResizeStartedMessage event={e} />,
   },
   linode_resize_create: {
     notification: (e) => (
@@ -539,4 +535,47 @@ export const linode: PartialEventMap<'linode'> = {
       </>
     ),
   },
+};
+
+const LinodeMigrateDataCenterMessage = ({ event }: { event: Event }) => {
+  const { data: linode } = useLinodeQuery(event.entity?.id ?? -1);
+  const { data: regions } = useRegionsQuery();
+  const region = regions?.find((r) => r.id === linode?.region);
+
+  return (
+    <>
+      Linode <EventLink event={event} to="entity" /> is being{' '}
+      <strong>migrated</strong>
+      {region && (
+        <>
+          {' '}
+          to <strong>{region.label}</strong>
+        </>
+      )}
+      .
+    </>
+  );
+};
+
+const LinodeResizeStartedMessage = ({ event }: { event: Event }) => {
+  const { data: linode } = useLinodeQuery(event.entity?.id ?? -1);
+  const type = useTypeQuery(linode?.type ?? '');
+
+  return (
+    <>
+      Linode <EventLink event={event} to="entity" /> is{' '}
+      <strong>resizing</strong>
+      {type && (
+        <>
+          {' '}
+          to the{' '}
+          {type.data && (
+            <strong>{formatStorageUnits(type.data.label)}</strong>
+          )}{' '}
+          Plan
+        </>
+      )}
+      .
+    </>
+  );
 };

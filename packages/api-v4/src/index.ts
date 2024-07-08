@@ -2,6 +2,8 @@ export * from './account';
 
 export * from './aclb';
 
+export * from './cloudpulse';
+
 export * from './databases';
 
 export * from './domains';
@@ -21,6 +23,8 @@ export * from './longview';
 export * from './managed';
 
 export * from './networking';
+
+export * from './network-transfer';
 
 export * from './nodebalancers';
 

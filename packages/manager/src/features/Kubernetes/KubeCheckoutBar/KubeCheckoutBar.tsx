@@ -1,11 +1,9 @@
-import { KubeNodePoolResponse, Region } from '@linode/api-v4';
 import { Typography, styled } from '@mui/material';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { displayPrice } from 'src/components/DisplayPrice';
 import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
@@ -22,15 +20,17 @@ import {
 } from 'src/utilities/pricing/kubernetes';
 
 import { nodeWarning } from '../kubeUtils';
-import NodePoolSummary from './NodePoolSummary';
+import { NodePoolSummary } from './NodePoolSummary';
+
+import type { KubeNodePoolResponse, Region } from '@linode/api-v4';
 
 export interface Props {
   createCluster: () => void;
   hasAgreed: boolean;
   highAvailability?: boolean;
-  highAvailabilityPrice: number | undefined;
+  highAvailabilityPrice: string;
   pools: KubeNodePoolResponse[];
-  region: string;
+  region: string | undefined;
   regionsData: Region[];
   removePool: (poolIdx: number) => void;
   showHighAvailability: boolean | undefined;
@@ -39,7 +39,7 @@ export interface Props {
   updatePool: (poolIdx: number, updatedPool: KubeNodePoolResponse) => void;
 }
 
-export const KubeCheckoutBar: React.FC<Props> = (props) => {
+export const KubeCheckoutBar = (props: Props) => {
   const {
     createCluster,
     hasAgreed,
@@ -81,7 +81,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     highAvailabilityPrice !== undefined;
 
   const disableCheckout = Boolean(
-    needsAPool || gdprConditions || haConditions || region === ''
+    needsAPool || gdprConditions || haConditions || !region
   );
 
   if (isLoading) {
@@ -96,10 +96,10 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
         ) : undefined
       }
       calculatedPrice={
-        region !== ''
+        region
           ? getTotalClusterPrice({
               highAvailabilityPrice: highAvailability
-                ? highAvailabilityPrice
+                ? Number(highAvailabilityPrice)
                 : undefined,
               pools,
               region,
@@ -122,7 +122,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
               types?.find((thisType) => thisType.id === thisPool.type) || null
             }
             price={
-              region !== ''
+              region
                 ? getKubernetesMonthlyPrice({
                     count: thisPool.count,
                     region,
@@ -148,14 +148,12 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             variant="warning"
           />
         )}
-        {region != '' && highAvailability ? (
+        {region && highAvailability ? (
           <StyledHABox>
             <StyledHAHeader>
               High Availability (HA) Control Plane
             </StyledHAHeader>
-            <Typography>
-              {displayPrice(Number(highAvailabilityPrice))}/month
-            </Typography>
+            <Typography>{`$${highAvailabilityPrice}/month`}</Typography>
             <Divider dark spacingBottom={0} spacingTop={16} />
           </StyledHABox>
         ) : undefined}

@@ -1,11 +1,10 @@
-import React from 'react';
-
 import type {
   AccountAvailability,
   Capabilities,
   Region,
   RegionSite,
 } from '@linode/api-v4';
+import type React from 'react';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
 
 export interface DisableRegionOption {
@@ -21,6 +20,20 @@ export interface DisableRegionOption {
   tooltipWidth?: number;
 }
 
+export type RegionFilterValue =
+  | 'distributed-AF'
+  | 'distributed-ALL'
+  | 'distributed-AS'
+  | 'distributed-EU'
+  | 'distributed-NA'
+  | 'distributed-OC'
+  | 'distributed-SA'
+  | RegionSite;
+
+export interface GetRegionLabel {
+  includeSlug?: boolean;
+  region: Region;
+}
 export interface RegionSelectProps<
   DisableClearable extends boolean | undefined = undefined
 > extends Omit<
@@ -41,7 +54,7 @@ export interface RegionSelectProps<
   disabledRegions?: Record<string, DisableRegionOption>;
   helperText?: string;
   label?: string;
-  regionFilter?: RegionSite;
+  regionFilter?: RegionFilterValue;
   regions: Region[];
   required?: boolean;
   showDistributedRegionIconHelperText?: boolean;
@@ -49,7 +62,7 @@ export interface RegionSelectProps<
   /**
    * The ID of the selected region.
    */
-  value: null | string;
+  value: string | undefined;
   width?: number;
 }
 
@@ -80,5 +93,3 @@ export interface GetRegionOptionAvailability {
   currentCapability: Capabilities | undefined;
   region: Region;
 }
-
-export type SupportedDistributedRegionTypes = 'Distributions' | 'StackScripts';

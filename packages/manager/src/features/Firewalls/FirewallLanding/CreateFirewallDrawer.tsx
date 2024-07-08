@@ -1,13 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Linode } from '@linode/api-v4';
-import {
-  CreateFirewallPayload,
-  Firewall,
-  FirewallDeviceEntityType,
-} from '@linode/api-v4/lib/firewalls';
-import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
-import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -27,12 +19,7 @@ import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import {
-  queryKey as firewallQueryKey,
-  useAllFirewallsQuery,
-  useCreateFirewall,
-} from 'src/queries/firewalls';
-import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
+import { useAllFirewallsQuery, useCreateFirewall } from 'src/queries/firewalls';
 import { useGrants } from 'src/queries/profile/profile';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -48,8 +35,14 @@ import {
   NODEBALANCER_CREATE_FLOW_TEXT,
 } from './constants';
 
+import type {
+  CreateFirewallPayload,
+  Firewall,
+  FirewallDeviceEntityType,
+  Linode,
+  NodeBalancer,
+} from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
-import { nodebalancerQueries } from 'src/queries/nodebalancers';
 
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
@@ -81,10 +74,9 @@ export const CreateFirewallDrawer = React.memo(
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { data: grants } = useGrants();
     const { mutateAsync } = useCreateFirewall();
-    const { data } = useAllFirewallsQuery();
+    const { data } = useAllFirewallsQuery(open);
 
     const { enqueueSnackbar } = useSnackbar();
-    const queryClient = useQueryClient();
 
     const location = useLocation();
     const isFromLinodeCreate = location.pathname.includes('/linodes/create');
@@ -132,32 +124,9 @@ export const CreateFirewallDrawer = React.memo(
         mutateAsync(payload)
           .then((response) => {
             setSubmitting(false);
-            queryClient.invalidateQueries([firewallQueryKey]);
             enqueueSnackbar(`Firewall ${payload.label} successfully created`, {
               variant: 'success',
             });
-
-            // Invalidate for Linodes
-            if (payload.devices?.linodes) {
-              payload.devices.linodes.forEach((linodeId) => {
-                queryClient.invalidateQueries([
-                  linodesQueryKey,
-                  'linode',
-                  linodeId,
-                  'firewalls',
-                ]);
-              });
-            }
-
-            // Invalidate for NodeBalancers
-            if (payload.devices?.nodebalancers) {
-              for (const id of payload.devices.nodebalancers) {
-                queryClient.invalidateQueries({
-                  queryKey: nodebalancerQueries.nodebalancer(id)._ctx.firewalls
-                    .queryKey,
-                });
-              }
-            }
 
             if (onFirewallCreated) {
               onFirewallCreated(response);

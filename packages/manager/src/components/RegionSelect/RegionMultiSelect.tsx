@@ -67,6 +67,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     selectedIds,
     sortRegionOptions,
     width,
+    onClose,
   } = props;
 
   const {
@@ -171,6 +172,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
           options={regionOptions}
           placeholder={placeholder ?? 'Select Regions'}
           value={selectedRegions}
+          onClose={onClose}
         />
       </StyledAutocompleteContainer>
       {selectedRegions.length > 0 && SelectedRegionsList && (

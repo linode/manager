@@ -1,4 +1,4 @@
-import * as Factory from 'factory.ts';
+import Factory from 'src/factories/factoryProxy';
 
 import {
   LongviewPort,
