@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import { useDebouncedValue } from 'src/hooks/useDebouncedValue';
 import { useVLANsInfiniteQuery } from 'src/queries/vlans';
 
 import { Autocomplete } from './Autocomplete/Autocomplete';
@@ -59,9 +60,11 @@ export const VLANSelect = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
+  const debouncedInputValue = useDebouncedValue(inputValue);
+
   const apiFilter = getVLANSelectFilter({
     defaultFilter: filter,
-    inputValue,
+    inputValue: debouncedInputValue,
   });
 
   const {

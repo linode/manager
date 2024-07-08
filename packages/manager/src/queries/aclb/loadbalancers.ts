@@ -2,12 +2,11 @@ import {
   createBasicLoadbalancer,
   createLoadbalancer,
   deleteLoadbalancer,
-  getLoadbalancer,
-  getLoadbalancerEndpointHealth,
-  getLoadbalancers,
   updateLoadbalancer,
 } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { aclbQueries } from './queries';
 
 import type {
   APIError,
@@ -21,75 +20,86 @@ import type {
   UpdateLoadbalancerPayload,
 } from '@linode/api-v4';
 
-export const QUERY_KEY = 'aclbs';
-
 export const useLoadBalancersQuery = (params?: Params, filter?: Filter) => {
-  return useQuery<ResourcePage<Loadbalancer>, APIError[]>(
-    [QUERY_KEY, 'paginated', params, filter],
-    () => getLoadbalancers(params, filter),
-    { keepPreviousData: true }
-  );
+  return useQuery<ResourcePage<Loadbalancer>, APIError[]>({
+    ...aclbQueries.paginated(params, filter),
+    keepPreviousData: true,
+  });
 };
 
 export const useLoadBalancerQuery = (id: number, enabled = true) => {
-  return useQuery<Loadbalancer, APIError[]>(
-    [QUERY_KEY, 'aclb', id],
-    () => getLoadbalancer(id),
-    { enabled }
-  );
+  return useQuery<Loadbalancer, APIError[]>({
+    ...aclbQueries.loadbalancer(id),
+    enabled,
+  });
 };
 
 export const useLoadBalancerEndpointHealthQuery = (id: number) => {
   return useQuery<LoadBalancerEndpointHealth, APIError[]>({
-    queryFn: () => getLoadbalancerEndpointHealth(id),
-    queryKey: [QUERY_KEY, 'aclb', id, 'endpoint-health'],
+    ...aclbQueries.loadbalancer(id)._ctx.endpointHealth,
     refetchInterval: 10_000,
   });
 };
 
 export const useLoadBalancerMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<Loadbalancer, APIError[], UpdateLoadbalancerPayload>(
-    (data) => updateLoadbalancer(id, data),
-    {
-      onSuccess(data) {
-        queryClient.setQueryData([QUERY_KEY, 'aclb', id], data);
-        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
-      },
-    }
-  );
+  return useMutation<Loadbalancer, APIError[], UpdateLoadbalancerPayload>({
+    mutationFn: (data) => updateLoadbalancer(id, data),
+    onSuccess(loadbalancer) {
+      queryClient.setQueryData<Loadbalancer>(
+        aclbQueries.loadbalancer(id).queryKey,
+        loadbalancer
+      );
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.paginated._def,
+      });
+    },
+  });
 };
 
 export const useLoadBalancerBasicCreateMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Loadbalancer, APIError[], CreateBasicLoadbalancerPayload>(
-    (data) => createBasicLoadbalancer(data),
-    {
-      onSuccess(data) {
-        queryClient.setQueryData([QUERY_KEY, 'aclb', data.id], data);
-        queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
-      },
-    }
-  );
+  return useMutation<Loadbalancer, APIError[], CreateBasicLoadbalancerPayload>({
+    mutationFn: createBasicLoadbalancer,
+    onSuccess(loadbalancer) {
+      queryClient.setQueryData<Loadbalancer>(
+        aclbQueries.loadbalancer(loadbalancer.id).queryKey,
+        loadbalancer
+      );
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.paginated._def,
+      });
+    },
+  });
 };
 
 export const useLoadBalancerCreateMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Loadbalancer, APIError[], CreateLoadbalancerPayload>({
     mutationFn: createLoadbalancer,
-    onSuccess(data) {
-      queryClient.setQueryData([QUERY_KEY, 'aclb', data.id], data);
-      queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
+    onSuccess(loadbalancer) {
+      queryClient.setQueryData<Loadbalancer>(
+        aclbQueries.loadbalancer(loadbalancer.id).queryKey,
+        loadbalancer
+      );
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.paginated._def,
+      });
     },
   });
 };
 
 export const useLoadBalancerDeleteMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteLoadbalancer(id), {
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deleteLoadbalancer(id),
     onSuccess() {
-      queryClient.removeQueries([QUERY_KEY, 'aclb', id]);
-      queryClient.invalidateQueries([QUERY_KEY, 'paginated']);
+      queryClient.removeQueries({
+        queryKey: aclbQueries.loadbalancer(id).queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.paginated._def,
+      });
     },
   });
 };

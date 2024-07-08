@@ -70,7 +70,7 @@ describe('Create Linode', () => {
          */
         it(`creates a ${planConfig.planType} Linode`, () => {
           const linodeRegion = chooseRegion({
-            capabilities: ['Linodes', 'Premium Plans'],
+            capabilities: ['Linodes', 'Premium Plans', 'Vlans'],
           });
           const linodeLabel = randomLabel();
 

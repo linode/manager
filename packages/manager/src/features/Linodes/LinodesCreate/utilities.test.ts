@@ -50,28 +50,26 @@ describe('trimOneClickFromLabel', () => {
 });
 
 describe('filterOneClickApps', () => {
-  const baseAppIds = [1, 2, 3, 4];
+  const baseAppIds = [2, 3, 4, 5];
   const newApps = {
-    5: 'New App 1',
-    6: 'New App 2',
-    7: 'New App 3',
-    8: 'New App 4',
+    6: 'New App 1',
+    7: 'New App 2',
+    8: 'New App 3',
+    9: 'New App 4',
   };
 
-  const stackScript = stackScriptFactory.build();
-
-  // id: 1,2,3,4
+  // id: 2,3,4,5
   const queryResultsWithHelpers: StackScript[] = [
     ...stackScriptFactory.buildList(3),
-    { ...stackScript, id: 4, label: 'StackScript Helpers' },
+    stackScriptFactory.build({ label: 'StackScript Helpers' }),
   ];
-  // id: 5,6,7,8
+  // id: 6,7,8,9
   const queryResultsWithoutHelpers: StackScript[] = stackScriptFactory.buildList(
     4
   );
 
   it('filters OneClickApps and trims labels, excluding StackScripts with Helpers', () => {
-    // feeding 4 Ids (1,2,3,4) getting 3 back
+    // feeding 4 Ids (2,3,4,5) getting 3 back
     const filteredOCAsWithHelpersLabel = filterOneClickApps({
       baseAppIds,
       newApps,
@@ -79,7 +77,7 @@ describe('filterOneClickApps', () => {
     });
     expect(filteredOCAsWithHelpersLabel.length).toBe(3);
 
-    // feeding 4 Ids (5,6,7,8) getting 4 back
+    // feeding 4 Ids (6,7,8,9) getting 4 back
     const filteredOCAsWithoutHelpersLabel = filterOneClickApps({
       baseAppIds,
       newApps,
