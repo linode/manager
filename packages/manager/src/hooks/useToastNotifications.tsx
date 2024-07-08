@@ -161,7 +161,7 @@ const toasts: Toasts = {
     },
   },
   tax_id_invalid: {
-    failure: { message: 'Tax Identification Number has been verified.' },
+    failure: { message: 'Error validating Tax Identification Number.' },
     invertVariant: true,
     success: {
       message: 'Tax Identification Number could not be verified.',
