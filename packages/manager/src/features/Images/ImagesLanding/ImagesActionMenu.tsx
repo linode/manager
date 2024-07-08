@@ -91,7 +91,7 @@ export const ImagesActionMenu = (props: Props) => {
           },
           {
             onClick: () => onDelete?.(label, id, status),
-            title: isAvailable ? 'Delete' : 'Cancel Upload',
+            title: isAvailable ? 'Delete' : 'Cancel',
           },
         ];
   }, [

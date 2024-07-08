@@ -94,6 +94,7 @@ describe('create image (e2e)', () => {
       cy.findByLabelText('Label')
         .should('be.enabled')
         .should('be.visible')
+        .clear()
         .type(label);
 
       // Give the Image a description

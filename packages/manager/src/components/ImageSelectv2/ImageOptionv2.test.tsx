@@ -44,7 +44,9 @@ describe('ImageOptionv2', () => {
     );
 
     expect(
-      getByLabelText('This image is compatible with distributed regions.')
+      getByLabelText(
+        'This image is compatible with distributed compute regions.'
+      )
     ).toBeVisible();
   });
 });

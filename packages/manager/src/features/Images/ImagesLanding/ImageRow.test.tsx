@@ -8,7 +8,7 @@ import {
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
 
-import ImageRow from './ImageRow';
+import { ImageRow } from './ImageRow';
 
 import type { Handlers } from './ImagesActionMenu';
 

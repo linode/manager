@@ -26,7 +26,7 @@ interface Props {
   multiRegionsEnabled?: boolean; // TODO Image Service v2: delete after GA
 }
 
-const ImageRow = (props: Props) => {
+export const ImageRow = (props: Props) => {
   const { event, handlers, image, multiRegionsEnabled } = props;
 
   const {
@@ -171,5 +171,3 @@ const ProgressDisplay: React.FC<{
     </Typography>
   );
 };
-
-export default React.memo(ImageRow);
