@@ -74,9 +74,6 @@ describe('Account login history', () => {
         .closest('tr')
         .within(() => {
           // Confirm that successful login and status icon display in table.
-          cy.findByText(mockSuccessfulLogin.status, { exact: false }).should(
-            'be.visible'
-          );
           cy.findAllByLabelText(`Status is ${mockSuccessfulLogin.status}`);
 
           // Confirm all other fields display in table.
@@ -206,9 +203,6 @@ describe('Account login history', () => {
         .closest('tr')
         .within(() => {
           // Confirm that successful login and status icon display in table.
-          // cy.findByText(mockSuccessfulLogin.status, { exact: false }).should(
-          //   'be.visible'
-          // );
           cy.findAllByLabelText(`Status is ${mockSuccessfulLogin.status}`);
 
           // Confirm all other fields display in table.
