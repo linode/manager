@@ -1,5 +1,3 @@
-import { LISH_ROOT } from 'src/constants';
-
 export const lishLaunch = (linodeId: number) => {
   window.open(
     `${window.location.protocol}//${window.location.host}/linodes/${linodeId}/lish/weblish`,
