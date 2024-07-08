@@ -354,6 +354,12 @@ export const darkTheme: ThemeOptions = {
         color: 'primary',
       },
       styleOverrides: {
+        clickable: {
+          '&:hover': {
+            backgroundColor: Color.Brand[30],
+          },
+          color: Color.Brand[100],
+        },
         colorError: {
           backgroundColor: Badge.Bold.Red.Background,
           color: Badge.Bold.Red.Text,
