@@ -355,10 +355,11 @@ export const captureLinodeCreateAnalyticsEvent = async (
   }
 
   if (type === 'Clone Linode' && values.linode) {
-    // @todo use Linode Query key factory when implemented
+    const linodeId = values.linode.id;
+    // @todo use Linode query key factory when it is implemented
     const linode = await queryClient.ensureQueryData({
-      queryFn: () => getLinode(values.linode!.id),
-      queryKey: ['linodes', 'linode', values.linode.id, 'details'],
+      queryFn: () => getLinode(linodeId),
+      queryKey: ['linodes', 'linode', linodeId, 'details'],
     });
 
     sendCreateLinodeEvent('clone', values.type, {
