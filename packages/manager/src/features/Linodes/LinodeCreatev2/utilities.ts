@@ -337,9 +337,9 @@ export const defaultValuesMap: Record<LinodeCreateType, CreateLinodeRequest> = {
 };
 
 interface LinodeCreateAnalyticsEventOptions {
-  payload: LinodeCreateFormValues;
   queryClient: QueryClient;
   type: LinodeCreateType;
+  values: LinodeCreateFormValues;
 }
 
 /**
@@ -348,38 +348,38 @@ interface LinodeCreateAnalyticsEventOptions {
 export const captureLinodeCreateAnalyticsEvent = async (
   options: LinodeCreateAnalyticsEventOptions
 ) => {
-  const { payload, queryClient, type } = options;
+  const { queryClient, type, values } = options;
 
-  if (type === 'Backups' && payload.backup_id) {
-    sendCreateLinodeEvent('backup', String(payload.backup_id));
+  if (type === 'Backups' && values.backup_id) {
+    sendCreateLinodeEvent('backup', String(values.backup_id));
   }
 
-  if (type === 'Clone Linode' && payload.linode) {
+  if (type === 'Clone Linode' && values.linode) {
     // @todo use Linode Query key factory when implemented
     const linode = await queryClient.ensureQueryData({
-      queryFn: () => getLinode(payload.linode!.id),
-      queryKey: ['linodes', 'linode', payload.linode.id, 'details'],
+      queryFn: () => getLinode(values.linode!.id),
+      queryKey: ['linodes', 'linode', values.linode.id, 'details'],
     });
 
-    sendCreateLinodeEvent('clone', payload.type, {
+    sendCreateLinodeEvent('clone', values.type, {
       isLinodePoweredOff: linode.status === 'offline',
     });
   }
 
   if (type === 'Distributions' || type === 'Images') {
-    sendCreateLinodeEvent('image', payload.image ?? undefined);
+    sendCreateLinodeEvent('image', values.image ?? undefined);
   }
 
-  if (type === 'StackScripts' && payload.stackscript_id) {
+  if (type === 'StackScripts' && values.stackscript_id) {
     const stackscript = await queryClient.ensureQueryData(
-      stackscriptQueries.stackscript(payload.stackscript_id)
+      stackscriptQueries.stackscript(values.stackscript_id)
     );
     sendCreateLinodeEvent('stackscript', stackscript.label);
   }
 
-  if (type === 'One-Click' && payload.stackscript_id) {
+  if (type === 'One-Click' && values.stackscript_id) {
     const stackscript = await queryClient.ensureQueryData(
-      stackscriptQueries.stackscript(payload.stackscript_id)
+      stackscriptQueries.stackscript(values.stackscript_id)
     );
     sendCreateLinodeEvent('one-click', stackscript.label);
   }
