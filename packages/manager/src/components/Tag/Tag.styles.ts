@@ -16,7 +16,6 @@ export const StyledChip = styled(Chip, {
       borderTopRightRadius: props.onDelete && 0,
     },
     borderRadius: 4,
-    color: theme.name === 'light' ? '#3a3f46' : '#fff',
     fontFamily: theme.font.normal,
     maxWidth: 350,
     padding: '7px 10px',
@@ -32,18 +31,19 @@ export const StyledChip = styled(Chip, {
     ['& .StyledDeleteButton']: {
       color: theme.color.tagIcon,
     },
-    backgroundColor: theme.color.tagButton,
+    backgroundColor: theme.color.tagButtonBg,
   },
   // Overrides MUI chip default styles so these appear as separate elements.
   '&:hover': {
     ['& .StyledDeleteButton']: {
       color: theme.color.tagIcon,
     },
-    backgroundColor: theme.color.tagButton,
+    backgroundColor: theme.color.tagButtonBg,
   },
   fontSize: '0.875rem',
   height: 30,
   padding: 0,
+  transition: 'none',
   ...(props.colorVariant === 'blue' && {
     '& > span': {
       '&:hover, &:focus': {
@@ -58,15 +58,16 @@ export const StyledChip = styled(Chip, {
   ...(props.colorVariant === 'lightBlue' && {
     '& > span': {
       '&:focus': {
-        backgroundColor: theme.color.tagButton,
-        color: theme.color.black,
+        backgroundColor: theme.color.tagButtonBg,
+        color: theme.color.white,
       },
       '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        color: 'white',
+        backgroundColor: theme.color.tagButtonBgHover,
+        color: theme.color.tagButtonTextHover,
       },
     },
-    backgroundColor: theme.color.tagButton,
+    backgroundColor: theme.color.tagButtonBg,
+    color: theme.color.tagButtonText,
   }),
 }));
 
@@ -85,10 +86,9 @@ export const StyledDeleteButton = styled(StyledLinkButton, {
   },
   '&:hover': {
     '& svg': {
-      color: 'white',
+      color: theme.color.tagIconHover,
     },
-    backgroundColor: theme.palette.primary.main,
-    color: 'white',
+    backgroundColor: theme.color.buttonPrimaryHover,
   },
   borderBottomRightRadius: 3,
   borderLeft: `1px solid ${theme.name === 'light' ? '#fff' : '#2e3238'}`,

@@ -1,5 +1,10 @@
-## [2024-06-10] - v0.48.0
+## [2024-07-08] - v0.49.0
 
+### Added:
+
+- `createSMTPSupportTicketSchema` to support schemas ([#10557](https://github.com/linode/manager/pull/10557))
+
+## [2024-06-10] - v0.48.0
 
 ### Added:
 
@@ -7,7 +12,6 @@
 - `updateImageRegionsSchema` ([#10541](https://github.com/linode/manager/pull/10541))
 
 ## [2024-05-28] - v0.47.0
-
 
 ### Added:
 
@@ -18,18 +22,14 @@
 - Adjust DiskEncryptionSchema so it is not an object ([#10462](https://github.com/linode/manager/pull/10462))
 - Improve Image `label` validation ([#10471](https://github.com/linode/manager/pull/10471))
 
-
 ## [2024-05-13] - v0.46.0
-
 
 ### Changed:
 
 - Include disk_encryption in CreateLinodeSchema and RebuildLinodeSchema ([#10413](https://github.com/linode/manager/pull/10413))
 - Allow `backup_id` to be nullable in `CreateLinodeSchema` ([#10421](https://github.com/linode/manager/pull/10421))
 
-
 ## [2024-04-29] - v0.45.0
-
 
 ### Changed:
 
@@ -52,11 +52,9 @@
 
 ## [2024-03-18] - v0.42.0
 
-
 ### Changed:
 
 - Update TCP rules to not include a `match_condition` ([#10264](https://github.com/linode/manager/pull/10264))
-
 
 ## [2024-03-04] - v0.41.0
 

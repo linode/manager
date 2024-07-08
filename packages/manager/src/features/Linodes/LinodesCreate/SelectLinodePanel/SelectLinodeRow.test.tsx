@@ -1,11 +1,21 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
-import { imageFactory } from 'src/factories';
-import { linodeFactory } from 'src/factories/linodes';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+
+import { imageFactory, linodeFactory, typeFactory } from 'src/factories';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { SelectLinodeRow } from './SelectLinodeRow';
+
+vi.mock('src/queries/types', async () => {
+  const actual = await vi.importActual('src/queries/types');
+  return {
+    ...actual,
+    useTypeQuery: vi.fn().mockReturnValue({
+      data: typeFactory.build({ label: 'Linode 1 GB' }),
+    }),
+  };
+});
 
 describe('SelectLinodeRow', () => {
   const handlePowerOff = vi.fn();

@@ -23,7 +23,7 @@ import { getUniqueLinodesFromSubnets } from '../utils';
 import {
   StyledActionButton,
   StyledDescriptionBox,
-  StyledPaper,
+  StyledBox,
   StyledSummaryBox,
   StyledSummaryTextTypography,
 } from './VPCDetail.styles';
@@ -133,7 +133,7 @@ const VPCDetail = () => {
           </StyledActionButton>
         </Box>
       </EntityHeader>
-      <StyledPaper>
+      <StyledBox>
         <StyledSummaryBox data-qa-vpc-summary display="flex" flex={1}>
           {summaryData.map((col) => {
             return (
@@ -174,7 +174,7 @@ const VPCDetail = () => {
             </Typography>
           </StyledDescriptionBox>
         )}
-      </StyledPaper>
+      </StyledBox>
       <VPCDeleteDialog
         id={vpc.id}
         label={vpc.label}

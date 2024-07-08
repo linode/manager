@@ -4,6 +4,7 @@ import {
   kubeLinodeFactory,
   linodeFactory,
 } from 'src/factories';
+import { extendType } from 'src/utilities/extendType';
 import { latestKubernetesVersion } from 'support/constants/lke';
 import {
   mockGetCluster,
@@ -785,6 +786,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
    */
   it('can resize pools with DC-specific prices', () => {
     const dcSpecificPricingRegion = getRegionById('us-east');
+    const mockPlanType = extendType(dcPricingMockLinodeTypes[0]);
 
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: latestKubernetesVersion,
@@ -796,7 +798,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
 
     const mockNodePoolResized = nodePoolFactory.build({
       count: 3,
-      type: dcPricingMockLinodeTypes[0].id,
+      type: mockPlanType.id,
       nodes: kubeLinodeFactory.buildList(3),
     });
 
@@ -812,19 +814,19 @@ describe('LKE cluster updates for DC-specific prices', () => {
           id: node.instance_id ?? undefined,
           ipv4: [randomIp()],
           region: dcSpecificPricingRegion.id,
-          type: dcPricingMockLinodeTypes[0].id,
+          type: mockPlanType.id,
         });
       }
     );
 
-    const mockNodePoolDrawerTitle = 'Resize Pool: Linode 0 GB Plan';
+    const mockNodePoolDrawerTitle = `Resize Pool: ${mockPlanType.formattedLabel} Plan`;
 
     mockGetCluster(mockCluster).as('getCluster');
     mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
       'getNodePools'
     );
     mockGetLinodes(mockLinodes).as('getLinodes');
-    mockGetLinodeType(dcPricingMockLinodeTypes[0]).as('getLinodeType');
+    mockGetLinodeType(mockPlanType).as('getLinodeType');
     mockGetKubernetesVersions().as('getVersions');
     mockGetDashboardUrl(mockCluster.id);
     mockGetApiEndpoints(mockCluster.id);
@@ -938,15 +940,17 @@ describe('LKE cluster updates for DC-specific prices', () => {
       },
     });
 
+    const mockPlanType = extendType(dcPricingMockLinodeTypes[0]);
+
     const mockNewNodePool = nodePoolFactory.build({
       count: 2,
-      type: dcPricingMockLinodeTypes[0].id,
+      type: mockPlanType.id,
       nodes: kubeLinodeFactory.buildList(2),
     });
 
     const mockNodePool = nodePoolFactory.build({
       count: 1,
-      type: dcPricingMockLinodeTypes[0].id,
+      type: mockPlanType.id,
       nodes: kubeLinodeFactory.buildList(1),
     });
 
@@ -954,7 +958,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
     mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
     mockGetKubernetesVersions().as('getVersions');
     mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
-    mockGetLinodeType(dcPricingMockLinodeTypes[0]).as('getLinodeType');
+    mockGetLinodeType(mockPlanType).as('getLinodeType');
     mockGetLinodeTypes(dcPricingMockLinodeTypes);
     mockGetDashboardUrl(mockCluster.id);
     mockGetApiEndpoints(mockCluster.id);
@@ -963,7 +967,9 @@ describe('LKE cluster updates for DC-specific prices', () => {
     cy.wait(['@getCluster', '@getNodePools', '@getVersions', '@getLinodeType']);
 
     // Assert that initial node pool is shown on the page.
-    cy.findByText('Linode 0 GB', { selector: 'h2' }).should('be.visible');
+    cy.findByText(mockPlanType.formattedLabel, { selector: 'h2' }).should(
+      'be.visible'
+    );
 
     // Confirm total price is listed in Kube Specs.
     cy.findByText('$14.40/month').should('be.visible');
@@ -987,7 +993,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
           .should('be.visible')
           .should('be.enabled')
           .click();
-        cy.findByText('Linode 0 GB')
+        cy.findByText(mockPlanType.formattedLabel)
           .should('be.visible')
           .closest('tr')
           .within(() => {
@@ -1024,6 +1030,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
    */
   it('can resize pools with region prices of $0', () => {
     const dcSpecificPricingRegion = getRegionById('us-southeast');
+    const mockPlanType = extendType(dcPricingMockLinodeTypes[2]);
 
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: latestKubernetesVersion,
@@ -1035,7 +1042,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
 
     const mockNodePoolResized = nodePoolFactory.build({
       count: 3,
-      type: dcPricingMockLinodeTypes[2].id,
+      type: mockPlanType.id,
       nodes: kubeLinodeFactory.buildList(3),
     });
 
@@ -1051,19 +1058,19 @@ describe('LKE cluster updates for DC-specific prices', () => {
           id: node.instance_id ?? undefined,
           ipv4: [randomIp()],
           region: dcSpecificPricingRegion.id,
-          type: dcPricingMockLinodeTypes[2].id,
+          type: mockPlanType.id,
         });
       }
     );
 
-    const mockNodePoolDrawerTitle = 'Resize Pool: Linode 2 GB Plan';
+    const mockNodePoolDrawerTitle = `Resize Pool: ${mockPlanType.formattedLabel} Plan`;
 
     mockGetCluster(mockCluster).as('getCluster');
     mockGetClusterPools(mockCluster.id, [mockNodePoolInitial]).as(
       'getNodePools'
     );
     mockGetLinodes(mockLinodes).as('getLinodes');
-    mockGetLinodeType(dcPricingMockLinodeTypes[2]).as('getLinodeType');
+    mockGetLinodeType(mockPlanType).as('getLinodeType');
     mockGetKubernetesVersions().as('getVersions');
     mockGetDashboardUrl(mockCluster.id);
     mockGetApiEndpoints(mockCluster.id);
@@ -1160,6 +1167,8 @@ describe('LKE cluster updates for DC-specific prices', () => {
   it('can add node pools with region prices of $0', () => {
     const dcSpecificPricingRegion = getRegionById('us-southeast');
 
+    const mockPlanType = extendType(dcPricingMockLinodeTypes[2]);
+
     const mockCluster = kubernetesClusterFactory.build({
       k8s_version: latestKubernetesVersion,
       region: dcSpecificPricingRegion.id,
@@ -1170,13 +1179,13 @@ describe('LKE cluster updates for DC-specific prices', () => {
 
     const mockNewNodePool = nodePoolFactory.build({
       count: 2,
-      type: dcPricingMockLinodeTypes[2].id,
+      type: mockPlanType.id,
       nodes: kubeLinodeFactory.buildList(2),
     });
 
     const mockNodePool = nodePoolFactory.build({
       count: 1,
-      type: dcPricingMockLinodeTypes[2].id,
+      type: mockPlanType.id,
       nodes: kubeLinodeFactory.buildList(1),
     });
 
@@ -1184,7 +1193,7 @@ describe('LKE cluster updates for DC-specific prices', () => {
     mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
     mockGetKubernetesVersions().as('getVersions');
     mockAddNodePool(mockCluster.id, mockNewNodePool).as('addNodePool');
-    mockGetLinodeType(dcPricingMockLinodeTypes[2]).as('getLinodeType');
+    mockGetLinodeType(mockPlanType).as('getLinodeType');
     mockGetLinodeTypes(dcPricingMockLinodeTypes);
     mockGetDashboardUrl(mockCluster.id);
     mockGetApiEndpoints(mockCluster.id);
@@ -1193,7 +1202,9 @@ describe('LKE cluster updates for DC-specific prices', () => {
     cy.wait(['@getCluster', '@getNodePools', '@getVersions', '@getLinodeType']);
 
     // Assert that initial node pool is shown on the page.
-    cy.findByText('Linode 2 GB', { selector: 'h2' }).should('be.visible');
+    cy.findByText(mockPlanType.formattedLabel, { selector: 'h2' }).should(
+      'be.visible'
+    );
 
     // Confirm total price of $0 is listed in Kube Specs.
     cy.findByText('$0.00/month').should('be.visible');

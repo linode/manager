@@ -260,7 +260,7 @@ describe('Community Stackscripts integration tests', () => {
     const fairPassword = 'Akamai123';
     const rootPassword = randomString(16);
     const image = 'AlmaLinux 9';
-    const region = chooseRegion();
+    const region = chooseRegion({ capabilities: ['Vlans'] });
     const linodeLabel = randomLabel();
 
     interceptGetStackScripts().as('getStackScripts');

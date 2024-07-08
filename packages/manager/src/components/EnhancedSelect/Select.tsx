@@ -1,18 +1,10 @@
-import { Theme, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import * as React from 'react';
-import ReactSelect, {
-  ActionMeta,
-  NamedProps as SelectProps,
-  ValueType,
-} from 'react-select';
-import CreatableSelect, {
-  CreatableProps as CreatableSelectProps,
-} from 'react-select/creatable';
+import ReactSelect from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 
-import { TextFieldProps } from 'src/components/TextField';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
-import { reactSelectStyles, useStyles } from './Select.styles';
 import { DropdownIndicator } from './components/DropdownIndicator';
 import Input from './components/Input';
 import { LoadingIndicator } from './components/LoadingIndicator';
@@ -23,6 +15,16 @@ import NoOptionsMessage from './components/NoOptionsMessage';
 import { Option } from './components/Option';
 import Control from './components/SelectControl';
 import { SelectPlaceholder as Placeholder } from './components/SelectPlaceholder';
+import { reactSelectStyles, useStyles } from './Select.styles';
+
+import type { Theme } from '@mui/material';
+import type {
+  ActionMeta,
+  NamedProps as SelectProps,
+  ValueType,
+} from 'react-select';
+import type { CreatableProps as CreatableSelectProps } from 'react-select/creatable';
+import type { TextFieldProps } from 'src/components/TextField';
 
 export interface Item<T = number | string, L = string> {
   data?: any;

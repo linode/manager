@@ -24,11 +24,12 @@ export const StyledTagButton = styled(Button, {
   }),
   ...(!props.disabled && {
     '&:hover, &:focus': {
-      backgroundColor: theme.color.tagButton,
+      backgroundColor: theme.color.tagButtonBg,
       border: 'none',
+      color: theme.color.tagButtonText,
     },
-    backgroundColor: theme.color.tagButton,
-    color: theme.textColors.linkActiveLight,
+    backgroundColor: theme.color.tagButtonBg,
+    color: theme.color.tagButtonText,
   }),
 }));
 

@@ -1,8 +1,10 @@
 import { DateTime } from 'luxon';
+import React from 'react';
 
 import { imageFactory } from 'src/factories';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { imagesToGroupedItems } from './ImageSelect';
+import { ImageSelect, imagesToGroupedItems } from './ImageSelect';
 
 describe('imagesToGroupedItems', () => {
   it('should filter deprecated images when end of life is past beyond 6 months ', () => {
@@ -36,7 +38,7 @@ describe('imagesToGroupedItems', () => {
             isCloudInitCompatible: false,
             isDistributedCompatible: false,
             label: 'Slackware 14.1',
-            value: 'private/4',
+            value: 'private/5',
           },
           {
             className: 'fl-tux',
@@ -44,13 +46,15 @@ describe('imagesToGroupedItems', () => {
             isCloudInitCompatible: false,
             isDistributedCompatible: false,
             label: 'Slackware 14.1',
-            value: 'private/5',
+            value: 'private/6',
           },
         ],
       },
     ];
+
     expect(imagesToGroupedItems(images)).toStrictEqual(expected);
   });
+
   it('should add suffix `deprecated` to images at end of life ', () => {
     const images = [
       ...imageFactory.buildList(2, {
@@ -76,7 +80,7 @@ describe('imagesToGroupedItems', () => {
             isCloudInitCompatible: false,
             isDistributedCompatible: false,
             label: 'Debian 9 (deprecated)',
-            value: 'private/6',
+            value: 'private/7',
           },
           {
             className: 'fl-tux',
@@ -84,11 +88,34 @@ describe('imagesToGroupedItems', () => {
             isCloudInitCompatible: false,
             isDistributedCompatible: false,
             label: 'Debian 9 (deprecated)',
-            value: 'private/7',
+            value: 'private/8',
           },
         ],
       },
     ];
     expect(imagesToGroupedItems(images)).toStrictEqual(expected);
+  });
+});
+
+describe('ImageSelect', () => {
+  it('renders a "Indicates compatibility with distributed compute regions." notice if the user has at least one image with the distributed capability', async () => {
+    const images = [
+      imageFactory.build({ capabilities: [] }),
+      imageFactory.build({ capabilities: ['distributed-images'] }),
+      imageFactory.build({ capabilities: [] }),
+    ];
+
+    const { getByText } = renderWithTheme(
+      <ImageSelect
+        handleSelectImage={vi.fn()}
+        images={images}
+        title="Images"
+        variant="private"
+      />
+    );
+
+    expect(
+      getByText('Indicates compatibility with distributed compute regions.')
+    ).toBeVisible();
   });
 });

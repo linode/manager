@@ -95,7 +95,5 @@ const meta: Meta<NoticeProps> = {
 export default meta;
 
 const StyledWrapper = styled('div')(({ theme }) => ({
-  backgroundColor: theme.color.grey2,
-
   padding: theme.spacing(2),
 }));

@@ -52,7 +52,7 @@ export const InlineMenuAction = (props: InlineMenuActionProps) => {
     <StyledActionButton
       // TODO: We need to define what buttonType this will be in the future for now 'secondary' works...
       aria-label={rest['aria-label']}
-      buttonType="secondary"
+      buttonType="primary"
       disabled={disabled}
       loading={loading}
       onClick={onClick}

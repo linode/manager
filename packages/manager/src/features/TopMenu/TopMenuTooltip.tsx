@@ -28,6 +28,7 @@ export const topMenuIconButtonSx = (theme: Theme) => ({
     color: '#606469',
   },
   color: '#c9c7c7',
+  height: `50px`,
   [theme.breakpoints.down('sm')]: {
     padding: 1,
   },

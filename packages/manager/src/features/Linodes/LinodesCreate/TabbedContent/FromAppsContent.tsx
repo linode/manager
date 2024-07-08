@@ -189,7 +189,7 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <StyledGrid>
-          <Paper>
+          <Paper sx={{ borderBottom: 0 }}>
             <Typography variant="h2">Select an App</Typography>
             <StyledSearchFilterBox>
               <StyledSearchBox>

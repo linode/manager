@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -18,7 +18,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     margin: `${theme.spacing(6)} 0`,
   },
   withSeparator: {
-    borderLeft: `1px solid ${theme.palette.divider}`,
+    borderLeft: `1px solid ${theme.borderColors.divider}`,
     paddingLeft: theme.spacing(4),
     [theme.breakpoints.down('sm')]: {
       borderLeft: 'none',

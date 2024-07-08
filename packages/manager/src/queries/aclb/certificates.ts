@@ -1,8 +1,6 @@
 import {
   createLoadbalancerCertificate,
   deleteLoadbalancerCertificate,
-  getLoadbalancerCertificate,
-  getLoadbalancerCertificates,
   updateLoadbalancerCertificate,
 } from '@linode/api-v4';
 import {
@@ -12,7 +10,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { QUERY_KEY } from './loadbalancers';
+import { aclbQueries } from './queries';
 
 import type {
   APIError,
@@ -29,19 +27,12 @@ export const useLoadBalancerCertificatesQuery = (
   params: Params,
   filter: Filter
 ) => {
-  return useQuery<ResourcePage<Certificate>, APIError[]>(
-    [
-      QUERY_KEY,
-      'loadbalancer',
-      id,
-      'certificates',
-      'paginated',
-      params,
-      filter,
-    ],
-    () => getLoadbalancerCertificates(id, params, filter),
-    { keepPreviousData: true }
-  );
+  return useQuery<ResourcePage<Certificate>, APIError[]>({
+    ...aclbQueries
+      .loadbalancer(id)
+      ._ctx.certificates._ctx.lists._ctx.paginated(params, filter),
+    keepPreviousData: true,
+  });
 };
 
 export const useLoadbalancerCertificateQuery = (
@@ -49,48 +40,34 @@ export const useLoadbalancerCertificateQuery = (
   certificateId: number,
   enabled = true
 ) => {
-  return useQuery<Certificate, APIError[]>(
-    [
-      QUERY_KEY,
-      'loadbalancer',
-      loadbalancerId,
-      'certificates',
-      'certificate',
-      certificateId,
-    ],
-    () => getLoadbalancerCertificate(loadbalancerId, certificateId),
-    { enabled }
-  );
+  return useQuery<Certificate, APIError[]>({
+    ...aclbQueries
+      .loadbalancer(loadbalancerId)
+      ._ctx.certificates._ctx.certificate(certificateId),
+    enabled,
+  });
 };
 
 export const useLoadBalancerCertificateCreateMutation = (
   loadbalancerId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<Certificate, APIError[], CreateCertificatePayload>(
-    (data) => createLoadbalancerCertificate(loadbalancerId, data),
-    {
-      onSuccess(certificate) {
-        queryClient.invalidateQueries([
-          QUERY_KEY,
-          'loadbalancer',
-          loadbalancerId,
-          'certificates',
-        ]);
-        queryClient.setQueryData(
-          [
-            QUERY_KEY,
-            'loadbalancer',
-            loadbalancerId,
-            'certificates',
-            'certificate',
-            certificate.id,
-          ],
-          certificate
-        );
-      },
-    }
-  );
+  return useMutation<Certificate, APIError[], CreateCertificatePayload>({
+    mutationFn: (data) => createLoadbalancerCertificate(loadbalancerId, data),
+    onSuccess(certificate) {
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.certificates
+          ._ctx.lists.queryKey,
+      });
+
+      queryClient.setQueryData(
+        aclbQueries
+          .loadbalancer(loadbalancerId)
+          ._ctx.certificates._ctx.certificate(certificate.id).queryKey,
+        certificate
+      );
+    },
+  });
 };
 
 export const useLoadBalancerCertificateMutation = (
@@ -98,31 +75,23 @@ export const useLoadBalancerCertificateMutation = (
   certificateId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<Certificate, APIError[], UpdateCertificatePayload>(
-    (data) =>
+  return useMutation<Certificate, APIError[], UpdateCertificatePayload>({
+    mutationFn: (data) =>
       updateLoadbalancerCertificate(loadbalancerId, certificateId, data),
-    {
-      onSuccess(certificate) {
-        queryClient.setQueryData(
-          [
-            QUERY_KEY,
-            'loadbalancer',
-            loadbalancerId,
-            'certificates',
-            'certificate',
-            certificate.id,
-          ],
-          certificate
-        );
-        queryClient.invalidateQueries([
-          QUERY_KEY,
-          'loadbalancer',
-          loadbalancerId,
-          'certificates',
-        ]);
-      },
-    }
-  );
+    onSuccess(certificate) {
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.certificates
+          ._ctx.lists.queryKey,
+      });
+
+      queryClient.setQueryData(
+        aclbQueries
+          .loadbalancer(loadbalancerId)
+          ._ctx.certificates._ctx.certificate(certificate.id).queryKey,
+        certificate
+      );
+    },
+  });
 };
 
 export const useLoadBalancerCertificateDeleteMutation = (
@@ -130,48 +99,36 @@ export const useLoadBalancerCertificateDeleteMutation = (
   certificateId: number
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(
-    () => deleteLoadbalancerCertificate(loadbalancerId, certificateId),
-    {
-      onSuccess() {
-        queryClient.removeQueries([
-          QUERY_KEY,
-          'loadbalancer',
-          loadbalancerId,
-          'certificates',
-          'certificate',
-          certificateId,
-        ]);
-        queryClient.invalidateQueries([
-          QUERY_KEY,
-          'loadbalancer',
-          loadbalancerId,
-          'certificates',
-        ]);
-      },
-    }
-  );
+  return useMutation<{}, APIError[]>({
+    mutationFn: () =>
+      deleteLoadbalancerCertificate(loadbalancerId, certificateId),
+    onSuccess() {
+      queryClient.removeQueries({
+        queryKey: aclbQueries
+          .loadbalancer(loadbalancerId)
+          ._ctx.certificates._ctx.certificate(certificateId).queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: aclbQueries.loadbalancer(loadbalancerId)._ctx.certificates
+          ._ctx.lists.queryKey,
+      });
+    },
+  });
 };
 
 export const useLoadBalancerCertificatesInfiniteQuery = (
   id: number,
   filter: Filter = {}
 ) => {
-  return useInfiniteQuery<ResourcePage<Certificate>, APIError[]>(
-    [QUERY_KEY, 'loadbalancer', id, 'certificates', 'infinite', filter],
-    ({ pageParam }) =>
-      getLoadbalancerCertificates(
-        id,
-        { page: pageParam, page_size: 25 },
-        filter
-      ),
-    {
-      getNextPageParam: ({ page, pages }) => {
-        if (page === pages) {
-          return undefined;
-        }
-        return page + 1;
-      },
-    }
-  );
+  return useInfiniteQuery<ResourcePage<Certificate>, APIError[]>({
+    ...aclbQueries
+      .loadbalancer(id)
+      ._ctx.certificates._ctx.lists._ctx.infinite(filter),
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+  });
 };
