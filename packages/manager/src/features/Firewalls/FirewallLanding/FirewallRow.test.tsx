@@ -58,7 +58,7 @@ describe('FirewallRow', () => {
       const { getByTestId, getByText } = render(
         wrapWithTableBody(<FirewallRow {...baseProps} />)
       );
-      getByTestId('firewall-row-0');
+      getByTestId('firewall-row-1');
       getByText(firewall.label);
       getByText(capitalize(firewall.status));
       getByText(getRuleString(getCountOfRules(firewall.rules)));

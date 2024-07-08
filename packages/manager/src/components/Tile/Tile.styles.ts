@@ -15,8 +15,8 @@ export const useStyles = makeStyles<void, 'buttonTitle' | 'icon'>()(
     },
     card: {
       alignItems: 'center',
-      backgroundColor: theme.color.white,
-      border: `1px solid ${theme.color.grey2}`,
+      backgroundColor: theme.bg.bgPaper,
+      border: `1px solid ${theme.borderColors.divider}`,
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
@@ -51,7 +51,7 @@ export const useStyles = makeStyles<void, 'buttonTitle' | 'icon'>()(
     icon: {
       '& .insidePath': {
         fill: 'none',
-        stroke: '#3683DC',
+        stroke: theme.palette.primary.main,
         strokeLinejoin: 'round',
         strokeWidth: 1.25,
       },

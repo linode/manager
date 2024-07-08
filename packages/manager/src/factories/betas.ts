@@ -1,5 +1,5 @@
 import { Beta, AccountBeta } from '@linode/api-v4';
-import * as Factory from 'factory.ts';
+import Factory from 'src/factories/factoryProxy';
 import { DateTime } from 'luxon';
 
 export const betaFactory = Factory.Sync.makeFactory<Beta>({

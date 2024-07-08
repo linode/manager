@@ -4,6 +4,60 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-07-08] - v1.123.0
+
+### Added:
+
+- Design Tokens (CDS 2.0) ([#10022](https://github.com/linode/manager/pull/10022))
+- Design update dismissible banner ([#10640](https://github.com/linode/manager/pull/10640))
+
+### Changed:
+
+- Rebuild Linode drawer ([#10594](https://github.com/linode/manager/pull/10594))
+- Auto-populate Image label based on Linode and Disk names ([#10604](https://github.com/linode/manager/pull/10604))
+- Update Linode disk action menu ([#10614](https://github.com/linode/manager/pull/10614))
+
+### Fixed:
+
+- Potential runtime issue with conditional hook ([#10584](https://github.com/linode/manager/pull/10584))
+- Visual bug inside Node Pools table ([#10599](https://github.com/linode/manager/pull/10599))
+- Linode Resize dialog UX when linode data is loading or there is an error ([#10618](https://github.com/linode/manager/pull/10618))
+
+### Removed:
+
+- Region helper text on the Image Upload page ([#10642](https://github.com/linode/manager/pull/10642))
+
+### Tech Stories:
+
+- Refactor `SupportTicketDialog` with React Hook Form ([#10557](https://github.com/linode/manager/pull/10557))
+- Query Key Factory for ACLB ([#10598](https://github.com/linode/manager/pull/10598))
+- Make `Factory.each` start incrementing at 1 instead of 0 ([#10619](https://github.com/linode/manager/pull/10619))
+
+### Tests:
+
+- Cypress integration test for SSH key update and delete ([#10542](https://github.com/linode/manager/pull/10542))
+- Refactor Cypress Longview test to use mock API data/events ([#10579](https://github.com/linode/manager/pull/10579))
+- Add assertions for created LKE cluster in Cypress LKE tests ([#10593](https://github.com/linode/manager/pull/10593))
+- Update Object Storage tests to mock account capabilities as needed for Multicluster ([#10602](https://github.com/linode/manager/pull/10602))
+- Fix OBJ test failure caused by visiting hardcoded and out-of-date URL ([#10609](https://github.com/linode/manager/pull/10609))
+- Combine VPC details page subnet create, edit, and delete Cypress tests ([#10612](https://github.com/linode/manager/pull/10612))
+- De-parameterize Cypress Domain Record Create tests ([#10615](https://github.com/linode/manager/pull/10615))
+- De-parameterize Cypress Deep Link smoke tests ([#10622](https://github.com/linode/manager/pull/10622))
+- Improve security of Linodes created during tests ([#10633](https://github.com/linode/manager/pull/10633))
+
+### Upcoming Features:
+
+- Gecko GA Region Select ([#10479](https://github.com/linode/manager/pull/10479))
+- Add Dashboard Selection component inside the Global Filters of CloudPulse view ([#10589](https://github.com/linode/manager/pull/10589))
+- Conditionally disable regions based on the selected image on Linode Create ([#10607](https://github.com/linode/manager/pull/10607))
+- Prevent Linode Create v2 from toggling mid-creation ([#10611](https://github.com/linode/manager/pull/10611))
+- Add new search query parser to Linode Create v2 StackScripts tab ([#10613](https://github.com/linode/manager/pull/10613))
+- Add ‘Manage Image Regions’ Drawer ([#10617](https://github.com/linode/manager/pull/10617))
+- Add Marketplace Cluster pricing support to Linode Create v2 ([#10623](https://github.com/linode/manager/pull/10623))
+- Add debouncing to the Linode Create v2 `VLANSelect` ([#10628](https://github.com/linode/manager/pull/10628))
+- Add Validation to Linode Create v2 Marketplace Tab ([#10629](https://github.com/linode/manager/pull/10629))
+- Add Image distributed compatibility notice to Linode Create ([#10636](https://github.com/linode/manager/pull/10636))
+
 ## [2024-06-24] - v1.122.0
 
 ### Added:

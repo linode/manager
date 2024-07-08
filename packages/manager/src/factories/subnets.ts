@@ -2,7 +2,7 @@ import {
   Subnet,
   SubnetAssignedLinodeData,
 } from '@linode/api-v4/lib/vpcs/types';
-import * as Factory from 'factory.ts';
+import Factory from 'src/factories/factoryProxy';
 
 // NOTE: Changing to fixed array length for the interfaces and linodes fields of the
 // subnetAssignedLinodeDataFactory and subnetFactory respectively -- see [M3-7227] for more details

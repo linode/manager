@@ -2,7 +2,10 @@ import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 import { LongviewClient } from '@linode/api-v4';
-import { LongviewResponse } from 'src/features/Longview/request.types';
+import type {
+  LongviewAction,
+  LongviewResponse,
+} from 'src/features/Longview/request.types';
 
 /**
  * Intercepts request to retrieve Longview status for a Longview client.
@@ -16,15 +19,38 @@ export const interceptFetchLongviewStatus = (): Cypress.Chainable<null> => {
 /**
  * Mocks request to retrieve Longview status for a Longview client.
  *
+ * @param client - Longview Client for which to intercept Longview fetch request.
+ * @param apiAction - Longview API action to intercept.
+ * @param mockStatus -
+ *
  * @returns Cypress chainable.
  */
 export const mockFetchLongviewStatus = (
-  status: LongviewResponse
+  client: LongviewClient,
+  apiAction: LongviewAction,
+  mockStatus: LongviewResponse
 ): Cypress.Chainable<null> => {
   return cy.intercept(
-    'POST',
-    'https://longview.linode.com/fetch',
-    makeResponse(status)
+    {
+      url: 'https://longview.linode.com/fetch',
+      method: 'POST',
+    },
+    async (req) => {
+      const payload = req.body;
+      const response = new Response(payload, {
+        headers: {
+          'content-type': req.headers['content-type'] as string,
+        },
+      });
+      const formData = await response.formData();
+
+      if (
+        formData.get('api_key') === client.api_key &&
+        formData.get('api_action') === apiAction
+      ) {
+        req.reply(makeResponse([mockStatus]));
+      }
+    }
   );
 };
 

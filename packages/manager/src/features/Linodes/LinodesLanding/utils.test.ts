@@ -1,9 +1,10 @@
-import { parseMaintenanceStartTime, getVPCsFromLinodeConfigs } from './utils';
 import {
-  configFactory,
   LinodeConfigInterfaceFactory,
   LinodeConfigInterfaceFactoryWithVPC,
+  configFactory,
 } from 'src/factories';
+
+import { getVPCsFromLinodeConfigs, parseMaintenanceStartTime } from './utils';
 
 describe('Linode Landing Utilites', () => {
   it('should return "Maintenance Window Unknown" for invalid dates', () => {
@@ -52,18 +53,18 @@ describe('Linode Landing Utilites', () => {
         ...configFactory.buildList(3),
         config,
       ]);
-      expect(vpcIds).toEqual([2, 3]);
+      expect(vpcIds).toEqual([3, 4]);
     });
 
     it('returns unique vpc ids (no duplicates)', () => {
       const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
-        vpc_id: 2,
+        vpc_id: 3,
       });
       const config = configFactory.build({
         interfaces: [...vpcInterfaceList, vpcInterface],
       });
       const vpcIds = getVPCsFromLinodeConfigs([config]);
-      expect(vpcIds).toEqual([2, 3]);
+      expect(vpcIds).toEqual([3, 4]);
     });
   });
 });

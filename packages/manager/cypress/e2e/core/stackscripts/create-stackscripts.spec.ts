@@ -169,7 +169,7 @@ describe('Create stackscripts', () => {
     const stackscriptImageTag = 'alpine3.19';
 
     const linodeLabel = randomLabel();
-    const linodeRegion = chooseRegion();
+    const linodeRegion = chooseRegion({ capabilities: ['Vlans'] });
 
     interceptCreateStackScript().as('createStackScript');
     interceptGetStackScripts().as('getStackScripts');
@@ -372,7 +372,10 @@ describe('Create stackscripts', () => {
         .click();
 
       interceptCreateLinode().as('createLinode');
-      fillOutLinodeForm(linodeLabel, chooseRegion().label);
+      fillOutLinodeForm(
+        linodeLabel,
+        chooseRegion({ capabilities: ['Vlans'] }).label
+      );
       ui.button
         .findByTitle('Create Linode')
         .should('be.visible')

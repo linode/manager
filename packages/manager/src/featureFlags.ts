@@ -66,13 +66,20 @@ interface AclpFlag {
 interface gpuV2 {
   planDivider: boolean;
 }
+
 type OneClickApp = Record<string, string>;
+
+interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
+  key: string;
+  link: string;
+}
 
 export interface Flags {
   aclb: boolean;
   aclbFullCreateFlow: boolean;
   aclp: AclpFlag;
   apiMaintenance: APIMaintenance;
+  cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;

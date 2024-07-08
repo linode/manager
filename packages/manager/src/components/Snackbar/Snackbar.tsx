@@ -1,36 +1,44 @@
 import { styled } from '@mui/material/styles';
-import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
 import { MaterialDesignContent } from 'notistack';
+import { SnackbarProvider } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { CloseSnackbar } from './CloseSnackbar';
 
 import type { Theme } from '@mui/material/styles';
+import type { SnackbarProviderProps } from 'notistack';
 
 const StyledMaterialDesignContent = styled(MaterialDesignContent)(
   ({ theme }: { theme: Theme }) => ({
     '&.notistack-MuiContent-error': {
-      borderLeft: `6px solid ${theme.palette.error.dark}`,
+      backgroundColor: theme.notificationToast.error.backgroundColor,
+      borderLeft: theme.notificationToast.error.borderLeft,
     },
     '&.notistack-MuiContent-info': {
-      borderLeft: `6px solid ${theme.palette.primary.main}`,
+      backgroundColor: theme.notificationToast.info.backgroundColor,
+      borderLeft: theme.notificationToast.info.borderLeft,
     },
     '&.notistack-MuiContent-success': {
-      borderLeft: `6px solid ${theme.palette.success.main}`, // corrected to palette.success
+      backgroundColor: theme.notificationToast.success.backgroundColor,
+      borderLeft: theme.notificationToast.success.borderLeft,
     },
     '&.notistack-MuiContent-warning': {
-      borderLeft: `6px solid ${theme.palette.warning.dark}`,
+      backgroundColor: theme.notificationToast.warning.backgroundColor,
+      borderLeft: theme.notificationToast.warning.borderLeft,
     },
   })
 );
 
 const useStyles = makeStyles()((theme: Theme) => ({
   root: {
-    '& div': {
-      backgroundColor: `${theme.bg.white} !important`,
-      color: theme.palette.text.primary,
+    '& .notistack-MuiContent': {
+      color: theme.notificationToast.default.color,
       fontSize: '0.875rem',
+    },
+    '& .notistack-MuiContent-default': {
+      backgroundColor: theme.notificationToast.default.backgroundColor,
+      borderLeft: theme.notificationToast.default.borderLeft,
     },
     [theme.breakpoints.down('md')]: {
       '& .SnackbarItem-contentRoot': {
