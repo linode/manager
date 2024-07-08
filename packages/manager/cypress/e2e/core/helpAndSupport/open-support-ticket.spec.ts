@@ -406,7 +406,6 @@ describe('help & support', () => {
     mockGetSupportTicketReplies(mockAccountLimitTicket.id, []);
     mockGetLinodes([mockLinode]);
 
-    // Attempt to create a Linode and mock an error response to reach the support ticket link.
     cy.visitWithLogin('/linodes/create');
 
     // Set Linode label, distribution, plan type, password, etc.

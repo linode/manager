@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { SupportTicketError } from 'src/components/SupportTicketGeneralError';
+import { SupportTicketGeneralError } from 'src/components/SupportTicketGeneralError';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
@@ -26,7 +26,7 @@ export const Error = () => {
           <Typography py={2}>{generalError}</Typography>
         )}
         {typeof generalError !== 'string' && (
-          <SupportTicketError
+          <SupportTicketGeneralError
             entityType="linode_id"
             generalError={generalError}
           />

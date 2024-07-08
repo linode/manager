@@ -13,7 +13,9 @@ interface SupportTicketGeneralErrorProps {
   generalError: JSX.Element;
 }
 
-export const SupportTicketError = (props: SupportTicketGeneralErrorProps) => {
+export const SupportTicketGeneralError = (
+  props: SupportTicketGeneralErrorProps
+) => {
   const { entityType, generalError } = props;
   const theme = useTheme();
 
