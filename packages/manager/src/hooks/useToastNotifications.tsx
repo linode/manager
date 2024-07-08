@@ -18,7 +18,7 @@ const formatLink = (text: string, link: string, handleClick?: () => void) => {
   );
 };
 
-type PersistType = 'both' | 'failure' | 'none' | 'success';
+type PersistType = 'both' | 'failure' | 'success';
 
 interface Toast {
   /**
