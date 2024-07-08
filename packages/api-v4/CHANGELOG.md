@@ -1,3 +1,13 @@
+## [2024-07-08] - v0.121.0
+
+### Changed:
+
+- Update `updateImageRegions` to accept `UpdateImageRegionsPayload` instead of `regions: string[]` ([#10617](https://github.com/linode/manager/pull/10617))
+
+### Upcoming Features:
+
+- Added types needed for DashboardSelect component ([#10589](https://github.com/linode/manager/pull/10589))
+
 ## [2024-06-24] - v0.120.0
 
 ### Added:
