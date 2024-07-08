@@ -1,10 +1,11 @@
-import { Event, EventAction } from '@linode/api-v4/lib/account/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
 import { sendLinodeDiskEvent } from 'src/utilities/analytics/customEventAnalytics';
+
+import type { Event, EventAction } from '@linode/api-v4/lib/account/types';
 
 export const getLabel = (event: Event) => event.entity?.label ?? '';
 export const getSecondaryLabel = (event: Event) =>
@@ -17,10 +18,28 @@ const formatLink = (text: string, link: string, handleClick?: () => void) => {
   );
 };
 
+type PersistType = 'both' | 'failure' | 'none' | 'success';
+
 interface Toast {
+  /**
+   * If defined, this message will be displayed when the event fails.
+   */
   failure?: ((event: Event) => string | undefined) | string;
+  /**
+   * If true, the toast will be displayed with an error variant.
+   */
+  invertVariant?: boolean;
+  /**
+   * If defined, this link will be displayed in the toast.
+   */
   link?: JSX.Element;
-  persistFailureMessage?: boolean;
+  /**
+   * If defined, the toast will persist until dismissed.
+   */
+  persist?: PersistType;
+  /**
+   * If defined, this message will be displayed when the event succeeds.
+   */
   success?: ((event: Event) => string | undefined) | string;
 }
 
@@ -44,7 +63,7 @@ const toasts: Toasts = {
       'Learn more about limits and considerations.',
       'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
     ),
-    persistFailureMessage: true,
+    persist: 'failure',
   },
   disk_delete: {
     failure: (e) =>
@@ -60,7 +79,7 @@ const toasts: Toasts = {
       'Learn more about image technical specifications.',
       'https://www.linode.com/docs/products/tools/images/#technical-specifications'
     ),
-    persistFailureMessage: true,
+    persist: 'failure',
     success: (e) => `Image ${getSecondaryLabel(e)} successfully created.`,
   },
   disk_resize: {
@@ -71,7 +90,7 @@ const toasts: Toasts = {
       () =>
         sendLinodeDiskEvent('Resize', 'Click:link', 'Disk resize failed toast')
     ),
-    persistFailureMessage: true,
+    persist: 'failure',
     success: (e) => `Disk ${getSecondaryLabel(e)} successfully resized.`,
   },
   image_delete: {
@@ -90,7 +109,7 @@ const toasts: Toasts = {
         event
       )}: ${event.message?.replace(/(\d+)/g, '$1 MB')}`;
     },
-    persistFailureMessage: true,
+    persist: 'failure',
     success: (e) => `Image ${getLabel(e)} is now available.`,
   },
   linode_clone: {
@@ -116,11 +135,17 @@ const toasts: Toasts = {
       'Learn more about limits and considerations.',
       'https://www.linode.com/docs/products/storage/backups/#limits-and-considerations'
     ),
-    persistFailureMessage: true,
+    persist: 'failure',
   },
   longviewclient_create: {
     failure: (e) => `Error creating Longview Client ${getLabel(e)}.`,
     success: (e) => `Longview Client ${getLabel(e)} successfully created.`,
+  },
+  tax_id_invalid: {
+    failure: 'Tax Identification Number has been verified.',
+    invertVariant: true,
+    persist: 'success',
+    success: 'Tax Identification Number could not be verified.',
   },
   volume_attach: {
     failure: (e) => `Error attaching Volume ${getLabel(e)}.`,
@@ -144,55 +169,72 @@ const toasts: Toasts = {
   },
 };
 
-export const useToastNotifications = () => {
+const getToastMessage = (
+  toastMessage: ((event: Event) => string | undefined) | string,
+  event: Event
+): string | undefined => {
+  if (typeof toastMessage === 'function') {
+    return toastMessage(event);
+  }
+  return toastMessage;
+};
+
+const getPersistOption = (
+  persist: PersistType | undefined,
+  success: boolean
+): boolean | undefined => {
+  if (success && (persist === 'success' || persist === 'both')) {
+    return true;
+  }
+  if (!success && (persist === 'failure' || persist === 'both')) {
+    return true;
+  }
+  return undefined;
+};
+
+export const useToastNotifications = (): {
+  handleGlobalToast: (event: Event) => void;
+} => {
   const { enqueueSnackbar } = useSnackbar();
 
-  const handleGlobalToast = (event: Event) => {
+  const handleGlobalToast = (event: Event): void => {
     const toastInfo = toasts[event.action];
-
     if (!toastInfo) {
       return;
     }
 
-    if (
-      ['finished', 'notification'].includes(event.status) &&
-      toastInfo.success
-    ) {
-      const successMessage =
-        typeof toastInfo.success === 'function'
-          ? toastInfo.success(event)
-          : toastInfo.success;
+    const isSuccessEvent = ['finished', 'notification'].includes(event.status);
+
+    if (isSuccessEvent && toastInfo.success) {
+      const successMessage = getToastMessage(toastInfo.success, event);
 
       enqueueSnackbar(successMessage, {
-        variant: 'success',
+        persist: getPersistOption(toastInfo.persist, true),
+        variant: toastInfo.invertVariant ? 'error' : 'success',
       });
     }
 
     if (event.status === 'failed' && toastInfo.failure) {
-      const failureMessage =
-        typeof toastInfo.failure === 'function'
-          ? toastInfo.failure(event)
-          : toastInfo.failure;
-
+      const failureMessage = getToastMessage(toastInfo.failure, event);
       const hasSupportLink =
         failureMessage?.includes('contact Support') ?? false;
 
       const formattedFailureMessage = (
         <>
           {failureMessage?.replace(/ contact Support/i, '') ?? failureMessage}
-          {hasSupportLink ? (
+          {hasSupportLink && (
             <>
               &nbsp;
               <SupportLink text="contact Support" title={failureMessage} />.
             </>
-          ) : null}
-          {toastInfo.link ? <>&nbsp;{toastInfo.link}</> : null}
+          )}
+          {toastInfo.link && <>&nbsp;{toastInfo.link}</>}
         </>
       );
 
       enqueueSnackbar(formattedFailureMessage, {
-        persist: toastInfo.persistFailureMessage,
-        variant: 'error',
+        persist: getPersistOption(toastInfo.persist, false),
+        variant: toastInfo.invertVariant ? 'success' : 'error',
       });
     }
   };
