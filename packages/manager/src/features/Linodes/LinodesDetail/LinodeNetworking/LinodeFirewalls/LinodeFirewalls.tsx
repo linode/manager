@@ -72,18 +72,14 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
   };
 
   return (
-    <Stack sx={{ marginTop: '20px' }}>
-      <Box bgcolor={(theme) => theme.color.white} display="flex">
-        <Typography
-          sx={(theme) => ({
-            lineHeight: '1.5rem',
-            marginBottom: theme.spacing(),
-            marginLeft: '15px',
-            marginTop: theme.spacing(),
-          })}
-          data-testid="linode-firewalls-table-header"
-          variant="h3"
-        >
+    <Stack>
+      <Box
+        bgcolor={(theme) => theme.palette.background.paper}
+        display="flex"
+        px={2}
+        py={1.25}
+      >
+        <Typography data-testid="linode-firewalls-table-header" variant="h3">
           Firewalls
         </Typography>
       </Box>
