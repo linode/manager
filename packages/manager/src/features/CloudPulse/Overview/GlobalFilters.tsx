@@ -1,15 +1,15 @@
+import { Dashboard } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
+import { WithStartAndEnd } from 'src/features/Longview/request.types';
+
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseRegionSelect } from '../shared/CloudPulseRegionSelect';
+import { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import { CloudPulseResourcesSelect } from '../shared/CloudPulseResourcesSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
-
-import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
-import type { Dashboard } from '@linode/api-v4';
-import type { WithStartAndEnd } from 'src/features/Longview/request.types';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(filters: FiltersObject): undefined | void;

@@ -32,9 +32,11 @@ export const CloudPulseResourcesSelect = React.memo(
       { region: props.region }
     );
 
-    const [selectedResources, setSelectedResources] = React.useState<any>();
+    const [selectedResources, setSelectedResources] = React.useState<
+      CloudPulseResources[]
+    >([]);
 
-    const getResourcesList = (): any[] => {
+    const getResourcesList = (): CloudPulseResources[] => {
       return resources && resources.length > 0 ? resources : [];
     };
 
@@ -50,18 +52,18 @@ export const CloudPulseResourcesSelect = React.memo(
           props.handleResourcesSelection(resource);
           setSelectedResources(resource);
         } else {
-          setSelectedResources(undefined);
+          setSelectedResources([]);
           props.handleResourcesSelection([]);
         }
       } else {
-        setSelectedResources(undefined);
+        setSelectedResources([]);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resources, props.region, props.resourceType]);
 
     return (
       <Autocomplete
-        onChange={(_: any, resourceSelections: any) => {
+        onChange={(_: any, resourceSelections: CloudPulseResources[]) => {
           updateGlobalFilterPreference({
             [RESOURCES]: resourceSelections.map((resource: { id: any }) =>
               String(resource.id)
@@ -80,7 +82,7 @@ export const CloudPulseResourcesSelect = React.memo(
         multiple
         options={getResourcesList()}
         placeholder={props.placeholder ? props.placeholder : 'Select Resources'}
-        value={selectedResources ?? []}
+        value={selectedResources}
       />
     );
   }

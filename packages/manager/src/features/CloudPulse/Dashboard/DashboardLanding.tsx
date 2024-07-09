@@ -9,10 +9,9 @@ import { loadUserPreferences } from '../Utils/UserPreference';
 import type { FiltersObject } from '../Overview/GlobalFilters';
 
 export const DashboardLanding = () => {
-  const { isLoading } = loadUserPreferences();
-
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const onFilterChange = React.useCallback((_filters: FiltersObject) => {}, []);
+  const { isLoading } = loadUserPreferences();
 
   if (isLoading) {
     return <CircleProgress />;

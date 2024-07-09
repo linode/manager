@@ -11,9 +11,6 @@ let timerId: ReturnType<typeof setTimeout>;
 let mutateFn: any;
 
 export const loadUserPreferences = () => {
-  if (userPreference) {
-    return { isLoading: false };
-  }
   const { data: preferences, isError, isLoading } = usePreferences();
 
   const { mutate } = useMutatePreferences();

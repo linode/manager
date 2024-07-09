@@ -41,7 +41,7 @@ export const CloudPulseRegionSelect = React.memo(
 
     return (
       <RegionSelect
-        onChange={(e, region) => {
+        onChange={(_, region) => {
           updateGlobalFilterPreference({
             [REGION]: region?.id,
             [RESOURCES]: undefined,
