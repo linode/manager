@@ -32,6 +32,7 @@ import {
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const Region = () => {
   const {
@@ -39,6 +40,7 @@ export const Region = () => {
   } = useIsDiskEncryptionFeatureEnabled();
 
   const flags = useFlags();
+  const queryClient = useQueryClient();
 
   const { params } = useLinodeCreateQueryParams();
 
@@ -47,6 +49,8 @@ export const Region = () => {
     formState: {
       dirtyFields: { label: isLabelFieldDirty },
     },
+    setValue,
+    getValues,
     reset,
   } = useFormContext<LinodeCreateFormValues>();
   const { field, fieldState } = useController({
@@ -75,7 +79,7 @@ export const Region = () => {
 
   const { data: regions } = useRegionsQuery();
 
-  const onChange = (region: RegionType) => {
+  const onChange = async (region: RegionType) => {
     const isDistributedRegion =
       region.site_type === 'distributed' || region.site_type === 'edge';
 
@@ -105,13 +109,6 @@ export const Region = () => {
         ...(isDiskEncryptionFeatureEnabled && {
           disk_encryption: defaultDiskEncryptionValue,
         }),
-        // If the user hasn't changed the label, auto-generate one
-        ...(!isLabelFieldDirty && {
-          label: getGeneratedLinodeLabel({
-            tab: params.type,
-            values: { ...prev, region: region.id },
-          }),
-        }),
       }),
       {
         keepDirty: true,
@@ -121,6 +118,15 @@ export const Region = () => {
         keepTouched: true,
       }
     );
+
+    if (!isLabelFieldDirty) {
+      const label = await getGeneratedLinodeLabel({
+        queryClient,
+        tab: params.type ?? 'Distributions',
+        values: getValues(),
+      });
+      setValue('label', label);
+    }
   };
 
   const showCrossDataCenterCloneWarning =

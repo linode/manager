@@ -18,6 +18,7 @@ import type {
   Linode,
 } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
+import { imageQueries } from 'src/queries/images';
 
 /**
  * This is the ID of the Image of the default distribution.
@@ -253,7 +254,7 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
  *
  * The default values are dependent on the query params present.
  */
-export const defaultValues = async (): Promise<LinodeCreateFormValues> => {
+export const defaultValues = async (queryClient: QueryClient): Promise<LinodeCreateFormValues> => {
   const queryParams = getQueryParamsFromQueryString(window.location.search);
   const params = getParsedLinodeCreateQueryParams(queryParams);
 
@@ -282,7 +283,7 @@ export const defaultValues = async (): Promise<LinodeCreateFormValues> => {
     type: linode?.type ? linode.type : '',
   };
 
-  values.label = getGeneratedLinodeLabel({ values, tab: params.type });
+  values.label = await getGeneratedLinodeLabel({ values, tab: params.type, queryClient });
 
   return values;
 };
@@ -310,14 +311,41 @@ const getDefaultImageId = (params: ParsedLinodeCreateQueryParams) => {
 interface GeneratedLinodeLabelOptions {
   tab: LinodeCreateType | undefined;
   values: LinodeCreateFormValues;
+  queryClient: QueryClient;
 }
 
-export const getGeneratedLinodeLabel = (
-  options: GeneratedLinodeLabelOptions
+export const getGeneratedLinodeLabel = async (
+  options: GeneratedLinodeLabelOptions,
 ) => {
-  const { tab, values } = options;
+  const { tab, values, queryClient } = options;
 
-  return [values.image, values.region].filter(Boolean).join('-');
+  if (tab === "Distributions") {
+    const generatedLabelParts: string[] = [];
+    if (values.image) {
+      const image = await queryClient.ensureQueryData(imageQueries.image(values.image));
+      if (image.vendor) {
+        generatedLabelParts.push(image.vendor.toLowerCase());
+      }
+    }
+    if (values.region) {
+      generatedLabelParts.push(values.region);
+    }
+    return generatedLabelParts.join('-');
+  }
+
+  if (tab === 'Images') {
+    const generatedLabelParts: string[] = [];
+    if (values.image) {
+      const image = await queryClient.ensureQueryData(imageQueries.image(values.image));
+      generatedLabelParts.push(image.label);
+    }
+    if (values.region) {
+      generatedLabelParts.push(values.region);
+    }
+    return generatedLabelParts.join('-');
+  }
+
+  return '';
 };
 
 interface LinodeCreateAnalyticsEventOptions {

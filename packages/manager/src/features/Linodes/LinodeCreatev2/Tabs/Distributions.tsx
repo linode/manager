@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
@@ -19,6 +20,7 @@ export const Distributions = () => {
     getValues,
     setValue,
   } = useFormContext<LinodeCreateFormValues>();
+  const queryClient = useQueryClient();
 
   const { field, fieldState } = useController<LinodeCreateFormValues>({
     name: 'image',
@@ -28,14 +30,16 @@ export const Distributions = () => {
     globalGrantType: 'add_linodes',
   });
 
-  const onChange = (image: Image | null) => {
+  const onChange = async (image: Image | null) => {
     field.onChange(image?.id ?? null);
 
     if (!isLabelFieldDirty) {
-      setValue(
-        'label',
-        getGeneratedLinodeLabel({ tab: 'Distributions', values: getValues() })
-      );
+      const label = await getGeneratedLinodeLabel({
+        queryClient,
+        tab: 'Distributions',
+        values: getValues(),
+      });
+      setValue('label', label);
     }
   };
 
