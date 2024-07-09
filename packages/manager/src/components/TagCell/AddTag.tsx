@@ -64,7 +64,7 @@ export const AddTag = (props: AddTagProps) => {
   return (
     <Autocomplete
       noOptionsText={
-        inputValue.length == 0 ? (
+        inputValue.length === 0 ? (
           'No tags to choose from. Type to create a new tag.'
         ) : (
           <i>{`"${inputValue}" already added`}</i> // Will display create option unless that tag is already added
