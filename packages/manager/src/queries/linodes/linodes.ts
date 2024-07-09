@@ -5,8 +5,12 @@ import {
   deleteLinode,
   getLinode,
   getLinodeBackups,
+  getLinodeFirewalls,
   getLinodeKernel,
   getLinodeLishToken,
+  getLinodeStats,
+  getLinodeStatsByDate,
+  getLinodeTransferByDate,
   getLinodes,
   linodeBoot,
   linodeReboot,
@@ -33,7 +37,12 @@ import { firewallQueries } from '../firewalls';
 import { profileQueries } from '../profile/profile';
 import { vlanQueries } from '../vlans';
 import { vpcQueries } from '../vpcs/vpcs';
-import { getAllLinodeKernelsRequest, getAllLinodesRequest } from './requests';
+import {
+  getAllLinodeConfigs,
+  getAllLinodeDisks,
+  getAllLinodeKernelsRequest,
+  getAllLinodesRequest,
+} from './requests';
 
 import type {
   APIError,
@@ -51,8 +60,6 @@ import type {
   ResourcePage,
 } from '@linode/api-v4';
 
-export const queryKey = 'linodes';
-
 export const linodeQueries = createQueryKeys('linodes', {
   kernel: (id: string) => ({
     queryFn: () => getLinodeKernel(id),
@@ -68,10 +75,34 @@ export const linodeQueries = createQueryKeys('linodes', {
         queryFn: () => getLinodeBackups(id),
         queryKey: null,
       },
+      configs: {
+        queryFn: getAllLinodeConfigs,
+        queryKey: null,
+      },
+      disks: {
+        queryFn: getAllLinodeDisks,
+        queryKey: null,
+      },
+      firewalls: {
+        queryFn: () => getLinodeFirewalls(id),
+        queryKey: null,
+      },
       lishToken: {
         queryFn: () => getLinodeLishToken(id),
         queryKey: null,
       },
+      stats: {
+        queryFn: () => getLinodeStats(id),
+        queryKey: null,
+      },
+      statsByDate: (year: string, month: string) => ({
+        queryFn: () => getLinodeStatsByDate(id, year, month),
+        queryKey: [year, month],
+      }),
+      transfer: (year: string, month: string) => ({
+        queryFn: () => getLinodeTransferByDate(id, year, month),
+        queryKey: [year, month],
+      }),
     },
     queryFn: () => getLinode(id),
     queryKey: [id],
@@ -306,7 +337,7 @@ export const useBootLinodeMutation = (
           configsToUpdate
         );
         queryClient.setQueryData(
-          [queryKey, 'linode', id, 'configs'],
+          linodeQueries.linode(id)._ctx.configs.queryKey,
           updatedConfigs
         );
       }
@@ -339,7 +370,7 @@ export const useRebootLinodeMutation = (
           configsToUpdate
         );
         queryClient.setQueryData(
-          [queryKey, 'linode', id, 'configs'],
+          linodeQueries.linode(id)._ctx.configs.queryKey,
           updatedConfigs
         );
       }

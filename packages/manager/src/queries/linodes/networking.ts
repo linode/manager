@@ -1,4 +1,19 @@
 import {
+  allocateIPAddress,
+  assignAddresses,
+  createIPv6Range,
+  getIPv6RangeInfo,
+  getLinodeIPs,
+  removeIPAddress,
+  removeIPv6Range,
+  shareAddresses,
+  updateIP,
+} from '@linode/api-v4';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { getAllIPv6Ranges, getAllIps } from './requests';
+
+import type {
   APIError,
   CreateIPv6RangePayload,
   Filter,
@@ -11,25 +26,8 @@ import {
   Linode,
   LinodeIPsResponse,
   Params,
-  allocateIPAddress,
-  assignAddresses,
-  createIPv6Range,
-  getIPv6RangeInfo,
-  getLinodeIPs,
-  removeIPAddress,
-  removeIPv6Range,
-  shareAddresses,
-  updateIP,
 } from '@linode/api-v4';
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
-
-import { queryKey } from './linodes';
-import { getAllIPv6Ranges, getAllIps } from './requests';
+import type { QueryClient } from '@tanstack/react-query';
 
 export const useLinodeIPsQuery = (
   linodeId: number,
