@@ -19,6 +19,7 @@ import type {
   IPRangeInformation,
   Params,
 } from '@linode/api-v4';
+import { useMemo } from 'react';
 
 export const networkingQueries = createQueryKeys('networking', {
   ips: (params: Params = {}, filter: Filter = {}) => ({
@@ -75,6 +76,7 @@ export const useAllDetailedIPv6RangesQuery = (
       [],
   });
 
+  // @todo use React Query's combine once we upgrade to v5
   const data = queryResults.reduce<IPRangeInformation[]>(
     (detailedRanges, query) => {
       if (query.data) {
@@ -85,7 +87,9 @@ export const useAllDetailedIPv6RangesQuery = (
     []
   );
 
-  return { data };
+  const stableData = useMemo(() => data, [JSON.stringify(data)]);
+
+  return { data: stableData };
 };
 
 export const useCreateIPv6RangeMutation = () => {
