@@ -12,7 +12,7 @@ let mutateFn: any;
 
 export const loadUserPreferences = () => {
   if (userPreference) {
-    return { isLoading: true };
+    return { isLoading: false };
   }
   const { data: preferences, isError, isLoading } = usePreferences();
 
