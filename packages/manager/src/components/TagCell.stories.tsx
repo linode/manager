@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 const _tags: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'];
 
-export const Default: StoryObj<TagCellProps> = {
+export const PanelView: StoryObj<TagCellProps> = {
   render: (args) => {
     const TagsInputWrapper = () => {
       const [{ tags }, updateArgs] = useArgs();
@@ -20,7 +20,12 @@ export const Default: StoryObj<TagCellProps> = {
 
       return (
         <Box sx={{ height: 300 }}>
-          <TagCell {...args} tags={tags} updateTags={handleUpdateTags} />
+          <TagCell
+            {...args}
+            tags={tags}
+            updateTags={handleUpdateTags}
+            view={args.view ?? 'panel'}
+          />
         </Box>
       );
     };
@@ -43,7 +48,7 @@ export const InlineView: StoryObj<TagCellProps> = {
             {...args}
             tags={tags}
             updateTags={handleUpdateTags}
-            view="inline"
+            view={args.view ?? 'inline'}
           />
         </Box>
       );
