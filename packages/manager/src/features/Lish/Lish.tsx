@@ -45,11 +45,6 @@ const Lish = () => {
 
   const isLoading = isLinodeLoading || isTokenLoading || isMakingInitalRequests;
 
-  const weblish_url = data?.weblish_url;
-  const glish_url = data?.glish_url;
-  const monitor_url = data?.monitor_url;
-  const ws_protocols = data?.ws_protocols;
-
   React.useEffect(() => {
     const interval = setInterval(checkAuthentication, AUTH_POLLING_INTERVAL);
 
@@ -113,7 +108,7 @@ const Lish = () => {
     );
   }
 
-  return linode && weblish_url && glish_url && monitor_url && ws_protocols !== undefined ? (
+  return linode && data !== undefined ? (
     <StyledTabs
       index={
         type &&
@@ -126,11 +121,11 @@ const Lish = () => {
       <TabLinkList tabs={tabs} />
       <TabPanels>
         <SafeTabPanel data-qa-tab="Weblish" index={0}>
-          <Weblish linode={linode} refreshToken={refreshToken} weblish_url={weblish_url} ws_protocols={ws_protocols} />
+          <Weblish linode={linode} refreshToken={refreshToken} {...data} />
         </SafeTabPanel>
         {!isBareMetal && (
           <SafeTabPanel data-qa-tab="Glish" index={1}>
-            <Glish linode={linode} refreshToken={refreshToken} glish_url={glish_url} monitor_url={monitor_url} ws_protocols={ws_protocols} />
+            <Glish linode={linode} refreshToken={refreshToken} {...data} />
           </SafeTabPanel>
         )}
       </TabPanels>

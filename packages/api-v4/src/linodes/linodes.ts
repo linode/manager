@@ -13,7 +13,7 @@ import Request, {
 } from '../request';
 import { DeepPartial, Filter, Params, ResourcePage as Page } from '../types';
 import { Volume } from '../volumes/types';
-import { CreateLinodeRequest, Linode } from './types';
+import { CreateLinodeRequest, Linode, LinodeLishData } from './types';
 
 /**
  * getLinode
@@ -36,11 +36,8 @@ export const getLinode = (linodeId: number) =>
  * @param linodeId { number } The id of the Linode.
  */
 export const getLinodeLish = (linodeId: number) =>
-  Request<{ weblish_url: string, glish_url: string, monitor_url: string,
-            ws_protocols: string[] }>(
-    setURL(
-      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/lish`
-    ),
+  Request<LinodeLishData>(
+    setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/lish`),
     setMethod('POST')
   );
 

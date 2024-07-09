@@ -5,6 +5,7 @@ import {
   Kernel,
   Linode,
   LinodeCloneData,
+  LinodeLishData,
   MigrateLinodeRequest,
   ResizeLinodePayload,
   changeLinodePassword,
@@ -131,9 +132,7 @@ export const useLinodeKernelQuery = (kernel: string) => {
 };
 
 export const useLinodeLishQuery = (id: number) => {
-  return useQuery<{ weblish_url: string, glish_url: string,
-                    monitor_url: string, ws_protocols: string[] },
-                    APIError[]>(
+  return useQuery<LinodeLishData, APIError[]>(
     [queryKey, 'linode', id, 'lish'],
     () => getLinodeLish(id),
     { staleTime: Infinity }
