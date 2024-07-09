@@ -113,7 +113,7 @@ export const sendCreateNodeBalancerEvent = (eventLabel: string): void => {
 // LinodeCreateContainer.tsx
 export const sendCreateLinodeEvent = (
   eventAction: string,
-  eventLabel: string,
+  eventLabel: string | undefined,
   eventData?: CustomAnalyticsData
 ): void => {
   sendEvent({
