@@ -10,7 +10,6 @@ import { Chip } from 'src/components/Chip';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Paper } from 'src/components/Paper';
 import { TagCell } from 'src/components/TagCell/TagCell';
-import { TagDrawer } from 'src/components/TagCell/TagDrawer';
 import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
@@ -108,7 +107,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-  const [isTagDrawerOpen, setIsTagDrawerOpen] = React.useState(false);
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
     cluster.id
@@ -209,9 +207,10 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
             <Grid className={classes.tags}>
               <TagCell
                 disabled={isClusterReadOnly}
-                listAllTags={() => setIsTagDrawerOpen(true)}
+                entityLabel={cluster.label}
                 tags={cluster.tags}
                 updateTags={handleUpdateTags}
+                view="inline"
               />
             </Grid>
           </Grid>
@@ -260,13 +259,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         will no longer be able to access this cluster via your previous
         Kubeconfig file. This action cannot be undone.
       </ConfirmationDialog>
-      <TagDrawer
-        entityLabel={cluster.label}
-        onClose={() => setIsTagDrawerOpen(false)}
-        open={isTagDrawerOpen}
-        tags={cluster.tags}
-        updateTags={handleUpdateTags}
-      />
     </>
   );
 });

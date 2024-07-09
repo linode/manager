@@ -1,10 +1,12 @@
 import { useArgs } from '@storybook/preview-api';
-import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
 import { Box } from 'src/components/Box';
 
-import { TagCell, TagCellProps } from './TagCell/TagCell';
+import { TagCell } from './TagCell/TagCell';
+
+import type { TagCellProps } from './TagCell/TagCell';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const _tags: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'];
 
@@ -39,9 +41,9 @@ export const InlineView: StoryObj<TagCellProps> = {
         <Box sx={{ height: 300 }}>
           <TagCell
             {...args}
-            listAllTags={() => undefined}
             tags={tags}
             updateTags={handleUpdateTags}
+            view="inline"
           />
         </Box>
       );
