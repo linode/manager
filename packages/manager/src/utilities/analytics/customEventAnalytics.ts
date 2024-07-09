@@ -452,24 +452,6 @@ export const sendUpdateLinodeLabelEvent = (
   });
 };
 
-// GravatarByEmail.tsx
-export const sendHasGravatarEvent = (hasGravatar: boolean) => {
-  sendEvent({
-    action: 'Load',
-    category: 'Gravatar',
-    label: hasGravatar ? 'Has Gravatar' : 'Does not have Gravatar',
-  });
-};
-
-// DisplaySettings.tsx
-export const sendManageGravatarEvent = () => {
-  sendEvent({
-    action: 'Click:link',
-    category: 'Gravatar',
-    label: 'Manage photo',
-  });
-};
-
 // SelectLinodePanel.tsx
 // LinodeSelectTable.tsx
 export const sendLinodePowerOffEvent = (category: string) => {
