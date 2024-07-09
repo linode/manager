@@ -1,28 +1,45 @@
-import { getUserPreferences, updateUserPreferences } from '@linode/api-v4';
+/* eslint-disable react-hooks/rules-of-hooks */
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 
 import type { AclpConfig } from '@linode/api-v4';
 
 let userPreference: AclpConfig;
 let timerId: ReturnType<typeof setTimeout>;
+let mutateFn: any;
 
-export const loadUserPreference = async () => {
-  const data = await getUserPreferences();
+export const loadUserPreferences = () => {
+  if (userPreference) {
+    return { isLoading: true };
+  }
+  const { data: preferences, isError, isLoading } = usePreferences();
 
-  if (!data || !data.aclpPreference) {
+  const { mutate } = useMutatePreferences();
+
+  if (isLoading) {
+    return { isLoading };
+  }
+  mutateFn = mutate;
+
+  if (isError || !preferences) {
     userPreference = {} as AclpConfig;
   } else {
-    userPreference = { ...data.aclpPreference };
+    userPreference = preferences.aclpPreference ?? {};
   }
-  return data;
+
+  return { isLoading };
 };
 
 export const getUserPreferenceObject = () => {
   return { ...userPreference };
 };
 
-const updateUserPreference = async (updatedData: AclpConfig) => {
-  const data = await getUserPreferences();
-  return await updateUserPreferences({ ...data, aclpPreference: updatedData });
+const updateUserPreference = (updatedData: AclpConfig) => {
+  if (mutateFn) {
+    mutateFn({ aclpPreference: updatedData });
+  }
 };
 
 export const updateGlobalFilterPreference = (data: {}) => {
@@ -33,6 +50,7 @@ export const updateGlobalFilterPreference = (data: {}) => {
 
   debounce(userPreference);
 };
+
 // to avoid frequent preference update calls within 500 ms interval
 const debounce = (updatedData: AclpConfig) => {
   if (timerId) {
