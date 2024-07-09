@@ -1,5 +1,4 @@
 import { useTheme } from '@mui/material';
-import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
@@ -11,7 +10,6 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useImageQuery } from 'src/queries/images';
-import { linodeQueries } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
@@ -32,7 +30,6 @@ interface Props {
 }
 
 export const SelectLinodeRow = (props: Props) => {
-  const queryClient = useQueryClient();
   const {
     disabled,
     handlePowerOff,
@@ -61,16 +58,6 @@ export const SelectLinodeRow = (props: Props) => {
   });
 
   const isDisabled = disabled || isLinodesGrantReadOnly;
-
-  // If the Linode's status is running, we want to check if its interfaces associated with this subnet have become active so
-  // that we can determine if it needs a reboot or not. So, we need to invalidate the linode configs query to get the most up to date information.
-  React.useEffect(() => {
-    if (linode && linode.status === 'running') {
-      queryClient.invalidateQueries({
-        queryKey: linodeQueries.linode(linode.id)._ctx.configs.queryKey,
-      });
-    }
-  }, [linode, queryClient]);
 
   const iconStatus = getLinodeIconStatus(linode.status);
   const isRunning = linode.status == 'running';

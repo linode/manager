@@ -1,6 +1,5 @@
 import { Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -14,7 +13,6 @@ import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActi
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { linodeQueries } from 'src/queries/linodes/linodes';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
@@ -66,7 +64,6 @@ export const LinodeEntityDetailHeader = (
   props: LinodeEntityDetailHeaderProps
 ) => {
   const theme = useTheme();
-  const queryClient = useQueryClient();
 
   const {
     backups,
@@ -106,16 +103,6 @@ export const LinodeEntityDetailHeader = (
           linodeInterface.purpose === 'vpc' && !linodeInterface.active
       )
     );
-
-  // If the Linode is running, we want to check the active status of its interfaces to determine whether it needs to
-  // be rebooted or not. So, we need to invalidate the linode configs query to get the most up to date information.
-  React.useEffect(() => {
-    if (isRunning) {
-      queryClient.invalidateQueries({
-        queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
-      });
-    }
-  }, [linodeId, isRunning, queryClient]);
 
   const formattedStatus = isRebootNeeded
     ? 'REBOOT NEEDED'
