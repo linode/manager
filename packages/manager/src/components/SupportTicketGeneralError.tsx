@@ -19,17 +19,13 @@ export const SupportTicketGeneralError = (
   const { entityType, generalError } = props;
   const theme = useTheme();
 
-  const supportTextRegex = new RegExp(
-    /(open a support ticket|contact Support)/i
-  );
+  const supportTextRegex = /(open a support ticket|contact Support)/i;
   const reason: string = generalError.props.errors[0].reason;
   const limitError = reason.split(supportTextRegex);
 
   // Determine whether we'll need to link to a specific support ticket form based on ticketType.
-  const accountLimitRegex = new RegExp(
-    /(limit|limit for the number of active services) on your account/i
-  );
-  const isAccountLimitSupportTicket = reason.match(accountLimitRegex);
+  const accountLimitRegex = /(limit|limit for the number of active services) on your account/i;
+  const isAccountLimitSupportTicket = accountLimitRegex.test(reason);
 
   return (
     <Typography
