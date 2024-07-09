@@ -1,5 +1,4 @@
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -50,7 +49,6 @@ interface Props {
 }
 
 export const SubnetLinodeRow = (props: Props) => {
-  const queryClient = useQueryClient();
   const {
     handlePowerActionsLinode,
     handleUnassignLinode,
