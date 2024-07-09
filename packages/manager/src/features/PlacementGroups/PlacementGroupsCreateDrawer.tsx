@@ -8,6 +8,8 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
+import { List } from 'src/components/List';
+import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
@@ -132,7 +134,7 @@ export const PlacementGroupsCreateDrawer = (
     validationSchema: createPlacementGroupSchema,
   });
 
-  const generalError = error?.find((e) => !e.field)?.reason;
+  const hasApiError = error?.[0]?.reason;
 
   const selectedRegion = React.useMemo(
     () => regions?.find((region) => region.id == values.region),
@@ -191,7 +193,21 @@ export const PlacementGroupsCreateDrawer = (
       )}
       <form onSubmit={handleSubmit}>
         <Stack spacing={1}>
-          {generalError && <Notice text={generalError} variant="error" />}
+          {hasApiError && (
+            <Notice variant="error">
+              <List>
+                {error.map((e) => (
+                  <ListItem
+                    disablePadding={true}
+                    key={e.field}
+                    sx={{ my: 0.25 }}
+                  >
+                    - {e.reason}
+                  </ListItem>
+                ))}
+              </List>
+            </Notice>
+          )}
           {selectedRegion && displayRegionHeaderText && (
             <DescriptionList
               items={[
