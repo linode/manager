@@ -11,6 +11,7 @@ import {
   getLinodeLishToken,
   getLinodeStats,
   getLinodeStatsByDate,
+  getLinodeTransfer,
   getLinodeTransferByDate,
   getLinodes,
   linodeBoot,
@@ -104,7 +105,11 @@ export const linodeQueries = createQueryKeys('linodes', {
         queryFn: () => getLinodeStatsByDate(id, year, month),
         queryKey: [year, month],
       }),
-      transfer: (year: string, month: string) => ({
+      transfer: {
+        queryFn: () => getLinodeTransfer(id),
+        queryKey: null,
+      },
+      transferByDate: (year: string, month: string) => ({
         queryFn: () => getLinodeTransferByDate(id, year, month),
         queryKey: [year, month],
       }),
