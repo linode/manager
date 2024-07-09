@@ -3,16 +3,15 @@ import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { OrderByProps } from 'src/components/OrderBy';
 import { Radio } from 'src/components/Radio/Radio';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { TableCell, TableCellProps } from 'src/components/TableCell';
+import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useImageQuery } from 'src/queries/images';
-import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
+import { linodeQueries } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
@@ -20,6 +19,8 @@ import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { RegionIndicator } from '../../LinodesLanding/RegionIndicator';
 
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
+import type { OrderByProps } from 'src/components/OrderBy';
+import type { TableCellProps } from 'src/components/TableCell';
 
 interface Props {
   disabled?: boolean;
@@ -65,12 +66,9 @@ export const SelectLinodeRow = (props: Props) => {
   // that we can determine if it needs a reboot or not. So, we need to invalidate the linode configs query to get the most up to date information.
   React.useEffect(() => {
     if (linode && linode.status === 'running') {
-      queryClient.invalidateQueries([
-        linodesQueryKey,
-        'linode',
-        linode.id,
-        'configs',
-      ]);
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linode.id)._ctx.configs.queryKey,
+      });
     }
   }, [linode, queryClient]);
 

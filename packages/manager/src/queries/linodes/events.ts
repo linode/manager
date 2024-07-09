@@ -1,7 +1,7 @@
 import { accountQueries } from '../account/queries';
 import { firewallQueries } from '../firewalls';
 import { volumeQueries } from '../volumes/volumes';
-import { linodeQueries, queryKey } from './linodes';
+import { linodeQueries } from './linodes';
 
 import type { Event } from '@linode/api-v4';
 import type { EventHandlerData } from 'src/hooks/useEventHandlers';
@@ -56,7 +56,10 @@ export const linodeEventsHandler = ({
         exact: true,
         queryKey: linodeQueries.linode(linodeId).queryKey,
       });
-      queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'configs']); // Ensure configs are fresh when Linode is booted up (see https://github.com/linode/manager/pull/9914)
+      // Ensure configs are fresh when Linode is booted up (see https://github.com/linode/manager/pull/9914)
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
+      });
       return;
     case 'linode_snapshot':
       queryClient.invalidateQueries(linodeQueries.linodes);
@@ -70,8 +73,10 @@ export const linodeEventsHandler = ({
       return;
     case 'linode_addip':
     case 'linode_deleteip':
-      queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'ips']);
       queryClient.invalidateQueries(linodeQueries.linodes);
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
+      });
       queryClient.invalidateQueries({
         exact: true,
         queryKey: linodeQueries.linode(linodeId).queryKey,
@@ -79,7 +84,9 @@ export const linodeEventsHandler = ({
       return;
     case 'linode_create':
     case 'linode_clone':
-      queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'disks']);
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.disks.queryKey,
+      });
       queryClient.invalidateQueries(linodeQueries.linodes);
       queryClient.invalidateQueries({
         exact: true,
@@ -87,8 +94,12 @@ export const linodeEventsHandler = ({
       });
       return;
     case 'linode_rebuild':
-      queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'disks']);
-      queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'configs']);
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.disks.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
+      });
       queryClient.invalidateQueries(linodeQueries.linodes);
       queryClient.invalidateQueries({
         exact: true,
@@ -112,7 +123,9 @@ export const linodeEventsHandler = ({
     case 'linode_config_create':
     case 'linode_config_delete':
     case 'linode_config_update':
-      queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'configs']);
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
+      });
       return;
   }
 };
@@ -130,7 +143,9 @@ export const diskEventHandler = ({ event, queryClient }: EventHandlerData) => {
     return;
   }
 
-  queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'disks']);
+  queryClient.invalidateQueries({
+    queryKey: linodeQueries.linode(linodeId)._ctx.disks.queryKey,
+  });
 };
 
 /**

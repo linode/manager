@@ -2,8 +2,6 @@ import { deleteLinodeConfigInterface } from '@linode/api-v4';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
-import { configQueryKey, interfaceQueryKey } from 'src/queries/linodes/configs';
-import { queryKey } from 'src/queries/linodes/linodes';
 import { vpcQueries } from 'src/queries/vpcs/vpcs';
 
 import type {
@@ -27,8 +25,6 @@ export const useUnassignLinode = () => {
   >([]);
 
   const invalidateQueries = async ({
-    configId,
-    linodeId,
     vpcId,
   }: InvalidateSubnetLinodeConfigQueryIds) => {
     const queryKeys = [
@@ -36,15 +32,6 @@ export const useUnassignLinode = () => {
       vpcQueries.paginated._def,
       vpcQueries.vpc(vpcId).queryKey,
       vpcQueries.vpc(vpcId)._ctx.subnets.queryKey,
-      [
-        queryKey,
-        'linode',
-        linodeId,
-        configQueryKey,
-        'config',
-        configId,
-        interfaceQueryKey,
-      ],
     ];
     await Promise.all(
       queryKeys.map((key) => queryClient.invalidateQueries(key))
@@ -59,17 +46,6 @@ export const useUnassignLinode = () => {
   }: IdsForUnassignLinode) => {
     await deleteLinodeConfigInterface(linodeId, configId, interfaceId);
     invalidateQueries({ configId, linodeId, vpcId });
-    queryClient.invalidateQueries([
-      queryKey,
-      'linode',
-      linodeId,
-      configQueryKey,
-      'config',
-      configId,
-      interfaceQueryKey,
-      'interface',
-      interfaceId,
-    ]);
   };
 
   return {

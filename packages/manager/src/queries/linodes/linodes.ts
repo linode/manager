@@ -6,6 +6,7 @@ import {
   getLinode,
   getLinodeBackups,
   getLinodeFirewalls,
+  getLinodeIPs,
   getLinodeKernel,
   getLinodeLishToken,
   getLinodeStats,
@@ -76,15 +77,19 @@ export const linodeQueries = createQueryKeys('linodes', {
         queryKey: null,
       },
       configs: {
-        queryFn: getAllLinodeConfigs,
+        queryFn: () => getAllLinodeConfigs(id),
         queryKey: null,
       },
       disks: {
-        queryFn: getAllLinodeDisks,
+        queryFn: () => getAllLinodeDisks(id),
         queryKey: null,
       },
       firewalls: {
         queryFn: () => getLinodeFirewalls(id),
+        queryKey: null,
+      },
+      ips: {
+        queryFn: () => getLinodeIPs(id),
         queryKey: null,
       },
       lishToken: {

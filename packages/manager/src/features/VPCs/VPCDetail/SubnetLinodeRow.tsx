@@ -17,10 +17,7 @@ import { Typography } from 'src/components/Typography';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
-import {
-  queryKey as linodesQueryKey,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+import { linodeQueries, useLinodeQuery } from 'src/queries/linodes/linodes';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
@@ -89,12 +86,9 @@ export const SubnetLinodeRow = (props: Props) => {
   // that we can determine if it needs a reboot or not. So, we need to invalidate the linode configs query to get the most up to date information.
   React.useEffect(() => {
     if (linode && linode.status === 'running') {
-      queryClient.invalidateQueries([
-        linodesQueryKey,
-        'linode',
-        linodeId,
-        'configs',
-      ]);
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linode.id)._ctx.configs.queryKey,
+      });
     }
   }, [linode, linodeId, queryClient]);
 

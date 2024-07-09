@@ -1,5 +1,3 @@
-import { Config } from '@linode/api-v4/lib';
-import { LinodeBackups } from '@linode/api-v4/lib/linodes';
 import { Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
@@ -12,20 +10,21 @@ import { Hidden } from 'src/components/Hidden';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import { TypographyProps } from 'src/components/Typography';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
+import { linodeQueries } from 'src/queries/linodes/linodes';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
 import { StyledLink } from './LinodeEntityDetail.styles';
-import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import { getLinodeIconStatus } from './LinodesLanding/utils';
 
+import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
+import type { Config, LinodeBackups } from '@linode/api-v4';
 import type { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
+import type { TypographyProps } from 'src/components/Typography';
 
 interface LinodeEntityDetailProps {
   id: number;
@@ -112,12 +111,9 @@ export const LinodeEntityDetailHeader = (
   // be rebooted or not. So, we need to invalidate the linode configs query to get the most up to date information.
   React.useEffect(() => {
     if (isRunning) {
-      queryClient.invalidateQueries([
-        linodesQueryKey,
-        'linode',
-        linodeId,
-        'configs',
-      ]);
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
+      });
     }
   }, [linodeId, isRunning, queryClient]);
 

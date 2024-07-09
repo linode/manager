@@ -1,6 +1,4 @@
 import {
-  getIPs,
-  getIPv6Ranges,
   getLinodeConfigs,
   getLinodeDisks,
   getLinodeFirewalls,
@@ -15,8 +13,6 @@ import type {
   Disk,
   Filter,
   Firewall,
-  IPAddress,
-  IPRange,
   Kernel,
   Linode,
   Params,
@@ -54,25 +50,6 @@ export const getAllLinodeFirewalls = (
   getAll<Firewall>((params, filter) =>
     getLinodeFirewalls(
       linodeId,
-      { ...params, ...passedParams },
-      { ...filter, ...passedFilter }
-    )
-  )().then((data) => data.data);
-
-export const getAllIps = (
-  passedParams: Params = {},
-  passedFilter: Filter = {}
-) =>
-  getAll<IPAddress>((params, filter) =>
-    getIPs({ ...params, ...passedParams }, { ...filter, ...passedFilter })
-  )().then((data) => data.data);
-
-export const getAllIPv6Ranges = (
-  passedParams: Params = {},
-  passedFilter: Filter = {}
-) =>
-  getAll<IPRange>((params, filter) =>
-    getIPv6Ranges(
       { ...params, ...passedParams },
       { ...filter, ...passedFilter }
     )

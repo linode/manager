@@ -7,13 +7,8 @@ import { debounce } from 'throttle-debounce';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import {
-  CPUTimeData,
-  DiskIOTimeData,
-  Point,
-} from 'src/components/AreaChart/types';
 import { Box } from 'src/components/Box';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
@@ -38,6 +33,12 @@ import { NetworkGraphs } from './NetworkGraphs';
 import { StatsPanel } from './StatsPanel';
 
 import type { ChartProps } from './NetworkGraphs';
+import type {
+  CPUTimeData,
+  DiskIOTimeData,
+  Point,
+} from 'src/components/AreaChart/types';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 setUpCharts();
 
@@ -71,13 +72,13 @@ const LinodeSummary: React.FC<Props> = (props) => {
     error: statsError,
     isLoading: statsLoading,
     refetch: refetchLinodeStats,
-  } = useLinodeStats(id, isLast24Hours, linodeCreated);
+  } = useLinodeStats(id, isLast24Hours);
 
   const {
     data: statsByDateData,
     error: statsByDateError,
     isLoading: statsByDateLoading,
-  } = useLinodeStatsByDate(id, year, month, !isLast24Hours, linodeCreated);
+  } = useLinodeStatsByDate(id, year, month, !isLast24Hours);
 
   const stats = isLast24Hours ? statsData : statsByDateData;
   const isLoading = isLast24Hours ? statsLoading : statsByDateLoading;
