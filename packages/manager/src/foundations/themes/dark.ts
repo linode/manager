@@ -5,6 +5,7 @@ import {
   Color,
   Dropdown,
   Interaction,
+  NotificationToast,
   Select,
   TextField,
 } from '@linode/design-language-system/themes/dark';
@@ -93,6 +94,30 @@ export const customDarkModeOptions = {
     tableHeader: Color.Neutrals[60],
     tableStatic: Color.Neutrals[20],
     textAccessTable: Color.Neutrals[50],
+  },
+} as const;
+
+export const notificationToast = {
+  default: {
+    backgroundColor: NotificationToast.Informative.Background,
+    borderLeft: `6px solid ${NotificationToast.Informative.Border}`,
+    color: NotificationToast.Text,
+  },
+  error: {
+    backgroundColor: NotificationToast.Error.Background,
+    borderLeft: `6px solid ${NotificationToast.Error.Border}`,
+  },
+  info: {
+    backgroundColor: NotificationToast.Informative.Background,
+    borderLeft: `6px solid ${NotificationToast.Informative.Border}`,
+  },
+  success: {
+    backgroundColor: NotificationToast.Success.Background,
+    borderLeft: `6px solid ${NotificationToast.Success.Border}`,
+  },
+  warning: {
+    backgroundColor: NotificationToast.Warning.Background,
+    borderLeft: `6px solid ${NotificationToast.Warning.Border}`,
   },
 } as const;
 
@@ -329,6 +354,9 @@ export const darkTheme: ThemeOptions = {
         color: 'primary',
       },
       styleOverrides: {
+        clickable: {
+          color: Color.Brand[100],
+        },
         colorError: {
           backgroundColor: Badge.Bold.Red.Background,
           color: Badge.Bold.Red.Text,
@@ -574,7 +602,7 @@ export const darkTheme: ThemeOptions = {
         root: {
           backgroundColor: Color.Neutrals[90],
           backgroundImage: 'none', // I have no idea why MUI defaults to setting a background image...
-          border: `1px solid ${Color.Neutrals[80]}`,
+          border: 0,
         },
       },
     },
@@ -826,6 +854,7 @@ export const darkTheme: ThemeOptions = {
     },
   },
   name: 'dark',
+  notificationToast,
   palette: {
     background: {
       default: customDarkModeOptions.bg.app,
