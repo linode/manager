@@ -9,14 +9,13 @@ import {
   isParentTokenValid,
   updateCurrentTokenBasedOnUserType,
 } from 'src/features/Account/SwitchAccounts/utils';
-import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { useCreateChildAccountPersonalAccessTokenMutation } from 'src/queries/account/account';
 import { getStorage } from 'src/utilities/storage';
 
 import type { Token, UserType } from '@linode/api-v4';
 
 export const useParentChildAuthentication = () => {
-  const currentTokenWithBearer = useCurrentToken() ?? '';
+  const currentTokenWithBearer = localStorage.getItem('authentication/token');
 
   const {
     error: createTokenError,

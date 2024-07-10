@@ -1,11 +1,10 @@
-import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { dark, light } from 'src/foundations/themes';
-
-import type { ThemeName } from 'src/foundations/themes';
-import { useAuthentication } from 'src/hooks/useAuthentication';
 import { usePreferences } from 'src/queries/profile/preferences';
+
+import type { Theme } from '@mui/material/styles';
+import type { ThemeName } from 'src/foundations/themes';
 
 export type ThemeChoice = 'dark' | 'light' | 'system';
 
@@ -53,8 +52,7 @@ export const getThemeFromPreferenceValue = (
 
 export const useColorMode = () => {
   // Make sure we are authenticated before we fetch preferences.
-  const isAuthenticated = !!useAuthentication().token;
-  const { data: preferences } = usePreferences(isAuthenticated);
+  const { data: preferences } = usePreferences();
   const isSystemInDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const colorMode = getThemeFromPreferenceValue(

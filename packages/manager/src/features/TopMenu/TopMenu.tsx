@@ -7,7 +7,6 @@ import { Hidden } from 'src/components/Hidden';
 import { IconButton } from 'src/components/IconButton';
 import { Toolbar } from 'src/components/Toolbar';
 import { Typography } from 'src/components/Typography';
-import { useAuthentication } from 'src/hooks/useAuthentication';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { AddNewMenu } from './AddNewMenu/AddNewMenu';
@@ -35,7 +34,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
   // TODO eventMessagesV2: delete when flag is removed
   const flags = useFlags();
 
-  const { loggedInAsCustomer } = useAuthentication();
+  const loggedInAsCustomer = localStorage.getItem('authentication/token')?.startsWith('Admin');
 
   const navHoverText = isSideMenuOpen
     ? 'Collapse side menu'

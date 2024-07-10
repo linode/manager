@@ -1,7 +1,6 @@
 import { getStorage, setStorage } from 'src/utilities/storage';
 
 import type { Token, UserType } from '@linode/api-v4';
-import type { State as AuthState } from 'src/store/authentication';
 
 export interface ProxyTokenCreationParams {
   /**
@@ -21,7 +20,7 @@ export interface ProxyTokenCreationParams {
 export const updateParentTokenInLocalStorage = ({
   currentTokenWithBearer,
 }: {
-  currentTokenWithBearer?: AuthState['token'];
+  currentTokenWithBearer?: string | null;
 }) => {
   const parentToken: Token = {
     created: getStorage('authentication/created'),
@@ -104,7 +103,7 @@ export const updateCurrentTokenBasedOnUserType = ({
  */
 export function getPersonalAccessTokenForRevocation(
   tokens: Token[] | undefined,
-  currentTokenWithBearer: string
+  currentTokenWithBearer: string | null
 ): Token | undefined {
   if (!tokens) {
     return;
@@ -112,6 +111,6 @@ export function getPersonalAccessTokenForRevocation(
   return tokens.find(
     (token) =>
       token.token &&
-      currentTokenWithBearer.replace('Bearer ', '').startsWith(token.token)
+      currentTokenWithBearer?.replace('Bearer ', '').startsWith(token.token)
   );
 }

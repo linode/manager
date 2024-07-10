@@ -1,7 +1,6 @@
 import { updateUser } from '@linode/api-v4/lib/account';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { v4 } from 'uuid';
 
@@ -19,16 +18,13 @@ import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 
 import { TimezoneForm } from './TimezoneForm';
 
-import type { ApplicationState } from 'src/store';
 
 export const DisplaySettings = () => {
   const theme = useTheme();
   const { mutateAsync: updateProfile } = useMutateProfile();
   const { data: profile, refetch: requestProfile } = useProfile();
   const { data: notifications, refetch } = useNotificationsQuery();
-  const loggedInAsCustomer = useSelector(
-    (state: ApplicationState) => state.authentication.loggedInAsCustomer
-  );
+  const loggedInAsCustomer = Boolean(localStorage.getItem('authentication/token')?.startsWith('Admin'));
   const location = useLocation<{ focusEmail: boolean }>();
   const emailRef = React.createRef<HTMLInputElement>();
 

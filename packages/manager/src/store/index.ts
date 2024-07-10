@@ -1,9 +1,5 @@
 import { Store, applyMiddleware, combineReducers, createStore } from 'redux';
 
-import { State as AuthState } from 'src/store/authentication';
-import authentication, {
-  defaultState as authenticationDefaultState,
-} from 'src/store/authentication/authentication.reducer';
 import globalErrors, {
   State as GlobalErrorState,
   defaultState as defaultGlobalErrorState,
@@ -36,7 +32,6 @@ import pendingUpload, {
 import thunk from 'redux-thunk';
 
 export interface ApplicationState {
-  authentication: AuthState;
   createLinode: LinodeCreateState;
   globalErrors: GlobalErrorState;
   longviewClients: LongviewState;
@@ -47,7 +42,6 @@ export interface ApplicationState {
 }
 
 export const defaultState: ApplicationState = {
-  authentication: authenticationDefaultState,
   createLinode: linodeCreateDefaultState,
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
@@ -61,7 +55,6 @@ export const defaultState: ApplicationState = {
  * Reducers
  */
 const reducers = combineReducers<ApplicationState>({
-  authentication,
   createLinode: linodeCreateReducer,
   globalErrors,
   longviewClients: longview,
