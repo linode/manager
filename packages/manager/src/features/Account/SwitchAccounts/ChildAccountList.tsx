@@ -11,10 +11,9 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useChildAccountsInfiniteQuery } from 'src/queries/account/account';
 
-import type { Filter, UserType } from '@linode/api-v4';
+import type { Account, Filter, UserType } from '@linode/api-v4';
 
 interface ChildAccountListProps {
-  currentTokenWithBearer: string;
   isLoading?: boolean;
   onClose: () => void;
   onSwitchAccount: (props: {
@@ -23,6 +22,7 @@ interface ChildAccountListProps {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>;
     onClose: () => void;
     userType: UserType | undefined;
+    childAccount: Account;
   }) => void;
   searchQuery: string;
   userType: UserType | undefined;
@@ -30,7 +30,6 @@ interface ChildAccountListProps {
 
 export const ChildAccountList = React.memo(
   ({
-    currentTokenWithBearer,
     isLoading,
     onClose,
     onSwitchAccount,
@@ -45,10 +44,6 @@ export const ChildAccountList = React.memo(
       filter['company'] = { '+contains': searchQuery };
     }
 
-    const [
-      isSwitchingChildAccounts,
-      setIsSwitchingChildAccounts,
-    ] = useState<boolean>(false);
     const {
       data,
       fetchNextPage,
@@ -60,21 +55,15 @@ export const ChildAccountList = React.memo(
       refetch: refetchChildAccounts,
     } = useChildAccountsInfiniteQuery({
       filter,
-      headers:
-        userType === 'proxy'
-          ? {
-              Authorization: currentTokenWithBearer,
-            }
-          : undefined,
+      headers: {
+        Authorization:
+          localStorage.getItem('authentication/parent_token/token') ??
+          undefined,
+      },
     });
     const childAccounts = data?.pages.flatMap((page) => page.data);
 
-    if (
-      isInitialLoading ||
-      isLoading ||
-      isSwitchingChildAccounts ||
-      isRefetching
-    ) {
+    if (isInitialLoading) {
       return (
         <Box display="flex" justifyContent="center">
           <CircleProgress size="md" />
@@ -120,19 +109,19 @@ export const ChildAccountList = React.memo(
       return (
         <StyledLinkButton
           onClick={(event) => {
-            setIsSwitchingChildAccounts(true);
             onSwitchAccount({
-              currentTokenWithBearer,
+              currentTokenWithBearer:
+                localStorage.getItem('authentication/token') ?? '',
               euuid,
               event,
               onClose,
               userType,
+              childAccount,
             });
           }}
           sx={(theme) => ({
             marginBottom: theme.spacing(2),
           })}
-          disabled={isSwitchingChildAccounts}
           key={`child-account-link-button-${idx}`}
         >
           {childAccount.company}
@@ -142,7 +131,7 @@ export const ChildAccountList = React.memo(
 
     return (
       <Stack alignItems={'flex-start'} data-testid="child-account-list">
-        {!isSwitchingChildAccounts && !isLoading && renderChildAccounts}
+        {renderChildAccounts}
         {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
         {isFetchingNextPage && <CircleProgress size="sm" />}
       </Stack>

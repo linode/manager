@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -33,6 +34,7 @@ export const SessionExpirationDialog = React.memo(
     });
     const [logoutLoading, setLogoutLoading] = React.useState(false);
     const history = useHistory();
+    const queryClient = useQueryClient();
     const { data: account } = useAccount();
     const euuid = account?.euuid ?? '';
 
@@ -92,12 +94,10 @@ export const SessionExpirationDialog = React.memo(
 
       updateCurrentToken({ userType: 'parent' });
 
-      // Reset flag for proxy user to display success toast once.
-      setStorage('is_proxy_user', 'false');
       setLogoutLoading(false);
 
       onClose();
-      location.reload();
+      queryClient.resetQueries();
     };
 
     const handleRefreshToken = async ({ euuid }: { euuid: string }) => {
@@ -118,7 +118,7 @@ export const SessionExpirationDialog = React.memo(
 
         updateCurrentToken({ userType: 'proxy' });
         onClose();
-        location.reload();
+        queryClient.resetQueries();
       } catch (error) {
         // Error is handled by createTokenError.
       }

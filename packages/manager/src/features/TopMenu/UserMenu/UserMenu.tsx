@@ -110,18 +110,6 @@ export const UserMenu = React.memo(() => {
     setAnchorEl(null);
   };
 
-  React.useEffect(() => {
-    // Run after we've switched to a proxy user.
-    if (isProxyUser && !getStorage('is_proxy_user')) {
-      // Flag for proxy user to display success toast once.
-      setStorage('is_proxy_user', 'true');
-
-      enqueueSnackbar(`Account switched to ${companyNameOrEmail}.`, {
-        variant: 'success',
-      });
-    }
-  }, [isProxyUser, companyNameOrEmail, enqueueSnackbar]);
-
   const accountLinks: MenuLink[] = React.useMemo(
     () => [
       {

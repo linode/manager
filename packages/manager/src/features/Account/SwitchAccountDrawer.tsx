@@ -14,7 +14,9 @@ import { getStorage, setStorage } from 'src/utilities/storage';
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 import { updateParentTokenInLocalStorage } from './SwitchAccounts/utils';
 
-import type { APIError, UserType } from '@linode/api-v4';
+import type { Account, APIError, UserType } from '@linode/api-v4';
+import { useQueryClient } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
 
 interface Props {
   onClose: () => void;
@@ -27,19 +29,21 @@ interface HandleSwitchToChildAccountProps {
   event: React.MouseEvent<HTMLElement>;
   onClose: (e: React.SyntheticEvent<HTMLElement>) => void;
   userType: UserType | undefined;
+  childAccount: Account;
 }
 
 export const SwitchAccountDrawer = (props: Props) => {
   const { onClose, open, userType } = props;
-  const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [isParentTokenError, setIsParentTokenError] = React.useState<
     APIError[]
   >([]);
   const [query, setQuery] = React.useState<string>('');
 
+  const queryClient = useQueryClient();
+  const { enqueueSnackbar} = useSnackbar();
+
   const isProxyUser = userType === 'proxy';
-  const currentParentTokenWithBearer =
-    getStorage('authentication/parent_token/token') ?? '';
+
   const currentTokenWithBearer = localStorage.getItem('authentication/token');
 
   const {
@@ -58,6 +62,7 @@ export const SwitchAccountDrawer = (props: Props) => {
       event,
       onClose,
       userType,
+      childAccount,
     }: HandleSwitchToChildAccountProps) => {
       const isProxyUser = userType === 'proxy';
 
@@ -84,7 +89,12 @@ export const SwitchAccountDrawer = (props: Props) => {
 
         updateCurrentToken({ userType: 'proxy' });
         onClose(event);
-        location.reload();
+
+        enqueueSnackbar(`Account switched to ${childAccount.company}.`, {
+          variant: 'success',
+        });
+
+        queryClient.resetQueries();
       } catch (error) {
         // Error is handled by createTokenError.
       }
@@ -104,9 +114,6 @@ export const SwitchAccountDrawer = (props: Props) => {
       return;
     }
 
-    // Flag to prevent multiple clicks on the switch account link.
-    setSubmitting(true);
-
     // Revoke proxy token before switching to parent account.
     await revokeToken().catch(() => {
       /* Allow user account switching; tokens will expire naturally. */
@@ -114,11 +121,12 @@ export const SwitchAccountDrawer = (props: Props) => {
 
     updateCurrentToken({ userType: 'parent' });
 
-    // Reset flag for proxy user to display success toast once.
-    setStorage('is_proxy_user', 'false');
+    enqueueSnackbar(`Account switched to parent account.`, {
+      variant: 'success',
+    });
 
     onClose();
-    location.reload();
+    queryClient.resetQueries();
   }, [onClose, revokeToken, validateParentToken, updateCurrentToken]);
 
   return (
@@ -144,7 +152,6 @@ export const SwitchAccountDrawer = (props: Props) => {
                 handleSwitchToParentAccount();
               }}
               aria-label="parent-account-link"
-              disabled={isSubmitting}
             >
               switch back to your account
             </StyledLinkButton>
@@ -163,10 +170,6 @@ export const SwitchAccountDrawer = (props: Props) => {
         value={query}
       />
       <ChildAccountList
-        currentTokenWithBearer={
-          isProxyUser ? currentParentTokenWithBearer : currentTokenWithBearer
-        }
-        isLoading={isSubmitting}
         onClose={onClose}
         onSwitchAccount={handleSwitchToChildAccount}
         searchQuery={query}

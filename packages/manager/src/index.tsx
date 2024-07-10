@@ -16,6 +16,7 @@ import { App } from './App';
 import { loadDevTools, shouldEnableDevTools } from './dev-tools/load';
 import './index.css';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
+import { Logout } from './Logout';
 import { OAuth, useOAuth } from './OAuth';
 import { queryClientFactory } from './queries/base';
 
@@ -50,7 +51,7 @@ const Main = () => {
           <React.Suspense fallback={<SplashScreen />}>
             <Router>
               <Switch>
-                {/* <Route component={Logout} exact path="/logout" /> */}
+                <Route component={Logout} exact path="/logout" />
                 <Route component={CancelLanding} exact path="/cancel" />
                 <Snackbar
                   anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
