@@ -35,6 +35,17 @@ import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
+import type { BooleanString } from 'src/features/Linodes/types';
+import type { BaseQueryParams } from 'src/utilities/queryParams';
+
+interface QueryParams extends BaseQueryParams {
+  delete: BooleanString;
+  migrate: BooleanString;
+  rebuild: BooleanString;
+  rescue: BooleanString;
+  resize: BooleanString;
+  upgrade: BooleanString;
+}
 
 const LinodeDetailHeader = () => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
@@ -43,7 +54,9 @@ const LinodeDetailHeader = () => {
   // logic changes the URL) to determine if a modal should be open when this component
   // is first rendered.
   const location = useLocation();
-  const queryParams = getQueryParamsFromQueryString(location.search);
+  const queryParams = getQueryParamsFromQueryString<QueryParams>(
+    location.search
+  );
 
   const match = useRouteMatch<{ linodeId: string; subpath: string }>({
     path: '/linodes/:linodeId/:subpath?',

@@ -29,7 +29,7 @@ Feel free to open an issue to report a bug or request a feature.
 6. Open a pull request against `develop` and make sure the title follows the same format as the commit message.
 7. If needed, create a changeset to populate our changelog
     - If you don't have the Github CLI installed or need to update it (you need GH CLI 2.21.0 or greater),
-        - install it via `brew`: https://cli.github.com/manual/installation or upgrade with `brew upgrade gh`
+        - install it via `brew`: https://github.com/cli/cli#installation or upgrade with `brew upgrade gh`
         - Once installed, run `gh repo set-default` and pick `linode/manager` (only > 2.21.0)
         - You can also just create the changeset manually, in this case make sure to use the proper formatting for it.
     - Run `yarn changeset`from the root, choose the package to create a changeset for, and provide a description for the change.
