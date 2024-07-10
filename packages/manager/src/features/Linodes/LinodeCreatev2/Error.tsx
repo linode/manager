@@ -1,10 +1,9 @@
-import { Typography } from '@mui/material';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { SupportTicketGeneralError } from 'src/components/SupportTicketGeneralError';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
@@ -22,15 +21,7 @@ export const Error = () => {
   return (
     <Paper sx={{ p: 0 }}>
       <Notice spacingBottom={0} spacingTop={0} variant="error">
-        {typeof generalError === 'string' && (
-          <Typography py={2}>{generalError}</Typography>
-        )}
-        {typeof generalError !== 'string' && (
-          <SupportTicketGeneralError
-            entityType="linode_id"
-            generalError={generalError}
-          />
-        )}
+        <ErrorMessage entityType="linode_id" message={generalError} />
       </Notice>
     </Paper>
   );

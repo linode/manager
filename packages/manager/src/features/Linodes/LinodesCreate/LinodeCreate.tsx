@@ -21,13 +21,13 @@ import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary'
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DetailsPanel } from 'src/components/DetailsPanel/DetailsPanel';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import { Stack } from 'src/components/Stack';
-import { SupportTicketGeneralError } from 'src/components/SupportTicketGeneralError';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
@@ -520,16 +520,11 @@ export class LinodeCreate extends React.PureComponent<
           {hasErrorFor.none && !!showGeneralError && (
             <Notice spacingTop={8} text={hasErrorFor.none} variant="error" />
           )}
-          {generalError && typeof generalError === 'string' ? (
-            <Notice spacingTop={8} text={generalError} variant="error" />
-          ) : generalError && typeof generalError !== 'string' ? (
-            <Notice spacingTop={8} variant="error">
-              <SupportTicketGeneralError
-                entityType="linode_id"
-                generalError={generalError}
-              />
+          {generalError && (
+            <Notice spacingTop={8}>
+              <ErrorMessage entityType="linode_id" message={generalError} />
             </Notice>
-          ) : undefined}
+          )}
           {userCannotCreateLinode && (
             <Notice
               text={
