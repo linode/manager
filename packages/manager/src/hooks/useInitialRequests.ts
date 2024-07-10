@@ -55,6 +55,7 @@ export const useInitialRequests = () => {
     }
 
     try {
+      // Initial Requests: Things we want immediately (before rendering the app)
       await Promise.all([
         queryClient.prefetchQuery(accountQueries.account),
         queryClient.prefetchQuery(accountQueries.settings),
