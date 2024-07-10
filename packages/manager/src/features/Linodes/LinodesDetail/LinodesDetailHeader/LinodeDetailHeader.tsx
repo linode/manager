@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
@@ -9,10 +8,7 @@ import { ProductInformationBanner } from 'src/components/ProductInformationBanne
 import { TagDrawer } from 'src/components/TagCell/TagDrawer';
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
-import {
-  Action,
-  PowerActionsDialog,
-} from 'src/features/Linodes/PowerActionsDialogOrDrawer';
+import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
@@ -39,6 +35,20 @@ import { MutationNotification } from './MutationNotification';
 import Notifications from './Notifications';
 import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
+import type { BooleanString } from 'src/features/Linodes/types';
+import type { BaseQueryParams } from 'src/utilities/queryParams';
+
+interface QueryParams extends BaseQueryParams {
+  delete: BooleanString;
+  migrate: BooleanString;
+  rebuild: BooleanString;
+  rescue: BooleanString;
+  resize: BooleanString;
+  upgrade: BooleanString;
+}
+
 const LinodeDetailHeader = () => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
   // now show their content in modals instead. The logic below facilitates handling
@@ -46,7 +56,9 @@ const LinodeDetailHeader = () => {
   // logic changes the URL) to determine if a modal should be open when this component
   // is first rendered.
   const location = useLocation();
-  const queryParams = getQueryParamsFromQueryString(location.search);
+  const queryParams = getQueryParamsFromQueryString<QueryParams>(
+    location.search
+  );
 
   const match = useRouteMatch<{ linodeId: string; subpath: string }>({
     path: '/linodes/:linodeId/:subpath?',
