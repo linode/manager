@@ -150,7 +150,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         }}
       >
         <Typography variant="h3">IP Addresses</Typography>
-        <Stack direction="row" spacing={0.5}>
+        <Stack direction="row" spacing={1}>
           <Button
             buttonType="secondary"
             disabled={isLinodesGrantReadOnly}
@@ -162,7 +162,6 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
             buttonType="secondary"
             disabled={isLinodesGrantReadOnly}
             onClick={() => setIsShareDialogOpen(true)}
-            style={{ marginRight: 16 }}
           >
             IP Sharing
           </Button>
@@ -182,24 +181,20 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
             <Table aria-label="IPv4 Addresses" id={ipv4TableID}>
               <TableHead>
                 <TableRow>
-                  <TableCell style={{ width: '15%' }}>Address</TableCell>
+                  <TableCell sx={{ width: '15%' }}>Address</TableCell>
                   <TableSortCell
                     active={orderBy === 'type'}
                     direction={order}
                     handleClick={handleOrderChange}
                     label="type"
-                    style={{ width: '10%' }}
+                    sx={{ width: '10%' }}
                   >
                     Type
                   </TableSortCell>
-                  <TableCell style={{ width: '10%' }}>
-                    Default Gateway
-                  </TableCell>
-                  <TableCell style={{ width: '10%' }}>Subnet Mask</TableCell>
-                  <TableCell style={{ borderRight: 'none', width: '20%' }}>
-                    Reverse DNS
-                  </TableCell>
-                  <TableCell style={{ borderLeft: 'none', width: '20%' }} />
+                  <TableCell sx={{ width: '10%' }}>Default Gateway</TableCell>
+                  <TableCell sx={{ width: '10%' }}>Subnet Mask</TableCell>
+                  <TableCell sx={{ width: '20%' }}>Reverse DNS</TableCell>
+                  <TableCell sx={{ width: '20%' }} />
                 </TableRow>
               </TableHead>
               <TableBody>
