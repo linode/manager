@@ -240,6 +240,9 @@ const ContactInformation = (props: Props) => {
                 {invalidTaxId && (
                   <TooltipIcon
                     sxTooltipIcon={{
+                      '& > svg': {
+                        fontSize: '18px',
+                      },
                       paddingBottom: 0,
                       paddingTop: 0,
                     }}
