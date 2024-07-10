@@ -276,24 +276,11 @@ describe('longview', () => {
    */
 
   it('can rename a Longview client on a Linode', () => {
-    const client: LongviewClient = longviewClientFactory.build({
-      api_key: '01AE82DD-6F99-44F6-95781512B64FFBC3',
-      apps: longviewAppsFactory.build(),
-      created: new Date().toISOString(),
-      id: 338283,
-      install_code: '748632FC-E92B-491F-A29D44019039017C',
-      label: randomLabel(),
-      updated: new Date().toISOString(),
-    });
+    const client: LongviewClient = longviewClientFactory.build();
 
     const newClient: LongviewClient = longviewClientFactory.build({
-      api_key: '01AE82DD-6F99-44F6-95781512B64FFBC3',
-      apps: longviewAppsFactory.build(),
-      created: new Date().toISOString(),
-      id: 338283,
-      install_code: '748632FC-E92B-491F-A29D44019039017C',
+      ...client,
       label: randomLabel(),
-      updated: new Date().toISOString(),
     });
 
     mockGetLongviewClients([client]).as('getLongviewClients');
@@ -348,15 +335,7 @@ describe('longview', () => {
    */
 
   it('can delete a Longview client on a Linode', () => {
-    const client: LongviewClient = longviewClientFactory.build({
-      api_key: '01AE82DD-6F99-44F6-95781512B64FFBC3',
-      apps: longviewAppsFactory.build(),
-      created: new Date().toISOString(),
-      id: 338283,
-      install_code: '748632FC-E92B-491F-A29D44019039017C',
-      label: 'longview-client-longview338283',
-      updated: new Date().toISOString(),
-    });
+    const client: LongviewClient = longviewClientFactory.build();
     const deleteWarnMessage =
       'Are you sure you want to delete this Longview Client?';
 
