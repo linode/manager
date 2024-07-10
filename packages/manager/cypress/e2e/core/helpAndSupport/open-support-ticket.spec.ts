@@ -422,8 +422,12 @@ describe('help & support', () => {
       .click();
     cy.wait('@createLinode');
 
-    cy.get('[data-qa-error="true"]').first().scrollIntoView();
-    cy.contains(ACCOUNT_THING_LIMIT_ERROR);
+    cy.get('[data-qa-error="true"]')
+      .first()
+      .scrollIntoView()
+      .within(() => {
+        cy.contains(ACCOUNT_THING_LIMIT_ERROR);
+      });
 
     // Navigate to the account limit ticket form.
     cy.findByText('contact Support').should('be.visible').click();

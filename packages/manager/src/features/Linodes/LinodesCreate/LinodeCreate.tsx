@@ -521,7 +521,7 @@ export class LinodeCreate extends React.PureComponent<
             <Notice spacingTop={8} text={hasErrorFor.none} variant="error" />
           )}
           {generalError && (
-            <Notice spacingTop={8}>
+            <Notice spacingTop={8} variant="error">
               <ErrorMessage entityType="linode_id" message={generalError} />
             </Notice>
           )}
