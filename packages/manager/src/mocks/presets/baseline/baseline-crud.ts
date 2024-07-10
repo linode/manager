@@ -5,6 +5,12 @@
 import { getEvents, updateEvents } from 'src/mocks/handlers/event-handlers';
 import { createLinodes, getLinodes } from 'src/mocks/handlers/linode-handlers';
 import {
+  createPlacementGroup,
+  deletePlacementGroup,
+  getPlacementGroups,
+  updatePlacementGroup,
+} from 'src/mocks/handlers/placementGroup-handlers';
+import {
   createVolumes,
   deleteVolumes,
   getVolumes,
@@ -19,6 +25,12 @@ export const baselineCrudPreset: MockPreset = {
     // Linode CRUD handlers.
     getLinodes,
     createLinodes,
+
+    // Placement Group CRUD handlers.
+    getPlacementGroups,
+    createPlacementGroup,
+    updatePlacementGroup,
+    deletePlacementGroup,
 
     // Volume CRUD handlers.
     getVolumes,

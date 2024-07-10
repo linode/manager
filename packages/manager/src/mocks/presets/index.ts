@@ -11,6 +11,7 @@ import { managedEnabledPreset } from './extra/account/managed-enabled';
 import { parentAccountPreset } from './extra/account/parent-account';
 import { regionsPreset } from './extra/environment/regions';
 import { linodeCrudPreset } from './extra/linodes/linodes-crud';
+import { placementGroupsCrudPreset } from './extra/placementGroups/placementGroups-crud';
 import { volumeCrudPreset } from './extra/volumes/volumes-crud';
 
 import type { MockPreset } from '../types';
@@ -36,6 +37,7 @@ export const extraMockPresets: MockPreset[] = [
   parentAccountPreset,
   childAccountPreset,
   linodeCrudPreset,
+  placementGroupsCrudPreset,
   volumeCrudPreset,
   regionsPreset,
 ];

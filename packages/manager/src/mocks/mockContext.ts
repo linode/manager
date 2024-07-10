@@ -29,6 +29,7 @@ export const makeMockContext = (): MockContext => {
     linodeConfigs: [],
     linodes: [],
     notificationQueue: [],
+    placementGroups: [],
     regionAvailability: [],
     regions: [],
     volumes: [],
