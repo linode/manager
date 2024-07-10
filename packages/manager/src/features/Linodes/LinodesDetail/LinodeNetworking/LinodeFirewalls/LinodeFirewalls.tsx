@@ -1,8 +1,7 @@
-import { Firewall, FirewallDevice } from '@linode/api-v4';
 import { Stack } from '@mui/material';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
+import { Paper } from 'src/components/Paper';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -16,6 +15,8 @@ import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Device
 import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 
 import { LinodeFirewallsRow } from './LinodeFirewallsRow';
+
+import type { Firewall, FirewallDevice } from '@linode/api-v4';
 
 interface LinodeFirewallsProps {
   linodeID: number;
@@ -73,16 +74,11 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
 
   return (
     <Stack>
-      <Box
-        bgcolor={(theme) => theme.palette.background.paper}
-        display="flex"
-        px={2}
-        py={1.25}
-      >
+      <Paper sx={{ display: 'flex', px: 2, py: 1.25 }}>
         <Typography data-testid="linode-firewalls-table-header" variant="h3">
           Firewalls
         </Typography>
-      </Box>
+      </Paper>
       <Table>
         <TableHead>
           <TableRow>

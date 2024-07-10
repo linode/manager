@@ -8,6 +8,7 @@ import { Hidden } from 'src/components/Hidden';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -106,14 +107,15 @@ export const LinodeDisks = () => {
 
   return (
     <Box>
-      <Box
-        alignItems="center"
-        bgcolor={(theme) => theme.palette.background.paper}
-        display="flex"
-        justifyContent="space-between"
-        pl={2}
-        pr={0.5}
-        py={0.5}
+      <Paper
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+          pl: 2,
+          pr: 0.5,
+          py: 0.5,
+        }}
       >
         <Typography ref={disksHeaderRef} variant="h3">
           Disks
@@ -135,7 +137,7 @@ export const LinodeDisks = () => {
             Add a Disk
           </Button>
         </Stack>
-      </Box>
+      </Paper>
       <OrderBy
         data={disks ?? []}
         order={'asc'}

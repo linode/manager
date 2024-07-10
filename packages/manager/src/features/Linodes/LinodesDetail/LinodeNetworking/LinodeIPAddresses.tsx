@@ -5,6 +5,7 @@ import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import OrderBy from 'src/components/OrderBy';
+import { Paper } from 'src/components/Paper';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Stack } from 'src/components/Stack';
 import { Table } from 'src/components/Table';
@@ -137,15 +138,16 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
 
   return (
     <Box>
-      <Box
-        alignItems="center"
-        bgcolor={(theme) => theme.palette.background.paper}
-        display="flex"
-        flexWrap="wrap"
-        justifyContent="space-between"
-        pl={2}
-        pr={0.5}
-        py={0.5}
+      <Paper
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          pl: 2,
+          pr: 0.5,
+          py: 0.5,
+        }}
       >
         <Typography variant="h3">IP Addresses</Typography>
         <Stack direction="row" spacing={0.5}>
@@ -172,7 +174,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
             Add an IP Address
           </Button>
         </Stack>
-      </Box>
+      </Paper>
       {/* @todo: It'd be nice if we could always sort by public -> private. */}
       <OrderBy data={ipDisplay} order="asc" orderBy="type">
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {

@@ -5,6 +5,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Paper } from 'src/components/Paper';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -165,14 +166,15 @@ export const LinodeVolumes = () => {
 
   return (
     <Box>
-      <Box
-        alignItems="center"
-        bgcolor={(theme) => theme.palette.background.paper}
-        display="flex"
-        justifyContent="space-between"
-        pl={2}
-        pr={0.5}
-        py={0.5}
+      <Paper
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+          pl: 2,
+          pr: 0.5,
+          py: 0.5,
+        }}
       >
         <Typography variant="h3">Volumes</Typography>
         <Button
@@ -182,7 +184,7 @@ export const LinodeVolumes = () => {
         >
           Create Volume
         </Button>
-      </Box>
+      </Paper>
       <Table>
         <TableHead>
           <TableRow>
