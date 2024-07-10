@@ -1,20 +1,20 @@
 import { baseRequest } from '@linode/api-v4/lib/request';
-import { APIError } from '@linode/api-v4/lib/types';
 import { AxiosHeaders } from 'axios';
 import * as React from 'react';
 
 import { MigrateError } from 'src/components/MigrateError';
 import { VerificationError } from 'src/components/VerificationError';
-import { API_ROOT, APP_ROOT, CLIENT_ID, DEFAULT_ERROR_MESSAGE, LOGIN_ROOT } from 'src/constants';
+import { API_ROOT, APP_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 import { interceptErrors } from 'src/utilities/interceptAPIError';
 
 import { SupportError } from './components/SupportError';
+import { LOGIN_URL, SCOPE, clientID } from './OAuth';
 import { getEnvLocalStorageOverrides } from './utilities/storage';
 
 import type { ApplicationStore } from './store';
+import type { APIError } from '@linode/api-v4/lib/types';
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { LOGIN_URL, REDIRECT_URL, SCOPE, clientID, loginRoot } from './OAuth';
 
 const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
   response
