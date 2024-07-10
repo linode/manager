@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { MigrateError } from 'src/components/MigrateError';
 import { VerificationError } from 'src/components/VerificationError';
-import { API_ROOT, CLIENT_ID, DEFAULT_ERROR_MESSAGE, LOGIN_ROOT } from 'src/constants';
+import { API_ROOT, APP_ROOT, CLIENT_ID, DEFAULT_ERROR_MESSAGE, LOGIN_ROOT } from 'src/constants';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 import { interceptErrors } from 'src/utilities/interceptAPIError';
 
@@ -34,8 +34,9 @@ export const handleError = (
   store: ApplicationStore
 ) => {
   if (error.response && error.response.status === 401) {
+    const redirect_uri = `${APP_ROOT}/oauth/callback?returnTo=${window.location.href}`;
     window.location.href = encodeURI(
-      `${loginRoot}?response_type=token&client_id=${clientID}&state=xyz&redirect_uri=${REDIRECT_URL}&scope=${SCOPE}`
+      `${LOGIN_URL}?response_type=token&client_id=${clientID}&state=xyz&redirect_uri=${redirect_uri}&scope=${SCOPE}`
     );
   }
 
