@@ -1,4 +1,3 @@
-import { Config } from '@linode/api-v4/lib/linodes';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -12,10 +11,11 @@ import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import {
   useBootLinodeMutation,
-  useLinodeQuery,
   useRebootLinodeMutation,
   useShutdownLinodeMutation,
 } from 'src/queries/linodes/linodes';
+
+import type { Config } from '@linode/api-v4/lib/linodes';
 
 export type Action = 'Power Off' | 'Power On' | 'Reboot';
 
@@ -23,6 +23,7 @@ interface Props {
   action: Action;
   isOpen: boolean;
   linodeId: number | undefined;
+  linodeLabel?: string | undefined;
   onClose: () => void;
 }
 
@@ -38,13 +39,8 @@ export const selectDefaultConfig = (configs?: Config[]) =>
   configs?.length === 1 ? configs[0].id : undefined;
 
 export const PowerActionsDialog = (props: Props) => {
-  const { action, isOpen, linodeId, onClose } = props;
+  const { action, isOpen, linodeId, linodeLabel, onClose } = props;
   const theme = useTheme();
-
-  const { data: linode } = useLinodeQuery(
-    linodeId ?? -1,
-    linodeId !== undefined && isOpen
-  );
 
   const {
     data: configs,
@@ -148,7 +144,7 @@ export const PowerActionsDialog = (props: Props) => {
       error={error?.[0].reason}
       onClose={onClose}
       open={isOpen}
-      title={`${action} Linode ${linode?.label ?? ''}?`}
+      title={`${action} Linode ${linodeLabel ?? ''}?`}
     >
       {isPowerOnAction ? (
         <Typography
