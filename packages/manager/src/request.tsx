@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { MigrateError } from 'src/components/MigrateError';
 import { VerificationError } from 'src/components/VerificationError';
-import { API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
+import { API_ROOT, CLIENT_ID, DEFAULT_ERROR_MESSAGE, LOGIN_ROOT } from 'src/constants';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 import { interceptErrors } from 'src/utilities/interceptAPIError';
 
@@ -14,6 +14,7 @@ import { getEnvLocalStorageOverrides } from './utilities/storage';
 
 import type { ApplicationStore } from './store';
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { LOGIN_URL, REDIRECT_URL, SCOPE, clientID, loginRoot } from './OAuth';
 
 const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
   response
@@ -33,7 +34,9 @@ export const handleError = (
   store: ApplicationStore
 ) => {
   if (error.response && error.response.status === 401) {
-    window.location.href = 'https://login.linode.com/logout';
+    window.location.href = encodeURI(
+      `${loginRoot}?response_type=token&client_id=${clientID}&state=xyz&redirect_uri=${REDIRECT_URL}&scope=${SCOPE}`
+    );
   }
 
   const config = error.response?.config;
@@ -173,14 +176,9 @@ export const setupInterceptors = (store: ApplicationStore) => {
 
     // If headers are explicitly passed to our endpoint via
     // setHeaders(), we don't want this overridden.
-    const hasExplicitAuthToken = headers.hasAuthorization();
-
-    const bearer = hasExplicitAuthToken
-      ? headers.getAuthorization()
-      : localStorage.getItem('authentication/token');
-
-    headers.setAuthorization(bearer);
-
+    if (!headers.hasAuthorization()) {
+      headers.setAuthorization(localStorage.getItem('authentication/token'));
+    }
     return {
       ...config,
       headers,

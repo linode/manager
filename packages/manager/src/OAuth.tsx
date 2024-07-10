@@ -1,12 +1,15 @@
-import { setToken } from '@linode/api-v4';
 import { useEffect, useState } from 'react';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { SplashScreen } from './components/SplashScreen';
-import { CLIENT_ID } from './constants';
+import { CLIENT_ID, LOGIN_ROOT } from './constants';
+import { getEnvLocalStorageOverrides } from './utilities/storage';
 
-export const LOGIN_URL = 'https://login.linode.com/oauth/authorize';
+const localStorageOverrides = getEnvLocalStorageOverrides();
+export const clientID = localStorageOverrides?.clientID ?? CLIENT_ID;
+export const loginRoot = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
+
+export const LOGIN_URL = `${loginRoot}/oauth/authorize`;
 
 export const REDIRECT_URL = `http://localhost:3000/oauth/callback`;
 
@@ -35,34 +38,31 @@ export function OAuth() {
 
     // Make app reauth when token is set to expire
     setTimeout(() => {
-      localStorage.removeItem('expires');
-      localStorage.removeItem('token');
+      localStorage.removeItem('authentication/expire');
+      localStorage.removeItem('authentication/token');
       window.location.href = encodeURI(
-        `${LOGIN_URL}?response_type=token&client_id=${CLIENT_ID}&state=xyz&redirect_uri=${REDIRECT_URL}&scope=${SCOPE}`
+        `${LOGIN_URL}?response_type=token&client_id=${clientID}&state=xyz&redirect_uri=${REDIRECT_URL}&scope=${SCOPE}`
       );
     }, expiresIn);
 
     // Store token and expire time in localstorage
-    localStorage.setItem('token', token);
-    localStorage.setItem('expires', String(expiresAt));
-
-    // Set @linode/api-v4 token for use
-    setToken(token);
+    localStorage.setItem('authentication/token', `Bearer ${token}`);
+    localStorage.setItem('authentication/expire', String(expiresAt));
 
     // Go home
     history.replace('/');
   }, []);
 
-  return <SplashScreen />;
+  return <div>loading</div>;
 }
 
 export function useOAuth() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('authentication/token');
     const hasToken = token !== null;
-    const expiresAt = Number(localStorage.getItem('expires'));
+    const expiresAt = Number(localStorage.getItem('authentication/expire'));
 
     // If we initialize the app with the /callback url, we need to render routes but do no processing.
     if (location.pathname.includes('/callback')) {
@@ -75,22 +75,21 @@ export function useOAuth() {
       // If we have an auth token that is not expired...
       // Make app redirect to auth when token expires
       setTimeout(() => {
-        localStorage.removeItem('expires');
-        localStorage.removeItem('token');
+        localStorage.removeItem('authentication/expire');
+        localStorage.removeItem('authentication/token');
         window.location.href = encodeURI(
-          `${LOGIN_URL}?response_type=token&client_id=${CLIENT_ID}&state=xyz&redirect_uri=${REDIRECT_URL}&scope=${SCOPE}`
+          `${LOGIN_URL}?response_type=token&client_id=${clientID}&state=xyz&redirect_uri=${REDIRECT_URL}&scope=${SCOPE}`
         );
       }, expiresAt - Date.now());
 
       // Set the @linode/api-v4 token and render the app
-      setToken(token);
       setIsLoading(false);
       return;
     }
 
     // if we have mde it here, we need to authenticate
     window.location.href = encodeURI(
-      `${LOGIN_URL}?response_type=token&client_id=${CLIENT_ID}&state=xyz&redirect_uri=${REDIRECT_URL}&scope=${SCOPE}`
+      `${LOGIN_URL}?response_type=token&client_id=${clientID}&state=xyz&redirect_uri=${REDIRECT_URL}&scope=${SCOPE}`
     );
   }, []);
 
