@@ -83,7 +83,7 @@ const ContactInformation = (props: Props) => {
 
   const isChildUser = Boolean(profile?.user_type === 'child');
 
-  const invalidTaxId = notifications?.find((notification) => {
+  const invalidTaxIdNotification = notifications?.find((notification) => {
     return notification.type === 'tax_id_invalid';
   });
 
@@ -237,7 +237,7 @@ const ContactInformation = (props: Props) => {
                 >
                   <strong>Tax ID</strong> {taxId}
                 </StyledTypography>
-                {invalidTaxId && (
+                {invalidTaxIdNotification && (
                   <TooltipIcon
                     sxTooltipIcon={{
                       '& > svg': {
@@ -247,7 +247,7 @@ const ContactInformation = (props: Props) => {
                       paddingTop: 0,
                     }}
                     status="warning"
-                    text={invalidTaxId.label}
+                    text={invalidTaxIdNotification.label}
                   />
                 )}
               </Box>
