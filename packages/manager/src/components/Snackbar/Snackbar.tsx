@@ -13,6 +13,9 @@ const StyledMaterialDesignContent = styled(MaterialDesignContent)(
     '&.notistack-MuiContent': {
       color: theme.notificationToast.default.color,
       flexWrap: 'unset',
+      [theme.breakpoints.up('md')]: {
+        maxWidth: '400px',
+      },
     },
     '&.notistack-MuiContent-default': {
       backgroundColor: theme.notificationToast.default.backgroundColor,
