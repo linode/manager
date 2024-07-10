@@ -38,7 +38,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     paddingRight: 8,
   },
   deletePoolBtn: {
-    marginBottom: 3,
     paddingRight: 8,
   },
 }));
