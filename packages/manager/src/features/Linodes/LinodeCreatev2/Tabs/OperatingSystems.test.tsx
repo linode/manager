@@ -2,12 +2,12 @@ import React from 'react';
 
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
-import { Distributions } from './Distributions';
+import { OperatingSystems } from './OperatingSystems';
 
-describe('Distributions', () => {
+describe('OperatingSystems', () => {
   it('renders a header', () => {
     const { getByText } = renderWithThemeAndHookFormContext({
-      component: <Distributions />,
+      component: <OperatingSystems />,
     });
 
     const header = getByText('Choose an OS');
@@ -21,7 +21,7 @@ describe('Distributions', () => {
       getByLabelText,
       getByPlaceholderText,
     } = renderWithThemeAndHookFormContext({
-      component: <Distributions />,
+      component: <OperatingSystems />,
     });
 
     expect(getByLabelText('Images')).toBeVisible();

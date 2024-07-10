@@ -1,4 +1,3 @@
-import { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -15,6 +14,7 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { Autocomplete } from '../Autocomplete/Autocomplete';
 import { LinkButton } from '../LinkButton';
 
+import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
 interface Props {
@@ -45,7 +45,7 @@ export const SelectFirewallPanel = (props: Props) => {
       sendLinodeCreateFormStepEvent({
         action: 'click',
         category: 'button',
-        createType: (queryParams.type as LinodeCreateType) ?? 'Distributions',
+        createType: (queryParams.type as LinodeCreateType) ?? 'OS',
         formStepName: 'Firewall Panel',
         label: 'Create Firewall',
         version: 'v1',
@@ -91,8 +91,7 @@ export const SelectFirewallPanel = (props: Props) => {
             sendLinodeCreateFormStepEvent({
               action: 'click',
               category: 'select',
-              createType:
-                (queryParams.type as LinodeCreateType) ?? 'Distributions',
+              createType: (queryParams.type as LinodeCreateType) ?? 'OS',
               formStepName: 'Firewall Panel',
               label: 'Assign Firewall',
               version: 'v1',

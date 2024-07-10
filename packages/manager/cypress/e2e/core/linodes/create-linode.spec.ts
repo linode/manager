@@ -78,7 +78,7 @@ describe('Create Linode', () => {
           interceptCreateLinode().as('createLinode');
           cy.visitWithLogin('/linodes/create');
 
-          // Set Linode label, distribution, plan type, password, etc.
+          // Set Linode label, OS, plan type, password, etc.
           linodeCreatePage.setLabel(linodeLabel);
           linodeCreatePage.selectImage('Debian 11');
           linodeCreatePage.selectRegionById(linodeRegion.id);

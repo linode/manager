@@ -113,7 +113,7 @@ export const Region = () => {
   const hideDistributedRegions =
     !flags.gecko2?.enabled ||
     flags.gecko2?.ga ||
-    !isDistributedRegionSupported(params.type ?? 'Distributions');
+    !isDistributedRegionSupported(params.type ?? 'OS');
 
   const showDistributedRegionIconHelperText =
     !hideDistributedRegions &&

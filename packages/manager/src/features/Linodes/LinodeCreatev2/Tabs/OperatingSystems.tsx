@@ -8,7 +8,7 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
-export const Distributions = () => {
+export const OperatingSystems = () => {
   const { field, fieldState } = useController<CreateLinodeRequest>({
     name: 'image',
   });

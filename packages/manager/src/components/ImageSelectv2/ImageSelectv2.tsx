@@ -3,7 +3,7 @@ import React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useAllImagesQuery } from 'src/queries/images';
 
-import { DistributionIcon } from '../DistributionIcon';
+import { OSIcon } from '../OSIcon';
 import { ImageOptionv2 } from './ImageOptionv2';
 import {
   getAPIFilterForImageSelect,
@@ -38,7 +38,7 @@ interface Props
   value: null | string | undefined;
   /**
    * Determines what images are fetched and shown
-   * - Public - Includes all public Linux distributions
+   * - Public - Includes all public Linux OSs
    * - Private - Includes images the customer captured or uploaded
    * - All - shows all images (no API filtering)
    */
@@ -81,10 +81,10 @@ export const ImageSelectv2 = (props: Props) => {
       textFieldProps={{
         InputProps: {
           startAdornment: value && (
-            <DistributionIcon
-              distribution={value.vendor}
+            <OSIcon
               fontSize="24px"
               height="24px"
+              os={value.vendor}
               pl={1}
               pr={2}
             />

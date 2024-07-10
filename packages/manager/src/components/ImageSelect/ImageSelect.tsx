@@ -16,7 +16,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
 import { Box } from '../Box';
-import { distroIcons } from '../DistributionIcon';
+import { OS_ICONS } from '../OSIcon';
 import { Stack } from '../Stack';
 
 import type { Image } from '@linode/api-v4/lib/images';
@@ -115,7 +115,7 @@ export const imagesToGroupedItems = (images: Image[]) => {
                 acc.push({
                   className: vendor
                     ? // Use Tux as a fallback.
-                      `fl-${distroIcons[vendor] ?? 'tux'}`
+                      `fl-${OS_ICONS[vendor] ?? 'tux'}`
                     : `fl-tux`,
                   created,
                   isCloudInitCompatible: capabilities?.includes('cloud-init'),

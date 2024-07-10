@@ -224,8 +224,7 @@ export const CreateFirewallDrawer = React.memo(
           sendLinodeCreateFormStepEvent({
             action: 'click',
             category: 'link',
-            createType:
-              (queryParams.type as LinodeCreateType) ?? 'Distributions',
+            createType: (queryParams.type as LinodeCreateType) ?? 'OS',
             formStepName: 'Create Firewall Drawer',
             label: 'Learn more',
             version: 'v1',
@@ -379,8 +378,7 @@ export const CreateFirewallDrawer = React.memo(
                 sendLinodeCreateFormStepEvent({
                   action: 'click',
                   category: 'button',
-                  createType:
-                    (queryParams.type as LinodeCreateType) ?? 'Distributions',
+                  createType: (queryParams.type as LinodeCreateType) ?? 'OS',
                   formStepName: 'Create Firewall Drawer',
                   label: 'Create Firewall',
                   version: 'v1',

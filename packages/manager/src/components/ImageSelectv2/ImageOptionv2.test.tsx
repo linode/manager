@@ -15,7 +15,7 @@ describe('ImageOptionv2', () => {
 
     expect(getByText(image.label)).toBeVisible();
   });
-  it('renders a distribution icon', () => {
+  it('renders an OS icon', () => {
     const image = imageFactory.build();
 
     const { getByTestId } = renderWithTheme(

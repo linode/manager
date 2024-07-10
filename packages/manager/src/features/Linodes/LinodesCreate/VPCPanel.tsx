@@ -152,7 +152,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
             sendLinodeCreateFormStepEvent({
               action: 'click',
               category: 'link',
-              createType: (params.type as LinodeCreateType) ?? 'Distributions',
+              createType: (params.type as LinodeCreateType) ?? 'OS',
               formStepName: 'VPC Panel',
               label: 'Learn more',
               version: 'v1',
@@ -196,8 +196,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
               sendLinodeCreateFormStepEvent({
                 action: 'click',
                 category: 'select',
-                createType:
-                  (params.type as LinodeCreateType) ?? 'Distributions',
+                createType: (params.type as LinodeCreateType) ?? 'OS',
                 formStepName: 'VPC Panel',
                 label: 'Assign VPC',
                 version: 'v1',
@@ -236,8 +235,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                     sendLinodeCreateFormStepEvent({
                       action: 'click',
                       category: 'button',
-                      createType:
-                        (params.type as LinodeCreateType) ?? 'Distributions',
+                      createType: (params.type as LinodeCreateType) ?? 'OS',
                       formStepName: 'VPC Panel',
                       label: 'Create VPC',
                       version: 'v1',
