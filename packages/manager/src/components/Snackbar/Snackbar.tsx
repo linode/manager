@@ -2,7 +2,6 @@ import { styled } from '@mui/material/styles';
 import { MaterialDesignContent } from 'notistack';
 import { SnackbarProvider } from 'notistack';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { CloseSnackbar } from './CloseSnackbar';
 
@@ -30,34 +29,7 @@ const StyledMaterialDesignContent = styled(MaterialDesignContent)(
   })
 );
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    '& .notistack-MuiContent': {
-      color: theme.notificationToast.default.color,
-      fontSize: '0.875rem',
-    },
-    '& .notistack-MuiContent-default': {
-      backgroundColor: theme.notificationToast.default.backgroundColor,
-      borderLeft: theme.notificationToast.default.borderLeft,
-    },
-    [theme.breakpoints.down('md')]: {
-      '& .SnackbarItem-contentRoot': {
-        flexWrap: 'nowrap',
-      },
-      '& .SnackbarItem-message': {
-        display: 'unset',
-      },
-    },
-    [theme.breakpoints.down('sm')]: {
-      '& .SnackbarItem-action': {
-        paddingLeft: 0,
-      },
-    },
-  },
-}));
-
 export const Snackbar = (props: SnackbarProviderProps) => {
-  const { classes } = useStyles();
   /**
    * This pattern is taken from the Notistack docs:
    * https://iamhosseindhv.com/notistack/demos#action-for-all-snackbars
@@ -87,9 +59,6 @@ export const Snackbar = (props: SnackbarProviderProps) => {
           text="Dismiss Notification"
         />
       )}
-      classes={{
-        root: classes.root,
-      }}
     >
       {children}
     </SnackbarProvider>

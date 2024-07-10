@@ -1,10 +1,12 @@
-import { Event, EventAction } from '@linode/api-v4/lib/account/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
+import { Typography } from 'src/components/Typography';
 import { sendLinodeDiskEvent } from 'src/utilities/analytics/customEventAnalytics';
+
+import type { Event, EventAction } from '@linode/api-v4';
 
 export const getLabel = (event: Event) => event.entity?.label ?? '';
 export const getSecondaryLabel = (event: Event) =>
@@ -174,26 +176,28 @@ export const useToastNotifications = () => {
           ? toastInfo.failure(event)
           : toastInfo.failure;
 
-      const hasSupportLink =
-        failureMessage?.includes('contact Support') ?? false;
+      if (failureMessage) {
+        const hasSupportLink =
+          failureMessage?.includes('contact Support') ?? false;
 
-      const formattedFailureMessage = (
-        <>
-          {failureMessage?.replace(/ contact Support/i, '') ?? failureMessage}
-          {hasSupportLink ? (
-            <>
-              &nbsp;
-              <SupportLink text="contact Support" title={failureMessage} />.
-            </>
-          ) : null}
-          {toastInfo.link ? <>&nbsp;{toastInfo.link}</> : null}
-        </>
-      );
+        const formattedFailureMessage = (
+          <Typography>
+            {failureMessage?.replace(/ contact Support/i, '') ?? failureMessage}
+            {hasSupportLink ? (
+              <>
+                &nbsp;
+                <SupportLink text="contact Support" title={failureMessage} />.
+              </>
+            ) : null}
+            {toastInfo.link ? <>&nbsp;{toastInfo.link}</> : null}
+          </Typography>
+        );
 
-      enqueueSnackbar(formattedFailureMessage, {
-        persist: toastInfo.persistFailureMessage,
-        variant: 'error',
-      });
+        enqueueSnackbar(formattedFailureMessage, {
+          persist: toastInfo.persistFailureMessage,
+          variant: 'error',
+        });
+      }
     }
   };
 
