@@ -1,5 +1,4 @@
 /* eslint-disable scanjs-rules/call_addEventListener */
-import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Terminal } from 'xterm';
 
@@ -9,11 +8,12 @@ import { StyledCircleProgress } from 'src/features/Lish/Lish';
 
 import { resizeViewPort } from './lishUtils';
 
+import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
+import type { Linode } from '@linode/api-v4/lib/linodes';
+
 interface Props {
   linode: Linode;
   refreshToken: () => Promise<void>;
-  weblish_url: string;
-  ws_protocols: string[];
 }
 
 interface State {
@@ -21,25 +21,42 @@ interface State {
   renderingLish: boolean;
 }
 
-export class Weblish extends React.Component<Props, State> {
+type CombinedProps = Props &
+  Pick<LinodeLishData, 'weblish_url' | 'ws_protocols'>;
+
+export class Weblish extends React.Component<CombinedProps, State> {
+  mounted: boolean = false;
+
+  socket: WebSocket;
+  state: State = {
+    error: '',
+    renderingLish: true,
+  };
+
+  terminal: Terminal;
+
   componentDidMount() {
     this.mounted = true;
     resizeViewPort(1080, 730);
     this.connect();
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: CombinedProps) {
     /*
      * If we have a new token, refresh the webosocket connection
      * and console with the new token
      */
-    if (this.props.weblish_url !== prevProps.weblish_url ||
-        JSON.stringify(this.props.ws_protocols) !== JSON.stringify(prevProps.ws_protocols)) {
+    if (
+      this.props.weblish_url !== prevProps.weblish_url ||
+      JSON.stringify(this.props.ws_protocols) !==
+        JSON.stringify(prevProps.ws_protocols)
+    ) {
       this.socket.close();
       this.terminal.dispose();
       this.connect();
     }
   }
+
   componentWillUnmount() {
     this.mounted = false;
   }
@@ -157,17 +174,6 @@ export class Weblish extends React.Component<Props, State> {
     const linodeLabel = group ? `${group}/${label}` : label;
     window.document.title = `${linodeLabel} - Linode Lish Console`;
   }
-
-  mounted: boolean = false;
-
-  socket: WebSocket;
-
-  state: State = {
-    error: '',
-    renderingLish: true,
-  };
-
-  terminal: Terminal;
 }
 
 export default Weblish;

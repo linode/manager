@@ -6,7 +6,6 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
-import { Tab } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useInitialRequests } from 'src/hooks/useInitialRequests';
@@ -19,6 +18,8 @@ import '../../assets/weblish/weblish.css';
 import '../../assets/weblish/xterm.css';
 import Glish from './Glish';
 import Weblish from './Weblish';
+
+import type { Tab } from 'src/components/Tabs/TabLinkList';
 
 const AUTH_POLLING_INTERVAL = 2000;
 
