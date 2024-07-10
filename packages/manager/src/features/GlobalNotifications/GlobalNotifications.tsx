@@ -7,6 +7,7 @@ import { switchAccountSessionContext } from 'src/context/switchAccountSessionCon
 import { SwitchAccountSessionDialog } from 'src/features/Account/SwitchAccounts/SwitchAccountSessionDialog';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { useFlags } from 'src/hooks/useFlags';
+import { usePreferences } from 'src/queries/profile/preferences';
 import { useProfile } from 'src/queries/profile/profile';
 import { useSecurityQuestions } from 'src/queries/profile/securityQuestions';
 
@@ -23,6 +24,7 @@ import { VerificationDetailsBanner } from './VerificationDetailsBanner';
 export const GlobalNotifications = () => {
   const flags = useFlags();
   const { data: profile } = useProfile();
+  const { isLoading: isPreferencesLoading } = usePreferences();
   const sessionContext = React.useContext(switchAccountSessionContext);
   const sessionExpirationContext = React.useContext(_sessionExpirationContext);
   const isChildUser = profile?.user_type === 'child';
@@ -53,7 +55,7 @@ export const GlobalNotifications = () => {
 
   return (
     <>
-      <DesignUpdateBanner />
+      <DesignUpdateBanner isLoading={isPreferencesLoading} />
       <EmailBounceNotificationSection />
       <RegionStatusBanner />
       <AbuseTicketBanner />

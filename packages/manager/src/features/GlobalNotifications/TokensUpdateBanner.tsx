@@ -5,11 +5,16 @@ import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 
-export const DesignUpdateBanner = () => {
+interface DesignUpdateBannerProps {
+  isLoading: boolean;
+}
+
+export const DesignUpdateBanner = (props: DesignUpdateBannerProps) => {
+  const { isLoading } = props;
   const flags = useFlags();
   const designUpdateFlag = flags.cloudManagerDesignUpdatesBanner;
 
-  if (!designUpdateFlag || !designUpdateFlag.enabled) {
+  if (isLoading || !designUpdateFlag?.enabled) {
     return null;
   }
   const { key, link } = designUpdateFlag;
