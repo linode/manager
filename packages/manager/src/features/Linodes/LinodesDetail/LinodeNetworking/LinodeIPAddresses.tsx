@@ -1,5 +1,7 @@
+import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -50,6 +52,9 @@ interface LinodeIPAddressesProps {
 
 export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const { linodeID } = props;
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { data: ips, error, isLoading } = useLinodeIPsQuery(linodeID);
   const { data: linode } = useLinodeQuery(linodeID);
@@ -150,29 +155,52 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         }}
       >
         <Typography variant="h3">IP Addresses</Typography>
-        <Stack direction="row" spacing={1}>
-          <Button
-            buttonType="secondary"
-            disabled={isLinodesGrantReadOnly}
-            onClick={() => setIsTransferDialogOpen(true)}
-          >
-            IP Transfer
-          </Button>
-          <Button
-            buttonType="secondary"
-            disabled={isLinodesGrantReadOnly}
-            onClick={() => setIsShareDialogOpen(true)}
-          >
-            IP Sharing
-          </Button>
-          <Button
-            buttonType="primary"
-            disabled={isLinodesGrantReadOnly}
-            onClick={() => setIsAddDrawerOpen(true)}
-          >
-            Add an IP Address
-          </Button>
-        </Stack>
+        {isSmallScreen ? (
+          <ActionMenu
+            actionsList={[
+              {
+                disabled: isLinodesGrantReadOnly,
+                onClick: () => setIsAddDrawerOpen(true),
+                title: 'Add an IP Address',
+              },
+              {
+                disabled: isLinodesGrantReadOnly,
+                onClick: () => setIsTransferDialogOpen(true),
+                title: 'IP Transfer',
+              },
+              {
+                disabled: isLinodesGrantReadOnly,
+                onClick: () => setIsShareDialogOpen(true),
+                title: 'IP Sharing',
+              },
+            ]}
+            ariaLabel="Linode IP Address Actions"
+          />
+        ) : (
+          <Stack direction="row" spacing={1}>
+            <Button
+              buttonType="secondary"
+              disabled={isLinodesGrantReadOnly}
+              onClick={() => setIsTransferDialogOpen(true)}
+            >
+              IP Transfer
+            </Button>
+            <Button
+              buttonType="secondary"
+              disabled={isLinodesGrantReadOnly}
+              onClick={() => setIsShareDialogOpen(true)}
+            >
+              IP Sharing
+            </Button>
+            <Button
+              buttonType="primary"
+              disabled={isLinodesGrantReadOnly}
+              onClick={() => setIsAddDrawerOpen(true)}
+            >
+              Add an IP Address
+            </Button>
+          </Stack>
+        )}
       </Paper>
       {/* @todo: It'd be nice if we could always sort by public -> private. */}
       <OrderBy data={ipDisplay} order="asc" orderBy="type">
