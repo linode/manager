@@ -22,7 +22,7 @@ describe('ImageOptionv2', () => {
       <ImageOptionv2 image={image} isSelected={false} listItemProps={{}} />
     );
 
-    expect(getByTestId('distro-icon')).toBeVisible();
+    expect(getByTestId('os-icon')).toBeVisible();
   });
   it('renders a metadata (cloud-init) icon if the flag is on and the image supports cloud-init', () => {
     const image = imageFactory.build({ capabilities: ['cloud-init'] });
