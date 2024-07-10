@@ -3,6 +3,7 @@ import type {
   Event,
   Linode,
   Notification,
+  PlacementGroup,
   Region,
   RegionAvailability,
   Volume,
@@ -16,6 +17,7 @@ export type MockPresetGroup =
   | 'Environment'
   | 'General'
   | 'Linodes'
+  | 'Placement Groups'
   | 'Volumes';
 
 export type MockHandlerGenerator = (mockContext: MockContext) => HttpHandler[];
@@ -54,10 +56,14 @@ export interface MockContext {
   linodes: Linode[];
 
   notificationQueue: Notification[];
+  // Placement Groups.
+  placementGroups: PlacementGroup[];
+
   regionAvailability: RegionAvailability[];
 
   // Environment.
   regions: Region[];
+
   // Volumes.
   volumes: Volume[];
 }
