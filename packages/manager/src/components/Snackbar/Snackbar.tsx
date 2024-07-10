@@ -11,7 +11,12 @@ import type { SnackbarProviderProps } from 'notistack';
 const StyledMaterialDesignContent = styled(MaterialDesignContent)(
   ({ theme }: { theme: Theme }) => ({
     '&.notistack-MuiContent': {
+      color: theme.notificationToast.default.color,
       flexWrap: 'unset',
+    },
+    '&.notistack-MuiContent-default': {
+      backgroundColor: theme.notificationToast.default.backgroundColor,
+      borderLeft: theme.notificationToast.default.borderLeft,
     },
     '&.notistack-MuiContent-error': {
       backgroundColor: theme.notificationToast.error.backgroundColor,
