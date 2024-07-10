@@ -51,6 +51,7 @@ export const Snackbar = (props: SnackbarProviderProps) => {
       ref={notistackRef}
       {...rest}
       Components={{
+        default: StyledMaterialDesignContent,
         error: StyledMaterialDesignContent,
         info: StyledMaterialDesignContent,
         success: StyledMaterialDesignContent,
