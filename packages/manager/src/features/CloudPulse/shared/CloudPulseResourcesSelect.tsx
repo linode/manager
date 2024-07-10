@@ -65,7 +65,7 @@ export const CloudPulseResourcesSelect = React.memo(
       <Autocomplete
         onChange={(_: any, resourceSelections: CloudPulseResources[]) => {
           updateGlobalFilterPreference({
-            [RESOURCES]: resourceSelections.map((resource: { id: any }) =>
+            [RESOURCES]: resourceSelections.map((resource: { id: string }) =>
               String(resource.id)
             ),
           });
@@ -74,7 +74,7 @@ export const CloudPulseResourcesSelect = React.memo(
         }}
         autoHighlight
         clearOnBlur
-        data-testid="Resource-select"
+        data-testid="resource-select"
         disabled={!props.region || !props.resourceType || isLoading}
         isOptionEqualToValue={(option, value) => option.id === value.id}
         label=""

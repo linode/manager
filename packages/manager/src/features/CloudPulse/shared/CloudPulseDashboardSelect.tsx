@@ -1,3 +1,4 @@
+import { Dashboard } from '@linode/api-v4';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -10,8 +11,6 @@ import {
   getUserPreferenceObject,
   updateGlobalFilterPreference,
 } from '../Utils/UserPreference';
-
-import type { Dashboard } from '@linode/api-v4';
 
 export interface CloudPulseDashboardSelectProps {
   handleDashboardChange: (

@@ -41,7 +41,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
         resourceType={undefined}
       />
     );
-    expect(getByTestId('Resource-select')).toBeInTheDocument();
+    expect(getByTestId('resource-select')).toBeInTheDocument();
     expect(getByPlaceholderText('Select Resources')).toBeInTheDocument();
   }),
     it('should render resources happy path', () => {

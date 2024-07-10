@@ -4,14 +4,14 @@ import * as React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 
 import { GlobalFilters } from '../Overview/GlobalFilters';
-import { loadUserPreferences } from '../Utils/UserPreference';
+import { useLoadUserPreferences } from '../Utils/UserPreference';
 
 import type { FiltersObject } from '../Overview/GlobalFilters';
 
 export const DashboardLanding = () => {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const onFilterChange = React.useCallback((_filters: FiltersObject) => {}, []);
-  const { isLoading } = loadUserPreferences();
+  const { isLoading } = useLoadUserPreferences();
 
   if (isLoading) {
     return <CircleProgress />;

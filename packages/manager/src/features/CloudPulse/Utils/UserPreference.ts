@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import {
   useMutatePreferences,
   usePreferences,
@@ -10,7 +9,7 @@ let userPreference: AclpConfig;
 let timerId: ReturnType<typeof setTimeout>;
 let mutateFn: any;
 
-export const loadUserPreferences = () => {
+export const useLoadUserPreferences = () => {
   const { data: preferences, isError, isLoading } = usePreferences();
 
   const { mutate } = useMutatePreferences();
@@ -33,7 +32,7 @@ export const getUserPreferenceObject = () => {
   return { ...userPreference };
 };
 
-const updateUserPreference = (updatedData: AclpConfig) => {
+const useUpdateUserPreference = (updatedData: AclpConfig) => {
   if (mutateFn) {
     mutateFn({ aclpPreference: updatedData });
   }
@@ -54,5 +53,5 @@ const debounce = (updatedData: AclpConfig) => {
     clearTimeout(timerId);
   }
 
-  timerId = setTimeout(() => updateUserPreference(updatedData), 500);
+  timerId = setTimeout(() => useUpdateUserPreference(updatedData), 500);
 };
