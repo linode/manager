@@ -8,7 +8,7 @@ import {
   getLinodeFirewalls,
   getLinodeIPs,
   getLinodeKernel,
-  getLinodeLishToken,
+  getLinodeLish,
   getLinodeStats,
   getLinodeStatsByDate,
   getLinodeTransfer,
@@ -56,6 +56,7 @@ import type {
   Kernel,
   Linode,
   LinodeCloneData,
+  LinodeLishData,
   MigrateLinodeRequest,
   Params,
   ResizeLinodePayload,
@@ -93,8 +94,8 @@ export const linodeQueries = createQueryKeys('linodes', {
         queryFn: () => getLinodeIPs(id),
         queryKey: null,
       },
-      lishToken: {
-        queryFn: () => getLinodeLishToken(id),
+      lish: {
+        queryFn: () => getLinodeLish(id),
         queryKey: null,
       },
       stats: {
@@ -211,9 +212,9 @@ export const useLinodeKernelQuery = (kernel: string) => {
   return useQuery<Kernel, APIError[]>(linodeQueries.kernel(kernel));
 };
 
-export const useLinodeLishTokenQuery = (id: number) => {
-  return useQuery<{ lish_token: string }, APIError[]>({
-    ...linodeQueries.linode(id)._ctx.lishToken,
+export const useLinodeLishQuery = (id: number) => {
+  return useQuery<LinodeLishData, APIError[]>({
+    ...linodeQueries.linode(id)._ctx.lish,
     staleTime: Infinity,
   });
 };
