@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { updateImageRegionsSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -32,8 +32,6 @@ export const ManageImageRegionsForm = (props: Props) => {
   const { data: regions } = useRegionsQuery();
   const { mutateAsync } = useUpdateImageRegionsMutation(image?.id ?? '');
 
-  const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
-
   const {
     formState: { errors, isDirty, isSubmitting },
     handleSubmit,
@@ -50,9 +48,11 @@ export const ManageImageRegionsForm = (props: Props) => {
     try {
       await mutateAsync(data);
 
-      enqueueSnackbar('Image regions successfully updated.', {
+      enqueueSnackbar(`${image?.label}'s regions successfully updated.`, {
         variant: 'success',
       });
+
+      onClose();
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
@@ -79,22 +79,20 @@ export const ManageImageRegionsForm = (props: Props) => {
         for details on managing your Linux system's disk space.
       </Typography>
       <RegionMultiSelect
-        onClose={() => {
-          setValue('regions', [...values.regions, ...selectedRegions], {
+        onChange={(regionIds) =>
+          setValue('regions', regionIds, {
             shouldDirty: true,
             shouldValidate: true,
-          });
-          setSelectedRegions([]);
-        }}
-        regions={(regions ?? []).filter(
-          (r) => !values.regions.includes(r.id) && r.site_type === 'core'
-        )}
+          })
+        }
         currentCapability={undefined}
         errorText={errors.regions?.message}
+        isClearable
         label="Add Regions"
-        onChange={setSelectedRegions}
         placeholder="Select Regions"
-        selectedIds={selectedRegions}
+        regions={regions?.filter((r) => r.site_type === 'core') ?? []}
+        renderTags={() => null}
+        selectedIds={values.regions}
       />
       <Typography sx={{ mb: 1, mt: 2 }}>
         Image will be available in these regions ({values.regions.length})
@@ -127,6 +125,7 @@ export const ManageImageRegionsForm = (props: Props) => {
                   (regionItem) => regionItem.region === regionId
                 )?.status ?? 'unsaved'
               }
+              disableRemoveButton={values.regions.length <= 1}
               key={regionId}
               region={regionId}
             />
