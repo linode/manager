@@ -13,7 +13,7 @@ import { wrapWithTheme } from '../src/utilities/testHelpers';
 import { useDarkMode } from 'storybook-dark-mode';
 import { DocsContainer as BaseContainer } from '@storybook/addon-docs';
 import { themes } from '@storybook/theming';
-import { storybookWorker } from '../src/mocks/mswWorkers';
+import { storybookWorker } from '../src/dev-tools/load';
 
 import '../src/index.css';
 // TODO: M3-6705 Remove this when replacing @reach/tabs with MUI Tabs
