@@ -9,7 +9,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 
 describe('ImagesLandingEmptyState', () => {
-  it('disables the create button if the user does not have permission to create volumes', async () => {
+  it('disables the create button if the user does not have permission to create images', async () => {
     server.use(
       http.get('*/v4/profile', () => {
         const profile = profileFactory.build({ restricted: true });
