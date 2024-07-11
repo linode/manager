@@ -4,10 +4,10 @@ import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Select from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
@@ -56,7 +56,7 @@ import type {
   KubeNodePoolResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { Item } from 'src/components/Autocomplete/Autocomplete';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
@@ -244,16 +244,16 @@ export const CreateCluster = () => {
             </StyledDocsLinkContainer>
           </StyledRegionSelectStack>
           <Divider sx={{ marginTop: 4 }} />
-          <Select
-            onChange={(selected: Item<string>) => {
+          <Autocomplete
+            onChange={(_, selected: Item<string>) => {
               setVersion(selected);
             }}
+            disableClearable={!!version}
             errorText={errorMap.k8s_version}
-            isClearable={false}
             label="Kubernetes Version"
             options={versions}
             placeholder={' '}
-            value={version || null}
+            value={version ?? null}
           />
           <Divider sx={{ marginTop: 4 }} />
           {showHighAvailability ? (
