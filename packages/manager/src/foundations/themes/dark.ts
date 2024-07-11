@@ -858,7 +858,7 @@ export const darkTheme: ThemeOptions = {
   palette: {
     background: {
       default: customDarkModeOptions.bg.app,
-      paper: Color.Neutrals[100],
+      paper: Color.Neutrals[90],
     },
     divider: primaryColors.divider,
     error: {
