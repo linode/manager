@@ -9,7 +9,7 @@ import {
 } from 'support/intercepts/linodes';
 import {
   mockGetFirewalls,
-  mockCreateFirewalls,
+  mockCreateFirewall,
 } from 'support/intercepts/firewalls';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
@@ -96,7 +96,7 @@ describe('Create Linode with Firewall', () => {
    * - Confirms that Firewall is reflected in create summary section.
    * - Confirms that outgoing Linode Create API request specifies the selected Firewall to be attached.
    */
-  it.only('can assign new Firewall during Linode Create flow', () => {
+  it('can assign new Firewall during Linode Create flow', () => {
     const linodeRegion = chooseRegion({ capabilities: ['Cloud Firewall'] });
 
     const mockFirewall = firewallFactory.build({
@@ -110,8 +110,8 @@ describe('Create Linode with Firewall', () => {
       region: linodeRegion.id,
     });
 
-    mockCreateFirewalls([mockFirewall]).as('createFirewall');
-    mockGetFirewalls([]).as('getFirewall');
+    mockCreateFirewall(mockFirewall).as('createFirewall');
+    mockGetFirewalls([mockFirewall]).as('getFirewall');
     mockCreateLinode(mockLinode).as('createLinode');
     mockGetLinodeDetails(mockLinode.id, mockLinode);
 
@@ -140,7 +140,7 @@ describe('Create Linode with Firewall', () => {
           .should('be.enabled')
           .click();
       });
-    cy.wait('@createFirewall');
+    cy.wait('@getFirewall');
     // Confirm toast notification should appear on Linode create.
     ui.toast.assertMessage(
       `Firewall ${mockFirewall.label} successfully created`
