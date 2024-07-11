@@ -11,7 +11,7 @@ import type { UseQueryOptions } from '@tanstack/react-query';
 export const statusPageQueries = createQueryKeys('statusPage', {
   incidents: {
     queryFn: getIncidents,
-    queryKey: ['status-page-incidents'],
+    queryKey: null,
   },
   maintenance: {
     queryFn: getAllMaintenance,
