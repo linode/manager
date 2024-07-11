@@ -23,8 +23,10 @@ export const OperatingSystems = () => {
       <ImageSelectv2
         disabled={isCreateLinodeRestricted}
         errorText={fieldState.error?.message}
+        label="Linux Distribution"
         onBlur={field.onBlur}
         onChange={(image) => field.onChange(image?.id ?? null)}
+        placeholder="Choose a Linux distribution"
         value={field.value}
         variant="public"
       />

@@ -41,6 +41,8 @@ interface ImageSelectProps {
     image: Image | undefined
   ) => void;
   images: Image[];
+  label?: string;
+  placeholder?: string;
   selectedImageID?: string;
   title: string;
   variant?: Variant;
@@ -158,6 +160,8 @@ export const ImageSelect = React.memo((props: ImageSelectProps) => {
     error: errorText,
     handleSelectImage,
     images,
+    label,
+    placeholder,
     selectedImageID,
     title,
     variant,
@@ -234,10 +238,10 @@ export const ImageSelect = React.memo((props: ImageSelectProps) => {
           disabled={disabled}
           errorText={errorText ?? imageError}
           isLoading={_loading}
-          label="Images"
+          label={label || 'Images'}
           onChange={onChange}
           options={options}
-          placeholder="Choose an image"
+          placeholder={placeholder || 'Choose an image'}
         />
         {showDistributedCapabilityNotice && (
           <Stack alignItems="center" direction="row" pb={0.8} spacing={1}>
