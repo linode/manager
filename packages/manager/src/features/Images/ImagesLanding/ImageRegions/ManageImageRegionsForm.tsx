@@ -87,9 +87,8 @@ export const ManageImageRegionsForm = (props: Props) => {
         }
         currentCapability={undefined}
         errorText={errors.regions?.message}
-        isClearable
         label="Add Regions"
-        placeholder="Select Regions"
+        placeholder="Select regions or type to search"
         regions={regions?.filter((r) => r.site_type === 'core') ?? []}
         renderTags={() => null}
         selectedIds={values.regions}
