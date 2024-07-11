@@ -178,6 +178,17 @@ export const ImageUpload = () => {
     <FormProvider {...form}>
       <form onSubmit={onSubmit}>
         <Stack spacing={2}>
+          {isImageCreateRestricted && (
+            <Notice
+              text={getRestrictedResourceText({
+                action: 'create',
+                isSingular: false,
+                resourceType: 'Images',
+              })}
+              important
+              variant="error"
+            />
+          )}
           <Paper>
             <Typography mb={1.5} variant="h2">
               Image Details
@@ -185,16 +196,6 @@ export const ImageUpload = () => {
             {form.formState.errors.root?.message && (
               <Notice
                 text={form.formState.errors.root.message}
-                variant="error"
-              />
-            )}
-            {isImageCreateRestricted && (
-              <Notice
-                text={getRestrictedResourceText({
-                  action: 'create',
-                  isSingular: false,
-                  resourceType: 'Images',
-                })}
                 variant="error"
               />
             )}

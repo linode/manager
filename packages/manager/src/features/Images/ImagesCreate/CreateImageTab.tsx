@@ -31,6 +31,7 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 
 import type { CreateImagePayload } from '@linode/api-v4';
 import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
@@ -167,13 +168,18 @@ export const CreateImageTab = () => {
   return (
     <form onSubmit={onSubmit}>
       <Stack spacing={2}>
+        {isImageCreateRestricted && (
+          <Notice
+            text={getRestrictedResourceText({
+              action: 'create',
+              isSingular: false,
+              resourceType: 'Images',
+            })}
+            important
+            variant="error"
+          />
+        )}
         <Paper>
-          {isImageCreateRestricted && (
-            <Notice
-              text="You don't have permissions to create a new Image. Please contact an account administrator for details."
-              variant="error"
-            />
-          )}
           {formState.errors.root?.message && (
             <Notice
               spacingBottom={8}
