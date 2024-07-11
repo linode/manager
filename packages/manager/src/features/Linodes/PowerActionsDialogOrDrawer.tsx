@@ -4,6 +4,7 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import Select from 'src/components/EnhancedSelect/Select';
+import { FormHelperText } from 'src/components/FormHelperText';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
@@ -163,15 +164,22 @@ export const PowerActionsDialog = (props: Props) => {
         </Typography>
       ) : null}
       {showConfigSelect && (
-        <Select
-          errorText={configsError?.[0].reason}
-          isLoading={configsLoading}
-          label="Config"
-          onChange={(o) => setSelectConfigID(o === null ? null : o.value)}
-          options={configOptions}
-          overflowPortal
-          value={configOptions.find((o) => o.value === selectedConfigID)}
-        />
+        <>
+          <Select
+            value={configOptions.find(
+              (option) => option.value === selectedConfigID
+            )}
+            errorText={configsError?.[0].reason}
+            isLoading={configsLoading}
+            label="Config"
+            onChange={(option) => setSelectConfigID(option.value)}
+            options={configOptions}
+            overflowPortal
+          />
+          <FormHelperText>
+            If no value is selected, the last booted config will be used.
+          </FormHelperText>
+        </>
       )}
       {props.action === 'Power Off' && (
         <span>
