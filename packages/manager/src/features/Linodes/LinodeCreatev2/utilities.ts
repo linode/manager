@@ -345,6 +345,36 @@ export const getGeneratedLinodeLabel = async (
     return generatedLabelParts.join('-');
   }
 
+  if (tab === "StackScripts" || tab === "One-Click") {
+    const generatedLabelParts: string[] = [];
+    if (values.stackscript_id) {
+      const stackscript = await queryClient.ensureQueryData(stackscriptQueries.stackscript(values.stackscript_id));
+      generatedLabelParts.push(stackscript.label.toLowerCase());
+    }
+    if (values.region) {
+      generatedLabelParts.push(values.region);
+    }
+    return generatedLabelParts.join('-');
+  }
+
+  if (tab === 'Backups') {
+    const generatedLabelParts: string[] = [];
+    if (values.linode) {
+      generatedLabelParts.push(values.linode.label);
+    }
+    generatedLabelParts.push('backup');
+    return generatedLabelParts.join('-');
+  }
+
+  if (tab === 'Clone Linode') {
+    const generatedLabelParts: string[] = [];
+    if (values.linode) {
+      generatedLabelParts.push(values.linode.label);
+    }
+    generatedLabelParts.push('clone');
+    return generatedLabelParts.join('-');
+  }
+
   return '';
 };
 
