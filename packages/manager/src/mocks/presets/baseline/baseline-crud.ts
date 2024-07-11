@@ -9,6 +9,7 @@ import {
   createPlacementGroup,
   deletePlacementGroup,
   getPlacementGroups,
+  placementGroupLinodeAssignment,
   updatePlacementGroup,
 } from 'src/mocks/handlers/placementGroup-handlers';
 import {
@@ -42,6 +43,7 @@ export const baselineCrudPreset: MockPreset = {
     createPlacementGroup,
     updatePlacementGroup,
     deletePlacementGroup,
+    placementGroupLinodeAssignment,
 
     // Volume CRUD handlers.
     getVolumes,

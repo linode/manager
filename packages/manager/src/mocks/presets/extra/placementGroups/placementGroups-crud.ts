@@ -2,6 +2,7 @@ import {
   createPlacementGroup,
   deletePlacementGroup,
   getPlacementGroups,
+  placementGroupLinodeAssignment,
   updatePlacementGroup,
 } from 'src/mocks/handlers/placementGroup-handlers';
 
@@ -14,6 +15,7 @@ export const placementGroupsCrudPreset: MockPreset = {
     getPlacementGroups,
     updatePlacementGroup,
     deletePlacementGroup,
+    placementGroupLinodeAssignment,
   ],
   id: 'placementGroups-crud',
   label: 'Placement Groups CRUD',
