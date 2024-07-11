@@ -90,10 +90,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
       // Tags Panel wrapper
       '& > div:last-child': {
         display: 'flex',
-        flexWrap: 'wrap',
         justifyContent: 'flex-end',
       },
     },
+    width: '100%',
   },
 }));
 
@@ -207,8 +207,10 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
             <Grid className={classes.tags}>
               <TagCell
                 disabled={isClusterReadOnly}
+                entityLabel={cluster.label}
                 tags={cluster.tags}
                 updateTags={handleUpdateTags}
+                view="inline"
               />
             </Grid>
           </Grid>
