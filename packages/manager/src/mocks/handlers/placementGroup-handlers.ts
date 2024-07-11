@@ -9,7 +9,14 @@ import {
 
 import { getPaginatedSlice } from '../utilities/pagination';
 
-import type { PlacementGroup } from '@linode/api-v4';
+import type {
+  AssignLinodesToPlacementGroupPayload,
+  CreatePlacementGroupPayload,
+  Linode,
+  PlacementGroup,
+  UnassignLinodesFromPlacementGroupPayload,
+  UpdatePlacementGroupPayload,
+} from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockContext } from 'src/mocks/types';
 import type { APIErrorResponse } from 'src/mocks/utilities/response';
@@ -33,7 +40,7 @@ export const getPlacementGroups = (mockContext: MockContext) => [
   }),
 
   http.get(
-    '*/v4/placement/group/:id',
+    '*/v4/placement/groups/:id',
     ({ params }): StrictResponse<APIErrorResponse | PlacementGroup> => {
       const id = Number(params.id);
       const placementGroup = mockContext.placementGroups.find(
@@ -55,7 +62,7 @@ export const createPlacementGroup = (mockContext: MockContext) => [
     async ({
       request,
     }): Promise<StrictResponse<APIErrorResponse | PlacementGroup>> => {
-      const payload = await request.clone().json();
+      const payload: CreatePlacementGroupPayload = await request.clone().json();
 
       const placementGroup = placementGroupFactory.build({
         affinity_type: payload['affinity_type'],
@@ -80,7 +87,7 @@ export const updatePlacementGroup = (mockContext: MockContext) => [
       request,
     }): Promise<StrictResponse<APIErrorResponse | PlacementGroup>> => {
       const id = Number(params.id);
-      const payload = await request.clone().json();
+      const payload: UpdatePlacementGroupPayload = await request.clone().json();
 
       const placementGroup = mockContext.placementGroups.find(
         (contextPlacementGroup) => contextPlacementGroup.id === id
@@ -95,7 +102,6 @@ export const updatePlacementGroup = (mockContext: MockContext) => [
         ...payload,
       };
 
-      // Updating contest store
       const placementGroupIndex = mockContext.placementGroups.indexOf(
         placementGroup
       );
@@ -126,4 +132,119 @@ export const deletePlacementGroup = (mockContext: MockContext) => [
 
     return makeNotFoundResponse();
   }),
+];
+
+export const placementGroupLinodeAssignment = (mockContext: MockContext) => [
+  http.post(
+    '*/v4/placement/groups/:id/assign',
+    async ({
+      params,
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | PlacementGroup>> => {
+      const id = Number(params.id);
+      const payload: AssignLinodesToPlacementGroupPayload = await request
+        .clone()
+        .json();
+
+      const placementGroup = mockContext.placementGroups.find(
+        (contextPlacementGroup) => contextPlacementGroup.id === id
+      );
+
+      if (!placementGroup) {
+        return makeNotFoundResponse();
+      }
+
+      const updatedPlacementGroup: PlacementGroup = {
+        ...placementGroup,
+        members: [
+          ...placementGroup.members,
+          {
+            is_compliant: true,
+            linode_id: payload['linodes'][0],
+          },
+        ],
+      };
+
+      const linodeAssigned = mockContext.linodes.find(
+        (linode) => linode.id === payload['linodes'][0]
+      );
+
+      if (!linodeAssigned) {
+        return makeNotFoundResponse();
+      }
+
+      const updatedLinode: Linode = {
+        ...linodeAssigned,
+        placement_group: {
+          affinity_type: placementGroup.affinity_type,
+          id: placementGroup.id,
+          is_strict: placementGroup.is_strict,
+          label: placementGroup.label,
+        },
+      };
+      const linodeIndex = mockContext.linodes.indexOf(linodeAssigned);
+      mockContext.linodes[linodeIndex] = updatedLinode;
+
+      const placementGroupIndex = mockContext.placementGroups.indexOf(
+        placementGroup
+      );
+      mockContext.placementGroups[placementGroupIndex] = updatedPlacementGroup;
+
+      // TODO queue event.
+      return makeResponse(updatedPlacementGroup);
+    }
+  ),
+
+  http.post(
+    '*/v4/placement/groups/:id/unassign',
+    async ({
+      params,
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | PlacementGroup>> => {
+      const id = Number(params.id);
+      const payload: UnassignLinodesFromPlacementGroupPayload = await request
+        .clone()
+        .json();
+
+      const placementGroup = mockContext.placementGroups.find(
+        (contextPlacementGroup) => contextPlacementGroup.id === id
+      );
+
+      if (!placementGroup) {
+        return makeNotFoundResponse();
+      }
+
+      const updatedPlacementGroup: PlacementGroup = {
+        ...placementGroup,
+        members: [
+          ...placementGroup.members.filter(
+            (member) => member.linode_id !== payload['linodes'][0]
+          ),
+        ],
+      };
+
+      const linodeAssigned = mockContext.linodes.find(
+        (linode) => linode.id === payload['linodes'][0]
+      );
+
+      if (!linodeAssigned) {
+        return makeNotFoundResponse();
+      }
+
+      const updatedLinode: Linode = {
+        ...linodeAssigned,
+        placement_group: undefined,
+      };
+      const linodeIndex = mockContext.linodes.indexOf(linodeAssigned);
+      mockContext.linodes[linodeIndex] = updatedLinode;
+
+      const placementGroupIndex = mockContext.placementGroups.indexOf(
+        placementGroup
+      );
+      mockContext.placementGroups[placementGroupIndex] = updatedPlacementGroup;
+
+      // TODO queue event.
+      return makeResponse(updatedPlacementGroup);
+    }
+  ),
 ];
