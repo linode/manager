@@ -43,7 +43,7 @@ import type {
   ResizeLinodePayload,
 } from '@linode/api-v4/lib/linodes';
 
-interface Props {
+export interface Props {
   linodeId?: number;
   linodeLabel?: string;
   onClose: () => void;
