@@ -43,8 +43,8 @@ export interface TagCellProps {
   updateTags: (tags: string[]) => Promise<any>;
 
   /**
-   * Determines whether to allow tags to wrap or
-   * to overflow into a drawer.
+   * Determines whether to allow tags to wrap in a panel or
+   * to overflow inline into a drawer.
    */
   view: 'inline' | 'panel';
 }
@@ -107,18 +107,18 @@ export const TagCell = (props: TagCellProps) => {
 
   return (
     <>
-      {(addingTag || view == 'panel') && (
+      {(addingTag || view === 'panel') && (
         <div
           style={{
             display: 'flex',
             flexDirection: 'row',
             height: 40,
-            justifyContent: view == 'panel' ? 'flex-start' : 'flex-end',
-            marginBottom: view == 'panel' ? 4 : 0,
+            justifyContent: view === 'panel' ? 'flex-start' : 'flex-end',
+            marginBottom: view === 'panel' ? 4 : 0,
             width: '100%',
           }}
         >
-          {view == 'panel' && !addingTag && <AddButton panel />}
+          {view === 'panel' && !addingTag && <AddButton panel />}
           {addingTag && (
             <AddTag
               addTag={(tag) => handleUpdateTag([...tags, tag])}
@@ -128,18 +128,18 @@ export const TagCell = (props: TagCellProps) => {
           )}
         </div>
       )}
-      {(!addingTag || view == 'panel') && (
+      {(!addingTag || view === 'panel') && (
         <StyledGrid
           alignItems="center"
           container
           direction="row"
           sx={sx}
-          wrap={view == 'panel' ? 'wrap' : 'nowrap'}
+          wrap={view === 'panel' ? 'wrap' : 'nowrap'}
         >
           <StyledTagListDiv
-            hasOverflow={hasOverflow && view == 'inline'}
+            hasOverflow={hasOverflow && view === 'inline'}
             ref={setElRef}
-            wrap={view == 'panel'}
+            wrap={view === 'panel'}
           >
             {loading ? (
               <StyledCircleDiv>
@@ -162,7 +162,7 @@ export const TagCell = (props: TagCellProps) => {
               />
             ))}
           </StyledTagListDiv>
-          {hasOverflow && view == 'inline' ? (
+          {hasOverflow && view === 'inline' ? (
             <StyledIconButton
               aria-label="Display all tags"
               disableRipple
@@ -173,10 +173,10 @@ export const TagCell = (props: TagCellProps) => {
               <MoreHoriz />
             </StyledIconButton>
           ) : null}
-          {view == 'inline' && <AddButton />}
+          {view === 'inline' && <AddButton />}
         </StyledGrid>
       )}
-      {view == 'inline' && (
+      {view === 'inline' && (
         <TagDrawer
           {...props}
           onClose={() => setDrawerOpen(false)}
@@ -188,7 +188,7 @@ export const TagCell = (props: TagCellProps) => {
 };
 
 const StyledGrid = styled(Grid)((props) => ({
-  justifyContent: props.wrap == 'wrap' ? 'flex-start' : 'flex-end',
+  justifyContent: props.wrap === 'wrap' ? 'flex-start' : 'flex-end',
   minHeight: 40,
   position: 'relative',
 }));
