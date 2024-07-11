@@ -3,9 +3,10 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
+import { Typography } from 'src/components/Typography';
 import { sendLinodeDiskEvent } from 'src/utilities/analytics/customEventAnalytics';
 
-import type { Event, EventAction } from '@linode/api-v4/lib/account/types';
+import type { Event, EventAction } from '@linode/api-v4';
 
 export const getLabel = (event: Event) => event.entity?.label ?? '';
 export const getSecondaryLabel = (event: Event) =>
@@ -201,7 +202,7 @@ const createFormattedMessage = (
   link: JSX.Element | undefined,
   hasSupportLink: boolean
 ) => (
-  <>
+  <Typography>
     {message?.replace(/ contact Support/i, '') ?? message}
     {hasSupportLink && (
       <>
@@ -210,7 +211,7 @@ const createFormattedMessage = (
       </>
     )}
     {link && <>&nbsp;{link}</>}
-  </>
+  </Typography>
 );
 
 export const useToastNotifications = (): {
@@ -230,34 +231,39 @@ export const useToastNotifications = (): {
       const { link, message, persist } = toastInfo.success;
       const successMessage = getToastMessage(message, event);
 
-      const formattedSuccessMessage = createFormattedMessage(
-        successMessage,
-        link,
-        false
-      );
+      if (successMessage) {
+        const formattedSuccessMessage = createFormattedMessage(
+          successMessage,
+          link,
+          false
+        );
 
-      enqueueSnackbar(formattedSuccessMessage, {
-        persist: persist ?? false,
-        variant: toastInfo.invertVariant ? 'error' : 'success',
-      });
+        enqueueSnackbar(formattedSuccessMessage, {
+          persist: persist ?? false,
+          variant: toastInfo.invertVariant ? 'error' : 'success',
+        });
+      }
     }
 
     if (event.status === 'failed' && toastInfo.failure) {
       const { link, message, persist } = toastInfo.failure;
       const failureMessage = getToastMessage(message, event);
-      const hasSupportLink =
-        failureMessage?.includes('contact Support') ?? false;
 
-      const formattedFailureMessage = createFormattedMessage(
-        failureMessage,
-        link,
-        hasSupportLink
-      );
+      if (failureMessage) {
+        const hasSupportLink =
+          failureMessage?.includes('contact Support') ?? false;
 
-      enqueueSnackbar(formattedFailureMessage, {
-        persist: persist ?? false,
-        variant: toastInfo.invertVariant ? 'success' : 'error',
-      });
+        const formattedFailureMessage = createFormattedMessage(
+          failureMessage,
+          link,
+          hasSupportLink
+        );
+
+        enqueueSnackbar(formattedFailureMessage, {
+          persist: persist ?? false,
+          variant: toastInfo.invertVariant ? 'success' : 'error',
+        });
+      }
     }
   };
 
