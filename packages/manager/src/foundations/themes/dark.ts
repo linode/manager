@@ -354,6 +354,9 @@ export const darkTheme: ThemeOptions = {
         color: 'primary',
       },
       styleOverrides: {
+        clickable: {
+          color: Color.Brand[100],
+        },
         colorError: {
           backgroundColor: Badge.Bold.Red.Background,
           color: Badge.Bold.Red.Text,
@@ -855,7 +858,7 @@ export const darkTheme: ThemeOptions = {
   palette: {
     background: {
       default: customDarkModeOptions.bg.app,
-      paper: Color.Neutrals[100],
+      paper: Color.Neutrals[90],
     },
     divider: primaryColors.divider,
     error: {

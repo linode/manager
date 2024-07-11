@@ -42,6 +42,7 @@ import {
 
 import type { Disk, Linode } from '@linode/api-v4/lib/linodes';
 import type { APIError } from '@linode/api-v4/lib/types';
+import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
 
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));
@@ -127,7 +128,10 @@ export const CloneLanding = () => {
   // A config and/or disk can be selected via query param. Memoized
   // so it can be used as a dep in the useEffects that consume it.
   const queryParams = React.useMemo(
-    () => getQueryParamsFromQueryString(location.search),
+    () =>
+      getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
+        location.search
+      ),
     [location.search]
   );
 
