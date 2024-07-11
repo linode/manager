@@ -15,7 +15,7 @@ export const statusPageQueries = createQueryKeys('statusPage', {
   },
   maintenance: {
     queryFn: getAllMaintenance,
-    queryKey: ['status-page-maintenance'],
+    queryKey: null,
   },
 });
 
