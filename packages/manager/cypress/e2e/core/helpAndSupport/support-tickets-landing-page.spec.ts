@@ -56,16 +56,16 @@ describe('support tickets landing page', () => {
       cy.findByLabelText('Sort by severity').should('not.exist');
 
       // Confirm that other table columns are shown.
-      cy.findAllByText('Subject').should('be.visible');
-      cy.findAllByText('Ticket ID').should('be.visible');
-      cy.findAllByText('Regarding').should('be.visible');
-      cy.findAllByText('Date Created').should('be.visible');
-      cy.findAllByText('Last Updated').should('be.visible');
-      cy.findAllByText('Updated By').should('be.visible');
+      cy.findByText('Subject').should('be.visible');
+      cy.findByText('Ticket ID').should('be.visible');
+      cy.findByText('Regarding').should('be.visible');
+      cy.findByText('Date Created').should('be.visible');
+      cy.findByText('Last Updated').should('be.visible');
+      cy.findByText('Updated By').should('be.visible');
     });
 
     // Confirm that no ticket is listed.
-    cy.findAllByText('No items to display.').should('be.visible');
+    cy.findByText('No items to display.').should('be.visible');
   });
 
   /*
@@ -104,12 +104,12 @@ describe('support tickets landing page', () => {
       cy.findByLabelText('Sort by severity').should('be.visible');
 
       // Confirm that other table columns are shown.
-      cy.findAllByText('Subject').should('be.visible');
-      cy.findAllByText('Ticket ID').should('be.visible');
-      cy.findAllByText('Regarding').should('be.visible');
-      cy.findAllByText('Date Created').should('be.visible');
-      cy.findAllByText('Last Updated').should('be.visible');
-      cy.findAllByText('Updated By').should('be.visible');
+      cy.findByText('Subject').should('be.visible');
+      cy.findByText('Ticket ID').should('be.visible');
+      cy.findByText('Regarding').should('be.visible');
+      cy.findByText('Date Created').should('be.visible');
+      cy.findByText('Last Updated').should('be.visible');
+      cy.findByText('Updated By').should('be.visible');
     });
 
     mockTickets.forEach((ticket) => {
@@ -123,7 +123,7 @@ describe('support tickets landing page', () => {
       }
 
       // Confirm that tickets are listed as expected.
-      cy.findAllByText(ticket.summary)
+      cy.findByText(ticket.summary)
         .should('be.visible')
         .closest('tr')
         .within(() => {
@@ -166,7 +166,7 @@ describe('support tickets landing page', () => {
     cy.visitWithLogin('/support/tickets');
 
     // Confirm that tickets are listed as expected.
-    cy.findAllByText(mockTicket.summary).should('be.visible').click();
+    cy.findByText(mockTicket.summary).should('be.visible').click();
 
     cy.wait(['@getSupportTicket', '@getReplies']);
 
@@ -265,7 +265,7 @@ describe('support tickets landing page', () => {
     cy.visitWithLogin('/support/tickets');
 
     // Confirm that tickets are listed as expected.
-    cy.findAllByText(mockTicket.summary).should('be.visible').click();
+    cy.findByText(mockTicket.summary).should('be.visible').click();
 
     cy.wait(['@getSupportTicket', '@getReplies']);
 
