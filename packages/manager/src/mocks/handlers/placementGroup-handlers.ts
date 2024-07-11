@@ -108,7 +108,7 @@ export const updatePlacementGroup = (mockContext: MockContext) => [
 ];
 
 export const deletePlacementGroup = (mockContext: MockContext) => [
-  http.delete('*/v4/placementGroup/:id', ({ params }) => {
+  http.delete('*/v4/placement/groups/:id', ({ params }) => {
     const id = Number(params.id);
     const placementGroup = mockContext.placementGroups.find(
       (contextPlacementGroup) => contextPlacementGroup.id === id
