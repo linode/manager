@@ -6,12 +6,11 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
-import { Tab } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useInitialRequests } from 'src/hooks/useInitialRequests';
 import {
-  useLinodeLishTokenQuery,
+  useLinodeLishQuery,
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 
@@ -19,6 +18,8 @@ import '../../assets/weblish/weblish.css';
 import '../../assets/weblish/xterm.css';
 import Glish from './Glish';
 import Weblish from './Weblish';
+
+import type { Tab } from 'src/components/Tabs/TabLinkList';
 
 const AUTH_POLLING_INTERVAL = 2000;
 
@@ -41,11 +42,9 @@ const Lish = () => {
     error: tokenError,
     isLoading: isTokenLoading,
     refetch,
-  } = useLinodeLishTokenQuery(id);
+  } = useLinodeLishQuery(id);
 
   const isLoading = isLinodeLoading || isTokenLoading || isMakingInitalRequests;
-
-  const token = data?.lish_token;
 
   React.useEffect(() => {
     const interval = setInterval(checkAuthentication, AUTH_POLLING_INTERVAL);
@@ -110,7 +109,7 @@ const Lish = () => {
     );
   }
 
-  return linode && token ? (
+  return linode && data !== undefined ? (
     <StyledTabs
       index={
         type &&
@@ -123,11 +122,11 @@ const Lish = () => {
       <TabLinkList tabs={tabs} />
       <TabPanels>
         <SafeTabPanel data-qa-tab="Weblish" index={0}>
-          <Weblish linode={linode} refreshToken={refreshToken} token={token} />
+          <Weblish linode={linode} refreshToken={refreshToken} {...data} />
         </SafeTabPanel>
         {!isBareMetal && (
           <SafeTabPanel data-qa-tab="Glish" index={1}>
-            <Glish linode={linode} refreshToken={refreshToken} token={token} />
+            <Glish linode={linode} refreshToken={refreshToken} {...data} />
           </SafeTabPanel>
         )}
       </TabPanels>
