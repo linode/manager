@@ -12,10 +12,9 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
 import { useAllIPsQuery } from 'src/queries/networking/networking';
 
-import { StyledActionTableCell } from './LinodeIPAddresses.styles';
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
 
-import type { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
+import type { IPAddress, IPRange } from '@linode/api-v4';
 import type { IPv6 } from 'ipaddr.js';
 import type { IPDisplay } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 
@@ -92,7 +91,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
           rdns
         )}
       </TableCell>
-      <StyledActionTableCell data-qa-action>
+      <TableCell actionCell data-qa-action>
         {_ip ? (
           <LinodeNetworkingActionMenu
             ipAddress={_ip}
@@ -114,7 +113,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
             readOnly={readOnly}
           />
         ) : null}
-      </StyledActionTableCell>
+      </TableCell>
     </StyledTableRow>
   );
 };
