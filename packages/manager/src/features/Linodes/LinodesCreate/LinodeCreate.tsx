@@ -866,8 +866,10 @@ export class LinodeCreate extends React.PureComponent<
                   <FromImageContent
                     accountBackupsEnabled={accountBackupsEnabled}
                     error={hasErrorFor.image}
+                    imageLabel="Linux Distribution"
                     imagePanelTitle="Choose an OS"
                     imagesData={imagesData!}
+                    placeholder="Choose a Linux distribution"
                     regionsData={regionsData!}
                     typesData={typesData!}
                     userCannotCreateLinode={userCannotCreateLinode}

@@ -24,7 +24,7 @@ describe('OperatingSystems', () => {
       component: <OperatingSystems />,
     });
 
-    expect(getByLabelText('Images')).toBeVisible();
-    expect(getByPlaceholderText('Choose an image')).toBeVisible();
+    expect(getByLabelText('Linux Distribution')).toBeVisible();
+    expect(getByPlaceholderText('Choose a Linux distribution')).toBeVisible();
   });
 });

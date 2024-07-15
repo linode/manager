@@ -20,7 +20,9 @@ import type { Image } from '@linode/api-v4';
 
 interface Props extends BasicFromContentProps {
   error?: string;
+  imageLabel?: string;
   imagePanelTitle?: string;
+  placeholder?: string;
   variant?: 'all' | 'private' | 'public';
 }
 
@@ -32,8 +34,10 @@ export type CombinedProps = Props &
 export const FromImageContent = (props: CombinedProps) => {
   const {
     error,
+    imageLabel,
     imagePanelTitle,
     imagesData,
+    placeholder,
     userCannotCreateLinode,
     variant,
   } = props;
@@ -84,8 +88,8 @@ export const FromImageContent = (props: CombinedProps) => {
         error={error}
         handleSelectImage={(_, image) => onChange(image ?? null)}
         images={Object.keys(imagesData).map((eachKey) => imagesData[eachKey])}
-        label="Linux Distribution"
-        placeholder={'Choose a Linux distribution'}
+        label={imageLabel}
+        placeholder={placeholder}
         selectedImageID={props.selectedImageID}
         title={imagePanelTitle || 'Choose an Image'}
         variant={variant}
