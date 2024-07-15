@@ -2,6 +2,7 @@ import { getLinode, getStackScript } from '@linode/api-v4';
 import { omit } from 'lodash';
 import { useHistory } from 'react-router-dom';
 
+import { imageQueries } from 'src/queries/images';
 import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { privateIPRegex } from 'src/utilities/ipUtils';
@@ -18,7 +19,6 @@ import type {
   Linode,
 } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
-import { imageQueries } from 'src/queries/images';
 
 /**
  * This is the ID of the Image of the default distribution.
@@ -254,7 +254,9 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
  *
  * The default values are dependent on the query params present.
  */
-export const defaultValues = async (queryClient: QueryClient): Promise<LinodeCreateFormValues> => {
+export const defaultValues = async (
+  queryClient: QueryClient
+): Promise<LinodeCreateFormValues> => {
   const queryParams = getQueryParamsFromQueryString(window.location.search);
   const params = getParsedLinodeCreateQueryParams(queryParams);
 
@@ -283,7 +285,11 @@ export const defaultValues = async (queryClient: QueryClient): Promise<LinodeCre
     type: linode?.type ? linode.type : '',
   };
 
-  values.label = await getGeneratedLinodeLabel({ values, tab: params.type, queryClient });
+  values.label = await getGeneratedLinodeLabel({
+    queryClient,
+    tab: params.type,
+    values,
+  });
 
   return values;
 };
@@ -315,14 +321,16 @@ interface GeneratedLinodeLabelOptions {
 }
 
 export const getGeneratedLinodeLabel = async (
-  options: GeneratedLinodeLabelOptions,
+  options: GeneratedLinodeLabelOptions
 ) => {
   const { tab, values, queryClient } = options;
 
-  if (tab === "Distributions") {
+  if (tab === 'Distributions') {
     const generatedLabelParts: string[] = [];
     if (values.image) {
-      const image = await queryClient.ensureQueryData(imageQueries.image(values.image));
+      const image = await queryClient.ensureQueryData(
+        imageQueries.image(values.image)
+      );
       if (image.vendor) {
         generatedLabelParts.push(image.vendor.toLowerCase());
       }
@@ -330,31 +338,35 @@ export const getGeneratedLinodeLabel = async (
     if (values.region) {
       generatedLabelParts.push(values.region);
     }
-    return generatedLabelParts.join('-');
+    return getLinodeLabelFromLabelParts(generatedLabelParts);
   }
 
   if (tab === 'Images') {
     const generatedLabelParts: string[] = [];
     if (values.image) {
-      const image = await queryClient.ensureQueryData(imageQueries.image(values.image));
+      const image = await queryClient.ensureQueryData(
+        imageQueries.image(values.image)
+      );
       generatedLabelParts.push(image.label);
     }
     if (values.region) {
       generatedLabelParts.push(values.region);
     }
-    return generatedLabelParts.join('-');
+    return getLinodeLabelFromLabelParts(generatedLabelParts);
   }
 
-  if (tab === "StackScripts" || tab === "One-Click") {
+  if (tab === 'StackScripts' || tab === 'One-Click') {
     const generatedLabelParts: string[] = [];
     if (values.stackscript_id) {
-      const stackscript = await queryClient.ensureQueryData(stackscriptQueries.stackscript(values.stackscript_id));
+      const stackscript = await queryClient.ensureQueryData(
+        stackscriptQueries.stackscript(values.stackscript_id)
+      );
       generatedLabelParts.push(stackscript.label.toLowerCase());
     }
     if (values.region) {
       generatedLabelParts.push(values.region);
     }
-    return generatedLabelParts.join('-');
+    return getLinodeLabelFromLabelParts(generatedLabelParts);
   }
 
   if (tab === 'Backups') {
@@ -363,7 +375,7 @@ export const getGeneratedLinodeLabel = async (
       generatedLabelParts.push(values.linode.label);
     }
     generatedLabelParts.push('backup');
-    return generatedLabelParts.join('-');
+    return getLinodeLabelFromLabelParts(generatedLabelParts);
   }
 
   if (tab === 'Clone Linode') {
@@ -372,10 +384,42 @@ export const getGeneratedLinodeLabel = async (
       generatedLabelParts.push(values.linode.label);
     }
     generatedLabelParts.push('clone');
-    return generatedLabelParts.join('-');
+    return getLinodeLabelFromLabelParts(generatedLabelParts);
   }
 
   return '';
+};
+
+const getIsValidLinodeLabelCharacter = (char: string) => {
+  const code = char.charCodeAt(0);
+  const isNumeric = code > 47 && code < 58; // (0-9)
+  const isLowercaseLetter = code > 96 && code < 123; // (a-z)
+  const isUppercaseLetter = code > 64 && code < 91; // (A-Z)
+  return isNumeric || isUppercaseLetter || isLowercaseLetter;
+};
+
+const getLinodeLabelFromLabelParts = (parts: string[]) => {
+  let label = '';
+
+  for (const part of parts) {
+    for (let i = 0; i < part.length; i++) {
+      if (
+        getIsValidLinodeLabelCharacter(part[i]) ||
+        (part[i] === '-' && label[label.length - 1] !== '-') ||
+        (part[i] === '.' && label[label.length - 1] !== '.') ||
+        (part[i] === '_' && label[label.length - 1] !== '_')
+      ) {
+        label += part[i];
+      } else if (part[i] === ' ' && label[label.length - 1] !== '-') {
+        label += '-';
+      }
+    }
+    if (part !== parts[parts.length - 1]) {
+      label += '-';
+    }
+  }
+
+  return label;
 };
 
 interface LinodeCreateAnalyticsEventOptions {

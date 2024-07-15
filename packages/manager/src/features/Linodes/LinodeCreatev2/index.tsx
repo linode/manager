@@ -70,10 +70,12 @@ export const LinodeCreatev2 = () => {
 
   const onTabChange = (index: number) => {
     const newTab = tabs[index];
-    // Update tab "type" query param. (This changes the selected tab)
-    setParams({ type: newTab });
-    // Reset the form values
-    defaultValues(queryClient).then((values) => form.reset(values));
+    defaultValues(queryClient).then((values) => {
+      // Reset the form values
+      form.reset(values);
+      // Update tab "type" query param. (This changes the selected tab)
+      setParams({ type: newTab });
+    });
   };
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
