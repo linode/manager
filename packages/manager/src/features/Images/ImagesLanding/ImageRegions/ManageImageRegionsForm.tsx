@@ -48,9 +48,12 @@ export const ManageImageRegionsForm = (props: Props) => {
     try {
       await mutateAsync(data);
 
-      enqueueSnackbar(`${image?.label}'s regions successfully updated.`, {
-        variant: 'success',
-      });
+      enqueueSnackbar(
+        `${image?.label ?? 'Image'}'s regions successfully updated.`,
+        {
+          variant: 'success',
+        }
+      );
 
       onClose();
     } catch (errors) {
