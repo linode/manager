@@ -3,7 +3,7 @@ import {
   usePreferences,
 } from 'src/queries/profile/preferences';
 
-import type { AclpConfig } from '@linode/api-v4';
+import type { AclpConfig, AclpWidget } from '@linode/api-v4';
 
 let userPreference: AclpConfig;
 let timerId: ReturnType<typeof setTimeout>;
@@ -43,6 +43,31 @@ export const updateGlobalFilterPreference = (data: {}) => {
     userPreference = {} as AclpConfig;
   }
   userPreference = { ...userPreference, ...data };
+
+  debounce(userPreference);
+};
+
+export const updateWidgetPreference = (label: string, data: {}) => {
+  if (!userPreference) {
+    userPreference = {} as AclpConfig;
+  }
+
+  let widgets = userPreference.widgets;
+
+  if (!widgets) {
+    widgets = {};
+    userPreference.widgets = widgets;
+  }
+
+  let widget = widgets[label];
+
+  if (widget) {
+    widget = { ...widget, ...data };
+  } else {
+    widget = { label, ...data } as AclpWidget;
+  }
+
+  widgets[label] = widget;
 
   debounce(userPreference);
 };
