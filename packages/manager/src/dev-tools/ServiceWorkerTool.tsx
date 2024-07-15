@@ -385,7 +385,6 @@ export const ServiceWorkerTool = () => {
       </div>
       <div className="dev-tools__tool__footer">
         <div className="dev-tools__button-list">
-          {saveState.hasSaved && <span>Your changes have been saved.</span>}
           <button
             disabled={saveState.hasUnsavedChanges ? false : true}
             onClick={discardChanges}

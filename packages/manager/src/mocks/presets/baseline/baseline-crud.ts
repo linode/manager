@@ -4,20 +4,10 @@
 import { http } from 'msw';
 
 import { getEvents, updateEvents } from 'src/mocks/handlers/event-handlers';
-import { createLinodes, getLinodes } from 'src/mocks/handlers/linode-handlers';
-import {
-  createPlacementGroup,
-  deletePlacementGroup,
-  getPlacementGroups,
-  placementGroupLinodeAssignment,
-  updatePlacementGroup,
-} from 'src/mocks/handlers/placementGroup-handlers';
-import {
-  createVolumes,
-  deleteVolumes,
-  getVolumes,
-  updateVolumes,
-} from 'src/mocks/handlers/volume-handlers';
+import { linodeCrudPreset } from 'src/mocks/presets/extra/linodes/linodes-crud';
+
+import { placementGroupsCrudPreset } from '../extra/placementGroups/placementGroups-crud';
+import { volumeCrudPreset } from '../extra/volumes/volumes-crud';
 
 import type { MockPreset } from 'src/mocks/types';
 
@@ -34,22 +24,9 @@ const slowDownAllRequests = () => {
 export const baselineCrudPreset: MockPreset = {
   group: 'General',
   handlers: [
-    // Linode CRUD handlers.
-    getLinodes,
-    createLinodes,
-
-    // Placement Group CRUD handlers.
-    getPlacementGroups,
-    createPlacementGroup,
-    updatePlacementGroup,
-    deletePlacementGroup,
-    placementGroupLinodeAssignment,
-
-    // Volume CRUD handlers.
-    getVolumes,
-    createVolumes,
-    updateVolumes,
-    deleteVolumes,
+    ...linodeCrudPreset.handlers,
+    ...placementGroupsCrudPreset.handlers,
+    ...volumeCrudPreset.handlers,
 
     // Events.
     getEvents,

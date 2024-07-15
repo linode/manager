@@ -1,6 +1,7 @@
 import type {
   Config,
   Event,
+  Firewall,
   Linode,
   Notification,
   PlacementGroup,
@@ -15,6 +16,7 @@ export type MockPresetGroup =
   | 'Account State'
   | 'Account'
   | 'Environment'
+  | 'Firewalls'
   | 'General'
   | 'Linodes'
   | 'Placement Groups'
@@ -48,23 +50,14 @@ export type MockEventProgressHandler = (
  * Contextual data shared among mocks.
  */
 export interface MockContext {
-  // Misc.
   eventQueue: [Event, MockEventProgressHandler | null][];
+  firewalls: Firewall[];
   linodeConfigs: [number, Config][];
-
-  // Linodes and related data.
   linodes: Linode[];
-
   notificationQueue: Notification[];
-  // Placement Groups.
   placementGroups: PlacementGroup[];
-
   regionAvailability: RegionAvailability[];
-
-  // Environment.
   regions: Region[];
-
-  // Volumes.
   volumes: Volume[];
 }
 

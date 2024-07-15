@@ -12,7 +12,6 @@ import { getPaginatedSlice } from '../utilities/pagination';
 import type {
   AssignLinodesToPlacementGroupPayload,
   CreatePlacementGroupPayload,
-  Linode,
   PlacementGroup,
   UnassignLinodesFromPlacementGroupPayload,
   UpdatePlacementGroupPayload,
@@ -38,7 +37,7 @@ export const getPlacementGroups = (mockContext: MockContext) => [
 
     return makePaginatedResponse(pageSlice, pageNumber, totalPages);
   }),
-  ///
+
   http.get(
     '*/v4/placement/groups/:id',
     ({ params }): StrictResponse<APIErrorResponse | PlacementGroup> => {
@@ -65,12 +64,8 @@ export const createPlacementGroup = (mockContext: MockContext) => [
       const payload: CreatePlacementGroupPayload = await request.clone().json();
 
       const placementGroup = placementGroupFactory.build({
-        affinity_type: payload['affinity_type'],
-        is_compliant: true,
-        is_strict: payload['is_strict'],
-        label: payload['label'],
+        ...payload,
         members: [],
-        region: payload['region'],
       });
 
       mockContext.placementGroups.push(placementGroup);
@@ -97,18 +92,10 @@ export const updatePlacementGroup = (mockContext: MockContext) => [
         return makeNotFoundResponse();
       }
 
-      const updatedPlacementGroup = {
-        ...placementGroup,
-        ...payload,
-      };
-
-      const placementGroupIndex = mockContext.placementGroups.indexOf(
-        placementGroup
-      );
-      mockContext.placementGroups[placementGroupIndex] = updatedPlacementGroup;
+      Object.assign(placementGroup, payload);
 
       // TODO queue event.
-      return makeResponse(updatedPlacementGroup);
+      return makeResponse(placementGroup);
     }
   ),
 ];
@@ -149,49 +136,34 @@ export const placementGroupLinodeAssignment = (mockContext: MockContext) => [
       const placementGroup = mockContext.placementGroups.find(
         (contextPlacementGroup) => contextPlacementGroup.id === id
       );
-
-      if (!placementGroup) {
-        return makeNotFoundResponse();
-      }
-
-      const updatedPlacementGroup: PlacementGroup = {
-        ...placementGroup,
-        members: [
-          ...placementGroup.members,
-          {
-            is_compliant: true,
-            linode_id: payload['linodes'][0],
-          },
-        ],
-      };
-
       const linodeAssigned = mockContext.linodes.find(
         (linode) => linode.id === payload['linodes'][0]
       );
 
-      if (!linodeAssigned) {
+      if (!placementGroup || !linodeAssigned) {
         return makeNotFoundResponse();
       }
 
-      const updatedLinode: Linode = {
-        ...linodeAssigned,
+      Object.assign(placementGroup, {
+        members: [
+          ...placementGroup.members,
+          {
+            linode_id: payload['linodes'][0],
+          },
+        ],
+      });
+
+      Object.assign(linodeAssigned, {
         placement_group: {
           affinity_type: placementGroup.affinity_type,
           id: placementGroup.id,
           is_strict: placementGroup.is_strict,
           label: placementGroup.label,
         },
-      };
-      const linodeIndex = mockContext.linodes.indexOf(linodeAssigned);
-      mockContext.linodes[linodeIndex] = updatedLinode;
-
-      const placementGroupIndex = mockContext.placementGroups.indexOf(
-        placementGroup
-      );
-      mockContext.placementGroups[placementGroupIndex] = updatedPlacementGroup;
+      });
 
       // TODO queue event.
-      return makeResponse(updatedPlacementGroup);
+      return makeResponse(placementGroup);
     }
   ),
 
@@ -210,41 +182,28 @@ export const placementGroupLinodeAssignment = (mockContext: MockContext) => [
         (contextPlacementGroup) => contextPlacementGroup.id === id
       );
 
-      if (!placementGroup) {
+      const linodeAssigned = mockContext.linodes.find(
+        (linode) => linode.id === payload['linodes'][0]
+      );
+
+      if (!placementGroup || !linodeAssigned) {
         return makeNotFoundResponse();
       }
 
-      const updatedPlacementGroup: PlacementGroup = {
-        ...placementGroup,
+      Object.assign(placementGroup, {
         members: [
           ...placementGroup.members.filter(
             (member) => member.linode_id !== payload['linodes'][0]
           ),
         ],
-      };
+      });
 
-      const linodeAssigned = mockContext.linodes.find(
-        (linode) => linode.id === payload['linodes'][0]
-      );
-
-      if (!linodeAssigned) {
-        return makeNotFoundResponse();
-      }
-
-      const updatedLinode: Linode = {
-        ...linodeAssigned,
-        placement_group: undefined,
-      };
-      const linodeIndex = mockContext.linodes.indexOf(linodeAssigned);
-      mockContext.linodes[linodeIndex] = updatedLinode;
-
-      const placementGroupIndex = mockContext.placementGroups.indexOf(
-        placementGroup
-      );
-      mockContext.placementGroups[placementGroupIndex] = updatedPlacementGroup;
+      Object.assign(linodeAssigned, {
+        placement_group: null,
+      });
 
       // TODO queue event.
-      return makeResponse(updatedPlacementGroup);
+      return makeResponse(placementGroup);
     }
   ),
 ];

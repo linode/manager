@@ -26,6 +26,7 @@ export const getContextPopulatorGroups = (
 export const makeMockContext = (): MockContext => {
   return {
     eventQueue: [],
+    firewalls: [],
     linodeConfigs: [],
     linodes: [],
     notificationQueue: [],

@@ -1,7 +1,16 @@
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { configFactory, eventFactory, linodeFactory } from 'src/factories';
+import {
+  configFactory,
+  eventFactory,
+  linodeBackupFactory,
+  linodeDiskFactory,
+  linodeFactory,
+  linodeIPFactory,
+  linodeStatsFactory,
+  linodeTransferFactory,
+} from 'src/factories';
 import {
   makeNotFoundResponse,
   makePaginatedResponse,
@@ -10,7 +19,16 @@ import {
 
 import { getPaginatedSlice } from '../utilities/pagination';
 
-import type { Config, Linode } from '@linode/api-v4';
+import type {
+  Config,
+  Disk,
+  Firewall,
+  Linode,
+  LinodeBackupsResponse,
+  LinodeIPsResponse,
+  RegionalNetworkUtilization,
+  Stats,
+} from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockContext } from 'src/mocks/types';
 import type {
@@ -18,9 +36,6 @@ import type {
   APIPaginatedResponse,
 } from 'src/mocks/utilities/response';
 
-/**
- * HTTP handlers to fetch Linodes.
- */
 export const getLinodes = (mockContext: MockContext) => [
   // Get an individual Linode's details.
   // Responds with a Linode instance if one exists with ID `id` in context.
@@ -40,9 +55,6 @@ export const getLinodes = (mockContext: MockContext) => [
     }
   ),
 
-  // Get a list of a Linode's configs.
-  // Responds with a paginated list of configs if a Linode with ID `id` exists in context.
-  // Otherwise, a 404 response is mocked.
   http.get(
     '*/v4/linode/instances/:id/configs',
     ({
@@ -68,12 +80,11 @@ export const getLinodes = (mockContext: MockContext) => [
       const totalPages = Math.max(Math.ceil(configs.length / pageSize), 1);
 
       const pageSlice = getPaginatedSlice(configs, pageNumber, pageSize);
+
       return makePaginatedResponse(pageSlice, pageNumber, totalPages);
     }
   ),
 
-  // Get all Linodes stored in mock context.
-  // Responds with a paginated list of Linodes.
   http.get('*/v4/linode/instances', ({ request }) => {
     const url = new URL(request.url);
 
@@ -86,22 +97,18 @@ export const getLinodes = (mockContext: MockContext) => [
       pageNumber,
       pageSize
     );
+
     return makePaginatedResponse(pageSlice, pageNumber, totalPages);
   }),
 ];
 
-/**
- * HTTP handlers to create Linodes.
- */
-export const createLinodes = (mockContext: MockContext) => [
+export const createLinode = (mockContext: MockContext) => [
   http.post('*/v4/linode/instances', async ({ request }) => {
     const payload = await request.clone().json();
     const linode = linodeFactory.build({
       created: DateTime.now().toISO(),
-      image: payload['image'],
-      label: payload['label'],
-      region: payload['region'],
       status: 'provisioning',
+      ...payload,
     });
 
     // Mock default label behavior when one is not specified.
@@ -135,19 +142,199 @@ export const createLinodes = (mockContext: MockContext) => [
     mockContext.linodeConfigs.push([linode.id, linodeConfig]);
     mockContext.eventQueue.push([
       linodeEvent,
-      (e, context) => {
+      (e) => {
         if (e.status === 'scheduled') {
           e.status = 'started';
+
           return false;
         }
         if (e.status === 'started') {
           e.status = 'finished';
           linode.status = 'booting';
         }
+
         return true;
       },
     ]);
 
     return makeResponse(linode);
   }),
+];
+
+export const updateLinode = (mockContext: MockContext) => [
+  http.put(
+    '*/v4/linode/instances/:id',
+    async ({
+      params,
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | Linode>> => {
+      const id = Number(params.id);
+      const payload = await request.clone().json();
+
+      const linode = mockContext.linodes.find(
+        (contextLinode) => contextLinode.id === id
+      );
+
+      if (!linode) {
+        return makeNotFoundResponse();
+      }
+
+      Object.assign(linode, payload);
+
+      return makeResponse(linode);
+    }
+  ),
+];
+
+export const deleteLinode = (mockContext: MockContext) => [
+  http.delete('*/v4/linode/instances/:id', ({ params }) => {
+    const id = Number(params.id);
+    const linode = mockContext.linodes.find(
+      (contextLinode) => contextLinode.id === id
+    );
+
+    if (linode) {
+      const linodeIndex = mockContext.linodes.indexOf(linode);
+      if (linodeIndex >= 0) {
+        mockContext.linodes.splice(linodeIndex, 1);
+        return makeResponse({});
+      }
+    }
+
+    return makeNotFoundResponse();
+  }),
+];
+
+export const getLinodeStats = (mockContext: MockContext) => [
+  http.get(
+    '*/v4/linode/instances/:id/stats*',
+    ({ params }): StrictResponse<APIErrorResponse | Stats> => {
+      const id = Number(params.id);
+      const linode = mockContext.linodes.find(
+        (contextLinode) => contextLinode.id === id
+      );
+
+      if (!linode) {
+        return makeNotFoundResponse();
+      }
+
+      const mockStats = linodeStatsFactory.build();
+
+      return makeResponse(mockStats);
+    }
+  ),
+];
+
+export const getLinodeDisks = (mockContext: MockContext) => [
+  http.get(
+    '*/v4/linode/instances/:id/disks',
+    ({
+      params,
+    }): StrictResponse<APIErrorResponse | APIPaginatedResponse<Disk>> => {
+      const id = Number(params.id);
+      const linode = mockContext.linodes.find(
+        (contextLinode) => contextLinode.id === id
+      );
+
+      if (!linode) {
+        return makeNotFoundResponse();
+      }
+
+      const mockDisks = linodeDiskFactory.buildList(3);
+
+      return makePaginatedResponse(mockDisks);
+    }
+  ),
+];
+
+export const getLinodeTransfer = (mockContext: MockContext) => [
+  http.get(
+    '*/v4/linode/instances/:id/transfer',
+    ({
+      params,
+    }): StrictResponse<APIErrorResponse | RegionalNetworkUtilization> => {
+      const id = Number(params.id);
+      const linode = mockContext.linodes.find(
+        (contextLinode) => contextLinode.id === id
+      );
+
+      if (!linode) {
+        return makeNotFoundResponse();
+      }
+
+      const mockTransfer = linodeTransferFactory.build();
+
+      return makeResponse(mockTransfer);
+    }
+  ),
+];
+
+export const getLinodeFirewalls = (mockContext: MockContext) => [
+  http.get(
+    '*/v4/linode/instances/:id/firewalls',
+    ({
+      params,
+    }): StrictResponse<APIErrorResponse | APIPaginatedResponse<Firewall>> => {
+      const id = Number(params.id);
+      const linode = mockContext.linodes.find(
+        (contextLinode) => contextLinode.id === id
+      );
+
+      if (!linode) {
+        return makeNotFoundResponse();
+      }
+
+      const mockFirewalls = mockContext.firewalls.filter((firewall) =>
+        firewall.entities.some((entity) => entity.id === id)
+      );
+
+      return makePaginatedResponse(mockFirewalls);
+    }
+  ),
+];
+
+export const getLinodeIps = (mockContext: MockContext) => [
+  http.get(
+    '*/v4/linode/instances/:id/ips',
+    ({ params }): StrictResponse<APIErrorResponse | LinodeIPsResponse> => {
+      const id = Number(params.id);
+      const linode = mockContext.linodes.find(
+        (contextLinode) => contextLinode.id === id
+      );
+
+      if (!linode) {
+        return makeNotFoundResponse();
+      }
+
+      const mockLinodeIps = linodeIPFactory.build();
+
+      return makeResponse(mockLinodeIps);
+    }
+  ),
+];
+
+export const getLinodeBackups = (mockContext: MockContext) => [
+  http.get(
+    '*/v4/linode/instances/:id/backups',
+    ({ params }): StrictResponse<APIErrorResponse | LinodeBackupsResponse> => {
+      const id = Number(params.id);
+      const linode = mockContext.linodes.find(
+        (contextLinode) => contextLinode.id === id
+      );
+
+      if (!linode) {
+        return makeNotFoundResponse();
+      }
+
+      const mockLinodeBackup = linodeBackupFactory.build();
+
+      return makeResponse({
+        automatic: [mockLinodeBackup],
+        snapshot: {
+          current: null,
+          in_progress: null,
+        },
+      });
+    }
+  ),
 ];
