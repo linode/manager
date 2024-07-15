@@ -109,6 +109,7 @@ export const PowerActionsDialog = (props: Props) => {
       const mutateAsync = mutationMap[action as 'Power Off'];
       await mutateAsync();
     }
+    setSelectConfigID(null);
     checkForNewEvents();
     onClose();
   };
@@ -123,6 +124,11 @@ export const PowerActionsDialog = (props: Props) => {
       label: config.label,
       value: config.id,
     })) ?? [];
+
+  const handleOnClose = () => {
+    setSelectConfigID(null);
+    onClose();
+  };
 
   return (
     <ConfirmationDialog
@@ -143,7 +149,7 @@ export const PowerActionsDialog = (props: Props) => {
         },
       }}
       error={error?.[0].reason}
-      onClose={onClose}
+      onClose={handleOnClose}
       open={isOpen}
       title={`${action} Linode ${linodeLabel ?? ''}?`}
     >
@@ -170,9 +176,10 @@ export const PowerActionsDialog = (props: Props) => {
               (option) => option.value === selectedConfigID
             )}
             errorText={configsError?.[0].reason}
+            isClearable
             isLoading={configsLoading}
             label="Config"
-            onChange={(option) => setSelectConfigID(option.value)}
+            onChange={(option) => setSelectConfigID(option?.value ?? null)}
             options={configOptions}
             overflowPortal
           />
