@@ -1,13 +1,16 @@
 /* eslint-disable no-unused-expressions */
-import { Linode } from '@linode/api-v4/lib/linodes';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
-import { VncScreen, VncScreenHandle } from 'react-vnc';
+import { VncScreen } from 'react-vnc';
+import { makeStyles } from 'tss-react/mui';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { StyledCircleProgress } from 'src/features/Lish/Lish';
 
-import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
+import { resizeViewPort } from './lishUtils';
+
+import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
+import type { Linode } from '@linode/api-v4/lib/linodes';
+import type { VncScreenHandle } from 'react-vnc';
 
 const useStyles = makeStyles()(() => ({
   container: {
@@ -26,16 +29,16 @@ const useStyles = makeStyles()(() => ({
 interface Props {
   linode: Linode;
   refreshToken: () => Promise<void>;
-  token: string;
 }
+
+type CombinedProps = Props & Omit<LinodeLishData, 'weblish_url'>;
 
 let monitor: WebSocket;
 
-const Glish = (props: Props) => {
+const Glish = (props: CombinedProps) => {
   const { classes } = useStyles();
-  const { linode, refreshToken, token } = props;
+  const { glish_url, linode, monitor_url, refreshToken, ws_protocols } = props;
   const ref = React.useRef<VncScreenHandle>(null);
-  const region = linode.region;
   const [powered, setPowered] = React.useState(linode.status === 'running');
 
   React.useEffect(() => {
@@ -69,7 +72,7 @@ const Glish = (props: Props) => {
     // If the Lish token (from props) ever changes, we need to reconnect the monitor websocket
     connectMonitor();
     ref.current?.connect();
-  }, [token]);
+  }, [glish_url, monitor_url, ws_protocols]);
 
   const handlePaste = (event: ClipboardEvent) => {
     event.preventDefault();
@@ -93,9 +96,7 @@ const Glish = (props: Props) => {
       monitor.close();
     }
 
-    const url = `${getLishSchemeAndHostname(region)}:8080/${token}/monitor`;
-
-    monitor = new WebSocket(url);
+    monitor = new WebSocket(monitor_url, ws_protocols);
 
     // eslint-disable-next-line scanjs-rules/call_addEventListener
     monitor.addEventListener('message', (ev) => {
@@ -130,13 +131,16 @@ const Glish = (props: Props) => {
     );
   }
 
+  const rfbOptions = { wsProtocols: ws_protocols };
+
   return (
     <VncScreen
       autoConnect={false}
       loadingUI={<StyledCircleProgress />}
       ref={ref}
+      rfbOptions={rfbOptions}
       showDotCursor
-      url={`${getLishSchemeAndHostname(region)}:8080/${token}`}
+      url={glish_url}
     />
   );
 };

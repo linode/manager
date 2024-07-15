@@ -12,7 +12,7 @@ import { StyledBodyTypography } from './VPCCreateForm.styles';
 
 import type { Region } from '@linode/api-v4';
 import type { FormikErrors } from 'formik';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { CreateVPCFieldState } from 'src/hooks/useCreateVPC';
 
 interface Props {
@@ -28,7 +28,9 @@ export const VPCTopSectionContent = (props: Props) => {
   const { disabled, errors, isDrawer, onChangeField, regions, values } = props;
   const location = useLocation();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
-  const queryParams = getQueryParamsFromQueryString(location.search);
+  const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+    location.search
+  );
 
   return (
     <>
@@ -40,7 +42,7 @@ export const VPCTopSectionContent = (props: Props) => {
             sendLinodeCreateFormStepEvent({
               action: 'click',
               category: 'link',
-              createType: (queryParams.type as LinodeCreateType) ?? 'OS',
+              createType: queryParams.type ?? 'OS',
               formStepName: 'Create VPC Drawer',
               label: 'Learn more',
               version: 'v1',

@@ -26,11 +26,11 @@ import { Typography } from 'src/components/Typography';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
-import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import {
   getMonthlyAndHourlyNodePricing,
   utoa,
 } from 'src/features/Linodes/LinodesCreate/utilities';
+import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
@@ -106,6 +106,7 @@ import type { RegionsProps } from 'src/containers/regions.container';
 import type { WithTypesProps } from 'src/containers/types.container';
 import type { WithLinodesProps } from 'src/containers/withLinodes.container';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
@@ -536,7 +537,9 @@ export class LinodeCreate extends React.PureComponent<
     super(props);
 
     /** Get the query params as an object, excluding the "?" */
-    const queryParams = getQueryParamsFromQueryString(location.search);
+    const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+      location.search
+    );
 
     const _tabs: LinodeCreateType[] = [
       'OS',

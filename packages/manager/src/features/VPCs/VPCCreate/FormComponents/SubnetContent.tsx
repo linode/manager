@@ -14,7 +14,7 @@ import {
 } from './VPCCreateForm.styles';
 
 import type { APIError } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { SubnetFieldState } from 'src/utilities/subnets';
 
 interface Props {
@@ -30,7 +30,9 @@ export const SubnetContent = (props: Props) => {
 
   const location = useLocation();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
-  const queryParams = getQueryParamsFromQueryString(location.search);
+  const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+    location.search
+  );
 
   return (
     <>
@@ -45,7 +47,7 @@ export const SubnetContent = (props: Props) => {
             sendLinodeCreateFormStepEvent({
               action: 'click',
               category: 'link',
-              createType: (queryParams.type as LinodeCreateType) ?? 'OS',
+              createType: queryParams.type ?? 'OS',
               formStepName: 'VPC Subnets',
               label: 'Learn more',
               version: 'v1',

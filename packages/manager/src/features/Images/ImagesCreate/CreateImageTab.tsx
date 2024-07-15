@@ -33,12 +33,16 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import type { CreateImagePayload } from '@linode/api-v4';
+import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
 
 export const CreateImageTab = () => {
   const location = useLocation();
 
   const queryParams = React.useMemo(
-    () => getQueryParamsFromQueryString(location.search),
+    () =>
+      getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
+        location.search
+      ),
     [location.search]
   );
 
