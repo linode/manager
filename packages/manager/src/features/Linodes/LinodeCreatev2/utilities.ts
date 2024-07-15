@@ -390,7 +390,7 @@ export const getGeneratedLinodeLabel = async (
   return '';
 };
 
-const getIsValidLinodeLabelCharacter = (char: string) => {
+export const getIsValidLinodeLabelCharacter = (char: string) => {
   const code = char.charCodeAt(0);
   const isNumeric = code > 47 && code < 58; // (0-9)
   const isLowercaseLetter = code > 96 && code < 123; // (a-z)

@@ -3,6 +3,7 @@ import { createLinodeRequestFactory } from 'src/factories';
 import { base64UserData, userData } from '../LinodesCreate/utilities.test';
 import {
   getInterfacesPayload,
+  getIsValidLinodeLabelCharacter,
   getLinodeCreatePayload,
   getLinodeLabelFromLabelParts,
   getTabIndex,
@@ -328,5 +329,25 @@ describe('getLinodeLabelFromLabelParts', () => {
     expect(getLinodeLabelFromLabelParts([linodeLabel, region])).toBe(
       'a'.repeat(31) + '-us-east'
     );
+  });
+});
+
+describe('getIsValidLinodeLabelCharacter', () => {
+  it('should allow a-z characters', () => {
+    expect(getIsValidLinodeLabelCharacter('a')).toBe(true);
+    expect(getIsValidLinodeLabelCharacter('z')).toBe(true);
+  });
+  it('should allow A-Z characters', () => {
+    expect(getIsValidLinodeLabelCharacter('A')).toBe(true);
+    expect(getIsValidLinodeLabelCharacter('Z')).toBe(true);
+  });
+  it('should allow 0-9 characters', () => {
+    expect(getIsValidLinodeLabelCharacter('0')).toBe(true);
+    expect(getIsValidLinodeLabelCharacter('9')).toBe(true);
+  });
+  it('should not allow special characters', () => {
+    expect(getIsValidLinodeLabelCharacter('&')).toBe(false);
+    expect(getIsValidLinodeLabelCharacter('!')).toBe(false);
+    expect(getIsValidLinodeLabelCharacter(' ')).toBe(false);
   });
 });
