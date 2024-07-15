@@ -12,7 +12,7 @@ describe('TagCell Component', () => {
   describe('Disabled States', () => {
     it('does not allow adding a new tag when disabled', async () => {
       const { getByTestId } = renderWithTheme(
-        <TagCell disabled tags={tags} updateTags={updateTags} />
+        <TagCell disabled tags={tags} updateTags={updateTags} view="panel" />
       );
       const disabledButton = getByTestId('Button');
       expect(disabledButton).toHaveAttribute('aria-disabled', 'true');
@@ -20,7 +20,7 @@ describe('TagCell Component', () => {
 
     it('should display the tooltip if disabled and tooltipText is true', async () => {
       const { getByTestId } = renderWithTheme(
-        <TagCell disabled tags={tags} updateTags={updateTags} />
+        <TagCell disabled tags={tags} updateTags={updateTags} view="panel" />
       );
       const disabledButton = getByTestId('Button');
       expect(disabledButton).toBeInTheDocument();

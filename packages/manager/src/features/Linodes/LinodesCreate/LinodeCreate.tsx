@@ -1,18 +1,9 @@
-import { PlacementGroup } from '@linode/api-v4';
-import {
-  CreateLinodePlacementGroupPayload,
-  EncryptionStatus,
-  InterfacePayload,
-  PriceObject,
-  restoreBackup,
-} from '@linode/api-v4/lib/linodes';
-import { Tag } from '@linode/api-v4/lib/tags/types';
+import { restoreBackup } from '@linode/api-v4/lib/linodes';
 import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import cloneDeep from 'lodash.clonedeep';
 import * as React from 'react';
-import { MapDispatchToProps, connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { v4 } from 'uuid';
 
 import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
@@ -34,12 +25,6 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
-import { WithAccountProps } from 'src/containers/account.container';
-import { WithFeatureFlagProps } from 'src/containers/flags.container';
-import { WithImagesProps as ImagesProps } from 'src/containers/images.container';
-import { RegionsProps } from 'src/containers/regions.container';
-import { WithTypesProps } from 'src/containers/types.container';
-import { WithLinodesProps } from 'src/containers/withLinodes.container';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import {
@@ -52,10 +37,7 @@ import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
-import {
-  CreateTypes,
-  handleChangeCreateType,
-} from 'src/store/linodeCreate/linodeCreate.actions';
+import { handleChangeCreateType } from 'src/store/linodeCreate/linodeCreate.actions';
 import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
 import {
   sendApiAwarenessClickEvent,
@@ -70,7 +52,6 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
-import { ExtendedIP } from 'src/utilities/ipUtils';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
@@ -94,7 +75,9 @@ import { FromImageContent } from './TabbedContent/FromImageContent';
 import { FromLinodeContent } from './TabbedContent/FromLinodeContent';
 import { FromStackScriptContent } from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
-import {
+import { VPCPanel } from './VPCPanel';
+
+import type {
   AllFormStateAndHandlers,
   AppsData,
   HandleSubmit,
@@ -106,10 +89,27 @@ import {
   WithDisplayData,
   WithTypesRegionsAndImages,
 } from './types';
-import { VPCPanel } from './VPCPanel';
-
+import type { PlacementGroup } from '@linode/api-v4';
+import type {
+  CreateLinodePlacementGroupPayload,
+  EncryptionStatus,
+  InterfacePayload,
+  PriceObject,
+} from '@linode/api-v4/lib/linodes';
+import type { Tag } from '@linode/api-v4/lib/tags/types';
+import type { MapDispatchToProps } from 'react-redux';
+import type { RouteComponentProps } from 'react-router-dom';
 import type { Tab } from 'src/components/Tabs/TabLinkList';
+import type { WithAccountProps } from 'src/containers/account.container';
+import type { WithFeatureFlagProps } from 'src/containers/flags.container';
+import type { WithImagesProps as ImagesProps } from 'src/containers/images.container';
+import type { RegionsProps } from 'src/containers/regions.container';
+import type { WithTypesProps } from 'src/containers/types.container';
+import type { WithLinodesProps } from 'src/containers/withLinodes.container';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
+import type { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export interface LinodeCreateProps {
   additionalIPv4RangesForVPC: ExtendedIP[];
@@ -213,11 +213,336 @@ export class LinodeCreate extends React.PureComponent<
   LinodeCreateComponentProps,
   State
 > {
+  createLinode = () => {
+    const payload = this.getPayload();
+    const { selectedTab } = this.state;
+    const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
+
+    try {
+      CreateLinodeSchema.validateSync(payload, {
+        abortEarly: true,
+      });
+      this.setState({ hasError: false });
+    } catch (e) {
+      this.setState({ hasError: true }, () => {
+        scrollErrorIntoViewV2(this.createLinodeFormRef);
+      });
+    }
+    this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
+    sendLinodeCreateFormSubmitEvent(
+      'Create Linode',
+      selectedTabName ?? 'Distributions',
+      'v1'
+    );
+  };
+
+  createLinodeFormRef = React.createRef<HTMLFormElement>();
+
+  filterTypes = () => {
+    const { createType, typesData } = this.props;
+    const { selectedTab } = this.state;
+    const currentTypes = filterCurrentTypes(typesData?.map(extendType));
+
+    return ['fromBackup', 'fromImage'].includes(createType) && selectedTab !== 0
+      ? currentTypes.filter((t) => t.class !== 'metal')
+      : currentTypes;
+  };
+
+  getPayload = () => {
+    const selectedRegion = this.props.selectedRegionID || '';
+
+    const regionSupportsVLANs = doesRegionSupportFeature(
+      selectedRegion,
+      this.props.regionsData,
+      'Vlans'
+    );
+
+    const regionSupportsVPCs = doesRegionSupportFeature(
+      this.props.selectedRegionID ?? '',
+      this.props.regionsData,
+      'VPCs'
+    );
+
+    const regionSupportsDiskEncryption = doesRegionSupportFeature(
+      this.props.selectedRegionID ?? '',
+      this.props.regionsData,
+      'Disk Encryption'
+    );
+
+    const hasDiskEncryptionAccountCapability = this.props.account.data?.capabilities?.includes(
+      'Disk Encryption'
+    );
+
+    const isDiskEncryptionFeatureEnabled =
+      this.props.flags.linodeDiskEncryption &&
+      hasDiskEncryptionAccountCapability;
+
+    const diskEncryptionPayload: EncryptionStatus = this.props
+      .diskEncryptionEnabled
+      ? 'enabled'
+      : 'disabled';
+
+    const placement_group_payload: CreateLinodePlacementGroupPayload = {
+      id: this.props.placementGroupSelection?.id ?? -1,
+    };
+
+    // eslint-disable-next-line sonarjs/no-unused-collection
+    const interfaces: InterfacePayload[] = [];
+
+    const payload = {
+      authorized_users: this.props.authorized_users,
+      backup_id: this.props.selectedBackupID,
+      backups_enabled: this.props.backupsEnabled,
+      booted: true,
+      disk_encryption:
+        isDiskEncryptionFeatureEnabled && regionSupportsDiskEncryption
+          ? diskEncryptionPayload
+          : undefined,
+      firewall_id:
+        this.props.firewallId !== -1 ? this.props.firewallId : undefined,
+      image: this.props.selectedImageID,
+      label: this.props.label,
+      placement_group:
+        placement_group_payload.id !== -1 ? placement_group_payload : undefined,
+      private_ip: this.props.privateIPEnabled,
+      region: this.props.selectedRegionID ?? '',
+      root_pass: this.props.password,
+      stackscript_data: this.props.selectedUDFs,
+
+      // StackScripts
+      stackscript_id: this.props.selectedStackScriptID,
+      tags: this.props.tags
+        ? this.props.tags.map((eachTag) => eachTag.label)
+        : [],
+      type: this.props.selectedTypeID ?? '',
+    };
+
+    if (
+      regionSupportsVPCs &&
+      this.props.selectedVPCId !== undefined &&
+      this.props.selectedVPCId !== -1
+    ) {
+      const vpcInterfaceData: InterfacePayload = {
+        ip_ranges: this.props.additionalIPv4RangesForVPC
+          .map((ipRange) => ipRange.address)
+          .filter((ipRange) => ipRange !== ''),
+        ipam_address: null,
+        ipv4: {
+          nat_1_1: this.props.assignPublicIPv4Address ? 'any' : undefined,
+          vpc: this.props.autoassignIPv4WithinVPC
+            ? undefined
+            : this.props.vpcIPv4AddressOfLinode,
+        },
+        label: null,
+        primary: true,
+        purpose: 'vpc',
+        subnet_id: this.props.selectedSubnetId,
+        vpc_id: this.props.selectedVPCId,
+      };
+
+      interfaces.unshift(vpcInterfaceData);
+    }
+
+    if (
+      regionSupportsVLANs &&
+      this.props.selectedImageID &&
+      Boolean(this.props.vlanLabel)
+    ) {
+      // The region must support VLANs and an image and VLAN
+      // must be selected
+      interfaces.push({
+        ipam_address: this.props.ipamAddress,
+        label: this.props.vlanLabel,
+        purpose: 'vlan',
+      });
+    }
+
+    if (this.props.userData) {
+      payload['metadata'] = {
+        user_data: utoa(this.props.userData),
+      };
+    }
+
+    const vpcAssigned = interfaces.some(
+      (_interface) => _interface.purpose === 'vpc'
+    );
+    const vlanAssigned = interfaces.some(
+      (_interface) => _interface.purpose === 'vlan'
+    );
+
+    // Only submit 'interfaces' in the payload if there are VPCs
+    // or VLANs
+    if (interfaces.length > 0) {
+      // Determine position of the default public interface
+
+      // Case 1: VLAN assigned, no VPC assigned
+      if (!vpcAssigned) {
+        interfaces.unshift(defaultPublicInterface);
+      }
+
+      // Case 2: VPC assigned, no VLAN assigned, Private IP enabled
+      if (!vlanAssigned && this.props.privateIPEnabled) {
+        interfaces.push(defaultPublicInterface);
+      }
+
+      // Case 3: VPC and VLAN assigned + Private IP enabled
+      if (vpcAssigned && vlanAssigned && this.props.privateIPEnabled) {
+        interfaces.push(defaultPublicInterface);
+      }
+
+      payload['interfaces'] = interfaces;
+    }
+
+    return payload;
+  };
+
+  handleAnalyticsFormError = (
+    errorMap: Partial<Record<string, string | undefined>>
+  ) => {
+    const { selectedTab } = this.state;
+    const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
+
+    if (!errorMap) {
+      return;
+    }
+    if (errorMap.region) {
+      sendLinodeCreateFormErrorEvent(
+        'Region not selected',
+        selectedTabName ?? 'Distributions',
+        'v1'
+      );
+    }
+    if (errorMap.type) {
+      sendLinodeCreateFormErrorEvent(
+        'Plan not selected',
+        selectedTabName ?? 'Distributions',
+        'v1'
+      );
+    }
+    if (errorMap.root_pass) {
+      sendLinodeCreateFormErrorEvent(
+        'Password not created',
+        selectedTabName ?? 'Distributions',
+        'v1'
+      );
+    }
+  };
+
+  handleClickCreateUsingCommandLine = () => {
+    const payload = {
+      authorized_users: this.props.authorized_users,
+      backup_id: this.props.selectedBackupID,
+      backups_enabled: this.props.backupsEnabled,
+      booted: true,
+      image: this.props.selectedImageID,
+      label: this.props.label,
+      private_ip: this.props.privateIPEnabled,
+      region: this.props.selectedRegionID ?? '',
+      root_pass: this.props.password,
+      stackscript_data: this.props.selectedUDFs,
+      // StackScripts
+      stackscript_id: this.props.selectedStackScriptID,
+
+      tags: this.props.tags
+        ? this.props.tags.map((eachTag) => eachTag.label)
+        : [],
+      type: this.props.selectedTypeID ?? '',
+    };
+    sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
+    this.props.checkValidation(payload);
+  };
+
+  handleTabChange = (index: number) => {
+    const prevTabIndex = this.state.selectedTab;
+
+    this.props.resetCreationState();
+
+    /** set the tab in redux state */
+    this.props.setTab(this.tabs[index].type);
+
+    /** Reset the plan panel since types may have shifted */
+
+    this.setState({
+      planKey: v4(),
+      selectedTab: index,
+    });
+
+    // Do not fire the form event if a user is not switching to a different tab.
+    // Prevents a double-firing on Marketplace because we manually handle the tab change.
+    if (prevTabIndex !== index) {
+      sendLinodeCreateFormStepEvent({
+        action: 'click',
+        category: 'tab',
+        createType:
+          (this.tabs[prevTabIndex].title as LinodeCreateType) ??
+          'Distributions',
+        label: `${this.tabs[index].title} Tab`,
+        version: 'v1',
+      });
+    }
+  };
+
+  mounted: boolean = false;
+
+  setNumberOfNodesForAppCluster = (num: number) => {
+    this.setState({
+      numberOfNodes: num,
+    });
+  };
+
+  stackScriptTabs: CreateTab[] = [
+    {
+      routeName: `${this.props.match.url}?type=StackScripts&subtype=Account`,
+      title: 'Account StackScripts',
+      type: 'fromStackScript',
+    },
+    {
+      routeName: `${this.props.match.url}?type=StackScripts&subtype=Community`,
+      title: 'Community StackScripts',
+      type: 'fromStackScript',
+    },
+  ];
+
+  tabs: CreateTab[] = [
+    {
+      routeName: `${this.props.match.url}?type=Distributions`,
+      title: 'Distributions',
+      type: 'fromImage',
+    },
+    {
+      routeName: `${this.props.match.url}?type=One-Click`,
+      title: 'Marketplace',
+      type: 'fromApp',
+    },
+    {
+      routeName: `${this.props.match.url}?type=StackScripts`,
+      title: 'StackScripts',
+      type: 'fromStackScript',
+    },
+    {
+      routeName: `${this.props.match.url}?type=Images`,
+      title: 'Images',
+      type: 'fromImage',
+    },
+    {
+      routeName: `${this.props.match.url}?type=Backups`,
+      title: 'Backups',
+      type: 'fromBackup',
+    },
+    {
+      routeName: `${this.props.match.url}?type=Clone%20Linode`,
+      title: 'Clone Linode',
+      type: 'fromLinode',
+    },
+  ];
+
   constructor(props: LinodeCreateComponentProps) {
     super(props);
 
     /** Get the query params as an object, excluding the "?" */
-    const queryParams = getQueryParamsFromQueryString(location.search);
+    const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+      location.search
+    );
 
     const _tabs: LinodeCreateType[] = [
       'Distributions',
@@ -615,10 +940,10 @@ export class LinodeCreate extends React.PureComponent<
                     imagePanelTitle="Choose an Image"
                     imagesData={imagesData}
                     regionsData={regionsData!}
+                    selectedRegionID={selectedRegionID}
                     typesData={typesData!}
                     userCannotCreateLinode={userCannotCreateLinode}
                     variant={'private'}
-                    selectedRegionID={selectedRegionID}
                     {...rest}
                   />
                 </SafeTabPanel>
@@ -891,329 +1216,6 @@ export class LinodeCreate extends React.PureComponent<
       </StyledForm>
     );
   }
-
-  createLinode = () => {
-    const payload = this.getPayload();
-    const { selectedTab } = this.state;
-    const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
-
-    try {
-      CreateLinodeSchema.validateSync(payload, {
-        abortEarly: true,
-      });
-      this.setState({ hasError: false });
-    } catch (e) {
-      this.setState({ hasError: true }, () => {
-        scrollErrorIntoViewV2(this.createLinodeFormRef);
-      });
-    }
-    this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
-    sendLinodeCreateFormSubmitEvent(
-      'Create Linode',
-      selectedTabName ?? 'Distributions',
-      'v1'
-    );
-  };
-
-  createLinodeFormRef = React.createRef<HTMLFormElement>();
-
-  filterTypes = () => {
-    const { createType, typesData } = this.props;
-    const { selectedTab } = this.state;
-    const currentTypes = filterCurrentTypes(typesData?.map(extendType));
-
-    return ['fromBackup', 'fromImage'].includes(createType) && selectedTab !== 0
-      ? currentTypes.filter((t) => t.class !== 'metal')
-      : currentTypes;
-  };
-
-  getPayload = () => {
-    const selectedRegion = this.props.selectedRegionID || '';
-
-    const regionSupportsVLANs = doesRegionSupportFeature(
-      selectedRegion,
-      this.props.regionsData,
-      'Vlans'
-    );
-
-    const regionSupportsVPCs = doesRegionSupportFeature(
-      this.props.selectedRegionID ?? '',
-      this.props.regionsData,
-      'VPCs'
-    );
-
-    const regionSupportsDiskEncryption = doesRegionSupportFeature(
-      this.props.selectedRegionID ?? '',
-      this.props.regionsData,
-      'Disk Encryption'
-    );
-
-    const hasDiskEncryptionAccountCapability = this.props.account.data?.capabilities?.includes(
-      'Disk Encryption'
-    );
-
-    const isDiskEncryptionFeatureEnabled =
-      this.props.flags.linodeDiskEncryption &&
-      hasDiskEncryptionAccountCapability;
-
-    const diskEncryptionPayload: EncryptionStatus = this.props
-      .diskEncryptionEnabled
-      ? 'enabled'
-      : 'disabled';
-
-    const placement_group_payload: CreateLinodePlacementGroupPayload = {
-      id: this.props.placementGroupSelection?.id ?? -1,
-    };
-
-    // eslint-disable-next-line sonarjs/no-unused-collection
-    const interfaces: InterfacePayload[] = [];
-
-    const payload = {
-      authorized_users: this.props.authorized_users,
-      backup_id: this.props.selectedBackupID,
-      backups_enabled: this.props.backupsEnabled,
-      booted: true,
-      disk_encryption:
-        isDiskEncryptionFeatureEnabled && regionSupportsDiskEncryption
-          ? diskEncryptionPayload
-          : undefined,
-      firewall_id:
-        this.props.firewallId !== -1 ? this.props.firewallId : undefined,
-      image: this.props.selectedImageID,
-      label: this.props.label,
-      placement_group:
-        placement_group_payload.id !== -1 ? placement_group_payload : undefined,
-      private_ip: this.props.privateIPEnabled,
-      region: this.props.selectedRegionID ?? '',
-      root_pass: this.props.password,
-      stackscript_data: this.props.selectedUDFs,
-
-      // StackScripts
-      stackscript_id: this.props.selectedStackScriptID,
-      tags: this.props.tags
-        ? this.props.tags.map((eachTag) => eachTag.label)
-        : [],
-      type: this.props.selectedTypeID ?? '',
-    };
-
-    if (
-      regionSupportsVPCs &&
-      this.props.selectedVPCId !== undefined &&
-      this.props.selectedVPCId !== -1
-    ) {
-      const vpcInterfaceData: InterfacePayload = {
-        ip_ranges: this.props.additionalIPv4RangesForVPC
-          .map((ipRange) => ipRange.address)
-          .filter((ipRange) => ipRange !== ''),
-        ipam_address: null,
-        ipv4: {
-          nat_1_1: this.props.assignPublicIPv4Address ? 'any' : undefined,
-          vpc: this.props.autoassignIPv4WithinVPC
-            ? undefined
-            : this.props.vpcIPv4AddressOfLinode,
-        },
-        label: null,
-        primary: true,
-        purpose: 'vpc',
-        subnet_id: this.props.selectedSubnetId,
-        vpc_id: this.props.selectedVPCId,
-      };
-
-      interfaces.unshift(vpcInterfaceData);
-    }
-
-    if (
-      regionSupportsVLANs &&
-      this.props.selectedImageID &&
-      Boolean(this.props.vlanLabel)
-    ) {
-      // The region must support VLANs and an image and VLAN
-      // must be selected
-      interfaces.push({
-        ipam_address: this.props.ipamAddress,
-        label: this.props.vlanLabel,
-        purpose: 'vlan',
-      });
-    }
-
-    if (this.props.userData) {
-      payload['metadata'] = {
-        user_data: utoa(this.props.userData),
-      };
-    }
-
-    const vpcAssigned = interfaces.some(
-      (_interface) => _interface.purpose === 'vpc'
-    );
-    const vlanAssigned = interfaces.some(
-      (_interface) => _interface.purpose === 'vlan'
-    );
-
-    // Only submit 'interfaces' in the payload if there are VPCs
-    // or VLANs
-    if (interfaces.length > 0) {
-      // Determine position of the default public interface
-
-      // Case 1: VLAN assigned, no VPC assigned
-      if (!vpcAssigned) {
-        interfaces.unshift(defaultPublicInterface);
-      }
-
-      // Case 2: VPC assigned, no VLAN assigned, Private IP enabled
-      if (!vlanAssigned && this.props.privateIPEnabled) {
-        interfaces.push(defaultPublicInterface);
-      }
-
-      // Case 3: VPC and VLAN assigned + Private IP enabled
-      if (vpcAssigned && vlanAssigned && this.props.privateIPEnabled) {
-        interfaces.push(defaultPublicInterface);
-      }
-
-      payload['interfaces'] = interfaces;
-    }
-
-    return payload;
-  };
-
-  handleAnalyticsFormError = (
-    errorMap: Partial<Record<string, string | undefined>>
-  ) => {
-    const { selectedTab } = this.state;
-    const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
-
-    if (!errorMap) {
-      return;
-    }
-    if (errorMap.region) {
-      sendLinodeCreateFormErrorEvent(
-        'Region not selected',
-        selectedTabName ?? 'Distributions',
-        'v1'
-      );
-    }
-    if (errorMap.type) {
-      sendLinodeCreateFormErrorEvent(
-        'Plan not selected',
-        selectedTabName ?? 'Distributions',
-        'v1'
-      );
-    }
-    if (errorMap.root_pass) {
-      sendLinodeCreateFormErrorEvent(
-        'Password not created',
-        selectedTabName ?? 'Distributions',
-        'v1'
-      );
-    }
-  };
-
-  handleClickCreateUsingCommandLine = () => {
-    const payload = {
-      authorized_users: this.props.authorized_users,
-      backup_id: this.props.selectedBackupID,
-      backups_enabled: this.props.backupsEnabled,
-      booted: true,
-      image: this.props.selectedImageID,
-      label: this.props.label,
-      private_ip: this.props.privateIPEnabled,
-      region: this.props.selectedRegionID ?? '',
-      root_pass: this.props.password,
-      stackscript_data: this.props.selectedUDFs,
-      // StackScripts
-      stackscript_id: this.props.selectedStackScriptID,
-
-      tags: this.props.tags
-        ? this.props.tags.map((eachTag) => eachTag.label)
-        : [],
-      type: this.props.selectedTypeID ?? '',
-    };
-    sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
-    this.props.checkValidation(payload);
-  };
-
-  handleTabChange = (index: number) => {
-    const prevTabIndex = this.state.selectedTab;
-
-    this.props.resetCreationState();
-
-    /** set the tab in redux state */
-    this.props.setTab(this.tabs[index].type);
-
-    /** Reset the plan panel since types may have shifted */
-
-    this.setState({
-      planKey: v4(),
-      selectedTab: index,
-    });
-
-    // Do not fire the form event if a user is not switching to a different tab.
-    // Prevents a double-firing on Marketplace because we manually handle the tab change.
-    if (prevTabIndex !== index) {
-      sendLinodeCreateFormStepEvent({
-        action: 'click',
-        category: 'tab',
-        createType:
-          (this.tabs[prevTabIndex].title as LinodeCreateType) ??
-          'Distributions',
-        label: `${this.tabs[index].title} Tab`,
-        version: 'v1',
-      });
-    }
-  };
-
-  mounted: boolean = false;
-
-  setNumberOfNodesForAppCluster = (num: number) => {
-    this.setState({
-      numberOfNodes: num,
-    });
-  };
-
-  stackScriptTabs: CreateTab[] = [
-    {
-      routeName: `${this.props.match.url}?type=StackScripts&subtype=Account`,
-      title: 'Account StackScripts',
-      type: 'fromStackScript',
-    },
-    {
-      routeName: `${this.props.match.url}?type=StackScripts&subtype=Community`,
-      title: 'Community StackScripts',
-      type: 'fromStackScript',
-    },
-  ];
-
-  tabs: CreateTab[] = [
-    {
-      routeName: `${this.props.match.url}?type=Distributions`,
-      title: 'Distributions',
-      type: 'fromImage',
-    },
-    {
-      routeName: `${this.props.match.url}?type=One-Click`,
-      title: 'Marketplace',
-      type: 'fromApp',
-    },
-    {
-      routeName: `${this.props.match.url}?type=StackScripts`,
-      title: 'StackScripts',
-      type: 'fromStackScript',
-    },
-    {
-      routeName: `${this.props.match.url}?type=Images`,
-      title: 'Images',
-      type: 'fromImage',
-    },
-    {
-      routeName: `${this.props.match.url}?type=Backups`,
-      title: 'Backups',
-      type: 'fromBackup',
-    },
-    {
-      routeName: `${this.props.match.url}?type=Clone%20Linode`,
-      title: 'Clone Linode',
-      type: 'fromLinode',
-    },
-  ];
 }
 
 export const defaultPublicInterface: InterfacePayload = {
