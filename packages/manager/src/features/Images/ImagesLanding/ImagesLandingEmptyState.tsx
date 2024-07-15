@@ -17,7 +17,7 @@ import {
 export const ImagesLandingEmptyState = () => {
   const { push } = useHistory();
 
-  const isRestricted = useRestrictedGlobalGrantCheck({
+  const isImagesReadOnly = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_images',
   });
 
@@ -26,7 +26,7 @@ export const ImagesLandingEmptyState = () => {
       buttonProps={[
         {
           children: 'Create Image',
-          disabled: isRestricted,
+          disabled: isImagesReadOnly,
           onClick: () => {
             sendEvent({
               action: 'Click:button',
