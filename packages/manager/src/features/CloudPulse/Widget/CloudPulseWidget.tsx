@@ -194,10 +194,10 @@ export const CloudPulseWidget = (props: CloudViewWidgetProperties) => {
                 props.availableMetrics.available_aggregate_functions.length >
                   0 && (
                   <CloudPulseAggregateFunction
-                    available_aggregate_func={
+                    availableAggregateFunctions={
                       props.availableMetrics?.available_aggregate_functions
                     }
-                    default_aggregate_func={widget?.aggregate_function}
+                    defaultAggregateFunction={widget?.aggregate_function}
                     onAggregateFuncChange={handleAggregateFunctionChange}
                   />
                 )}

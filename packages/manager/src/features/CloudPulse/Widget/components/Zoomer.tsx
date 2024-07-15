@@ -17,6 +17,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
     if (props.zoomIn) {
       return (
         <ZoomInMap
+          data-testid="zoom-in"
           onClick={() => handleClick(false)}
           style={{ color: 'grey', fontSize: 'x-large' }}
         />
@@ -25,6 +26,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
 
     return (
       <ZoomOutMap
+        data-testid="zoom-out"
         onClick={() => handleClick(true)}
         style={{ color: 'grey', fontSize: 'x-large' }}
       />
