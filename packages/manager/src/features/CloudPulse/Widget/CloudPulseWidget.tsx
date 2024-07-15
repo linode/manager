@@ -1,5 +1,5 @@
 import { Widgets } from '@linode/api-v4';
-import { Grid, Paper, Stack, Typography } from '@mui/material';
+import { Grid, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 import { makeStyles } from 'tss-react/mui';

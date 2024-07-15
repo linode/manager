@@ -2437,7 +2437,7 @@ export const handlers = [
 
     return HttpResponse.json(response);
   }),
-  http.get('*/v4/monitor/services/:serviceType/metric-definitions', () => {
+  http.get('*/v4/monitor/services/:serviceType/metricDefinitions', () => {
     const response = {
       data: [
         {
@@ -2468,7 +2468,7 @@ export const handlers = [
               values: null,
             },
           ],
-          label: 'Utilization CPU',
+          label: 'CPU utilization',
           metric: 'system_cpu_utilization_percent',
           metric_type: 'gauge',
           scrape_interval: '2m',
