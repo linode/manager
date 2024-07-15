@@ -109,7 +109,7 @@ export const LinodeRebuildDialog = (props: Props) => {
           If you can&rsquo;t rescue an existing disk, it&rsquo;s time to rebuild
           your Linode. There are a couple of different ways you can do this:
           either restore from a backup or start over with a fresh Linux
-          OS.&nbsp;
+          distribution.&nbsp;
           <strong>
             Rebuilding will destroy all data on all existing disks on this
             Linode.

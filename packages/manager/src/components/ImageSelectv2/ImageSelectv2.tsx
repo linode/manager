@@ -37,7 +37,7 @@ interface Props
    */
   placeholder?: string;
   /**
-   * If there is only one avaiblable option, selected it by default.
+   * If there is only one available option, selected it by default.
    */
   selectIfOnlyOneOption?: boolean;
   /**
@@ -46,7 +46,7 @@ interface Props
   value: null | string | undefined;
   /**
    * Determines what images are fetched and shown
-   * - Public - Includes all public Linux OSs
+   * - Public - Includes all public Linux distributions
    * - Private - Includes images the customer captured or uploaded
    * - All - shows all images (no API filtering)
    */
