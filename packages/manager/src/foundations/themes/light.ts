@@ -5,6 +5,7 @@ import {
   Color,
   Dropdown,
   Interaction,
+  NotificationToast,
   Select,
 } from '@linode/design-language-system';
 
@@ -98,6 +99,30 @@ export const borderColors = {
   borderTypography: Color.Neutrals[30],
   divider: Color.Neutrals[30],
   dividerDark: Color.Neutrals[80],
+} as const;
+
+export const notificationToast = {
+  default: {
+    backgroundColor: NotificationToast.Informative.Background,
+    borderLeft: `6px solid ${NotificationToast.Informative.Border}`,
+    color: NotificationToast.Text,
+  },
+  error: {
+    backgroundColor: NotificationToast.Error.Background,
+    borderLeft: `6px solid ${NotificationToast.Error.Border}`,
+  },
+  info: {
+    backgroundColor: NotificationToast.Informative.Background,
+    borderLeft: `6px solid ${NotificationToast.Informative.Border}`,
+  },
+  success: {
+    backgroundColor: NotificationToast.Success.Background,
+    borderLeft: `6px solid ${NotificationToast.Success.Border}`,
+  },
+  warning: {
+    backgroundColor: NotificationToast.Warning.Background,
+    borderLeft: `6px solid ${NotificationToast.Warning.Border}`,
+  },
 } as const;
 
 const iconCircleAnimation = {
@@ -530,10 +555,10 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         clickable: {
           '&:focus': {
-            bbackgroundColor: Color.Brand[40], // TODO: This was the closest color according to our palette
+            backgroundColor: Color.Brand[30], // TODO: This was the closest color according to our palette
           },
           '&:hover': {
-            bbackgroundColor: Color.Brand[40], // TODO: This was the closest color according to our palette
+            backgroundColor: Color.Brand[30], // TODO: This was the closest color according to our palette
           },
           backgroundColor: Color.Brand[10], // TODO: This was the closest color according to our palette
         },
@@ -1547,6 +1572,7 @@ export const lightTheme: ThemeOptions = {
     },
   },
   name: 'light', // @todo remove this because we leverage pallete.mode now
+  notificationToast,
   palette: {
     background: {
       default: bg.app,

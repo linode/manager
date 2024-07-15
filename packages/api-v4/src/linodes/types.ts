@@ -527,3 +527,10 @@ export interface DeleteLinodeConfigInterfacePayload {
   configId: number;
   interfaceId: number;
 }
+
+export interface LinodeLishData {
+  weblish_url: string;
+  glish_url: string;
+  monitor_url: string;
+  ws_protocols: string[];
+}

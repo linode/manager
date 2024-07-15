@@ -28,7 +28,12 @@ import type { PaginationProps } from 'src/components/Paginate';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import type { DialogType } from 'src/features/Linodes/types';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
+import type { BaseQueryParams } from 'src/utilities/queryParams';
 import type { RegionFilter } from 'src/utilities/storage';
+
+interface QueryParams extends BaseQueryParams {
+  page: string;
+}
 
 export interface RenderLinodesProps
   extends PaginationProps<LinodeWithMaintenance> {
@@ -115,7 +120,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const maxPageNumber = Math.ceil(count / pageSize);
 
   const { search } = useLocation();
-  const params = getQueryParamsFromQueryString(search);
+  const params = getQueryParamsFromQueryString<QueryParams>(search);
   const queryPage = Math.min(Number(params.page), maxPageNumber) || 1;
 
   const { isGeckoGAEnabled } = useIsGeckoEnabled();

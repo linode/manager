@@ -1,4 +1,6 @@
 import { isEmpty } from '@linode/api-v4';
+import { useQueryClient } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
@@ -17,7 +19,6 @@ import {
 } from 'src/queries/linodes/linodes';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { Security } from './Security';
 import { Actions } from './Actions';
 import { Addons } from './Addons/Addons';
 import { Details } from './Details/Details';
@@ -26,7 +27,8 @@ import { Firewall } from './Firewall';
 import { Plan } from './Plan';
 import { Region } from './Region';
 import { linodeCreateResolvers } from './resolvers';
-import { Summary } from './Summary';
+import { Security } from './Security';
+import { Summary } from './Summary/Summary';
 import { Backups } from './Tabs/Backups/Backups';
 import { Clone } from './Tabs/Clone/Clone';
 import { Distributions } from './Tabs/Distributions';
@@ -35,7 +37,7 @@ import { Marketplace } from './Tabs/Marketplace/Marketplace';
 import { StackScripts } from './Tabs/StackScripts/StackScripts';
 import { UserData } from './UserData/UserData';
 import {
-  LinodeCreateFormValues,
+  captureLinodeCreateAnalyticsEvent,
   defaultValues,
   defaultValuesMap,
   getLinodeCreatePayload,
@@ -46,11 +48,11 @@ import {
 import { VLAN } from './VLAN';
 import { VPC } from './VPC/VPC';
 
+import type { LinodeCreateFormValues } from './utilities';
 import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreatev2 = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
-  const formRef = useRef<HTMLFormElement>(null);
 
   const form = useForm<LinodeCreateFormValues>({
     defaultValues,
@@ -60,9 +62,10 @@ export const LinodeCreatev2 = () => {
   });
 
   const history = useHistory();
-
+  const queryClient = useQueryClient();
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
+  const { enqueueSnackbar } = useSnackbar();
 
   const currentTabIndex = getTabIndex(params.type);
 
@@ -87,6 +90,16 @@ export const LinodeCreatev2 = () => {
           : await createLinode(payload);
 
       history.push(`/linodes/${linode.id}`);
+
+      enqueueSnackbar(`Your Linode ${linode.label} is being created.`, {
+        variant: 'success',
+      });
+
+      captureLinodeCreateAnalyticsEvent({
+        queryClient,
+        type: params.type ?? 'Distributions',
+        values,
+      });
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
@@ -118,7 +131,7 @@ export const LinodeCreatev2 = () => {
         docsLink="https://www.linode.com/docs/guides/platform/get-started/"
         title="Create"
       />
-      <form onSubmit={form.handleSubmit(onSubmit)} ref={formRef}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <Error />
         <Stack gap={3}>
           <Tabs index={currentTabIndex} onChange={onTabChange}>
