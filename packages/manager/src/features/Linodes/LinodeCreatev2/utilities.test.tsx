@@ -4,6 +4,7 @@ import { base64UserData, userData } from '../LinodesCreate/utilities.test';
 import {
   getInterfacesPayload,
   getLinodeCreatePayload,
+  getLinodeLabelFromLabelParts,
   getTabIndex,
 } from './utilities';
 
@@ -298,5 +299,34 @@ describe('getInterfacesPayload', () => {
         purpose: 'public',
       },
     ]);
+  });
+});
+
+describe('getLinodeLabelFromLabelParts', () => {
+  it('should join items', () => {
+    expect(getLinodeLabelFromLabelParts(['my-linode', 'us-east'])).toBe(
+      'my-linode-us-east'
+    );
+  });
+  it('should not include special characters in the generated label', () => {
+    expect(getLinodeLabelFromLabelParts(['redis&app', 'us-east'])).toBe(
+      'redisapp-us-east'
+    );
+  });
+  it('should replace spaces with a -', () => {
+    expect(getLinodeLabelFromLabelParts(['banks test'])).toBe('banks-test');
+  });
+  it('should not generate consecutive - _ or .', () => {
+    expect(getLinodeLabelFromLabelParts(['banks - test', 'us-east'])).toBe(
+      'banks-test-us-east'
+    );
+  });
+  it('should ensure the generated label is less than 64 characters', () => {
+    const linodeLabel = 'a'.repeat(64);
+    const region = 'us-east';
+
+    expect(getLinodeLabelFromLabelParts([linodeLabel, region])).toBe(
+      'a'.repeat(31) + '-us-east'
+    );
   });
 });

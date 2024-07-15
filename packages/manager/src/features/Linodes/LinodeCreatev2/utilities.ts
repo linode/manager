@@ -398,11 +398,15 @@ const getIsValidLinodeLabelCharacter = (char: string) => {
   return isNumeric || isUppercaseLetter || isLowercaseLetter;
 };
 
-const getLinodeLabelFromLabelParts = (parts: string[]) => {
+export const getLinodeLabelFromLabelParts = (parts: string[]) => {
+  const numberOfSeperaterDashes = parts.length - 1;
+  const maxSizeOfEachPart = Math.floor(
+    (64 - numberOfSeperaterDashes) / parts.length
+  );
   let label = '';
 
   for (const part of parts) {
-    for (let i = 0; i < part.length; i++) {
+    for (let i = 0; i < Math.min(part.length, maxSizeOfEachPart); i++) {
       if (
         getIsValidLinodeLabelCharacter(part[i]) ||
         (part[i] === '-' && label[label.length - 1] !== '-') ||
