@@ -95,7 +95,7 @@ export const ImagesLanding = () => {
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
   const location = useLocation();
-  const isRestricted = useRestrictedGlobalGrantCheck({
+  const isImagesReadOnly = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_images',
   });
   const queryParams = new URLSearchParams(location.search);
@@ -391,7 +391,7 @@ export const ImagesLanding = () => {
             resourceType: 'Images',
           }),
         }}
-        disabledCreateButton={isRestricted}
+        disabledCreateButton={isImagesReadOnly}
         title="Images"
       />
       <TextField
