@@ -84,8 +84,6 @@ export const CloudPulseDashboard = (
 
   const {
     data: dashboard,
-    isError: isDashboardFetchError,
-    isSuccess: isDashboardSuccess,
   } = useCloudViewDashboardByIdQuery(props.dashboardId!, props.savePref);
 
   const { data: resources } = useResourcesQuery(
@@ -97,7 +95,6 @@ export const CloudPulseDashboard = (
 
   const {
     data: metricDefinitions,
-    isError: isMetricDefinitionError,
     isLoading,
   } = useGetCloudViewMetricDefinitionsByServiceType(
     dashboard ? dashboard!.service_type : undefined!,
@@ -107,7 +104,6 @@ export const CloudPulseDashboard = (
   const {
     data: jweToken,
     isError: isJweTokenError,
-    isSuccess,
   } = useCloudViewJWEtokenQuery(
     dashboard ? dashboard.service_type! : undefined!,
     getJweTokenPayload(),

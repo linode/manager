@@ -2,6 +2,7 @@ import {
   ObjectStorageKeyRequest,
   SecurityQuestionsPayload,
   TokenRequest,
+  UpdateImageRegionsPayload,
   User,
 } from '@linode/api-v4';
 import { DateTime } from 'luxon';

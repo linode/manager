@@ -71,7 +71,8 @@ export const CloudPulseWidget = (props: CloudViewWidgetProperties) => {
 
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
 
-  const [today, setToday] = React.useState<boolean>(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [today, setToday] = React.useState<boolean>(false); // Temporarily disabled eslint for this line. Will be removed in future PRs
 
   /**
    *
