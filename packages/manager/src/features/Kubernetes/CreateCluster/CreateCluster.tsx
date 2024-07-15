@@ -245,6 +245,9 @@ export const CreateCluster = () => {
           </StyledRegionSelectStack>
           <Divider sx={{ marginTop: 4 }} />
           <Autocomplete
+            isOptionEqualToValue={(option, value) =>
+              option.value === value.value
+            }
             onChange={(_, selected: Item<string>) => {
               setVersion(selected);
             }}
