@@ -16,12 +16,6 @@ import {
 
 import type { AutocompleteProps } from '@mui/material/Autocomplete';
 
-export interface Item<T = number | string, L = string> {
-  data?: any;
-  label: L;
-  value: T;
-}
-
 export interface EnhancedAutocompleteProps<
   T extends { label: string },
   Multiple extends boolean | undefined = undefined,

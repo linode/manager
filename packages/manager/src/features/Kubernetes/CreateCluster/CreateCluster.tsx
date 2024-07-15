@@ -56,7 +56,6 @@ import type {
   KubeNodePoolResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { Item } from 'src/components/Autocomplete/Autocomplete';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
@@ -65,7 +64,7 @@ export const CreateCluster = () => {
   >();
   const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
-  const [version, setVersion] = React.useState<Item<string> | undefined>();
+  const [version, setVersion] = React.useState<string | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [hasAgreed, setAgreed] = React.useState<boolean>(false);
@@ -113,7 +112,7 @@ export const CreateCluster = () => {
 
   React.useEffect(() => {
     if (versions.length > 0) {
-      setVersion(getLatestVersion(versions));
+      setVersion(getLatestVersion(versions).value);
     }
   }, [versionData]);
 
@@ -121,7 +120,7 @@ export const CreateCluster = () => {
     const { push } = history;
     setErrors(undefined);
     setSubmitting(true);
-    const k8s_version = version ? version.value : undefined;
+    const k8s_version = version ?? undefined;
 
     // Only type and count to the API.
     const node_pools = nodePools.map(
@@ -245,18 +244,15 @@ export const CreateCluster = () => {
           </StyledRegionSelectStack>
           <Divider sx={{ marginTop: 4 }} />
           <Autocomplete
-            isOptionEqualToValue={(option, value) =>
-              option.value === value.value
-            }
-            onChange={(_, selected: Item<string>) => {
-              setVersion(selected);
+            onChange={(_, selected) => {
+              setVersion(selected?.value);
             }}
             disableClearable={!!version}
             errorText={errorMap.k8s_version}
             label="Kubernetes Version"
             options={versions}
             placeholder={' '}
-            value={version ?? null}
+            value={versions.find((v) => v.value === version) ?? null}
           />
           <Divider sx={{ marginTop: 4 }} />
           {showHighAvailability ? (
