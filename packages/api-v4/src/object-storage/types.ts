@@ -1,6 +1,9 @@
-export interface RegionS3EndpointAndID {
+export type ObjEndpointTypes = 'E0' | 'E1' | 'E2' | 'E3';
+
+export interface ObjAccessKeyRegionsResponse {
   id: string;
   s3_endpoint: string;
+  endpoint_type?: ObjEndpointTypes;
 }
 
 export interface ObjectStorageKey {
@@ -9,7 +12,7 @@ export interface ObjectStorageKey {
   id: number;
   label: string;
   limited: boolean;
-  regions: RegionS3EndpointAndID[];
+  regions: ObjAccessKeyRegionsResponse[];
   secret_key: string;
 }
 
@@ -45,6 +48,7 @@ export interface ObjectStorageBucketRequestPayload {
   cors_enabled?: boolean;
   label: string;
   region?: string;
+  endpoint_type?: ObjEndpointTypes;
   /*
    @TODO OBJ Multicluster: 'region' will become required, and the 'cluster' field will be deprecated
    once the feature is fully rolled out in production as part of the process of cleaning up the 'objMultiCluster'
@@ -61,18 +65,15 @@ export interface ObjectStorageDeleteBucketRequestPayload {
 }
 
 export interface ObjectStorageBucket {
-  /*
-   @TODO OBJ Multicluster: 'region' will become required, and the 'cluster' field will be deprecated
-   once the feature is fully rolled out in production as part of the process of cleaning up the 'objMultiCluster'
-   feature flag.
-  */
-  region?: string;
+  region: string;
   label: string;
   created: string;
   cluster: string;
   hostname: string;
   objects: number;
   size: number; // Size of bucket in bytes
+  s3_endpoint?: string;
+  endpoint_type?: ObjEndpointTypes;
 }
 
 export interface ObjectStorageObject {
@@ -88,6 +89,12 @@ export interface ObjectStorageObjectURL {
   url: string;
 }
 
+export interface ObjectStorageEndpointsResponse {
+  region: string;
+  endpoint_type: ObjEndpointTypes;
+  s3_endpoint: string | null;
+}
+
 export type ACLType =
   | 'private'
   | 'public-read'
@@ -95,9 +102,10 @@ export type ACLType =
   | 'public-read-write'
   | 'custom';
 
+// Gen2 endpoints ('E2', 'E3') are not supported and will return null.
 export interface ObjectStorageObjectACL {
-  acl: ACLType;
-  acl_xml: string;
+  acl: ACLType | null;
+  acl_xml: string | null;
 }
 
 export interface ObjectStorageObjectURLOptions {
@@ -142,8 +150,9 @@ export interface ObjectStorageBucketSSLRequest {
   private_key: string;
 }
 
+// Gen2 endpoints ('E2', 'E3') are not supported and will return null.
 export interface ObjectStorageBucketSSLResponse {
-  ssl: boolean;
+  ssl: boolean | null;
 }
 
 export interface ObjectStorageBucketAccessRequest {
@@ -151,9 +160,15 @@ export interface ObjectStorageBucketAccessRequest {
   cors_enabled?: boolean;
 }
 
+export interface ObjBucketAccessPayload {
+  acl: ACLType;
+  cors_enabled?: boolean;
+}
+
+// Gen2 endpoints ('E2', 'E3') are not supported and will return null.
 export interface ObjectStorageBucketAccessResponse {
   acl: ACLType;
   acl_xml: string;
-  cors_enabled: boolean;
-  cors_xml: string;
+  cors_enabled: boolean | null;
+  cors_xml: string | null;
 }
