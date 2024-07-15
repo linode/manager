@@ -5,7 +5,8 @@ import * as React from 'react';
 import { invoiceFactory, paymentFactory } from 'src/factories/billing';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import BillingActivityPanel, {
+import {
+  BillingActivityPanel,
   getCutoffFromDateRange,
   invoiceToActivityFeedItem,
   makeFilter,
@@ -71,13 +72,13 @@ describe('BillingActivityPanel', () => {
   });
 
   it('should filter by item type', async () => {
-    const { queryAllByTestId, queryByTestId, queryByText } = renderWithTheme(
+    const { getByLabelText, queryByTestId, queryByText } = renderWithTheme(
       <BillingActivityPanel />
     );
 
     // Test selecting "Invoices"
     await waitFor(() => {
-      const transactionTypeSelect = queryAllByTestId('select')?.[0];
+      const transactionTypeSelect = getByLabelText('Transaction Types');
       fireEvent.change(transactionTypeSelect, {
         target: { value: 'invoice' },
       });
@@ -86,7 +87,7 @@ describe('BillingActivityPanel', () => {
 
     // Test selecting "Payments"
     await waitFor(() => {
-      const transactionTypeSelect = queryAllByTestId('select')?.[0];
+      const transactionTypeSelect = getByLabelText('Transaction Types');
       fireEvent.change(transactionTypeSelect, {
         target: { value: 'payment' },
       });
@@ -95,12 +96,12 @@ describe('BillingActivityPanel', () => {
   });
 
   it('should filter by transaction date', async () => {
-    const { queryAllByTestId, queryByTestId, queryByText } = renderWithTheme(
+    const { getByLabelText, queryByTestId, queryByText } = renderWithTheme(
       <BillingActivityPanel />
     );
 
     await waitFor(() => {
-      const transactionDateSelect = queryAllByTestId('select')?.[1];
+      const transactionDateSelect = getByLabelText('Transaction Dates');
       fireEvent.change(transactionDateSelect, {
         target: { value: '30 Days' },
       });
@@ -110,11 +111,11 @@ describe('BillingActivityPanel', () => {
   });
 
   it('should display transaction selection components with defaults', async () => {
-    const { getByText } = renderWithTheme(<BillingActivityPanel />);
-    await waitFor(() => {
-      getByText('All Transaction Types');
-      getByText('90 Days');
-    });
+    const { getByLabelText } = renderWithTheme(<BillingActivityPanel />);
+    const transactionTypeSelect = getByLabelText('Transaction Types');
+    expect(transactionTypeSelect).toHaveValue('All Transaction Types');
+    const transactionDateSelect = getByLabelText('Transaction Dates');
+    expect(transactionDateSelect).toHaveValue('6 Months');
   });
 
   it('should display "Account active since"', async () => {

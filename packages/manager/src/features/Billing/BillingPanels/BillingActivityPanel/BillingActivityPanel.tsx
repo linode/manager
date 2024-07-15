@@ -1,18 +1,13 @@
-import {
-  Invoice,
-  InvoiceItem,
-  Payment,
-  getInvoiceItems,
-} from '@linode/api-v4/lib/account';
-import { Theme, styled } from '@mui/material/styles';
+import { getInvoiceItems } from '@linode/api-v4/lib/account';
+import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
 import OrderBy from 'src/components/OrderBy';
@@ -47,9 +42,13 @@ import { getAll } from 'src/utilities/getAll';
 
 import { getTaxID } from '../../billingUtils';
 
+import type { Invoice, InvoiceItem, Payment } from '@linode/api-v4/lib/account';
+import type { Theme } from '@mui/material/styles';
+
 const useStyles = makeStyles()((theme: Theme) => ({
   activeSince: {
     marginRight: theme.spacing(1.25),
+    marginTop: theme.spacing(5.5),
   },
   dateColumn: {
     width: '25%',
@@ -121,13 +120,18 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   transactionDate: {
-    width: 130,
+    width: 150,
   },
   transactionType: {
     marginRight: theme.spacing(),
-    width: 200,
+    width: 210,
   },
 }));
+
+export interface Item<T = string, L = string> {
+  label: L;
+  value: T;
+}
 
 interface ActivityFeedItem {
   date: string;
@@ -182,7 +186,7 @@ export interface Props {
   accountActiveSince?: string;
 }
 
-export const BillingActivityPanel = (props: Props) => {
+export const BillingActivityPanel = React.memo((props: Props) => {
   const { accountActiveSince } = props;
 
   const { data: profile } = useProfile();
@@ -299,25 +303,6 @@ export const BillingActivityPanel = (props: Props) => {
     [payments, flags, account, pdfErrors]
   );
 
-  // Handlers for <Select /> components.
-  const handleTransactionTypeChange = React.useCallback(
-    (item: Item<TransactionTypes>) => {
-      setSelectedTransactionType(item.value);
-      pdfErrors.clear();
-      pdfLoading.clear();
-    },
-    [pdfErrors, pdfLoading]
-  );
-
-  const handleTransactionDateChange = React.useCallback(
-    (item: Item<DateRange>) => {
-      setSelectedTransactionDate(item.value);
-      pdfErrors.clear();
-      pdfLoading.clear();
-    },
-    [pdfErrors, pdfLoading]
-  );
-
   // Combine Invoices and Payments
   const combinedData = React.useMemo(
     () => [
@@ -365,37 +350,39 @@ export const BillingActivityPanel = (props: Props) => {
               </div>
             )}
             <div className={classes.flexContainer}>
-              <Select
+              <Autocomplete
+                onChange={(_, item) => {
+                  setSelectedTransactionType(item?.value ?? 'all');
+                  pdfErrors.clear();
+                  pdfLoading.clear();
+                }}
                 value={
                   transactionTypeOptions.find(
-                    (thisOption) => thisOption.value === selectedTransactionType
+                    (item) => item.value === selectedTransactionType
                   ) || null
                 }
                 className={classes.transactionType}
-                hideLabel
-                inline
-                isClearable={false}
-                isSearchable={false}
                 label="Transaction Types"
-                onChange={handleTransactionTypeChange}
+                multiple={false}
                 options={transactionTypeOptions}
-                small
+                placeholder=" "
               />
-              <Select
+              <Autocomplete
+                onChange={(_, item) => {
+                  setSelectedTransactionDate(item?.value ?? defaultDateRange);
+                  pdfErrors.clear();
+                  pdfLoading.clear();
+                }}
                 value={
                   transactionDateOptions.find(
                     (thisOption) => thisOption.value === selectedTransactionDate
                   ) || null
                 }
                 className={classes.transactionDate}
-                hideLabel
-                inline
-                isClearable={false}
-                isSearchable={false}
                 label="Transaction Dates"
-                onChange={handleTransactionDateChange}
+                multiple={false}
                 options={transactionDateOptions}
-                small
+                placeholder=" "
               />
             </div>
           </div>
@@ -489,7 +476,7 @@ export const BillingActivityPanel = (props: Props) => {
       </div>
     </Grid>
   );
-};
+});
 
 const StyledBillingAndPaymentHistoryHeader = styled('div', {
   name: 'BillingAndPaymentHistoryHeader',
@@ -652,5 +639,3 @@ export const makeFilter = (endDate: null | string) => {
 
   return filter;
 };
-
-export default React.memo(BillingActivityPanel);
