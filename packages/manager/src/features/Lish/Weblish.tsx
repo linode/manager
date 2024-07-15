@@ -1,5 +1,4 @@
 /* eslint-disable scanjs-rules/call_addEventListener */
-import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Terminal } from 'xterm';
 
@@ -7,12 +6,14 @@ import { Box } from 'src/components/Box';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { StyledCircleProgress } from 'src/features/Lish/Lish';
 
-import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
+import { resizeViewPort } from './lishUtils';
+
+import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
+import type { Linode } from '@linode/api-v4/lib/linodes';
 
 interface Props {
   linode: Linode;
   refreshToken: () => Promise<void>;
-  token: string;
 }
 
 interface State {
@@ -20,35 +21,50 @@ interface State {
   renderingLish: boolean;
 }
 
-export class Weblish extends React.Component<Props, State> {
+type CombinedProps = Props &
+  Pick<LinodeLishData, 'weblish_url' | 'ws_protocols'>;
+
+export class Weblish extends React.Component<CombinedProps, State> {
+  mounted: boolean = false;
+
+  socket: WebSocket;
+  state: State = {
+    error: '',
+    renderingLish: true,
+  };
+
+  terminal: Terminal;
+
   componentDidMount() {
     this.mounted = true;
     resizeViewPort(1080, 730);
     this.connect();
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: CombinedProps) {
     /*
      * If we have a new token, refresh the webosocket connection
      * and console with the new token
      */
-    if (this.props.token !== prevProps.token) {
+    if (
+      this.props.weblish_url !== prevProps.weblish_url ||
+      JSON.stringify(this.props.ws_protocols) !==
+        JSON.stringify(prevProps.ws_protocols)
+    ) {
       this.socket.close();
       this.terminal.dispose();
       this.connect();
     }
   }
+
   componentWillUnmount() {
     this.mounted = false;
   }
 
   connect() {
-    const { linode, token } = this.props;
-    const { region } = linode;
+    const { weblish_url, ws_protocols } = this.props;
 
-    this.socket = new WebSocket(
-      `${getLishSchemeAndHostname(region)}:8181/${token}/weblish`
-    );
+    this.socket = new WebSocket(weblish_url, ws_protocols);
 
     this.socket.addEventListener('open', () => {
       if (!this.mounted) {
@@ -158,17 +174,6 @@ export class Weblish extends React.Component<Props, State> {
     const linodeLabel = group ? `${group}/${label}` : label;
     window.document.title = `${linodeLabel} - Linode Lish Console`;
   }
-
-  mounted: boolean = false;
-
-  socket: WebSocket;
-
-  state: State = {
-    error: '',
-    renderingLish: true,
-  };
-
-  terminal: Terminal;
 }
 
 export default Weblish;
