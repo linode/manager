@@ -2,14 +2,15 @@ import Handyman from '@mui/icons-material/Handyman';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
 import React from 'react';
-import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
+
+import { handleRoot } from 'src/utilities/rootManager';
 
 import './dev-tools.css';
 import { EnvironmentToggleTool } from './EnvironmentToggleTool';
 import { FeatureFlagTool } from './FeatureFlagTool';
-import { isMSWEnabled } from './ServiceWorkerTool';
 import { ServiceWorkerTool } from './ServiceWorkerTool';
+import { isMSWEnabled } from './ServiceWorkerTool';
 
 import type { QueryClient } from '@tanstack/react-query';
 import type { ApplicationStore } from 'src/store';
@@ -107,18 +108,16 @@ function install(store: ApplicationStore, queryClient: QueryClient) {
     );
   }
 
-  const devToolsRoot = (() => {
-    const existingRoot = document.getElementById('dev-tools-root');
-    if (existingRoot) {
-      return existingRoot;
-    }
-    const newRoot = document.createElement('div');
-    newRoot.id = 'dev-tools-root';
-    document.body.appendChild(newRoot);
-    return newRoot;
-  })();
+  const devToolsRoot =
+    document.getElementById('dev-tools-root') ||
+    (() => {
+      const newRoot = document.createElement('div');
+      newRoot.id = 'dev-tools-root';
+      document.body.appendChild(newRoot);
+      return newRoot;
+    })();
 
-  const root = createRoot(devToolsRoot);
+  const root = handleRoot(devToolsRoot);
   root.render(
     <Provider store={store}>
       <DevTools />
