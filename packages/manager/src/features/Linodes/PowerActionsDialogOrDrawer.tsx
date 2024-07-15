@@ -176,7 +176,6 @@ export const PowerActionsDialog = (props: Props) => {
               (option) => option.value === selectedConfigID
             )}
             errorText={configsError?.[0].reason}
-            isClearable
             isLoading={configsLoading}
             label="Config"
             onChange={(option) => setSelectConfigID(option?.value ?? null)}
