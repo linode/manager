@@ -21,7 +21,7 @@ export const CreateBucketSchema = object()
       endpoint_type: string()
         .oneOf([...ENDPOINT_TYPES])
         .notRequired(),
-      cors_enabled: boolean().required('CORS is required.'),
+      cors_enabled: boolean().notRequired(),
     },
     [['cluster', 'region']]
   )
