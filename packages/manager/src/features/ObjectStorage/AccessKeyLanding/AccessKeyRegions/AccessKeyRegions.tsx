@@ -30,7 +30,7 @@ export const AccessKeyRegions = (props: Props) => {
   return (
     <RegionMultiSelect
       placeholder={
-        selectedRegion.length > 0 ? ' ' : 'Select regions or type to search'
+        selectedRegion.length > 0 ? '' : 'Select regions or type to search'
       }
       currentCapability="Object Storage"
       disabled={disabled}
