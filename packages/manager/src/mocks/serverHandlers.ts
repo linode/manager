@@ -2438,7 +2438,7 @@ export const handlers = [
 
     return HttpResponse.json(response);
   }),
-  http.get('*/v4/monitor/services/:serviceType/metricDefinitions', () => {
+  http.get('*/v4/monitor/services/:serviceType/metric-definitions', () => {
     const response = {
       data: [
         {

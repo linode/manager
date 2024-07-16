@@ -25,8 +25,8 @@ import type {
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
-export interface CloudViewWidgetProperties {
-  // we can try renaming this CloudViewWidget
+export interface CloudPulseWidgetProperties {
+  // we can try renaming this CloudPulseWidget
   ariaLabel?: string;
   authToken: string;
   availableMetrics: AvailableMetrics | undefined;
@@ -63,7 +63,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export const CloudPulseWidget = (props: CloudViewWidgetProperties) => {
+export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const { classes } = useStyles();
   const { data: profile } = useProfile();
 

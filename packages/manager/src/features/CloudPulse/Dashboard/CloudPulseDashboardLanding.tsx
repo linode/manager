@@ -10,7 +10,7 @@ import { CloudPulseDashboard } from './CloudPulseDashboard';
 import type { FiltersObject } from '../Overview/GlobalFilters';
 import type { TimeDuration } from '@linode/api-v4';
 
-export const DashboardLanding = () => {
+export const CloudPulseDashboardLanding = () => {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const onFilterChange = React.useCallback((_filters: FiltersObject) => {}, []);
   const { isLoading } = useLoadUserPreferences();

@@ -1,22 +1,27 @@
 import { Grid, Paper, styled } from '@mui/material';
 import React from 'react';
 
-import CloudViewIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
+import CloudPulseIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import {
-  useCloudViewDashboardByIdQuery,
-  useCloudViewJWEtokenQuery,
-} from 'src/queries/cloudpulse/dashboards';
+import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
-import { useGetCloudViewMetricDefinitionsByServiceType } from 'src/queries/cloudpulse/services';
+import {
+  useCloudPulseJWEtokenQuery,
+  useGetCloudPulseMetricDefinitionsByServiceType,
+} from 'src/queries/cloudpulse/services';
 
 import { getUserPreferenceObject } from '../Utils/UserPreference';
 import { removeObjectReference } from '../Utils/utils';
-import { CloudPulseWidget, type CloudViewWidgetProperties } from '../Widget/CloudPulseWidget';
-import { all_interval_options, getInSeconds, getIntervalIndex } from '../Widget/components/CloudPulseIntervalSelect';
+import { CloudPulseWidget } from '../Widget/CloudPulseWidget';
+import {
+  all_interval_options,
+  getInSeconds,
+  getIntervalIndex,
+} from '../Widget/components/CloudPulseIntervalSelect';
 
+import type { CloudPulseWidgetProperties } from '../Widget/CloudPulseWidget';
 import type {
   AvailableMetrics,
   Dashboard,
@@ -40,17 +45,15 @@ const StyledErrorState = styled(Placeholder, {
   height: '100%',
 });
 
-export const CloudPulseDashboard = (
-  props: DashboardProperties
-) => {
+export const CloudPulseDashboard = (props: DashboardProperties) => {
   const getJweTokenPayload = () => {
     return {
       resource_id: resources?.map((resource) => String(resource.id)) ?? [],
     } as JWETokenPayLoad;
   };
 
-  const getCloudViewGraphProperties = (widget: Widgets) => {
-    const graphProp: CloudViewWidgetProperties = {} as CloudViewWidgetProperties;
+  const getCloudPulseGraphProperties = (widget: Widgets) => {
+    const graphProp: CloudPulseWidgetProperties = {} as CloudPulseWidgetProperties;
     graphProp.widget = { ...widget };
     if (props.savePref) {
       setPrefferedWidgetPlan(graphProp.widget);
@@ -82,9 +85,10 @@ export const CloudPulseDashboard = (
     return index < 0 ? all_interval_options[0] : all_interval_options[index];
   };
 
-  const {
-    data: dashboard,
-  } = useCloudViewDashboardByIdQuery(props.dashboardId!, props.savePref);
+  const { data: dashboard } = useCloudPulseDashboardByIdQuery(
+    props.dashboardId!,
+    props.savePref
+  );
 
   const { data: resources } = useResourcesQuery(
     dashboard && dashboard.service_type ? true : false,
@@ -96,7 +100,7 @@ export const CloudPulseDashboard = (
   const {
     data: metricDefinitions,
     isLoading,
-  } = useGetCloudViewMetricDefinitionsByServiceType(
+  } = useGetCloudPulseMetricDefinitionsByServiceType(
     dashboard ? dashboard!.service_type : undefined!,
     dashboard && dashboard!.service_type !== undefined ? true : false
   );
@@ -104,7 +108,7 @@ export const CloudPulseDashboard = (
   const {
     data: jweToken,
     isError: isJweTokenError,
-  } = useCloudViewJWEtokenQuery(
+  } = useCloudPulseJWEtokenQuery(
     dashboard ? dashboard.service_type! : undefined!,
     getJweTokenPayload(),
     resources && dashboard ? true : false
@@ -145,22 +149,24 @@ export const CloudPulseDashboard = (
                   (availMetrics: AvailableMetrics) =>
                     element.label === availMetrics.label
                 );
-                const cloudViewWidgetProperties = getCloudViewGraphProperties({
-                  ...element,
-                });
+                const cloudPulseWidgetProperties = getCloudPulseGraphProperties(
+                  {
+                    ...element,
+                  }
+                );
 
                 if (
                   availMetrics &&
-                  !cloudViewWidgetProperties.widget.time_granularity
+                  !cloudPulseWidgetProperties.widget.time_granularity
                 ) {
-                  cloudViewWidgetProperties.widget.time_granularity = getTimeGranularity(
+                  cloudPulseWidgetProperties.widget.time_granularity = getTimeGranularity(
                     availMetrics.scrape_interval
                   );
                 }
                 return (
                   <CloudPulseWidget
                     key={element.label}
-                    {...cloudViewWidgetProperties}
+                    {...cloudPulseWidgetProperties}
                     authToken={jweToken?.token}
                     availableMetrics={availMetrics}
                     resources={resources}
@@ -194,7 +200,7 @@ export const CloudPulseDashboard = (
   const renderPlaceHolder = (subtitle: string) => {
     return (
       <Paper>
-        <StyledPlaceholder icon={CloudViewIcon} subtitle={subtitle} title="" />
+        <StyledPlaceholder icon={CloudPulseIcon} subtitle={subtitle} title="" />
       </Paper>
     );
   };
