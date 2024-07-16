@@ -47,7 +47,6 @@ interface DisplayLinodesProps extends OrderByProps<LinodeWithMaintenance> {
   component: React.ComponentType<RenderLinodesProps>;
   data: LinodeWithMaintenance[];
   display: 'grid' | 'list';
-  filteredLinodesData?: LinodeWithMaintenance[] | null;
   handleRegionFilter: (regionFilter: RegionFilter) => void;
   linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
@@ -89,7 +88,6 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
     component: Component,
     data,
     display,
-    filteredLinodesData,
     handleOrderChange,
     handleRegionFilter,
     linodeViewPreference,
@@ -131,7 +129,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
 
   return (
     <Paginate
-      data={filteredLinodesData || data}
+      data={data}
       page={queryPage}
       // If there are more Linodes with maintenance than the current page size, show the minimum
       // page size needed to show ALL Linodes with maintenance.
@@ -256,7 +254,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
             <Grid xs={12}>
               {
                 <PaginationFooter
-                  count={filteredLinodesData?.length || data.length}
+                  count={data.length}
                   eventCategory={'linodes landing'}
                   handlePageChange={handlePageChange}
                   handleSizeChange={handlePageSizeChange}
