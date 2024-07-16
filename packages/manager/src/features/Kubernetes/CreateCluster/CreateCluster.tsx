@@ -120,7 +120,6 @@ export const CreateCluster = () => {
     const { push } = history;
     setErrors(undefined);
     setSubmitting(true);
-    const k8s_version = version ?? undefined;
 
     // Only type and count to the API.
     const node_pools = nodePools.map(
@@ -129,7 +128,7 @@ export const CreateCluster = () => {
 
     const payload: CreateKubeClusterPayload = {
       control_plane: { high_availability: highAvailability ?? false },
-      k8s_version,
+      k8s_version: version,
       label,
       node_pools,
       region: selectedRegionId,
