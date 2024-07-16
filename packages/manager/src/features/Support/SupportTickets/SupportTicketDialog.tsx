@@ -30,12 +30,14 @@ import {
   TICKET_SEVERITY_TOOLTIP_TEXT,
   TICKET_TYPE_MAP,
 } from './constants';
+import { SupportTicketAccountLimitFields } from './SupportTicketAccountLimitFields';
 import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
 import { SupportTicketSMTPFields } from './SupportTicketSMTPFields';
 import { formatDescription, useTicketSeverityCapability } from './ticketUtils';
 
 import type { FileAttachment } from '../index';
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
+import type { AccountLimitCustomFields } from './SupportTicketAccountLimitFields';
 import type { SMTPCustomFields } from './SupportTicketSMTPFields';
 import type { TicketSeverity } from '@linode/api-v4/lib/support';
 import type { Theme } from '@mui/material/styles';
@@ -56,8 +58,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   rootReply: {
     marginBottom: theme.spacing(2),
-    padding: 0,
     marginTop: theme.spacing(2),
+    padding: 0,
   },
 }));
 
@@ -82,14 +84,16 @@ export type EntityType =
   | 'none'
   | 'volume_id';
 
-export type TicketType = 'general' | 'smtp';
+export type TicketType = 'accountLimit' | 'general' | 'smtp';
 
 export type AllSupportTicketFormFields = SupportTicketFormFields &
-  SMTPCustomFields;
+  SMTPCustomFields &
+  AccountLimitCustomFields;
 
 export interface TicketTypeData {
   dialogTitle: string;
   helperText: JSX.Element | string;
+  ticketTitle?: string;
 }
 
 export interface SupportTicketDialogProps {
@@ -146,6 +150,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const valuesFromStorage = storage.supportText.get();
 
+  // Use a prefilled title if one is given, otherwise, use any default prefill titles by ticket type, if extant.
+  const _prefilledTitle = prefilledTitle
+    ? prefilledTitle
+    : prefilledTicketType && TICKET_TYPE_MAP[prefilledTicketType]
+    ? TICKET_TYPE_MAP[prefilledTicketType].ticketTitle
+    : undefined;
+
   // Ticket information
   const form = useForm<SupportTicketFormFields>({
     defaultValues: {
@@ -153,10 +164,10 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
         prefilledDescription,
         valuesFromStorage.description
       ),
-      entityId: prefilledEntity ? String(prefilledEntity.id) : '',
+      entityId: prefilledEntity?.id ? String(prefilledEntity.id) : '',
       entityInputValue: '',
       entityType: prefilledEntity?.type ?? 'general',
-      summary: getInitialValue(prefilledTitle, valuesFromStorage.title),
+      summary: getInitialValue(_prefilledTitle, valuesFromStorage.title),
       ticketType: prefilledTicketType ?? 'general',
     },
     resolver: yupResolver(SCHEMA_MAP[prefilledTicketType ?? 'general']),
@@ -164,7 +175,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const {
     description,
-    entityId,
     entityType,
     selectedSeverity,
     summary,
@@ -306,7 +316,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
     const _description = formatDescription(values, ticketType);
 
-    if (!['general', 'none'].includes(entityType) && !entityId) {
+    // If this is an account limit ticket, we needed the entity type but won't actually send a valid entity selection.
+    // Reset the entity type and id back to defaults.
+    const _entityType =
+      ticketType === 'accountLimit' ? 'general' : values.entityType;
+    const _entityId = ticketType === 'accountLimit' ? '' : values.entityId;
+
+    if (!['general', 'none'].includes(_entityType) && !_entityId) {
       form.setError('entityId', {
         message: `Please select a ${ENTITY_ID_TO_NAME_MAP[entityType]}.`,
       });
@@ -316,8 +332,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     setSubmitting(true);
 
     createSupportTicket({
+      [_entityType]: Number(_entityId),
       description: _description,
-      [entityType]: Number(entityId),
       severity: selectedSeverity,
       summary,
     })
@@ -427,9 +443,9 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               )}
             </>
           )}
-          {ticketType === 'smtp' ? (
-            <SupportTicketSMTPFields />
-          ) : (
+          {ticketType === 'smtp' && <SupportTicketSMTPFields />}
+          {ticketType === 'accountLimit' && <SupportTicketAccountLimitFields />}
+          {(!ticketType || ticketType === 'general') && (
             <>
               {props.hideProductSelection ? null : (
                 <SupportTicketProductSelectionFields />
