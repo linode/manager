@@ -20,6 +20,11 @@ import Glish from './Glish';
 import Weblish from './Weblish';
 
 import type { Tab } from 'src/components/Tabs/TabLinkList';
+import { Stack } from 'src/components/Stack';
+import { Typography } from 'src/components/Typography';
+import { Code } from 'src/components/Code/Code';
+import { Button } from 'src/components/Button/Button';
+import { Box } from 'src/components/Box';
 
 const AUTH_POLLING_INTERVAL = 2000;
 
@@ -87,10 +92,10 @@ const Lish = () => {
   };
 
   if (isLoading) {
-    return <StyledCircleProgress />;
+    return <CircleProgress />;
   }
 
-  if (linodeError) {
+  if (linodeError || !linode) {
     return (
       <ErrorState
         errorText={linodeError?.[0]?.reason ?? 'Unable to load this Linode'}
@@ -109,8 +114,8 @@ const Lish = () => {
     );
   }
 
-  return linode && data !== undefined ? (
-    <StyledTabs
+  return (
+    <Tabs
       index={
         type &&
         tabs.findIndex((tab) => tab.title.toLocaleLowerCase() === type) !== -1
@@ -119,7 +124,24 @@ const Lish = () => {
       }
       onChange={navToURL}
     >
-      <TabLinkList tabs={tabs} />
+      <Stack
+        sx={(theme) => ({
+          background: theme.palette.background.paper,
+          borderBottom: `1px ${theme.borderColors.divider} solid`,
+          pt: 0.5,
+          px: 1,
+        })}
+        alignItems="center"
+        columnGap={2}
+        direction="row"
+        flexWrap="wrap"
+        justifyContent="space-between"
+      >
+        <Typography variant="h1">
+          LISH Console for Linode <Code>{linode.label}</Code>
+        </Typography>
+        <TabLinkList tabs={tabs} />
+      </Stack>
       <TabPanels>
         <SafeTabPanel data-qa-tab="Weblish" index={0}>
           <Weblish linode={linode} refreshToken={refreshToken} {...data} />
@@ -130,42 +152,17 @@ const Lish = () => {
           </SafeTabPanel>
         )}
       </TabPanels>
-    </StyledTabs>
-  ) : null;
+    </Tabs>
+  );
 };
 
 export default Lish;
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
-  '& [data-reach-tab][role="tab"]': {
-    '&[aria-selected="true"]': {
-      '&:hover': {
-        backgroundColor: theme.palette.primary.light,
-        color: theme.name === 'light' ? theme.color.white : theme.color.black,
-      },
-      backgroundColor: theme.palette.primary.main,
-      borderBottom: 'none !important',
-      color: theme.name === 'light' ? theme.color.white : theme.color.black,
-    },
-    backgroundColor: theme.bg.offWhite,
-    color: theme.color.tableHeaderText,
-    flex: 'auto',
-    margin: 0,
-    maxWidth: 'none !important',
+  '& [data-reach-tab]': {},
+  '& [data-reach-tab-list]': {
+    boxShadow: 'none',
+    marginBottom: '0 !important',
+    overflowX: 'hidden',
   },
-  '& [role="tablist"]': {
-    backgroundColor: theme.bg.offWhite,
-    display: 'flex',
-    margin: 0,
-    overflow: 'hidden',
-  },
-  backgroundColor: 'black',
-  margin: 0,
-}));
-
-export const StyledCircleProgress = styled(CircleProgress)(() => ({
-  left: '50%',
-  position: 'absolute',
-  top: '50%',
-  transform: 'translate(-50%, -50%)',
 }));

@@ -1,15 +1,14 @@
 /* eslint-disable scanjs-rules/call_addEventListener */
+import { FitAddon } from '@xterm/addon-fit';
+import { Terminal } from '@xterm/xterm';
 import * as React from 'react';
-import { Terminal } from 'xterm';
 
 import { Box } from 'src/components/Box';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { StyledCircleProgress } from 'src/features/Lish/Lish';
-
-import { resizeViewPort } from './lishUtils';
 
 import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
 import type { Linode } from '@linode/api-v4/lib/linodes';
+import { CircleProgress } from 'src/components/CircleProgress';
 
 interface Props {
   linode: Linode;
@@ -34,10 +33,10 @@ export class Weblish extends React.Component<CombinedProps, State> {
   };
 
   terminal: Terminal;
+  fitAddon: FitAddon;
 
   componentDidMount() {
     this.mounted = true;
-    resizeViewPort(1080, 730);
     this.connect();
   }
 
@@ -98,11 +97,18 @@ export class Weblish extends React.Component<CombinedProps, State> {
      * then render the terminal div, you end up with a blank black screen
      */
     return (
-      <div>
+      <div style={{ width: '100%', height: '100%' }}>
         {this.socket && this.socket.readyState === this.socket.OPEN ? (
-          <div className="terminal" id="terminal" />
+          <div
+            style={{
+              height: 'calc(100vh - 50px)',
+              width: 'initial !important',
+            }}
+            className="terminal"
+            id="terminal"
+          />
         ) : (
-          <StyledCircleProgress />
+          <CircleProgress />
         )}
       </div>
     );
@@ -113,15 +119,26 @@ export class Weblish extends React.Component<CombinedProps, State> {
     const { group, label } = linode;
 
     this.terminal = new Terminal({
-      cols: 120,
       fontFamily: '"Ubuntu Mono", monospace, sans-serif',
-      rows: 40,
-      screenReaderMode: true,
     });
+    this.fitAddon = new FitAddon();
+    this.terminal.loadAddon(this.fitAddon);
 
     this.terminal.onData((data: string) => this.socket.send(data));
     const terminalDiv = document.getElementById('terminal');
     this.terminal.open(terminalDiv as HTMLElement);
+
+    window.onresize = () => {
+      this.fitAddon.fit();
+    };
+
+    setTimeout(() => {
+      this.fitAddon.fit();
+    }, 500);
+
+    // window.onkeydown = () => {
+    //   this.fitAddon.fit();
+    // };
 
     this.terminal.writeln('\x1b[32mLinode Lish Console\x1b[m');
 
