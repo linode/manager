@@ -84,7 +84,7 @@ type RouteProps = RouteComponentProps<Params>;
 export interface LinodesLandingProps {
   LandingHeader?: React.ReactElement;
   handleRegionFilter: (regionFilter: RegionFilter) => void;
-  linodesData: LinodeWithMaintenance[] | null;
+  linodesData: LinodeWithMaintenance[];
   linodesInTransition: Set<number>;
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
@@ -244,7 +244,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
       return <CircleProgress />;
     }
 
-    if (this.props.linodesData?.length === 0) {
+    if (this.props.linodesData.length === 0) {
       return (
         <>
           <ProductInformationBanner bannerLocation="Linodes" />

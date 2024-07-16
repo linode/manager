@@ -12,7 +12,6 @@ import { storage } from 'src/utilities/storage';
 
 import { linodesInTransition } from './transitions';
 
-import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 import type { RegionFilter } from 'src/utilities/storage';
 
 const LinodesLanding = React.lazy(
@@ -73,7 +72,7 @@ const LinodesLandingWrapper = React.memo(() => {
 
   const { data: linodes, error, isLoading } = useAllLinodesQuery(
     {},
-    generateLinodesXFilter(regionFilter)
+    isGeckoGAEnabled ? generateLinodesXFilter(regionFilter) : {}
   );
 
   const someLinodesHaveScheduledMaintenance = accountMaintenanceData?.some(
@@ -92,25 +91,13 @@ const LinodesLandingWrapper = React.memo(() => {
     storage.regionFilter.set(regionFilter);
   };
 
-  let filteredData: LinodeWithMaintenance[] | null = null;
-  if (
-    isGeckoGAEnabled &&
-    (regionFilter === 'core' || regionFilter === 'distributed')
-  ) {
-    filteredData = linodesData.filter(
-      (linode) => linode.site_type === regionFilter
-    );
-  } else {
-    filteredData = null;
-  }
-
   return (
     <LinodesLanding
       someLinodesHaveScheduledMaintenance={Boolean(
         someLinodesHaveScheduledMaintenance
       )}
       handleRegionFilter={handleRegionFilter}
-      linodesData={filteredData || linodesData}
+      linodesData={linodesData}
       linodesInTransition={linodesInTransition(events ?? [])}
       linodesRequestError={error ?? undefined}
       linodesRequestLoading={isLoading}
