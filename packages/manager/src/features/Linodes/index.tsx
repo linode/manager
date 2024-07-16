@@ -71,7 +71,10 @@ const LinodesLandingWrapper = React.memo(() => {
     RegionFilter | undefined
   >(storage.regionFilter.get());
 
-  const { data: linodes, error, isLoading } = useAllLinodesQuery();
+  const { data: linodes, error, isLoading } = useAllLinodesQuery(
+    {},
+    generateLinodesXFilter(regionFilter)
+  );
 
   const someLinodesHaveScheduledMaintenance = accountMaintenanceData?.some(
     (thisAccountMaintenance) => thisAccountMaintenance.entity.type === 'linode'
@@ -115,3 +118,12 @@ const LinodesLandingWrapper = React.memo(() => {
     />
   );
 });
+
+const generateLinodesXFilter = (regionFilter: RegionFilter | undefined) => {
+  if (regionFilter === 'core' || regionFilter === 'distributed') {
+    return {
+      site_type: { '+contains': regionFilter },
+    };
+  }
+  return {};
+};

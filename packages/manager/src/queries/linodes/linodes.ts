@@ -69,7 +69,7 @@ export const useAllLinodesQuery = (
   return useQuery<Linode[], APIError[]>(
     [queryKey, 'all', params, filter],
     () => getAllLinodesRequest(params, filter),
-    { ...queryPresets.longLived, enabled }
+    { ...queryPresets.longLived, enabled, keepPreviousData: true }
   );
 };
 
