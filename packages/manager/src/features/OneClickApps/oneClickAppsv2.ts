@@ -2587,25 +2587,4 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'High-performance database for analytics, monitoring and IoT.',
     website: 'https://influxdata.com/',
   },
-  1403818: {
-    alt_description: 'Open source analytics engine.',
-    alt_name: 'Multi-language data engineering.',
-    categories: ['Development'],
-    colors: {
-      end: '9D29FB',
-      start: '76A3CC',
-    },
-    description: `Engine designed for data engineering, data science and machine learning.`,
-    logo_url: 'apachespark.svg',
-    name: 'Apache Spark Cluster',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/apache-spark-cluster/',
-        title: 'Deploy an Apache Spark Cluster through the Linode Marketplace',
-      },
-    ],
-    summary: 'Big data science and engineering platform.',
-    website: 'https://spark.apache.org/',
-  },
 };
