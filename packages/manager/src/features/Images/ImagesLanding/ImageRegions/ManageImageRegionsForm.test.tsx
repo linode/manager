@@ -96,9 +96,6 @@ describe('ManageImageRegionsDrawer', () => {
     // Select new region
     await userEvent.click(await findByText('us-west', { exact: false }));
 
-    // Close the Region Multi-Select to that selections are committed to the list
-    await userEvent.type(regionSelect, '{escape}');
-
     expect(getByText('Place, CA')).toBeVisible();
     expect(getByText('unsaved')).toBeVisible();
 
