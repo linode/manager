@@ -1,5 +1,4 @@
 import * as React from 'react';
-import type { RouteComponentProps } from 'react-router-dom';
 import { Link, withRouter } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -11,25 +10,20 @@ import OrderBy from 'src/components/OrderBy';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
-import type { WithFeatureFlagProps } from 'src/containers/flags.container';
 import { withFeatureFlags } from 'src/containers/flags.container';
-import type { WithProfileProps } from 'src/containers/profile.container';
 import { withProfile } from 'src/containers/profile.container';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { BackupsCTA } from 'src/features/Backups/BackupsCTA';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
-import type { DialogType } from 'src/features/Linodes/types';
 import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
-import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import { EnableBackupsDialog } from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodesDetail/LinodeResize/LinodeResize';
-import type { Action } from '../PowerActionsDialogOrDrawer';
 import { PowerActionsDialog } from '../PowerActionsDialogOrDrawer';
 import { CardView } from './CardView';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';
@@ -42,13 +36,19 @@ import {
 import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
 import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
 import { ListView } from './ListView';
-import type { ExtendedStatus } from './utils';
 import { statusToPriority } from './utils';
-import type { RegionFilter } from 'src/utilities/storage';
 
+import type { Action } from '../PowerActionsDialogOrDrawer';
+import type { ExtendedStatus } from './utils';
 import type { Config } from '@linode/api-v4/lib/linodes/types';
 import type { APIError } from '@linode/api-v4/lib/types';
+import type { RouteComponentProps } from 'react-router-dom';
 import type { PreferenceToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
+import type { WithFeatureFlagProps } from 'src/containers/flags.container';
+import type { WithProfileProps } from 'src/containers/profile.container';
+import type { DialogType } from 'src/features/Linodes/types';
+import type { LinodeWithMaintenance } from 'src/utilities/linodes';
+import type { RegionFilter } from 'src/utilities/storage';
 
 interface State {
   deleteDialogOpen: boolean;
@@ -98,6 +98,99 @@ type CombinedProps = LinodesLandingProps &
   WithProfileProps;
 
 class ListLinodes extends React.Component<CombinedProps, State> {
+  changeView = (style: 'grid' | 'list') => {
+    sendLinodesViewEvent(eventCategory, style);
+
+    const { history, location } = this.props;
+
+    const query = new URLSearchParams(location.search);
+
+    query.set('view', style);
+
+    history.push(`?${query.toString()}`);
+  };
+
+  closeDialogs = () => {
+    this.setState({
+      deleteDialogOpen: false,
+      enableBackupsDialogOpen: false,
+      linodeMigrateOpen: false,
+      linodeResizeOpen: false,
+      powerDialogOpen: false,
+      rebuildDialogOpen: false,
+      rescueDialogOpen: false,
+    });
+  };
+
+  openDialog = (type: DialogType, linodeID: number, linodeLabel?: string) => {
+    switch (type) {
+      case 'delete':
+        this.setState({
+          deleteDialogOpen: true,
+        });
+        break;
+      case 'resize':
+        this.setState({
+          linodeResizeOpen: true,
+        });
+        break;
+      case 'migrate':
+        this.setState({
+          linodeMigrateOpen: true,
+        });
+        break;
+      case 'rebuild':
+        this.setState({
+          rebuildDialogOpen: true,
+        });
+        break;
+      case 'rescue':
+        this.setState({
+          rescueDialogOpen: true,
+        });
+        break;
+      case 'enable_backups':
+        this.setState({
+          enableBackupsDialogOpen: true,
+        });
+        break;
+    }
+    this.setState({
+      selectedLinodeID: linodeID,
+      selectedLinodeLabel: linodeLabel,
+    });
+  };
+
+  openPowerDialog = (
+    bootAction: Action,
+    linodeID: number,
+    linodeLabel: string,
+    linodeConfigs: Config[]
+  ) => {
+    this.setState({
+      powerDialogAction: bootAction,
+      powerDialogOpen: true,
+      selectedLinodeConfigs: linodeConfigs,
+      selectedLinodeID: linodeID,
+      selectedLinodeLabel: linodeLabel,
+    });
+  };
+
+  state: State = {
+    deleteDialogOpen: false,
+    enableBackupsDialogOpen: false,
+    groupByTag: false,
+    linodeMigrateOpen: false,
+    linodeResizeOpen: false,
+    powerDialogOpen: false,
+    rebuildDialogOpen: false,
+    rescueDialogOpen: false,
+  };
+
+  updatePageUrl = (page: number) => {
+    this.props.history.push(`?page=${page}`);
+  };
+
   render() {
     const {
       filteredLinodesData,
@@ -355,99 +448,6 @@ class ListLinodes extends React.Component<CombinedProps, State> {
       </React.Fragment>
     );
   }
-
-  changeView = (style: 'grid' | 'list') => {
-    sendLinodesViewEvent(eventCategory, style);
-
-    const { history, location } = this.props;
-
-    const query = new URLSearchParams(location.search);
-
-    query.set('view', style);
-
-    history.push(`?${query.toString()}`);
-  };
-
-  closeDialogs = () => {
-    this.setState({
-      deleteDialogOpen: false,
-      enableBackupsDialogOpen: false,
-      linodeMigrateOpen: false,
-      linodeResizeOpen: false,
-      powerDialogOpen: false,
-      rebuildDialogOpen: false,
-      rescueDialogOpen: false,
-    });
-  };
-
-  openDialog = (type: DialogType, linodeID: number, linodeLabel?: string) => {
-    switch (type) {
-      case 'delete':
-        this.setState({
-          deleteDialogOpen: true,
-        });
-        break;
-      case 'resize':
-        this.setState({
-          linodeResizeOpen: true,
-        });
-        break;
-      case 'migrate':
-        this.setState({
-          linodeMigrateOpen: true,
-        });
-        break;
-      case 'rebuild':
-        this.setState({
-          rebuildDialogOpen: true,
-        });
-        break;
-      case 'rescue':
-        this.setState({
-          rescueDialogOpen: true,
-        });
-        break;
-      case 'enable_backups':
-        this.setState({
-          enableBackupsDialogOpen: true,
-        });
-        break;
-    }
-    this.setState({
-      selectedLinodeID: linodeID,
-      selectedLinodeLabel: linodeLabel,
-    });
-  };
-
-  openPowerDialog = (
-    bootAction: Action,
-    linodeID: number,
-    linodeLabel: string,
-    linodeConfigs: Config[]
-  ) => {
-    this.setState({
-      powerDialogAction: bootAction,
-      powerDialogOpen: true,
-      selectedLinodeConfigs: linodeConfigs,
-      selectedLinodeID: linodeID,
-      selectedLinodeLabel: linodeLabel,
-    });
-  };
-
-  state: State = {
-    deleteDialogOpen: false,
-    enableBackupsDialogOpen: false,
-    groupByTag: false,
-    linodeMigrateOpen: false,
-    linodeResizeOpen: false,
-    powerDialogOpen: false,
-    rebuildDialogOpen: false,
-    rescueDialogOpen: false,
-  };
-
-  updatePageUrl = (page: number) => {
-    this.props.history.push(`?page=${page}`);
-  };
 }
 
 const eventCategory = 'linodes landing';
