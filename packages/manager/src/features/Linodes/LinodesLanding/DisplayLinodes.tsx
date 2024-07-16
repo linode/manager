@@ -47,6 +47,8 @@ interface DisplayLinodesProps extends OrderByProps<LinodeWithMaintenance> {
   component: React.ComponentType<RenderLinodesProps>;
   data: LinodeWithMaintenance[];
   display: 'grid' | 'list';
+  filteredLinodesData?: LinodeWithMaintenance[] | null;
+  handleRegionFilter: (regionFilter: RegionFilter) => void;
   linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
   openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
@@ -87,7 +89,9 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
     component: Component,
     data,
     display,
+    filteredLinodesData,
     handleOrderChange,
+    handleRegionFilter,
     linodeViewPreference,
     linodesAreGrouped,
     order,
@@ -124,23 +128,10 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const queryPage = Math.min(Number(params.page), maxPageNumber) || 1;
 
   const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const [regionFilter, setRegionFilter] = React.useState<
-    RegionFilter | undefined
-  >(storage.regionFilter.get());
-
-  let filteredData: LinodeWithMaintenance[] | null = null;
-  if (
-    isGeckoGAEnabled &&
-    (regionFilter === 'core' || regionFilter === 'distributed')
-  ) {
-    filteredData = data.filter((linode) => linode.site_type === regionFilter);
-  } else {
-    filteredData = null;
-  }
 
   return (
     <Paginate
-      data={filteredData !== null ? filteredData : data}
+      data={filteredLinodesData || data}
       page={queryPage}
       // If there are more Linodes with maintenance than the current page size, show the minimum
       // page size needed to show ALL Linodes with maintenance.
@@ -188,8 +179,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                         )}
                         onChange={(_, selectedOption) => {
                           if (selectedOption?.value) {
-                            setRegionFilter(selectedOption.value);
-                            storage.regionFilter.set(selectedOption.value);
+                            handleRegionFilter(selectedOption.value);
                           }
                         }}
                         sx={{
@@ -266,9 +256,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
             <Grid xs={12}>
               {
                 <PaginationFooter
-                  count={
-                    filteredData !== null ? filteredData.length : data.length
-                  }
+                  count={filteredLinodesData?.length || data.length}
                   eventCategory={'linodes landing'}
                   handlePageChange={handlePageChange}
                   handleSizeChange={handlePageSizeChange}

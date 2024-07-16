@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import type { RouteComponentProps } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -10,29 +11,26 @@ import OrderBy from 'src/components/OrderBy';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
-import {
-  WithFeatureFlagProps,
-  withFeatureFlags,
-} from 'src/containers/flags.container';
-import {
-  WithProfileProps,
-  withProfile,
-} from 'src/containers/profile.container';
+import type { WithFeatureFlagProps } from 'src/containers/flags.container';
+import { withFeatureFlags } from 'src/containers/flags.container';
+import type { WithProfileProps } from 'src/containers/profile.container';
+import { withProfile } from 'src/containers/profile.container';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { BackupsCTA } from 'src/features/Backups/BackupsCTA';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
-import { DialogType } from 'src/features/Linodes/types';
+import type { DialogType } from 'src/features/Linodes/types';
 import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
-import { LinodeWithMaintenance } from 'src/utilities/linodes';
+import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import { EnableBackupsDialog } from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodesDetail/LinodeResize/LinodeResize';
-import { Action, PowerActionsDialog } from '../PowerActionsDialogOrDrawer';
+import type { Action } from '../PowerActionsDialogOrDrawer';
+import { PowerActionsDialog } from '../PowerActionsDialogOrDrawer';
 import { CardView } from './CardView';
 import { DeleteLinodeDialog } from './DeleteLinodeDialog';
 import { DisplayGroupedLinodes } from './DisplayGroupedLinodes';
@@ -44,7 +42,9 @@ import {
 import { LinodesLandingCSVDownload } from './LinodesLandingCSVDownload';
 import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
 import { ListView } from './ListView';
-import { ExtendedStatus, statusToPriority } from './utils';
+import type { ExtendedStatus } from './utils';
+import { statusToPriority } from './utils';
+import type { RegionFilter } from 'src/utilities/storage';
 
 import type { Config } from '@linode/api-v4/lib/linodes/types';
 import type { APIError } from '@linode/api-v4/lib/types';
@@ -83,6 +83,8 @@ type RouteProps = RouteComponentProps<Params>;
 
 export interface LinodesLandingProps {
   LandingHeader?: React.ReactElement;
+  filteredLinodesData?: LinodeWithMaintenance[] | null;
+  handleRegionFilter: (regionFilter: RegionFilter) => void;
   linodesData: LinodeWithMaintenance[];
   linodesInTransition: Set<number>;
   linodesRequestError?: APIError[];
@@ -98,7 +100,9 @@ type CombinedProps = LinodesLandingProps &
 class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
+      filteredLinodesData,
       grants,
+      handleRegionFilter,
       linodesData,
       linodesInTransition,
       linodesRequestError,
@@ -308,6 +312,8 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                                   : ListView
                               }
                               display={linodeViewPreference}
+                              filteredLinodesData={filteredLinodesData}
+                              handleRegionFilter={handleRegionFilter}
                               linodeViewPreference={linodeViewPreference}
                               linodesAreGrouped={false}
                               toggleGroupLinodes={toggleGroupLinodes}
