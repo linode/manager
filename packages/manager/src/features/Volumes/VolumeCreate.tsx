@@ -44,6 +44,7 @@ import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants
 
 import { ConfigSelect } from './VolumeDrawer/ConfigSelect';
 import { SizeField } from './VolumeDrawer/SizeField';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 
 export const SIZE_FIELD_WIDTH = 160;
 
@@ -281,12 +282,9 @@ export const VolumeCreate = () => {
               </span>
             </Typography>
             {error && (
-              <Notice
-                spacingBottom={0}
-                spacingTop={12}
-                text={error}
-                variant="error"
-              />
+              <Notice spacingBottom={0} spacingTop={12} variant="error">
+                <ErrorMessage entityType="volume_id" message={error} />
+              </Notice>
             )}
             <TextField
               tooltipText="Use only ASCII letters, numbers,
