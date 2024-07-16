@@ -3,7 +3,6 @@ import { http } from 'msw';
 
 import {
   configFactory,
-  eventFactory,
   linodeBackupFactory,
   linodeDiskFactory,
   linodeFactory,
@@ -11,6 +10,7 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
 } from 'src/factories';
+import { queueEvents } from 'src/mocks/utilities/events';
 import {
   makeNotFoundResponse,
   makePaginatedResponse,
@@ -111,7 +111,6 @@ export const createLinode = (mockContext: MockContext) => [
       ...payload,
     });
 
-    // Mock default label behavior when one is not specified.
     if (!linode.label) {
       linode.label = `linode${linode.id}`;
     }
@@ -120,48 +119,48 @@ export const createLinode = (mockContext: MockContext) => [
       created: DateTime.now().toISO(),
     });
 
-    const linodeCreateEvent = eventFactory.build({
-      action: 'linode_create',
-      created: DateTime.local().toISO(),
-      duration: null,
-      entity: {
-        id: linode.id,
-        label: linode.label,
-        type: 'linode',
-        url: `/v4/linode/instances/${linode.id}`,
-      },
-      message: '',
-      percent_complete: 0,
-      rate: null,
-      read: false,
-      seen: false,
-      status: 'scheduled',
-    });
-
     mockContext.linodes.push(linode);
     mockContext.linodeConfigs.push([linode.id, linodeConfig]);
-    mockContext.eventQueue.push([
-      linodeCreateEvent,
-      (e) => {
-        if (e.status === 'scheduled') {
-          e.status = 'started';
 
-          return false;
-        }
-
-        if (e.status === 'started') {
-          linode.status = 'booting';
-
-          setTimeout(() => {
-            linode.status = 'running';
-            e.status = 'finished';
-            e.percent_complete = 100;
-          }, 3000);
-        }
-
-        return true;
+    queueEvents({
+      event: {
+        action: 'linode_create',
+        entity: {
+          id: linode.id,
+          label: linode.label,
+          type: 'linode',
+          url: `/v4/linode/instances/${linode.id}`,
+        },
       },
-    ]);
+      mockContext,
+      sequence: [
+        { status: 'scheduled' },
+        { isProgressEvent: true, status: 'started' },
+        { status: 'finished' },
+      ],
+    })
+      .then(() => {
+        linode.status = 'booting';
+        return queueEvents({
+          event: {
+            action: 'linode_boot',
+            entity: {
+              id: linode.id,
+              label: linode.label,
+              type: 'linode',
+              url: `/v4/linode/instances/${linode.id}`,
+            },
+          },
+          mockContext,
+          sequence: [
+            { isProgressEvent: true, status: 'started' },
+            { status: 'finished' },
+          ],
+        });
+      })
+      .then(() => {
+        linode.status = 'running';
+      });
 
     return makeResponse(linode);
   }),
@@ -187,25 +186,19 @@ export const updateLinode = (mockContext: MockContext) => [
 
       Object.assign(linode, payload);
 
-      const linodeUpdateEvent = eventFactory.build({
-        action: 'linode_update',
-        created: DateTime.local().toISO(),
-        duration: null,
-        entity: {
-          id: linode.id,
-          label: linode.label,
-          type: 'linode',
-          url: `/v4/linode/instances/${linode.id}`,
+      queueEvents({
+        event: {
+          action: 'linode_update',
+          entity: {
+            id: linode.id,
+            label: linode.label,
+            type: 'linode',
+            url: `/v4/linode/instances/${linode.id}`,
+          },
         },
-        message: '',
-        percent_complete: 100,
-        rate: null,
-        read: false,
-        seen: false,
-        status: 'notification',
+        mockContext,
+        sequence: [{ status: 'notification' }],
       });
-
-      mockContext.eventQueue.push([linodeUpdateEvent, () => true]);
 
       return makeResponse(linode);
     }
@@ -223,6 +216,21 @@ export const deleteLinode = (mockContext: MockContext) => [
       const linodeIndex = mockContext.linodes.indexOf(linode);
       if (linodeIndex >= 0) {
         mockContext.linodes.splice(linodeIndex, 1);
+
+        queueEvents({
+          event: {
+            action: 'linode_delete',
+            entity: {
+              id: linode.id,
+              label: linode.label,
+              type: 'linode',
+              url: `/v4/linode/instances/${linode.id}`,
+            },
+          },
+          mockContext,
+          sequence: [{ status: 'finished' }],
+        });
+
         return makeResponse({});
       }
     }

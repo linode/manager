@@ -1,6 +1,7 @@
 import { HttpResponse } from 'msw';
-import type { JsonBodyType } from 'msw';
+
 import type { APIError } from '@linode/api-v4';
+import type { JsonBodyType } from 'msw';
 
 export interface APIPaginatedResponse<T> {
   data: T[];
@@ -19,8 +20,8 @@ export const makeResponse = <T extends JsonBodyType>(
   headers: {} = {}
 ) => {
   return HttpResponse.json(body, {
-    status,
     headers,
+    status,
   });
 };
 
@@ -37,8 +38,8 @@ export const makeErrorResponse = (
       })),
     },
     {
-      status,
       headers,
+      status,
     }
   );
 };

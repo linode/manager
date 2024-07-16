@@ -7,6 +7,7 @@ import {
   makeResponse,
 } from 'src/mocks/utilities/response';
 
+import { queueEvents } from '../utilities/events';
 import { getPaginatedSlice } from '../utilities/pagination';
 
 import type {
@@ -65,10 +66,26 @@ export const createPlacementGroup = (mockContext: MockContext) => [
 
       const placementGroup = placementGroupFactory.build({
         ...payload,
+        is_compliant: true,
         members: [],
       });
 
       mockContext.placementGroups.push(placementGroup);
+
+      queueEvents({
+        event: {
+          action: 'placement_group_create',
+          entity: {
+            id: placementGroup.id,
+            label: placementGroup.label,
+            type: 'placement_group',
+            url: `/v4/placement/groups/${placementGroup.id}`,
+          },
+        },
+        mockContext,
+        sequence: [{ status: 'notification' }],
+      });
+
       return makeResponse(placementGroup);
     }
   ),
@@ -94,7 +111,20 @@ export const updatePlacementGroup = (mockContext: MockContext) => [
 
       Object.assign(placementGroup, payload);
 
-      // TODO queue event.
+      queueEvents({
+        event: {
+          action: 'placement_group_update',
+          entity: {
+            id: placementGroup.id,
+            label: placementGroup.label,
+            type: 'placement_group',
+            url: `/v4/placement/groups/${placementGroup.id}`,
+          },
+        },
+        mockContext,
+        sequence: [{ status: 'notification' }],
+      });
+
       return makeResponse(placementGroup);
     }
   ),
@@ -113,6 +143,21 @@ export const deletePlacementGroup = (mockContext: MockContext) => [
       );
       if (placementGroupIndex >= 0) {
         mockContext.placementGroups.splice(placementGroupIndex, 1);
+
+        queueEvents({
+          event: {
+            action: 'placement_group_delete',
+            entity: {
+              id: placementGroup.id,
+              label: placementGroup.label,
+              type: 'placement_group',
+              url: `/v4/placement/groups/${placementGroup.id}`,
+            },
+          },
+          mockContext,
+          sequence: [{ status: 'notification' }],
+        });
+
         return makeResponse({});
       }
     }
