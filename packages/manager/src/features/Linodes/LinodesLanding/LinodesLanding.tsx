@@ -100,13 +100,9 @@ type CombinedProps = LinodesLandingProps &
 class ListLinodes extends React.Component<CombinedProps, State> {
   changeView = (style: 'grid' | 'list') => {
     sendLinodesViewEvent(eventCategory, style);
-
     const { history, location } = this.props;
-
     const query = new URLSearchParams(location.search);
-
     query.set('view', style);
-
     history.push(`?${query.toString()}`);
   };
 
@@ -263,6 +259,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <LinodeResize
           linodeId={this.state.selectedLinodeID}
+          linodeLabel={this.state.selectedLinodeLabel}
           onClose={this.closeDialogs}
           open={this.state.linodeResizeOpen}
         />
@@ -273,11 +270,13 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         />
         <LinodeRebuildDialog
           linodeId={this.state.selectedLinodeID ?? -1}
+          linodeLabel={this.state.selectedLinodeLabel}
           onClose={this.closeDialogs}
           open={this.state.rebuildDialogOpen}
         />
         <RescueDialog
           linodeId={this.state.selectedLinodeID ?? -1}
+          linodeLabel={this.state.selectedLinodeLabel}
           onClose={this.closeDialogs}
           open={this.state.rescueDialogOpen}
         />
@@ -286,6 +285,23 @@ class ListLinodes extends React.Component<CombinedProps, State> {
           onClose={this.closeDialogs}
           open={this.state.enableBackupsDialogOpen}
         />
+        {!!this.state.selectedLinodeID && !!this.state.selectedLinodeLabel && (
+          <React.Fragment>
+            <PowerActionsDialog
+              action={this.state.powerDialogAction ?? 'Power On'}
+              isOpen={this.state.powerDialogOpen}
+              linodeId={this.state.selectedLinodeID}
+              linodeLabel={this.state.selectedLinodeLabel}
+              onClose={this.closeDialogs}
+            />
+            <DeleteLinodeDialog
+              linodeId={this.state.selectedLinodeID}
+              linodeLabel={this.state.selectedLinodeLabel}
+              onClose={this.closeDialogs}
+              open={this.state.deleteDialogOpen}
+            />
+          </React.Fragment>
+        )}
         {this.props.someLinodesHaveScheduledMaintenance && (
           <MaintenanceBanner />
         )}
@@ -429,22 +445,6 @@ class ListLinodes extends React.Component<CombinedProps, State> {
           }}
         </PreferenceToggle>
         <TransferDisplay />
-
-        {!!this.state.selectedLinodeID && !!this.state.selectedLinodeLabel && (
-          <React.Fragment>
-            <PowerActionsDialog
-              action={this.state.powerDialogAction ?? 'Power On'}
-              isOpen={this.state.powerDialogOpen}
-              linodeId={this.state.selectedLinodeID}
-              onClose={this.closeDialogs}
-            />
-            <DeleteLinodeDialog
-              linodeId={this.state.selectedLinodeID}
-              onClose={this.closeDialogs}
-              open={this.state.deleteDialogOpen}
-            />
-          </React.Fragment>
-        )}
       </React.Fragment>
     );
   }

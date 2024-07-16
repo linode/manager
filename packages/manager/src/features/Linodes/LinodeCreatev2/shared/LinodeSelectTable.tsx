@@ -27,12 +27,10 @@ import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnal
 import { privateIPRegex } from 'src/utilities/ipUtils';
 import { isNumeric } from 'src/utilities/stringUtils';
 
-import {
-  LinodeCreateFormValues,
-  useLinodeCreateQueryParams,
-} from '../utilities';
+import { useLinodeCreateQueryParams } from '../utilities';
 import { LinodeSelectTableRow } from './LinodeSelectTableRow';
 
+import type { LinodeCreateFormValues } from '../utilities';
 import type { Linode } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
@@ -213,6 +211,7 @@ export const LinodeSelectTable = (props: Props) => {
           action="Power Off"
           isOpen={Boolean(linodeToPowerOff)}
           linodeId={linodeToPowerOff?.id}
+          linodeLabel={linodeToPowerOff?.label}
           onClose={() => setLinodeToPowerOff(undefined)}
         />
       )}

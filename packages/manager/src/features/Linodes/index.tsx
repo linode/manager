@@ -18,7 +18,11 @@ import type { RegionFilter } from 'src/utilities/storage';
 const LinodesLanding = React.lazy(
   () => import('./LinodesLanding/LinodesLanding')
 );
-const LinodesDetail = React.lazy(() => import('./LinodesDetail/LinodesDetail'));
+const LinodesDetail = React.lazy(() =>
+  import('src/features/Linodes/LinodesDetail/LinodesDetail').then((module) => ({
+    default: module.LinodeDetail,
+  }))
+);
 const LinodesCreate = React.lazy(
   () => import('./LinodesCreate/LinodeCreateContainer')
 );
@@ -28,7 +32,7 @@ const LinodesCreatev2 = React.lazy(() =>
   }))
 );
 
-const LinodesRoutes = () => {
+export const LinodesRoutes = () => {
   const flags = useFlags();
 
   // Hold this feature flag in state so that the user's Linode creation
@@ -49,8 +53,6 @@ const LinodesRoutes = () => {
     </React.Suspense>
   );
 };
-
-export default LinodesRoutes;
 
 // Light wrapper around LinodesLanding that injects "extended" Linodes (with
 // plan type and maintenance information). This extra data used to come from
