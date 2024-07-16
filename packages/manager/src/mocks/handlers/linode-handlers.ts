@@ -120,7 +120,7 @@ export const createLinode = (mockContext: MockContext) => [
       created: DateTime.now().toISO(),
     });
 
-    const linodeEvent = eventFactory.build({
+    const linodeCreateEvent = eventFactory.build({
       action: 'linode_create',
       created: DateTime.local().toISO(),
       duration: null,
@@ -141,16 +141,22 @@ export const createLinode = (mockContext: MockContext) => [
     mockContext.linodes.push(linode);
     mockContext.linodeConfigs.push([linode.id, linodeConfig]);
     mockContext.eventQueue.push([
-      linodeEvent,
+      linodeCreateEvent,
       (e) => {
         if (e.status === 'scheduled') {
           e.status = 'started';
 
           return false;
         }
+
         if (e.status === 'started') {
-          e.status = 'finished';
           linode.status = 'booting';
+
+          setTimeout(() => {
+            linode.status = 'running';
+            e.status = 'finished';
+            e.percent_complete = 100;
+          }, 3000);
         }
 
         return true;
@@ -180,6 +186,26 @@ export const updateLinode = (mockContext: MockContext) => [
       }
 
       Object.assign(linode, payload);
+
+      const linodeUpdateEvent = eventFactory.build({
+        action: 'linode_update',
+        created: DateTime.local().toISO(),
+        duration: null,
+        entity: {
+          id: linode.id,
+          label: linode.label,
+          type: 'linode',
+          url: `/v4/linode/instances/${linode.id}`,
+        },
+        message: '',
+        percent_complete: 100,
+        rate: null,
+        read: false,
+        seen: false,
+        status: 'notification',
+      });
+
+      mockContext.eventQueue.push([linodeUpdateEvent, () => true]);
 
       return makeResponse(linode);
     }
