@@ -427,10 +427,9 @@ describe('help & support', () => {
       .scrollIntoView()
       .within(() => {
         cy.contains(ACCOUNT_THING_LIMIT_ERROR);
+        // Navigate to the account limit ticket form.
+        cy.findByText('contact Support').should('be.visible').click();
       });
-
-    // Navigate to the account limit ticket form.
-    cy.findByText('contact Support').should('be.visible').click();
 
     // Fill out ticket form.
     ui.dialog
