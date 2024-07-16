@@ -251,8 +251,9 @@ export const useToastNotifications = (): {
       const failureMessage = getToastMessage(message, event);
 
       if (failureMessage) {
-        const hasSupportLink =
-          failureMessage?.includes('contact Support') ?? false;
+        const hasSupportLink = failureMessage
+          .toLowerCase()
+          .includes('contact support');
 
         const formattedFailureMessage = createFormattedMessage(
           failureMessage,
