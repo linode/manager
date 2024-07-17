@@ -12,7 +12,7 @@ import {
   useAllFirewallDevicesQuery,
   useUpdateFirewallRulesMutation,
 } from 'src/queries/firewalls';
-import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
+import { linodeQueries } from 'src/queries/linodes/linodes';
 import { nodebalancerQueries } from 'src/queries/nodebalancers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -206,12 +206,8 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
           for (const device of devices) {
             if (device.entity.type === 'linode') {
               queryClient.invalidateQueries({
-                queryKey: [
-                  linodesQueryKey,
-                  device.entity.type,
-                  device.entity.id,
-                  'firewalls',
-                ],
+                queryKey: linodeQueries.linode(device.entity.id)._ctx.firewalls
+                  .queryKey,
               });
             }
             if (device.entity.type === 'nodebalancer') {

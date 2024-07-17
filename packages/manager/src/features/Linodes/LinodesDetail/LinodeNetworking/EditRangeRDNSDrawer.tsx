@@ -1,4 +1,3 @@
-import { IPRange } from '@linode/api-v4/lib/networking';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -10,13 +9,13 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import {
-  useAllIPsQuery,
-  useLinodeIPMutation,
-} from 'src/queries/linodes/networking';
+import { useLinodeIPMutation } from 'src/queries/linodes/networking';
+import { useAllIPsQuery } from 'src/queries/networking/networking';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { listIPv6InRange } from './LinodeIPAddressRow';
+
+import type { IPRange } from '@linode/api-v4';
 
 interface Props {
   linodeId: number;
