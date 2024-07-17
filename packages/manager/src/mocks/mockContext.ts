@@ -1,3 +1,5 @@
+import { mswDB } from './indexedDB';
+
 import type { MockContext, MockContextPopulator } from './types';
 
 /**
@@ -14,6 +16,7 @@ export const getContextPopulatorGroups = (
     if (!acc.includes(cur.group)) {
       acc.push(cur.group);
     }
+
     return acc;
   }, []);
 };
@@ -23,7 +26,12 @@ export const getContextPopulatorGroups = (
  *
  * @returns Empty mock context.
  */
-export const makeMockContext = (): MockContext => {
+export const createInitialMockContext = async (): Promise<MockContext> => {
+  const storedContext = await mswDB.getStore();
+  if (storedContext) {
+    return storedContext;
+  }
+
   return {
     eventQueue: [],
     firewalls: [],

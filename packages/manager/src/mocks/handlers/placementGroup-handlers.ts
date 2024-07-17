@@ -1,6 +1,7 @@
 import { http } from 'msw';
 
 import { placementGroupFactory } from 'src/factories';
+import { mswDB } from 'src/mocks/indexedDB';
 import {
   makeNotFoundResponse,
   makePaginatedResponse,
@@ -19,33 +20,46 @@ import type {
 } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockContext } from 'src/mocks/types';
-import type { APIErrorResponse } from 'src/mocks/utilities/response';
+import type {
+  APIErrorResponse,
+  APIPaginatedResponse,
+} from 'src/mocks/utilities/response';
 
 export const getPlacementGroups = (mockContext: MockContext) => [
-  http.get('*/v4/placement/groups', ({ request }) => {
-    const url = new URL(request.url);
+  http.get(
+    '*/v4/placement/groups',
+    async ({
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<PlacementGroup>>
+    > => {
+      const url = new URL(request.url);
+      const placementGroups = await mswDB.getAll('placementGroups');
 
-    const pageNumber = Number(url.searchParams.get('page')) || 1;
-    const pageSize = Number(url.searchParams.get('page_size')) || 25;
-    const totalPages = Math.ceil(
-      mockContext.placementGroups?.length / pageSize
-    );
-    const pageSlice = getPaginatedSlice(
-      mockContext.placementGroups,
-      pageNumber,
-      pageSize
-    );
+      if (!placementGroups) {
+        return makeNotFoundResponse();
+      }
 
-    return makePaginatedResponse(pageSlice, pageNumber, totalPages);
-  }),
+      const pageNumber = Number(url.searchParams.get('page')) || 1;
+      const pageSize = Number(url.searchParams.get('page_size')) || 25;
+      const totalPages = Math.ceil(placementGroups?.length / pageSize);
+      const pageSlice = getPaginatedSlice(
+        mockContext.placementGroups,
+        pageNumber,
+        pageSize
+      );
+
+      return makePaginatedResponse(pageSlice, pageNumber, totalPages);
+    }
+  ),
 
   http.get(
     '*/v4/placement/groups/:id',
-    ({ params }): StrictResponse<APIErrorResponse | PlacementGroup> => {
+    async ({
+      params,
+    }): Promise<StrictResponse<APIErrorResponse | PlacementGroup>> => {
       const id = Number(params.id);
-      const placementGroup = mockContext.placementGroups.find(
-        (contextPlacementGroup) => contextPlacementGroup.id === id
-      );
+      const placementGroup = await mswDB.get('placementGroups', id);
 
       if (!placementGroup) {
         return makeNotFoundResponse();
@@ -70,7 +84,7 @@ export const createPlacementGroup = (mockContext: MockContext) => [
         members: [],
       });
 
-      mockContext.placementGroups.push(placementGroup);
+      await mswDB.add('placementGroups', placementGroup, mockContext);
 
       queueEvents({
         event: {
@@ -100,16 +114,13 @@ export const updatePlacementGroup = (mockContext: MockContext) => [
     }): Promise<StrictResponse<APIErrorResponse | PlacementGroup>> => {
       const id = Number(params.id);
       const payload: UpdatePlacementGroupPayload = await request.clone().json();
-
-      const placementGroup = mockContext.placementGroups.find(
-        (contextPlacementGroup) => contextPlacementGroup.id === id
-      );
+      const placementGroup = await mswDB.get('placementGroups', id);
 
       if (!placementGroup) {
         return makeNotFoundResponse();
       }
 
-      Object.assign(placementGroup, payload);
+      mswDB.update('placementGroups', id, payload, mockContext);
 
       queueEvents({
         event: {
@@ -131,38 +142,31 @@ export const updatePlacementGroup = (mockContext: MockContext) => [
 ];
 
 export const deletePlacementGroup = (mockContext: MockContext) => [
-  http.delete('*/v4/placement/groups/:id', ({ params }) => {
+  http.delete('*/v4/placement/groups/:id', async ({ params }) => {
     const id = Number(params.id);
-    const placementGroup = mockContext.placementGroups.find(
-      (contextPlacementGroup) => contextPlacementGroup.id === id
-    );
+    const placementGroup = await mswDB.get('placementGroups', id);
 
-    if (placementGroup) {
-      const placementGroupIndex = mockContext.placementGroups.indexOf(
-        placementGroup
-      );
-      if (placementGroupIndex >= 0) {
-        mockContext.placementGroups.splice(placementGroupIndex, 1);
-
-        queueEvents({
-          event: {
-            action: 'placement_group_delete',
-            entity: {
-              id: placementGroup.id,
-              label: placementGroup.label,
-              type: 'placement_group',
-              url: `/v4/placement/groups/${placementGroup.id}`,
-            },
-          },
-          mockContext,
-          sequence: [{ status: 'notification' }],
-        });
-
-        return makeResponse({});
-      }
+    if (!placementGroup) {
+      return makeNotFoundResponse();
     }
 
-    return makeNotFoundResponse();
+    await mswDB.delete('placementGroups', id, mockContext);
+
+    queueEvents({
+      event: {
+        action: 'placement_group_delete',
+        entity: {
+          id: placementGroup.id,
+          label: placementGroup.label,
+          type: 'placement_group',
+          url: `/v4/placement/groups/${placementGroup.id}`,
+        },
+      },
+      mockContext,
+      sequence: [{ status: 'notification' }],
+    });
+
+    return makeResponse({});
   }),
 ];
 
@@ -177,13 +181,8 @@ export const placementGroupLinodeAssignment = (mockContext: MockContext) => [
       const payload: AssignLinodesToPlacementGroupPayload = await request
         .clone()
         .json();
-
-      const placementGroup = mockContext.placementGroups.find(
-        (contextPlacementGroup) => contextPlacementGroup.id === id
-      );
-      const linodeAssigned = mockContext.linodes.find(
-        (linode) => linode.id === payload['linodes'][0]
-      );
+      const placementGroup = await mswDB.get('placementGroups', id);
+      const linodeAssigned = await mswDB.get('linodes', payload['linodes'][0]);
 
       if (!placementGroup || !linodeAssigned) {
         return makeNotFoundResponse();
@@ -197,6 +196,29 @@ export const placementGroupLinodeAssignment = (mockContext: MockContext) => [
           },
         ],
       });
+
+      await mswDB.update(
+        'placementGroups',
+        placementGroup.id,
+        {
+          members: placementGroup.members,
+        },
+        mockContext
+      );
+
+      await mswDB.update(
+        'linodes',
+        linodeAssigned.id,
+        {
+          placement_group: {
+            affinity_type: placementGroup.affinity_type,
+            id: placementGroup.id,
+            is_strict: placementGroup.is_strict,
+            label: placementGroup.label,
+          },
+        },
+        mockContext
+      );
 
       Object.assign(linodeAssigned, {
         placement_group: {
@@ -222,30 +244,32 @@ export const placementGroupLinodeAssignment = (mockContext: MockContext) => [
       const payload: UnassignLinodesFromPlacementGroupPayload = await request
         .clone()
         .json();
-
-      const placementGroup = mockContext.placementGroups.find(
-        (contextPlacementGroup) => contextPlacementGroup.id === id
-      );
-
-      const linodeAssigned = mockContext.linodes.find(
-        (linode) => linode.id === payload['linodes'][0]
-      );
+      const placementGroup = await mswDB.get('placementGroups', id);
+      const linodeAssigned = await mswDB.get('linodes', payload['linodes'][0]);
 
       if (!placementGroup || !linodeAssigned) {
         return makeNotFoundResponse();
       }
 
-      Object.assign(placementGroup, {
-        members: [
-          ...placementGroup.members.filter(
+      mswDB.update(
+        'placementGroups',
+        placementGroup.id,
+        {
+          members: placementGroup.members.filter(
             (member) => member.linode_id !== payload['linodes'][0]
           ),
-        ],
-      });
+        },
+        mockContext
+      );
 
-      Object.assign(linodeAssigned, {
-        placement_group: null,
-      });
+      mswDB.update(
+        'linodes',
+        linodeAssigned.id,
+        {
+          placement_group: undefined,
+        },
+        mockContext
+      );
 
       // TODO queue event.
       return makeResponse(placementGroup);
