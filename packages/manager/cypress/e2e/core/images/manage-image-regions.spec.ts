@@ -139,7 +139,7 @@ describe('Manage Image Regions', () => {
     // mock the updated paginated response
     mockGetCustomImages([updatedImage]);
 
-    // Click outside of the Region Multi-Select to commit the selection to the list
+    // Click outside of the Region Multi-Select to close the popover
     ui.drawer
       .findByTitle(`Manage Regions for ${image.label}`)
       .click()
@@ -170,7 +170,7 @@ describe('Manage Image Regions', () => {
         // Verify the image isn't shown in the list after being removed
         cy.findByText(region1.label).should('not.exist');
 
-        // Verify the count is now 2
+        // Verify the count is now 3
         cy.findByText('Image will be available in these regions (3)').should(
           'be.visible'
         );
@@ -181,21 +181,9 @@ describe('Manage Image Regions', () => {
           .should('be.visible')
           .should('be.enabled')
           .click();
-
-        // "Unsaved" regions should transition to "pending replication" because
-        // they are now returned by the API
-        cy.findAllByText('pending replication').should('be.visible');
-
-        // The save button should become disabled now that changes have been saved
-        ui.button.findByTitle('Save').should('be.disabled');
-
-        // The save button should become disabled now that changes have been saved
-        ui.button.findByTitle('Save').should('be.disabled');
-
-        cy.findByLabelText('Close drawer').click();
       });
 
-    ui.toast.assertMessage('Image regions successfully updated.');
+    ui.toast.assertMessage(`${image.label}'s regions successfully updated.`);
 
     cy.findByText(image.label)
       .closest('tr')
@@ -206,8 +194,24 @@ describe('Manage Image Regions', () => {
         // Verify the first region is rendered
         cy.findByText(region2.label + ',').should('be.visible');
 
-        // Verify the regions count is now "+2"
         cy.findByText('+2').should('be.visible').should('be.enabled');
+
+        // Verify the regions count is now "+2" and open the drawer
+        cy.findByText('+2').should('be.visible').should('be.enabled').click();
+      });
+
+    ui.drawer
+      .findByTitle(`Manage Regions for ${image.label}`)
+      .click()
+      .within(() => {
+        // "Unsaved" regions should transition to "pending replication" because
+        // they are now returned by the API
+        cy.findAllByText('pending replication').should('be.visible');
+
+        // The save button should be disabled
+        ui.button.findByTitle('Save').should('be.disabled');
+
+        cy.findByLabelText('Close drawer').click();
       });
   });
 });

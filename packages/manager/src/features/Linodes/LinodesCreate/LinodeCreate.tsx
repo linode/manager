@@ -12,6 +12,7 @@ import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary'
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DetailsPanel } from 'src/components/DetailsPanel/DetailsPanel';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -845,7 +846,9 @@ export class LinodeCreate extends React.PureComponent<
             <Notice spacingTop={8} text={hasErrorFor.none} variant="error" />
           )}
           {generalError && (
-            <Notice spacingTop={8} text={generalError} variant="error" />
+            <Notice spacingTop={8} variant="error">
+              <ErrorMessage entityType="linode_id" message={generalError} />
+            </Notice>
           )}
           {userCannotCreateLinode && (
             <Notice
