@@ -77,7 +77,6 @@ export const createPlacementGroup = (mockContext: MockContext) => [
       request,
     }): Promise<StrictResponse<APIErrorResponse | PlacementGroup>> => {
       const payload: CreatePlacementGroupPayload = await request.clone().json();
-
       const placementGroup = placementGroupFactory.build({
         ...payload,
         is_compliant: true,

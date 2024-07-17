@@ -13,11 +13,7 @@ import {
 } from './ServiceWorkerTool';
 
 import type { QueryClient } from '@tanstack/react-query';
-import type {
-  MockContext,
-  MockContextPopulator,
-  MockPreset,
-} from 'src/mocks/types';
+import type { MockContextPopulator, MockPreset } from 'src/mocks/types';
 import type { ApplicationStore } from 'src/store';
 
 /**
@@ -54,14 +50,17 @@ export async function loadDevTools(
       .filter((populator) => !!populator);
 
     // Apply MSW context populators.
-    const mockContext = mswContentPopulators.reduce(
-      (acc: MockContext, cur: MockContextPopulator) => {
+    const initialContext = await createInitialMockContext();
+
+    const mockContext = await mswContentPopulators.reduce(
+      async (accPromise, cur: MockContextPopulator) => {
+        const acc = await accPromise;
         return cur.populator(acc);
       },
-      await createInitialMockContext()
+      Promise.resolve(initialContext)
     );
 
-    mswDB.saveStore(mockContext);
+    await mswDB.saveStore(mockContext);
 
     const extraHandlers = extraMswPresets.reduce((acc, cur: MockPreset) => {
       return [

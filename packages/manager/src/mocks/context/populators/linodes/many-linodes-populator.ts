@@ -1,4 +1,5 @@
 import { configFactory, linodeFactory } from 'src/factories';
+import { mswDB } from 'src/mocks/indexedDB';
 
 import type { Config } from '@linode/api-v4';
 import type { MockContext, MockContextPopulator } from 'src/mocks/types';
@@ -13,14 +14,17 @@ export const manyLinodesPopulator: MockContextPopulator = {
   id: 'many-linodes',
   label: 'Many Linodes',
 
-  populator: (mockContext: MockContext) => {
+  populator: async (mockContext: MockContext) => {
+    mswDB.clearEntity('linodes', mockContext);
+    mswDB.clearEntity('linodeConfigs', mockContext);
+
     const linodes = linodeFactory.buildList(5000);
     const configs: [number, Config][] = linodes.map((linode) => {
       return [linode.id, configFactory.build()];
     });
 
-    mockContext.linodes.push(...linodes);
-    mockContext.linodeConfigs.push(...configs);
+    await mswDB.addMany('linodes', linodes, mockContext);
+    await mswDB.addMany('linodeConfigs', configs, mockContext);
 
     return mockContext;
   },
