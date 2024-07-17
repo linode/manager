@@ -1,10 +1,11 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
 import { capitalize } from 'src/utilities/capitalize';
+
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
   errors: APIError[];

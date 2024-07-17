@@ -135,6 +135,7 @@ export const SummaryPanel = () => {
           disabled={isNodeBalancerReadOnly}
           tags={nodebalancer?.tags}
           updateTags={(tags) => updateNodeBalancer({ tags })}
+          view="panel"
         />
       </StyledSummarySection>
     </StyledRootDiv>

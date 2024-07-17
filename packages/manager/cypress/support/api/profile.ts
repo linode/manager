@@ -2,6 +2,9 @@ import {
   OAuthClient,
   deleteOAuthClient,
   getOAuthClients,
+  SSHKey,
+  deleteSSHKey,
+  getSSHKeys,
 } from '@linode/api-v4';
 import { isTestLabel } from 'support/api/common';
 import { pageSize } from 'support/constants/api';
@@ -22,6 +25,21 @@ export const deleteAllTestOAuthApps = async (): Promise<void> => {
     .map(async (oauthApp: OAuthClient) => {
       console.log(`deleting ${oauthApp.label}`);
       await deleteOAuthClient(oauthApp.id);
+    });
+
+  await Promise.all(deletionPromises);
+};
+
+export const deleteAllTestSSHKeys = async (): Promise<void> => {
+  const sshKeys = await depaginate<SSHKey>((page: number) => {
+    return getSSHKeys({ page, page_size: pageSize });
+  });
+
+  const deletionPromises = sshKeys
+    .filter((sshKey: SSHKey) => isTestLabel(sshKey.label))
+    .map(async (sshKey: SSHKey) => {
+      console.log(`deleting ${sshKey.label}`);
+      await deleteSSHKey(sshKey.id);
     });
 
   await Promise.all(deletionPromises);

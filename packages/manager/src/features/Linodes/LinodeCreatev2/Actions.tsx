@@ -1,14 +1,16 @@
-import { CreateLinodeRequest } from '@linode/api-v4';
 import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { ApiAwarenessModal } from '../LinodesCreate/ApiAwarenessModal/ApiAwarenessModal';
 import { getLinodeCreatePayload } from './utilities';
+
+import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const Actions = () => {
   const [isAPIAwarenessModalOpen, setIsAPIAwarenessModalOpen] = useState(false);
@@ -24,6 +26,7 @@ export const Actions = () => {
   });
 
   const onOpenAPIAwareness = async () => {
+    sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
     if (await trigger()) {
       // If validation is successful, we open the dialog.
       setIsAPIAwarenessModalOpen(true);
