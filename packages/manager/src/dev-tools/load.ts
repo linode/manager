@@ -61,7 +61,7 @@ export async function loadDevTools(
       await createInitialMockContext()
     );
 
-    mswDB.saveAllToDB(mockContext);
+    mswDB.saveStore(mockContext);
 
     const extraHandlers = extraMswPresets.reduce((acc, cur: MockPreset) => {
       return [

@@ -6,7 +6,7 @@ export const mswDB = {
     payload: MockContext[T] extends Array<infer U> ? U : MockContext[T],
     state: MockContext
   ): Promise<void> => {
-    const db = await mswDB.openDB('MockContextDB', 1);
+    const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(['mockContext'], 'readwrite');
@@ -44,7 +44,7 @@ export const mswDB = {
   },
 
   clearDB: async (): Promise<void> => {
-    const db = await mswDB.openDB('MockContextDB', 1);
+    const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(['mockContext'], 'readwrite');
@@ -65,7 +65,7 @@ export const mswDB = {
     id: number,
     state: MockContext
   ): Promise<void> => {
-    const db = await mswDB.openDB('MockContextDB', 1);
+    const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(['mockContext'], 'readwrite');
@@ -116,7 +116,7 @@ export const mswDB = {
   ): Promise<
     (MockContext[T] extends Array<infer U> ? U : MockContext[T]) | undefined
   > => {
-    const db = await mswDB.openDB('MockContextDB', 1);
+    const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(['mockContext'], 'readonly');
@@ -151,7 +151,7 @@ export const mswDB = {
   getAll: async <T extends keyof MockContext>(
     entity: T
   ): Promise<MockContext[T] | undefined> => {
-    const db = await mswDB.openDB('MockContextDB', 1);
+    const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(['mockContext'], 'readonly');
@@ -182,7 +182,7 @@ export const mswDB = {
    * Retrieves the whole mock context from IndexedDB.
    */
   getStore: async (): Promise<MockContext | undefined> => {
-    const db = await mswDB.openDB('MockContextDB', 1);
+    const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(['mockContext'], 'readonly');
@@ -202,17 +202,17 @@ export const mswDB = {
    * Opens the IndexedDB with the given name and version.
    * Create the object store if it doesn't exist.
    */
-  openDB: (name: string, version: number): Promise<IDBDatabase> => {
+  open: (name: string, version: number): Promise<IDBDatabase> => {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(name, version);
 
       request.onerror = (event) => {
         reject(event);
       };
-      request.onsuccess = (event) => {
+      request.onsuccess = () => {
         resolve(request.result);
       };
-      request.onupgradeneeded = (event) => {
+      request.onupgradeneeded = () => {
         const db = request.result;
         if (!db.objectStoreNames.contains('mockContext')) {
           db.createObjectStore('mockContext', { keyPath: 'id' });
@@ -225,8 +225,8 @@ export const mswDB = {
    * Saves the given mock context to IndexedDB.
    * Useful to replace or initialize the whole mock context.
    */
-  saveAllToDB: async (data: MockContext): Promise<void> => {
-    const db = await mswDB.openDB('MockContextDB', 1);
+  saveStore: async (data: MockContext): Promise<void> => {
+    const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(['mockContext'], 'readwrite');
@@ -253,7 +253,7 @@ export const mswDB = {
     >,
     state: MockContext
   ): Promise<void> => {
-    const db = await mswDB.openDB('MockContextDB', 1);
+    const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(['mockContext'], 'readwrite');
