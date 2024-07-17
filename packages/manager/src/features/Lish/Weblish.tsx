@@ -101,7 +101,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
         {this.socket && this.socket.readyState === this.socket.OPEN ? (
           <div
             style={{
-              height: 'calc(100vh - 40px)',
+              height: 'calc(100vh - 45px)',
               padding: 8,
             }}
             className="terminal"
@@ -136,9 +136,9 @@ export class Weblish extends React.Component<CombinedProps, State> {
       this.fitAddon.fit();
     };
 
-    setTimeout(() => {
+    setInterval(() => {
       this.fitAddon.fit();
-    }, 500);
+    }, 2000);
 
     this.terminal.writeln('\x1b[32mLinode Lish Console\x1b[m');
 

@@ -2,13 +2,13 @@
 import * as React from 'react';
 import { VncScreen } from 'react-vnc';
 
+import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
 import type { Linode } from '@linode/api-v4/lib/linodes';
 import type { VncScreenHandle } from 'react-vnc';
-import { Box } from 'src/components/Box';
 
 interface Props {
   linode: Linode;
