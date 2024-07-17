@@ -47,7 +47,7 @@ interface QueryParams extends BaseQueryParams {
   upgrade: BooleanString;
 }
 
-const LinodeDetailHeader = () => {
+export const LinodeDetailHeader = () => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
   // now show their content in modals instead. The logic below facilitates handling
   // modal-related query params (and the older /:subpath routes before the redirect
@@ -230,26 +230,31 @@ const LinodeDetailHeader = () => {
         action={powerAction}
         isOpen={powerDialogOpen}
         linodeId={matchedLinodeId}
+        linodeLabel={linode.label}
         onClose={closeDialogs}
       />
       <DeleteLinodeDialog
         linodeId={matchedLinodeId}
+        linodeLabel={linode.label}
         onClose={closeDialogs}
         onSuccess={() => history.replace('/linodes')}
         open={deleteDialogOpen}
       />
       <LinodeResize
         linodeId={matchedLinodeId}
+        linodeLabel={linode.label}
         onClose={closeDialogs}
         open={resizeDialogOpen}
       />
       <LinodeRebuildDialog
         linodeId={matchedLinodeId}
+        linodeLabel={linode.label}
         onClose={closeDialogs}
         open={rebuildDialogOpen}
       />
       <RescueDialog
         linodeId={matchedLinodeId}
+        linodeLabel={linode.label}
         onClose={closeDialogs}
         open={rescueDialogOpen}
       />
@@ -271,5 +276,3 @@ const LinodeDetailHeader = () => {
     </>
   );
 };
-
-export default LinodeDetailHeader;

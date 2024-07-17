@@ -43,7 +43,7 @@ import type {
   ResizeLinodePayload,
 } from '@linode/api-v4/lib/linodes';
 
-interface Props {
+export interface Props {
   linodeId?: number;
   linodeLabel?: string;
   onClose: () => void;
@@ -56,7 +56,7 @@ const migrationTypeOptions: { [key in MigrationTypes]: key } = {
 };
 
 export const LinodeResize = (props: Props) => {
-  const { linodeId, onClose, open } = props;
+  const { linodeId, linodeLabel, onClose, open } = props;
   const theme = useTheme();
 
   const { data: linode, isLoading: isLinodeDataLoading } = useLinodeQuery(
@@ -70,15 +70,10 @@ export const LinodeResize = (props: Props) => {
   );
 
   const { data: types } = useAllTypes(open);
-
   const { data: preferences } = usePreferences(open);
-
   const { enqueueSnackbar } = useSnackbar();
-
   const [confirmationText, setConfirmationText] = React.useState('');
-
   const [hasResizeError, setHasResizeError] = React.useState<boolean>(false);
-
   const formRef = React.useRef<HTMLFormElement>(null);
 
   const {
@@ -193,7 +188,7 @@ export const LinodeResize = (props: Props) => {
       maxWidth="md"
       onClose={onClose}
       open={open}
-      title={`Resize Linode ${linode?.label ?? ''}`}
+      title={`Resize Linode ${linodeLabel ?? ''}`}
     >
       {isLinodeDataLoading ? (
         <CircleProgress />

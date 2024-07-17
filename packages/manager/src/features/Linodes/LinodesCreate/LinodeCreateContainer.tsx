@@ -635,7 +635,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             {
               field: 'placement_group',
               reason: `${this.state.placementGroupSelection?.label} (${
-                this.state.placementGroupSelection?.affinity_type ===
+                this.state.placementGroupSelection?.placement_group_type ===
                 'affinity:local'
                   ? 'Affinity'
                   : 'Anti-affinity'
