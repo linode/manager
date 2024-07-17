@@ -43,13 +43,13 @@ export const pages: Page[] = [
       {
         go: () => {
           loadAppNoLogin(routes.createLinodeOCA);
-          cy.findByText('Distributions').click();
+          cy.findByText('OS').click();
         },
         name: 'Tab',
       },
     ],
-    name: 'Linode/Create/Distribution',
-    url: `${routes.createLinode}?type=Distributions`,
+    name: 'Linode/Create/OS',
+    url: `${routes.createLinode}?type=OS`,
   },
   {
     assertIsLoaded: () => cy.findByText('Select App').should('be.visible'),

@@ -152,7 +152,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
             sendLinodeCreateFormStepEvent({
               action: 'click',
               category: 'link',
-              createType: params.type ?? 'Distributions',
+              createType: params.type ?? 'OS',
               label: DOCS_LINK_LABEL_DC_PRICING,
               version: 'v1',
             })

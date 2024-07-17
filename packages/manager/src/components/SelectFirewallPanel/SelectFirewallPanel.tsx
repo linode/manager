@@ -47,7 +47,7 @@ export const SelectFirewallPanel = (props: Props) => {
       sendLinodeCreateFormStepEvent({
         action: 'click',
         category: 'button',
-        createType: queryParams.type ?? 'Distributions',
+        createType: queryParams.type ?? 'OS',
         formStepName: 'Firewall Panel',
         label: 'Create Firewall',
         version: 'v1',
@@ -93,7 +93,7 @@ export const SelectFirewallPanel = (props: Props) => {
             sendLinodeCreateFormStepEvent({
               action: 'click',
               category: 'select',
-              createType: queryParams.type ?? 'Distributions',
+              createType: queryParams.type ?? 'OS',
               formStepName: 'Firewall Panel',
               label: 'Assign Firewall',
               version: 'v1',

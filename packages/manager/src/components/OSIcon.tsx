@@ -8,24 +8,22 @@ import type { Image } from '@linode/api-v4';
 
 interface Props extends BoxProps {
   /**
-   * The Linux distribution name
+   * The Linux operating system name
    */
-  distribution: Image['vendor'];
+  os: Image['vendor'];
 }
 
 /**
- * Linux distribution icon component
+ * Linux OS icon component
  *
  * Uses https://github.com/Lukas-W/font-logos
  */
-export const DistributionIcon = (props: Props) => {
-  const { distribution, ...rest } = props;
+export const OSIcon = (props: Props) => {
+  const { os, ...rest } = props;
 
-  const className = distribution
-    ? `fl-${distroIcons[distribution] ?? 'tux'}`
-    : `fl-tux`;
+  const className = os ? `fl-${OS_ICONS[os] ?? 'tux'}` : `fl-tux`;
 
-  return <Box className={className} data-testid="distro-icon" {...rest} />;
+  return <Box className={className} data-testid="os-icon" {...rest} />;
 };
 
 /**
@@ -33,7 +31,7 @@ export const DistributionIcon = (props: Props) => {
  *
  * @see https://github.com/Lukas-W/font-logos
  */
-export const distroIcons = {
+export const OS_ICONS = {
   AlmaLinux: 'almalinux',
   Alpine: 'alpine',
   Arch: 'archlinux',

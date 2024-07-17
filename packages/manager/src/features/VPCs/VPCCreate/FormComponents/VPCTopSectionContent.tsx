@@ -42,7 +42,7 @@ export const VPCTopSectionContent = (props: Props) => {
             sendLinodeCreateFormStepEvent({
               action: 'click',
               category: 'link',
-              createType: queryParams.type ?? 'Distributions',
+              createType: queryParams.type ?? 'OS',
               formStepName: 'Create VPC Drawer',
               label: 'Learn more',
               version: 'v1',
