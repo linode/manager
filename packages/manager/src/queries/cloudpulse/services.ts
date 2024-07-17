@@ -14,14 +14,14 @@ export const queryKey = 'cloudpulse-services';
 export const serviceTypeKey = 'service-types';
 
 const serviceQueries = createQueryKeys(queryKey, {
-  metricsDefinitons: (serviceType: string) => ({
-    queryFn: () => getMetricDefinitionsByServiceType(serviceType),
+  metricsDefinitons: (serviceType: string | undefined) => ({
+    queryFn: () => getMetricDefinitionsByServiceType(serviceType!),
     queryKey: [serviceType],
   }),
-  token: (key: string, serviceType: string) => ({
+  token: (key: string, serviceType: string | undefined) => ({
     contextQueries: {
       jweToken: (request: JWETokenPayLoad) => ({
-        queryFn: () => getJWEToken(request, serviceType),
+        queryFn: () => getJWEToken(request, serviceType!),
         queryKey: [key, serviceType],
       }),
     },
@@ -30,7 +30,7 @@ const serviceQueries = createQueryKeys(queryKey, {
 });
 
 export const useGetCloudPulseMetricDefinitionsByServiceType = (
-  serviceType: string,
+  serviceType: string | undefined,
   enabled: boolean
 ) => {
   return useQuery<MetricDefinitions, APIError[]>({
@@ -40,7 +40,7 @@ export const useGetCloudPulseMetricDefinitionsByServiceType = (
 };
 
 export const useCloudPulseJWEtokenQuery = (
-  serviceType: string,
+  serviceType: string | undefined,
   request: JWETokenPayLoad,
   runQuery: boolean
 ) => {

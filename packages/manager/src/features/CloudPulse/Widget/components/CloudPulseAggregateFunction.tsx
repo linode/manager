@@ -3,39 +3,43 @@ import React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 export interface AggregateFunctionProperties {
-  availableAggregateFunctions: Array<string>;
+  /**
+   * List of aggregate functions available to display
+   */
+  availableAggregateFunctions: string[];
+
+  /**
+   * Default aggregate function to be selected
+   */
   defaultAggregateFunction?: string | undefined;
+
+  /**
+   * Function to be triggered on aggregate function changed from dropdown
+   */
   onAggregateFuncChange: any;
 }
 
 export const CloudPulseAggregateFunction = React.memo(
   (props: AggregateFunctionProperties) => {
-    // Convert list of available_aggregate_fun into a proper response structure accepted by Autocomplete component
-    const available_aggregate_func = props.availableAggregateFunctions?.map(
-      (aggregate_func) => {
+    // Convert list of availableAggregateFunc into a proper response structure accepted by Autocomplete component
+    const availableAggregateFunc = props.availableAggregateFunctions?.map(
+      (aggrFunc) => {
         return {
-          label: aggregate_func,
-          value: aggregate_func,
+          label: aggrFunc,
+          value: aggrFunc,
         };
       }
     );
 
-    let default_aggregate_func = available_aggregate_func.find(
-      (obj) => obj.label === props.defaultAggregateFunction
+    const defaultAggregateFunc =
+      availableAggregateFunc.find(
+        (obj) => obj.label === props.defaultAggregateFunction
+      ) || props.availableAggregateFunctions[0];
+
+    // if default aggregate func not available in availableAggregateFunc
+    const defaultAggrUnavilable = !props.availableAggregateFunctions.includes(
+      props.defaultAggregateFunction || ''
     );
-    let default_agg_unavailable = false;
-
-    // if default aggregate func not available in available_aggregate_function
-    if (!default_aggregate_func) {
-      default_aggregate_func = available_aggregate_func[0];
-
-      if (
-        props.defaultAggregateFunction &&
-        props.defaultAggregateFunction.length > 0
-      ) {
-        default_agg_unavailable = true;
-      }
-    }
 
     return (
       <>
@@ -46,14 +50,14 @@ export const CloudPulseAggregateFunction = React.memo(
           onChange={(_: any, selectedAggregateFunc: any) => {
             props.onAggregateFuncChange(selectedAggregateFunc.label);
           }}
-          defaultValue={default_aggregate_func}
+          defaultValue={defaultAggregateFunc}
           disableClearable
           fullWidth={false}
           label=""
           noMarginTop={true}
-          options={available_aggregate_func}
+          options={availableAggregateFunc}
         />
-        {default_agg_unavailable && (
+        {defaultAggrUnavilable && (
           <p style={{ color: 'rgb(210 165 28)', fontSize: 'smaller' }}>
             Invalid agg function '{props.defaultAggregateFunction}'
           </p>

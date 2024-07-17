@@ -70,7 +70,7 @@ export interface AvailableMetrics {
   metric_type: string;
   unit: string;
   scrape_interval: string;
-  available_aggregate_functions: Array<string>;
+  available_aggregate_functions: string[];
   dimensions: Dimension[];
 }
 

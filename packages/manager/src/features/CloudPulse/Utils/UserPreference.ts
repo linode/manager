@@ -47,27 +47,23 @@ export const updateGlobalFilterPreference = (data: {}) => {
   debounce(userPreference);
 };
 
-export const updateWidgetPreference = (label: string, data: {}) => {
+export const updateWidgetPreference = (
+  label: string,
+  data: Partial<AclpWidget>
+) => {
   if (!userPreference) {
     userPreference = {} as AclpConfig;
   }
 
-  let widgets = userPreference.widgets;
-
-  if (!widgets) {
-    widgets = {};
-    userPreference.widgets = widgets;
+  if (!userPreference.widgets) {
+    userPreference.widgets = {};
   }
 
-  let widget = widgets[label];
-
-  if (widget) {
-    widget = { ...widget, ...data };
-  } else {
-    widget = { label, ...data } as AclpWidget;
-  }
-
-  widgets[label] = widget;
+  userPreference.widgets[label] = {
+    ...userPreference.widgets[label],
+    label,
+    ...data,
+  };
 
   debounce(userPreference);
 };

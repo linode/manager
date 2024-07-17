@@ -22,18 +22,13 @@ export const useIsACLPEnabled = (): {
 export const convertStringToCamelCasesWithSpaces = (
   nonFormattedString: string
 ): string => {
-  if (nonFormattedString && nonFormattedString.length > 0) {
-    const splitString = nonFormattedString.split(' ');
-
-    return splitString
-      .map((text) => text[0].toUpperCase() + text.slice(1))
-      .join(' ');
-  }
-
-  return nonFormattedString;
+  return nonFormattedString
+    ?.split(' ')
+    .map((text) => text.charAt(0).toUpperCase() + text.slice(1))
+    .join(' ');
 };
 
-export const removeObjectReference = (object: any) => {
+export const removeObjectReference = <T>(object: T): T | null => {
   if (!object) {
     return null;
   }

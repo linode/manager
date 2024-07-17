@@ -1,8 +1,6 @@
 import { Widgets } from '@linode/api-v4';
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { Divider } from 'src/components/Divider';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
@@ -18,50 +16,88 @@ import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFun
 import { CloudPulseIntervalSelect } from './components/CloudPulseIntervalSelect';
 import { ZoomIcon } from './components/Zoomer';
 
+import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type {
   AvailableMetrics,
   TimeDuration,
   TimeGranularity,
 } from '@linode/api-v4';
-import type { Theme } from '@mui/material';
 
 export interface CloudPulseWidgetProperties {
-  // we can try renaming this CloudPulseWidget
+  /**
+   * Aria label for this widget
+   */
   ariaLabel?: string;
-  authToken: string;
-  availableMetrics: AvailableMetrics | undefined;
-  duration: TimeDuration;
-  errorLabel?: string; // error label can come from dashboard
 
+  /**
+   * token to fetch metrics data
+   */
+  authToken: string;
+
+  /**
+   * metrics defined of this widget
+   */
+  availableMetrics: AvailableMetrics | undefined;
+
+  /**
+   * time duration to fetch the metrics data in this widget
+   */
+  duration: TimeDuration;
+
+  /**
+   * Any error to be shown in this widget
+   */
+  errorLabel?: string;
+
+  /**
+   * resources ids selected by user to show metrics for
+   */
   resourceIds: string[];
-  resources: any[]; // list of resources in a service type
+
+  /**
+   * List of resources available of selected service type
+   */
+  resources: CloudPulseResources[];
+
+  /**
+   * optional flag to check whether changes should be stored in preferences or not (in case this component is reused)
+   */
   savePref?: boolean;
+
+  /**
+   * Service type selected by user
+   */
   serviceType: string;
-  timeStamp: number;
-  unit: string; // this should come from dashboard, which maintains map for service types in a separate API call
+
+  /**
+   * optional timestamp to pass as react query param to forcefully re-fetch data
+   */
+  timeStamp?: number;
+
+  /**
+   * this should come from dashboard, which maintains map for service types in a separate API call
+   */
+  unit: string;
+
+  /**
+   * color index to be selected from available them if not theme is provided by user
+   */
   useColorIndex?: number;
-  widget: Widgets; // this comes from dashboard, has inbuilt metrics, agg_func,group_by,filters,gridsize etc , also helpful in publishing any changes
+
+  /**
+   * this comes from dashboard, has inbuilt metrics, agg_func,group_by,filters,gridsize etc , also helpful in publishing any changes
+   */
+  widget: Widgets;
 }
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  title: {
-    '& > span': {
-      color: theme.palette.text.primary,
-    },
-    color: theme.color.headline,
-    fontFamily: theme.font.bold,
-    fontSize: '1.30rem',
-    marginLeft: '8px',
-  },
-}));
-
 export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
-  const { classes } = useStyles();
   const { data: profile } = useProfile();
 
   const timezone = profile?.timezone ?? 'US/Eastern';
 
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
+
+  const { availableMetrics, savePref } = props;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [today, setToday] = React.useState<boolean>(false); // Temporarily disabled eslint for this line. Will be removed in future PRs
@@ -71,8 +107,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
    * @param zoomInValue: True if zoom in clicked &  False if zoom out icon clicked
    */
   const handleZoomToggle = React.useCallback((zoomInValue: boolean) => {
-    if (props.savePref) {
-      updateWidgetPreference(props.widget.label, {
+    if (savePref) {
+      updateWidgetPreference(widget.label, {
         [SIZE]: zoomInValue ? 12 : 6,
       });
     }
@@ -93,8 +129,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     (aggregateValue: string) => {
       // To avoid updation if user again selected the currently selected value from drop down.
       if (aggregateValue !== widget.aggregate_function) {
-        if (props.savePref) {
-          updateWidgetPreference(props.widget.label, {
+        if (savePref) {
+          updateWidgetPreference(widget.label, {
             [AGGREGATE_FUNCTION]: aggregateValue,
           });
         }
@@ -121,8 +157,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         intervalValue.unit !== widget.time_granularity.unit ||
         intervalValue.value !== widget.time_duration.value
       ) {
-        if (props.savePref) {
-          updateWidgetPreference(props.widget.label, {
+        if (savePref) {
+          updateWidgetPreference(widget.label, {
             [TIME_GRANULARITY]: { ...intervalValue },
           });
         }
@@ -139,7 +175,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   );
   // Update the widget preference if already not present in the preferences
   React.useEffect(() => {
-    if (props.savePref) {
+    if (savePref) {
       const widgets = getUserPreferenceObject()?.widgets;
       if (!widgets || !widgets[widget.label]) {
         updateWidgetPreference(widget.label, {
@@ -161,36 +197,38 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             justifyContent={'space-between'}
             padding={1}
           >
-            <Typography className={classes.title} my={2}>
-              {convertStringToCamelCasesWithSpaces(props.widget.label)}{' '}
+            <Typography marginLeft={1} my={2} variant="h1">
+              {convertStringToCamelCasesWithSpaces(widget.label)}{' '}
             </Typography>
             <Stack
               alignItems={{ sm: 'center', xs: 'end' }}
               direction={{ sm: 'row' }}
               gap={1}
             >
-              {props.availableMetrics?.scrape_interval && (
+              {availableMetrics?.scrape_interval && (
                 <CloudPulseIntervalSelect
                   default_interval={widget?.time_granularity}
                   onIntervalChange={handleIntervalChange}
-                  scrape_interval={props.availableMetrics.scrape_interval}
+                  scrape_interval={availableMetrics.scrape_interval}
                 />
               )}
-              {props.availableMetrics?.available_aggregate_functions &&
-                props.availableMetrics.available_aggregate_functions.length >
-                  0 && (
-                  <CloudPulseAggregateFunction
-                    availableAggregateFunctions={
-                      props.availableMetrics?.available_aggregate_functions
-                    }
-                    defaultAggregateFunction={widget?.aggregate_function}
-                    onAggregateFuncChange={handleAggregateFunctionChange}
-                  />
-                )}
-              <ZoomIcon
-                handleZoomToggle={handleZoomToggle}
-                zoomIn={widget?.size == 12 ? true : false}
-              />
+              {Boolean(
+                availableMetrics?.available_aggregate_functions?.length
+              ) && (
+                <CloudPulseAggregateFunction
+                  availableAggregateFunctions={
+                    availableMetrics!.available_aggregate_functions
+                  }
+                  defaultAggregateFunction={widget?.aggregate_function}
+                  onAggregateFuncChange={handleAggregateFunctionChange}
+                />
+              )}
+              <Box sx={{ display: { lg: 'flex', xs: 'none' } }}>
+                <ZoomIcon
+                  handleZoomToggle={handleZoomToggle}
+                  zoomIn={widget?.size === 12}
+                />
+              </Box>
             </Stack>
           </Box>
           <Divider />
@@ -201,63 +239,4 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       </Paper>
     </Grid>
   );
-  // return (
-  //   <Grid item lg={widget.size} xs={12}>
-  //     <Paper
-  //       style={{
-  //         border: 'solid 1px #e3e5e8',
-  //         height: '98%',
-  //         marginTop: '10px',
-  //         width: '100%',
-  //       }}
-  //     >
-  //       <div className={widget.metric} style={{ margin: '1%' }}>
-  //         <div
-  //           style={{
-  //             alignItems: 'center',
-  //             display: 'flex',
-  //             width: '100%',
-  //           }}
-  //         >
-  //           <Grid sx={{ marginRight: 'auto' }}>
-  //             <Typography className={classes.title}>
-  //               {convertStringToCamelCasesWithSpaces(props.widget.label)}
-  //             </Typography>
-  //           </Grid>
-  //           <Grid sx={{ marginRight: 5, width: 100 }}>
-  //             {props.availableMetrics?.scrape_interval && (
-  //               <CloudPulseIntervalSelect
-  //                 default_interval={widget?.time_granularity}
-  //                 onIntervalChange={handleIntervalChange}
-  //                 scrape_interval={props.availableMetrics.scrape_interval}
-  //               />
-  //             )}
-  //           </Grid>
-  //           <Grid sx={{ marginRight: 5, width: 100 }}>
-  //             {props.availableMetrics?.available_aggregate_functions &&
-  //               props.availableMetrics.available_aggregate_functions.length >
-  //                 0 && (
-  //                 <CloudPulseAggregateFunction
-  //                   availableAggregateFunctions={
-  //                     props.availableMetrics?.available_aggregate_functions
-  //                   }
-  //                   defaultAggregateFunction={widget?.aggregate_function}
-  //                   onAggregateFuncChange={handleAggregateFunctionChange}
-  //                 />
-  //               )}
-  //           </Grid>
-  //           <StyledZoomIcon
-  //             handleZoomToggle={handleZoomToggle}
-  //             zoomIn={widget?.size == 12 ? true : false}
-  //           />
-  //         </div>
-  //         <Divider spacingBottom={32} spacingTop={15} />
-
-  //         <div style={{ position: 'relative' }}>
-  //           <LineGraph data={[]} showToday={today} timezone={timezone} />
-  //         </div>
-  //       </div>
-  //     </Paper>
-  //   </Grid>
-  // );
 };

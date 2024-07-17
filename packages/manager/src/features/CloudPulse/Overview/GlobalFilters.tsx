@@ -158,9 +158,9 @@ const itemSpacing = {
   margin: '0',
 };
 
-const StyledReload = styled(Reload, { label: 'StyledReload' })(({}) => ({
+const StyledReload = styled(Reload, { label: 'StyledReload' })(({ theme }) => ({
   '&:active': {
-    color: 'green',
+    color: `${theme.palette.success}`,
   },
   '&:hover': {
     cursor: 'pointer',

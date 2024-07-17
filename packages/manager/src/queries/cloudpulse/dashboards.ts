@@ -6,10 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 export const queryKey = 'cloudpulse-dashboards';
 
 export const dashboardQueries = createQueryKeys(queryKey, {
-  dashboardById: (
-    dashboardId: number | undefined,
-    key: boolean | undefined
-  ) => ({
+  dashboardById: (dashboardId: number, key: boolean | undefined) => ({
     contextQueries: {
       dashboard: {
         queryFn: () => getDashboardById(dashboardId), // Todo: will be implemented later
@@ -43,7 +40,7 @@ export const useCloudPulseDashboardByIdQuery = (
   key: boolean | undefined
 ) => {
   return useQuery<Dashboard, APIError[]>({
-    ...dashboardQueries.dashboardById(dashboardId, key)._ctx.dashboard,
+    ...dashboardQueries.dashboardById(dashboardId!, key)._ctx.dashboard,
     enabled: dashboardId !== undefined,
   });
 };

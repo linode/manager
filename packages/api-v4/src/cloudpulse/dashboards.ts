@@ -10,10 +10,10 @@ export const getDashboards = () =>
     setMethod('GET')
   );
 
-  export const getDashboardById = (dashboardId?: number) =>
+  export const getDashboardById = (dashboardId: number) =>
     Request<Dashboard>(
       setURL(
-        `${API_ROOT}/monitor/dashboards/${encodeURIComponent(dashboardId!)}`
+        `${API_ROOT}/monitor/dashboards/${encodeURIComponent(dashboardId)}`
       ),
       setMethod('GET')
     );

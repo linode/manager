@@ -1,4 +1,4 @@
-import { Box, Grid, Paper, Stack } from '@mui/material';
+import { Grid, Paper } from '@mui/material';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -34,25 +34,4 @@ export const CloudPulseDashboardLanding = () => {
       />
     </Grid>
   );
-
-  // return (
-  //   <Stack spacing={2}>
-  //     <Paper sx={{ border: '1px solid #e3e5e8' }}>
-  //       <div style={{ display: 'flex' }}>
-  //         <div style={{ width: '100%' }}>
-  //           <GlobalFilters
-  //             handleAnyFilterChange={onFilterChange}
-  //           ></GlobalFilters>
-  //         </div>
-  //       </div>
-  //     </Paper>
-  //     <CloudPulseDashboard
-  //       dashboardId={1}
-  //       duration={{} as TimeDuration}
-  //       region="us-east"
-  //       resources={['123', '456']}
-  //       savePref={true}
-  //     />
-  //   </Stack>
-  // );
 };

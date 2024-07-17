@@ -5,8 +5,19 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import type { TimeGranularity } from '@linode/api-v4';
 
 export interface IntervalSelectProperties {
+  /**
+   * Default time granularity to be selected
+   */
   default_interval?: TimeGranularity | undefined;
+
+  /**
+   * Function to be triggered on aggregate function changed from dropdown
+   */
   onIntervalChange: any;
+
+  /**
+   * scrape intervalto filter out minimum time granularity
+   */
   scrape_interval: string;
 }
 
