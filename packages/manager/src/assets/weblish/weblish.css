@@ -1,5 +1,5 @@
 body {
-  background-color: #000;
+  background-color: black !important;
 }
 
 #terminal {
@@ -9,6 +9,7 @@ body {
   background-size: 10px 10px;
   background-position: 0 0, 5px 5px;
 }
+
 canvas {
   margin: unset !important;
 }
