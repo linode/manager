@@ -102,6 +102,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
           <div
             style={{
               height: 'calc(100vh - 40px)',
+              padding: 8,
             }}
             className="terminal"
             id="terminal"
