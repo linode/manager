@@ -28,6 +28,7 @@ export const getContextPopulatorGroups = (
  */
 export const createInitialMockContext = async (): Promise<MockContext> => {
   const storedContext = await mswDB.getStore();
+
   if (storedContext) {
     return storedContext;
   }

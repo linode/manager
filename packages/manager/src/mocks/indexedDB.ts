@@ -43,7 +43,49 @@ export const mswDB = {
     });
   },
 
-  clearDB: async (): Promise<void> => {
+  addMany: async <T extends keyof MockContext>(
+    entity: T,
+    payload: MockContext[T] extends Array<infer U> ? U[] : never,
+    state: MockContext
+  ): Promise<void> => {
+    const db = await mswDB.open('MockContextDB', 1);
+
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(['mockContext'], 'readwrite');
+      const store = transaction.objectStore('mockContext');
+      const request = store.get(1);
+
+      request.onsuccess = () => {
+        const mockContext = request.result;
+        if (!mockContext) {
+          reject();
+          return;
+        }
+
+        if (!mockContext[entity]) {
+          reject();
+          return;
+        }
+
+        mockContext[entity].push(...payload);
+        state[entity].push(...(payload as any)); // casting to avoid inference issues
+
+        const updatedRequest = store.put({ id: 1, ...mockContext });
+
+        updatedRequest.onsuccess = () => {
+          resolve();
+        };
+        updatedRequest.onerror = (event) => {
+          reject(event);
+        };
+      };
+      request.onerror = (event) => {
+        reject(event);
+      };
+    });
+  },
+
+  clear: async (): Promise<void> => {
     const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
@@ -53,6 +95,47 @@ export const mswDB = {
 
       request.onsuccess = () => {
         resolve();
+      };
+      request.onerror = (event) => {
+        reject(event);
+      };
+    });
+  },
+
+  clearEntity: async <T extends keyof MockContext>(
+    entity: T,
+    state: MockContext
+  ): Promise<void> => {
+    const db = await mswDB.open('MockContextDB', 1);
+
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(['mockContext'], 'readwrite');
+      const store = transaction.objectStore('mockContext');
+      const request = store.get(1);
+
+      request.onsuccess = () => {
+        const mockContext = request.result;
+        if (!mockContext) {
+          reject();
+          return;
+        }
+
+        if (!mockContext[entity]) {
+          reject();
+          return;
+        }
+
+        mockContext[entity] = [];
+        state[entity] = [];
+
+        const updatedRequest = store.put({ id: 1, ...mockContext });
+
+        updatedRequest.onsuccess = () => {
+          resolve();
+        };
+        updatedRequest.onerror = (event) => {
+          reject(event);
+        };
       };
       request.onerror = (event) => {
         reject(event);
@@ -216,6 +299,10 @@ export const mswDB = {
         const db = request.result;
         if (!db.objectStoreNames.contains('mockContext')) {
           db.createObjectStore('mockContext', { keyPath: 'id' });
+        }
+
+        if (!db.objectStoreNames.contains('seedContext')) {
+          db.createObjectStore('seedContext', { keyPath: 'id' });
         }
       };
     });

@@ -66,5 +66,5 @@ export interface MockContextPopulator {
   group?: string;
   id: string;
   label: string;
-  populator: (mockContext: MockContext) => MockContext;
+  populator: (mockContext: MockContext) => MockContext | Promise<MockContext>;
 }
