@@ -12,7 +12,7 @@ import type {
   APIPaginatedResponse,
 } from 'src/mocks/utilities/response';
 
-export const getPlacementGroups = (mockContext: MockContext) => [
+export const getFirewalls = (mockContext: MockContext) => [
   http.get(
     '*/v4beta/networking/firewalls',
     ({

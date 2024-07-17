@@ -1,6 +1,7 @@
 import { ENABLE_DEV_TOOLS } from 'src/constants';
 import { allContextPopulators } from 'src/mocks/context/populators';
-import { makeMockContext } from 'src/mocks/mockContext';
+import { mswDB } from 'src/mocks/indexedDB';
+import { createInitialMockContext } from 'src/mocks/mockContext';
 import { resolveMockPreset } from 'src/mocks/mockPreset';
 import { allMockPresets, defaultBaselineMockPreset } from 'src/mocks/presets';
 
@@ -57,8 +58,10 @@ export async function loadDevTools(
       (acc: MockContext, cur: MockContextPopulator) => {
         return cur.populator(acc);
       },
-      makeMockContext()
+      await createInitialMockContext()
     );
+
+    mswDB.saveAllToDB(mockContext);
 
     const extraHandlers = extraMswPresets.reduce((acc, cur: MockPreset) => {
       return [
