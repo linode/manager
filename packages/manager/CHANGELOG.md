@@ -3610,8 +3610,8 @@ VLAN:
 - uploadSSLCert endpoint
 - getSSLCert endpoint
 - deleteSSLCert endpoint
-- CreateObjectStorageBucketSSLPayload endpoint
-- ObjectStorageBucketSSL endpoint
+- ObjectStorageBucketSSLRequest endpoint
+- ObjectStorageBucketSSLResponse endpoint
 - CreateVLANPayload endpoint
 - createVlanSchema endpoint
 - getVlans endpoint
@@ -3892,7 +3892,7 @@ CMR:
 
 ### Changed
 
-- Add access control and CORS fields to CreateObjectStorageBucketPayload interface
+- Add access control and CORS fields to ObjectStorageBucketRequestPayload interface
 
 ## [2020-07-13] - v1.14.0
 

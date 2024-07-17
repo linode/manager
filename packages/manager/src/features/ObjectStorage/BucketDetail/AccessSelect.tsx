@@ -97,19 +97,7 @@ export const AccessSelect = React.memo((props: Props) => {
     setAccessError('');
     closeDialog();
 
-    // const payload =
-    //   variant === 'bucket'
-    //     ? {
-    //         acl: selectedACL !== 'custom' ? selectedACL : undefined,
-    //         cors_enabled: selectedCORSOption,
-    //       }
-    //     : {
-    //         acl: selectedACL,
-    //         name,
-    //       };
-
     updateAccess(selectedACL, selectedCORSOption)
-      // updateAccess(payload)
       .then(() => {
         setUpdateAccessSuccess(true);
         setACLData(selectedACL);
