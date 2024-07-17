@@ -5,7 +5,7 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
-import Select from 'src/components/EnhancedSelect/Select';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -19,7 +19,6 @@ import { setErrorMap } from './utils';
 
 import type { NodeBalancerConfigPanelProps } from './types';
 import type { NodeBalancerConfigNodeMode } from '@linode/api-v4';
-import type { Item } from 'src/components/EnhancedSelect/Select';
 
 const DATA_NODE = 'data-node-idx';
 
@@ -44,8 +43,10 @@ export const NodeBalancerConfigPanel = (
     submitting,
   } = props;
 
-  const onAlgorithmChange = (e: Item<string>) =>
-    props.onAlgorithmChange(e.value);
+  const onAlgorithmChange = (
+    event: React.SyntheticEvent,
+    selected: { label: string; value: string }
+  ) => props.onAlgorithmChange(selected.value);
 
   const onPortChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     props.onPortChange(e.target.value);
@@ -53,11 +54,14 @@ export const NodeBalancerConfigPanel = (
   const onPrivateKeyChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     props.onPrivateKeyChange(e.target.value);
 
-  const onProtocolChange = (e: Item<string>) => {
+  const onProtocolChange = (
+    event: React.SyntheticEvent,
+    selected: { label: string; value: string }
+  ) => {
     const { healthCheckType } = props;
-    const { value: protocol } = e;
+    const { value: protocol } = selected;
 
-    props.onProtocolChange(e.value);
+    props.onProtocolChange(selected.value);
 
     if (
       protocol === 'tcp' &&
@@ -73,12 +77,17 @@ export const NodeBalancerConfigPanel = (
     }
   };
 
-  const onProxyProtocolChange = (e: Item<string>) => {
-    props.onProxyProtocolChange(e.value);
+  const onProxyProtocolChange = (
+    event: React.SyntheticEvent,
+    selected: { label: string; value: string }
+  ) => {
+    props.onProxyProtocolChange(selected.value);
   };
 
-  const onSessionStickinessChange = (e: Item<string>) =>
-    props.onSessionStickinessChange(e.value);
+  const onSessionStickinessChange = (
+    event: React.SyntheticEvent,
+    selected: { label: string; value: string }
+  ) => props.onSessionStickinessChange(selected.value);
 
   const onSslCertificateChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     props.onSslCertificateChange(e.target.value);
@@ -203,22 +212,22 @@ export const NodeBalancerConfigPanel = (
           <FormHelperText>Listen on this port</FormHelperText>
         </Grid>
         <Grid md={3} xs={6}>
-          <Select
+          <Autocomplete
             textFieldProps={{
               dataAttrs: {
                 'data-qa-protocol-select': true,
               },
+              errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
             disabled={disabled}
-            errorGroup={forEdit ? `${configIdx}` : undefined}
             errorText={errorMap.protocol}
-            inputId={`protocol-${configIdx}`}
-            isClearable={false}
+            id={`protocol-${configIdx}`}
+            disableClearable={true}
             label="Protocol"
             noMarginTop
             onChange={onProtocolChange}
             options={protocolOptions}
-            small
+            size="small"
             value={defaultProtocol || protocolOptions[0]}
           />
         </Grid>
@@ -258,22 +267,22 @@ export const NodeBalancerConfigPanel = (
 
         {tcpSelected && (
           <Grid md={6} xs={12}>
-            <Select
+            <Autocomplete
               textFieldProps={{
                 dataAttrs: {
                   'data-qa-proxy-protocol-select': true,
+                  errorGroup: forEdit ? `${configIdx}` : undefined,
                 },
               }}
               disabled={disabled}
-              errorGroup={forEdit ? `${configIdx}` : undefined}
               errorText={errorMap.proxy_protocol}
-              inputId={`proxy-protocol-${configIdx}`}
-              isClearable={false}
+              id={`proxy-protocol-${configIdx}`}
+              disableClearable={true}
               label="Proxy Protocol"
               noMarginTop
               onChange={onProxyProtocolChange}
               options={proxyProtocolOptions}
-              small
+              size="small"
               value={selectedProxyProtocol || proxyProtocolOptions[0]}
             />
             <FormHelperText>
@@ -289,22 +298,22 @@ export const NodeBalancerConfigPanel = (
         )}
 
         <Grid md={tcpSelected ? 6 : 3} xs={6}>
-          <Select
+          <Autocomplete
             textFieldProps={{
               dataAttrs: {
                 'data-qa-algorithm-select': true,
               },
+              errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
             disabled={disabled}
-            errorGroup={forEdit ? `${configIdx}` : undefined}
             errorText={errorMap.algorithm}
-            inputId={`algorithm-${configIdx}`}
-            isClearable={false}
+            id={`algorithm-${configIdx}`}
+            disableClearable={true}
             label="Algorithm"
             noMarginTop
             onChange={onAlgorithmChange}
             options={algOptions}
-            small
+            size="small"
             value={defaultAlg || algOptions[0]}
           />
           <FormHelperText>
@@ -315,22 +324,22 @@ export const NodeBalancerConfigPanel = (
         </Grid>
 
         <Grid md={3} xs={6}>
-          <Select
+          <Autocomplete
             textFieldProps={{
               dataAttrs: {
                 'data-qa-session-stickiness-select': true,
               },
+              errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
             disabled={disabled}
-            errorGroup={forEdit ? `${configIdx}` : undefined}
             errorText={errorMap.stickiness}
-            inputId={`session-stickiness-${configIdx}`}
-            isClearable={false}
+            id={`session-stickiness-${configIdx}`}
+            disableClearable={true}
             label="Session Stickiness"
             noMarginTop
             onChange={onSessionStickinessChange}
             options={sessionOptions}
-            small
+            size="small"
             value={defaultSession || sessionOptions[1]}
           />
           <FormHelperText>

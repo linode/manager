@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import Select from 'src/components/EnhancedSelect/Select';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
@@ -10,7 +10,6 @@ import { Typography } from 'src/components/Typography';
 import { setErrorMap } from './utils';
 
 import type { NodeBalancerConfigPanelProps } from './types';
-import type { Item } from 'src/components/EnhancedSelect';
 
 interface ActiveCheckProps extends NodeBalancerConfigPanelProps {
   errorMap: Record<string, string | undefined>;
@@ -60,8 +59,8 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
   const onHealthCheckTimeoutChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     props.onHealthCheckTimeoutChange(e.target.value);
 
-  const onHealthCheckTypeChange = (e: Item<string>) =>
-    props.onHealthCheckTypeChange(e.value);
+  const onHealthCheckTypeChange = (value: string) =>
+    props.onHealthCheckTypeChange(value);
 
   const conditionalText = displayProtocolText(protocol);
 
@@ -99,22 +98,24 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
           </Typography>
         </Grid>
         <Grid xs={12}>
-          <Select
+          <Autocomplete
             textFieldProps={{
               dataAttrs: {
                 'data-qa-active-check-select': true,
               },
+              errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
             disabled={disabled}
-            errorGroup={forEdit ? `${configIdx}` : undefined}
             errorText={errorMap.check}
-            inputId={`type-${configIdx}`}
-            isClearable={false}
+            id={`type-${configIdx}`}
+            disableClearable={true}
             label="Type"
             noMarginTop
-            onChange={onHealthCheckTypeChange}
+            onChange={(e, selected) =>
+              onHealthCheckTypeChange(selected?.value ?? '')
+            }
             options={typeOptions}
-            small
+            size="small"
             value={defaultType || typeOptions[0]}
           />
           <FormHelperText>
