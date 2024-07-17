@@ -7,11 +7,11 @@ import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
+import { StyledActionButton } from 'src/components/Button/StyledActionButton';
 import { Chip } from 'src/components/Chip';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
-import { LinkButton } from 'src/components/LinkButton';
 import { Stack } from 'src/components/Stack';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography } from 'src/components/Typography';
@@ -52,7 +52,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     display: 'flex',
   },
   deleteClusterBtn: {
-    padding: `0 0 0 ${theme.spacing(2)}`,
     [theme.breakpoints.up('md')]: {
       paddingRight: '8px',
     },
@@ -225,27 +224,23 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
             >
               <Typography variant="h2">Summary</Typography>
             </Box>
-            <Box
-              display="flex"
-              justifyContent="end"
-              sx={{ paddingTop: theme.spacing() }}
-            >
-              <LinkButton
+            <Box display="flex" justifyContent="end">
+              <StyledActionButton
                 onClick={() => {
                   window.open(dashboard?.url, '_blank');
                 }}
                 className={classes.dashboard}
-                isDisabled={Boolean(dashboardError) || !dashboard}
+                disabled={Boolean(dashboardError) || !dashboard}
               >
                 Kubernetes Dashboard
                 <OpenInNewIcon />
-              </LinkButton>
-              <LinkButton
+              </StyledActionButton>
+              <StyledActionButton
                 className={classes.deleteClusterBtn}
                 onClick={() => setIsDeleteDialogOpen(true)}
               >
                 Delete Cluster
-              </LinkButton>
+              </StyledActionButton>
             </Box>
           </EntityHeader>
         }
