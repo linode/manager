@@ -31,7 +31,7 @@ export const SupportTicketAccountLimitFields = () => {
     ...formState.defaultValues,
   };
 
-  const shouldShowLinodeTypeField =
+  const shouldShowLinodePlanField =
     entityType === 'linode_id' || entityType === 'lkecluster_id';
 
   React.useEffect(() => {
@@ -70,7 +70,7 @@ export const SupportTicketAccountLimitFields = () => {
         name="companyName"
       />
       <SupportTicketProductSelectionFields ticketType="accountLimit" />
-      {shouldShowLinodeTypeField && (
+      {shouldShowLinodePlanField && (
         <Controller
           render={({ field, fieldState }) => (
             <TextField
