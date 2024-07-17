@@ -101,7 +101,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
         {this.socket && this.socket.readyState === this.socket.OPEN ? (
           <div
             style={{
-              height: 'calc(100vh - 45px)',
+              height: 'calc(100vh - 50px)',
               padding: 8,
             }}
             className="terminal"
