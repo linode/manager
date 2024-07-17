@@ -66,14 +66,6 @@ export const CreateDomain = () => {
 
   const history = useHistory();
 
-  const [
-    defaultRecordsSetting,
-    setDefaultRecordsSetting,
-  ] = React.useState<DefaultRecordsSetting>({
-    label: 'Do not insert default records for me.',
-    value: 'none',
-  });
-
   const defaultRecords: DefaultRecordsSetting[] = [
     {
       label: 'Do not insert default records for me.',
@@ -88,6 +80,11 @@ export const CreateDomain = () => {
       value: 'nodebalancer',
     },
   ];
+
+  const [
+    defaultRecordsSetting,
+    setDefaultRecordsSetting,
+  ] = React.useState<DefaultRecordsSetting>(defaultRecords[0]);
 
   const [selectedDefaultLinode, setSelectedDefaultLinode] = React.useState<
     Linode | undefined
