@@ -229,11 +229,7 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
 
   React.useEffect(() => {
     if (purpose !== 'vpc') {
-      return handleChange({
-        ipam_address: ipamAddress,
-        label,
-        purpose,
-      });
+      return;
     }
 
     const changeObj = {
