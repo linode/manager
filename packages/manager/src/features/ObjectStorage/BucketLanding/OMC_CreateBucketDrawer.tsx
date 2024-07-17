@@ -95,6 +95,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
 
   const formik = useFormik({
     initialValues: {
+      cors_enabled: true, // Gen1 = true, Gen2 = false @TODO: OBJGen2 - Future PR will implement this...
       label: '',
       region: '',
     },
