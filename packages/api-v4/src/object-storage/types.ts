@@ -65,7 +65,12 @@ export interface ObjectStorageDeleteBucketRequestPayload {
 }
 
 export interface ObjectStorageBucket {
-  region: string;
+  /*
+   @TODO OBJ Multicluster: 'region' will become required, and the 'cluster' field will be deprecated
+   once the feature is fully rolled out in production as part of the process of cleaning up the 'objMultiCluster'
+   feature flag.
+  */
+  region?: string;
   label: string;
   created: string;
   cluster: string;
