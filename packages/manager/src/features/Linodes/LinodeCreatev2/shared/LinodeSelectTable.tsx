@@ -236,6 +236,7 @@ export const LinodeSelectTable = (props: Props) => {
           action="Power Off"
           isOpen={Boolean(linodeToPowerOff)}
           linodeId={linodeToPowerOff?.id}
+          linodeLabel={linodeToPowerOff?.label}
           onClose={() => setLinodeToPowerOff(undefined)}
         />
       )}
