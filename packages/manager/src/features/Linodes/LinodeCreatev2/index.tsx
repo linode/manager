@@ -23,10 +23,11 @@ import { Actions } from './Actions';
 import { Addons } from './Addons/Addons';
 import { Details } from './Details/Details';
 import { Error } from './Error';
+import { EUAgreement } from './EUAgreement';
 import { Firewall } from './Firewall';
 import { Plan } from './Plan';
 import { Region } from './Region';
-import { linodeCreateResolvers } from './resolvers';
+import { getLinodeCreateResolver } from './resolvers';
 import { Security } from './Security';
 import { Summary } from './Summary/Summary';
 import { Backups } from './Tabs/Backups/Backups';
@@ -54,15 +55,16 @@ import type { SubmitHandler } from 'react-hook-form';
 export const LinodeCreatev2 = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
 
+  const queryClient = useQueryClient();
+
   const form = useForm<LinodeCreateFormValues>({
     defaultValues,
     mode: 'onBlur',
-    resolver: linodeCreateResolvers[params.type ?? 'OS'],
+    resolver: getLinodeCreateResolver(params.type, queryClient),
     shouldFocusError: false, // We handle this ourselves with `scrollErrorIntoView`
   });
 
   const history = useHistory();
-  const queryClient = useQueryClient();
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
   const { enqueueSnackbar } = useSnackbar();
@@ -173,6 +175,7 @@ export const LinodeCreatev2 = () => {
           {params.type !== 'Clone Linode' && <VLAN />}
           <UserData />
           <Addons />
+          <EUAgreement />
           <Summary />
           <Actions />
         </Stack>

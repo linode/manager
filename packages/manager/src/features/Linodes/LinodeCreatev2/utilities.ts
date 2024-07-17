@@ -142,7 +142,7 @@ export const tabs: LinodeCreateType[] = [
 export const getLinodeCreatePayload = (
   formValues: LinodeCreateFormValues
 ): CreateLinodeRequest => {
-  const values = omit(formValues, ['linode']);
+  const values = omit(formValues, ['linode', 'hasSignedEUAgreement']);
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
   }
@@ -241,6 +241,10 @@ export const defaultInterfaces: InterfacePayload[] = [
  * removes them from the payload before it is sent to the API.
  */
 export interface LinodeCreateFormValues extends CreateLinodeRequest {
+  /**
+   * Whether or not the user has signed the EU agreement
+   */
+  hasSignedEUAgreement?: boolean;
   /**
    * The currently selected Linode
    */
