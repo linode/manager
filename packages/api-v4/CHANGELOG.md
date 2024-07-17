@@ -298,7 +298,7 @@
 ### Changed:
 
 - Corrected `getLinodeKernel` return type from `ResourcePage<Kernel>` to `Kernel` #9198
-- Corrected the return type of `deleteSSLCert` from `ObjectStorageBucketSSLResponse` to `{}` #9167
+- Corrected the return type of `deleteSSLCert` from `ObjectStorageBucketSSL` to `{}` #9167
 - Updated `lint-staged` to `^13.2.2` #9156
 - Removed unused `handlebars` resolution #9156
 

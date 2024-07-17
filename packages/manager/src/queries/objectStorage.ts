@@ -1,14 +1,4 @@
 import {
-  ObjectStorageBucket,
-  ObjectStorageBucketRequestPayload,
-  ObjectStorageBucketSSLRequest,
-  ObjectStorageBucketSSLResponse,
-  ObjectStorageCluster,
-  ObjectStorageKey,
-  ObjectStorageObjectListResponse,
-  ObjectStorageObjectURL,
-  ObjectStorageObjectURLOptions,
-  Region,
   createBucket,
   deleteBucket,
   deleteBucketWithRegion,
@@ -26,13 +16,6 @@ import {
   uploadSSLCert,
 } from '@linode/api-v4';
 import {
-  APIError,
-  Params,
-  PriceType,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
-import {
-  QueryClient,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -45,6 +28,25 @@ import { getAll } from 'src/utilities/getAll';
 import { accountQueries } from './account/queries';
 import { queryPresets } from './base';
 
+import type {
+  CreateObjectStorageBucketPayload,
+  CreateObjectStorageBucketSSLPayload,
+  CreateObjectStorageObjectURLPayload,
+  ObjectStorageBucket,
+  ObjectStorageBucketSSL,
+  ObjectStorageCluster,
+  ObjectStorageKey,
+  ObjectStorageObjectList,
+  ObjectStorageObjectURL,
+  Region,
+} from '@linode/api-v4';
+import type {
+  APIError,
+  Params,
+  PriceType,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
+import type { QueryClient } from '@tanstack/react-query';
 import type { AtLeastOne } from 'src/utilities/types/typesHelpers';
 
 export interface BucketError {
@@ -144,7 +146,7 @@ export const useCreateBucketMutation = () => {
   return useMutation<
     ObjectStorageBucket,
     APIError[],
-    ObjectStorageBucketRequestPayload
+    CreateObjectStorageBucketPayload
   >(createBucket, {
     onMutate: async () => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
@@ -226,14 +228,18 @@ export const useDeleteBucketWithRegionMutation = () => {
 };
 
 export const useObjectBucketDetailsInfiniteQuery = (
-  cluster: string,
+  clusterId: string,
   bucket: string,
   prefix: string
 ) =>
-  useInfiniteQuery<ObjectStorageObjectListResponse, APIError[]>(
-    [queryKey, cluster, bucket, 'objects', ...prefixToQueryKey(prefix)],
+  useInfiniteQuery<ObjectStorageObjectList, APIError[]>(
+    [queryKey, clusterId, bucket, 'objects', ...prefixToQueryKey(prefix)],
     ({ pageParam }) =>
-      getObjectList(cluster, bucket, { delimiter, marker: pageParam, prefix }),
+      getObjectList({
+        bucket,
+        clusterId,
+        params: { delimiter, marker: pageParam, prefix },
+      }),
     {
       getNextPageParam: (lastPage) => lastPage.next_marker,
     }
@@ -372,7 +378,7 @@ export const useCreateObjectUrlMutation = (
     {
       method: 'DELETE' | 'GET' | 'POST' | 'PUT';
       name: string;
-      options?: ObjectStorageObjectURLOptions;
+      options?: CreateObjectStorageObjectURLPayload;
     }
   >(({ method, name, options }) =>
     getObjectURL(clusterId, bucketName, name, method, options)
@@ -387,12 +393,12 @@ export const useBucketSSLMutation = (cluster: string, bucket: string) => {
   const queryClient = useQueryClient();
 
   return useMutation<
-    ObjectStorageBucketSSLResponse,
+    ObjectStorageBucketSSL,
     APIError[],
-    ObjectStorageBucketSSLRequest
+    CreateObjectStorageBucketSSLPayload
   >((data) => uploadSSLCert(cluster, bucket, data), {
     onSuccess(data) {
-      queryClient.setQueryData<ObjectStorageBucketSSLResponse>(
+      queryClient.setQueryData<ObjectStorageBucketSSL>(
         [queryKey, cluster, bucket, 'ssl'],
         data
       );
@@ -405,7 +411,7 @@ export const useBucketSSLDeleteMutation = (cluster: string, bucket: string) => {
 
   return useMutation<{}, APIError[]>(() => deleteSSLCert(cluster, bucket), {
     onSuccess() {
-      queryClient.setQueryData<ObjectStorageBucketSSLResponse>(
+      queryClient.setQueryData<ObjectStorageBucketSSL>(
         [queryKey, cluster, bucket, 'ssl'],
         { ssl: false }
       );

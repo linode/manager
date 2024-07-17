@@ -104,7 +104,7 @@ import { getStorage } from 'src/utilities/storage';
 
 import type {
   NotificationType,
-  ObjectStorageKeyRequest,
+  CreateObjectStorageKeyPayload,
   SecurityQuestionsPayload,
   TokenRequest,
   UpdateImageRegionsPayload,
@@ -1180,7 +1180,7 @@ export const handlers = [
       ])
     );
   }),
-  http.post<any, ObjectStorageKeyRequest>(
+  http.post<any, CreateObjectStorageKeyPayload>(
     '*object-storage/keys',
     async ({ request }) => {
       const body = await request.json();
@@ -1199,7 +1199,7 @@ export const handlers = [
       );
     }
   ),
-  http.put<any, ObjectStorageKeyRequest>(
+  http.put<any, CreateObjectStorageKeyPayload>(
     '*object-storage/keys/:id',
     async ({ request }) => {
       const body = await request.json();
