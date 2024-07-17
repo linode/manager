@@ -4,11 +4,11 @@ import { Terminal } from '@xterm/xterm';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
-import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
 import type { Linode } from '@linode/api-v4/lib/linodes';
-import { CircleProgress } from 'src/components/CircleProgress';
+import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
 
 interface Props {
   linode: Linode;
@@ -24,16 +24,16 @@ type CombinedProps = Props &
   Pick<LinodeLishData, 'weblish_url' | 'ws_protocols'>;
 
 export class Weblish extends React.Component<CombinedProps, State> {
-  mounted: boolean = false;
+  fitAddon: FitAddon;
 
+  mounted: boolean = false;
   socket: WebSocket;
+
   state: State = {
     error: '',
     renderingLish: true,
   };
-
   terminal: Terminal;
-  fitAddon: FitAddon;
 
   componentDidMount() {
     this.mounted = true;
@@ -97,12 +97,11 @@ export class Weblish extends React.Component<CombinedProps, State> {
      * then render the terminal div, you end up with a blank black screen
      */
     return (
-      <div style={{ width: '100%', height: '100%' }}>
+      <div>
         {this.socket && this.socket.readyState === this.socket.OPEN ? (
           <div
             style={{
-              height: 'calc(100vh - 50px)',
-              width: 'initial !important',
+              height: 'calc(100vh - 40px)',
             }}
             className="terminal"
             id="terminal"
@@ -119,8 +118,12 @@ export class Weblish extends React.Component<CombinedProps, State> {
     const { group, label } = linode;
 
     this.terminal = new Terminal({
+      cursorBlink: true,
       fontFamily: '"Ubuntu Mono", monospace, sans-serif',
+      screenReaderMode: true,
+      scrollback: 5000,
     });
+
     this.fitAddon = new FitAddon();
     this.terminal.loadAddon(this.fitAddon);
 
@@ -135,10 +138,6 @@ export class Weblish extends React.Component<CombinedProps, State> {
     setTimeout(() => {
       this.fitAddon.fit();
     }, 500);
-
-    // window.onkeydown = () => {
-    //   this.fitAddon.fit();
-    // };
 
     this.terminal.writeln('\x1b[32mLinode Lish Console\x1b[m');
 

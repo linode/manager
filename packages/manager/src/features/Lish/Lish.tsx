@@ -156,9 +156,7 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
   '& [role="tablist"]': {
     backgroundColor: theme.bg.offWhite,
     display: 'flex',
-    margin: 0,
+    marginBottom: '0 !important',
     overflow: 'hidden',
   },
-  backgroundColor: 'black',
-  margin: 0,
 }));
