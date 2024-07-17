@@ -62,7 +62,12 @@ export interface DeleteObjectStorageBucketPayload {
 }
 
 export interface ObjectStorageBucket {
-  region: string;
+  /*
+   @TODO OBJ Multicluster: 'region' will become required, and the 'cluster' field will be deprecated
+   once the feature is fully rolled out in production as part of the process of cleaning up the 'objMultiCluster'
+   feature flag.
+  */
+  region?: string;
   label: string;
   created: string;
   cluster: string;
@@ -169,11 +174,6 @@ export interface GetObjectStorageACLPayload {
   params: {
     name: string;
   };
-}
-
-export interface UpdateObjectStorageACLPayload {
-  acl: ACLType; // TODO: This does not appear to be documented in the API https://techdocs.akamai.com/linode-api/reference/get-object-storage-bucket-acl
-  name: string;
 }
 
 // Gen2 endpoints ('E2', 'E3') are not supported and will return null.
