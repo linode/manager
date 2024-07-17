@@ -1,15 +1,34 @@
 import { generatePythonLinodeSnippet } from './generate-pythonSDKSnippet';
 
+import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 describe('generatePythonLinodeSnippet', () => {
-  it('should correctly generates Python snippet for creating a Linode instance', () => {
-    const config = {
+  it('should correctly generates Python snippet for creating a Linode instance with all possible fields', () => {
+    const config: CreateLinodeRequest = {
+      authorized_keys: ['ssh-rsa AAAAB3Nza...'],
+      backups_enabled: true,
+      firewall_id: 289203,
       image: 'linode/ubuntu20.04',
-      label: 'MyTestLinode',
+      interfaces: [
+        {
+          ip_ranges: ['192.168.0.1/24'],
+          ipam_address: '192.168.0.1',
+          label: 'main-interface',
+          purpose: 'public',
+          subnet_id: 69513,
+        },
+      ],
+      label: 'FullTestLinode',
+      metadata: { user_data: 'AAAAB3Nza' },
+      placement_group: { id: 2603 },
+      private_ip: true,
       region: 'us-central',
+      root_pass: 'securepassword123',
+      stackscript_id: 123456,
+      tags: ['production', 'webserver'],
       type: 'g6-standard-1',
     };
 
-    const expectedOutput = `client = LinodeClient(token=os.getenv(\'LINODE_TOKEN\'))\nnew_linode = client.linode.instance_create(\n    ltype="g6-standard-1",\n    region="us-central",\n    image="linode/ubuntu20.04",\n    label="MyTestLinode"\n)\n`;
+    const expectedOutput = `client = LinodeClient(token=os.getenv('LINODE_TOKEN'))\nnew_linode = client.linode.instance_create(\n    ltype="g6-standard-1",\n    region="us-central",\n    image="linode/ubuntu20.04",\n    label="FullTestLinode",\n    root_pass="securepassword123",\n    placement_group={\n        "id" : 2603,\n    },\n    metadata={\n        "user_data" : "AAAAB3Nza",\n    },\n    authorized_keys=["ssh-rsa AAAAB3Nza..."],\n    interfaces=[\n        {\n            "label": "main-interface",\n            "purpose": "public",\n            "ipam_address": "192.168.0.1",\n            "subnet_id": 69513,\n            "ip_ranges": ["192.168.0.1/24"],\n        },\n    ],\n    backups_enabled=True,\n    firewall_id=289203,\n    stackscript_id=123456,\n    tags=["production", "webserver"],\n    private_ip=True\n)\n`;
     expect(generatePythonLinodeSnippet(config)).toEqual(expectedOutput);
   });
 
@@ -21,7 +40,7 @@ describe('generatePythonLinodeSnippet', () => {
       type: 'g6-"nanode-1',
     };
 
-    const expectedOutput = `client = LinodeClient(token=os.getenv(\'LINODE_TOKEN\'))\nnew_linode = client.linode.instance_create(\n    ltype="g6-\\"nanode-1",\n    region="us-\\"central",\n    image="linode/ubuntu20.04",\n    label="Test\\"Instance"\n)\n`;
+    const expectedOutput = `client = LinodeClient(token=os.getenv('LINODE_TOKEN'))\nnew_linode = client.linode.instance_create(\n    ltype="g6-\\"nanode-1",\n    region="us-\\"central",\n    image="linode/ubuntu20.04",\n    label="Test\\"Instance"\n)\n`;
     expect(generatePythonLinodeSnippet(config)).toEqual(expectedOutput);
   });
 });

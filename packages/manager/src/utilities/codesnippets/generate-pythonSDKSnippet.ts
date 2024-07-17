@@ -35,10 +35,10 @@ export function generatePythonLinodeSnippet(
     snippet += `    root_pass="${escapePythonString(config.root_pass)}",\n`;
   }
   if (config.placement_group && config.placement_group.id) {
-    snippet += `    placement_group= {\n        "id" = ${config.placement_group.id},\n    },\n`;
+    snippet += `    placement_group={\n        "id" : ${config.placement_group.id},\n    },\n`;
   }
   if (config.metadata && config.metadata.user_data) {
-    snippet += `    metadata= {\n        "user_data" = "${config.metadata.user_data}",\n    },\n`;
+    snippet += `    metadata={\n        "user_data" : "${config.metadata.user_data}",\n    },\n`;
   }
   // Handling other optional fields like authorized_keys, stackscript_id, etc.
   if (config.authorized_keys && config.authorized_keys.length > 0) {
