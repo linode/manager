@@ -122,7 +122,6 @@ export class Weblish extends React.Component<CombinedProps, State> {
       cursorBlink: true,
       fontFamily: '"Ubuntu Mono", monospace, sans-serif',
       screenReaderMode: true,
-      scrollback: 5000,
     });
 
     this.fitAddon = new FitAddon();
