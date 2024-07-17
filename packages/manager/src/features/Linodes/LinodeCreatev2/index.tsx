@@ -31,9 +31,9 @@ import { Security } from './Security';
 import { Summary } from './Summary/Summary';
 import { Backups } from './Tabs/Backups/Backups';
 import { Clone } from './Tabs/Clone/Clone';
-import { Distributions } from './Tabs/Distributions';
 import { Images } from './Tabs/Images';
 import { Marketplace } from './Tabs/Marketplace/Marketplace';
+import { OperatingSystems } from './Tabs/OperatingSystems';
 import { StackScripts } from './Tabs/StackScripts/StackScripts';
 import { UserData } from './UserData/UserData';
 import {
@@ -57,7 +57,7 @@ export const LinodeCreatev2 = () => {
   const form = useForm<LinodeCreateFormValues>({
     defaultValues,
     mode: 'onBlur',
-    resolver: linodeCreateResolvers[params.type ?? 'Distributions'],
+    resolver: linodeCreateResolvers[params.type ?? 'OS'],
     shouldFocusError: false, // We handle this ourselves with `scrollErrorIntoView`
   });
 
@@ -97,7 +97,7 @@ export const LinodeCreatev2 = () => {
 
       captureLinodeCreateAnalyticsEvent({
         queryClient,
-        type: params.type ?? 'Distributions',
+        type: params.type ?? 'OS',
         values,
       });
     } catch (errors) {
@@ -136,7 +136,7 @@ export const LinodeCreatev2 = () => {
         <Stack gap={3}>
           <Tabs index={currentTabIndex} onChange={onTabChange}>
             <TabList>
-              <Tab>Distributions</Tab>
+              <Tab>OS</Tab>
               <Tab>Marketplace</Tab>
               <Tab>StackScripts</Tab>
               <Tab>Images</Tab>
@@ -145,7 +145,7 @@ export const LinodeCreatev2 = () => {
             </TabList>
             <TabPanels>
               <SafeTabPanel index={0}>
-                <Distributions />
+                <OperatingSystems />
               </SafeTabPanel>
               <SafeTabPanel index={1}>
                 <Marketplace />

@@ -309,9 +309,9 @@ export const CreateImageTab = () => {
                         <TooltipIcon
                           text={
                             <Typography>
-                              Many Linode supported distributions are compatible
-                              with cloud-init by default, or you may have
-                              installed cloud-init.{' '}
+                              Many Linode supported operating systems are
+                              compatible with cloud-init by default, or you may
+                              have installed cloud-init.{' '}
                               <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata/">
                                 Learn more.
                               </Link>
