@@ -23,11 +23,11 @@ export const EUAgreement = () => {
 
   const selectedRegion = regions?.find((r) => r.id === regionId);
 
-  const { data: agreements } = useAccountAgreements();
-
   const hasSelectedAnEURegion = isEURegion(
     getRegionCountryGroup(selectedRegion)
   );
+
+  const { data: agreements } = useAccountAgreements(hasSelectedAnEURegion);
 
   if (hasSelectedAnEURegion && agreements?.eu_model === false) {
     return (
