@@ -13,6 +13,7 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { useMutateAccountAgreements } from 'src/queries/account/agreements';
 import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
@@ -65,9 +66,11 @@ export const LinodeCreatev2 = () => {
   });
 
   const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
+
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
-  const { enqueueSnackbar } = useSnackbar();
+  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
   const currentTabIndex = getTabIndex(params.type);
 
@@ -102,6 +105,13 @@ export const LinodeCreatev2 = () => {
         type: params.type ?? 'OS',
         values,
       });
+
+      if (values.hasSignedEUAgreement) {
+        updateAccountAgreements({
+          eu_model: true,
+          privacy_policy: true,
+        });
+      }
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
