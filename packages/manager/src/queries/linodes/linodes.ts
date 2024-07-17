@@ -5,6 +5,7 @@ import {
   Kernel,
   Linode,
   LinodeCloneData,
+  LinodeLishData,
   MigrateLinodeRequest,
   ResizeLinodePayload,
   changeLinodePassword,
@@ -13,7 +14,7 @@ import {
   deleteLinode,
   getLinode,
   getLinodeKernel,
-  getLinodeLishToken,
+  getLinodeLish,
   getLinodes,
   linodeBoot,
   linodeReboot,
@@ -130,10 +131,10 @@ export const useLinodeKernelQuery = (kernel: string) => {
   );
 };
 
-export const useLinodeLishTokenQuery = (id: number) => {
-  return useQuery<{ lish_token: string }, APIError[]>(
-    [queryKey, 'linode', id, 'lish-token'],
-    () => getLinodeLishToken(id),
+export const useLinodeLishQuery = (id: number) => {
+  return useQuery<LinodeLishData, APIError[]>(
+    [queryKey, 'linode', id, 'lish'],
+    () => getLinodeLish(id),
     { staleTime: Infinity }
   );
 };

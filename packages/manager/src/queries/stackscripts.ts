@@ -24,7 +24,7 @@ export const getAllOCAsRequest = (passedParams: Params = {}) =>
     getOneClickApps({ ...params, ...passedParams })
   )().then((data) => data.data);
 
-const stackscriptQueries = createQueryKeys('stackscripts', {
+export const stackscriptQueries = createQueryKeys('stackscripts', {
   infinite: (filter: Filter = {}) => ({
     queryFn: ({ pageParam }) =>
       getStackScripts({ page: pageParam, page_size: 25 }, filter),
