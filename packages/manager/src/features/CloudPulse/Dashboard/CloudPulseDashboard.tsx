@@ -142,7 +142,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
         // maintain a copy
         const newDashboard: Dashboard = removeObjectReference(dashboard);
         return (
-          <Grid columnSpacing={1.5} container rowSpacing={2}>
+          <Grid columnSpacing={1} container item rowSpacing={2} xs={12}>
             {{ ...newDashboard }.widgets.map((element, index) => {
               if (element) {
                 const availMetrics = metricDefinitions?.data.find(

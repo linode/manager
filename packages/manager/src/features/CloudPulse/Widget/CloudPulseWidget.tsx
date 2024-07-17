@@ -1,5 +1,5 @@
 import { Widgets } from '@linode/api-v4';
-import { Grid, Paper, Typography } from '@mui/material';
+import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -42,14 +42,6 @@ export interface CloudPulseWidgetProperties {
   useColorIndex?: number;
   widget: Widgets; // this comes from dashboard, has inbuilt metrics, agg_func,group_by,filters,gridsize etc , also helpful in publishing any changes
 }
-
-const StyledZoomIcon = styled(ZoomIcon, {
-  label: 'StyledZoomIcon',
-})({
-  display: 'inline-block',
-  marginLeft: '10px',
-  marginTop: '10px',
-});
 
 const useStyles = makeStyles()((theme: Theme) => ({
   title: {
@@ -158,30 +150,25 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       }
     }
   }, []);
+
   return (
-    <Grid item xs={widget.size}>
-      <Paper
-        style={{
-          border: 'solid 1px #e3e5e8',
-          height: '98%',
-          marginTop: '10px',
-          width: '100%',
-        }}
-      >
-        <div className={widget.metric} style={{ margin: '1%' }}>
-          <div
-            style={{
-              alignItems: 'center',
-              display: 'flex',
-              width: '100%',
-            }}
+    <Grid item lg={widget.size} xs={12}>
+      <Paper>
+        <Stack spacing={2}>
+          <Box
+            display={'flex'}
+            flexWrap={'wrap'}
+            justifyContent={'space-between'}
+            padding={1}
           >
-            <Grid sx={{ marginRight: 'auto' }}>
-              <Typography className={classes.title}>
-                {convertStringToCamelCasesWithSpaces(props.widget.label)}
-              </Typography>
-            </Grid>
-            <Grid sx={{ marginRight: 5, width: 100 }}>
+            <Typography className={classes.title} my={2}>
+              {convertStringToCamelCasesWithSpaces(props.widget.label)}{' '}
+            </Typography>
+            <Stack
+              alignItems={{ sm: 'center', xs: 'end' }}
+              direction={{ sm: 'row' }}
+              gap={1}
+            >
               {props.availableMetrics?.scrape_interval && (
                 <CloudPulseIntervalSelect
                   default_interval={widget?.time_granularity}
@@ -189,8 +176,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   scrape_interval={props.availableMetrics.scrape_interval}
                 />
               )}
-            </Grid>
-            <Grid sx={{ marginRight: 5, width: 100 }}>
               {props.availableMetrics?.available_aggregate_functions &&
                 props.availableMetrics.available_aggregate_functions.length >
                   0 && (
@@ -202,19 +187,77 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                     onAggregateFuncChange={handleAggregateFunctionChange}
                   />
                 )}
-            </Grid>
-            <StyledZoomIcon
-              handleZoomToggle={handleZoomToggle}
-              zoomIn={widget?.size == 12 ? true : false}
-            />
-          </div>
-          <Divider spacingBottom={32} spacingTop={15} />
-
-          <div style={{ position: 'relative' }}>
+              <ZoomIcon
+                handleZoomToggle={handleZoomToggle}
+                zoomIn={widget?.size == 12 ? true : false}
+              />
+            </Stack>
+          </Box>
+          <Divider />
+          <Box p={2}>
             <LineGraph data={[]} showToday={today} timezone={timezone} />
-          </div>
-        </div>
+          </Box>
+        </Stack>
       </Paper>
     </Grid>
   );
+  // return (
+  //   <Grid item lg={widget.size} xs={12}>
+  //     <Paper
+  //       style={{
+  //         border: 'solid 1px #e3e5e8',
+  //         height: '98%',
+  //         marginTop: '10px',
+  //         width: '100%',
+  //       }}
+  //     >
+  //       <div className={widget.metric} style={{ margin: '1%' }}>
+  //         <div
+  //           style={{
+  //             alignItems: 'center',
+  //             display: 'flex',
+  //             width: '100%',
+  //           }}
+  //         >
+  //           <Grid sx={{ marginRight: 'auto' }}>
+  //             <Typography className={classes.title}>
+  //               {convertStringToCamelCasesWithSpaces(props.widget.label)}
+  //             </Typography>
+  //           </Grid>
+  //           <Grid sx={{ marginRight: 5, width: 100 }}>
+  //             {props.availableMetrics?.scrape_interval && (
+  //               <CloudPulseIntervalSelect
+  //                 default_interval={widget?.time_granularity}
+  //                 onIntervalChange={handleIntervalChange}
+  //                 scrape_interval={props.availableMetrics.scrape_interval}
+  //               />
+  //             )}
+  //           </Grid>
+  //           <Grid sx={{ marginRight: 5, width: 100 }}>
+  //             {props.availableMetrics?.available_aggregate_functions &&
+  //               props.availableMetrics.available_aggregate_functions.length >
+  //                 0 && (
+  //                 <CloudPulseAggregateFunction
+  //                   availableAggregateFunctions={
+  //                     props.availableMetrics?.available_aggregate_functions
+  //                   }
+  //                   defaultAggregateFunction={widget?.aggregate_function}
+  //                   onAggregateFuncChange={handleAggregateFunctionChange}
+  //                 />
+  //               )}
+  //           </Grid>
+  //           <StyledZoomIcon
+  //             handleZoomToggle={handleZoomToggle}
+  //             zoomIn={widget?.size == 12 ? true : false}
+  //           />
+  //         </div>
+  //         <Divider spacingBottom={32} spacingTop={15} />
+
+  //         <div style={{ position: 'relative' }}>
+  //           <LineGraph data={[]} showToday={today} timezone={timezone} />
+  //         </div>
+  //       </div>
+  //     </Paper>
+  //   </Grid>
+  // );
 };

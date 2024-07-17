@@ -38,12 +38,7 @@ export const CloudPulseAggregateFunction = React.memo(
     }
 
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
+      <>
         <Autocomplete
           isOptionEqualToValue={(option, value) => {
             return option.label == value.label;
@@ -63,7 +58,7 @@ export const CloudPulseAggregateFunction = React.memo(
             Invalid agg function '{props.defaultAggregateFunction}'
           </p>
         )}
-      </div>
+      </>
     );
   }
 );

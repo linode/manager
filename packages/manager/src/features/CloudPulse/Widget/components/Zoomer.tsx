@@ -33,9 +33,5 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
     );
   };
 
-  return (
-    <div className={props.className}>
-      <ToggleZoomer />
-    </div>
-  );
+  return <ToggleZoomer />;
 });

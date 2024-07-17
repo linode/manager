@@ -100,12 +100,7 @@ export const CloudPulseIntervalSelect = React.memo(
     }
 
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
+      <>
         <Autocomplete
           isOptionEqualToValue={(option, value) => {
             return (
@@ -133,7 +128,7 @@ export const CloudPulseIntervalSelect = React.memo(
             '
           </p>
         )}
-      </div>
+      </>
     );
   }
 );

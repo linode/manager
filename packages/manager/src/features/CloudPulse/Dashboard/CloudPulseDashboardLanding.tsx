@@ -1,4 +1,4 @@
-import { Paper, Stack } from '@mui/material';
+import { Box, Grid, Paper, Stack } from '@mui/material';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -18,18 +18,13 @@ export const CloudPulseDashboardLanding = () => {
   if (isLoading) {
     return <CircleProgress />;
   }
-
   return (
-    <Stack spacing={2}>
-      <Paper sx={{ border: '1px solid #e3e5e8' }}>
-        <div style={{ display: 'flex' }}>
-          <div style={{ width: '100%' }}>
-            <GlobalFilters
-              handleAnyFilterChange={onFilterChange}
-            ></GlobalFilters>
-          </div>
-        </div>
-      </Paper>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Paper sx={{ border: '1px solid #e3e5e8' }}>
+          <GlobalFilters handleAnyFilterChange={onFilterChange} />
+        </Paper>
+      </Grid>
       <CloudPulseDashboard
         dashboardId={1}
         duration={{} as TimeDuration}
@@ -37,6 +32,27 @@ export const CloudPulseDashboardLanding = () => {
         resources={['123', '456']}
         savePref={true}
       />
-    </Stack>
+    </Grid>
   );
+
+  // return (
+  //   <Stack spacing={2}>
+  //     <Paper sx={{ border: '1px solid #e3e5e8' }}>
+  //       <div style={{ display: 'flex' }}>
+  //         <div style={{ width: '100%' }}>
+  //           <GlobalFilters
+  //             handleAnyFilterChange={onFilterChange}
+  //           ></GlobalFilters>
+  //         </div>
+  //       </div>
+  //     </Paper>
+  //     <CloudPulseDashboard
+  //       dashboardId={1}
+  //       duration={{} as TimeDuration}
+  //       region="us-east"
+  //       resources={['123', '456']}
+  //       savePref={true}
+  //     />
+  //   </Stack>
+  // );
 };
