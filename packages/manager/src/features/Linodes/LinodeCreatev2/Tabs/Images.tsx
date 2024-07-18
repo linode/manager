@@ -2,10 +2,13 @@ import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import DistributedRegionIcon from 'src/assets/icons/entityIcons/distributed-region.svg';
+import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import { Box } from 'src/components/Box';
 import { ImageSelectv2 } from 'src/components/ImageSelectv2/ImageSelectv2';
 import { getAPIFilterForImageSelect } from 'src/components/ImageSelectv2/utilities';
+import { Link } from 'src/components/Link';
 import { Paper } from 'src/components/Paper';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -56,6 +59,20 @@ export const Images = () => {
   const showDistributedCapabilityNotice = images?.some((image) =>
     image.capabilities.includes('distributed-images')
   );
+
+  if (images?.length === 0) {
+    return (
+      <Paper>
+        <Placeholder icon={ImageIcon} isEntity title="My Images">
+          <Typography variant="subtitle1">
+            You don&rsquo;t have any private Images. Visit the{' '}
+            <Link to="/images">Images section</Link> to create an Image from one
+            of your Linode&rsquo;s disks.
+          </Typography>
+        </Placeholder>
+      </Paper>
+    );
+  }
 
   return (
     <Paper>
