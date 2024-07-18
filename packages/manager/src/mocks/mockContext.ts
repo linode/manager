@@ -26,11 +26,16 @@ export const getContextPopulatorGroups = (
  *
  * @returns Empty mock context.
  */
-export const createInitialMockContext = async (): Promise<MockContext> => {
-  const storedContext = await mswDB.getStore();
+export const createInitialMockStore = async (): Promise<MockContext> => {
+  const mockContext = await mswDB.getStore('mockContext');
+  const seedContext = await mswDB.getStore('seedContext');
 
-  if (storedContext) {
-    return storedContext;
+  if (mockContext) {
+    return mockContext;
+  }
+
+  if (seedContext) {
+    return seedContext;
   }
 
   return {

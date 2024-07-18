@@ -9,6 +9,7 @@ import {
   defaultBaselineMockPreset,
   extraMockPresets,
 } from 'src/mocks/presets';
+import { removeSeeds } from 'src/mocks/utilities/removeSeeds';
 
 import { DevToolSelect } from './components/DevToolSelect';
 
@@ -230,7 +231,7 @@ export const ServiceWorkerTool = () => {
     window.location.reload();
   };
 
-  const handleChangePopulator = (
+  const handleChangePopulator = async (
     e: React.ChangeEvent<HTMLInputElement>,
     populatorId: string
   ) => {
@@ -251,6 +252,7 @@ export const ServiceWorkerTool = () => {
         hasSaved: false,
         hasUnsavedChanges: true,
       });
+      await removeSeeds(populatorId);
     }
   };
 

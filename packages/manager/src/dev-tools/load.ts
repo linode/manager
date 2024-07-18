@@ -1,7 +1,7 @@
 import { ENABLE_DEV_TOOLS } from 'src/constants';
 import { allContextPopulators } from 'src/mocks/context/populators';
 import { mswDB } from 'src/mocks/indexedDB';
-import { createInitialMockContext } from 'src/mocks/mockContext';
+import { createInitialMockStore } from 'src/mocks/mockContext';
 import { resolveMockPreset } from 'src/mocks/mockPreset';
 import { allMockPresets, defaultBaselineMockPreset } from 'src/mocks/presets';
 
@@ -13,8 +13,14 @@ import {
 } from './ServiceWorkerTool';
 
 import type { QueryClient } from '@tanstack/react-query';
-import type { MockContextPopulator, MockPreset } from 'src/mocks/types';
+import type {
+  MockContext,
+  MockContextPopulator,
+  MockPreset,
+} from 'src/mocks/types';
 import type { ApplicationStore } from 'src/store';
+
+export let mockState: MockContext;
 
 /**
  * Use this to dynamically import our custom dev-tools ONLY when they
@@ -50,9 +56,9 @@ export async function loadDevTools(
       .filter((populator) => !!populator);
 
     // Apply MSW context populators.
-    const initialContext = await createInitialMockContext();
+    const initialContext = await createInitialMockStore();
 
-    const mockContext = await mswContentPopulators.reduce(
+    mockState = await mswContentPopulators.reduce(
       async (accPromise, cur: MockContextPopulator) => {
         const acc = await accPromise;
         return cur.populator(acc);
@@ -60,19 +66,20 @@ export async function loadDevTools(
       Promise.resolve(initialContext)
     );
 
-    await mswDB.saveStore(mockContext);
+    await mswDB.saveStore(mockState, 'mockContext');
+    await mswDB.saveStore(mockState, 'seedContext');
 
     const extraHandlers = extraMswPresets.reduce((acc, cur: MockPreset) => {
       return [
         // MSW applies the first handler that is set up for any given request,
         // so we must apply extra handlers in the opposite order that they are
         // specified.
-        ...resolveMockPreset(cur, mockContext),
+        ...resolveMockPreset(cur, mockState),
         ...acc,
       ];
     }, []);
 
-    const baseHandlers = resolveMockPreset(mswPreset, mockContext);
+    const baseHandlers = resolveMockPreset(mswPreset, mockState);
 
     // Because MSW applies the first handler that is set up for any given request,
     // we must apply extra request handlers before base handlers.
