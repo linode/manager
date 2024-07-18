@@ -48,6 +48,7 @@ export const RegionTypeFilter = (props: Props) => {
         }}
         sx={{
           display: 'inline-block',
+          width: 140,
         }}
         textFieldProps={{
           hideLabel: true,
