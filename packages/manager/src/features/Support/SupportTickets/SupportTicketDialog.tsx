@@ -162,12 +162,12 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     defaultValues: {
       description: getInitialValue(
         prefilledDescription,
-        valuesFromStorage.description
+        valuesFromStorage?.description
       ),
       entityId: prefilledEntity?.id ? String(prefilledEntity.id) : '',
       entityInputValue: '',
       entityType: prefilledEntity?.type ?? 'general',
-      summary: getInitialValue(_prefilledTitle, valuesFromStorage.title),
+      summary: getInitialValue(_prefilledTitle, valuesFromStorage?.summary),
       ticketType: prefilledTicketType ?? 'general',
     },
     resolver: yupResolver(SCHEMA_MAP[prefilledTicketType ?? 'general']),
@@ -175,6 +175,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const {
     description,
+    entityId,
     entityType,
     selectedSeverity,
     summary,
@@ -195,17 +196,29 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     }
   }, [open]);
 
-  const saveText = (_title: string, _description: string) => {
-    storage.supportText.set({ description: _description, title: _title });
+  // const saveText = (_title: string, _description: string) => {
+  //   storage.supportText.set({ description: _description, title: _title });
+  // };
+
+  const saveFormData = (values: SupportTicketFormFields) => {
+    storage.supportText.set(values);
   };
 
   // Has to be a ref or else the timeout is redone with each render
-  const debouncedSave = React.useRef(debounce(500, false, saveText)).current;
+  const debouncedSave = React.useRef(debounce(500, false, saveFormData))
+    .current;
 
   React.useEffect(() => {
     // Store in-progress work to localStorage
-    debouncedSave(summary, description);
-  }, [summary, description]);
+    debouncedSave(form.getValues());
+  }, [
+    summary,
+    description,
+    ticketType,
+    entityId,
+    entityType,
+    selectedSeverity,
+  ]);
 
   /**
    * Clear the drawer completely if clearValues is passed (when canceling out of the drawer or successfully submitting)
@@ -214,12 +227,22 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const resetTicket = (clearValues: boolean = false) => {
     form.reset({
       ...form.formState.defaultValues,
-      description: clearValues ? '' : valuesFromStorage.description,
+      description: clearValues ? '' : valuesFromStorage?.description,
       entityId: '',
       entityType: 'general',
-      summary: clearValues ? '' : valuesFromStorage.title,
+      summary: clearValues ? '' : valuesFromStorage?.summary,
       ticketType: 'general',
     });
+  };
+
+  const formLocalStorageDefaults = {
+    description: '',
+    entityId: '',
+    entityInputValue: '',
+    entityType: 'general' as EntityType,
+    selectedSeverity: undefined,
+    summary: '',
+    ticketType: 'general' as TicketType,
   };
 
   const resetDrawer = (clearValues: boolean = false) => {
@@ -227,7 +250,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     setFiles([]);
 
     if (clearValues) {
-      saveText('', '');
+      // saveText('', '');
+      saveFormData(formLocalStorageDefaults);
     }
   };
 

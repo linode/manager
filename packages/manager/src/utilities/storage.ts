@@ -1,6 +1,7 @@
 import { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
 
 import { shouldEnableDevTools } from 'src/dev-tools/load';
+import { SupportTicketFormFields } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
 const localStorageCache = {};
 
@@ -61,10 +62,10 @@ interface AuthGetAndSet {
   set: (value: string) => void;
 }
 
-interface SupportText {
-  description: string;
-  title: string;
-}
+// interface SupportText {
+//   description: string;
+//   title: string;
+// }
 
 interface TicketReply {
   text: string;
@@ -111,8 +112,8 @@ export interface Storage {
     set: (s: StackScriptData) => void;
   };
   supportText: {
-    get: () => SupportText;
-    set: (v: SupportText) => void;
+    get: () => SupportTicketFormFields | undefined;
+    set: (v: SupportTicketFormFields | undefined) => void;
   };
   ticketReply: {
     get: () => TicketReply;
@@ -185,7 +186,7 @@ export const storage: Storage = {
     set: (s) => setStorage(STACKSCRIPT, JSON.stringify(s)),
   },
   supportText: {
-    get: () => getStorage(SUPPORT, { description: '', title: '' }),
+    get: () => getStorage(SUPPORT, undefined),
     set: (v) => setStorage(SUPPORT, JSON.stringify(v)),
   },
   ticketReply: {
