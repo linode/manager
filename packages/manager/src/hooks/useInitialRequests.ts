@@ -1,4 +1,3 @@
-import { getUserPreferences } from '@linode/api-v4/lib/profile';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
@@ -47,8 +46,6 @@ export const useInitialRequests = () => {
    * 1. App begins load; users see splash screen
    * 2. Initial requests (in makeInitialRequests) are made (account, profile, etc.)
    * 3. Initial requests complete; app is marked as done loading
-   * 4. As splash screen goes away, secondary requests (in makeSecondaryRequests -- Linodes, types, regions)
-   * are kicked off
    */
   const makeInitialRequests = async () => {
     // When loading Lish we avoid all this extra data loading
@@ -57,26 +54,14 @@ export const useInitialRequests = () => {
       return;
     }
 
-    // Initial Requests: Things we need immediately (before rendering the app)
-    const dataFetchingPromises: Promise<any>[] = [
-      // Fetch user's account information
-      queryClient.prefetchQuery(accountQueries.account),
-
-      // Is a user managed
-      queryClient.prefetchQuery(accountQueries.settings),
-
-      // Username and whether a user is restricted
-      queryClient.prefetchQuery(profileQueries.profile()),
-
-      // preferences
-      queryClient.prefetchQuery({
-        queryFn: getUserPreferences,
-        queryKey: ['preferences'],
-      }),
-    ];
-
     try {
-      await Promise.all(dataFetchingPromises);
+      // Initial Requests: Things we want immediately (before rendering the app)
+      await Promise.all([
+        queryClient.prefetchQuery(accountQueries.account),
+        queryClient.prefetchQuery(accountQueries.settings),
+        queryClient.prefetchQuery(profileQueries.profile()),
+        queryClient.prefetchQuery(profileQueries.preferences),
+      ]);
     } finally {
       setIsLoading(false);
     }

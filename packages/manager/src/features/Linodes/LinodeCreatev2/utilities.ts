@@ -2,6 +2,8 @@ import { getLinode, getStackScript } from '@linode/api-v4';
 import { omit } from 'lodash';
 import { useHistory } from 'react-router-dom';
 
+import { stackscriptQueries } from 'src/queries/stackscripts';
+import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
@@ -15,11 +17,12 @@ import type {
   InterfacePayload,
   Linode,
 } from '@linode/api-v4';
+import type { QueryClient } from '@tanstack/react-query';
 
 /**
- * This is the ID of the Image of the default distribution.
+ * This is the ID of the Image of the default OS.
  */
-const DEFAULT_DISTRIBUTION = 'linode/debian11';
+const DEFAULT_OS = 'linode/debian11';
 
 /**
  * This interface is used to type the query params on the Linode Create flow.
@@ -121,7 +124,7 @@ export const getTabIndex = (tabType: LinodeCreateType | undefined) => {
 };
 
 export const tabs: LinodeCreateType[] = [
-  'Distributions',
+  'OS',
   'One-Click',
   'StackScripts',
   'Images',
@@ -286,9 +289,9 @@ const getDefaultImageId = (params: ParsedLinodeCreateQueryParams) => {
     return null;
   }
 
-  // Always default debian for the distributions tab.
-  if (!params.type || params.type === 'Distributions') {
-    return DEFAULT_DISTRIBUTION;
+  // Always default debian for the OS tab.
+  if (!params.type || params.type === 'OS') {
+    return DEFAULT_OS;
   }
 
   // If the user is deep linked to the Images tab with a preselected image,
@@ -306,8 +309,8 @@ const defaultValuesForImages = {
   type: '',
 };
 
-const defaultValuesForDistributions = {
-  image: DEFAULT_DISTRIBUTION,
+const defaultValuesForOS = {
+  image: DEFAULT_OS,
   interfaces: defaultInterfaces,
   region: '',
   type: '',
@@ -327,8 +330,58 @@ const defaultValuesForStackScripts = {
 export const defaultValuesMap: Record<LinodeCreateType, CreateLinodeRequest> = {
   Backups: defaultValuesForImages,
   'Clone Linode': defaultValuesForImages,
-  Distributions: defaultValuesForDistributions,
   Images: defaultValuesForImages,
+  OS: defaultValuesForOS,
   'One-Click': defaultValuesForStackScripts,
   StackScripts: defaultValuesForStackScripts,
+};
+
+interface LinodeCreateAnalyticsEventOptions {
+  queryClient: QueryClient;
+  type: LinodeCreateType;
+  values: LinodeCreateFormValues;
+}
+
+/**
+ * Captures a custom analytics event when a Linode is created.
+ */
+export const captureLinodeCreateAnalyticsEvent = async (
+  options: LinodeCreateAnalyticsEventOptions
+) => {
+  const { queryClient, type, values } = options;
+
+  if (type === 'Backups' && values.backup_id) {
+    sendCreateLinodeEvent('backup', String(values.backup_id));
+  }
+
+  if (type === 'Clone Linode' && values.linode) {
+    const linodeId = values.linode.id;
+    // @todo use Linode query key factory when it is implemented
+    const linode = await queryClient.ensureQueryData({
+      queryFn: () => getLinode(linodeId),
+      queryKey: ['linodes', 'linode', linodeId, 'details'],
+    });
+
+    sendCreateLinodeEvent('clone', values.type, {
+      isLinodePoweredOff: linode.status === 'offline',
+    });
+  }
+
+  if (type === 'OS' || type === 'Images') {
+    sendCreateLinodeEvent('image', values.image ?? undefined);
+  }
+
+  if (type === 'StackScripts' && values.stackscript_id) {
+    const stackscript = await queryClient.ensureQueryData(
+      stackscriptQueries.stackscript(values.stackscript_id)
+    );
+    sendCreateLinodeEvent('stackscript', stackscript.label);
+  }
+
+  if (type === 'One-Click' && values.stackscript_id) {
+    const stackscript = await queryClient.ensureQueryData(
+      stackscriptQueries.stackscript(values.stackscript_id)
+    );
+    sendCreateLinodeEvent('one-click', stackscript.label);
+  }
 };

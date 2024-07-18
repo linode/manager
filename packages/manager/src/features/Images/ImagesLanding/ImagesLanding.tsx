@@ -31,6 +31,7 @@ import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   isEventImageUpload,
   isEventInProgressDiskImagize,
@@ -42,6 +43,7 @@ import {
   useImagesQuery,
 } from 'src/queries/images';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 
 import { getEventsForImages } from '../utils';
 import { EditImageDrawer } from './EditImageDrawer';
@@ -93,6 +95,9 @@ export const ImagesLanding = () => {
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
   const location = useLocation();
+  const isImagesReadOnly = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_images',
+  });
   const queryParams = new URLSearchParams(location.search);
   const imageLabelFromParam = queryParams.get(searchQueryKey) ?? '';
 
@@ -379,6 +384,14 @@ export const ImagesLanding = () => {
         docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
         entity="Image"
         onButtonClick={() => history.push('/images/create')}
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Images',
+          }),
+        }}
+        disabledCreateButton={isImagesReadOnly}
         title="Images"
       />
       <TextField
