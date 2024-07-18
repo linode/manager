@@ -11,6 +11,7 @@ import {
   invoiceToActivityFeedItem,
   makeFilter,
   paymentToActivityFeedItem,
+  transactionDateOptions,
 } from './BillingActivityPanel';
 vi.mock('../../../../utilities/getUserTimezone');
 
@@ -174,22 +175,29 @@ describe('paymentToActivityFeedItem', () => {
         throw new Error('Invalid test date');
       }
 
-      expect(getCutoffFromDateRange('30 Days', testDateISO)).toBe(
-        testDate.minus({ days: 30 }).toISO()
-      );
-      expect(getCutoffFromDateRange('60 Days', testDateISO)).toBe(
-        testDate.minus({ days: 60 }).toISO()
-      );
-      expect(getCutoffFromDateRange('90 Days', testDateISO)).toBe(
-        testDate.minus({ days: 90 }).toISO()
-      );
-      expect(getCutoffFromDateRange('6 Months', testDateISO)).toBe(
-        testDate.minus({ months: 6 }).toISO()
-      );
-      expect(getCutoffFromDateRange('12 Months', testDateISO)).toBe(
-        testDate.minus({ months: 12 }).toISO()
-      );
-      expect(getCutoffFromDateRange('All Time', testDateISO)).toBeNull();
+      expect(
+        getCutoffFromDateRange(transactionDateOptions[0], testDateISO)
+      ).toBe(testDate.minus({ days: 30 }).toISO());
+
+      expect(
+        getCutoffFromDateRange(transactionDateOptions[1], testDateISO)
+      ).toBe(testDate.minus({ days: 60 }).toISO());
+
+      expect(
+        getCutoffFromDateRange(transactionDateOptions[2], testDateISO)
+      ).toBe(testDate.minus({ days: 90 }).toISO());
+
+      expect(
+        getCutoffFromDateRange(transactionDateOptions[3], testDateISO)
+      ).toBe(testDate.minus({ months: 6 }).toISO());
+
+      expect(
+        getCutoffFromDateRange(transactionDateOptions[4], testDateISO)
+      ).toBe(testDate.minus({ months: 12 }).toISO());
+
+      expect(
+        getCutoffFromDateRange(transactionDateOptions[5], testDateISO)
+      ).toBeNull();
     });
   });
 

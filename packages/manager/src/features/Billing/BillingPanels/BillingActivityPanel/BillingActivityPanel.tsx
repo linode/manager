@@ -113,18 +113,13 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   transactionDate: {
-    width: 150,
+    width: 130,
   },
   transactionType: {
     marginRight: theme.spacing(),
-    width: 210,
+    width: 200,
   },
 }));
-
-export interface Item<T = string, L = string> {
-  label: L;
-  value: T;
-}
 
 interface ActivityFeedItem {
   date: string;
@@ -134,21 +129,29 @@ interface ActivityFeedItem {
   type: 'invoice' | 'payment';
 }
 
-type TransactionTypes = 'all' | ActivityFeedItem['type'];
-const transactionTypeOptions: Item<TransactionTypes>[] = [
+interface TransactionTypeOptions {
+  label: string;
+  value: 'all' | 'invoice' | 'payment';
+}
+
+const transactionTypeOptions: TransactionTypeOptions[] = [
   { label: 'Invoices', value: 'invoice' },
   { label: 'Payments', value: 'payment' },
   { label: 'All Transaction Types', value: 'all' },
 ];
 
-type DateRange =
-  | '6 Months'
-  | '12 Months'
-  | '30 Days'
-  | '60 Days'
-  | '90 Days'
-  | 'All Time';
-const transactionDateOptions: Item<DateRange>[] = [
+interface TransactionDateOptions {
+  label: string;
+  value:
+    | '6 Months'
+    | '12 Months'
+    | '30 Days'
+    | '60 Days'
+    | '90 Days'
+    | 'All Time';
+}
+
+export const transactionDateOptions: TransactionDateOptions[] = [
   { label: '30 Days', value: '30 Days' },
   { label: '60 Days', value: '60 Days' },
   { label: '90 Days', value: '90 Days' },
@@ -156,8 +159,6 @@ const transactionDateOptions: Item<DateRange>[] = [
   { label: '12 Months', value: '12 Months' },
   { label: 'All Time', value: 'All Time' },
 ];
-
-const defaultDateRange: DateRange = '6 Months';
 
 const AkamaiBillingInvoiceText = (
   <Typography>
@@ -181,28 +182,24 @@ export interface Props {
 
 export const BillingActivityPanel = React.memo((props: Props) => {
   const { accountActiveSince } = props;
-
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
   const { data: regions } = useRegionsQuery();
-
   const isAkamaiCustomer = account?.billing_source === 'akamai';
-
   const { classes } = useStyles();
   const flags = useFlags();
-
   const pdfErrors = useSet();
   const pdfLoading = useSet();
 
   const [
     selectedTransactionType,
     setSelectedTransactionType,
-  ] = React.useState<TransactionTypes>('all');
+  ] = React.useState<TransactionTypeOptions>(transactionTypeOptions[2]);
 
   const [
     selectedTransactionDate,
     setSelectedTransactionDate,
-  ] = React.useState<DateRange>(defaultDateRange);
+  ] = React.useState<TransactionDateOptions>(transactionDateOptions[3]);
 
   const endDate = getCutoffFromDateRange(selectedTransactionDate);
   const filter = makeFilter(endDate);
@@ -308,7 +305,8 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   // Filter on transaction type
   const filteredData = React.useMemo(() => {
     return combinedData.filter(
-      (thisBillingItem) => thisBillingItem.type === selectedTransactionType
+      (thisBillingItem) =>
+        thisBillingItem.type === selectedTransactionType.value
     );
   }, [selectedTransactionType, combinedData]);
 
@@ -346,45 +344,42 @@ export const BillingActivityPanel = React.memo((props: Props) => {
               <div className={classes.flexContainer}>
                 <Autocomplete
                   onChange={(_, item) => {
-                    setSelectedTransactionType(item?.value ?? 'all');
+                    setSelectedTransactionType(item);
                     pdfErrors.clear();
                     pdfLoading.clear();
                   }}
-                  value={
-                    transactionTypeOptions.find(
-                      (item) => item.value === selectedTransactionType
-                    ) || null
-                  }
+                  value={transactionTypeOptions.find(
+                    (option) => option.value === selectedTransactionType.value
+                  )}
                   className={classes.transactionType}
+                  disableClearable
                   label="Transaction Types"
-                  multiple={false}
                   options={transactionTypeOptions}
-                  placeholder=" "
                 />
                 <Autocomplete
                   onChange={(_, item) => {
-                    setSelectedTransactionDate(item?.value ?? defaultDateRange);
+                    setSelectedTransactionDate(item);
                     pdfErrors.clear();
                     pdfLoading.clear();
                   }}
-                  value={
-                    transactionDateOptions.find(
-                      (thisOption) =>
-                        thisOption.value === selectedTransactionDate
-                    ) || null
-                  }
+                  value={transactionDateOptions.find(
+                    (option) => option.value === selectedTransactionDate.value
+                  )}
                   className={classes.transactionDate}
+                  disableClearable
                   label="Transaction Dates"
-                  multiple={false}
                   options={transactionDateOptions}
-                  placeholder=" "
                 />
               </div>
             </div>
           </StyledBillingAndPaymentHistoryHeader>
         </div>
         <OrderBy
-          data={selectedTransactionType === 'all' ? combinedData : filteredData}
+          data={
+            selectedTransactionType.value === 'all'
+              ? combinedData
+              : filteredData
+          }
           order={'desc'}
           orderBy={'date'}
         >
@@ -585,10 +580,10 @@ export const paymentToActivityFeedItem = (
  * @returns ISO format beginning of the range date
  */
 export const getCutoffFromDateRange = (
-  range: DateRange,
+  range: TransactionDateOptions,
   currentDatetime?: string
 ): null | string => {
-  if (range === 'All Time') {
+  if (range === transactionDateOptions[5]) {
     return null;
   }
 
@@ -596,19 +591,19 @@ export const getCutoffFromDateRange = (
 
   let outputDate: DateTime;
   switch (range) {
-    case '30 Days':
+    case transactionDateOptions[0]:
       outputDate = date.minus({ days: 30 });
       break;
-    case '60 Days':
+    case transactionDateOptions[1]:
       outputDate = date.minus({ days: 60 });
       break;
-    case '90 Days':
+    case transactionDateOptions[2]:
       outputDate = date.minus({ days: 90 });
       break;
-    case '6 Months':
+    case transactionDateOptions[3]:
       outputDate = date.minus({ months: 6 });
       break;
-    case '12 Months':
+    case transactionDateOptions[4]:
       outputDate = date.minus({ months: 12 });
       break;
     default:
