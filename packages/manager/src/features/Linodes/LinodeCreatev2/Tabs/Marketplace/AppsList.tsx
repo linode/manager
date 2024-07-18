@@ -1,4 +1,5 @@
 import Grid from '@mui/material/Unstable_Grid2';
+import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
@@ -9,6 +10,7 @@ import { Stack } from 'src/components/Stack';
 import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
 import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 
+import { getGeneratedLinodeLabel } from '../../utilities';
 import { getDefaultUDFData } from '../StackScripts/UserDefinedFields/utilities';
 import { AppSection } from './AppSection';
 import { AppSelectionCard } from './AppSelectionCard';
@@ -38,18 +40,37 @@ export const AppsList = (props: Props) => {
   const { data: stackscripts, error, isLoading } = useMarketplaceAppsQuery(
     true
   );
+  const queryClient = useQueryClient();
 
-  const { setValue } = useFormContext<LinodeCreateFormValues>();
+  const {
+    formState: {
+      dirtyFields: { label: isLabelFieldDirty },
+    },
+    getValues,
+    setValue,
+  } = useFormContext<LinodeCreateFormValues>();
+
   const { field } = useController<LinodeCreateFormValues, 'stackscript_id'>({
     name: 'stackscript_id',
   });
 
-  const onSelect = (stackscript: StackScript) => {
+  const onSelect = async (stackscript: StackScript) => {
     setValue(
       'stackscript_data',
       getDefaultUDFData(stackscript.user_defined_fields)
     );
     field.onChange(stackscript.id);
+
+    if (!isLabelFieldDirty) {
+      setValue(
+        'label',
+        await getGeneratedLinodeLabel({
+          queryClient,
+          tab: 'StackScripts',
+          values: getValues(),
+        })
+      );
+    }
   };
 
   if (isLoading) {
