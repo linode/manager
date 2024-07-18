@@ -373,6 +373,7 @@ export const ImageUpload = () => {
             <Button
               buttonType="outlined"
               onClick={() => setLinodeCLIModalOpen(true)}
+              disabled={isImageCreateRestricted}
             >
               Upload Using Command Line
             </Button>
