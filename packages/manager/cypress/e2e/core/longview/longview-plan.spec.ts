@@ -16,9 +16,11 @@ describe('longview plan', () => {
 
   /*
    * - Tests Longview change plan end-to-end using mock API data.
-   * - Confirms that UI flow when a user changes their Longview plan.
+   * - Confirm UI flow when a user changes their Longview plan.
    */
   it('can change longview plan', () => {
+    const newPlan: ActiveLongviewPlan = longviewActivePlanFactory.build();
+
     mockGetLongviewPlan({}).as('getLongviewPlan');
 
     cy.visitWithLogin('/longview');
@@ -35,7 +37,6 @@ describe('longview plan', () => {
       .should('be.visible')
       .should('be.disabled');
 
-    const newPlan: ActiveLongviewPlan = longviewActivePlanFactory.build();
     mockUpdateLongviewPlan(newPlan).as('updateLongviewPlan');
 
     // Confirms that Longview plan can be changed.
