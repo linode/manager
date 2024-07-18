@@ -12,7 +12,7 @@ import { getGeneratedLinodeLabel } from '../utilities';
 import type { LinodeCreateFormValues } from '../utilities';
 import type { Image } from '@linode/api-v4';
 
-export const Distributions = () => {
+export const OperatingSystems = () => {
   const {
     formState: {
       dirtyFields: { label: isLabelFieldDirty },
@@ -20,6 +20,7 @@ export const Distributions = () => {
     getValues,
     setValue,
   } = useFormContext<LinodeCreateFormValues>();
+
   const queryClient = useQueryClient();
 
   const { field, fieldState } = useController<LinodeCreateFormValues>({
@@ -36,7 +37,7 @@ export const Distributions = () => {
     if (!isLabelFieldDirty) {
       const label = await getGeneratedLinodeLabel({
         queryClient,
-        tab: 'Distributions',
+        tab: 'OS',
         values: getValues(),
       });
       setValue('label', label);
@@ -49,8 +50,10 @@ export const Distributions = () => {
       <ImageSelectv2
         disabled={isCreateLinodeRestricted}
         errorText={fieldState.error?.message}
+        label="Linux Distribution"
         onBlur={field.onBlur}
         onChange={onChange}
+        placeholder="Choose a Linux distribution"
         value={field.value}
         variant="public"
       />

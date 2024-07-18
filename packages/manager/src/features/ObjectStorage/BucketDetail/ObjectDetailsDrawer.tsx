@@ -1,5 +1,4 @@
 import {
-  ACLType,
   getObjectACL,
   updateObjectACL,
 } from '@linode/api-v4/lib/object-storage';
@@ -17,6 +16,8 @@ import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { AccessSelect } from './AccessSelect';
+
+import type { ACLType } from '@linode/api-v4/lib/object-storage';
 
 export interface ObjectDetailsDrawerProps {
   bucketName: string;

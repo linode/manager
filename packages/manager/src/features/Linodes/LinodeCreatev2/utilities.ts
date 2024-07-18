@@ -21,9 +21,9 @@ import type {
 import type { QueryClient } from '@tanstack/react-query';
 
 /**
- * This is the ID of the Image of the default distribution.
+ * This is the ID of the Image of the default OS.
  */
-const DEFAULT_DISTRIBUTION = 'linode/debian11';
+const DEFAULT_OS = 'linode/debian11';
 
 /**
  * This interface is used to type the query params on the Linode Create flow.
@@ -125,7 +125,7 @@ export const getTabIndex = (tabType: LinodeCreateType | undefined) => {
 };
 
 export const tabs: LinodeCreateType[] = [
-  'Distributions',
+  'OS',
   'One-Click',
   'StackScripts',
   'Images',
@@ -300,9 +300,9 @@ const getDefaultImageId = (params: ParsedLinodeCreateQueryParams) => {
     return null;
   }
 
-  // Always default debian for the distributions tab.
-  if (!params.type || params.type === 'Distributions') {
-    return DEFAULT_DISTRIBUTION;
+  // Always default debian for the OS tab.
+  if (!params.type || params.type === 'OS') {
+    return DEFAULT_OS;
   }
 
   // If the user is deep linked to the Images tab with a preselected image,
@@ -315,17 +315,17 @@ const getDefaultImageId = (params: ParsedLinodeCreateQueryParams) => {
 };
 
 interface GeneratedLinodeLabelOptions {
+  queryClient: QueryClient;
   tab: LinodeCreateType | undefined;
   values: LinodeCreateFormValues;
-  queryClient: QueryClient;
 }
 
 export const getGeneratedLinodeLabel = async (
   options: GeneratedLinodeLabelOptions
 ) => {
-  const { tab, values, queryClient } = options;
+  const { queryClient, tab, values } = options;
 
-  if (tab === 'Distributions') {
+  if (tab === 'OS') {
     const generatedLabelParts: string[] = [];
     if (values.image) {
       const image = await queryClient.ensureQueryData(
@@ -391,13 +391,16 @@ export const getGeneratedLinodeLabel = async (
 };
 
 export const getIsValidLinodeLabelCharacter = (char: string) => {
-  const code = char.charCodeAt(0);
-  const isNumeric = code > 47 && code < 58; // (0-9)
-  const isLowercaseLetter = code > 96 && code < 123; // (a-z)
-  const isUppercaseLetter = code > 64 && code < 91; // (A-Z)
-  return isNumeric || isUppercaseLetter || isLowercaseLetter;
+  return /^[0-9a-zA-Z]$/.test(char);
 };
 
+/**
+ * Given an array of strings, this function joins them together by
+ * "-" and ensures that the generated label is <= 64 characters.
+ *
+ * @param parts an array of strings that will be joined together by a "-"
+ * @returns a generated Linode label that is <= 64 characters
+ */
 export const getLinodeLabelFromLabelParts = (parts: string[]) => {
   const numberOfSeperaterDashes = parts.length - 1;
   const maxSizeOfEachPart = Math.floor(
@@ -457,7 +460,7 @@ export const captureLinodeCreateAnalyticsEvent = async (
     });
   }
 
-  if (type === 'Distributions' || type === 'Images') {
+  if (type === 'OS' || type === 'Images') {
     sendCreateLinodeEvent('image', values.image ?? undefined);
   }
 
