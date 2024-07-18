@@ -32,7 +32,7 @@ describe('Maintenance', () => {
    * - When there is pending maintenance, it is shown in the table with expected details.
    * - When there is completed maintenance, it is shown in the table with expected details.
    */
-  it.only('confirm maintenance details in the tables', () => {
+  it('confirm maintenance details in the tables', () => {
     const pendingMaintenanceNumber = 5;
     const completedMaintenanceNumber = 10;
     const accountpendingMaintenance = accountMaintenanceFactory.buildList(
@@ -54,32 +54,34 @@ describe('Maintenance', () => {
 
     cy.contains('No pending maintenance').should('not.exist');
     cy.contains('No completed maintenance').should('not.exist');
-    /*
 
     // Confirm Pending table is not empty and contains exact number of pending maintenances
     // Confirm Completed table is not empty and contains exact number of completed maintenances
-    cy.get('tbody.MuiTableBody-root.css-apqrd9-MuiTableBody-root').each(($tbody, index, $tbodys) => {
-      cy.wrap($tbody).within(() => {
-        if (index === 0) {
-          cy.get('tr').should('have.length', pendingMaintenanceNumber)
-        } else if (index === $tbodys.length - 1) {
-          cy.get('tr').should('have.length', completedMaintenanceNumber)
-        };
-        cy.get('tr').should('exist')
-          .each(($row, idx, $rows) => {           
-            cy.wrap($row).within(() => {
-              // Check the content of each <td> element
-              cy.get('td').each(($cell, idx, $cells) => {
-                cy.wrap($cell).should('not.be.empty');
+    cy.get('tbody.MuiTableBody-root.css-apqrd9-MuiTableBody-root').each(
+      ($tbody, index, $tbodys) => {
+        cy.wrap($tbody).within(() => {
+          if (index === 0) {
+            cy.get('tr').should('have.length', pendingMaintenanceNumber);
+          } else if (index === $tbodys.length - 1) {
+            cy.get('tr').should('have.length', completedMaintenanceNumber);
+          }
+          cy.get('tr')
+            .should('exist')
+            .each(($row, idx, $rows) => {
+              cy.wrap($row).within(() => {
+                // Check the content of each <td> element
+                cy.get('td').each(($cell, idx, $cells) => {
+                  cy.wrap($cell).should('not.be.empty');
+                });
               });
             });
-          });;
-      });
-    });
+        });
+      }
+    );
 
-    */
-
-    cy.contains('button', 'Download CSV')
+    // Confirm download buttons work
+    cy.get('button')
+      .filter(':contains("Download CSV")')
       .should('be.visible')
       .should('be.enabled')
       .click({ multiple: true });
