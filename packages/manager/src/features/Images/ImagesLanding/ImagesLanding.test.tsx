@@ -289,4 +289,78 @@ describe('Images Landing Table', () => {
       "You don't have permissions to create Images. Please contact your account administrator to request the necessary permissions."
     );
   });
+
+  it('disables the action menu buttons if user does not have permissions to edit images', async () => {
+    const images = imageFactory.buildList(1, {
+      id: 'private/99999',
+      label: 'vi-test-image',
+      regions: [
+        { region: 'us-east', status: 'available' },
+        { region: 'us-southeast', status: 'pending' },
+      ],
+    });
+
+    server.use(
+      http.get('*/v4/profile', () => {
+        const profile = profileFactory.build({ restricted: true });
+        return HttpResponse.json(profile);
+      }),
+      http.get('*/v4/profile/grants', () => {
+        const grants = grantsFactory.build({
+          global: {
+            add_linodes: false,
+          },
+          image: [
+            {
+              id: 99999,
+              label: 'vi-test-image',
+              permissions: 'read_only',
+            },
+          ],
+        });
+        return HttpResponse.json(grants);
+      }),
+      http.get('*/v4/images', () => {
+        return HttpResponse.json(makeResourcePage(images));
+      })
+    );
+
+    const {
+      getAllByLabelText,
+      getByTestId,
+      findAllByLabelText,
+    } = renderWithTheme(<ImagesLanding />, {
+      flags: { imageServiceGen2: true },
+    });
+
+    // Loading state should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    // Open action menu
+    const actionMenu = getAllByLabelText(
+      `Action menu for Image ${images[0].label}`
+    )[0];
+
+    await userEvent.click(actionMenu);
+
+    const disabledEditText = await findAllByLabelText(
+      "You don't have permissions to edit this Image. Please contact your account administrator to request the necessary permissions."
+    );
+    const disabledDeleteText = await findAllByLabelText(
+      "You don't have permissions to delete this Image. Please contact your account administrator to request the necessary permissions."
+    );
+    const disabledLinodeCreationText = await findAllByLabelText(
+      "You don't have permissions to create Linodes. Please contact your account administrator to request the necessary permissions."
+    );
+    const disabledLinodeRebuildingText = await findAllByLabelText(
+      "You don't have permissions to rebuild Linodes. Please contact your account administrator to request the necessary permissions."
+    );
+
+    expect(disabledEditText.length).toBe(2);
+    expect(disabledDeleteText.length).toBe(1);
+    expect(disabledLinodeCreationText.length).toBe(1);
+    expect(disabledLinodeRebuildingText.length).toBe(1);
+  });
 });
