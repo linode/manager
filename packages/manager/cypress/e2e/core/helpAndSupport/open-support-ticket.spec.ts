@@ -56,7 +56,7 @@ import { mockGetClusters } from 'support/intercepts/lke';
 import { linodeCreatePage } from 'support/ui/pages';
 import { chooseRegion } from 'support/util/regions';
 
-describe('help & support', () => {
+describe('open support tickets', () => {
   after(() => {
     cleanUp(['linodes']);
   });
