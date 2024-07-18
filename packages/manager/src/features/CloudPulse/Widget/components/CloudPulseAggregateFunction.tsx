@@ -56,6 +56,7 @@ export const CloudPulseAggregateFunction = React.memo(
           label=""
           noMarginTop={true}
           options={availableAggregateFunc}
+          sx={{ width: '100%' }}
         />
         {defaultAggrUnavilable && (
           <p style={{ color: 'rgb(210 165 28)', fontSize: 'smaller' }}>

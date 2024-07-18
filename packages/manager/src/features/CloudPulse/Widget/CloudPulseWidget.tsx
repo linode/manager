@@ -191,19 +191,25 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     <Grid item lg={widget.size} xs={12}>
       <Paper>
         <Stack spacing={2}>
-          <Box
-            display={'flex'}
-            flexWrap={'wrap'}
-            justifyContent={'space-between'}
+          <Stack
+            alignItems={'center'}
+            direction={{ sm: 'row' }}
+            gap={{ sm: 0, xs: 2 }}
+            justifyContent={{ sm: 'space-between' }}
             padding={1}
           >
-            <Typography marginLeft={1} my={2} variant="h1">
+            <Typography
+              fontSize={{ sm: '1.5rem', xs: '2rem' }}
+              marginLeft={1}
+              variant="h1"
+            >
               {convertStringToCamelCasesWithSpaces(widget.label)}{' '}
             </Typography>
             <Stack
-              alignItems={{ sm: 'center', xs: 'end' }}
+              alignItems={'center'}
               direction={{ sm: 'row' }}
               gap={1}
+              width={{ sm: 'inherit', xs: '100%' }}
             >
               {availableMetrics?.scrape_interval && (
                 <CloudPulseIntervalSelect
@@ -230,7 +236,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                 />
               </Box>
             </Stack>
-          </Box>
+          </Stack>
           <Divider />
           <Box p={2}>
             <LineGraph data={[]} showToday={today} timezone={timezone} />

@@ -130,6 +130,7 @@ export const CloudPulseIntervalSelect = React.memo(
           label=""
           noMarginTop={true}
           options={[autoIntervalOption, ...available_interval_options]}
+          sx={{ width: { xs: '100%' } }}
         />
         {default_interval_unavailable && (
           <p style={{ color: 'rgb(210 165 28)', fontSize: 'smaller' }}>
