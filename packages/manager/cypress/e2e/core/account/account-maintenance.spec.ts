@@ -1,12 +1,13 @@
 import { mockGetMaintenance } from 'support/intercepts/account';
 import { accountMaintenanceFactory } from 'src/factories';
-//import { ui } from 'support/ui';
 
 describe('Maintenance', () => {
   /*
    * - Confirm user can navigate to account maintenance page via user menu.
    * - When there is no pending maintenance, "No pending maintenance." is shown in the table.
    * - When there is no completed maintenance, "No completed maintenance." is shown in the table.
+   * - Confirm "Download CSV" button for pending maintenance visible and enabled.
+   * - Confirm "Download CSV" button for completed maintenance visible and enabled.
    */
   it('table empty when no maintenance', () => {
     mockGetMaintenance([], []).as('getMaintenance');
