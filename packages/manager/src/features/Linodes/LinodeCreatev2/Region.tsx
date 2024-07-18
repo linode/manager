@@ -49,9 +49,9 @@ export const Region = () => {
     formState: {
       dirtyFields: { label: isLabelFieldDirty },
     },
-    setValue,
     getValues,
     reset,
+    setValue,
   } = useFormContext<LinodeCreateFormValues>();
   const { field, fieldState } = useController({
     control,
@@ -122,7 +122,7 @@ export const Region = () => {
     if (!isLabelFieldDirty) {
       const label = await getGeneratedLinodeLabel({
         queryClient,
-        tab: params.type ?? 'Distributions',
+        tab: params.type ?? 'OS',
         values: getValues(),
       });
       setValue('label', label);
