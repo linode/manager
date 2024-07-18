@@ -306,7 +306,7 @@ export const oneClickApps: Record<number, OCA> = {
       end: '8a9177',
       start: '1d758f',
     },
-    description: `MySQL, or MariaDB for Linux distributions, is primarily used for web and server applications, including as a component of the industry-standard LAMP and LEMP stacks.`,
+    description: `MySQL, or MariaDB for Linux operating systems, is primarily used for web and server applications, including as a component of the industry-standard LAMP and LEMP stacks.`,
     logo_url: 'mysql.svg',
     name: 'MySQL/MariaDB',
     related_guides: [
@@ -1731,7 +1731,7 @@ export const oneClickApps: Record<number, OCA> = {
       end: '2fa1bc',
       start: '267ff7',
     },
-    description: `Kali Linux is an open source, Debian-based Linux distribution that has become an industry-standard tool for penetration testing and security audits. Kali includes hundreds of free tools for reverse engineering, penetration testing and more. Kali prioritizes simplicity, making security best practices more accessible to everyone from cybersecurity professionals to hobbyists.`,
+    description: `Kali Linux is an open source, Debian-based Linux OS that has become an industry-standard tool for penetration testing and security audits. Kali includes hundreds of free tools for reverse engineering, penetration testing and more. Kali prioritizes simplicity, making security best practices more accessible to everyone from cybersecurity professionals to hobbyists.`,
     logo_url: 'kalilinux.svg',
     name: 'Kali Linux',
     related_guides: [
@@ -1742,7 +1742,7 @@ export const oneClickApps: Record<number, OCA> = {
       },
     ],
     summary:
-      'Popular Linux distribution and tool suite for penetration testing and security research.',
+      'Popular Linux OS and tool suite for penetration testing and security research.',
     website: 'https://www.kali.org/',
   },
   1037036: {

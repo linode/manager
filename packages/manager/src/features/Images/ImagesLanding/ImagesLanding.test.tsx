@@ -253,6 +253,43 @@ describe('Images Landing Table', () => {
     getByText(`Delete Image ${images[0].label}`);
   });
 
+  it('disables the create button if the user does not have permission to create images', async () => {
+    const images = imageFactory.buildList(3, {
+      regions: [
+        { region: 'us-east', status: 'available' },
+        { region: 'us-southeast', status: 'pending' },
+      ],
+    });
+    server.use(
+      http.get('*/v4/profile', () => {
+        const profile = profileFactory.build({ restricted: true });
+        return HttpResponse.json(profile);
+      }),
+      http.get('*/v4/profile/grants', () => {
+        const grants = grantsFactory.build({ global: { add_images: false } });
+        return HttpResponse.json(grants);
+      }),
+      http.get('*/v4/images', () => {
+        return HttpResponse.json(makeResourcePage(images));
+      })
+    );
+
+    const { getByTestId, getByText } = renderWithTheme(<ImagesLanding />);
+
+    // Loading state should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const createImageButton = getByText('Create Image').closest('button');
+
+    expect(createImageButton).toBeDisabled();
+    expect(createImageButton).toHaveAttribute(
+      'data-qa-tooltip',
+      "You don't have permissions to create Images. Please contact your account administrator to request the necessary permissions."
+    );
+  });
+
   it('disables the action menu buttons if user does not have permissions to edit images', async () => {
     const images = imageFactory.buildList(1, {
       id: 'private/99999',

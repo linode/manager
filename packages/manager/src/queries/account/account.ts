@@ -60,11 +60,6 @@ export const useMutateAccount = () => {
               "You edited the Tax Identification Number. It's being verified. You'll get an email with the verification result.",
               {
                 hideIconVariant: false,
-                style: {
-                  display: 'flex',
-                  flexWrap: 'nowrap',
-                  width: '372px',
-                },
                 variant: 'info',
               }
             );
