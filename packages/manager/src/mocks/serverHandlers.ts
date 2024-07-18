@@ -2172,21 +2172,19 @@ export const handlers = [
     return HttpResponse.json(
       makeResourcePage([
         placementGroupFactory.build({
-          affinity_type: 'anti_affinity:local',
           id: 1,
           is_compliant: true,
-          is_strict: true,
           members: [1, 2, 3, 4, 5, 6, 7, 8, 43].map((linode) => ({
             is_compliant: true,
             linode_id: linode,
           })),
+          placement_group_policy: 'strict',
+          placement_group_type: 'anti_affinity:local',
           region: 'us-east',
         }),
         placementGroupFactory.build({
-          affinity_type: 'affinity:local',
           id: 2,
           is_compliant: true,
-          is_strict: true,
           members: [
             {
               is_compliant: true,
@@ -2201,19 +2199,21 @@ export const handlers = [
               linode_id: 11,
             },
           ],
+          placement_group_policy: 'strict',
+          placement_group_type: 'affinity:local',
           region: 'us-west',
         }),
         placementGroupFactory.build({
-          affinity_type: 'affinity:local',
           id: 3,
           is_compliant: true,
-          is_strict: true,
           members: [
             {
               is_compliant: true,
               linode_id: 12,
             },
           ],
+          placement_group_policy: 'strict',
+          placement_group_type: 'affinity:local',
           region: 'ca-central',
         }),
       ])
@@ -2272,7 +2272,6 @@ export const handlers = [
       }
 
       const response = placementGroupFactory.build({
-        affinity_type: 'anti_affinity:local',
         id: Number(params.placementGroupId) ?? -1,
         label: 'pg-1',
         members: [
@@ -2317,6 +2316,7 @@ export const handlers = [
             linode_id: (body as any).linodes[0],
           },
         ],
+        placement_group_type: 'anti_affinity:local',
       });
 
       return HttpResponse.json(response);
@@ -2328,7 +2328,6 @@ export const handlers = [
     }
 
     const response = placementGroupFactory.build({
-      affinity_type: 'anti_affinity:local',
       id: Number(params.placementGroupId) ?? -1,
       label: 'pg-1',
       members: [
@@ -2370,6 +2369,7 @@ export const handlers = [
           linode_id: 43,
         },
       ],
+      placement_group_type: 'anti_affinity:local',
     });
 
     return HttpResponse.json(response);
@@ -2378,52 +2378,52 @@ export const handlers = [
     const response = {
       data: [
         {
-          id: 1,
-          type: 'standard',
-          service_type: 'linode',
-          label: 'Linode Service I/O Statistics',
           created: '2024-04-29T17:09:29',
+          id: 1,
+          label: 'Linode Service I/O Statistics',
+          service_type: 'linode',
+          type: 'standard',
           updated: null,
           widgets: [
             {
-              metric: 'system_cpu_utilization_percent',
-              unit: '%',
-              label: 'CPU utilization',
+              aggregate_function: 'avg',
+              chart_type: 'area',
               color: 'blue',
+              label: 'CPU utilization',
+              metric: 'system_cpu_utilization_percent',
               size: 12,
-              chart_type: 'area',
+              unit: '%',
               y_label: 'system_cpu_utilization_ratio',
-              aggregate_function: 'avg',
             },
             {
-              metric: 'system_memory_usage_by_resource',
-              unit: 'Bytes',
-              label: 'Memory Usage',
+              aggregate_function: 'avg',
+              chart_type: 'area',
               color: 'red',
+              label: 'Memory Usage',
+              metric: 'system_memory_usage_by_resource',
               size: 12,
-              chart_type: 'area',
-              y_label: 'system_memory_usage_bytes',
-              aggregate_function: 'avg',
-            },
-            {
-              metric: 'system_network_io_by_resource',
               unit: 'Bytes',
-              label: 'Network Traffic',
-              color: 'green',
-              size: 6,
-              chart_type: 'area',
-              y_label: 'system_network_io_bytes_total',
-              aggregate_function: 'avg',
+              y_label: 'system_memory_usage_bytes',
             },
             {
-              metric: 'system_disk_OPS_total',
-              unit: 'OPS',
-              label: 'Disk I/O',
-              color: 'yellow',
-              size: 6,
-              chart_type: 'area',
-              y_label: 'system_disk_operations_total',
               aggregate_function: 'avg',
+              chart_type: 'area',
+              color: 'green',
+              label: 'Network Traffic',
+              metric: 'system_network_io_by_resource',
+              size: 6,
+              unit: 'Bytes',
+              y_label: 'system_network_io_bytes_total',
+            },
+            {
+              aggregate_function: 'avg',
+              chart_type: 'area',
+              color: 'yellow',
+              label: 'Disk I/O',
+              metric: 'system_disk_OPS_total',
+              size: 6,
+              unit: 'OPS',
+              y_label: 'system_disk_operations_total',
             },
           ],
         },
