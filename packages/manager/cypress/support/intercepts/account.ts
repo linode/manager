@@ -656,11 +656,16 @@ export const interceptGetNetworkUtilization = (): Cypress.Chainable<null> => {
  * @returns Cypress chainable.
  */
 export const mockGetMaintenance = (
-  accountMaintenance: AccountMaintenance[]
+  accountPendingMaintenance: AccountMaintenance[],
+  accountCompletedMaintenance: AccountMaintenance[]
 ): Cypress.Chainable<null> => {
-  return cy.intercept(
-    'GET',
-    apiMatcher(`account/maintenance*`),
-    paginateResponse(accountMaintenance)
-  );
+  return cy.intercept('GET', apiMatcher(`account/maintenance*`), (req) => {
+    const filters = getFilters(req);
+
+    if (filters?.['status'] === 'completed') {
+      req.reply(paginateResponse(accountCompletedMaintenance));
+    } else {
+      req.reply(paginateResponse(accountPendingMaintenance));
+    }
+  });
 };
