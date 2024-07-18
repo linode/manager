@@ -210,10 +210,10 @@ export const placementGroupLinodeAssignment = (mockContext: MockContext) => [
         linodeAssigned.id,
         {
           placement_group: {
-            affinity_type: placementGroup.affinity_type,
             id: placementGroup.id,
-            is_strict: placementGroup.is_strict,
             label: placementGroup.label,
+            placement_group_policy: placementGroup.placement_group_policy,
+            placement_group_type: placementGroup.placement_group_type,
           },
         },
         mockContext
@@ -221,10 +221,10 @@ export const placementGroupLinodeAssignment = (mockContext: MockContext) => [
 
       Object.assign(linodeAssigned, {
         placement_group: {
-          affinity_type: placementGroup.affinity_type,
           id: placementGroup.id,
-          is_strict: placementGroup.is_strict,
           label: placementGroup.label,
+          placement_group_policy: placementGroup.placement_group_policy,
+          placement_group_type: placementGroup.placement_group_type,
         },
       });
 

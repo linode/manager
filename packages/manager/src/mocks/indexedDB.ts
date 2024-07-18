@@ -1,5 +1,10 @@
 import type { MockContext } from './types';
 
+type ObjectStore = 'mockContext' | 'seedContext';
+
+const MOCK_CONTEXT: ObjectStore = 'mockContext';
+const SEED_CONTEXT: ObjectStore = 'seedContext';
+
 export const mswDB = {
   add: async <T extends keyof MockContext>(
     entity: T,
@@ -9,8 +14,8 @@ export const mswDB = {
     const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(['mockContext'], 'readwrite');
-      const store = transaction.objectStore('mockContext');
+      const transaction = db.transaction([MOCK_CONTEXT], 'readwrite');
+      const store = transaction.objectStore(MOCK_CONTEXT);
       const request = store.get(1);
 
       request.onsuccess = () => {
@@ -46,13 +51,14 @@ export const mswDB = {
   addMany: async <T extends keyof MockContext>(
     entity: T,
     payload: MockContext[T] extends Array<infer U> ? U[] : never,
-    state: MockContext
+    state?: MockContext,
+    objectStore: ObjectStore = MOCK_CONTEXT
   ): Promise<void> => {
     const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(['mockContext'], 'readwrite');
-      const store = transaction.objectStore('mockContext');
+      const transaction = db.transaction([objectStore], 'readwrite');
+      const store = transaction.objectStore(objectStore);
       const request = store.get(1);
 
       request.onsuccess = () => {
@@ -68,7 +74,9 @@ export const mswDB = {
         }
 
         mockContext[entity].push(...payload);
-        state[entity].push(...(payload as any)); // casting to avoid inference issues
+        if (state) {
+          state[entity].push(...(payload as any));
+        }
 
         const updatedRequest = store.put({ id: 1, ...mockContext });
 
@@ -89,8 +97,8 @@ export const mswDB = {
     const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(['mockContext'], 'readwrite');
-      const store = transaction.objectStore('mockContext');
+      const transaction = db.transaction([MOCK_CONTEXT], 'readwrite');
+      const store = transaction.objectStore(MOCK_CONTEXT);
       const request = store.clear();
 
       request.onsuccess = () => {
@@ -109,8 +117,8 @@ export const mswDB = {
     const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(['mockContext'], 'readwrite');
-      const store = transaction.objectStore('mockContext');
+      const transaction = db.transaction([MOCK_CONTEXT], 'readwrite');
+      const store = transaction.objectStore(MOCK_CONTEXT);
       const request = store.get(1);
 
       request.onsuccess = () => {
@@ -151,8 +159,8 @@ export const mswDB = {
     const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(['mockContext'], 'readwrite');
-      const store = transaction.objectStore('mockContext');
+      const transaction = db.transaction([MOCK_CONTEXT], 'readwrite');
+      const store = transaction.objectStore(MOCK_CONTEXT);
       const request = store.get(1);
 
       request.onsuccess = () => {
@@ -202,8 +210,8 @@ export const mswDB = {
     const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(['mockContext'], 'readonly');
-      const store = transaction.objectStore('mockContext');
+      const transaction = db.transaction([MOCK_CONTEXT], 'readonly');
+      const store = transaction.objectStore(MOCK_CONTEXT);
       const request = store.get(1);
 
       request.onsuccess = () => {
@@ -237,8 +245,8 @@ export const mswDB = {
     const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(['mockContext'], 'readonly');
-      const store = transaction.objectStore('mockContext');
+      const transaction = db.transaction([MOCK_CONTEXT], 'readonly');
+      const store = transaction.objectStore(MOCK_CONTEXT);
       const request = store.get(1);
 
       request.onsuccess = () => {
@@ -264,12 +272,14 @@ export const mswDB = {
   /**
    * Retrieves the whole mock context from IndexedDB.
    */
-  getStore: async (): Promise<MockContext | undefined> => {
+  getStore: async (
+    objectStore: ObjectStore = MOCK_CONTEXT
+  ): Promise<MockContext | undefined> => {
     const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(['mockContext'], 'readonly');
-      const store = transaction.objectStore('mockContext');
+      const transaction = db.transaction([objectStore], 'readonly');
+      const store = transaction.objectStore(objectStore);
       const request = store.get(1);
 
       request.onsuccess = () => {
@@ -297,13 +307,60 @@ export const mswDB = {
       };
       request.onupgradeneeded = () => {
         const db = request.result;
-        if (!db.objectStoreNames.contains('mockContext')) {
-          db.createObjectStore('mockContext', { keyPath: 'id' });
+
+        if (!db.objectStoreNames.contains(MOCK_CONTEXT)) {
+          db.createObjectStore(MOCK_CONTEXT, { keyPath: 'id' });
         }
 
-        if (!db.objectStoreNames.contains('seedContext')) {
-          db.createObjectStore('seedContext', { keyPath: 'id' });
+        if (!db.objectStoreNames.contains(SEED_CONTEXT)) {
+          db.createObjectStore(SEED_CONTEXT, { keyPath: 'id' });
         }
+      };
+    });
+  },
+
+  removeMany: async <T extends keyof MockContext>(
+    entity: T,
+    ids: number[],
+    state?: MockContext,
+    objectStore: ObjectStore = MOCK_CONTEXT
+  ): Promise<void> => {
+    const db = await mswDB.open('MockContextDB', 1);
+
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction([objectStore], 'readwrite');
+      const store = transaction.objectStore(objectStore);
+      const request = store.get(1);
+
+      request.onsuccess = () => {
+        const mockContext = request.result;
+        if (!mockContext?.[entity]) {
+          reject(new Error('Entity not found'));
+          return;
+        }
+
+        ids.forEach((id) => {
+          const index = mockContext[entity].findIndex(
+            (item: Record<string, unknown>) => item.id === id
+          );
+
+          mockContext[entity].splice(index, 1);
+          if (state) {
+            state[entity].splice(index, 1);
+          }
+        });
+
+        const updatedRequest = store.put({ id: 1, ...mockContext });
+
+        updatedRequest.onsuccess = () => {
+          resolve();
+        };
+        updatedRequest.onerror = (event) => {
+          reject(event);
+        };
+      };
+      request.onerror = (event) => {
+        reject(event);
       };
     });
   },
@@ -312,12 +369,15 @@ export const mswDB = {
    * Saves the given mock context to IndexedDB.
    * Useful to replace or initialize the whole mock context.
    */
-  saveStore: async (data: MockContext): Promise<void> => {
+  saveStore: async (
+    data: MockContext,
+    objectStore: ObjectStore = MOCK_CONTEXT
+  ): Promise<void> => {
     const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(['mockContext'], 'readwrite');
-      const store = transaction.objectStore('mockContext');
+      const transaction = db.transaction([objectStore], 'readwrite');
+      const store = transaction.objectStore(objectStore);
       // eslint-disable-next-line xss/no-mixed-html
       const sanitizedData = JSON.parse(JSON.stringify(data));
       // eslint-disable-next-line xss/no-mixed-html
@@ -343,8 +403,8 @@ export const mswDB = {
     const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(['mockContext'], 'readwrite');
-      const store = transaction.objectStore('mockContext');
+      const transaction = db.transaction([MOCK_CONTEXT], 'readwrite');
+      const store = transaction.objectStore(MOCK_CONTEXT);
       const request = store.get(1);
 
       request.onsuccess = () => {
