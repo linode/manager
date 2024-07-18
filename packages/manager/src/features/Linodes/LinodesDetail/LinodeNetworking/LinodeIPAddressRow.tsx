@@ -1,7 +1,6 @@
-import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
-import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
-import { IPv6, parse as parseIP } from 'ipaddr.js';
+import { styled } from '@mui/material/styles';
+import { parse as parseIP } from 'ipaddr.js';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -9,15 +8,16 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
 import { Typography } from 'src/components/Typography';
 import { StyledTableRow } from 'src/features/Linodes/LinodeEntityDetail.styles';
-import { IPDisplay } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import {
-  useAllIPsQuery,
-  useLinodeIPsQuery,
-} from 'src/queries/linodes/networking';
+import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
+import { useAllIPsQuery } from 'src/queries/networking/networking';
 
-import { StyledActionTableCell } from './LinodeIPAddresses.styles';
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
+
+import type { IPAddress, IPRange } from '@linode/api-v4';
+import type { IPv6 } from 'ipaddr.js';
+import type { IPDisplay } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
+
 export interface IPAddressRowHandlers {
   handleOpenEditRDNS: (ip: IPAddress) => void;
   handleOpenEditRDNSForRange: (range: IPRange) => void;
@@ -91,7 +91,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
           rdns
         )}
       </TableCell>
-      <StyledActionTableCell data-qa-action>
+      <TableCell actionCell data-qa-action>
         {_ip ? (
           <LinodeNetworkingActionMenu
             ipAddress={_ip}
@@ -113,7 +113,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
             readOnly={readOnly}
           />
         ) : null}
-      </StyledActionTableCell>
+      </TableCell>
     </StyledTableRow>
   );
 };

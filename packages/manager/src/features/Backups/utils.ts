@@ -1,7 +1,7 @@
 import { enableBackups } from '@linode/api-v4';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { queryKey } from 'src/queries/linodes/linodes';
+import { linodeQueries } from 'src/queries/linodes/linodes';
 import { pluralize } from 'src/utilities/pluralize';
 
 import type { APIError, Linode } from '@linode/api-v4';
@@ -30,22 +30,15 @@ export const useEnableBackupsOnLinodesMutation = () => {
     },
     {
       onSuccess(_, variables) {
-        queryClient.invalidateQueries([queryKey, 'paginated']);
-        queryClient.invalidateQueries([queryKey, 'all']);
-        queryClient.invalidateQueries([queryKey, 'infinite']);
+        queryClient.invalidateQueries(linodeQueries.linodes);
         for (const linode of variables) {
-          queryClient.invalidateQueries([
-            queryKey,
-            'linode',
-            linode.id,
-            'details',
-          ]);
-          queryClient.invalidateQueries([
-            queryKey,
-            'linode',
-            linode.id,
-            'backups',
-          ]);
+          queryClient.invalidateQueries({
+            exact: true,
+            queryKey: linodeQueries.linode(linode.id).queryKey,
+          });
+          queryClient.invalidateQueries({
+            queryKey: linodeQueries.linode(linode.id)._ctx.backups.queryKey,
+          });
         }
       },
     }

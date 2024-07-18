@@ -87,7 +87,7 @@ export const VPCCreateDrawer = (props: Props) => {
                 sendLinodeCreateFormStepEvent({
                   action: 'click',
                   category: 'button',
-                  createType: queryParams.type ?? 'Distributions',
+                  createType: queryParams.type ?? 'OS',
                   formStepName: 'Create VPC Drawer',
                   label: 'Create VPC',
                   version: 'v1',
