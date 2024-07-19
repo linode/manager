@@ -7,7 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { SMTP } from './SMTP';
 
 describe('SMTP', () => {
-  it('should render if the account was actived before MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED', async () => {
+  it('should render if the account was activated before MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED', async () => {
     const account = accountFactory.build({
       active_since: '2022-11-29T00:00:00.000',
     });
