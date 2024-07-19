@@ -59,9 +59,6 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
   const onHealthCheckTimeoutChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     props.onHealthCheckTimeoutChange(e.target.value);
 
-  const onHealthCheckTypeChange = (value: string) =>
-    props.onHealthCheckTypeChange(value);
-
   const conditionalText = displayProtocolText(protocol);
 
   const typeOptions = [
@@ -111,8 +108,8 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
             disableClearable={true}
             label="Type"
             noMarginTop
-            onChange={(e, selected) =>
-              onHealthCheckTypeChange(selected?.value ?? '')
+            onChange={(_, selected) =>
+              props.onHealthCheckTypeChange(selected.value)
             }
             options={typeOptions}
             size="small"

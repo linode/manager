@@ -43,11 +43,6 @@ export const NodeBalancerConfigPanel = (
     submitting,
   } = props;
 
-  const onAlgorithmChange = (
-    event: React.SyntheticEvent,
-    selected: { label: string; value: string }
-  ) => props.onAlgorithmChange(selected.value);
-
   const onPortChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     props.onPortChange(e.target.value);
 
@@ -76,18 +71,6 @@ export const NodeBalancerConfigPanel = (
       props.onHealthCheckTypeChange('http');
     }
   };
-
-  const onProxyProtocolChange = (
-    event: React.SyntheticEvent,
-    selected: { label: string; value: string }
-  ) => {
-    props.onProxyProtocolChange(selected.value);
-  };
-
-  const onSessionStickinessChange = (
-    event: React.SyntheticEvent,
-    selected: { label: string; value: string }
-  ) => props.onSessionStickinessChange(selected.value);
 
   const onSslCertificateChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     props.onSslCertificateChange(e.target.value);
@@ -280,7 +263,9 @@ export const NodeBalancerConfigPanel = (
               disableClearable={true}
               label="Proxy Protocol"
               noMarginTop
-              onChange={onProxyProtocolChange}
+              onChange={(_, selected) => {
+                props.onProxyProtocolChange(selected.value);
+              }}
               options={proxyProtocolOptions}
               size="small"
               value={selectedProxyProtocol || proxyProtocolOptions[0]}
@@ -311,7 +296,9 @@ export const NodeBalancerConfigPanel = (
             disableClearable={true}
             label="Algorithm"
             noMarginTop
-            onChange={onAlgorithmChange}
+            onChange={(_, selected) => {
+              props.onAlgorithmChange(selected.value);
+            }}
             options={algOptions}
             size="small"
             value={defaultAlg || algOptions[0]}
@@ -337,7 +324,9 @@ export const NodeBalancerConfigPanel = (
             disableClearable={true}
             label="Session Stickiness"
             noMarginTop
-            onChange={onSessionStickinessChange}
+            onChange={(_, selected) => {
+              props.onSessionStickinessChange(selected.value);
+            }}
             options={sessionOptions}
             size="small"
             value={defaultSession || sessionOptions[1]}
