@@ -20,16 +20,9 @@ export const EUAgreementCheckbox = (props: Props) => {
   const { centerCheckbox, checked, className, onChange } = props;
   const theme = useTheme();
 
-  const baseCheckboxStyle = {
-    [theme.breakpoints.up('md')]: {
-      marginLeft: '-8px',
-    },
-  };
-
   const checkboxStyle = centerCheckbox
-    ? baseCheckboxStyle
+    ? {}
     : {
-        ...baseCheckboxStyle,
         marginTop: '-5px',
       };
 
@@ -56,7 +49,7 @@ export const EUAgreementCheckbox = (props: Props) => {
       <Typography
         component="label"
         htmlFor="gdpr-checkbox"
-        style={{ marginLeft: 4 }}
+        style={{ marginLeft: 16 }}
       >
         I have read and agree to the{' '}
         <Link to="https://www.linode.com/legal-privacy/">

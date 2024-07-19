@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
@@ -32,7 +33,6 @@ import {
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
-import { useQueryClient } from '@tanstack/react-query';
 
 export const Region = () => {
   const {
@@ -92,6 +92,8 @@ export const Region = () => {
     reset(
       (prev) => ({
         ...prev,
+        // reset EU agreement
+        hasSignedEUAgreement: undefined,
         // Reset interfaces because VPC and VLANs are region-sepecific
         interfaces: defaultInterfaces,
         // Reset Cloud-init metadata because not all regions support it
