@@ -49,12 +49,14 @@ describe('GDPR agreement', () => {
     }).as('getAgreements');
 
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getAgreements', '@getRegions']);
+    cy.wait('@getRegions');
 
     // Paris should have the agreement
     ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionId('fr-par').click();
     cy.get('[data-testid="eu-agreement-checkbox"]').should('be.visible');
+
+    cy.wait('@getAgreements');
 
     // London should have the agreement
     ui.regionSelect.find().click();
@@ -75,12 +77,14 @@ describe('GDPR agreement', () => {
     }).as('getAgreements');
 
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getAgreements', '@getRegions']);
+    cy.wait('@getRegions');
 
     // Paris should not have the agreement
     ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionId('fr-par').click();
     cy.get('[data-testid="eu-agreement-checkbox"]').should('not.exist');
+    
+    cy.wait('@getAgreements');
 
     // London should not have the agreement
     ui.regionSelect.find().click();
