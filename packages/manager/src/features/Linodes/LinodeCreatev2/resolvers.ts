@@ -126,8 +126,8 @@ export const linodeCreateResolvers: Record<
 > = {
   Backups: backupResolver,
   'Clone Linode': cloneResolver,
-  Distributions: resolver,
   Images: resolver,
+  OS: resolver,
   'One-Click': marketplaceResolver,
   StackScripts: stackscriptResolver,
 };

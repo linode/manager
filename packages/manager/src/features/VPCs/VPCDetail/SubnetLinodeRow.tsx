@@ -1,7 +1,4 @@
-import { APIError, Firewall, Linode } from '@linode/api-v4';
-import { Config, Interface } from '@linode/api-v4/lib/linodes/types';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -17,10 +14,7 @@ import { Typography } from 'src/components/Typography';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
-import {
-  queryKey as linodesQueryKey,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
@@ -41,6 +35,8 @@ import {
   StyledWarningIcon,
 } from './SubnetLinodeRow.styles';
 
+import type { APIError, Firewall, Linode } from '@linode/api-v4';
+import type { Config, Interface } from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
@@ -53,7 +49,6 @@ interface Props {
 }
 
 export const SubnetLinodeRow = (props: Props) => {
-  const queryClient = useQueryClient();
   const {
     handlePowerActionsLinode,
     handleUnassignLinode,
@@ -84,19 +79,6 @@ export const SubnetLinodeRow = (props: Props) => {
     configs ?? [],
     subnet?.id ?? -1
   );
-
-  // If the Linode's status is running, we want to check if its interfaces associated with this subnet have become active so
-  // that we can determine if it needs a reboot or not. So, we need to invalidate the linode configs query to get the most up to date information.
-  React.useEffect(() => {
-    if (linode && linode.status === 'running') {
-      queryClient.invalidateQueries([
-        linodesQueryKey,
-        'linode',
-        linodeId,
-        'configs',
-      ]);
-    }
-  }, [linode, linodeId, queryClient]);
 
   if (linodeLoading || !linode) {
     return (
