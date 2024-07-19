@@ -340,11 +340,13 @@ describe('Create Linode', () => {
     ui.toast.assertMessage('Successfully created SSH key.');
 
     // When a user creates an SSH key, the list of SSH keys for each user updates to show the new key for the signed in user
-    cy.findAllByText(sshPublicKeyLabel).should('be.visible');
+    cy.findByText(sshPublicKeyLabel, { exact: false }).should('be.visible');
 
     getClick('#linode-label').clear().type(linodeLabel);
     cy.get('#root-password').type(rootpass);
-    getClick('[data-qa-deploy-linode]');
+
+    ui.button.findByTitle("Create Linode").click();
+
     cy.wait('@linodeCreated').its('response.statusCode').should('eq', 200);
     fbtVisible(linodeLabel);
     cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');
