@@ -202,6 +202,7 @@ export const NodeBalancerConfigPanel = (
               },
               errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
+            autoHighlight
             disabled={disabled}
             errorText={errorMap.protocol}
             id={`protocol-${configIdx}`}
@@ -257,6 +258,7 @@ export const NodeBalancerConfigPanel = (
                   errorGroup: forEdit ? `${configIdx}` : undefined,
                 },
               }}
+              autoHighlight
               disabled={disabled}
               errorText={errorMap.proxy_protocol}
               id={`proxy-protocol-${configIdx}`}
@@ -290,6 +292,7 @@ export const NodeBalancerConfigPanel = (
               },
               errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
+            autoHighlight
             disabled={disabled}
             errorText={errorMap.algorithm}
             id={`algorithm-${configIdx}`}
@@ -318,6 +321,7 @@ export const NodeBalancerConfigPanel = (
               },
               errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
+            autoHighlight
             disabled={disabled}
             errorText={errorMap.stickiness}
             id={`session-stickiness-${configIdx}`}

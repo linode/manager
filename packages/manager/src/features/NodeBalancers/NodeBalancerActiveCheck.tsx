@@ -102,6 +102,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
               },
               errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
+            autoHighlight
             disabled={disabled}
             errorText={errorMap.check}
             id={`type-${configIdx}`}
