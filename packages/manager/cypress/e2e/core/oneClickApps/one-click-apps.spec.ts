@@ -49,14 +49,14 @@ describe('OneClick Apps (OCA)', () => {
       // Check the content of the OCA listing
       cy.findByTestId('one-click-apps-container').within(() => {
         // Check that all sections are present (note: New apps can be empty so not asserting its presence)
-        cy.findByTestId('Popular apps').should('exist');
-        cy.findByTestId('All apps').should('exist');
+        cy.findByText('Popular apps').should('be.visible');
+        cy.findByText('All apps').should('be.visible');
 
         trimmedApps.forEach((stackScript) => {
           const { decodedLabel, label } = handleAppLabel(stackScript);
 
           // Check that every OCA is listed with the correct label
-          cy.get(`[data-qa-select-card-heading="${label}"]`).should('exist');
+          cy.get(`[data-qa-select-card-heading="${label.trim()}"]`).should('exist');
 
           // Check that every OCA has a drawer match
           // This validates the regex in `mapStackScriptLabelToOCA`
@@ -76,7 +76,7 @@ describe('OneClick Apps (OCA)', () => {
       const candidateLabel = handleAppLabel(trimmedApps[0]).label;
 
       const stackScriptCandidate = cy
-        .get(`[data-qa-selection-card-info="${candidateLabel}"]`)
+        .get(`[data-qa-selection-card-info="${candidateLabel.trim()}"]`)
         .first();
       stackScriptCandidate.should('exist').click();
 
@@ -92,7 +92,7 @@ describe('OneClick Apps (OCA)', () => {
       }
 
       ui.drawer
-        .findByTitle(trimmedApps[0].label)
+        .findByTitle(trimmedApps[0].label.trim())
         .should('be.visible')
         .within(() => {
           containsVisible(app.description);
@@ -113,7 +113,7 @@ describe('OneClick Apps (OCA)', () => {
           'have.length.below',
           initialNumberOfApps
         );
-        cy.get(`[data-qa-selection-card-info="${candidateLabel}"]`).should(
+        cy.get(`[data-qa-selection-card-info="${candidateLabel.trim()}"]`).should(
           'be.visible'
         );
       });
