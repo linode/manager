@@ -9,30 +9,25 @@ export const mswDB = {
   add: async <T extends keyof MockContext>(
     entity: T,
     payload: MockContext[T] extends Array<infer U> ? U : MockContext[T],
-    state: MockContext,
-    objectStore: ObjectStore = MOCK_CONTEXT
+    state: MockContext
   ): Promise<void> => {
     const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction([objectStore], 'readwrite');
-      const store = transaction.objectStore(objectStore);
+      const transaction = db.transaction([MOCK_CONTEXT], 'readwrite');
+      const store = transaction.objectStore(MOCK_CONTEXT);
       const request = store.get(1);
 
       request.onsuccess = () => {
         const mockContext = request.result;
-        if (!mockContext) {
-          reject();
-          return;
-        }
 
-        if (!mockContext[entity]) {
+        if (!mockContext?.[entity]) {
           reject();
           return;
         }
 
         mockContext[entity].push(payload);
-        state[entity].push(payload as any); // casting to avoid inference issues
+        state[entity].push(payload as any);
 
         const updatedRequest = store.put({ id: 1, ...mockContext });
 
@@ -252,72 +247,108 @@ export const mswDB = {
 
   get: async <T extends keyof MockContext>(
     entity: T,
-    id: number,
-    objectStore: ObjectStore = MOCK_CONTEXT
+    id: number
   ): Promise<
     (MockContext[T] extends Array<infer U> ? U : MockContext[T]) | undefined
   > => {
     const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction([objectStore], 'readonly');
-      const store = transaction.objectStore(objectStore);
+      const transaction = db.transaction([MOCK_CONTEXT], 'readonly');
+      const seedTransaction = db.transaction([SEED_CONTEXT], 'readonly');
+      const store = transaction.objectStore(MOCK_CONTEXT);
+      const seedStore = seedTransaction.objectStore(SEED_CONTEXT);
+
       const request = store.get(1);
+      const seedRequest = seedStore.get(1);
 
-      request.onsuccess = () => {
-        const mockContext = request.result;
-        if (!mockContext) {
-          reject();
-          return;
-        }
+      Promise.all([
+        new Promise<MockContext | undefined>((resolve, reject) => {
+          request.onsuccess = () => {
+            resolve(request.result);
+          };
+          request.onerror = (event) => {
+            reject(event);
+          };
+        }),
+        new Promise<MockContext | undefined>((resolve, reject) => {
+          seedRequest.onsuccess = () => {
+            resolve(seedRequest.result);
+          };
+          seedRequest.onerror = (event) => {
+            reject(event);
+          };
+        }),
+      ])
+        .then(([mockContext, seedContext]) => {
+          const mockEntity = mockContext?.[entity]?.find((item) => {
+            if (!hasId(item)) {
+              return false;
+            }
 
-        if (!mockContext[entity]) {
-          reject();
-          return;
-        }
+            return item.id === id;
+          });
+          const seedEntity = seedContext?.[entity]?.find((item) => {
+            if (!hasId(item)) {
+              return false;
+            }
 
-        const entityData = mockContext[entity].find(
-          (item: Record<string, unknown>) => item.id === id
-        );
+            return item.id === id;
+          });
 
-        resolve(entityData);
-      };
-
-      request.onerror = (event) => {
-        reject(event);
-      };
+          resolve(
+            (mockEntity ?? seedEntity) as MockContext[T] extends Array<infer U>
+              ? U
+              : MockContext[T]
+          );
+        })
+        .catch((error) => {
+          reject(error);
+        });
     });
   },
 
   getAll: async <T extends keyof MockContext>(
-    entity: T,
-    objectStore: ObjectStore = MOCK_CONTEXT
+    entity: T
   ): Promise<MockContext[T] | undefined> => {
     const db = await mswDB.open('MockContextDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction([objectStore], 'readonly');
-      const store = transaction.objectStore(objectStore);
+      const transaction = db.transaction([MOCK_CONTEXT], 'readonly');
+      const seedTransaction = db.transaction([SEED_CONTEXT], 'readonly');
+      const store = transaction.objectStore(MOCK_CONTEXT);
+      const seedStore = seedTransaction.objectStore(SEED_CONTEXT);
+
       const request = store.get(1);
+      const seedRequest = seedStore.get(1);
 
-      request.onsuccess = () => {
-        const mockContext = request.result;
-        if (!mockContext) {
-          reject();
-          return;
-        }
+      Promise.all([
+        new Promise<MockContext | undefined>((resolve, reject) => {
+          request.onsuccess = () => {
+            resolve(request.result);
+          };
+          request.onerror = (event) => {
+            reject(event);
+          };
+        }),
+        new Promise<MockContext | undefined>((resolve, reject) => {
+          seedRequest.onsuccess = () => {
+            resolve(seedRequest.result);
+          };
+          seedRequest.onerror = (event) => {
+            reject(event);
+          };
+        }),
+      ])
+        .then(([mockContext, seedContext]) => {
+          const mockEntities = mockContext?.[entity] || [];
+          const seedEntities = seedContext?.[entity] || [];
 
-        if (!mockContext[entity]) {
-          reject();
-          return;
-        }
-
-        resolve(mockContext[entity]);
-      };
-
-      request.onerror = (event) => {
-        reject(event);
-      };
+          resolve([...mockEntities, ...seedEntities] as MockContext[T]);
+        })
+        .catch((error) => {
+          reject(error);
+        });
     });
   },
 
@@ -439,4 +470,13 @@ export const mswDB = {
       };
     });
   },
+};
+
+type WithId = {
+  id: unknown;
+};
+
+// Type guard to check if an object has an 'id' property
+const hasId = (obj: any): obj is WithId => {
+  return 'id' in obj;
 };

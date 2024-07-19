@@ -58,41 +58,54 @@ export async function loadDevTools(
     // Apply MSW context populators.
     const initialContext = await createInitialMockStore();
 
-    mockState = await mswContentPopulators.reduce(
-      async (accPromise, cur: MockContextPopulator) => {
-        const acc = await accPromise;
-        return cur.populator(acc);
-      },
-      Promise.resolve(initialContext)
-    );
+    // Check if seedContext already exists
+    let seedContext = await mswDB.getStore('seedContext');
+    if (!seedContext) {
+      // If seedContext does not exist, initialize it
+      seedContext = await mswContentPopulators.reduce(
+        async (accPromise, cur: MockContextPopulator) => {
+          const acc = await accPromise;
+          return cur.populator(acc);
+        },
+        Promise.resolve(initialContext)
+      );
 
+      await mswDB.saveStore(seedContext, 'seedContext');
+    }
+
+    // Always initialize or re-initialize the mockContext
     await mswDB.saveStore(initialContext, 'mockContext');
-    await mswDB.saveStore(mockState, 'seedContext');
 
-    const seedContext = await mswDB.getStore('seedContext');
+    // Merge the contexts
     const mergedContext: MockContext = {
-      ...mockState,
-      eventQueue: [...mockState.eventQueue, ...(seedContext?.eventQueue || [])],
-      firewalls: [...mockState.firewalls, ...(seedContext?.firewalls || [])],
+      ...initialContext,
+      eventQueue: [
+        ...initialContext.eventQueue,
+        ...(seedContext?.eventQueue || []),
+      ],
+      firewalls: [
+        ...initialContext.firewalls,
+        ...(seedContext?.firewalls || []),
+      ],
       linodeConfigs: [
-        ...mockState.linodeConfigs,
+        ...initialContext.linodeConfigs,
         ...(seedContext?.linodeConfigs || []),
       ],
-      linodes: [...mockState.linodes, ...(seedContext?.linodes || [])],
+      linodes: [...initialContext.linodes, ...(seedContext?.linodes || [])],
       notificationQueue: [
-        ...mockState.notificationQueue,
+        ...initialContext.notificationQueue,
         ...(seedContext?.notificationQueue || []),
       ],
       placementGroups: [
-        ...mockState.placementGroups,
+        ...initialContext.placementGroups,
         ...(seedContext?.placementGroups || []),
       ],
       regionAvailability: [
-        ...mockState.regionAvailability,
+        ...initialContext.regionAvailability,
         ...(seedContext?.regionAvailability || []),
       ],
-      regions: [...mockState.regions, ...(seedContext?.regions || [])],
-      volumes: [...mockState.volumes, ...(seedContext?.volumes || [])],
+      regions: [...initialContext.regions, ...(seedContext?.regions || [])],
+      volumes: [...initialContext.volumes, ...(seedContext?.volumes || [])],
     };
 
     const extraHandlers = extraMswPresets.reduce((acc, cur: MockPreset) => {
