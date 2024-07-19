@@ -15,6 +15,7 @@ import { Profile } from '@linode/api-v4';
 import { formatDate } from '@src/utilities/formatDate';
 
 import type { StackScript } from '@linode/api-v4';
+import { mockGetUserPreferences } from 'support/intercepts/profile';
 
 const mockStackScripts: StackScript[] = [
   stackScriptFactory.build({
@@ -262,9 +263,11 @@ describe('Community Stackscripts integration tests', () => {
     const region = chooseRegion({ capabilities: ['Vlans'] });
     const linodeLabel = randomLabel();
 
+    // Ensure that the Primary Nav is open
+    mockGetUserPreferences({ desktop_sidebar_open: false }).as('getPreferences');
     interceptGetStackScripts().as('getStackScripts');
     cy.visitWithLogin('/stackscripts/community');
-    cy.wait('@getStackScripts');
+    cy.wait(['@getStackScripts', '@getPreferences']);
 
     cy.get('[id="search-by-label,-username,-or-description"]')
       .click()

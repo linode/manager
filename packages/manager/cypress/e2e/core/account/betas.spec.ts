@@ -8,6 +8,7 @@ import {
 } from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { ui } from 'support/ui';
+import { mockGetUserPreferences } from 'support/intercepts/profile';
 
 // TODO Delete feature flag mocks when feature flag is removed.
 describe('Betas landing page', () => {
@@ -22,8 +23,11 @@ describe('Betas landing page', () => {
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
+    // Ensure that the Primary Nav is open
+    mockGetUserPreferences({ desktop_sidebar_open: false }).as('getPreferences');
+
     cy.visitWithLogin('/linodes');
-    cy.wait(['@getFeatureFlags', '@getClientStream']);
+    cy.wait(['@getFeatureFlags', '@getClientStream', '@getPreferences']);
 
     ui.nav.findItemByTitle('Betas').should('be.visible').click();
 
