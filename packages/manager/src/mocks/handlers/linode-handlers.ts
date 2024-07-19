@@ -17,6 +17,7 @@ import {
   makeResponse,
 } from 'src/mocks/utilities/response';
 
+import { mswDB } from '../indexedDB';
 import { getPaginatedSlice } from '../utilities/pagination';
 
 import type {
@@ -36,42 +37,63 @@ import type {
   APIPaginatedResponse,
 } from 'src/mocks/utilities/response';
 
-export const getLinodes = (mockContext: MockContext) => [
-  // Get an individual Linode's details.
-  // Responds with a Linode instance if one exists with ID `id` in context.
-  // Otherwise, a 404 response is mocked.
+export const getLinodes = () => [
+  http.get(
+    '*/v4/linode/instances',
+    async ({
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<Linode>>
+    > => {
+      const url = new URL(request.url);
+      const linodes = await mswDB.getAll('linodes');
+
+      if (!linodes) {
+        return makeNotFoundResponse();
+      }
+
+      const pageNumber = Number(url.searchParams.get('page')) || 1;
+      const pageSize = Number(url.searchParams.get('page_size')) || 25;
+      const totalPages = Math.ceil(linodes.length / pageSize);
+
+      const pageSlice = getPaginatedSlice(linodes, pageNumber, pageSize);
+
+      return makePaginatedResponse(pageSlice, pageNumber, totalPages);
+    }
+  ),
+
   http.get(
     '*/v4/linode/instances/:id',
-    ({ params }): StrictResponse<APIErrorResponse | Linode> => {
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | Linode>> => {
       const id = Number(params.id);
-      const linode = mockContext.linodes.find(
-        (contextLinode) => contextLinode.id === id
-      );
+      const linode = await mswDB.get('linodes', id);
 
       if (!linode) {
         return makeNotFoundResponse();
       }
+
       return makeResponse(linode);
     }
   ),
 
   http.get(
     '*/v4/linode/instances/:id/configs',
-    ({
+    async ({
       params,
       request,
-    }): StrictResponse<APIErrorResponse | APIPaginatedResponse<Config>> => {
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<Config>>
+    > => {
       const id = Number(params.id);
-      const linode = mockContext.linodes.find(
-        (contextLinode) => contextLinode.id === id
-      );
+      const linode = await mswDB.get('linodes', id);
+      const linodeConfigs = await mswDB.getAll('linodeConfigs');
       const url = new URL(request.url);
 
-      if (!linode) {
+      if (!linode || !linodeConfigs) {
         return makeNotFoundResponse();
       }
 
-      const configs = mockContext.linodeConfigs
+      const configs = linodeConfigs
         .filter((configTuple) => configTuple[0] === id)
         .map((configTuple) => configTuple[1]);
 
@@ -84,22 +106,6 @@ export const getLinodes = (mockContext: MockContext) => [
       return makePaginatedResponse(pageSlice, pageNumber, totalPages);
     }
   ),
-
-  http.get('*/v4/linode/instances', ({ request }) => {
-    const url = new URL(request.url);
-
-    const pageNumber = Number(url.searchParams.get('page')) || 1;
-    const pageSize = Number(url.searchParams.get('page_size')) || 25;
-    const totalPages = Math.ceil(mockContext.linodes.length / pageSize);
-
-    const pageSlice = getPaginatedSlice(
-      mockContext.linodes,
-      pageNumber,
-      pageSize
-    );
-
-    return makePaginatedResponse(pageSlice, pageNumber, totalPages);
-  }),
 ];
 
 export const createLinode = (mockContext: MockContext) => [
@@ -119,8 +125,8 @@ export const createLinode = (mockContext: MockContext) => [
       created: DateTime.now().toISO(),
     });
 
-    mockContext.linodes.push(linode);
-    mockContext.linodeConfigs.push([linode.id, linodeConfig]);
+    await mswDB.add('linodes', linode, mockContext);
+    await mswDB.add('linodeConfigs', [linode.id, linodeConfig], mockContext);
 
     queueEvents({
       event: {
@@ -175,16 +181,13 @@ export const updateLinode = (mockContext: MockContext) => [
     }): Promise<StrictResponse<APIErrorResponse | Linode>> => {
       const id = Number(params.id);
       const payload = await request.clone().json();
-
-      const linode = mockContext.linodes.find(
-        (contextLinode) => contextLinode.id === id
-      );
+      const linode = await mswDB.get('linodes', id);
 
       if (!linode) {
         return makeNotFoundResponse();
       }
 
-      Object.assign(linode, payload);
+      await mswDB.update('linodes', id, payload, mockContext);
 
       queueEvents({
         event: {
@@ -206,39 +209,35 @@ export const updateLinode = (mockContext: MockContext) => [
 ];
 
 export const deleteLinode = (mockContext: MockContext) => [
-  http.delete('*/v4/linode/instances/:id', ({ params }) => {
+  http.delete('*/v4/linode/instances/:id', async ({ params }) => {
     const id = Number(params.id);
-    const linode = mockContext.linodes.find(
-      (contextLinode) => contextLinode.id === id
-    );
+    const linode = await mswDB.get('linodes', id);
 
-    if (linode) {
-      const linodeIndex = mockContext.linodes.indexOf(linode);
-      if (linodeIndex >= 0) {
-        mockContext.linodes.splice(linodeIndex, 1);
-
-        queueEvents({
-          event: {
-            action: 'linode_delete',
-            entity: {
-              id: linode.id,
-              label: linode.label,
-              type: 'linode',
-              url: `/v4/linode/instances/${linode.id}`,
-            },
-          },
-          mockContext,
-          sequence: [{ status: 'finished' }],
-        });
-
-        return makeResponse({});
-      }
+    if (!linode) {
+      return makeNotFoundResponse();
     }
 
-    return makeNotFoundResponse();
+    await mswDB.delete('linodes', id, mockContext);
+
+    queueEvents({
+      event: {
+        action: 'linode_delete',
+        entity: {
+          id: linode.id,
+          label: linode.label,
+          type: 'linode',
+          url: `/v4/linode/instances/${linode.id}`,
+        },
+      },
+      mockContext,
+      sequence: [{ status: 'finished' }],
+    });
+
+    return makeResponse({});
   }),
 ];
 
+// Intentionally not storing static data the DB
 export const getLinodeStats = (mockContext: MockContext) => [
   http.get(
     '*/v4/linode/instances/:id/stats*',
@@ -259,6 +258,7 @@ export const getLinodeStats = (mockContext: MockContext) => [
   ),
 ];
 
+// TODO: integrate with DB
 export const getLinodeDisks = (mockContext: MockContext) => [
   http.get(
     '*/v4/linode/instances/:id/disks',
@@ -281,6 +281,7 @@ export const getLinodeDisks = (mockContext: MockContext) => [
   ),
 ];
 
+// TODO: integrate with DB
 export const getLinodeTransfer = (mockContext: MockContext) => [
   http.get(
     '*/v4/linode/instances/:id/transfer',
@@ -306,27 +307,31 @@ export const getLinodeTransfer = (mockContext: MockContext) => [
 export const getLinodeFirewalls = (mockContext: MockContext) => [
   http.get(
     '*/v4/linode/instances/:id/firewalls',
-    ({
+    async ({
       params,
-    }): StrictResponse<APIErrorResponse | APIPaginatedResponse<Firewall>> => {
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<Firewall>>
+    > => {
       const id = Number(params.id);
       const linode = mockContext.linodes.find(
         (contextLinode) => contextLinode.id === id
       );
+      const allFirewalls = await mswDB.getAll('firewalls');
 
-      if (!linode) {
+      if (!linode || !allFirewalls) {
         return makeNotFoundResponse();
       }
 
-      const mockFirewalls = mockContext.firewalls.filter((firewall) =>
+      const linodeFirewalls = allFirewalls.filter((firewall) =>
         firewall.entities.some((entity) => entity.id === id)
       );
 
-      return makePaginatedResponse(mockFirewalls);
+      return makePaginatedResponse(linodeFirewalls);
     }
   ),
 ];
 
+// TODO: integrate with DB
 export const getLinodeIps = (mockContext: MockContext) => [
   http.get(
     '*/v4/linode/instances/:id/ips',
@@ -347,6 +352,7 @@ export const getLinodeIps = (mockContext: MockContext) => [
   ),
 ];
 
+// TODO: integrate with DB
 export const getLinodeBackups = (mockContext: MockContext) => [
   http.get(
     '*/v4/linode/instances/:id/backups',
