@@ -31,15 +31,14 @@ import { Security } from './Security';
 import { Summary } from './Summary/Summary';
 import { Backups } from './Tabs/Backups/Backups';
 import { Clone } from './Tabs/Clone/Clone';
-import { Distributions } from './Tabs/Distributions';
 import { Images } from './Tabs/Images';
 import { Marketplace } from './Tabs/Marketplace/Marketplace';
+import { OperatingSystems } from './Tabs/OperatingSystems';
 import { StackScripts } from './Tabs/StackScripts/StackScripts';
 import { UserData } from './UserData/UserData';
 import {
   captureLinodeCreateAnalyticsEvent,
   defaultValues,
-  defaultValuesMap,
   getLinodeCreatePayload,
   getTabIndex,
   tabs,
@@ -55,9 +54,9 @@ export const LinodeCreatev2 = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
 
   const form = useForm<LinodeCreateFormValues>({
-    defaultValues,
+    defaultValues: () => defaultValues(queryClient),
     mode: 'onBlur',
-    resolver: linodeCreateResolvers[params.type ?? 'Distributions'],
+    resolver: linodeCreateResolvers[params.type ?? 'OS'],
     shouldFocusError: false, // We handle this ourselves with `scrollErrorIntoView`
   });
 
@@ -71,10 +70,12 @@ export const LinodeCreatev2 = () => {
 
   const onTabChange = (index: number) => {
     const newTab = tabs[index];
-    // Update tab "type" query param. (This changes the selected tab)
-    setParams({ type: newTab });
-    // Reset the form values
-    form.reset(defaultValuesMap[newTab]);
+    defaultValues(queryClient).then((values) => {
+      // Reset the form values
+      form.reset(values);
+      // Update tab "type" query param. (This changes the selected tab)
+      setParams({ type: newTab });
+    });
   };
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
@@ -97,7 +98,7 @@ export const LinodeCreatev2 = () => {
 
       captureLinodeCreateAnalyticsEvent({
         queryClient,
-        type: params.type ?? 'Distributions',
+        type: params.type ?? 'OS',
         values,
       });
     } catch (errors) {
@@ -136,7 +137,7 @@ export const LinodeCreatev2 = () => {
         <Stack gap={3}>
           <Tabs index={currentTabIndex} onChange={onTabChange}>
             <TabList>
-              <Tab>Distributions</Tab>
+              <Tab>OS</Tab>
               <Tab>Marketplace</Tab>
               <Tab>StackScripts</Tab>
               <Tab>Images</Tab>
@@ -145,7 +146,7 @@ export const LinodeCreatev2 = () => {
             </TabList>
             <TabPanels>
               <SafeTabPanel index={0}>
-                <Distributions />
+                <OperatingSystems />
               </SafeTabPanel>
               <SafeTabPanel index={1}>
                 <Marketplace />

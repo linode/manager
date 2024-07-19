@@ -112,6 +112,7 @@ export const CreateBucketDrawer = (props: Props) => {
   const formik = useFormik({
     initialValues: {
       cluster: '',
+      cors_enabled: true, // For Gen1, CORS is always enabled
       label: '',
     },
     async onSubmit(values) {
