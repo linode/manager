@@ -32,6 +32,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - User Preferences not properly being cached when the app loads ([#10663](https://github.com/linode/manager/pull/10663))
 - Blank toast notification when canceling an image upload ([#10664](https://github.com/linode/manager/pull/10664))
 - Missing support link in some toast notifications ([#10680](https://github.com/linode/manager/pull/10680))
+- Column headers for Automatic Images ([#10696](https://github.com/linode/manager/pull/10696))
 
 ### Removed:
 
