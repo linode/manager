@@ -584,10 +584,10 @@ class DomainRecords extends React.Component<Props, State> {
     /** SRV Record */
     {
       columns: [
-        { render: (r: DomainRecord) => r.name, title: 'Name' },
+        { render: (r: DomainRecord) => r.name, title: 'Service/Protocol' },
         {
           render: () => this.props.domain.domain,
-          title: 'Domain',
+          title: 'Name',
         },
         {
           render: (r: DomainRecord) => String(r.priority),
