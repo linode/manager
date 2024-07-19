@@ -93,7 +93,7 @@ export const Region = () => {
       (prev) => ({
         ...prev,
         // reset EU agreement
-        hasSignedEUAgreement: false,
+        hasSignedEUAgreement: undefined,
         // Reset interfaces because VPC and VLANs are region-sepecific
         interfaces: defaultInterfaces,
         // Reset Cloud-init metadata because not all regions support it
