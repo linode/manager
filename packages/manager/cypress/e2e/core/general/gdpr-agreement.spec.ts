@@ -124,7 +124,7 @@ describe('GDPR agreement', () => {
     cy.get('[data-qa-deploy-linode="true"]').should('be.disabled');
 
     // check the agreement
-    getClick('[data-testid="eu-agreement-checkbox"]');
+    getClick('#gdpr-checkbox');
 
     // expect the button to be enabled
     cy.get('[data-qa-deploy-linode="true"]').should('not.be.disabled');
