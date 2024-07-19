@@ -1,0 +1,51 @@
+import React from 'react';
+import { useController, useWatch } from 'react-hook-form';
+
+import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from 'src/components/Paper';
+import { Stack } from 'src/components/Stack';
+import { Typography } from 'src/components/Typography';
+import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { useAccountAgreements } from 'src/queries/account/agreements';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
+
+import type { LinodeCreateFormValues } from './utilities';
+
+export const EUAgreement = () => {
+  const { field, fieldState } = useController<LinodeCreateFormValues>({
+    name: 'hasSignedEUAgreement',
+  });
+
+  const { data: regions } = useRegionsQuery();
+
+  const regionId = useWatch<LinodeCreateFormValues>({ name: 'region' });
+
+  const selectedRegion = regions?.find((r) => r.id === regionId);
+
+  const hasSelectedAnEURegion = isEURegion(
+    getRegionCountryGroup(selectedRegion)
+  );
+
+  const { data: agreements } = useAccountAgreements(hasSelectedAnEURegion);
+
+  if (hasSelectedAnEURegion && agreements?.eu_model === false) {
+    return (
+      <Paper>
+        <Stack spacing={1}>
+          <Typography variant="h2">Agreements</Typography>
+          {fieldState.error?.message && (
+            <Notice text={fieldState.error.message} variant="error" />
+          )}
+          <EUAgreementCheckbox
+            centerCheckbox
+            checked={field.value ?? false}
+            onChange={(_, checked) => field.onChange(checked)}
+          />
+        </Stack>
+      </Paper>
+    );
+  }
+
+  return null;
+};

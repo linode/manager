@@ -7,7 +7,7 @@ import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 
 import { PLACEMENT_GROUPS_DOCS_LINK } from './constants';
-import { affinityTypeOptions } from './utils';
+import { placementGroupTypeOptions } from './utils';
 
 import type { FormikHelpers } from 'formik';
 
@@ -17,15 +17,15 @@ interface Props {
   setFieldValue: FormikHelpers<any>['setFieldValue'];
 }
 
-export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
+export const PlacementGroupTypeSelect = (props: Props) => {
   const { disabledPlacementGroupCreateButton, error, setFieldValue } = props;
   return (
     <Autocomplete
-      defaultValue={affinityTypeOptions.find(
+      defaultValue={placementGroupTypeOptions.find(
         (option) => option.value === 'anti_affinity:local'
       )}
       onChange={(_, value) => {
-        setFieldValue('affinity_type', value?.value ?? '');
+        setFieldValue('placement_group_type', value?.value ?? '');
       }}
       renderOption={(props, option) => {
         const isDisabledMenuItem = option.value === 'affinity:local';
@@ -86,9 +86,9 @@ export const PlacementGroupsAffinityTypeSelect = (props: Props) => {
       disableClearable={true}
       disabled={disabledPlacementGroupCreateButton}
       errorText={error}
-      label="Affinity Type"
-      options={affinityTypeOptions}
-      placeholder="Select an Affinity Type"
+      label="Placement Group Type"
+      options={placementGroupTypeOptions}
+      placeholder="Select an Placement Group Type"
     />
   );
 };

@@ -1,7 +1,7 @@
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
-import { LongviewClient } from '@linode/api-v4';
+import { LongviewClient, ActiveLongviewPlan } from '@linode/api-v4';
 import type {
   LongviewAction,
   LongviewResponse,
@@ -90,5 +90,58 @@ export const mockCreateLongviewClient = (
     'POST',
     apiMatcher('longview/clients*'),
     makeResponse(client)
+  );
+};
+
+export const mockGetLongviewPlan = (
+  plan: ActiveLongviewPlan
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('longview/plan'), makeResponse(plan));
+};
+
+export const mockUpdateLongviewPlan = (
+  newPlan: ActiveLongviewPlan
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher('longview/plan'),
+    makeResponse(newPlan)
+  );
+};
+
+export const mockCreateLongviewPlan = (
+  plan: ActiveLongviewPlan
+): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher('longview/plan'), makeResponse(plan));
+};
+
+/**
+ * Mocks request to delete a Longview Client.
+ *
+ * @param clientID - ID of Longview Client for which to intercept delete request.
+ *
+ */
+export const mockDeleteLongviewClient = (
+  clientID: number
+): Cypress.Chainable<null> => {
+  return cy.intercept('DELETE', apiMatcher(`longview/clients/${clientID}`), {});
+};
+
+/**
+ * Intercepts PUT request to update Longview Client and mocks response.
+ *
+ * @param clientID - ID of Longview Client for which to intercept update request.
+ * @param newClient - new Longview Client object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateLongviewClient = (
+  clientID: number,
+  newClient: LongviewClient
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`longview/clients/${clientID}`),
+    makeResponse(newClient)
   );
 };

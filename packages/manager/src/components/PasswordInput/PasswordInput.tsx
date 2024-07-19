@@ -1,11 +1,11 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import zxcvbn from 'zxcvbn';
 
-import { TextFieldProps } from 'src/components/TextField';
-
 import { StrengthIndicator } from '../PasswordInput/StrengthIndicator';
+import { Stack } from '../Stack';
 import { HideShowText } from './HideShowText';
+
+import type { TextFieldProps } from 'src/components/TextField';
 
 interface Props extends TextFieldProps {
   disabledReason?: JSX.Element | string;
@@ -26,25 +26,21 @@ const PasswordInput = (props: Props) => {
   const strength = React.useMemo(() => maybeStrength(value), [value]);
 
   return (
-    <Grid container spacing={1}>
-      <Grid xs={12}>
-        <HideShowText
-          {...rest}
-          fullWidth
-          required={required}
-          tooltipText={disabledReason}
-          value={value}
-        />
-      </Grid>
+    <Stack spacing={1}>
+      <HideShowText
+        {...rest}
+        fullWidth
+        required={required}
+        tooltipText={disabledReason}
+        value={value}
+      />
       {!hideValidation && (
-        <Grid xs={12}>
-          <StrengthIndicator
-            hideStrengthLabel={hideStrengthLabel}
-            strength={strength}
-          />
-        </Grid>
+        <StrengthIndicator
+          hideStrengthLabel={hideStrengthLabel}
+          strength={strength}
+        />
       )}
-    </Grid>
+    </Stack>
   );
 };
 
