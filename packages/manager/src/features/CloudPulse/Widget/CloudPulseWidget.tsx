@@ -1,4 +1,3 @@
-import { Widgets } from '@linode/api-v4';
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import React from 'react';
 
@@ -22,6 +21,7 @@ import type {
   TimeDuration,
   TimeGranularity,
 } from '@linode/api-v4';
+import type { Widgets } from '@linode/api-v4';
 
 export interface CloudPulseWidgetProperties {
   /**
@@ -100,7 +100,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const { availableMetrics, savePref } = props;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [today, setToday] = React.useState<boolean>(false); // Temporarily disabled eslint for this line. Will be removed in future PRs
+  const [today, _] = React.useState<boolean>(false); // Temporarily disabled eslint for this line. Will be removed in future PRs
 
   /**
    *

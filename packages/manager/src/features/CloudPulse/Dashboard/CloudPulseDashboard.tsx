@@ -13,7 +13,7 @@ import {
 } from 'src/queries/cloudpulse/services';
 
 import { getUserPreferenceObject } from '../Utils/UserPreference';
-import { removeObjectReference } from '../Utils/utils';
+import { createObjectCopy } from '../Utils/utils';
 import { CloudPulseWidget } from '../Widget/CloudPulseWidget';
 import {
   all_interval_options,
@@ -94,12 +94,12 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       widget: { ...widget },
     };
     if (savePref) {
-      setPrefferedWidgetPlan(graphProp.widget);
+      setPreferredWidgetPlan(graphProp.widget);
     }
     return graphProp;
   };
 
-  const setPrefferedWidgetPlan = (widgetObj: Widgets) => {
+  const setPreferredWidgetPlan = (widgetObj: Widgets) => {
     const widgetPreferences = getUserPreferenceObject().widgets;
     const pref = widgetPreferences?.[widgetObj.label];
     if (pref) {
@@ -153,9 +153,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   if (isJweTokenError) {
     return (
       <Grid item xs>
-        <Paper>
-          <Placeholder title="Failed to get jwe token" />
-        </Paper>
+        <ErrorState errorText="Failed to get jwe token" />
       </Grid>
     );
   }
@@ -169,7 +167,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   }
 
   const RenderWidgets = () => {
-    if (!dashboard) {
+    if (!dashboard || Boolean(dashboard.widgets?.length)) {
       return renderPlaceHolder(
         'No visualizations are available at this moment. Create Dashboards to list here.'
       );
@@ -187,7 +185,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     }
 
     // maintain a copy
-    const newDashboard: Dashboard = removeObjectReference(dashboard)!;
+    const newDashboard: Dashboard = createObjectCopy(dashboard)!;
     return (
       <Grid columnSpacing={1} container item rowSpacing={2} xs={12}>
         {{ ...newDashboard }.widgets.map((widget, index) => {
@@ -224,7 +222,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
           } else {
             return <React.Fragment key={index}></React.Fragment>;
           }
-        })}{' '}
+        })}
       </Grid>
     );
   };

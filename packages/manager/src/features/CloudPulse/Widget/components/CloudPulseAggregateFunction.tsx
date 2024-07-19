@@ -36,34 +36,22 @@ export const CloudPulseAggregateFunction = React.memo(
         (obj) => obj.label === props.defaultAggregateFunction
       ) || props.availableAggregateFunctions[0];
 
-    // if default aggregate func not available in availableAggregateFunc
-    const defaultAggrUnavilable = !props.availableAggregateFunctions.includes(
-      props.defaultAggregateFunction || ''
-    );
-
     return (
-      <>
-        <Autocomplete
-          isOptionEqualToValue={(option, value) => {
-            return option.label == value.label;
-          }}
-          onChange={(_: any, selectedAggregateFunc: any) => {
-            props.onAggregateFuncChange(selectedAggregateFunc.label);
-          }}
-          defaultValue={defaultAggregateFunc}
-          disableClearable
-          fullWidth={false}
-          label=""
-          noMarginTop={true}
-          options={availableAggregateFunc}
-          sx={{ width: '100%' }}
-        />
-        {defaultAggrUnavilable && (
-          <p style={{ color: 'rgb(210 165 28)', fontSize: 'smaller' }}>
-            Invalid agg function '{props.defaultAggregateFunction}'
-          </p>
-        )}
-      </>
+      <Autocomplete
+        isOptionEqualToValue={(option, value) => {
+          return option.label == value.label;
+        }}
+        onChange={(_: any, selectedAggregateFunc: any) => {
+          props.onAggregateFuncChange(selectedAggregateFunc.label);
+        }}
+        defaultValue={defaultAggregateFunc}
+        disableClearable
+        fullWidth={false}
+        label=""
+        noMarginTop={true}
+        options={availableAggregateFunc}
+        sx={{ width: '100%' }}
+      />
     );
   }
 );

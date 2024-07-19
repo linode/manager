@@ -28,7 +28,7 @@ export const convertStringToCamelCasesWithSpaces = (
     .join(' ');
 };
 
-export const removeObjectReference = <T>(object: T): T | null => {
+export const createObjectCopy = <T>(object: T): T | null => {
   if (!object) {
     return null;
   }

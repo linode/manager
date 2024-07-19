@@ -24,11 +24,14 @@ export interface IntervalSelectProperties {
 export const getInSeconds = (interval: string) => {
   if (interval.endsWith('s')) {
     return Number(interval.slice(0, -1));
-  } else if (interval.endsWith('m')) {
+  }
+  if (interval.endsWith('m')) {
     return Number(interval.slice(0, -1)) * 60;
-  } else if (interval.endsWith('h')) {
+  }
+  if (interval.endsWith('h')) {
     return Number(interval.slice(0, -1)) * 3600;
-  } else if (interval.endsWith('d')) {
+  }
+  if (interval.endsWith('d')) {
     return Number(interval.slice(0, -1)) * 86400;
   }
   return 0;
@@ -96,7 +99,6 @@ export const CloudPulseIntervalSelect = React.memo(
               obj.value === props.default_interval?.value &&
               obj.unit === props.default_interval?.unit
           );
-    let default_interval_unavailable = false;
 
     if (!default_interval) {
       default_interval = autoIntervalOption;
@@ -104,43 +106,27 @@ export const CloudPulseIntervalSelect = React.memo(
         unit: default_interval.unit,
         value: default_interval.value,
       });
-
-      if (props.default_interval && props.default_interval.value) {
-        default_interval_unavailable = true;
-      }
     }
 
     return (
-      <>
-        <Autocomplete
-          isOptionEqualToValue={(option, value) => {
-            return (
-              option?.value === value?.value && option?.unit === value?.unit
-            );
-          }}
-          onChange={(_: any, selectedInterval: any) => {
-            props.onIntervalChange({
-              unit: selectedInterval?.unit,
-              value: selectedInterval?.value,
-            });
-          }}
-          defaultValue={{ ...default_interval }}
-          disableClearable
-          fullWidth={false}
-          label=""
-          noMarginTop={true}
-          options={[autoIntervalOption, ...available_interval_options]}
-          sx={{ width: { xs: '100%' } }}
-        />
-        {default_interval_unavailable && (
-          <p style={{ color: 'rgb(210 165 28)', fontSize: 'smaller' }}>
-            Invalid interval '
-            {props.default_interval?.unit +
-              String(props.default_interval?.value)}
-            '
-          </p>
-        )}
-      </>
+      <Autocomplete
+        isOptionEqualToValue={(option, value) => {
+          return option?.value === value?.value && option?.unit === value?.unit;
+        }}
+        onChange={(_: any, selectedInterval: any) => {
+          props.onIntervalChange({
+            unit: selectedInterval?.unit,
+            value: selectedInterval?.value,
+          });
+        }}
+        defaultValue={{ ...default_interval }}
+        disableClearable
+        fullWidth={false}
+        label=""
+        noMarginTop={true}
+        options={[autoIntervalOption, ...available_interval_options]}
+        sx={{ width: { xs: '100%' } }}
+      />
     );
   }
 );
