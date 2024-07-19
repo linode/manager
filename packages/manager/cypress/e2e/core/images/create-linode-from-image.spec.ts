@@ -1,4 +1,4 @@
-import { containsClick, fbtClick, fbtVisible, getClick } from 'support/helpers';
+import { fbtClick, fbtVisible, getClick } from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { mockGetAllImages } from 'support/intercepts/images';
@@ -33,14 +33,17 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
   cy.visitWithLogin(url);
 
   cy.wait('@mockImage');
+
   if (!preselectedImage) {
-    cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
-      containsClick('Choose an image');
-    });
-    cy.get(`[data-qa-image-select-item="${mockImage.id}"]`).within(() => {
-      cy.get('span').should('have.class', 'fl-tux');
-      fbtClick(mockImage.label);
-    });
+    cy.findByPlaceholderText('Choose an image')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.findByText(mockImage.label)
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
   }
 
   ui.regionSelect.find().click();
@@ -49,7 +52,13 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
   fbtClick('Shared CPU');
   getClick('[id="g6-nanode-1"][type="radio"]');
   cy.get('[id="root-password"]').type(randomString(32));
-  getClick('[data-qa-deploy-linode="true"]');
+
+  ui.button
+    .findByTitle('Create Linode')
+    .scrollIntoView()
+    .should('be.visible')
+    .should('be.enabled')
+    .click();
 
   cy.wait('@mockLinodeRequest');
 

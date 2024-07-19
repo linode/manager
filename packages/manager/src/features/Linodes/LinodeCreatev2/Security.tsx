@@ -67,6 +67,7 @@ export const Security = () => {
               label="Root Password"
               name="password"
               noMarginTop
+              id="linode-password"
               onBlur={field.onBlur}
               onChange={field.onChange}
               placeholder="Enter a password."

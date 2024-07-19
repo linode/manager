@@ -73,7 +73,7 @@ export const VPC = () => {
       : 'Assign this Linode to an existing VPC.';
 
   return (
-    <Paper>
+    <Paper data-testid="vpc-panel">
       <Stack spacing={2}>
         <Typography variant="h2">VPC</Typography>
         <Typography>
