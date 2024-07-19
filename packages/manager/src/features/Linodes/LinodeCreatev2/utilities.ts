@@ -259,11 +259,9 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
  * The default values are dependent on the query params present.
  */
 export const defaultValues = async (
+  params: ParsedLinodeCreateQueryParams,
   queryClient: QueryClient
 ): Promise<LinodeCreateFormValues> => {
-  const queryParams = getQueryParamsFromQueryString(window.location.search);
-  const params = getParsedLinodeCreateQueryParams(queryParams);
-
   const stackscriptId = params.stackScriptID ?? params.appID;
 
   const stackscript = stackscriptId
