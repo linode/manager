@@ -168,6 +168,7 @@ describe('OneClick Apps (OCA)', () => {
 
     mockGetStackScripts([stackScripts]).as('getStackScripts');
     mockAppendFeatureFlags({
+      linodeCreateRefactor: makeFeatureFlagData(false),
       oneClickApps: makeFeatureFlagData({
         401709: 'E2E Test App',
       }),
@@ -181,7 +182,7 @@ describe('OneClick Apps (OCA)', () => {
 
     cy.findByTestId('one-click-apps-container').within(() => {
       // Since it is mock data we can assert the New App section is present
-      cy.findByTestId('New apps').should('exist');
+      cy.findByText('New apps').should('be.visible');
 
       // Check that the app is listed and select it
       cy.get('[data-qa-selection-card="true"]').should('have.length', 3);
