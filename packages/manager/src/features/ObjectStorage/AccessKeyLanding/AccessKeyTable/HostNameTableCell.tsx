@@ -9,11 +9,11 @@ import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import type {
   ObjectStorageKey,
-  RegionS3EndpointAndID,
+  ObjAccessKeyRegionsResponse,
 } from '@linode/api-v4/lib/object-storage';
 
 type Props = {
-  setHostNames: (hostNames: RegionS3EndpointAndID[]) => void;
+  setHostNames: (hostNames: ObjAccessKeyRegionsResponse[]) => void;
   setShowHostNamesDrawers: (show: boolean) => void;
   storageKeyData: ObjectStorageKey;
 };

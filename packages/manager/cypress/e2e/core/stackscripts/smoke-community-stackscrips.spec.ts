@@ -5,7 +5,6 @@ import {
   mockGetStackScripts,
   mockGetStackScript,
 } from 'support/intercepts/stackscripts';
-import { containsClick } from 'support/helpers';
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
@@ -326,9 +325,9 @@ describe('Community Stackscripts integration tests', () => {
     cy.get('[id="vpn-password"]').should('have.value', vpnPassword);
 
     // Choose an image
-    cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
-      containsClick('Choose an image').type(`${image}{enter}`);
-    });
+    cy.findByPlaceholderText('Choose an image').should('be.visible').click();
+
+    cy.findByText(image).should('be.visible').click();
 
     // Choose a region
     ui.button
@@ -370,7 +369,10 @@ describe('Community Stackscripts integration tests', () => {
       .should('be.visible')
       .should('be.enabled')
       .click();
-    cy.contains('Password does not meet complexity requirements.');
+
+    cy.findByText('Password does not meet', { exact: false }).should(
+      'be.visible'
+    );
 
     cy.get('[id="root-password"]').clear().type(fairPassword);
     ui.button
@@ -378,7 +380,10 @@ describe('Community Stackscripts integration tests', () => {
       .should('be.visible')
       .should('be.enabled')
       .click();
-    cy.contains('Password does not meet complexity requirements.');
+
+    cy.findByText('Password does not meet', { exact: false }).should(
+      'be.visible'
+    );
 
     // Only strong password is allowed to rebuild the linode
     cy.get('[id="root-password"]').type(rootPassword);

@@ -852,7 +852,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         selectedRegionId: this.params.regionID,
       });
 
-      this.params = getQueryParamsFromQueryString(this.props.location.search);
+      this.params = getQueryParamsFromQueryString(
+        this.props.location.search
+      ) as Record<string, string>;
 
       this.setState({
         showGDPRCheckbox,
@@ -886,8 +888,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
               sendLinodeCreateFormStepEvent({
                 action: 'click',
                 category: 'link',
-                createType:
-                  (this.params.type as LinodeCreateType) ?? 'Distributions',
+                createType: (this.params.type as LinodeCreateType) ?? 'OS',
                 label: 'Getting Started',
                 version: 'v1',
               });
