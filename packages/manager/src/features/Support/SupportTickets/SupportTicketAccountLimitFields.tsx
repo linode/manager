@@ -7,6 +7,7 @@ import { useAccount } from 'src/queries/account/account';
 
 import { ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP } from './constants';
 import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
+import { getEntityNameFromEntityType } from './ticketUtils';
 
 import type { CustomFields } from './constants';
 import type { SupportTicketFormFields } from './SupportTicketDialog';
@@ -95,10 +96,13 @@ export const SupportTicketAccountLimitFields = () => {
       <Controller
         render={({ field, fieldState }) => (
           <TextField
+            label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.useCase.replace(
+              'entities',
+              getEntityNameFromEntityType(entityType, true)
+            )}
             data-qa-ticket-use-case
             errorText={fieldState.error?.message}
             expand
-            label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.useCase}
             multiline
             name="useCase"
             onChange={field.onChange}

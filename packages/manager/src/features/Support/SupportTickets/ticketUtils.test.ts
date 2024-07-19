@@ -1,5 +1,5 @@
 import { SMTP_FIELD_NAME_TO_LABEL_MAP } from './constants';
-import { formatDescription } from './ticketUtils';
+import { formatDescription, getEntityNameFromEntityType } from './ticketUtils';
 
 import type { SupportTicketFormFields } from './SupportTicketDialog';
 import type { SMTPCustomFields } from './SupportTicketSMTPFields';
@@ -45,5 +45,21 @@ describe('formatDescription', () => {
         'smtp'
       )
     ).toEqual(expectedFormattedDescription);
+  });
+});
+
+describe('getEntityNameFromEntityType', () => {
+  it('returns a human-readable entity name or default from the entity type', () => {
+    const nbEntityType = 'nodebalancer_id';
+    const generalEntityType = 'general';
+
+    expect(getEntityNameFromEntityType(nbEntityType)).toEqual('NodeBalancer');
+    expect(getEntityNameFromEntityType(nbEntityType, true)).toEqual(
+      'NodeBalancers'
+    );
+    expect(getEntityNameFromEntityType(generalEntityType)).toEqual('entity');
+    expect(getEntityNameFromEntityType(generalEntityType, true)).toEqual(
+      'entities'
+    );
   });
 });
