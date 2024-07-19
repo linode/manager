@@ -1,7 +1,7 @@
 import { ENABLE_DEV_TOOLS } from 'src/constants';
 import { allContextPopulators } from 'src/mocks/context/populators';
 import { mswDB } from 'src/mocks/indexedDB';
-import { createInitialMockStore } from 'src/mocks/mockContext';
+import { createInitialMockStore, emptyStore } from 'src/mocks/mockContext';
 import { resolveMockPreset } from 'src/mocks/mockPreset';
 import { allMockPresets, defaultBaselineMockPreset } from 'src/mocks/presets';
 
@@ -57,24 +57,37 @@ export async function loadDevTools(
 
     // Apply MSW context populators.
     const initialContext = await createInitialMockStore();
+    await mswDB.saveStore(initialContext, 'mockContext');
 
-    // Check if seedContext already exists
-    let seedContext = await mswDB.getStore('seedContext');
-    if (!seedContext) {
-      // If seedContext does not exist, initialize it
-      seedContext = await mswContentPopulators.reduce(
+    // Seeding
+    const seedContext = (await mswDB.getStore('seedContext')) || emptyStore;
+    const populateSeeds = async (store: MockContext): Promise<MockContext> => {
+      return await mswContentPopulators.reduce(
         async (accPromise, cur: MockContextPopulator) => {
           const acc = await accPromise;
           return cur.populator(acc);
         },
-        Promise.resolve(initialContext)
+        Promise.resolve(store)
       );
+    };
 
-      await mswDB.saveStore(seedContext, 'seedContext');
-    }
+    const updateSeedContext = async <T extends keyof MockContext>(
+      key: T,
+      seeds: MockContext
+    ): Promise<void> => {
+      if (Array.isArray(seedContext[key]) && seedContext[key].length === 0) {
+        seedContext[key] = seeds[key];
+      }
+    };
 
-    // Always initialize or re-initialize the mockContext
-    await mswDB.saveStore(initialContext, 'mockContext');
+    const seeds = await populateSeeds(emptyStore);
+
+    const seedPromises = (Object.keys(
+      seedContext
+    ) as (keyof MockContext)[]).map((key) => updateSeedContext(key, seeds));
+
+    await Promise.all(seedPromises);
+    await mswDB.saveStore(seedContext ?? emptyStore, 'seedContext');
 
     // Merge the contexts
     const mergedContext: MockContext = {

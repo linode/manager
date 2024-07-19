@@ -21,6 +21,18 @@ export const getContextPopulatorGroups = (
   }, []);
 };
 
+export const emptyStore: MockContext = {
+  eventQueue: [],
+  firewalls: [],
+  linodeConfigs: [],
+  linodes: [],
+  notificationQueue: [],
+  placementGroups: [],
+  regionAvailability: [],
+  regions: [],
+  volumes: [],
+};
+
 /**
  * Creates and returns an empty mock context.
  *
@@ -33,15 +45,5 @@ export const createInitialMockStore = async (): Promise<MockContext> => {
     return mockContext;
   }
 
-  return {
-    eventQueue: [],
-    firewalls: [],
-    linodeConfigs: [],
-    linodes: [],
-    notificationQueue: [],
-    placementGroups: [],
-    regionAvailability: [],
-    regions: [],
-    volumes: [],
-  };
+  return emptyStore;
 };
