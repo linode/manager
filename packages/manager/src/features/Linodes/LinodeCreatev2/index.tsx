@@ -30,6 +30,7 @@ import { Plan } from './Plan';
 import { Region } from './Region';
 import { getLinodeCreateResolver } from './resolvers';
 import { Security } from './Security';
+import { SMTP } from './SMTP';
 import { Summary } from './Summary/Summary';
 import { Backups } from './Tabs/Backups/Backups';
 import { Clone } from './Tabs/Clone/Clone';
@@ -188,6 +189,7 @@ export const LinodeCreatev2 = () => {
           <Addons />
           <EUAgreement />
           <Summary />
+          <SMTP />
           <Actions />
         </Stack>
       </form>
