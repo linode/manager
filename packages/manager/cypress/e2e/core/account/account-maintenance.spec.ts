@@ -6,8 +6,6 @@ describe('Maintenance', () => {
    * - Confirm user can navigate to account maintenance page via user menu.
    * - When there is no pending maintenance, "No pending maintenance." is shown in the table.
    * - When there is no completed maintenance, "No completed maintenance." is shown in the table.
-   * - Confirm "Download CSV" button for pending maintenance visible and enabled.
-   * - Confirm "Download CSV" button for completed maintenance visible and enabled.
    */
   it('table empty when no maintenance', () => {
     mockGetMaintenance([], []).as('getMaintenance');
@@ -32,6 +30,8 @@ describe('Maintenance', () => {
    * - Uses mock API data to confirm maintenance details.
    * - When there is pending maintenance, it is shown in the table with expected details.
    * - When there is completed maintenance, it is shown in the table with expected details.
+   * - Confirm "Download CSV" button for pending maintenance visible and enabled.
+   * - Confirm "Download CSV" button for completed maintenance visible and enabled.
    */
   it('confirm maintenance details in the tables', () => {
     const pendingMaintenanceNumber = 5;
@@ -58,8 +58,10 @@ describe('Maintenance', () => {
 
     // Confirm Pending table is not empty and contains exact number of pending maintenances
     // Confirm Completed table is not empty and contains exact number of completed maintenances
-    cy.get('tbody.MuiTableBody-root.css-apqrd9-MuiTableBody-root').each(
-      ($tbody, index, $tbodys) => {
+    cy.get('tbody.MuiTableBody-root')
+      .should('exist')
+      .should('be.visible')
+      .each(($tbody, index, $tbodys) => {
         cy.wrap($tbody).within(() => {
           if (index === 0) {
             cy.get('tr').should('have.length', pendingMaintenanceNumber);
@@ -77,8 +79,7 @@ describe('Maintenance', () => {
               });
             });
         });
-      }
-    );
+      });
 
     // Confirm download buttons work
     cy.get('button')
