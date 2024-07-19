@@ -41,7 +41,6 @@ import { UserData } from './UserData/UserData';
 import {
   captureLinodeCreateAnalyticsEvent,
   defaultValues,
-  defaultValuesMap,
   getLinodeCreatePayload,
   getTabIndex,
   tabs,
@@ -59,7 +58,7 @@ export const LinodeCreatev2 = () => {
   const queryClient = useQueryClient();
 
   const form = useForm<LinodeCreateFormValues>({
-    defaultValues,
+    defaultValues: () => defaultValues(queryClient),
     mode: 'onBlur',
     resolver: getLinodeCreateResolver(params.type, queryClient),
     shouldFocusError: false, // We handle this ourselves with `scrollErrorIntoView`
@@ -76,10 +75,12 @@ export const LinodeCreatev2 = () => {
 
   const onTabChange = (index: number) => {
     const newTab = tabs[index];
-    // Update tab "type" query param. (This changes the selected tab)
-    setParams({ type: newTab });
-    // Reset the form values
-    form.reset(defaultValuesMap[newTab]);
+    defaultValues(queryClient).then((values) => {
+      // Reset the form values
+      form.reset(values);
+      // Update tab "type" query param. (This changes the selected tab)
+      setParams({ type: newTab });
+    });
   };
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {

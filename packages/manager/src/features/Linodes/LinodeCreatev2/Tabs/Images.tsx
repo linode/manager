@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
@@ -12,15 +13,25 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { useAllImagesQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
+import { getGeneratedLinodeLabel } from '../utilities';
+
 import type { LinodeCreateFormValues } from '../utilities';
 import type { Image } from '@linode/api-v4';
 
 export const Images = () => {
-  const { control, setValue } = useFormContext<LinodeCreateFormValues>();
+  const {
+    control,
+    formState: {
+      dirtyFields: { label: isLabelFieldDirty },
+    },
+    getValues,
+    setValue,
+  } = useFormContext<LinodeCreateFormValues>();
   const { field, fieldState } = useController({
     control,
     name: 'image',
   });
+  const queryClient = useQueryClient();
 
   const isCreateLinodeRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
@@ -30,7 +41,7 @@ export const Images = () => {
 
   const { data: regions } = useRegionsQuery();
 
-  const onChange = (image: Image | null) => {
+  const onChange = async (image: Image | null) => {
     field.onChange(image?.id ?? null);
 
     const selectedRegion = regions?.find((r) => r.id === regionId);
@@ -44,6 +55,15 @@ export const Images = () => {
       selectedRegion?.site_type === 'distributed'
     ) {
       setValue('region', '');
+    }
+
+    if (!isLabelFieldDirty) {
+      const label = await getGeneratedLinodeLabel({
+        queryClient,
+        tab: 'Images',
+        values: getValues(),
+      });
+      setValue('label', label);
     }
   };
 

@@ -3,7 +3,9 @@ import { createLinodeRequestFactory } from 'src/factories';
 import { base64UserData, userData } from '../LinodesCreate/utilities.test';
 import {
   getInterfacesPayload,
+  getIsValidLinodeLabelCharacter,
   getLinodeCreatePayload,
+  getLinodeLabelFromLabelParts,
   getTabIndex,
 } from './utilities';
 
@@ -298,5 +300,54 @@ describe('getInterfacesPayload', () => {
         purpose: 'public',
       },
     ]);
+  });
+});
+
+describe('getLinodeLabelFromLabelParts', () => {
+  it('should join items', () => {
+    expect(getLinodeLabelFromLabelParts(['my-linode', 'us-east'])).toBe(
+      'my-linode-us-east'
+    );
+  });
+  it('should not include special characters in the generated label', () => {
+    expect(getLinodeLabelFromLabelParts(['redis&app', 'us-east'])).toBe(
+      'redisapp-us-east'
+    );
+  });
+  it('should replace spaces with a -', () => {
+    expect(getLinodeLabelFromLabelParts(['banks test'])).toBe('banks-test');
+  });
+  it('should not generate consecutive - _ or .', () => {
+    expect(getLinodeLabelFromLabelParts(['banks - test', 'us-east'])).toBe(
+      'banks-test-us-east'
+    );
+  });
+  it('should ensure the generated label is less than 64 characters', () => {
+    const linodeLabel = 'a'.repeat(64);
+    const region = 'us-east';
+
+    expect(getLinodeLabelFromLabelParts([linodeLabel, region])).toBe(
+      'a'.repeat(31) + '-us-east'
+    );
+  });
+});
+
+describe('getIsValidLinodeLabelCharacter', () => {
+  it('should allow a-z characters', () => {
+    expect(getIsValidLinodeLabelCharacter('a')).toBe(true);
+    expect(getIsValidLinodeLabelCharacter('z')).toBe(true);
+  });
+  it('should allow A-Z characters', () => {
+    expect(getIsValidLinodeLabelCharacter('A')).toBe(true);
+    expect(getIsValidLinodeLabelCharacter('Z')).toBe(true);
+  });
+  it('should allow 0-9 characters', () => {
+    expect(getIsValidLinodeLabelCharacter('0')).toBe(true);
+    expect(getIsValidLinodeLabelCharacter('9')).toBe(true);
+  });
+  it('should not allow special characters', () => {
+    expect(getIsValidLinodeLabelCharacter('&')).toBe(false);
+    expect(getIsValidLinodeLabelCharacter('!')).toBe(false);
+    expect(getIsValidLinodeLabelCharacter(' ')).toBe(false);
   });
 });

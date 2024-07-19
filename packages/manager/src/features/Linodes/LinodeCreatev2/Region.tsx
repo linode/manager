@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
@@ -24,7 +25,11 @@ import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricin
 
 import { CROSS_DATA_CENTER_CLONE_WARNING } from '../LinodesCreate/constants';
 import { getDisabledRegions } from './Region.utils';
-import { defaultInterfaces, useLinodeCreateQueryParams } from './utilities';
+import {
+  defaultInterfaces,
+  getGeneratedLinodeLabel,
+  useLinodeCreateQueryParams,
+} from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
@@ -35,10 +40,19 @@ export const Region = () => {
   } = useIsDiskEncryptionFeatureEnabled();
 
   const flags = useFlags();
+  const queryClient = useQueryClient();
 
   const { params } = useLinodeCreateQueryParams();
 
-  const { control, reset } = useFormContext<LinodeCreateFormValues>();
+  const {
+    control,
+    formState: {
+      dirtyFields: { label: isLabelFieldDirty },
+    },
+    getValues,
+    reset,
+    setValue,
+  } = useFormContext<LinodeCreateFormValues>();
   const { field, fieldState } = useController({
     control,
     name: 'region',
@@ -65,7 +79,7 @@ export const Region = () => {
 
   const { data: regions } = useRegionsQuery();
 
-  const onChange = (region: RegionType) => {
+  const onChange = async (region: RegionType) => {
     const isDistributedRegion =
       region.site_type === 'distributed' || region.site_type === 'edge';
 
@@ -75,28 +89,46 @@ export const Region = () => {
       ? 'enabled'
       : undefined;
 
-    reset((prev) => ({
-      ...prev,
-      // Reset the EU agreement
-      hasSignedEUAgreement: undefined,
-      // Reset interfaces because VPC and VLANs are region-sepecific
-      interfaces: defaultInterfaces,
-      // Reset Cloud-init metadata because not all regions support it
-      metadata: undefined,
-      // Reset the placement group because they are region-specific
-      placement_group: undefined,
-      // Set the region
-      region: region.id,
-      // Backups and Private IP are not supported in distributed compute regions
-      ...(isDistributedRegion && {
-        backups_enabled: false,
-        private_ip: false,
+    reset(
+      (prev) => ({
+        ...prev,
+        // reset EU agreement
+        hasSignedEUAgreement: false,
+        // Reset interfaces because VPC and VLANs are region-sepecific
+        interfaces: defaultInterfaces,
+        // Reset Cloud-init metadata because not all regions support it
+        metadata: undefined,
+        // Reset the placement group because they are region-specific
+        placement_group: undefined,
+        // Set the region
+        region: region.id,
+        // Backups and Private IP are not supported in distributed compute regions
+        ...(isDistributedRegion && {
+          backups_enabled: false,
+          private_ip: false,
+        }),
+        // If disk encryption is enabled, set the default value to "enabled" if the region supports it
+        ...(isDiskEncryptionFeatureEnabled && {
+          disk_encryption: defaultDiskEncryptionValue,
+        }),
       }),
-      // If disk encryption is enabled, set the default value to "enabled" if the region supports it
-      ...(isDiskEncryptionFeatureEnabled && {
-        disk_encryption: defaultDiskEncryptionValue,
-      }),
-    }));
+      {
+        keepDirty: true,
+        keepDirtyValues: true,
+        keepErrors: true,
+        keepSubmitCount: true,
+        keepTouched: true,
+      }
+    );
+
+    if (!isLabelFieldDirty) {
+      const label = await getGeneratedLinodeLabel({
+        queryClient,
+        tab: params.type ?? 'OS',
+        values: getValues(),
+      });
+      setValue('label', label);
+    }
   };
 
   const showCrossDataCenterCloneWarning =
