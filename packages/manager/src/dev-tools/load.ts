@@ -66,23 +66,41 @@ export async function loadDevTools(
       Promise.resolve(initialContext)
     );
 
-    await mswDB.saveStore(mockState, 'mockContext');
+    await mswDB.saveStore(initialContext, 'mockContext');
     await mswDB.saveStore(mockState, 'seedContext');
 
+    const seedContext = await mswDB.getStore('seedContext');
+    const mergedContext: MockContext = {
+      ...mockState,
+      eventQueue: [...mockState.eventQueue, ...(seedContext?.eventQueue || [])],
+      firewalls: [...mockState.firewalls, ...(seedContext?.firewalls || [])],
+      linodeConfigs: [
+        ...mockState.linodeConfigs,
+        ...(seedContext?.linodeConfigs || []),
+      ],
+      linodes: [...mockState.linodes, ...(seedContext?.linodes || [])],
+      notificationQueue: [
+        ...mockState.notificationQueue,
+        ...(seedContext?.notificationQueue || []),
+      ],
+      placementGroups: [
+        ...mockState.placementGroups,
+        ...(seedContext?.placementGroups || []),
+      ],
+      regionAvailability: [
+        ...mockState.regionAvailability,
+        ...(seedContext?.regionAvailability || []),
+      ],
+      regions: [...mockState.regions, ...(seedContext?.regions || [])],
+      volumes: [...mockState.volumes, ...(seedContext?.volumes || [])],
+    };
+
     const extraHandlers = extraMswPresets.reduce((acc, cur: MockPreset) => {
-      return [
-        // MSW applies the first handler that is set up for any given request,
-        // so we must apply extra handlers in the opposite order that they are
-        // specified.
-        ...resolveMockPreset(cur, mockState),
-        ...acc,
-      ];
+      return [...resolveMockPreset(cur, mergedContext), ...acc];
     }, []);
 
-    const baseHandlers = resolveMockPreset(mswPreset, mockState);
+    const baseHandlers = resolveMockPreset(mswPreset, mergedContext);
 
-    // Because MSW applies the first handler that is set up for any given request,
-    // we must apply extra request handlers before base handlers.
     const worker = mswWorker(extraHandlers, baseHandlers);
     await worker.start({ onUnhandledRequest: 'bypass' });
   }
