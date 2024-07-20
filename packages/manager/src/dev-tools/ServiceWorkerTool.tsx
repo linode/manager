@@ -13,6 +13,8 @@ import { removeSeeds } from 'src/mocks/utilities/removeSeeds';
 
 import { DevToolSelect } from './components/DevToolSelect';
 
+import type { MockContextPopulatorIds } from 'src/mocks/types';
+
 const LOCAL_STORAGE_KEY = 'msw';
 const LOCAL_STORAGE_POPULATORS_KEY = 'msw-populators';
 const LOCAL_STORAGE_PRESET_KEY = 'msw-preset';
@@ -87,6 +89,15 @@ export const saveMSWExtraPresets = (presets: string[]) => {
 export const getMSWContextPopulators = (): string[] => {
   const encodedPopulators = localStorage.getItem(LOCAL_STORAGE_POPULATORS_KEY);
   if (!encodedPopulators) {
+    // always have a default region
+    if (
+      !encodedPopulators?.includes(
+        'prod-regions' || 'legacy-test-regions' || 'edge-regions'
+      )
+    ) {
+      return ['prod-regions'];
+    }
+
     return [];
   }
   const storedPopulators = encodedPopulators.split(',');
@@ -233,7 +244,7 @@ export const ServiceWorkerTool = () => {
 
   const handleChangePopulator = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    populatorId: string
+    populatorId: MockContextPopulatorIds
   ) => {
     const willEnable = e.target.checked;
     if (willEnable && !MSWPopulators.includes(populatorId)) {

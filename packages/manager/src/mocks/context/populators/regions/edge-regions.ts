@@ -1,4 +1,5 @@
 import { edgeRegions } from 'src/__data__/edgeRegionsData';
+import { mswDB } from 'src/mocks/indexedDB';
 
 import type { MockContext, MockContextPopulator } from 'src/mocks/types';
 
@@ -7,12 +8,18 @@ import type { MockContext, MockContextPopulator } from 'src/mocks/types';
  */
 export const edgeRegionsPopulator: MockContextPopulator = {
   desc: 'Populates context with mock Edge region data',
-  group: 'Environment',
+  group: 'Regions',
   id: 'edge-regions',
   label: 'Edge Regions',
 
-  populator: (mockContext: MockContext) => {
-    mockContext.regions.push(...edgeRegions);
-    return mockContext;
+  populator: async (mockContext: MockContext) => {
+    const updatedMockContext = {
+      ...mockContext,
+      regions: mockContext.regions.concat(edgeRegions),
+    };
+
+    await mswDB.saveStore(updatedMockContext, 'seedContext');
+
+    return updatedMockContext;
   },
 };

@@ -15,11 +15,11 @@ export type MockPresetGroup =
   | 'API State'
   | 'Account State'
   | 'Account'
-  | 'Environment'
   | 'Firewalls'
   | 'General'
   | 'Linodes'
   | 'Placement Groups'
+  | 'Regions'
   | 'Volumes';
 
 export type MockHandlerGenerator = (mockContext: MockContext) => HttpHandler[];
@@ -61,10 +61,22 @@ export interface MockContext {
   volumes: Volume[];
 }
 
+export type MockContextPopulatorIds =
+  | 'edge-regions'
+  | 'legacy-test-regions'
+  | 'many-linodes'
+  | 'prod-regions';
+
+export type MockContextPopulatorGroup =
+  | 'Account'
+  | 'Linodes'
+  | 'Regions'
+  | 'Volumes';
+
 export interface MockContextPopulator {
   desc?: string;
-  group?: string;
-  id: string;
+  group?: MockContextPopulatorGroup;
+  id: MockContextPopulatorIds;
   label: string;
   populator: (mockContext: MockContext) => MockContext | Promise<MockContext>;
 }

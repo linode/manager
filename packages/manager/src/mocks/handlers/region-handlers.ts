@@ -6,47 +6,46 @@ import {
   makeResponse,
 } from 'src/mocks/utilities/response';
 
+import { mswDB } from '../indexedDB';
 import { getPaginatedSlice } from '../utilities/pagination';
 
 import type { Region, RegionAvailability } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockContext } from 'src/mocks/types';
-import type { APIErrorResponse } from 'src/mocks/utilities/response';
+import type {
+  APIErrorResponse,
+  APIPaginatedResponse,
+} from 'src/mocks/utilities/response';
 
-/**
- * HTTP handlers to fetch Regions.
- */
 export const getRegions = (mockContext: MockContext) => [
-  // Get a list of regions.
-  // Responds with a paginated list of regions in context.
-  http.get('*/v4*/regions', ({ request }) => {
-    const url = new URL(request.url);
+  http.get(
+    '*/v4*/regions',
+    async ({
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<Region>>
+    > => {
+      const url = new URL(request.url);
+      const regions = await mswDB.getAll('regions');
 
-    const pageNumber = Number(url.searchParams.get('page')) || 1;
-    const pageSize = Number(url.searchParams.get('page_size')) || 25;
-    const totalPages = Math.max(
-      Math.ceil(mockContext.regions.length / pageSize),
-      1
-    );
+      if (!regions) {
+        return makeNotFoundResponse();
+      }
 
-    const pageSlice = getPaginatedSlice(
-      mockContext.regions,
-      pageNumber,
-      pageSize
-    );
+      const pageNumber = Number(url.searchParams.get('page')) || 1;
+      const pageSize = Number(url.searchParams.get('page_size')) || 25;
+      const totalPages = Math.max(Math.ceil(regions.length / pageSize), 1);
 
-    return makePaginatedResponse(pageSlice, pageNumber, totalPages);
-  }),
+      const pageSlice = getPaginatedSlice(regions, pageNumber, pageSize);
 
-  // Get an individual region by its ID.
-  // Responds with a Region instance if one exists with ID `id` in context.
-  // Otherwise, a 404 response is mocked.
+      return makePaginatedResponse(pageSlice, pageNumber, totalPages);
+    }
+  ),
+
   http.get(
     '*/v4*/regions/:id',
-    ({ params }): StrictResponse<APIErrorResponse | Region> => {
-      const region = mockContext.regions.find(
-        (contextRegion) => contextRegion.id === params.id
-      );
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | Region>> => {
+      const region = await mswDB.get('regions', Number(params.id));
 
       if (!region) {
         return makeNotFoundResponse();
@@ -56,8 +55,7 @@ export const getRegions = (mockContext: MockContext) => [
     }
   ),
 
-  // Get a list of objects that describe region availability.
-  // Responds with a paginated list of region availability objects in context.
+  // TODO: integrate with DB
   http.get('*/v4*/regions/availability', ({ request }) => {
     const url = new URL(request.url);
 
@@ -77,9 +75,7 @@ export const getRegions = (mockContext: MockContext) => [
     return makePaginatedResponse(pageSlice, pageNumber, totalPages);
   }),
 
-  // Get an object that describes availability for the region with a given ID.
-  // Responds with an array of RegionAvailability objects for the given region.
-  // If no region with the given ID exists in context, a 404 response is mocked.
+  // TODO: integrate with DB
   http.get(
     '*/v4*/regions/:id/availability',
     ({ params }): StrictResponse<APIErrorResponse | RegionAvailability[]> => {
@@ -94,6 +90,7 @@ export const getRegions = (mockContext: MockContext) => [
       const availabilityObjects = mockContext.regionAvailability.filter(
         (regionAvailability) => regionAvailability.region === region.id
       );
+
       return makeResponse(availabilityObjects);
     }
   ),

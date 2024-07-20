@@ -1,4 +1,5 @@
 import { productionRegions } from 'src/__data__/productionRegionsData';
+import { mswDB } from 'src/mocks/indexedDB';
 
 import type { MockContext, MockContextPopulator } from 'src/mocks/types';
 
@@ -7,12 +8,18 @@ import type { MockContext, MockContextPopulator } from 'src/mocks/types';
  */
 export const productionRegionsPopulator: MockContextPopulator = {
   desc: 'Populates context with Production-like region data',
-  group: 'Environment',
+  group: 'Regions',
   id: 'prod-regions',
   label: 'Production Regions',
 
-  populator: (mockContext: MockContext) => {
-    mockContext.regions.push(...productionRegions);
-    return mockContext;
+  populator: async (mockContext: MockContext) => {
+    const updatedMockContext = {
+      ...mockContext,
+      regions: mockContext.regions.concat(productionRegions),
+    };
+
+    await mswDB.saveStore(updatedMockContext, 'seedContext');
+
+    return updatedMockContext;
   },
 };

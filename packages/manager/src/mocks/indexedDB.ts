@@ -349,6 +349,7 @@ export const mswDB = {
           const seedContext = seedRequest.result;
           const mockEntities = mockContext?.[entity] || [];
           const seedEntities = seedContext?.[entity] || [];
+
           resolve([...mockEntities, ...seedEntities] as MockContext[T]);
         };
         seedRequest.onerror = (event) => {
