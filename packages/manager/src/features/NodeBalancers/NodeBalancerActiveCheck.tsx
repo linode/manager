@@ -106,7 +106,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
             disabled={disabled}
             errorText={errorMap.check}
             id={`type-${configIdx}`}
-            disableClearable={true}
+            disableClearable
             label="Type"
             noMarginTop
             onChange={(_, selected) =>

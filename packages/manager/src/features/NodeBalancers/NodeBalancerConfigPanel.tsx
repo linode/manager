@@ -206,7 +206,7 @@ export const NodeBalancerConfigPanel = (
             disabled={disabled}
             errorText={errorMap.protocol}
             id={`protocol-${configIdx}`}
-            disableClearable={true}
+            disableClearable
             label="Protocol"
             noMarginTop
             onChange={onProtocolChange}
@@ -262,7 +262,7 @@ export const NodeBalancerConfigPanel = (
               disabled={disabled}
               errorText={errorMap.proxy_protocol}
               id={`proxy-protocol-${configIdx}`}
-              disableClearable={true}
+              disableClearable
               label="Proxy Protocol"
               noMarginTop
               onChange={(_, selected) => {
@@ -296,7 +296,7 @@ export const NodeBalancerConfigPanel = (
             disabled={disabled}
             errorText={errorMap.algorithm}
             id={`algorithm-${configIdx}`}
-            disableClearable={true}
+            disableClearable
             label="Algorithm"
             noMarginTop
             onChange={(_, selected) => {
@@ -325,7 +325,7 @@ export const NodeBalancerConfigPanel = (
             disabled={disabled}
             errorText={errorMap.stickiness}
             id={`session-stickiness-${configIdx}`}
-            disableClearable={true}
+            disableClearable
             label="Session Stickiness"
             noMarginTop
             onChange={(_, selected) => {
