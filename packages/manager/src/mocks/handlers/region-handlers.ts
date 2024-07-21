@@ -45,7 +45,8 @@ export const getRegions = (mockContext: MockContext) => [
   http.get(
     '*/v4*/regions/:id',
     async ({ params }): Promise<StrictResponse<APIErrorResponse | Region>> => {
-      const region = await mswDB.get('regions', Number(params.id));
+      const id = Number(params.id);
+      const region = await mswDB.get('regions', id);
 
       if (!region) {
         return makeNotFoundResponse();

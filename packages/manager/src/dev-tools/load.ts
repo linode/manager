@@ -61,11 +61,13 @@ export async function loadDevTools(
 
     // Seeding
     const seedContext = (await mswDB.getStore('seedContext')) || emptyStore;
+
     const populateSeeds = async (store: MockContext): Promise<MockContext> => {
       return await mswContentPopulators.reduce(
         async (accPromise, cur: MockContextPopulator) => {
           const acc = await accPromise;
-          return cur.populator(acc);
+
+          return await cur.populator(acc);
         },
         Promise.resolve(store)
       );
@@ -75,9 +77,7 @@ export async function loadDevTools(
       key: T,
       seeds: MockContext
     ): Promise<void> => {
-      if (Array.isArray(seedContext[key]) && seedContext[key].length === 0) {
-        seedContext[key] = seeds[key];
-      }
+      seedContext[key] = seeds[key];
     };
 
     const seeds = await populateSeeds(emptyStore);
@@ -87,6 +87,7 @@ export async function loadDevTools(
     ) as (keyof MockContext)[]).map((key) => updateSeedContext(key, seeds));
 
     await Promise.all(seedPromises);
+
     await mswDB.saveStore(seedContext ?? emptyStore, 'seedContext');
 
     // Merge the contexts

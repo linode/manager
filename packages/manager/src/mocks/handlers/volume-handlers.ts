@@ -1,14 +1,16 @@
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { volumeFactory } from 'src/factories';
+import { volumeFactory, volumeTypeFactory } from 'src/factories';
+import { mswDB } from 'src/mocks/indexedDB';
+import { getPaginatedSlice } from 'src/mocks/utilities/pagination';
 import {
   makeNotFoundResponse,
   makePaginatedResponse,
   makeResponse,
 } from 'src/mocks/utilities/response';
 
-import type { Volume } from '@linode/api-v4';
+import type { PriceType, Volume } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockContext } from 'src/mocks/types';
 import type {
@@ -17,21 +19,47 @@ import type {
 } from 'src/mocks/utilities/response';
 
 export const getVolumes = (mockContext: MockContext) => [
-  http.get('*/v4/volumes', () => {
-    return makePaginatedResponse(mockContext.volumes);
-  }),
+  // Keeping things static for types/prices.
+  http.get(
+    '*/v4/volumes/types',
+    async (): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<PriceType>>
+    > => {
+      const volumeTypes = volumeTypeFactory.buildList(3);
 
-  /*
-   * Responds with the Volume with the given ID.
-   * Responds with a 404 if no Volume with the given ID exists in context.
-   */
+      return makePaginatedResponse(volumeTypes);
+    }
+  ),
+
+  http.get(
+    '*/v4/volumes',
+    async ({
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<Volume>>
+    > => {
+      const url = new URL(request.url);
+      const volumes = await mswDB.getAll('volumes');
+
+      if (!volumes) {
+        return makeNotFoundResponse();
+      }
+
+      const pageNumber = Number(url.searchParams.get('page')) || 1;
+      const pageSize = Number(url.searchParams.get('page_size')) || 25;
+      const totalPages = Math.max(Math.ceil(volumes.length / pageSize), 1);
+
+      const pageSlice = getPaginatedSlice(volumes, pageNumber, pageSize);
+
+      return makePaginatedResponse(pageSlice, pageNumber, totalPages);
+    }
+  ),
+
   http.get(
     '*/v4/volumes/:id',
-    ({ params }): StrictResponse<APIErrorResponse | Volume> => {
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | Volume>> => {
       const id = Number(params.id);
-      const volume = mockContext.volumes.find(
-        (contextVolume) => contextVolume.id === id
-      );
+      const volume = await mswDB.get('volumes', id);
 
       if (!volume) {
         return makeNotFoundResponse();
@@ -41,19 +69,15 @@ export const getVolumes = (mockContext: MockContext) => [
     }
   ),
 
-  /*
-   * Responds with a list of Volumes that are attached to the given Linode.
-   * Responds with a 404 if no Linode with the given ID exists in context.
-   */
   http.get(
     '*/v4/linode/instances/:linodeId/volumes',
-    ({
+    async ({
       params,
-    }): StrictResponse<APIErrorResponse | APIPaginatedResponse<Volume>> => {
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<Volume>>
+    > => {
       const linodeId = Number(params.linodeId);
-      const linode = mockContext.linodes.find(
-        (contextLinode) => contextLinode.id === linodeId
-      );
+      const linode = await mswDB.get('linodes', linodeId);
 
       if (!linode) {
         return makeNotFoundResponse();
@@ -63,16 +87,12 @@ export const getVolumes = (mockContext: MockContext) => [
         (contextVolume) => contextVolume.linode_id === linodeId
       );
 
-      // Return paginated response containing all volumes for Linode.
       return makePaginatedResponse(volumesForLinode);
     }
   ),
 ];
 
 export const createVolumes = (mockContext: MockContext) => [
-  /*
-   * Responds with a new Volume instance.
-   */
   http.post(
     '*/v4/volumes',
     async ({ request }): Promise<StrictResponse<APIErrorResponse | Volume>> => {
@@ -84,12 +104,9 @@ export const createVolumes = (mockContext: MockContext) => [
       };
 
       if (linodeId) {
-        const linode = mockContext.linodes.find(
-          (contextLinode) => contextLinode.id === linodeId
-        );
+        const linode = await mswDB.get('linodes', linodeId);
 
         if (!linode) {
-          // TODO Handle error when `linodeId` is invalid -- not sure if 400 or 404.
           return makeNotFoundResponse();
         }
 
@@ -108,54 +125,72 @@ export const createVolumes = (mockContext: MockContext) => [
         ...volumeLinodePayloadData,
       });
 
-      mockContext.volumes.push(volume);
+      await mswDB.add('volumes', volume, mockContext);
+
+      // TODO queue event.
       return makeResponse(volume);
     }
   ),
 ];
 
-/**
- * Generates MSW handlers for Volume update API operations.
- */
 export const updateVolumes = (mockContext: MockContext) => [
-  http.post('*/v4/volumes/:id/detach', ({ params }) => {
-    const id = Number(params.id);
-    const volume = mockContext.volumes.find(
-      (contextVolume) => contextVolume.id === id
-    );
+  http.put(
+    '*/v4/volumes/:id',
+    async ({
+      params,
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | Volume>> => {
+      const id = Number(params.id);
+      const volume = await mswDB.get('volumes', id);
 
-    if (!volume) {
-      return makeNotFoundResponse();
+      if (!volume) {
+        return makeNotFoundResponse();
+      }
+
+      const payload = await request.clone().json();
+      const updatedVolume = { ...volume, ...payload };
+
+      await mswDB.update('volumes', id, updatedVolume, mockContext);
+
+      // TODO queue event.
+      return makeResponse(updatedVolume);
     }
+  ),
 
-    volume.linode_id = null;
-    volume.linode_label = null;
-    // TODO queue event.
-    return makeResponse({});
-  }),
+  http.post(
+    '*/v4/volumes/:id/detach',
+    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+      const id = Number(params.id);
+      const volume = await mswDB.get('volumes', id);
+
+      if (!volume) {
+        return makeNotFoundResponse();
+      }
+
+      const updatedVolume = { ...volume, linode_id: null, linode_label: null };
+
+      await mswDB.update('volumes', id, updatedVolume, mockContext);
+
+      // TODO queue event.
+      return makeResponse({});
+    }
+  ),
 ];
 
 export const deleteVolumes = (mockContext: MockContext) => [
-  /*
-   * Deletes the Volume with the given ID from context and responds with empty object.
-   * Responds with a 404 if no Volume with the given ID exists in context.
-   */
-  http.delete('*/v4/volumes/:id', ({ params }) => {
-    const id = Number(params.id);
-    const volume = mockContext.volumes.find(
-      (contextVolume) => contextVolume.id === id
-    );
+  http.delete(
+    '*/v4/volumes/:id',
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
+      const id = Number(params.id);
+      const volume = await mswDB.get('volumes', id);
 
-    if (volume) {
-      const volumeIndex = mockContext.volumes.indexOf(volume);
-      if (volumeIndex >= 0) {
-        mockContext.volumes.splice(volumeIndex, 1);
-        return makeResponse({});
+      if (!volume) {
+        return makeNotFoundResponse();
       }
-    }
 
-    // If Volume does not exist in context, or its index is failed to be retrieved,
-    // respond with a 404 response.
-    return makeNotFoundResponse();
-  }),
+      await mswDB.delete('volumes', id, mockContext);
+
+      return makeResponse({});
+    }
+  ),
 ];
