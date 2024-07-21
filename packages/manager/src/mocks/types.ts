@@ -65,6 +65,7 @@ export type MockContextPopulatorIds =
   | 'edge-regions'
   | 'legacy-test-regions'
   | 'many-linodes'
+  | 'many-volumes'
   | 'prod-regions';
 
 export type MockContextPopulatorGroup =
@@ -74,9 +75,13 @@ export type MockContextPopulatorGroup =
   | 'Volumes';
 
 export interface MockContextPopulator {
+  defaultCount?: number;
   desc?: string;
   group?: MockContextPopulatorGroup;
   id: MockContextPopulatorIds;
   label: string;
-  populator: (mockContext: MockContext) => MockContext | Promise<MockContext>;
+  populator: (
+    mockContext: MockContext,
+    count?: number
+  ) => MockContext | Promise<MockContext>;
 }

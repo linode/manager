@@ -13,12 +13,13 @@ import { removeSeeds } from 'src/mocks/utilities/removeSeeds';
 
 import { DevToolSelect } from './components/DevToolSelect';
 
-import type { MockContextPopulatorIds } from 'src/mocks/types';
+import type { MockContext, MockContextPopulatorIds } from 'src/mocks/types';
 
 const LOCAL_STORAGE_KEY = 'msw';
 const LOCAL_STORAGE_POPULATORS_KEY = 'msw-populators';
 const LOCAL_STORAGE_PRESET_KEY = 'msw-preset';
 const LOCAL_STORAGE_PRESET_EXTRAS_KEY = 'msw-preset-extras';
+export const LOCAL_STORAGE_COUNT_MAP_KEY = 'msw-count-map';
 
 /**
  * Whether MSW is enabled via local storage setting.
@@ -55,10 +56,22 @@ export const getMSWPreset = () => {
  */
 export const saveMSWPreset = (presetId: string) => {
   localStorage.setItem(LOCAL_STORAGE_PRESET_KEY, presetId);
+};
 
-  // if (presetId !== previousPreset && isMSWEnabled) {
-  //   window.location.reload();
-  // }
+/**
+ * Retrieves the seeding count map from local storage.
+ */
+export const getMSWCountMap = (): { [key: string]: number } => {
+  const encodedCountMap = localStorage.getItem(LOCAL_STORAGE_COUNT_MAP_KEY);
+
+  return encodedCountMap ? JSON.parse(encodedCountMap) : {};
+};
+
+/**
+ * Saves the seeding count map to local storage.
+ */
+export const saveMSWCountMap = (countMap: { [key: string]: number }) => {
+  localStorage.setItem(LOCAL_STORAGE_COUNT_MAP_KEY, JSON.stringify(countMap));
 };
 
 /**
@@ -112,7 +125,6 @@ export const getMSWContextPopulators = (): string[] => {
 
 export const saveMSWContextPopulators = (populators: string[]) => {
   localStorage.setItem(LOCAL_STORAGE_POPULATORS_KEY, populators.join(','));
-  // window.location.reload();
 };
 
 const renderBaselinePresetOptions = () =>
@@ -135,6 +147,13 @@ const renderBaselinePresetOptions = () =>
 const renderContentPopulatorOptions = (
   populators: string[],
   onChange: (e: React.ChangeEvent, populatorId: string) => void,
+  onCountChange: (e: React.ChangeEvent, populatorId: string) => void,
+  onBlurCountChange: (
+    e: React.ChangeEvent,
+    populatorId: string,
+    defaultCount: number
+  ) => void,
+  countMap: { [key: string]: number },
   disabled: boolean
 ) => {
   return (
@@ -156,6 +175,23 @@ const renderContentPopulatorOptions = (
                 <span title={contextPopulator.desc || contextPopulator.label}>
                   {contextPopulator.label}
                 </span>
+                {contextPopulator.defaultCount && (
+                  <input
+                    onBlur={(e) =>
+                      onBlurCountChange(
+                        e,
+                        contextPopulator.id,
+                        contextPopulator.defaultCount!
+                      )
+                    }
+                    aria-label="Count"
+                    defaultValue={contextPopulator.defaultCount}
+                    onChange={(e) => onCountChange(e, contextPopulator.id)}
+                    style={{ marginLeft: 8, width: 60 }}
+                    type="number"
+                    value={countMap[contextPopulator.id] || ''}
+                  />
+                )}
               </li>
             ))}
         </div>
@@ -205,6 +241,7 @@ export const ServiceWorkerTool = () => {
   const loadedBasePreset = getMSWPreset();
   const loadedPresets = getMSWExtraPresets();
   const loadedPopulators = getMSWContextPopulators();
+  const loadedCountMap = getMSWCountMap();
 
   const [MSWBasePreset, setMSWBasePreset] = React.useState<string>(
     loadedBasePreset
@@ -213,21 +250,14 @@ export const ServiceWorkerTool = () => {
   const [MSWPopulators, setMSWPopulators] = React.useState<string[]>(
     loadedPopulators
   );
+  const [countMap, setCountMap] = React.useState<{ [key: string]: number }>(
+    loadedCountMap
+  );
 
   const [saveState, setSaveState] = React.useState<ServiceWorkerSaveState>({
     hasSaved: false,
     hasUnsavedChanges: false,
   });
-
-  // React.useEffect(() => {
-  //   if (!MSWPreset) {
-  //     const storedPreset = localStorage.getItem(LOCAL_STORAGE_PRESET_KEY);
-  //     const newPreset = storedPreset || defaultBaselineMockPreset.id;
-  //     setMSWPreset(newPreset);
-  //   } else {
-  //     saveMSWPreset(MSWPreset);
-  //   }
-  // }, [MSWPreset]);
 
   const handleChangeBasePreset = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setMSWBasePreset(e.target.value);
@@ -291,16 +321,59 @@ export const ServiceWorkerTool = () => {
     }
   };
 
+  const handleCountChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    populatorId: string
+  ) => {
+    const updatedCountMap = {
+      ...countMap,
+      [populatorId]: parseInt(e.target.value, 10),
+    };
+
+    setCountMap(updatedCountMap);
+    setSaveState({
+      hasSaved: false,
+      hasUnsavedChanges: true,
+    });
+  };
+
+  const handleBlurCountChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    populatorId: string,
+    defaultCount: number
+  ) => {
+    if (e.target.value) {
+      return;
+    }
+
+    // if field is empty, reset to default count
+    const updatedCountMap = {
+      ...countMap,
+      [populatorId]: defaultCount,
+    };
+
+    setCountMap(updatedCountMap);
+  };
+
   const handleApplyChanges = () => {
     // Save base preset, extra presets, and content populators to local storage.
     saveMSWPreset(MSWBasePreset);
     saveMSWExtraPresets(MSWHandlers);
     saveMSWContextPopulators(MSWPopulators);
+    saveMSWCountMap(countMap);
 
-    // Update save state to reflect saved changes if page does not refresh.
-    setSaveState({
-      hasSaved: true,
-      hasUnsavedChanges: false,
+    const promises = MSWPopulators.map((populatorId) => {
+      const populator = allContextPopulators.find((p) => p.id === populatorId);
+
+      return populator?.populator({} as MockContext);
+    });
+
+    Promise.all(promises).then(() => {
+      setSaveState((prevSaveState) => ({
+        ...prevSaveState,
+        hasSaved: true,
+        hasUnsavedChanges: false,
+      }));
     });
 
     // We only have to reload the window if MSW is already enabled. Otherwise,
@@ -376,6 +449,9 @@ export const ServiceWorkerTool = () => {
                   {renderContentPopulatorOptions(
                     MSWPopulators,
                     handleChangePopulator,
+                    handleCountChange,
+                    handleBlurCountChange,
+                    countMap,
                     !isMSWEnabled
                   )}
                 </div>

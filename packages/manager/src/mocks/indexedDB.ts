@@ -26,6 +26,21 @@ export const mswDB = {
           return;
         }
 
+        // Generate unique ID if necessary
+        if (hasId(payload)) {
+          let newId = payload.id;
+
+          while (
+            mockContext[entity].some(
+              // eslint-disable-next-line no-loop-func
+              (item: { id: number }) => item.id === newId
+            )
+          ) {
+            newId = (newId as number) + 1;
+          }
+          payload.id = newId;
+        }
+
         mockContext[entity].push(payload);
         state[entity].push(payload as any);
 
