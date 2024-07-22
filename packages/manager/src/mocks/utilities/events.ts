@@ -1,5 +1,4 @@
 import { eventFactory } from 'src/factories';
-
 import { mswDB } from '../indexedDB';
 
 import type { Event } from '@linode/api-v4';
@@ -23,7 +22,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 /**
  * Queues a series of events to be processed in sequence.
  *
- * The sequence is is sorted by the natural order of our statuses: 'scheduled', 'started', 'finished | notification | failed'.
+ * The sequence is sorted by the natural order of our statuses: 'scheduled', 'started', 'finished | notification | failed'.
  * Events can be marked as progress events, which will increase their duration as well as the following event's delay.
  */
 export const queueEvents = (props: QueuedEvents): Promise<void> => {
@@ -63,26 +62,33 @@ export const queueEvents = (props: QueuedEvents): Promise<void> => {
       status: seq.status,
     });
 
-    // Add the new event to the database
-    await mswDB.add('eventQueue', sequenceEvent as any, mockContext);
+    // Add the new event to the database (store only serializable data)
+    await mswDB.add('eventQueue', sequenceEvent, mockContext);
 
-    // Update the event's progress if it is a progress event
+    // Handle progress events separately
     if (seq.isProgressEvent) {
       const intervalId = setInterval(async () => {
-        const updatedEvent = { ...sequenceEvent };
-        updatedEvent.percent_complete! += 10;
+        try {
+          const updatedEvent = await mswDB.get('eventQueue', sequenceEvent.id);
 
-        if (updatedEvent.percent_complete! >= 100) {
-          clearInterval(intervalId);
+          if (updatedEvent) {
+            updatedEvent.percent_complete! += 10;
+            if (updatedEvent.percent_complete! >= 100) {
+              clearInterval(intervalId);
+            }
+
+            await mswDB.update(
+              'eventQueue',
+              updatedEvent.id,
+              updatedEvent,
+              mockContext
+            );
+          }
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error('Error updating event progress:', error);
         }
-
-        await mswDB.update(
-          'eventQueue',
-          updatedEvent.id,
-          updatedEvent as any,
-          mockContext
-        );
-      }, 1500);
+      }, 1000);
     }
 
     // Recursively process the next event in the sequence
