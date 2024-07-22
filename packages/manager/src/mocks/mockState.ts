@@ -9,7 +9,7 @@ import type { MockState, MockSeeder } from './types';
  *
  * @returns `true` if event is considered complete, `false` if callback should continue to be called.
  */
-export const getContextSeederGroups = (
+export const getStateSeederGroups = (
   seeders: MockSeeder[]
 ): Array<string | undefined> => {
   return seeders.reduce((acc: Array<string | undefined>, cur) => {
@@ -34,9 +34,9 @@ export const emptyStore: MockState = {
 };
 
 /**
- * Creates and returns an empty mock context.
+ * Creates and returns an empty mock state.
  *
- * @returns Empty mock context.
+ * @returns Empty mock state.
  */
 export const createInitialMockStore = async (): Promise<MockState> => {
   const mockState = await mswDB.getStore('mockState');

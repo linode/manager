@@ -2,13 +2,13 @@ import * as React from 'react';
 
 import { Tooltip } from 'src/components/Tooltip';
 import { getMockPresetGroups } from 'src/mocks/mockPreset';
-import { getContextSeederGroups } from 'src/mocks/mockState';
+import { getStateSeederGroups } from 'src/mocks/mockState';
 import {
   baselineMockPresets,
   defaultBaselineMockPreset,
   extraMockPresets,
 } from 'src/mocks/presets';
-import { allContextSeeders } from 'src/mocks/seeds';
+import { allStateSeeders } from 'src/mocks/seeds';
 import { removeSeeds } from 'src/mocks/utilities/removeSeeds';
 
 import { DevToolSelect } from './components/DevToolSelect';
@@ -117,9 +117,7 @@ export const getMSWContextSeeders = (): string[] => {
 
   // Filter out any stored populators that no longer exist in the code base.
   return storedPopulators.filter((storedPopulator) =>
-    allContextSeeders.find(
-      (contextSeeder) => contextSeeder.id === storedPopulator
-    )
+    allStateSeeders.find((stateSeeder) => stateSeeder.id === storedPopulator)
   );
 };
 
@@ -153,31 +151,31 @@ const renderContentPopulatorOptions = (
 ) => {
   return (
     <ul>
-      {getContextSeederGroups(allContextSeeders).map((group) => (
+      {getStateSeederGroups(allStateSeeders).map((group) => (
         <div key={group}>
           <li className="dev-tools__list-box__separator">{group}</li>
-          {allContextSeeders
-            .filter((contextSeeder) => contextSeeder.group === group)
-            .map((contextSeeder) => (
-              <li key={contextSeeder.id}>
+          {allStateSeeders
+            .filter((stateSeeder) => stateSeeder.group === group)
+            .map((stateSeeder) => (
+              <li key={stateSeeder.id}>
                 <input
-                  checked={seeders.includes(contextSeeder.id)}
+                  checked={seeders.includes(stateSeeder.id)}
                   disabled={disabled}
-                  onChange={(e) => onChange(e, contextSeeder.id)}
+                  onChange={(e) => onChange(e, stateSeeder.id)}
                   style={{ marginRight: 12 }}
                   type="checkbox"
                 />
-                <span title={contextSeeder.desc || contextSeeder.label}>
-                  {contextSeeder.label}
+                <span title={stateSeeder.desc || stateSeeder.label}>
+                  {stateSeeder.label}
                 </span>
-                {contextSeeder.canUpdateCount && (
+                {stateSeeder.canUpdateCount && (
                   <input
                     aria-label="Count"
                     min={0}
-                    onChange={(e) => onCountChange(e, contextSeeder.id)}
+                    onChange={(e) => onCountChange(e, stateSeeder.id)}
                     style={{ marginLeft: 8, width: 60 }}
                     type="number"
-                    value={countMap[contextSeeder.id] || 0}
+                    value={countMap[stateSeeder.id] || 0}
                   />
                 )}
               </li>
@@ -331,7 +329,7 @@ export const ServiceWorkerTool = () => {
     saveMSWCountMap(countMap);
 
     const promises = MSWSeeders.map((seederId) => {
-      const populator = allContextSeeders.find(
+      const populator = allStateSeeders.find(
         (seeder) => seeder.id === seederId
       );
 

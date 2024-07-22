@@ -1,9 +1,9 @@
 import type { MockState } from './types';
 
-type ObjectStore = 'mockState' | 'seedContext';
+type ObjectStore = 'mockState' | 'seedState';
 
-const MOCK_CONTEXT: ObjectStore = 'mockState';
-const SEED_CONTEXT: ObjectStore = 'seedContext';
+const MOCK_STATE: ObjectStore = 'mockState';
+const SEED_STATE: ObjectStore = 'seedState';
 
 export const mswDB = {
   add: async <T extends keyof MockState>(
@@ -14,8 +14,8 @@ export const mswDB = {
     const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction([MOCK_CONTEXT], 'readwrite');
-      const store = transaction.objectStore(MOCK_CONTEXT);
+      const transaction = db.transaction([MOCK_STATE], 'readwrite');
+      const store = transaction.objectStore(MOCK_STATE);
       const request = store.get(1);
 
       request.onsuccess = () => {
@@ -63,7 +63,7 @@ export const mswDB = {
     entity: T,
     payload: MockState[T] extends Array<infer U> ? U[] : never,
     state?: MockState,
-    objectStore: ObjectStore = MOCK_CONTEXT
+    objectStore: ObjectStore = MOCK_STATE
   ): Promise<void> => {
     const db = await mswDB.open('MockDB', 1);
 
@@ -104,7 +104,7 @@ export const mswDB = {
     });
   },
 
-  clear: async (objectStore: ObjectStore = MOCK_CONTEXT): Promise<void> => {
+  clear: async (objectStore: ObjectStore = MOCK_STATE): Promise<void> => {
     const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
@@ -129,12 +129,9 @@ export const mswDB = {
     const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(
-        [MOCK_CONTEXT, SEED_CONTEXT],
-        'readwrite'
-      );
-      const store = transaction.objectStore(MOCK_CONTEXT);
-      const seedStore = transaction.objectStore(SEED_CONTEXT);
+      const transaction = db.transaction([MOCK_STATE, SEED_STATE], 'readwrite');
+      const store = transaction.objectStore(MOCK_STATE);
+      const seedStore = transaction.objectStore(SEED_STATE);
 
       const storeRequest = store.get(1);
       const seedRequest = seedStore.get(1);
@@ -143,11 +140,11 @@ export const mswDB = {
         const mockState = storeRequest.result;
 
         seedRequest.onsuccess = () => {
-          const seedContext = seedRequest.result;
+          const seedState = seedRequest.result;
 
-          const deleteEntity = (context: MockState | undefined) => {
-            if (context && context[entity]) {
-              const index = context[entity].findIndex((item) => {
+          const deleteEntity = (state: MockState | undefined) => {
+            if (state && state[entity]) {
+              const index = state[entity].findIndex((item) => {
                 if (!hasId(item)) {
                   return false;
                 }
@@ -155,13 +152,13 @@ export const mswDB = {
                 return item.id === id;
               });
               if (index !== -1) {
-                context[entity].splice(index, 1);
+                state[entity].splice(index, 1);
               }
             }
           };
 
           deleteEntity(mockState);
-          deleteEntity(seedContext);
+          deleteEntity(seedState);
 
           if (state[entity]) {
             const stateIndex = state[entity].findIndex((item) => {
@@ -177,7 +174,7 @@ export const mswDB = {
           }
 
           const updateStoreRequest = store.put({ id: 1, ...mockState });
-          const updateSeedRequest = seedStore.put({ id: 1, ...seedContext });
+          const updateSeedRequest = seedStore.put({ id: 1, ...seedState });
 
           Promise.all([
             new Promise<void>((resolve, reject) => {
@@ -248,7 +245,7 @@ export const mswDB = {
     entity: T,
     ids: number[],
     state?: MockState,
-    objectStore: ObjectStore = MOCK_CONTEXT
+    objectStore: ObjectStore = MOCK_STATE
   ): Promise<void> => {
     const db = await mswDB.open('MockDB', 1);
 
@@ -299,12 +296,9 @@ export const mswDB = {
     const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(
-        [MOCK_CONTEXT, SEED_CONTEXT],
-        'readonly'
-      );
-      const store = transaction.objectStore(MOCK_CONTEXT);
-      const seedStore = transaction.objectStore(SEED_CONTEXT);
+      const transaction = db.transaction([MOCK_STATE, SEED_STATE], 'readonly');
+      const store = transaction.objectStore(MOCK_STATE);
+      const seedStore = transaction.objectStore(SEED_STATE);
 
       const storeRequest = store.get(1);
       const seedRequest = seedStore.get(1);
@@ -312,10 +306,10 @@ export const mswDB = {
       storeRequest.onsuccess = () => {
         const mockState = storeRequest.result;
         seedRequest.onsuccess = () => {
-          const seedContext = seedRequest.result;
+          const seedState = seedRequest.result;
 
-          const findEntity = (context: MockState | undefined) => {
-            return context?.[entity]?.find((item) => {
+          const findEntity = (state: MockState | undefined) => {
+            return state?.[entity]?.find((item) => {
               if (!hasId(item)) {
                 return false;
               }
@@ -324,7 +318,7 @@ export const mswDB = {
           };
 
           const mockEntity = findEntity(mockState);
-          const seedEntity = findEntity(seedContext);
+          const seedEntity = findEntity(seedState);
 
           resolve(
             (mockEntity ?? seedEntity) as MockState[T] extends Array<infer U>
@@ -348,12 +342,9 @@ export const mswDB = {
     const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(
-        [MOCK_CONTEXT, SEED_CONTEXT],
-        'readonly'
-      );
-      const store = transaction.objectStore(MOCK_CONTEXT);
-      const seedStore = transaction.objectStore(SEED_CONTEXT);
+      const transaction = db.transaction([MOCK_STATE, SEED_STATE], 'readonly');
+      const store = transaction.objectStore(MOCK_STATE);
+      const seedStore = transaction.objectStore(SEED_STATE);
 
       const storeRequest = store.get(1);
       const seedRequest = seedStore.get(1);
@@ -361,9 +352,9 @@ export const mswDB = {
       storeRequest.onsuccess = () => {
         const mockState = storeRequest.result;
         seedRequest.onsuccess = () => {
-          const seedContext = seedRequest.result;
+          const seedState = seedRequest.result;
           const mockEntities = mockState?.[entity] || [];
-          const seedEntities = seedContext?.[entity] || [];
+          const seedEntities = seedState?.[entity] || [];
 
           resolve([...mockEntities, ...seedEntities] as MockState[T]);
         };
@@ -378,10 +369,10 @@ export const mswDB = {
   },
 
   /**
-   * Retrieves the whole mock context from IndexedDB.
+   * Retrieves the whole mock state from IndexedDB.
    */
   getStore: async (
-    objectStore: ObjectStore = MOCK_CONTEXT
+    objectStore: ObjectStore = MOCK_STATE
   ): Promise<MockState | undefined> => {
     const db = await mswDB.open('MockDB', 1);
 
@@ -416,24 +407,24 @@ export const mswDB = {
       request.onupgradeneeded = () => {
         const db = request.result;
 
-        if (!db.objectStoreNames.contains(MOCK_CONTEXT)) {
-          db.createObjectStore(MOCK_CONTEXT, { keyPath: 'id' });
+        if (!db.objectStoreNames.contains(MOCK_STATE)) {
+          db.createObjectStore(MOCK_STATE, { keyPath: 'id' });
         }
 
-        if (!db.objectStoreNames.contains(SEED_CONTEXT)) {
-          db.createObjectStore(SEED_CONTEXT, { keyPath: 'id' });
+        if (!db.objectStoreNames.contains(SEED_STATE)) {
+          db.createObjectStore(SEED_STATE, { keyPath: 'id' });
         }
       };
     });
   },
 
   /**
-   * Saves the given mock context to IndexedDB.
-   * Useful to replace or initialize the whole mock context.
+   * Saves the given mock state to IndexedDB.
+   * Useful to replace or initialize the whole mock state.
    */
   saveStore: async (
     data: MockState,
-    objectStore: ObjectStore = MOCK_CONTEXT
+    objectStore: ObjectStore = MOCK_STATE
   ): Promise<void> => {
     const db = await mswDB.open('MockDB', 1);
 
@@ -463,12 +454,9 @@ export const mswDB = {
     const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(
-        [MOCK_CONTEXT, SEED_CONTEXT],
-        'readwrite'
-      );
-      const store = transaction.objectStore(MOCK_CONTEXT);
-      const seedStore = transaction.objectStore(SEED_CONTEXT);
+      const transaction = db.transaction([MOCK_STATE, SEED_STATE], 'readwrite');
+      const store = transaction.objectStore(MOCK_STATE);
+      const seedStore = transaction.objectStore(SEED_STATE);
 
       const storeRequest = store.get(1);
       const seedRequest = seedStore.get(1);
@@ -491,13 +479,13 @@ export const mswDB = {
         }
 
         seedRequest.onsuccess = () => {
-          const seedContext = seedRequest.result;
-          if (!seedContext || !seedContext[entity]) {
+          const seedState = seedRequest.result;
+          if (!seedState || !seedState[entity]) {
             reject(new Error('Entity not found'));
             return;
           }
 
-          const index = seedContext[entity].findIndex(
+          const index = seedState[entity].findIndex(
             (item: { id: number }) => item.id === id
           );
           if (index === -1) {
@@ -505,10 +493,10 @@ export const mswDB = {
             return;
           }
 
-          Object.assign(seedContext[entity][index], payload);
+          Object.assign(seedState[entity][index], payload);
           Object.assign(state[entity][index], payload);
 
-          const updatedSeedRequest = seedStore.put({ id: 1, ...seedContext });
+          const updatedSeedRequest = seedStore.put({ id: 1, ...seedState });
           updatedSeedRequest.onsuccess = () => resolve();
           updatedSeedRequest.onerror = (event) => reject(event);
         };

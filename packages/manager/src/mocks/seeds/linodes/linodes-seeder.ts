@@ -26,7 +26,7 @@ export const linodesSeeder: MockSeeder = {
       linodes: mockState.linodes.concat(linodes),
     };
 
-    await mswDB.saveStore(updatedMockState, 'seedContext');
+    await mswDB.saveStore(updatedMockState, 'seedState');
 
     return updatedMockState;
   },

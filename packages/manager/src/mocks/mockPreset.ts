@@ -10,10 +10,10 @@ import type { HttpHandler } from 'msw';
  */
 export const resolveMockPreset = (
   preset: MockPreset,
-  context: MockState
+  state: MockState
 ): HttpHandler[] => {
   return preset.handlers.reduce((acc: HttpHandler[], cur: MockHandler) => {
-    return [...cur(context), ...acc];
+    return [...cur(state), ...acc];
   }, []);
 };
 

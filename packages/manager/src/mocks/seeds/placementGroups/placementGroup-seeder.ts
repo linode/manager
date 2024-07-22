@@ -21,7 +21,7 @@ export const placementGroupSeeder: MockSeeder = {
       placementGroups: mockState.placementGroups.concat(placementGroups),
     };
 
-    await mswDB.saveStore(updatedMockState, 'seedContext');
+    await mswDB.saveStore(updatedMockState, 'seedState');
 
     return updatedMockState;
   },

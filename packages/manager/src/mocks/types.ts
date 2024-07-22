@@ -42,7 +42,7 @@ export type MockPreset = {
 };
 
 /**
- * Contextual data shared among mocks.
+ * Stateual data shared among mocks.
  */
 export interface MockState {
   eventQueue: Event[];
