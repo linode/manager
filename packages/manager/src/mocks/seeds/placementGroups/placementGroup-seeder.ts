@@ -6,7 +6,7 @@ import type { MockContext, MockContextSeeder } from 'src/mocks/types';
 
 export const placementGroupSeeder: MockContextSeeder = {
   canUpdateCount: true,
-  desc: 'Populates Placement Groups',
+  desc: 'Placement Groups Seeds',
   group: 'Placement Groups',
   id: 'many-placement-groups',
   label: 'Placement Groups',

@@ -9,7 +9,7 @@ import type { MockContext, MockContextSeeder } from './types';
  *
  * @returns `true` if event is considered complete, `false` if callback should continue to be called.
  */
-export const getContextPopulatorGroups = (
+export const getContextSeederGroups = (
   seeders: MockContextSeeder[]
 ): Array<string | undefined> => {
   return seeders.reduce((acc: Array<string | undefined>, cur) => {

@@ -7,7 +7,7 @@ import type { MockContext, MockContextSeeder } from 'src/mocks/types';
 
 export const linodesSeeder: MockContextSeeder = {
   canUpdateCount: true,
-  desc: 'Populates Linodes',
+  desc: 'Linodes Seeds',
   group: 'Linodes',
   id: 'many-linodes',
   label: 'Linodes',
