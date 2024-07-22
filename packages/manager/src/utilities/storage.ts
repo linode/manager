@@ -1,7 +1,7 @@
-import { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
-
 import { shouldEnableDevTools } from 'src/dev-tools/load';
-import { SupportTicketFormFields } from 'src/features/Support/SupportTickets/SupportTicketDialog';
+
+import type { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
+import type { SupportTicketFormFields } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
 const localStorageCache = {};
 

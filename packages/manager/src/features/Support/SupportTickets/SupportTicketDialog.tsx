@@ -200,8 +200,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   //   storage.supportText.set({ description: _description, title: _title });
   // };
 
-  const saveFormData = (values: SupportTicketFormFields) => {
-    storage.supportText.set(values);
+  const saveFormData = (values?: SupportTicketFormFields) => {
+    storage.supportText.set(values ?? undefined);
   };
 
   // Has to be a ref or else the timeout is redone with each render
@@ -227,23 +227,36 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const resetTicket = (clearValues: boolean = false) => {
     form.reset({
       ...form.formState.defaultValues,
-      description: clearValues ? '' : valuesFromStorage?.description,
-      entityId: '',
-      entityType: 'general',
-      summary: clearValues ? '' : valuesFromStorage?.summary,
-      ticketType: 'general',
+      description:
+        clearValues || !valuesFromStorage ? '' : valuesFromStorage.description,
+      entityId:
+        clearValues || !valuesFromStorage ? '' : valuesFromStorage.entityId,
+      entityType:
+        clearValues || !valuesFromStorage
+          ? 'general'
+          : valuesFromStorage.entityType,
+      selectedSeverity:
+        clearValues || !valuesFromStorage
+          ? undefined
+          : valuesFromStorage.selectedSeverity,
+      summary:
+        clearValues || !valuesFromStorage ? '' : valuesFromStorage.summary,
+      ticketType:
+        clearValues || !valuesFromStorage
+          ? 'general'
+          : valuesFromStorage.ticketType,
     });
   };
 
-  const formLocalStorageDefaults = {
-    description: '',
-    entityId: '',
-    entityInputValue: '',
-    entityType: 'general' as EntityType,
-    selectedSeverity: undefined,
-    summary: '',
-    ticketType: 'general' as TicketType,
-  };
+  // const formLocalStorageDefaults = {
+  //   description: '',
+  //   entityId: '',
+  //   entityInputValue: '',
+  //   entityType: 'general' as EntityType,
+  //   selectedSeverity: undefined,
+  //   summary: '',
+  //   ticketType: 'general' as TicketType,
+  // };
 
   const resetDrawer = (clearValues: boolean = false) => {
     resetTicket(clearValues);
@@ -251,15 +264,15 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
     if (clearValues) {
       // saveText('', '');
-      saveFormData(formLocalStorageDefaults);
+      saveFormData();
     }
   };
 
   const handleClose = () => {
-    props.onClose();
     if (ticketType === 'smtp') {
       window.setTimeout(() => resetDrawer(true), 500);
     }
+    props.onClose();
   };
 
   const handleCancel = () => {
