@@ -6,7 +6,6 @@ import { regionQueries } from 'src/queries/regions/regions';
 import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
 
 import {
-  CreateLinodeByCloningSchema,
   CreateLinodeFromBackupSchema,
   CreateLinodeFromMarketplaceAppSchema,
   CreateLinodeFromStackScriptSchema,
@@ -37,6 +36,13 @@ export const getLinodeCreateResolver = (
       {},
       { mode: 'async', rawValues: true }
     )(transformedValues, context, options);
+
+    if (tab === 'Clone Linode' && !values.linode) {
+      errors['linode'] = {
+        message: 'You must select a Linode to clone from.',
+        type: 'validate',
+      };
+    }
 
     const regions = await queryClient.ensureQueryData(regionQueries.regions);
 
@@ -74,7 +80,7 @@ export const getLinodeCreateResolver = (
 
 export const linodeCreateResolvers = {
   Backups: CreateLinodeFromBackupSchema,
-  'Clone Linode': CreateLinodeByCloningSchema,
+  'Clone Linode': CreateLinodeSchema,
   Images: CreateLinodeSchema,
   OS: CreateLinodeSchema,
   'One-Click': CreateLinodeFromMarketplaceAppSchema,
