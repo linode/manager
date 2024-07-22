@@ -94,6 +94,7 @@ const Lish = () => {
     return (
       <ErrorState
         errorText={linodeError?.[0]?.reason ?? 'Unable to load this Linode'}
+        typographySx={(theme) => ({ color: theme.palette.common.white })}
       />
     );
   }
@@ -105,6 +106,7 @@ const Lish = () => {
           tokenError?.[0]?.reason ??
           'Unable to load a Lish token for this Linode'
         }
+        typographySx={(theme) => ({ color: theme.palette.common.white })}
       />
     );
   }

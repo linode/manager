@@ -105,7 +105,12 @@ const Glish = (props: CombinedProps) => {
   };
 
   if (!powered) {
-    return <ErrorState errorText="Please power on your Linode to use Glish" />;
+    return (
+      <ErrorState
+        errorText="Please power on your Linode to use Glish"
+        typographySx={(theme) => ({ color: theme.palette.common.white })}
+      />
+    );
   }
 
   const rfbOptions = { wsProtocols: ws_protocols };
@@ -118,8 +123,8 @@ const Glish = (props: CombinedProps) => {
         </Box>
       }
       style={{
-        padding: 8,
         height: 'calc(100vh - 60px)',
+        padding: 8,
       }}
       autoConnect={false}
       ref={ref}

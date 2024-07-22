@@ -3,7 +3,6 @@ import { FitAddon } from '@xterm/addon-fit';
 import { Terminal } from '@xterm/xterm';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
@@ -78,15 +77,10 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
     if (error) {
       return (
-        <Box
-          sx={{
-            '& *': {
-              color: '#f4f4f4 !important',
-            },
-          }}
-        >
-          <ErrorState errorText={error} />
-        </Box>
+        <ErrorState
+          errorText={error}
+          typographySx={(theme) => ({ color: theme.palette.common.white })}
+        />
       );
     }
 
