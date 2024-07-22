@@ -1,4 +1,5 @@
 import { linodesPopulator } from './linodes/linodes-populator';
+import { placementGroupPopulator } from './placementGroups/placementGroup-populator';
 import { edgeRegionsPopulator } from './regions/edge-regions';
 import { legacyRegionsPopulator } from './regions/legacy-test-regions';
 import { productionRegionsPopulator } from './regions/production-regions';
@@ -9,5 +10,6 @@ export const allContextPopulators = [
   productionRegionsPopulator,
   edgeRegionsPopulator,
   legacyRegionsPopulator,
+  placementGroupPopulator,
   volumesPopulator,
 ];

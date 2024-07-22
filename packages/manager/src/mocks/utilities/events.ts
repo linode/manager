@@ -1,5 +1,7 @@
 import { eventFactory } from 'src/factories';
 
+import { mswDB } from '../indexedDB';
+
 import type { Event } from '@linode/api-v4';
 import type { MockContext } from 'src/mocks/types';
 
@@ -61,27 +63,27 @@ export const queueEvents = (props: QueuedEvents): Promise<void> => {
       status: seq.status,
     });
 
-    mockContext.eventQueue.push([
-      sequenceEvent,
-      (e) => {
-        if (e.status === 'scheduled') {
-          return false;
+    // Add the new event to the database
+    await mswDB.add('eventQueue', sequenceEvent as any, mockContext);
+
+    // Update the event's progress if it is a progress event
+    if (seq.isProgressEvent) {
+      const intervalId = setInterval(async () => {
+        const updatedEvent = { ...sequenceEvent };
+        updatedEvent.percent_complete! += 10;
+
+        if (updatedEvent.percent_complete! >= 100) {
+          clearInterval(intervalId);
         }
 
-        if (seq.isProgressEvent) {
-          const intervalId = setInterval(() => {
-            e.percent_complete! += 10;
-            if (e.percent_complete! >= 100) {
-              clearInterval(intervalId);
-            }
-          }, 1500);
-
-          return false;
-        }
-
-        return true;
-      },
-    ]);
+        await mswDB.update(
+          'eventQueue',
+          updatedEvent.id,
+          updatedEvent as any,
+          mockContext
+        );
+      }, 1500);
+    }
 
     // Recursively process the next event in the sequence
     await processEventSequence(index + 1);

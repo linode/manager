@@ -1,24 +1,24 @@
 import { getMSWCountMap } from 'src/dev-tools/ServiceWorkerTool';
-import { volumeFactory } from 'src/factories';
+import { placementGroupFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 
 import type { MockContext, MockContextPopulator } from 'src/mocks/types';
 
-export const volumesPopulator: MockContextPopulator = {
+export const placementGroupPopulator: MockContextPopulator = {
   canUpdateCount: true,
-  desc: 'Populates Volumes',
-  group: 'Volumes',
-  id: 'many-volumes',
-  label: 'Volumes',
+  desc: 'Populates Placement Groups',
+  group: 'Placement Groups',
+  id: 'many-placement-groups',
+  label: 'Placement Groups',
 
   populator: async (mockContext: MockContext) => {
     const countMap = getMSWCountMap();
-    const count = countMap[volumesPopulator.id] ?? 0;
-    const volumes = volumeFactory.buildList(count);
+    const count = countMap[placementGroupPopulator.id] ?? 0;
+    const placementGroups = placementGroupFactory.buildList(count);
 
     const updatedMockContext = {
       ...mockContext,
-      volumes: mockContext.volumes.concat(volumes),
+      placementGroups: mockContext.placementGroups.concat(placementGroups),
     };
 
     await mswDB.saveStore(updatedMockContext, 'seedContext');
