@@ -3,11 +3,8 @@ import { mswDB } from 'src/mocks/indexedDB';
 
 import type { MockContext, MockContextSeeder } from 'src/mocks/types';
 
-/**
- * Populates context with Regions that simulate our Production regions.
- */
 export const legacyRegionsSeeder: MockContextSeeder = {
-  desc: 'Populates context with legacy mock region data',
+  desc: 'Legacy region data seeds',
   group: 'Regions',
   id: 'legacy-test-regions',
   label: 'Legacy Test Regions',

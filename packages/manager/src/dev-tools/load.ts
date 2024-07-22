@@ -49,7 +49,7 @@ export async function loadDevTools(
       .filter((preset) => !!preset);
 
     const mswContentSeederIds = getMSWContextSeeders();
-    const mswContentPopulators = mswContentSeederIds
+    const mswContentSeeders = mswContentSeederIds
       .map((seederId) =>
         allContextSeeders.find((seeder) => seeder.id === seederId)
       )
@@ -63,7 +63,7 @@ export async function loadDevTools(
     const seedContext = (await mswDB.getStore('seedContext')) || emptyStore;
 
     const populateSeeds = async (store: MockContext): Promise<MockContext> => {
-      return await mswContentPopulators.reduce(
+      return await mswContentSeeders.reduce(
         async (accPromise, cur: MockContextSeeder) => {
           const acc = await accPromise;
 

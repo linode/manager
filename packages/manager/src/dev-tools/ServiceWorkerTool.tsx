@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Tooltip } from 'src/components/Tooltip';
-import { getContextPopulatorGroups } from 'src/mocks/mockContext';
+import { getContextSeederGroups } from 'src/mocks/mockContext';
 import { getMockPresetGroups } from 'src/mocks/mockPreset';
 import {
   baselineMockPresets,
@@ -153,7 +153,7 @@ const renderContentPopulatorOptions = (
 ) => {
   return (
     <ul>
-      {getContextPopulatorGroups(allContextSeeders).map((group) => (
+      {getContextSeederGroups(allContextSeeders).map((group) => (
         <div key={group}>
           <li className="dev-tools__list-box__separator">{group}</li>
           {allContextSeeders
