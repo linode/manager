@@ -1,9 +1,9 @@
 import { mockState } from 'src/dev-tools/load';
 import { mswDB } from 'src/mocks/indexedDB';
 
-import type { MockContextSeeder } from 'src/mocks/types';
+import type { MockSeeder } from 'src/mocks/types';
 
-export const removeSeeds = async (seederId: MockContextSeeder['id']) => {
+export const removeSeeds = async (seederId: MockSeeder['id']) => {
   switch (seederId) {
     case 'many-linodes':
       await mswDB.deleteAll('linodes', mockState, 'seedContext');

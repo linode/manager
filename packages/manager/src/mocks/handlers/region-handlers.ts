@@ -11,13 +11,13 @@ import { getPaginatedSlice } from '../utilities/pagination';
 
 import type { Region, RegionAvailability } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
-import type { MockContext } from 'src/mocks/types';
+import type { MockState } from 'src/mocks/types';
 import type {
   APIErrorResponse,
   APIPaginatedResponse,
 } from 'src/mocks/utilities/response';
 
-export const getRegions = (mockContext: MockContext) => [
+export const getRegions = (mockState: MockState) => [
   http.get(
     '*/v4*/regions',
     async ({
@@ -63,12 +63,12 @@ export const getRegions = (mockContext: MockContext) => [
     const pageNumber = Number(url.searchParams.get('page')) || 1;
     const pageSize = Number(url.searchParams.get('page_size')) || 25;
     const totalPages = Math.max(
-      Math.ceil(mockContext.regions.length / pageSize),
+      Math.ceil(mockState.regions.length / pageSize),
       1
     );
 
     const pageSlice = getPaginatedSlice(
-      mockContext.regions,
+      mockState.regions,
       pageNumber,
       pageSize
     );
@@ -80,7 +80,7 @@ export const getRegions = (mockContext: MockContext) => [
   http.get(
     '*/v4*/regions/:id/availability',
     ({ params }): StrictResponse<APIErrorResponse | RegionAvailability[]> => {
-      const region = mockContext.regions.find(
+      const region = mockState.regions.find(
         (contextRegion) => contextRegion.id === params.id
       );
 
@@ -88,7 +88,7 @@ export const getRegions = (mockContext: MockContext) => [
         return makeNotFoundResponse();
       }
 
-      const availabilityObjects = mockContext.regionAvailability.filter(
+      const availabilityObjects = mockState.regionAvailability.filter(
         (regionAvailability) => regionAvailability.region === region.id
       );
 

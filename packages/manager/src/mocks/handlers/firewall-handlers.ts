@@ -6,13 +6,13 @@ import { getPaginatedSlice } from '../utilities/pagination';
 
 import type { Firewall } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
-import type { MockContext } from 'src/mocks/types';
+import type { MockState } from 'src/mocks/types';
 import type {
   APIErrorResponse,
   APIPaginatedResponse,
 } from 'src/mocks/utilities/response';
 
-export const getFirewalls = (mockContext: MockContext) => [
+export const getFirewalls = (mockState: MockState) => [
   http.get(
     '*/v4beta/networking/firewalls',
     ({
@@ -22,9 +22,9 @@ export const getFirewalls = (mockContext: MockContext) => [
 
       const pageNumber = Number(url.searchParams.get('page')) || 1;
       const pageSize = Number(url.searchParams.get('page_size')) || 25;
-      const totalPages = Math.ceil(mockContext.firewalls?.length / pageSize);
+      const totalPages = Math.ceil(mockState.firewalls?.length / pageSize);
       const pageSlice = getPaginatedSlice(
-        mockContext.firewalls,
+        mockState.firewalls,
         pageNumber,
         pageSize
       );

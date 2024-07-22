@@ -1,6 +1,6 @@
 import { mswDB } from './indexedDB';
 
-import type { MockContext, MockContextSeeder } from './types';
+import type { MockState, MockSeeder } from './types';
 
 /**
  * Describes a function that executes on each request to the events endpoint.
@@ -10,7 +10,7 @@ import type { MockContext, MockContextSeeder } from './types';
  * @returns `true` if event is considered complete, `false` if callback should continue to be called.
  */
 export const getContextSeederGroups = (
-  seeders: MockContextSeeder[]
+  seeders: MockSeeder[]
 ): Array<string | undefined> => {
   return seeders.reduce((acc: Array<string | undefined>, cur) => {
     if (!acc.includes(cur.group)) {
@@ -21,7 +21,7 @@ export const getContextSeederGroups = (
   }, []);
 };
 
-export const emptyStore: MockContext = {
+export const emptyStore: MockState = {
   eventQueue: [],
   firewalls: [],
   linodeConfigs: [],
@@ -38,11 +38,11 @@ export const emptyStore: MockContext = {
  *
  * @returns Empty mock context.
  */
-export const createInitialMockStore = async (): Promise<MockContext> => {
-  const mockContext = await mswDB.getStore('mockContext');
+export const createInitialMockStore = async (): Promise<MockState> => {
+  const mockState = await mswDB.getStore('mockState');
 
-  if (mockContext) {
-    return mockContext;
+  if (mockState) {
+    return mockState;
   }
 
   return emptyStore;

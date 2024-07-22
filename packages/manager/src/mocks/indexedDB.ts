@@ -1,17 +1,17 @@
-import type { MockContext } from './types';
+import type { MockState } from './types';
 
-type ObjectStore = 'mockContext' | 'seedContext';
+type ObjectStore = 'mockState' | 'seedContext';
 
-const MOCK_CONTEXT: ObjectStore = 'mockContext';
+const MOCK_CONTEXT: ObjectStore = 'mockState';
 const SEED_CONTEXT: ObjectStore = 'seedContext';
 
 export const mswDB = {
-  add: async <T extends keyof MockContext>(
+  add: async <T extends keyof MockState>(
     entity: T,
-    payload: MockContext[T] extends Array<infer U> ? U : MockContext[T],
-    state: MockContext
+    payload: MockState[T] extends Array<infer U> ? U : MockState[T],
+    state: MockState
   ): Promise<void> => {
-    const db = await mswDB.open('MockContextDB', 1);
+    const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([MOCK_CONTEXT], 'readwrite');
@@ -19,9 +19,9 @@ export const mswDB = {
       const request = store.get(1);
 
       request.onsuccess = () => {
-        const mockContext = request.result;
+        const mockState = request.result;
 
-        if (!mockContext?.[entity]) {
+        if (!mockState?.[entity]) {
           reject();
           return;
         }
@@ -31,7 +31,7 @@ export const mswDB = {
           let newId = payload.id;
 
           while (
-            mockContext[entity].some(
+            mockState[entity].some(
               // eslint-disable-next-line no-loop-func
               (item: { id: number }) => item.id === newId
             )
@@ -41,10 +41,10 @@ export const mswDB = {
           payload.id = newId;
         }
 
-        mockContext[entity].push(payload);
+        mockState[entity].push(payload);
         state[entity].push(payload as any);
 
-        const updatedRequest = store.put({ id: 1, ...mockContext });
+        const updatedRequest = store.put({ id: 1, ...mockState });
 
         updatedRequest.onsuccess = () => {
           resolve();
@@ -59,13 +59,13 @@ export const mswDB = {
     });
   },
 
-  addMany: async <T extends keyof MockContext>(
+  addMany: async <T extends keyof MockState>(
     entity: T,
-    payload: MockContext[T] extends Array<infer U> ? U[] : never,
-    state?: MockContext,
+    payload: MockState[T] extends Array<infer U> ? U[] : never,
+    state?: MockState,
     objectStore: ObjectStore = MOCK_CONTEXT
   ): Promise<void> => {
-    const db = await mswDB.open('MockContextDB', 1);
+    const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([objectStore], 'readwrite');
@@ -73,23 +73,23 @@ export const mswDB = {
       const request = store.get(1);
 
       request.onsuccess = () => {
-        const mockContext = request.result;
-        if (!mockContext) {
+        const mockState = request.result;
+        if (!mockState) {
           reject();
           return;
         }
 
-        if (!mockContext[entity]) {
+        if (!mockState[entity]) {
           reject();
           return;
         }
 
-        mockContext[entity].push(...payload);
+        mockState[entity].push(...payload);
         if (state) {
           state[entity].push(...(payload as any));
         }
 
-        const updatedRequest = store.put({ id: 1, ...mockContext });
+        const updatedRequest = store.put({ id: 1, ...mockState });
 
         updatedRequest.onsuccess = () => {
           resolve();
@@ -105,7 +105,7 @@ export const mswDB = {
   },
 
   clear: async (objectStore: ObjectStore = MOCK_CONTEXT): Promise<void> => {
-    const db = await mswDB.open('MockContextDB', 1);
+    const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([objectStore], 'readwrite');
@@ -121,12 +121,12 @@ export const mswDB = {
     });
   },
 
-  delete: async <T extends keyof MockContext>(
+  delete: async <T extends keyof MockState>(
     entity: T,
     id: number,
-    state: MockContext
+    state: MockState
   ): Promise<void> => {
-    const db = await mswDB.open('MockContextDB', 1);
+    const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(
@@ -140,12 +140,12 @@ export const mswDB = {
       const seedRequest = seedStore.get(1);
 
       storeRequest.onsuccess = () => {
-        const mockContext = storeRequest.result;
+        const mockState = storeRequest.result;
 
         seedRequest.onsuccess = () => {
           const seedContext = seedRequest.result;
 
-          const deleteEntity = (context: MockContext | undefined) => {
+          const deleteEntity = (context: MockState | undefined) => {
             if (context && context[entity]) {
               const index = context[entity].findIndex((item) => {
                 if (!hasId(item)) {
@@ -160,7 +160,7 @@ export const mswDB = {
             }
           };
 
-          deleteEntity(mockContext);
+          deleteEntity(mockState);
           deleteEntity(seedContext);
 
           if (state[entity]) {
@@ -176,7 +176,7 @@ export const mswDB = {
             }
           }
 
-          const updateStoreRequest = store.put({ id: 1, ...mockContext });
+          const updateStoreRequest = store.put({ id: 1, ...mockState });
           const updateSeedRequest = seedStore.put({ id: 1, ...seedContext });
 
           Promise.all([
@@ -200,12 +200,12 @@ export const mswDB = {
     });
   },
 
-  deleteAll: async <T extends keyof MockContext>(
+  deleteAll: async <T extends keyof MockState>(
     entity: T,
-    state: MockContext,
+    state: MockState,
     objectStore: ObjectStore
   ): Promise<void> => {
-    const db = await mswDB.open('MockContextDB', 1);
+    const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([objectStore], 'readwrite');
@@ -213,23 +213,23 @@ export const mswDB = {
       const request = store.get(1);
 
       request.onsuccess = () => {
-        const mockContext = request.result;
-        if (!mockContext) {
+        const mockState = request.result;
+        if (!mockState) {
           reject();
           return;
         }
 
-        if (!mockContext[entity]) {
+        if (!mockState[entity]) {
           reject();
           return;
         }
 
-        mockContext[entity] = [];
+        mockState[entity] = [];
         if (state?.[entity]) {
           state[entity] = [];
         }
 
-        const updatedRequest = store.put({ id: 1, ...mockContext });
+        const updatedRequest = store.put({ id: 1, ...mockState });
 
         updatedRequest.onsuccess = () => {
           resolve();
@@ -244,13 +244,13 @@ export const mswDB = {
     });
   },
 
-  deleteMany: async <T extends keyof MockContext>(
+  deleteMany: async <T extends keyof MockState>(
     entity: T,
     ids: number[],
-    state?: MockContext,
+    state?: MockState,
     objectStore: ObjectStore = MOCK_CONTEXT
   ): Promise<void> => {
-    const db = await mswDB.open('MockContextDB', 1);
+    const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([objectStore], 'readwrite');
@@ -258,24 +258,24 @@ export const mswDB = {
       const request = store.get(1);
 
       request.onsuccess = () => {
-        const mockContext = request.result;
-        if (!mockContext?.[entity]) {
+        const mockState = request.result;
+        if (!mockState?.[entity]) {
           reject(new Error('Entity not found'));
           return;
         }
 
         ids.forEach((id) => {
-          const index = mockContext[entity].findIndex(
+          const index = mockState[entity].findIndex(
             (item: Record<string, unknown>) => item.id === id
           );
 
-          mockContext[entity].splice(index, 1);
+          mockState[entity].splice(index, 1);
           if (state) {
             state[entity].splice(index, 1);
           }
         });
 
-        const updatedRequest = store.put({ id: 1, ...mockContext });
+        const updatedRequest = store.put({ id: 1, ...mockState });
 
         updatedRequest.onsuccess = () => {
           resolve();
@@ -290,13 +290,13 @@ export const mswDB = {
     });
   },
 
-  get: async <T extends keyof MockContext>(
+  get: async <T extends keyof MockState>(
     entity: T,
     id: number
   ): Promise<
-    (MockContext[T] extends Array<infer U> ? U : MockContext[T]) | undefined
+    (MockState[T] extends Array<infer U> ? U : MockState[T]) | undefined
   > => {
-    const db = await mswDB.open('MockContextDB', 1);
+    const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(
@@ -310,11 +310,11 @@ export const mswDB = {
       const seedRequest = seedStore.get(1);
 
       storeRequest.onsuccess = () => {
-        const mockContext = storeRequest.result;
+        const mockState = storeRequest.result;
         seedRequest.onsuccess = () => {
           const seedContext = seedRequest.result;
 
-          const findEntity = (context: MockContext | undefined) => {
+          const findEntity = (context: MockState | undefined) => {
             return context?.[entity]?.find((item) => {
               if (!hasId(item)) {
                 return false;
@@ -323,13 +323,13 @@ export const mswDB = {
             });
           };
 
-          const mockEntity = findEntity(mockContext);
+          const mockEntity = findEntity(mockState);
           const seedEntity = findEntity(seedContext);
 
           resolve(
-            (mockEntity ?? seedEntity) as MockContext[T] extends Array<infer U>
+            (mockEntity ?? seedEntity) as MockState[T] extends Array<infer U>
               ? U
-              : MockContext[T]
+              : MockState[T]
           );
         };
         seedRequest.onerror = (event) => {
@@ -342,10 +342,10 @@ export const mswDB = {
     });
   },
 
-  getAll: async <T extends keyof MockContext>(
+  getAll: async <T extends keyof MockState>(
     entity: T
-  ): Promise<MockContext[T] | undefined> => {
-    const db = await mswDB.open('MockContextDB', 1);
+  ): Promise<MockState[T] | undefined> => {
+    const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(
@@ -359,13 +359,13 @@ export const mswDB = {
       const seedRequest = seedStore.get(1);
 
       storeRequest.onsuccess = () => {
-        const mockContext = storeRequest.result;
+        const mockState = storeRequest.result;
         seedRequest.onsuccess = () => {
           const seedContext = seedRequest.result;
-          const mockEntities = mockContext?.[entity] || [];
+          const mockEntities = mockState?.[entity] || [];
           const seedEntities = seedContext?.[entity] || [];
 
-          resolve([...mockEntities, ...seedEntities] as MockContext[T]);
+          resolve([...mockEntities, ...seedEntities] as MockState[T]);
         };
         seedRequest.onerror = (event) => {
           reject(event);
@@ -382,8 +382,8 @@ export const mswDB = {
    */
   getStore: async (
     objectStore: ObjectStore = MOCK_CONTEXT
-  ): Promise<MockContext | undefined> => {
-    const db = await mswDB.open('MockContextDB', 1);
+  ): Promise<MockState | undefined> => {
+    const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([objectStore], 'readonly');
@@ -432,10 +432,10 @@ export const mswDB = {
    * Useful to replace or initialize the whole mock context.
    */
   saveStore: async (
-    data: MockContext,
+    data: MockState,
     objectStore: ObjectStore = MOCK_CONTEXT
   ): Promise<void> => {
-    const db = await mswDB.open('MockContextDB', 1);
+    const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([objectStore], 'readwrite');
@@ -454,15 +454,13 @@ export const mswDB = {
     });
   },
 
-  update: async <T extends keyof MockContext>(
+  update: async <T extends keyof MockState>(
     entity: T,
     id: number,
-    payload: Partial<
-      MockContext[T] extends Array<infer U> ? U : MockContext[T]
-    >,
-    state: MockContext
+    payload: Partial<MockState[T] extends Array<infer U> ? U : MockState[T]>,
+    state: MockState
   ): Promise<void> => {
-    const db = await mswDB.open('MockContextDB', 1);
+    const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(
@@ -476,16 +474,16 @@ export const mswDB = {
       const seedRequest = seedStore.get(1);
 
       storeRequest.onsuccess = () => {
-        const mockContext = storeRequest.result;
-        if (mockContext && mockContext[entity]) {
-          const index = mockContext[entity].findIndex(
+        const mockState = storeRequest.result;
+        if (mockState && mockState[entity]) {
+          const index = mockState[entity].findIndex(
             (item: { id: number }) => item.id === id
           );
           if (index !== -1) {
-            Object.assign(mockContext[entity][index], payload);
+            Object.assign(mockState[entity][index], payload);
             Object.assign(state[entity][index], payload);
 
-            const updatedRequest = store.put({ id: 1, ...mockContext });
+            const updatedRequest = store.put({ id: 1, ...mockState });
             updatedRequest.onsuccess = () => resolve();
             updatedRequest.onerror = (event) => reject(event);
             return;

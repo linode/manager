@@ -15,7 +15,7 @@ import type {
 } from '../utilities/response';
 import type { Event } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
-import type { MockContext } from 'src/mocks/types';
+import type { MockState } from 'src/mocks/types';
 
 /**
  * Filters events by their `created` date.
@@ -76,7 +76,7 @@ export const getEvents = () => [
   ),
 ];
 
-export const updateEvents = (mockContext: MockContext) => [
+export const updateEvents = (mockState: MockState) => [
   http.post('*/v4*/events/:id/seen', async ({ params }) => {
     const id = Number(params.id);
     const eventQueue = await mswDB.getAll('eventQueue');
@@ -96,7 +96,7 @@ export const updateEvents = (mockContext: MockContext) => [
           'eventQueue',
           eventQueueItem.id,
           updatedEvent,
-          mockContext
+          mockState
         );
       }
     });
@@ -125,7 +125,7 @@ export const updateEvents = (mockContext: MockContext) => [
           'eventQueue',
           eventQueueItem.id,
           updatedEvent as any,
-          mockContext
+          mockState
         );
       }
     });

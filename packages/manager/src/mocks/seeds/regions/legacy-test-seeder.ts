@@ -1,22 +1,22 @@
 import { regions } from 'src/__data__/regionsData';
 import { mswDB } from 'src/mocks/indexedDB';
 
-import type { MockContext, MockContextSeeder } from 'src/mocks/types';
+import type { MockState, MockSeeder } from 'src/mocks/types';
 
-export const legacyRegionsSeeder: MockContextSeeder = {
+export const legacyRegionsSeeder: MockSeeder = {
   desc: 'Legacy region data seeds',
   group: 'Regions',
   id: 'legacy-test-regions',
   label: 'Legacy Test Regions',
 
-  seeder: async (mockContext: MockContext) => {
-    const updatedMockContext = {
-      ...mockContext,
-      regions: mockContext.regions.concat(regions),
+  seeder: async (mockState: MockState) => {
+    const updatedMockState = {
+      ...mockState,
+      regions: mockState.regions.concat(regions),
     };
 
-    await mswDB.saveStore(updatedMockContext, 'seedContext');
+    await mswDB.saveStore(updatedMockState, 'seedContext');
 
-    return updatedMockContext;
+    return updatedMockState;
   },
 };

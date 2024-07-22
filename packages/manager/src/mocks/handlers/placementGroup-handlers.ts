@@ -19,13 +19,13 @@ import type {
   UpdatePlacementGroupPayload,
 } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
-import type { MockContext } from 'src/mocks/types';
+import type { MockState } from 'src/mocks/types';
 import type {
   APIErrorResponse,
   APIPaginatedResponse,
 } from 'src/mocks/utilities/response';
 
-export const getPlacementGroups = (mockContext: MockContext) => [
+export const getPlacementGroups = (mockState: MockState) => [
   http.get(
     '*/v4/placement/groups',
     async ({
@@ -44,7 +44,7 @@ export const getPlacementGroups = (mockContext: MockContext) => [
       const pageSize = Number(url.searchParams.get('page_size')) || 25;
       const totalPages = Math.ceil(placementGroups?.length / pageSize);
       const pageSlice = getPaginatedSlice(
-        mockContext.placementGroups,
+        mockState.placementGroups,
         pageNumber,
         pageSize
       );
@@ -70,7 +70,7 @@ export const getPlacementGroups = (mockContext: MockContext) => [
   ),
 ];
 
-export const createPlacementGroup = (mockContext: MockContext) => [
+export const createPlacementGroup = (mockState: MockState) => [
   http.post(
     '*/v4/placement/groups',
     async ({
@@ -83,7 +83,7 @@ export const createPlacementGroup = (mockContext: MockContext) => [
         members: [],
       });
 
-      await mswDB.add('placementGroups', placementGroup, mockContext);
+      await mswDB.add('placementGroups', placementGroup, mockState);
 
       queueEvents({
         event: {
@@ -95,7 +95,7 @@ export const createPlacementGroup = (mockContext: MockContext) => [
             url: `/v4/placement/groups/${placementGroup.id}`,
           },
         },
-        mockContext,
+        mockState,
         sequence: [{ status: 'notification' }],
       });
 
@@ -104,7 +104,7 @@ export const createPlacementGroup = (mockContext: MockContext) => [
   ),
 ];
 
-export const updatePlacementGroup = (mockContext: MockContext) => [
+export const updatePlacementGroup = (mockState: MockState) => [
   http.put(
     '*/v4/placement/groups/:id',
     async ({
@@ -119,7 +119,7 @@ export const updatePlacementGroup = (mockContext: MockContext) => [
         return makeNotFoundResponse();
       }
 
-      mswDB.update('placementGroups', id, payload, mockContext);
+      mswDB.update('placementGroups', id, payload, mockState);
 
       queueEvents({
         event: {
@@ -131,7 +131,7 @@ export const updatePlacementGroup = (mockContext: MockContext) => [
             url: `/v4/placement/groups/${placementGroup.id}`,
           },
         },
-        mockContext,
+        mockState,
         sequence: [{ status: 'notification' }],
       });
 
@@ -140,7 +140,7 @@ export const updatePlacementGroup = (mockContext: MockContext) => [
   ),
 ];
 
-export const deletePlacementGroup = (mockContext: MockContext) => [
+export const deletePlacementGroup = (mockState: MockState) => [
   http.delete('*/v4/placement/groups/:id', async ({ params }) => {
     const id = Number(params.id);
     const placementGroup = await mswDB.get('placementGroups', id);
@@ -149,7 +149,7 @@ export const deletePlacementGroup = (mockContext: MockContext) => [
       return makeNotFoundResponse();
     }
 
-    await mswDB.delete('placementGroups', id, mockContext);
+    await mswDB.delete('placementGroups', id, mockState);
 
     queueEvents({
       event: {
@@ -161,7 +161,7 @@ export const deletePlacementGroup = (mockContext: MockContext) => [
           url: `/v4/placement/groups/${placementGroup.id}`,
         },
       },
-      mockContext,
+      mockState,
       sequence: [{ status: 'notification' }],
     });
 
@@ -169,7 +169,7 @@ export const deletePlacementGroup = (mockContext: MockContext) => [
   }),
 ];
 
-export const placementGroupLinodeAssignment = (mockContext: MockContext) => [
+export const placementGroupLinodeAssignment = (mockState: MockState) => [
   http.post(
     '*/v4/placement/groups/:id/assign',
     async ({
@@ -202,7 +202,7 @@ export const placementGroupLinodeAssignment = (mockContext: MockContext) => [
         {
           members: placementGroup.members,
         },
-        mockContext
+        mockState
       );
 
       await mswDB.update(
@@ -216,7 +216,7 @@ export const placementGroupLinodeAssignment = (mockContext: MockContext) => [
             placement_group_type: placementGroup.placement_group_type,
           },
         },
-        mockContext
+        mockState
       );
 
       Object.assign(linodeAssigned, {
@@ -244,7 +244,7 @@ export const placementGroupLinodeAssignment = (mockContext: MockContext) => [
             url: `/v4/linode/instances/${linodeAssigned.id}`,
           },
         },
-        mockContext,
+        mockState,
         sequence: [{ status: 'notification' }],
       });
 
@@ -277,7 +277,7 @@ export const placementGroupLinodeAssignment = (mockContext: MockContext) => [
             (member) => member.linode_id !== payload['linodes'][0]
           ),
         },
-        mockContext
+        mockState
       );
 
       mswDB.update(
@@ -286,7 +286,7 @@ export const placementGroupLinodeAssignment = (mockContext: MockContext) => [
         {
           placement_group: undefined,
         },
-        mockContext
+        mockState
       );
 
       queueEvents({
@@ -305,7 +305,7 @@ export const placementGroupLinodeAssignment = (mockContext: MockContext) => [
             url: `/v4/linode/instances/${linodeAssigned.id}`,
           },
         },
-        mockContext,
+        mockState,
         sequence: [{ status: 'notification' }],
       });
 

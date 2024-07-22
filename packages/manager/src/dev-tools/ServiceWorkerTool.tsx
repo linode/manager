@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 import { Tooltip } from 'src/components/Tooltip';
-import { getContextSeederGroups } from 'src/mocks/mockContext';
 import { getMockPresetGroups } from 'src/mocks/mockPreset';
+import { getContextSeederGroups } from 'src/mocks/mockState';
 import {
   baselineMockPresets,
   defaultBaselineMockPreset,
@@ -13,7 +13,7 @@ import { removeSeeds } from 'src/mocks/utilities/removeSeeds';
 
 import { DevToolSelect } from './components/DevToolSelect';
 
-import type { MockContext, MockContextSeederIds } from 'src/mocks/types';
+import type { MockSeederIds, MockState } from 'src/mocks/types';
 
 const LOCAL_STORAGE_KEY = 'msw';
 const LOCAL_STORAGE_POPULATORS_KEY = 'msw-populators';
@@ -260,7 +260,7 @@ export const ServiceWorkerTool = () => {
 
   const handleChangePopulator = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    seederId: MockContextSeederIds
+    seederId: MockSeederIds
   ) => {
     const willEnable = e.target.checked;
     if (willEnable && !MSWSeeders.includes(seederId)) {
@@ -335,7 +335,7 @@ export const ServiceWorkerTool = () => {
         (seeder) => seeder.id === seederId
       );
 
-      return populator?.seeder({} as MockContext);
+      return populator?.seeder({} as MockState);
     });
 
     Promise.all(promises).then(() => {

@@ -2,7 +2,7 @@ import { eventFactory } from 'src/factories';
 import { mswDB } from '../indexedDB';
 
 import type { Event } from '@linode/api-v4';
-import type { MockContext } from 'src/mocks/types';
+import type { MockState } from 'src/mocks/types';
 
 interface QueuedEvents {
   event: {
@@ -10,7 +10,7 @@ interface QueuedEvents {
     entity?: Event['entity'];
     secondary_entity?: Event['secondary_entity'];
   };
-  mockContext: MockContext;
+  mockState: MockState;
   sequence: {
     isProgressEvent?: boolean;
     status: Event['status'];
@@ -26,7 +26,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
  * Events can be marked as progress events, which will increase their duration as well as the following event's delay.
  */
 export const queueEvents = (props: QueuedEvents): Promise<void> => {
-  const { event, mockContext, sequence } = props;
+  const { event, mockState, sequence } = props;
 
   const initialDelay = 7500;
   const progressDelay = 10_000;
@@ -63,7 +63,7 @@ export const queueEvents = (props: QueuedEvents): Promise<void> => {
     });
 
     // Add the new event to the database (store only serializable data)
-    await mswDB.add('eventQueue', sequenceEvent, mockContext);
+    await mswDB.add('eventQueue', sequenceEvent, mockState);
 
     // Handle progress events separately
     if (seq.isProgressEvent) {
@@ -81,7 +81,7 @@ export const queueEvents = (props: QueuedEvents): Promise<void> => {
               'eventQueue',
               updatedEvent.id,
               updatedEvent,
-              mockContext
+              mockState
             );
           }
         } catch (error) {

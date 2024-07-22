@@ -12,13 +12,13 @@ import {
 
 import type { PriceType, Volume } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
-import type { MockContext } from 'src/mocks/types';
+import type { MockState } from 'src/mocks/types';
 import type {
   APIErrorResponse,
   APIPaginatedResponse,
 } from 'src/mocks/utilities/response';
 
-export const getVolumes = (mockContext: MockContext) => [
+export const getVolumes = (mockState: MockState) => [
   // Keeping things static for types/prices.
   http.get(
     '*/v4/volumes/types',
@@ -83,7 +83,7 @@ export const getVolumes = (mockContext: MockContext) => [
         return makeNotFoundResponse();
       }
 
-      const volumesForLinode = mockContext.volumes.filter(
+      const volumesForLinode = mockState.volumes.filter(
         (contextVolume) => contextVolume.linode_id === linodeId
       );
 
@@ -92,7 +92,7 @@ export const getVolumes = (mockContext: MockContext) => [
   ),
 ];
 
-export const createVolumes = (mockContext: MockContext) => [
+export const createVolumes = (mockState: MockState) => [
   http.post(
     '*/v4/volumes',
     async ({ request }): Promise<StrictResponse<APIErrorResponse | Volume>> => {
@@ -125,7 +125,7 @@ export const createVolumes = (mockContext: MockContext) => [
         ...volumeLinodePayloadData,
       });
 
-      await mswDB.add('volumes', volume, mockContext);
+      await mswDB.add('volumes', volume, mockState);
 
       // TODO queue event.
       return makeResponse(volume);
@@ -133,7 +133,7 @@ export const createVolumes = (mockContext: MockContext) => [
   ),
 ];
 
-export const updateVolumes = (mockContext: MockContext) => [
+export const updateVolumes = (mockState: MockState) => [
   http.put(
     '*/v4/volumes/:id',
     async ({
@@ -150,7 +150,7 @@ export const updateVolumes = (mockContext: MockContext) => [
       const payload = await request.clone().json();
       const updatedVolume = { ...volume, ...payload };
 
-      await mswDB.update('volumes', id, updatedVolume, mockContext);
+      await mswDB.update('volumes', id, updatedVolume, mockState);
 
       // TODO queue event.
       return makeResponse(updatedVolume);
@@ -169,7 +169,7 @@ export const updateVolumes = (mockContext: MockContext) => [
 
       const updatedVolume = { ...volume, linode_id: null, linode_label: null };
 
-      await mswDB.update('volumes', id, updatedVolume, mockContext);
+      await mswDB.update('volumes', id, updatedVolume, mockState);
 
       // TODO queue event.
       return makeResponse({});
@@ -177,7 +177,7 @@ export const updateVolumes = (mockContext: MockContext) => [
   ),
 ];
 
-export const deleteVolumes = (mockContext: MockContext) => [
+export const deleteVolumes = (mockState: MockState) => [
   http.delete(
     '*/v4/volumes/:id',
     async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
@@ -188,7 +188,7 @@ export const deleteVolumes = (mockContext: MockContext) => [
         return makeNotFoundResponse();
       }
 
-      await mswDB.delete('volumes', id, mockContext);
+      await mswDB.delete('volumes', id, mockState);
 
       // TODO queue event.
       return makeResponse({});
