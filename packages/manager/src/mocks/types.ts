@@ -56,7 +56,7 @@ export interface MockContext {
   volumes: Volume[];
 }
 
-export type MockContextPopulatorIds =
+export type MockContextSeederIds =
   | 'edge-regions'
   | 'legacy-test-regions'
   | 'many-linodes'
@@ -64,21 +64,18 @@ export type MockContextPopulatorIds =
   | 'many-volumes'
   | 'prod-regions';
 
-export type MockContextPopulatorGroup =
+export type MockContextSeederGroup =
   | 'Account'
   | 'Linodes'
   | 'Placement Groups'
   | 'Regions'
   | 'Volumes';
 
-export interface MockContextPopulator {
+export interface MockContextSeeder {
   canUpdateCount?: boolean;
   desc?: string;
-  group?: MockContextPopulatorGroup;
-  id: MockContextPopulatorIds;
+  group?: MockContextSeederGroup;
+  id: MockContextSeederIds;
   label: string;
-  populator: (
-    mockContext: MockContext,
-    count?: number
-  ) => MockContext | Promise<MockContext>;
+  seeder: (mockContext: MockContext) => MockContext | Promise<MockContext>;
 }

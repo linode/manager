@@ -87,6 +87,8 @@ export const queueEvents = (props: QueuedEvents): Promise<void> => {
         } catch (error) {
           // eslint-disable-next-line no-console
           console.error('Error updating event progress:', error);
+
+          return;
         }
       }, 1000);
     }

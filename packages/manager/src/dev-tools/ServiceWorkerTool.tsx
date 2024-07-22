@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { Tooltip } from 'src/components/Tooltip';
-import { allContextPopulators } from 'src/mocks/context/populators';
 import { getContextPopulatorGroups } from 'src/mocks/mockContext';
 import { getMockPresetGroups } from 'src/mocks/mockPreset';
 import {
@@ -9,11 +8,12 @@ import {
   defaultBaselineMockPreset,
   extraMockPresets,
 } from 'src/mocks/presets';
+import { allContextSeeders } from 'src/mocks/seeds';
 import { removeSeeds } from 'src/mocks/utilities/removeSeeds';
 
 import { DevToolSelect } from './components/DevToolSelect';
 
-import type { MockContext, MockContextPopulatorIds } from 'src/mocks/types';
+import type { MockContext, MockContextSeederIds } from 'src/mocks/types';
 
 const LOCAL_STORAGE_KEY = 'msw';
 const LOCAL_STORAGE_POPULATORS_KEY = 'msw-populators';
@@ -99,7 +99,7 @@ export const saveMSWExtraPresets = (presets: string[]) => {
   localStorage.setItem(LOCAL_STORAGE_PRESET_EXTRAS_KEY, presets.join(','));
 };
 
-export const getMSWContextPopulators = (): string[] => {
+export const getMSWContextSeeders = (): string[] => {
   const encodedPopulators = localStorage.getItem(LOCAL_STORAGE_POPULATORS_KEY);
   if (!encodedPopulators) {
     // always have a default region
@@ -117,8 +117,8 @@ export const getMSWContextPopulators = (): string[] => {
 
   // Filter out any stored populators that no longer exist in the code base.
   return storedPopulators.filter((storedPopulator) =>
-    allContextPopulators.find(
-      (contextPopulator) => contextPopulator.id === storedPopulator
+    allContextSeeders.find(
+      (contextSeeder) => contextSeeder.id === storedPopulator
     )
   );
 };
@@ -145,7 +145,7 @@ const renderBaselinePresetOptions = () =>
   });
 
 const renderContentPopulatorOptions = (
-  populators: string[],
+  seeders: string[],
   onChange: (e: React.ChangeEvent, populatorId: string) => void,
   onCountChange: (e: React.ChangeEvent, populatorId: string) => void,
   countMap: { [key: string]: number },
@@ -153,31 +153,31 @@ const renderContentPopulatorOptions = (
 ) => {
   return (
     <ul>
-      {getContextPopulatorGroups(allContextPopulators).map((group) => (
+      {getContextPopulatorGroups(allContextSeeders).map((group) => (
         <div key={group}>
           <li className="dev-tools__list-box__separator">{group}</li>
-          {allContextPopulators
-            .filter((contextPopulator) => contextPopulator.group === group)
-            .map((contextPopulator) => (
-              <li key={contextPopulator.id}>
+          {allContextSeeders
+            .filter((contextSeeder) => contextSeeder.group === group)
+            .map((contextSeeder) => (
+              <li key={contextSeeder.id}>
                 <input
-                  checked={populators.includes(contextPopulator.id)}
+                  checked={seeders.includes(contextSeeder.id)}
                   disabled={disabled}
-                  onChange={(e) => onChange(e, contextPopulator.id)}
+                  onChange={(e) => onChange(e, contextSeeder.id)}
                   style={{ marginRight: 12 }}
                   type="checkbox"
                 />
-                <span title={contextPopulator.desc || contextPopulator.label}>
-                  {contextPopulator.label}
+                <span title={contextSeeder.desc || contextSeeder.label}>
+                  {contextSeeder.label}
                 </span>
-                {contextPopulator.canUpdateCount && (
+                {contextSeeder.canUpdateCount && (
                   <input
                     aria-label="Count"
                     min={0}
-                    onChange={(e) => onCountChange(e, contextPopulator.id)}
+                    onChange={(e) => onCountChange(e, contextSeeder.id)}
                     style={{ marginLeft: 8, width: 60 }}
                     type="number"
-                    value={countMap[contextPopulator.id] || 0}
+                    value={countMap[contextSeeder.id] || 0}
                   />
                 )}
               </li>
@@ -228,16 +228,14 @@ interface ServiceWorkerSaveState {
 export const ServiceWorkerTool = () => {
   const loadedBasePreset = getMSWPreset();
   const loadedPresets = getMSWExtraPresets();
-  const loadedPopulators = getMSWContextPopulators();
+  const loadedSeeders = getMSWContextSeeders();
   const loadedCountMap = getMSWCountMap();
 
   const [MSWBasePreset, setMSWBasePreset] = React.useState<string>(
     loadedBasePreset
   );
   const [MSWHandlers, setMSWHandlers] = React.useState<string[]>(loadedPresets);
-  const [MSWPopulators, setMSWPopulators] = React.useState<string[]>(
-    loadedPopulators
-  );
+  const [MSWSeeders, setMSWSeeders] = React.useState<string[]>(loadedSeeders);
   const [countMap, setCountMap] = React.useState<{ [key: string]: number }>(
     loadedCountMap
   );
@@ -262,26 +260,26 @@ export const ServiceWorkerTool = () => {
 
   const handleChangePopulator = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    populatorId: MockContextPopulatorIds
+    seederId: MockContextSeederIds
   ) => {
     const willEnable = e.target.checked;
-    if (willEnable && !MSWPopulators.includes(populatorId)) {
-      setMSWPopulators([...MSWPopulators, populatorId]);
+    if (willEnable && !MSWSeeders.includes(seederId)) {
+      setMSWSeeders([...MSWSeeders, seederId]);
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: true,
       });
-    } else if (!willEnable && MSWPopulators.includes(populatorId)) {
-      setMSWPopulators(
-        MSWPopulators.filter((populator) => {
-          return populator !== populatorId;
+    } else if (!willEnable && MSWSeeders.includes(seederId)) {
+      setMSWSeeders(
+        MSWSeeders.filter((seeder) => {
+          return seeder !== seederId;
         })
       );
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: true,
       });
-      await removeSeeds(populatorId);
+      await removeSeeds(seederId);
     }
   };
 
@@ -329,13 +327,15 @@ export const ServiceWorkerTool = () => {
     // Save base preset, extra presets, and content populators to local storage.
     saveMSWPreset(MSWBasePreset);
     saveMSWExtraPresets(MSWHandlers);
-    saveMSWContextPopulators(MSWPopulators);
+    saveMSWContextPopulators(MSWSeeders);
     saveMSWCountMap(countMap);
 
-    const promises = MSWPopulators.map((populatorId) => {
-      const populator = allContextPopulators.find((p) => p.id === populatorId);
+    const promises = MSWSeeders.map((seederId) => {
+      const populator = allContextSeeders.find(
+        (seeder) => seeder.id === seederId
+      );
 
-      return populator?.populator({} as MockContext);
+      return populator?.seeder({} as MockContext);
     });
 
     Promise.all(promises).then(() => {
@@ -356,7 +356,7 @@ export const ServiceWorkerTool = () => {
   const discardChanges = () => {
     setMSWBasePreset(getMSWPreset());
     setMSWHandlers(getMSWExtraPresets());
-    setMSWPopulators(getMSWContextPopulators());
+    setMSWSeeders(getMSWContextSeeders());
     setSaveState({
       hasSaved: false,
       hasUnsavedChanges: false,
@@ -417,7 +417,7 @@ export const ServiceWorkerTool = () => {
               <div className="dev-tools__msw__column__body">
                 <div className="dev-tools__list-box">
                   {renderContentPopulatorOptions(
-                    MSWPopulators,
+                    MSWSeeders,
                     handleChangePopulator,
                     handleCountChange,
                     countMap,

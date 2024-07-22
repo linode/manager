@@ -2,18 +2,18 @@ import { getMSWCountMap } from 'src/dev-tools/ServiceWorkerTool';
 import { placementGroupFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 
-import type { MockContext, MockContextPopulator } from 'src/mocks/types';
+import type { MockContext, MockContextSeeder } from 'src/mocks/types';
 
-export const placementGroupPopulator: MockContextPopulator = {
+export const placementGroupSeeder: MockContextSeeder = {
   canUpdateCount: true,
   desc: 'Populates Placement Groups',
   group: 'Placement Groups',
   id: 'many-placement-groups',
   label: 'Placement Groups',
 
-  populator: async (mockContext: MockContext) => {
+  seeder: async (mockContext: MockContext) => {
     const countMap = getMSWCountMap();
-    const count = countMap[placementGroupPopulator.id] ?? 0;
+    const count = countMap[placementGroupSeeder.id] ?? 0;
     const placementGroups = placementGroupFactory.buildList(count);
 
     const updatedMockContext = {

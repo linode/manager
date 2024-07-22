@@ -1,6 +1,6 @@
 import { mswDB } from './indexedDB';
 
-import type { MockContext, MockContextPopulator } from './types';
+import type { MockContext, MockContextSeeder } from './types';
 
 /**
  * Describes a function that executes on each request to the events endpoint.
@@ -10,9 +10,9 @@ import type { MockContext, MockContextPopulator } from './types';
  * @returns `true` if event is considered complete, `false` if callback should continue to be called.
  */
 export const getContextPopulatorGroups = (
-  populators: MockContextPopulator[]
+  seeders: MockContextSeeder[]
 ): Array<string | undefined> => {
-  return populators.reduce((acc: Array<string | undefined>, cur) => {
+  return seeders.reduce((acc: Array<string | undefined>, cur) => {
     if (!acc.includes(cur.group)) {
       acc.push(cur.group);
     }

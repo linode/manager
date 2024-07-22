@@ -1,12 +1,12 @@
 import { ENABLE_DEV_TOOLS } from 'src/constants';
-import { allContextPopulators } from 'src/mocks/context/populators';
 import { mswDB } from 'src/mocks/indexedDB';
 import { createInitialMockStore, emptyStore } from 'src/mocks/mockContext';
 import { resolveMockPreset } from 'src/mocks/mockPreset';
 import { allMockPresets, defaultBaselineMockPreset } from 'src/mocks/presets';
+import { allContextSeeders } from 'src/mocks/seeds';
 
 import {
-  getMSWContextPopulators,
+  getMSWContextSeeders,
   getMSWExtraPresets,
   getMSWPreset,
   isMSWEnabled,
@@ -15,7 +15,7 @@ import {
 import type { QueryClient } from '@tanstack/react-query';
 import type {
   MockContext,
-  MockContextPopulator,
+  MockContextSeeder,
   MockPreset,
 } from 'src/mocks/types';
 import type { ApplicationStore } from 'src/store';
@@ -48,12 +48,12 @@ export async function loadDevTools(
       )
       .filter((preset) => !!preset);
 
-    const mswContentPopulatorIds = getMSWContextPopulators();
-    const mswContentPopulators = mswContentPopulatorIds
-      .map((populatorId) =>
-        allContextPopulators.find((populator) => populator.id === populatorId)
+    const mswContentSeederIds = getMSWContextSeeders();
+    const mswContentPopulators = mswContentSeederIds
+      .map((seederId) =>
+        allContextSeeders.find((seeder) => seeder.id === seederId)
       )
-      .filter((populator) => !!populator);
+      .filter((seeder) => !!seeder);
 
     // Apply MSW context populators.
     const initialContext = await createInitialMockStore();
@@ -64,10 +64,10 @@ export async function loadDevTools(
 
     const populateSeeds = async (store: MockContext): Promise<MockContext> => {
       return await mswContentPopulators.reduce(
-        async (accPromise, cur: MockContextPopulator) => {
+        async (accPromise, cur: MockContextSeeder) => {
           const acc = await accPromise;
 
-          return await cur.populator(acc);
+          return await cur.seeder(acc);
         },
         Promise.resolve(store)
       );
