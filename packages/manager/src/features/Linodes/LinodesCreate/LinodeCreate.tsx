@@ -231,7 +231,7 @@ export class LinodeCreate extends React.PureComponent<
     this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
     sendLinodeCreateFormSubmitEvent(
       'Create Linode',
-      selectedTabName ?? 'Distributions',
+      selectedTabName ?? 'OS',
       'v1'
     );
   };
@@ -408,21 +408,21 @@ export class LinodeCreate extends React.PureComponent<
     if (errorMap.region) {
       sendLinodeCreateFormErrorEvent(
         'Region not selected',
-        selectedTabName ?? 'Distributions',
+        selectedTabName ?? 'OS',
         'v1'
       );
     }
     if (errorMap.type) {
       sendLinodeCreateFormErrorEvent(
         'Plan not selected',
-        selectedTabName ?? 'Distributions',
+        selectedTabName ?? 'OS',
         'v1'
       );
     }
     if (errorMap.root_pass) {
       sendLinodeCreateFormErrorEvent(
         'Password not created',
-        selectedTabName ?? 'Distributions',
+        selectedTabName ?? 'OS',
         'v1'
       );
     }
@@ -480,9 +480,7 @@ export class LinodeCreate extends React.PureComponent<
       sendLinodeCreateFormStepEvent({
         action: 'click',
         category: 'tab',
-        createType:
-          (this.tabs[prevTabIndex].title as LinodeCreateType) ??
-          'Distributions',
+        createType: (this.tabs[prevTabIndex].title as LinodeCreateType) ?? 'OS',
         label: `${this.tabs[index].title} Tab`,
         version: 'v1',
       });
@@ -512,8 +510,8 @@ export class LinodeCreate extends React.PureComponent<
 
   tabs: CreateTab[] = [
     {
-      routeName: `${this.props.match.url}?type=Distributions`,
-      title: 'Distributions',
+      routeName: `${this.props.match.url}?type=OS`,
+      title: 'OS',
       type: 'fromImage',
     },
     {
@@ -552,7 +550,7 @@ export class LinodeCreate extends React.PureComponent<
     );
 
     const _tabs: LinodeCreateType[] = [
-      'Distributions',
+      'OS',
       'One-Click',
       'StackScripts',
       'Images',
@@ -601,7 +599,7 @@ export class LinodeCreate extends React.PureComponent<
     // Because it is the same route, the component will not unmount and remount, so we need to manually update the tab state.
     // This fix provides an isolated solution for this specific case.
     // Hard to make this dynamic without a larger refactor because the relationship between the tabs and the query params is not straightforward at all.
-    // ex: "One-Click" is `fromApp` creationType, and `fromImage` applies to both "Distributions" and "Images" creation flows so getting the index of the tab
+    // ex: "One-Click" is `fromApp` creationType, and `fromImage` applies to both "OS" and "Images" creation flows so getting the index of the tab
     // based on the query param is not reliable.
     // It would be wise to consider rethinking this logic when we refactor the Linode Create flow. (M3-7572)
     if (getInitialType() === 'fromApp') {
@@ -879,8 +877,10 @@ export class LinodeCreate extends React.PureComponent<
                   <FromImageContent
                     accountBackupsEnabled={accountBackupsEnabled}
                     error={hasErrorFor.image}
+                    imageLabel="Linux Distribution"
                     imagePanelTitle="Choose an OS"
                     imagesData={imagesData!}
+                    placeholder="Choose a Linux distribution"
                     regionsData={regionsData!}
                     typesData={typesData!}
                     userCannotCreateLinode={userCannotCreateLinode}
@@ -1007,7 +1007,7 @@ export class LinodeCreate extends React.PureComponent<
                       category: 'link',
                       createType:
                         (this.tabs[selectedTab].title as LinodeCreateType) ??
-                        'Distributions',
+                        'OS',
                       label: 'Choosing a Plan',
                       version: 'v1',
                     });
@@ -1110,7 +1110,7 @@ export class LinodeCreate extends React.PureComponent<
                         category: 'link',
                         createType:
                           (this.tabs[selectedTab].title as LinodeCreateType) ??
-                          'Distributions',
+                          'OS',
                         formStepName: 'Firewall Panel',
                         label: 'Learn more',
                         version: 'v1',

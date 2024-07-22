@@ -117,6 +117,7 @@ export const AppDetailDrawerv2 = (props: Props) => {
                   text: selectedApp.name,
                 }),
               }}
+              data-qa-drawer-title={selectedApp.name}
               className={classes.appName}
               data-testid="app-name"
               variant="h2"

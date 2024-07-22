@@ -7,24 +7,22 @@ import {
   unassignLinodesFromPlacementGroup,
   updatePlacementGroup,
 } from '@linode/api-v4';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { queryKey as linodeQueryKey } from 'src/queries/linodes/linodes';
 import { getAll } from 'src/utilities/getAll';
 
+import { linodeQueries } from './linodes/linodes';
 import { profileQueries } from './profile/profile';
 
 import type {
+  APIError,
   AssignLinodesToPlacementGroupPayload,
   CreatePlacementGroupPayload,
+  Filter,
+  Params,
   PlacementGroup,
+  ResourcePage,
   UnassignLinodesFromPlacementGroupPayload,
   UpdatePlacementGroupPayload,
 } from '@linode/api-v4';
@@ -155,11 +153,14 @@ export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
         placementGroupQueries.placementGroup(placementGroupId).queryKey
       );
 
-      queryClient.invalidateQueries([
-        linodeQueryKey,
-        'linode',
-        variables.linodes[0],
-      ]);
+      queryClient.invalidateQueries(linodeQueries.linodes);
+
+      for (const linodeId of variables.linodes) {
+        queryClient.invalidateQueries({
+          exact: true,
+          queryKey: linodeQueries.linode(linodeId).queryKey,
+        });
+      }
     },
   });
 };
@@ -182,11 +183,14 @@ export const useUnassignLinodesFromPlacementGroup = (
         placementGroupQueries.placementGroup(placementGroupId).queryKey
       );
 
-      queryClient.invalidateQueries([
-        linodeQueryKey,
-        'linode',
-        variables.linodes[0],
-      ]);
+      queryClient.invalidateQueries(linodeQueries.linodes);
+
+      for (const linodeId of variables.linodes) {
+        queryClient.invalidateQueries({
+          exact: true,
+          queryKey: linodeQueries.linode(linodeId).queryKey,
+        });
+      }
     },
   });
 };
