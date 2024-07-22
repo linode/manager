@@ -21,7 +21,7 @@ export const volumesSeeder: MockSeeder = {
       volumes: mockState.volumes.concat(volumes),
     };
 
-    await mswDB.saveStore(updatedMockState, 'seedContext');
+    await mswDB.saveStore(updatedMockState, 'seedState');
 
     return updatedMockState;
   },

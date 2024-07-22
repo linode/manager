@@ -255,7 +255,7 @@ export const getLinodeStats = (mockState: MockState) => [
     ({ params }): StrictResponse<APIErrorResponse | Stats> => {
       const id = Number(params.id);
       const linode = mockState.linodes.find(
-        (contextLinode) => contextLinode.id === id
+        (stateLinode) => stateLinode.id === id
       );
 
       if (!linode) {
@@ -278,7 +278,7 @@ export const getLinodeDisks = (mockState: MockState) => [
     }): StrictResponse<APIErrorResponse | APIPaginatedResponse<Disk>> => {
       const id = Number(params.id);
       const linode = mockState.linodes.find(
-        (contextLinode) => contextLinode.id === id
+        (stateLinode) => stateLinode.id === id
       );
 
       if (!linode) {
@@ -301,7 +301,7 @@ export const getLinodeTransfer = (mockState: MockState) => [
     }): StrictResponse<APIErrorResponse | RegionalNetworkUtilization> => {
       const id = Number(params.id);
       const linode = mockState.linodes.find(
-        (contextLinode) => contextLinode.id === id
+        (stateLinode) => stateLinode.id === id
       );
 
       if (!linode) {
@@ -325,7 +325,7 @@ export const getLinodeFirewalls = (mockState: MockState) => [
     > => {
       const id = Number(params.id);
       const linode = mockState.linodes.find(
-        (contextLinode) => contextLinode.id === id
+        (stateLinode) => stateLinode.id === id
       );
       const allFirewalls = await mswDB.getAll('firewalls');
 
@@ -349,7 +349,7 @@ export const getLinodeIps = (mockState: MockState) => [
     ({ params }): StrictResponse<APIErrorResponse | LinodeIPsResponse> => {
       const id = Number(params.id);
       const linode = mockState.linodes.find(
-        (contextLinode) => contextLinode.id === id
+        (stateLinode) => stateLinode.id === id
       );
 
       if (!linode) {
@@ -370,7 +370,7 @@ export const getLinodeBackups = (mockState: MockState) => [
     ({ params }): StrictResponse<APIErrorResponse | LinodeBackupsResponse> => {
       const id = Number(params.id);
       const linode = mockState.linodes.find(
-        (contextLinode) => contextLinode.id === id
+        (stateLinode) => stateLinode.id === id
       );
 
       if (!linode) {

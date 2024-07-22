@@ -81,7 +81,7 @@ export const getRegions = (mockState: MockState) => [
     '*/v4*/regions/:id/availability',
     ({ params }): StrictResponse<APIErrorResponse | RegionAvailability[]> => {
       const region = mockState.regions.find(
-        (contextRegion) => contextRegion.id === params.id
+        (stateRegion) => stateRegion.id === params.id
       );
 
       if (!region) {

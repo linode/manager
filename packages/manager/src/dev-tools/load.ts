@@ -3,7 +3,7 @@ import { mswDB } from 'src/mocks/indexedDB';
 import { resolveMockPreset } from 'src/mocks/mockPreset';
 import { createInitialMockStore, emptyStore } from 'src/mocks/mockState';
 import { allMockPresets, defaultBaselineMockPreset } from 'src/mocks/presets';
-import { allContextSeeders } from 'src/mocks/seeds';
+import { allStateSeeders } from 'src/mocks/seeds';
 
 import {
   getMSWContextSeeders,
@@ -13,7 +13,7 @@ import {
 } from './ServiceWorkerTool';
 
 import type { QueryClient } from '@tanstack/react-query';
-import type { MockSeeder, MockPreset, MockState } from 'src/mocks/types';
+import type { MockPreset, MockSeeder, MockState } from 'src/mocks/types';
 import type { ApplicationStore } from 'src/store';
 
 export let mockState: MockState;
@@ -47,7 +47,7 @@ export async function loadDevTools(
     const mswContentSeederIds = getMSWContextSeeders();
     const mswContentSeeders = mswContentSeederIds
       .map((seederId) =>
-        allContextSeeders.find((seeder) => seeder.id === seederId)
+        allStateSeeders.find((seeder) => seeder.id === seederId)
       )
       .filter((seeder) => !!seeder);
 
@@ -56,7 +56,7 @@ export async function loadDevTools(
     await mswDB.saveStore(initialContext, 'mockState');
 
     // Seeding
-    const seedContext = (await mswDB.getStore('seedContext')) || emptyStore;
+    const seedContext = (await mswDB.getStore('seedState')) || emptyStore;
 
     const populateSeeds = async (store: MockState): Promise<MockState> => {
       return await mswContentSeeders.reduce(
@@ -84,7 +84,7 @@ export async function loadDevTools(
 
     await Promise.all(seedPromises);
 
-    await mswDB.saveStore(seedContext ?? emptyStore, 'seedContext');
+    await mswDB.saveStore(seedContext ?? emptyStore, 'seedState');
 
     // Merge the contexts
     const mergedContext: MockState = {

@@ -84,7 +84,7 @@ export const getVolumes = (mockState: MockState) => [
       }
 
       const volumesForLinode = mockState.volumes.filter(
-        (contextVolume) => contextVolume.linode_id === linodeId
+        (stateVolume) => stateVolume.linode_id === linodeId
       );
 
       return makePaginatedResponse(volumesForLinode);

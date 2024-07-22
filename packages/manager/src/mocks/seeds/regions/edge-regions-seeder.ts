@@ -15,7 +15,7 @@ export const edgeRegionsSeeder: MockSeeder = {
       regions: mockState.regions.concat(edgeRegions),
     };
 
-    await mswDB.saveStore(updatedMockState, 'seedContext');
+    await mswDB.saveStore(updatedMockState, 'seedState');
 
     return updatedMockState;
   },

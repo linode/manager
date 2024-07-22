@@ -15,7 +15,7 @@ export const legacyRegionsSeeder: MockSeeder = {
       regions: mockState.regions.concat(regions),
     };
 
-    await mswDB.saveStore(updatedMockState, 'seedContext');
+    await mswDB.saveStore(updatedMockState, 'seedState');
 
     return updatedMockState;
   },

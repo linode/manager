@@ -5,7 +5,7 @@ import { legacyRegionsSeeder } from './regions/legacy-test-seeder';
 import { productionRegionsSeeder } from './regions/production-seeder';
 import { volumesSeeder } from './volumes/volumes-seeder';
 
-export const allContextSeeders = [
+export const allStateSeeders = [
   linodesSeeder,
   productionRegionsSeeder,
   edgeRegionsSeeder,
