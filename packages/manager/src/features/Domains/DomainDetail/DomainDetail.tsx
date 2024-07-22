@@ -134,6 +134,7 @@ export const DomainDetail = () => {
               disabled={isDomainReadOnly}
               tags={domain.tags}
               updateTags={handleUpdateTags}
+              view="panel"
             />
           </StyledPaper>
           <StyledDiv>

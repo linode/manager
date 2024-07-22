@@ -14,6 +14,12 @@ import { SupportTicketDialog } from './SupportTicketDialog';
 import TicketList from './TicketList';
 
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
+import type { BooleanString } from 'src/features/Linodes/types';
+import type { BaseQueryParams } from 'src/utilities/queryParams';
+
+interface QueryParams extends BaseQueryParams {
+  drawerOpen: BooleanString;
+}
 
 const tabs = ['open', 'closed'];
 
@@ -22,7 +28,9 @@ const SupportTicketsLanding = () => {
   const history = useHistory();
 
   /** ?drawerOpen=true to allow external links to go directly to the ticket drawer */
-  const parsedParams = getQueryParamsFromQueryString(location.search);
+  const parsedParams = getQueryParamsFromQueryString<QueryParams>(
+    location.search
+  );
 
   const stateParams = location.state;
 

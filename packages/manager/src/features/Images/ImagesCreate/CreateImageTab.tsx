@@ -33,12 +33,16 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import type { CreateImagePayload } from '@linode/api-v4';
+import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
 
 export const CreateImageTab = () => {
   const location = useLocation();
 
   const queryParams = React.useMemo(
-    () => getQueryParamsFromQueryString(location.search),
+    () =>
+      getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
+        location.search
+      ),
     [location.search]
   );
 
@@ -305,9 +309,9 @@ export const CreateImageTab = () => {
                         <TooltipIcon
                           text={
                             <Typography>
-                              Many Linode supported distributions are compatible
-                              with cloud-init by default, or you may have
-                              installed cloud-init.{' '}
+                              Many Linode supported operating systems are
+                              compatible with cloud-init by default, or you may
+                              have installed cloud-init.{' '}
                               <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata/">
                                 Learn more.
                               </Link>

@@ -37,7 +37,7 @@ describe('PlacementGroupsCreateDrawer', () => {
     const { getByLabelText, getByRole, getByText } = renderWithTheme(
       <PlacementGroupsEditDrawer
         selectedPlacementGroup={placementGroupFactory.build({
-          affinity_type: 'anti_affinity:local',
+          placement_group_type: 'anti_affinity:local',
           id: 1,
           label: 'PG-to-edit',
           region: 'us-east',

@@ -31,6 +31,18 @@ export const createSMTPSupportTicketSchema = object({
   publicInfo: string().required('Links to public information are required.'),
 });
 
+export const createAccountLimitSupportTicketSchema = object({
+  summary: string()
+    .required('Summary is required.')
+    .min(1, 'Summary must be between 1 and 64 characters.')
+    .max(64, 'Summary must be between 1 and 64 characters.')
+    .trim(),
+  description: string().trim(),
+  customerName: string().required('First and last name are required.'),
+  useCase: string().required('Use case is required.'),
+  publicInfo: string().required('Links to public information are required.'),
+});
+
 export const createReplySchema = object({
   description: string()
     .required('Description is required.')

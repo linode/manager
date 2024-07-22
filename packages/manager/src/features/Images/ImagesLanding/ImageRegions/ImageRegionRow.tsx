@@ -15,13 +15,14 @@ import type { Status } from 'src/components/StatusIcon/StatusIcon';
 type ExtendedImageRegionStatus = 'unsaved' | ImageRegionStatus;
 
 interface Props {
+  disableRemoveButton?: boolean;
   onRemove: () => void;
   region: string;
   status: ExtendedImageRegionStatus;
 }
 
 export const ImageRegionRow = (props: Props) => {
-  const { onRemove, region, status } = props;
+  const { disableRemoveButton, onRemove, region, status } = props;
 
   const { data: regions } = useRegionsQuery();
 
@@ -40,6 +41,7 @@ export const ImageRegionRow = (props: Props) => {
         />
         <IconButton
           aria-label={`Remove ${region}`}
+          disabled={disableRemoveButton}
           onClick={onRemove}
           sx={{ p: 0.5 }}
         >

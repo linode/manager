@@ -68,7 +68,7 @@ export interface RegionSelectProps<
 
 export interface RegionMultiSelectProps
   extends Omit<
-    EnhancedAutocompleteProps<Region, false>,
+    EnhancedAutocompleteProps<Region, true>,
     'label' | 'onChange' | 'options'
   > {
   SelectedRegionsList?: React.ComponentType<{

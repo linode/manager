@@ -1,6 +1,14 @@
 import * as React from 'react';
 
-import Select, {
+import Select from 'src/components/EnhancedSelect/Select';
+
+import { TIME_DURATION } from '../Utils/constants';
+import {
+  getUserPreferenceObject,
+  updateGlobalFilterPreference,
+} from '../Utils/UserPreference';
+
+import type {
   BaseSelectProps,
   Item,
 } from 'src/components/EnhancedSelect/Select';
@@ -10,7 +18,6 @@ interface Props
     BaseSelectProps<Item<Labels, Labels>, false>,
     'defaultValue' | 'onChange'
   > {
-  defaultValue?: Labels;
   handleStatsChange?: (start: number, end: number) => void;
 }
 
@@ -27,61 +34,48 @@ export type Labels =
   | 'Past 30 Minutes';
 
 export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
-  const { defaultValue, handleStatsChange, ...restOfSelectProps } = props;
+  const { handleStatsChange, ...restOfSelectProps } = props;
 
-  /*
-    the time range is the label instead of the value because it's a lot harder
-    to keep Date.now() consistent with this state. We can get the actual
-    values when it comes time to make the request.
+  // To set the default value fetched from preferences.
+  const getPreferredValue = () => {
+    const defaultValue = getUserPreferenceObject().timeDuration;
 
-    Use the value from user preferences if available, then fall back to
-    the default that was passed to the component, and use Past 30 Minutes
-    if all else fails.
-
-    @todo Validation here to make sure that the value from user preferences
-    is a valid time window.
-  */
-  const [selectedTimeRange, setTimeRange] = React.useState<Labels>(
-    PAST_30_MINUTES
-  );
-
-  /*
-    Why division by 1000?
-
-    Because the LongView API doesn't expect the start and date time
-    to the nearest millisecond - if you send anything more than 10 digits
-    you won't get any data back
-  */
-  const nowInSeconds = Date.now() / 1000;
-
-  React.useEffect(() => {
-    // Do the math and send start/end values to the consumer
-    // (in most cases the consumer has passed defaultValue={'last 30 minutes'}
-    // but the calcs to turn that into start/end numbers live here)
-    if (!!handleStatsChange) {
-      handleStatsChange(
-        Math.round(generateStartTime(selectedTimeRange, nowInSeconds)),
-        Math.round(nowInSeconds)
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTimeRange]);
+    return options.find((o) => o.label === defaultValue) || options[0];
+  };
 
   const options = generateSelectOptions();
 
   const handleChange = (item: Item<Labels, Labels>) => {
-    setTimeRange(item.value);
+    updateGlobalFilterPreference({
+      [TIME_DURATION]: item.value,
+    });
+
+    /*
+      Why division by 1000?
+
+      Because the LongView API doesn't expect the start and date time
+      to the nearest millisecond - if you send anything more than 10 digits
+      you won't get any data back
+    */
+    const nowInSeconds = Date.now() / 1000;
+
+    if (handleStatsChange) {
+      handleStatsChange(
+        Math.round(generateStartTime(item.value, nowInSeconds)),
+        Math.round(nowInSeconds)
+      );
+    }
   };
 
   return (
     <Select
       {...restOfSelectProps}
+      defaultValue={getPreferredValue()}
       isClearable={false}
       isSearchable={false}
       onChange={handleChange}
       options={options}
       small
-      value={options.find((o) => o.label === selectedTimeRange) || options[0]}
     />
   );
 });

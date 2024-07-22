@@ -98,7 +98,7 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
       <form onSubmit={formik.handleSubmit}>
         {isReadOnly && (
           <Notice
-            text="You don't have permission to edit this volume."
+            text="You don't have permission to attach this volume."
             variant="error"
           />
         )}

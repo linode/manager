@@ -1,12 +1,6 @@
-import {
-  Disk,
-  Linode,
-  cloneLinode,
-  cloneLinodeDisk,
-} from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import { cloneLinode, cloneLinodeDisk } from '@linode/api-v4/lib/linodes';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { castDraft } from 'immer';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
@@ -46,13 +40,21 @@ import {
   defaultState,
 } from './utilities';
 
+import type { Disk, Linode } from '@linode/api-v4/lib/linodes';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
+
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));
-const LinodesDetailHeader = React.lazy(
-  () => import('../LinodesDetail/LinodesDetailHeader/LinodeDetailHeader')
+const LinodesDetailHeader = React.lazy(() =>
+  import(
+    'src/features/Linodes/LinodesDetail/LinodesDetailHeader/LinodeDetailHeader'
+  ).then((module) => ({
+    default: module.LinodeDetailHeader,
+  }))
 );
 
-const CloneLanding = () => {
+export const CloneLanding = () => {
   const { linodeId: _linodeId } = useParams<{ linodeId: string }>();
   const history = useHistory();
   const match = useRouteMatch();
@@ -126,7 +128,10 @@ const CloneLanding = () => {
   // A config and/or disk can be selected via query param. Memoized
   // so it can be used as a dep in the useEffects that consume it.
   const queryParams = React.useMemo(
-    () => getQueryParamsFromQueryString(location.search),
+    () =>
+      getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
+        location.search
+      ),
     [location.search]
   );
 
@@ -371,5 +376,3 @@ const CloneLanding = () => {
     </React.Fragment>
   );
 };
-
-export default CloneLanding;

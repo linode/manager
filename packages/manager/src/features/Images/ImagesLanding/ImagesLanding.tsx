@@ -28,9 +28,11 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   isEventImageUpload,
   isEventInProgressDiskImagize,
@@ -93,6 +95,9 @@ export const ImagesLanding = () => {
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
   const location = useLocation();
+  const isImagesReadOnly = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_images',
+  });
   const queryParams = new URLSearchParams(location.search);
   const imageLabelFromParam = queryParams.get(searchQueryKey) ?? '';
 
@@ -376,6 +381,14 @@ export const ImagesLanding = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
       <LandingHeader
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Images',
+          }),
+        }}
+        disabledCreateButton={isImagesReadOnly}
         docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
         entity="Image"
         onButtonClick={() => history.push('/images/create')}
@@ -519,6 +532,14 @@ export const ImagesLanding = () => {
               <Hidden smDown>
                 <TableCell>Status</TableCell>
               </Hidden>
+              <TableSortCell
+                active={automaticImagesOrderBy === 'size'}
+                direction={automaticImagesOrder}
+                handleClick={handleAutomaticImagesOrderChange}
+                label="size"
+              >
+                Size
+              </TableSortCell>
               <Hidden smDown>
                 <TableSortCell
                   active={automaticImagesOrderBy === 'created'}
@@ -529,14 +550,6 @@ export const ImagesLanding = () => {
                   Created
                 </TableSortCell>
               </Hidden>
-              <TableSortCell
-                active={automaticImagesOrderBy === 'size'}
-                direction={automaticImagesOrder}
-                handleClick={handleAutomaticImagesOrderChange}
-                label="size"
-              >
-                Size
-              </TableSortCell>
               <Hidden smDown>
                 <TableCell>Expires</TableCell>
               </Hidden>

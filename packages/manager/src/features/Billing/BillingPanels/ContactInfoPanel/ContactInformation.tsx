@@ -4,10 +4,13 @@ import { allCountries } from 'country-region-data';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
+import { Box } from 'src/components/Box';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
 
 import {
   BillingActionButton,
@@ -74,9 +77,15 @@ const ContactInformation = (props: Props) => {
     setEditContactDrawerOpen,
   ] = React.useState<boolean>(false);
 
+  const { data: notifications } = useNotificationsQuery();
+
   const [focusEmail, setFocusEmail] = React.useState(false);
 
   const isChildUser = Boolean(profile?.user_type === 'child');
+
+  const invalidTaxIdNotification = notifications?.find((notification) => {
+    return notification.type === 'tax_id_invalid';
+  });
 
   const isReadOnly =
     useRestrictedGlobalGrantCheck({
@@ -220,9 +229,28 @@ const ContactInformation = (props: Props) => {
               <StyledTypography data-qa-contact-phone>{phone}</StyledTypography>
             )}
             {taxId && (
-              <StyledTypography sx={{ marginTop: 'auto' }}>
-                <strong>Tax ID</strong> {taxId}
-              </StyledTypography>
+              <Box alignItems="center" display="flex">
+                <StyledTypography
+                  sx={{
+                    margin: 0,
+                  }}
+                >
+                  <strong>Tax ID</strong> {taxId}
+                </StyledTypography>
+                {invalidTaxIdNotification && (
+                  <TooltipIcon
+                    sxTooltipIcon={{
+                      '& > svg': {
+                        fontSize: '18px',
+                      },
+                      paddingBottom: 0,
+                      paddingTop: 0,
+                    }}
+                    status="warning"
+                    text={invalidTaxIdNotification.label}
+                  />
+                )}
+              </Box>
             )}
           </Grid>
         </Grid>
