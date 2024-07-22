@@ -92,3 +92,34 @@ export const mockCreateLongviewClient = (
     makeResponse(client)
   );
 };
+
+/**
+ * Mocks request to delete a Longview Client.
+ *
+ * @param clientID - ID of Longview Client for which to intercept delete request.
+ *
+ */
+export const mockDeleteLongviewClient = (
+  clientID: number
+): Cypress.Chainable<null> => {
+  return cy.intercept('DELETE', apiMatcher(`longview/clients/${clientID}`), {});
+};
+
+/**
+ * Intercepts PUT request to update Longview Client and mocks response.
+ *
+ * @param clientID - ID of Longview Client for which to intercept update request.
+ * @param newClient - new Longview Client object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateLongviewClient = (
+  clientID: number,
+  newClient: LongviewClient
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`longview/clients/${clientID}`),
+    makeResponse(newClient)
+  );
+};

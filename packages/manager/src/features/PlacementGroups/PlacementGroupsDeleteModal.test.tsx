@@ -40,7 +40,7 @@ describe('PlacementGroupsDeleteModal', () => {
           }),
         ]}
         selectedPlacementGroup={placementGroupFactory.build({
-          affinity_type: 'anti_affinity:local',
+          placement_group_type: 'anti_affinity:local',
           id: 1,
           label: 'PG-to-delete',
           members: [
@@ -84,7 +84,7 @@ describe('PlacementGroupsDeleteModal', () => {
           }),
         ]}
         selectedPlacementGroup={placementGroupFactory.build({
-          affinity_type: 'anti_affinity:local',
+          placement_group_type: 'anti_affinity:local',
           id: 1,
           label: 'PG-to-delete',
           members: [],

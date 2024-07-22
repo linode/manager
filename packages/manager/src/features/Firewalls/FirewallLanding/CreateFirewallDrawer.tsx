@@ -42,7 +42,7 @@ import type {
   Linode,
   NodeBalancer,
 } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
@@ -80,7 +80,9 @@ export const CreateFirewallDrawer = React.memo(
 
     const location = useLocation();
     const isFromLinodeCreate = location.pathname.includes('/linodes/create');
-    const queryParams = getQueryParamsFromQueryString(location.search);
+    const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+      location.search
+    );
 
     const {
       errors,
@@ -224,8 +226,7 @@ export const CreateFirewallDrawer = React.memo(
           sendLinodeCreateFormStepEvent({
             action: 'click',
             category: 'link',
-            createType:
-              (queryParams.type as LinodeCreateType) ?? 'Distributions',
+            createType: queryParams.type ?? 'OS',
             formStepName: 'Create Firewall Drawer',
             label: 'Learn more',
             version: 'v1',
@@ -379,8 +380,7 @@ export const CreateFirewallDrawer = React.memo(
                 sendLinodeCreateFormStepEvent({
                   action: 'click',
                   category: 'button',
-                  createType:
-                    (queryParams.type as LinodeCreateType) ?? 'Distributions',
+                  createType: queryParams.type ?? 'OS',
                   formStepName: 'Create Firewall Drawer',
                   label: 'Create Firewall',
                   version: 'v1',
