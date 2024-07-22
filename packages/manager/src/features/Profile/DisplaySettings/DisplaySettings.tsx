@@ -16,10 +16,10 @@ import { Typography } from 'src/components/Typography';
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
-import { ApplicationState } from 'src/store';
-import { sendManageGravatarEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { TimezoneForm } from './TimezoneForm';
+
+import type { ApplicationState } from 'src/store';
 
 export const DisplaySettings = () => {
   const theme = useTheme();
@@ -111,11 +111,7 @@ export const DisplaySettings = () => {
                 Create, upload, and manage your globally recognized avatar from
                 a single place with Gravatar.
               </StyledProfileCopy>
-              <StyledAddImageLink
-                external
-                onClick={() => sendManageGravatarEvent()}
-                to="https://en.gravatar.com/"
-              >
+              <StyledAddImageLink external to="https://en.gravatar.com/">
                 Manage photo
               </StyledAddImageLink>
             </div>

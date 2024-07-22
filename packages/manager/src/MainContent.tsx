@@ -1,4 +1,3 @@
-import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -9,8 +8,8 @@ import { Box } from 'src/components/Box';
 import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import { NotFound } from 'src/components/NotFound';
-import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
 import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
+import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
 import { Footer } from 'src/features/Footer';
@@ -36,6 +35,8 @@ import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { useAccountSettings } from './queries/account/settings';
 import { useProfile } from './queries/profile/profile';
+
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {
@@ -122,7 +123,11 @@ const Account = React.lazy(() =>
     default: module.Account,
   }))
 );
-const LinodesRoutes = React.lazy(() => import('src/features/Linodes'));
+const LinodesRoutes = React.lazy(() =>
+  import('src/features/Linodes').then((module) => ({
+    default: module.LinodesRoutes,
+  }))
+);
 const Volumes = React.lazy(() => import('src/features/Volumes'));
 const Domains = React.lazy(() =>
   import('src/features/Domains').then((module) => ({
