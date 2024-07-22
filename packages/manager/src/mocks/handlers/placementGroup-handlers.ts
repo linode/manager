@@ -228,7 +228,26 @@ export const placementGroupLinodeAssignment = (mockContext: MockContext) => [
         },
       });
 
-      // TODO queue event.
+      queueEvents({
+        event: {
+          action: 'placement_group_assign',
+          entity: {
+            id: placementGroup.id,
+            label: placementGroup.label,
+            type: 'placement_group',
+            url: `/v4/placement/groups/${placementGroup.id}`,
+          },
+          secondary_entity: {
+            id: linodeAssigned.id,
+            label: linodeAssigned.label,
+            type: 'linode',
+            url: `/v4/linode/instances/${linodeAssigned.id}`,
+          },
+        },
+        mockContext,
+        sequence: [{ status: 'notification' }],
+      });
+
       return makeResponse(placementGroup);
     }
   ),
@@ -270,7 +289,26 @@ export const placementGroupLinodeAssignment = (mockContext: MockContext) => [
         mockContext
       );
 
-      // TODO queue event.
+      queueEvents({
+        event: {
+          action: 'placement_group_unassign',
+          entity: {
+            id: placementGroup.id,
+            label: placementGroup.label,
+            type: 'placement_group',
+            url: `/v4/placement/groups/${placementGroup.id}`,
+          },
+          secondary_entity: {
+            id: linodeAssigned.id,
+            label: linodeAssigned.label,
+            type: 'linode',
+            url: `/v4/linode/instances/${linodeAssigned.id}`,
+          },
+        },
+        mockContext,
+        sequence: [{ status: 'notification' }],
+      });
+
       return makeResponse(placementGroup);
     }
   ),

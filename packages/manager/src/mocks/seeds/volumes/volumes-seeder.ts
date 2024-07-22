@@ -2,18 +2,18 @@ import { getMSWCountMap } from 'src/dev-tools/ServiceWorkerTool';
 import { volumeFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 
-import type { MockContext, MockContextPopulator } from 'src/mocks/types';
+import type { MockContext, MockContextSeeder } from 'src/mocks/types';
 
-export const volumesPopulator: MockContextPopulator = {
+export const volumesSeeder: MockContextSeeder = {
   canUpdateCount: true,
   desc: 'Populates Volumes',
   group: 'Volumes',
   id: 'many-volumes',
   label: 'Volumes',
 
-  populator: async (mockContext: MockContext) => {
+  seeder: async (mockContext: MockContext) => {
     const countMap = getMSWCountMap();
-    const count = countMap[volumesPopulator.id] ?? 0;
+    const count = countMap[volumesSeeder.id] ?? 0;
     const volumes = volumeFactory.buildList(count);
 
     const updatedMockContext = {

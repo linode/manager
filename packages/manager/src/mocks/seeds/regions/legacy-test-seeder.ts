@@ -1,18 +1,18 @@
 import { regions } from 'src/__data__/regionsData';
 import { mswDB } from 'src/mocks/indexedDB';
 
-import type { MockContext, MockContextPopulator } from 'src/mocks/types';
+import type { MockContext, MockContextSeeder } from 'src/mocks/types';
 
 /**
  * Populates context with Regions that simulate our Production regions.
  */
-export const legacyRegionsPopulator: MockContextPopulator = {
+export const legacyRegionsSeeder: MockContextSeeder = {
   desc: 'Populates context with legacy mock region data',
   group: 'Regions',
   id: 'legacy-test-regions',
   label: 'Legacy Test Regions',
 
-  populator: async (mockContext: MockContext) => {
+  seeder: async (mockContext: MockContext) => {
     const updatedMockContext = {
       ...mockContext,
       regions: mockContext.regions.concat(regions),
