@@ -73,7 +73,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
   const isDxAdditionsFeatureEnabled = flags?.apicliDxToolsAdditions;
 
   const tabs = isDxAdditionsFeatureEnabled
-    ? [...baseTabs.reverse(), ...additionalTabs]
+    ? [baseTabs[1], baseTabs[0], ...additionalTabs]
     : baseTabs;
 
   const handleTabChange = (index: number) => {

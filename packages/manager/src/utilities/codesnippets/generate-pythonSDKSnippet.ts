@@ -40,6 +40,12 @@ export function generatePythonLinodeSnippet(
   if (config.metadata && config.metadata.user_data) {
     snippet += `    metadata={\n        "user_data" : "${config.metadata.user_data}",\n    },\n`;
   }
+  if (config.authorized_users && config.authorized_users.length > 0) {
+    const users = config.authorized_users
+      .map((user) => `"${escapePythonString(user)}"`)
+      .join(', ');
+    snippet += `    authorized_users=[${users}],\n`;
+  }
   // Handling other optional fields like authorized_keys, stackscript_id, etc.
   if (config.authorized_keys && config.authorized_keys.length > 0) {
     const keys = config.authorized_keys

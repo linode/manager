@@ -40,6 +40,11 @@ export function generateAnsibleConfig(config: CreateLinodeRequest): string {
   if (config.hasOwnProperty('private_ip')) {
     configStr += `    private_ip: ${config.private_ip}\n`;
   }
+  if (config.authorized_users && config.authorized_users.length > 0) {
+    configStr += `    authorized_users:\n      - "${config.authorized_users
+      .map((user) => escapeYAMLString(user))
+      .join('"\n      - "')}"\n`;
+  }
   if (config.authorized_keys && config.authorized_keys.length > 0) {
     configStr += `    authorized_keys:\n      - "${config.authorized_keys
       .map((key) => escapeYAMLString(key))

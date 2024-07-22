@@ -57,10 +57,16 @@ export function generateTerraformConfig(config: CreateLinodeRequest): string {
       terraformConfig += `  }\n`;
     });
   }
+  if (config.authorized_users && config.authorized_users.length > 0) {
+    const authorizedUsersFormatted = config.authorized_users
+      ?.map((key) => `"${escapeStringForCLI(key)}"`)
+      ?.join(', ');
+    terraformConfig += `  authorized_users = [${authorizedUsersFormatted}]\n`;
+  }
 
   if (config.authorized_keys && config.authorized_keys.length > 0) {
     const authorizedKeysFormatted = config.authorized_keys
-      ?.map((key) => `"${escapeStringForCLI(key)}"`)
+      ?.map((user) => `"${escapeStringForCLI(user)}"`)
       ?.join(', ');
     terraformConfig += `  authorized_keys = [${authorizedKeysFormatted}]\n`;
   }
