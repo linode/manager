@@ -1,3 +1,10 @@
+## [2024-07-22] - v0.50.0
+
+### Changed:
+
+- `createAccountLimitSupportTicketSchema` to support schemas ([#10620](https://github.com/linode/manager/pull/10620))
+- Breaking: change Placement Group `is_strict` to `placement_group_policy` ([#10651](https://github.com/linode/manager/pull/10651))
+  
 ## [2024-07-08] - v0.49.0
 
 ### Added:
