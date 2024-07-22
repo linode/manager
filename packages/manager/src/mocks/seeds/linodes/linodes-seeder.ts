@@ -3,16 +3,16 @@ import { configFactory, linodeFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 
 import type { Config } from '@linode/api-v4';
-import type { MockContext, MockContextSeeder } from 'src/mocks/types';
+import type { MockSeeder, MockState } from 'src/mocks/types';
 
-export const linodesSeeder: MockContextSeeder = {
+export const linodesSeeder: MockSeeder = {
   canUpdateCount: true,
   desc: 'Linodes Seeds',
   group: 'Linodes',
   id: 'many-linodes',
   label: 'Linodes',
 
-  seeder: async (mockContext: MockContext) => {
+  seeder: async (mockState: MockState) => {
     const countMap = getMSWCountMap();
     const count = countMap[linodesSeeder.id] ?? 0;
     const linodes = linodeFactory.buildList(count);
@@ -20,14 +20,14 @@ export const linodesSeeder: MockContextSeeder = {
       return [linode.id, configFactory.build()];
     });
 
-    const updatedMockContext = {
-      ...mockContext,
-      linodeConfigs: mockContext.linodeConfigs.concat(configs),
-      linodes: mockContext.linodes.concat(linodes),
+    const updatedMockState = {
+      ...mockState,
+      linodeConfigs: mockState.linodeConfigs.concat(configs),
+      linodes: mockState.linodes.concat(linodes),
     };
 
-    await mswDB.saveStore(updatedMockContext, 'seedContext');
+    await mswDB.saveStore(updatedMockState, 'seedContext');
 
-    return updatedMockContext;
+    return updatedMockState;
   },
 };

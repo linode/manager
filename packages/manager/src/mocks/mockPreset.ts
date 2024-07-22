@@ -1,4 +1,4 @@
-import type { MockContext, MockHandlerGenerator, MockPreset } from './types';
+import type { MockHandler, MockPreset, MockState } from './types';
 import type { HttpHandler } from 'msw';
 
 /**
@@ -10,14 +10,11 @@ import type { HttpHandler } from 'msw';
  */
 export const resolveMockPreset = (
   preset: MockPreset,
-  context: MockContext
+  context: MockState
 ): HttpHandler[] => {
-  return preset.handlers.reduce(
-    (acc: HttpHandler[], cur: MockHandlerGenerator) => {
-      return [...cur(context), ...acc];
-    },
-    []
-  );
+  return preset.handlers.reduce((acc: HttpHandler[], cur: MockHandler) => {
+    return [...cur(context), ...acc];
+  }, []);
 };
 
 /**

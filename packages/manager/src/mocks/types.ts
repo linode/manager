@@ -22,7 +22,7 @@ export type MockPresetGroup =
   | 'Regions'
   | 'Volumes';
 
-export type MockHandlerGenerator = (mockContext: MockContext) => HttpHandler[];
+export type MockHandler = (mockState: MockState) => HttpHandler[];
 
 export type MockPreset = {
   /** Description of mock preset and its purpose. */
@@ -32,7 +32,7 @@ export type MockPreset = {
   group: MockPresetGroup;
 
   /** Array of MSW handler generator functions. */
-  handlers: MockHandlerGenerator[];
+  handlers: MockHandler[];
 
   /** Unique ID of mock preset, used to keep track of user preset selections. */
   id: string;
@@ -44,7 +44,7 @@ export type MockPreset = {
 /**
  * Contextual data shared among mocks.
  */
-export interface MockContext {
+export interface MockState {
   eventQueue: Event[];
   firewalls: Firewall[];
   linodeConfigs: [number, Config][];
@@ -56,7 +56,7 @@ export interface MockContext {
   volumes: Volume[];
 }
 
-export type MockContextSeederIds =
+export type MockSeederIds =
   | 'edge-regions'
   | 'legacy-test-regions'
   | 'many-linodes'
@@ -64,18 +64,18 @@ export type MockContextSeederIds =
   | 'many-volumes'
   | 'prod-regions';
 
-export type MockContextSeederGroup =
+type MockSeederGroup =
   | 'Account'
   | 'Linodes'
   | 'Placement Groups'
   | 'Regions'
   | 'Volumes';
 
-export interface MockContextSeeder {
+export interface MockSeeder {
   canUpdateCount?: boolean;
   desc?: string;
-  group?: MockContextSeederGroup;
-  id: MockContextSeederIds;
+  group?: MockSeederGroup;
+  id: MockSeederIds;
   label: string;
-  seeder: (mockContext: MockContext) => MockContext | Promise<MockContext>;
+  seeder: (mockState: MockState) => MockState | Promise<MockState>;
 }

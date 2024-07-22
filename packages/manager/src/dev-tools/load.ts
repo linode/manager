@@ -1,7 +1,7 @@
 import { ENABLE_DEV_TOOLS } from 'src/constants';
 import { mswDB } from 'src/mocks/indexedDB';
-import { createInitialMockStore, emptyStore } from 'src/mocks/mockContext';
 import { resolveMockPreset } from 'src/mocks/mockPreset';
+import { createInitialMockStore, emptyStore } from 'src/mocks/mockState';
 import { allMockPresets, defaultBaselineMockPreset } from 'src/mocks/presets';
 import { allContextSeeders } from 'src/mocks/seeds';
 
@@ -13,14 +13,10 @@ import {
 } from './ServiceWorkerTool';
 
 import type { QueryClient } from '@tanstack/react-query';
-import type {
-  MockContext,
-  MockContextSeeder,
-  MockPreset,
-} from 'src/mocks/types';
+import type { MockSeeder, MockPreset, MockState } from 'src/mocks/types';
 import type { ApplicationStore } from 'src/store';
 
-export let mockState: MockContext;
+export let mockState: MockState;
 
 /**
  * Use this to dynamically import our custom dev-tools ONLY when they
@@ -57,14 +53,14 @@ export async function loadDevTools(
 
     // Apply MSW context populators.
     const initialContext = await createInitialMockStore();
-    await mswDB.saveStore(initialContext, 'mockContext');
+    await mswDB.saveStore(initialContext, 'mockState');
 
     // Seeding
     const seedContext = (await mswDB.getStore('seedContext')) || emptyStore;
 
-    const populateSeeds = async (store: MockContext): Promise<MockContext> => {
+    const populateSeeds = async (store: MockState): Promise<MockState> => {
       return await mswContentSeeders.reduce(
-        async (accPromise, cur: MockContextSeeder) => {
+        async (accPromise, cur: MockSeeder) => {
           const acc = await accPromise;
 
           return await cur.seeder(acc);
@@ -73,9 +69,9 @@ export async function loadDevTools(
       );
     };
 
-    const updateSeedContext = async <T extends keyof MockContext>(
+    const updateSeedContext = async <T extends keyof MockState>(
       key: T,
-      seeds: MockContext
+      seeds: MockState
     ): Promise<void> => {
       seedContext[key] = seeds[key];
     };
@@ -84,14 +80,14 @@ export async function loadDevTools(
 
     const seedPromises = (Object.keys(
       seedContext
-    ) as (keyof MockContext)[]).map((key) => updateSeedContext(key, seeds));
+    ) as (keyof MockState)[]).map((key) => updateSeedContext(key, seeds));
 
     await Promise.all(seedPromises);
 
     await mswDB.saveStore(seedContext ?? emptyStore, 'seedContext');
 
     // Merge the contexts
-    const mergedContext: MockContext = {
+    const mergedContext: MockState = {
       ...initialContext,
       eventQueue: [
         ...initialContext.eventQueue,

@@ -31,7 +31,7 @@ import type {
   Stats,
 } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
-import type { MockContext } from 'src/mocks/types';
+import type { MockState } from 'src/mocks/types';
 import type {
   APIErrorResponse,
   APIPaginatedResponse,
@@ -108,7 +108,7 @@ export const getLinodes = () => [
   ),
 ];
 
-export const createLinode = (mockContext: MockContext) => [
+export const createLinode = (mockState: MockState) => [
   http.post('*/v4/linode/instances', async ({ request }) => {
     const payload = await request.clone().json();
     const linode = linodeFactory.build({
@@ -125,8 +125,8 @@ export const createLinode = (mockContext: MockContext) => [
       created: DateTime.now().toISO(),
     });
 
-    await mswDB.add('linodes', linode, mockContext);
-    await mswDB.add('linodeConfigs', [linode.id, linodeConfig], mockContext);
+    await mswDB.add('linodes', linode, mockState);
+    await mswDB.add('linodeConfigs', [linode.id, linodeConfig], mockState);
 
     queueEvents({
       event: {
@@ -138,7 +138,7 @@ export const createLinode = (mockContext: MockContext) => [
           url: `/v4/linode/instances/${linode.id}`,
         },
       },
-      mockContext,
+      mockState,
       sequence: [
         { status: 'scheduled' },
         { isProgressEvent: true, status: 'started' },
@@ -150,7 +150,7 @@ export const createLinode = (mockContext: MockContext) => [
           'linodes',
           linode.id,
           { status: 'booting' },
-          mockContext
+          mockState
         );
 
         return queueEvents({
@@ -163,7 +163,7 @@ export const createLinode = (mockContext: MockContext) => [
               url: `/v4/linode/instances/${linode.id}`,
             },
           },
-          mockContext,
+          mockState,
           sequence: [
             { isProgressEvent: true, status: 'started' },
             { status: 'finished' },
@@ -175,7 +175,7 @@ export const createLinode = (mockContext: MockContext) => [
           'linodes',
           linode.id,
           { status: 'running' },
-          mockContext
+          mockState
         );
       });
 
@@ -183,7 +183,7 @@ export const createLinode = (mockContext: MockContext) => [
   }),
 ];
 
-export const updateLinode = (mockContext: MockContext) => [
+export const updateLinode = (mockState: MockState) => [
   http.put(
     '*/v4/linode/instances/:id',
     async ({
@@ -198,7 +198,7 @@ export const updateLinode = (mockContext: MockContext) => [
         return makeNotFoundResponse();
       }
 
-      await mswDB.update('linodes', id, payload, mockContext);
+      await mswDB.update('linodes', id, payload, mockState);
 
       queueEvents({
         event: {
@@ -210,7 +210,7 @@ export const updateLinode = (mockContext: MockContext) => [
             url: `/v4/linode/instances/${linode.id}`,
           },
         },
-        mockContext,
+        mockState,
         sequence: [{ status: 'notification' }],
       });
 
@@ -219,7 +219,7 @@ export const updateLinode = (mockContext: MockContext) => [
   ),
 ];
 
-export const deleteLinode = (mockContext: MockContext) => [
+export const deleteLinode = (mockState: MockState) => [
   http.delete('*/v4/linode/instances/:id', async ({ params }) => {
     const id = Number(params.id);
     const linode = await mswDB.get('linodes', id);
@@ -228,7 +228,7 @@ export const deleteLinode = (mockContext: MockContext) => [
       return makeNotFoundResponse();
     }
 
-    await mswDB.delete('linodes', id, mockContext);
+    await mswDB.delete('linodes', id, mockState);
 
     queueEvents({
       event: {
@@ -240,7 +240,7 @@ export const deleteLinode = (mockContext: MockContext) => [
           url: `/v4/linode/instances/${linode.id}`,
         },
       },
-      mockContext,
+      mockState,
       sequence: [{ status: 'finished' }],
     });
 
@@ -249,12 +249,12 @@ export const deleteLinode = (mockContext: MockContext) => [
 ];
 
 // Intentionally not storing static data the DB
-export const getLinodeStats = (mockContext: MockContext) => [
+export const getLinodeStats = (mockState: MockState) => [
   http.get(
     '*/v4/linode/instances/:id/stats*',
     ({ params }): StrictResponse<APIErrorResponse | Stats> => {
       const id = Number(params.id);
-      const linode = mockContext.linodes.find(
+      const linode = mockState.linodes.find(
         (contextLinode) => contextLinode.id === id
       );
 
@@ -270,14 +270,14 @@ export const getLinodeStats = (mockContext: MockContext) => [
 ];
 
 // TODO: integrate with DB
-export const getLinodeDisks = (mockContext: MockContext) => [
+export const getLinodeDisks = (mockState: MockState) => [
   http.get(
     '*/v4/linode/instances/:id/disks',
     ({
       params,
     }): StrictResponse<APIErrorResponse | APIPaginatedResponse<Disk>> => {
       const id = Number(params.id);
-      const linode = mockContext.linodes.find(
+      const linode = mockState.linodes.find(
         (contextLinode) => contextLinode.id === id
       );
 
@@ -293,14 +293,14 @@ export const getLinodeDisks = (mockContext: MockContext) => [
 ];
 
 // TODO: integrate with DB
-export const getLinodeTransfer = (mockContext: MockContext) => [
+export const getLinodeTransfer = (mockState: MockState) => [
   http.get(
     '*/v4/linode/instances/:id/transfer',
     ({
       params,
     }): StrictResponse<APIErrorResponse | RegionalNetworkUtilization> => {
       const id = Number(params.id);
-      const linode = mockContext.linodes.find(
+      const linode = mockState.linodes.find(
         (contextLinode) => contextLinode.id === id
       );
 
@@ -315,7 +315,7 @@ export const getLinodeTransfer = (mockContext: MockContext) => [
   ),
 ];
 
-export const getLinodeFirewalls = (mockContext: MockContext) => [
+export const getLinodeFirewalls = (mockState: MockState) => [
   http.get(
     '*/v4/linode/instances/:id/firewalls',
     async ({
@@ -324,7 +324,7 @@ export const getLinodeFirewalls = (mockContext: MockContext) => [
       StrictResponse<APIErrorResponse | APIPaginatedResponse<Firewall>>
     > => {
       const id = Number(params.id);
-      const linode = mockContext.linodes.find(
+      const linode = mockState.linodes.find(
         (contextLinode) => contextLinode.id === id
       );
       const allFirewalls = await mswDB.getAll('firewalls');
@@ -343,12 +343,12 @@ export const getLinodeFirewalls = (mockContext: MockContext) => [
 ];
 
 // TODO: integrate with DB
-export const getLinodeIps = (mockContext: MockContext) => [
+export const getLinodeIps = (mockState: MockState) => [
   http.get(
     '*/v4/linode/instances/:id/ips',
     ({ params }): StrictResponse<APIErrorResponse | LinodeIPsResponse> => {
       const id = Number(params.id);
-      const linode = mockContext.linodes.find(
+      const linode = mockState.linodes.find(
         (contextLinode) => contextLinode.id === id
       );
 
@@ -364,12 +364,12 @@ export const getLinodeIps = (mockContext: MockContext) => [
 ];
 
 // TODO: integrate with DB
-export const getLinodeBackups = (mockContext: MockContext) => [
+export const getLinodeBackups = (mockState: MockState) => [
   http.get(
     '*/v4/linode/instances/:id/backups',
     ({ params }): StrictResponse<APIErrorResponse | LinodeBackupsResponse> => {
       const id = Number(params.id);
-      const linode = mockContext.linodes.find(
+      const linode = mockState.linodes.find(
         (contextLinode) => contextLinode.id === id
       );
 
