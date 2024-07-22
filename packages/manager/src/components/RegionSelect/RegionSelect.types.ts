@@ -20,6 +20,20 @@ export interface DisableRegionOption {
   tooltipWidth?: number;
 }
 
+export type RegionFilterValue =
+  | 'distributed-AF'
+  | 'distributed-ALL'
+  | 'distributed-AS'
+  | 'distributed-EU'
+  | 'distributed-NA'
+  | 'distributed-OC'
+  | 'distributed-SA'
+  | RegionSite;
+
+export interface GetRegionLabel {
+  includeSlug?: boolean;
+  region: Region;
+}
 export interface RegionSelectProps<
   DisableClearable extends boolean | undefined = undefined
 > extends Omit<
@@ -40,7 +54,7 @@ export interface RegionSelectProps<
   disabledRegions?: Record<string, DisableRegionOption>;
   helperText?: string;
   label?: string;
-  regionFilter?: RegionSite;
+  regionFilter?: RegionFilterValue;
   regions: Region[];
   required?: boolean;
   showDistributedRegionIconHelperText?: boolean;
@@ -54,7 +68,7 @@ export interface RegionSelectProps<
 
 export interface RegionMultiSelectProps
   extends Omit<
-    EnhancedAutocompleteProps<Region, false>,
+    EnhancedAutocompleteProps<Region, true>,
     'label' | 'onChange' | 'options'
   > {
   SelectedRegionsList?: React.ComponentType<{

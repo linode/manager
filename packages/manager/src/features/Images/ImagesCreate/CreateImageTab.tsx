@@ -1,10 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { CreateImagePayload } from '@linode/api-v4';
 import { createImageSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
@@ -31,10 +30,21 @@ import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+
+import type { CreateImagePayload } from '@linode/api-v4';
+import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
 
 export const CreateImageTab = () => {
-  const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
-    null
+  const location = useLocation();
+
+  const queryParams = React.useMemo(
+    () =>
+      getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
+        location.search
+      ),
+    [location.search]
   );
 
   const {
@@ -43,8 +53,12 @@ export const CreateImageTab = () => {
     handleSubmit,
     resetField,
     setError,
+    setValue,
     watch,
   } = useForm<CreateImagePayload>({
+    defaultValues: {
+      disk_id: +queryParams.selectedDisk,
+    },
     mode: 'onBlur',
     resolver: yupResolver(createImageSchema),
   });
@@ -89,6 +103,15 @@ export const CreateImageTab = () => {
     }
   });
 
+  const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
+    queryParams.selectedLinode ? +queryParams.selectedLinode : null
+  );
+
+  const { data: selectedLinode } = useLinodeQuery(
+    selectedLinodeId ?? -1,
+    selectedLinodeId !== null
+  );
+
   const {
     data: disks,
     error: disksError,
@@ -99,18 +122,30 @@ export const CreateImageTab = () => {
   const selectedDisk =
     disks?.find((disk) => disk.id === selectedDiskId) ?? null;
 
+  React.useEffect(() => {
+    if (formState.touchedFields.label) {
+      return;
+    }
+    if (selectedLinode) {
+      setValue('label', `${selectedLinode.label}-${selectedDisk?.label ?? ''}`);
+    } else {
+      resetField('label');
+    }
+  }, [
+    selectedLinode,
+    selectedDisk,
+    formState.touchedFields.label,
+    setValue,
+    resetField,
+  ]);
+
   const isRawDisk = selectedDisk?.filesystem === 'raw';
 
   const { data: regionsData } = useRegionsQuery();
 
-  const { data: linode } = useLinodeQuery(
-    selectedLinodeId ?? -1,
-    selectedLinodeId !== null
-  );
-
   const linodeIsInDistributedRegion = getIsDistributedRegion(
     regionsData ?? [],
-    linode?.region ?? ''
+    selectedLinode?.region ?? ''
   );
 
   /*
@@ -133,13 +168,18 @@ export const CreateImageTab = () => {
   return (
     <form onSubmit={onSubmit}>
       <Stack spacing={2}>
+        {isImageCreateRestricted && (
+          <Notice
+            text={getRestrictedResourceText({
+              action: 'create',
+              isSingular: false,
+              resourceType: 'Images',
+            })}
+            important
+            variant="error"
+          />
+        )}
         <Paper>
-          {isImageCreateRestricted && (
-            <Notice
-              text="You don't have permissions to create a new Image. Please contact an account administrator for details."
-              variant="error"
-            />
-          )}
           {formState.errors.root?.message && (
             <Notice
               spacingBottom={8}
@@ -275,9 +315,9 @@ export const CreateImageTab = () => {
                         <TooltipIcon
                           text={
                             <Typography>
-                              Many Linode supported distributions are compatible
-                              with cloud-init by default, or you may have
-                              installed cloud-init.{' '}
+                              Many Linode supported operating systems are
+                              compatible with cloud-init by default, or you may
+                              have installed cloud-init.{' '}
                               <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata/">
                                 Learn more.
                               </Link>

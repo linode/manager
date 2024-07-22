@@ -12,7 +12,7 @@ import {
   Stats,
   StatsData,
 } from '@linode/api-v4/lib/linodes/types';
-import * as Factory from 'factory.ts';
+import Factory from 'src/factories/factoryProxy';
 
 import { placementGroupFactory } from './placementGroups';
 
@@ -265,7 +265,7 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   label: Factory.each((i) => `linode-${i}`),
   lke_cluster_id: null,
   placement_group: placementGroupFactory.build({
-    affinity_type: 'anti_affinity:local',
+    placement_group_type: 'anti_affinity:local',
     id: 1,
     label: 'pg-1',
   }),

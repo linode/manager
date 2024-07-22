@@ -1,13 +1,11 @@
-import { Image } from '@linode/api-v4/lib/images';
-import Grid from '@mui/material/Unstable_Grid2';
 import produce from 'immer';
 import { DateTime } from 'luxon';
 import { equals, groupBy } from 'ramda';
 import * as React from 'react';
 
-import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
+import DistributedRegionIcon from 'src/assets/icons/entityIcons/distributed-region.svg';
+import Select from 'src/components/EnhancedSelect';
 import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
-import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 import { ImageOption } from 'src/components/ImageSelect/ImageOption';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
@@ -17,7 +15,13 @@ import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
-import { distroIcons } from '../DistributionIcon';
+import { Box } from '../Box';
+import { OS_ICONS } from '../OSIcon';
+import { Stack } from '../Stack';
+
+import type { Image } from '@linode/api-v4/lib/images';
+import type { GroupType, Item } from 'src/components/EnhancedSelect';
+import type { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 
 export type Variant = 'all' | 'private' | 'public';
 
@@ -37,6 +41,8 @@ interface ImageSelectProps {
     image: Image | undefined
   ) => void;
   images: Image[];
+  label?: string;
+  placeholder?: string;
   selectedImageID?: string;
   title: string;
   variant?: Variant;
@@ -111,7 +117,7 @@ export const imagesToGroupedItems = (images: Image[]) => {
                 acc.push({
                   className: vendor
                     ? // Use Tux as a fallback.
-                      `fl-${distroIcons[vendor] ?? 'tux'}`
+                      `fl-${OS_ICONS[vendor] ?? 'tux'}`
                     : `fl-tux`,
                   created,
                   isCloudInitCompatible: capabilities?.includes('cloud-init'),
@@ -151,12 +157,14 @@ export const ImageSelect = React.memo((props: ImageSelectProps) => {
   const {
     classNames,
     disabled,
+    error: errorText,
     handleSelectImage,
     images,
+    label,
+    placeholder,
     selectedImageID,
     title,
     variant,
-    ...reactSelectProps
   } = props;
 
   // Check for loading status and request errors in React Query
@@ -203,31 +211,47 @@ export const ImageSelect = React.memo((props: ImageSelectProps) => {
     return handleSelectImage(selection.value, selectedImage);
   };
 
+  const showDistributedCapabilityNotice =
+    variant === 'private' &&
+    filteredImages.some((image) =>
+      image.capabilities.includes('distributed-images')
+    );
+
   return (
     <Paper data-qa-select-image-panel>
       <Typography data-qa-tp={title} variant="h2">
         {title}
       </Typography>
-      <Grid container>
-        <Grid xs={12}>
-          <Select
-            value={getSelectedOptionFromGroupedOptions(
-              selectedImageID || '',
-              options
-            )}
-            components={{ Option: ImageOption, SingleValue: _SingleValue }}
-            disabled={disabled}
-            errorText={imageError}
-            isLoading={_loading}
-            label="Images"
-            onChange={onChange}
-            options={options}
-            placeholder="Choose an image"
-            {...reactSelectProps}
-            className={classNames}
-          />
-        </Grid>
-      </Grid>
+      <Box alignItems="flex-end" display="flex" flexWrap="wrap" gap={2}>
+        <Select
+          styles={{
+            container(base) {
+              return { ...base, width: '416px' };
+            },
+          }}
+          value={getSelectedOptionFromGroupedOptions(
+            selectedImageID || '',
+            options
+          )}
+          className={classNames}
+          components={{ Option: ImageOption, SingleValue: _SingleValue }}
+          disabled={disabled}
+          errorText={errorText ?? imageError}
+          isLoading={_loading}
+          label={label || 'Images'}
+          onChange={onChange}
+          options={options}
+          placeholder={placeholder || 'Choose an image'}
+        />
+        {showDistributedCapabilityNotice && (
+          <Stack alignItems="center" direction="row" pb={0.8} spacing={1}>
+            <DistributedRegionIcon height="21px" width="24px" />
+            <Typography>
+              Indicates compatibility with distributed compute regions.
+            </Typography>
+          </Stack>
+        )}
+      </Box>
     </Paper>
   );
 }, isMemo);

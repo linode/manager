@@ -17,6 +17,8 @@ function escapeYAMLString(str: string) {
 export function generateAnsibleConfig(config: CreateLinodeRequest): string {
   let configStr = `- name: Create a new Linode instance.\n  linode.cloud.instance:\n`;
 
+  configStr += `    state: "present"\n`;
+
   if (config.label) {
     configStr += `    label: "${escapeYAMLString(config.label)}"\n`;
   }
@@ -32,8 +34,19 @@ export function generateAnsibleConfig(config: CreateLinodeRequest): string {
   if (config.root_pass) {
     configStr += `    root_pass: "${escapeYAMLString(config.root_pass)}"\n`;
   }
+  if (config.metadata) {
+    configStr += `    metadata:\n      user_data: "${config.metadata?.user_data}"\n`;
+  }
   if (config.hasOwnProperty('private_ip')) {
     configStr += `    private_ip: ${config.private_ip}\n`;
+  }
+  if (config.authorized_keys && config.authorized_keys.length > 0) {
+    configStr += `    authorized_keys:\n      - "${config.authorized_keys
+      .map((key) => escapeYAMLString(key))
+      .join('"\n      - "')}"\n`;
+  }
+  if (config.firewall_id) {
+    configStr += `    firewall_id: ${config.firewall_id}\n`;
   }
   if (config.stackscript_id) {
     configStr += `    stackscript_id: ${config.stackscript_id}\n`;
@@ -49,6 +62,9 @@ export function generateAnsibleConfig(config: CreateLinodeRequest): string {
   if (config.backups_enabled) {
     configStr += `    backups_enabled: ${config.backups_enabled}\n`;
   }
+  if (config.placement_group) {
+    configStr += `    placement_group:\n      id: ${config.placement_group?.id}\n`;
+  }
   if (config.tags && config.tags.length > 0) {
     configStr += `    tags:\n      - "${config.tags
       .map((tag) => escapeYAMLString(tag))
@@ -61,10 +77,13 @@ export function generateAnsibleConfig(config: CreateLinodeRequest): string {
       if (iface.subnet_id) {
         configStr += `        subnet_id: ${iface.subnet_id}\n`;
       }
-      if (iface.ip_ranges) {
+      if (iface.ip_ranges && iface.ip_ranges.length > 0) {
         configStr += `        ip_ranges:\n          - ${iface.ip_ranges
           .map((ip) => escapeYAMLString(ip))
           .join('\n          - ')}\n`;
+      }
+      if (iface.ipv4 && iface.ipv4.nat_1_1) {
+        configStr += `        ipv4:\n          nat_1_1: "${iface.ipv4.nat_1_1}"\n`;
       }
       if (iface.label) {
         configStr += `        label: "${escapeYAMLString(iface.label)}"\n`;

@@ -23,7 +23,7 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
   }
 
   return (
-    <StyledPaper>
+    <Paper>
       <Grid container spacing={4} sx={{ flexGrow: 1 }}>
         <Grid md={2.5} sm={6} xs={12}>
           <NetworkTransfer
@@ -59,7 +59,7 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
           <DNSResolvers region={linode.region} />
         </StyledDnsResolverGrid>
       </Grid>
-    </StyledPaper>
+    </Paper>
   );
 });
 
@@ -74,14 +74,3 @@ const StyledDnsResolverGrid = styled(Grid, { label: 'StyledDnsResolverGrid' })(
     },
   })
 );
-
-const StyledPaper = styled(Paper, { label: 'StyledPaper' })(({ theme }) => ({
-  display: 'flex',
-  flexFlow: 'row nowrap',
-  justifyContent: 'space-between',
-  padding: theme.spacing(3),
-  paddingBottom: theme.spacing(2.5),
-  [theme.breakpoints.down('sm')]: {
-    flexDirection: 'column',
-  },
-}));

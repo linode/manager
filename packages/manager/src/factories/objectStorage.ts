@@ -1,10 +1,12 @@
-import {
+import Factory from 'src/factories/factoryProxy';
+
+import type {
   ObjectStorageBucket,
+  ObjectStorageBucketRequestPayload,
   ObjectStorageCluster,
   ObjectStorageKey,
   ObjectStorageObject,
 } from '@linode/api-v4/lib/object-storage/types';
-import * as Factory from 'factory.ts';
 
 export const objectStorageBucketFactory = Factory.Sync.makeFactory<ObjectStorageBucket>(
   {
@@ -17,6 +19,17 @@ export const objectStorageBucketFactory = Factory.Sync.makeFactory<ObjectStorage
     objects: 103,
     region: 'us-east',
     size: 999999,
+  }
+);
+
+export const createObjectStorageBucketFactory = Factory.Sync.makeFactory<ObjectStorageBucketRequestPayload>(
+  {
+    acl: 'private',
+    cluster: 'us-east-1',
+    cors_enabled: true,
+    endpoint_type: 'E1',
+    label: Factory.each((i) => `obj-bucket-${i}`),
+    region: 'us-east',
   }
 );
 

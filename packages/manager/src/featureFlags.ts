@@ -66,7 +66,13 @@ interface AclpFlag {
 interface gpuV2 {
   planDivider: boolean;
 }
+
 type OneClickApp = Record<string, string>;
+
+interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
+  key: string;
+  link: string;
+}
 
 export interface Flags {
   aclb: boolean;
@@ -74,6 +80,7 @@ export interface Flags {
   aclp: AclpFlag;
   apiMaintenance: APIMaintenance;
   apicliDxToolsAdditions: boolean;
+  cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;
@@ -90,6 +97,7 @@ export interface Flags {
   mainContentBanner: MainContentBanner;
   metadata: boolean;
   objMultiCluster: boolean;
+  objectStorageGen2: BaseFeatureFlag;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
   placementGroups: BetaFeatureFlag;
