@@ -53,6 +53,10 @@ export function generateTerraformConfig(config: CreateLinodeRequest): string {
         if (interfaceConfig.ipv4.vpc) {
           terraformConfig += `      vpc = "${interfaceConfig.ipv4.vpc}"\n    }\n`;
         }
+        terraformConfig += `    }\n`;
+      }
+      if (interfaceConfig.ipam_address) {
+        terraformConfig += `    ipam_address = "${interfaceConfig.ipam_address}"\n`;
       }
       terraformConfig += `  }\n`;
     });
