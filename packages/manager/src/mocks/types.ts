@@ -66,16 +66,18 @@ export type MockContextPopulatorIds =
   | 'legacy-test-regions'
   | 'many-linodes'
   | 'many-volumes'
+  | 'many-placement-groups'
   | 'prod-regions';
 
 export type MockContextPopulatorGroup =
   | 'Account'
   | 'Linodes'
+  | 'Placement Groups'
   | 'Regions'
   | 'Volumes';
 
 export interface MockContextPopulator {
-  defaultCount?: number;
+  canUpdateCount?: boolean;
   desc?: string;
   group?: MockContextPopulatorGroup;
   id: MockContextPopulatorIds;

@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
+import { mswDB } from '../indexedDB';
 import { getPaginatedSlice } from '../utilities/pagination';
 import {
   makeNotFoundResponse,
@@ -8,7 +9,10 @@ import {
   makeResponse,
 } from '../utilities/response';
 
-import type { APIErrorResponse } from '../utilities/response';
+import type {
+  APIErrorResponse,
+  APIPaginatedResponse,
+} from '../utilities/response';
 import type { Event } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockContext, MockEventProgressHandler } from 'src/mocks/types';
@@ -24,18 +28,24 @@ import type { MockContext, MockEventProgressHandler } from 'src/mocks/types';
  */
 const filterEventsByCreatedTime = (
   eventQueueItem: [Event, MockEventProgressHandler | null]
-): boolean => DateTime.fromISO(eventQueueItem[0].created) <= DateTime.now();
+): boolean => {
+  const event = eventQueueItem?.[0];
+  if (!event) {
+    return false;
+  }
+
+  return DateTime.fromISO(event.created) <= DateTime.now();
+};
 
 /**
  * Simulates event progression by executing a callback that may mutate the event or context.
- *
- *
  */
 const progressEvent = (
   eventQueueItem: [Event, MockEventProgressHandler | null],
   context: MockContext
 ) => {
   const [event, handler] = eventQueueItem;
+
   if (handler) {
     const result = handler(event, context);
     // If handler responds with `true`, replace the handler with `null` to prevent further execution.
@@ -46,40 +56,50 @@ const progressEvent = (
 };
 
 export const getEvents = (mockContext: MockContext) => [
-  http.get('*/v4*/events', ({ request }) => {
-    const url = new URL(request.url);
+  http.get(
+    '*/v4*/events',
+    async ({
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<Event>>
+    > => {
+      const url = new URL(request.url);
+      const eventQueue = await mswDB.getAll('eventQueue');
 
-    const pageNumber = Number(url.searchParams.get('page')) || 1;
-    const pageSize = Number(url.searchParams.get('page_size')) || 25;
-    const totalPages = Math.max(
-      Math.ceil(mockContext.regions.length / pageSize),
-      1
-    );
+      if (!eventQueue) {
+        return makeNotFoundResponse();
+      }
 
-    const events = mockContext.eventQueue
-      .filter(filterEventsByCreatedTime)
-      .map((queuedEvent) => {
-        progressEvent(queuedEvent, mockContext);
-        return queuedEvent[0];
-      });
+      const pageNumber = Number(url.searchParams.get('page')) || 1;
+      const pageSize = Number(url.searchParams.get('page_size')) || 25;
+      const totalPages = Math.max(Math.ceil(eventQueue.length / pageSize), 1);
 
-    const pageSlice = getPaginatedSlice(events, pageNumber, pageSize);
+      const events = eventQueue
+        .filter(filterEventsByCreatedTime)
+        .map((queuedEvent) => {
+          progressEvent(queuedEvent, mockContext);
 
-    return makePaginatedResponse(pageSlice, pageNumber, totalPages);
-  }),
+          return queuedEvent[0];
+        });
+
+      const pageSlice = getPaginatedSlice(events, pageNumber, pageSize);
+
+      return makePaginatedResponse(pageSlice, pageNumber, totalPages);
+    }
+  ),
+
   http.get(
     '*/v4*/events/:id',
-    ({ params }): StrictResponse<APIErrorResponse | Event> => {
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | Event>> => {
       const id = Number(params.id);
-      const event = mockContext.eventQueue.find(
-        (eventQueueItem) => eventQueueItem[0].id === id
-      );
+      const event = await mswDB.get('eventQueue', id);
 
       if (!event) {
         return makeNotFoundResponse();
       }
 
       progressEvent(event, mockContext);
+
       return makeResponse(event[0]);
     }
   ),
@@ -87,12 +107,27 @@ export const getEvents = (mockContext: MockContext) => [
 
 export const updateEvents = (mockContext: MockContext) => [
   // Marks all events up to and including the event with the given ID as seen.
-  http.post('*/v4*/events/:id/seen', ({ params }) => {
+  http.post('*/v4*/events/:id/seen', async ({ params }) => {
     const id = Number(params.id);
+    const eventQueue = await mswDB.getAll('eventQueue');
 
-    mockContext.eventQueue.forEach((eventQueueItem) => {
+    if (!eventQueue) {
+      return makeNotFoundResponse();
+    }
+
+    eventQueue.forEach(async (eventQueueItem) => {
       if (eventQueueItem[0].id <= id) {
-        eventQueueItem[0].seen = true;
+        const updatedEvent = {
+          ...eventQueueItem[0],
+          seen: true,
+        };
+
+        await mswDB.update(
+          'eventQueue',
+          eventQueueItem[0].id,
+          updatedEvent as any,
+          mockContext
+        );
       }
     });
 
@@ -101,12 +136,27 @@ export const updateEvents = (mockContext: MockContext) => [
     return makeResponse({});
   }),
   // Marks all events up to and including the event with the given ID as read.
-  http.post('*/v4*/events/:id/read', ({ params }) => {
+  http.post('*/v4*/events/:id/read', async ({ params }) => {
     const id = Number(params.id);
+    const eventQueue = await mswDB.getAll('eventQueue');
 
-    mockContext.eventQueue.forEach((eventQueueItem) => {
+    if (!eventQueue) {
+      return makeNotFoundResponse();
+    }
+
+    eventQueue.forEach(async (eventQueueItem) => {
       if (eventQueueItem[0].id <= id) {
-        eventQueueItem[0].read = true;
+        const updatedEvent = {
+          ...eventQueueItem[0],
+          read: true,
+        };
+
+        await mswDB.update(
+          'eventQueue',
+          eventQueueItem[0].id,
+          updatedEvent as any,
+          mockContext
+        );
       }
     });
 

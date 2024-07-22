@@ -148,11 +148,6 @@ const renderContentPopulatorOptions = (
   populators: string[],
   onChange: (e: React.ChangeEvent, populatorId: string) => void,
   onCountChange: (e: React.ChangeEvent, populatorId: string) => void,
-  onBlurCountChange: (
-    e: React.ChangeEvent,
-    populatorId: string,
-    defaultCount: number
-  ) => void,
   countMap: { [key: string]: number },
   disabled: boolean
 ) => {
@@ -175,21 +170,14 @@ const renderContentPopulatorOptions = (
                 <span title={contextPopulator.desc || contextPopulator.label}>
                   {contextPopulator.label}
                 </span>
-                {contextPopulator.defaultCount && (
+                {contextPopulator.canUpdateCount && (
                   <input
-                    onBlur={(e) =>
-                      onBlurCountChange(
-                        e,
-                        contextPopulator.id,
-                        contextPopulator.defaultCount!
-                      )
-                    }
                     aria-label="Count"
-                    defaultValue={contextPopulator.defaultCount}
+                    min={0}
                     onChange={(e) => onCountChange(e, contextPopulator.id)}
                     style={{ marginLeft: 8, width: 60 }}
                     type="number"
-                    value={countMap[contextPopulator.id] || ''}
+                    value={countMap[contextPopulator.id] || 0}
                   />
                 )}
               </li>
@@ -337,24 +325,6 @@ export const ServiceWorkerTool = () => {
     });
   };
 
-  const handleBlurCountChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    populatorId: string,
-    defaultCount: number
-  ) => {
-    if (e.target.value) {
-      return;
-    }
-
-    // if field is empty, reset to default count
-    const updatedCountMap = {
-      ...countMap,
-      [populatorId]: defaultCount,
-    };
-
-    setCountMap(updatedCountMap);
-  };
-
   const handleApplyChanges = () => {
     // Save base preset, extra presets, and content populators to local storage.
     saveMSWPreset(MSWBasePreset);
@@ -450,7 +420,6 @@ export const ServiceWorkerTool = () => {
                     MSWPopulators,
                     handleChangePopulator,
                     handleCountChange,
-                    handleBlurCountChange,
                     countMap,
                     !isMSWEnabled
                   )}
