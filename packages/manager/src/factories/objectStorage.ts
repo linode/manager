@@ -2,7 +2,7 @@ import Factory from 'src/factories/factoryProxy';
 
 import type {
   ObjectStorageBucket,
-  ObjectStorageBucketRequestPayload,
+  CreateObjectStorageBucketPayload,
   ObjectStorageCluster,
   ObjectStorageKey,
   ObjectStorageObject,
@@ -22,7 +22,7 @@ export const objectStorageBucketFactory = Factory.Sync.makeFactory<ObjectStorage
   }
 );
 
-export const createObjectStorageBucketFactory = Factory.Sync.makeFactory<ObjectStorageBucketRequestPayload>(
+export const createObjectStorageBucketFactory = Factory.Sync.makeFactory<CreateObjectStorageBucketPayload>(
   {
     acl: 'private',
     cluster: 'us-east-1',

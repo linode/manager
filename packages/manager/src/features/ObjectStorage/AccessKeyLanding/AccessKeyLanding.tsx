@@ -1,7 +1,7 @@
 import {
   ObjectStorageKey,
-  ObjectStorageKeyRequest,
-  UpdateObjectStorageKeyRequest,
+  CreateObjectStorageKeyPayload,
+  UpdateObjectStorageKeyPayload,
   createObjectStorageKeys,
   revokeObjectStorageKey,
   updateObjectStorageKey,
@@ -42,7 +42,7 @@ interface Props {
   openAccessDrawer: (mode: MODE) => void;
 }
 
-export type FormikProps = FormikBag<Props, ObjectStorageKeyRequest>;
+export type FormikProps = FormikBag<Props, CreateObjectStorageKeyPayload>;
 
 export const AccessKeyLanding = (props: Props) => {
   const {
@@ -96,12 +96,12 @@ export const AccessKeyLanding = (props: Props) => {
   );
 
   const handleCreateKey = (
-    values: ObjectStorageKeyRequest,
+    values: CreateObjectStorageKeyPayload,
     {
       setErrors,
       setStatus,
       setSubmitting,
-    }: FormikHelpers<ObjectStorageKeyRequest>
+    }: FormikHelpers<CreateObjectStorageKeyPayload>
   ) => {
     // Clear out status (used for general errors)
     setStatus(null);
@@ -156,12 +156,12 @@ export const AccessKeyLanding = (props: Props) => {
   };
 
   const handleEditKey = (
-    values: UpdateObjectStorageKeyRequest,
+    values: UpdateObjectStorageKeyPayload,
     {
       setErrors,
       setStatus,
       setSubmitting,
-    }: FormikHelpers<UpdateObjectStorageKeyRequest>
+    }: FormikHelpers<UpdateObjectStorageKeyPayload>
   ) => {
     // This shouldn't happen, but just in case.
     if (!keyToEdit) {

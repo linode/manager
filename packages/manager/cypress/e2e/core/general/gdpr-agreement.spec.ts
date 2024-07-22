@@ -4,7 +4,10 @@ import { regionFactory } from '@src/factories';
 import { randomString, randomLabel } from 'support/util/random';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetAccountAgreements } from 'support/intercepts/account';
-import { mockAppendFeatureFlags, mockGetFeatureFlagClientstream } from 'support/intercepts/feature-flags';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 
 import type { Region } from '@linode/api-v4';
@@ -85,7 +88,7 @@ describe('GDPR agreement', () => {
     ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionId('fr-par').click();
     cy.get('[data-testid="eu-agreement-checkbox"]').should('not.exist');
-    
+
     cy.wait('@getAgreements');
 
     // London should not have the agreement

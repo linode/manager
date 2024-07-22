@@ -19,22 +19,22 @@ import { copy } from './AccessSelect.data';
 
 import type {
   ACLType,
-  ObjBucketAccessPayload,
+  ObjectStorageBucketAccess,
   ObjectStorageObjectACL,
 } from '@linode/api-v4/lib/object-storage';
 import type { Theme } from '@mui/material/styles';
 
 export interface Props {
-  getAccess: () => Promise<ObjBucketAccessPayload | ObjectStorageObjectACL>;
+  getAccess: () => Promise<ObjectStorageBucketAccess | ObjectStorageObjectACL>;
   name: string;
   updateAccess: (acl: ACLType, cors_enabled?: boolean) => Promise<{}>;
   variant: 'bucket' | 'object';
 }
 
-function isObjBucketAccessPayload(
-  payload: ObjBucketAccessPayload | ObjectStorageObjectACL
-): payload is ObjBucketAccessPayload {
-  return 'cors_enabled' in payload;
+function isUpdateObjectStorageBucketAccessPayload(
+  response: ObjectStorageBucketAccess | ObjectStorageObjectACL
+): response is ObjectStorageBucketAccess {
+  return 'cors_enabled' in response;
 }
 
 export const AccessSelect = React.memo((props: Props) => {
@@ -62,18 +62,17 @@ export const AccessSelect = React.memo((props: Props) => {
     setUpdateAccessSuccess(false);
     setAccessLoading(true);
     getAccess()
-      .then((payload) => {
+      .then((response) => {
         setAccessLoading(false);
-        const { acl } = payload;
+        const { acl } = response;
         // Don't show "public-read-write" for Objects here; use "custom" instead
         // since "public-read-write" Objects are basically the same as "public-read".
         const _acl =
           variant === 'object' && acl === 'public-read-write' ? 'custom' : acl;
         setACLData(_acl);
         setSelectedACL(_acl);
-
-        if (isObjBucketAccessPayload(payload)) {
-          const { cors_enabled } = payload;
+        if (isUpdateObjectStorageBucketAccessPayload(response)) {
+          const { cors_enabled } = response;
           if (typeof cors_enabled === 'boolean') {
             setCORSData(cors_enabled);
             setSelectedCORSOption(cors_enabled);
