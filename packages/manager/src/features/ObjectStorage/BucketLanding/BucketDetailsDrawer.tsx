@@ -1,6 +1,4 @@
-import { Region } from '@linode/api-v4';
 import {
-  ACLType,
   getBucketAccess,
   updateBucketAccess,
 } from '@linode/api-v4/lib/object-storage';
@@ -24,6 +22,9 @@ import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { AccessSelect } from '../BucketDetail/AccessSelect';
+
+import type { Region } from '@linode/api-v4';
+import type { ACLType } from '@linode/api-v4/lib/object-storage';
 export interface BucketDetailsDrawerProps {
   bucketLabel?: string;
   bucketRegion?: Region;

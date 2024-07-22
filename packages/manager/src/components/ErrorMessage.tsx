@@ -7,15 +7,16 @@ import type { EntityType } from 'src/features/Support/SupportTickets/SupportTick
 
 interface Props {
   entityType: EntityType;
-  message: JSX.Element | string;
+  message: string;
 }
+
+export const supportTextRegex = /(open a support ticket|contact Support)/i;
 
 export const ErrorMessage = (props: Props) => {
   const { entityType, message } = props;
+  const isSupportTicketError = supportTextRegex.test(message);
 
-  if (typeof message === 'string') {
-    return <Typography py={2}>{message}</Typography>;
-  } else {
+  if (isSupportTicketError) {
     return (
       <SupportTicketGeneralError
         entityType={entityType}
@@ -23,4 +24,6 @@ export const ErrorMessage = (props: Props) => {
       />
     );
   }
+
+  return <Typography py={2}>{message}</Typography>;
 };

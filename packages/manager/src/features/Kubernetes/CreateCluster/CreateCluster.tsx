@@ -8,6 +8,7 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
@@ -184,6 +185,8 @@ export const CreateCluster = () => {
     errors
   );
 
+  const generalError = errorMap.none;
+
   const {
     hasSelectedRegion,
     isPlanPanelDisabled,
@@ -207,7 +210,11 @@ export const CreateCluster = () => {
         title="Create Cluster"
       />
       <Grid className={`mlMain py0`}>
-        {errorMap.none && <Notice text={errorMap.none} variant="error" />}
+        {generalError && (
+          <Notice variant="error">
+            <ErrorMessage entityType="lkecluster_id" message={generalError} />
+          </Notice>
+        )}
         <Paper data-qa-label-header>
           <TextField
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

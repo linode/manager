@@ -1,0 +1,22 @@
+name: 'Stale issue handler'
+
+on:
+  workflow_dispatch: null
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        id: stale
+        with:
+          stale-pr-message: 'This PR is stale because it has been open 15 days with
+            no activity. Please attend to this PR or it will be closed in
+            5 days'
+          days-before-stale: 15
+          days-before-close: 5
+          # Disable issues. We only want this running on PRs.
+          days-before-issue-stale: -1
+          days-before-issue-close: -1
