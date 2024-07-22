@@ -145,8 +145,14 @@ export const createLinode = (mockContext: MockContext) => [
         { status: 'finished' },
       ],
     })
-      .then(() => {
-        linode.status = 'booting';
+      .then(async () => {
+        await mswDB.update(
+          'linodes',
+          linode.id,
+          { status: 'booting' },
+          mockContext
+        );
+
         return queueEvents({
           event: {
             action: 'linode_boot',
@@ -164,8 +170,13 @@ export const createLinode = (mockContext: MockContext) => [
           ],
         });
       })
-      .then(() => {
-        linode.status = 'running';
+      .then(async () => {
+        await mswDB.update(
+          'linodes',
+          linode.id,
+          { status: 'running' },
+          mockContext
+        );
       });
 
     return makeResponse(linode);

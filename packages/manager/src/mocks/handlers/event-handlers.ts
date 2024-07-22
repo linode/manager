@@ -15,7 +15,7 @@ import type {
 } from '../utilities/response';
 import type { Event } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
-import type { MockContext, MockEventProgressHandler } from 'src/mocks/types';
+import type { MockContext } from 'src/mocks/types';
 
 /**
  * Filters events by their `created` date.
@@ -26,36 +26,15 @@ import type { MockContext, MockEventProgressHandler } from 'src/mocks/types';
  *
  * @returns `true` if event's created date is in the past, `false` otherwise.
  */
-const filterEventsByCreatedTime = (
-  eventQueueItem: [Event, MockEventProgressHandler | null]
-): boolean => {
-  const event = eventQueueItem?.[0];
-  if (!event) {
+const filterEventsByCreatedTime = (eventQueueItem: Event): boolean => {
+  if (!eventQueueItem) {
     return false;
   }
 
-  return DateTime.fromISO(event.created) <= DateTime.now();
+  return DateTime.fromISO(eventQueueItem.created) <= DateTime.now();
 };
 
-/**
- * Simulates event progression by executing a callback that may mutate the event or context.
- */
-const progressEvent = (
-  eventQueueItem: [Event, MockEventProgressHandler | null],
-  context: MockContext
-) => {
-  const [event, handler] = eventQueueItem;
-
-  if (handler) {
-    const result = handler(event, context);
-    // If handler responds with `true`, replace the handler with `null` to prevent further execution.
-    if (result) {
-      eventQueueItem[1] = null;
-    }
-  }
-};
-
-export const getEvents = (mockContext: MockContext) => [
+export const getEvents = () => [
   http.get(
     '*/v4*/events',
     async ({
@@ -74,13 +53,7 @@ export const getEvents = (mockContext: MockContext) => [
       const pageSize = Number(url.searchParams.get('page_size')) || 25;
       const totalPages = Math.max(Math.ceil(eventQueue.length / pageSize), 1);
 
-      const events = eventQueue
-        .filter(filterEventsByCreatedTime)
-        .map((queuedEvent) => {
-          progressEvent(queuedEvent, mockContext);
-
-          return queuedEvent[0];
-        });
+      const events = eventQueue.filter(filterEventsByCreatedTime);
 
       const pageSlice = getPaginatedSlice(events, pageNumber, pageSize);
 
@@ -98,15 +71,12 @@ export const getEvents = (mockContext: MockContext) => [
         return makeNotFoundResponse();
       }
 
-      progressEvent(event, mockContext);
-
-      return makeResponse(event[0]);
+      return makeResponse(event);
     }
   ),
 ];
 
 export const updateEvents = (mockContext: MockContext) => [
-  // Marks all events up to and including the event with the given ID as seen.
   http.post('*/v4*/events/:id/seen', async ({ params }) => {
     const id = Number(params.id);
     const eventQueue = await mswDB.getAll('eventQueue');
@@ -116,16 +86,16 @@ export const updateEvents = (mockContext: MockContext) => [
     }
 
     eventQueue.forEach(async (eventQueueItem) => {
-      if (eventQueueItem[0].id <= id) {
+      if (eventQueueItem.id <= id) {
         const updatedEvent = {
-          ...eventQueueItem[0],
+          ...eventQueueItem,
           seen: true,
         };
 
         await mswDB.update(
           'eventQueue',
-          eventQueueItem[0].id,
-          updatedEvent as any,
+          eventQueueItem.id,
+          updatedEvent,
           mockContext
         );
       }
@@ -145,15 +115,15 @@ export const updateEvents = (mockContext: MockContext) => [
     }
 
     eventQueue.forEach(async (eventQueueItem) => {
-      if (eventQueueItem[0].id <= id) {
+      if (eventQueueItem.id <= id) {
         const updatedEvent = {
-          ...eventQueueItem[0],
+          ...eventQueueItem,
           read: true,
         };
 
         await mswDB.update(
           'eventQueue',
-          eventQueueItem[0].id,
+          eventQueueItem.id,
           updatedEvent as any,
           mockContext
         );

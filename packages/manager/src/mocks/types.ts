@@ -41,16 +41,11 @@ export type MockPreset = {
   label: string;
 };
 
-export type MockEventProgressHandler = (
-  event: Event,
-  context: MockContext
-) => boolean;
-
 /**
  * Contextual data shared among mocks.
  */
 export interface MockContext {
-  eventQueue: [Event, MockEventProgressHandler | null][];
+  eventQueue: Event[];
   firewalls: Firewall[];
   linodeConfigs: [number, Config][];
   linodes: Linode[];
@@ -65,8 +60,8 @@ export type MockContextPopulatorIds =
   | 'edge-regions'
   | 'legacy-test-regions'
   | 'many-linodes'
-  | 'many-volumes'
   | 'many-placement-groups'
+  | 'many-volumes'
   | 'prod-regions';
 
 export type MockContextPopulatorGroup =
