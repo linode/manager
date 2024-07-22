@@ -9,10 +9,8 @@ import { TableCell } from 'src/components/TableCell';
 import { Typography } from 'src/components/Typography';
 import { StyledTableRow } from 'src/features/Linodes/LinodeEntityDetail.styles';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import {
-  useAllIPsQuery,
-  useLinodeIPsQuery,
-} from 'src/queries/linodes/networking';
+import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
+import { useAllIPsQuery } from 'src/queries/networking/networking';
 
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
 

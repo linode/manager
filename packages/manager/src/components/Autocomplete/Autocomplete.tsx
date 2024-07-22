@@ -108,7 +108,7 @@ export const Autocomplete = <
           label={label}
           loading={loading}
           noMarginTop={noMarginTop}
-          placeholder={placeholder || 'Select an option'}
+          placeholder={placeholder ?? 'Select an option'}
           required={textFieldProps?.InputProps?.required}
           tooltipText={textFieldProps?.tooltipText}
           {...params}
