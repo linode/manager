@@ -9,7 +9,25 @@ export const CreateBucketSchema = object()
         .required('Label is required.')
         .matches(/^\S*$/, 'Label must not contain spaces.')
         .min(3, 'Label must be between 3 and 63 characters.')
-        .max(63, 'Label must be between 3 and 63 characters.'),
+        .max(63, 'Label must be between 3 and 63 characters.')
+        .test(
+          'unique-label',
+          'A bucket with this label already exists in your selected region',
+          function (value) {
+            const { cluster, region } = this.parent;
+            const buckets = this.options.context?.buckets;
+
+            if (!buckets || !Array.isArray(buckets)) {
+              return true; // If buckets is not available, assume the label is unique
+            }
+
+            return !buckets.some(
+              (b) =>
+                b.label === value &&
+                (b.cluster === cluster || b.region === region)
+            );
+          }
+        ),
       cluster: string().when('region', {
         is: (region: string) => !region || region.length === 0,
         then: string().required('Cluster is required.'),
