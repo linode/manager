@@ -47,7 +47,7 @@ export const SubnetContent = (props: Props) => {
             sendLinodeCreateFormStepEvent({
               action: 'click',
               category: 'link',
-              createType: queryParams.type ?? 'Distributions',
+              createType: queryParams.type ?? 'OS',
               formStepName: 'VPC Subnets',
               label: 'Learn more',
               version: 'v1',

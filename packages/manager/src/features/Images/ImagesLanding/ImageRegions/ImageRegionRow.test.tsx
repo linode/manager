@@ -39,4 +39,19 @@ describe('ImageRegionRow', () => {
 
     expect(onRemove).toHaveBeenCalled();
   });
+
+  it('disables the remove button if disableRemoveButton is true', async () => {
+    const { getByLabelText } = renderWithTheme(
+      <ImageRegionRow
+        disableRemoveButton
+        onRemove={vi.fn()}
+        region="us-east"
+        status="creating"
+      />
+    );
+
+    const removeButton = getByLabelText('Remove us-east');
+
+    expect(removeButton).toBeDisabled();
+  });
 });

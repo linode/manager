@@ -635,7 +635,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             {
               field: 'placement_group',
               reason: `${this.state.placementGroupSelection?.label} (${
-                this.state.placementGroupSelection?.affinity_type ===
+                this.state.placementGroupSelection?.placement_group_type ===
                 'affinity:local'
                   ? 'Affinity'
                   : 'Anti-affinity'
@@ -852,7 +852,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         selectedRegionId: this.params.regionID,
       });
 
-      this.params = getQueryParamsFromQueryString(this.props.location.search);
+      this.params = getQueryParamsFromQueryString(
+        this.props.location.search
+      ) as Record<string, string>;
 
       this.setState({
         showGDPRCheckbox,
@@ -886,8 +888,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
               sendLinodeCreateFormStepEvent({
                 action: 'click',
                 category: 'link',
-                createType:
-                  (this.params.type as LinodeCreateType) ?? 'Distributions',
+                createType: (this.params.type as LinodeCreateType) ?? 'OS',
                 label: 'Getting Started',
                 version: 'v1',
               });
