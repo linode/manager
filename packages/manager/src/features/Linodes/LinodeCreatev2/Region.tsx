@@ -77,7 +77,7 @@ export const Region = () => {
     globalGrantType: 'add_linodes',
   });
 
-  const { data: regions } = useRegionsQuery();
+  const { data: regions } = useRegionsQuery(true);
 
   const onChange = async (region: RegionType) => {
     const isDistributedRegion =
