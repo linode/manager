@@ -84,7 +84,7 @@ describe('ImageSelectv2', () => {
     await findByDisplayValue(image.label);
   });
 
-  it('should render a distro icon for the selected Image', async () => {
+  it('should render an OS icon for the selected Image', async () => {
     const image = imageFactory.build();
 
     server.use(
@@ -97,6 +97,6 @@ describe('ImageSelectv2', () => {
       <ImageSelectv2 value={image.id} />
     );
 
-    await findByTestId('distro-icon');
+    await findByTestId('os-icon');
   });
 });

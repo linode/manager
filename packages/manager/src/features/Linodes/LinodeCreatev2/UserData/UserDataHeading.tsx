@@ -18,8 +18,8 @@ export const UserDataHeading = () => {
       'Existing user data is not accessible when creating a Linode from a backup. You may add new user data now.',
     'Clone Linode':
       'Existing user data is not cloned. You may add new user data now.',
-    Distributions: null,
     Images: null,
+    OS: null,
     'One-Click': null,
     StackScripts: null,
   };

@@ -6,6 +6,16 @@ import { useQuery } from '@tanstack/react-query';
 export const queryKey = 'cloudview-dashboards';
 
 export const dashboardQueries = createQueryKeys('cloudview-dashboards', {
+  dashboardById: (dashboardId: number) => ({
+    contextQueries: {
+      dashboard: {
+        queryFn: () => {}, // Todo: will be implemented later
+        queryKey: [dashboardId],
+      },
+    },
+    queryKey: [dashboardId],
+  }),
+
   lists: {
     contextQueries: {
       allDashboards: {
@@ -15,19 +25,9 @@ export const dashboardQueries = createQueryKeys('cloudview-dashboards', {
     },
     queryKey: null,
   },
-
-  dashboardById: (dashboardId: number) => ({
-    contextQueries: {
-      dashboard: {
-        queryFn: () => {}, //Todo: will be implemented later
-        queryKey: [dashboardId],
-      },
-    },
-    queryKey: [dashboardId],
-  }),
 });
 
-//Fetch the list of all the dashboard available
+// Fetch the list of all the dashboard available
 export const useCloudViewDashboardsQuery = (enabled: boolean) => {
   return useQuery<ResourcePage<Dashboard>, APIError[]>({
     ...dashboardQueries.lists._ctx.allDashboards,

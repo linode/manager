@@ -1,4 +1,6 @@
 import { isEmpty } from '@linode/api-v4';
+import { useQueryClient } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
@@ -29,12 +31,13 @@ import { Security } from './Security';
 import { Summary } from './Summary/Summary';
 import { Backups } from './Tabs/Backups/Backups';
 import { Clone } from './Tabs/Clone/Clone';
-import { Distributions } from './Tabs/Distributions';
 import { Images } from './Tabs/Images';
 import { Marketplace } from './Tabs/Marketplace/Marketplace';
+import { OperatingSystems } from './Tabs/OperatingSystems';
 import { StackScripts } from './Tabs/StackScripts/StackScripts';
 import { UserData } from './UserData/UserData';
 import {
+  captureLinodeCreateAnalyticsEvent,
   defaultValues,
   defaultValuesMap,
   getLinodeCreatePayload,
@@ -50,19 +53,19 @@ import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreatev2 = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
-  const formRef = useRef<HTMLFormElement>(null);
 
   const form = useForm<LinodeCreateFormValues>({
     defaultValues,
     mode: 'onBlur',
-    resolver: linodeCreateResolvers[params.type ?? 'Distributions'],
+    resolver: linodeCreateResolvers[params.type ?? 'OS'],
     shouldFocusError: false, // We handle this ourselves with `scrollErrorIntoView`
   });
 
   const history = useHistory();
-
+  const queryClient = useQueryClient();
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
+  const { enqueueSnackbar } = useSnackbar();
 
   const currentTabIndex = getTabIndex(params.type);
 
@@ -87,6 +90,16 @@ export const LinodeCreatev2 = () => {
           : await createLinode(payload);
 
       history.push(`/linodes/${linode.id}`);
+
+      enqueueSnackbar(`Your Linode ${linode.label} is being created.`, {
+        variant: 'success',
+      });
+
+      captureLinodeCreateAnalyticsEvent({
+        queryClient,
+        type: params.type ?? 'OS',
+        values,
+      });
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
@@ -118,12 +131,12 @@ export const LinodeCreatev2 = () => {
         docsLink="https://www.linode.com/docs/guides/platform/get-started/"
         title="Create"
       />
-      <form onSubmit={form.handleSubmit(onSubmit)} ref={formRef}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <Error />
         <Stack gap={3}>
           <Tabs index={currentTabIndex} onChange={onTabChange}>
             <TabList>
-              <Tab>Distributions</Tab>
+              <Tab>OS</Tab>
               <Tab>Marketplace</Tab>
               <Tab>StackScripts</Tab>
               <Tab>Images</Tab>
@@ -132,7 +145,7 @@ export const LinodeCreatev2 = () => {
             </TabList>
             <TabPanels>
               <SafeTabPanel index={0}>
-                <Distributions />
+                <OperatingSystems />
               </SafeTabPanel>
               <SafeTabPanel index={1}>
                 <Marketplace />

@@ -18,7 +18,7 @@ import {
   mockGetPlacementGroups,
 } from 'support/intercepts/placement-groups';
 import { randomString } from 'support/util/random';
-import { CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE } from 'src/features/PlacementGroups/constants';
+import { CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE } from 'src/features/PlacementGroups/constants';
 
 import type { Region } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
@@ -119,8 +119,8 @@ describe('Linode create flow with Placement Group', () => {
     const mockPlacementGroup = placementGroupFactory.build({
       label: 'pg-1-us-east',
       region: mockRegions[0].id,
-      affinity_type: 'anti_affinity:local',
-      is_strict: true,
+      placement_group_type: 'anti_affinity:local',
+      placement_group_policy: 'strict',
       is_compliant: true,
     });
 
@@ -133,10 +133,10 @@ describe('Linode create flow with Placement Group', () => {
       .within(() => {
         // Confirm that the drawer contains the expected default information.
         // - A selection region
-        // - An Affinity Type Enforcement message
+        // - An Placement Group Policy message
         // - a disabled "Create Placement Group" button.
         cy.findByText('Newark, NJ (us-east)').should('be.visible');
-        cy.findByText(CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE).should(
+        cy.findByText(CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE).should(
           'be.visible'
         );
         ui.buttonGroup
@@ -156,8 +156,10 @@ describe('Linode create flow with Placement Group', () => {
     // Wait for outgoing API request and confirm that payload contains expected data.
     cy.wait('@createPlacementGroup').then((xhr) => {
       const requestPayload = xhr.request?.body;
-      expect(requestPayload['affinity_type']).to.equal('anti_affinity:local');
-      expect(requestPayload['is_strict']).to.equal(true);
+      expect(requestPayload['placement_group_type']).to.equal(
+        'anti_affinity:local'
+      );
+      expect(requestPayload['placement_group_policy']).to.equal('strict');
       expect(requestPayload['label']).to.equal(mockPlacementGroup.label);
       expect(requestPayload['region']).to.equal(mockRegions[0].id);
     });

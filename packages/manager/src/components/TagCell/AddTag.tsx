@@ -63,6 +63,13 @@ export const AddTag = (props: AddTagProps) => {
 
   return (
     <Autocomplete
+      noOptionsText={
+        inputValue.length === 0 ? (
+          'No tags to choose from. Type to create a new tag.'
+        ) : (
+          <i>{`"${inputValue}" already added`}</i> // Will display create option unless that tag is already added
+        )
+      }
       onBlur={() => {
         if (onClose) {
           onClose();
@@ -80,7 +87,6 @@ export const AddTag = (props: AddTagProps) => {
       forcePopupIcon
       label={'Create or Select a Tag'}
       loading={accountTagsLoading || loading}
-      noOptionsText={<i>{`"${inputValue}" already added`}</i>} // Will display create option unless that tag is already added
       onInputChange={(_, value) => setInputValue(value)}
       openOnFocus
       options={tagOptions ?? []}

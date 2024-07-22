@@ -34,10 +34,10 @@ describe('PlacementGroupSelect', () => {
     queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
-          affinity_type: 'affinity:local',
+          placement_group_type: 'affinity:local',
           id: 1,
           is_compliant: true,
-          is_strict: true,
+          placement_group_policy: 'strict',
           label: 'my-placement-group',
           members: [
             {
@@ -67,10 +67,10 @@ describe('PlacementGroupSelect', () => {
     queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
-          affinity_type: 'affinity:local',
+          placement_group_type: 'affinity:local',
           id: 1,
           is_compliant: true,
-          is_strict: true,
+          placement_group_policy: 'strict',
           label: 'my-placement-group',
           members: [
             {

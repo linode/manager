@@ -98,7 +98,7 @@ export const ResizeVolumeDrawer = (props: Props) => {
         {isReadOnly && (
           <Notice
             spacingBottom={0}
-            text="You don't have permission to edit this volume."
+            text="You don't have permission to resize this volume."
             variant="error"
           />
         )}

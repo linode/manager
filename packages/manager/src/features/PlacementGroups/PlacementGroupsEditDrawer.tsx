@@ -1,4 +1,7 @@
-import { AFFINITY_TYPES } from '@linode/api-v4';
+import {
+  PLACEMENT_GROUP_TYPES,
+  PLACEMENT_GROUP_POLICIES,
+} from '@linode/api-v4';
 import { updatePlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -21,8 +24,6 @@ import {
 } from 'src/queries/placementGroups';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
-
-import { getAffinityTypeEnforcement } from './utils';
 
 import type { PlacementGroupsEditDrawerProps } from './types';
 import type { UpdatePlacementGroupPayload } from '@linode/api-v4';
@@ -142,14 +143,16 @@ export const PlacementGroupsEditDrawer = (
                 title: 'Region',
               },
               {
-                description: AFFINITY_TYPES[placementGroup.affinity_type],
-                title: 'Affinity Type',
+                description:
+                  PLACEMENT_GROUP_TYPES[placementGroup.placement_group_type],
+                title: 'Placement Group Type',
               },
               {
-                description: getAffinityTypeEnforcement(
-                  placementGroup.is_strict
-                ),
-                title: 'Affinity Type Enforcement',
+                description:
+                  PLACEMENT_GROUP_POLICIES[
+                    placementGroup.placement_group_policy
+                  ],
+                title: 'Placement Group Policy',
               },
             ]}
             sx={{

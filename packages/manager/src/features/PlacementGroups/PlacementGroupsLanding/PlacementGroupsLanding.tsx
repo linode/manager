@@ -215,23 +215,23 @@ export const PlacementGroupsLanding = React.memo(() => {
             </TableSortCell>
             <Hidden smDown>
               <TableSortCell
-                active={orderBy === 'affinity_type'}
+                active={orderBy === 'placement_group_type'}
                 direction={order}
                 handleClick={handleOrderChange}
-                label="affinity_type"
+                label="placement_group_type"
               >
-                Affinity Type
+                Placement Group Type
               </TableSortCell>
             </Hidden>
             <Hidden smDown>
               <TableSortCell
-                active={orderBy === 'is_strict'}
+                active={orderBy === 'placement_group_policy'}
                 direction={order}
                 handleClick={handleOrderChange}
-                label="is_strict"
+                label="placement_group_policy"
                 sx={{ width: '20%' }}
               >
-                Affinity Type Enforcement
+                Placement Group Policy
               </TableSortCell>
             </Hidden>
             <TableCell>Linodes</TableCell>

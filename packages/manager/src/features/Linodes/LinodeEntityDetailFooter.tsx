@@ -18,22 +18,6 @@ import {
   sxListItemFirstChild,
 } from './LinodeEntityDetail.styles';
 
-import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
-import type { Linode } from '@linode/api-v4/lib/linodes/types';
-import type { TypographyProps } from 'src/components/Typography';
-
-interface LinodeEntityDetailProps {
-  id: number;
-  isSummaryView?: boolean;
-  linode: Linode;
-  openTagDrawer: (tags: string[]) => void;
-  variant?: TypographyProps['variant'];
-}
-
-export interface Props extends LinodeEntityDetailProps {
-  handlers: LinodeHandlers;
-}
-
 interface FooterProps {
   isLinodesGrantReadOnly: boolean;
   linodeCreated: string;
@@ -42,7 +26,6 @@ interface FooterProps {
   linodePlan: null | string;
   linodeRegionDisplay: null | string;
   linodeTags: string[];
-  openTagDrawer: () => void;
 }
 
 export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
@@ -54,10 +37,10 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
     isLinodesGrantReadOnly,
     linodeCreated,
     linodeId,
+    linodeLabel,
     linodePlan,
     linodeRegionDisplay,
     linodeTags,
-    openTagDrawer,
   } = props;
 
   const isReadOnlyAccountAccess = useRestrictedGlobalGrantCheck({
@@ -164,9 +147,10 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
             width: '100%',
           }}
           disabled={isLinodesGrantReadOnly || isReadOnlyAccountAccess}
-          listAllTags={openTagDrawer}
+          entityLabel={linodeLabel}
           tags={linodeTags}
           updateTags={updateTags}
+          view="inline"
         />
       </Grid>
     </Grid>

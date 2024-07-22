@@ -1,9 +1,7 @@
 import * as React from 'react';
 
-import { extendedTypes } from 'src/__data__/ExtendedType';
 import { extDisk, swapDisk } from 'src/__data__/disks';
-import { linodeFactory } from 'src/factories';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { extendedTypes } from 'src/__data__/ExtendedType';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeResize } from './LinodeResize';
@@ -12,25 +10,22 @@ import {
   shouldEnableAutoResizeDiskOption,
 } from './LinodeResize.utils';
 
+import type { Props } from './LinodeResize';
+
+const props: Props = {
+  linodeId: 12,
+  linodeLabel: 'test-resize',
+  onClose: () => vi.fn(),
+  open: true,
+};
+
 beforeAll(() => {
   mockMatchMedia();
 });
 
 describe('LinodeResize', () => {
   it('to render', async () => {
-    server.use(
-      http.get('*/linode/instances/:id', () => {
-        return HttpResponse.json(linodeFactory.build({ label: 'test-resize' }));
-      })
-    );
-    const { findByText } = renderWithTheme(
-      <LinodeResize
-        linodeId={12}
-        linodeLabel=""
-        onClose={vi.fn()}
-        open={true}
-      />
-    );
+    const { findByText } = renderWithTheme(<LinodeResize {...props} />);
     await findByText('Resize Linode test-resize');
   });
 

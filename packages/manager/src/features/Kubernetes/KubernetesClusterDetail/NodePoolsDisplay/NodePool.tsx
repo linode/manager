@@ -1,9 +1,10 @@
-import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Button } from 'src/components/Button/Button';
+import { Box } from 'src/components/Box';
+import { StyledActionButton } from 'src/components/Button/StyledActionButton';
+import { Paper } from 'src/components/Paper';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 
@@ -14,6 +15,7 @@ import type {
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
+import type { Theme } from '@mui/material/styles';
 
 interface Props {
   autoscaler: AutoscaleSettings;
@@ -38,7 +40,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     paddingRight: 8,
   },
   deletePoolBtn: {
-    marginBottom: 3,
     paddingRight: 8,
   },
 }));
@@ -61,82 +62,75 @@ export const NodePool = (props: Props) => {
   const { classes } = useStyles();
 
   return (
-    <Grid
-      alignItems="center"
-      container
-      data-qa-node-pool-id={poolId}
-      data-qa-node-pool-section
-      justifyContent="space-between"
-      spacing={2}
-    >
-      <Grid>
-        <Typography variant="h2">{typeLabel}</Typography>
-      </Grid>
-      <Grid
+    <Grid data-qa-node-pool-id={poolId} data-qa-node-pool-section>
+      <Paper
         sx={{
+          alignItems: 'center',
           display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          pl: 2,
+          pr: 0.5,
+          py: 0,
         }}
       >
-        <Button
-          buttonType="secondary"
-          className={`${autoscaler.enabled ? classes.button : ''}`}
-          compactY
-          onClick={() => openAutoscalePoolDialog(poolId)}
+        <Box>
+          <Typography variant="h2">{typeLabel}</Typography>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+          }}
         >
-          Autoscale Pool
-        </Button>
-        {autoscaler.enabled ? (
-          <Typography className={classes.autoscaleText}>
-            {`(Min ${autoscaler.min} / Max ${autoscaler.max})`}
-          </Typography>
-        ) : null}
-        <Button
-          buttonType="secondary"
-          compactY
-          onClick={() => handleClickResize(poolId)}
-        >
-          Resize Pool
-        </Button>
-        <Button
-          buttonType="secondary"
-          compactY
-          onClick={() => openRecycleAllNodesDialog(poolId)}
-        >
-          Recycle Pool Nodes
-        </Button>
-        <Tooltip
-          disableFocusListener={!isOnlyNodePool}
-          disableHoverListener={!isOnlyNodePool}
-          disableTouchListener={!isOnlyNodePool}
-          title="Clusters must contain at least one node pool."
-        >
-          <div>
-            <Button
-              buttonType="secondary"
-              className={classes.deletePoolBtn}
-              compactY
-              disabled={isOnlyNodePool}
-              onClick={() => openDeletePoolDialog(poolId)}
-            >
-              Delete Pool
-            </Button>
-          </div>
-        </Tooltip>
-      </Grid>
-      <Grid
-        sx={{
-          paddingTop: 0,
-        }}
-        xs={12}
-      >
-        <NodeTable
-          encryptionStatus={encryptionStatus}
-          nodes={nodes}
-          openRecycleNodeDialog={openRecycleNodeDialog}
-          poolId={poolId}
-          typeLabel={typeLabel}
-        />
-      </Grid>
+          <StyledActionButton
+            compactY
+            onClick={() => openAutoscalePoolDialog(poolId)}
+          >
+            Autoscale Pool
+          </StyledActionButton>
+          {autoscaler.enabled ? (
+            <Typography className={classes.autoscaleText}>
+              {`(Min ${autoscaler.min} / Max ${autoscaler.max})`}
+            </Typography>
+          ) : null}
+          <StyledActionButton
+            compactY
+            onClick={() => handleClickResize(poolId)}
+          >
+            Resize Pool
+          </StyledActionButton>
+          <StyledActionButton
+            compactY
+            onClick={() => openRecycleAllNodesDialog(poolId)}
+          >
+            Recycle Pool Nodes
+          </StyledActionButton>
+          <Tooltip
+            disableFocusListener={!isOnlyNodePool}
+            disableHoverListener={!isOnlyNodePool}
+            disableTouchListener={!isOnlyNodePool}
+            title="Clusters must contain at least one node pool."
+          >
+            <div>
+              <StyledActionButton
+                compactY
+                disabled={isOnlyNodePool}
+                onClick={() => openDeletePoolDialog(poolId)}
+              >
+                Delete Pool
+              </StyledActionButton>
+            </div>
+          </Tooltip>
+        </Box>
+      </Paper>
+      <NodeTable
+        encryptionStatus={encryptionStatus}
+        nodes={nodes}
+        openRecycleNodeDialog={openRecycleNodeDialog}
+        poolId={poolId}
+        typeLabel={typeLabel}
+      />
     </Grid>
   );
 };

@@ -1,7 +1,7 @@
-import { Typography } from '@mui/material';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 
@@ -21,7 +21,7 @@ export const Error = () => {
   return (
     <Paper sx={{ p: 0 }}>
       <Notice spacingBottom={0} spacingTop={0} variant="error">
-        <Typography py={2}>{generalError}</Typography>
+        <ErrorMessage entityType="linode_id" message={generalError} />
       </Notice>
     </Paper>
   );

@@ -4,7 +4,11 @@ import * as React from 'react';
 import { linodeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { RESOURCES } from '../Utils/constants';
+import * as preferences from '../Utils/UserPreference';
 import { CloudPulseResourcesSelect } from './CloudPulseResourcesSelect';
+
+import type { AclpConfig } from '@linode/api-v4';
 
 const queryMocks = vi.hoisted(() => ({
   useResourcesQuery: vi.fn().mockReturnValue({}),
@@ -24,6 +28,12 @@ const ARIA_SELECTED = 'aria-selected';
 
 describe('CloudPulseResourcesSelect component tests', () => {
   it('should render disabled component if the the props are undefined or regions and service type does not have any resources', () => {
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: linodeFactory.buildList(2),
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
     const { getByPlaceholderText, getByTestId } = renderWithTheme(
       <CloudPulseResourcesSelect
         handleResourcesSelection={mockResourceHandler}
@@ -31,7 +41,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
         resourceType={undefined}
       />
     );
-    expect(getByTestId('Resource-select')).toBeInTheDocument();
+    expect(getByTestId('resource-select')).toBeInTheDocument();
     expect(getByPlaceholderText('Select Resources')).toBeInTheDocument();
   }),
     it('should render resources happy path', () => {
@@ -51,12 +61,12 @@ describe('CloudPulseResourcesSelect component tests', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Open' }));
       expect(
         screen.getByRole('option', {
-          name: 'linode-1',
+          name: 'linode-3',
         })
       ).toBeInTheDocument();
       expect(
         screen.getByRole('option', {
-          name: 'linode-2',
+          name: 'linode-4',
         })
       ).toBeInTheDocument();
     });
@@ -79,12 +89,12 @@ describe('CloudPulseResourcesSelect component tests', () => {
     fireEvent.click(screen.getByRole('option', { name: SELECT_ALL }));
     expect(
       screen.getByRole('option', {
-        name: 'linode-3',
+        name: 'linode-5',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
     expect(
       screen.getByRole('option', {
-        name: 'linode-4',
+        name: 'linode-6',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
   });
@@ -108,12 +118,12 @@ describe('CloudPulseResourcesSelect component tests', () => {
     fireEvent.click(screen.getByRole('option', { name: 'Deselect All' }));
     expect(
       screen.getByRole('option', {
-        name: 'linode-5',
+        name: 'linode-7',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
     expect(
       screen.getByRole('option', {
-        name: 'linode-6',
+        name: 'linode-8',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
   });
@@ -133,27 +143,60 @@ describe('CloudPulseResourcesSelect component tests', () => {
       />
     );
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    fireEvent.click(screen.getByRole('option', { name: 'linode-7' }));
-    fireEvent.click(screen.getByRole('option', { name: 'linode-8' }));
+    fireEvent.click(screen.getByRole('option', { name: 'linode-9' }));
+    fireEvent.click(screen.getByRole('option', { name: 'linode-10' }));
 
     expect(
       screen.getByRole('option', {
-        name: 'linode-7',
-      })
-    ).toHaveAttribute(ARIA_SELECTED, 'true');
-    expect(
-      screen.getByRole('option', {
-        name: 'linode-8',
-      })
-    ).toHaveAttribute(ARIA_SELECTED, 'true');
-    expect(
-      screen.getByRole('option', {
         name: 'linode-9',
+      })
+    ).toHaveAttribute(ARIA_SELECTED, 'true');
+    expect(
+      screen.getByRole('option', {
+        name: 'linode-10',
+      })
+    ).toHaveAttribute(ARIA_SELECTED, 'true');
+    expect(
+      screen.getByRole('option', {
+        name: 'linode-11',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
     expect(
       screen.getByRole('option', {
         name: 'Select All',
+      })
+    ).toHaveAttribute(ARIA_SELECTED, 'false');
+  });
+  it('Should select the default resource returned from preferences', () => {
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: linodeFactory.buildList(2),
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+    vi.spyOn(preferences, 'getUserPreferenceObject').mockReturnValue({
+      [RESOURCES]: ['12'],
+    } as AclpConfig);
+
+    renderWithTheme(
+      <CloudPulseResourcesSelect
+        handleResourcesSelection={mockResourceHandler}
+        region={'us-east'}
+        resourceType={'linode'}
+      />
+    );
+
+    expect(
+      screen.getByRole('button', {
+        name: 'linode-12',
+      })
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+
+    expect(
+      screen.getByRole('option', {
+        name: 'linode-13',
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
   });
