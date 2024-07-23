@@ -11,7 +11,7 @@ import { CopyAllHostnames } from 'src/features/ObjectStorage/AccessKeyLanding/Co
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
@@ -46,7 +46,7 @@ export const SecretTokenDialog = (props: Props) => {
   const flags = useFlags();
   const { account } = useAccountManagement();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
