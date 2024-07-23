@@ -1,4 +1,4 @@
-import type { Region } from '@linode/api-v4/lib/regions';
+import { Region } from '@linode/api-v4/lib/regions';
 
 export const regions: Region[] = [
   {
@@ -16,7 +16,7 @@ export const regions: Region[] = [
     ],
     country: 'in',
     id: 'ap-west',
-    label: 'IN, Mumbai',
+    label: 'Mumbai, IN',
     placement_group_limits: {
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: 10,
@@ -45,7 +45,7 @@ export const regions: Region[] = [
     ],
     country: 'ca',
     id: 'ca-central',
-    label: 'CA, Toronto',
+    label: 'Toronto, CA',
     placement_group_limits: {
       maximum_linodes_per_pg: 1,
       maximum_pgs_per_customer: null,
@@ -73,7 +73,7 @@ export const regions: Region[] = [
     ],
     country: 'au',
     id: 'ap-southeast',
-    label: 'AU, Sydney',
+    label: 'Sydney, AU',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -104,7 +104,7 @@ export const regions: Region[] = [
     ],
     country: 'us',
     id: 'us-iad',
-    label: 'US, Washington',
+    label: 'Washington, DC',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -134,7 +134,7 @@ export const regions: Region[] = [
     ],
     country: 'us',
     id: 'us-ord',
-    label: 'US, Chicago',
+    label: 'Chicago, IL',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -164,7 +164,7 @@ export const regions: Region[] = [
     ],
     country: 'fr',
     id: 'fr-par',
-    label: 'FR, Paris',
+    label: 'Paris, FR',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -194,7 +194,7 @@ export const regions: Region[] = [
     ],
     country: 'us',
     id: 'us-sea',
-    label: 'US, Seattle',
+    label: 'Seattle, WA',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -224,7 +224,7 @@ export const regions: Region[] = [
     ],
     country: 'br',
     id: 'br-gru',
-    label: 'BR, Sao Paulo',
+    label: 'Sao Paulo, BR',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -253,7 +253,7 @@ export const regions: Region[] = [
     ],
     country: 'nl',
     id: 'nl-ams',
-    label: 'NL, Amsterdam',
+    label: 'Amsterdam, NL',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -282,7 +282,7 @@ export const regions: Region[] = [
     ],
     country: 'se',
     id: 'se-sto',
-    label: 'SE, Stockholm',
+    label: 'Stockholm, SE',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -311,7 +311,7 @@ export const regions: Region[] = [
     ],
     country: 'in',
     id: 'in-maa',
-    label: 'IN, Chennai',
+    label: 'Chennai, IN',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -341,7 +341,7 @@ export const regions: Region[] = [
     ],
     country: 'jp',
     id: 'jp-osa',
-    label: 'JP, Osaka',
+    label: 'Osaka, JP',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -370,7 +370,7 @@ export const regions: Region[] = [
     ],
     country: 'it',
     id: 'it-mil',
-    label: 'IT, Milan',
+    label: 'Milan, IT',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -400,7 +400,7 @@ export const regions: Region[] = [
     ],
     country: 'us',
     id: 'us-mia',
-    label: 'US, Miami',
+    label: 'Miami, FL',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -429,7 +429,7 @@ export const regions: Region[] = [
     ],
     country: 'id',
     id: 'id-cgk',
-    label: 'ID, Jakarta',
+    label: 'Jakarta, ID',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -459,7 +459,7 @@ export const regions: Region[] = [
     ],
     country: 'us',
     id: 'us-lax',
-    label: 'US, Los Angeles',
+    label: 'Los Angeles, CA',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -488,7 +488,7 @@ export const regions: Region[] = [
     ],
     country: 'us',
     id: 'us-central',
-    label: 'US, Dallas',
+    label: 'Dallas, TX',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -515,7 +515,7 @@ export const regions: Region[] = [
     ],
     country: 'us',
     id: 'us-west',
-    label: 'US, Fremont',
+    label: 'Fremont, CA',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 1,
@@ -546,7 +546,7 @@ export const regions: Region[] = [
     ],
     country: 'us',
     id: 'us-southeast',
-    label: 'US, Atlanta',
+    label: 'Atlanta, GA',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -578,7 +578,7 @@ export const regions: Region[] = [
     ],
     country: 'us',
     id: 'us-east',
-    label: 'US, Newark',
+    label: 'Newark, NJ',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -606,7 +606,7 @@ export const regions: Region[] = [
     ],
     country: 'gb',
     id: 'eu-west',
-    label: 'GB, London',
+    label: 'London, UK',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -636,7 +636,7 @@ export const regions: Region[] = [
     ],
     country: 'sg',
     id: 'ap-south',
-    label: 'SG, Singapore',
+    label: 'Singapore, SG',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -666,7 +666,7 @@ export const regions: Region[] = [
     ],
     country: 'de',
     id: 'eu-central',
-    label: 'DE, Frankfurt',
+    label: 'Frankfurt, DE',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -684,7 +684,7 @@ export const regions: Region[] = [
     capabilities: ['Linodes'],
     country: 'us',
     id: 'us-den-10',
-    label: 'US, Gecko Distributed Region Test',
+    label: 'Gecko Distributed Region Test',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
@@ -702,7 +702,7 @@ export const regions: Region[] = [
     capabilities: ['Linodes'],
     country: 'us',
     id: 'us-den-11',
-    label: 'US, Gecko Distributed Region Test 2',
+    label: 'Gecko Distributed Region Test 2',
     placement_group_limits: {
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
