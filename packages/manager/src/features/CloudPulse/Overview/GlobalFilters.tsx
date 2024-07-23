@@ -1,15 +1,17 @@
+import { Dashboard } from '@linode/api-v4';
+import { IconButton, Tooltip } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
+import Reload from 'src/assets/icons/reload.svg';
+import { WithStartAndEnd } from 'src/features/Longview/request.types';
+
+import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseRegionSelect } from '../shared/CloudPulseRegionSelect';
+import { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import { CloudPulseResourcesSelect } from '../shared/CloudPulseResourcesSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
-
-import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
-import type { WithStartAndEnd } from 'src/features/Longview/request.types';
-import { Dashboard } from '@linode/api-v4';
-import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(filters: FiltersObject): undefined | void;
@@ -32,7 +34,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const [selectedDashboard, setSelectedDashboard] = React.useState<
     Dashboard | undefined
   >();
-  const [selectedRegion, setRegion] = React.useState<string | undefined>();
+  const [selectedRegion, setRegion] = React.useState<string>(); // fetch the default region from preference
   const [, setResources] = React.useState<CloudPulseResources[]>(); // removed the unused variable, this will be used later point of time
 
   React.useEffect(() => {
@@ -71,12 +73,17 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   );
 
   const handleDashboardChange = React.useCallback(
-    (dashboard: Dashboard | undefined) => {
+    (dashboard: Dashboard | undefined, isDefault: boolean = false) => {
       setSelectedDashboard(dashboard);
-      setRegion(undefined);
+      if (!isDefault) {
+        // only update the region state when it is not a preference (default) call
+        setRegion(undefined);
+      }
     },
     []
   );
+
+  const handleGlobalRefresh = React.useCallback(() => {}, []);
 
   return (
     <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
@@ -90,7 +97,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           <StyledCloudPulseRegionSelect
             handleRegionChange={handleRegionChange}
             selectedDashboard={selectedDashboard}
-            selectedRegion={selectedRegion}
           />
         </Grid>
 
@@ -103,11 +109,17 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
         </Grid>
         <Grid sx={{ marginLeft: 2, width: 250 }}>
           <StyledCloudPulseTimeRangeSelect
-            defaultValue={'Past 30 Minutes'}
             handleStatsChange={handleTimeRangeChange}
             hideLabel
             label="Select Time Range"
           />
+        </Grid>
+        <Grid sx={{ marginLeft: -4, marginRight: 3 }}>
+          <Tooltip arrow enterDelay={500} placement="top" title="Refresh">
+            <IconButton onClick={handleGlobalRefresh} size="small">
+              <StyledReload />
+            </IconButton>
+          </Tooltip>
         </Grid>
       </StyledGrid>
     </Grid>
@@ -145,3 +157,14 @@ const itemSpacing = {
   boxSizing: 'border-box',
   margin: '0',
 };
+
+const StyledReload = styled(Reload, { label: 'StyledReload' })(({ theme }) => ({
+  '&:active': {
+    color: `${theme.palette.success}`,
+  },
+  '&:hover': {
+    cursor: 'pointer',
+  },
+  height: '27px',
+  width: '27px',
+}));

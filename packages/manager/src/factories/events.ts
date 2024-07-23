@@ -1,5 +1,5 @@
 import { Entity, Event } from '@linode/api-v4/lib/account/types';
-import * as Factory from 'factory.ts';
+import Factory from 'src/factories/factoryProxy';
 import { DateTime } from 'luxon';
 
 export const entityFactory = Factory.Sync.makeFactory<Entity>({

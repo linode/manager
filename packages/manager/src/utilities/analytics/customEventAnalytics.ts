@@ -113,7 +113,7 @@ export const sendCreateNodeBalancerEvent = (eventLabel: string): void => {
 // LinodeCreateContainer.tsx
 export const sendCreateLinodeEvent = (
   eventAction: string,
-  eventLabel: string,
+  eventLabel: string | undefined,
   eventData?: CustomAnalyticsData
 ): void => {
   sendEvent({
@@ -449,24 +449,6 @@ export const sendUpdateLinodeLabelEvent = (
     action: 'Click:button',
     category: 'Linode Label',
     label: `Update linode label from ${label}`,
-  });
-};
-
-// GravatarByEmail.tsx
-export const sendHasGravatarEvent = (hasGravatar: boolean) => {
-  sendEvent({
-    action: 'Load',
-    category: 'Gravatar',
-    label: hasGravatar ? 'Has Gravatar' : 'Does not have Gravatar',
-  });
-};
-
-// DisplaySettings.tsx
-export const sendManageGravatarEvent = () => {
-  sendEvent({
-    action: 'Click:link',
-    category: 'Gravatar',
-    label: 'Manage photo',
   });
 };
 

@@ -103,10 +103,11 @@ import { pickRandom } from 'src/utilities/random';
 import { getStorage } from 'src/utilities/storage';
 
 import type {
+  CreateObjectStorageKeyPayload,
   NotificationType,
-  ObjectStorageKeyRequest,
   SecurityQuestionsPayload,
   TokenRequest,
+  UpdateImageRegionsPayload,
   User,
   VolumeStatus,
 } from '@linode/api-v4';
@@ -697,6 +698,21 @@ export const handlers = [
 
     return HttpResponse.json(makeResourcePage(images));
   }),
+  http.post<any, UpdateImageRegionsPayload>(
+    '*/v4/images/:id/regions',
+    async ({ request }) => {
+      const data = await request.json();
+
+      const image = imageFactory.build();
+
+      image.regions = data.regions.map((regionId) => ({
+        region: regionId,
+        status: 'pending replication',
+      }));
+
+      return HttpResponse.json(image);
+    }
+  ),
 
   http.get('*/linode/types', () => {
     return HttpResponse.json(
@@ -1164,7 +1180,7 @@ export const handlers = [
       ])
     );
   }),
-  http.post<any, ObjectStorageKeyRequest>(
+  http.post<any, CreateObjectStorageKeyPayload>(
     '*object-storage/keys',
     async ({ request }) => {
       const body = await request.json();
@@ -1183,7 +1199,7 @@ export const handlers = [
       );
     }
   ),
-  http.put<any, ObjectStorageKeyRequest>(
+  http.put<any, CreateObjectStorageKeyPayload>(
     '*object-storage/keys/:id',
     async ({ request }) => {
       const body = await request.json();
@@ -2155,21 +2171,19 @@ export const handlers = [
     return HttpResponse.json(
       makeResourcePage([
         placementGroupFactory.build({
-          affinity_type: 'anti_affinity:local',
           id: 1,
           is_compliant: true,
-          is_strict: true,
           members: [1, 2, 3, 4, 5, 6, 7, 8, 43].map((linode) => ({
             is_compliant: true,
             linode_id: linode,
           })),
+          placement_group_policy: 'strict',
+          placement_group_type: 'anti_affinity:local',
           region: 'us-east',
         }),
         placementGroupFactory.build({
-          affinity_type: 'affinity:local',
           id: 2,
           is_compliant: true,
-          is_strict: true,
           members: [
             {
               is_compliant: true,
@@ -2184,19 +2198,21 @@ export const handlers = [
               linode_id: 11,
             },
           ],
+          placement_group_policy: 'strict',
+          placement_group_type: 'affinity:local',
           region: 'us-west',
         }),
         placementGroupFactory.build({
-          affinity_type: 'affinity:local',
           id: 3,
           is_compliant: true,
-          is_strict: true,
           members: [
             {
               is_compliant: true,
               linode_id: 12,
             },
           ],
+          placement_group_policy: 'strict',
+          placement_group_type: 'affinity:local',
           region: 'ca-central',
         }),
       ])
@@ -2255,7 +2271,6 @@ export const handlers = [
       }
 
       const response = placementGroupFactory.build({
-        affinity_type: 'anti_affinity:local',
         id: Number(params.placementGroupId) ?? -1,
         label: 'pg-1',
         members: [
@@ -2300,6 +2315,7 @@ export const handlers = [
             linode_id: (body as any).linodes[0],
           },
         ],
+        placement_group_type: 'anti_affinity:local',
       });
 
       return HttpResponse.json(response);
@@ -2311,7 +2327,6 @@ export const handlers = [
     }
 
     const response = placementGroupFactory.build({
-      affinity_type: 'anti_affinity:local',
       id: Number(params.placementGroupId) ?? -1,
       label: 'pg-1',
       members: [
@@ -2353,6 +2368,7 @@ export const handlers = [
           linode_id: 43,
         },
       ],
+      placement_group_type: 'anti_affinity:local',
     });
 
     return HttpResponse.json(response);
@@ -2361,58 +2377,237 @@ export const handlers = [
     const response = {
       data: [
         {
-          id: 1,
-          type: 'standard',
-          service_type: 'linode',
-          label: 'Linode Service I/O Statistics',
           created: '2024-04-29T17:09:29',
+          id: 1,
+          label: 'Linode Service I/O Statistics',
+          service_type: 'linode',
+          type: 'standard',
           updated: null,
           widgets: [
             {
-              metric: 'system_cpu_utilization_percent',
-              unit: '%',
-              label: 'CPU utilization',
+              aggregate_function: 'avg',
+              chart_type: 'area',
               color: 'blue',
+              label: 'CPU utilization',
+              metric: 'system_cpu_utilization_percent',
               size: 12,
-              chart_type: 'area',
+              unit: '%',
               y_label: 'system_cpu_utilization_ratio',
-              aggregate_function: 'avg',
             },
             {
-              metric: 'system_memory_usage_by_resource',
-              unit: 'Bytes',
-              label: 'Memory Usage',
+              aggregate_function: 'avg',
+              chart_type: 'area',
               color: 'red',
+              label: 'Memory Usage',
+              metric: 'system_memory_usage_by_resource',
               size: 12,
-              chart_type: 'area',
-              y_label: 'system_memory_usage_bytes',
-              aggregate_function: 'avg',
-            },
-            {
-              metric: 'system_network_io_by_resource',
               unit: 'Bytes',
-              label: 'Network Traffic',
-              color: 'green',
-              size: 6,
-              chart_type: 'area',
-              y_label: 'system_network_io_bytes_total',
-              aggregate_function: 'avg',
+              y_label: 'system_memory_usage_bytes',
             },
             {
-              metric: 'system_disk_OPS_total',
-              unit: 'OPS',
-              label: 'Disk I/O',
-              color: 'yellow',
-              size: 6,
-              chart_type: 'area',
-              y_label: 'system_disk_operations_total',
               aggregate_function: 'avg',
+              chart_type: 'area',
+              color: 'green',
+              label: 'Network Traffic',
+              metric: 'system_network_io_by_resource',
+              size: 6,
+              unit: 'Bytes',
+              y_label: 'system_network_io_bytes_total',
+            },
+            {
+              aggregate_function: 'avg',
+              chart_type: 'area',
+              color: 'yellow',
+              label: 'Disk I/O',
+              metric: 'system_disk_OPS_total',
+              size: 6,
+              unit: 'OPS',
+              y_label: 'system_disk_operations_total',
             },
           ],
         },
       ],
     };
 
+    return HttpResponse.json(response);
+  }),
+  http.get('*/v4/monitor/services/:serviceType/metric-definitions', () => {
+    const response = {
+      data: [
+        {
+          available_aggregate_functions: ['min', 'max', 'avg'],
+          dimensions: [
+            {
+              dim_label: 'cpu',
+              label: 'CPU name',
+              values: null,
+            },
+            {
+              dim_label: 'state',
+              label: 'State of CPU',
+              values: [
+                'user',
+                'system',
+                'idle',
+                'interrupt',
+                'nice',
+                'softirq',
+                'steal',
+                'wait',
+              ],
+            },
+            {
+              dim_label: 'LINODE_ID',
+              label: 'Linode ID',
+              values: null,
+            },
+          ],
+          label: 'CPU utilization',
+          metric: 'system_cpu_utilization_percent',
+          metric_type: 'gauge',
+          scrape_interval: '2m',
+          unit: 'percent',
+        },
+        {
+          available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
+          dimensions: [
+            {
+              dim_label: 'state',
+              label: 'State of memory',
+              values: [
+                'used',
+                'free',
+                'buffered',
+                'cached',
+                'slab_reclaimable',
+                'slab_unreclaimable',
+              ],
+            },
+            {
+              dim_label: 'LINODE_ID',
+              label: 'Linode ID',
+              values: null,
+            },
+          ],
+          label: 'Memory Usage',
+          metric: 'system_memory_usage_by_resource',
+          metric_type: 'gauge',
+          scrape_interval: '30s',
+          unit: 'byte',
+        },
+        {
+          available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
+          dimensions: [
+            {
+              dim_label: 'device',
+              label: 'Device name',
+              values: ['lo', 'eth0'],
+            },
+            {
+              dim_label: 'direction',
+              label: 'Direction of network transfer',
+              values: ['transmit', 'receive'],
+            },
+            {
+              dim_label: 'LINODE_ID',
+              label: 'Linode ID',
+              values: null,
+            },
+          ],
+          label: 'Network Traffic',
+          metric: 'system_network_io_by_resource',
+          metric_type: 'counter',
+          scrape_interval: '30s',
+          unit: 'byte',
+        },
+        {
+          available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
+          dimensions: [
+            {
+              dim_label: 'device',
+              label: 'Device name',
+              values: ['loop0', 'sda', 'sdb'],
+            },
+            {
+              dim_label: 'direction',
+              label: 'Operation direction',
+              values: ['read', 'write'],
+            },
+            {
+              dim_label: 'LINODE_ID',
+              label: 'Linode ID',
+              values: null,
+            },
+          ],
+          label: 'Disk I/O',
+          metric: 'system_disk_OPS_total',
+          metric_type: 'counter',
+          scrape_interval: '30s',
+          unit: 'ops_per_second',
+        },
+      ],
+    };
+
+    return HttpResponse.json(response);
+  }),
+  http.post('*/v4/monitor/services/:serviceType/token', () => {
+    const response = {
+      token: 'eyJhbGciOiAiZGlyIiwgImVuYyI6ICJBMTI4Q0JDLUhTMjU2IiwgImtpZCI6ID',
+    };
+    return HttpResponse.json(response);
+  }),
+
+  http.get('*/v4/monitor/dashboards/:id', () => {
+    const response = {
+      created: '2024-04-29T17:09:29',
+      id: 1,
+      label: 'Linode Service I/O Statistics',
+      service_type: 'linode',
+      type: 'standard',
+      updated: null,
+      widgets: [
+        {
+          aggregate_function: 'avg',
+          chart_type: 'area',
+          color: 'blue',
+          label: 'CPU utilization',
+          metric: 'system_cpu_utilization_percent',
+          size: 12,
+          unit: '%',
+          y_label: 'system_cpu_utilization_ratio',
+        },
+        {
+          aggregate_function: 'avg',
+          chart_type: 'area',
+          color: 'red',
+          label: 'Memory Usage',
+          metric: 'system_memory_usage_by_resource',
+          size: 12,
+          unit: 'Bytes',
+          y_label: 'system_memory_usage_bytes',
+        },
+        {
+          aggregate_function: 'avg',
+          chart_type: 'area',
+          color: 'green',
+          label: 'Network Traffic',
+          metric: 'system_network_io_by_resource',
+          size: 6,
+          unit: 'Bytes',
+          y_label: 'system_network_io_bytes_total',
+        },
+        {
+          aggregate_function: 'avg',
+          chart_type: 'area',
+          color: 'yellow',
+          label: 'Disk I/O',
+          metric: 'system_disk_OPS_total',
+          size: 6,
+          unit: 'OPS',
+          y_label: 'system_disk_operations_total',
+        },
+      ],
+    };
     return HttpResponse.json(response);
   }),
   ...entityTransfers,
