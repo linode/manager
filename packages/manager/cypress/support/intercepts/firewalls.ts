@@ -32,6 +32,19 @@ export const mockGetFirewalls = (
 };
 
 /**
+ * Intercepts POST request to create a Firewall and mocks response.
+ *
+ * @param firewall - A Firewall with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateFirewall = (
+  firewall: Firewall
+): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher('networking/firewalls*'), firewall);
+};
+
+/**
  * Intercepts POST request to create a Firewall.
  *
  * @returns Cypress chainable.
