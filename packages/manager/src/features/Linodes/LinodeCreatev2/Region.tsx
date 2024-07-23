@@ -132,7 +132,7 @@ export const Region = () => {
       const label = await getGeneratedLinodeLabel({
         queryClient,
         tab: params.type ?? 'OS',
-        values,
+        values: { ...values, region: region.id },
       });
 
       setValue('label', label);
