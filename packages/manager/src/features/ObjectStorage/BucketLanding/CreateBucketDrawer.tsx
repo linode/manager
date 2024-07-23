@@ -28,13 +28,14 @@ import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { sendCreateBucketEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import ClusterSelect from './ClusterSelect';
 import { OveragePricing } from './OveragePricing';
+
+import type { CreateObjectStorageBucketPayload } from '@linode/api-v4';
 
 interface Props {
   isOpen: boolean;
@@ -71,6 +72,7 @@ export const CreateBucketDrawer = (props: Props) => {
    As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
    remove 'cluster' and retain 'regions'.
   */
+
   const { data: buckets } = useObjectStorageBuckets({
     clusters: isObjMultiClusterEnabled ? undefined : clusters,
     isObjMultiClusterEnabled,
@@ -95,11 +97,7 @@ export const CreateBucketDrawer = (props: Props) => {
   const isInvalidPrice =
     !objTypes || !transferTypes || isErrorTypes || isErrorTransferTypes;
 
-  const {
-    error,
-    isLoading,
-    mutateAsync: createBucket,
-  } = useCreateBucketMutation();
+  const { isLoading, mutateAsync: createBucket } = useCreateBucketMutation();
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const { data: accountSettings } = useAccountSettings();
@@ -116,13 +114,14 @@ export const CreateBucketDrawer = (props: Props) => {
     handleSubmit,
     reset,
     watch,
-  } = useForm({
+  } = useForm<CreateObjectStorageBucketPayload>({
     context: { buckets },
     defaultValues: {
       cluster: '',
       cors_enabled: true,
       label: '',
     },
+    mode: 'onBlur',
     resolver: yupResolver(CreateBucketSchema),
   });
 
@@ -134,9 +133,9 @@ export const CreateBucketDrawer = (props: Props) => {
       await createBucket(values);
       sendCreateBucketEvent(values.cluster);
       if (hasSignedAgreement) {
-        updateAccountAgreements({
-          eu_model: true,
-        }).catch(reportAgreementSigningError);
+        updateAccountAgreements({ eu_model: true }).catch(
+          reportAgreementSigningError
+        );
       }
       onClose();
     } else {
@@ -144,9 +143,9 @@ export const CreateBucketDrawer = (props: Props) => {
     }
   };
 
-  const clusterRegion = regions?.filter((region) =>
-    watchCluster.includes(region.id)
-  )[0];
+  const clusterRegion = watchCluster
+    ? regions?.find((region) => watchCluster.includes(region.id))
+    : undefined;
 
   const { showGDPRCheckbox } = getGDPRDetails({
     agreements,
@@ -154,8 +153,6 @@ export const CreateBucketDrawer = (props: Props) => {
     regions,
     selectedRegionId: clusterRegion?.id ?? '',
   });
-
-  const errorMap = getErrorMap(['label', 'cluster'], error);
 
   return (
     <Drawer
@@ -172,17 +169,17 @@ export const CreateBucketDrawer = (props: Props) => {
             variant="error"
           />
         )}
-        {Boolean(errorMap.none) && (
-          <Notice text={errorMap.none} variant="error" />
+        {errors.root?.message && (
+          <Notice text={errors.root?.message} variant="error" />
         )}
         <Controller
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <TextField
               {...field}
               data-qa-cluster-label
               data-testid="label"
               disabled={isRestrictedUser}
-              errorText={errors.label?.message || errorMap.label}
+              errorText={fieldState.error?.message}
               label="Label"
               required
             />
@@ -192,15 +189,15 @@ export const CreateBucketDrawer = (props: Props) => {
           rules={{ required: 'Label is required' }}
         />
         <Controller
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <ClusterSelect
               {...field}
               data-qa-cluster-select
               disabled={isRestrictedUser}
-              error={errors.cluster?.message || errorMap.cluster}
+              error={fieldState.error?.message}
               onChange={(value) => field.onChange(value)}
               required
-              selectedCluster={field.value}
+              selectedCluster={field.value ?? undefined}
             />
           )}
           control={control}

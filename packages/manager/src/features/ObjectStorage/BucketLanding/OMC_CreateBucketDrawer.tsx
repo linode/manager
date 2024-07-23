@@ -25,7 +25,6 @@ import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { sendCreateBucketEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
@@ -33,6 +32,8 @@ import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { BucketRegions } from './BucketRegions';
 import { StyledEUAgreementCheckbox } from './OMC_CreateBucketDrawer.styles';
 import { OveragePricing } from './OveragePricing';
+
+import type { CreateObjectStorageBucketPayload } from '@linode/api-v4';
 
 interface Props {
   isOpen: boolean;
@@ -79,11 +80,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   const isInvalidPrice =
     !objTypes || !transferTypes || isErrorTypes || isErrorTransferTypes;
 
-  const {
-    error,
-    isLoading,
-    mutateAsync: createBucket,
-  } = useCreateBucketMutation();
+  const { isLoading, mutateAsync: createBucket } = useCreateBucketMutation();
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const { data: accountSettings } = useAccountSettings();
@@ -100,13 +97,14 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     handleSubmit,
     reset,
     watch,
-  } = useForm({
+  } = useForm<CreateObjectStorageBucketPayload>({
     context: { buckets },
     defaultValues: {
       cors_enabled: true,
       label: '',
       region: '',
     },
+    mode: 'onBlur',
     resolver: yupResolver(CreateBucketSchema),
   });
 
@@ -128,9 +126,9 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     }
   };
 
-  const region = regions?.filter((region) =>
-    watchRegion.includes(region.id)
-  )[0];
+  const region = watchRegion
+    ? regions?.find((region) => watchRegion.includes(region.id))
+    : undefined;
 
   const { showGDPRCheckbox } = getGDPRDetails({
     agreements,
@@ -138,8 +136,6 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     regions,
     selectedRegionId: region?.id ?? '',
   });
-
-  const errorMap = getErrorMap(['label', 'region'], error);
 
   return (
     <Drawer
@@ -156,8 +152,8 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
             variant="error"
           />
         )}
-        {Boolean(errorMap.none) && (
-          <Notice text={errorMap.none} variant="error" />
+        {errors.root?.message && (
+          <Notice text={errors.root?.message} variant="error" />
         )}
         <Controller
           render={({ field }) => (
@@ -166,7 +162,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
               data-qa-cluster-label
               data-testid="label"
               disabled={isRestrictedUser}
-              errorText={errors.label?.message || errorMap.label}
+              errorText={errors.label?.message}
               label="Label"
               required
             />
@@ -179,7 +175,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
           render={({ field }) => (
             <BucketRegions
               disabled={isRestrictedUser}
-              error={errors.region?.message || errorMap.region}
+              error={errors.region?.message}
               onBlur={field.onBlur}
               onChange={(value) => field.onChange(value)}
               required

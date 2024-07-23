@@ -13,9 +13,9 @@ export const CreateBucketSchema = object()
         .test(
           'unique-label',
           'A bucket with this label already exists in your selected region',
-          function (value) {
-            const { cluster, region } = this.parent;
-            const buckets = this.options.context?.buckets;
+          (value, context) => {
+            const { cluster, region } = context.parent;
+            const buckets = context.options.context?.buckets;
 
             if (!buckets || !Array.isArray(buckets)) {
               return true; // If buckets is not available, assume the label is unique
