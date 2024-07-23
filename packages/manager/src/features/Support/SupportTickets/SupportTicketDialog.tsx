@@ -173,12 +173,12 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     defaultValues: {
       description: getInitialValue(
         prefilledDescription,
-        valuesFromStorage?.description
+        valuesFromStorage.description
       ),
       entityId: prefilledEntity?.id ? String(prefilledEntity.id) : '',
       entityInputValue: '',
       entityType: prefilledEntity?.type ?? 'general',
-      summary: getInitialValue(_prefilledTitle, valuesFromStorage?.summary),
+      summary: getInitialValue(_prefilledTitle, valuesFromStorage.summary),
       ticketType: prefilledTicketType ?? 'general',
     },
     resolver: yupResolver(SCHEMA_MAP[prefilledTicketType ?? 'general']),
@@ -246,7 +246,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
         ? undefined
         : valuesFromStorage.selectedSeverity,
       summary: clearValues ? '' : valuesFromStorage.summary,
-      ticketType: clearValues ? 'general' : valuesFromStorage.ticketType,
+      ticketType: 'general',
     });
   };
 
@@ -260,7 +260,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   };
 
   const handleClose = () => {
-    if (ticketType === 'smtp') {
+    if (ticketType !== 'general') {
       window.setTimeout(() => resetDrawer(true), 500);
     }
     props.onClose();
