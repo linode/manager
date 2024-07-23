@@ -18,3 +18,23 @@ export const useIsACLPEnabled = (): {
 
   return { isACLPEnabled };
 };
+
+export const convertStringToCamelCasesWithSpaces = (
+  nonFormattedString: string
+): string => {
+  return nonFormattedString
+    ?.split(' ')
+    .map((text) => text.charAt(0).toUpperCase() + text.slice(1))
+    .join(' ');
+};
+
+export const createObjectCopy = <T>(object: T): T | null => {
+  if (!object) {
+    return null;
+  }
+  try {
+    return JSON.parse(JSON.stringify(object));
+  } catch (e) {
+    return null;
+  }
+};
