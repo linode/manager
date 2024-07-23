@@ -85,10 +85,16 @@ export const ObjectDetailsDrawer = React.memo(
           <>
             <Divider spacingBottom={16} spacingTop={16} />
             <AccessSelect
+              getAccess={() =>
+                getObjectACL({
+                  bucket: bucketName,
+                  clusterId,
+                  params: { name },
+                })
+              }
               updateAccess={(acl: ACLType) =>
                 updateObjectACL(clusterId, bucketName, name, acl)
               }
-              getAccess={() => getObjectACL(clusterId, bucketName, name)}
               name={name}
               variant="object"
             />

@@ -9,12 +9,12 @@ import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import { CopyAllHostnames } from './CopyAllHostnames';
 
-import type { ObjAccessKeyRegionsResponse } from '@linode/api-v4';
+import type { ObjectStorageKeyRegions } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
   open: boolean;
-  regions: ObjAccessKeyRegionsResponse[];
+  regions: ObjectStorageKeyRegions[];
 }
 
 export const HostNamesDrawer = (props: Props) => {

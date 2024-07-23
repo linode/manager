@@ -9,12 +9,12 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import type {
-  ObjAccessKeyRegionsResponse,
   ObjectStorageKey,
+  ObjectStorageKeyRegions,
 } from '@linode/api-v4/lib/object-storage';
 
 type Props = {
-  setHostNames: (hostNames: ObjAccessKeyRegionsResponse[]) => void;
+  setHostNames: (hostNames: ObjectStorageKeyRegions[]) => void;
   setShowHostNamesDrawers: (show: boolean) => void;
   storageKeyData: ObjectStorageKey;
 };
