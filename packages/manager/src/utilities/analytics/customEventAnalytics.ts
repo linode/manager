@@ -1,5 +1,6 @@
-import { CustomAnalyticsData } from './types';
 import { sendEvent } from './utils';
+
+import type { CustomAnalyticsData } from './types';
 
 /**
  * Custom Events

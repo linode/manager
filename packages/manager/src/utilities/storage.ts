@@ -63,11 +63,6 @@ interface AuthGetAndSet {
   set: (value: string) => void;
 }
 
-// interface SupportText {
-//   description: string;
-//   title: string;
-// }
-
 interface TicketReply {
   text: string;
   ticketId: number;

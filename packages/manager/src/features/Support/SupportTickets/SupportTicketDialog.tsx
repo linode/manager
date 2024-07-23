@@ -14,6 +14,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useCreateSupportTicketMutation } from 'src/queries/support';
+import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { reduceAsync } from 'src/utilities/reduceAsync';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
@@ -42,7 +43,6 @@ import type { SMTPCustomFields } from './SupportTicketSMTPFields';
 import type { TicketSeverity } from '@linode/api-v4/lib/support';
 import type { Theme } from '@mui/material/styles';
 import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
-import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   expPanelSummary: {
@@ -222,14 +222,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   React.useEffect(() => {
     // Store in-progress work to localStorage
     debouncedSave(form.getValues());
-  }, [
-    summary,
-    description,
-    ticketType,
-    entityId,
-    entityType,
-    selectedSeverity,
-  ]);
+  }, [summary, description, entityId, entityType, selectedSeverity]);
 
   /**
    * Clear the drawer completely if clearValues is passed (when canceling out of the drawer or successfully submitting)
