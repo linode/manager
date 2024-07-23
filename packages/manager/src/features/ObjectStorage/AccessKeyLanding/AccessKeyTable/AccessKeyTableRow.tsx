@@ -1,6 +1,6 @@
 import {
   ObjectStorageKey,
-  RegionS3EndpointAndID,
+  ObjectStorageKeyRegions,
 } from '@linode/api-v4/lib/object-storage';
 import { styled } from '@mui/material/styles';
 import React from 'react';
@@ -20,7 +20,7 @@ import { HostNameTableCell } from './HostNameTableCell';
 type Props = {
   openDrawer: OpenAccessDrawer;
   openRevokeDialog: (storageKeyData: ObjectStorageKey) => void;
-  setHostNames: (hostNames: RegionS3EndpointAndID[]) => void;
+  setHostNames: (hostNames: ObjectStorageKeyRegions[]) => void;
   setShowHostNamesDrawers: (show: boolean) => void;
   storageKeyData: ObjectStorageKey;
 };

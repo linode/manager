@@ -21,7 +21,6 @@ interface ImportMetaEnv {
   REACT_APP_GPAY_ENV?: 'PRODUCTION' | 'TEST';
   REACT_APP_GPAY_MERCHANT_ID?: string;
   REACT_APP_LAUNCH_DARKLY_ID?: string;
-  REACT_APP_LISH_ROOT?: string;
   REACT_APP_LOG_PERFORMANCE_METRICS?: string;
   REACT_APP_LOGIN_ROOT?: string;
   REACT_APP_MOCK_SERVICE_WORKER?: string;
@@ -43,7 +42,7 @@ declare module '*.svg' {
   export default src;
 }
 
-declare module '*.css?raw' {
+declare module '*?raw' {
   const src: string;
   export default src;
 }

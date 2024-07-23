@@ -9,7 +9,6 @@ import {
   useMutatePreferences,
   usePreferences,
 } from 'src/queries/profile/preferences';
-import { ManagerPreferences } from 'src/types/ManagerPreferences';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import {
   sortByArrayLength,
@@ -19,6 +18,7 @@ import {
 } from 'src/utilities/sort-by';
 
 import type { Order } from 'src/hooks/useOrder';
+import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 export interface OrderByProps<T> extends State {
   data: T[];
@@ -165,7 +165,7 @@ export const OrderBy = <T,>(props: CombinedProps<T>) => {
   const initialValues = getInitialValuesFromUserPreferences(
     props.preferenceKey ?? '',
     preferences ?? {},
-    params as Record<string, string>,
+    params,
     props.orderBy,
     props.order
   );

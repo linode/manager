@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -42,7 +43,7 @@ import type {
   Linode,
   NodeBalancer,
 } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
@@ -80,7 +81,9 @@ export const CreateFirewallDrawer = React.memo(
 
     const location = useLocation();
     const isFromLinodeCreate = location.pathname.includes('/linodes/create');
-    const queryParams = getQueryParamsFromQueryString(location.search);
+    const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+      location.search
+    );
 
     const {
       errors,
@@ -224,8 +227,7 @@ export const CreateFirewallDrawer = React.memo(
           sendLinodeCreateFormStepEvent({
             action: 'click',
             category: 'link',
-            createType:
-              (queryParams.type as LinodeCreateType) ?? 'Distributions',
+            createType: queryParams.type ?? 'OS',
             formStepName: 'Create Firewall Drawer',
             label: 'Learn more',
             version: 'v1',
@@ -253,12 +255,12 @@ export const CreateFirewallDrawer = React.memo(
             />
           ) : null}
           {generalError && (
-            <Notice
-              data-qa-error
-              key={status}
-              text={status?.generalError ?? 'An unexpected error occurred'}
-              variant="error"
-            />
+            <Notice data-qa-error key={status} variant="error">
+              <ErrorMessage
+                entityType="firewall_id"
+                message={generalError ?? 'An unexpected error occurred'}
+              />
+            </Notice>
           )}
           <TextField
             inputProps={{
@@ -379,8 +381,7 @@ export const CreateFirewallDrawer = React.memo(
                 sendLinodeCreateFormStepEvent({
                   action: 'click',
                   category: 'button',
-                  createType:
-                    (queryParams.type as LinodeCreateType) ?? 'Distributions',
+                  createType: queryParams.type ?? 'OS',
                   formStepName: 'Create Firewall Drawer',
                   label: 'Create Firewall',
                   version: 'v1',

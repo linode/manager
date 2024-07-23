@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { RouteComponentProps, matchPath } from 'react-router-dom';
+import { matchPath } from 'react-router-dom';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -8,7 +8,9 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 
-import { DashboardLanding } from './Dashboard/DashboardLanding';
+import { CloudPulseDashboardLanding } from './Dashboard/CloudPulseDashboardLanding';
+
+import type { RouteComponentProps } from 'react-router-dom';
 type Props = RouteComponentProps<{}>;
 
 export const CloudPulseTabs = React.memo((props: Props) => {
@@ -40,7 +42,7 @@ export const CloudPulseTabs = React.memo((props: Props) => {
       <React.Suspense fallback={<SuspenseLoader />}>
         <TabPanels>
           <SafeTabPanel index={0}>
-            <DashboardLanding />
+            <CloudPulseDashboardLanding />
           </SafeTabPanel>
         </TabPanels>
       </React.Suspense>

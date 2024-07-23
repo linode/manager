@@ -458,3 +458,29 @@ export const mockCreateSSHKeyError = (
     makeErrorResponse(errorMessage, status)
   );
 };
+
+/**
+ * Intercepts PUT request to update an SSH key and mocks response.
+ *
+ * @param sshKeyId - The SSH key ID to update
+ * @param sshKey - An SSH key with which to update.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateSSHKey = (
+  sshKeyId: number,
+  sshKey: SSHKey
+): Cypress.Chainable<null> => {
+  return cy.intercept('PUT', apiMatcher(`profile/sshkeys/${sshKeyId}`), sshKey);
+};
+
+/**
+ * Intercepts DELETE request to delete an SSH key and mocks response.
+ *
+ * @param sshKeyId - The SSH key ID to delete
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteSSHKey = (sshKeyId: number): Cypress.Chainable<null> => {
+  return cy.intercept('DELETE', apiMatcher(`profile/sshkeys/${sshKeyId}`), {});
+};

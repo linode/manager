@@ -18,6 +18,7 @@ import type {
   Image,
   ImageUploadPayload,
   UpdateImagePayload,
+  UpdateImageRegionsPayload,
   UploadImageResponse,
 } from './types';
 
@@ -99,16 +100,14 @@ export const uploadImage = (data: ImageUploadPayload) => {
 };
 
 /**
- * Selects the regions to which this image will be replicated.
+ * updateImageRegions
  *
- * @param imageId { string } ID of the Image to look up.
- * @param regions { string[] } ID of regions to replicate to. Must contain at least one valid region.
+ * Selects the regions to which this image will be replicated.
  */
-export const updateImageRegions = (imageId: string, regions: string[]) => {
-  const data = {
-    regions,
-  };
-
+export const updateImageRegions = (
+  imageId: string,
+  data: UpdateImageRegionsPayload
+) => {
   return Request<Image>(
     setURL(`${API_ROOT}/images/${encodeURIComponent(imageId)}/regions`),
     setMethod('POST'),

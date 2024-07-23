@@ -33,8 +33,8 @@ const getLinodeCloneUrl = (linode: Linode): string => {
   return `/linodes/create?linodeID=${linode.id}${regionQuery}&type=Clone+Linode${typeQuery}`;
 };
 
-/* Timeout after 3 minutes while waiting for clone. */
-const CLONE_TIMEOUT = 180_000;
+/* Timeout after 4 minutes while waiting for clone. */
+const CLONE_TIMEOUT = 240_000;
 
 authenticate();
 describe('clone linode', () => {
@@ -47,7 +47,7 @@ describe('clone linode', () => {
    * - Confirms that Linode can be cloned successfully.
    */
   it('can clone a Linode from Linode details page', () => {
-    const linodeRegion = chooseRegion();
+    const linodeRegion = chooseRegion({ capabilities: ['Vlans'] });
     const linodePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
       region: linodeRegion.id,
@@ -64,8 +64,6 @@ describe('clone linode', () => {
     cy.defer(() =>
       createTestLinode(linodePayload, { securityMethod: 'vlan_no_internet' })
     ).then((linode: Linode) => {
-      const linodeRegion = getRegionById(linodePayload.region!);
-
       interceptCloneLinode(linode.id).as('cloneLinode');
       cy.visitWithLogin(`/linodes/${linode.id}`);
 

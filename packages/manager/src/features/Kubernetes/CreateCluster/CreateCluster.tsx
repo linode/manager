@@ -4,10 +4,11 @@ import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Select from 'src/components/EnhancedSelect/Select';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
@@ -56,7 +57,6 @@ import type {
   KubeNodePoolResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { Item } from 'src/components/EnhancedSelect/Select';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
@@ -65,7 +65,7 @@ export const CreateCluster = () => {
   >();
   const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
-  const [version, setVersion] = React.useState<Item<string> | undefined>();
+  const [version, setVersion] = React.useState<string | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [hasAgreed, setAgreed] = React.useState<boolean>(false);
@@ -113,7 +113,7 @@ export const CreateCluster = () => {
 
   React.useEffect(() => {
     if (versions.length > 0) {
-      setVersion(getLatestVersion(versions));
+      setVersion(getLatestVersion(versions).value);
     }
   }, [versionData]);
 
@@ -121,7 +121,6 @@ export const CreateCluster = () => {
     const { push } = history;
     setErrors(undefined);
     setSubmitting(true);
-    const k8s_version = version ? version.value : undefined;
 
     // Only type and count to the API.
     const node_pools = nodePools.map(
@@ -130,7 +129,7 @@ export const CreateCluster = () => {
 
     const payload: CreateKubeClusterPayload = {
       control_plane: { high_availability: highAvailability ?? false },
-      k8s_version,
+      k8s_version: version,
       label,
       node_pools,
       region: selectedRegionId,
@@ -186,6 +185,8 @@ export const CreateCluster = () => {
     errors
   );
 
+  const generalError = errorMap.none;
+
   const {
     hasSelectedRegion,
     isPlanPanelDisabled,
@@ -209,7 +210,11 @@ export const CreateCluster = () => {
         title="Create Cluster"
       />
       <Grid className={`mlMain py0`}>
-        {errorMap.none && <Notice text={errorMap.none} variant="error" />}
+        {generalError && (
+          <Notice variant="error">
+            <ErrorMessage entityType="lkecluster_id" message={generalError} />
+          </Notice>
+        )}
         <Paper data-qa-label-header>
           <TextField
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -244,16 +249,16 @@ export const CreateCluster = () => {
             </StyledDocsLinkContainer>
           </StyledRegionSelectStack>
           <Divider sx={{ marginTop: 4 }} />
-          <Select
-            onChange={(selected: Item<string>) => {
-              setVersion(selected);
+          <Autocomplete
+            onChange={(_, selected) => {
+              setVersion(selected?.value);
             }}
+            disableClearable={!!version}
             errorText={errorMap.k8s_version}
-            isClearable={false}
             label="Kubernetes Version"
             options={versions}
             placeholder={' '}
-            value={version || null}
+            value={versions.find((v) => v.value === version) ?? null}
           />
           <Divider sx={{ marginTop: 4 }} />
           {showHighAvailability ? (
