@@ -22,7 +22,7 @@ import {
 import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 
 import { CROSS_DATA_CENTER_CLONE_WARNING } from '../LinodesCreate/constants';
-import { defaultInterfaces, useLinodeCreateQueryParams } from './utilities';
+import { useLinodeCreateQueryParams } from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
@@ -36,7 +36,12 @@ export const Region = () => {
 
   const { params } = useLinodeCreateQueryParams();
 
-  const { control, reset } = useFormContext<LinodeCreateFormValues>();
+  const {
+    control,
+    getValues,
+    setValue,
+  } = useFormContext<LinodeCreateFormValues>();
+
   const { field, fieldState } = useController({
     control,
     name: 'region',
@@ -56,35 +61,52 @@ export const Region = () => {
   const { data: regions } = useRegionsQuery();
 
   const onChange = (region: RegionType) => {
-    const isDistributedRegion =
-      region.site_type === 'distributed' || region.site_type === 'edge';
+    const values = getValues();
 
-    const defaultDiskEncryptionValue = region.capabilities.includes(
-      'Disk Encryption'
-    )
-      ? 'enabled'
-      : undefined;
+    field.onChange(region.id);
 
-    reset((prev) => ({
-      ...prev,
-      // Reset interfaces because VPC and VLANs are region-sepecific
-      interfaces: defaultInterfaces,
-      // Reset Cloud-init metadata because not all regions support it
-      metadata: undefined,
-      // Reset the placement group because they are region-specific
-      placement_group: undefined,
-      // Set the region
-      region: region.id,
-      // Backups and Private IP are not supported in distributed compute regions
-      ...(isDistributedRegion && {
-        backups_enabled: false,
-        private_ip: false,
-      }),
-      // If disk encryption is enabled, set the default value to "enabled" if the region supports it
-      ...(isDiskEncryptionFeatureEnabled && {
-        disk_encryption: defaultDiskEncryptionValue,
-      }),
-    }));
+    if (values.interfaces?.[0].vpc_id) {
+      // If a VPC is selected, clear it.
+      setValue('interfaces.0.vpc_id', null);
+      setValue('interfaces.0.subnet_id', null);
+    }
+
+    if (values.interfaces?.[1].label) {
+      setValue('interfaces.1.label', null);
+      setValue('interfaces.1.ipam_address', null);
+    }
+
+    if (
+      values.metadata?.user_data &&
+      !region.capabilities.includes('Metadata')
+    ) {
+      // Clear metadata only if the new region does not support it
+      setValue('metadata.user_data', null);
+    }
+
+    if (
+      values.placement_group?.id &&
+      !region.capabilities.includes('Placement Group')
+    ) {
+      // @ts-expect-error reset might be good here
+      setValue('placement_group.id', null);
+    }
+
+    if (region.site_type === 'distributed') {
+      setValue('backups_enabled', false);
+      setValue('private_ip', false);
+    }
+
+    if (isDiskEncryptionFeatureEnabled) {
+      // Enable disk encryption if the region supports it
+      const defaultDiskEncryptionValue = region.capabilities.includes(
+        'Disk Encryption'
+      )
+        ? 'enabled'
+        : undefined;
+
+      setValue('disk_encryption', defaultDiskEncryptionValue);
+    }
   };
 
   const showCrossDataCenterCloneWarning =

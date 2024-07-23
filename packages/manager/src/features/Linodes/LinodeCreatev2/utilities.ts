@@ -209,7 +209,7 @@ export const getInterfacesPayload = (
   return undefined;
 };
 
-export const defaultInterfaces: InterfacePayload[] = [
+const defaultInterfaces: InterfacePayload[] = [
   {
     ipam_address: '',
     label: '',
