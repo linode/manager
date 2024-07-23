@@ -2505,7 +2505,7 @@ export const oneClickApps: Record<number, OCA> = {
   },
   1350845: {
     alt_description:
-      'Lineraly scalable, fault tolerant, open source NoSQL distributed database.',
+      'Linearly scalable, fault tolerant, open source NoSQL distributed database.',
     alt_name: 'NoSQL database cluster',
     categories: ['Databases'],
     colors: {
