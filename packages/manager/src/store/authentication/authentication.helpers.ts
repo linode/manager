@@ -1,7 +1,8 @@
+import { supportTicketStorageDefaults } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 import {
   authentication,
   stackScriptInProgress,
-  supportText,
+  supportTicket,
   ticketReply,
 } from 'src/utilities/storage';
 
@@ -13,10 +14,7 @@ export const clearLocalStorage = () => {
 };
 
 export const clearUserInput = () => {
-  // Add more things here as needed, right now we only cache
-  // Support ticket title/description.
-
-  supportText.set(undefined);
+  supportTicket.set(supportTicketStorageDefaults);
   ticketReply.set({ text: '', ticketId: -1 });
   stackScriptInProgress.set({
     description: '',

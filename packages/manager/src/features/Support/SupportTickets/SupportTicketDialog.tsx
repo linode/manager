@@ -119,6 +119,16 @@ export interface SupportTicketFormFields {
   ticketType: TicketType;
 }
 
+export const supportTicketStorageDefaults: SupportTicketFormFields = {
+  description: '',
+  entityId: '',
+  entityInputValue: '',
+  entityType: 'general',
+  selectedSeverity: undefined,
+  summary: '',
+  ticketType: 'general',
+};
+
 export const entitiesToItems = (type: string, entities: any) => {
   return entities.map((entity: any) => {
     return type === 'domain_id'
@@ -148,7 +158,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const hasSeverityCapability = useTicketSeverityCapability();
 
-  const valuesFromStorage = storage.supportText.get();
+  const valuesFromStorage = storage.supportTicket.get();
 
   // Use a prefilled title if one is given, otherwise, use any default prefill titles by ticket type, if extant.
   const _prefilledTitle = prefilledTitle
@@ -196,12 +206,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     }
   }, [open]);
 
-  // const saveText = (_title: string, _description: string) => {
-  //   storage.supportText.set({ description: _description, title: _title });
-  // };
-
-  const saveFormData = (values?: SupportTicketFormFields) => {
-    storage.supportText.set(values ?? undefined);
+  const saveFormData = (values: SupportTicketFormFields) => {
+    storage.supportTicket.set(values);
   };
 
   // Has to be a ref or else the timeout is redone with each render
@@ -227,44 +233,24 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const resetTicket = (clearValues: boolean = false) => {
     form.reset({
       ...form.formState.defaultValues,
-      description:
-        clearValues || !valuesFromStorage ? '' : valuesFromStorage.description,
-      entityId:
-        clearValues || !valuesFromStorage ? '' : valuesFromStorage.entityId,
-      entityType:
-        clearValues || !valuesFromStorage
-          ? 'general'
-          : valuesFromStorage.entityType,
-      selectedSeverity:
-        clearValues || !valuesFromStorage
-          ? undefined
-          : valuesFromStorage.selectedSeverity,
-      summary:
-        clearValues || !valuesFromStorage ? '' : valuesFromStorage.summary,
-      ticketType:
-        clearValues || !valuesFromStorage
-          ? 'general'
-          : valuesFromStorage.ticketType,
+      description: clearValues ? '' : valuesFromStorage.description,
+      entityId: clearValues ? '' : valuesFromStorage.entityId,
+      entityInputValue: clearValues ? '' : valuesFromStorage.entityInputValue,
+      entityType: clearValues ? 'general' : valuesFromStorage.entityType,
+      selectedSeverity: clearValues
+        ? undefined
+        : valuesFromStorage.selectedSeverity,
+      summary: clearValues ? '' : valuesFromStorage.summary,
+      ticketType: clearValues ? 'general' : valuesFromStorage.ticketType,
     });
   };
-
-  // const formLocalStorageDefaults = {
-  //   description: '',
-  //   entityId: '',
-  //   entityInputValue: '',
-  //   entityType: 'general' as EntityType,
-  //   selectedSeverity: undefined,
-  //   summary: '',
-  //   ticketType: 'general' as TicketType,
-  // };
 
   const resetDrawer = (clearValues: boolean = false) => {
     resetTicket(clearValues);
     setFiles([]);
 
     if (clearValues) {
-      // saveText('', '');
-      saveFormData();
+      saveFormData(supportTicketStorageDefaults);
     }
   };
 
