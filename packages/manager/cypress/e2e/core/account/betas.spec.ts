@@ -24,7 +24,9 @@ describe('Betas landing page', () => {
     mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Ensure that the Primary Nav is open
-    mockGetUserPreferences({ desktop_sidebar_open: false }).as('getPreferences');
+    mockGetUserPreferences({ desktop_sidebar_open: false }).as(
+      'getPreferences'
+    );
 
     cy.visitWithLogin('/linodes');
     cy.wait(['@getFeatureFlags', '@getClientStream', '@getPreferences']);

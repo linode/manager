@@ -301,7 +301,7 @@ describe('Create Linode', () => {
       // select subnet
       cy.findByPlaceholderText('Select Subnet')
         .should('be.visible')
-        .type(`${mockSubnet.label}{downArrow}{enter}`)
+        .type(`${mockSubnet.label}{downArrow}{enter}`);
     });
 
     // The drawer opens when clicking "Add an SSH Key" button
@@ -345,7 +345,7 @@ describe('Create Linode', () => {
     getClick('#linode-label').clear().type(linodeLabel);
     cy.get('#root-password').type(rootpass);
 
-    ui.button.findByTitle("Create Linode").click();
+    ui.button.findByTitle('Create Linode').click();
 
     cy.wait('@linodeCreated').its('response.statusCode').should('eq', 200);
     fbtVisible(linodeLabel);
