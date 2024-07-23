@@ -106,7 +106,6 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
       cors_enabled: true,
       label: '',
       region: '',
-      cluster: undefined,
     },
     resolver: yupResolver(CreateBucketSchema),
   });
