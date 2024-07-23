@@ -84,12 +84,13 @@ export const Region = () => {
     field.onChange(region.id);
 
     if (values.interfaces?.[0].vpc_id) {
-      // If a VPC is selected, clear it.
+      // If a VPC is selected, clear it because VPCs are region sepecific
       setValue('interfaces.0.vpc_id', null);
       setValue('interfaces.0.subnet_id', null);
     }
 
     if (values.interfaces?.[1].label) {
+      // If a VLAN is selected, clear it because VLANs are region sepecific
       setValue('interfaces.1.label', null);
       setValue('interfaces.1.ipam_address', null);
     }
@@ -102,21 +103,21 @@ export const Region = () => {
       setValue('metadata.user_data', null);
     }
 
-    if (
-      values.placement_group?.id &&
-      !region.capabilities.includes('Placement Group')
-    ) {
-      // @ts-expect-error reset might be good here
-      setValue('placement_group.id', null);
+    if (values.placement_group?.id) {
+      // If a placement group is selected, clear it because they are region sepecific
+      setValue('placement_group.id', 0);
     }
 
+    // Because distributed regions do not support some features,
+    // we must disable those features here. Keep in mind, we should
+    // prevent the user from enabling these features in their respective components.
     if (region.site_type === 'distributed') {
       setValue('backups_enabled', false);
       setValue('private_ip', false);
     }
 
     if (isDiskEncryptionFeatureEnabled) {
-      // Enable disk encryption if the region supports it
+      // Enable disk encryption by default if the region supports it
       const defaultDiskEncryptionValue = region.capabilities.includes(
         'Disk Encryption'
       )
@@ -127,11 +128,13 @@ export const Region = () => {
     }
 
     if (!isLabelFieldDirty) {
+      // Auto-generate the Linode label because the region is included in the generated label
       const label = await getGeneratedLinodeLabel({
         queryClient,
         tab: params.type ?? 'OS',
-        values: getValues(),
+        values,
       });
+
       setValue('label', label);
     }
   };
