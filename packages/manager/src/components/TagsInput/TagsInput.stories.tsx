@@ -6,8 +6,7 @@ import { Box } from 'src/components/Box';
 
 import { TagsInput } from './TagsInput';
 
-import type { TagsInputProps } from './TagsInput';
-import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { Tag, TagsInputProps } from './TagsInput';
 
 export const Default: StoryObj<TagsInputProps> = {
   args: {
@@ -25,7 +24,7 @@ export const Default: StoryObj<TagsInputProps> = {
   render: (args) => {
     const TagsInputWrapper = () => {
       const [, setTags] = useArgs();
-      const handleUpdateTags = (selected: Item[]) => {
+      const handleUpdateTags = (selected: Tag[]) => {
         return setTags({ value: selected });
       };
 
