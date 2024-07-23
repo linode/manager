@@ -42,6 +42,7 @@ import type { SMTPCustomFields } from './SupportTicketSMTPFields';
 import type { TicketSeverity } from '@linode/api-v4/lib/support';
 import type { Theme } from '@mui/material/styles';
 import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
+import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   expPanelSummary: {
@@ -263,11 +264,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       window.setTimeout(() => resetDrawer(true), 500);
     }
     props.onClose();
+    sendSupportTicketExitEvent('Close');
   };
 
   const handleCancel = () => {
     props.onClose();
     window.setTimeout(() => resetDrawer(true), 500);
+    sendSupportTicketExitEvent('Cancel');
   };
 
   const updateFiles = (newFiles: FileAttachment[]) => {
