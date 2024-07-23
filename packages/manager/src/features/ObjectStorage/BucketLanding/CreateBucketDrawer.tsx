@@ -128,7 +128,8 @@ export const CreateBucketDrawer = (props: Props) => {
 
   const watchCluster = watch('cluster');
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (e: any, values: any) => {
+    e.preventDefault();
     if (accountSettings?.object_storage === 'active') {
       await createBucket(values);
       sendCreateBucketEvent(values.cluster);

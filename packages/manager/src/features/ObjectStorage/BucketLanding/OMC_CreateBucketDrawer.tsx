@@ -106,13 +106,15 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
       cors_enabled: true,
       label: '',
       region: '',
+      cluster: undefined,
     },
     resolver: yupResolver(CreateBucketSchema),
   });
 
   const watchRegion = watch('region');
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (e: any, values: any) => {
+    e.preventDefault();
     if (accountSettings?.object_storage === 'active') {
       await createBucket(values);
       sendCreateBucketEvent(values.region);
@@ -147,7 +149,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
       open={isOpen}
       title="Create Bucket"
     >
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         {isRestrictedUser && (
           <Notice
             data-qa-permissions-notice
