@@ -3,21 +3,14 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
-import { debounce } from 'throttle-debounce';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import {
-  CPUTimeData,
-  DiskIOTimeData,
-  Point,
-} from 'src/components/AreaChart/types';
 import { Box } from 'src/components/Box';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
-import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import {
   STATS_NOT_READY_API_MESSAGE,
   STATS_NOT_READY_MESSAGE,
@@ -38,6 +31,12 @@ import { NetworkGraphs } from './NetworkGraphs';
 import { StatsPanel } from './StatsPanel';
 
 import type { ChartProps } from './NetworkGraphs';
+import type {
+  CPUTimeData,
+  DiskIOTimeData,
+  Point,
+} from 'src/components/AreaChart/types';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 setUpCharts();
 
@@ -58,8 +57,6 @@ const LinodeSummary: React.FC<Props> = (props) => {
   const { data: profile } = useProfile();
   const timezone = profile?.timezone || DateTime.local().zoneName;
 
-  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
-
   const options = getDateOptions(linodeCreated);
   const [rangeSelection, setRangeSelection] = React.useState('24');
   const [year, month] = rangeSelection.split(' ');
@@ -70,14 +67,13 @@ const LinodeSummary: React.FC<Props> = (props) => {
     data: statsData,
     error: statsError,
     isLoading: statsLoading,
-    refetch: refetchLinodeStats,
-  } = useLinodeStats(id, isLast24Hours, linodeCreated);
+  } = useLinodeStats(id, isLast24Hours);
 
   const {
     data: statsByDateData,
     error: statsByDateError,
     isLoading: statsByDateLoading,
-  } = useLinodeStatsByDate(id, year, month, !isLast24Hours, linodeCreated);
+  } = useLinodeStatsByDate(id, year, month, !isLast24Hours);
 
   const stats = isLast24Hours ? statsData : statsByDateData;
   const isLoading = isLast24Hours ? statsLoading : statsByDateLoading;
@@ -97,20 +93,6 @@ const LinodeSummary: React.FC<Props> = (props) => {
   const handleChartRangeChange = (e: Item<string>) => {
     setRangeSelection(e.value);
   };
-
-  /*
-    We create a debounced function to refetch Linode stats that will run 1.5 seconds after the window is resized.
-    This makes the graphs adjust sooner than their typical 30-second interval.
-  */
-  const debouncedRefetchLinodeStats = React.useRef(
-    debounce(1500, false, () => {
-      refetchLinodeStats();
-    })
-  ).current;
-
-  React.useEffect(() => {
-    debouncedRefetchLinodeStats();
-  }, [windowWidth, windowHeight, debouncedRefetchLinodeStats]);
 
   /**
    * This changes the X-Axis tick labels depending on the selected timeframe.

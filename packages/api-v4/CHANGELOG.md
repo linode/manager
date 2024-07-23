@@ -1,3 +1,15 @@
+## [2024-07-22] - v0.122.0
+
+### Changed:
+
+- Breaking: change Placement Group `affinity_type` to `placement_group_type` ([#10651](https://github.com/linode/manager/pull/10651))
+- Breaking: change Placement Group `is_strict` to `placement_group_policy` ([#10651](https://github.com/linode/manager/pull/10651))
+- Use new "lish" API instead of "lish_token" ([#10656](https://github.com/linode/manager/pull/10656))
+
+### Upcoming Features:
+
+- Add ACLG Config and Widget to CloudPulse types ([#10625](https://github.com/linode/manager/pull/10625))
+
 ## [2024-07-08] - v0.121.0
 
 ### Changed:

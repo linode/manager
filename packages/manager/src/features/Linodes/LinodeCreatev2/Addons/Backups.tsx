@@ -108,6 +108,7 @@ export const Backups = () => {
       }
       checked={checked}
       control={<Checkbox />}
+      data-testid="backups"
       onChange={field.onChange}
     />
   );

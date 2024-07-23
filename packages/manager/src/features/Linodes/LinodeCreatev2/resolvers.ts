@@ -1,8 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { CreateLinodeSchema } from '@linode/validation';
 
+import { accountQueries } from 'src/queries/account/queries';
+import { regionQueries } from 'src/queries/regions/regions';
+import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
+
 import {
-  CreateLinodeByCloningSchema,
   CreateLinodeFromBackupSchema,
   CreateLinodeFromMarketplaceAppSchema,
   CreateLinodeFromStackScriptSchema,
@@ -11,123 +14,75 @@ import { getLinodeCreatePayload } from './utilities';
 
 import type { LinodeCreateType } from '../LinodesCreate/types';
 import type { LinodeCreateFormValues } from './utilities';
+import type { QueryClient } from '@tanstack/react-query';
 import type { Resolver } from 'react-hook-form';
 
-export const resolver: Resolver<LinodeCreateFormValues> = async (
-  values,
-  context,
-  options
+export const getLinodeCreateResolver = (
+  tab: LinodeCreateType | undefined,
+  queryClient: QueryClient
 ) => {
-  const transformedValues = getLinodeCreatePayload(structuredClone(values));
+  const schema = linodeCreateResolvers[tab ?? 'OS'];
 
-  const { errors } = await yupResolver(
-    CreateLinodeSchema,
-    {},
-    { mode: 'async', rawValues: true }
-  )(transformedValues, context, options);
-
-  if (errors) {
-    return { errors, values };
-  }
-
-  return { errors: {}, values };
-};
-
-export const stackscriptResolver: Resolver<LinodeCreateFormValues> = async (
-  values,
-  context,
-  options
-) => {
-  const transformedValues = getLinodeCreatePayload(structuredClone(values));
-
-  const { errors } = await yupResolver(
-    CreateLinodeFromStackScriptSchema,
-    {},
-    { mode: 'async', rawValues: true }
-  )(transformedValues, context, options);
-
-  if (errors) {
-    return { errors, values };
-  }
-
-  return { errors: {}, values };
-};
-
-export const marketplaceResolver: Resolver<LinodeCreateFormValues> = async (
-  values,
-  context,
-  options
-) => {
-  const transformedValues = getLinodeCreatePayload(structuredClone(values));
-
-  const { errors } = await yupResolver(
-    CreateLinodeFromMarketplaceAppSchema,
-    {},
-    { mode: 'async', rawValues: true }
-  )(transformedValues, context, options);
-
-  if (errors) {
-    return { errors, values };
-  }
-
-  return { errors: {}, values };
-};
-
-export const cloneResolver: Resolver<LinodeCreateFormValues> = async (
-  values,
-  context,
-  options
-) => {
-  const transformedValues = getLinodeCreatePayload(structuredClone(values));
-
-  const { errors } = await yupResolver(
-    CreateLinodeByCloningSchema,
-    {},
-    { mode: 'async', rawValues: true }
-  )(
-    {
-      linode: values.linode ?? undefined,
-      ...transformedValues,
-    },
+  // eslint-disable-next-line sonarjs/prefer-immediate-return
+  const resolver: Resolver<LinodeCreateFormValues> = async (
+    values,
     context,
     options
-  );
+  ) => {
+    const transformedValues = getLinodeCreatePayload(structuredClone(values));
 
-  if (errors) {
-    return { errors, values };
-  }
+    const { errors } = await yupResolver(
+      schema,
+      {},
+      { mode: 'async', rawValues: true }
+    )(transformedValues, context, options);
 
-  return { errors: {}, values };
+    if (tab === 'Clone Linode' && !values.linode) {
+      errors['linode'] = {
+        message: 'You must select a Linode to clone from.',
+        type: 'validate',
+      };
+    }
+
+    const regions = await queryClient.ensureQueryData(regionQueries.regions);
+
+    const selectedRegion = regions.find((r) => r.id === values.region);
+
+    const hasSelectedAnEURegion = isEURegion(
+      getRegionCountryGroup(selectedRegion)
+    );
+
+    if (hasSelectedAnEURegion) {
+      const agreements = await queryClient.ensureQueryData(
+        accountQueries.agreements
+      );
+
+      const hasSignedEUAgreement = agreements.eu_model;
+
+      if (!hasSignedEUAgreement && !values.hasSignedEUAgreement) {
+        errors['hasSignedEUAgreement'] = {
+          message:
+            'You must agree to the EU agreement to deploy to this region.',
+          type: 'validate',
+        };
+      }
+    }
+
+    if (errors) {
+      return { errors, values };
+    }
+
+    return { errors: {}, values };
+  };
+
+  return resolver;
 };
 
-export const backupResolver: Resolver<LinodeCreateFormValues> = async (
-  values,
-  context,
-  options
-) => {
-  const transformedValues = getLinodeCreatePayload(structuredClone(values));
-
-  const { errors } = await yupResolver(
-    CreateLinodeFromBackupSchema,
-    {},
-    { mode: 'async', rawValues: true }
-  )(transformedValues, context, options);
-
-  if (errors) {
-    return { errors, values };
-  }
-
-  return { errors: {}, values };
-};
-
-export const linodeCreateResolvers: Record<
-  LinodeCreateType,
-  Resolver<LinodeCreateFormValues>
-> = {
-  Backups: backupResolver,
-  'Clone Linode': cloneResolver,
-  Images: resolver,
-  OS: resolver,
-  'One-Click': marketplaceResolver,
-  StackScripts: stackscriptResolver,
+export const linodeCreateResolvers = {
+  Backups: CreateLinodeFromBackupSchema,
+  'Clone Linode': CreateLinodeSchema,
+  Images: CreateLinodeSchema,
+  OS: CreateLinodeSchema,
+  'One-Click': CreateLinodeFromMarketplaceAppSchema,
+  StackScripts: CreateLinodeFromStackScriptSchema,
 };

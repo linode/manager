@@ -8,6 +8,7 @@ import {
 } from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { ui } from 'support/ui';
+import { mockGetUserPreferences } from 'support/intercepts/profile';
 
 // TODO Remove feature flag mocks when feature flag is removed from codebase.
 describe('VPC navigation', () => {
@@ -21,8 +22,13 @@ describe('VPC navigation', () => {
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
+    // Ensure that the Primary Nav is open
+    mockGetUserPreferences({ desktop_sidebar_open: false }).as(
+      'getPreferences'
+    );
+
     cy.visitWithLogin('/linodes');
-    cy.wait(['@getFeatureFlags', '@getClientStream']);
+    cy.wait(['@getFeatureFlags', '@getClientStream', '@getPreferences']);
 
     ui.nav.findItemByTitle('VPC').should('be.visible').click();
 

@@ -57,3 +57,27 @@ export const mockApiMaintenanceMode = (): Cypress.Chainable<null> => {
 
   return cy.intercept(apiMatcher('**'), errorResponse);
 };
+
+/**
+ * Intercepts all requests to Linode API v4 and mocks an error HTTP response.
+ *
+ * @param errorCode - HTTP status code to mock.
+ * @param errorMessage - Response error message to mock.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockApiRequestWithError = (
+  errorCode: number,
+  errorReason: string
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('*'), {
+    statusCode: errorCode,
+    body: {
+      errors: [
+        {
+          reason: errorReason,
+        },
+      ],
+    },
+  });
+};
