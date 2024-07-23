@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
@@ -13,6 +14,7 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import {
@@ -22,7 +24,11 @@ import {
 import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 
 import { CROSS_DATA_CENTER_CLONE_WARNING } from '../LinodesCreate/constants';
-import { useLinodeCreateQueryParams } from './utilities';
+import { getDisabledRegions } from './Region.utils';
+import {
+  getGeneratedLinodeLabel,
+  useLinodeCreateQueryParams,
+} from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
@@ -33,11 +39,15 @@ export const Region = () => {
   } = useIsDiskEncryptionFeatureEnabled();
 
   const flags = useFlags();
+  const queryClient = useQueryClient();
 
   const { params } = useLinodeCreateQueryParams();
 
   const {
     control,
+    formState: {
+      dirtyFields: { label: isLabelFieldDirty },
+    },
     getValues,
     setValue,
   } = useFormContext<LinodeCreateFormValues>();
@@ -47,7 +57,15 @@ export const Region = () => {
     name: 'region',
   });
 
-  const selectedLinode = useWatch({ control, name: 'linode' });
+  const [selectedLinode, selectedImage] = useWatch({
+    control,
+    name: ['linode', 'image'],
+  });
+
+  const { data: image } = useImageQuery(
+    selectedImage ?? '',
+    Boolean(selectedImage)
+  );
 
   const { data: type } = useTypeQuery(
     selectedLinode?.type ?? '',
@@ -60,7 +78,7 @@ export const Region = () => {
 
   const { data: regions } = useRegionsQuery();
 
-  const onChange = (region: RegionType) => {
+  const onChange = async (region: RegionType) => {
     const values = getValues();
 
     field.onChange(region.id);
@@ -107,6 +125,15 @@ export const Region = () => {
 
       setValue('disk_encryption', defaultDiskEncryptionValue);
     }
+
+    if (!isLabelFieldDirty) {
+      const label = await getGeneratedLinodeLabel({
+        queryClient,
+        tab: params.type ?? 'OS',
+        values: getValues(),
+      });
+      setValue('label', label);
+    }
   };
 
   const showCrossDataCenterCloneWarning =
@@ -125,7 +152,7 @@ export const Region = () => {
   const hideDistributedRegions =
     !flags.gecko2?.enabled ||
     flags.gecko2?.ga ||
-    !isDistributedRegionSupported(params.type ?? 'Distributions');
+    !isDistributedRegionSupported(params.type ?? 'OS');
 
   const showDistributedRegionIconHelperText =
     !hideDistributedRegions &&
@@ -133,6 +160,12 @@ export const Region = () => {
       (region) =>
         region.site_type === 'distributed' || region.site_type === 'edge'
     );
+
+  const disabledRegions = getDisabledRegions({
+    linodeCreateTab: params.type,
+    regions: regions ?? [],
+    selectedImage: image,
+  });
 
   return (
     <Paper>
@@ -152,15 +185,21 @@ export const Region = () => {
         </Notice>
       )}
       <RegionSelect
+        regionFilter={
+          // We don't want the Image Service Gen2 work to abide by Gecko feature flags
+          hideDistributedRegions && params.type !== 'Images'
+            ? 'core'
+            : undefined
+        }
         showDistributedRegionIconHelperText={
           showDistributedRegionIconHelperText
         }
         currentCapability="Linodes"
         disableClearable
         disabled={isLinodeCreateRestricted}
+        disabledRegions={disabledRegions}
         errorText={fieldState.error?.message}
         onChange={(e, region) => onChange(region)}
-        regionFilter={hideDistributedRegions ? 'core' : undefined}
         regions={regions ?? []}
         textFieldProps={{ onBlur: field.onBlur }}
         value={field.value}

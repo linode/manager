@@ -28,7 +28,7 @@ import { ui } from 'support/ui';
 import { accountFactory, regionFactory } from 'src/factories';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { buildArray } from 'support/util/arrays';
-import { Scope } from '@linode/api-v4';
+import { ObjectStorageKeyBucketAccess } from '@linode/api-v4';
 import { mockGetAccount } from 'support/intercepts/account';
 
 describe('object storage access keys smoke tests', () => {
@@ -304,7 +304,7 @@ describe('object storage access keys smoke tests', () => {
         ],
         limited: true,
         bucket_access: mockBuckets.map(
-          (bucket): Scope => ({
+          (bucket): ObjectStorageKeyBucketAccess => ({
             bucket_name: bucket.label,
             cluster: '',
             permissions: 'read_only',

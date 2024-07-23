@@ -1,6 +1,5 @@
-import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
-import { Theme, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -10,6 +9,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
@@ -19,6 +19,7 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   reportAgreementSigningError,
@@ -43,6 +44,9 @@ import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants
 
 import { ConfigSelect } from './VolumeDrawer/ConfigSelect';
 import { SizeField } from './VolumeDrawer/SizeField';
+
+import type { Linode } from '@linode/api-v4/lib/linodes/types';
+import type { Theme } from '@mui/material/styles';
 
 export const SIZE_FIELD_WIDTH = 160;
 
@@ -254,6 +258,17 @@ export const VolumeCreate = () => {
         }}
         title="Create"
       />
+      {doesNotHavePermission && (
+        <Notice
+          text={getRestrictedResourceText({
+            action: 'create',
+            resourceType: 'Volumes',
+          })}
+          important
+          spacingTop={16}
+          variant="error"
+        />
+      )}
       <form onSubmit={handleSubmit}>
         <Box display="flex" flexDirection="column">
           <Paper>
@@ -269,22 +284,9 @@ export const VolumeCreate = () => {
               </span>
             </Typography>
             {error && (
-              <Notice
-                spacingBottom={0}
-                spacingTop={12}
-                text={error}
-                variant="error"
-              />
-            )}
-            {doesNotHavePermission && (
-              <Notice
-                text={
-                  "You don't have permissions to create a new Volume. Please contact an account administrator for details."
-                }
-                important
-                spacingBottom={0}
-                variant="error"
-              />
+              <Notice spacingBottom={0} spacingTop={12} variant="error">
+                <ErrorMessage entityType="volume_id" message={error} />
+              </Notice>
             )}
             <TextField
               tooltipText="Use only ASCII letters, numbers,

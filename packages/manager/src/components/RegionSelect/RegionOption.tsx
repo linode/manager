@@ -4,6 +4,7 @@ import React from 'react';
 import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 
@@ -34,9 +35,9 @@ export const RegionOption = ({
   const { className, onClick } = props;
   const isRegionDisabled = Boolean(disabledOptions);
   const isRegionDisabledReason = disabledOptions?.reason;
-
+  const { isGeckoBetaEnabled, isGeckoGAEnabled } = useIsGeckoEnabled();
   const displayDistributedRegionIcon =
-    region.site_type === 'edge' || region.site_type === 'distributed';
+    isGeckoBetaEnabled && region.site_type === 'distributed';
 
   return (
     <Tooltip
@@ -76,7 +77,7 @@ export const RegionOption = ({
             <StyledFlagContainer>
               <Flag country={region.country} />
             </StyledFlagContainer>
-            {region.label} ({region.id})
+            {isGeckoGAEnabled ? region.label : `${region.label} (${region.id})`}
             {displayDistributedRegionIcon && (
               <Box sx={visuallyHidden}>
                 &nbsp;(This region is a distributed region.)
@@ -86,6 +87,7 @@ export const RegionOption = ({
               <Box sx={visuallyHidden}>{isRegionDisabledReason}</Box>
             )}
           </Box>
+          {isGeckoGAEnabled && `(${region.id})`}
           {selected && <SelectedIcon visible />}
           {displayDistributedRegionIcon && (
             <TooltipIcon

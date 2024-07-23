@@ -865,6 +865,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   tax_id_invalid: {
     notification: (e) => `Tax Identification Number format is invalid.`,
   },
+  tax_id_valid: {
+    notification: (e) => `Tax Identification Number has been verified.`,
+  },
   tfa_disabled: {
     notification: (e) => `Two-factor authentication has been disabled.`,
   },

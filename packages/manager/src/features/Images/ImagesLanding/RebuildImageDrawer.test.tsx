@@ -53,7 +53,7 @@ describe('RebuildImageDrawer', () => {
 
     expect(mockHistoryPush).toBeCalledWith({
       pathname: '/linodes/1/rebuild',
-      search: 'selectedImageId=private%2F0',
+      search: 'selectedImageId=private%2F1',
     });
   });
 });

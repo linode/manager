@@ -8,8 +8,12 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
+import { List } from 'src/components/List';
+import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
@@ -24,15 +28,19 @@ import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION } from './constants';
-import { PlacementGroupsAffinityTypeEnforcementRadioGroup } from './PlacementGroupsAffinityEnforcementRadioGroup';
-import { PlacementGroupsAffinityTypeSelect } from './PlacementGroupsAffinityTypeSelect';
+import { PlacementGroupPolicyRadioGroup } from './PlacementGroupPolicyRadioGroup';
+import { PlacementGroupTypeSelect } from './PlacementGroupTypeSelect';
 import {
   getMaxPGsPerCustomer,
   hasRegionReachedPlacementGroupCapacity,
 } from './utils';
 
 import type { PlacementGroupsCreateDrawerProps } from './types';
-import type { CreatePlacementGroupPayload, Region } from '@linode/api-v4';
+import type {
+  CreatePlacementGroupPayload,
+  PlacementGroup,
+  Region,
+} from '@linode/api-v4';
 import type { FormikHelpers } from 'formik';
 import type { DisableRegionOption } from 'src/components/RegionSelect/RegionSelect.types';
 
@@ -115,9 +123,9 @@ export const PlacementGroupsCreateDrawer = (
   } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      affinity_type: 'anti_affinity:local',
-      is_strict: true,
       label: '',
+      placement_group_policy: 'strict' as PlacementGroup['placement_group_policy'],
+      placement_group_type: 'anti_affinity:local' as PlacementGroup['placement_group_type'],
       region: selectedRegionId ?? '',
     },
     onSubmit: handleFormSubmit,
@@ -126,7 +134,7 @@ export const PlacementGroupsCreateDrawer = (
     validationSchema: createPlacementGroupSchema,
   });
 
-  const generalError = error?.find((e) => !e.field)?.reason;
+  const hasApiError = error?.[0]?.reason;
 
   const selectedRegion = React.useMemo(
     () => regions?.find((region) => region.id == values.region),
@@ -136,6 +144,8 @@ export const PlacementGroupsCreateDrawer = (
   const pgRegionLimitHelperText = `${MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION} ${getMaxPGsPerCustomer(
     selectedRegion
   )}`;
+
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
 
   const disabledRegions = regions?.reduce<Record<string, DisableRegionOption>>(
     (acc, region) => {
@@ -183,12 +193,31 @@ export const PlacementGroupsCreateDrawer = (
       )}
       <form onSubmit={handleSubmit}>
         <Stack spacing={1}>
-          {generalError && <Notice text={generalError} variant="error" />}
+          {hasApiError && (
+            <Notice variant="error">
+              <List>
+                {error.map((e) => (
+                  <ListItem
+                    disablePadding={true}
+                    key={e.field}
+                    sx={{ my: 0.25 }}
+                  >
+                    - {e.reason}
+                  </ListItem>
+                ))}
+              </List>
+            </Notice>
+          )}
           {selectedRegion && displayRegionHeaderText && (
             <DescriptionList
               items={[
                 {
-                  description: `${selectedRegion.label} (${selectedRegion.id})`,
+                  description: isGeckoGAEnabled
+                    ? getNewRegionLabel({
+                        includeSlug: true,
+                        region: selectedRegion,
+                      })
+                    : `${selectedRegion.label} (${selectedRegion.id})`,
                   title: 'Region',
                 },
               ]}
@@ -224,20 +253,20 @@ export const PlacementGroupsCreateDrawer = (
               value={selectedRegionId ?? values.region}
             />
           )}
-          <PlacementGroupsAffinityTypeSelect
+          <PlacementGroupTypeSelect
             disabledPlacementGroupCreateButton={
               disabledPlacementGroupCreateButton
             }
-            error={errors.affinity_type}
+            error={errors.placement_group_type}
             setFieldValue={setFieldValue}
           />
-          <PlacementGroupsAffinityTypeEnforcementRadioGroup
+          <PlacementGroupPolicyRadioGroup
             disabledPlacementGroupCreateButton={
               disabledPlacementGroupCreateButton
             }
             handleChange={handleChange}
             setFieldValue={setFieldValue}
-            value={values.is_strict}
+            value={values.placement_group_policy}
           />
           <ActionsPanel
             primaryButtonProps={{

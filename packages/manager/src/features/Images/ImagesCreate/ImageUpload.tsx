@@ -178,6 +178,17 @@ export const ImageUpload = () => {
     <FormProvider {...form}>
       <form onSubmit={onSubmit}>
         <Stack spacing={2}>
+          {isImageCreateRestricted && (
+            <Notice
+              text={getRestrictedResourceText({
+                action: 'create',
+                isSingular: false,
+                resourceType: 'Images',
+              })}
+              important
+              variant="error"
+            />
+          )}
           <Paper>
             <Typography mb={1.5} variant="h2">
               Image Details
@@ -185,16 +196,6 @@ export const ImageUpload = () => {
             {form.formState.errors.root?.message && (
               <Notice
                 text={form.formState.errors.root.message}
-                variant="error"
-              />
-            )}
-            {isImageCreateRestricted && (
-              <Notice
-                text={getRestrictedResourceText({
-                  action: 'create',
-                  isSingular: false,
-                  resourceType: 'Images',
-                })}
                 variant="error"
               />
             )}
@@ -251,14 +252,12 @@ export const ImageUpload = () => {
                     isImageCreateRestricted || form.formState.isSubmitting
                   }
                   textFieldProps={{
-                    helperTextPosition: 'top',
                     inputRef: field.ref,
                     onBlur: field.onBlur,
                   }}
                   currentCapability={undefined}
                   disableClearable
                   errorText={fieldState.error?.message}
-                  helperText="For fastest initial upload, select the region that is geographically closest to you. Once uploaded, you will be able to deploy the image to other regions."
                   label="Region"
                   onChange={(e, region) => field.onChange(region.id)}
                   regionFilter="core" // Images service will not be supported for Gecko Beta
@@ -374,6 +373,7 @@ export const ImageUpload = () => {
             <Button
               buttonType="outlined"
               onClick={() => setLinodeCLIModalOpen(true)}
+              disabled={isImageCreateRestricted}
             >
               Upload Using Command Line
             </Button>

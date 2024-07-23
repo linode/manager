@@ -1,74 +1,43 @@
-import { PlacementGroup } from '@linode/api-v4';
-import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
-import { Image } from '@linode/api-v4/lib/images';
-import { Region } from '@linode/api-v4/lib/regions';
+import { signAgreement } from '@linode/api-v4/lib/account';
 import { convertYupToLinodeErrors } from '@linode/api-v4/lib/request';
-import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
 import { vpcsValidateIP } from '@linode/validation';
 import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
-import { Tag } from 'src/components/TagsInput/TagsInput';
-import {
-  WithAccountSettingsProps,
-  withAccountSettings,
-} from 'src/containers/accountSettings.container';
-import {
-  WithEventsPollingActionProps,
-  withEventsPollingActions,
-} from 'src/containers/events.container';
-import {
-  WithFeatureFlagProps,
-  withFeatureFlags,
-} from 'src/containers/flags.container';
-import { WithImagesProps, withImages } from 'src/containers/images.container';
-import {
-  WithProfileProps,
-  withProfile,
-} from 'src/containers/profile.container';
-import { RegionsProps, withRegions } from 'src/containers/regions.container';
-import { WithTypesProps, withTypes } from 'src/containers/types.container';
-import {
-  WithLinodesProps,
-  withLinodes,
-} from 'src/containers/withLinodes.container';
-import {
-  WithMarketplaceAppsProps,
-  withMarketplaceApps,
-} from 'src/containers/withMarketplaceApps';
-import {
-  WithQueryClientProps,
-  withQueryClient,
-} from 'src/containers/withQueryClient.container';
-import withAgreements, {
-  AgreementsProps,
-} from 'src/features/Account/Agreements/withAgreements';
+import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
+import { withAccount } from 'src/containers/account.container';
+import { withAccountSettings } from 'src/containers/accountSettings.container';
+import { withEventsPollingActions } from 'src/containers/events.container';
+import { withFeatureFlags } from 'src/containers/flags.container';
+import { withImages } from 'src/containers/images.container';
+import { withProfile } from 'src/containers/profile.container';
+import { withRegions } from 'src/containers/regions.container';
+import { withTypes } from 'src/containers/types.container';
+import { withLinodes } from 'src/containers/withLinodes.container';
+import { withMarketplaceApps } from 'src/containers/withMarketplaceApps';
+import { withQueryClient } from 'src/containers/withQueryClient.container';
+import withAgreements from 'src/features/Account/Agreements/withAgreements';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import { reportAgreementSigningError } from 'src/queries/account/agreements';
 import { vpcQueries } from 'src/queries/vpcs/vpcs';
-import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
-import { MapState } from 'src/store/types';
 import {
   sendCreateLinodeEvent,
   sendLinodeCreateFlowDocsClickEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { extendType } from 'src/utilities/extendType';
+import { isEURegion } from 'src/utilities/formatRegion';
 import {
   getGDPRDetails,
   getSelectedRegionGroup,
 } from 'src/utilities/formatRegion';
-import { isEURegion } from 'src/utilities/formatRegion';
-import { ExtendedIP } from 'src/utilities/ipUtils';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -76,14 +45,17 @@ import { validatePassword } from 'src/utilities/validatePassword';
 
 import { deriveDefaultLabel } from './deriveDefaultLabel';
 import LinodeCreate from './LinodeCreate';
-import {
+
+import type {
   HandleSubmit,
   Info,
   LinodeCreateType,
   LinodeCreateValidation,
   TypeInfo,
 } from './types';
-
+import type { PlacementGroup } from '@linode/api-v4';
+import type { Agreements } from '@linode/api-v4/lib/account';
+import type { Image } from '@linode/api-v4/lib/images';
 import type {
   CreateLinodeRequest,
   Interface,
@@ -91,10 +63,27 @@ import type {
   LinodeTypeClass,
   PriceObject,
 } from '@linode/api-v4/lib/linodes';
-import {
-  withAccount,
-  WithAccountProps,
-} from 'src/containers/account.container';
+import type { Region } from '@linode/api-v4/lib/regions';
+import type { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { RouteComponentProps } from 'react-router-dom';
+import type { Tag } from 'src/components/TagsInput/TagsInput';
+import type { WithAccountProps } from 'src/containers/account.container';
+import type { WithAccountSettingsProps } from 'src/containers/accountSettings.container';
+import type { WithEventsPollingActionProps } from 'src/containers/events.container';
+import type { WithFeatureFlagProps } from 'src/containers/flags.container';
+import type { WithImagesProps } from 'src/containers/images.container';
+import type { WithProfileProps } from 'src/containers/profile.container';
+import type { RegionsProps } from 'src/containers/regions.container';
+import type { WithTypesProps } from 'src/containers/types.container';
+import type { WithLinodesProps } from 'src/containers/withLinodes.container';
+import type { WithMarketplaceAppsProps } from 'src/containers/withMarketplaceApps';
+import type { WithQueryClientProps } from 'src/containers/withQueryClient.container';
+import type { AgreementsProps } from 'src/features/Account/Agreements/withAgreements';
+import type { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
+import type { MapState } from 'src/store/types';
+import type { ExtendedType } from 'src/utilities/extendType';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -216,140 +205,6 @@ const isNonDefaultImageType = (prevType: string, type: string) => {
 };
 
 class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
-  componentDidMount() {
-    // Allowed apps include the base set of original apps + anything LD tells us to show
-    if (nonImageCreateTypes.includes(this.props.createType)) {
-      // If we're navigating directly to e.g. the clone page, don't select an image by default
-      this.setState({ selectedImageID: undefined });
-    }
-  }
-
-  componentDidUpdate(prevProps: CombinedProps) {
-    /**
-     * When switching to a creation flow where
-     * having a pre-selected image is problematic,
-     * deselect it.
-     */
-    if (isNonDefaultImageType(prevProps.createType, this.props.createType)) {
-      this.setState({ selectedImageID: undefined });
-    }
-
-    // Update search params for Linode Clone
-    if (prevProps.location.search !== this.props.history.location.search) {
-      const { showGDPRCheckbox } = getGDPRDetails({
-        agreements: this.props.agreements?.data,
-        profile: this.props.profile.data,
-        regions: this.props.regionsData,
-        selectedRegionId: this.params.regionID,
-      });
-
-      this.params = getQueryParamsFromQueryString(
-        this.props.location.search
-      ) as Record<string, string>;
-
-      this.setState({
-        showGDPRCheckbox,
-      });
-    }
-  }
-
-  render() {
-    const {
-      grants,
-      profile,
-      regionsData,
-      typesData,
-      ...restOfProps
-    } = this.props;
-    const { udfs: selectedUDFs, ...restOfState } = this.state;
-
-    const extendedTypeData = typesData?.map(extendType);
-
-    const userCannotCreateLinode =
-      Boolean(profile.data?.restricted) && !grants.data?.global.add_linodes;
-
-    return (
-      <React.Fragment>
-        <DocumentTitleSegment segment="Create a Linode" />
-        <ProductInformationBanner bannerLocation="LinodeCreate" />
-        <Grid className="m0" container spacing={0}>
-          <LandingHeader
-            onDocsClick={() => {
-              sendLinodeCreateFlowDocsClickEvent('Getting Started');
-              sendLinodeCreateFormStepEvent({
-                action: 'click',
-                category: 'link',
-                createType:
-                  (this.params.type as LinodeCreateType) ?? 'Distributions',
-                label: 'Getting Started',
-                version: 'v1',
-              });
-            }}
-            docsLabel="Getting Started"
-            docsLink="https://www.linode.com/docs/guides/platform/get-started/"
-            title="Create"
-          />
-          <LinodeCreate
-            accountBackupsEnabled={
-              this.props.accountSettings.data?.backups_enabled ?? false
-            }
-            toggleAutoassignIPv4WithinVPCEnabled={
-              this.toggleAutoassignIPv4WithinVPCEnabled
-            }
-            autoassignIPv4WithinVPC={this.state.autoassignIPv4WithinVPCEnabled}
-            checkValidation={this.checkValidation}
-            diskEncryptionEnabled={this.state.diskEncryptionEnabled ?? false}
-            firewallId={this.state.selectedfirewallId}
-            handleAgreementChange={this.handleAgreementChange}
-            handleFirewallChange={this.handleFirewallChange}
-            handleIPv4RangesForVPC={this.handleVPCIPv4RangesChange}
-            handlePlacementGroupChange={this.setPlacementGroupSelection}
-            handleSelectUDFs={this.setUDFs}
-            handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
-            handleSubmitForm={this.submitForm}
-            handleSubnetChange={this.handleSubnetChange}
-            handleVLANChange={this.handleVLANChange}
-            handleVPCIPv4Change={this.handleVPCIPv4Change}
-            imageDisplayInfo={this.getImageInfo()}
-            ipamAddress={this.state.vlanIPAMAddress}
-            label={this.generateLabel()}
-            placementGroupSelection={this.state.placementGroupSelection}
-            regionDisplayInfo={this.getRegionInfo()}
-            regionsData={regionsData}
-            resetCreationState={this.clearCreationState}
-            selectedRegionID={this.state.selectedRegionID}
-            selectedUDFs={selectedUDFs}
-            selectedVPCId={this.state.selectedVPCId}
-            setAuthorizedUsers={this.setAuthorizedUsers}
-            setBackupID={this.setBackupID}
-            setSelectedVPC={this.handleVPCChange}
-            toggleAssignPublicIPv4Address={this.toggleAssignPublicIPv4Address}
-            toggleBackupsEnabled={this.toggleBackupsEnabled}
-            toggleDiskEncryptionEnabled={this.toggleDiskEncryptionEnabled}
-            togglePrivateIPEnabled={this.togglePrivateIPEnabled}
-            typeDisplayInfo={this.getTypeInfo()}
-            typesData={extendedTypeData}
-            updateDiskSize={this.setDiskSize}
-            updateImageID={this.setImageID}
-            updateLabel={this.updateCustomLabel}
-            updateLinodeID={this.setLinodeID}
-            updatePassword={this.setPassword}
-            updateRegionID={this.setRegionID}
-            updateStackScript={this.setStackScript}
-            updateTags={this.setTags}
-            updateTypeID={this.setTypeID}
-            updateUserData={this.setUserData}
-            userCannotCreateLinode={userCannotCreateLinode}
-            vlanLabel={this.state.attachedVLANLabel}
-            vpcIPv4AddressOfLinode={this.state.vpcIPv4AddressOfLinode}
-            {...restOfProps}
-            {...restOfState}
-          />
-        </Grid>
-      </React.Fragment>
-    );
-  }
-
   checkValidation: LinodeCreateValidation = (payload) => {
     try {
       CreateLinodeSchema.validateSync(payload, { abortEarly: false });
@@ -476,10 +331,20 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const selectedRegion = this.props.regionsData.find(
       (region) => region.id === selectedRegionID
     );
+    const isGeckoGAEnabled =
+      this.props.flags.gecko2?.enabled &&
+      this.props.flags.gecko2?.ga &&
+      this.props.regionsData.some((region) =>
+        region.capabilities.includes('Distributed Plans')
+      );
 
     return (
       selectedRegion && {
-        title: selectedRegion.label,
+        title: isGeckoGAEnabled
+          ? getNewRegionLabel({
+              region: selectedRegion,
+            })
+          : selectedRegion.label,
       }
     );
   };
@@ -705,7 +570,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     selectedBackupID: isNaN(+this.params.backupID)
       ? undefined
       : +this.params.backupID,
-    selectedImageID: this.params.imageID ?? DEFAULT_IMAGE,
+    selectedImageID:
+      this.params.imageID ?? this.params.type !== 'Images'
+        ? DEFAULT_IMAGE
+        : undefined,
     // @todo: Abstract and test. UPDATE 5/21/20: lol what does this mean. UPDATE 3/16/23 lol what
     selectedLinodeID: isNaN(+this.params.linodeID)
       ? undefined
@@ -767,7 +635,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             {
               field: 'placement_group',
               reason: `${this.state.placementGroupSelection?.label} (${
-                this.state.placementGroupSelection?.affinity_type ===
+                this.state.placementGroupSelection?.placement_group_type ===
                 'affinity:local'
                   ? 'Affinity'
                   : 'Anti-affinity'
@@ -956,6 +824,139 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   updateCustomLabel = (customLabel: string) => {
     this.setState({ customLabel });
   };
+
+  componentDidMount() {
+    // Allowed apps include the base set of original apps + anything LD tells us to show
+    if (nonImageCreateTypes.includes(this.props.createType)) {
+      // If we're navigating directly to e.g. the clone page, don't select an image by default
+      this.setState({ selectedImageID: undefined });
+    }
+  }
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    /**
+     * When switching to a creation flow where
+     * having a pre-selected image is problematic,
+     * deselect it.
+     */
+    if (isNonDefaultImageType(prevProps.createType, this.props.createType)) {
+      this.setState({ selectedImageID: undefined });
+    }
+
+    // Update search params for Linode Clone
+    if (prevProps.location.search !== this.props.history.location.search) {
+      const { showGDPRCheckbox } = getGDPRDetails({
+        agreements: this.props.agreements?.data,
+        profile: this.props.profile.data,
+        regions: this.props.regionsData,
+        selectedRegionId: this.params.regionID,
+      });
+
+      this.params = getQueryParamsFromQueryString(
+        this.props.location.search
+      ) as Record<string, string>;
+
+      this.setState({
+        showGDPRCheckbox,
+      });
+    }
+  }
+
+  render() {
+    const {
+      grants,
+      profile,
+      regionsData,
+      typesData,
+      ...restOfProps
+    } = this.props;
+    const { udfs: selectedUDFs, ...restOfState } = this.state;
+
+    const extendedTypeData = typesData?.map(extendType);
+
+    const userCannotCreateLinode =
+      Boolean(profile.data?.restricted) && !grants.data?.global.add_linodes;
+
+    return (
+      <React.Fragment>
+        <DocumentTitleSegment segment="Create a Linode" />
+        <ProductInformationBanner bannerLocation="LinodeCreate" />
+        <Grid className="m0" container spacing={0}>
+          <LandingHeader
+            onDocsClick={() => {
+              sendLinodeCreateFlowDocsClickEvent('Getting Started');
+              sendLinodeCreateFormStepEvent({
+                action: 'click',
+                category: 'link',
+                createType: (this.params.type as LinodeCreateType) ?? 'OS',
+                label: 'Getting Started',
+                version: 'v1',
+              });
+            }}
+            docsLabel="Getting Started"
+            docsLink="https://www.linode.com/docs/guides/platform/get-started/"
+            title="Create"
+          />
+          <LinodeCreate
+            accountBackupsEnabled={
+              this.props.accountSettings.data?.backups_enabled ?? false
+            }
+            toggleAutoassignIPv4WithinVPCEnabled={
+              this.toggleAutoassignIPv4WithinVPCEnabled
+            }
+            autoassignIPv4WithinVPC={this.state.autoassignIPv4WithinVPCEnabled}
+            checkValidation={this.checkValidation}
+            diskEncryptionEnabled={this.state.diskEncryptionEnabled ?? false}
+            firewallId={this.state.selectedfirewallId}
+            handleAgreementChange={this.handleAgreementChange}
+            handleFirewallChange={this.handleFirewallChange}
+            handleIPv4RangesForVPC={this.handleVPCIPv4RangesChange}
+            handlePlacementGroupChange={this.setPlacementGroupSelection}
+            handleSelectUDFs={this.setUDFs}
+            handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
+            handleSubmitForm={this.submitForm}
+            handleSubnetChange={this.handleSubnetChange}
+            handleVLANChange={this.handleVLANChange}
+            handleVPCIPv4Change={this.handleVPCIPv4Change}
+            imageDisplayInfo={this.getImageInfo()}
+            ipamAddress={this.state.vlanIPAMAddress}
+            label={this.generateLabel()}
+            placementGroupSelection={this.state.placementGroupSelection}
+            regionDisplayInfo={this.getRegionInfo()}
+            regionsData={regionsData}
+            resetCreationState={this.clearCreationState}
+            selectedRegionID={this.state.selectedRegionID}
+            selectedUDFs={selectedUDFs}
+            selectedVPCId={this.state.selectedVPCId}
+            setAuthorizedUsers={this.setAuthorizedUsers}
+            setBackupID={this.setBackupID}
+            setSelectedVPC={this.handleVPCChange}
+            toggleAssignPublicIPv4Address={this.toggleAssignPublicIPv4Address}
+            toggleBackupsEnabled={this.toggleBackupsEnabled}
+            toggleDiskEncryptionEnabled={this.toggleDiskEncryptionEnabled}
+            togglePrivateIPEnabled={this.togglePrivateIPEnabled}
+            typeDisplayInfo={this.getTypeInfo()}
+            typesData={extendedTypeData}
+            updateDiskSize={this.setDiskSize}
+            updateImageID={this.setImageID}
+            updateLabel={this.updateCustomLabel}
+            updateLinodeID={this.setLinodeID}
+            updatePassword={this.setPassword}
+            updateRegionID={this.setRegionID}
+            updateStackScript={this.setStackScript}
+            updateTags={this.setTags}
+            updateTypeID={this.setTypeID}
+            updateUserData={this.setUserData}
+            userCannotCreateLinode={userCannotCreateLinode}
+            vlanLabel={this.state.attachedVLANLabel}
+            vpcIPv4AddressOfLinode={this.state.vpcIPv4AddressOfLinode}
+            {...restOfProps}
+            {...restOfState}
+          />
+        </Grid>
+      </React.Fragment>
+    );
+  }
 }
 
 interface CreateType {
