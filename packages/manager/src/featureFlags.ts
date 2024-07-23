@@ -75,8 +75,6 @@ interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
 }
 
 export interface Flags {
-  aclb: boolean;
-  aclbFullCreateFlow: boolean;
   aclp: AclpFlag;
   apiMaintenance: APIMaintenance;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
