@@ -206,6 +206,10 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     }
   }, [open]);
 
+  /**
+   * Store 'general' support ticket data in local storage if it exists.
+   * Specific fields from other ticket types (e.g. smtp) will not be saved since the general form will render via 'Open New Ticket'.
+   */
   const saveFormData = (values: SupportTicketFormFields) => {
     storage.supportTicket.set(values);
   };
