@@ -1,10 +1,3 @@
-import {
-  ObjectStorageKeyRequest,
-  SecurityQuestionsPayload,
-  TokenRequest,
-  UpdateImageRegionsPayload,
-  User,
-} from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { HttpResponse, http } from 'msw';
 
@@ -110,8 +103,8 @@ import { pickRandom } from 'src/utilities/random';
 import { getStorage } from 'src/utilities/storage';
 
 import type {
-  NotificationType,
   CreateObjectStorageKeyPayload,
+  NotificationType,
   SecurityQuestionsPayload,
   TokenRequest,
   UpdateImageRegionsPayload,
