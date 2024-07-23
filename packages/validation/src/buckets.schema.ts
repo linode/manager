@@ -17,14 +17,15 @@ export const CreateBucketSchema = object()
             const { cluster, region } = context.parent;
             const buckets = context.options.context?.buckets;
 
-            if (!buckets || !Array.isArray(buckets)) {
-              return true; // If buckets is not available, assume the label is unique
+            if (!Array.isArray(buckets)) {
+              // If buckets is not an array, assume the label is unique
+              return true;
             }
 
             return !buckets.some(
-              (b) =>
-                b.label === value &&
-                (b.cluster === cluster || b.region === region)
+              (bucket) =>
+                bucket.label === value &&
+                (bucket.cluster === cluster || bucket.region === region)
             );
           }
         ),

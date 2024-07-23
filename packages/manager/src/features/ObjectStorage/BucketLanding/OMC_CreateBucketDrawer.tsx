@@ -59,7 +59,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     region.capabilities.includes('Object Storage')
   );
 
-  const { data: buckets } = useObjectStorageBuckets({
+  const { data: bucketsData } = useObjectStorageBuckets({
     isObjMultiClusterEnabled,
     regions: regionsSupportingObjectStorage,
   });
@@ -96,9 +96,10 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     formState: { errors },
     handleSubmit,
     reset,
+    setError,
     watch,
   } = useForm<CreateObjectStorageBucketPayload>({
-    context: { buckets },
+    context: { buckets: bucketsData?.buckets ?? [] },
     defaultValues: {
       cors_enabled: true,
       label: '',
@@ -109,20 +110,38 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   });
 
   const watchRegion = watch('region');
+  const watchLabel = watch('label');
 
-  const onSubmit = async (e: any, values: any) => {
-    e.preventDefault();
-    if (accountSettings?.object_storage === 'active') {
-      await createBucket(values);
-      sendCreateBucketEvent(values.region);
-      if (hasSignedAgreement) {
-        updateAccountAgreements({
-          eu_model: true,
-        }).catch(reportAgreementSigningError);
+  const onSubmit = async (data: CreateObjectStorageBucketPayload) => {
+    try {
+      if (accountSettings?.object_storage !== 'active') {
+        setIsEnableObjDialogOpen(true);
+        return;
       }
+
+      await createBucket(data);
+
+      if (data.region) {
+        sendCreateBucketEvent(data.region);
+      }
+
+      if (hasSignedAgreement) {
+        try {
+          await updateAccountAgreements({ eu_model: true });
+        } catch (error) {
+          reportAgreementSigningError(error);
+        }
+      }
+
       onClose();
-    } else {
-      setIsEnableObjDialogOpen(true);
+    } catch (errors) {
+      for (const error of errors) {
+        if (error.field) {
+          setError(error.field, { message: error.reason });
+        } else {
+          setError('root', { message: error.reason });
+        }
+      }
     }
   };
 
@@ -197,6 +216,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
           primaryButtonProps={{
             'data-testid': 'create-bucket-button',
             disabled:
+              !watchLabel ||
               !watchRegion ||
               (showGDPRCheckbox && !hasSignedAgreement) ||
               isErrorTypes,

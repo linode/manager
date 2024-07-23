@@ -73,7 +73,7 @@ export const CreateBucketDrawer = (props: Props) => {
    remove 'cluster' and retain 'regions'.
   */
 
-  const { data: buckets } = useObjectStorageBuckets({
+  const { data: bucketsData } = useObjectStorageBuckets({
     clusters: isObjMultiClusterEnabled ? undefined : clusters,
     isObjMultiClusterEnabled,
     regions: isObjMultiClusterEnabled
@@ -113,9 +113,10 @@ export const CreateBucketDrawer = (props: Props) => {
     formState: { errors },
     handleSubmit,
     reset,
+    setError,
     watch,
   } = useForm<CreateObjectStorageBucketPayload>({
-    context: { buckets },
+    context: { buckets: bucketsData?.buckets ?? [] },
     defaultValues: {
       cluster: '',
       cors_enabled: true,
@@ -126,20 +127,38 @@ export const CreateBucketDrawer = (props: Props) => {
   });
 
   const watchCluster = watch('cluster');
+  const watchLabel = watch('label');
 
-  const onSubmit = async (e: any, values: any) => {
-    e.preventDefault();
-    if (accountSettings?.object_storage === 'active') {
-      await createBucket(values);
-      sendCreateBucketEvent(values.cluster);
-      if (hasSignedAgreement) {
-        updateAccountAgreements({ eu_model: true }).catch(
-          reportAgreementSigningError
-        );
+  const onSubmit = async (data: CreateObjectStorageBucketPayload) => {
+    try {
+      if (accountSettings?.object_storage !== 'active') {
+        setIsEnableObjDialogOpen(true);
+        return;
       }
+
+      await createBucket(data);
+
+      if (data.cluster) {
+        sendCreateBucketEvent(data.cluster);
+      }
+
+      if (hasSignedAgreement) {
+        try {
+          await updateAccountAgreements({ eu_model: true });
+        } catch (error) {
+          reportAgreementSigningError(error);
+        }
+      }
+
       onClose();
-    } else {
-      setIsEnableObjDialogOpen(true);
+    } catch (errors) {
+      for (const error of errors) {
+        if (error.field) {
+          setError(error.field, { message: error.reason });
+        } else {
+          setError('root', { message: error.reason });
+        }
+      }
     }
   };
 
@@ -215,6 +234,7 @@ export const CreateBucketDrawer = (props: Props) => {
           primaryButtonProps={{
             'data-testid': 'create-bucket-button',
             disabled:
+              !watchLabel ||
               !watchCluster ||
               (showGDPRCheckbox && !hasSignedAgreement) ||
               isErrorTypes,
