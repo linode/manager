@@ -120,7 +120,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   const {
     data: dashboard,
     isLoading: isDashboardLoading,
-  } = useCloudPulseDashboardByIdQuery(dashboardId, savePref);
+  } = useCloudPulseDashboardByIdQuery(dashboardId);
 
   const {
     data: resourceList,

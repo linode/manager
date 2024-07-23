@@ -28,20 +28,6 @@ describe('Cloud Pulse Aggregate Function', () => {
     expect(dropdown).toHaveAttribute('value', defaultAggregateFunction);
   });
 
-  // it('should show a warning if default agg function not present in available agg function', () => {
-  //   const availableAggFunctions = ['max', 'min'];
-
-  //   const { getByText } = renderWithTheme(
-  //     <CloudPulseAggregateFunction
-  //       {...{ ...props, availableAggregateFunctions: availableAggFunctions }}
-  //     />
-  //   );
-
-  //   expect(
-  //     getByText(`Invalid agg function '${defaultAggregateFunction}'`)
-  //   ).toBeInTheDocument();
-  // });
-
   it('should select the aggregate function on click', () => {
     renderWithTheme(<CloudPulseAggregateFunction {...props} />);
 

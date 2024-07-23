@@ -1,14 +1,13 @@
-import {
-  APIError,
-  JWEToken,
-  MetricDefinitions,
-  getJWEToken,
-  getMetricDefinitionsByServiceType,
-} from '@linode/api-v4';
+import { getJWEToken, getMetricDefinitionsByServiceType } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQuery } from '@tanstack/react-query';
 
-import type { JWETokenPayLoad } from '@linode/api-v4';
+import type {
+  APIError,
+  JWEToken,
+  JWETokenPayLoad,
+  MetricDefinitions,
+} from '@linode/api-v4';
 
 export const queryKey = 'cloudpulse-services';
 export const serviceTypeKey = 'service-types';
@@ -18,14 +17,9 @@ const serviceQueries = createQueryKeys(queryKey, {
     queryFn: () => getMetricDefinitionsByServiceType(serviceType!),
     queryKey: [serviceType],
   }),
-  token: (key: string, serviceType: string | undefined) => ({
-    contextQueries: {
-      jweToken: (request: JWETokenPayLoad) => ({
-        queryFn: () => getJWEToken(request, serviceType!),
-        queryKey: [key, serviceType],
-      }),
-    },
-    queryKey: [key, serviceType],
+  token: (serviceType: string | undefined, request: JWETokenPayLoad) => ({
+    queryFn: () => getJWEToken(request, serviceType!),
+    queryKey: [serviceType],
   }),
 });
 
@@ -45,7 +39,7 @@ export const useCloudPulseJWEtokenQuery = (
   runQuery: boolean
 ) => {
   return useQuery<JWEToken, APIError[]>({
-    ...serviceQueries.token('jwe-token', serviceType)._ctx.jweToken(request),
+    ...serviceQueries.token(serviceType, request),
     enabled: runQuery,
     keepPreviousData: true,
     refetchOnWindowFocus: false,
