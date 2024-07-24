@@ -2503,4 +2503,89 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'Open source data streaming.',
     website: 'https://kafka.apache.org/',
   },
+  1350845: {
+    alt_description:
+      'Linearly scalable, fault tolerant, open source NoSQL distributed database.',
+    alt_name: 'NoSQL database cluster',
+    categories: ['Databases'],
+    colors: {
+      end: '1486B1',
+      start: '85A355',
+    },
+    description: `Distributed, masterless, replicating NoSQL database cluster.`,
+    logo_url: 'apachecassandra.svg',
+    name: 'Apache Cassandra Cluster',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/apache-cassandra-cluster/',
+        title: 'Deploy Apache Cassandra Cluster through the Linode Marketplace',
+      },
+    ],
+    summary: 'Open source NoSQL database cluster.',
+    website: 'https://cassandra.apache.org/doc/latest/',
+  },
+  1403815: {
+    alt_description: 'Open Source key/value datastore.',
+    alt_name: 'Caching and message queue database',
+    categories: ['Databases'],
+    colors: {
+      end: '1486B1',
+      start: 'AAAAAA',
+    },
+    description: `High performance, BSD license key/value database.`,
+    logo_url: 'valkey.svg',
+    name: 'Valkey',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/valkey/',
+        title: 'Deploy Valkey through the Linode Marketplace',
+      },
+    ],
+    summary: 'Open Source key/value database',
+    website: 'https://valkey.io/',
+  },
+  1403816: {
+    alt_description: 'Open Source secrets management platform.',
+    alt_name: 'Linux Foundation supported password mangement.',
+    categories: ['Security'],
+    colors: {
+      end: '336D5C',
+      start: 'FFBA01',
+    },
+    description: `OSI approved open source secrets platform.`,
+    logo_url: 'openbao.svg',
+    name: 'OpenBao',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/openbao/',
+        title: 'Deploy OpenBao through the Linode Marketplace',
+      },
+    ],
+    summary: 'Open source password and credentials security.',
+    website: 'https://openbao.org/',
+  },
+  1403817: {
+    alt_description: 'High-performance time series database.',
+    alt_name: 'Monitoring and analytics datastore.',
+    categories: ['Databases'],
+    colors: {
+      end: 'CD0C81',
+      start: '9D29FB',
+    },
+    description: `Time series database supporting native query and visualization.`,
+    logo_url: 'influxdb.svg',
+    name: 'InfluxDB',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/influxdb/',
+        title: 'Deploy InfluxDB through the Linode Marketplace',
+      },
+    ],
+    summary: 'High-performance database for analytics, monitoring and IoT.',
+    website: 'https://influxdata.com/',
+  },
 };
