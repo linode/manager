@@ -1,15 +1,10 @@
-import { Region } from '@linode/api-v4';
-import {
-  Database,
-  DatabaseInstance,
-  DatabaseType,
-} from '@linode/api-v4/lib/databases/types';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useInProgressEvents } from 'src/queries/events/events';
@@ -27,6 +22,13 @@ import {
   StyledTitleTypography,
 } from './DatabaseResizeCurrentConfiguration.style';
 
+import type { Region } from '@linode/api-v4';
+import type {
+  Database,
+  DatabaseInstance,
+  DatabaseType,
+} from '@linode/api-v4/lib/databases/types';
+
 interface Props {
   database: Database;
 }
@@ -42,7 +44,10 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
     isLoading: typesLoading,
   } = useDatabaseTypesQuery();
   const theme = useTheme();
-  const { data: regions } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
 
   const region = regions?.find((r: Region) => r.id === database.region);
 
