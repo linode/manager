@@ -49,9 +49,9 @@ describe('TagsInput', () => {
 
     await waitFor(() => expect(input).toHaveValue('new-tag'));
 
-    const createOption = screen.getByText(/Create "/i);
+    const createOption = screen.getByText('Create "new-tag"');
 
-    // Click 'Create "[tag-name]"' option to create a new-tag
+    // Click 'Create "new-tag"' option to create a new-tag
     userEvent.click(createOption);
 
     // Wait for the onChange to be called with the updated value
