@@ -109,12 +109,14 @@ export const TagsInput = (props: TagsInputProps) => {
     const isExistingTag = options.some(
       (o) => o.label.toLowerCase() === inputValue.toLowerCase()
     );
+
     if (inputValue !== '' && !isExistingTag) {
       filtered.push({
         label: `Create "${inputValue}"`,
         value: inputValue,
       });
     }
+
     return filtered;
   };
 
@@ -131,7 +133,6 @@ export const TagsInput = (props: TagsInputProps) => {
         ? 'There was an error retrieving your tags.'
         : undefined);
 
-  // console.log(accountTagItems, value);
   return (
     <Autocomplete
       onChange={(_, newValue, reason, details) => {
