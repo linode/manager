@@ -207,6 +207,11 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
       )}
       <Autocomplete
         autoHighlight
+        textFieldProps={{
+          dataAttrs: {
+            'data-qa-rule-select': true,
+          },
+        }}
         aria-label="Preset for firewall rule"
         disableClearable
         label="Preset"
@@ -241,6 +246,9 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
           InputProps: {
             required: true,
           },
+          dataAttrs: {
+            'data-qa-protocol-select': true,
+          },
         }}
         autoHighlight
         aria-label="Select rule protocol."
@@ -261,12 +269,16 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
           InputProps: {
             required: true,
           },
+          dataAttrs: {
+            'data-qa-port-select': true,
+          },
         }}
+        autoHighlight
         disabled={['ICMP', 'IPENCAP'].includes(values.protocol)}
         errorText={generalPortError}
         multiple
         label="Ports"
-        placeholder="Select a protocol..."
+        placeholder="Select a port..."
         onChange={(_, selected) => handlePortPresetChange(selected)}
         options={portOptions}
         value={presetPorts}
@@ -288,7 +300,11 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
           InputProps: {
             required: true,
           },
+          dataAttrs: {
+            'data-qa-address-source-select': true,
+          },
         }}
+        autoHighlight
         aria-label={`Select rule ${addressesLabel}s.`}
         errorText={errors.addresses}
         disableClearable
