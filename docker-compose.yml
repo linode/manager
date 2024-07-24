@@ -105,8 +105,19 @@ services:
       timeout: 10s
       retries: 10
 
+  # Generic end-to-end test runner for Cloud's primary testing pipeline.
+  # Configured to run against a local Cloud instance.
   e2e:
     <<: *default-runner
+    environment:
+      <<: *default-env
+      MANAGER_OAUTH: ${MANAGER_OAUTH}
+
+  # End-to-end test runner for Cloud's synthetic monitoring tests.
+  # Configured to run against a remote Cloud instance hosted at some URL.
+  e2e_heimdall:
+    <<: *default-runner
+    depends_on: ~
     environment:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH}
