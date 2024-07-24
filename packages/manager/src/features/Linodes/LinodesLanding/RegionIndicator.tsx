@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
 interface Props {
@@ -8,7 +9,10 @@ interface Props {
 
 export const RegionIndicator = (props: Props) => {
   const { region } = props;
-  const { data: regions } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
 
   const actualRegion = regions?.find((r) => r.id === region);
 

@@ -1,14 +1,9 @@
-import { Event } from '@linode/api-v4';
-import {
-  Database,
-  DatabaseInstance,
-  Engine,
-} from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Chip } from 'src/components/Chip';
 import { Hidden } from 'src/components/Hidden';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useProfile } from 'src/queries/profile/profile';
@@ -17,6 +12,13 @@ import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { DatabaseStatusDisplay } from '../DatabaseDetail/DatabaseStatusDisplay';
+
+import type { Event } from '@linode/api-v4';
+import type {
+  Database,
+  DatabaseInstance,
+  Engine,
+} from '@linode/api-v4/lib/databases/types';
 
 export const databaseEngineMap: Record<Engine, string> = {
   mongodb: 'MongoDB',
@@ -41,7 +43,10 @@ export const DatabaseRow = ({ database, events }: Props) => {
     version,
   } = database;
 
-  const { data: regions } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
   const { data: profile } = useProfile();
 
   const actualRegion = regions?.find((r) => r.id === region);

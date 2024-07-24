@@ -61,7 +61,10 @@ export const ConfigureForm = React.memo((props: Props) => {
 
   const flags = useFlags();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
-  const { data: regions } = useRegionsQuery();
+  const { isGeckoBetaEnabled, isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
 
   const { data: currentLinodeType } = useTypeQuery(
     linodeType || '',
@@ -148,8 +151,6 @@ export const ConfigureForm = React.memo((props: Props) => {
   const linodeIsInDistributedRegion =
     currentActualRegion?.site_type === 'distributed' ||
     currentActualRegion?.site_type === 'edge';
-
-  const { isGeckoBetaEnabled } = useIsGeckoEnabled();
 
   return (
     <StyledPaper>

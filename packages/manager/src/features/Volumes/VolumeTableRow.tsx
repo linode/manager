@@ -5,6 +5,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { Hidden } from 'src/components/Hidden';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -18,8 +19,9 @@ import {
   getEventProgress,
   volumeStatusIconMap,
 } from './utils';
-import { ActionHandlers, VolumesActionMenu } from './VolumesActionMenu';
+import { VolumesActionMenu } from './VolumesActionMenu';
 
+import type { ActionHandlers } from './VolumesActionMenu';
 import type { Volume } from '@linode/api-v4';
 
 export const useStyles = makeStyles()({
@@ -41,7 +43,10 @@ export const VolumeTableRow = React.memo((props: Props) => {
 
   const history = useHistory();
 
-  const { data: regions } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
   const { data: notifications } = useNotificationsQuery();
   const { data: inProgressEvents } = useInProgressEvents();
 

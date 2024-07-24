@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
@@ -53,7 +54,10 @@ const renderBanner = (statusWarnings: string[]): JSX.Element => {
 };
 
 export const RegionStatusBanner = React.memo(() => {
-  const { data: regions } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
 
   const labelsOfRegionsWithOutages = regions
     ?.filter((region) => region.status === 'outage')

@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { REGION, RESOURCES } from '../Utils/constants';
@@ -18,7 +19,10 @@ export interface CloudPulseRegionSelectProps {
 
 export const CloudPulseRegionSelect = React.memo(
   (props: CloudPulseRegionSelectProps) => {
-    const { data: regions } = useRegionsQuery();
+    const { isGeckoGAEnabled } = useIsGeckoEnabled();
+    const { data: regions } = useRegionsQuery({
+      transformRegionLabel: isGeckoGAEnabled,
+    });
 
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
 

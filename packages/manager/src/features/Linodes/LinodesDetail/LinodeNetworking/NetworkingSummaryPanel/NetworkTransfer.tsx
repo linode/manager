@@ -1,6 +1,7 @@
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Typography } from 'src/components/Typography';
 import { useAccountNetworkTransfer } from 'src/queries/account/transfer';
 import { useLinodeTransfer } from 'src/queries/linodes/stats';
@@ -28,7 +29,10 @@ export const NetworkTransfer = React.memo((props: Props) => {
   const theme = useTheme();
 
   const linodeTransfer = useLinodeTransfer(linodeId);
-  const regions = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
   const { data: type } = useTypeQuery(linodeType || '', Boolean(linodeType));
   const {
     data: accountTransfer,
@@ -36,9 +40,7 @@ export const NetworkTransfer = React.memo((props: Props) => {
     isLoading: accountTransferLoading,
   } = useAccountNetworkTransfer();
 
-  const currentRegion = regions.data?.find(
-    (region) => region.id === linodeRegionId
-  );
+  const currentRegion = regions?.find((region) => region.id === linodeRegionId);
   const dynamicDClinodeTransferData = getDynamicDCNetworkTransferData({
     networkTransferData: linodeTransfer.data,
     regionId: linodeRegionId,

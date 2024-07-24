@@ -3,6 +3,7 @@ import React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
 import { Box } from 'src/components/Box';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Stack } from 'src/components/Stack';
 import { linodeFactory } from 'src/factories';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
@@ -53,7 +54,10 @@ export const LinodeOrIPSelect = (props: Props) => {
     isLoading,
   } = useInfiniteLinodesQuery(filter);
 
-  const { data: regions } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
 
   const linodes = data?.pages.flatMap((page) => page.data) ?? [];
 

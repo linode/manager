@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { Paper } from 'src/components/Paper';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography } from 'src/components/Typography';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
@@ -21,7 +22,10 @@ export const SummaryPanel = () => {
   const id = Number(nodeBalancerId);
   const { data: nodebalancer } = useNodeBalancerQuery(id);
   const { data: configs } = useAllNodeBalancerConfigsQuery(id);
-  const { data: regions } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
   const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
   const linkText = attachedFirewallData?.data[0]?.label;
   const linkID = attachedFirewallData?.data[0]?.id;

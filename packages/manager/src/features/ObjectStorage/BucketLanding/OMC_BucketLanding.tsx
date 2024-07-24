@@ -1,7 +1,3 @@
-import { Region } from '@linode/api-v4';
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -12,6 +8,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import OrderBy from 'src/components/OrderBy';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
@@ -19,7 +16,6 @@ import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
-  BucketError,
   useDeleteBucketWithRegionMutation,
   useObjectStorageBuckets,
 } from 'src/queries/objectStorage';
@@ -37,6 +33,12 @@ import { CancelNotice } from '../CancelNotice';
 import { BucketDetailsDrawer } from './BucketDetailsDrawer';
 import { BucketLandingEmptyState } from './BucketLandingEmptyState';
 import { BucketTable } from './BucketTable';
+
+import type { Region } from '@linode/api-v4';
+import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Theme } from '@mui/material/styles';
+import type { BucketError } from 'src/queries/objectStorage';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
@@ -57,12 +59,14 @@ export const OMC_BucketLanding = () => {
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
   );
-
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
   const {
     data: regions,
     error: regionErrors,
     isLoading: areRegionsLoading,
-  } = useRegionsQuery();
+  } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
 
   const regionsLookup = regions && getRegionsByRegionId(regions);
 

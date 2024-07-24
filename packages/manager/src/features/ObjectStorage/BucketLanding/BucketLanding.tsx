@@ -1,9 +1,3 @@
-import {
-  ObjectStorageBucket,
-  ObjectStorageCluster,
-} from '@linode/api-v4/lib/object-storage';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -14,6 +8,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import OrderBy from 'src/components/OrderBy';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
@@ -21,7 +16,6 @@ import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
-  BucketError,
   useDeleteBucketMutation,
   useObjectStorageBuckets,
   useObjectStorageClusters,
@@ -39,6 +33,14 @@ import { CancelNotice } from '../CancelNotice';
 import { BucketDetailsDrawer } from './BucketDetailsDrawer';
 import { BucketLandingEmptyState } from './BucketLandingEmptyState';
 import { BucketTable } from './BucketTable';
+
+import type {
+  ObjectStorageBucket,
+  ObjectStorageCluster,
+} from '@linode/api-v4/lib/object-storage';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Theme } from '@mui/material/styles';
+import type { BucketError } from 'src/queries/objectStorage';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
@@ -298,7 +300,10 @@ interface UnavailableClustersDisplayProps {
 
 const UnavailableClustersDisplay = React.memo(
   ({ unavailableClusters }: UnavailableClustersDisplayProps) => {
-    const { data: regions } = useRegionsQuery();
+    const { isGeckoGAEnabled } = useIsGeckoEnabled();
+    const { data: regions } = useRegionsQuery({
+      transformRegionLabel: isGeckoGAEnabled,
+    });
 
     const regionsAffected = unavailableClusters.map(
       (cluster) =>

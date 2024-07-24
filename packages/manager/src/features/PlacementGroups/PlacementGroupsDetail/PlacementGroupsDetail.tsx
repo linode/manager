@@ -8,6 +8,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { Notice } from 'src/components/Notice/Notice';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
@@ -39,7 +40,10 @@ export const PlacementGroupsDetail = () => {
       })),
     }
   );
-  const { data: regions } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
 
   const region = regions?.find(
     (region) => region.id === placementGroup?.region

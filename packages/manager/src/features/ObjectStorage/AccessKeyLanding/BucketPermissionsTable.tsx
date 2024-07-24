@@ -1,11 +1,8 @@
-import {
-  ObjectStorageKeyBucketAccessPermissions,
-  ObjectStorageKeyBucketAccess,
-} from '@linode/api-v4/lib/object-storage/types';
 import { update } from 'ramda';
 import * as React from 'react';
 
 import { Radio } from 'src/components/Radio/Radio';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
@@ -25,6 +22,10 @@ import {
 } from './AccessTable.styles';
 
 import type { MODE } from './types';
+import type {
+  ObjectStorageKeyBucketAccess,
+  ObjectStorageKeyBucketAccessPermissions,
+} from '@linode/api-v4/lib/object-storage/types';
 
 export const getUpdatedScopes = (
   oldScopes: ObjectStorageKeyBucketAccess[],
@@ -59,7 +60,10 @@ interface Props {
 export const BucketPermissionsTable = React.memo((props: Props) => {
   const { bucket_access, checked, mode, selectedRegions, updateScopes } = props;
 
-  const { data: regionsData } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regionsData } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
   const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
 
   if (!bucket_access || !regionsLookup) {
