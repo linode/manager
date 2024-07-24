@@ -1,4 +1,4 @@
-import type { Doc } from './features/OneClickApps/types';
+import type { Doc, OCA } from './features/OneClickApps/types';
 import type { TPAProvider } from '@linode/api-v4/lib/profile';
 import type { NoticeVariant } from 'src/components/Notice/Notice';
 
@@ -94,6 +94,7 @@ export interface Flags {
   linodeCreateWithFirewall: boolean;
   linodeDiskEncryption: boolean;
   mainContentBanner: MainContentBanner;
+  marketplaceAppOverrides: MarketplaceAppOverrides;
   metadata: boolean;
   objMultiCluster: boolean;
   objectStorageGen2: BaseFeatureFlag;
@@ -112,6 +113,11 @@ export interface Flags {
   taxId: BaseFeatureFlag;
   taxes: Taxes;
   tpaProviders: Provider[];
+}
+
+interface MarketplaceAppOverrides {
+  apps: { details: Partial<OCA>; stackScriptId: number }[];
+  hiddenApps: number[];
 }
 
 type PromotionalOfferFeature =
