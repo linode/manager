@@ -150,8 +150,6 @@ export const useMakertplaceApps = () => {
   const query = useMarketplaceAppsQuery(true);
   const flags = useFlags();
 
-  console.log(flags.marketplaceAppOverrides)
-
   const stackscripts = query.data ?? [];
 
   const apps: MarketplaceApp[] = [];
