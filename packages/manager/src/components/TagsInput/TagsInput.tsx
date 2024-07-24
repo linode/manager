@@ -15,10 +15,6 @@ export interface Tag {
   value: string;
 }
 
-export interface NoOptionsMessageProps {
-  inputValue: string;
-}
-
 export interface TagsInputProps {
   /**
    * If true, the component is disabled.
@@ -135,14 +131,16 @@ export const TagsInput = (props: TagsInputProps) => {
         ? 'There was an error retrieving your tags.'
         : undefined);
 
+  // console.log(accountTagItems, value);
   return (
     <Autocomplete
       onChange={(_, newValue, reason, details) => {
+        const detailsOption = details?.option;
         if (
           reason === 'selectOption' &&
-          details?.option?.label.startsWith('Create "')
+          detailsOption?.label.includes(`Create "${detailsOption?.value}"`)
         ) {
-          createTag(details.option.value);
+          createTag(detailsOption.value);
         } else {
           setErrors([]);
           onChange(newValue);
