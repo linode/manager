@@ -83,6 +83,11 @@ export const Region = () => {
 
     field.onChange(region.id);
 
+    if (values.hasSignedEUAgreement) {
+      // Reset the EU agreement checkbox if they checked it so they have to re-agree when they change regions
+      setValue('hasSignedEUAgreement', false);
+    }
+
     if (values.interfaces?.[0].vpc_id) {
       // If a VPC is selected, clear it because VPCs are region sepecific
       setValue('interfaces.0.vpc_id', null);
