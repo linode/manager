@@ -117,7 +117,7 @@ services:
   # Configured to run against a remote Cloud instance hosted at some URL.
   e2e_heimdall:
     <<: *default-runner
-    depends_on:
+    depends_on: []
     environment:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH}
