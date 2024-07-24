@@ -89,13 +89,13 @@ export const Region = () => {
     }
 
     if (values.interfaces?.[0].vpc_id) {
-      // If a VPC is selected, clear it because VPCs are region sepecific
+      // If a VPC is selected, clear it because VPCs are region specific
       setValue('interfaces.0.vpc_id', null);
       setValue('interfaces.0.subnet_id', null);
     }
 
     if (values.interfaces?.[1].label) {
-      // If a VLAN is selected, clear it because VLANs are region sepecific
+      // If a VLAN is selected, clear it because VLANs are region specific
       setValue('interfaces.1.label', null);
       setValue('interfaces.1.ipam_address', null);
     }
@@ -109,7 +109,7 @@ export const Region = () => {
     }
 
     if (values.placement_group?.id) {
-      // If a placement group is selected, clear it because they are region sepecific
+      // If a placement group is selected, clear it because they are region specific
       setValue('placement_group.id', 0);
     }
 
