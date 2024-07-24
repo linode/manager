@@ -153,11 +153,7 @@ export const CreateBucketDrawer = (props: Props) => {
       onClose();
     } catch (errors) {
       for (const error of errors) {
-        if (error.field) {
-          setError(error.field, { message: error.reason });
-        } else {
-          setError('root', { message: error.reason });
-        }
+        setError(error?.field ?? 'root', { message: error.reason });
       }
     }
   };
