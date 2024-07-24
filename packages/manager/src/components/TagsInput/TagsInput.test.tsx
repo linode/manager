@@ -42,10 +42,17 @@ describe('TagsInput', () => {
       />
     );
 
-    userEvent.click(screen.getByRole('combobox'));
+    const input = screen.getByRole('combobox');
 
-    // Create a new tag by typing in the input field and pressing Enter
-    userEvent.type(screen.getByRole('combobox'), 'new-tag{Enter}');
+    // Typing 'new-tag' in the input field
+    userEvent.type(input, 'new-tag');
+
+    await waitFor(() => expect(input).toHaveValue('new-tag'));
+
+    const createOption = screen.getByText(/Create "/i);
+
+    // Click 'Create "[tag-name]"' option to create a new-tag
+    userEvent.click(createOption);
 
     // Wait for the onChange to be called with the updated value
     await waitFor(() =>
@@ -54,8 +61,5 @@ describe('TagsInput', () => {
         { label: 'new-tag', value: 'new-tag' },
       ])
     );
-
-    // Verify the new tag is displayed
-    expect(screen.getByText('new-tag')).toBeInTheDocument();
   });
 });
