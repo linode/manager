@@ -1,4 +1,3 @@
-import { Scope } from '@linode/api-v4/lib/object-storage/types';
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 
@@ -7,9 +6,10 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AccessKeyDrawer, getDefaultScopes } from './AccessKeyDrawer';
 import { getUpdatedScopes } from './AccessTable';
-import { MODE } from './types';
 
 import type { AccessKeyDrawerProps } from './AccessKeyDrawer';
+import type { MODE } from './types';
+import type { ObjectStorageKeyBucketAccess } from '@linode/api-v4/lib/object-storage/types';
 
 describe('AccessKeyDrawer', () => {
   const props: AccessKeyDrawerProps = {
@@ -66,7 +66,7 @@ describe('AccessKeyDrawer', () => {
       const newScope = {
         ...mockScopes[2],
         permissions: 'read_write',
-      } as Scope;
+      } as ObjectStorageKeyBucketAccess;
       expect(getUpdatedScopes(mockScopes, newScope)[2]).toHaveProperty(
         'permissions',
         'read_write'
@@ -77,7 +77,7 @@ describe('AccessKeyDrawer', () => {
       const newScope = {
         ...mockScopes[2],
         access: 'read_write',
-      } as Scope;
+      } as ObjectStorageKeyBucketAccess;
       const updatedScopes = getUpdatedScopes(mockScopes, newScope);
       expect(updatedScopes[0]).toEqual(mockScopes[0]);
       expect(updatedScopes[1]).toEqual(mockScopes[1]);
@@ -90,7 +90,7 @@ describe('AccessKeyDrawer', () => {
         cluster: 'totally-fake',
         permissions: 'read_only',
         region: 'us-east',
-      } as Scope;
+      } as ObjectStorageKeyBucketAccess;
       expect(getUpdatedScopes(mockScopes, newScope)).toEqual(mockScopes);
     });
   });
