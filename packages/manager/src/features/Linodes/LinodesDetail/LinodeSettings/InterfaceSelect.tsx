@@ -154,81 +154,64 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
     if (selectedVPCId !== vpcId) {
       handleChange({
         ip_ranges: _additionalIPv4RangesForVPC,
-        ipam_address: null,
         ipv4: {
           nat_1_1: nattedIPv4Address,
           vpc: vpcIPv4,
         },
-        label: null,
         purpose,
-        subnet_id: undefined,
         vpc_id: selectedVPCId,
       });
     }
   };
 
   const handleIPv4RangeChange = (ipv4Ranges: ExtendedIP[]) => {
-    const changeObj = {
+    handleChange({
       ip_ranges: ipv4Ranges.map((ip_range) => ip_range.address),
-      ipam_address: null,
-      label: null,
+      ipv4: {
+        nat_1_1: nattedIPv4Address,
+        vpc: vpcIPv4,
+      },
       purpose,
       subnet_id: subnetId,
       vpc_id: vpcId,
-    };
-
-    handleChange(changeObj);
+    });
   };
 
   const handleSubnetChange = (selectedSubnetId: number) =>
     handleChange({
       ip_ranges: _additionalIPv4RangesForVPC,
-      ipam_address: null,
       ipv4: {
         nat_1_1: nattedIPv4Address,
         vpc: vpcIPv4,
       },
-      label: null,
       purpose,
       subnet_id: selectedSubnetId,
       vpc_id: vpcId,
     });
 
-  const handleVPCIPv4Input = (vpcIPv4Input: string | undefined) => {
-    const changeObj = {
-      ip_ranges: _additionalIPv4RangesForVPC,
-      ipam_address: null,
-      label: null,
-      purpose,
-      subnet_id: subnetId,
-      vpc_id: vpcId,
-    };
+  const handleVPCIPv4Input = (vpcIPv4Input: string | undefined) =>
     handleChange({
-      ...changeObj,
+      ip_ranges: _additionalIPv4RangesForVPC,
       ipv4: {
         nat_1_1: nattedIPv4Address,
         vpc: vpcIPv4Input,
       },
-    });
-  };
-
-  const handleIPv4Input = (IPv4Input: string | undefined) => {
-    const changeObj = {
-      ip_ranges: _additionalIPv4RangesForVPC,
-      ipam_address: null,
-      label: null,
       purpose,
       subnet_id: subnetId,
       vpc_id: vpcId,
-    };
+    });
+
+  const handleIPv4Input = (IPv4Input: string | undefined) =>
     handleChange({
-      ...changeObj,
+      ip_ranges: _additionalIPv4RangesForVPC,
       ipv4: {
         nat_1_1: IPv4Input,
         vpc: vpcIPv4,
       },
+      purpose,
+      subnet_id: subnetId,
+      vpc_id: vpcId,
     });
-  };
 
   const handleCreateOption = (_newVlan: string) => {
     setNewVlan(_newVlan);

@@ -637,7 +637,7 @@ export const LinodeConfigDialog = (props: Props) => {
   );
 
   const handleInterfaceChange = React.useCallback(
-    (slot: number, updatedInterface: Interface) => {
+    (slot: number, updatedInterface: ExtendedInterface) => {
       setFieldValue(`interfaces[${slot}]`, updatedInterface);
     },
     [setFieldValue]
@@ -1031,9 +1031,9 @@ export const LinodeConfigDialog = (props: Props) => {
                         vpcIPv4Error:
                           formik.errors[`interfaces[${idx}].ipv4.vpc`],
                       }}
-                      handleChange={(newInterface: Interface) =>
-                        handleInterfaceChange(idx, newInterface)
-                      }
+                      handleChange={(newInterface: ExtendedInterface) => {
+                        handleInterfaceChange(idx, newInterface);
+                      }}
                       nattedIPv4Address={
                         thisInterface.ipv4?.nat_1_1 ?? undefined
                       }
