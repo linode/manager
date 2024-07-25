@@ -18,11 +18,11 @@ export const getDisabledRegions = (options: DisabledRegionOptions) => {
 
   // On the images tab, we disabled distributed regions if:
   // - The user has selected an Image
-  // - The selected image does not have the `distributed-images` capability
+  // - The selected image does not have the `distributed-sites` capability
   if (
     linodeCreateTab === 'Images' &&
     selectedImage &&
-    !selectedImage.capabilities.includes('distributed-images')
+    !selectedImage.capabilities.includes('distributed-sites')
   ) {
     const disabledRegions: Record<string, DisableRegionOption> = {};
 

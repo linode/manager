@@ -35,7 +35,7 @@ export const ImageOptionv2 = ({ image, isSelected, listItemProps }: Props) => {
         <Typography color="inherit">{image.label}</Typography>
       </Stack>
       <Stack alignItems="center" direction="row" spacing={1}>
-        {image.capabilities.includes('distributed-images') && (
+        {image.capabilities.includes('distributed-sites') && (
           <Tooltip title="This image is compatible with distributed compute regions.">
             <div style={{ display: 'flex' }}>
               <DistributedRegionIcon height="24px" width="24px" />

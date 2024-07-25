@@ -175,7 +175,7 @@ describe('Region', () => {
     ).toBeVisible();
   });
 
-  it('should disable distributed regions if the selected image does not have the `distributed-images` capability', async () => {
+  it('should disable distributed regions if the selected image does not have the `distributed-sites` capability', async () => {
     const image = imageFactory.build({ capabilities: [] });
 
     const distributedRegion = regionFactory.build({
