@@ -94,7 +94,7 @@ export interface Flags {
   linodeCreateWithFirewall: boolean;
   linodeDiskEncryption: boolean;
   mainContentBanner: MainContentBanner;
-  marketplaceAppOverrides: MarketplaceAppOverrides;
+  marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
   objMultiCluster: boolean;
   objectStorageGen2: BaseFeatureFlag;
@@ -115,9 +115,20 @@ export interface Flags {
   tpaProviders: Provider[];
 }
 
-interface MarketplaceAppOverrides {
-  apps: { details: Partial<OCA>; stackScriptId: number }[];
-  hiddenApps: number[];
+interface MarketplaceAppOverride {
+  /**
+   * Define app details that should be overwritten
+   *
+   * If you are adding an app that is not already defined in "oneClickAppsv2.ts",
+   * you *must* include all required OCA properties or Cloud Manager could crash.
+   *
+   * Pass `null` to hide the marketplace app
+   */
+  details: Partial<OCA> | null;
+  /**
+   * The ID of the StackScript that powers this Marketplace app
+   */
+  stackscriptId: number;
 }
 
 type PromotionalOfferFeature =

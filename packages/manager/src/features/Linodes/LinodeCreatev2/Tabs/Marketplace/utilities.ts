@@ -1,5 +1,3 @@
-import { isEmpty } from '@linode/api-v4';
-
 import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
 import { useFlags } from 'src/hooks/useFlags';
 import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
@@ -155,16 +153,26 @@ export const useMakertplaceApps = () => {
   const apps: MarketplaceApp[] = [];
 
   for (const stackscript of stackscripts) {
-    const override = flags.marketplaceAppOverrides?.apps?.find(
-      (override) => override.stackScriptId === stackscript.id
+    const override = flags.marketplaceAppOverrides?.find(
+      (override) => override.stackscriptId === stackscript.id
     );
 
-    const details = { ...oneClickApps[stackscript.id], ...override?.details };
+    const baseAppDetails = oneClickApps[stackscript.id];
 
-    if (
-      !flags.marketplaceAppOverrides?.hiddenApps?.includes(stackscript.id) &&
-      !isEmpty(details)
-    ) {
+    if (override === undefined && baseAppDetails) {
+      // If the StackScript has no overrides, just add it to the apps array.
+      apps.push({ details: baseAppDetails, stackscript });
+    }
+
+    if (override?.details === null) {
+      // If the feature flag explicitly specifies `null`, it means we don't want it to show,
+      // so we skip it.
+      continue;
+    }
+
+    if (override?.details) {
+      const details = { ...baseAppDetails, ...override.details };
+
       apps.push({ details, stackscript });
     }
   }
