@@ -1,4 +1,4 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
+import type { Linode } from '@linode/api-v4/lib/linodes';
 
 export const linode1: Linode = {
   alerts: {
@@ -32,6 +32,7 @@ export const linode1: Linode = {
     label: 'pg-1',
   },
   region: 'us-east',
+  site_type: 'core',
   specs: {
     disk: 20480,
     gpus: 0,
@@ -78,6 +79,7 @@ export const linode2: Linode = {
     label: 'pg-1',
   },
   region: 'us-east',
+  site_type: 'core',
   specs: {
     disk: 30720,
     gpus: 0,
@@ -124,6 +126,7 @@ export const linode3: Linode = {
     label: 'pg-1',
   },
   region: 'us-east',
+  site_type: 'core',
   specs: {
     disk: 30720,
     gpus: 0,
@@ -170,6 +173,7 @@ export const linode4: Linode = {
     label: 'pg-1',
   },
   region: 'eu-west',
+  site_type: 'core',
   specs: {
     disk: 30720,
     gpus: 0,

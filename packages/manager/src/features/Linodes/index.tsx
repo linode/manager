@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAllAccountMaintenanceQuery } from 'src/queries/account/maintenance';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { addMaintenanceToLinodes } from 'src/utilities/linodes';
+import { storage } from 'src/utilities/storage';
 
 import { linodesInTransition } from './transitions';
+
+import type { RegionFilter } from 'src/utilities/storage';
 
 const LinodesLanding = React.lazy(
   () => import('./LinodesLanding/LinodesLanding')
@@ -64,7 +68,16 @@ const LinodesLandingWrapper = React.memo(() => {
     { status: { '+or': ['pending, started'] } }
   );
 
-  const { data: linodes, error, isLoading } = useAllLinodesQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+
+  const [regionFilter, setRegionFilter] = React.useState<
+    RegionFilter | undefined
+  >(storage.regionFilter.get());
+
+  const { data: linodes, error, isLoading } = useAllLinodesQuery(
+    {},
+    isGeckoGAEnabled ? generateLinodesXFilter(regionFilter) : {}
+  );
 
   const someLinodesHaveScheduledMaintenance = accountMaintenanceData?.some(
     (thisAccountMaintenance) => thisAccountMaintenance.entity.type === 'linode'
@@ -77,11 +90,17 @@ const LinodesLandingWrapper = React.memo(() => {
     linodes ?? []
   );
 
+  const handleRegionFilter = (regionFilter: RegionFilter) => {
+    setRegionFilter(regionFilter);
+    storage.regionFilter.set(regionFilter);
+  };
+
   return (
     <LinodesLanding
       someLinodesHaveScheduledMaintenance={Boolean(
         someLinodesHaveScheduledMaintenance
       )}
+      handleRegionFilter={handleRegionFilter}
       linodesData={linodesData}
       linodesInTransition={linodesInTransition(events ?? [])}
       linodesRequestError={error ?? undefined}
@@ -89,3 +108,12 @@ const LinodesLandingWrapper = React.memo(() => {
     />
   );
 });
+
+const generateLinodesXFilter = (regionFilter: RegionFilter | undefined) => {
+  if (regionFilter === 'core' || regionFilter === 'distributed') {
+    return {
+      site_type: { '+contains': regionFilter },
+    };
+  }
+  return {};
+};
