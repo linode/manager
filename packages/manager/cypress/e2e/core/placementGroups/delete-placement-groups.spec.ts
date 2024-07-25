@@ -21,7 +21,7 @@ import {
   linodeFactory,
   placementGroupFactory,
 } from 'src/factories';
-
+import { headers as emptyStatePageHeaders } from 'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLandingEmptyStateData';
 import type { Flags } from 'src/featureFlags';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
@@ -41,8 +41,7 @@ const unassignWarning =
   'You need to unassign all Linodes before deleting a placement group.';
 
 // Landing page empty state text.
-const emptyStateMessage =
-  'Control the physical placement or distribution of Linode instances within a data center or availability zone.';
+const emptyStateMessage = emptyStatePageHeaders.description;
 
 // Error message that when an unexpected error occurs.
 const PlacementGroupErrorMessage = 'An unknown error has occurred.';

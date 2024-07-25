@@ -1,4 +1,3 @@
-import { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -15,7 +14,9 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { Autocomplete } from '../Autocomplete/Autocomplete';
 import { LinkButton } from '../LinkButton';
 
+import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
 interface Props {
   disabled?: boolean;
@@ -37,7 +38,9 @@ export const SelectFirewallPanel = (props: Props) => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const location = useLocation();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
-  const queryParams = getQueryParamsFromQueryString(location.search);
+  const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+    location.search
+  );
 
   const handleCreateFirewallClick = () => {
     setIsDrawerOpen(true);

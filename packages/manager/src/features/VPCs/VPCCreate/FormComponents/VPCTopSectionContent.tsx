@@ -1,19 +1,20 @@
-import { Region } from '@linode/api-v4';
-import { FormikErrors } from 'formik';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
-import { CreateVPCFieldState } from 'src/hooks/useCreateVPC';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { VPC_CREATE_FORM_VPC_HELPER_TEXT } from '../../constants';
 import { StyledBodyTypography } from './VPCCreateForm.styles';
 
+import type { Region } from '@linode/api-v4';
+import type { FormikErrors } from 'formik';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
+import type { CreateVPCFieldState } from 'src/hooks/useCreateVPC';
 
 interface Props {
   disabled?: boolean;
@@ -28,7 +29,9 @@ export const VPCTopSectionContent = (props: Props) => {
   const { disabled, errors, isDrawer, onChangeField, regions, values } = props;
   const location = useLocation();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
-  const queryParams = getQueryParamsFromQueryString(location.search);
+  const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+    location.search
+  );
 
   return (
     <>
@@ -38,10 +41,9 @@ export const VPCTopSectionContent = (props: Props) => {
           onClick={() =>
             isFromLinodeCreate &&
             sendLinodeCreateFormInputEvent({
-              createType:
-                (queryParams.type as LinodeCreateType) ?? 'Distributions',
-              paperName: 'VPC',
+              createType: (queryParams.type as LinodeCreateType) ?? 'OS',
               labelName: 'Learn more',
+              paperName: 'VPC',
               version: 'v1',
             })
           }

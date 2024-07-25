@@ -27,9 +27,10 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { REGION_CAVEAT_HELPER_TEXT } from './constants';
 import { VPCCreateDrawer } from './VPCCreateDrawer';
 
-import type { LinodeCreateType } from './types';
 import type { Item } from 'src/components/EnhancedSelect';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { LinodeCreateType } from './types';
 
 export interface VPCPanelProps {
   additionalIPv4RangesForVPC: ExtendedIP[];
@@ -95,7 +96,9 @@ export const VPCPanel = (props: VPCPanelProps) => {
   );
 
   const { data: vpcsData, error, isLoading } = useAllVPCsQuery();
-  const params = getQueryParamsFromQueryString(location.search);
+  const params = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+    location.search
+  );
 
   React.useEffect(() => {
     if (subnetError || vpcIPv4Error) {

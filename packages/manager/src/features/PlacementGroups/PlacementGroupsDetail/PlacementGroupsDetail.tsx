@@ -1,4 +1,4 @@
-import { AFFINITY_TYPES } from '@linode/api-v4';
+import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -8,6 +8,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { Notice } from 'src/components/Notice/Notice';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
@@ -39,7 +40,10 @@ export const PlacementGroupsDetail = () => {
       })),
     }
   );
-  const { data: regions } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
 
   const region = regions?.find(
     (region) => region.id === placementGroup?.region
@@ -75,10 +79,10 @@ export const PlacementGroupsDetail = () => {
     placementGroup?.members.some((pgLinode) => pgLinode.linode_id === linode.id)
   );
 
-  const { affinity_type, label } = placementGroup;
+  const { placement_group_type, label } = placementGroup;
 
   const resetEditableLabel = () => {
-    return `${label} (${AFFINITY_TYPES[affinity_type]})`;
+    return `${label} (${PLACEMENT_GROUP_TYPES[placement_group_type]})`;
   };
 
   const handleLabelEdit = (newLabel: string) => {
