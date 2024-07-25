@@ -264,7 +264,9 @@ describe('Community Stackscripts integration tests', () => {
     const linodeLabel = randomLabel();
 
     // Ensure that the Primary Nav is open
-    mockGetUserPreferences({ desktop_sidebar_open: false }).as('getPreferences');
+    mockGetUserPreferences({ desktop_sidebar_open: false }).as(
+      'getPreferences'
+    );
     interceptGetStackScripts().as('getStackScripts');
     cy.visitWithLogin('/stackscripts/community');
     cy.wait(['@getStackScripts', '@getPreferences']);

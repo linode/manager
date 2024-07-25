@@ -1,4 +1,4 @@
-import { Scope } from '@linode/api-v4/lib/object-storage/types';
+import { ObjectStorageKeyBucketAccess } from '@linode/api-v4/lib/object-storage/types';
 import * as React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -29,12 +29,12 @@ const LabelWithTooltip = ({
 );
 
 interface Props {
-  bucket_access: Scope[] | null;
+  bucket_access: ObjectStorageKeyBucketAccess[] | null;
   checked: boolean;
   handleToggle: () => void;
   mode: MODE;
   selectedRegions?: string[];
-  updateScopes: (newScopes: Scope[]) => void;
+  updateScopes: (newScopes: ObjectStorageKeyBucketAccess[]) => void;
 }
 
 export const LimitedAccessControls = React.memo((props: Props) => {
