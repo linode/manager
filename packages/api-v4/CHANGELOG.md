@@ -1,3 +1,9 @@
+## [2024-07-25] - v0.122.1
+
+### Fixed:
+
+- Incorrect Image capability of `distributed-images` by changing it to `distributed-sites` ([#10717](https://github.com/linode/manager/pull/10717))
+
 ## [2024-07-22] - v0.122.0
 
 ### Changed:
