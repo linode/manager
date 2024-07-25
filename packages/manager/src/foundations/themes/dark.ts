@@ -372,7 +372,7 @@ export const darkTheme: ThemeOptions = {
         colorSecondary: {
           '&.MuiChip-clickable': {
             '&:hover': {
-              backgroundColor: 'lch(77.7 28.7 275 / 0.12)',
+              backgroundColor: Badge.Informative.Background,
               color: Badge.Informative.Text,
             },
           },
