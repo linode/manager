@@ -26,6 +26,7 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SelectFirewallPanel } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Stack } from 'src/components/Stack';
@@ -109,7 +110,10 @@ const defaultFieldsStates = {
 const NodeBalancerCreate = () => {
   const { data: agreements } = useAccountAgreements();
   const { data: profile } = useProfile();
-  const { data: regions } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
   const { data: types } = useNodeBalancerTypesQuery();
 
   const {

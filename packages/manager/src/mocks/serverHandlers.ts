@@ -13,12 +13,7 @@ import {
   accountTransferFactory,
   appTokenFactory,
   betaFactory,
-  certificateFactory,
-  configurationFactory,
-  configurationsEndpointHealthFactory,
   contactFactory,
-  createRouteFactory,
-  createServiceTargetFactory,
   credentialFactory,
   creditPaymentResponseFactory,
   databaseBackupFactory,
@@ -49,8 +44,6 @@ import {
   linodeTypeFactory,
   lkeHighAvailabilityTypeFactory,
   lkeStandardAvailabilityTypeFactory,
-  loadbalancerEndpointHealthFactory,
-  loadbalancerFactory,
   longviewActivePlanFactory,
   longviewClientFactory,
   longviewSubscriptionFactory,
@@ -81,10 +74,7 @@ import {
   profileFactory,
   promoFactory,
   regionAvailabilityFactory,
-  routeFactory,
   securityQuestionsFactory,
-  serviceTargetFactory,
-  serviceTargetsEndpointHealthFactory,
   stackScriptFactory,
   staticObjects,
   subnetFactory,
@@ -305,165 +295,6 @@ const databases = [
   ),
 
   http.delete('*/databases/mysql/instances/:databaseId', () => {
-    return HttpResponse.json({});
-  }),
-];
-
-const aclb = [
-  // Configurations
-  http.get('*/v4beta/aclb/:id/configurations', () => {
-    const configurations = configurationFactory.buildList(3);
-    return HttpResponse.json(makeResourcePage(configurations));
-  }),
-  http.get('*/v4beta/aclb/:id/endpoints-health', ({ params }) => {
-    const health = loadbalancerEndpointHealthFactory.build({
-      id: Number(params.id),
-    });
-    return HttpResponse.json(health);
-  }),
-  http.get(
-    '*/v4beta/aclb/:id/configurations/endpoints-health',
-    ({ params }) => {
-      const health = configurationsEndpointHealthFactory.build({
-        id: Number(params.id),
-      });
-      return HttpResponse.json(health);
-    }
-  ),
-  http.get(
-    '*/v4beta/aclb/:id/service-targets/endpoints-health',
-    ({ params }) => {
-      const health = serviceTargetsEndpointHealthFactory.build({
-        id: Number(params.id),
-      });
-      return HttpResponse.json(health);
-    }
-  ),
-  http.get('*/v4beta/aclb/:id/configurations/:configId', () => {
-    return HttpResponse.json(configurationFactory.build());
-  }),
-  http.post('*/v4beta/aclb/:id/configurations', () => {
-    return HttpResponse.json(configurationFactory.build());
-  }),
-  http.put(
-    '*/v4beta/aclb/:id/configurations/:configId',
-    async ({ params, request }) => {
-      const reqBody = await request.json();
-      const id = Number(params.configId);
-      const body = reqBody as any;
-      return HttpResponse.json(configurationFactory.build({ id, ...body }));
-    }
-  ),
-  http.delete('*/v4beta/aclb/:id/configurations/:configId', () => {
-    return HttpResponse.json({});
-  }),
-  // Load Balancers
-  http.get('*/v4beta/aclb', () => {
-    return HttpResponse.json(
-      makeResourcePage(loadbalancerFactory.buildList(3))
-    );
-  }),
-  http.get('*/v4beta/aclb/:loadbalancerId', ({ params }) => {
-    return HttpResponse.json(
-      loadbalancerFactory.build({
-        id: Number(params.loadbalancerId),
-        label: `aclb-${params.loadbalancerId}`,
-      })
-    );
-  }),
-  http.post('*/v4beta/aclb', () => {
-    return HttpResponse.json(loadbalancerFactory.build());
-  }),
-  http.put('*/v4beta/aclb/:id', async ({ params, request }) => {
-    const reqBody = await request.json();
-    const id = Number(params.id);
-    const body = reqBody as any;
-    // The payload to update a loadbalancer is not the same as the payload to create a loadbalancer
-    // In one instance we have a list of entrypoints objects, in the other we have a list of entrypoints ids
-    // TODO: ACLB - figure out if this is still accurate
-    return HttpResponse.json(loadbalancerFactory.build({ id, ...body }));
-  }),
-  http.delete('*/v4beta/aclb/:id', () => {
-    return HttpResponse.json({});
-  }),
-  // Routes
-  http.get('*/v4beta/aclb/:id/routes', ({ request }) => {
-    const headers = JSON.parse(request.headers.get('x-filter') || '{}');
-    if (headers['+or']) {
-      return HttpResponse.json(
-        makeResourcePage(routeFactory.buildList(headers['+or'].length))
-      );
-    }
-    return HttpResponse.json(makeResourcePage(routeFactory.buildList(5)));
-  }),
-  http.post('*/v4beta/aclb/:id/routes', () => {
-    return HttpResponse.json(createRouteFactory.buildList(4));
-  }),
-  http.put('*/v4beta/aclb/:id/routes/:routeId', async ({ params, request }) => {
-    const reqBody = await request.json();
-    const id = Number(params.routeId);
-    const body = reqBody as any;
-    return HttpResponse.json(createRouteFactory.build({ id, ...body }));
-  }),
-  http.delete('*/v4beta/aclb/:id/routes/:routeId', () => {
-    return HttpResponse.json({});
-  }),
-  // Service Targets
-  http.get('*/v4beta/aclb/:id/service-targets', () => {
-    return HttpResponse.json(
-      makeResourcePage(serviceTargetFactory.buildList(5))
-    );
-  }),
-  http.post('*/v4beta/aclb/:id/service-targets', () => {
-    return HttpResponse.json(createServiceTargetFactory.build());
-  }),
-  http.put(
-    '*/v4beta/aclb/:id/service-targets/:serviceTargetId',
-    async ({ params, request }) => {
-      const reqBody = await request.json();
-      const id = Number(params.serviceTargetId);
-      const body = reqBody as any;
-      return HttpResponse.json(
-        createServiceTargetFactory.build({ id, ...body })
-      );
-    }
-  ),
-  http.delete('*/v4beta/aclb/:id/service-targets/:serviceTargetId', () => {
-    return HttpResponse.json({});
-  }),
-  // Certificates
-  http.get('*/v4beta/aclb/:id/certificates', () => {
-    const tlsCertificate = certificateFactory.build({
-      label: 'tls-certificate',
-      type: 'downstream',
-    });
-    const certificates = certificateFactory.buildList(3);
-    return HttpResponse.json(
-      makeResourcePage([tlsCertificate, ...certificates])
-    );
-  }),
-  http.get(
-    '*/v4beta/aclb/:id/certificates/:certId',
-    async ({ params, request }) => {
-      const reqBody = await request.json();
-      const id = Number(params.certId);
-      const body = reqBody as any;
-      return HttpResponse.json(certificateFactory.build({ id, ...body }));
-    }
-  ),
-  http.post('*/v4beta/aclb/:id/certificates', () => {
-    return HttpResponse.json(certificateFactory.build());
-  }),
-  http.put(
-    '*/v4beta/aclb/:id/certificates/:certId',
-    async ({ params, request }) => {
-      const reqBody = await request.json();
-      const id = Number(params.certId);
-      const body = reqBody as any;
-      return HttpResponse.json(certificateFactory.build({ id, ...body }));
-    }
-  ),
-  http.delete('*/v4beta/aclb/:id/certificates/:certId', () => {
     return HttpResponse.json({});
   }),
 ];
@@ -2613,6 +2444,5 @@ export const handlers = [
   ...entityTransfers,
   ...statusPage,
   ...databases,
-  ...aclb,
   ...vpc,
 ];

@@ -1,30 +1,14 @@
 /* eslint-disable no-unused-expressions */
 import * as React from 'react';
 import { VncScreen } from 'react-vnc';
-import { makeStyles } from 'tss-react/mui';
 
+import { Box } from 'src/components/Box';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { StyledCircleProgress } from 'src/features/Lish/Lish';
-
-import { resizeViewPort } from './lishUtils';
 
 import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
 import type { Linode } from '@linode/api-v4/lib/linodes';
 import type { VncScreenHandle } from 'react-vnc';
-
-const useStyles = makeStyles()(() => ({
-  container: {
-    '& canvas': {
-      display: 'block',
-      margin: 'auto',
-    },
-  },
-  errorState: {
-    '& *': {
-      color: '#f4f4f4 !important',
-    },
-  },
-}));
 
 interface Props {
   linode: Linode;
@@ -36,14 +20,11 @@ type CombinedProps = Props & Omit<LinodeLishData, 'weblish_url'>;
 let monitor: WebSocket;
 
 const Glish = (props: CombinedProps) => {
-  const { classes } = useStyles();
   const { glish_url, linode, monitor_url, refreshToken, ws_protocols } = props;
   const ref = React.useRef<VncScreenHandle>(null);
   const [powered, setPowered] = React.useState(linode.status === 'running');
 
   React.useEffect(() => {
-    resizeViewPort(1080, 840);
-
     // Every 5 seconds, ping for the status?
     const monitorInterval = setInterval(() => {
       if (monitor.readyState === monitor.OPEN) {
@@ -125,9 +106,10 @@ const Glish = (props: CombinedProps) => {
 
   if (!powered) {
     return (
-      <div className={classes.errorState}>
-        <ErrorState errorText="Please power on your Linode to use Glish" />
-      </div>
+      <ErrorState
+        errorText="Please power on your Linode to use Glish"
+        typographySx={(theme) => ({ color: theme.palette.common.white })}
+      />
     );
   }
 
@@ -135,10 +117,19 @@ const Glish = (props: CombinedProps) => {
 
   return (
     <VncScreen
+      loadingUI={
+        <Box p={8} position="absolute" top="0" width="100%">
+          <CircleProgress />
+        </Box>
+      }
+      style={{
+        height: 'calc(100vh - 60px)',
+        padding: 8,
+      }}
       autoConnect={false}
-      loadingUI={<StyledCircleProgress />}
       ref={ref}
       rfbOptions={rfbOptions}
+      scaleViewport
       showDotCursor
       url={glish_url}
     />
