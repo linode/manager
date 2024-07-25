@@ -4,6 +4,7 @@ import React from 'react';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
 import { IconButton } from 'src/components/IconButton';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Typography } from 'src/components/Typography';
@@ -24,7 +25,10 @@ interface Props {
 export const ImageRegionRow = (props: Props) => {
   const { disableRemoveButton, onRemove, region, status } = props;
 
-  const { data: regions } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
 
   const actualRegion = regions?.find((r) => r.id === region);
 
