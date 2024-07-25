@@ -48,19 +48,14 @@ import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activeSince: {
-    marginRight: theme.spacing(1.25),
-    marginTop: theme.spacing(5.5),
+    marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(1),
   },
   dateColumn: {
     width: '25%',
   },
   descriptionColumn: {
     width: '25%',
-  },
-  flexContainer: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
   },
   headerContainer: {
     display: 'flex',
@@ -72,7 +67,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   headerLeft: {
     display: 'flex',
-    flexGrow: 2,
+    flexDirection: 'column',
     [theme.breakpoints.down('sm')]: {
       paddingLeft: 0,
     },
@@ -82,17 +77,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 5,
+    paddingRight: 20,
     [theme.breakpoints.down('sm')]: {
       alignItems: 'flex-start',
       flexDirection: 'column',
-      marginLeft: 15,
-      paddingLeft: 0,
     },
-  },
-  headline: {
-    fontSize: '1rem',
-    lineHeight: '1.5rem',
   },
   pdfDownloadColumn: {
     '& > .loading': {
@@ -102,9 +91,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   pdfError: {
     color: theme.color.red,
-  },
-  root: {
-    padding: `15px 0px 15px 20px`,
   },
   totalColumn: {
     [theme.breakpoints.up('md')]: {
@@ -313,67 +299,69 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   return (
     <Grid data-qa-billing-activity-panel xs={12}>
       <Paper variant="outlined">
-        <div className={classes.root}>
-          <StyledBillingAndPaymentHistoryHeader
-            className={classes.headerContainer}
-          >
-            <Typography className={classes.headline} variant="h2">
+        <StyledBillingAndPaymentHistoryHeader
+          className={classes.headerContainer}
+        >
+          <div>
+            <Typography
+              sx={{
+                fontSize: '1rem',
+                lineHeight: '1.5rem',
+              }}
+              variant="h2"
+            >
               {`${isAkamaiCustomer ? 'Usage' : 'Billing & Payment'} History`}
             </Typography>
-            {isAkamaiCustomer ? (
-              <div className={classes.headerLeft}>
-                <TextTooltip
-                  displayText="Usage History may not reflect finalized invoice"
-                  sxTypography={{ paddingLeft: '4px' }}
-                  tooltipText={AkamaiBillingInvoiceText}
-                />
-              </div>
+            {accountActiveSince ? (
+              <Typography className={classes.activeSince} variant="body1">
+                Account active since{' '}
+                {formatDate(accountActiveSince, {
+                  displayTime: false,
+                  timezone: profile?.timezone,
+                })}
+              </Typography>
             ) : null}
-            <div className={classes.headerRight}>
-              {accountActiveSince && (
-                <div className={classes.flexContainer}>
-                  <Typography className={classes.activeSince} variant="body1">
-                    Account active since{' '}
-                    {formatDate(accountActiveSince, {
-                      displayTime: false,
-                      timezone: profile?.timezone,
-                    })}
-                  </Typography>
-                </div>
+            {isAkamaiCustomer ? (
+              <TextTooltip
+                displayText="Usage History may not reflect finalized invoice"
+                placement="right-end"
+                tooltipText={AkamaiBillingInvoiceText}
+              />
+            ) : null}
+          </div>
+          <div className={classes.headerRight}>
+            <Autocomplete
+              onChange={(_, item) => {
+                setSelectedTransactionType(item);
+                pdfErrors.clear();
+                pdfLoading.clear();
+              }}
+              value={transactionTypeOptions.find(
+                (option) => option.value === selectedTransactionType.value
               )}
-              <div className={classes.flexContainer}>
-                <Autocomplete
-                  onChange={(_, item) => {
-                    setSelectedTransactionType(item);
-                    pdfErrors.clear();
-                    pdfLoading.clear();
-                  }}
-                  value={transactionTypeOptions.find(
-                    (option) => option.value === selectedTransactionType.value
-                  )}
-                  className={classes.transactionType}
-                  disableClearable
-                  label="Transaction Types"
-                  options={transactionTypeOptions}
-                />
-                <Autocomplete
-                  onChange={(_, item) => {
-                    setSelectedTransactionDate(item);
-                    pdfErrors.clear();
-                    pdfLoading.clear();
-                  }}
-                  value={transactionDateOptions.find(
-                    (option) => option.value === selectedTransactionDate.value
-                  )}
-                  className={classes.transactionDate}
-                  disableClearable
-                  label="Transaction Dates"
-                  options={transactionDateOptions}
-                />
-              </div>
-            </div>
-          </StyledBillingAndPaymentHistoryHeader>
-        </div>
+              className={classes.transactionType}
+              disableClearable
+              label="Transaction Types"
+              noMarginTop
+              options={transactionTypeOptions}
+            />
+            <Autocomplete
+              onChange={(_, item) => {
+                setSelectedTransactionDate(item);
+                pdfErrors.clear();
+                pdfLoading.clear();
+              }}
+              value={transactionDateOptions.find(
+                (option) => option.value === selectedTransactionDate.value
+              )}
+              className={classes.transactionDate}
+              disableClearable
+              label="Transaction Dates"
+              noMarginTop
+              options={transactionDateOptions}
+            />
+          </div>
+        </StyledBillingAndPaymentHistoryHeader>
         <OrderBy
           data={
             selectedTransactionType.value === 'all'
@@ -474,6 +462,7 @@ const StyledBillingAndPaymentHistoryHeader = styled('div', {
 })(({ theme }) => ({
   border: theme.name === 'dark' ? `1px solid ${theme.borderColors.divider}` : 0,
   borderBottom: 0,
+  padding: `15px 0px 15px 20px`,
 }));
 
 // =============================================================================
