@@ -155,7 +155,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
       // Fire analytics form submit upon successful creation from Linode Create flow.
       if (isFromLinodeCreate) {
         sendLinodeCreateFormStepEvent({
-          createType: (queryParams.type as LinodeCreateType) ?? 'Distributions',
+          createType: (queryParams.type as LinodeCreateType) ?? 'OS',
           labelName: 'Create VPC',
           paperName: 'VPC Branch',
           version: 'v1',
@@ -205,7 +205,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
         });
         sendLinodeCreateFormErrorEvent(
           errorString,
-          (queryParams.type as LinodeCreateType) ?? 'Distributions',
+          (queryParams.type as LinodeCreateType) ?? 'OS',
           'v1'
         );
       }

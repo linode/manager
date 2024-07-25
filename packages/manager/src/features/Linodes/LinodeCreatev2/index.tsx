@@ -54,7 +54,6 @@ import { VPC } from './VPC/VPC';
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { SubmitHandler } from 'react-hook-form';
-import { handleFormFocusEvent } from 'src/utilities/analytics/utils';
 
 export const LinodeCreatev2 = () => {
   const { params, setParams } = useLinodeCreateQueryParams();

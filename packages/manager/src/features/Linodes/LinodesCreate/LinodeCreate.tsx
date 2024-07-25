@@ -469,8 +469,8 @@ export class LinodeCreate extends React.PureComponent<
     if (prevTabIndex !== index) {
       sendLinodeCreateFormStepEvent({
         createType: (this.tabs[prevTabIndex].title as LinodeCreateType) ?? 'OS',
-        paperName: undefined,
         labelName: `${this.tabs[index].title} Tab`,
+        paperName: undefined,
         version: 'v1',
       });
     }

@@ -1003,7 +1003,7 @@ const handleAnalytics = (details: {
 }) => {
   const { label, linode: linode, payload, type } = details;
   const eventInfo = actionsAndLabels[type];
-  const eventCreateType = capitalize(eventInfo?.action) ?? 'Distributions';
+  const eventCreateType = capitalize(eventInfo?.action) ?? 'OS';
   let eventAction = 'unknown';
   let eventLabel = '';
 

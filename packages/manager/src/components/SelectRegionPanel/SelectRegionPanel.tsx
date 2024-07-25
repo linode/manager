@@ -155,7 +155,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           onClick={() =>
             isFromLinodeCreate &&
             sendLinodeCreateFormInputEvent({
-              createType: (params.type as LinodeCreateType) ?? 'Distributions',
+              createType: (params.type as LinodeCreateType) ?? 'OS',
               labelName: 'DC Pricing',
               version: 'v1',
               paperName: 'Region',

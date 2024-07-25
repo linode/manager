@@ -46,7 +46,7 @@ export const SelectFirewallPanel = (props: Props) => {
     setIsDrawerOpen(true);
     if (isFromLinodeCreate) {
       sendLinodeCreateFormInputEvent({
-        createType: (queryParams.type as LinodeCreateType) ?? 'Distributions',
+        createType: (queryParams.type as LinodeCreateType) ?? 'OS',
         paperName: 'Firewall',
         labelName: 'Create Firewall',
         version: 'v1',
@@ -92,8 +92,7 @@ export const SelectFirewallPanel = (props: Props) => {
             // Track clearing the value once per form - this is configured on backend by inputValue.
             if (!selection) {
               sendLinodeCreateFormInputEvent({
-                createType:
-                  (queryParams.type as LinodeCreateType) ?? 'Distributions',
+                createType: (queryParams.type as LinodeCreateType) ?? 'OS',
                 paperName: 'Firewall',
                 labelName: 'Assign Firewall',
                 version: 'v1',

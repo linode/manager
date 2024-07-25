@@ -153,7 +153,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
           onClick={() =>
             fromLinodeCreate &&
             sendLinodeCreateFormInputEvent({
-              createType: (params.type as LinodeCreateType) ?? 'Distributions',
+              createType: (params.type as LinodeCreateType) ?? 'OS',
               paperName: 'VPC',
               labelName: 'Learn more',
               version: 'v1',
@@ -197,8 +197,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
               // Track clearing the value once per form - this is configured on backend by inputValue.
               if (selectedVPC.label === 'None') {
                 sendLinodeCreateFormInputEvent({
-                  createType:
-                    (params.type as LinodeCreateType) ?? 'Distributions',
+                  createType: (params.type as LinodeCreateType) ?? 'OS',
                   paperName: 'VPC',
                   labelName: 'Assign VPC',
                   version: 'v1',
@@ -236,8 +235,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                   onClick={() => {
                     setIsVPCCreateDrawerOpen(true);
                     sendLinodeCreateFormInputEvent({
-                      createType:
-                        (params.type as LinodeCreateType) ?? 'Distributions',
+                      createType: (params.type as LinodeCreateType) ?? 'OS',
                       paperName: 'VPC',
                       labelName: 'Create VPC',
                       version: 'v1',
