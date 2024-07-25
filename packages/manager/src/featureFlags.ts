@@ -63,6 +63,11 @@ interface AclpFlag {
   enabled: boolean;
 }
 
+export interface CloudPulseResourceTypeMap {
+  dimensionKey: string;
+  serviceType: string;
+}
+
 interface gpuV2 {
   planDivider: boolean;
 }
@@ -76,6 +81,8 @@ interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
 
 export interface Flags {
   aclp: AclpFlag;
+  aclpReadEndpoint: string;
+  aclpResourceTypeMap: CloudPulseResourceTypeMap[];
   apiMaintenance: APIMaintenance;
   apicliDxToolsAdditions: boolean;
   blockStorageEncryption: boolean;

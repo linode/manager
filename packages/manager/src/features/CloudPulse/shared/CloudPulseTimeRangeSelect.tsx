@@ -8,6 +8,7 @@ import {
   updateGlobalFilterPreference,
 } from '../Utils/UserPreference';
 
+import type { TimeDuration } from '@linode/api-v4';
 import type {
   BaseSelectProps,
   Item,
@@ -134,4 +135,33 @@ export const generateStartTime = (modifier: Labels, nowInSeconds: number) => {
     default:
       return nowInSeconds - 30 * 24 * 60 * 60;
   }
+};
+
+/**
+ *
+ * @param label label for time duration to get the corresponding time duration object
+ * @returns time duration object for the label
+ */
+export const getTimeDurationFromTimeRange = (label: string): TimeDuration => {
+  if (label === PAST_30_MINUTES) {
+    return { unit: 'min', value: 30 };
+  }
+
+  if (label === PAST_24_HOURS) {
+    return { unit: 'hr', value: 24 };
+  }
+
+  if (label === PAST_12_HOURS) {
+    return { unit: 'hr', value: 12 };
+  }
+
+  if (label === PAST_7_DAYS) {
+    return { unit: 'day', value: 7 };
+  }
+
+  if (label === PAST_30_DAYS) {
+    return { unit: 'day', value: 30 };
+  }
+
+  return { unit: 'min', value: 30 };
 };
