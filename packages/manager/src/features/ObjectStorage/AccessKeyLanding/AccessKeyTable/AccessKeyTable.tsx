@@ -1,6 +1,6 @@
 import {
   ObjectStorageKey,
-  RegionS3EndpointAndID,
+  ObjectStorageKeyRegions,
 } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
 import { styled } from '@mui/material/styles';
@@ -41,7 +41,7 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
   const [showHostNamesDrawer, setShowHostNamesDrawers] = useState<boolean>(
     false
   );
-  const [hostNames, setHostNames] = useState<RegionS3EndpointAndID[]>([]);
+  const [hostNames, setHostNames] = useState<ObjectStorageKeyRegions[]>([]);
 
   const flags = useFlags();
   const { account } = useAccountManagement();

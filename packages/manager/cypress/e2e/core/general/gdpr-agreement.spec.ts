@@ -4,6 +4,11 @@ import { regionFactory } from '@src/factories';
 import { randomString, randomLabel } from 'support/util/random';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetAccountAgreements } from 'support/intercepts/account';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 
 import type { Region } from '@linode/api-v4';
 
@@ -49,12 +54,14 @@ describe('GDPR agreement', () => {
     }).as('getAgreements');
 
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getAgreements', '@getRegions']);
+    cy.wait('@getRegions');
 
     // Paris should have the agreement
     ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionId('fr-par').click();
     cy.get('[data-testid="eu-agreement-checkbox"]').should('be.visible');
+
+    cy.wait('@getAgreements');
 
     // London should have the agreement
     ui.regionSelect.find().click();
@@ -75,12 +82,14 @@ describe('GDPR agreement', () => {
     }).as('getAgreements');
 
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getAgreements', '@getRegions']);
+    cy.wait('@getRegions');
 
     // Paris should not have the agreement
     ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionId('fr-par').click();
     cy.get('[data-testid="eu-agreement-checkbox"]').should('not.exist');
+
+    cy.wait('@getAgreements');
 
     // London should not have the agreement
     ui.regionSelect.find().click();
@@ -94,6 +103,14 @@ describe('GDPR agreement', () => {
   });
 
   it('needs the agreement checked to validate the form', () => {
+    // This test does not apply to Linode Create v2 because
+    // Linode Create v2 allows you to press "Create Linode"
+    // without checking the GDPR checkbox. (The user will
+    // get a validation error if they have not agreed).
+    mockAppendFeatureFlags({
+      linodeCreateRefactor: makeFeatureFlagData(false),
+    });
+    mockGetFeatureFlagClientstream();
     mockGetRegions(mockRegions).as('getRegions');
     mockGetAccountAgreements({
       privacy_policy: false,
@@ -120,7 +137,7 @@ describe('GDPR agreement', () => {
     cy.get('[data-qa-deploy-linode="true"]').should('be.disabled');
 
     // check the agreement
-    getClick('[data-testid="eu-agreement-checkbox"]');
+    getClick('#gdpr-checkbox');
 
     // expect the button to be enabled
     cy.get('[data-qa-deploy-linode="true"]').should('not.be.disabled');

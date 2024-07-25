@@ -73,9 +73,9 @@ describe('VM Placement landing page', () => {
       id: randomNumber(),
       label: randomLabel(),
       region: mockPlacementGroupCompliantRegion.id,
-      affinity_type: 'anti_affinity:local',
+      placement_group_type: 'anti_affinity:local',
       is_compliant: true,
-      is_strict: false,
+      placement_group_policy: 'flexible',
       members: [],
     });
 
@@ -83,9 +83,9 @@ describe('VM Placement landing page', () => {
       id: randomNumber(),
       label: randomLabel(),
       region: mockPlacementGroupNoncompliantRegion.id,
-      affinity_type: 'affinity:local',
+      placement_group_type: 'affinity:local',
       is_compliant: false,
-      is_strict: true,
+      placement_group_policy: 'strict',
       members: [
         { linode_id: mockPlacementGroupLinode.id, is_compliant: false },
       ],

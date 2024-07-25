@@ -4,6 +4,7 @@ import React from 'react';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
 import { IconButton } from 'src/components/IconButton';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Typography } from 'src/components/Typography';
@@ -15,15 +16,19 @@ import type { Status } from 'src/components/StatusIcon/StatusIcon';
 type ExtendedImageRegionStatus = 'unsaved' | ImageRegionStatus;
 
 interface Props {
+  disableRemoveButton?: boolean;
   onRemove: () => void;
   region: string;
   status: ExtendedImageRegionStatus;
 }
 
 export const ImageRegionRow = (props: Props) => {
-  const { onRemove, region, status } = props;
+  const { disableRemoveButton, onRemove, region, status } = props;
 
-  const { data: regions } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
 
   const actualRegion = regions?.find((r) => r.id === region);
 
@@ -40,6 +45,7 @@ export const ImageRegionRow = (props: Props) => {
         />
         <IconButton
           aria-label={`Remove ${region}`}
+          disabled={disableRemoveButton}
           onClick={onRemove}
           sx={{ p: 0.5 }}
         >

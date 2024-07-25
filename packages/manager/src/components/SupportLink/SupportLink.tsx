@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Link, LinkProps } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import {
+import type { LinkProps } from 'react-router-dom';
+import type {
   EntityType,
   TicketType,
 } from 'src/features/Support/SupportTickets/SupportTicketDialog';
@@ -16,7 +17,7 @@ interface SupportLinkProps {
 }
 
 export interface EntityForTicketDetails {
-  id: number;
+  id: number | undefined;
   type: EntityType;
 }
 

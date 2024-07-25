@@ -75,6 +75,8 @@ const eventActions: RecPartial<EventAction>[] = [
   'subnet_create',
   'subnet_delete',
   'subnet_update',
+  'tax_id_invalid',
+  'tax_id_valid',
   'tfa_disabled',
   'tfa_enabled',
   'user_ssh_key_add',

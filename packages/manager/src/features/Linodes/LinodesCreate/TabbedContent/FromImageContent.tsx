@@ -6,20 +6,23 @@ import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { Paper } from 'src/components/Paper';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Typography } from 'src/components/Typography';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 
-import {
+import { StyledGrid } from './CommonTabbedContent.styles';
+
+import type {
   BasicFromContentProps,
   ReduxStateProps,
   WithTypesRegionsAndImages,
 } from '../types';
-import { StyledGrid } from './CommonTabbedContent.styles';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import type { Image } from '@linode/api-v4';
 
 interface Props extends BasicFromContentProps {
   error?: string;
+  imageLabel?: string;
   imagePanelTitle?: string;
+  placeholder?: string;
   variant?: 'all' | 'private' | 'public';
 }
 
@@ -31,8 +34,10 @@ export type CombinedProps = Props &
 export const FromImageContent = (props: CombinedProps) => {
   const {
     error,
+    imageLabel,
     imagePanelTitle,
     imagesData,
+    placeholder,
     userCannotCreateLinode,
     variant,
   } = props;
@@ -83,6 +88,8 @@ export const FromImageContent = (props: CombinedProps) => {
         error={error}
         handleSelectImage={(_, image) => onChange(image ?? null)}
         images={Object.keys(imagesData).map((eachKey) => imagesData[eachKey])}
+        label={imageLabel}
+        placeholder={placeholder}
         selectedImageID={props.selectedImageID}
         title={imagePanelTitle || 'Choose an Image'}
         variant={variant}

@@ -5,8 +5,10 @@ import { useLocation } from 'react-router-dom';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
+import {
+  isDistributedRegionSupported,
+  useIsGeckoEnabled,
+} from 'src/components/RegionSelect/RegionSelect.utils';
 import { TwoStepRegionSelect } from 'src/components/RegionSelect/TwoStepRegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
@@ -72,7 +74,9 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
 
   const { isGeckoGAEnabled } = useIsGeckoEnabled();
 
-  const { data: regions } = useRegionsQuery(isGeckoGAEnabled);
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
 
   const isCloning = /clone/i.test(params.type);
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
@@ -152,7 +156,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
             sendLinodeCreateFormStepEvent({
               action: 'click',
               category: 'link',
-              createType: params.type ?? 'Distributions',
+              createType: params.type ?? 'OS',
               label: DOCS_LINK_LABEL_DC_PRICING,
               version: 'v1',
             })

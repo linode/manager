@@ -46,11 +46,15 @@ import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types'
 
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));
-const LinodesDetailHeader = React.lazy(
-  () => import('../LinodesDetail/LinodesDetailHeader/LinodeDetailHeader')
+const LinodesDetailHeader = React.lazy(() =>
+  import(
+    'src/features/Linodes/LinodesDetail/LinodesDetailHeader/LinodeDetailHeader'
+  ).then((module) => ({
+    default: module.LinodeDetailHeader,
+  }))
 );
 
-const CloneLanding = () => {
+export const CloneLanding = () => {
   const { linodeId: _linodeId } = useParams<{ linodeId: string }>();
   const history = useHistory();
   const match = useRouteMatch();
@@ -372,5 +376,3 @@ const CloneLanding = () => {
     </React.Fragment>
   );
 };
-
-export default CloneLanding;
