@@ -6,8 +6,9 @@ import { Box } from 'src/components/Box';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { CopyableAndDownloadableTextField } from 'src/components/CopyableAndDownloadableTextField';
 import { Notice } from 'src/components/Notice/Notice';
-import { HostNamesList } from 'src/features/ObjectStorage/AccessKeyLanding/HostNamesList';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { CopyAllHostnames } from 'src/features/ObjectStorage/AccessKeyLanding/CopyAllHostnames';
+import { HostNamesList } from 'src/features/ObjectStorage/AccessKeyLanding/HostNamesList';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -40,7 +41,10 @@ const renderActions = (
 export const SecretTokenDialog = (props: Props) => {
   const { objectStorageKey, onClose, open, title, value } = props;
 
-  const { data: regionsData } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regionsData } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
   const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
 
   const flags = useFlags();
