@@ -1,17 +1,16 @@
 import Dialog from '@mui/material/Dialog';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import EnhancedSelect from 'src/components/EnhancedSelect/Select';
+import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 
-import { useIsDatabasesEnabled } from './features/Databases/utilities';
+import { useIsACLBEnabled } from './features/LoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useAccountManagement } from './hooks/useAccountManagement';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
-
-import type { Theme } from '@mui/material/styles';
-import type { Item } from 'src/components/EnhancedSelect/Select';
+import { useIsDatabasesEnabled } from './features/Databases/utilities';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   input: {
@@ -62,6 +61,7 @@ export const GoTo = React.memo(() => {
   const routerHistory = useHistory();
   const { _hasAccountAccess, _isManagedAccount } = useAccountManagement();
 
+  const { isACLBEnabled } = useIsACLBEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
@@ -90,6 +90,11 @@ export const GoTo = React.memo(() => {
       {
         display: 'Volumes',
         href: '/volumes',
+      },
+      {
+        display: 'Load Balancers',
+        hide: !isACLBEnabled,
+        href: '/loadbalancers',
       },
       {
         display: 'VPC',
@@ -158,7 +163,12 @@ export const GoTo = React.memo(() => {
         href: '/profile/display',
       },
     ],
-    [_hasAccountAccess, _isManagedAccount, isPlacementGroupsEnabled]
+    [
+      _hasAccountAccess,
+      _isManagedAccount,
+      isACLBEnabled,
+      isPlacementGroupsEnabled,
+    ]
   );
 
   const options: Item[] = React.useMemo(

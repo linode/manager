@@ -1,8 +1,8 @@
+import { getLinode, getStackScript } from '@linode/api-v4';
 import { omit } from 'lodash';
 import { useHistory } from 'react-router-dom';
 
 import { imageQueries } from 'src/queries/images';
-import { linodeQueries } from 'src/queries/linodes/linodes';
 import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { privateIPRegex } from 'src/utilities/ipUtils';
@@ -152,7 +152,7 @@ export const getLinodeCreatePayload = (
     values.metadata = undefined;
   }
 
-  if (!values.placement_group?.id) {
+  if (values.placement_group?.id === undefined) {
     values.placement_group = undefined;
   }
 
@@ -213,7 +213,7 @@ export const getInterfacesPayload = (
   return undefined;
 };
 
-const defaultInterfaces: InterfacePayload[] = [
+export const defaultInterfaces: InterfacePayload[] = [
   {
     ipam_address: '',
     label: '',
@@ -265,14 +265,10 @@ export const defaultValues = async (
   const stackscriptId = params.stackScriptID ?? params.appID;
 
   const stackscript = stackscriptId
-    ? await queryClient.ensureQueryData(
-        stackscriptQueries.stackscript(stackscriptId)
-      )
+    ? await getStackScript(stackscriptId)
     : null;
 
-  const linode = params.linodeID
-    ? await queryClient.ensureQueryData(linodeQueries.linode(params.linodeID))
-    : null;
+  const linode = params.linodeID ? await getLinode(params.linodeID) : null;
 
   const privateIp =
     linode?.ipv4.some((ipv4) => privateIPRegex.test(ipv4)) ?? false;
@@ -455,10 +451,11 @@ export const captureLinodeCreateAnalyticsEvent = async (
 
   if (type === 'Clone Linode' && values.linode) {
     const linodeId = values.linode.id;
-
-    const linode = await queryClient.ensureQueryData(
-      linodeQueries.linode(linodeId)
-    );
+    // @todo use Linode query key factory when it is implemented
+    const linode = await queryClient.ensureQueryData({
+      queryFn: () => getLinode(linodeId),
+      queryKey: ['linodes', 'linode', linodeId, 'details'],
+    });
 
     sendCreateLinodeEvent('clone', values.type, {
       isLinodePoweredOff: linode.status === 'offline',

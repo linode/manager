@@ -87,14 +87,13 @@ const Lish = () => {
   };
 
   if (isLoading) {
-    return <CircleProgress />;
+    return <StyledCircleProgress />;
   }
 
   if (linodeError) {
     return (
       <ErrorState
         errorText={linodeError?.[0]?.reason ?? 'Unable to load this Linode'}
-        typographySx={(theme) => ({ color: theme.palette.common.white })}
       />
     );
   }
@@ -106,12 +105,11 @@ const Lish = () => {
           tokenError?.[0]?.reason ??
           'Unable to load a Lish token for this Linode'
         }
-        typographySx={(theme) => ({ color: theme.palette.common.white })}
       />
     );
   }
 
-  return (
+  return linode && data !== undefined ? (
     <StyledTabs
       index={
         type &&
@@ -133,7 +131,7 @@ const Lish = () => {
         )}
       </TabPanels>
     </StyledTabs>
-  );
+  ) : null;
 };
 
 export default Lish;
@@ -158,7 +156,16 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
   '& [role="tablist"]': {
     backgroundColor: theme.bg.offWhite,
     display: 'flex',
-    marginBottom: '0 !important',
+    margin: 0,
     overflow: 'hidden',
   },
+  backgroundColor: 'black',
+  margin: 0,
+}));
+
+export const StyledCircleProgress = styled(CircleProgress)(() => ({
+  left: '50%',
+  position: 'absolute',
+  top: '50%',
+  transform: 'translate(-50%, -50%)',
 }));

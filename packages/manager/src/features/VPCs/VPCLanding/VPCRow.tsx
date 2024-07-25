@@ -1,15 +1,13 @@
+import { VPC } from '@linode/api-v4/lib/vpcs/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
+import { Action } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-
-import type { VPC } from '@linode/api-v4/lib/vpcs/types';
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   handleDeleteVPC: () => void;
@@ -19,10 +17,7 @@ interface Props {
 
 export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
   const { id, label, subnets } = vpc;
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
 
   const regionLabel = regions?.find((r) => r.id === vpc.region)?.label ?? '';
   const numLinodes = subnets.reduce(

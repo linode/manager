@@ -1,7 +1,6 @@
-import { shouldEnableDevTools } from 'src/dev-tools/load';
+import { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
 
-import type { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
-import type { SupportTicketFormFields } from 'src/features/Support/SupportTickets/SupportTicketDialog';
+import { shouldEnableDevTools } from 'src/dev-tools/load';
 
 const localStorageCache = {};
 
@@ -62,6 +61,11 @@ interface AuthGetAndSet {
   set: (value: string) => void;
 }
 
+interface SupportText {
+  description: string;
+  title: string;
+}
+
 interface TicketReply {
   text: string;
   ticketId: number;
@@ -78,17 +82,6 @@ export interface DevToolsEnv {
   label: string;
   loginRoot: string;
 }
-
-// We declare and export here to ensure it is available in the test environment, avoiding test failures.
-export const supportTicketStorageDefaults: SupportTicketFormFields = {
-  description: '',
-  entityId: '',
-  entityInputValue: '',
-  entityType: 'general',
-  selectedSeverity: undefined,
-  summary: '',
-  ticketType: 'general',
-};
 
 export interface Storage {
   BackupsCtaDismissed: {
@@ -117,9 +110,9 @@ export interface Storage {
     get: () => StackScriptData;
     set: (s: StackScriptData) => void;
   };
-  supportTicket: {
-    get: () => SupportTicketFormFields;
-    set: (v: SupportTicketFormFields) => void;
+  supportText: {
+    get: () => SupportText;
+    set: (v: SupportText) => void;
   };
   ticketReply: {
     get: () => TicketReply;
@@ -191,8 +184,8 @@ export const storage: Storage = {
       }),
     set: (s) => setStorage(STACKSCRIPT, JSON.stringify(s)),
   },
-  supportTicket: {
-    get: () => getStorage(SUPPORT, supportTicketStorageDefaults),
+  supportText: {
+    get: () => getStorage(SUPPORT, { description: '', title: '' }),
     set: (v) => setStorage(SUPPORT, JSON.stringify(v)),
   },
   ticketReply: {
@@ -209,7 +202,7 @@ export const {
   BackupsCtaDismissed,
   authentication,
   stackScriptInProgress,
-  supportTicket,
+  supportText,
   ticketReply,
 } = storage;
 

@@ -1,6 +1,6 @@
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import Grid from '@mui/material/Unstable_Grid2';
-import { SxProps, Theme, styled, useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
@@ -24,14 +24,10 @@ export interface ErrorStateProps {
    * The error text to display.
    */
   errorText: JSX.Element | string;
-  /**
-   * Styles applied to the error text
-   */
-  typographySx?: SxProps<Theme>;
 }
 
 export const ErrorState = (props: ErrorStateProps) => {
-  const { CustomIcon, compact, typographySx } = props;
+  const { CustomIcon, compact } = props;
   const theme = useTheme();
 
   const sxIcon = {
@@ -64,7 +60,6 @@ export const ErrorState = (props: ErrorStateProps) => {
           <Typography
             data-qa-error-msg
             style={{ textAlign: 'center' }}
-            sx={typographySx}
             variant="h3"
           >
             {props.errorText}

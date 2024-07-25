@@ -12,6 +12,7 @@ import Firewall from 'src/assets/icons/entityIcons/firewall.svg';
 import Image from 'src/assets/icons/entityIcons/image.svg';
 import Kubernetes from 'src/assets/icons/entityIcons/kubernetes.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
+import LoadBalancer from 'src/assets/icons/entityIcons/loadbalancer.svg';
 import Managed from 'src/assets/icons/entityIcons/managed.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
@@ -26,6 +27,7 @@ import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
+import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
@@ -162,6 +164,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   // the followed comment is for later use, the showCloudPulse will be removed and isACLPEnabled will be used
   // const { isACLPEnabled } = useIsACLPEnabled();
 
+  const { isACLBEnabled } = useIsACLBEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
 
@@ -198,6 +201,14 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           display: 'Volumes',
           href: '/volumes',
           icon: <Volume />,
+        },
+        {
+          betaChipClassName: 'beta-chip-aclb',
+          display: 'Cloud Load Balancers',
+          hide: !isACLBEnabled,
+          href: '/loadbalancers',
+          icon: <LoadBalancer />,
+          isBeta: true,
         },
         {
           display: 'NodeBalancers',
@@ -314,6 +325,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       allowObjPrefetch,
       allowMarketplacePrefetch,
       flags.databaseBeta,
+      isACLBEnabled,
       isPlacementGroupsEnabled,
       flags.placementGroups,
       showCloudPulse,

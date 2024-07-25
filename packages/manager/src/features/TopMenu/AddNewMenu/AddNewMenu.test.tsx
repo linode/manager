@@ -7,6 +7,18 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AddNewMenu } from './AddNewMenu';
 
+vi.mock('src/hooks/useFlags', async () => {
+  const actual = await vi.importActual<any>('src/hooks/useFlags');
+  return {
+    ...actual,
+    __esModule: true,
+    useFlags: vi.fn().mockReturnValue({
+      aclb: false,
+      databases: false,
+    }),
+  };
+});
+
 describe('AddNewMenu', () => {
   test('renders the Create button', () => {
     const { getByText } = renderWithTheme(<AddNewMenu />);
@@ -52,13 +64,11 @@ describe('AddNewMenu', () => {
   });
 
   test('does not render hidden menu items', () => {
-    const { getByText, queryByText } = renderWithTheme(<AddNewMenu />, {
-      flags: { databases: false },
-    });
+    const { getByText, queryByText } = renderWithTheme(<AddNewMenu />);
     const createButton = getByText('Create');
     fireEvent.click(createButton);
 
-    ['Database'].forEach((createMenuItem: string) => {
+    ['Cloud Load Balancer', 'Database'].forEach((createMenuItem: string) => {
       const hiddenMenuItem = queryByText(createMenuItem);
       expect(hiddenMenuItem).toBeNull();
     });

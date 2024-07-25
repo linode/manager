@@ -30,6 +30,7 @@ import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
+import { useIsACLBEnabled } from './features/LoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { useAccountSettings } from './queries/account/settings';
@@ -141,6 +142,11 @@ const Kubernetes = React.lazy(() =>
 );
 const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
 const Profile = React.lazy(() => import('src/features/Profile/Profile'));
+const LoadBalancers = React.lazy(() =>
+  import('src/features/LoadBalancers').then((module) => ({
+    default: module.LoadBalancers,
+  }))
+);
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
 );
@@ -221,6 +227,7 @@ export const MainContent = () => {
   const username = profile?.username || '';
 
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
+  const { isACLBEnabled } = useIsACLBEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
   const { data: accountSettings } = useAccountSettings();
@@ -327,6 +334,12 @@ export const MainContent = () => {
                           )}
                           <Route component={Volumes} path="/volumes" />
                           <Redirect path="/volumes*" to="/volumes" />
+                          {isACLBEnabled && (
+                            <Route
+                              component={LoadBalancers}
+                              path="/loadbalancer*"
+                            />
+                          )}
                           <Route
                             component={NodeBalancers}
                             path="/nodebalancers"
