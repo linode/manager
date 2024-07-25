@@ -1,15 +1,13 @@
 /* eslint-disable scanjs-rules/call_addEventListener */
+import { FitAddon } from '@xterm/addon-fit';
+import { Terminal } from '@xterm/xterm';
 import * as React from 'react';
-import { Terminal } from 'xterm';
 
-import { Box } from 'src/components/Box';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { StyledCircleProgress } from 'src/features/Lish/Lish';
 
-import { resizeViewPort } from './lishUtils';
-
-import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
 import type { Linode } from '@linode/api-v4/lib/linodes';
+import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
 
 interface Props {
   linode: Linode;
@@ -25,19 +23,19 @@ type CombinedProps = Props &
   Pick<LinodeLishData, 'weblish_url' | 'ws_protocols'>;
 
 export class Weblish extends React.Component<CombinedProps, State> {
-  mounted: boolean = false;
+  fitAddon: FitAddon;
 
+  mounted: boolean = false;
   socket: WebSocket;
+
   state: State = {
     error: '',
     renderingLish: true,
   };
-
   terminal: Terminal;
 
   componentDidMount() {
     this.mounted = true;
-    resizeViewPort(1080, 730);
     this.connect();
   }
 
@@ -79,15 +77,10 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
     if (error) {
       return (
-        <Box
-          sx={{
-            '& *': {
-              color: '#f4f4f4 !important',
-            },
-          }}
-        >
-          <ErrorState errorText={error} />
-        </Box>
+        <ErrorState
+          errorText={error}
+          typographySx={(theme) => ({ color: theme.palette.common.white })}
+        />
       );
     }
 
@@ -100,9 +93,16 @@ export class Weblish extends React.Component<CombinedProps, State> {
     return (
       <div>
         {this.socket && this.socket.readyState === this.socket.OPEN ? (
-          <div className="terminal" id="terminal" />
+          <div
+            style={{
+              height: 'calc(100vh - 50px)',
+              padding: 8,
+            }}
+            className="terminal"
+            id="terminal"
+          />
         ) : (
-          <StyledCircleProgress />
+          <CircleProgress />
         )}
       </div>
     );
@@ -113,15 +113,25 @@ export class Weblish extends React.Component<CombinedProps, State> {
     const { group, label } = linode;
 
     this.terminal = new Terminal({
-      cols: 120,
+      cursorBlink: true,
       fontFamily: '"Ubuntu Mono", monospace, sans-serif',
-      rows: 40,
       screenReaderMode: true,
     });
+
+    this.fitAddon = new FitAddon();
+    this.terminal.loadAddon(this.fitAddon);
 
     this.terminal.onData((data: string) => this.socket.send(data));
     const terminalDiv = document.getElementById('terminal');
     this.terminal.open(terminalDiv as HTMLElement);
+
+    window.onresize = () => {
+      this.fitAddon.fit();
+    };
+
+    setInterval(() => {
+      this.fitAddon.fit();
+    }, 2000);
 
     this.terminal.writeln('\x1b[32mLinode Lish Console\x1b[m');
 
