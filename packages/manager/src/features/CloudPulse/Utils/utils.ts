@@ -74,7 +74,7 @@ export const convertTimeDurationToStartAndEndTimeRange = (
     startEnd.start = nowInSeconds - timeDuration.value * 60;
   }
 
-  if (timeDuration.unit == 'day') {
+  if (timeDuration.unit == 'days') {
     startEnd.start = nowInSeconds - timeDuration.value * 24 * 60 * 60;
   }
 

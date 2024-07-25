@@ -41,7 +41,7 @@ export const useCloudViewMetricsQuery = (
           }
         }
       },
-      refetchInterval: 6000000,
+      refetchInterval: 120000,
       refetchOnWindowFocus: false,
       retry: 0,
     }

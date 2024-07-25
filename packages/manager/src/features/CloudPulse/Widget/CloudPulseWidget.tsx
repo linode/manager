@@ -290,13 +290,13 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       metricsList.data &&
       metricsList.data.result.length > 0
     ) {
-      let index = 0;
+      let colorPalatteInfoIndex = 0;
       metricsList.data.result.forEach((graphData: CloudPulseMetricsList) => {
         // todo, move it to utils at a widget level
         if (!graphData) {
           return;
         }
-        const color = colors[index];
+        const color = colors[colorPalatteInfoIndex];
         const startEnd = convertTimeDurationToStartAndEndTimeRange({
           unit: 'min',
           value: 30,
@@ -321,7 +321,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         };
         legendRowsData.push(legendRow);
         dimensions.push(dimension);
-        index = index + 1;
+        colorPalatteInfoIndex = colorPalatteInfoIndex + 1;
         setToday(isToday(startEnd.start, startEnd.end));
       });
 
@@ -329,6 +329,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       setData(dimensions);
       setLegendRows(legendRowsData);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, metricsList]);
 
   return (
