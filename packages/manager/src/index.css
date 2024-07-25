@@ -317,10 +317,6 @@ button::-moz-focus-inner {
   transition: none !important;
 }
 
-.terminal {
-  padding: 24px;
-}
-
 .overflow-hidden {
   overflow: hidden !important;
 }
