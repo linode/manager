@@ -1,14 +1,9 @@
-import {
-  APIError,
-  CreateSubnetPayload,
-  CreateVPCPayload,
-} from '@linode/api-v4';
 import { createVPCSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useCreateVPCMutation } from 'src/queries/vpcs/vpcs';
@@ -16,16 +11,19 @@ import {
   sendLinodeCreateFormErrorEvent,
   sendLinodeCreateFormStepEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
-import {
-  SubnetError,
-  handleVPCAndSubnetErrors,
-} from 'src/utilities/formikErrorUtils';
+import { handleVPCAndSubnetErrors } from 'src/utilities/formikErrorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
-import {
-  DEFAULT_SUBNET_IPV4_VALUE,
-  SubnetFieldState,
-} from 'src/utilities/subnets';
+import { DEFAULT_SUBNET_IPV4_VALUE } from 'src/utilities/subnets';
+
+import type {
+  APIError,
+  CreateSubnetPayload,
+  CreateVPCPayload,
+} from '@linode/api-v4';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { SubnetError } from 'src/utilities/formikErrorUtils';
+import type { SubnetFieldState } from 'src/utilities/subnets';
 
 // Custom hook to consolidate shared logic between VPCCreate.tsx and VPCCreateDrawer.tsx
 
@@ -60,7 +58,10 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
   const queryParams = getQueryParamsFromQueryString(location.search);
 
-  const { data: regions } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
   const regionsData = regions ?? [];
 
   const [
@@ -155,8 +156,8 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
       if (isFromLinodeCreate) {
         sendLinodeCreateFormStepEvent({
           createType: (queryParams.type as LinodeCreateType) ?? 'Distributions',
-          paperName: 'VPC Branch',
           labelName: 'Create VPC',
+          paperName: 'VPC Branch',
           version: 'v1',
         });
       }

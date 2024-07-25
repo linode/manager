@@ -14,10 +14,11 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useCreateSupportTicketMutation } from 'src/queries/support';
+import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { reduceAsync } from 'src/utilities/reduceAsync';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
-import { storage } from 'src/utilities/storage';
+import { storage, supportTicketStorageDefaults } from 'src/utilities/storage';
 
 import { AttachFileForm } from '../AttachFileForm';
 import { MarkdownReference } from '../SupportTicketDetail/TabbedReply/MarkdownReference';
@@ -30,12 +31,14 @@ import {
   TICKET_SEVERITY_TOOLTIP_TEXT,
   TICKET_TYPE_MAP,
 } from './constants';
+import { SupportTicketAccountLimitFields } from './SupportTicketAccountLimitFields';
 import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
 import { SupportTicketSMTPFields } from './SupportTicketSMTPFields';
 import { formatDescription, useTicketSeverityCapability } from './ticketUtils';
 
 import type { FileAttachment } from '../index';
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
+import type { AccountLimitCustomFields } from './SupportTicketAccountLimitFields';
 import type { SMTPCustomFields } from './SupportTicketSMTPFields';
 import type { TicketSeverity } from '@linode/api-v4/lib/support';
 import type { Theme } from '@mui/material/styles';
@@ -56,8 +59,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   rootReply: {
     marginBottom: theme.spacing(2),
-    padding: 0,
     marginTop: theme.spacing(2),
+    padding: 0,
   },
 }));
 
@@ -82,14 +85,16 @@ export type EntityType =
   | 'none'
   | 'volume_id';
 
-export type TicketType = 'general' | 'smtp';
+export type TicketType = 'accountLimit' | 'general' | 'smtp';
 
 export type AllSupportTicketFormFields = SupportTicketFormFields &
-  SMTPCustomFields;
+  SMTPCustomFields &
+  AccountLimitCustomFields;
 
 export interface TicketTypeData {
   dialogTitle: string;
   helperText: JSX.Element | string;
+  ticketTitle?: string;
 }
 
 export interface SupportTicketDialogProps {
@@ -144,7 +149,14 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const hasSeverityCapability = useTicketSeverityCapability();
 
-  const valuesFromStorage = storage.supportText.get();
+  const valuesFromStorage = storage.supportTicket.get();
+
+  // Use a prefilled title if one is given, otherwise, use any default prefill titles by ticket type, if extant.
+  const _prefilledTitle = prefilledTitle
+    ? prefilledTitle
+    : prefilledTicketType && TICKET_TYPE_MAP[prefilledTicketType]
+    ? TICKET_TYPE_MAP[prefilledTicketType].ticketTitle
+    : undefined;
 
   // Ticket information
   const form = useForm<SupportTicketFormFields>({
@@ -153,10 +165,10 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
         prefilledDescription,
         valuesFromStorage.description
       ),
-      entityId: prefilledEntity ? String(prefilledEntity.id) : '',
+      entityId: prefilledEntity?.id ? String(prefilledEntity.id) : '',
       entityInputValue: '',
       entityType: prefilledEntity?.type ?? 'general',
-      summary: getInitialValue(prefilledTitle, valuesFromStorage.title),
+      summary: getInitialValue(_prefilledTitle, valuesFromStorage.summary),
       ticketType: prefilledTicketType ?? 'general',
     },
     resolver: yupResolver(SCHEMA_MAP[prefilledTicketType ?? 'general']),
@@ -185,17 +197,22 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     }
   }, [open]);
 
-  const saveText = (_title: string, _description: string) => {
-    storage.supportText.set({ description: _description, title: _title });
+  /**
+   * Store 'general' support ticket data in local storage if it exists.
+   * Specific fields from other ticket types (e.g. smtp) will not be saved since the general form will render via 'Open New Ticket'.
+   */
+  const saveFormData = (values: SupportTicketFormFields) => {
+    storage.supportTicket.set(values);
   };
 
   // Has to be a ref or else the timeout is redone with each render
-  const debouncedSave = React.useRef(debounce(500, false, saveText)).current;
+  const debouncedSave = React.useRef(debounce(500, false, saveFormData))
+    .current;
 
   React.useEffect(() => {
     // Store in-progress work to localStorage
-    debouncedSave(summary, description);
-  }, [summary, description]);
+    debouncedSave(form.getValues());
+  }, [summary, description, entityId, entityType, selectedSeverity]);
 
   /**
    * Clear the drawer completely if clearValues is passed (when canceling out of the drawer or successfully submitting)
@@ -205,9 +222,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     form.reset({
       ...form.formState.defaultValues,
       description: clearValues ? '' : valuesFromStorage.description,
-      entityId: '',
-      entityType: 'general',
-      summary: clearValues ? '' : valuesFromStorage.title,
+      entityId: clearValues ? '' : valuesFromStorage.entityId,
+      entityInputValue: clearValues ? '' : valuesFromStorage.entityInputValue,
+      entityType: clearValues ? 'general' : valuesFromStorage.entityType,
+      selectedSeverity: clearValues
+        ? undefined
+        : valuesFromStorage.selectedSeverity,
+      summary: clearValues ? '' : valuesFromStorage.summary,
       ticketType: 'general',
     });
   };
@@ -217,20 +238,22 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     setFiles([]);
 
     if (clearValues) {
-      saveText('', '');
+      saveFormData(supportTicketStorageDefaults);
     }
   };
 
   const handleClose = () => {
-    props.onClose();
-    if (ticketType === 'smtp') {
+    if (ticketType !== 'general') {
       window.setTimeout(() => resetDrawer(true), 500);
     }
+    props.onClose();
+    sendSupportTicketExitEvent('Close');
   };
 
   const handleCancel = () => {
     props.onClose();
     window.setTimeout(() => resetDrawer(true), 500);
+    sendSupportTicketExitEvent('Cancel');
   };
 
   const updateFiles = (newFiles: FileAttachment[]) => {
@@ -306,7 +329,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
     const _description = formatDescription(values, ticketType);
 
-    if (!['general', 'none'].includes(entityType) && !entityId) {
+    // If this is an account limit ticket, we needed the entity type but won't actually send a valid entity selection.
+    // Reset the entity type and id back to defaults.
+    const _entityType =
+      ticketType === 'accountLimit' ? 'general' : values.entityType;
+    const _entityId = ticketType === 'accountLimit' ? '' : values.entityId;
+
+    if (!['general', 'none'].includes(_entityType) && !_entityId) {
       form.setError('entityId', {
         message: `Please select a ${ENTITY_ID_TO_NAME_MAP[entityType]}.`,
       });
@@ -316,8 +345,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     setSubmitting(true);
 
     createSupportTicket({
+      [_entityType]: Number(_entityId),
       description: _description,
-      [entityType]: Number(entityId),
       severity: selectedSeverity,
       summary,
     })
@@ -427,9 +456,9 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               )}
             </>
           )}
-          {ticketType === 'smtp' ? (
-            <SupportTicketSMTPFields />
-          ) : (
+          {ticketType === 'smtp' && <SupportTicketSMTPFields />}
+          {ticketType === 'accountLimit' && <SupportTicketAccountLimitFields />}
+          {(!ticketType || ticketType === 'general') && (
             <>
               {props.hideProductSelection ? null : (
                 <SupportTicketProductSelectionFields />

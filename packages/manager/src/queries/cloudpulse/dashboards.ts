@@ -1,11 +1,23 @@
-import { Dashboard, getDashboards } from '@linode/api-v4';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { getDashboardById, getDashboards } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQuery } from '@tanstack/react-query';
 
-export const queryKey = 'cloudview-dashboards';
+import type { Dashboard } from '@linode/api-v4';
+import type { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 
-export const dashboardQueries = createQueryKeys('cloudview-dashboards', {
+export const queryKey = 'cloudpulse-dashboards';
+
+export const dashboardQueries = createQueryKeys(queryKey, {
+  dashboardById: (dashboardId: number) => ({
+    contextQueries: {
+      dashboard: {
+        queryFn: () => getDashboardById(dashboardId),
+        queryKey: [dashboardId],
+      },
+    },
+    queryKey: [dashboardId],
+  }),
+
   lists: {
     contextQueries: {
       allDashboards: {
@@ -15,22 +27,21 @@ export const dashboardQueries = createQueryKeys('cloudview-dashboards', {
     },
     queryKey: null,
   },
-
-  dashboardById: (dashboardId: number) => ({
-    contextQueries: {
-      dashboard: {
-        queryFn: () => {}, //Todo: will be implemented later
-        queryKey: [dashboardId],
-      },
-    },
-    queryKey: [dashboardId],
-  }),
 });
 
-//Fetch the list of all the dashboard available
-export const useCloudViewDashboardsQuery = (enabled: boolean) => {
+// Fetch the list of all the dashboard available
+export const useCloudPulseDashboardsQuery = (enabled: boolean) => {
   return useQuery<ResourcePage<Dashboard>, APIError[]>({
     ...dashboardQueries.lists._ctx.allDashboards,
     enabled,
+  });
+};
+
+export const useCloudPulseDashboardByIdQuery = (
+  dashboardId: number | undefined
+) => {
+  return useQuery<Dashboard, APIError[]>({
+    ...dashboardQueries.dashboardById(dashboardId!)._ctx.dashboard,
+    enabled: dashboardId !== undefined,
   });
 };

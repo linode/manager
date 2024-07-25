@@ -6,16 +6,43 @@ import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
+import { linodeVlanNoInternetConfig } from 'support/util/linodes';
 
 import type { Disk, Kernel, Linode, LinodeType, Volume } from '@linode/api-v4';
 
 /**
  * Intercepts POST request to create a Linode.
  *
+ * The outgoing request payload is modified to create a Linode without access
+ * to the internet.
+ *
  * @returns Cypress chainable.
  */
 export const interceptCreateLinode = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', apiMatcher('linode/instances'));
+  return cy.intercept('POST', apiMatcher('linode/instances'), (req) => {
+    req.body = {
+      ...req.body,
+      interfaces: linodeVlanNoInternetConfig,
+    };
+  });
+};
+
+/** Intercepts POST request to create a Linode and mocks an error response.
+ *
+ * @param errorMessage - Error message to be included in the mocked HTTP response.
+ * @param statusCode - HTTP status code for mocked error response. Default is `400`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateLinodeAccountLimitError = (
+  errorMessage: string,
+  statusCode: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('linode/instances'),
+    makeErrorResponse(errorMessage, statusCode)
+  );
 };
 
 /**

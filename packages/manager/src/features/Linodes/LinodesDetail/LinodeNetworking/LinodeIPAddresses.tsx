@@ -1,22 +1,22 @@
-import { Interface, LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
-import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
-import Grid from '@mui/material/Unstable_Grid2';
+import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
-import AddNewLink from 'src/components/AddNewLink';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Hidden } from 'src/components/Hidden';
 import OrderBy from 'src/components/OrderBy';
 import { Paper } from 'src/components/Paper';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { Stack } from 'src/components/Stack';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { Typography } from 'src/components/Typography';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
@@ -30,16 +30,19 @@ import { EditIPRDNSDrawer } from './EditIPRDNSDrawer';
 import { EditRangeRDNSDrawer } from './EditRangeRDNSDrawer';
 import IPSharing from './IPSharing';
 import { IPTransfer } from './IPTransfer';
-import {
-  StyledRootGrid,
-  StyledTypography,
-  StyledWrapperGrid,
-} from './LinodeIPAddresses.styles';
-import { IPAddressRowHandlers, LinodeIPAddressRow } from './LinodeIPAddressRow';
-import { IPTypes } from './types';
+import { LinodeIPAddressRow } from './LinodeIPAddressRow';
 import { ViewIPDrawer } from './ViewIPDrawer';
 import { ViewRangeDrawer } from './ViewRangeDrawer';
 import { ViewRDNSDrawer } from './ViewRDNSDrawer';
+
+import type { IPAddressRowHandlers } from './LinodeIPAddressRow';
+import type { IPTypes } from './types';
+import type {
+  IPAddress,
+  IPRange,
+  Interface,
+  LinodeIPsResponse,
+} from '@linode/api-v4';
 
 export const ipv4TableID = 'ips';
 
@@ -49,6 +52,9 @@ interface LinodeIPAddressesProps {
 
 export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const { linodeID } = props;
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { data: ips, error, isLoading } = useLinodeIPsQuery(linodeID);
   const { data: linode } = useLinodeQuery(linodeID);
@@ -133,101 +139,110 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     return null;
   }
 
-  const renderIPTable = () => {
-    const ipDisplay = ipResponseToDisplayRows(ips, configInterfaceWithVPC);
-
-    return (
-      <div style={{ marginTop: 20 }}>
-        <StyledRootGrid
-          alignItems="flex-end"
-          container
-          justifyContent="space-between"
-          spacing={1}
-        >
-          <Grid className="p0">
-            <StyledTypography variant="h3">IP Addresses</StyledTypography>
-          </Grid>
-          <StyledWrapperGrid>
-            <Hidden smDown>
-              <Button
-                buttonType="secondary"
-                disabled={isLinodesGrantReadOnly}
-                onClick={() => setIsTransferDialogOpen(true)}
-              >
-                IP Transfer
-              </Button>
-              <Button
-                buttonType="secondary"
-                disabled={isLinodesGrantReadOnly}
-                onClick={() => setIsShareDialogOpen(true)}
-                style={{ marginRight: 16 }}
-              >
-                IP Sharing
-              </Button>
-            </Hidden>
-            <AddNewLink
-              disabled={isLinodesGrantReadOnly}
-              label="Add an IP Address"
-              onClick={() => setIsAddDrawerOpen(true)}
-            />
-          </StyledWrapperGrid>
-        </StyledRootGrid>
-        <Paper style={{ padding: 0 }}>
-          {/* @todo: It'd be nice if we could always sort by public -> private. */}
-          <OrderBy data={ipDisplay} order="asc" orderBy="type">
-            {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-              return (
-                <Table aria-label="IPv4 Addresses" id={ipv4TableID}>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell style={{ width: '15%' }}>Address</TableCell>
-                      <TableSortCell
-                        active={orderBy === 'type'}
-                        direction={order}
-                        handleClick={handleOrderChange}
-                        label="type"
-                        style={{ width: '10%' }}
-                      >
-                        Type
-                      </TableSortCell>
-                      <TableCell style={{ width: '10%' }}>
-                        Default Gateway
-                      </TableCell>
-                      <TableCell style={{ width: '10%' }}>
-                        Subnet Mask
-                      </TableCell>
-                      <TableCell style={{ borderRight: 'none', width: '20%' }}>
-                        Reverse DNS
-                      </TableCell>
-                      <TableCell style={{ borderLeft: 'none', width: '20%' }} />
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {orderedData.map((ipDisplay) => (
-                      <LinodeIPAddressRow
-                        {...ipDisplay}
-                        {...handlers}
-                        isVPCOnlyLinode={
-                          isVPCOnlyLinode && ipDisplay.type === 'IPv4 – Public'
-                        }
-                        key={`${ipDisplay.address}-${ipDisplay.type}`}
-                        linodeId={linodeID}
-                        readOnly={isLinodesGrantReadOnly}
-                      />
-                    ))}
-                  </TableBody>
-                </Table>
-              );
-            }}
-          </OrderBy>
-        </Paper>
-      </div>
-    );
-  };
+  const ipDisplay = ipResponseToDisplayRows(ips, configInterfaceWithVPC);
 
   return (
-    <div>
-      {renderIPTable()}
+    <Box>
+      <Paper
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          pl: 2,
+          pr: 0.5,
+          py: 0.5,
+        }}
+      >
+        <Typography variant="h3">IP Addresses</Typography>
+        {isSmallScreen ? (
+          <ActionMenu
+            actionsList={[
+              {
+                disabled: isLinodesGrantReadOnly,
+                onClick: () => setIsAddDrawerOpen(true),
+                title: 'Add an IP Address',
+              },
+              {
+                disabled: isLinodesGrantReadOnly,
+                onClick: () => setIsTransferDialogOpen(true),
+                title: 'IP Transfer',
+              },
+              {
+                disabled: isLinodesGrantReadOnly,
+                onClick: () => setIsShareDialogOpen(true),
+                title: 'IP Sharing',
+              },
+            ]}
+            ariaLabel="Linode IP Address Actions"
+          />
+        ) : (
+          <Stack direction="row" spacing={1}>
+            <Button
+              buttonType="secondary"
+              disabled={isLinodesGrantReadOnly}
+              onClick={() => setIsTransferDialogOpen(true)}
+            >
+              IP Transfer
+            </Button>
+            <Button
+              buttonType="secondary"
+              disabled={isLinodesGrantReadOnly}
+              onClick={() => setIsShareDialogOpen(true)}
+            >
+              IP Sharing
+            </Button>
+            <Button
+              buttonType="primary"
+              disabled={isLinodesGrantReadOnly}
+              onClick={() => setIsAddDrawerOpen(true)}
+            >
+              Add an IP Address
+            </Button>
+          </Stack>
+        )}
+      </Paper>
+      {/* @todo: It'd be nice if we could always sort by public -> private. */}
+      <OrderBy data={ipDisplay} order="asc" orderBy="type">
+        {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+          return (
+            <Table aria-label="IPv4 Addresses" id={ipv4TableID}>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ width: '15%' }}>Address</TableCell>
+                  <TableSortCell
+                    active={orderBy === 'type'}
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    label="type"
+                    sx={{ width: '10%' }}
+                  >
+                    Type
+                  </TableSortCell>
+                  <TableCell sx={{ width: '10%' }}>Default Gateway</TableCell>
+                  <TableCell sx={{ width: '10%' }}>Subnet Mask</TableCell>
+                  <TableCell sx={{ width: '20%' }}>Reverse DNS</TableCell>
+                  <TableCell sx={{ width: '20%' }} />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {orderedData.map((ipDisplay) => (
+                  <LinodeIPAddressRow
+                    {...ipDisplay}
+                    {...handlers}
+                    isVPCOnlyLinode={
+                      isVPCOnlyLinode && ipDisplay.type === 'IPv4 – Public'
+                    }
+                    key={`${ipDisplay.address}-${ipDisplay.type}`}
+                    linodeId={linodeID}
+                    readOnly={isLinodesGrantReadOnly}
+                  />
+                ))}
+              </TableBody>
+            </Table>
+          );
+        }}
+      </OrderBy>
       <ViewIPDrawer
         ip={selectedIP}
         onClose={() => setIsIPDrawerOpen(false)}
@@ -289,7 +304,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
           range={selectedRange}
         />
       )}
-    </div>
+    </Box>
   );
 };
 

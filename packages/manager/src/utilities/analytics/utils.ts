@@ -99,6 +99,7 @@ export const handleFormFocusEvent = (
   firstTouchedInputName: string,
   context: FormAnalyticsContextProps
 ) => {
+  console.log({context})
   // Update the first touched input once per form.
   // It will be undefined at context initialization, indicating that a user has not yet interacted with the form.
   if (!context.firstTouchedInputName) {

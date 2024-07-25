@@ -1,13 +1,22 @@
+import { Dashboard } from '@linode/api-v4';
 import React from 'react';
 
-import { Dashboard } from '@linode/api-v4';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Typography } from 'src/components/Typography';
-import { useCloudViewDashboardsQuery } from 'src/queries/cloudpulse/dashboards';
+import { useCloudPulseDashboardsQuery } from 'src/queries/cloudpulse/dashboards';
+
+import { DASHBOARD_ID, REGION, RESOURCES } from '../Utils/constants';
+import {
+  getUserPreferenceObject,
+  updateGlobalFilterPreference,
+} from '../Utils/UserPreference';
 
 export interface CloudPulseDashboardSelectProps {
-  handleDashboardChange: (dashboard: Dashboard | undefined) => void;
+  handleDashboardChange: (
+    dashboard: Dashboard | undefined,
+    isDefault?: boolean
+  ) => void;
 }
 
 export const CloudPulseDashboardSelect = React.memo(
@@ -16,7 +25,12 @@ export const CloudPulseDashboardSelect = React.memo(
       data: dashboardsList,
       error,
       isLoading,
-    } = useCloudViewDashboardsQuery(true); //Fetch the list of dashboards
+    } = useCloudPulseDashboardsQuery(true); // Fetch the list of dashboards
+
+    const [
+      selectedDashboard,
+      setSelectedDashboard,
+    ] = React.useState<Dashboard>();
 
     const errorText: string = error ? 'Error loading dashboards' : '';
 
@@ -29,26 +43,35 @@ export const CloudPulseDashboardSelect = React.memo(
       );
     };
 
-    if (!dashboardsList) {
-      return (
-        <Autocomplete
-          options={[]}
-          label=""
-          disabled={true}
-          onChange={() => {}}
-          data-testid="cloudview-dashboard-select"
-          placeholder={placeHolder}
-          errorText={errorText}
-        />
-      );
-    }
+    // Once the data is loaded, set the state variable with value stored in preferences
+    React.useEffect(() => {
+      if (dashboardsList) {
+        const dashboardId = getUserPreferenceObject()?.dashboardId;
+
+        if (dashboardId) {
+          const dashboard = dashboardsList.data.find(
+            (obj) => obj.id === dashboardId
+          );
+          setSelectedDashboard(dashboard);
+          props.handleDashboardChange(dashboard, true);
+        } else {
+          props.handleDashboardChange(undefined, true);
+        }
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dashboardsList]);
 
     return (
       <Autocomplete
         onChange={(_: any, dashboard: Dashboard) => {
+          updateGlobalFilterPreference({
+            [DASHBOARD_ID]: dashboard?.id,
+            [REGION]: undefined,
+            [RESOURCES]: undefined,
+          });
+          setSelectedDashboard(dashboard);
           props.handleDashboardChange(dashboard);
         }}
-        options={getSortedDashboardsList(dashboardsList.data)}
         renderGroup={(params) => (
           <Box key={params.key}>
             <Typography
@@ -62,15 +85,18 @@ export const CloudPulseDashboardSelect = React.memo(
         )}
         autoHighlight
         clearOnBlur
-        data-testid="cloudview-dashboard-select"
+        data-testid="cloudpulse-dashboard-select"
+        disabled={!dashboardsList}
         errorText={errorText}
         fullWidth
         groupBy={(option: Dashboard) => option.service_type}
-        isOptionEqualToValue={(option, value) => option.label === value.label}
+        isOptionEqualToValue={(option, value) => option.id === value.id}
         label=""
         loading={isLoading}
         noMarginTop
+        options={getSortedDashboardsList(dashboardsList?.data ?? [])}
         placeholder={placeHolder}
+        value={selectedDashboard ?? null} // Undefined is not allowed for uncontrolled component
       />
     );
   }

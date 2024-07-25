@@ -2,7 +2,10 @@ import * as React from 'react';
 
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { Notice } from 'src/components/Notice/Notice';
-import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import {
+  getIsDistributedRegion,
+  useIsGeckoEnabled,
+} from 'src/components/RegionSelect/RegionSelect.utils';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
@@ -17,13 +20,13 @@ import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { LinodeEntityDetailBody } from './LinodeEntityDetailBody';
 import { LinodeEntityDetailFooter } from './LinodeEntityDetailFooter';
 import { LinodeEntityDetailHeader } from './LinodeEntityDetailHeader';
-import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import {
   transitionText as _transitionText,
   getProgressOrDefault,
   isEventWithSecondaryLinodeStatus,
 } from './transitions';
 
+import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
 import type { TypographyProps } from 'src/components/Typography';
 
@@ -31,7 +34,6 @@ interface LinodeEntityDetailProps {
   id: number;
   isSummaryView?: boolean;
   linode: Linode;
-  openTagDrawer: () => void;
   variant?: TypographyProps['variant'];
 }
 
@@ -40,7 +42,7 @@ export interface Props extends LinodeEntityDetailProps {
 }
 
 export const LinodeEntityDetail = (props: Props) => {
-  const { handlers, isSummaryView, linode, openTagDrawer, variant } = props;
+  const { handlers, isSummaryView, linode, variant } = props;
 
   const notificationContext = React.useContext(_notificationContext);
 
@@ -58,7 +60,10 @@ export const LinodeEntityDetail = (props: Props) => {
 
   const numberOfVolumes = volumes?.results ?? 0;
 
-  const { data: regions } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
 
   const {
     configInterfaceWithVPC,
@@ -136,7 +141,6 @@ export const LinodeEntityDetail = (props: Props) => {
             linodePlan={linodePlan}
             linodeRegionDisplay={linodeRegionDisplay}
             linodeTags={linode.tags}
-            openTagDrawer={openTagDrawer}
           />
         }
         header={

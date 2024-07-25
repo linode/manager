@@ -12,7 +12,6 @@ import {
   getVisible,
 } from 'support/helpers';
 import { ui } from 'support/ui';
-import { apiMatcher } from 'support/util/intercepts';
 import { randomString, randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { getRegionById } from 'support/util/regions';
@@ -39,6 +38,7 @@ import {
 import { mockGetVLANs } from 'support/intercepts/vlans';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import {
+  interceptCreateLinode,
   mockCreateLinode,
   mockGetLinodeType,
   mockGetLinodeTypes,
@@ -155,10 +155,14 @@ describe('create linode', () => {
     // intercept request
     cy.visitWithLogin('/linodes/create');
     cy.get('[data-qa-deploy-linode]');
-    cy.intercept('POST', apiMatcher('linode/instances')).as('linodeCreated');
+    interceptCreateLinode().as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(chooseRegion().label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(
+        chooseRegion({ capabilities: ['Vlans', 'Linodes'] }).label
+      )
+      .click();
     fbtClick('Shared CPU');
     getClick('[id="g6-nanode-1"]');
     getClick('#linode-label').clear().type(linodeLabel);
@@ -501,20 +505,21 @@ describe('create linode', () => {
     getVisible('[data-testid="vpc-panel"]').within(() => {
       containsVisible('Assign this Linode to an existing VPC.');
       // select VPC
-      cy.get('[data-qa-enhanced-select="None"]')
+      cy.findByLabelText('Assign VPC')
         .should('be.visible')
-        .click()
-        .type(`${mockVPC.label}{enter}`);
+        .focus()
+        .type(`${mockVPC.label}{downArrow}{enter}`);
       // select subnet
-      cy.findByText('Select Subnet')
+      cy.findByPlaceholderText('Select Subnet')
         .should('be.visible')
-        .click()
-        .type(`${mockSubnet.label}{enter}`);
+        .type(`${mockSubnet.label}{downArrow}{enter}`);
     });
 
     getClick('#linode-label').clear().type(linodeLabel);
     cy.get('#root-password').type(rootpass);
-    getClick('[data-qa-deploy-linode]');
+
+    ui.button.findByTitle('Create Linode').click();
+
     cy.wait('@linodeCreated').its('response.statusCode').should('eq', 200);
     fbtVisible(linodeLabel);
     cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');

@@ -1,5 +1,6 @@
-import { CustomAnalyticsData } from './types';
 import { sendEvent } from './utils';
+
+import type { CustomAnalyticsData } from './types';
 
 /**
  * Custom Events
@@ -113,7 +114,7 @@ export const sendCreateNodeBalancerEvent = (eventLabel: string): void => {
 // LinodeCreateContainer.tsx
 export const sendCreateLinodeEvent = (
   eventAction: string,
-  eventLabel: string,
+  eventLabel: string | undefined,
   eventData?: CustomAnalyticsData
 ): void => {
   sendEvent({
@@ -452,24 +453,6 @@ export const sendUpdateLinodeLabelEvent = (
   });
 };
 
-// GravatarByEmail.tsx
-export const sendHasGravatarEvent = (hasGravatar: boolean) => {
-  sendEvent({
-    action: 'Load',
-    category: 'Gravatar',
-    label: hasGravatar ? 'Has Gravatar' : 'Does not have Gravatar',
-  });
-};
-
-// DisplaySettings.tsx
-export const sendManageGravatarEvent = () => {
-  sendEvent({
-    action: 'Click:link',
-    category: 'Gravatar',
-    label: 'Manage photo',
-  });
-};
-
 // SelectLinodePanel.tsx
 // LinodeSelectTable.tsx
 export const sendLinodePowerOffEvent = (category: string) => {
@@ -477,5 +460,14 @@ export const sendLinodePowerOffEvent = (category: string) => {
     action: 'Click:button',
     category,
     label: 'Power Off',
+  });
+};
+
+// SupportTicketDialog.tsx
+export const sendSupportTicketExitEvent = (label: 'Cancel' | 'Close') => {
+  sendEvent({
+    action: 'Open a Support Ticket',
+    category: 'Support Ticket',
+    label: `Click:${label}`,
   });
 };

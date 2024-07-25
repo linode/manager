@@ -63,7 +63,7 @@ describe('database current configuration section', () => {
     getByText('1 GB');
 
     getByText('CPUs');
-    getByText('2');
+    getByText('4');
 
     getByText('Total Disk Size');
     getByText('15 GB');

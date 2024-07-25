@@ -1,4 +1,3 @@
-import { Region } from '@linode/api-v4';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
@@ -24,6 +23,7 @@ import type {
   DisableRegionOption,
   RegionMultiSelectProps,
 } from './RegionSelect.types';
+import type { Region } from '@linode/api-v4';
 
 interface LabelComponentProps {
   region: Region;
@@ -67,6 +67,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     selectedIds,
     sortRegionOptions,
     width,
+    ...rest
   } = props;
 
   const {
@@ -114,7 +115,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             return getRegionCountryGroup(option);
           }}
           onChange={(_, selectedOptions) =>
-            onChange(selectedOptions.map((region) => region.id))
+            onChange(selectedOptions?.map((region) => region.id) ?? [])
           }
           renderOption={(props, option, { selected }) => {
             if (!option.site_type) {
@@ -154,7 +155,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             InputProps: {
               required,
             },
-            placeholder: selectedRegions.length > 0 ? '' : placeholder,
             tooltipText: helperText,
           }}
           autoHighlight
@@ -171,6 +171,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
           options={regionOptions}
           placeholder={placeholder ?? 'Select Regions'}
           value={selectedRegions}
+          {...rest}
         />
       </StyledAutocompleteContainer>
       {selectedRegions.length > 0 && SelectedRegionsList && (

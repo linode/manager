@@ -1,6 +1,4 @@
-import { Region } from '@linode/api-v4';
 import {
-  ACLType,
   getBucketAccess,
   updateBucketAccess,
 } from '@linode/api-v4/lib/object-storage';
@@ -11,6 +9,7 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
@@ -24,6 +23,9 @@ import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { AccessSelect } from '../BucketDetail/AccessSelect';
+
+import type { Region } from '@linode/api-v4';
+import type { ACLType } from '@linode/api-v4/lib/object-storage';
 export interface BucketDetailsDrawerProps {
   bucketLabel?: string;
   bucketRegion?: Region;
@@ -63,7 +65,10 @@ export const BucketDetailsDrawer = React.memo(
     const { data: clusters } = useObjectStorageClusters(
       !isObjMultiClusterEnabled
     );
-    const { data: regions } = useRegionsQuery();
+    const { isGeckoGAEnabled } = useIsGeckoEnabled();
+    const { data: regions } = useRegionsQuery({
+      transformRegionLabel: isGeckoGAEnabled,
+    });
     const { data: profile } = useProfile();
     const actualCluster = clusters?.find((c) => c.id === cluster);
     const region = regions?.find((r) => r.id === actualCluster?.region);
