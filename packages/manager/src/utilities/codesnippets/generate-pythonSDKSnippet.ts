@@ -63,6 +63,16 @@ export function generatePythonLinodeSnippet(
           iface.label
         )}",\n`;
       }
+      if (iface.ipv4 && (iface.ipv4?.nat_1_1 || iface.ipv4?.vpc)) {
+        snippet += `            "ipv4"={\n`;
+        if (iface.ipv4?.nat_1_1) {
+          snippet += `                "nat_1_1":"${iface.ipv4.nat_1_1}",\n`;
+        }
+        if (iface.ipv4?.vpc) {
+          snippet += `                "vpc":"${iface.ipv4.vpc}",\n`;
+        }
+        snippet += `            },\n`;
+      }
       if (iface.purpose) {
         snippet += `            "purpose": "${escapePythonString(
           iface.purpose

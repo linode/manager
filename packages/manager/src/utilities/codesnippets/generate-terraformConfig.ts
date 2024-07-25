@@ -46,12 +46,13 @@ export function generateTerraformConfig(config: CreateLinodeRequest): string {
           ?.join(', ');
         terraformConfig += `    ip_ranges = [${ip_rangesFormatted}]\n`;
       }
-      if (interfaceConfig.ipv4) {
+      if (interfaceConfig.ipv4?.nat_1_1 || interfaceConfig.ipv4?.vpc) {
+        terraformConfig += `    ipv4 {\n`;
         if (interfaceConfig.ipv4.nat_1_1) {
-          terraformConfig += `    ipv4 {\n      nat_1_1 = "${interfaceConfig.ipv4.nat_1_1}"\n`;
+          terraformConfig += `      nat_1_1 = "${interfaceConfig.ipv4.nat_1_1}"\n`;
         }
         if (interfaceConfig.ipv4.vpc) {
-          terraformConfig += `      vpc = "${interfaceConfig.ipv4.vpc}"\n    }\n`;
+          terraformConfig += `      vpc = "${interfaceConfig.ipv4.vpc}"\n`;
         }
         terraformConfig += `    }\n`;
       }

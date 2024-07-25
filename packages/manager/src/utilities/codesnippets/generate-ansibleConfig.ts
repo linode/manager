@@ -87,8 +87,14 @@ export function generateAnsibleConfig(config: CreateLinodeRequest): string {
           .map((ip) => escapeYAMLString(ip))
           .join('\n          - ')}\n`;
       }
-      if (iface.ipv4 && iface.ipv4.nat_1_1) {
-        configStr += `        ipv4:\n          nat_1_1: "${iface.ipv4.nat_1_1}"\n`;
+      if (iface.ipv4 && (iface.ipv4?.nat_1_1 || iface.ipv4?.vpc)) {
+        configStr += `        ipv4:\n`;
+        if (iface.ipv4.nat_1_1) {
+          configStr += `          nat_1_1: "${iface.ipv4.nat_1_1}"\n`;
+        }
+        if (iface.ipv4.vpc) {
+          configStr += `          vpc: "${iface.ipv4.vpc}"\n`;
+        }
       }
       if (iface.label) {
         configStr += `        label: "${escapeYAMLString(iface.label)}"\n`;
