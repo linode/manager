@@ -1,8 +1,8 @@
-import { supportTicketStorageDefaults } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 import {
   authentication,
   stackScriptInProgress,
   supportTicket,
+  supportTicketStorageDefaults,
   ticketReply,
 } from 'src/utilities/storage';
 

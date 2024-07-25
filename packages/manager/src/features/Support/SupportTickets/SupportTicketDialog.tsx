@@ -18,7 +18,7 @@ import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventA
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { reduceAsync } from 'src/utilities/reduceAsync';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
-import { storage } from 'src/utilities/storage';
+import { storage, supportTicketStorageDefaults } from 'src/utilities/storage';
 
 import { AttachFileForm } from '../AttachFileForm';
 import { MarkdownReference } from '../SupportTicketDetail/TabbedReply/MarkdownReference';
@@ -119,16 +119,6 @@ export interface SupportTicketFormFields {
   summary: string;
   ticketType: TicketType;
 }
-
-export const supportTicketStorageDefaults: SupportTicketFormFields = {
-  description: '',
-  entityId: '',
-  entityInputValue: '',
-  entityType: 'general',
-  selectedSeverity: undefined,
-  summary: '',
-  ticketType: 'general',
-};
 
 export const entitiesToItems = (type: string, entities: any) => {
   return entities.map((entity: any) => {

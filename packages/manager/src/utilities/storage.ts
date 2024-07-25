@@ -1,5 +1,4 @@
 import { shouldEnableDevTools } from 'src/dev-tools/load';
-import { supportTicketStorageDefaults } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
 import type { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
 import type { SupportTicketFormFields } from 'src/features/Support/SupportTickets/SupportTicketDialog';
@@ -79,6 +78,17 @@ export interface DevToolsEnv {
   label: string;
   loginRoot: string;
 }
+
+// We declare and export here to ensure it is available in the test environment, avoiding test failures.
+export const supportTicketStorageDefaults: SupportTicketFormFields = {
+  description: '',
+  entityId: '',
+  entityInputValue: '',
+  entityType: 'general',
+  selectedSeverity: undefined,
+  summary: '',
+  ticketType: 'general',
+};
 
 export interface Storage {
   BackupsCtaDismissed: {
