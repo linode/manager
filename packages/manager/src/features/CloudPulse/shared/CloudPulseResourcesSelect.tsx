@@ -17,19 +17,25 @@ export interface CloudPulseResources {
 }
 
 export interface CloudPulseResourcesSelectProps {
+  disabled?: boolean;
   handleResourcesSelection: (resources: CloudPulseResources[]) => void;
   placeholder?: string;
   region: string | undefined;
   resourceType: string | undefined;
+  xFilter?: { [key: string]: any } | undefined;
 }
 
 export const CloudPulseResourcesSelect = React.memo(
   (props: CloudPulseResourcesSelectProps) => {
     const { data: resources, isLoading } = useResourcesQuery(
-      props.region && props.resourceType ? true : false,
+      props.disabled != undefined
+        ? !props.disabled
+        : props.region && props.resourceType
+        ? true
+        : false,
       props.resourceType,
       {},
-      { region: props.region }
+      props.xFilter ? props.xFilter : { region: props.region }
     );
 
     const [selectedResources, setSelectedResources] = React.useState<
@@ -59,7 +65,7 @@ export const CloudPulseResourcesSelect = React.memo(
         setSelectedResources([]);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resources, props.region, props.resourceType]);
+    }, [resources, props.region, props.resourceType, props.xFilter]);
 
     return (
       <Autocomplete
@@ -75,7 +81,7 @@ export const CloudPulseResourcesSelect = React.memo(
         autoHighlight
         clearOnBlur
         data-testid="resource-select"
-        disabled={!props.region || !props.resourceType || isLoading}
+        disabled={props.disabled || isLoading}
         isOptionEqualToValue={(option, value) => option.id === value.id}
         label=""
         limitTags={2}
