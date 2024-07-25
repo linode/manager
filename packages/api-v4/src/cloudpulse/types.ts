@@ -84,6 +84,6 @@ export interface JWETokenPayLoad {
   resource_id: string[];
 }
 
-export interface JWEToken{
+export interface JWEToken {
   token: string;
 }
