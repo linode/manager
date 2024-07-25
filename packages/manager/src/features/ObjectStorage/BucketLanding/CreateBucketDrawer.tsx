@@ -131,11 +131,6 @@ export const CreateBucketDrawer = (props: Props) => {
 
   const onSubmit = async (data: CreateObjectStorageBucketPayload) => {
     try {
-      if (accountSettings?.object_storage !== 'active') {
-        setIsEnableObjDialogOpen(true);
-        return;
-      }
-
       await createBucket(data);
 
       if (data.cluster) {
@@ -158,6 +153,15 @@ export const CreateBucketDrawer = (props: Props) => {
     }
   };
 
+  const handleBucketFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    if (accountSettings?.object_storage !== 'active') {
+      e.preventDefault();
+      setIsEnableObjDialogOpen(true);
+    } else {
+      handleSubmit(onSubmit);
+    }
+  };
+
   const clusterRegion = watchCluster
     ? regions?.find((region) => watchCluster.includes(region.id))
     : undefined;
@@ -176,7 +180,7 @@ export const CreateBucketDrawer = (props: Props) => {
       open={isOpen}
       title="Create Bucket"
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleBucketFormSubmit}>
         {isRestrictedUser && (
           <Notice
             data-qa-permissions-notice
