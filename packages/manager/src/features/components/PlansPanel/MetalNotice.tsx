@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { StyledTypography } from './PlansPanel.styles';
@@ -14,7 +15,10 @@ interface Props {
 export const MetalNotice = (props: Props) => {
   const { dataTestId, hasDisabledClass } = props;
 
-  const { data: regions } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
 
   // Until BM-426 is merged, we aren't filtering for regions in getDisabledClass
   // so this branch will never run.
