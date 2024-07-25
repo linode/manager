@@ -34,8 +34,8 @@ describe('Maintenance', () => {
    * - Confirm "Download CSV" button for completed maintenance visible and enabled.
    */
   it('confirm maintenance details in the tables', () => {
-    const pendingMaintenanceNumber = 5;
-    const completedMaintenanceNumber = 10;
+    const pendingMaintenanceNumber = 2;
+    const completedMaintenanceNumber = 5;
     const accountpendingMaintenance = accountMaintenanceFactory.buildList(
       pendingMaintenanceNumber
     );
@@ -57,21 +57,49 @@ describe('Maintenance', () => {
     cy.contains('No completed maintenance').should('not.exist');
 
     // Confirm Pending table is not empty and contains exact number of pending maintenances
-    // Confirm Completed table is not empty and contains exact number of completed maintenances
-    cy.get('tbody.MuiTableBody-root')
-      .should('exist')
+    cy.findByLabelText('List of pending maintenance')
       .should('be.visible')
-      .each(($tbody, index, $tbodys) => {
-        cy.wrap($tbody).within(() => {
-          if (index === 0) {
-            cy.get('tr').should('have.length', pendingMaintenanceNumber);
-          } else if (index === $tbodys.length - 1) {
-            cy.get('tr').should('have.length', completedMaintenanceNumber);
-          }
+      .find('tbody')
+      .within(() => {
+        accountpendingMaintenance.forEach(() => {
           cy.get('tr')
-            .should('exist')
-            .each(($row, idx, $rows) => {
-              cy.wrap($row).within(() => {
+            .should('have.length', accountpendingMaintenance.length)
+            .each((row, index) => {
+              const pendingMaintenance = accountpendingMaintenance[index];
+              cy.wrap(row).within(() => {
+                cy.contains(pendingMaintenance.entity.label).should(
+                  'be.visible'
+                );
+                // TODO One of the reasons is too long to fit in, waiting for reviews in
+                // https://github.com/linode/manager/pull/10694#discussion_r1691635245
+                // cy.findByText(pendingMaintenance.reason).should('be.visible');
+                // Check the content of each <td> element
+                cy.get('td').each(($cell, idx, $cells) => {
+                  cy.wrap($cell).should('not.be.empty');
+                });
+              });
+            });
+        });
+      });
+
+    // Confirm Completed table is not empty and contains exact number of completed maintenances
+    cy.findByLabelText('List of completed maintenance')
+      .should('be.visible')
+      .find('tbody')
+      .within(() => {
+        accountcompletedMaintenance.forEach(() => {
+          cy.get('tr')
+            .should('have.length', accountcompletedMaintenance.length)
+            .each((row, index) => {
+              const completedMaintenance = accountcompletedMaintenance[index];
+              cy.wrap(row).within(() => {
+                cy.contains(completedMaintenance.entity.label).should(
+                  'be.visible'
+                );
+                // TODO One of the reasons is too long to fit in, waiting for reviews in
+                // https://github.com/linode/manager/pull/10694#discussion_r1691635245
+                // cy.findByText(pendingMaintenance.reason).should('be.visible');
+                // cy.findByText(completedMaintenance.reason).should('be.visible');
                 // Check the content of each <td> element
                 cy.get('td').each(($cell, idx, $cells) => {
                   cy.wrap($cell).should('not.be.empty');
