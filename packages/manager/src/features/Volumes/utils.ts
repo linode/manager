@@ -4,6 +4,7 @@ import type { Status } from 'src/components/StatusIcon/StatusIcon';
 export const volumeStatusIconMap: Record<Volume['status'], Status> = {
   active: 'active',
   creating: 'other',
+  key_rotating: 'other',
   migrating: 'other',
   offline: 'inactive',
   resizing: 'other',
@@ -14,7 +15,7 @@ export const volumeStatusIconMap: Record<Volume['status'], Status> = {
  * returns a volume's status with event info taken into account.
  *
  * We do this to provide users with a real-time feeling experience
- * without having to refetch a volume's status agressivly.
+ * without having to refetch a volume's status aggressively.
  *
  * @param status The actual volume status from the volumes endpoint
  * @param event An in-progress event for the volume
