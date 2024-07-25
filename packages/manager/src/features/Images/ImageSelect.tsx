@@ -1,13 +1,16 @@
-import { Image } from '@linode/api-v4/lib/images';
-import { Box } from 'src/components/Box';
+import Autocomplete from '@mui/material/Autocomplete';
 import { clone, propOr } from 'ramda';
 import * as React from 'react';
 
-import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
+import { Box } from 'src/components/Box';
+import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useAllImagesQuery } from 'src/queries/images';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { groupImages } from 'src/utilities/images';
+
+import type { Image } from '@linode/api-v4/lib/images';
+import type { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 
 interface BaseProps {
   anyAllOption?: boolean;
@@ -62,6 +65,7 @@ export const ImageSelect = (props: MultiProps | Props) => {
   ]);
 
   const imageSelectOptions = clone(renderedImages);
+  debugger;
 
   if (anyAllOption) {
     imageSelectOptions.unshift({
@@ -88,20 +92,31 @@ export const ImageSelect = (props: MultiProps | Props) => {
           width: '415px',
         }}
       >
-        <Select
-          textFieldProps={{
-            required,
+        <Autocomplete
+          onChange={(event, value) => {
+            onSelect(value?.id ?? -1);
           }}
+          renderInput={(params) => (
+            <TextField
+              helperText={
+                helperText || 'Choosing a 64-bit distro is recommended.'
+              }
+              errorText={imageError || imageFieldError || rqError}
+              label={label || 'Image'}
+              // onBlur={onBlur}
+              placeholder="Select an Image"
+              required={required}
+              {...params}
+            />
+          )}
+          // }}
           disabled={disabled || Boolean(imageError)}
-          errorText={imageError || imageFieldError || rqError}
+          groupBy={(option) => option.label}
           id={'image-select'}
-          isLoading={imagesLoading}
-          isMulti={Boolean(isMulti)}
-          label={label || 'Image'}
-          onChange={onSelect}
-          options={imageSelectOptions as any}
-          placeholder="Select an Image"
-          value={value}
+          loading={imagesLoading}
+          multiple={Boolean(isMulti)}
+          options={imageSelectOptions.flatMap((option) => option.options)}
+          value={isMulti ? value : [value]}
         />
       </Box>
       <Box>

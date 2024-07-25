@@ -1,9 +1,6 @@
-import { Image } from '@linode/api-v4/lib/images';
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Item } from 'src/components/EnhancedSelect/Select';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
@@ -18,6 +15,10 @@ import {
   StyledNotice,
   StyledTextField,
 } from './StackScriptForm.styles';
+
+import type { Image } from '@linode/api-v4/lib/images';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 interface TextFieldHandler {
   handler: (e: React.ChangeEvent<HTMLInputElement>) => void;

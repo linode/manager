@@ -1,9 +1,11 @@
-import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import * as React from 'react';
 
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
+
+import type { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 interface Props {
   error?: string;
@@ -25,6 +27,20 @@ interface State {
 }
 
 class UserDefinedMultiSelect extends React.Component<Props, State> {
+  handleSelectManyOf = (selectedOptions: Item[]) => {
+    const { field, updateFormState } = this.props;
+
+    const arrayToString = Array.prototype.map
+      .call(selectedOptions, (opt: Item) => opt.value)
+      .toString();
+
+    updateFormState(field.name, arrayToString);
+  };
+
+  state: State = {
+    manyof: this.props.field.manyof!.split(','),
+  };
+
   render() {
     const { manyof } = this.state;
     const { error, field, value: propValue } = this.props;
@@ -61,20 +77,6 @@ class UserDefinedMultiSelect extends React.Component<Props, State> {
       </div>
     );
   }
-
-  handleSelectManyOf = (selectedOptions: Item[]) => {
-    const { field, updateFormState } = this.props;
-
-    const arrayToString = Array.prototype.map
-      .call(selectedOptions, (opt: Item) => opt.value)
-      .toString();
-
-    updateFormState(field.name, arrayToString);
-  };
-
-  state: State = {
-    manyof: this.props.field.manyof!.split(','),
-  };
 }
 
 export default RenderGuard<Props>(UserDefinedMultiSelect);
