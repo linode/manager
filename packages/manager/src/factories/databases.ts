@@ -1,4 +1,7 @@
-import {
+import Factory from 'src/factories/factoryProxy';
+import { pickRandom, randomDate } from 'src/utilities/random';
+
+import type {
   Database,
   DatabaseBackup,
   DatabaseEngine,
@@ -7,11 +10,7 @@ import {
   DatabaseType,
   MySQLReplicationType,
   PostgresReplicationType,
-} from '@linode/api-v4/lib/databases/types';
-import Factory from 'src/factories/factoryProxy';
-import { v4 } from 'uuid';
-
-import { pickRandom, randomDate } from 'src/utilities/random';
+} from '@linode/api-v4';
 
 // These are not all of the possible statuses, but these are some common ones.
 export const possibleStatuses: DatabaseStatus[] = [
@@ -205,7 +204,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
 export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
   created: Factory.each(() => randomDate().toISOString()),
   id: Factory.each((i) => i),
-  label: Factory.each(() => `backup-${v4()}`),
+  label: Factory.each(() => `backup-${crypto.randomUUID()}`),
   type: pickRandom(['snapshot', 'auto']),
 });
 

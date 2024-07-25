@@ -1,13 +1,13 @@
-import {
+import Factory from 'src/factories/factoryProxy';
+
+import type {
   KubeNodePoolResponse,
   KubernetesCluster,
   KubernetesDashboardResponse,
   KubernetesEndpointResponse,
   KubernetesVersion,
   PoolNodeResponse,
-} from '@linode/api-v4/lib/kubernetes/types';
-import Factory from 'src/factories/factoryProxy';
-import { v4 } from 'uuid';
+} from '@linode/api-v4';
 
 export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
   id: Factory.each((id) => `id-${id}`),
@@ -44,13 +44,13 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<KubernetesClust
 
 export const kubeEndpointFactory = Factory.Sync.makeFactory<KubernetesEndpointResponse>(
   {
-    endpoint: `https://${v4()}`,
+    endpoint: `https://${crypto.randomUUID()}`,
   }
 );
 
 export const kubernetesDashboardUrlFactory = Factory.Sync.makeFactory<KubernetesDashboardResponse>(
   {
-    url: `https://${v4()}`,
+    url: `https://${crypto.randomUUID()}`,
   }
 );
 

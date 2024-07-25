@@ -3,7 +3,6 @@ import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { v4 } from 'uuid';
 
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
@@ -42,11 +41,15 @@ export const DisplaySettings = () => {
   }, [emailRef, location.state]);
 
   // Used as React keys to force-rerender forms.
-  const [emailResetToken, setEmailResetToken] = React.useState(v4());
-  const [usernameResetToken, setUsernameResetToken] = React.useState(v4());
+  const [emailResetToken, setEmailResetToken] = React.useState(
+    crypto.randomUUID()
+  );
+  const [usernameResetToken, setUsernameResetToken] = React.useState(
+    crypto.randomUUID()
+  );
 
   const updateUsername = (newUsername: string) => {
-    setEmailResetToken(v4());
+    setEmailResetToken(crypto.randomUUID());
     // Default to empty string... but I don't believe this is possible.
     return updateUser(profile?.username ?? '', {
       username: newUsername,
@@ -54,7 +57,7 @@ export const DisplaySettings = () => {
   };
 
   const updateEmail = (newEmail: string) => {
-    setUsernameResetToken(v4());
+    setUsernameResetToken(crypto.randomUUID());
     return updateProfile({ email: newEmail });
   };
 
