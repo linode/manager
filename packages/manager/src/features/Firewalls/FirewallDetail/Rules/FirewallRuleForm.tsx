@@ -275,10 +275,12 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
         }}
         autoHighlight
         disabled={['ICMP', 'IPENCAP'].includes(values.protocol)}
+        disableSelectAll
         errorText={generalPortError}
         multiple
         label="Ports"
-        placeholder="Select a port..."
+        // If options are selected, hide the placeholder
+        placeholder={presetPorts.length > 0 ? ' ' : 'Select a port...'}
         onChange={(_, selected) => handlePortPresetChange(selected)}
         options={portOptions}
         value={presetPorts}
