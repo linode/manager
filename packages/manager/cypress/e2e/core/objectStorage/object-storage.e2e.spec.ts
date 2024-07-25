@@ -157,7 +157,6 @@ describe('object storage end-to-end tests', () => {
    */
   it('can create and delete object storage buckets', () => {
     cy.tag('purpose:syntheticTesting');
-    throw new Error('This failure was triggered intentionally.');
 
     const bucketLabel = randomLabel();
     const bucketRegion = 'Atlanta, GA';
