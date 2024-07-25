@@ -56,7 +56,7 @@ export const getAppSections = (apps: MarketplaceApp[]) => {
   ];
 };
 
-interface FilterdAppsOptions {
+interface FilteredAppsOptions {
   apps: MarketplaceApp[];
   category: AppCategory | undefined;
   query: string;
@@ -71,7 +71,7 @@ interface FilterdAppsOptions {
  *
  * @returns Stackscripts that have been filtered based on the options passed
  */
-export const getFilteredApps = (options: FilterdAppsOptions) => {
+export const getFilteredApps = (options: FilteredAppsOptions) => {
   const { apps, category, query } = options;
 
   return apps.filter((app) => {
@@ -144,7 +144,7 @@ export interface MarketplaceApp {
   stackscript: StackScript;
 }
 
-export const useMakertplaceApps = () => {
+export const useMarketplaceApps = () => {
   const query = useMarketplaceAppsQuery(true);
   const flags = useFlags();
 

@@ -15,7 +15,7 @@ import { AppSelectionCard } from './AppSelectionCard';
 import {
   getAppSections,
   getFilteredApps,
-  useMakertplaceApps,
+  useMarketplaceApps,
 } from './utilities';
 
 import type { LinodeCreateFormValues } from '../../utilities';
@@ -39,7 +39,7 @@ interface Props {
 
 export const AppsList = (props: Props) => {
   const { category, onOpenDetailsDrawer, query } = props;
-  const { apps, error, isLoading } = useMakertplaceApps();
+  const { apps, error, isLoading } = useMarketplaceApps();
   const queryClient = useQueryClient();
 
   const {

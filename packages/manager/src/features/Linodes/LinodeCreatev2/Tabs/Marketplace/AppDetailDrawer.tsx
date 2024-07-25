@@ -10,7 +10,7 @@ import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
-import { useMakertplaceApps } from './utilities';
+import { useMarketplaceApps } from './utilities';
 
 import type { Theme } from '@mui/material/styles';
 
@@ -67,7 +67,7 @@ interface Props {
 export const AppDetailDrawerv2 = (props: Props) => {
   const { onClose, open, stackScriptId } = props;
   const { classes } = useStyles();
-  const { apps } = useMakertplaceApps();
+  const { apps } = useMarketplaceApps();
 
   const selectedApp = apps.find((app) => app.stackscript.id === stackScriptId)
     ?.details;

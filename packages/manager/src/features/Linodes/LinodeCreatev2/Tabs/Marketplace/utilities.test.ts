@@ -6,7 +6,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { getFilteredApps, useMakertplaceApps } from './utilities';
+import { getFilteredApps, useMarketplaceApps } from './utilities';
 
 import type { MarketplaceApp } from './utilities';
 
@@ -109,7 +109,7 @@ describe('getFilteredApps', () => {
   });
 });
 
-describe('useMakertplaceApps', () => {
+describe('useMarketplaceApps', () => {
   it('should return apps from the stackscripts response', async () => {
     const stackscript = stackScriptFactory.build({
       id: 0,
@@ -122,7 +122,7 @@ describe('useMakertplaceApps', () => {
       })
     );
 
-    const { result } = renderHook(() => useMakertplaceApps(), {
+    const { result } = renderHook(() => useMarketplaceApps(), {
       wrapper: (ui) =>
         wrapWithTheme(ui, { flags: { marketplaceAppOverrides: [] } }),
     });
@@ -149,7 +149,7 @@ describe('useMakertplaceApps', () => {
       })
     );
 
-    const { result } = renderHook(() => useMakertplaceApps(), {
+    const { result } = renderHook(() => useMarketplaceApps(), {
       wrapper: (ui) =>
         wrapWithTheme(ui, {
           flags: {
@@ -191,7 +191,7 @@ describe('useMakertplaceApps', () => {
       })
     );
 
-    const { result } = renderHook(() => useMakertplaceApps(), {
+    const { result } = renderHook(() => useMarketplaceApps(), {
       wrapper: (ui) =>
         wrapWithTheme(ui, {
           flags: {
