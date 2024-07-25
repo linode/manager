@@ -57,7 +57,15 @@ export interface TagsInputProps {
 }
 
 export const TagsInput = (props: TagsInputProps) => {
-  const { disabled, label, onChange, tagError, value } = props;
+  const {
+    disabled,
+    hideLabel,
+    label,
+    noMarginTop,
+    onChange,
+    tagError,
+    value,
+  } = props;
 
   const [errors, setErrors] = React.useState<APIError[]>([]);
 
@@ -170,6 +178,7 @@ export const TagsInput = (props: TagsInputProps) => {
       noOptionsText={'No results'}
       options={accountTagItems}
       placeholder={value.length === 0 ? 'Type to choose or create a tag.' : ' '}
+      textFieldProps={{ hideLabel, noMarginTop }}
       value={value}
     />
   );
