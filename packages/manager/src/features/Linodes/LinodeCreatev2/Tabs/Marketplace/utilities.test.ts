@@ -1,7 +1,12 @@
+import { renderHook, waitFor } from '@testing-library/react';
+
 import { stackScriptFactory } from 'src/factories';
 import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { getFilteredApps } from './utilities';
+import { getFilteredApps, useMakertplaceApps } from './utilities';
 
 import type { MarketplaceApp } from './utilities';
 
@@ -101,5 +106,107 @@ describe('getFilteredApps', () => {
     });
 
     expect(result).toStrictEqual([]);
+  });
+});
+
+describe('useMakertplaceApps', () => {
+  it('should return apps from the stackscripts response', async () => {
+    const stackscript = stackScriptFactory.build({
+      id: 0,
+      label: 'Linode Marketplace App',
+    });
+
+    server.use(
+      http.get('*/v4/linode/stackscripts', () => {
+        return HttpResponse.json(makeResourcePage([stackscript]));
+      })
+    );
+
+    const { result } = renderHook(() => useMakertplaceApps(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, { flags: { marketplaceAppOverrides: [] } }),
+    });
+
+    await waitFor(() => {
+      expect(result.current.apps).toStrictEqual([
+        {
+          details: oneClickApps[0],
+          stackscript,
+        },
+      ]);
+    });
+  });
+
+  it('should override app details with the marketplaceAppOverrides feature flag', async () => {
+    const stackscript = stackScriptFactory.build({
+      id: 0,
+      label: 'Linode Marketplace App',
+    });
+
+    server.use(
+      http.get('*/v4/linode/stackscripts', () => {
+        return HttpResponse.json(makeResourcePage([stackscript]));
+      })
+    );
+
+    const { result } = renderHook(() => useMakertplaceApps(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            marketplaceAppOverrides: [
+              {
+                details: {
+                  isNew: true,
+                  related_guides: [
+                    { href: 'https://akamai.com', title: 'Overwritten Doc' },
+                  ],
+                },
+                stackscriptId: 0,
+              },
+            ],
+          },
+        }),
+    });
+
+    await waitFor(() => {
+      expect(result.current.apps[0].details.related_guides?.[0].title).toBe(
+        'Overwritten Doc'
+      );
+      expect(result.current.apps[0].details.related_guides?.[0].href).toBe(
+        'https://akamai.com'
+      );
+      expect(result.current.apps[0].details.isNew).toBe(true);
+    });
+  });
+
+  it('should be able to hide an app with the marketplaceAppOverrides feature flag', async () => {
+    const stackscript = stackScriptFactory.build({
+      id: 0,
+      label: 'Linode Marketplace App',
+    });
+
+    server.use(
+      http.get('*/v4/linode/stackscripts', () => {
+        return HttpResponse.json(makeResourcePage([stackscript]));
+      })
+    );
+
+    const { result } = renderHook(() => useMakertplaceApps(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            marketplaceAppOverrides: [
+              {
+                details: null,
+                stackscriptId: 0,
+              },
+            ],
+          },
+        }),
+    });
+
+    await waitFor(() => expect(result.current.data).toBeDefined());
+
+    expect(result.current.apps).toHaveLength(0);
   });
 });
