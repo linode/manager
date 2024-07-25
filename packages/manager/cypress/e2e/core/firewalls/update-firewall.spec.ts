@@ -77,7 +77,7 @@ const addFirewallRules = (rule: FirewallRuleType, direction: string) => {
     .should('be.visible')
     .within(() => {
       const port = rule.ports ? rule.ports : '22';
-      cy.get('[data-qa-rule-select="true"]').type(
+      cy.findByPlaceholderText('Select a rule preset...').type(
         portPresetMap[port] + '{enter}'
       );
       const label = rule.label ? rule.label : 'test-label';
