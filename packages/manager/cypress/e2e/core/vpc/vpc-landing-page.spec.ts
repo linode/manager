@@ -1,9 +1,4 @@
 import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import {
   mockGetVPCs,
   mockDeleteVPC,
   mockDeleteVPCError,
@@ -23,14 +18,10 @@ describe('VPC landing page', () => {
    */
   it('lists VPC instances', () => {
     const mockVPCs = vpcFactory.buildList(5);
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetVPCs(mockVPCs).as('getVPCs');
 
     cy.visitWithLogin('/vpcs');
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
+    cy.wait('@getVPCs');
 
     // Confirm each VPC is listed with expected data.
     mockVPCs.forEach((mockVPC) => {
@@ -58,14 +49,10 @@ describe('VPC landing page', () => {
    * - Confirms VPC landing page empty state is shown when no VPCs are present.
    */
   it('shows empty state when there are no VPCs', () => {
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetVPCs([]).as('getVPCs');
 
     cy.visitWithLogin('/vpcs');
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
+    cy.wait('@getVPCs');
 
     // Confirm that empty state is shown and that each section is present.
     cy.findByText(VPC_LABEL).should('be.visible');
@@ -109,15 +96,11 @@ describe('VPC landing page', () => {
       description: randomPhrase(),
     };
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetVPCs([mockVPCs[1]]).as('getVPCs');
     mockUpdateVPC(mockVPCs[1].id, mockUpdatedVPC).as('updateVPC');
 
     cy.visitWithLogin('/vpcs');
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
+    cy.wait('@getVPCs');
 
     // Find mocked VPC and click its "Edit" button.
     cy.findByText(mockVPCs[1].label)
@@ -182,7 +165,7 @@ describe('VPC landing page', () => {
     mockDeleteVPC(mockVPCs[0].id).as('deleteVPC');
 
     cy.visitWithLogin('/vpcs');
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
+    cy.wait('@getVPCs');
 
     // Delete the first VPC instance
     cy.findByText(mockVPCs[0].label)
@@ -271,15 +254,11 @@ describe('VPC landing page', () => {
       }),
     ];
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetVPCs(mockVPCs).as('getVPCs');
     mockDeleteVPCError(mockVPCs[0].id).as('deleteVPCError');
 
     cy.visitWithLogin('/vpcs');
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
+    cy.wait('@getVPCs');
 
     // Try to delete VPC
     cy.findByText(mockVPCs[0].label)
