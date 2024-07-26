@@ -110,7 +110,6 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   });
 
   const watchRegion = watch('region');
-  const watchLabel = watch('label');
 
   const onSubmit = async (data: CreateObjectStorageBucketPayload) => {
     try {
@@ -215,11 +214,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'create-bucket-button',
-            disabled:
-              !watchLabel ||
-              !watchRegion ||
-              (showGDPRCheckbox && !hasSignedAgreement) ||
-              isErrorTypes,
+            disabled: (showGDPRCheckbox && !hasSignedAgreement) || isErrorTypes,
             label: 'Create Bucket',
             loading: isLoading || Boolean(region?.id && isLoadingTypes),
             tooltipText:

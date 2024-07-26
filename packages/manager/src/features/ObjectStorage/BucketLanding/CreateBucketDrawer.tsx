@@ -127,7 +127,6 @@ export const CreateBucketDrawer = (props: Props) => {
   });
 
   const watchCluster = watch('cluster');
-  const watchLabel = watch('label');
 
   const onSubmit = async (data: CreateObjectStorageBucketPayload) => {
     try {
@@ -233,11 +232,7 @@ export const CreateBucketDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'create-bucket-button',
-            disabled:
-              !watchLabel ||
-              !watchCluster ||
-              (showGDPRCheckbox && !hasSignedAgreement) ||
-              isErrorTypes,
+            disabled: (showGDPRCheckbox && !hasSignedAgreement) || isErrorTypes,
             label: 'Create Bucket',
             loading: isLoading || Boolean(clusterRegion?.id && isLoadingTypes),
             tooltipText:
