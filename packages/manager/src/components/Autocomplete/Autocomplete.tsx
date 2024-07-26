@@ -38,6 +38,8 @@ export interface EnhancedAutocompleteProps<
   placeholder?: string;
   /** Label for the "select all" option. */
   selectAllLabel?: string;
+  /** Removes "select all" option for mutliselect */
+  disableSelectAll?: boolean;
   textFieldProps?: Partial<TextFieldProps>;
 }
 
@@ -86,6 +88,7 @@ export const Autocomplete = <
     selectAllLabel = '',
     textFieldProps,
     value,
+    disableSelectAll = false,
     ...rest
   } = props;
 
@@ -166,7 +169,11 @@ export const Autocomplete = <
       multiple={multiple}
       noOptionsText={noOptionsText || <i>You have no options to choose from</i>}
       onBlur={onBlur}
-      options={multiple && options.length > 0 ? optionsWithSelectAll : options}
+      options={
+        multiple && !disableSelectAll && options.length > 0
+          ? optionsWithSelectAll
+          : options
+      }
       popupIcon={<KeyboardArrowDownIcon />}
       value={value}
       {...rest}
