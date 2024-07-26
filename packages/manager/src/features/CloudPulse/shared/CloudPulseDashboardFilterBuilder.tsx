@@ -14,12 +14,12 @@ import {
   RESOURCE_ID,
   RESOURCES,
 } from '../Utils/constants';
-import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import {
   getRegionProperties,
   getResourcesProperties,
   getTimeDurationProperties,
-} from '../Utils/utils';
+} from '../Utils/FilterBuilder';
+import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 import type { CloudPulseServiceTypeFilters } from '../Utils/models';
 import type { Dashboard, TimeDuration } from '@linode/api-v4';

@@ -4,8 +4,8 @@ import React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import RenderComponent from '../shared/CloudPulseComponentRenderer';
+import { getRegionProperties } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
-import { getRegionProperties } from '../Utils/utils';
 
 const linodeFilterConfig = FILTER_CONFIG.get('linode');
 const DASHBOARD = 'Test Metrics Dashboard';
