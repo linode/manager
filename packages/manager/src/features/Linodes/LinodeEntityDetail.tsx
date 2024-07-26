@@ -2,10 +2,7 @@ import * as React from 'react';
 
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { Notice } from 'src/components/Notice/Notice';
-import {
-  getIsDistributedRegion,
-  useIsGeckoEnabled,
-} from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
@@ -60,10 +57,7 @@ export const LinodeEntityDetail = (props: Props) => {
 
   const numberOfVolumes = volumes?.results ?? 0;
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
 
   const {
     configInterfaceWithVPC,

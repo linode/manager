@@ -1,8 +1,8 @@
+import { Linode } from '@linode/api-v4';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
 import { Button } from 'src/components/Button/Button';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
@@ -15,8 +15,6 @@ import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 import { getLinodeIconStatus } from '../../LinodesLanding/utils';
-
-import type { Linode } from '@linode/api-v4';
 
 interface Props {
   disabled?: boolean;
@@ -35,10 +33,7 @@ export const SelectLinodeCard = ({
   selected,
   showPowerActions,
 }: Props) => {
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
 
   const { data: linodeType } = useTypeQuery(
     linode?.type ?? '',

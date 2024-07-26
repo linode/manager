@@ -1,9 +1,9 @@
+import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableCell } from 'src/components/TableCell';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
@@ -24,8 +24,6 @@ import {
   StyledBucketSizeCell,
 } from './BucketTableRow.styles';
 
-import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
-
 export interface BucketTableRowProps extends ObjectStorageBucket {
   onDetails: () => void;
   onRemove: () => void;
@@ -44,10 +42,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
     size,
   } = props;
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
 
   const flags = useFlags();
   const { account } = useAccountManagement();
