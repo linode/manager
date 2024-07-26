@@ -178,9 +178,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
   const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery(isGeckoGAEnabled);
   const isAkamaiCustomer = account?.billing_source === 'akamai';
   const { classes } = useStyles();
   const flags = useFlags();
