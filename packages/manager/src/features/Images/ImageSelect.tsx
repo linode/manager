@@ -65,7 +65,6 @@ export const ImageSelect = (props: MultiProps | Props) => {
   ]);
 
   const imageSelectOptions = clone(renderedImages);
-  debugger;
 
   if (anyAllOption) {
     imageSelectOptions.unshift({
@@ -78,6 +77,10 @@ export const ImageSelect = (props: MultiProps | Props) => {
       ],
     });
   }
+
+  const formattedOptions = imageSelectOptions.flatMap(
+    (option) => option.options
+  );
 
   return (
     <Box
@@ -93,8 +96,14 @@ export const ImageSelect = (props: MultiProps | Props) => {
         }}
       >
         <Autocomplete
+          groupBy={(option) => {
+            const group = imageSelectOptions.find((group) =>
+              group.options.includes(option)
+            );
+            return group ? group.label : '';
+          }}
           onChange={(event, value) => {
-            onSelect(value?.id ?? -1);
+            onSelect(value ?? []);
           }}
           renderInput={(params) => (
             <TextField
@@ -109,14 +118,12 @@ export const ImageSelect = (props: MultiProps | Props) => {
               {...params}
             />
           )}
-          // }}
           disabled={disabled || Boolean(imageError)}
-          groupBy={(option) => option.label}
           id={'image-select'}
           loading={imagesLoading}
           multiple={Boolean(isMulti)}
-          options={imageSelectOptions.flatMap((option) => option.options)}
-          value={isMulti ? value : [value]}
+          options={formattedOptions}
+          value={value}
         />
       </Box>
       <Box>
