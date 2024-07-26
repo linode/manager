@@ -24,10 +24,13 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
     return null;
   }
 
+  const hideNetworkTransfer =
+    isGeckoGAEnabled && linode.site_type === 'distributed';
+
   return (
     <Paper>
       <Grid container spacing={4} sx={{ flexGrow: 1 }}>
-        {isGeckoGAEnabled && linode.site_type === 'distributed' ? null : ( // Distributed compute instances have no transfer pool
+        {hideNetworkTransfer ? null : ( // Distributed compute instances have no transfer pool
           <Grid md={2.5} sm={6} xs={12}>
             <NetworkTransfer
               linodeId={linode.id}
@@ -57,7 +60,7 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
             paddingBottom: 0,
           }}
           md={3.5}
-          sm={6}
+          sm={hideNetworkTransfer ? 12 : 6}
           xs={12}
         >
           <DNSResolvers region={linode.region} />
