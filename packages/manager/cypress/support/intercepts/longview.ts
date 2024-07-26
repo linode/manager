@@ -1,7 +1,7 @@
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
-import { LongviewClient } from '@linode/api-v4';
+import { LongviewClient, ActiveLongviewPlan } from '@linode/api-v4';
 import type {
   LongviewAction,
   LongviewResponse,
@@ -91,6 +91,28 @@ export const mockCreateLongviewClient = (
     apiMatcher('longview/clients*'),
     makeResponse(client)
   );
+};
+
+export const mockGetLongviewPlan = (
+  plan: ActiveLongviewPlan
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('longview/plan'), makeResponse(plan));
+};
+
+export const mockUpdateLongviewPlan = (
+  newPlan: ActiveLongviewPlan
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher('longview/plan'),
+    makeResponse(newPlan)
+  );
+};
+
+export const mockCreateLongviewPlan = (
+  plan: ActiveLongviewPlan
+): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher('longview/plan'), makeResponse(plan));
 };
 
 /**

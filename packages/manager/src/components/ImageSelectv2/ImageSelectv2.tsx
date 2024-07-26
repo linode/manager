@@ -3,7 +3,7 @@ import React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useAllImagesQuery } from 'src/queries/images';
 
-import { DistributionIcon } from '../DistributionIcon';
+import { OSIcon } from '../OSIcon';
 import { ImageOptionv2 } from './ImageOptionv2';
 import {
   getAPIFilterForImageSelect,
@@ -25,11 +25,19 @@ interface Props
    */
   filter?: (image: Image) => boolean;
   /**
+   * Set a custom select label
+   */
+  label?: string;
+  /**
    * Called when the value is changed
    */
   onChange?: (image: Image | null) => void;
   /**
-   * If there is only one avaiblable option, selected it by default.
+   * Set custom placeholder text
+   */
+  placeholder?: string;
+  /**
+   * If there is only one available option, selected it by default.
    */
   selectIfOnlyOneOption?: boolean;
   /**
@@ -46,7 +54,15 @@ interface Props
 }
 
 export const ImageSelectv2 = (props: Props) => {
-  const { filter, onChange, selectIfOnlyOneOption, variant, ...rest } = props;
+  const {
+    filter,
+    label,
+    onChange,
+    placeholder,
+    selectIfOnlyOneOption,
+    variant,
+    ...rest
+  } = props;
 
   const { data: images, error, isLoading } = useAllImagesQuery(
     {},
@@ -81,10 +97,10 @@ export const ImageSelectv2 = (props: Props) => {
       textFieldProps={{
         InputProps: {
           startAdornment: value && (
-            <DistributionIcon
-              distribution={value.vendor}
+            <OSIcon
               fontSize="24px"
               height="24px"
+              os={value.vendor}
               pl={1}
               pr={2}
             />
@@ -93,10 +109,10 @@ export const ImageSelectv2 = (props: Props) => {
       }}
       clearOnBlur
       groupBy={(option) => option.vendor ?? 'My Images'}
-      label="Images"
+      label={label || 'Images'}
       loading={isLoading}
       options={filteredOptions ?? []}
-      placeholder="Choose an image"
+      placeholder={placeholder || 'Choose an image'}
       {...rest}
       disableClearable={
         rest.disableClearable ??
