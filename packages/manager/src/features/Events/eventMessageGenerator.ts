@@ -73,10 +73,17 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     started: (e) => `Backup restoration started for ${e.entity!.label}`,
   },
   community_like: {
-    notification: (e) =>
-      e.entity?.label
-        ? `A post on "${e.entity.label}" has been liked.`
-        : `There has been a like on your community post.`,
+    notification: (e) => {
+      if (e.entity?.label) {
+        if (e.entity?.label?.includes('liked your answer to')) {
+          return `${e.entity.label} and has been liked`;
+        } else {
+          return `A post on "${e.entity.label}" has been liked.`;
+        }
+      } else {
+        return 'There has been a like on your community post.';
+      }
+    },
   },
   community_mention: {
     notification: (e) =>
