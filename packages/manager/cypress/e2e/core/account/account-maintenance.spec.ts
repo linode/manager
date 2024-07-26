@@ -124,5 +124,6 @@ describe('Maintenance', () => {
       .should('be.visible')
       .should('be.enabled')
       .click({ multiple: true });
+    // TODO Need to add assertions to confirm CSV contains the expected contents on first trial (M3-8393)
   });
 });
