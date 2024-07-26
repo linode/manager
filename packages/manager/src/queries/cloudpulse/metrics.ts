@@ -1,11 +1,14 @@
-import { getCloudPulseMetricsAPI } from '@linode/api-v4';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import Axios from 'axios';
 
 import type {
   APIError,
   CloudPulseMetricsRequest,
   CloudPulseMetricsResponse,
 } from '@linode/api-v4';
+import type { AxiosRequestConfig } from 'axios';
+
+const axiosInstance = Axios.create({});
 
 export const useCloudViewMetricsQuery = (
   serviceType: string,
@@ -19,7 +22,7 @@ export const useCloudViewMetricsQuery = (
   return useQuery<CloudPulseMetricsResponse, APIError[]>(
     [request, widgetProps, serviceType, props.authToken], // querykey and dashboardId makes this uniquely identifiable
     () =>
-      getCloudPulseMetricsAPI(
+      fetchCloudPulseMetrics(
         props.authToken,
         readApiEndpoint,
         serviceType,
@@ -46,4 +49,25 @@ export const useCloudViewMetricsQuery = (
       retry: 0,
     }
   );
+};
+
+export const fetchCloudPulseMetrics = (
+  token: string,
+  readApiEndpoint: string,
+  serviceType: string,
+  requestData: CloudPulseMetricsRequest
+) => {
+  const config: AxiosRequestConfig = {
+    data: requestData,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    method: 'POST',
+    url: `${readApiEndpoint}/${encodeURIComponent(serviceType!)}/metrics`,
+  };
+
+  return axiosInstance
+    .request(config)
+    .then((response) => response.data)
+    .catch((error) => Promise.reject(error.response.data.errors));
 };

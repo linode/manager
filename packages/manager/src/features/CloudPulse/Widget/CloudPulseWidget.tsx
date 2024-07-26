@@ -261,7 +261,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     setToday(isToday);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, metricsList]);
-
   return (
     <Grid item lg={widget.size} xs={12}>
       <Paper>
