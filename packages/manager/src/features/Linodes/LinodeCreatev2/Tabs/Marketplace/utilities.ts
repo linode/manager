@@ -129,8 +129,8 @@ const getDoesMarketplaceAppMatchQuery = (
  * Checks if the given StackScript has a category
  *
  * @param category The category to check for
- * @param stackscript The StackScript to compare aginst
- * @returns true if the given StackScript has the given category
+ * @param app The Marketplace app to compare against
+ * @returns true if the given app has the given category
  */
 const getDoesMarketplaceAppMatchCategory = (
   category: AppCategory,
