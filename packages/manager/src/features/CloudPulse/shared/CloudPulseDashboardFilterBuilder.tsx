@@ -34,7 +34,10 @@ export interface CloudPulseDashboardFilterBuilderProps {
   /**
    * all the selection changes in the filter goes through this method
    */
-  emitFilterChange: (filterKey: string, value: any) => void;
+  emitFilterChange: (
+    filterKey: string,
+    value: TimeDuration | number | number[] | string | string[] | undefined
+  ) => void;
 
   /**
    * this will handle the restrictions, if the parent of the component is going to be integrated in service analytics page
