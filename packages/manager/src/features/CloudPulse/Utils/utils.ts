@@ -2,7 +2,7 @@ import { convertData } from 'src/features/Longview/shared/formatters';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 
-import type { CloudPulseMetricValues, TimeDuration } from '@linode/api-v4';
+import type { TimeDuration } from '@linode/api-v4';
 import type {
   StatWithDummyPoint,
   WithStartAndEnd,
@@ -66,15 +66,15 @@ export const convertTimeDurationToStartAndEndTimeRange = (
   const startEnd: WithStartAndEnd = { end: 0, start: 0 };
   const nowInSeconds = Date.now() / 1000;
   startEnd.end = nowInSeconds;
-  if (timeDuration.unit == 'hr') {
+  if (timeDuration.unit === 'hr') {
     startEnd.start = nowInSeconds - timeDuration.value * 60 * 60;
   }
 
-  if (timeDuration.unit == 'min') {
+  if (timeDuration.unit === 'min') {
     startEnd.start = nowInSeconds - timeDuration.value * 60;
   }
 
-  if (timeDuration.unit == 'days') {
+  if (timeDuration.unit === 'days') {
     startEnd.start = nowInSeconds - timeDuration.value * 24 * 60 * 60;
   }
 
@@ -89,13 +89,13 @@ export const convertTimeDurationToStartAndEndTimeRange = (
  * @returns formatted data based on the time range between @startTime & @endTime
  */
 export const seriesDataFormatter = (
-  data: CloudPulseMetricValues[],
+  data: (number | string)[],
   startTime: number,
   endTime: number
-) => {
+): [number, null | number][] => {
   const formattedArray: StatWithDummyPoint[] = [];
   if (data && data.length > 0) {
-    data?.forEach((element: CloudPulseMetricValues) => {
+    data?.forEach((element: number | string) => {
       const formattedPoint: StatWithDummyPoint = {
         x: Number(element[0]),
         y: element[1] ? Number(element[1]) : null,

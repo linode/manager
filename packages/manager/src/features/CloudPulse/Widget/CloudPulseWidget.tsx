@@ -8,21 +8,17 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudViewMetricsQuery } from 'src/queries/cloudpulse/metrics';
 import { useProfile } from 'src/queries/profile/profile';
-import { isToday } from 'src/utilities/isToday';
-import { roundTo } from 'src/utilities/roundTo';
-import { getMetrics } from 'src/utilities/statMetrics';
 
-import { COLOR_MAP } from '../Utils/CloudPulseWidgetColorPalette';
+import {
+  generateGraphData,
+  getCloudPulseMetricRequest,
+} from '../Utils/CloudPulseWidgetUtils';
 import { AGGREGATE_FUNCTION, SIZE, TIME_GRANULARITY } from '../Utils/constants';
 import {
   getUserPreferenceObject,
   updateWidgetPreference,
 } from '../Utils/UserPreference';
-import {
-  convertStringToCamelCasesWithSpaces,
-  convertTimeDurationToStartAndEndTimeRange,
-  seriesDataFormatter,
-} from '../Utils/utils';
+import { convertStringToCamelCasesWithSpaces } from '../Utils/utils';
 import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFunction';
 import { CloudPulseIntervalSelect } from './components/CloudPulseIntervalSelect';
 import { CloudPulseLineGraph } from './components/CloudPulseLineGraph';
@@ -31,12 +27,12 @@ import { ZoomIcon } from './components/Zoomer';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type {
   AvailableMetrics,
-  CloudPulseMetricsList,
-  CloudPulseMetricsRequest,
   TimeDuration,
   TimeGranularity,
 } from '@linode/api-v4';
 import type { Widgets } from '@linode/api-v4';
+import type { DataSet } from 'src/components/LineGraph/LineGraph';
+import type { Metrics } from 'src/utilities/statMetrics';
 
 export interface CloudPulseWidgetProperties {
   /**
@@ -105,6 +101,13 @@ export interface CloudPulseWidgetProperties {
   widget: Widgets;
 }
 
+export interface LegendRow {
+  data: Metrics;
+  format: (value: number) => {};
+  legendColor: string;
+  legendTitle: string;
+}
+
 export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const { data: profile } = useProfile();
 
@@ -112,14 +115,16 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
 
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
 
-  const [data, setData] = React.useState<Array<any>>([]);
+  const [data, setData] = React.useState<DataSet[]>([]);
 
-  const [legendRows, setLegendRows] = React.useState<any[]>([]);
+  const [legendRows, setLegendRows] = React.useState<LegendRow[]>([]);
 
   const {
     authToken,
     availableMetrics,
     duration,
+    resourceIds,
+    resources,
     savePref,
     serviceType,
     timeStamp,
@@ -127,8 +132,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   } = props;
 
   const flags = useFlags();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [today, setToday] = React.useState<boolean>(false); // Temporarily disabled eslint for this line. Will be removed in future PRs
+  const [today, setToday] = React.useState<boolean>(false);
 
   /**
    *
@@ -217,42 +221,10 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
 
   /**
    *
-   * @returns a CloudPulseMetricRequest object to be passed as data to metric api call
-   */
-  const getCloudViewMetricsRequest = (): CloudPulseMetricsRequest => {
-    const request: CloudPulseMetricsRequest = {
-      aggregate_function: widget.aggregate_function,
-      filters: undefined,
-      group_by: widget.group_by,
-      metric: widget.metric,
-      relative_time_duration: duration ?? widget.time_duration,
-      resource_id: [],
-      time_granularity:
-        widget.time_granularity.unit === 'Auto'
-          ? undefined
-          : {
-              unit: widget.time_granularity.unit,
-              value: widget.time_granularity.value,
-            },
-    };
-
-    if (props && props.resources) {
-      request.resource_id = props.resourceIds.map((obj) => parseInt(obj, 10));
-    } else {
-      request.resource_id = widget.resource_id.map((obj) => parseInt(obj, 10));
-    }
-
-    return request;
-  };
-
-  /**
-   *
    * @param value number value for the tool tip
    * @param unit string unit for the tool tip
    * @returns formatted string using @value & @unit
    */
-  const tooltipValueFormatter = (value: number, unit: string) =>
-    `${roundTo(value)} ${unit}`;
 
   const {
     data: metricsList,
@@ -261,7 +233,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     status,
   } = useCloudViewMetricsQuery(
     serviceType,
-    getCloudViewMetricsRequest(),
+    getCloudPulseMetricRequest(widget, duration, resources, resourceIds),
     authToken,
     [
       widget.aggregate_function,
@@ -276,59 +248,17 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   );
 
   React.useEffect(() => {
-    const dimensions: any[] = [];
-    const legendRowsData: any[] = [];
+    const { dimensions, legendRowsData, today: isToday } = generateGraphData(
+      widget.color,
+      metricsList,
+      status,
+      widget.label,
+      unit
+    );
 
-    // for now we will use this, but once we decide how to work with coloring, it should be dynamic
-    let colors: string[] = COLOR_MAP.get('default')!; // choose default theme by default
-    if (widget.color) {
-      colors = COLOR_MAP.get(widget.color)!;
-    }
-
-    if (
-      status == 'success' &&
-      metricsList.data &&
-      metricsList.data.result.length > 0
-    ) {
-      let colorPalatteInfoIndex = 0;
-      metricsList.data.result.forEach((graphData: CloudPulseMetricsList) => {
-        // todo, move it to utils at a widget level
-        if (!graphData) {
-          return;
-        }
-        const color = colors[colorPalatteInfoIndex];
-        const startEnd = convertTimeDurationToStartAndEndTimeRange({
-          unit: 'min',
-          value: 30,
-        });
-        const dimension = {
-          backgroundColor: color,
-          data: seriesDataFormatter(
-            graphData.values,
-            startEnd ? startEnd.start : graphData.values[0][0],
-            startEnd
-              ? startEnd.end
-              : graphData.values[graphData.values.length - 1][0]
-          ),
-          label: `${widget.label} (${widget.unit})`,
-        };
-        // construct a legend row with the dimension
-        const legendRow = {
-          data: getMetrics(dimension.data as number[][]),
-          format: (value: number) => tooltipValueFormatter(value, props.unit),
-          legendColor: color,
-          legendTitle: dimension.label,
-        };
-        legendRowsData.push(legendRow);
-        dimensions.push(dimension);
-        colorPalatteInfoIndex = colorPalatteInfoIndex + 1;
-        setToday(isToday(startEnd.start, startEnd.end));
-      });
-
-      // chart dimensions
-      setData(dimensions);
-      setLegendRows(legendRowsData);
-    }
+    setData(dimensions);
+    setLegendRows(legendRowsData);
+    setToday(isToday);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, metricsList]);
 
@@ -387,7 +317,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
           {!isLoading && !Boolean(error) && (
             <CloudPulseLineGraph // rename where we have cloudview to cloudpulse
               error={
-                status == 'error'
+                status === 'error'
                   ? error && error.length > 0
                     ? error[0].reason
                     : 'Error while rendering widget'

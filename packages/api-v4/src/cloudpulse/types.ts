@@ -113,11 +113,6 @@ export interface CloudPulseMetricsResponseData {
 }
 
 export interface CloudPulseMetricsList {
-  metric: any;
-  values: CloudPulseMetricValues[];
-}
-
-export interface CloudPulseMetricValues {
-  timestamp: number;
-  value: string;
+  metric: { [resourceName: string]: string };
+  values: (number | string)[];
 }
