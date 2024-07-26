@@ -14,6 +14,11 @@ import {
   RESOURCES,
 } from '../Utils/constants';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
+import {
+  getRegionProperties,
+  getResourcesProperties,
+  getTimeDurationProperties,
+} from '../Utils/utils';
 
 import type { CloudPulseServiceTypeFilters } from '../Utils/models';
 import type { Dashboard, TimeDuration } from '@linode/api-v4';
@@ -28,14 +33,22 @@ export interface CloudPulseDashboardFilterBuilderProps {
 export const CloudPulseDashboardFilterBuilder = React.memo(
   (props: CloudPulseDashboardFilterBuilderProps) => {
     const [dependentFilters, setDependentFilters] = React.useState<{
-      [key: string]: any;
+      [key: string]:
+        | TimeDuration
+        | number
+        | number[]
+        | string
+        | string[]
+        | undefined;
     }>({});
 
     const [showFilter, setShowFilter] = React.useState<boolean>(true);
 
-    const dependentFilterReference: { [key: string]: any } = React.useRef({});
+    const dependentFilterReference: React.MutableRefObject<{
+      [key: string]: number | number[] | string | string[] | undefined;
+    }> = React.useRef({});
 
-    const handleResourceChange = (resourceId: any) => {
+    const handleResourceChange = (resourceId: number[]) => {
       emitFilterChangeByFilterKey(RESOURCE_ID, resourceId);
     };
 
@@ -47,7 +60,10 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       emitFilterChangeByFilterKey(REGION, region);
     };
 
-    const handleCustomSelectChange = (filterType: string, value: any) => {
+    const handleCustomSelectChange = (
+      filterType: string,
+      value: number[] | string[]
+    ) => {
       emitFilterChangeByFilterKey(filterType, value);
     };
 
@@ -57,47 +73,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     ) => {
       props.emitFilterChange(filterKey, filterValue);
       checkAndUpdateDependentFilters(filterKey, filterValue);
-    };
-
-    const getRegionProperties = (config: CloudPulseServiceTypeFilters) => {
-      return {
-        componentKey: config.configuration.filterKey,
-        filterKey: config.configuration.filterKey,
-        handleRegionChange,
-        key: config.configuration.filterKey,
-        placeholder: config.configuration.placeholder,
-        savePreferences: !props.isServiceAnalyticsIntegration,
-        selectedDashboard: props.dashboard,
-      };
-    };
-
-    const getResourcesProperties = (config: CloudPulseServiceTypeFilters) => {
-      return {
-        componentKey: config.configuration.filterKey,
-        disabled: checkIfWeNeedToDisableFilterByFilterKey(
-          config.configuration.filterKey
-        ),
-        filterKey: config.configuration.filterKey,
-        handleResourcesSelection: handleResourceChange,
-        key: config.configuration.filterKey,
-        placeholder: config.configuration.placeholder,
-        resourceType: props.dashboard?.service_type,
-        savePreferences: !props.isServiceAnalyticsIntegration,
-        xFilter: buildXFilter(config),
-      };
-    };
-
-    const getTimeDurationProperties = (
-      config: CloudPulseServiceTypeFilters
-    ) => {
-      return {
-        componentKey: config.configuration.filterKey,
-        filterKey: config.configuration.filterKey,
-        handleStatsChange: handleTimeRangeChange,
-        key: config.configuration.filterKey,
-        placeholder: config.configuration.placeholder,
-        savePreferences: !props.isServiceAnalyticsIntegration,
-      };
     };
 
     const getCustomSelectProperties = (
@@ -124,13 +99,28 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     const getProps = (config: CloudPulseServiceTypeFilters) => {
       if (config.configuration.filterKey == REGION) {
-        return getRegionProperties(config);
+        return getRegionProperties(
+          config,
+          handleRegionChange,
+          props.dashboard,
+          props.isServiceAnalyticsIntegration
+        );
       } else if (config.configuration.filterKey == RESOURCE_ID) {
-        return getResourcesProperties(config);
+        return getResourcesProperties(
+          config,
+          handleResourceChange,
+          props.dashboard,
+          props.isServiceAnalyticsIntegration,
+          dependentFilterReference.current
+        );
       } else if (config.configuration.filterKey == RELATIVE_TIME_DURATION) {
-        return getTimeDurationProperties(config);
+        return getTimeDurationProperties(
+          config,
+          handleTimeRangeChange,
+          props.isServiceAnalyticsIntegration
+        );
       } else {
-        return getCustomSelectProperties(config); // if the above doesn't match use out custom select for rendering filters
+        return getCustomSelectProperties(config); // if the above doesn't match use out custom select for rendering filters, the equivalent component for this will be implemented in upcoming PR's
       }
     };
 
@@ -154,19 +144,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           }
         }
       }
-    };
-
-    const buildXFilter = (config: CloudPulseServiceTypeFilters) => {
-      const xFilterObj: any = {};
-
-      if (config.configuration.dependency) {
-        for (let i = 0; i < config.configuration.dependency.length; i++) {
-          xFilterObj[config.configuration.dependency[i]] =
-            dependentFilters[config.configuration.dependency[i]];
-        }
-      }
-
-      return xFilterObj;
     };
 
     const getDepedendantConfig = (filterKey: string): string[] => {
@@ -202,35 +179,14 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       setShowFilter((showFilterPrev) => !showFilterPrev);
     };
 
-    const checkIfWeNeedToDisableFilterByFilterKey = (filterKey: string) => {
-      if (props.dashboard && props.dashboard.service_type) {
-        const serviceTypeConfig = FILTER_CONFIG.get(
-          props.dashboard.service_type!
-        );
-        const filters = serviceTypeConfig?.filters ?? [];
-
-        for (const filter of filters) {
-          if (
-            filter?.configuration.filterKey === filterKey &&
-            filter.configuration.dependency
-          ) {
-            return filter.configuration.dependency.some((dependent) => {
-              const dependentFilter = dependentFilters[dependent];
-              return (
-                !dependentFilter ||
-                (Array.isArray(dependentFilter) && dependentFilter.length === 0)
-              );
-            });
-          }
-        }
-      }
-      return false;
-    };
-
-    if (!props.dashboard) {
+    if (
+      !props.dashboard ||
+      !props.dashboard.service_type ||
+      !FILTER_CONFIG.has(props.dashboard.service_type)
+    ) {
       return (
         <ErrorState
-          errorText={'Please pass the dashboard to render the filters'}
+          errorText={'Please pass a valid dashboard to render the filters'}
         ></ErrorState>
       );
     }
