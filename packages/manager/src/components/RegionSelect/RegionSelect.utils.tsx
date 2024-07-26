@@ -166,7 +166,9 @@ export const useIsGeckoEnabled = () => {
   const flags = useFlags();
   const isGeckoGA = flags?.gecko2?.enabled && flags.gecko2.ga;
   const isGeckoBeta = flags.gecko2?.enabled && !flags.gecko2?.ga;
-  const { data: regions } = useRegionsQuery(isGeckoGA);
+  const { data: regions } = useRegionsQuery({
+    transformRegionLabel: isGeckoGA,
+  });
 
   const hasDistributedRegionCapability = regions?.some((region: Region) =>
     region.capabilities.includes('Distributed Plans')
