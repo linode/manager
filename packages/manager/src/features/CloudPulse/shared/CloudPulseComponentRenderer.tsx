@@ -7,7 +7,9 @@ import { CloudPulseTimeRangeSelect } from './CloudPulseTimeRangeSelect';
 
 import type { MemoExoticComponent } from 'react';
 
-const Components: { [key: string]: MemoExoticComponent<any> } = {
+const Components: {
+  [key: string]: MemoExoticComponent<React.ComponentType>;
+} = {
   region: CloudPulseRegionSelect,
   relative_time_duration: CloudPulseTimeRangeSelect,
   resource_id: CloudPulseResourcesSelect,

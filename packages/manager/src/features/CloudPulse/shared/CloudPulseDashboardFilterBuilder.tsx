@@ -1,6 +1,6 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { Box, Grid, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
@@ -24,15 +24,26 @@ import type { CloudPulseServiceTypeFilters } from '../Utils/models';
 import type { Dashboard, TimeDuration } from '@linode/api-v4';
 
 export interface CloudPulseDashboardFilterBuilderProps {
-  // we need to dashboard here, as we can infer serviceType and other required properties from it. Since it is going to integrated after a dashboard selection component, it is easily available to pass
+  /**
+   * we need to dashboard here, as we can infer serviceType and other required properties from it.
+   * Since it is going to integrated after a dashboard selection component, it is easily available to pass.
+   */
   dashboard: Dashboard;
-  emitFilterChange: (filterKey: string, value: any) => void; // all the selection changes in the filter goes through this method
-  isServiceAnalyticsIntegration: boolean; // this will handle the restrictions, if the parent of the component is going to be integrated in service analytics page
+
+  /**
+   * all the selection changes in the filter goes through this method
+   */
+  emitFilterChange: (filterKey: string, value: any) => void;
+
+  /**
+   * this will handle the restrictions, if the parent of the component is going to be integrated in service analytics page
+   */
+  isServiceAnalyticsIntegration: boolean;
 }
 
 export const CloudPulseDashboardFilterBuilder = React.memo(
   (props: CloudPulseDashboardFilterBuilderProps) => {
-    const [dependentFilters, setDependentFilters] = React.useState<{
+    const [, setDependentFilters] = React.useState<{
       [key: string]:
         | TimeDuration
         | number
@@ -81,7 +92,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       return {
         apiResponseIdField: config.configuration.apiIdField,
         apiResponseLabelField: config.configuration.apiLabelField,
-        clearSelections: getDepedendantConfig(config.configuration.filterKey),
+        clearSelections: getDependantConfig(config.configuration.filterKey),
         componentKey: 'customDropDown', // needed for renderer to choose the component
         dataApiUrl: config.configuration.apiUrl,
         filterKey: config.configuration.filterKey,
@@ -133,10 +144,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
         for (const filter of filters) {
           if (
-            filter &&
-            filter.configuration &&
-            filter.configuration.dependency &&
-            filter.configuration.dependency.includes(filterKey)
+            Boolean(filter?.configuration.dependency?.length) &&
+            filter?.configuration.dependency?.includes(filterKey)
           ) {
             dependentFilterReference.current[filterKey] = value;
             setDependentFilters({ ...dependentFilterReference.current });
@@ -146,33 +155,23 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       }
     };
 
-    const getDepedendantConfig = (filterKey: string): string[] => {
+    const getDependantConfig = (filterKey: string): string[] => {
       const serviceTypeConfig = FILTER_CONFIG.get(
-        props.dashboard.service_type!
-      );
+        props.dashboard.service_type!)
 
-      const dependants: string[] = [];
-
-      for (
-        let i = 0;
-        serviceTypeConfig && i < serviceTypeConfig?.filters.length;
-        i++
-      ) {
-        const filter = serviceTypeConfig.filters[i];
-        if (
-          filter.configuration &&
-          filter.configuration.dependency != undefined &&
-          filter.configuration.dependency.includes(filterKey)
-        ) {
-          dependants.push(
-            filter.configuration.filterKey == RESOURCE_ID
-              ? RESOURCES
-              : filter.configuration.filterKey
-          );
-        }
+      if (!serviceTypeConfig) {
+        return [];
       }
 
-      return dependants;
+      return serviceTypeConfig.filters
+        .filter((filter) =>
+          filter.configuration?.dependency?.includes(filterKey)
+        )
+        .map((filter) =>
+          filter.configuration.filterKey === RESOURCE_ID
+            ? RESOURCES
+            : filter.configuration.filterKey
+        );
     };
 
     const toggleShowFilter = () => {
@@ -186,7 +185,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     ) {
       return (
         <ErrorState
-          errorText={'Please pass a valid dashboard to render the filters'}
+          errorText={'Please pass valid dashboard to render the filters'}
         ></ErrorState>
       );
     }
@@ -194,53 +193,42 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     return (
       <>
         {!showFilter && (
-          <Button
-            key={'right'}
-            onClick={toggleShowFilter}
-            sx={{ marginTop: 2 }}
-          >
+          <Button onClick={toggleShowFilter} sx={{ marginTop: 2 }}>
             <KeyboardArrowRightIcon />
             <Typography>Filters</Typography>
           </Button>
         )}
         {showFilter && (
-          <Button key={'down'} onClick={toggleShowFilter} sx={{ marginTop: 2 }}>
+          <Button onClick={toggleShowFilter} sx={{ marginTop: 2 }}>
             <KeyboardArrowDownIcon />
             <Typography>Filters</Typography>
           </Button>
         )}
-        {showFilter &&
-          FILTER_CONFIG.get(props.dashboard.service_type)
-            ?.filters.filter((config) =>
-              !props.isServiceAnalyticsIntegration
-                ? config.configuration.filterKey != RELATIVE_TIME_DURATION
-                : config.configuration.neededInServicePage
-            )
-            .map((filter, index) => {
-              if (index % 3 == 0) {
+        <Grid container xs={12}>
+          {showFilter &&
+            FILTER_CONFIG.get(props.dashboard.service_type)
+              ?.filters.filter(
+                (config) =>
+                  (props.isServiceAnalyticsIntegration === false &&
+                    config.configuration.neededInServicePage === false) ||
+                  (props.isServiceAnalyticsIntegration === true &&
+                    config.configuration.neededInServicePage === true)
+              )
+              .map((filter, index) => {
                 return (
-                  <>
-                    <Box style={{ width: '100%' }}></Box>
-                    <Grid
-                      key={filter.configuration.filterKey}
-                      sx={{ marginLeft: 2 }}
-                      xs
-                    >
-                      {RenderComponent({ ...getProps(filter), key: index })}
-                    </Grid>
-                  </>
+                  <Grid
+                    key={filter.configuration.filterKey}
+                    sx={{ marginLeft: 2 }}
+                    xs
+                  >
+                    {RenderComponent({
+                      ...getProps(filter),
+                      key: index + filter.configuration.filterKey,
+                    })}
+                  </Grid>
                 );
-              }
-              return (
-                <Grid
-                  key={filter.configuration.filterKey}
-                  sx={{ marginLeft: 2 }}
-                  xs
-                >
-                  {RenderComponent({ ...getProps(filter), key: index })}
-                </Grid>
-              );
-            })}
+              })}
+        </Grid>
       </>
     );
   },
