@@ -51,6 +51,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
   activeSince: {
     marginBottom: theme.spacing(1),
     marginTop: theme.spacing(1),
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: theme.spacing(2),
+    },
   },
   dateColumn: {
     width: '25%',
@@ -100,6 +103,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   transactionDate: {
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(1),
+    },
     width: 130,
   },
   transactionType: {
