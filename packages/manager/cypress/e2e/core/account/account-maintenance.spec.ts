@@ -70,9 +70,14 @@ describe('Maintenance', () => {
                 cy.contains(pendingMaintenance.entity.label).should(
                   'be.visible'
                 );
-                // TODO One of the reasons is too long to fit in, waiting for reviews in
-                // https://github.com/linode/manager/pull/10694#discussion_r1691635245
-                // cy.findByText(pendingMaintenance.reason).should('be.visible');
+                // Confirm that the first 90 characters of each reason string are rendered on screen
+                const truncatedReason = pendingMaintenance.reason.substring(
+                  0,
+                  90
+                );
+                cy.findByText(truncatedReason, { exact: false }).should(
+                  'be.visible'
+                );
                 // Check the content of each <td> element
                 cy.get('td').each(($cell, idx, $cells) => {
                   cy.wrap($cell).should('not.be.empty');
@@ -96,10 +101,14 @@ describe('Maintenance', () => {
                 cy.contains(completedMaintenance.entity.label).should(
                   'be.visible'
                 );
-                // TODO One of the reasons is too long to fit in, waiting for reviews in
-                // https://github.com/linode/manager/pull/10694#discussion_r1691635245
-                // cy.findByText(pendingMaintenance.reason).should('be.visible');
-                // cy.findByText(completedMaintenance.reason).should('be.visible');
+                // Confirm that the first 90 characters of each reason string are rendered on screen
+                const truncatedReason = completedMaintenance.reason.substring(
+                  0,
+                  90
+                );
+                cy.findByText(truncatedReason, { exact: false }).should(
+                  'be.visible'
+                );
                 // Check the content of each <td> element
                 cy.get('td').each(($cell, idx, $cells) => {
                   cy.wrap($cell).should('not.be.empty');
