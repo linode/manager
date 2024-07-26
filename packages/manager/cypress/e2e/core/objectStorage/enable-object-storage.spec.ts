@@ -149,7 +149,9 @@ describe('Object Storage enrollment', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.get('[data-testid="label"] input').click().type(randomLabel());
+        cy.findByLabelText('Label (required)')
+          .should('be.visible')
+          .type(randomLabel());
 
         // Select a region with special pricing structure.
         ui.regionSelect.find().click().type('Jakarta, ID{enter}');
