@@ -3,6 +3,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Grid, Typography } from '@mui/material';
 import * as React from 'react';
 
+import InfoIcon from 'src/assets/icons/info.svg';
 import { Button } from 'src/components/Button/Button';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
@@ -157,7 +158,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     const getDependantConfig = (filterKey: string): string[] => {
       const serviceTypeConfig = FILTER_CONFIG.get(
-        props.dashboard.service_type!)
+        props.dashboard.service_type!
+      );
 
       if (!serviceTypeConfig) {
         return [];
@@ -185,6 +187,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     ) {
       return (
         <ErrorState
+          CustomIcon={InfoIcon}
+          CustomIconStyles={{ height: '10%', width: '10%' }}
           errorText={'Please pass valid dashboard to render the filters'}
         ></ErrorState>
       );
