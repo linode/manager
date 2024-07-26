@@ -1,8 +1,10 @@
 import { DateTime } from 'luxon';
+import React from 'react';
 
 import { imageFactory } from 'src/factories';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { imagesToGroupedItems } from './ImageSelect';
+import { ImageSelect, imagesToGroupedItems } from './ImageSelect';
 
 describe('imagesToGroupedItems', () => {
   it('should filter deprecated images when end of life is past beyond 6 months ', () => {
@@ -92,5 +94,28 @@ describe('imagesToGroupedItems', () => {
       },
     ];
     expect(imagesToGroupedItems(images)).toStrictEqual(expected);
+  });
+});
+
+describe('ImageSelect', () => {
+  it('renders a "Indicates compatibility with distributed compute regions." notice if the user has at least one image with the distributed capability', async () => {
+    const images = [
+      imageFactory.build({ capabilities: [] }),
+      imageFactory.build({ capabilities: ['distributed-images'] }),
+      imageFactory.build({ capabilities: [] }),
+    ];
+
+    const { getByText } = renderWithTheme(
+      <ImageSelect
+        handleSelectImage={vi.fn()}
+        images={images}
+        title="Images"
+        variant="private"
+      />
+    );
+
+    expect(
+      getByText('Indicates compatibility with distributed compute regions.')
+    ).toBeVisible();
   });
 });

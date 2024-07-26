@@ -5,6 +5,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import {
+  ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP,
   SMTP_FIELD_NAME_TO_LABEL_MAP,
   TICKET_TYPE_TO_CUSTOM_FIELD_KEYS_MAP,
 } from './constants';
@@ -103,6 +104,8 @@ export const formatDescription = (
       let label = key;
       if (ticketType === 'smtp') {
         label = SMTP_FIELD_NAME_TO_LABEL_MAP[key];
+      } else if (ticketType === 'accountLimit') {
+        label = ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP[key];
       }
       return `**${label}**\n${value ? value : 'No response'}`;
     })

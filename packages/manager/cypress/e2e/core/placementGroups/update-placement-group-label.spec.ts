@@ -49,9 +49,9 @@ describe('Placement Group update label flow', () => {
       id: randomNumber(),
       label: randomLabel(),
       region: mockPlacementGroupCompliantRegion.id,
-      affinity_type: 'anti_affinity:local',
+      placement_group_type: 'anti_affinity:local',
       is_compliant: true,
-      is_strict: false,
+      placement_group_policy: 'flexible',
       members: [],
     });
 
@@ -115,9 +115,9 @@ describe('Placement Group update label flow', () => {
       id: randomNumber(),
       label: randomLabel(),
       region: mockPlacementGroupCompliantRegion.id,
-      affinity_type: 'anti_affinity:local',
+      placement_group_type: 'anti_affinity:local',
       is_compliant: true,
-      is_strict: false,
+      placement_group_policy: 'flexible',
       members: [],
     });
 

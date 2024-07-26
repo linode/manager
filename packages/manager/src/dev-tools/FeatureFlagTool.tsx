@@ -19,9 +19,8 @@ const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
  * This requirement is both documented here and in our Docs since we don't have a way to enforce types from Launch Darkly objects.
  */
 const options: { flag: keyof Flags; label: string }[] = [
-  { flag: 'aclb', label: 'ACLB' },
-  { flag: 'aclbFullCreateFlow', label: 'ACLB Full Create Flow' },
   { flag: 'aclp', label: 'CloudPulse' },
+  { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
   { flag: 'eventMessagesV2', label: 'Event Messages V2' },
   { flag: 'gecko2', label: 'Gecko' },
@@ -29,6 +28,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
+  { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
   { flag: 'placementGroups', label: 'Placement Groups' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },

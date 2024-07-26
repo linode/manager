@@ -2,7 +2,9 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { CombinedProps, FromImageContent } from './FromImageContent';
+import { FromImageContent } from './FromImageContent';
+
+import type { CombinedProps } from './FromImageContent';
 
 const mockProps: CombinedProps = {
   accountBackupsEnabled: false,
