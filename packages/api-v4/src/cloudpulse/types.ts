@@ -114,5 +114,5 @@ export interface CloudPulseMetricsResponseData {
 
 export interface CloudPulseMetricsList {
   metric: { [resourceName: string]: string };
-  values: (number | string)[];
+  values: [number, string][];
 }

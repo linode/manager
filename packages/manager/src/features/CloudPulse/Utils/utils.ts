@@ -89,13 +89,13 @@ export const convertTimeDurationToStartAndEndTimeRange = (
  * @returns formatted data based on the time range between @startTime & @endTime
  */
 export const seriesDataFormatter = (
-  data: (number | string)[],
+  data: [number, string][],
   startTime: number,
   endTime: number
 ): [number, null | number][] => {
   const formattedArray: StatWithDummyPoint[] = [];
   if (data && data.length > 0) {
-    data?.forEach((element: number | string) => {
+    data?.forEach((element: [number, string]) => {
       const formattedPoint: StatWithDummyPoint = {
         x: Number(element[0]),
         y: element[1] ? Number(element[1]) : null,
