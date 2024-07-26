@@ -3,7 +3,6 @@ import React from 'react';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Radio } from 'src/components/Radio/Radio';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -31,10 +30,7 @@ export const LinodeSelectTableRow = (props: Props) => {
     Boolean(linode.image)
   );
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
 
   const { data: type } = useTypeQuery(linode.type ?? '', Boolean(linode.type));
 

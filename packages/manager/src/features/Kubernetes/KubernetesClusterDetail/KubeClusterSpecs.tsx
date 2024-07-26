@@ -4,7 +4,6 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { CircleProgress } from 'src/components/CircleProgress';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import {
@@ -66,10 +65,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 export const KubeClusterSpecs = React.memo((props: Props) => {
   const { cluster } = props;
   const { classes } = useStyles();
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
   const theme = useTheme();
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
   const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);

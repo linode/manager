@@ -1,10 +1,11 @@
+import { InvoiceItem } from '@linode/api-v4/lib/account';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -18,9 +19,6 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { getInvoiceRegion } from '../PdfGenerator/utils';
 
-import type { InvoiceItem } from '@linode/api-v4/lib/account';
-import type { APIError } from '@linode/api-v4/lib/types';
-
 interface Props {
   errors?: APIError[];
   items?: InvoiceItem[];
@@ -31,14 +29,11 @@ interface Props {
 export const InvoiceTable = (props: Props) => {
   const MIN_PAGE_SIZE = 25;
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
   const {
     data: regions,
     error: regionsError,
     isLoading: regionsLoading,
-  } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  } = useRegionsQuery();
 
   const { errors, items, loading, shouldShowRegion } = props;
   const NUM_COLUMNS = shouldShowRegion ? 9 : 8;

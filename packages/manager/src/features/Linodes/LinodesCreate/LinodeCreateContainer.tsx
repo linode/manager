@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
+import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 import { withAccount } from 'src/containers/account.container';
 import { withAccountSettings } from 'src/containers/accountSettings.container';
 import { withEventsPollingActions } from 'src/containers/events.container';
@@ -330,10 +331,20 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const selectedRegion = this.props.regionsData.find(
       (region) => region.id === selectedRegionID
     );
+    const isGeckoGAEnabled =
+      this.props.flags.gecko2?.enabled &&
+      this.props.flags.gecko2?.ga &&
+      this.props.regionsData.some((region) =>
+        region.capabilities.includes('Distributed Plans')
+      );
 
     return (
       selectedRegion && {
-        title: selectedRegion.label,
+        title: isGeckoGAEnabled
+          ? getNewRegionLabel({
+              region: selectedRegion,
+            })
+          : selectedRegion.label,
       }
     );
   };

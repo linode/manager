@@ -1,3 +1,4 @@
+import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -6,7 +7,6 @@ import { makeStyles } from 'tss-react/mui';
 import { Chip } from 'src/components/Chip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import {
@@ -22,8 +22,6 @@ import {
   getTotalClusterMemoryCPUAndStorage,
 } from '../kubeUtils';
 import { ClusterActionMenu } from './ClusterActionMenu';
-
-import type { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 
 const useStyles = makeStyles()(() => ({
   clusterRow: {
@@ -70,10 +68,7 @@ export const KubernetesClusterRow = (props: Props) => {
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
   const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);
   const types = extendTypesQueryResult(typesQuery);
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
 
   const region = regions?.find((r) => r.id === cluster.region);
 

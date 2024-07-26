@@ -1,3 +1,4 @@
+import { Disk, Linode } from '@linode/api-v4/lib/linodes';
 import Close from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
@@ -10,7 +11,6 @@ import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Typography } from 'src/components/Typography';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -21,10 +21,12 @@ import {
   StyledHeader,
   StyledTypography,
 } from './Details.styles';
-import { getAllDisks, getEstimatedCloneTime } from './utilities';
-
-import type { EstimatedCloneTimeMode, ExtendedConfig } from './utilities';
-import type { Disk, Linode } from '@linode/api-v4/lib/linodes';
+import {
+  EstimatedCloneTimeMode,
+  ExtendedConfig,
+  getAllDisks,
+  getEstimatedCloneTime,
+} from './utilities';
 
 interface Props {
   clearAll: () => void;
@@ -61,10 +63,7 @@ export const Details = (props: Props) => {
     thisLinodeRegion,
   } = props;
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
 
   const region = regions?.find((r) => r.id === thisLinodeRegion);
 

@@ -1,7 +1,14 @@
-import { getInvoice, getInvoiceItems } from '@linode/api-v4/lib/account';
+import {
+  Account,
+  Invoice,
+  InvoiceItem,
+  getInvoice,
+  getInvoiceItems,
+} from '@linode/api-v4/lib/account';
+import { APIError } from '@linode/api-v4/lib/types';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -13,7 +20,6 @@ import { IconButton } from 'src/components/IconButton';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Typography } from 'src/components/Typography';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useFlags } from 'src/hooks/useFlags';
@@ -22,12 +28,9 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 
-import { getShouldUseAkamaiBilling } from '../billingUtils';
 import { invoiceCreatedAfterDCPricingLaunch } from '../PdfGenerator/utils';
+import { getShouldUseAkamaiBilling } from '../billingUtils';
 import { InvoiceTable } from './InvoiceTable';
-
-import type { Account, Invoice, InvoiceItem } from '@linode/api-v4/lib/account';
-import type { APIError } from '@linode/api-v4/lib/types';
 
 export const InvoiceDetail = () => {
   const { invoiceId } = useParams<{ invoiceId: string }>();
@@ -36,10 +39,7 @@ export const InvoiceDetail = () => {
   const csvRef = React.useRef<any>();
 
   const { data: account } = useAccount();
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
 
   const [invoice, setInvoice] = React.useState<Invoice | undefined>(undefined);
   const [items, setItems] = React.useState<InvoiceItem[] | undefined>(

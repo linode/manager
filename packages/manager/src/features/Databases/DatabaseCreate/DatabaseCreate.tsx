@@ -62,7 +62,6 @@ import type { Theme } from '@mui/material/styles';
 import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   btnCtn: {
@@ -194,15 +193,12 @@ const DatabaseCreate = () => {
   const { classes } = useStyles();
   const history = useHistory();
   const flags = useFlags();
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
 
   const {
     data: regionsData,
     error: regionsError,
     isLoading: regionsLoading,
-  } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  } = useRegionsQuery();
 
   const {
     data: engines,

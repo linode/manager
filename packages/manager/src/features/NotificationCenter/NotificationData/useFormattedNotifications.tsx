@@ -1,3 +1,10 @@
+import { Profile } from '@linode/api-v4';
+import {
+  Notification,
+  NotificationSeverity,
+  NotificationType,
+} from '@linode/api-v4/lib/account';
+import { Region } from '@linode/api-v4/lib/regions';
 import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import { path } from 'ramda';
@@ -5,7 +12,6 @@ import * as React from 'react';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Link } from 'src/components/Link';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Typography } from 'src/components/Typography';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { reportException } from 'src/exceptionReporting';
@@ -16,17 +22,9 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { notificationContext as _notificationContext } from '../NotificationContext';
-import { checkIfMaintenanceNotification } from './notificationUtils';
+import { NotificationItem } from '../NotificationSection';
 import RenderNotification from './RenderNotification';
-
-import type { NotificationItem } from '../NotificationSection';
-import type { Profile } from '@linode/api-v4';
-import type {
-  Notification,
-  NotificationSeverity,
-  NotificationType,
-} from '@linode/api-v4/lib/account';
-import type { Region } from '@linode/api-v4/lib/regions';
+import { checkIfMaintenanceNotification } from './notificationUtils';
 
 export interface ExtendedNotification extends Notification {
   jsx?: JSX.Element;
@@ -39,10 +37,7 @@ export const useFormattedNotifications = (): NotificationItem[] => {
     hasDismissedNotifications,
   } = useDismissibleNotifications();
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
   const { data: profile } = useProfile();
 
   const { data: notifications } = useNotificationsQuery();

@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { sortByString } from 'src/utilities/sort-by';
 
@@ -23,10 +22,7 @@ const sortRegionOptions = (a: Region, b: Region) => {
 export const AccessKeyRegions = (props: Props) => {
   const { disabled, error, onChange, required, selectedRegion } = props;
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions, error: regionsError } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions, error: regionsError } = useRegionsQuery();
 
   // Error could be: 1. General Regions error, 2. Field error, 3. Nothing
   const errorText = error || regionsError?.[0]?.reason;
