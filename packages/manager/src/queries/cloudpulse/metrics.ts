@@ -10,7 +10,7 @@ import type { AxiosRequestConfig } from 'axios';
 
 const axiosInstance = Axios.create({});
 
-export const useCloudViewMetricsQuery = (
+export const useCloudPulseMetricsQuery = (
   serviceType: string,
   request: CloudPulseMetricsRequest,
   props: any,

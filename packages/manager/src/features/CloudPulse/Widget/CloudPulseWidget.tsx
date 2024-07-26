@@ -6,7 +6,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useFlags } from 'src/hooks/useFlags';
-import { useCloudViewMetricsQuery } from 'src/queries/cloudpulse/metrics';
+import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 import { useProfile } from 'src/queries/profile/profile';
 
 import {
@@ -231,7 +231,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     error,
     isLoading,
     status,
-  } = useCloudViewMetricsQuery(
+  } = useCloudPulseMetricsQuery(
     serviceType,
     getCloudPulseMetricRequest(widget, duration, resources, resourceIds),
     authToken,
@@ -314,7 +314,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
           </Stack>
           <Divider />
           {!isLoading && !Boolean(error) && (
-            <CloudPulseLineGraph // rename where we have cloudview to cloudpulse
+            <CloudPulseLineGraph
               error={
                 status === 'error'
                   ? error && error.length > 0
