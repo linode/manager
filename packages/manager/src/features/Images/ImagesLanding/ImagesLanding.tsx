@@ -141,6 +141,12 @@ export const ImagesLanding = () => {
       ...manualImagesFilter,
       is_public: false,
       type: 'manual',
+    },
+    {
+      // We refetch on an interval because we have no events that tell us
+      // when a image replication has finished.
+      // We should make the API / Image Service team implement new events for this.
+      refetchInterval: 20_000,
     }
   );
 

@@ -19,7 +19,12 @@ import {
   ResourcePage,
 } from '@linode/api-v4/lib/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  UseQueryOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
@@ -49,10 +54,15 @@ export const imageQueries = createQueryKeys('images', {
   }),
 });
 
-export const useImagesQuery = (params: Params, filters: Filter) =>
+export const useImagesQuery = (
+  params: Params,
+  filters: Filter,
+  options?: UseQueryOptions<ResourcePage<Image>, APIError[]>
+) =>
   useQuery<ResourcePage<Image>, APIError[]>({
     ...imageQueries.paginated(params, filters),
     keepPreviousData: true,
+    ...options,
   });
 
 export const useImageQuery = (imageId: string, enabled = true) =>
