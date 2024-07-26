@@ -1,8 +1,10 @@
-import { Region } from '@linode/api-v4/lib/regions';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+
+import type { Region } from '@linode/api-v4/lib/regions';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export interface RegionsProps {
   regionsData: Region[];
@@ -25,7 +27,11 @@ export interface RegionsProps {
 export const withRegions = <Props>(
   Component: React.ComponentType<Props & RegionsProps>
 ) => (props: Props) => {
-  const { data, error, isLoading } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data, error, isLoading } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
+
   return React.createElement(Component, {
     regionsData: data ?? [],
     regionsError: error ?? undefined,

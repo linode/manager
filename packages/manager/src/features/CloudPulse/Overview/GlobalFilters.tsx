@@ -1,8 +1,10 @@
 import { Dashboard } from '@linode/api-v4';
+import { IconButton, Tooltip } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
+import Reload from 'src/assets/icons/reload.svg';
 import { WithStartAndEnd } from 'src/features/Longview/request.types';
 
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
@@ -81,6 +83,8 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     []
   );
 
+  const handleGlobalRefresh = React.useCallback(() => {}, []);
+
   return (
     <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
       <StyledGrid xs={12}>
@@ -109,6 +113,13 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             hideLabel
             label="Select Time Range"
           />
+        </Grid>
+        <Grid sx={{ marginLeft: -4, marginRight: 3 }}>
+          <Tooltip arrow enterDelay={500} placement="top" title="Refresh">
+            <IconButton onClick={handleGlobalRefresh} size="small">
+              <StyledReload />
+            </IconButton>
+          </Tooltip>
         </Grid>
       </StyledGrid>
     </Grid>
@@ -146,3 +157,14 @@ const itemSpacing = {
   boxSizing: 'border-box',
   margin: '0',
 };
+
+const StyledReload = styled(Reload, { label: 'StyledReload' })(({ theme }) => ({
+  '&:active': {
+    color: `${theme.palette.success}`,
+  },
+  '&:hover': {
+    cursor: 'pointer',
+  },
+  height: '27px',
+  width: '27px',
+}));

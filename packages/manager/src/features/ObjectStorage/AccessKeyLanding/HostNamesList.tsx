@@ -4,6 +4,7 @@ import React, { useRef } from 'react';
 import { Box } from 'src/components/Box';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { List } from 'src/components/List';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { omittedProps } from 'src/utilities/omittedProps';
 import { getRegionsByRegionId } from 'src/utilities/regions';
@@ -17,7 +18,10 @@ interface Props {
 }
 
 export const HostNamesList = ({ objectStorageKey }: Props) => {
-  const { data: regionsData } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regionsData } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
   const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
 
   const listRef = useRef<HTMLUListElement>(null);

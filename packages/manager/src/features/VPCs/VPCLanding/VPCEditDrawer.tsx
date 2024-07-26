@@ -6,6 +6,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TextField } from 'src/components/TextField';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -86,7 +87,10 @@ export const VPCEditDrawer = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
-  const { data: regionsData, error: regionsError } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regionsData, error: regionsError } = useRegionsQuery({
+    transformRegionLabel: isGeckoGAEnabled,
+  });
 
   return (
     <Drawer onClose={onClose} open={open} title="Edit VPC">

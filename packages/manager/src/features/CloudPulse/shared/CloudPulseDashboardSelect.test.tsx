@@ -16,18 +16,18 @@ const props: CloudPulseDashboardSelectProps = {
 };
 
 const queryMocks = vi.hoisted(() => ({
-  useCloudViewDashboardsQuery: vi.fn().mockReturnValue({}),
+  useCloudPulseDashboardsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/cloudpulse/dashboards', async () => {
   const actual = await vi.importActual('src/queries/cloudpulse/dashboards');
   return {
     ...actual,
-    useCloudViewDashboardsQuery: queryMocks.useCloudViewDashboardsQuery,
+    useCloudPulseDashboardsQuery: queryMocks.useCloudPulseDashboardsQuery,
   };
 });
 
-queryMocks.useCloudViewDashboardsQuery.mockReturnValue({
+queryMocks.useCloudPulseDashboardsQuery.mockReturnValue({
   data: {
     data: [
       {
@@ -51,7 +51,7 @@ describe('CloudPulse Dashboard select', () => {
       <CloudPulseDashboardSelect {...props} />
     );
 
-    expect(getByTestId('cloudview-dashboard-select')).toBeInTheDocument();
+    expect(getByTestId('cloudpulse-dashboard-select')).toBeInTheDocument();
     expect(getByPlaceholderText('Select a Dashboard')).toBeInTheDocument();
   }),
     it('Should render dashboard select component with data', () => {
