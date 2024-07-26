@@ -84,7 +84,7 @@ export function generateAnsibleConfig(config: CreateLinodeRequest): string {
       }
       if (iface.ip_ranges && iface.ip_ranges.length > 0) {
         configStr += `        ip_ranges:\n          - ${iface.ip_ranges
-          .map((ip) => escapeYAMLString(ip))
+          .map((ip) => `"${escapeYAMLString(ip)}"`)
           .join('\n          - ')}\n`;
       }
       if (iface.ipv4 && (iface.ipv4?.nat_1_1 || iface.ipv4?.vpc)) {

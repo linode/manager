@@ -60,9 +60,7 @@ export function generateGoLinodeSnippet(config: CreateLinodeRequest): string {
       .join(', ');
     snippet += `        Tags: []string{${tags}},\n`;
   }
-  if (config.booted !== undefined) {
-    snippet += `        Booted: ${config.booted},\n`;
-  }
+
   if (config.stackscript_id) {
     snippet += `        StackScriptID: ${config.stackscript_id},\n`;
   }
@@ -71,6 +69,12 @@ export function generateGoLinodeSnippet(config: CreateLinodeRequest): string {
   }
   if (config.firewall_id) {
     snippet += `        FirewallID: ${config.firewall_id},\n`;
+  }
+  // Add metadata if present
+  if (config.metadata && config.metadata.user_data) {
+    snippet += `        Metadata: &linodego.InstanceMetadataOptions{\n`;
+    snippet += `            UserData: "${config.metadata.user_data}",\n`;
+    snippet += `        },\n`;
   }
 
   snippet += '    },\n';

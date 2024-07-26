@@ -56,6 +56,9 @@ export function generateTerraformConfig(config: CreateLinodeRequest): string {
         }
         terraformConfig += `    }\n`;
       }
+      if (interfaceConfig.label) {
+        terraformConfig += `    label = "${interfaceConfig.label}"\n`;
+      }
       if (interfaceConfig.ipam_address) {
         terraformConfig += `    ipam_address = "${interfaceConfig.ipam_address}"\n`;
       }
