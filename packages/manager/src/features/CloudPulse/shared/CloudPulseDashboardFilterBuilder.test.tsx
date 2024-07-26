@@ -67,7 +67,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
     );
 
     expect(
-      getByText('Please pass a valid dashboard to render the filters')
+      getByText('Please pass valid dashboard to render the filters')
     ).toBeDefined();
   });
 
@@ -89,7 +89,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
     );
 
     expect(
-      getByText('Please pass a valid dashboard to render the filters')
+      getByText('Please pass valid dashboard to render the filters')
     ).toBeDefined();
   });
 });

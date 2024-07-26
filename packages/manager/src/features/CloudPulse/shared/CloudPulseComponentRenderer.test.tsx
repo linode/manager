@@ -4,7 +4,10 @@ import React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import RenderComponent from '../shared/CloudPulseComponentRenderer';
-import { getRegionProperties } from '../Utils/FilterBuilder';
+import {
+  getRegionProperties,
+  getResourcesProperties,
+} from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 const linodeFilterConfig = FILTER_CONFIG.get('linode');
@@ -55,17 +58,18 @@ describe('ComponentRenderer component tests', () => {
       const { getByPlaceholderText } = renderWithTheme(
         <Grid item key={'region'} sx={{ marginLeft: 2 }} xs>
           {RenderComponent({
-            ...getRegionProperties(
+            ...getResourcesProperties(
               resourceProps!,
               vi.fn(),
               mockDashboard,
-              false
+              false,
+              [{ region: 'us-east' }]
             ),
             key: 1,
           })}
         </Grid>
       );
 
-      expect(getByPlaceholderText('Select a Region')).toBeDefined();
+      expect(getByPlaceholderText('Select Resources')).toBeDefined();
     });
 });
