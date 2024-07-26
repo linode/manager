@@ -137,11 +137,11 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   };
 
   const handleBucketFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (accountSettings?.object_storage !== 'active') {
-      e.preventDefault();
       setIsEnableObjDialogOpen(true);
     } else {
-      handleSubmit(onSubmit);
+      handleSubmit(onSubmit)();
     }
   };
 

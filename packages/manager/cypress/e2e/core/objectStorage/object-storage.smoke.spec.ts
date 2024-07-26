@@ -169,6 +169,7 @@ describe('object storage smoke tests', () => {
     mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
       objMultiCluster: makeFeatureFlagData(false),
+      gecko2: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
