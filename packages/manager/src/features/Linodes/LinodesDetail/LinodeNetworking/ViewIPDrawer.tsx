@@ -1,13 +1,11 @@
+import { IPAddress } from '@linode/api-v4/lib/networking';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-
-import type { IPAddress } from '@linode/api-v4/lib/networking';
 
 interface Props {
   ip?: IPAddress;
@@ -18,10 +16,7 @@ interface Props {
 export const ViewIPDrawer = (props: Props) => {
   const { ip } = props;
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
 
   const actualRegion = regions?.find((r) => r.id === ip?.region);
 

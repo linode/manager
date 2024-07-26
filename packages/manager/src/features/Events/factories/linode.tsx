@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
@@ -540,10 +539,7 @@ export const linode: PartialEventMap<'linode'> = {
 
 const LinodeMigrateDataCenterMessage = ({ event }: { event: Event }) => {
   const { data: linode } = useLinodeQuery(event.entity?.id ?? -1);
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
   const region = regions?.find((r) => r.id === linode?.region);
 
   return (
