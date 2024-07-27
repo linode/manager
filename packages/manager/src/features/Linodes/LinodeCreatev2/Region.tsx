@@ -9,10 +9,7 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import {
-  isDistributedRegionSupported,
-  useIsGeckoEnabled,
-} from 'src/components/RegionSelect/RegionSelect.utils';
+import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
 import { formAnalyticsContext as _formAnalyticsContext } from 'src/context/formAnalyticsContext';
@@ -81,10 +78,7 @@ export const Region = () => {
     globalGrantType: 'add_linodes',
   });
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
 
   const formAnalyticsContext = React.useContext(_formAnalyticsContext);
 

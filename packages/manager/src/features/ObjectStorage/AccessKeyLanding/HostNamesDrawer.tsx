@@ -1,15 +1,13 @@
+import { ObjectStorageKeyRegions } from '@linode/api-v4';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { Drawer } from 'src/components/Drawer';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import { CopyAllHostnames } from './CopyAllHostnames';
-
-import type { ObjectStorageKeyRegions } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -19,10 +17,7 @@ interface Props {
 
 export const HostNamesDrawer = (props: Props) => {
   const { onClose, open, regions } = props;
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regionsData } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regionsData } = useRegionsQuery();
   const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
 
   if (!regionsData || !regionsLookup) {

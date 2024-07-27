@@ -3,7 +3,6 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useCreateVPCMutation } from 'src/queries/vpcs/vpcs';
@@ -58,10 +57,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
   const queryParams = getQueryParamsFromQueryString(location.search);
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
   const regionsData = regions ?? [];
 
   const [
