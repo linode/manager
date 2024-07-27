@@ -1,9 +1,10 @@
 import Factory from 'src/factories/factoryProxy';
 
 import type {
-  ObjectStorageBucket,
   CreateObjectStorageBucketPayload,
+  ObjectStorageBucket,
   ObjectStorageCluster,
+  ObjectStorageEndpoint,
   ObjectStorageKey,
   ObjectStorageObject,
 } from '@linode/api-v4/lib/object-storage/types';
@@ -12,12 +13,14 @@ export const objectStorageBucketFactory = Factory.Sync.makeFactory<ObjectStorage
   {
     cluster: 'us-east-1',
     created: '2019-12-12T00:00:00',
+    endpoint_type: 'E1',
     hostname: Factory.each(
       (i) => `obj-bucket-${i}.us-east-1.linodeobjects.com`
     ),
     label: Factory.each((i) => `obj-bucket-${i}`),
     objects: 103,
     region: 'us-east',
+    s3_endpoint: 'us-east-1.linodeobjects.com',
     size: 999999,
   }
 );
@@ -62,7 +65,9 @@ export const objectStorageKeyFactory = Factory.Sync.makeFactory<ObjectStorageKey
     id: Factory.each((id) => id),
     label: Factory.each((id) => `access-key-${id}`),
     limited: false,
-    regions: [{ id: 'us-east', s3_endpoint: 'us-east.com' }],
+    regions: [
+      { endpoint_type: 'E1', id: 'us-east', s3_endpoint: 'us-east.com' },
+    ],
     secret_key: 'PYiAB02QRb53JeUge872CM6wEvBUyRhl3vHn31Ol',
   }
 );
@@ -77,3 +82,11 @@ export const makeObjectsPage = (
 });
 
 export const staticObjects = objectStorageObjectFactory.buildList(250);
+
+export const getObjectStorageEndpointsFactory = Factory.Sync.makeFactory<ObjectStorageEndpoint>(
+  {
+    endpoint_type: 'E2',
+    region: 'us-east',
+    s3_endpoint: 'us-east-1.linodeobjects.com',
+  }
+);

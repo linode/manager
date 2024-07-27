@@ -28,6 +28,7 @@ import {
   eventFactory,
   firewallDeviceFactory,
   firewallFactory,
+  getObjectStorageEndpointsFactory,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -835,6 +836,10 @@ export const handlers = [
       objectStorageOverageTypeFactory.build(),
     ];
     return HttpResponse.json(makeResourcePage(objectStorageTypes));
+  }),
+  http.get('*/v4/object-storage/endpoints', ({}) => {
+    const endpoint = getObjectStorageEndpointsFactory.build();
+    return HttpResponse.json(endpoint);
   }),
   http.get('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);
