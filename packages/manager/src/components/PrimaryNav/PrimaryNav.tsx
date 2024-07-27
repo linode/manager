@@ -36,7 +36,7 @@ import {
 } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import useStyles from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
@@ -102,7 +102,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const { _isManagedAccount, account } = useAccountManagement();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
