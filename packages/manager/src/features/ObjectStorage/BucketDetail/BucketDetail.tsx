@@ -29,7 +29,7 @@ import {
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { sendDownloadObjectEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { truncateMiddle } from 'src/utilities/truncate';
@@ -84,7 +84,7 @@ export const BucketDetail = () => {
   const flags = useFlags();
   const { data: account } = useAccount();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
