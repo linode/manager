@@ -3,7 +3,6 @@ import React from 'react';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableCell } from 'src/components/TableCell';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRegionsByRegionId } from 'src/utilities/regions';
@@ -24,10 +23,7 @@ export const HostNameTableCell = ({
   setShowHostNamesDrawers,
   storageKeyData,
 }: Props) => {
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regionsData } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regionsData } = useRegionsQuery();
 
   const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
 

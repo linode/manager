@@ -1,5 +1,10 @@
-import { getInvoiceItems } from '@linode/api-v4/lib/account';
-import { styled } from '@mui/material/styles';
+import {
+  Invoice,
+  InvoiceItem,
+  Payment,
+  getInvoiceItems,
+} from '@linode/api-v4/lib/account';
+import { Theme, styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
@@ -7,13 +12,12 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import Select from 'src/components/EnhancedSelect/Select';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -42,10 +46,6 @@ import { formatDate } from 'src/utilities/formatDate';
 import { getAll } from 'src/utilities/getAll';
 
 import { getTaxID } from '../../billingUtils';
-
-import type { Invoice, InvoiceItem, Payment } from '@linode/api-v4/lib/account';
-import type { Theme } from '@mui/material/styles';
-import type { Item } from 'src/components/EnhancedSelect/Select';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activeSince: {
@@ -187,10 +187,7 @@ export const BillingActivityPanel = (props: Props) => {
 
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
 
   const isAkamaiCustomer = account?.billing_source === 'akamai';
 

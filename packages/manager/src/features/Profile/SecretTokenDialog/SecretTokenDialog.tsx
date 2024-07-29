@@ -6,13 +6,12 @@ import { Box } from 'src/components/Box';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { CopyableAndDownloadableTextField } from 'src/components/CopyableAndDownloadableTextField';
 import { Notice } from 'src/components/Notice/Notice';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { CopyAllHostnames } from 'src/features/ObjectStorage/AccessKeyLanding/CopyAllHostnames';
 import { HostNamesList } from 'src/features/ObjectStorage/AccessKeyLanding/HostNamesList';
+import { CopyAllHostnames } from 'src/features/ObjectStorage/AccessKeyLanding/CopyAllHostnames';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
@@ -41,16 +40,13 @@ const renderActions = (
 export const SecretTokenDialog = (props: Props) => {
   const { objectStorageKey, onClose, open, title, value } = props;
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regionsData } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regionsData } = useRegionsQuery();
   const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
 
   const flags = useFlags();
   const { account } = useAccountManagement();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []

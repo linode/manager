@@ -1,29 +1,48 @@
+import { renderHook, waitFor } from '@testing-library/react';
+
 import { stackScriptFactory } from 'src/factories';
+import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { getFilteredApps } from './utilities';
+import { getFilteredApps, useMarketplaceApps } from './utilities';
 
-const mysql = stackScriptFactory.build({ id: 607026, label: 'MySQL' });
-const piHole = stackScriptFactory.build({ id: 970522, label: 'Pi-Hole' });
-const vault = stackScriptFactory.build({ id: 1037038, label: 'Vault' });
+import type { MarketplaceApp } from './utilities';
 
-const stackscripts = [mysql, piHole, vault];
+const mysql = {
+  details: oneClickApps[607026],
+  stackscript: stackScriptFactory.build({ id: 607026, label: 'MySQL' }),
+};
+
+const piHole = {
+  details: oneClickApps[970522],
+  stackscript: stackScriptFactory.build({ id: 970522, label: 'Pi-Hole' }),
+};
+
+const vault = {
+  details: oneClickApps[1037038],
+  stackscript: stackScriptFactory.build({ id: 1037038, label: 'Vault' }),
+};
+
+const apps: MarketplaceApp[] = [mysql, piHole, vault];
 
 describe('getFilteredApps', () => {
   it('should not perform any filtering if the search is empty', () => {
     const result = getFilteredApps({
+      apps,
       category: undefined,
       query: '',
-      stackscripts,
     });
 
-    expect(result).toStrictEqual(stackscripts);
+    expect(result).toStrictEqual(apps);
   });
 
   it('should allow a simple filter on label', () => {
     const result = getFilteredApps({
+      apps,
       category: undefined,
       query: 'mysql',
-      stackscripts,
     });
 
     expect(result).toStrictEqual([mysql]);
@@ -31,9 +50,9 @@ describe('getFilteredApps', () => {
 
   it('should allow a filter on label and catergory', () => {
     const result = getFilteredApps({
+      apps,
       category: undefined,
       query: 'mysql, database',
-      stackscripts,
     });
 
     expect(result).toStrictEqual([mysql]);
@@ -41,9 +60,9 @@ describe('getFilteredApps', () => {
 
   it('should allow filtering on StackScript id', () => {
     const result = getFilteredApps({
+      apps,
       category: undefined,
       query: '1037038',
-      stackscripts,
     });
 
     expect(result).toStrictEqual([vault]);
@@ -51,9 +70,9 @@ describe('getFilteredApps', () => {
 
   it('should allow filtering on alt description with many words', () => {
     const result = getFilteredApps({
+      apps,
       category: undefined,
       query: 'HashiCorp password',
-      stackscripts,
     });
 
     expect(result).toStrictEqual([vault]);
@@ -61,9 +80,9 @@ describe('getFilteredApps', () => {
 
   it('should filter if a category is selected in the category dropdown', () => {
     const result = getFilteredApps({
+      apps,
       category: 'Databases',
       query: '',
-      stackscripts,
     });
 
     expect(result).toStrictEqual([mysql]);
@@ -71,9 +90,9 @@ describe('getFilteredApps', () => {
 
   it('should allow searching by both a query and a category', () => {
     const result = getFilteredApps({
+      apps,
       category: 'Databases',
       query: 'My',
-      stackscripts,
     });
 
     expect(result).toStrictEqual([mysql]);
@@ -81,11 +100,113 @@ describe('getFilteredApps', () => {
 
   it('should return no matches if there are no results when searching by both query and category', () => {
     const result = getFilteredApps({
+      apps,
       category: 'Databases',
       query: 'HashiCorp',
-      stackscripts,
     });
 
     expect(result).toStrictEqual([]);
+  });
+});
+
+describe('useMarketplaceApps', () => {
+  it('should return apps from the stackscripts response', async () => {
+    const stackscript = stackScriptFactory.build({
+      id: 0,
+      label: 'Linode Marketplace App',
+    });
+
+    server.use(
+      http.get('*/v4/linode/stackscripts', () => {
+        return HttpResponse.json(makeResourcePage([stackscript]));
+      })
+    );
+
+    const { result } = renderHook(() => useMarketplaceApps(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, { flags: { marketplaceAppOverrides: [] } }),
+    });
+
+    await waitFor(() => {
+      expect(result.current.apps).toStrictEqual([
+        {
+          details: oneClickApps[0],
+          stackscript,
+        },
+      ]);
+    });
+  });
+
+  it('should override app details with the marketplaceAppOverrides feature flag', async () => {
+    const stackscript = stackScriptFactory.build({
+      id: 0,
+      label: 'Linode Marketplace App',
+    });
+
+    server.use(
+      http.get('*/v4/linode/stackscripts', () => {
+        return HttpResponse.json(makeResourcePage([stackscript]));
+      })
+    );
+
+    const { result } = renderHook(() => useMarketplaceApps(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            marketplaceAppOverrides: [
+              {
+                details: {
+                  isNew: true,
+                  related_guides: [
+                    { href: 'https://akamai.com', title: 'Overwritten Doc' },
+                  ],
+                },
+                stackscriptId: 0,
+              },
+            ],
+          },
+        }),
+    });
+
+    await waitFor(() => {
+      expect(result.current.apps[0].details.related_guides?.[0].title).toBe(
+        'Overwritten Doc'
+      );
+      expect(result.current.apps[0].details.related_guides?.[0].href).toBe(
+        'https://akamai.com'
+      );
+      expect(result.current.apps[0].details.isNew).toBe(true);
+    });
+  });
+
+  it('should be able to hide an app with the marketplaceAppOverrides feature flag', async () => {
+    const stackscript = stackScriptFactory.build({
+      id: 0,
+      label: 'Linode Marketplace App',
+    });
+
+    server.use(
+      http.get('*/v4/linode/stackscripts', () => {
+        return HttpResponse.json(makeResourcePage([stackscript]));
+      })
+    );
+
+    const { result } = renderHook(() => useMarketplaceApps(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            marketplaceAppOverrides: [
+              {
+                details: null,
+                stackscriptId: 0,
+              },
+            ],
+          },
+        }),
+    });
+
+    await waitFor(() => expect(result.current.data).toBeDefined());
+
+    expect(result.current.apps).toHaveLength(0);
   });
 });

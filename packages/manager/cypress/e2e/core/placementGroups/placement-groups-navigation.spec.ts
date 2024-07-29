@@ -2,16 +2,10 @@
  * @file Integration tests for Placement Groups navigation.
  */
 
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetAccount } from 'support/intercepts/account';
 import { accountFactory } from 'src/factories';
 import { ui } from 'support/ui';
-
-import type { Flags } from 'src/featureFlags';
 
 const mockAccount = accountFactory.build();
 
@@ -27,18 +21,16 @@ describe('Placement Groups navigation', () => {
    */
   it('can navigate to Placement Groups landing page', () => {
     mockAppendFeatureFlags({
-      placementGroups: makeFeatureFlagData<Flags['placementGroups']>({
+      placementGroups: {
         beta: true,
         enabled: true,
-      }),
+      },
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     cy.visitWithLogin('/linodes');
-    cy.wait(['@getFeatureFlags', '@getClientStream']);
+    cy.wait('@getFeatureFlags');
 
     ui.nav.findItemByTitle('Placement Groups').should('be.visible').click();
-
     cy.url().should('endWith', '/placement-groups');
   });
 
@@ -47,15 +39,14 @@ describe('Placement Groups navigation', () => {
    */
   it('does not show Placement Groups navigation item when feature is disabled', () => {
     mockAppendFeatureFlags({
-      placementGroups: makeFeatureFlagData<Flags['placementGroups']>({
+      placementGroups: {
         beta: true,
         enabled: false,
-      }),
+      },
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     cy.visitWithLogin('/linodes');
-    cy.wait(['@getFeatureFlags', '@getClientStream']);
+    cy.wait('@getFeatureFlags');
 
     ui.nav.find().within(() => {
       cy.findByText('Placement Groups').should('not.exist');
@@ -67,15 +58,14 @@ describe('Placement Groups navigation', () => {
    */
   it('displays Not Found when manually navigating to /placement-groups with feature flag disabled', () => {
     mockAppendFeatureFlags({
-      placementGroups: makeFeatureFlagData<Flags['placementGroups']>({
+      placementGroups: {
         beta: true,
         enabled: false,
-      }),
+      },
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     cy.visitWithLogin('/placement-groups');
-    cy.wait(['@getFeatureFlags', '@getClientStream']);
+    cy.wait('@getFeatureFlags');
 
     cy.findByText('Not Found').should('be.visible');
   });
