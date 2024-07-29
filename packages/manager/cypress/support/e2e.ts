@@ -61,6 +61,8 @@ chai.use(function (chai, utils) {
 // Test setup.
 import { mockAccountRequest } from './setup/mock-account-request';
 import { trackApiRequests } from './setup/request-tracking';
+import { mockFeatureFlagClientstream } from './setup/feature-flag-clientstream';
 
 trackApiRequests();
 mockAccountRequest();
+mockFeatureFlagClientstream();

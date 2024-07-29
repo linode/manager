@@ -61,7 +61,7 @@ export interface BucketError {
   region?: Region;
 }
 
-interface BucketsResponce {
+interface BucketsResponse {
   buckets: ObjectStorageBucket[];
   errors: BucketError[];
 }
@@ -117,7 +117,7 @@ export const useObjectStorageBuckets = ({
   isObjMultiClusterEnabled = false,
   regions,
 }: UseObjectStorageBucketsOptions) =>
-  useQuery<BucketsResponce, APIError[]>(
+  useQuery<BucketsResponse, APIError[]>(
     [`${queryKey}-buckets`],
     // Ideally we would use the line below, but if a cluster is down, the buckets on that
     // cluster don't show up in the responce. We choose to fetch buckets per-cluster so
@@ -155,7 +155,7 @@ export const useCreateBucketMutation = () => {
     onSuccess: (newEntity) => {
       // Invalidate account settings because it contains obj information
       queryClient.invalidateQueries(accountQueries.settings.queryKey);
-      queryClient.setQueryData<BucketsResponce>(
+      queryClient.setQueryData<BucketsResponse>(
         [`${queryKey}-buckets`],
         (oldData) => ({
           buckets: [...(oldData?.buckets || []), newEntity],
@@ -173,7 +173,7 @@ export const useDeleteBucketMutation = () => {
     (data) => deleteBucket(data),
     {
       onSuccess: (_, variables) => {
-        queryClient.setQueryData<BucketsResponce>(
+        queryClient.setQueryData<BucketsResponse>(
           [`${queryKey}-buckets`],
           (oldData) => {
             return {
@@ -206,7 +206,7 @@ export const useDeleteBucketWithRegionMutation = () => {
     (data) => deleteBucketWithRegion(data),
     {
       onSuccess: (_, variables) => {
-        queryClient.setQueryData<BucketsResponce>(
+        queryClient.setQueryData<BucketsResponse>(
           [`${queryKey}-buckets`],
           (oldData) => {
             return {
@@ -249,7 +249,7 @@ export const getAllBucketsFromClusters = async (
   clusters: ObjectStorageCluster[] | undefined
 ) => {
   if (clusters === undefined) {
-    return { buckets: [], errors: [] } as BucketsResponce;
+    return { buckets: [], errors: [] } as BucketsResponse;
   }
 
   const promises = clusters.map((cluster) =>
@@ -277,14 +277,14 @@ export const getAllBucketsFromClusters = async (
     throw new Error('Unable to get Object Storage buckets.');
   }
 
-  return { buckets, errors } as BucketsResponce;
+  return { buckets, errors } as BucketsResponse;
 };
 
 export const getAllBucketsFromRegions = async (
   regions: Region[] | undefined
 ) => {
   if (regions === undefined) {
-    return { buckets: [], errors: [] } as BucketsResponce;
+    return { buckets: [], errors: [] } as BucketsResponse;
   }
 
   const promises = regions.map((region) =>
@@ -312,7 +312,7 @@ export const getAllBucketsFromRegions = async (
     throw new Error('Unable to get Object Storage buckets.');
   }
 
-  return { buckets, errors } as BucketsResponce;
+  return { buckets, errors } as BucketsResponse;
 };
 
 /**
@@ -340,7 +340,7 @@ export const updateBucket = async (
   queryClient: QueryClient
 ) => {
   const bucket = await getBucket(cluster, bucketName);
-  queryClient.setQueryData<BucketsResponce | undefined>(
+  queryClient.setQueryData<BucketsResponse | undefined>(
     [`${queryKey}-buckets`],
     (oldData) => {
       if (oldData === undefined) {
@@ -363,7 +363,7 @@ export const updateBucket = async (
       return {
         buckets: updatedBuckets,
         errors: oldData.errors,
-      } as BucketsResponce;
+      } as BucketsResponse;
     }
   );
 };

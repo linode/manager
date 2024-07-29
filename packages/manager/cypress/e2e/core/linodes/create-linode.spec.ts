@@ -257,11 +257,6 @@ describe('Create Linode', () => {
     mockGetLinodeType(dcPricingMockLinodeTypes[1]);
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
     mockGetVLANs(mockVLANs);
@@ -274,12 +269,7 @@ describe('Create Linode', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait([
-      '@getLinodeTypes',
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getVPCs',
-    ]);
+    cy.wait(['@getLinodeTypes', '@getVPCs']);
 
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
 
