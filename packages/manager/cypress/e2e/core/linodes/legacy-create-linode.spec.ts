@@ -47,7 +47,10 @@ import {
 } from 'support/intercepts/linodes';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   checkboxTestId,
@@ -460,7 +463,6 @@ describe('create linode', () => {
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
 
     mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
       apicliDxToolsAdditions: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
