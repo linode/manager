@@ -156,6 +156,8 @@ describe('object storage end-to-end tests', () => {
    * - Confirms that deleted buckets are no longer listed on landing page.
    */
   it('can create and delete object storage buckets', () => {
+    cy.tag('purpose:syntheticTesting');
+
     const bucketLabel = randomLabel();
     const bucketRegion = 'Atlanta, GA';
     const bucketCluster = 'us-southeast-1';
