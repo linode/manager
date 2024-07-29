@@ -186,11 +186,14 @@ export const CreateFirewallDrawer = React.memo(
         Object.values(errors).forEach((error: string, index: number) => {
           errorString += `${index > 0 ? '| ' : ''}${error}`;
         });
-        sendLinodeCreateFormErrorEvent(
-          errorString,
-          (queryParams.type as LinodeCreateType) ?? 'OS',
-          'v1'
-        );
+
+        if (errorString.length > 0) {
+          sendLinodeCreateFormErrorEvent(
+            errorString,
+            (queryParams.type as LinodeCreateType) ?? 'OS',
+            'v1'
+          );
+        }
       }
     }, [errors]);
 

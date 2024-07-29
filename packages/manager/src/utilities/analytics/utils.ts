@@ -87,6 +87,11 @@ export const waitForAdobeAnalyticsToBeLoaded = () =>
     }, 1000);
   });
 
+/**
+ * A utility function to consistently format the formInput 'inputValue' and formStep 'stepName' string.
+ *
+ * @returns a formatted string
+ */
 export const getFormattedFormEventName = ({
   headerName,
   interaction,

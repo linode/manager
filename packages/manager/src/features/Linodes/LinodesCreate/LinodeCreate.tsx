@@ -47,7 +47,6 @@ import {
   sendLinodeCreateFormErrorEvent,
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormStepEvent,
-  sendLinodeCreateFormSubmitEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -216,8 +215,6 @@ export class LinodeCreate extends React.PureComponent<
 > {
   createLinode = () => {
     const payload = this.getPayload();
-    const { selectedTab } = this.state;
-    const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
 
     try {
       CreateLinodeSchema.validateSync(payload, {
@@ -230,7 +227,6 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
     this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
-    sendLinodeCreateFormSubmitEvent(selectedTabName ?? 'OS', 'v1');
   };
 
   createLinodeFormRef = React.createRef<HTMLFormElement>();
@@ -398,31 +394,22 @@ export class LinodeCreate extends React.PureComponent<
   ) => {
     const { selectedTab } = this.state;
     const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
+    let errorString = '';
 
     if (!errorMap) {
       return;
     }
     if (errorMap.region) {
-      sendLinodeCreateFormErrorEvent(
-        'Region not selected',
-        selectedTabName ?? 'OS',
-        'v1'
-      );
+      errorString += errorMap.region;
     }
     if (errorMap.type) {
-      sendLinodeCreateFormErrorEvent(
-        'Plan not selected',
-        selectedTabName ?? 'OS',
-        'v1'
-      );
+      errorString += `|${errorMap.type}`;
     }
     if (errorMap.root_pass) {
-      sendLinodeCreateFormErrorEvent(
-        'Password not created',
-        selectedTabName ?? 'OS',
-        'v1'
-      );
+      errorString += `|${errorMap.root_pass}`;
     }
+
+    sendLinodeCreateFormErrorEvent(errorString, selectedTabName ?? 'OS', 'v1');
   };
 
   handleClickCreateUsingCommandLine = () => {

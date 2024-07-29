@@ -200,11 +200,13 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
         errors.forEach((error: APIError, index: number) => {
           errorString += `${index > 0 ? '| ' : ''} ${error.reason}`;
         });
-        sendLinodeCreateFormErrorEvent(
-          errorString,
-          (queryParams.type as LinodeCreateType) ?? 'OS',
-          'v1'
-        );
+        if (errorString.length > 0) {
+          sendLinodeCreateFormErrorEvent(
+            errorString,
+            (queryParams.type as LinodeCreateType) ?? 'OS',
+            'v1'
+          );
+        }
       }
     }
 
