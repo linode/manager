@@ -1,7 +1,7 @@
 import { FILTER_CONFIG } from './FilterConfig';
 
 import type { CloudPulseServiceTypeFilters } from './models';
-import type { Dashboard, TimeDuration } from '@linode/api-v4';
+import type { Dashboard, Filter, TimeDuration } from '@linode/api-v4';
 
 export const getRegionProperties = (
   config: CloudPulseServiceTypeFilters,
@@ -25,7 +25,15 @@ export const getResourcesProperties = (
   handleResourceChange: (resourceId: number[]) => void,
   dashboard: Dashboard,
   isServiceAnalyticsIntegration: boolean,
-  dependentFilters: { [key: string]: any }
+  dependentFilters: {
+    [key: string]:
+      | TimeDuration
+      | number
+      | number[]
+      | string
+      | string[]
+      | undefined;
+  }
 ) => {
   return {
     componentKey: config.configuration.filterKey,
@@ -61,23 +69,47 @@ export const getTimeDurationProperties = (
 
 export const buildXFilter = (
   config: CloudPulseServiceTypeFilters,
-  dependentFilters: { [key: string]: any }
+  dependentFilters: {
+    [key: string]:
+      | TimeDuration
+      | number
+      | number[]
+      | string
+      | string[]
+      | undefined;
+  }
 ) => {
-  const xFilterObj: any = {};
+  const filters: Filter[] = [];
 
-  if (config.configuration.dependency) {
-    for (let i = 0; i < config.configuration.dependency.length; i++) {
-      xFilterObj[config.configuration.dependency[i]] =
-        dependentFilters[config.configuration.dependency[i]];
-    }
+  const { dependency } = config.configuration;
+  if (dependency) {
+    dependency.forEach((key) => {
+      const value = dependentFilters[key];
+      if (value !== undefined) {
+        if (Array.isArray(value)) {
+          const orCondition = value.map((val) => ({ [key]: val }));
+          filters.push({ '+or': orCondition });
+        } else {
+          filters.push({ [key]: value });
+        }
+      }
+    });
   }
 
-  return xFilterObj;
+  return { '+and': filters };
 };
 
 export const checkIfWeNeedToDisableFilterByFilterKey = (
   filterKey: string,
-  dependentFilters: { [key: string]: any },
+  dependentFilters: {
+    [key: string]:
+      | TimeDuration
+      | number
+      | number[]
+      | string
+      | string[]
+      | undefined;
+  },
   dashboard: Dashboard
 ) => {
   if (dashboard && dashboard.service_type) {

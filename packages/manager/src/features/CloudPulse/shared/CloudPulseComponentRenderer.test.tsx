@@ -63,7 +63,7 @@ describe('ComponentRenderer component tests', () => {
               vi.fn(),
               mockDashboard,
               false,
-              [{ region: 'us-east' }]
+              { region: 'us-east' }
             ),
             key: 1,
           })}

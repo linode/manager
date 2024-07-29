@@ -67,11 +67,20 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     const [showFilter, setShowFilter] = React.useState<boolean>(true);
 
     const dependentFilterReference: React.MutableRefObject<{
-      [key: string]: number | number[] | string | string[] | undefined;
+      [key: string]:
+        | TimeDuration
+        | number
+        | number[]
+        | string
+        | string[]
+        | undefined;
     }> = React.useRef({});
 
     const checkAndUpdateDependentFilters = React.useCallback(
-      (filterKey: string, value: any) => {
+      (
+        filterKey: string,
+        value: TimeDuration | number | number[] | string | string[] | undefined
+      ) => {
         if (dashboard && dashboard.service_type) {
           const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type!);
           const filters = serviceTypeConfig?.filters ?? [];
@@ -94,7 +103,16 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     );
 
     const emitFilterChangeByFilterKey = React.useCallback(
-      (filterKey: string, filterValue: any) => {
+      (
+        filterKey: string,
+        filterValue:
+          | TimeDuration
+          | number
+          | number[]
+          | string
+          | string[]
+          | undefined
+      ) => {
         emitFilterChange(filterKey, filterValue);
         checkAndUpdateDependentFilters(filterKey, filterValue);
       },
