@@ -83,7 +83,7 @@ export const makeObjectsPage = (
 
 export const staticObjects = objectStorageObjectFactory.buildList(250);
 
-export const getObjectStorageEndpointsFactory = Factory.Sync.makeFactory<ObjectStorageEndpoint>(
+export const objectStorageEndpointsFactory = Factory.Sync.makeFactory<ObjectStorageEndpoint>(
   {
     endpoint_type: 'E2',
     region: 'us-east',
