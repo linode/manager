@@ -89,6 +89,7 @@ import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
+import { LinodeKernelFactory } from 'src/factories/linodeKernel';
 import { pickRandom } from 'src/utilities/random';
 import { getStorage } from 'src/utilities/storage';
 
@@ -676,6 +677,10 @@ export const handlers = [
     const firewalls = firewallFactory.buildList(10);
     firewallFactory.resetSequenceNumber();
     return HttpResponse.json(makeResourcePage(firewalls));
+  }),
+  http.get('*/linode/kernels', async () => {
+    const kernels = LinodeKernelFactory.buildList(10);
+    return HttpResponse.json(makeResourcePage(kernels));
   }),
   http.delete('*/instances/*', async () => {
     return HttpResponse.json({});
