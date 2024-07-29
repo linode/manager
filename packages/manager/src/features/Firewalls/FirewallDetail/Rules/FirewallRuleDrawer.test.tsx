@@ -1,5 +1,4 @@
 import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
-import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -29,8 +28,6 @@ const mockOnSubmit = vi.fn();
 
 const baseItems = [PORT_PRESETS['22'], PORT_PRESETS['443']];
 
-vi.mock('src/components/EnhancedSelect/Select');
-
 const props: FirewallRuleDrawerProps = {
   category: 'inbound',
   isOpen: true,
@@ -48,21 +45,23 @@ describe('AddRuleDrawer', () => {
   });
 
   it('disables the port input when the ICMP protocol is selected', async () => {
-    renderWithTheme(
+    const { getByText, getByPlaceholderText } = renderWithTheme(
       <FirewallRuleDrawer {...props} category="inbound" mode="create" />
     );
-    expect(screen.getByLabelText('Ports')).not.toBeDisabled();
-    await userEvent.selectOptions(screen.getByLabelText('Protocol'), 'ICMP');
-    expect(screen.getByLabelText('Ports')).toBeDisabled();
+    expect(getByPlaceholderText('Select a port...')).not.toBeDisabled();
+    await userEvent.click(getByPlaceholderText('Select a protocol...'));
+    await userEvent.click(getByText('ICMP'));
+    expect(getByPlaceholderText('Select a port...')).toBeDisabled();
   });
 
   it('disables the port input when the IPENCAP protocol is selected', async () => {
-    renderWithTheme(
+    const { getByText, getByPlaceholderText } = renderWithTheme(
       <FirewallRuleDrawer {...props} category="inbound" mode="create" />
     );
-    expect(screen.getByLabelText('Ports')).not.toBeDisabled();
-    await userEvent.selectOptions(screen.getByLabelText('Protocol'), 'IPENCAP');
-    expect(screen.getByLabelText('Ports')).toBeDisabled();
+    expect(getByPlaceholderText('Select a port...')).not.toBeDisabled();
+    await userEvent.click(getByPlaceholderText('Select a protocol...'));
+    await userEvent.click(getByText('IPENCAP'));
+    expect(getByPlaceholderText('Select a port...')).toBeDisabled();
   });
 });
 

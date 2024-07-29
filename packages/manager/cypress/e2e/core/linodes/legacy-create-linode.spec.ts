@@ -47,10 +47,7 @@ import {
 } from 'support/intercepts/linodes';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   checkboxTestId,
@@ -94,7 +91,6 @@ describe('create linode', () => {
     mockAppendFeatureFlags({
       linodeCreateRefactor: makeFeatureFlagData(false),
     });
-    mockGetFeatureFlagClientstream();
   });
 
   /*
@@ -368,17 +364,11 @@ describe('create linode', () => {
     mockGetLinodeType(dcPricingMockLinodeTypes[0]);
     mockGetLinodeType(dcPricingMockLinodeTypes[1]);
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
-
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     mockGetRegions([mockNoVPCRegion]).as('getRegions');
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getLinodeTypes', '@getClientStream', '@getFeatureFlags']);
+    cy.wait('@getLinodeTypes');
 
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
 
@@ -468,11 +458,6 @@ describe('create linode', () => {
     mockGetLinodeType(dcPricingMockLinodeTypes[1]);
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
     mockGetVLANs(mockVLANs);
@@ -485,12 +470,7 @@ describe('create linode', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait([
-      '@getLinodeTypes',
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getVPCs',
-    ]);
+    cy.wait(['@getLinodeTypes', '@getVPCs']);
 
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
 
@@ -541,7 +521,6 @@ describe('create linode', () => {
     mockAppendFeatureFlags({
       linodeDiskEncryption: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock account response
     const mockAccount = accountFactory.build({
@@ -552,7 +531,7 @@ describe('create linode', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getAccount']);
+    cy.wait(['@getFeatureFlags', '@getAccount']);
 
     // Check if section is visible
     cy.get(`[data-testid=${headerTestId}]`).should('not.exist');
@@ -563,7 +542,6 @@ describe('create linode', () => {
     mockAppendFeatureFlags({
       linodeDiskEncryption: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock account response
     const mockAccount = accountFactory.build({
@@ -585,7 +563,7 @@ describe('create linode', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getAccount']);
+    cy.wait(['@getFeatureFlags', '@getAccount']);
 
     // Check if section is visible
     cy.get(`[data-testid="${headerTestId}"]`).should('exist');
