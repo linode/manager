@@ -84,19 +84,20 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
     const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type!);
     const filters = serviceTypeConfig?.filters ?? [];
 
-    for (const filter of filters) {
-      if (
+    const filter = filters.find(
+      (filter) =>
         filter?.configuration.filterKey === filterKey &&
         filter.configuration.dependency
-      ) {
-        return filter.configuration.dependency.some((dependent) => {
-          const dependentFilter = dependentFilters[dependent];
-          return (
-            !dependentFilter ||
-            (Array.isArray(dependentFilter) && dependentFilter.length === 0)
-          );
-        });
-      }
+    );
+
+    if (filter) {
+      return filter.configuration.dependency?.some((dependent) => {
+        const dependentFilter = dependentFilters[dependent];
+        return (
+          !dependentFilter ||
+          (Array.isArray(dependentFilter) && dependentFilter.length === 0)
+        );
+      });
     }
   }
   return false;

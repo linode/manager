@@ -30,9 +30,7 @@ export const CloudPulseResourcesSelect = React.memo(
     const { data: resources, isLoading } = useResourcesQuery(
       props.disabled != undefined
         ? !props.disabled
-        : props.region && props.resourceType
-        ? true
-        : false,
+        : Boolean(props.region && props.resourceType),
       props.resourceType,
       {},
       props.xFilter ? props.xFilter : { region: props.region }

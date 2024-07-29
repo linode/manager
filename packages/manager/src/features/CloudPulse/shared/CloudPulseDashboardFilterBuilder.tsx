@@ -4,6 +4,7 @@ import { Grid, Typography } from '@mui/material';
 import * as React from 'react';
 
 import InfoIcon from 'src/assets/icons/info.svg';
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
@@ -26,7 +27,7 @@ import type { Dashboard, TimeDuration } from '@linode/api-v4';
 
 export interface CloudPulseDashboardFilterBuilderProps {
   /**
-   * we need to dashboard here, as we can infer serviceType and other required properties from it.
+   * We need the dashboard here, as we can infer serviceType and other required properties from it.
    * Since it is going to integrated after a dashboard selection component, it is easily available to pass.
    */
   dashboard: Dashboard;
@@ -47,6 +48,12 @@ export interface CloudPulseDashboardFilterBuilderProps {
 
 export const CloudPulseDashboardFilterBuilder = React.memo(
   (props: CloudPulseDashboardFilterBuilderProps) => {
+    const {
+      dashboard,
+      emitFilterChange,
+      isServiceAnalyticsIntegration,
+    } = props;
+
     const [, setDependentFilters] = React.useState<{
       [key: string]:
         | TimeDuration
@@ -63,130 +70,195 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       [key: string]: number | number[] | string | string[] | undefined;
     }> = React.useRef({});
 
-    const handleResourceChange = (resourceId: number[]) => {
-      emitFilterChangeByFilterKey(RESOURCE_ID, resourceId);
-    };
+    const checkAndUpdateDependentFilters = React.useCallback(
+      (filterKey: string, value: any) => {
+        if (dashboard && dashboard.service_type) {
+          const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type!);
+          const filters = serviceTypeConfig?.filters ?? [];
 
-    const handleTimeRangeChange = (timeDuration: TimeDuration) => {
-      emitFilterChangeByFilterKey(RELATIVE_TIME_DURATION, timeDuration);
-    };
-
-    const handleRegionChange = (region: string | undefined) => {
-      emitFilterChangeByFilterKey(REGION, region);
-    };
-
-    const handleCustomSelectChange = (
-      filterType: string,
-      value: number[] | string[]
-    ) => {
-      emitFilterChangeByFilterKey(filterType, value);
-    };
-
-    const emitFilterChangeByFilterKey = (
-      filterKey: string,
-      filterValue: any
-    ) => {
-      props.emitFilterChange(filterKey, filterValue);
-      checkAndUpdateDependentFilters(filterKey, filterValue);
-    };
-
-    const getCustomSelectProperties = (
-      config: CloudPulseServiceTypeFilters
-    ) => {
-      return {
-        apiResponseIdField: config.configuration.apiIdField,
-        apiResponseLabelField: config.configuration.apiLabelField,
-        clearSelections: getDependantConfig(config.configuration.filterKey),
-        componentKey: 'customDropDown', // needed for renderer to choose the component
-        dataApiUrl: config.configuration.apiUrl,
-        filterKey: config.configuration.filterKey,
-        filterType: config.configuration.filterType,
-        handleSelectionChange: handleCustomSelectChange,
-        isMultiSelect: config.configuration.isMultiSelect,
-        key: config.configuration.filterKey,
-        maxSelections: config.configuration.maxSelections,
-        options: config.configuration.options,
-        placeholder: config.configuration.placeholder,
-        savePreferences: !props.isServiceAnalyticsIntegration,
-        type: config.configuration.type,
-      };
-    };
-
-    const getProps = (config: CloudPulseServiceTypeFilters) => {
-      if (config.configuration.filterKey == REGION) {
-        return getRegionProperties(
-          config,
-          handleRegionChange,
-          props.dashboard,
-          props.isServiceAnalyticsIntegration
-        );
-      } else if (config.configuration.filterKey == RESOURCE_ID) {
-        return getResourcesProperties(
-          config,
-          handleResourceChange,
-          props.dashboard,
-          props.isServiceAnalyticsIntegration,
-          dependentFilterReference.current
-        );
-      } else if (config.configuration.filterKey == RELATIVE_TIME_DURATION) {
-        return getTimeDurationProperties(
-          config,
-          handleTimeRangeChange,
-          props.isServiceAnalyticsIntegration
-        );
-      } else {
-        return getCustomSelectProperties(config); // if the above doesn't match use out custom select for rendering filters, the equivalent component for this will be implemented in upcoming PR's
-      }
-    };
-
-    const checkAndUpdateDependentFilters = (filterKey: string, value: any) => {
-      if (props.dashboard && props.dashboard.service_type) {
-        const serviceTypeConfig = FILTER_CONFIG.get(
-          props.dashboard.service_type!
-        );
-        const filters = serviceTypeConfig?.filters ?? [];
-
-        for (const filter of filters) {
-          if (
-            Boolean(filter?.configuration.dependency?.length) &&
-            filter?.configuration.dependency?.includes(filterKey)
-          ) {
-            dependentFilterReference.current[filterKey] = value;
-            setDependentFilters({ ...dependentFilterReference.current });
-            break;
+          for (const filter of filters) {
+            if (
+              Boolean(filter?.configuration.dependency?.length) &&
+              filter?.configuration.dependency?.includes(filterKey)
+            ) {
+              dependentFilterReference.current[filterKey] = value;
+              setDependentFilters(() => ({
+                ...dependentFilterReference.current,
+              }));
+              break;
+            }
           }
         }
-      }
-    };
+      },
+      [dashboard]
+    );
 
-    const getDependantConfig = (filterKey: string): string[] => {
-      const serviceTypeConfig = FILTER_CONFIG.get(
-        props.dashboard.service_type!
-      );
+    const emitFilterChangeByFilterKey = React.useCallback(
+      (filterKey: string, filterValue: any) => {
+        emitFilterChange(filterKey, filterValue);
+        checkAndUpdateDependentFilters(filterKey, filterValue);
+      },
+      [emitFilterChange, checkAndUpdateDependentFilters]
+    );
 
-      if (!serviceTypeConfig) {
-        return [];
-      }
+    const handleResourceChange = React.useCallback(
+      (resourceId: number[]) => {
+        emitFilterChangeByFilterKey(RESOURCE_ID, resourceId);
+      },
+      [emitFilterChangeByFilterKey]
+    );
 
-      return serviceTypeConfig.filters
-        .filter((filter) =>
-          filter.configuration?.dependency?.includes(filterKey)
-        )
-        .map((filter) =>
-          filter.configuration.filterKey === RESOURCE_ID
-            ? RESOURCES
-            : filter.configuration.filterKey
-        );
-    };
+    const handleTimeRangeChange = React.useCallback(
+      (timeDuration: TimeDuration) => {
+        emitFilterChangeByFilterKey(RELATIVE_TIME_DURATION, timeDuration);
+      },
+      [emitFilterChangeByFilterKey]
+    );
+
+    const handleRegionChange = React.useCallback(
+      (region: string | undefined) => {
+        emitFilterChangeByFilterKey(REGION, region);
+      },
+      [emitFilterChangeByFilterKey]
+    );
+
+    const handleCustomSelectChange = React.useCallback(
+      (filterType: string, value: number[] | string[]) => {
+        emitFilterChangeByFilterKey(filterType, value);
+      },
+      [emitFilterChangeByFilterKey]
+    );
+
+    const getDependantConfig = React.useCallback(
+      (filterKey: string): string[] => {
+        const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type!);
+
+        if (!serviceTypeConfig) {
+          return [];
+        }
+
+        return serviceTypeConfig.filters
+          .filter((filter) =>
+            filter.configuration?.dependency?.includes(filterKey)
+          )
+          .map((filter) =>
+            filter.configuration.filterKey === RESOURCE_ID
+              ? RESOURCES
+              : filter.configuration.filterKey
+          );
+      },
+      [dashboard]
+    );
+
+    const getCustomSelectProperties = React.useCallback(
+      (config: CloudPulseServiceTypeFilters) => {
+        return {
+          apiResponseIdField: config.configuration.apiIdField,
+          apiResponseLabelField: config.configuration.apiLabelField,
+          clearSelections: getDependantConfig(config.configuration.filterKey),
+          componentKey: 'customDropDown', // needed for renderer to choose the component
+          dataApiUrl: config.configuration.apiUrl,
+          filterKey: config.configuration.filterKey,
+          filterType: config.configuration.filterType,
+          handleSelectionChange: handleCustomSelectChange,
+          isMultiSelect: config.configuration.isMultiSelect,
+          key: config.configuration.filterKey,
+          maxSelections: config.configuration.maxSelections,
+          options: config.configuration.options,
+          placeholder: config.configuration.placeholder,
+          savePreferences: !isServiceAnalyticsIntegration,
+          type: config.configuration.type,
+        };
+      },
+      [
+        getDependantConfig,
+        handleCustomSelectChange,
+        isServiceAnalyticsIntegration,
+      ]
+    );
+
+    const getProps = React.useCallback(
+      (config: CloudPulseServiceTypeFilters) => {
+        if (config.configuration.filterKey == REGION) {
+          return getRegionProperties(
+            config,
+            handleRegionChange,
+            dashboard,
+            isServiceAnalyticsIntegration
+          );
+        } else if (config.configuration.filterKey == RESOURCE_ID) {
+          return getResourcesProperties(
+            config,
+            handleResourceChange,
+            dashboard,
+            isServiceAnalyticsIntegration,
+            dependentFilterReference.current
+          );
+        } else if (config.configuration.filterKey == RELATIVE_TIME_DURATION) {
+          return getTimeDurationProperties(
+            config,
+            handleTimeRangeChange,
+            isServiceAnalyticsIntegration
+          );
+        } else {
+          return getCustomSelectProperties(config); // if the above doesn't match use out custom select for rendering filters, the equivalent component for this will be implemented in upcoming PR's
+        }
+      },
+      [
+        dashboard,
+        getCustomSelectProperties,
+        handleRegionChange,
+        handleResourceChange,
+        handleTimeRangeChange,
+        isServiceAnalyticsIntegration,
+      ]
+    );
 
     const toggleShowFilter = () => {
       setShowFilter((showFilterPrev) => !showFilterPrev);
     };
 
+    const RenderFilters = React.useCallback(() => {
+      const filters = FILTER_CONFIG.get(dashboard.service_type)?.filters || [];
+
+      if (!filters || filters.length == 0) {
+        // if the filters are not defined , print an error state
+        return (
+          <Grid item key={'filtererror'} xs={12}>
+            <ErrorState
+              CustomIcon={InfoIcon}
+              CustomIconStyles={{ height: '10%', width: '10%' }}
+              errorText={'Please configure filters to continue'}
+            ></ErrorState>
+          </Grid>
+        );
+      }
+
+      return filters
+        .filter((config) =>
+          isServiceAnalyticsIntegration
+            ? config.configuration.neededInServicePage
+            : !config.configuration.neededInServicePage
+        )
+        .map((filter, index) => (
+          <Grid
+            item
+            key={filter.configuration.filterKey}
+            sx={{ marginLeft: 2 }}
+            xs
+          >
+            {RenderComponent({
+              ...getProps(filter),
+              key: index + filter.configuration.filterKey,
+            })}
+          </Grid>
+        ));
+    }, [dashboard, getProps, isServiceAnalyticsIntegration]);
+
     if (
-      !props.dashboard ||
-      !props.dashboard.service_type ||
-      !FILTER_CONFIG.has(props.dashboard.service_type)
+      !dashboard ||
+      !dashboard.service_type ||
+      !FILTER_CONFIG.has(dashboard.service_type)
     ) {
       return (
         <ErrorState
@@ -198,45 +270,21 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     }
 
     return (
-      <>
-        {!showFilter && (
-          <Button onClick={toggleShowFilter} sx={{ marginTop: 2 }}>
-            <KeyboardArrowRightIcon />
-            <Typography>Filters</Typography>
-          </Button>
-        )}
-        {showFilter && (
-          <Button onClick={toggleShowFilter} sx={{ marginTop: 2 }}>
-            <KeyboardArrowDownIcon />
-            <Typography>Filters</Typography>
-          </Button>
-        )}
-        <Grid container xs={12}>
-          {showFilter &&
-            FILTER_CONFIG.get(props.dashboard.service_type)
-              ?.filters.filter(
-                (config) =>
-                  (props.isServiceAnalyticsIntegration === false &&
-                    config.configuration.neededInServicePage === false) ||
-                  (props.isServiceAnalyticsIntegration === true &&
-                    config.configuration.neededInServicePage === true)
-              )
-              .map((filter, index) => {
-                return (
-                  <Grid
-                    key={filter.configuration.filterKey}
-                    sx={{ marginLeft: 2 }}
-                    xs
-                  >
-                    {RenderComponent({
-                      ...getProps(filter),
-                      key: index + filter.configuration.filterKey,
-                    })}
-                  </Grid>
-                );
-              })}
+      <Grid container>
+        <Grid item key={'toggleFilter'} sx={{ marginLeft: 2 }} xs={12}>
+          <Box>
+            <Button onClick={toggleShowFilter} sx={{ marginTop: 2 }}>
+              {showFilter ? (
+                <KeyboardArrowDownIcon />
+              ) : (
+                <KeyboardArrowRightIcon />
+              )}
+              <Typography>Filters</Typography>
+            </Button>
+          </Box>
         </Grid>
-      </>
+        {showFilter && <RenderFilters />}
+      </Grid>
     );
   },
   compareProps
@@ -247,9 +295,7 @@ function compareProps(
   newProps: CloudPulseDashboardFilterBuilderProps
 ) {
   return (
-    oldProps.dashboard &&
-    newProps.dashboard &&
-    oldProps.dashboard.id == newProps.dashboard.id &&
+    oldProps.dashboard?.id === newProps.dashboard?.id &&
     !newProps.isServiceAnalyticsIntegration
   );
 }
