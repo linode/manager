@@ -1,5 +1,9 @@
-import { RegionalNetworkUtilization } from '@linode/api-v4/lib/account';
-import {
+import Factory from 'src/factories/factoryProxy';
+
+import { placementGroupFactory } from './placementGroups';
+
+import type { RegionalNetworkUtilization } from '@linode/api-v4/lib/account';
+import type {
   CreateLinodeRequest,
   Linode,
   LinodeAlerts,
@@ -12,9 +16,6 @@ import {
   Stats,
   StatsData,
 } from '@linode/api-v4/lib/linodes/types';
-import Factory from 'src/factories/factoryProxy';
-
-import { placementGroupFactory } from './placementGroups';
 
 export const linodeAlertsFactory = Factory.Sync.makeFactory<LinodeAlerts>({
   cpu: 10,
@@ -265,11 +266,12 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   label: Factory.each((i) => `linode-${i}`),
   lke_cluster_id: null,
   placement_group: placementGroupFactory.build({
-    placement_group_type: 'anti_affinity:local',
     id: 1,
     label: 'pg-1',
+    placement_group_type: 'anti_affinity:local',
   }),
   region: 'us-east',
+  site_type: 'core',
   specs: linodeSpecsFactory.build(),
   status: 'running',
   tags: [],
