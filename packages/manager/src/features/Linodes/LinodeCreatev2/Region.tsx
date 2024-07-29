@@ -12,13 +12,11 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
-import { formAnalyticsContext as _formAnalyticsContext } from 'src/context/formAnalyticsContext';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
-import { handleFormFocusEvent } from 'src/utilities/analytics/utils';
 import {
   DIFFERENT_PRICE_STRUCTURE_WARNING,
   DOCS_LINK_LABEL_DC_PRICING,
@@ -79,8 +77,6 @@ export const Region = () => {
   });
 
   const { data: regions } = useRegionsQuery();
-
-  const formAnalyticsContext = React.useContext(_formAnalyticsContext);
 
   const onChange = async (region: RegionType) => {
     const values = getValues();
@@ -184,13 +180,6 @@ export const Region = () => {
       <Box display="flex" justifyContent="space-between" mb={1}>
         <Typography variant="h2">Region</Typography>
         <DocsLink
-          onClick={() =>
-            handleFormFocusEvent(
-              'Linode Create',
-              'DC Pricing',
-              formAnalyticsContext
-            )
-          }
           href="https://www.linode.com/pricing"
           label={DOCS_LINK_LABEL_DC_PRICING}
         />

@@ -27,10 +27,8 @@ import {
 
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
-import { formAnalyticsContext } from './context/formAnalyticsContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
-import { useFormAnalyticsContext } from './context/useFormAnalyticsContext';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
@@ -217,9 +215,6 @@ export const MainContent = () => {
     isOpen: false,
   });
 
-  const FormAnalyticsProvider = formAnalyticsContext.Provider;
-  const formAnalyticsContextValue = useFormAnalyticsContext();
-
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
 
   const { data: profile } = useProfile();
@@ -294,92 +289,90 @@ export const MainContent = () => {
         <SwitchAccountSessionProvider value={switchAccountSessionContextValue}>
           <ComplianceUpdateProvider value={complianceUpdateContextValue}>
             <NotificationProvider value={contextValue}>
-              <FormAnalyticsProvider value={formAnalyticsContextValue}>
-                <SideMenu
-                  closeMenu={() => toggleMenu(false)}
-                  collapse={desktopMenuIsOpen || false}
-                  open={menuIsOpen}
+              <SideMenu
+                closeMenu={() => toggleMenu(false)}
+                collapse={desktopMenuIsOpen || false}
+                open={menuIsOpen}
+              />
+              <div
+                className={cx(classes.content, {
+                  [classes.fullWidthContent]:
+                    desktopMenuIsOpen ||
+                    (desktopMenuIsOpen && desktopMenuIsOpen === true),
+                })}
+              >
+                <MainContentBanner />
+                <TopMenu
+                  desktopMenuToggle={desktopMenuToggle}
+                  isSideMenuOpen={!desktopMenuIsOpen}
+                  openSideMenu={() => toggleMenu(true)}
+                  username={username}
                 />
-                <div
-                  className={cx(classes.content, {
-                    [classes.fullWidthContent]:
-                      desktopMenuIsOpen ||
-                      (desktopMenuIsOpen && desktopMenuIsOpen === true),
-                  })}
+                <main
+                  className={classes.cmrWrapper}
+                  id="main-content"
+                  role="main"
                 >
-                  <MainContentBanner />
-                  <TopMenu
-                    desktopMenuToggle={desktopMenuToggle}
-                    isSideMenuOpen={!desktopMenuIsOpen}
-                    openSideMenu={() => toggleMenu(true)}
-                    username={username}
-                  />
-                  <main
-                    className={classes.cmrWrapper}
-                    id="main-content"
-                    role="main"
-                  >
-                    <Grid className={classes.grid} container spacing={0}>
-                      <Grid className={cx(classes.switchWrapper, 'p0')}>
-                        <GlobalNotifications />
-                        <React.Suspense fallback={<SuspenseLoader />}>
-                          <Switch>
-                            <Route component={LinodesRoutes} path="/linodes" />
-                            {isPlacementGroupsEnabled && (
-                              <Route
-                                component={PlacementGroups}
-                                path="/placement-groups"
-                              />
-                            )}
-                            <Route component={Volumes} path="/volumes" />
-                            <Redirect path="/volumes*" to="/volumes" />
+                  <Grid className={classes.grid} container spacing={0}>
+                    <Grid className={cx(classes.switchWrapper, 'p0')}>
+                      <GlobalNotifications />
+                      <React.Suspense fallback={<SuspenseLoader />}>
+                        <Switch>
+                          <Route component={LinodesRoutes} path="/linodes" />
+                          {isPlacementGroupsEnabled && (
                             <Route
-                              component={NodeBalancers}
-                              path="/nodebalancers"
+                              component={PlacementGroups}
+                              path="/placement-groups"
                             />
-                            <Route component={Domains} path="/domains" />
-                            <Route component={Managed} path="/managed" />
-                            <Route component={Longview} path="/longview" />
-                            <Route component={Images} path="/images" />
+                          )}
+                          <Route component={Volumes} path="/volumes" />
+                          <Redirect path="/volumes*" to="/volumes" />
+                          <Route
+                            component={NodeBalancers}
+                            path="/nodebalancers"
+                          />
+                          <Route component={Domains} path="/domains" />
+                          <Route component={Managed} path="/managed" />
+                          <Route component={Longview} path="/longview" />
+                          <Route component={Images} path="/images" />
+                          <Route
+                            component={StackScripts}
+                            path="/stackscripts"
+                          />
+                          <Route
+                            component={ObjectStorage}
+                            path="/object-storage"
+                          />
+                          <Route component={Kubernetes} path="/kubernetes" />
+                          <Route component={Account} path="/account" />
+                          <Route component={Profile} path="/profile" />
+                          <Route component={Help} path="/support" />
+                          <Route component={SearchLanding} path="/search" />
+                          <Route component={EventsLanding} path="/events" />
+                          <Route component={Firewalls} path="/firewalls" />
+                          {isDatabasesEnabled && (
+                            <Route component={Databases} path="/databases" />
+                          )}
+                          {flags.selfServeBetas && (
+                            <Route component={BetaRoutes} path="/betas" />
+                          )}
+                          <Route component={VPC} path="/vpcs" />
+                          {showCloudPulse && (
                             <Route
-                              component={StackScripts}
-                              path="/stackscripts"
+                              component={CloudPulse}
+                              path="/monitor/cloudpulse"
                             />
-                            <Route
-                              component={ObjectStorage}
-                              path="/object-storage"
-                            />
-                            <Route component={Kubernetes} path="/kubernetes" />
-                            <Route component={Account} path="/account" />
-                            <Route component={Profile} path="/profile" />
-                            <Route component={Help} path="/support" />
-                            <Route component={SearchLanding} path="/search" />
-                            <Route component={EventsLanding} path="/events" />
-                            <Route component={Firewalls} path="/firewalls" />
-                            {isDatabasesEnabled && (
-                              <Route component={Databases} path="/databases" />
-                            )}
-                            {flags.selfServeBetas && (
-                              <Route component={BetaRoutes} path="/betas" />
-                            )}
-                            <Route component={VPC} path="/vpcs" />
-                            {showCloudPulse && (
-                              <Route
-                                component={CloudPulse}
-                                path="/monitor/cloudpulse"
-                              />
-                            )}
-                            <Redirect exact from="/" to={defaultRoot} />
-                            {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
-                            <Redirect from="/dashboard" to={defaultRoot} />
-                            <Route component={NotFound} />
-                          </Switch>
-                        </React.Suspense>
-                      </Grid>
+                          )}
+                          <Redirect exact from="/" to={defaultRoot} />
+                          {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
+                          <Redirect from="/dashboard" to={defaultRoot} />
+                          <Route component={NotFound} />
+                        </Switch>
+                      </React.Suspense>
                     </Grid>
-                  </main>
-                </div>
-              </FormAnalyticsProvider>
+                  </Grid>
+                </main>
+              </div>
             </NotificationProvider>
             <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
           </ComplianceUpdateProvider>

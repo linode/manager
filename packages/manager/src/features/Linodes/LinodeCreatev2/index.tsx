@@ -13,13 +13,11 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { formAnalyticsContext as _formAnalyticsContext } from 'src/context/formAnalyticsContext';
 import { useMutateAccountAgreements } from 'src/queries/account/agreements';
 import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
 } from 'src/queries/linodes/linodes';
-import { handleFormFocusEvent } from 'src/utilities/analytics/utils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { Actions } from './Actions';
@@ -75,8 +73,6 @@ export const LinodeCreatev2 = () => {
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
   const currentTabIndex = getTabIndex(params.type);
-
-  const formAnalyticsContext = React.useContext(_formAnalyticsContext);
 
   const onTabChange = (index: number) => {
     if (index !== currentTabIndex) {
@@ -142,19 +138,6 @@ export const LinodeCreatev2 = () => {
     }
     previousSubmitCount.current = form.formState.submitCount;
   }, [form.formState]);
-
-  useEffect(() => {
-    const touchedFieldKeys = Object.keys(form.formState.touchedFields);
-    // Only track the first field that the user has touched as the form start.
-    if (touchedFieldKeys.length === 1) {
-      // Would fire a formFocus analytics event here.
-      handleFormFocusEvent(
-        'Linode Create',
-        touchedFieldKeys[0],
-        formAnalyticsContext
-      );
-    }
-  }, [form.formState, formAnalyticsContext]);
 
   return (
     <FormProvider {...form}>
