@@ -154,8 +154,9 @@ export const VPCPanel = (props: VPCPanelProps) => {
             fromLinodeCreate &&
             sendLinodeCreateFormInputEvent({
               createType: (params.type as LinodeCreateType) ?? 'OS',
-              paperName: 'VPC',
-              labelName: 'Learn more',
+              headerName: 'VPC',
+              interaction: 'click',
+              label: 'Learn more',
               version: 'v1',
             })
           }
@@ -198,8 +199,9 @@ export const VPCPanel = (props: VPCPanelProps) => {
               if (selectedVPC.label === 'None') {
                 sendLinodeCreateFormInputEvent({
                   createType: (params.type as LinodeCreateType) ?? 'OS',
-                  paperName: 'VPC',
-                  labelName: 'Assign VPC',
+                  headerName: 'VPC',
+                  interaction: 'click',
+                  label: 'Assign VPC',
                   version: 'v1',
                 });
               }
@@ -236,8 +238,9 @@ export const VPCPanel = (props: VPCPanelProps) => {
                     setIsVPCCreateDrawerOpen(true);
                     sendLinodeCreateFormInputEvent({
                       createType: (params.type as LinodeCreateType) ?? 'OS',
-                      paperName: 'VPC',
-                      labelName: 'Create VPC',
+                      headerName: 'VPC',
+                      interaction: 'click',
+                      label: 'Create VPC',
                       version: 'v1',
                     });
                   }}

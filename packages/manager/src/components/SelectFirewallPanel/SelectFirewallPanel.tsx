@@ -47,8 +47,10 @@ export const SelectFirewallPanel = (props: Props) => {
     if (isFromLinodeCreate) {
       sendLinodeCreateFormInputEvent({
         createType: (queryParams.type as LinodeCreateType) ?? 'OS',
-        paperName: 'Firewall',
-        labelName: 'Create Firewall',
+        headerName: 'Firewall',
+        interaction: 'click',
+        label: 'Create Firewall',
+        subheaderName: 'Assign Firewall',
         version: 'v1',
       });
     }
@@ -93,8 +95,9 @@ export const SelectFirewallPanel = (props: Props) => {
             if (!selection) {
               sendLinodeCreateFormInputEvent({
                 createType: (queryParams.type as LinodeCreateType) ?? 'OS',
-                paperName: 'Firewall',
-                labelName: 'Assign Firewall',
+                headerName: 'Firewall',
+                interaction: 'click',
+                label: 'Assign Firewall',
                 version: 'v1',
               });
             }

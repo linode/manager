@@ -469,9 +469,10 @@ export class LinodeCreate extends React.PureComponent<
     if (prevTabIndex !== index) {
       sendLinodeCreateFormStepEvent({
         createType: (this.tabs[prevTabIndex].title as LinodeCreateType) ?? 'OS',
-        labelName: `${this.tabs[index].title} Tab`,
-        paperName: undefined,
+        label: `${this.tabs[index].title} Tab`,
+        headerName: undefined,
         version: 'v1',
+        interaction: 'click',
       });
     }
   };
@@ -994,9 +995,10 @@ export class LinodeCreate extends React.PureComponent<
                       createType:
                         (this.tabs[selectedTab].title as LinodeCreateType) ??
                         'OS',
-                      labelName: 'Choosing a Plan',
+                      label: 'Choosing a Plan',
                       version: 'v1',
-                      paperName: 'Linode Plan',
+                      headerName: 'Linode Plan',
+                      interaction: 'click',
                     });
                   }}
                   href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
@@ -1096,9 +1098,10 @@ export class LinodeCreate extends React.PureComponent<
                         createType:
                           (this.tabs[selectedTab].title as LinodeCreateType) ??
                           'OS',
-                        paperName: 'Firewall Panel',
-                        labelName: 'Learn more',
+                        headerName: 'Firewall Panel',
+                        label: 'Learn more',
                         version: 'v1',
+                        interaction: 'click',
                       })
                     }
                     to={FIREWALL_GET_STARTED_LINK}

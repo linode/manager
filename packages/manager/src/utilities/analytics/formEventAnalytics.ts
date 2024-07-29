@@ -1,4 +1,4 @@
-import { sendFormEvent } from './utils';
+import { getFormattedFormEventName, sendFormEvent } from './utils';
 
 import type {
   BasicFormEvent,
@@ -24,14 +24,20 @@ import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types'
 // SelectRegionPanel.tsx
 export const sendLinodeCreateFormInputEvent = ({
   createType,
-  paperName,
-  labelName,
+  headerName,
+  interaction = 'click',
+  label,
+  subheaderName,
   version,
 }: LinodeCreateFormEventOptions) => {
   const formPayload: FormInputEvent = {
     formName: `Linode Create from ${createType} ${version}`,
-    // Form Name - Paper Name - Label Name
-    inputValue: `Linode Create from ${createType} ${version} - ${paperName} - ${labelName}`,
+    inputValue: getFormattedFormEventName({
+      headerName,
+      interaction,
+      label,
+      subheaderName,
+    }),
   };
   sendFormEvent(formPayload, 'formInput');
 };
@@ -40,14 +46,20 @@ export const sendLinodeCreateFormInputEvent = ({
 // VPCCreateDrawer.tsx
 export const sendLinodeCreateFormStepEvent = ({
   createType,
-  paperName,
-  labelName,
+  headerName,
+  interaction,
+  label,
+  subheaderName,
   version,
 }: LinodeCreateFormEventOptions) => {
   const formPayload: FormStepEvent = {
     formName: `Linode Create from ${createType} ${version}`,
-    // Form Name - Paper Name - Label Name
-    stepName: `Linode Create from ${createType} ${version} - ${paperName} - ${labelName}`,
+    stepName: getFormattedFormEventName({
+      headerName,
+      interaction,
+      label,
+      subheaderName,
+    }),
   };
   sendFormEvent(formPayload, 'formStepInteraction');
 };

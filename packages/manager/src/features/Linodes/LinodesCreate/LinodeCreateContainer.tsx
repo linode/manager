@@ -890,9 +890,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             onDocsClick={() => {
               sendLinodeCreateFlowDocsClickEvent('Getting Started');
               sendLinodeCreateFormStepEvent({
-                paperName: undefined,
                 createType: (this.params.type as LinodeCreateType) ?? 'OS',
-                labelName: 'Getting Started',
+                headerName: undefined,
+                interaction: 'click',
+                label: 'Getting Started',
                 version: 'v1',
               });
             }}

@@ -1,6 +1,11 @@
 import { ADOBE_ANALYTICS_URL } from 'src/constants';
 
-import type { AnalyticsEvent, FormEventType, FormPayload } from './types';
+import type {
+  AnalyticsEvent,
+  FormEventOptions,
+  FormEventType,
+  FormPayload,
+} from './types';
 import type { FormAnalyticsContextProps } from 'src/context/useFormAnalyticsContext';
 
 /**
@@ -46,15 +51,12 @@ export const sendFormEvent = (
   if (window._satellite) {
     // Depending on the type of form event, send the correct payload for a form focus, input, step, or error.
     if (eventType === 'formInput' && 'inputValue' in eventPayload) {
-      formEventPayload['inputValue'] = eventPayload.inputValue.replace(
-        /\|/g,
-        ''
-      );
+      formEventPayload['inputValue'] = eventPayload.inputValue;
     } else if (
       eventType === 'formStepInteraction' &&
       'stepName' in eventPayload
     ) {
-      formEventPayload['stepName'] = eventPayload.stepName.replace(/\|/g, '');
+      formEventPayload['stepName'] = eventPayload.stepName;
     } else if (eventType === 'formError' && 'formError' in eventPayload) {
       formEventPayload['formError'] = eventPayload;
     }
@@ -99,7 +101,6 @@ export const handleFormFocusEvent = (
   firstTouchedInputName: string,
   context: FormAnalyticsContextProps
 ) => {
-  console.log({context})
   // Update the first touched input once per form.
   // It will be undefined at context initialization, indicating that a user has not yet interacted with the form.
   if (!context.firstTouchedInputName) {
@@ -111,4 +112,15 @@ export const handleFormFocusEvent = (
     console.log(`Fire a formFocus event on ${firstTouchedInputName}!`);
     // TODO: call the actual formFocus event here.
   }
+};
+
+export const getFormattedFormEventName = ({
+  headerName,
+  interaction,
+  label,
+  subheaderName,
+}: FormEventOptions) => {
+  return `${headerName ?? 'No header'} ${
+    subheaderName ? `- ${subheaderName}` : ''
+  } | ${interaction}:${label}`;
 };
