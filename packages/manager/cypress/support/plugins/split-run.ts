@@ -38,7 +38,7 @@ export const splitCypressRun: CypressPlugin = (_on, config) => {
 
     // Information about test weights to be included in the info table, if applicable.
     // TODO type.
-    let weightsInfo: any = {
+    let weightsInfo: Record<string, any> = {
       'Test Weights': '(Unavailable)',
     };
 
