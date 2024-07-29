@@ -7,6 +7,10 @@ import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import {
+  isDistributedRegionSupported,
+  useIsGeckoEnabled,
+} from 'src/components/RegionSelect/RegionSelect.utils';
 import { Stack } from 'src/components/Stack';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Tab } from 'src/components/Tabs/Tab';
@@ -38,6 +42,7 @@ import { Images } from './Tabs/Images';
 import { Marketplace } from './Tabs/Marketplace/Marketplace';
 import { OperatingSystems } from './Tabs/OperatingSystems';
 import { StackScripts } from './Tabs/StackScripts/StackScripts';
+import { TwoStepRegion } from './TwoStepRegion';
 import { UserData } from './UserData/UserData';
 import {
   captureLinodeCreateAnalyticsEvent,
@@ -67,6 +72,10 @@ export const LinodeCreatev2 = () => {
 
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
+
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const showTwoStepRegion =
+    isGeckoGAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
 
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
@@ -180,7 +189,8 @@ export const LinodeCreatev2 = () => {
               </SafeTabPanel>
             </TabPanels>
           </Tabs>
-          {params.type !== 'Backups' && <Region />}
+          {params.type !== 'Backups' && !showTwoStepRegion && <Region />}
+          {params.type !== 'Backups' && showTwoStepRegion && <TwoStepRegion />}
           <Plan />
           <Details />
           {params.type !== 'Clone Linode' && <Security />}
