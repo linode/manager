@@ -1,14 +1,40 @@
 import { generateTerraformConfig } from './generate-terraformConfig';
 
+import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+
 describe('generateTerraformConfig', () => {
   it('should generate correct configuration with all properties', () => {
-    const config = {
+    const config: CreateLinodeRequest = {
       authorized_keys: ['ssh-rsa AAA...'],
+      authorized_users: ['user123'],
+      backup_id: 67890,
+      firewall_id: 98765,
       image: 'linode/ubuntu20.04',
+      interfaces: [
+        {
+          ip_ranges: ['192.168.1.1/32'],
+          ipam_address: '192.0.0.0/24',
+          ipv4: {
+            nat_1_1: '192.168.1.100',
+            vpc: '192.168.2.0',
+          },
+          label: 'interface-label',
+          purpose: 'public',
+        },
+        {
+          ipam_address: '192.0.0.0/24',
+          label: 'test',
+          purpose: 'vlan',
+        },
+      ],
       label: 'my-instance',
+      metadata: {
+        user_data: 'echo Hello World',
+      },
       private_ip: true,
       region: 'us-east',
-      root_pass: 'securePass123',
+      root_pass: 'verySecurePass123',
+      stackscript_id: 12345,
       swap_size: 512,
       tags: ['production', 'web'],
       type: 'g6-nanode-1',
@@ -20,8 +46,28 @@ describe('generateTerraformConfig', () => {
       `  image = "linode/ubuntu20.04"\n` +
       `  region = "us-east"\n` +
       `  type = "g6-nanode-1"\n` +
+      `  firewall_id = 98765\n` +
+      `  metadata {\n` +
+      `    user_data = "echo Hello World"\n` +
+      `  }\n` +
+      `  interface {\n` +
+      `    purpose = "public"\n` +
+      `    ip_ranges = ["192.168.1.1/32"]\n` +
+      `    ipv4 {\n` +
+      `      nat_1_1 = "192.168.1.100"\n` +
+      `      vpc = "192.168.2.0"\n` +
+      `    }\n` +
+      `    label = "interface-label"\n` +
+      `    ipam_address = "192.0.0.0/24"\n` +
+      `  }\n` +
+      `  interface {\n` +
+      `    purpose = "vlan"\n` +
+      `    label = "test"\n` +
+      `    ipam_address = "192.0.0.0/24"\n` +
+      `  }\n` +
+      `  authorized_users = ["user123"]\n` +
       `  authorized_keys = ["ssh-rsa AAA..."]\n` +
-      `  root_pass = "securePass123"\n` +
+      `  root_pass = "verySecurePass123"\n` +
       `  tags = ["production", "web"]\n` +
       `  swap_size = 512\n` +
       `  private_ip = true\n` +

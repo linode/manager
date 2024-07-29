@@ -16,6 +16,11 @@ describe('generatePythonLinodeSnippet', () => {
           purpose: 'public',
           subnet_id: 69513,
         },
+        {
+          ipam_address: '192.168.0.1',
+          label: 'test',
+          purpose: 'vpc',
+        },
       ],
       label: 'FullTestLinode',
       metadata: { user_data: 'AAAAB3Nza' },
@@ -28,7 +33,7 @@ describe('generatePythonLinodeSnippet', () => {
       type: 'g6-standard-1',
     };
 
-    const expectedOutput = `client = LinodeClient(token=os.getenv('LINODE_TOKEN'))\nnew_linode = client.linode.instance_create(\n    ltype="g6-standard-1",\n    region="us-central",\n    image="linode/ubuntu20.04",\n    label="FullTestLinode",\n    root_pass="securepassword123",\n    placement_group={\n        "id" : 2603,\n    },\n    metadata={\n        "user_data" : "AAAAB3Nza",\n    },\n    authorized_keys=["ssh-rsa AAAAB3Nza..."],\n    interfaces=[\n        {\n            "label": "main-interface",\n            "purpose": "public",\n            "ipam_address": "192.168.0.1",\n            "subnet_id": 69513,\n            "ip_ranges": ["192.168.0.1/24"],\n        },\n    ],\n    backups_enabled=True,\n    firewall_id=289203,\n    stackscript_id=123456,\n    tags=["production", "webserver"],\n    private_ip=True\n)\n`;
+    const expectedOutput = `client = LinodeClient(token=os.getenv('LINODE_TOKEN'))\nnew_linode = client.linode.instance_create(\n    ltype="g6-standard-1",\n    region="us-central",\n    image="linode/ubuntu20.04",\n    label="FullTestLinode",\n    root_pass="securepassword123",\n    placement_group={\n        "id" : 2603,\n    },\n    metadata={\n        "user_data" : "AAAAB3Nza",\n    },\n    authorized_keys=["ssh-rsa AAAAB3Nza..."],\n    interfaces=[\n        {\n            "label": "main-interface",\n            "purpose": "public",\n            "ipam_address": "192.168.0.1",\n            "subnet_id": 69513,\n            "ip_ranges": ["192.168.0.1/24"],\n        },\n        {\n            "label": "test",\n            "purpose": "vpc",\n            "ipam_address": "192.168.0.1",\n        },\n    ],\n    backups_enabled=True,\n    firewall_id=289203,\n    stackscript_id=123456,\n    tags=["production", "webserver"],\n    private_ip=True\n)\n`;
     expect(generatePythonLinodeSnippet(config)).toEqual(expectedOutput);
   });
 
