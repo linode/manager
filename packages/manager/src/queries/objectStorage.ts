@@ -3,7 +3,6 @@ import {
   deleteBucket,
   deleteBucketWithRegion,
   deleteSSLCert,
-  getBucket,
   getBuckets,
   getBucketsInCluster,
   getBucketsInRegion,
@@ -51,7 +50,6 @@ import type {
   PriceType,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import type { QueryClient } from '@tanstack/react-query';
 
 export interface BucketError {
   /*
@@ -70,8 +68,6 @@ interface BucketsResponse {
   errors: BucketError[];
 }
 
-export const queryKey = 'object-storage';
-
 /**
  * This getAll is probably overkill for getting all
  * Object Storage clusters (currently there are only 4),
@@ -88,13 +84,17 @@ const getAllObjectStorageTypes = () =>
     (data) => data.data
   );
 
-const objectStorageQueries = createQueryKeys('object-storage', {
+export const objectStorageQueries = createQueryKeys('object-storage', {
   accessKeys: (params: Params) => ({
     queryFn: () => getObjectStorageKeys(params),
     queryKey: [params],
   }),
   bucket: (clusterOrRegion: string, bucketName: string) => ({
     contextQueries: {
+      objects: {
+        queryFn: null,
+        queryKey: null,
+      },
       ssl: {
         queryFn: () => getSSLCert(clusterOrRegion, bucketName),
         queryKey: null,
@@ -103,7 +103,7 @@ const objectStorageQueries = createQueryKeys('object-storage', {
     queryKey: [clusterOrRegion, bucketName],
   }),
   buckets: {
-    queryFn: () => null, // Thi is a fake queryFn. Look at `useObjectStorageBuckets` for the actual logic.
+    queryFn: () => null, // This is a fake queryFn. Look at `useObjectStorageBuckets` for the actual logic.
     queryKey: null,
   },
   clusters: {
@@ -263,10 +263,7 @@ export const useObjectBucketDetailsInfiniteQuery = (
         params: { delimiter, marker: pageParam, prefix },
       }),
     queryKey: [
-      queryKey,
-      clusterId,
-      bucket,
-      'objects',
+      ...objectStorageQueries.bucket(clusterId, bucket)._ctx.objects.queryKey,
       ...prefixToQueryKey(prefix),
     ],
   });
@@ -353,45 +350,6 @@ export const getAllBucketsFromRegions = async (
  */
 export const prefixToQueryKey = (prefix: string) => {
   return prefix.split('/', prefix.split('/').length - 1);
-};
-
-/**
- * Updates the data for a single bucket in the useObjectStorageBuckets query
- * @param {string} cluster the id of the Object Storage cluster
- * @param {string} bucketName the label of the bucket
- */
-export const updateBucket = async (
-  cluster: string,
-  bucketName: string,
-  queryClient: QueryClient
-) => {
-  const bucket = await getBucket(cluster, bucketName);
-  queryClient.setQueryData<BucketsResponse | undefined>(
-    [`${queryKey}-buckets`],
-    (oldData) => {
-      if (oldData === undefined) {
-        return undefined;
-      }
-
-      const idx = oldData.buckets.findIndex(
-        (thisBucket) =>
-          thisBucket.label === bucketName && thisBucket.cluster === cluster
-      );
-
-      if (idx === -1) {
-        return oldData;
-      }
-
-      const updatedBuckets = [...oldData.buckets];
-
-      updatedBuckets[idx] = bucket;
-
-      return {
-        buckets: updatedBuckets,
-        errors: oldData.errors,
-      } as BucketsResponse;
-    }
-  );
 };
 
 export const useCreateObjectUrlMutation = (
