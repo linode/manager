@@ -64,12 +64,12 @@ export function generatePythonLinodeSnippet(
         )}",\n`;
       }
       if (iface.ipv4 && (iface.ipv4?.nat_1_1 || iface.ipv4?.vpc)) {
-        snippet += `            "ipv4"={\n`;
+        snippet += `            "ipv4": {\n`;
         if (iface.ipv4?.nat_1_1) {
-          snippet += `                "nat_1_1":"${iface.ipv4.nat_1_1}",\n`;
+          snippet += `                "nat_1_1": "${iface.ipv4.nat_1_1}",\n`;
         }
         if (iface.ipv4?.vpc) {
-          snippet += `                "vpc":"${iface.ipv4.vpc}",\n`;
+          snippet += `                "vpc": "${iface.ipv4.vpc}",\n`;
         }
         snippet += `            },\n`;
       }
