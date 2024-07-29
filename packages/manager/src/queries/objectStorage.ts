@@ -15,6 +15,7 @@ import {
   getSSLCert,
   uploadSSLCert,
 } from '@linode/api-v4';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   useInfiniteQuery,
   useMutation,
@@ -23,10 +24,14 @@ import {
 } from '@tanstack/react-query';
 
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
+import { useFlags } from 'src/hooks/useFlags';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { getAll } from 'src/utilities/getAll';
 
+import { useAccount } from './account/account';
 import { accountQueries } from './account/queries';
 import { queryPresets } from './base';
+import { useRegionsQuery } from './regions/regions';
 
 import type {
   CreateObjectStorageBucketPayload,
@@ -47,7 +52,6 @@ import type {
   ResourcePage,
 } from '@linode/api-v4/lib/types';
 import type { QueryClient } from '@tanstack/react-query';
-import type { AtLeastOne } from 'src/utilities/types/typesHelpers';
 
 export interface BucketError {
   /*
@@ -66,24 +70,6 @@ interface BucketsResponse {
   errors: BucketError[];
 }
 
-/*
-   @TODO OBJ Multicluster:'region' will become required, and the
-   'cluster' field will be deprecated once the feature is fully rolled out in production.
-   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
-   remove 'cluster' and retain 'regions'.
-  */
-interface UseObjectStorageBucketsBaseOptions {
-  enabled?: boolean;
-  isObjMultiClusterEnabled?: boolean;
-}
-
-// Use the utility type with your options
-type UseObjectStorageBucketsOptions = AtLeastOne<{
-  clusters: ObjectStorageCluster[] | undefined;
-  regions: Region[] | undefined;
-}> &
-  UseObjectStorageBucketsBaseOptions;
-
 export const queryKey = 'object-storage';
 
 /**
@@ -97,42 +83,51 @@ export const getAllObjectStorageClusters = () =>
 export const getAllObjectStorageBuckets = () =>
   getAll<ObjectStorageBucket>(() => getBuckets())().then((data) => data.data);
 
+const objectStorageQueries = createQueryKeys('object-storage', {
+  buckets: {
+    queryFn: () => null,
+    queryKey: null,
+  },
+  clusters: {
+    queryFn: () => getAllObjectStorageClusters(),
+    queryKey: null,
+  },
+});
+
 export const useObjectStorageClusters = (enabled: boolean = true) =>
-  useQuery<ObjectStorageCluster[], APIError[]>(
-    [`${queryKey}-clusters`],
-    getAllObjectStorageClusters,
-    { ...queryPresets.oneTimeFetch, enabled }
+  useQuery<ObjectStorageCluster[], APIError[]>({
+    ...objectStorageQueries.clusters,
+    ...queryPresets.oneTimeFetch,
+    enabled,
+  });
+
+export const useObjectStorageBuckets = (enabled = true) => {
+  const flags = useFlags();
+  const { data: account } = useAccount();
+
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
   );
 
-/*
-   @TODO OBJ Multicluster:'region' will become required, and the
-   'cluster' field will be deprecated once the feature is fully rolled out in production.
-   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
-   remove 'cluster' and retain 'regions'.
-  */
+  const { data: clusters } = useObjectStorageClusters(enabled);
+  const { data: allRegions } = useRegionsQuery();
 
-export const useObjectStorageBuckets = ({
-  clusters,
-  enabled = true,
-  isObjMultiClusterEnabled = false,
-  regions,
-}: UseObjectStorageBucketsOptions) =>
-  useQuery<BucketsResponse, APIError[]>(
-    [`${queryKey}-buckets`],
-    // Ideally we would use the line below, but if a cluster is down, the buckets on that
-    // cluster don't show up in the responce. We choose to fetch buckets per-cluster so
-    // we can tell the user which clusters are having issues.
-    // getAllObjectStorageBuckets,
-    () =>
-      isObjMultiClusterEnabled
-        ? getAllBucketsFromRegions(regions)
-        : getAllBucketsFromClusters(clusters),
-    {
-      ...queryPresets.longLived,
-      enabled: (clusters !== undefined || regions !== undefined) && enabled,
-      retry: false,
-    }
+  const regions = allRegions?.filter((r) =>
+    r.capabilities.includes('Object Storage')
   );
+
+  return useQuery<BucketsResponse, APIError[]>({
+    enabled: isObjMultiClusterEnabled
+      ? regions !== undefined && enabled
+      : clusters !== undefined && enabled,
+    queryFn: isObjMultiClusterEnabled
+      ? () => getAllBucketsFromRegions(regions)
+      : () => getAllBucketsFromClusters(clusters),
+    queryKey: objectStorageQueries.buckets.queryKey,
+  });
+};
 
 export const useObjectStorageAccessKeys = (params: Params) =>
   useQuery<ResourcePage<ObjectStorageKey>, APIError[]>(

@@ -26,9 +26,7 @@ import {
   updateBucket,
   useObjectBucketDetailsInfiniteQuery,
   useObjectStorageBuckets,
-  useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { sendDownloadObjectEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
@@ -90,18 +88,7 @@ export const BucketDetail = () => {
     account?.capabilities ?? []
   );
 
-  const { data: regions } = useRegionsQuery();
-
-  const regionsSupportingObjectStorage = regions?.filter((region) =>
-    region.capabilities.includes('Object Storage')
-  );
-
-  const { data: clusters } = useObjectStorageClusters();
-  const { data: buckets } = useObjectStorageBuckets({
-    clusters,
-    isObjMultiClusterEnabled,
-    regions: regionsSupportingObjectStorage,
-  });
+  const { data: buckets } = useObjectStorageBuckets();
 
   const bucket = buckets?.buckets.find((bucket) => {
     if (isObjMultiClusterEnabled) {
