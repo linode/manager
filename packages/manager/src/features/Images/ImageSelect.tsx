@@ -100,7 +100,7 @@ export const ImageSelect = (props: MultiProps | Props) => {
             const group = imageSelectOptions.find((group) =>
               group.options.includes(option)
             );
-            return group ? group.label : '';
+            return group ? String(group.label) : '';
           }}
           onChange={(event, value) => {
             onSelect(value ?? []);
