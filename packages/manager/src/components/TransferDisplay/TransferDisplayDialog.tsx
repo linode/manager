@@ -8,9 +8,10 @@ import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
 
 import { DocsLink } from '../DocsLink/DocsLink';
+import { useIsGeckoEnabled } from '../RegionSelect/RegionSelect.utils';
+import { NETWORK_TRANSFER_QUOTA_DOCS_LINKS } from './constants';
 import { TransferDisplayDialogHeader } from './TransferDisplayDialogHeader';
 import { TransferDisplayUsage } from './TransferDisplayUsage';
-import { NETWORK_TRANSFER_QUOTA_DOCS_LINKS } from './constants';
 import { formatRegionList, getDaysRemaining } from './utils';
 
 import type { RegionTransferPool } from './utils';
@@ -38,6 +39,8 @@ export const TransferDisplayDialog = React.memo(
       regionTransferPools,
     } = props;
     const theme = useTheme();
+    const { isGeckoGAEnabled } = useIsGeckoEnabled();
+
     const daysRemainingInMonth = getDaysRemaining();
     const listOfOtherRegionTransferPools: string[] =
       regionTransferPools.length > 0
@@ -62,7 +65,9 @@ export const TransferDisplayDialog = React.memo(
          *  Global Transfer Pool Display
          */}
         <TransferDisplayDialogHeader
-          tooltipText={`The Global Pool includes transfer associated with active services in your devices' regions${
+          tooltipText={`The Global Pool includes transfer associated with active services in your devices' ${
+            isGeckoGAEnabled ? 'core' : ''
+          } regions${
             listOfOtherRegionTransferPools.length > 0
               ? ` except for ${otherRegionPools}.`
               : '.'
