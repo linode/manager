@@ -177,7 +177,7 @@ export const TagsInput = (props: TagsInputProps) => {
       multiple
       noOptionsText={'No results'}
       options={accountTagItems}
-      placeholder={value.length === 0 ? 'Type to choose or create a tag.' : ' '}
+      placeholder={value.length === 0 ? 'Type to choose or create a tag.' : ''}
       textFieldProps={{ hideLabel, noMarginTop }}
       value={value}
     />
