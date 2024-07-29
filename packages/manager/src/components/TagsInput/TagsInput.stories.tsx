@@ -29,7 +29,7 @@ export const Default: StoryObj<TagsInputProps> = {
       };
 
       return (
-        <Box sx={{ alignItems: 'center', display: 'flex', height: 300 }}>
+        <Box sx={{ alignItems: 'center', height: 300 }}>
           <TagsInput
             {...args}
             onChange={(selected) => handleUpdateTags(selected)}
