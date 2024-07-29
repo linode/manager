@@ -9,6 +9,8 @@ import {
   updateGlobalFilterPreference,
 } from '../Utils/UserPreference';
 
+import type { Filter } from '@linode/api-v4';
+
 export interface CloudPulseResources {
   id: string;
   label: string;
@@ -22,7 +24,7 @@ export interface CloudPulseResourcesSelectProps {
   placeholder?: string;
   region: string | undefined;
   resourceType: string | undefined;
-  xFilter?: { [key: string]: any } | undefined;
+  xFilter: Filter;
 }
 
 export const CloudPulseResourcesSelect = React.memo(
