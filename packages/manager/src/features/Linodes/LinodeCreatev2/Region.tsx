@@ -9,10 +9,7 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import {
-  isDistributedRegionSupported,
-  useIsGeckoEnabled,
-} from 'src/components/RegionSelect/RegionSelect.utils';
+import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
@@ -79,10 +76,7 @@ export const Region = () => {
     globalGrantType: 'add_linodes',
   });
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
 
   const onChange = async (region: RegionType) => {
     const values = getValues();

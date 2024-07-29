@@ -12,6 +12,7 @@ import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
@@ -53,10 +54,7 @@ export const PlacementGroupsCreateDrawer = (
     open,
     selectedRegionId,
   } = props;
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
   const { data: allPlacementGroupsInRegion } = useAllPlacementGroupsQuery({
     enabled: Boolean(selectedRegionId),
     filter: {
@@ -147,6 +145,8 @@ export const PlacementGroupsCreateDrawer = (
     selectedRegion
   )}`;
 
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+
   const disabledRegions = regions?.reduce<Record<string, DisableRegionOption>>(
     (acc, region) => {
       const isRegionAtCapacity = hasRegionReachedPlacementGroupCapacity({
@@ -212,7 +212,12 @@ export const PlacementGroupsCreateDrawer = (
             <DescriptionList
               items={[
                 {
-                  description: `${selectedRegion.label} (${selectedRegion.id})`,
+                  description: isGeckoGAEnabled
+                    ? getNewRegionLabel({
+                        includeSlug: true,
+                        region: selectedRegion,
+                      })
+                    : `${selectedRegion.label} (${selectedRegion.id})`,
                   title: 'Region',
                 },
               ]}
