@@ -1,18 +1,29 @@
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
+import { stackScriptFactory } from 'src/factories';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AppDetailDrawerv2 } from './AppDetailDrawer';
 
 describe('AppDetailDrawer', () => {
-  it('should render an app', () => {
-    const { getByText } = renderWithTheme(
+  it('should render an app', async () => {
+    const stackscript = stackScriptFactory.build({ id: 401697 });
+
+    server.use(
+      http.get('*/v4/linode/stackscripts', () => {
+        return HttpResponse.json(makeResourcePage([stackscript]));
+      })
+    );
+
+    const { findByText, getByText } = renderWithTheme(
       <AppDetailDrawerv2 onClose={vi.fn()} open stackScriptId={401697} />
     );
 
     // Verify title renders
-    expect(getByText('WordPress')).toBeVisible();
+    expect(await findByText('WordPress')).toBeVisible();
 
     // Verify description renders
     expect(

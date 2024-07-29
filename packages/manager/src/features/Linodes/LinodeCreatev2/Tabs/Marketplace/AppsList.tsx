@@ -7,14 +7,16 @@ import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Stack } from 'src/components/Stack';
-import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
-import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 
 import { getGeneratedLinodeLabel } from '../../utilities';
 import { getDefaultUDFData } from '../StackScripts/UserDefinedFields/utilities';
 import { AppSection } from './AppSection';
 import { AppSelectionCard } from './AppSelectionCard';
-import { getAppSections, getFilteredApps } from './utilities';
+import {
+  getAppSections,
+  getFilteredApps,
+  useMarketplaceApps,
+} from './utilities';
 
 import type { LinodeCreateFormValues } from '../../utilities';
 import type { StackScript } from '@linode/api-v4';
@@ -37,9 +39,7 @@ interface Props {
 
 export const AppsList = (props: Props) => {
   const { category, onOpenDetailsDrawer, query } = props;
-  const { data: stackscripts, error, isLoading } = useMarketplaceAppsQuery(
-    true
-  );
+  const { apps, error, isLoading } = useMarketplaceApps();
   const queryClient = useQueryClient();
 
   const {
@@ -92,39 +92,39 @@ export const AppsList = (props: Props) => {
   }
 
   if (category || query) {
-    const filteredStackScripts = getFilteredApps({
+    const filteredApps = getFilteredApps({
+      apps,
       category,
       query,
-      stackscripts,
     });
 
     return (
       <Grid container spacing={2}>
-        {filteredStackScripts?.map((stackscript) => (
+        {filteredApps?.map((app) => (
           <AppSelectionCard
-            checked={field.value === stackscript.id}
-            iconUrl={`/assets/${oneClickApps[stackscript.id].logo_url}`}
-            key={stackscript.id}
-            label={stackscript.label}
-            onOpenDetailsDrawer={() => onOpenDetailsDrawer(stackscript.id)}
-            onSelect={() => onSelect(stackscript)}
+            checked={field.value === app.stackscript.id}
+            iconUrl={`/assets/${app.details.logo_url}`}
+            key={app.stackscript.id}
+            label={app.stackscript.label}
+            onOpenDetailsDrawer={() => onOpenDetailsDrawer(app.stackscript.id)}
+            onSelect={() => onSelect(app.stackscript)}
           />
         ))}
       </Grid>
     );
   }
 
-  const sections = getAppSections(stackscripts);
+  const sections = getAppSections(apps);
 
   return (
     <Stack spacing={2}>
-      {sections.map(({ stackscripts, title }) => (
+      {sections.map(({ apps, title }) => (
         <AppSection
+          apps={apps}
           key={title}
           onOpenDetailsDrawer={onOpenDetailsDrawer}
           onSelect={onSelect}
           selectedStackscriptId={field.value}
-          stackscripts={stackscripts}
           title={title}
         />
       ))}

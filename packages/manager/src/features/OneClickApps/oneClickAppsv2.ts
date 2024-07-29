@@ -13,7 +13,6 @@ export const oneClickApps: Record<number, OCA> = {
     ...oneClickAppFactory.build({
       name: 'E2E Test App',
     }),
-    isNew: true,
   },
   401697: {
     alt_description: 'Popular website content management system.',
