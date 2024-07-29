@@ -230,7 +230,9 @@ const interfacesToPayload = (
   }
 
   if (primaryInterfaceIndex !== undefined) {
-    interfaces[primaryInterfaceIndex].primary = true;
+    interfaces.forEach(
+      (iface, i) => (iface.primary = i === primaryInterfaceIndex)
+    );
   }
 
   return filteredInterfaces as Interface[];
