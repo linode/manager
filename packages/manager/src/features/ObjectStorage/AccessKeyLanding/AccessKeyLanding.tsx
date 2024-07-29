@@ -1,6 +1,7 @@
 import {
   ObjectStorageKey,
-  ObjectStorageKeyRequest,
+  CreateObjectStorageKeyPayload,
+  UpdateObjectStorageKeyPayload,
   createObjectStorageKeys,
   revokeObjectStorageKey,
   updateObjectStorageKey,
@@ -18,20 +19,20 @@ import { useOpenClose } from 'src/hooks/useOpenClose';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { useObjectStorageAccessKeys } from 'src/queries/objectStorage';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import {
   sendCreateAccessKeyEvent,
   sendEditAccessKeyEvent,
   sendRevokeAccessKeyEvent,
-} from 'src/utilities/analytics';
+} from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 import { AccessKeyDrawer } from './AccessKeyDrawer';
 import { AccessKeyTable } from './AccessKeyTable/AccessKeyTable';
 import { OMC_AccessKeyDrawer } from './OMC_AccessKeyDrawer';
 import { RevokeAccessKeyDialog } from './RevokeAccessKeyDialog';
-import ViewPermissionsDrawer from './ViewPermissionsDrawer';
 import { MODE, OpenAccessDrawer } from './types';
+import ViewPermissionsDrawer from './ViewPermissionsDrawer';
 
 interface Props {
   accessDrawerOpen: boolean;
@@ -41,7 +42,7 @@ interface Props {
   openAccessDrawer: (mode: MODE) => void;
 }
 
-export type FormikProps = FormikBag<Props, ObjectStorageKeyRequest>;
+export type FormikProps = FormikBag<Props, CreateObjectStorageKeyPayload>;
 
 export const AccessKeyLanding = (props: Props) => {
   const {
@@ -88,19 +89,19 @@ export const AccessKeyLanding = (props: Props) => {
   const flags = useFlags();
   const { account } = useAccountManagement();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
   );
 
   const handleCreateKey = (
-    values: ObjectStorageKeyRequest,
+    values: CreateObjectStorageKeyPayload,
     {
       setErrors,
       setStatus,
       setSubmitting,
-    }: FormikHelpers<ObjectStorageKeyRequest>
+    }: FormikHelpers<CreateObjectStorageKeyPayload>
   ) => {
     // Clear out status (used for general errors)
     setStatus(null);
@@ -155,12 +156,12 @@ export const AccessKeyLanding = (props: Props) => {
   };
 
   const handleEditKey = (
-    values: ObjectStorageKeyRequest,
+    values: UpdateObjectStorageKeyPayload,
     {
       setErrors,
       setStatus,
       setSubmitting,
-    }: FormikHelpers<ObjectStorageKeyRequest>
+    }: FormikHelpers<UpdateObjectStorageKeyPayload>
   ) => {
     // This shouldn't happen, but just in case.
     if (!keyToEdit) {
@@ -178,7 +179,10 @@ export const AccessKeyLanding = (props: Props) => {
 
     setSubmitting(true);
 
-    updateObjectStorageKey(keyToEdit.id, values)
+    updateObjectStorageKey(
+      keyToEdit.id,
+      isObjMultiClusterEnabled ? values : { label: values.label }
+    )
       .then((_) => {
         setSubmitting(false);
 

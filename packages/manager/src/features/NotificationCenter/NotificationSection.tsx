@@ -42,6 +42,7 @@ export interface NotificationItem {
   countInTotal: boolean;
   eventId: number;
   id: string;
+  showProgress?: boolean;
 }
 
 interface NotificationSectionProps {
@@ -50,6 +51,7 @@ interface NotificationSectionProps {
   emptyMessage?: string;
   header: string;
   loading?: boolean;
+  onCloseNotificationCenter?: () => void;
   showMoreTarget?: string;
   showMoreText?: string;
 }
@@ -63,6 +65,7 @@ export const NotificationSection = (props: NotificationSectionProps) => {
     emptyMessage,
     header,
     loading,
+    onCloseNotificationCenter,
     showMoreTarget,
     showMoreText,
   } = props;
@@ -88,7 +91,11 @@ export const NotificationSection = (props: NotificationSectionProps) => {
                   <Typography variant="h3">{header}</Typography>
                   {showMoreTarget && (
                     <strong>
-                      <Link style={{ padding: 0 }} to={showMoreTarget}>
+                      <Link
+                        onClick={onCloseNotificationCenter}
+                        style={{ padding: 0 }}
+                        to={showMoreTarget}
+                      >
                         {showMoreText ?? 'View history'}
                       </Link>
                     </strong>
@@ -149,7 +156,7 @@ const ContentBody = React.memo((props: BodyProps) => {
   if (loading) {
     return (
       <StyledLoadingContainer>
-        <CircleProgress mini />
+        <CircleProgress size="sm" />
       </StyledLoadingContainer>
     );
   }
@@ -161,6 +168,7 @@ const ContentBody = React.memo((props: BodyProps) => {
     <>
       {_content.map((thisItem) => (
         <StyledNotificationItem
+          data-testid="notification-item"
           header={props.header}
           key={`notification-row-${thisItem.id}`}
         >
@@ -235,7 +243,6 @@ const StyledNotificationItem = styled(Box, {
   shouldForwardProp: omittedProps(['header']),
 })<{ header: string }>(({ theme, ...props }) => ({
   '& p': {
-    color: theme.textColors.headlineStatic,
     lineHeight: '1.25rem',
   },
   display: 'flex',

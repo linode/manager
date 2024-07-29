@@ -1,9 +1,11 @@
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import { getDynamicVolumePrice } from 'src/utilities/pricing/dynamicVolumePrice';
+import { useVolumeTypesQuery } from 'src/queries/volumes/volumes';
+import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 
 interface Props {
   currentSize: number;
@@ -12,10 +14,13 @@ interface Props {
 }
 
 export const PricePanel = ({ currentSize, regionId, value }: Props) => {
+  const { data: types, isLoading } = useVolumeTypesQuery();
+
   const getPrice = (size: number) => {
-    return getDynamicVolumePrice({
+    return getDCSpecificPriceByType({
       regionId,
       size,
+      type: types?.[0],
     });
   };
 
@@ -30,9 +35,17 @@ export const PricePanel = ({ currentSize, regionId, value }: Props) => {
       : getPrice(currentSize);
   const price = getClampedPrice(value, currentSize);
 
+  if (isLoading) {
+    return (
+      <Box marginLeft={-1} marginTop={2}>
+        <CircleProgress size="sm" />
+      </Box>
+    );
+  }
+
   return (
     <Box marginTop={4}>
-      <DisplayPrice interval="mo" price={Number(price)} />
+      <DisplayPrice interval="mo" price={price ? Number(price) : '--.--'} />
     </Box>
   );
 };

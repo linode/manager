@@ -4,11 +4,14 @@ import {
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls/types';
 
-import { Item } from 'src/components/EnhancedSelect/Select';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
 export type FirewallPreset = 'dns' | 'http' | 'https' | 'mysql' | 'ssh';
 
+export interface FirewallOptionItem<T = number | string, L = string> {
+  label: L;
+  value: T;
+}
 // Predefined Firewall options for Select components (long-form).
 export const firewallOptionItemsLong = [
   {
@@ -57,7 +60,7 @@ export const firewallOptionItemsShort = [
   },
 ];
 
-export const protocolOptions: Item<FirewallRuleProtocol>[] = [
+export const protocolOptions: FirewallOptionItem<FirewallRuleProtocol>[] = [
   { label: 'TCP', value: 'TCP' },
   { label: 'UDP', value: 'UDP' },
   { label: 'ICMP', value: 'ICMP' },

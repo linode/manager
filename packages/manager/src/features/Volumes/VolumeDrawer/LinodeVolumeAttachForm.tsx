@@ -8,8 +8,8 @@ import { number, object } from 'yup';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useGrants } from 'src/queries/profile';
-import { useAttachVolumeMutation } from 'src/queries/volumes';
+import { useGrants } from 'src/queries/profile/profile';
+import { useAttachVolumeMutation } from 'src/queries/volumes/volumes';
 import {
   handleFieldErrors,
   handleGeneralErrors,

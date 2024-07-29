@@ -1,5 +1,5 @@
 import type { Disk, Linode } from '@linode/api-v4';
-import { createLinode, getLinodeDisks } from '@linode/api-v4';
+import { getLinodeDisks } from '@linode/api-v4';
 import { createLinodeRequestFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { interceptGetLinodeDetails } from 'support/intercepts/linodes';
@@ -8,6 +8,7 @@ import { cleanUp } from 'support/util/cleanup';
 import { depaginate } from 'support/util/paginate';
 import { randomLabel, randomString } from 'support/util/random';
 import { describeRegions } from 'support/util/regions';
+import { createTestLinode } from 'support/util/linodes';
 
 /*
  * Returns a Linode create payload for the given region.
@@ -34,7 +35,7 @@ describeRegions('Can update Linodes', (region) => {
    */
   it('can update a Linode label', () => {
     cy.defer(
-      createLinode(makeLinodePayload(region.id, true)),
+      () => createTestLinode(makeLinodePayload(region.id, true)),
       'creating Linode'
     ).then((linode: Linode) => {
       const newLabel = randomLabel();
@@ -89,7 +90,9 @@ describeRegions('Can update Linodes', (region) => {
     const newPassword = randomString(32);
 
     const createLinodeAndGetDisk = async (): Promise<[Linode, Disk]> => {
-      const linode = await createLinode(makeLinodePayload(region.id, false));
+      const linode = await createTestLinode(
+        makeLinodePayload(region.id, false)
+      );
       const disks = await depaginate((page) =>
         getLinodeDisks(linode.id, { page })
       );
@@ -101,7 +104,7 @@ describeRegions('Can update Linodes', (region) => {
       return [linode, disks[0]];
     };
 
-    cy.defer(createLinodeAndGetDisk(), 'creating Linode').then(
+    cy.defer(() => createLinodeAndGetDisk(), 'creating Linode').then(
       ([linode, disk]: [Linode, Disk]) => {
         // Navigate to Linode details page.
         interceptGetLinodeDetails(linode.id).as('getLinode');

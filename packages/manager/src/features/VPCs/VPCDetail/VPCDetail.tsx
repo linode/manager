@@ -13,7 +13,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useVPCQuery } from 'src/queries/vpcs';
+import { useVPCQuery } from 'src/queries/vpcs/vpcs';
 import { truncate } from 'src/utilities/truncate';
 
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
@@ -23,7 +23,7 @@ import { getUniqueLinodesFromSubnets } from '../utils';
 import {
   StyledActionButton,
   StyledDescriptionBox,
-  StyledPaper,
+  StyledBox,
   StyledSummaryBox,
   StyledSummaryTextTypography,
 } from './VPCDetail.styles';
@@ -133,7 +133,7 @@ const VPCDetail = () => {
           </StyledActionButton>
         </Box>
       </EntityHeader>
-      <StyledPaper>
+      <StyledBox>
         <StyledSummaryBox data-qa-vpc-summary display="flex" flex={1}>
           {summaryData.map((col) => {
             return (
@@ -174,7 +174,7 @@ const VPCDetail = () => {
             </Typography>
           </StyledDescriptionBox>
         )}
-      </StyledPaper>
+      </StyledBox>
       <VPCDeleteDialog
         id={vpc.id}
         label={vpc.label}

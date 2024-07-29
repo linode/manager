@@ -1,5 +1,3 @@
-import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
-import { APIError } from '@linode/api-v4/lib/types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -7,35 +5,22 @@ import { Hidden } from 'src/components/Hidden';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useFlags } from 'src/hooks/useFlags';
-import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
-import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
+import { FirewallActionMenu } from './FirewallActionMenu';
 
-export type Props = Firewall & ActionHandlers;
+import type { ActionHandlers } from './FirewallActionMenu';
+import type { Firewall, FirewallDeviceEntity } from '@linode/api-v4';
 
-export const FirewallRow = React.memo((props: Props) => {
-  const flags = useFlags();
-  const { id, label, rules, status, ...actionHandlers } = props;
+export interface FirewallRowProps extends Firewall, ActionHandlers {}
 
-  const { data: devices, error, isLoading } = useAllFirewallDevicesQuery(id);
-
-  let featureFlaggedDevices: FirewallDevice[] = devices ?? [];
-  if (!flags.firewallNodebalancer) {
-    featureFlaggedDevices =
-      devices?.filter((thisDevice) => {
-        return thisDevice.entity.type === 'linode';
-      }) ?? [];
-  }
+export const FirewallRow = React.memo((props: FirewallRowProps) => {
+  const { entities, id, label, rules, status, ...actionHandlers } = props;
 
   const count = getCountOfRules(rules);
 
   return (
-    <TableRow
-      ariaLabel={`Firewall ${label}`}
-      data-testid={`firewall-row-${id}`}
-    >
+    <TableRow data-testid={`firewall-row-${id}`}>
       <TableCell>
         <Link tabIndex={0} to={`/firewalls/${id}`}>
           {label}
@@ -47,13 +32,7 @@ export const FirewallRow = React.memo((props: Props) => {
       </TableCell>
       <Hidden smDown>
         <TableCell>{getRuleString(count)}</TableCell>
-        <TableCell>
-          {getDevicesCellString(
-            featureFlaggedDevices ?? [],
-            isLoading,
-            error ?? undefined
-          )}
-        </TableCell>
+        <TableCell>{getDevicesCellString(entities)}</TableCell>
       </Hidden>
       <TableCell sx={{ textAlign: 'end', whiteSpace: 'nowrap' }}>
         <FirewallActionMenu
@@ -96,47 +75,32 @@ export const getCountOfRules = (rules: Firewall['rules']): [number, number] => {
   return [(rules.inbound || []).length, (rules.outbound || []).length];
 };
 
-const getDevicesCellString = (
-  data: FirewallDevice[],
-  loading: boolean,
-  error?: APIError[]
-): JSX.Element | string => {
-  if (loading) {
-    return 'Loading...';
-  }
-
-  if (error) {
-    return 'Error retrieving Linodes';
-  }
-
-  if (data.length === 0) {
+const getDevicesCellString = (entities: FirewallDeviceEntity[]) => {
+  if (entities.length === 0) {
     return 'None assigned';
   }
 
-  return getDeviceLinks(data);
+  return getDeviceLinks(entities);
 };
 
-export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
-  const firstThree = data.slice(0, 3);
+export const getDeviceLinks = (entities: FirewallDeviceEntity[]) => {
+  const firstThree = entities.slice(0, 3);
 
   return (
     <>
-      {firstThree.map((thisDevice, idx) => (
-        <Link
-          className="link secondaryLink"
-          data-testid="firewall-row-link"
-          key={thisDevice.id}
-          to={`/${thisDevice.entity.type}s/${thisDevice.entity.id}`}
-        >
-          {idx > 0 && `, `}
-          {thisDevice.entity.label}
-        </Link>
+      {firstThree.map((entity, idx) => (
+        <React.Fragment key={entity.url}>
+          {idx > 0 && ', '}
+          <Link
+            className="link secondaryLink"
+            data-testid="firewall-row-link"
+            to={`/${entity.type}s/${entity.id}`}
+          >
+            {entity.label}
+          </Link>
+        </React.Fragment>
       ))}
-      {data.length > 3 && (
-        <span>
-          {`, `}plus {data.length - 3} more.
-        </span>
-      )}
+      {entities.length > 3 && <span>, plus {entities.length - 3} more.</span>}
     </>
   );
 };

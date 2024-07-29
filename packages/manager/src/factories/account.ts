@@ -3,7 +3,7 @@ import {
   ActivePromotion,
   RegionalNetworkUtilization,
 } from '@linode/api-v4/lib/account/types';
-import * as Factory from 'factory.ts';
+import Factory from 'src/factories/factoryProxy';
 
 export const promoFactory = Factory.Sync.makeFactory<ActivePromotion>({
   credit_monthly_cap: '20.00',
@@ -36,16 +36,18 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
   balance_uninvoiced: 0.0,
   billing_source: 'linode',
   capabilities: [
-    'Linodes',
-    'NodeBalancers',
     'Block Storage',
-    'Object Storage',
-    'Kubernetes',
     'Cloud Firewall',
-    'Vlans',
+    'Disk Encryption',
+    'Kubernetes',
+    'Linodes',
     'LKE HA Control Planes',
     'Machine Images',
     'Managed Databases',
+    'NodeBalancers',
+    'Object Storage',
+    'Placement Group',
+    'Vlans',
   ],
   city: 'Colorado',
   company: Factory.each((i) => `company-${i}`),

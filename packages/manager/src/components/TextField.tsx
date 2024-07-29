@@ -157,7 +157,6 @@ interface LabelToolTipProps {
 
 interface InputToolTipProps {
   tooltipClasses?: string;
-  tooltipInteractive?: boolean;
   tooltipOnMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
   tooltipPosition?: TooltipProps['placement'];
   tooltipText?: JSX.Element | string;
@@ -251,7 +250,6 @@ export const TextField = (props: TextFieldProps) => {
     optional,
     required,
     tooltipClasses,
-    tooltipInteractive,
     tooltipOnMouseEnter,
     tooltipPosition,
     tooltipText,
@@ -429,7 +427,7 @@ export const TextField = (props: TextFieldProps) => {
             disableUnderline: true,
             endAdornment: loading && (
               <InputAdornment position="end">
-                <CircleProgress mini />
+                <CircleProgress size="sm" />
               </InputAdornment>
             ),
             ...InputProps,
@@ -484,7 +482,6 @@ export const TextField = (props: TextFieldProps) => {
               padding: '6px',
             }}
             classes={{ popper: tooltipClasses }}
-            interactive={tooltipInteractive}
             onMouseEnter={tooltipOnMouseEnter}
             status="help"
             text={tooltipText}

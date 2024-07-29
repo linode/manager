@@ -4,14 +4,19 @@
 
 import 'cypress-file-upload';
 import { createBucket } from '@linode/api-v4/lib/object-storage';
-import { objectStorageBucketFactory } from 'src/factories';
+import { accountFactory, objectStorageBucketFactory } from 'src/factories';
 import { authenticate } from 'support/api/authentication';
-import { interceptGetNetworkUtilization } from 'support/intercepts/account';
+import {
+  interceptGetNetworkUtilization,
+  mockGetAccount,
+} from 'support/intercepts/account';
 import {
   interceptCreateBucket,
   interceptDeleteBucket,
   interceptGetBuckets,
   interceptUploadBucketObjectS3,
+  interceptGetBucketAccess,
+  interceptUpdateBucketAccess,
 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
@@ -45,13 +50,51 @@ const getNonEmptyBucketMessage = (bucketLabel: string) => {
 /**
  * Create a bucket with the given label and cluster.
  *
+ * This function assumes that OBJ Multicluster is not enabled. Use
+ * `setUpBucketMulticluster` to set up OBJ buckets when Multicluster is enabled.
+ *
  * @param label - Bucket label.
  * @param cluster - Bucket cluster.
  *
  * @returns Promise that resolves to created Bucket.
  */
 const setUpBucket = (label: string, cluster: string) => {
-  return createBucket(objectStorageBucketFactory.build({ label, cluster }));
+  return createBucket(
+    objectStorageBucketFactory.build({
+      label,
+      cluster,
+
+      // API accepts either `cluster` or `region`, but not both. Our factory
+      // populates both fields, so we have to manually set `region` to `undefined`
+      // to avoid 400 responses from the API.
+      region: undefined,
+    })
+  );
+};
+
+/**
+ * Create a bucket with the given label and cluster.
+ *
+ * This function assumes that OBJ Multicluster is enabled. Use
+ * `setUpBucket` to set up OBJ buckets when Multicluster is disabled.
+ *
+ * @param label - Bucket label.
+ * @param regionId - ID of Bucket region.
+ *
+ * @returns Promise that resolves to created Bucket.
+ */
+const setUpBucketMulticluster = (label: string, regionId: string) => {
+  return createBucket(
+    objectStorageBucketFactory.build({
+      label,
+      region: regionId,
+
+      // API accepts either `cluster` or `region`, but not both. Our factory
+      // populates both fields, so we have to manually set `cluster` to `undefined`
+      // to avoid 400 responses from the API.
+      cluster: undefined,
+    })
+  );
 };
 
 /**
@@ -113,6 +156,8 @@ describe('object storage end-to-end tests', () => {
    * - Confirms that deleted buckets are no longer listed on landing page.
    */
   it('can create and delete object storage buckets', () => {
+    cy.tag('purpose:syntheticTesting');
+
     const bucketLabel = randomLabel();
     const bucketRegion = 'Atlanta, GA';
     const bucketCluster = 'us-southeast-1';
@@ -123,6 +168,7 @@ describe('object storage end-to-end tests', () => {
     interceptDeleteBucket(bucketLabel, bucketCluster).as('deleteBucket');
     interceptGetNetworkUtilization().as('getNetworkUtilization');
 
+    mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
       objMultiCluster: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
@@ -198,7 +244,8 @@ describe('object storage end-to-end tests', () => {
   it('can upload, access, and delete objects', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-southeast-1';
-    const bucketPage = `/object-storage/buckets/${bucketCluster}/${bucketLabel}/objects`;
+    const bucketRegionId = 'us-southeast';
+    const bucketPage = `/object-storage/buckets/${bucketRegionId}/${bucketLabel}/objects`;
     const bucketFolderName = randomLabel();
 
     const bucketFiles = [
@@ -207,7 +254,7 @@ describe('object storage end-to-end tests', () => {
     ];
 
     cy.defer(
-      setUpBucket(bucketLabel, bucketCluster),
+      () => setUpBucketMulticluster(bucketLabel, bucketRegionId),
       'creating Object Storage bucket'
     ).then(() => {
       interceptUploadBucketObjectS3(
@@ -228,7 +275,7 @@ describe('object storage end-to-end tests', () => {
       cy.wait('@uploadObject');
       cy.reload();
 
-      cy.findByLabelText(bucketFiles[0].name).should('be.visible');
+      cy.findByText(bucketFiles[0].name).should('be.visible');
       ui.button.findByTitle('Delete').should('be.visible').click();
 
       ui.dialog
@@ -341,8 +388,10 @@ describe('object storage end-to-end tests', () => {
           assertStatusForUrlAtAlias('@bucketObjectUrl', 403);
 
           // Make object public, confirm it can be accessed, then close drawer.
-          cy.findByText('Access Control List (ACL)')
+          cy.findByLabelText('Access Control List (ACL)')
             .should('be.visible')
+            .should('not.have.value', 'Loading access...')
+            .should('have.value', 'Private')
             .click()
             .type('Public Read');
 
@@ -387,5 +436,50 @@ describe('object storage end-to-end tests', () => {
       // Confirm that bucket is empty.
       cy.findByText(emptyBucketMessage).should('be.visible');
     });
+  });
+
+  /*
+   * - Confirms that user can update Bucket access.
+   */
+  it('can update bucket access', () => {
+    const bucketLabel = randomLabel();
+    const bucketCluster = 'us-southeast-1';
+    const bucketAccessPage = `/object-storage/buckets/${bucketCluster}/${bucketLabel}/access`;
+
+    cy.defer(
+      () => setUpBucket(bucketLabel, bucketCluster),
+      'creating Object Storage bucket'
+    ).then(() => {
+      interceptGetBucketAccess(bucketLabel, bucketCluster).as(
+        'getBucketAccess'
+      );
+      interceptUpdateBucketAccess(bucketLabel, bucketCluster).as(
+        'updateBucketAccess'
+      );
+    });
+
+    // Navigate to new bucket page, upload and delete an object.
+    cy.visitWithLogin(bucketAccessPage);
+
+    cy.wait('@getBucketAccess');
+
+    // Make object public, confirm it can be accessed.
+    cy.findByLabelText('Access Control List (ACL)')
+      .should('be.visible')
+      .should('not.have.value', 'Loading access...')
+      .should('have.value', 'Private')
+      .click()
+      .type('Public Read');
+
+    ui.autocompletePopper
+      .findByTitle('Public Read')
+      .should('be.visible')
+      .click();
+
+    ui.button.findByTitle('Save').should('be.visible').click();
+
+    cy.wait('@updateBucketAccess');
+
+    cy.findByText('Bucket access updated successfully.');
   });
 });

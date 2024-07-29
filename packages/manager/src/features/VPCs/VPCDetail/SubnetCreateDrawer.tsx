@@ -5,8 +5,8 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
-import { useGrants, useProfile } from 'src/queries/profile';
-import { useCreateSubnetMutation, useVPCQuery } from 'src/queries/vpcs';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useCreateSubnetMutation, useVPCQuery } from 'src/queries/vpcs/vpcs';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,

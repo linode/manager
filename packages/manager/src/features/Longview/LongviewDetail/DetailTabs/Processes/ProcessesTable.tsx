@@ -13,8 +13,8 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { formatCPU } from 'src/features/Longview/shared/formatters';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { StyledDiv, StyledTable } from './ProcessesTable.styles';
 
+import { StyledDiv, StyledTable } from './ProcessesTable.styles';
 import { Process } from './types';
 
 export interface ProcessesTableProps {
@@ -176,7 +176,6 @@ export const ProcessesTableRow = React.memo((props: ProcessTableRowProps) => {
       onKeyUp={(e: any) =>
         e.key === 'Enter' && setSelectedProcess({ name, user })
       }
-      ariaLabel={`${name} for ${user}`}
       data-testid="longview-service-row"
       forceIndex
       onClick={() => setSelectedProcess({ name, user })}

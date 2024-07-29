@@ -5,8 +5,10 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import { usePrevious } from 'src/hooks/usePrevious';
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
-import { ManagerPreferences } from 'src/types/ManagerPreferences';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import {
   sortByArrayLength,
@@ -16,6 +18,7 @@ import {
 } from 'src/utilities/sort-by';
 
 import type { Order } from 'src/hooks/useOrder';
+import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 export interface OrderByProps<T> extends State {
   data: T[];
@@ -95,7 +98,7 @@ export const getInitialValuesFromUserPreferences = (
   );
 };
 
-export const sortData = <T extends unknown>(orderBy: string, order: Order) => {
+export const sortData = <T,>(orderBy: string, order: Order) => {
   return sort<T>((a, b) => {
     /* If the column we're sorting on is an array (e.g. 'tags', which is string[]),
      *  we want to sort by the length of the array. Otherwise, do a simple comparison.
@@ -152,7 +155,7 @@ export const sortData = <T extends unknown>(orderBy: string, order: Order) => {
   });
 };
 
-export const OrderBy = <T extends unknown>(props: CombinedProps<T>) => {
+export const OrderBy = <T,>(props: CombinedProps<T>) => {
   const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
   const location = useLocation();
@@ -162,7 +165,7 @@ export const OrderBy = <T extends unknown>(props: CombinedProps<T>) => {
   const initialValues = getInitialValuesFromUserPreferences(
     props.preferenceKey ?? '',
     preferences ?? {},
-    params as Record<string, string>,
+    params,
     props.orderBy,
     props.order
   );

@@ -1,17 +1,22 @@
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Link } from 'src/components/Link';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import { Typography } from 'src/components/Typography';
+import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { sendEvent } from 'src/utilities/analytics/utils';
+
+import {
+  gettingStartedGuides,
+  headers,
+  linkAnalyticsEvent,
+  youtubeLinkData,
+} from './NodeBalancersLandingEmptyStateData';
 
 export const NodeBalancerLandingEmptyState = () => {
-  const history = useHistory();
+  const { push } = useHistory();
 
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_nodebalancers',
@@ -20,12 +25,19 @@ export const NodeBalancerLandingEmptyState = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="NodeBalancers" />
-      <StyledPlaceholder
+      <ResourcesSection
         buttonProps={[
           {
             children: 'Create NodeBalancer',
             disabled: isRestricted,
-            onClick: () => history.push('/nodebalancers/create'),
+            onClick: () => {
+              sendEvent({
+                action: 'Click:button',
+                category: linkAnalyticsEvent.category,
+                label: 'Create NodeBalancer',
+              });
+              push('/nodebalancers/create');
+            },
             tooltipText: getRestrictedResourceText({
               action: 'create',
               isSingular: false,
@@ -33,29 +45,12 @@ export const NodeBalancerLandingEmptyState = () => {
             }),
           },
         ]}
+        gettingStartedGuidesData={gettingStartedGuides}
+        headers={headers}
         icon={NodeBalancer}
-        isEntity
-        showTransferDisplay
-        title="NodeBalancers"
-      >
-        <Typography variant="subtitle1">
-          <Link to="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/">
-            Learn how to use NodeBalancers with your Linode
-          </Link>
-          &nbsp;or&nbsp;
-          <Link to="https://www.linode.com/docs/">
-            visit our guides and tutorials.
-          </Link>
-        </Typography>
-      </StyledPlaceholder>
+        linkAnalyticsEvent={linkAnalyticsEvent}
+        youtubeLinkData={youtubeLinkData}
+      />
     </React.Fragment>
   );
 };
-
-const StyledPlaceholder = styled(Placeholder, {
-  label: 'StyledPlaceholder',
-})(({ theme }) => ({
-  // this important rules can be removed when Placeholder is refactored
-  // and we can just use sx={{ paddingBottom: 0 }} on placeholder
-  padding: `${theme.spacing(10)} 0 0 0 !important`,
-}));

@@ -4,15 +4,13 @@ import { Table } from 'src/components/Table';
 import { TableCell, TableCellProps } from 'src/components/TableCell';
 import { omittedProps } from 'src/utilities/omittedProps';
 
-type StyledTableCellPropsProps = TableCellProps & {
+interface StyledTableCellPropsProps extends TableCellProps {
   isPlanCell?: boolean;
-};
+}
 
 export const StyledTable = styled(Table, {
   label: 'StyledTable',
 })(({ theme }) => ({
-  borderLeft: `1px solid ${theme.borderColors.borderTable}`,
-  borderRight: `1px solid ${theme.borderColors.borderTable}`,
   overflowX: 'hidden',
 }));
 

@@ -6,7 +6,7 @@ import { Hidden } from 'src/components/Hidden';
 
 import PrimaryNav from './PrimaryNav';
 
-export const SIDEBAR_WIDTH = 190;
+export const SIDEBAR_WIDTH = 232;
 export const SIDEBAR_COLLAPSED_WIDTH = 52;
 
 export interface SideMenuProps {
@@ -66,7 +66,8 @@ const StyledDrawer = styled(Drawer, {
   shouldForwardProp: (prop) => prop !== 'collapse',
 })<{ collapse?: boolean }>(({ theme, ...props }) => ({
   '& .MuiDrawer-paper': {
-    backgroundColor: theme.bg.primaryNavPaper,
+    backgroundColor:
+      theme.name === 'dark' ? theme.bg.appBar : theme.bg.primaryNavPaper,
     borderRight: 'none',
     boxShadow: 'none',
     height: '100%',

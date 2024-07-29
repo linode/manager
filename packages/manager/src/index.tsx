@@ -21,7 +21,7 @@ import './index.css';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 import { queryClientFactory } from './queries/base';
 
-const queryClient = queryClientFactory();
+const queryClient = queryClientFactory('longLived');
 const store = storeFactory();
 
 setupInterceptors(store);
@@ -65,7 +65,6 @@ const Main = () => {
                 <Snackbar
                   anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                   autoHideDuration={4000}
-                  data-qa-toast
                   hideIconVariant={true}
                   maxSnack={3}
                 >

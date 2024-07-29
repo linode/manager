@@ -1,13 +1,16 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
-import countryData from 'country-region-data';
+import Grid from '@mui/material/Unstable_Grid2';
+import { allCountries } from 'country-region-data';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
+import { Box } from 'src/components/Box';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
 
 import {
   BillingActionButton,
@@ -74,9 +77,15 @@ const ContactInformation = (props: Props) => {
     setEditContactDrawerOpen,
   ] = React.useState<boolean>(false);
 
+  const { data: notifications } = useNotificationsQuery();
+
   const [focusEmail, setFocusEmail] = React.useState(false);
 
   const isChildUser = Boolean(profile?.user_type === 'child');
+
+  const invalidTaxIdNotification = notifications?.find((notification) => {
+    return notification.type === 'tax_id_invalid';
+  });
 
   const isReadOnly =
     useRestrictedGlobalGrantCheck({
@@ -113,10 +122,23 @@ const ContactInformation = (props: Props) => {
     }
   }, [editContactDrawerOpen, history.location.state]);
 
-  // Finding the country from the countryData JSON
-  const countryName = countryData?.find(
-    (_country) => _country.countryShortCode === country
-  )?.countryName;
+  /**
+   * Finding the country from the countryData JSON
+   * `country-region-data` mapping:
+   *
+   * COUNTRY
+   * - country[0] is the readable name of the country (e.g. "United States")
+   * - country[1] is the ISO 3166-1 alpha-2 code of the country (e.g. "US")
+   * - country[2] is an array of regions for the country
+   *
+   * REGION
+   * - region[0] is the readable name of the region (e.g. "Alabama")
+   * - region[1] is the ISO 3166-2 code of the region (e.g. "AL")
+   */
+  const countryName = allCountries?.find((_country) => {
+    const countryCode = _country[1];
+    return countryCode === country;
+  })?.[0];
 
   const sxGrid = {
     flex: 1,
@@ -207,9 +229,28 @@ const ContactInformation = (props: Props) => {
               <StyledTypography data-qa-contact-phone>{phone}</StyledTypography>
             )}
             {taxId && (
-              <StyledTypography sx={{ marginTop: 'auto' }}>
-                <strong>Tax ID</strong> {taxId}
-              </StyledTypography>
+              <Box alignItems="center" display="flex">
+                <StyledTypography
+                  sx={{
+                    margin: 0,
+                  }}
+                >
+                  <strong>Tax ID</strong> {taxId}
+                </StyledTypography>
+                {invalidTaxIdNotification && (
+                  <TooltipIcon
+                    sxTooltipIcon={{
+                      '& > svg': {
+                        fontSize: '18px',
+                      },
+                      paddingBottom: 0,
+                      paddingTop: 0,
+                    }}
+                    status="warning"
+                    text={invalidTaxIdNotification.label}
+                  />
+                )}
+              </Box>
             )}
           </Grid>
         </Grid>

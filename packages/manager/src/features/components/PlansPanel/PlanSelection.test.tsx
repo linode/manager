@@ -5,7 +5,7 @@ import {
   extendedTypeFactory,
   planSelectionTypeFactory,
 } from 'src/factories/types';
-import { LIMITED_AVAILABILITY_TEXT } from 'src/features/components/PlansPanel/constants';
+import { LIMITED_AVAILABILITY_COPY } from 'src/features/components/PlansPanel/constants';
 import { breakpoints } from 'src/foundations/breakpoints';
 import { resizeScreenSize } from 'src/utilities/testHelpers';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
@@ -14,9 +14,9 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { PlanSelection } from './PlanSelection';
 
 import type { PlanSelectionProps } from './PlanSelection';
-import type { PlanSelectionType } from './types';
+import type { PlanWithAvailability } from './types';
 
-const mockPlan: PlanSelectionType = planSelectionTypeFactory.build({
+const mockPlan: PlanWithAvailability = planSelectionTypeFactory.build({
   heading: 'Dedicated 20 GB',
   subHeadings: [
     '$10/mo ($0.015/hr)',
@@ -27,10 +27,10 @@ const mockPlan: PlanSelectionType = planSelectionTypeFactory.build({
 });
 
 const defaultProps: PlanSelectionProps = {
+  hasMajorityOfPlansDisabled: false,
   idx: 0,
-  isLimitedAvailabilityPlan: false,
   onSelect: () => vi.fn(),
-  type: mockPlan,
+  plan: mockPlan,
 };
 
 describe('PlanSelection (table, desktop)', () => {
@@ -64,7 +64,7 @@ describe('PlanSelection (table, desktop)', () => {
     expect(container.querySelector('[data-qa-storage]')).toHaveTextContent(
       '1024 GB'
     );
-    expect(queryByLabelText(LIMITED_AVAILABILITY_TEXT)).toBeNull();
+    expect(queryByLabelText(LIMITED_AVAILABILITY_COPY)).toBeNull();
   });
 
   it('renders the table row with unknown prices if a region is not selected', () => {
@@ -126,7 +126,7 @@ describe('PlanSelection (table, desktop)', () => {
   it('should not display an error message for $0 regions', () => {
     const propsWithRegionZeroPrice = {
       ...defaultProps,
-      type: planSelectionTypeFactory.build({
+      plan: planSelectionTypeFactory.build({
         heading: 'Dedicated 20 GB',
         region_prices: [
           {
@@ -169,27 +169,21 @@ describe('PlanSelection (table, desktop)', () => {
     const bigPlanType = extendedTypeFactory.build({
       heading: 'Dedicated 512 GB',
       label: 'Dedicated 512GB',
+      planHasLimitedAvailability: true,
     });
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
-      wrapWithTableBody(
-        <PlanSelection
-          {...defaultProps}
-          isLimitedAvailabilityPlan={true}
-          type={bigPlanType}
-        />,
-        { flags: { disableLargestGbPlans: true } }
-      )
+      wrapWithTableBody(<PlanSelection {...defaultProps} plan={bigPlanType} />)
     );
 
-    const button = getByTestId('limited-availability');
+    const button = getByTestId('disabled-plan-tooltip');
     fireEvent.mouseOver(button);
 
     await waitFor(() => {
       expect(getByRole('tooltip')).toBeInTheDocument();
     });
 
-    expect(getByText(LIMITED_AVAILABILITY_TEXT)).toBeVisible();
+    expect(getByText(LIMITED_AVAILABILITY_COPY)).toBeVisible();
   });
 });
 
@@ -272,43 +266,5 @@ describe('PlanSelection (card, mobile)', () => {
     expect(
       container.querySelector('[data-qa-select-card-subheading="subheading-4"]')
     ).toHaveTextContent('40 Gbps In / 2 Gbps Out');
-  });
-
-  it('verifies the presence of a help icon button accompanied by descriptive text for plans marked as "Limited Availability".', async () => {
-    const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <PlanSelection
-        {...defaultProps}
-        isLimitedAvailabilityPlan={true}
-        selectedRegionId={'us-east'}
-      />
-    );
-
-    const selectionCard = getByTestId('selection-card');
-    fireEvent.mouseOver(selectionCard);
-
-    await waitFor(() => {
-      expect(getByRole('tooltip')).toBeInTheDocument();
-    });
-
-    expect(getByText(LIMITED_AVAILABILITY_TEXT)).toBeVisible();
-  });
-
-  it('is disabled for 512 GB plans', () => {
-    const bigPlanType = extendedTypeFactory.build({
-      heading: 'Dedicated 512 GB',
-      label: 'Dedicated 512GB',
-    });
-
-    const { getByTestId } = renderWithTheme(
-      <PlanSelection
-        {...defaultProps}
-        isLimitedAvailabilityPlan={false}
-        type={bigPlanType}
-      />,
-      { flags: { disableLargestGbPlans: true } }
-    );
-
-    const selectionCard = getByTestId('selection-card');
-    expect(selectionCard).toBeDisabled();
   });
 });

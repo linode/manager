@@ -5,7 +5,7 @@ import * as React from 'react';
 import { appTokenFactory } from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
 import { profileFactory } from 'src/factories/profile';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
@@ -16,19 +16,11 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/profile', async () => {
-  const actual = await vi.importActual<any>('src/queries/profile');
+vi.mock('src/queries/profile/profile', async () => {
+  const actual = await vi.importActual<any>('src/queries/profile/profile');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
-  };
-});
-
-vi.mock('src/queries/grants', async () => {
-  const actual = await vi.importActual<any>('src/queries/grants');
-  return {
-    ...actual,
-    useGrants: queryMocks.useGrants,
   };
 });
 
@@ -54,44 +46,67 @@ describe('Create API Token Drawer', () => {
     const expiry = getByText(/Expiry/);
     expect(expiry).toBeVisible();
 
+    // Submit button will be disabled until scope selection is made.
     const submitBtn = getByTestId('create-button');
     expect(submitBtn).toBeVisible();
-    expect(submitBtn).not.toHaveAttribute('aria-disabled', 'true');
+    expect(submitBtn).toHaveAttribute('aria-disabled', 'true');
 
     const cancelBtn = getByText(/Cancel/);
     expect(cancelBtn).not.toHaveAttribute('aria-disabled', 'true');
     expect(cancelBtn).toBeVisible();
   });
 
-  it('Should see secret modal with secret when you type a label and submit the form successfully', async () => {
-    server.use(
-      http.post('*/profile/tokens', () => {
-        return HttpResponse.json(
-          appTokenFactory.build({ token: 'secret-value' })
-        );
-      })
-    );
+  it(
+    'Should see secret modal with secret when you type a label and submit the form successfully',
+    async () => {
+      server.use(
+        http.post('*/profile/tokens', () => {
+          return HttpResponse.json(
+            appTokenFactory.build({ token: 'secret-value' })
+          );
+        })
+      );
 
-    const { getByTestId, getByText } = renderWithTheme(
-      <CreateAPITokenDrawer {...props} />
-    );
+      const { getByLabelText, getByTestId, getByText } = renderWithTheme(
+        <CreateAPITokenDrawer {...props} />
+      );
 
-    const labelField = getByTestId('textfield-input');
-    await userEvent.type(labelField, 'my-test-token');
-    const submit = getByText('Create Token');
-    await userEvent.click(submit);
+      const labelField = getByTestId('textfield-input');
+      await userEvent.type(labelField, 'my-test-token');
 
-    await waitFor(() =>
-      expect(props.showSecret).toBeCalledWith('secret-value')
-    );
-  });
+      const selectAllNoAccessPermRadioButton = getByLabelText(
+        'Select no access for all'
+      );
+      const submitBtn = getByText('Create Token');
 
-  it('Should default to None for all scopes', () => {
+      expect(submitBtn).not.toHaveAttribute('aria-disabled', 'true');
+      await userEvent.click(selectAllNoAccessPermRadioButton);
+      await userEvent.click(submitBtn);
+
+      await waitFor(() =>
+        expect(props.showSecret).toBeCalledWith('secret-value')
+      );
+    },
+    { timeout: 15000 }
+  );
+
+  it('Should default to no selection for all scopes', () => {
     const { getByLabelText } = renderWithTheme(
       <CreateAPITokenDrawer {...props} />
     );
-    const selectAllNonePermRadioButton = getByLabelText('Select none for all');
-    expect(selectAllNonePermRadioButton).toBeChecked();
+    const selectAllNoAccessPermRadioButton = getByLabelText(
+      'Select no access for all'
+    );
+    const selectAllReadOnlyPermRadioButton = getByLabelText(
+      'Select read-only for all'
+    );
+    const selectAllReadWritePermRadioButton = getByLabelText(
+      'Select read/write for all'
+    );
+
+    expect(selectAllNoAccessPermRadioButton).not.toBeChecked();
+    expect(selectAllReadOnlyPermRadioButton).not.toBeChecked();
+    expect(selectAllReadWritePermRadioButton).not.toBeChecked();
   });
 
   it('Should default to 6 months for expiration', () => {
@@ -104,9 +119,7 @@ describe('Create API Token Drawer', () => {
       data: profileFactory.build({ user_type: 'parent' }),
     });
 
-    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />, {
-      flags: { parentChildAccountAccess: true },
-    });
+    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />);
     const childScope = getByText('Child Account Access');
     expect(childScope).toBeInTheDocument();
   });
@@ -120,10 +133,7 @@ describe('Create API Token Drawer', () => {
     });
 
     const { queryByText } = renderWithTheme(
-      <CreateAPITokenDrawer {...props} />,
-      {
-        flags: { parentChildAccountAccess: true },
-      }
+      <CreateAPITokenDrawer {...props} />
     );
     const childScope = queryByText('Child Account Access');
     expect(childScope).not.toBeInTheDocument();
@@ -135,34 +145,11 @@ describe('Create API Token Drawer', () => {
     });
 
     const { queryByText } = renderWithTheme(
-      <CreateAPITokenDrawer {...props} />,
-      {
-        flags: { parentChildAccountAccess: true },
-      }
+      <CreateAPITokenDrawer {...props} />
     );
 
     const childScope = queryByText('Child Account Access');
     expect(childScope).not.toBeInTheDocument();
-  });
-
-  it('Should show the VPC scope with the VPC feature flag on', () => {
-    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />, {
-      flags: { vpc: true },
-    });
-    const vpcScope = getByText('VPCs');
-    expect(vpcScope).toBeInTheDocument();
-  });
-
-  it('Should not show the VPC scope with the VPC feature flag off', () => {
-    const { queryByText } = renderWithTheme(
-      <CreateAPITokenDrawer {...props} />,
-      {
-        flags: { vpc: false },
-      }
-    );
-
-    const vpcScope = queryByText('VPCs');
-    expect(vpcScope).not.toBeInTheDocument();
   });
 
   it('Should close when Cancel is pressed', async () => {
@@ -174,13 +161,10 @@ describe('Create API Token Drawer', () => {
 
   it('Should not select Read Only for VPC scope when Select All > Read Only is clicked', async () => {
     const { getAllByTestId, getByLabelText } = renderWithTheme(
-      <CreateAPITokenDrawer {...props} />,
-      {
-        flags: { vpc: true },
-      }
+      <CreateAPITokenDrawer {...props} />
     );
     const vpcPermRadioButtons = getAllByTestId('perm-vpc-radio');
-    const vpcNonePermRadioButton = vpcPermRadioButtons[0].firstChild;
+    const vpcNoAccessPermRadioButton = vpcPermRadioButtons[0].firstChild;
     const vpcReadOnlyPermRadioButton = vpcPermRadioButtons[1].firstChild;
 
     const selectAllReadOnlyPermRadioButton = getByLabelText(
@@ -189,7 +173,7 @@ describe('Create API Token Drawer', () => {
     await userEvent.click(selectAllReadOnlyPermRadioButton);
     expect(selectAllReadOnlyPermRadioButton).toBeChecked();
 
-    expect(vpcNonePermRadioButton).toBeChecked();
+    expect(vpcNoAccessPermRadioButton).toBeChecked();
     expect(vpcReadOnlyPermRadioButton).not.toBeChecked();
     expect(vpcReadOnlyPermRadioButton).toBeDisabled();
   });

@@ -6,6 +6,8 @@ import React from 'react';
 import { Box } from 'src/components/Box';
 import { TextField, TextFieldProps } from 'src/components/TextField';
 
+import { CircleProgress } from '../CircleProgress';
+import { InputAdornment } from '../InputAdornment';
 import {
   CustomPopper,
   SelectedIcon,
@@ -31,11 +33,13 @@ export interface EnhancedAutocompleteProps<
   label: string;
   /** Removes the top margin from the input label, if desired. */
   noMarginTop?: boolean;
-  /** Text to show when the Autocomplete search yields no results. */
-  noOptionsText?: string;
+  /** Element to show when the Autocomplete search yields no results. */
+  noOptionsText?: JSX.Element | string;
   placeholder?: string;
   /** Label for the "select all" option. */
   selectAllLabel?: string;
+  /** Removes "select all" option for mutliselect */
+  disableSelectAll?: boolean;
   textFieldProps?: Partial<TextFieldProps>;
 }
 
@@ -64,7 +68,7 @@ export const Autocomplete = <
   props: EnhancedAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>
 ) => {
   const {
-    clearOnBlur = false,
+    clearOnBlur,
     defaultValue,
     disablePortal = true,
     errorText = '',
@@ -84,6 +88,7 @@ export const Autocomplete = <
     selectAllLabel = '',
     textFieldProps,
     value,
+    disableSelectAll = false,
     ...rest
   } = props;
 
@@ -106,7 +111,7 @@ export const Autocomplete = <
           label={label}
           loading={loading}
           noMarginTop={noMarginTop}
-          placeholder={placeholder || 'Select an option'}
+          placeholder={placeholder ?? 'Select an option'}
           required={textFieldProps?.InputProps?.required}
           tooltipText={textFieldProps?.tooltipText}
           {...params}
@@ -115,10 +120,15 @@ export const Autocomplete = <
             ...params.InputProps,
             ...textFieldProps?.InputProps,
             endAdornment: (
-              <React.Fragment>
+              <>
+                {loading && (
+                  <InputAdornment position="end">
+                    <CircleProgress size="sm" />
+                  </InputAdornment>
+                )}
                 {textFieldProps?.InputProps?.endAdornment}
                 {params.InputProps.endAdornment}
-              </React.Fragment>
+              </>
             ),
           }}
         />
@@ -159,7 +169,11 @@ export const Autocomplete = <
       multiple={multiple}
       noOptionsText={noOptionsText || <i>You have no options to choose from</i>}
       onBlur={onBlur}
-      options={multiple && options.length > 0 ? optionsWithSelectAll : options}
+      options={
+        multiple && !disableSelectAll && options.length > 0
+          ? optionsWithSelectAll
+          : options
+      }
       popupIcon={<KeyboardArrowDownIcon />}
       value={value}
       {...rest}

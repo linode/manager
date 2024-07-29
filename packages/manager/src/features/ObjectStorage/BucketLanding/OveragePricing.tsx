@@ -1,11 +1,16 @@
-import { Region } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
+import { Box } from 'src/components/Box';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
-import { OBJ_STORAGE_PRICE } from 'src/utilities/pricing/constants';
-import { objectStoragePriceIncreaseMap } from 'src/utilities/pricing/dynamicPricing';
+import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';
+import { useObjectStorageTypesQuery } from 'src/queries/objectStorage';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
+
+import type { Region } from '@linode/api-v4';
 
 interface Props {
   regionId: Region['id'];
@@ -18,30 +23,69 @@ export const GLOBAL_TRANSFER_POOL_TOOLTIP_TEXT =
 
 export const OveragePricing = (props: Props) => {
   const { regionId } = props;
-  const isDcSpecificPricingRegion = objectStoragePriceIncreaseMap.hasOwnProperty(
-    regionId
+
+  const {
+    data: objTypes,
+    isError: isErrorObjTypes,
+    isLoading: isLoadingObjTypes,
+  } = useObjectStorageTypesQuery();
+  const {
+    data: transferTypes,
+    isError: isErrorTransferTypes,
+    isLoading: isLoadingTransferTypes,
+  } = useNetworkTransferPricesQuery();
+
+  const storageOverageType = objTypes?.find(
+    (type) => type.id === 'objectstorage-overage'
+  );
+  const transferOverageType = transferTypes?.find(
+    (type) => type.id === 'network_transfer'
   );
 
-  return (
+  const storageOveragePrice = getDCSpecificPriceByType({
+    decimalPrecision: 3,
+    interval: 'hourly',
+    regionId,
+    type: storageOverageType,
+  });
+  const transferOveragePrice = getDCSpecificPriceByType({
+    decimalPrecision: 3,
+    interval: 'hourly',
+    regionId,
+    type: transferOverageType,
+  });
+
+  const isDcSpecificPricingRegion = Boolean(
+    transferOverageType?.region_prices.find(
+      (region_price) => region_price.id === regionId
+    )
+  );
+
+  return isLoadingObjTypes || isLoadingTransferTypes ? (
+    <Box marginLeft={-1} marginTop={1}>
+      <CircleProgress size="sm" />
+    </Box>
+  ) : (
     <>
       <StyledTypography>
         For this region, additional storage costs{' '}
         <strong>
           $
-          {isDcSpecificPricingRegion
-            ? objectStoragePriceIncreaseMap[regionId].storage_overage
-            : OBJ_STORAGE_PRICE.storage_overage}{' '}
+          {storageOveragePrice && !isErrorObjTypes
+            ? parseFloat(storageOveragePrice)
+            : UNKNOWN_PRICE}{' '}
           per GB
         </strong>
         .
       </StyledTypography>
+
       <StyledTypography>
         Outbound transfer will cost{' '}
         <strong>
           $
-          {isDcSpecificPricingRegion
-            ? objectStoragePriceIncreaseMap[regionId].transfer_overage
-            : OBJ_STORAGE_PRICE.transfer_overage}{' '}
+          {transferOveragePrice && !isErrorTransferTypes
+            ? parseFloat(transferOveragePrice)
+            : UNKNOWN_PRICE}{' '}
           per GB
         </strong>{' '}
         if it exceeds{' '}
@@ -50,6 +94,7 @@ export const OveragePricing = (props: Props) => {
             the{' '}
             <TextTooltip
               displayText="network transfer pool for this region"
+              placement="top"
               tooltipText={DC_SPECIFIC_TRANSFER_POOLS_TOOLTIP_TEXT}
             />
           </>
@@ -58,6 +103,7 @@ export const OveragePricing = (props: Props) => {
             your{' '}
             <TextTooltip
               displayText="global network transfer pool"
+              placement="top"
               tooltipText={GLOBAL_TRANSFER_POOL_TOOLTIP_TEXT}
             />
           </>

@@ -7,7 +7,7 @@ import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToCo
 import { Typography } from 'src/components/Typography';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useDetachVolumeMutation } from 'src/queries/volumes';
+import { useDetachVolumeMutation } from 'src/queries/volumes/volumes';
 
 interface Props {
   onClose: () => void;

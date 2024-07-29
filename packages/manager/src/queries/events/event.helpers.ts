@@ -1,17 +1,13 @@
-import { Event, EventAction, Filter } from '@linode/api-v4';
+import { EVENTS_LIST_FILTER } from 'src/features/Events/constants';
 
-export const isLongPendingEvent = (event: Event): boolean => {
-  const { action, status } = event;
-  return status === 'scheduled' && action === 'image_upload';
-};
+import type { Event, EventAction, Filter } from '@linode/api-v4';
 
 export const isInProgressEvent = (event: Event) => {
-  const { percent_complete } = event;
-  if (percent_complete === null || isLongPendingEvent(event)) {
+  if (event.percent_complete === null) {
     return false;
-  } else {
-    return percent_complete !== null && percent_complete < 100;
   }
+
+  return event.percent_complete < 100;
 };
 
 export const isEventInProgressDiskImagize = (event: Event): boolean => {
@@ -109,8 +105,10 @@ export const generatePollingFilter = (
   timestamp: string,
   inIds: number[] = [],
   neqIds: number[] = []
-) => {
-  let filter: Filter = { created: { '+gte': timestamp } };
+): Filter => {
+  let filter: Filter = {
+    created: { '+gte': timestamp },
+  };
 
   if (neqIds.length > 0) {
     filter = {
@@ -124,7 +122,12 @@ export const generatePollingFilter = (
     };
   }
 
-  return filter;
+  return {
+    ...filter,
+    ...EVENTS_LIST_FILTER,
+    '+order': 'desc',
+    '+order_by': 'id',
+  };
 };
 
 /**

@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Paper } from 'src/components/Paper';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import { getIsEdgeRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { buildQueryStringForLinodeClone } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenuUtils';
 import { useFlags } from 'src/hooks/useFlags';
 import { extendType } from 'src/utilities/extendType';
@@ -75,13 +75,13 @@ export const FromLinodeContent = (props: CombinedProps) => {
     }
   };
 
-  const filterEdgeLinodes = (linodes: Linode[]) =>
+  const filterDistributedRegionsLinodes = (linodes: Linode[]) =>
     linodes.filter(
-      (linode) => !getIsEdgeRegion(regionsData, linode.region) // Hide linodes that are in an edge region
+      (linode) => !getIsDistributedRegion(regionsData, linode.region) // Hide linodes that are in a distributed region
     );
 
-  const filteredLinodes = flags.gecko
-    ? filterEdgeLinodes(linodesData)
+  const filteredLinodes = flags.gecko2?.enabled
+    ? filterDistributedRegionsLinodes(linodesData)
     : linodesData;
 
   return (
@@ -106,12 +106,12 @@ export const FromLinodeContent = (props: CombinedProps) => {
         <StyledGrid>
           <SelectLinodePanel
             notices={[
+              <>
+                To help <strong>avoid data corruption</strong> during the
+                cloning process, we recommend powering off your Compute Instance
+                prior to cloning.
+              </>,
               'This newly created Linode will be created with the same password and SSH Keys (if any) as the original Linode.',
-              ...(flags.linodeCloneUiChanges
-                ? [
-                    'To help avoid data corruption during the cloning process, we recommend powering off your Compute Instance prior to cloning.',
-                  ]
-                : []),
             ]}
             data-qa-linode-panel
             disabled={userCannotCreateLinode}

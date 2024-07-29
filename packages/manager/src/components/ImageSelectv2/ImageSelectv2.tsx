@@ -3,6 +3,7 @@ import React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useAllImagesQuery } from 'src/queries/images';
 
+import { OSIcon } from '../OSIcon';
 import { ImageOptionv2 } from './ImageOptionv2';
 import {
   getAPIFilterForImageSelect,
@@ -15,7 +16,30 @@ import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Auto
 export type ImageSelectVariant = 'all' | 'private' | 'public';
 
 interface Props
-  extends Omit<Partial<EnhancedAutocompleteProps<Image>>, 'value'> {
+  extends Omit<
+    Partial<EnhancedAutocompleteProps<Image>>,
+    'onChange' | 'value'
+  > {
+  /**
+   * Optional filter function applied to the options.
+   */
+  filter?: (image: Image) => boolean;
+  /**
+   * Set a custom select label
+   */
+  label?: string;
+  /**
+   * Called when the value is changed
+   */
+  onChange?: (image: Image | null) => void;
+  /**
+   * Set custom placeholder text
+   */
+  placeholder?: string;
+  /**
+   * If there is only one available option, selected it by default.
+   */
+  selectIfOnlyOneOption?: boolean;
   /**
    * The ID of the selected image
    */
@@ -30,7 +54,15 @@ interface Props
 }
 
 export const ImageSelectv2 = (props: Props) => {
-  const { variant, ...rest } = props;
+  const {
+    filter,
+    label,
+    onChange,
+    placeholder,
+    selectIfOnlyOneOption,
+    variant,
+    ...rest
+  } = props;
 
   const { data: images, error, isLoading } = useAllImagesQuery(
     {},
@@ -40,7 +72,17 @@ export const ImageSelectv2 = (props: Props) => {
   // We can't filter out Kubernetes images using the API so we filter them here
   const options = getFilteredImagesForImageSelect(images, variant);
 
+  const filteredOptions = filter ? options?.filter(filter) : options;
+
   const value = images?.find((i) => i.id === props.value);
+
+  if (
+    filteredOptions?.length === 1 &&
+    props.onChange &&
+    selectIfOnlyOneOption
+  ) {
+    props.onChange(filteredOptions[0]);
+  }
 
   return (
     <Autocomplete
@@ -52,12 +94,35 @@ export const ImageSelectv2 = (props: Props) => {
           listItemProps={props}
         />
       )}
+      textFieldProps={{
+        InputProps: {
+          startAdornment: value && (
+            <OSIcon
+              fontSize="24px"
+              height="24px"
+              os={value.vendor}
+              pl={1}
+              pr={2}
+            />
+          ),
+        },
+      }}
+      clearOnBlur
       groupBy={(option) => option.vendor ?? 'My Images'}
-      label="Images"
+      label={label || 'Images'}
       loading={isLoading}
-      options={options ?? []}
-      placeholder="Choose an image"
+      options={filteredOptions ?? []}
+      placeholder={placeholder || 'Choose an image'}
       {...rest}
+      disableClearable={
+        rest.disableClearable ??
+        (selectIfOnlyOneOption && filteredOptions?.length === 1)
+      }
+      onChange={(e, image) => {
+        if (onChange) {
+          onChange(image);
+        }
+      }}
       errorText={rest.errorText ?? error?.[0].reason}
       value={value ?? null}
     />

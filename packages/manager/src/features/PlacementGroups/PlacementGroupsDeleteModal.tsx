@@ -1,46 +1,46 @@
-import { AFFINITY_TYPES } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { Button } from 'src/components/Button/Button';
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
 import {
   useDeletePlacementGroup,
-  usePlacementGroupQuery,
   useUnassignLinodesFromPlacementGroup,
 } from 'src/queries/placementGroups';
 
+import { getPlacementGroupLinodes } from './utils';
+
 import type {
   Linode,
+  PlacementGroup,
   UnassignLinodesFromPlacementGroupPayload,
 } from '@linode/api-v4';
+import type { ButtonProps } from 'src/components/Button/Button';
 
 interface Props {
+  disableUnassignButton: boolean;
+  linodes: Linode[] | undefined;
   onClose: () => void;
   open: boolean;
+  selectedPlacementGroup: PlacementGroup | undefined;
 }
 
 export const PlacementGroupsDeleteModal = (props: Props) => {
-  const { onClose, open } = props;
-  const { id } = useParams<{ id: string }>();
-  const { data: selectedPlacementGroup } = usePlacementGroupQuery(
-    +id,
-    Boolean(id)
-  );
   const {
-    assignedLinodes,
-    isLoading: placementGroupDataLoading,
-    linodesCount: assignedLinodesCount,
-  } = usePlacementGroupData({
-    placementGroup: selectedPlacementGroup,
-  });
+    disableUnassignButton,
+    linodes,
+    onClose,
+    open,
+    selectedPlacementGroup,
+  } = props;
+  const { enqueueSnackbar } = useSnackbar();
   const {
     error: deletePlacementError,
     isLoading: deletePlacementLoading,
@@ -49,21 +49,22 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
   } = useDeletePlacementGroup(selectedPlacementGroup?.id ?? -1);
   const {
     error: unassignLinodeError,
-    isLoading: unassignLinodeLoading,
     mutateAsync: unassignLinodes,
     reset: resetUnassignLinodes,
   } = useUnassignLinodesFromPlacementGroup(selectedPlacementGroup?.id ?? -1);
-
-  const { enqueueSnackbar } = useSnackbar();
-
-  const error = deletePlacementError || unassignLinodeError;
+  const [assignedLinodes, setAssignedLinodes] = React.useState<
+    Linode[] | undefined
+  >(undefined);
 
   React.useEffect(() => {
-    if (open) {
-      resetDeletePlacementGroup();
-      resetUnassignLinodes();
+    if (selectedPlacementGroup && linodes) {
+      setAssignedLinodes(
+        getPlacementGroupLinodes(selectedPlacementGroup, linodes)
+      );
     }
-  }, [open, resetUnassignLinodes, resetDeletePlacementGroup]);
+  }, [selectedPlacementGroup, linodes]);
+
+  const error = deletePlacementError || unassignLinodeError;
 
   const handleUnassignLinode = async (linode: Linode) => {
     const payload: UnassignLinodesFromPlacementGroupPayload = {
@@ -71,105 +72,143 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     };
 
     await unassignLinodes(payload);
-    const toastMessage = `Linode successfully unassigned`;
-    enqueueSnackbar(toastMessage, {
+
+    enqueueSnackbar(`Linode ${linode.label} successfully unassigned.`, {
       variant: 'success',
     });
   };
 
   const onDelete = async () => {
     await deletePlacementGroup();
-    const toastMessage = `Placement Group successfully deleted.`;
-    enqueueSnackbar(toastMessage, {
-      variant: 'success',
-    });
+
+    enqueueSnackbar(
+      `Placement Group ${selectedPlacementGroup?.label} successfully deleted.`,
+      {
+        variant: 'success',
+      }
+    );
+    handleClose();
+  };
+
+  const handleClose = () => {
+    resetDeletePlacementGroup();
+    resetUnassignLinodes();
     onClose();
   };
 
-  const placementGroupLabel = selectedPlacementGroup
-    ? `Placement Group ${selectedPlacementGroup?.label} (${
-        AFFINITY_TYPES[selectedPlacementGroup.affinity_type]
-      })`
-    : 'Placement Group';
-
+  const assignedLinodesCount = assignedLinodes?.length ?? 0;
   const isDisabled = !selectedPlacementGroup || assignedLinodesCount > 0;
+
+  if (!selectedPlacementGroup) {
+    return null;
+  }
+
+  if (!assignedLinodes) {
+    return (
+      <ConfirmationDialog
+        sx={{
+          '& .MuiDialog-paper': {
+            '& > .MuiDialogContent-root > div': {
+              maxHeight: 300,
+              padding: 4,
+            },
+            maxHeight: 500,
+            width: 500,
+          },
+        }}
+        onClose={handleClose}
+        open={open}
+        title="Delete Placement Group"
+      >
+        <CircleProgress />
+      </ConfirmationDialog>
+    );
+  }
 
   return (
     <TypeToConfirmDialog
       entity={{
         action: 'deletion',
-        name: selectedPlacementGroup?.label,
+        name: selectedPlacementGroup.label,
         primaryBtnText: 'Delete',
         type: 'Placement Group',
       }}
-      errors={
-        !selectedPlacementGroup
-          ? [{ reason: 'Placement Group not found.' }]
-          : undefined
-      }
       disableTypeToConfirmInput={isDisabled}
       disableTypeToConfirmSubmit={isDisabled}
       label="Placement Group"
-      loading={placementGroupDataLoading || deletePlacementLoading}
+      loading={deletePlacementLoading}
       onClick={onDelete}
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
-      title={`Delete ${placementGroupLabel}`}
+      title={`Delete Placement Group ${selectedPlacementGroup.label}`}
     >
       {error && (
         <Notice
-          key={selectedPlacementGroup?.id}
+          key={selectedPlacementGroup.id}
           text={error?.[0]?.reason}
           variant="error"
         />
       )}
 
-      <Notice spacingTop={8} variant="warning">
-        <Typography>
-          <strong>Warning:</strong>
-        </Typography>
-        <List
-          sx={(theme) => ({
-            '& > li': {
-              display: 'list-item',
-              fontSize: '0.875rem',
-              pb: 0,
-              pl: 0,
-            },
-            listStyle: 'disc',
-            ml: theme.spacing(2),
-            mt: theme.spacing(),
-          })}
-        >
-          <ListItem>
-            Deleting a placement group is permanent and cannot be undone.
-          </ListItem>
-          <ListItem>
-            You need to unassign all Linodes before deleting a placement group.
-          </ListItem>
-        </List>
-      </Notice>
-      <RemovableSelectionsList
-        RemoveButton={() => (
-          <Button
-            sx={(theme) => ({
-              fontFamily: theme.font.normal,
-              fontSize: '0.875rem',
-            })}
-            loading={unassignLinodeLoading}
-            variant="text"
-          >
-            Unassign
-          </Button>
-        )}
-        headerText={`Linodes assigned to ${placementGroupLabel}`}
-        id="assigned-linodes"
-        maxWidth={540}
-        noDataText="No Linodes assigned to this Placement Group."
-        onRemove={handleUnassignLinode}
-        selectionData={assignedLinodes ?? []}
-        sx={{ mb: 3, mt: 1 }}
-      />
+      {assignedLinodesCount > 0 ? (
+        <>
+          <Notice spacingTop={8} variant="warning">
+            <Typography>
+              <strong>Warning:</strong>
+            </Typography>
+            <List
+              sx={(theme) => ({
+                '& > li': {
+                  display: 'list-item',
+                  fontSize: '0.875rem',
+                  pb: 0,
+                  pl: 0,
+                },
+                listStyle: 'disc',
+                ml: theme.spacing(2),
+                mt: theme.spacing(),
+              })}
+            >
+              <ListItem>
+                Deleting a placement group is permanent and cannot be undone.
+              </ListItem>
+              <ListItem>
+                You need to unassign all Linodes before deleting a placement
+                group.
+              </ListItem>
+            </List>
+          </Notice>
+          <RemovableSelectionsList
+            RemoveButton={(props: ButtonProps) => (
+              <Button
+                {...props}
+                sx={(theme) => ({
+                  fontFamily: theme.font.normal,
+                  fontSize: '0.875rem',
+                })}
+                disabled={disableUnassignButton || props.disabled}
+                variant="text"
+              >
+                Unassign
+              </Button>
+            )}
+            disableItemsOnRemove
+            hasEncounteredMutationError={Boolean(unassignLinodeError)}
+            headerText={`Linodes assigned to Placement Group ${selectedPlacementGroup.label}`}
+            id="assigned-linodes"
+            maxWidth={540}
+            noDataText="No Linodes assigned to this Placement Group."
+            onRemove={handleUnassignLinode}
+            selectionData={assignedLinodes ?? []}
+            showLoadingIndicatorOnRemove
+            sx={{ mb: 3, mt: 1 }}
+          />
+        </>
+      ) : (
+        <Notice spacingTop={8} variant="warning">
+          Deleting a placement group is permanent and cannot be undone.
+        </Notice>
+      )}
     </TypeToConfirmDialog>
   );
 };

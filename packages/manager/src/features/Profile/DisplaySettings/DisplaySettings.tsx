@@ -15,10 +15,11 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
-import { useMutateProfile, useProfile } from 'src/queries/profile';
-import { ApplicationState } from 'src/store';
+import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 
 import { TimezoneForm } from './TimezoneForm';
+
+import type { ApplicationState } from 'src/store';
 
 export const DisplaySettings = () => {
   const theme = useTheme();
@@ -102,7 +103,6 @@ export const DisplaySettings = () => {
                     marginTop: '-2px',
                     padding: 0,
                   }}
-                  interactive
                   status="help"
                   text={tooltipIconText}
                 />

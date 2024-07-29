@@ -7,11 +7,12 @@ import { PlacementGroupsDetailPanel } from './PlacementGroupsDetailPanel';
 
 const defaultProps = {
   handlePlacementGroupChange: vi.fn(),
+  selectedPlacementGroupId: null,
 };
 
 const queryMocks = vi.hoisted(() => ({
+  useAllPlacementGroupsQuery: vi.fn().mockReturnValue({}),
   useRegionsQuery: vi.fn().mockReturnValue({}),
-  useUnpaginatedPlacementGroupsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/regions/regions', async () => {
@@ -26,8 +27,7 @@ vi.mock('src/queries/placementGroups', async () => {
   const actual = await vi.importActual('src/queries/placementGroups');
   return {
     ...actual,
-    useUnpaginatedPlacementGroupsQuery:
-      queryMocks.useUnpaginatedPlacementGroupsQuery,
+    useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
   };
 });
 
@@ -42,25 +42,29 @@ describe('PlacementGroupsDetailPanel', () => {
         regionFactory.build({
           capabilities: ['Placement Group'],
           id: 'ca-central',
-          maximum_vms_per_pg: 1,
+          placement_group_limits: {
+            maximum_linodes_per_pg: 1,
+          },
         }),
         regionFactory.build({
           capabilities: ['Placement Group'],
           id: 'us-west',
-          maximum_pgs_per_customer: 1,
+          placement_group_limits: {
+            maximum_pgs_per_customer: 1,
+          },
         }),
         regionFactory.build({
           id: 'us-southeast',
         }),
       ],
     });
-    queryMocks.useUnpaginatedPlacementGroupsQuery.mockReturnValue({
+    queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
-          affinity_type: 'affinity:local',
+          placement_group_type: 'affinity:local',
           id: 1,
           is_compliant: true,
-          is_strict: true,
+          placement_group_policy: 'strict',
           label: 'my-placement-group',
           members: [
             {
@@ -109,7 +113,7 @@ describe('PlacementGroupsDetailPanel', () => {
 
     expect(getByRole('combobox')).toBeDisabled();
     expect(getByTestId('notice-warning')).toHaveTextContent(
-      'The selected region does not currently have Placement Group capabilities.'
+      'Currently, only specific regions support placement groups.'
     );
     expect(
       queryByRole('button', { name: /create placement group/i })
@@ -124,7 +128,7 @@ describe('PlacementGroupsDetailPanel', () => {
       />
     );
 
-    const select = getByPlaceholderText('Select a Placement Group');
+    const select = getByPlaceholderText('None');
     expect(select).toBeEnabled();
     expect(
       getByRole('button', { name: /create placement group/i })

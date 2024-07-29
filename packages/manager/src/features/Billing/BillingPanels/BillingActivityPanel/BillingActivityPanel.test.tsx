@@ -63,10 +63,10 @@ describe('BillingActivityPanel', () => {
       <BillingActivityPanel />
     );
     await waitFor(() => {
-      getByText('Invoice #0');
       getByText('Invoice #1');
-      getByTestId(`payment-0`);
+      getByText('Invoice #2');
       getByTestId(`payment-1`);
+      getByTestId(`payment-2`);
     });
   });
 

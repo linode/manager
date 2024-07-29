@@ -14,8 +14,12 @@ import {
   profileFactory,
   regionFactory,
   objectStorageKeyFactory,
+  accountFactory,
 } from '@src/factories';
-import { mockGetAccountSettings } from 'support/intercepts/account';
+import {
+  mockGetAccount,
+  mockGetAccountSettings,
+} from 'support/intercepts/account';
 import {
   mockCancelObjectStorage,
   mockCreateAccessKey,
@@ -36,16 +40,6 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 // Various messages, notes, and warnings that may be shown when enabling Object Storage
 // under different circumstances.
 const objNotes = {
-  // When enabling OBJ using a region with a regular pricing structure, when OBJ DC-specific pricing is disabled.
-  regularPricing: /Linode Object Storage costs a flat rate of \$5\/month, and includes 250 GB of storage and 1 TB of outbound data transfer. Beyond that, it.*s \$0.02 per GB per month./,
-
-  // When enabling OBJ using a region with special pricing during the free beta period (OBJ DC-specific pricing is disabled).
-  dcSpecificBetaPricing: /Object Storage for .* is currently in beta\. During the beta period, Object Storage in these regions is free\. After the beta period, customers will be notified before charges for this service begin./,
-
-  // When enabling OBJ without having selected a region, when OBJ DC-specific pricing is disabled.
-  dcPricingGenericExplanation:
-    'Pricing for monthly rate and overage costs will depend on the data center you select for deployment.',
-
   // When enabling OBJ, in both the Access Key flow and Create Bucket flow, when OBJ DC-specific pricing is enabled.
   objDCPricing:
     'Object Storage costs a flat rate of $5/month, and includes 250 GB of storage. When you enable Object Storage, 1 TB of outbound data transfer will be added to your global network transfer pool.',
@@ -66,6 +60,7 @@ describe('Object Storage enrollment', () => {
    * - Confirms that consistent pricing information is shown for all regions in the enable modal.
    */
   it('can enroll in Object Storage', () => {
+    mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
       objMultiCluster: makeFeatureFlagData(false),
     });
@@ -154,6 +149,10 @@ describe('Object Storage enrollment', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
+        cy.findByLabelText('Label (required)')
+          .should('be.visible')
+          .type(randomLabel());
+
         // Select a region with special pricing structure.
         ui.regionSelect.find().click().type('Jakarta, ID{enter}');
 

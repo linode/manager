@@ -1,16 +1,24 @@
 import { VPC } from '@linode/api-v4/lib';
 import { useMediaQuery } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { HashLink } from 'react-router-hash-link';
 
+import { Box } from 'src/components/Box';
+import {
+  DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY as UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY,
+  UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY,
+} from 'src/components/DiskEncryption/constants';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
 import { Link } from 'src/components/Link';
 import { Typography, TypographyProps } from 'src/components/Typography';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { pluralize } from 'src/utilities/pluralize';
 
+import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
+import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import {
   StyledBodyGrid,
   StyledColumnLabelGrid,
@@ -24,7 +32,11 @@ import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses'
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 
-import type { Interface, Linode } from '@linode/api-v4/lib/linodes/types';
+import type {
+  EncryptionStatus,
+  Interface,
+  Linode,
+} from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs';
 
 interface LinodeEntityDetailProps {
@@ -35,20 +47,21 @@ interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
 }
 
-export type Props = LinodeEntityDetailProps & {
+export interface Props extends LinodeEntityDetailProps {
   handlers: LinodeHandlers;
-};
+}
 
 export interface BodyProps {
   configInterfaceWithVPC?: Interface;
-  displayVPCSection: boolean;
+  encryptionStatus: EncryptionStatus | undefined;
   gbRAM: number;
   gbStorage: number;
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
+  isLKELinode: boolean; // indicates whether linode belongs to an LKE cluster
   isVPCOnlyLinode: boolean;
   linodeId: number;
-  linodeIsInEdgeRegion: boolean;
+  linodeIsInDistributedRegion: boolean;
   linodeLabel: string;
   numCPUs: number;
   numVolumes: number;
@@ -59,14 +72,15 @@ export interface BodyProps {
 export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const {
     configInterfaceWithVPC,
-    displayVPCSection,
+    encryptionStatus,
     gbRAM,
     gbStorage,
     ipv4,
     ipv6,
+    isLKELinode,
     isVPCOnlyLinode,
     linodeId,
-    linodeIsInEdgeRegion,
+    linodeIsInDistributedRegion,
     linodeLabel,
     numCPUs,
     numVolumes,
@@ -78,6 +92,14 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const username = profile?.username ?? 'none';
 
   const theme = useTheme();
+
+  const {
+    isDiskEncryptionFeatureEnabled,
+  } = useIsDiskEncryptionFeatureEnabled();
+
+  // @ TODO LDE: Remove usages of this variable once LDE is fully rolled out (being used to determine formatting adjustments currently)
+  const isDisplayingEncryptedStatus =
+    isDiskEncryptionFeatureEnabled && Boolean(encryptionStatus);
 
   // Filter and retrieve subnets associated with a specific Linode ID
   const linodeAssociatedSubnets = vpcLinodeIsAssignedTo?.subnets.filter(
@@ -99,11 +121,14 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         <Grid
           container
           flexDirection={matchesLgUp ? 'row' : 'column'}
-          sm={3}
+          sm={isDisplayingEncryptedStatus ? 4 : 3}
           spacing={0}
           xs={12}
         >
-          <StyledColumnLabelGrid mb={matchesLgUp ? 0 : 2} xs={12}>
+          <StyledColumnLabelGrid
+            mb={matchesLgUp && !isDisplayingEncryptedStatus ? 0 : 2}
+            xs={12}
+          >
             Summary
           </StyledColumnLabelGrid>
           <StyledSummaryGrid container spacing={1}>
@@ -123,9 +148,28 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 {pluralize('Volume', 'Volumes', numVolumes)}
               </Typography>
             </Grid>
+            {isDiskEncryptionFeatureEnabled && encryptionStatus && (
+              <Grid>
+                <Box
+                  alignItems="center"
+                  data-testid={encryptionStatusTestId}
+                  display="flex"
+                  flexDirection="row"
+                >
+                  <EncryptedStatus
+                    tooltipText={
+                      isLKELinode
+                        ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
+                        : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
+                    }
+                    encryptionStatus={encryptionStatus}
+                  />
+                </Box>
+              </Grid>
+            )}
           </StyledSummaryGrid>
         </Grid>
-        <Grid container sm={9} xs={12}>
+        <Grid container sm={isDisplayingEncryptedStatus ? 8 : 9} xs={12}>
           <Grid container xs={12}>
             <AccessTable
               footer={
@@ -153,7 +197,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 { heading: 'SSH Access', text: sshLink(ipv4[0]) },
                 {
                   heading: 'LISH Console via SSH',
-                  text: linodeIsInEdgeRegion
+                  text: linodeIsInDistributedRegion
                     ? 'N/A'
                     : lishLink(username, region, linodeLabel),
                 },
@@ -166,7 +210,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           </Grid>
         </Grid>
       </StyledBodyGrid>
-      {displayVPCSection && vpcLinodeIsAssignedTo && (
+      {vpcLinodeIsAssignedTo && (
         <Grid
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,

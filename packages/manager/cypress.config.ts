@@ -15,6 +15,7 @@ import { fetchLinodeRegions } from './cypress/support/plugins/fetch-linode-regio
 import { splitCypressRun } from './cypress/support/plugins/split-run';
 import { enableJunitReport } from './cypress/support/plugins/junit-report';
 import { generateTestWeights } from './cypress/support/plugins/generate-weights';
+import { logTestTagInfo } from './cypress/support/plugins/test-tagging-info';
 
 /**
  * Exports a Cypress configuration object.
@@ -41,7 +42,7 @@ export default defineConfig({
   video: true,
 
   // Only retry test when running via CI.
-  retries: process.env['CI'] ? 2 : 0,
+  retries: process.env['CI'] && !process.env['CY_TEST_DISABLE_RETRIES'] ? 2 : 0,
 
   experimentalMemoryManagement: true,
   e2e: {
@@ -67,6 +68,7 @@ export default defineConfig({
         fetchAccount,
         fetchLinodeRegions,
         regionOverrideCheck,
+        logTestTagInfo,
         splitCypressRun,
         enableJunitReport,
         generateTestWeights,

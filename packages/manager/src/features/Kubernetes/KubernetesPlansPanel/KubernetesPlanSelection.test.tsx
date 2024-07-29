@@ -2,7 +2,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { extendedTypeFactory } from 'src/factories/types';
-import { LIMITED_AVAILABILITY_TEXT } from 'src/features/components/PlansPanel/constants';
+import { LIMITED_AVAILABILITY_COPY } from 'src/features/components/PlansPanel/constants';
 import { breakpoints } from 'src/foundations/breakpoints';
 import {
   renderWithTheme,
@@ -15,7 +15,7 @@ import {
   KubernetesPlanSelectionProps,
 } from './KubernetesPlanSelection';
 
-import type { TypeWithAvailability } from 'src/features/components/PlansPanel/types';
+import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 
 const planHeader = 'Dedicated 20 GB';
 const baseHourlyPrice = '$0.015';
@@ -26,20 +26,23 @@ const ram = '16 GB';
 const cpu = '8';
 const storage = '1024 GB';
 
-const typeWithAvailability: TypeWithAvailability = {
+const PlanWithAvailability: PlanWithAvailability = {
   ...extendedTypeFactory.build(),
-  isLimitedAvailabilityPlan: false,
+  planBelongsToDisabledClass: false,
+  planHasLimitedAvailability: false,
+  planIsDisabled512Gb: false,
 };
 
 const props: KubernetesPlanSelectionProps = {
   getTypeCount: vi.fn(),
+  hasMajorityOfPlansDisabled: false,
   idx: 0,
-  isLimitedAvailabilityPlan: false,
   onAdd: vi.fn(),
   onSelect: vi.fn(),
+  plan: PlanWithAvailability,
   selectedRegionId: 'us-east',
-  type: typeWithAvailability,
   updatePlanCount: vi.fn(),
+  wholePanelIsDisabled: false,
 };
 
 describe('KubernetesPlanSelection (table, desktop view)', () => {
@@ -80,7 +83,7 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
   it('should not display an error message for $0 regions', () => {
     const propsWithRegionZeroPrice = {
       ...props,
-      type: {
+      plan: {
         ...extendedTypeFactory.build({
           region_prices: [
             {
@@ -90,7 +93,6 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
             },
           ],
         }),
-        isLimitedAvailabilityPlan: false,
       },
     };
     const { container } = renderWithTheme(
@@ -116,33 +118,30 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
   });
 
   it('shows limited availability messaging for 512 GB plans', async () => {
-    const bigPlanType: TypeWithAvailability = {
+    const bigPlanType: PlanWithAvailability = {
       ...extendedTypeFactory.build({
         heading: 'Dedicated 512 GB',
         label: 'Dedicated 512GB',
       }),
-      isLimitedAvailabilityPlan: false,
+      planBelongsToDisabledClass: false,
+      planHasLimitedAvailability: true,
+      planIsDisabled512Gb: false,
     };
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(
       wrapWithTableBody(
-        <KubernetesPlanSelection
-          {...props}
-          isLimitedAvailabilityPlan={true}
-          type={bigPlanType}
-        />,
-        { flags: { disableLargestGbPlans: true } }
+        <KubernetesPlanSelection {...props} plan={bigPlanType} />
       )
     );
 
-    const button = getByTestId('limited-availability');
+    const button = getByTestId('disabled-plan-tooltip');
     fireEvent.mouseOver(button);
 
     await waitFor(() => {
       expect(getByRole('tooltip')).toBeInTheDocument();
     });
 
-    expect(getByText(LIMITED_AVAILABILITY_TEXT)).toBeVisible();
+    expect(getByText(LIMITED_AVAILABILITY_COPY)).toBeVisible();
   });
 });
 
@@ -181,46 +180,5 @@ describe('KubernetesPlanSelection (cards, mobile view)', () => {
     expect(
       getByText(`${regionHourlyPrice}/hr`, { exact: false })
     ).toBeInTheDocument();
-  });
-
-  it('shows limited availability messaging', async () => {
-    const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <KubernetesPlanSelection
-        {...props}
-        isLimitedAvailabilityPlan={true}
-        selectedRegionId={'us-east'}
-      />
-    );
-
-    const selectionCard = getByTestId('selection-card');
-    fireEvent.mouseOver(selectionCard);
-
-    await waitFor(() => {
-      expect(getByRole('tooltip')).toBeInTheDocument();
-    });
-
-    expect(getByText(LIMITED_AVAILABILITY_TEXT)).toBeVisible();
-  });
-
-  it('is disabled for 512 GB plans', () => {
-    const bigPlanType: TypeWithAvailability = {
-      ...extendedTypeFactory.build({
-        heading: 'Dedicated 512 GB',
-        label: 'Dedicated 512GB',
-      }),
-      isLimitedAvailabilityPlan: false,
-    };
-
-    const { getByTestId } = renderWithTheme(
-      <KubernetesPlanSelection
-        {...props}
-        isLimitedAvailabilityPlan={false}
-        type={bigPlanType}
-      />,
-      { flags: { disableLargestGbPlans: true } }
-    );
-
-    const selectionCard = getByTestId('selection-card');
-    expect(selectionCard).toBeDisabled();
   });
 });

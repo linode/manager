@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
-import { sendEvent } from 'src/utilities/analytics';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { sendEvent } from 'src/utilities/analytics/utils';
 
 import { StyledVolumeIcon } from './VolumesLandingEmptyState.styles';
 import {
@@ -11,10 +14,13 @@ import {
   linkAnalyticsEvent,
   youtubeLinkData,
 } from './VolumesLandingEmptyStateData';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 export const VolumesLandingEmptyState = () => {
   const { push } = useHistory();
+
+  const isRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_volumes',
+  });
 
   return (
     <>
@@ -23,6 +29,7 @@ export const VolumesLandingEmptyState = () => {
         buttonProps={[
           {
             children: 'Create Volume',
+            disabled: isRestricted,
             onClick: () => {
               sendEvent({
                 action: 'Click:button',
@@ -31,6 +38,11 @@ export const VolumesLandingEmptyState = () => {
               });
               push('/volumes/create');
             },
+            tooltipText: getRestrictedResourceText({
+              action: 'create',
+              isSingular: false,
+              resourceType: 'Volumes',
+            }),
           },
         ]}
         gettingStartedGuidesData={gettingStartedGuides}

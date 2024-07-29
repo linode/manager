@@ -1,4 +1,3 @@
-import { containsClick, containsVisible, getVisible } from '../helpers';
 import { waitForAppLoad } from './common';
 
 export const loadAppNoLogin = (path: string) => waitForAppLoad(path, false);
@@ -31,29 +30,26 @@ interface GoWithUI {
 
 export interface Page {
   assertIsLoaded: () => void;
-  first?: boolean;
   goWithUI?: GoWithUI[];
   name: string;
-  skip?: boolean;
   url: string;
 }
 
 // List of Routes and validator of the route
 export const pages: Page[] = [
   {
-    assertIsLoaded: () =>
-      cy.findByText('Choose a Distribution').should('be.visible'),
+    assertIsLoaded: () => cy.findByText('Choose an OS').should('be.visible'),
     goWithUI: [
       {
         go: () => {
           loadAppNoLogin(routes.createLinodeOCA);
-          cy.findByText('Distributions').click();
+          cy.findByText('OS').click();
         },
         name: 'Tab',
       },
     ],
-    name: 'Linode/Create/Distribution',
-    url: `${routes.createLinode}?type=Distributions`,
+    name: 'Linode/Create/OS',
+    url: `${routes.createLinode}?type=OS`,
   },
   {
     assertIsLoaded: () => cy.findByText('Select App').should('be.visible'),
@@ -118,10 +114,10 @@ export const pages: Page[] = [
         go: () => {
           const url = `${routes.profile}/auth`;
           loadAppNoLogin(url);
-          getVisible('[data-qa-header="My Profile"]');
-          containsVisible(
+          cy.get('[data-qa-header="My Profile"]').should('be.visible');
+          cy.contains(
             'How to Enable Third Party Authentication on Your User Account'
-          );
+          ).should('be.visible');
           waitDoubleRerender();
           cy.contains('Display').should('be.visible').click();
         },
@@ -150,7 +146,7 @@ export const pages: Page[] = [
           loadAppNoLogin(routes.profile);
           cy.findByText('Username').should('be.visible');
           waitDoubleRerender();
-          containsClick('Login & Authentication');
+          cy.contains('Login & Authentication').click();
         },
         name: 'Tab',
       },
@@ -183,7 +179,7 @@ export const pages: Page[] = [
           loadAppNoLogin(routes.profile);
           cy.findByText('Username');
           waitDoubleRerender();
-          containsClick('LISH Console Settings');
+          cy.contains('LISH Console Settings').click();
         },
         name: 'Tab',
       },
@@ -205,7 +201,7 @@ export const pages: Page[] = [
         name: 'Tab',
       },
     ],
-    name: 'Profile/API tokens',
+    name: 'Profile/API Tokens',
     url: `${routes.profile}/tokens`,
   },
   {
@@ -216,7 +212,7 @@ export const pages: Page[] = [
   },
   {
     assertIsLoaded: () => cy.findByText('Open New Ticket').should('be.visible'),
-    name: 'Support/tickets',
+    name: 'Support/Tickets',
     url: `${routes.supportTickets}`,
   },
   {
@@ -230,7 +226,7 @@ export const pages: Page[] = [
         name: 'Tab',
       },
     ],
-    name: 'Support/tickets/open',
+    name: 'Support/Tickets/Open',
     url: `${routes.supportTicketsOpen}`,
   },
   {
@@ -244,7 +240,7 @@ export const pages: Page[] = [
         name: 'Tab',
       },
     ],
-    name: 'Support/tickets/closed',
+    name: 'Support/Tickets/Closed',
     url: `${routes.supportTicketsClosed}`,
   },
   {
@@ -282,7 +278,7 @@ export const pages: Page[] = [
         name: 'Tab',
       },
     ],
-    name: 'account/Users',
+    name: 'Account/Users',
     url: `${routes.account}/users`,
   },
   {
@@ -299,7 +295,7 @@ export const pages: Page[] = [
         name: 'Tab',
       },
     ],
-    name: 'account/Settings',
+    name: 'Account/Settings',
     url: `${routes.account}/settings`,
   },
 ];

@@ -1,9 +1,10 @@
-import { APIError } from '@linode/api-v4';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { SubnetFieldState } from 'src/utilities/subnets';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { VPC_CREATE_FORM_SUBNET_HELPER_TEXT } from '../../constants';
 import { MultipleSubnetInput } from '../MultipleSubnetInput';
@@ -11,6 +12,10 @@ import {
   StyledBodyTypography,
   StyledHeaderTypography,
 } from './VPCCreateForm.styles';
+
+import type { APIError } from '@linode/api-v4';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
+import type { SubnetFieldState } from 'src/utilities/subnets';
 
 interface Props {
   disabled?: boolean;
@@ -23,6 +28,12 @@ interface Props {
 export const SubnetContent = (props: Props) => {
   const { disabled, isDrawer, onChangeField, subnetErrors, subnets } = props;
 
+  const location = useLocation();
+  const isFromLinodeCreate = location.pathname.includes('/linodes/create');
+  const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+    location.search
+  );
+
   return (
     <>
       <StyledHeaderTypography isDrawer={isDrawer} variant="h2">
@@ -30,7 +41,20 @@ export const SubnetContent = (props: Props) => {
       </StyledHeaderTypography>
       <StyledBodyTypography isDrawer={isDrawer} variant="body1">
         {VPC_CREATE_FORM_SUBNET_HELPER_TEXT}{' '}
-        <Link to="https://www.linode.com/docs/products/networking/vpc/guides/subnets/">
+        <Link
+          onClick={() =>
+            isFromLinodeCreate &&
+            sendLinodeCreateFormStepEvent({
+              action: 'click',
+              category: 'link',
+              createType: queryParams.type ?? 'OS',
+              formStepName: 'VPC Subnets',
+              label: 'Learn more',
+              version: 'v1',
+            })
+          }
+          to="https://www.linode.com/docs/products/networking/vpc/guides/subnets/"
+        >
           Learn more
         </Link>
         .

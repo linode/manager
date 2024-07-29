@@ -10,7 +10,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useAccount, useMutateAccount } from 'src/queries/account/account';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
-import { useMutateProfile, useProfile } from 'src/queries/profile';
+import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 
 import { StyledGrid } from './EmailBounce.styles';
 

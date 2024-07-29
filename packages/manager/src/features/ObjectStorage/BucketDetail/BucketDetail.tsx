@@ -1,10 +1,4 @@
-import {
-  ObjectStorageClusterID,
-  ObjectStorageObject,
-  ObjectStorageObjectListResponse,
-  getObjectList,
-  getObjectURL,
-} from '@linode/api-v4/lib/object-storage';
+import { getObjectList, getObjectURL } from '@linode/api-v4/lib/object-storage';
 import { useQueryClient } from '@tanstack/react-query';
 import produce from 'immer';
 import { useSnackbar } from 'notistack';
@@ -24,13 +18,19 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { ObjectUploader } from 'src/components/Uploaders/ObjectUploader/ObjectUploader';
 import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account/account';
 import {
   prefixToQueryKey,
   queryKey,
   updateBucket,
   useObjectBucketDetailsInfiniteQuery,
+  useObjectStorageBuckets,
+  useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import { sendDownloadObjectEvent } from 'src/utilities/analytics';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
+import { sendDownloadObjectEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { truncateMiddle } from 'src/utilities/truncate';
 
@@ -54,12 +54,22 @@ import { CreateFolderDrawer } from './CreateFolderDrawer';
 import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
 import ObjectTableContent from './ObjectTableContent';
 
+import type {
+  ObjectStorageClusterID,
+  ObjectStorageObject,
+  ObjectStorageObjectList,
+} from '@linode/api-v4/lib/object-storage';
+
 interface MatchParams {
   bucketName: string;
   clusterId: ObjectStorageClusterID;
 }
 
 export const BucketDetail = () => {
+  /**
+   * @note If `Object Storage Access Key Regions` is enabled, clusterId will actually contain
+   * the bucket's region id
+   */
   const match = useRouteMatch<MatchParams>(
     '/object-storage/buckets/:clusterId/:bucketName'
   );
@@ -70,6 +80,36 @@ export const BucketDetail = () => {
   const clusterId = match?.params.clusterId || '';
   const prefix = getQueryParamFromQueryString(location.search, 'prefix');
   const queryClient = useQueryClient();
+
+  const flags = useFlags();
+  const { data: account } = useAccount();
+
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
+
+  const { data: regions } = useRegionsQuery();
+
+  const regionsSupportingObjectStorage = regions?.filter((region) =>
+    region.capabilities.includes('Object Storage')
+  );
+
+  const { data: clusters } = useObjectStorageClusters();
+  const { data: buckets } = useObjectStorageBuckets({
+    clusters,
+    isObjMultiClusterEnabled,
+    regions: regionsSupportingObjectStorage,
+  });
+
+  const bucket = buckets?.buckets.find((bucket) => {
+    if (isObjMultiClusterEnabled) {
+      return bucket.label === bucketName && bucket.region === clusterId;
+    }
+    return bucket.label === bucketName && bucket.cluster === clusterId;
+  });
+
   const {
     data,
     error,
@@ -149,9 +189,13 @@ export const BucketDetail = () => {
     setDeleteObjectError(undefined);
 
     if (objectToDelete.endsWith('/')) {
-      const itemsInFolderData = await getObjectList(clusterId, bucketName, {
-        delimiter: OBJECT_STORAGE_DELIMITER,
-        prefix: objectToDelete,
+      const itemsInFolderData = await getObjectList({
+        bucket: bucketName,
+        clusterId,
+        params: {
+          delimiter: OBJECT_STORAGE_DELIMITER,
+          prefix: objectToDelete,
+        },
       });
 
       // Exclude the empty object the represents a folder so we can
@@ -194,10 +238,10 @@ export const BucketDetail = () => {
     }
   };
 
-  const updateStore = (pages: ObjectStorageObjectListResponse[]) => {
+  const updateStore = (pages: ObjectStorageObjectList[]) => {
     queryClient.setQueryData<{
       pageParams: string[];
-      pages: ObjectStorageObjectListResponse[];
+      pages: ObjectStorageObjectList[];
     }>(
       [queryKey, clusterId, bucketName, 'objects', ...prefixToQueryKey(prefix)],
       (data) => ({
@@ -428,9 +472,8 @@ export const BucketDetail = () => {
       </ConfirmationDialog>
       <ObjectDetailsDrawer
         url={
-          selectedObject
-            ? generateObjectUrl(clusterId, bucketName, selectedObject.name)
-                .absolute
+          selectedObject && bucket
+            ? generateObjectUrl(bucket.hostname, selectedObject.name)
             : undefined
         }
         bucketName={bucketName}

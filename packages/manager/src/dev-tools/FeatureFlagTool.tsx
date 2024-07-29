@@ -4,11 +4,12 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
-import { FlagSet, Flags } from 'src/featureFlags';
-import { Dispatch } from 'src/hooks/types';
 import { useFlags } from 'src/hooks/useFlags';
 import { setMockFeatureFlags } from 'src/store/mockFeatureFlags';
 import { getStorage, setStorage } from 'src/utilities/storage';
+
+import type { FlagSet, Flags } from 'src/featureFlags';
+import type { Dispatch } from 'src/hooks/types';
 const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 
 /**
@@ -18,19 +19,19 @@ const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
  * This requirement is both documented here and in our Docs since we don't have a way to enforce types from Launch Darkly objects.
  */
 const options: { flag: keyof Flags; label: string }[] = [
-  { flag: 'aclb', label: 'ACLB' },
-  { flag: 'aclbFullCreateFlow', label: 'ACLB Full Create Flow' },
+  { flag: 'aclp', label: 'CloudPulse' },
+  { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
-  { flag: 'linodeCloneUiChanges', label: 'Linode Clone UI Changes' },
-  { flag: 'gecko', label: 'Gecko' },
-  { flag: 'parentChildAccountAccess', label: 'Parent/Child Account' },
-  { flag: 'selfServeBetas', label: 'Self Serve Betas' },
-  { flag: 'vpc', label: 'VPC' },
-  { flag: 'firewallNodebalancer', label: 'Firewall NodeBalancer' },
-  { flag: 'recharts', label: 'Recharts' },
-  { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
-  { flag: 'placementGroups', label: 'Placement Groups' },
+  { flag: 'eventMessagesV2', label: 'Event Messages V2' },
+  { flag: 'gecko2', label: 'Gecko' },
+  { flag: 'imageServiceGen2', label: 'Image Service Gen2' },
   { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },
+  { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
+  { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
+  { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
+  { flag: 'placementGroups', label: 'Placement Groups' },
+  { flag: 'selfServeBetas', label: 'Self Serve Betas' },
+  { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
 ];
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {
@@ -51,9 +52,9 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
   ) => {
     const currentFlag = flags[flag];
     const updatedValue =
-      typeof currentFlag === 'boolean'
-        ? e.target.checked
-        : { ...currentFlag, enabled: e.target.checked }; // If current flag is an object, update 'enabled' key
+      typeof currentFlag == 'object' && 'enabled' in currentFlag
+        ? { ...currentFlag, enabled: e.target.checked } // If current flag is an object, update 'enabled' key
+        : e.target.checked;
     const updatedFlags = {
       ...getStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY),
       [flag]: updatedValue,

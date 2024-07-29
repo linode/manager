@@ -6,7 +6,7 @@ import {
   KubernetesVersion,
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes/types';
-import * as Factory from 'factory.ts';
+import Factory from 'src/factories/factoryProxy';
 import { v4 } from 'uuid';
 
 export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
@@ -22,6 +22,7 @@ export const nodePoolFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>({
     min: 1,
   },
   count: 3,
+  disk_encryption: 'enabled',
   id: Factory.each((id) => id),
   nodes: kubeLinodeFactory.buildList(3),
   type: 'g6-standard-1',

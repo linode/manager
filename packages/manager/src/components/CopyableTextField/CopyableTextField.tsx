@@ -1,16 +1,23 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import {
+  CopyTooltip,
+  CopyTooltipProps,
+} from 'src/components/CopyTooltip/CopyTooltip';
 import { TextField, TextFieldProps } from 'src/components/TextField';
 
-type CopyableTextFieldProps = TextFieldProps & {
+interface CopyableTextFieldProps extends TextFieldProps {
+  /**
+   * Optional props that are passed to the underlying CopyTooltip component
+   */
+  CopyTooltipProps?: Partial<CopyTooltipProps>;
   className?: string;
   hideIcon?: boolean;
-};
+}
 
 export const CopyableTextField = (props: CopyableTextFieldProps) => {
-  const { className, hideIcon, value, ...restProps } = props;
+  const { CopyTooltipProps, className, hideIcon, value, ...restProps } = props;
 
   return (
     <StyledTextField
@@ -18,7 +25,11 @@ export const CopyableTextField = (props: CopyableTextFieldProps) => {
       {...restProps}
       InputProps={{
         endAdornment: hideIcon ? undefined : (
-          <CopyTooltip className="copyIcon" text={`${value}`} />
+          <CopyTooltip
+            className="copyIcon"
+            text={`${value}`}
+            {...CopyTooltipProps}
+          />
         ),
       }}
       className={`${className} copy removeDisabledStyles`}
@@ -42,7 +53,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
   '.removeDisabledStyles': {
     '& .MuiInput-input': {
-      '-webkit-text-fill-color': 'unset !important',
+      WebkitTextFillColor: 'unset !important',
       borderColor: theme.name === 'light' ? '#ccc' : '#222',
       color:
         theme.name === 'light'

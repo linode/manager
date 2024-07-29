@@ -12,7 +12,7 @@ import {
   Stats,
   StatsData,
 } from '@linode/api-v4/lib/linodes/types';
-import * as Factory from 'factory.ts';
+import Factory from 'src/factories/factoryProxy';
 
 import { placementGroupFactory } from './placementGroups';
 
@@ -255,6 +255,7 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   alerts: linodeAlertsFactory.build(),
   backups: linodeBackupsFactory.build(),
   created: '2020-01-01',
+  disk_encryption: 'enabled',
   group: '',
   hypervisor: 'kvm',
   id: Factory.each((i) => i),
@@ -262,8 +263,9 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   ipv4: ['50.116.6.212', '192.168.203.1'],
   ipv6: '2600:3c00::f03c:92ff:fee2:6c40/64',
   label: Factory.each((i) => `linode-${i}`),
+  lke_cluster_id: null,
   placement_group: placementGroupFactory.build({
-    affinity_type: 'anti_affinity:local',
+    placement_group_type: 'anti_affinity:local',
     id: 1,
     label: 'pg-1',
   }),

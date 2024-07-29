@@ -1,10 +1,4 @@
 import {
-  CreateNodeBalancerConfig,
-  CreateNodeBalancerPayload,
-  Firewall,
-  NodeBalancer,
-  NodeBalancerConfig,
-  NodeBalancerStats,
   createNodeBalancer,
   createNodeBalancerConfig,
   deleteNodeBalancer,
@@ -13,164 +7,43 @@ import {
   getNodeBalancerConfigs,
   getNodeBalancerFirewalls,
   getNodeBalancerStats,
+  getNodeBalancerTypes,
   getNodeBalancers,
   updateNodeBalancer,
   updateNodeBalancerConfig,
 } from '@linode/api-v4';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { DateTime } from 'luxon';
 
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
-import { queryKey as firewallsQueryKey } from 'src/queries/firewalls';
-import { parseAPIDate } from 'src/utilities/date';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
-import { itemInListCreationHandler, itemInListMutationHandler } from './base';
-import { profileQueries } from './profile';
+import { firewallQueries } from './firewalls';
+import { profileQueries } from './profile/profile';
 
-export const queryKey = 'nodebalancers';
+import type {
+  APIError,
+  CreateNodeBalancerConfig,
+  CreateNodeBalancerPayload,
+  Filter,
+  Firewall,
+  NodeBalancer,
+  NodeBalancerConfig,
+  NodeBalancerStats,
+  Params,
+  PriceType,
+  ResourcePage,
+} from '@linode/api-v4';
+import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
-export const NODEBALANCER_STATS_NOT_READY_API_MESSAGE =
-  'Stats are unavailable at this time.';
-
-const getIsTooEarlyForStats = (created?: string) => {
-  if (!created) {
-    return false;
-  }
-
-  return parseAPIDate(created) > DateTime.local().minus({ minutes: 5 });
-};
-
-export const useNodeBalancerStats = (id: number, created?: string) => {
-  return useQuery<NodeBalancerStats, APIError[]>(
-    [queryKey, 'nodebalancer', id, 'stats'],
-    getIsTooEarlyForStats(created)
-      ? () =>
-          Promise.reject([{ reason: NODEBALANCER_STATS_NOT_READY_API_MESSAGE }])
-      : () => getNodeBalancerStats(id),
-    // We need to disable retries because the API will
-    // error if stats are not ready. If the default retry policy
-    // is used, a "stats not ready" state can't be shown because the
-    // query is still trying to request.
-    { refetchInterval: 20000, retry: false }
-  );
-};
-
-export const useNodeBalancersQuery = (params: Params, filter: Filter) =>
-  useQuery<ResourcePage<NodeBalancer>, APIError[]>(
-    [queryKey, 'paginated', params, filter],
-    () => getNodeBalancers(params, filter),
-    { keepPreviousData: true }
-  );
-
-export const useNodeBalancerQuery = (id: number, enabled = true) =>
-  useQuery<NodeBalancer, APIError[]>(
-    [queryKey, 'nodebalancer', id],
-    () => getNodeBalancer(id),
-    { enabled }
-  );
-
-export const useNodebalancerUpdateMutation = (id: number) => {
-  const queryClient = useQueryClient();
-  return useMutation<NodeBalancer, APIError[], Partial<NodeBalancer>>(
-    (data) => updateNodeBalancer(id, data),
-    {
-      onSuccess(data) {
-        queryClient.invalidateQueries([queryKey]);
-        queryClient.setQueryData([queryKey, 'nodebalancer', id], data);
-      },
-    }
-  );
-};
-
-export const useNodebalancerDeleteMutation = (id: number) => {
-  const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteNodeBalancer(id), {
-    onSuccess() {
-      queryClient.removeQueries([queryKey, 'nodebalancer', id]);
-      queryClient.invalidateQueries([queryKey]);
-    },
-  });
-};
-
-export const useNodebalancerCreateMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation<NodeBalancer, APIError[], CreateNodeBalancerPayload>(
-    createNodeBalancer,
-    {
-      onSuccess(data) {
-        queryClient.invalidateQueries([queryKey]);
-        queryClient.setQueryData([queryKey, 'nodebalancer', data.id], data);
-        // If a restricted user creates an entity, we must make sure grants are up to date.
-        queryClient.invalidateQueries(profileQueries.grants.queryKey);
-      },
-    }
-  );
-};
-
-export const useNodebalancerConfigCreateMutation = (id: number) => {
-  const queryClient = useQueryClient();
-  return useMutation<NodeBalancerConfig, APIError[], CreateNodeBalancerConfig>(
-    (data) => createNodeBalancerConfig(id, data),
-    itemInListCreationHandler(
-      [queryKey, 'nodebalancer', id, 'configs'],
-      queryClient
-    )
-  );
-};
-
-export const useNodebalancerConfigUpdateMutation = (nodebalancerId: number) => {
-  const queryClient = useQueryClient();
-  return useMutation<
-    NodeBalancerConfig,
-    APIError[],
-    Partial<CreateNodeBalancerConfig> & { configId: number }
-  >(
-    ({ configId, ...data }) =>
-      updateNodeBalancerConfig(nodebalancerId, configId, data),
-    itemInListMutationHandler(
-      [queryKey, 'nodebalancer', nodebalancerId, 'configs'],
-      queryClient
-    )
-  );
-};
-
-export const useNodebalancerConfigDeleteMutation = (nodebalancerId: number) => {
-  const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { configId: number }>(
-    ({ configId }) => deleteNodeBalancerConfig(nodebalancerId, configId),
-    {
-      onSuccess(_, vars) {
-        queryClient.setQueryData<NodeBalancerConfig[]>(
-          [queryKey, 'nodebalancer', nodebalancerId, 'configs'],
-          (oldData) => {
-            return (oldData ?? []).filter(
-              (config) => config.id !== vars.configId
-            );
-          }
-        );
-      },
-    }
-  );
-};
-
-export const useAllNodeBalancerConfigsQuery = (id: number) =>
-  useQuery<NodeBalancerConfig[], APIError[]>(
-    [queryKey, 'nodebalanacer', id, 'configs'],
-    () => getAllNodeBalancerConfigs(id),
-    { refetchInterval: 20000 }
+const getAllNodeBalancerTypes = () =>
+  getAll<PriceType>((params) => getNodeBalancerTypes(params))().then(
+    (results) => results.data
   );
 
 export const getAllNodeBalancerConfigs = (id: number) =>
@@ -183,57 +56,285 @@ export const getAllNodeBalancers = () =>
     (data) => data.data
   );
 
+export const nodebalancerQueries = createQueryKeys('nodebalancers', {
+  nodebalancer: (id: number) => ({
+    contextQueries: {
+      configurations: {
+        queryFn: () => getAllNodeBalancerConfigs(id),
+        queryKey: null,
+      },
+      firewalls: {
+        queryFn: () => getNodeBalancerFirewalls(id),
+        queryKey: null,
+      },
+      stats: {
+        queryFn: () => getNodeBalancerStats(id),
+        queryKey: null,
+      },
+    },
+    queryFn: () => getNodeBalancer(id),
+    queryKey: [id],
+  }),
+  nodebalancers: {
+    contextQueries: {
+      all: {
+        queryFn: getAllNodeBalancers,
+        queryKey: null,
+      },
+      infinite: (filter: Filter = {}) => ({
+        queryFn: ({ pageParam }) =>
+          getNodeBalancers({ page: pageParam, page_size: 25 }, filter),
+        queryKey: [filter],
+      }),
+      paginated: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getNodeBalancers(params, filter),
+        queryKey: [params, filter],
+      }),
+    },
+    queryKey: null,
+  },
+  types: {
+    queryFn: getAllNodeBalancerTypes,
+    queryKey: null,
+  },
+});
+
+export const useNodeBalancerStatsQuery = (id: number) => {
+  return useQuery<NodeBalancerStats, APIError[]>({
+    ...nodebalancerQueries.nodebalancer(id)._ctx.stats,
+    refetchInterval: 20000,
+    retry: false,
+  });
+};
+
+export const useNodeBalancersQuery = (params: Params, filter: Filter) =>
+  useQuery<ResourcePage<NodeBalancer>, APIError[]>({
+    ...nodebalancerQueries.nodebalancers._ctx.paginated(params, filter),
+    keepPreviousData: true,
+  });
+
+export const useNodeBalancerQuery = (id: number, enabled = true) =>
+  useQuery<NodeBalancer, APIError[]>({
+    ...nodebalancerQueries.nodebalancer(id),
+    enabled,
+  });
+
+export const useNodebalancerUpdateMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<NodeBalancer, APIError[], Partial<NodeBalancer>>({
+    mutationFn: (data) => updateNodeBalancer(id, data),
+    onSuccess(nodebalancer) {
+      // Invalidate paginated stores
+      queryClient.invalidateQueries({
+        queryKey: nodebalancerQueries.nodebalancers.queryKey,
+      });
+      // Update the NodeBalancer store
+      queryClient.setQueryData<NodeBalancer>(
+        nodebalancerQueries.nodebalancer(id).queryKey,
+        nodebalancer
+      );
+    },
+  });
+};
+
+export const useNodebalancerDeleteMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deleteNodeBalancer(id),
+    onSuccess() {
+      // Remove NodeBalancer queries for this specific NodeBalancer
+      queryClient.removeQueries({
+        queryKey: nodebalancerQueries.nodebalancer(id).queryKey,
+      });
+      // Invalidate paginated stores
+      queryClient.invalidateQueries({
+        queryKey: nodebalancerQueries.nodebalancers.queryKey,
+      });
+    },
+  });
+};
+
+export const useNodebalancerCreateMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<NodeBalancer, APIError[], CreateNodeBalancerPayload>({
+    mutationFn: createNodeBalancer,
+    onSuccess(nodebalancer, variables) {
+      // Invalidate paginated stores
+      queryClient.invalidateQueries({
+        queryKey: nodebalancerQueries.nodebalancers.queryKey,
+      });
+      // Prime the cache for this specific NodeBalancer
+      queryClient.setQueryData<NodeBalancer>(
+        nodebalancerQueries.nodebalancer(nodebalancer.id).queryKey,
+        nodebalancer
+      );
+      // If a restricted user creates an entity, we must make sure grants are up to date.
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.grants.queryKey,
+      });
+
+      // If a NodeBalancer is assigned to a firewall upon creation, make sure we invalidate that firewall
+      // so it reflects the new entity.
+      if (variables.firewall_id) {
+        // Invalidate the paginated list of firewalls because GET /v4/networking/firewalls returns all firewall entities
+        queryClient.invalidateQueries({
+          queryKey: firewallQueries.firewalls.queryKey,
+        });
+
+        // Invalidate the affected firewall
+        queryClient.invalidateQueries({
+          queryKey: firewallQueries.firewall(variables.firewall_id).queryKey,
+        });
+      }
+    },
+  });
+};
+
+export const useNodebalancerConfigCreateMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<NodeBalancerConfig, APIError[], CreateNodeBalancerConfig>({
+    mutationFn: (data) => createNodeBalancerConfig(id, data),
+    onSuccess(config) {
+      // Append new config to the configurations list
+      queryClient.setQueryData<NodeBalancerConfig[]>(
+        nodebalancerQueries.nodebalancer(id)._ctx.configurations.queryKey,
+        (previousData) => {
+          if (!previousData) {
+            return [config];
+          }
+          return [...previousData, config];
+        }
+      );
+    },
+  });
+};
+
+interface CreateNodeBalancerConfigWithConfig
+  extends Partial<CreateNodeBalancerConfig> {
+  configId: number;
+}
+
+export const useNodebalancerConfigUpdateMutation = (nodebalancerId: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    NodeBalancerConfig,
+    APIError[],
+    CreateNodeBalancerConfigWithConfig
+  >({
+    mutationFn: ({ configId, ...data }) =>
+      updateNodeBalancerConfig(nodebalancerId, configId, data),
+    onSuccess(config) {
+      // Update the config within the configs list
+      queryClient.setQueryData<NodeBalancerConfig[]>(
+        nodebalancerQueries.nodebalancer(nodebalancerId)._ctx.configurations
+          .queryKey,
+        (previousData) => {
+          if (!previousData) {
+            return [config];
+          }
+          const indexOfConfig = previousData.findIndex(
+            (c) => c.id === config.id
+          );
+          if (indexOfConfig === -1) {
+            return [...previousData, config];
+          }
+          const newConfigs = [...previousData];
+          newConfigs[indexOfConfig] = config;
+          return newConfigs;
+        }
+      );
+    },
+  });
+};
+
+export const useNodebalancerConfigDeleteMutation = (nodebalancerId: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], { configId: number }>({
+    mutationFn: ({ configId }) =>
+      deleteNodeBalancerConfig(nodebalancerId, configId),
+    onSuccess(_, vars) {
+      queryClient.setQueryData<NodeBalancerConfig[]>(
+        nodebalancerQueries.nodebalancer(nodebalancerId)._ctx.configurations
+          .queryKey,
+        (oldData) => {
+          return (oldData ?? []).filter(
+            (config) => config.id !== vars.configId
+          );
+        }
+      );
+    },
+  });
+};
+
+export const useAllNodeBalancerConfigsQuery = (id: number) =>
+  useQuery<NodeBalancerConfig[], APIError[]>({
+    ...nodebalancerQueries.nodebalancer(id)._ctx.configurations,
+    refetchInterval: 20000,
+  });
+
 // Please don't use
 export const useAllNodeBalancersQuery = (enabled = true) =>
-  useQuery<NodeBalancer[], APIError[]>([queryKey, 'all'], getAllNodeBalancers, {
+  useQuery<NodeBalancer[], APIError[]>({
+    ...nodebalancerQueries.nodebalancers._ctx.all,
     enabled,
   });
 
 export const useInfiniteNodebalancersQuery = (filter: Filter) =>
-  useInfiniteQuery<ResourcePage<NodeBalancer>, APIError[]>(
-    [queryKey, 'infinite', filter],
-    ({ pageParam }) =>
-      getNodeBalancers({ page: pageParam, page_size: 25 }, filter),
-    {
-      getNextPageParam: ({ page, pages }) => {
-        if (page === pages) {
-          return undefined;
-        }
-        return page + 1;
-      },
-    }
-  );
-
-export const nodebalanacerEventHandler = ({
-  event,
-  queryClient,
-}: EventHandlerData) => {
-  if (event.action.startsWith('nodebalancer_config')) {
-    queryClient.invalidateQueries([
-      queryKey,
-      'nodebalancer',
-      event.entity!.id,
-      'configs',
-    ]);
-  } else if (event.action.startsWith('nodebalancer_delete')) {
-    queryClient.invalidateQueries([firewallsQueryKey]);
-  } else {
-    queryClient.invalidateQueries([queryKey, 'all']);
-    queryClient.invalidateQueries([queryKey, 'paginated']);
-    queryClient.invalidateQueries([queryKey, 'infinite']);
-    if (event.entity?.id) {
-      queryClient.invalidateQueries([
-        queryKey,
-        'nodebalancer',
-        event.entity.id,
-      ]);
-    }
-  }
-};
+  useInfiniteQuery<ResourcePage<NodeBalancer>, APIError[]>({
+    ...nodebalancerQueries.nodebalancers._ctx.infinite(filter),
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+  });
 
 export const useNodeBalancersFirewallsQuery = (nodebalancerId: number) =>
   useQuery<ResourcePage<Firewall>, APIError[]>(
-    [queryKey, 'nodebalancer', nodebalancerId, 'firewalls'],
-    () => getNodeBalancerFirewalls(nodebalancerId),
-    queryPresets.oneTimeFetch
+    nodebalancerQueries.nodebalancer(nodebalancerId)._ctx.firewalls
   );
+
+export const useNodeBalancerTypesQuery = () =>
+  useQuery<PriceType[], APIError[]>({
+    ...queryPresets.oneTimeFetch,
+    ...nodebalancerQueries.types,
+  });
+
+export const nodebalancerEventHandler = ({
+  event,
+  queryClient,
+}: EventHandlerData) => {
+  const nodebalancerId = event.entity?.id;
+
+  if (event.action.startsWith('nodebalancer_node')) {
+    // We don't store NodeBalancer nodes is React Query currently, so just skip these events
+    return;
+  }
+
+  if (nodebalancerId === undefined) {
+    // Ignore events that don't have an associated NodeBalancer
+    return;
+  }
+
+  if (event.action.startsWith('nodebalancer_config')) {
+    // If the event is about a NodeBalancer's configs, just invalidate the configs
+    queryClient.invalidateQueries({
+      queryKey: nodebalancerQueries.nodebalancer(nodebalancerId)._ctx
+        .configurations.queryKey,
+    });
+  } else {
+    // If we've made it here, the event is about a NodeBalancer
+
+    // Invalidate the specific NodeBalancer
+    queryClient.invalidateQueries({
+      exact: true,
+      queryKey: nodebalancerQueries.nodebalancer(nodebalancerId).queryKey,
+    });
+
+    // Invalidate all paginated lists
+    queryClient.invalidateQueries({
+      queryKey: nodebalancerQueries.nodebalancers.queryKey,
+    });
+  }
+};

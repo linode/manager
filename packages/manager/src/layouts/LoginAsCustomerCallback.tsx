@@ -7,23 +7,28 @@
  */
 
 import { PureComponent } from 'react';
-import { MapDispatchToProps, connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-type CombinedProps = DispatchProps & RouteComponentProps;
+import type { MapDispatchToProps } from 'react-redux';
+import type { RouteComponentProps } from 'react-router-dom';
+import type { BaseQueryParams } from 'src/utilities/queryParams';
 
-interface QueryParams {
+interface LoginAsCustomerCallbackProps
+  extends DispatchProps,
+    RouteComponentProps {}
+
+interface QueryParams extends BaseQueryParams {
   access_token: string;
   destination: string;
   expires_in: string;
   token_type: string;
 }
 
-export class LoginAsCustomerCallback extends PureComponent<CombinedProps> {
+export class LoginAsCustomerCallback extends PureComponent<LoginAsCustomerCallbackProps> {
   componentDidMount() {
     /**
      * If this URL doesn't have a fragment, or doesn't have enough entries, we know we don't have
@@ -44,9 +49,9 @@ export class LoginAsCustomerCallback extends PureComponent<CombinedProps> {
       return history.push('/');
     }
 
-    const hashParams = (getQueryParamsFromQueryString(
+    const hashParams = getQueryParamsFromQueryString<QueryParams>(
       location.hash.substr(1)
-    ) as unknown) as QueryParams;
+    );
 
     const {
       access_token: accessToken,
@@ -115,7 +120,4 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 const connected = connect(undefined, mapDispatchToProps);
 
-export default compose<CombinedProps, {}>(
-  connected,
-  withRouter
-)(LoginAsCustomerCallback);
+export default connected(withRouter(LoginAsCustomerCallback));

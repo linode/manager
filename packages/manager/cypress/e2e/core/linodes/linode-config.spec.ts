@@ -1,14 +1,8 @@
-import { createLinode } from 'support/api/linodes';
-import { containsVisible } from 'support/helpers';
+import { createTestLinode } from 'support/util/linodes';
 import { ui } from 'support/ui';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
+import { mockGetVPC } from 'support/intercepts/vpc';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 import { getRegionById } from 'support/util/regions';
 import { mockGetVLANs } from 'support/intercepts/vlans';
@@ -16,9 +10,12 @@ import {
   interceptRebootLinode,
   mockGetLinodeDetails,
   mockGetLinodeDisks,
+  mockGetLinodeKernels,
   mockGetLinodeVolumes,
+  mockGetLinodeKernel,
 } from 'support/intercepts/linodes';
 import {
+  interceptGetLinodeConfigs,
   interceptDeleteLinodeConfig,
   interceptCreateLinodeConfigs,
   interceptUpdateLinodeConfigs,
@@ -26,441 +23,321 @@ import {
   mockCreateLinodeConfigs,
   mockUpdateLinodeConfigs,
 } from 'support/intercepts/configs';
+import { fetchLinodeConfigs } from 'support/util/linodes';
 import {
-  createLinodeAndGetConfig,
-  createAndBootLinode,
-} from 'support/util/linodes';
-import {
+  kernelFactory,
   vpcFactory,
   linodeFactory,
   linodeConfigFactory,
   VLANFactory,
+  LinodeConfigInterfaceFactory,
+  LinodeConfigInterfaceFactoryWithVPC,
 } from '@src/factories';
 import { randomNumber, randomLabel } from 'support/util/random';
+import { fetchAllKernels, findKernelById } from 'support/util/kernels';
+import { NOT_NATTED_HELPER_TEXT } from 'src/features/VPCs/constants';
 
-import type { Config, Linode, VLAN, VPC, Disk, Region } from '@linode/api-v4';
+import type { CreateTestLinodeOptions } from 'support/util/linodes';
+import type {
+  Config,
+  CreateLinodeRequest,
+  InterfacePurpose,
+  Linode,
+  VLAN,
+  Region,
+  Kernel,
+} from '@linode/api-v4';
 
-authenticate();
+/**
+ * Returns a Promise that resolves to a new test Linode and its first config object.
+ *
+ * @param interfaces - Interfaces with which to create test Linode.
+ *
+ * @throws If created Linode does not have any configs.
+ */
+const createLinodeAndGetConfig = async (
+  payload?: Partial<CreateLinodeRequest> | null,
+  options?: Partial<CreateTestLinodeOptions>
+) => {
+  const linode = await createTestLinode(payload, options);
 
-describe('Linode Config', () => {
-  const region: Region = getRegionById('us-southeast');
-  const diskLabel: string = 'Debian 10 Disk';
-  const mockConfig: Config = linodeConfigFactory.build({
-    id: randomNumber(),
-  });
-  const mockDisks: Disk[] = [
-    {
-      id: 44311273,
-      status: 'ready',
-      label: diskLabel,
-      created: '2020-08-21T17:26:14',
-      updated: '2020-08-21T17:26:30',
-      filesystem: 'ext4',
-      size: 81408,
-    },
-    {
-      id: 44311274,
-      status: 'ready',
-      label: '512 MB Swap Image',
-      created: '2020-08-21T17:26:14',
-      updated: '2020-08-21T17:26:31',
-      filesystem: 'swap',
-      size: 512,
-    },
-  ];
-  const mockVLANs: VLAN[] = VLANFactory.buildList(2);
-  const mockVPCs: VPC[] = vpcFactory.buildList(5);
-
-  before(() => {
-    mockConfig.interfaces.splice(2, 1);
-  });
-
-  beforeEach(() => {
-    cleanUp(['linodes']);
-  });
-
-  it('Creates a new config and list all configs', () => {
-    createLinode().then((linode: Linode) => {
-      interceptCreateLinodeConfigs(linode.id).as('postLinodeConfigs');
-
-      cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
-
-      cy.findByLabelText('List of Configurations').within(() => {
-        containsVisible('My Debian 10 Disk Profile – GRUB 2');
-      });
-      containsVisible('My Debian 10 Disk Profile – GRUB 2');
-
-      cy.findByText('Add Configuration').click();
-      ui.dialog
-        .findByTitle('Add Configuration')
-        .should('be.visible')
-        .within(() => {
-          cy.get('#label').type(`${linode.id}-test-config`);
-          ui.buttonGroup
-            .findButtonByTitle('Add Configuration')
-            .scrollIntoView()
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
-
-      cy.wait('@postLinodeConfigs')
-        .its('response.statusCode')
-        .should('eq', 200);
-
-      cy.findByLabelText('List of Configurations').within(() => {
-        cy.get('tr').should('have.length', 2);
-        containsVisible(
-          `${linode.id}-test-config – Latest 64 bit (6.2.9-x86_64-linode160)`
-        );
-        containsVisible('eth0 – Public Internet');
-      });
-    });
-  });
-
-  it('Creates a new config and assigns a VPC as a network interface', () => {
-    const mockLinode = linodeFactory.build({
-      region: region.id,
-      type: dcPricingMockLinodeTypes[0].id,
-    });
-
-    const mockVPC = vpcFactory.build({
-      id: 1,
-      label: randomLabel(),
-    });
-
-    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
-    mockGetVPCs(mockVPCs).as('getVPCs');
-    mockGetLinodeDisks(mockLinode.id, mockDisks).as('getDisks');
-    mockGetLinodeConfigs(mockLinode.id, []);
-    mockGetVPC(mockVPC).as('getVPC');
-    mockGetLinodeVolumes(mockLinode.id, []).as('getVolumes');
-
-    cy.visitWithLogin(`/linodes/${mockLinode.id}/configurations`);
-    cy.wait([
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getLinode',
-      '@getVPCs',
-      '@getDisks',
-      '@getVolumes',
-    ]);
-
-    // Confirm that there is no configuration yet.
-    cy.findByLabelText('List of Configurations').within(() => {
-      cy.contains(`${mockConfig.label} – GRUB 2`).should('not.exist');
-    });
-
-    mockGetVLANs(mockVLANs);
-    mockGetVPC(mockVPC).as('getVPC');
-    mockCreateLinodeConfigs(mockLinode.id, mockConfig).as('createLinodeConfig');
-    mockGetLinodeConfigs(mockLinode.id, [mockConfig]).as('getLinodeConfigs');
-    cy.findByText('Add Configuration').click();
-    ui.dialog
-      .findByTitle('Add Configuration')
-      .should('be.visible')
-      .within(() => {
-        cy.get('#label').type(`${mockConfig.label}`);
-        // Confirm that "VPC" can be selected for either "eth0", "eth1", or "eth2".
-        // Add VPC to eth0
-        cy.get('[data-qa-textfield-label="eth0"]')
-          .scrollIntoView()
-          .parent()
-          .parent()
-          .within(() => {
-            ui.select
-              .findByText('Public Internet')
-              .should('be.visible')
-              .click()
-              .type('VPC{enter}');
-          });
-        // Add VPC to eth1
-        cy.get('[data-qa-textfield-label="eth1"]')
-          .scrollIntoView()
-          .parent()
-          .parent()
-          .within(() => {
-            ui.select
-              .findByText('None')
-              .should('be.visible')
-              .click()
-              .type('VPC{enter}');
-          });
-        // Add VPC to eth2
-        cy.get('[data-qa-textfield-label="eth2"]')
-          .scrollIntoView()
-          .parent()
-          .parent()
-          .within(() => {
-            ui.select
-              .findByText('None')
-              .should('be.visible')
-              .click()
-              .type('VPC{enter}');
-          });
-        ui.buttonGroup
-          .findButtonByTitle('Add Configuration')
-          .scrollIntoView()
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-    cy.wait(['@createLinodeConfig', '@getLinodeConfigs', '@getVPC']);
-
-    // Confirm that VLAN and VPC have been assigned.
-    cy.findByLabelText('List of Configurations').within(() => {
-      cy.get('tr').should('have.length', 2);
-      containsVisible(`${mockConfig.label} – GRUB 2`);
-      containsVisible('eth0 – Public Internet');
-      containsVisible(`eth2 – VPC: ${mockVPC.label}`);
-    });
-  });
-
-  it('Edits an existing config', () => {
-    cy.defer(
-      createLinodeAndGetConfig({
-        waitForLinodeToBeRunning: false,
-        linodeConfigRequestOverride: {
-          label: 'cy-test-edit-config-linode',
-          interfaces: [
-            {
-              ipam_address: '',
-              label: '',
-              purpose: 'public',
-            },
-            {
-              ipam_address: '',
-              label: 'testvlan',
-              purpose: 'vlan',
-            },
-          ],
-          region: 'us-east',
-        },
-      }),
-      'creating a linode and getting its config'
-    ).then(([linode, config]: [Linode, Config]) => {
-      cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
-      interceptUpdateLinodeConfigs(linode.id, config.id).as('putLinodeConfigs');
-
-      containsVisible('My Debian 10 Disk Profile – GRUB 2');
-      cy.findByText('Edit').click();
-
-      ui.dialog
-        .findByTitle('Edit Configuration')
-        .should('be.visible')
-        .within(() => {
-          cy.get('#ipam-input-1').type('192.0.2.0/25');
-          ui.button
-            .findByTitle('Save Changes')
-            .scrollIntoView()
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
-
-      cy.wait('@putLinodeConfigs').its('response.statusCode').should('eq', 200);
-
-      cy.findByLabelText('List of Configurations').within(() => {
-        containsVisible('eth0 – Public Internet');
-        containsVisible('eth1 – VLAN: testvlan (192.0.2.0/25)');
-      });
-    });
-  });
-
-  it('Edits an existing config and assigns a VPC as a network interface', () => {
-    const mockLinode = linodeFactory.build({
-      region: region.id,
-      type: dcPricingMockLinodeTypes[0].id,
-    });
-
-    const mockVPC = vpcFactory.build({
-      id: 1,
-      label: randomLabel(),
-    });
-
-    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
-    mockGetVPCs(mockVPCs).as('getVPCs');
-    mockGetLinodeDisks(mockLinode.id, mockDisks).as('getDisks');
-    mockGetLinodeConfigs(mockLinode.id, [mockConfig]).as('getConfig');
-    mockGetVPC(mockVPC).as('getVPC');
-    mockGetLinodeVolumes(mockLinode.id, []).as('getVolumes');
-
-    cy.visitWithLogin(`/linodes/${mockLinode.id}/configurations`);
-    cy.wait([
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getLinode',
-      '@getConfig',
-      '@getVPCs',
-      '@getDisks',
-      '@getVolumes',
-    ]);
-
-    cy.findByLabelText('List of Configurations').within(() => {
-      containsVisible(`${mockConfig.label} – GRUB 2`);
-    });
-    cy.findByText('Edit').click();
-
-    mockGetVLANs(mockVLANs);
-    mockGetVPC(mockVPC).as('getVPC');
-    mockUpdateLinodeConfigs(mockLinode.id, mockConfig).as(
-      'updateLinodeConfigs'
+  const config = (await fetchLinodeConfigs(linode.id))[0];
+  if (!config) {
+    throw new Error(
+      `Linode '${linode.label}' (ID ${linode.id}) does not have any configs`
     );
-    mockGetLinodeConfigs(mockLinode.id, [mockConfig]).as('getLinodeConfigs');
-    ui.dialog
-      .findByTitle('Edit Configuration')
-      .should('be.visible')
-      .within(() => {
-        // Change eth0 to VPC
-        cy.get('[data-qa-textfield-label="eth0"]')
-          .scrollIntoView()
-          .parent()
-          .parent()
-          .within(() => {
-            ui.select
-              .findByText('Public Internet')
-              .should('be.visible')
-              .click()
-              .type('VPC{enter}');
-          });
-        // Change eth1 to VPC
-        cy.get('[data-qa-textfield-label="eth1"]')
-          .scrollIntoView()
-          .parent()
-          .parent()
-          .within(() => {
-            ui.select
-              .findByText('VLAN')
-              .should('be.visible')
-              .click()
-              .type('VPC{enter}');
-          });
-        // Change eth2 to VPC
-        cy.get('[data-qa-textfield-label="eth2"]')
-          .scrollIntoView()
-          .parent()
-          .parent()
-          .within(() => {
-            ui.select
-              .findByText('VPC')
-              .should('be.visible')
-              .click()
-              .type('VPC{enter}');
-          });
-        ui.button
-          .findByTitle('Save Changes')
-          .scrollIntoView()
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-    cy.wait(['@updateLinodeConfigs', '@getLinodeConfigs', '@getVPC']);
+  }
 
-    // Confirm that VLAN and VPC have been assigned.
-    cy.findByLabelText('List of Configurations').within(() => {
-      cy.get('tr').should('have.length', 2);
-      containsVisible(`${mockConfig.label} – GRUB 2`);
-      containsVisible('eth0 – Public Internet');
-      containsVisible(`eth2 – VPC: ${mockVPC.label}`);
+  return [linode, config];
+};
+
+let kernels: Kernel[] = [];
+authenticate();
+describe('Linode Config management', () => {
+  describe('End-to-End', () => {
+    before(() => {
+      cleanUp('linodes');
+
+      // Fetch Linode kernel data from the API.
+      // We'll use this data in the tests to confirm that config labels are rendered correctly.
+      cy.defer(() => fetchAllKernels(), 'Fetching Linode kernels...').then(
+        (fetchedKernels) => {
+          kernels = fetchedKernels;
+        }
+      );
     });
-  });
 
-  it('Boots an existing config', () => {
-    cy.defer(createAndBootLinode()).then((linode: Linode) => {
-      cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
-      interceptRebootLinode(linode.id).as('rebootLinode');
+    /*
+     * - Tests Linode config creation end-to-end using real API requests.
+     * - Confirms that a config is listed after a Linode has been created.
+     * - Confirms that config creation can be initiated and completed successfully.
+     * - Confirms that new config is automatically listed after being created.
+     */
+    it('Creates a config', () => {
+      // Wait for Linode to be created for kernel data to be retrieved.
+      cy.defer(() => createTestLinode(), 'Creating Linode').then(
+        (linode: Linode) => {
+          interceptCreateLinodeConfigs(linode.id).as('postLinodeConfigs');
+          interceptGetLinodeConfigs(linode.id).as('getLinodeConfigs');
 
-      containsVisible('My Debian 10 Disk Profile – GRUB 2');
-      cy.findByText('Boot').click();
+          cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
 
-      ui.dialog
-        .findByTitle('Confirm Boot')
-        .should('be.visible')
-        .within(() => {
-          containsVisible(
-            'Are you sure you want to boot "My Debian 10 Disk Profile"?'
+          // Confirm that initial config is listed in Linode configurations table.
+          cy.wait('@getLinodeConfigs');
+          cy.defer(() => fetchLinodeConfigs(linode.id)).then(
+            (configs: Config[]) => {
+              cy.findByLabelText('List of Configurations').within(() => {
+                configs.forEach((config) => {
+                  const kernel = findKernelById(kernels, config.kernel);
+                  cy.findByText(`${config.label} – ${kernel.label}`).should(
+                    'be.visible'
+                  );
+                });
+              });
+            }
           );
-          ui.button
-            .findByTitle('Boot')
+
+          // Add new configuration.
+          cy.findByText('Add Configuration').click();
+          ui.dialog
+            .findByTitle('Add Configuration')
             .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
+            .within(() => {
+              cy.get('#label').type(`${linode.id}-test-config`);
+              ui.buttonGroup
+                .findButtonByTitle('Add Configuration')
+                .scrollIntoView()
+                .should('be.visible')
+                .should('be.enabled')
+                .click();
+            });
 
-      cy.wait('@rebootLinode').its('response.statusCode').should('eq', 200);
+          // Confirm that config creation request was successful.
+          cy.wait('@postLinodeConfigs')
+            .its('response.statusCode')
+            .should('eq', 200);
 
-      ui.toast.assertMessage(
-        'Successfully booted config My Debian 10 Disk Profile'
+          // Confirm that new config and existing config are both listed.
+          cy.wait('@getLinodeConfigs');
+          cy.defer(() => fetchLinodeConfigs(linode.id)).then(
+            (configs: Config[]) => {
+              cy.findByLabelText('List of Configurations').within(() => {
+                configs.forEach((config) => {
+                  const kernel = findKernelById(kernels, config.kernel);
+                  cy.findByText(`${config.label} – ${kernel.label}`)
+                    .should('be.visible')
+                    .closest('tr')
+                    .within(() => {
+                      cy.findByText('eth0 – Public Internet').should(
+                        'be.visible'
+                      );
+                    });
+                });
+              });
+            }
+          );
+        }
       );
-      cy.findByText('REBOOTING').should('be.visible');
     });
-  });
 
-  it('Clones an existing config', () => {
-    // Create a destination Linode to clone to
-    // And delete the default config
-    createLinode({
-      label: 'cy-test-clone-destination-linode',
-    }).then((linode: Linode) => {
-      cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
+    /**
+     * - Tests Linode config edit flow end-to-end using real API requests.
+     * - Confirms that an existing config can be edited.
+     * - Confirms that updated config data is automatically displayed after editing.
+     */
+    it('Edits a config', () => {
+      // Config interfaces to use when creating test Linode.
+      const interfaces = [
+        {
+          ipam_address: '',
+          label: '',
+          purpose: 'public' as InterfacePurpose,
+        },
+        {
+          ipam_address: '',
+          label: 'testvlan',
+          purpose: 'vlan' as InterfacePurpose,
+        },
+      ];
 
-      ui.actionMenu
-        .findByTitle('Action menu for Linode Config My Debian 10 Disk Profile')
-        .should('be.visible')
-        .click();
-      ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
-
-      ui.dialog
-        .findByTitle('Confirm Delete')
-        .should('be.visible')
-        .within(() => {
-          ui.button
-            .findByTitle('Delete')
-            .scrollIntoView()
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
-
-      ui.toast.assertMessage(
-        'Configuration My Debian 10 Disk Profile successfully deleted'
-      );
-      cy.findByLabelText('List of Configurations').within(() => {
-        containsVisible('No data to display.');
-      });
-
-      // Create a source Linode to clone from
+      // Create a Linode and wait for its Config to be fetched before proceeding.
       cy.defer(
-        createLinodeAndGetConfig({
-          waitForLinodeToBeRunning: true,
-          linodeConfigRequestOverride: {
-            label: 'cy-test-clone-origin-linode',
-          },
-        }),
+        () => createLinodeAndGetConfig({ interfaces }, { waitForDisks: true }),
         'creating a linode and getting its config'
       ).then(([linode, config]: [Linode, Config]) => {
-        interceptDeleteLinodeConfig(linode.id, config.id).as(
-          'deleteLinodeConfig'
-        );
-        cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
+        // Get kernel info for config.
+        const kernel = findKernelById(kernels, config.kernel);
+        const newIpamAddress = '192.0.2.0/25';
 
-        // Add a sharable config to the source Linode
-        cy.findByText('Add Configuration').click();
+        cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
+        interceptUpdateLinodeConfigs(linode.id, config.id).as(
+          'putLinodeConfigs'
+        );
+
+        // Confirm that config is listed as expected, then click "Edit".
+        cy.contains(`${config.label} – ${kernel.label}`).should('be.visible');
+        cy.findByText('Edit').click();
+
+        // Enter a new IPAM address for eth1 (VLAN), then click "Save Changes"
+        ui.dialog
+          .findByTitle('Edit Configuration')
+          .should('be.visible')
+          .within(() => {
+            cy.get('#ipam-input-1').type(newIpamAddress);
+            ui.button
+              .findByTitle('Save Changes')
+              .scrollIntoView()
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+
+        // Confirm that config update request succeeded and that toast appears.
+        cy.wait('@putLinodeConfigs')
+          .its('response.statusCode')
+          .should('eq', 200);
+        ui.toast.assertMessage(
+          `Configuration ${config.label} successfully updated`
+        );
+
+        // Confirm that updated IPAM is automatically listed in config table.
+        cy.findByLabelText('List of Configurations').within(() => {
+          const configKernel = findKernelById(kernels, config.kernel);
+          cy.findByText(`${config.label} – ${configKernel.label}`)
+            .should('be.visible')
+            .closest('tr')
+            .within(() => {
+              cy.contains('eth0 – Public Internet').should('be.visible');
+              cy.contains(`eth1 – VLAN: testvlan (${newIpamAddress})`).should(
+                'be.visible'
+              );
+            });
+        });
+      });
+    });
+
+    /*
+     * - Confirms Linode config boot flow end-to-end using real API requests.
+     * - Confirms that API reboot request succeeds and Cloud UI automatically updates to reflect reboot.
+     */
+    it('Boots a config', () => {
+      cy.defer(
+        () =>
+          createLinodeAndGetConfig(
+            { booted: true },
+            { waitForBoot: true, securityMethod: 'vlan_no_internet' }
+          ),
+        'Creating and booting test Linode'
+      ).then(([linode, config]: [Linode, Config]) => {
+        const kernel = findKernelById(kernels, config.kernel);
+
+        cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
+        interceptRebootLinode(linode.id).as('rebootLinode');
+
+        // Confirm that Linode config is listed, then click its "Boot" button.
+        cy.findByText(`${config.label} – ${kernel.label}`)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            cy.findByText('Boot').click();
+          });
+
+        // Proceed through boot confirmation dialog.
+        ui.dialog
+          .findByTitle('Confirm Boot')
+          .should('be.visible')
+          .within(() => {
+            cy.contains(
+              `Are you sure you want to boot "${config.label}"?`
+            ).should('be.visible');
+            ui.button
+              .findByTitle('Boot')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+
+        // Confirm that API request succeeds, toast appears, and UI updates to reflect reboot.
+        cy.wait('@rebootLinode').its('response.statusCode').should('eq', 200);
+        ui.toast.assertMessage(`Successfully booted config ${config.label}`);
+        cy.findByText('REBOOTING').should('be.visible');
+      });
+    });
+
+    /*
+     * - Confirms Linode config clone flow end-to-end using real API requests.
+     * - Confirms that API config clone requests succeed.
+     * - Confirms that Cloud UI automatically updates to reflect clone-in-progress.
+     */
+    it('Clones a config', () => {
+      // Create clone source and destination Linodes.
+      // Use `vlan_no_internet` security method.
+      // This works around an issue where the Linode API responds with a 400
+      // when attempting to interact with it shortly after booting up when the
+      // Linode is attached to a Cloud Firewall.
+      const createCloneTestLinodes = async () => {
+        return Promise.all([
+          createTestLinode(
+            { booted: true },
+            { securityMethod: 'vlan_no_internet', waitForBoot: true }
+          ),
+          createTestLinode(
+            { booted: true },
+            { securityMethod: 'vlan_no_internet' }
+          ),
+        ]);
+      };
+
+      // Create clone and source destination Linodes, then proceed with clone flow.
+      cy.defer(
+        () => createCloneTestLinodes(),
+        'Waiting for 2 Linodes to be created'
+      ).then(([sourceLinode, destLinode]: [Linode, Linode]) => {
+        const kernel = findKernelById(kernels, 'linode/latest-64bit');
+        const sharedConfigLabel = 'cy-test-sharable-config';
+
+        cy.visitWithLogin(`/linodes/${sourceLinode.id}/configurations`);
+
+        // Add a new configuration that we can share across our Linodes.
+        ui.button
+          .findByTitle('Add Configuration')
+          .should('be.enabled')
+          .should('be.visible')
+          .click();
+
         ui.dialog
           .findByTitle('Add Configuration')
           .should('be.visible')
           .within(() => {
-            cy.get('#label').type(`sharable-configuration`);
+            cy.findByLabelText('Label', { exact: false })
+              .should('be.visible')
+              .type(sharedConfigLabel);
+
+            cy.findByText('Select a Kernel')
+              .scrollIntoView()
+              .click()
+              .type('Latest 64 bit{enter}');
+
             ui.buttonGroup
               .findButtonByTitle('Add Configuration')
               .scrollIntoView()
@@ -469,81 +346,317 @@ describe('Linode Config', () => {
               .click();
           });
 
+        // Confirm that new configuration is listed in table.
         cy.findByLabelText('List of Configurations').within(() => {
-          cy.get('tr').should('have.length', 2);
-          containsVisible(
-            `sharable-configuration – Latest 64 bit (6.2.9-x86_64-linode160)`
-          );
-          containsVisible('eth0 – Public Internet');
+          cy.findByText(`${sharedConfigLabel} – ${kernel.label}`)
+            .should('be.visible')
+            .closest('tr')
+            .within(() => {
+              cy.findByText('eth0 – Public Internet').should('be.visible');
+            });
         });
 
-        // Clone the thing
+        // Initiate configuration clone flow.
         ui.actionMenu
-          .findByTitle('Action menu for Linode Config sharable-configuration')
+          .findByTitle(`Action menu for Linode Config ${sharedConfigLabel}`)
           .should('be.visible')
           .click();
+
         ui.actionMenuItem.findByTitle('Clone').should('be.visible').click();
 
         cy.findByTestId('config-clone-selection-details')
           .should('be.visible')
           .within(() => {
             ui.button.findByTitle('Clone').should('be.disabled');
-            cy.findByRole('combobox').should('be.visible').click();
-            ui.select
-              .findItemByText('cy-test-clone-destination-linode')
-              .click();
+            cy.findByLabelText('Linode').should('be.visible').click();
+
+            ui.select.findItemByText(destLinode.label).click();
             ui.button.findByTitle('Clone').should('be.enabled').click();
           });
 
+        // Confirm toast message and that UI updates to reflect clone in progress.
         ui.toast.assertMessage(
-          'Linode cy-test-clone-origin-linode successfully cloned to cy-test-clone-destination-linode.'
+          `Linode ${sourceLinode.label} successfully cloned to ${destLinode.label}.`
         );
+        cy.findByText(/CLONING \(\d+%\)/).should('be.visible');
+      });
+    });
+
+    /*
+     * - Confirms Linode config delete flow end-to-end using real API requests.
+     * - Confirms that config can be deleted and related API requests succeed.
+     * - Confirms that Cloud Manager UI automatically updates to reflect deleted config.
+     */
+    it('Deletes a config', () => {
+      cy.defer(
+        () => createLinodeAndGetConfig(),
+        'creating a linode and getting its config'
+      ).then(([linode, config]: [Linode, Config]) => {
+        // Get kernel info for config to be deleted.
+        const kernel = findKernelById(kernels, config.kernel);
+
+        interceptDeleteLinodeConfig(linode.id, config.id).as(
+          'deleteLinodeConfig'
+        );
+        cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
+
+        // Confirm that config is listed and initiate deletion.
+        cy.findByText(`${config.label} – ${kernel.label}`).should('be.visible');
+        ui.actionMenu
+          .findByTitle(`Action menu for Linode Config ${config.label}`)
+          .should('be.visible')
+          .click();
+
+        ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
+        // Confirm config deletion.
+        ui.dialog
+          .findByTitle('Confirm Delete')
+          .should('be.visible')
+          .within(() => {
+            ui.button
+              .findByTitle('Delete')
+              .scrollIntoView()
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+
+        // Confirm request succeeds, toast appears, and config is removed from list.
+        cy.wait('@deleteLinodeConfig')
+          .its('response.statusCode')
+          .should('eq', 200);
+
+        ui.toast.assertMessage(
+          `Configuration ${config.label} successfully deleted`
+        );
+
+        cy.findByLabelText('List of Configurations').within(() => {
+          cy.contains('No data to display.').should('be.visible');
+        });
       });
     });
   });
 
-  it('Deletes an existing config', () => {
-    cy.defer(
-      createLinodeAndGetConfig({
-        linodeConfigRequestOverride: {
-          label: 'cy-test-delete-config-linode',
-        },
-      }),
-      'creating a linode and getting its config'
-    ).then(([linode, config]: [Linode, Config]) => {
-      interceptDeleteLinodeConfig(linode.id, config.id).as(
-        'deleteLinodeConfig'
+  describe('Mocked', () => {
+    const region: Region = getRegionById('us-southeast');
+    const mockKernel = kernelFactory.build();
+    const mockVPC = vpcFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
+
+    // Mock config with public internet for eth0 and VLAN for eth1.
+    const mockConfig: Config = linodeConfigFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      kernel: mockKernel.id,
+      interfaces: [
+        LinodeConfigInterfaceFactory.build({
+          ipam_address: null,
+          purpose: 'public',
+          label: null,
+        }),
+        LinodeConfigInterfaceFactory.build({
+          label: randomLabel(),
+          purpose: 'vlan',
+        }),
+      ],
+    });
+
+    const mockVLANs: VLAN[] = VLANFactory.buildList(2);
+
+    /*
+     * - Tests Linode config create and VPC interface assignment UI flows using mock API data.
+     * - Confirms that VPC can be assigned as eth0, eth1, and eth2.
+     * - Confirms public internet access/NAT helper text appears when VPC is set as eth0.
+     * - Confirms that "REBOOT NEEDED" status indicator appears upon creating VPC config.
+     */
+    it('Creates a new config and assigns a VPC as a network interface', () => {
+      const mockLinode = linodeFactory.build({
+        region: region.id,
+        type: dcPricingMockLinodeTypes[0].id,
+      });
+
+      // Mock config with VPC for eth0 and no other interfaces.
+      const mockConfigWithVpc: Config = {
+        ...mockConfig,
+        interfaces: [
+          LinodeConfigInterfaceFactoryWithVPC.build({
+            vpc_id: mockVPC.id,
+            active: false,
+            label: null,
+          }),
+        ],
+      };
+
+      // Mock a Linode with no existing configs, then visit its details page.
+      mockGetLinodeKernel(mockKernel.id, mockKernel);
+      mockGetLinodeKernels([mockKernel]);
+      mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
+      mockGetLinodeDisks(mockLinode.id, []).as('getDisks');
+      mockGetLinodeVolumes(mockLinode.id, []).as('getVolumes');
+      mockGetLinodeConfigs(mockLinode.id, []).as('getConfigs');
+      mockGetVPC(mockVPC).as('getVPC');
+      mockGetVLANs(mockVLANs);
+
+      cy.visitWithLogin(`/linodes/${mockLinode.id}/configurations`);
+      cy.wait(['@getConfigs', '@getDisks', '@getLinode', '@getVolumes']);
+
+      // Confirm that there are no configurations displayed.
+      cy.findByLabelText('List of Configurations').within(() => {
+        cy.findByText('No data to display.').should('be.visible');
+      });
+
+      // Mock requests to create new config and re-fetch configs.
+      mockCreateLinodeConfigs(mockLinode.id, mockConfigWithVpc).as(
+        'createLinodeConfig'
       );
-      cy.visitWithLogin(`/linodes/${linode.id}/configurations`);
+      mockGetLinodeConfigs(mockLinode.id, [mockConfigWithVpc]).as(
+        'getLinodeConfigs'
+      );
 
-      containsVisible('My Debian 10 Disk Profile – GRUB 2');
-      ui.actionMenu
-        .findByTitle('Action menu for Linode Config My Debian 10 Disk Profile')
-        .should('be.visible')
-        .click();
-      ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
-
+      // Create new config.
+      cy.findByText('Add Configuration').click();
       ui.dialog
-        .findByTitle('Confirm Delete')
+        .findByTitle('Add Configuration')
         .should('be.visible')
         .within(() => {
-          ui.button
-            .findByTitle('Delete')
+          cy.get('#label').type(`${mockConfigWithVpc.label}`);
+
+          // Confirm that "VPC" can be selected for either "eth0", "eth1", or "eth2".
+          // Add VPC to eth0
+          cy.get('[data-qa-textfield-label="eth0"]')
+            .scrollIntoView()
+            .click()
+            .type('VPC');
+
+          ui.select.findItemByText('VPC').should('be.visible').click();
+
+          // Confirm that internet access warning is displayed when eth0 is set
+          // to VPC.
+          cy.findByText(NOT_NATTED_HELPER_TEXT).should('be.visible');
+
+          // Confirm that VPC is an option for eth1 and eth2, but don't select them.
+          ['eth1', 'eth2'].forEach((interfaceName) => {
+            cy.get(`[data-qa-textfield-label="${interfaceName}"]`)
+              .scrollIntoView()
+              .click()
+              .type('VPC');
+
+            ui.select.findItemByText('VPC').should('be.visible');
+
+            cy.get(`[data-qa-textfield-label="${interfaceName}"]`).click();
+          });
+
+          ui.buttonGroup
+            .findButtonByTitle('Add Configuration')
             .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();
         });
 
-      cy.wait('@deleteLinodeConfig')
-        .its('response.statusCode')
-        .should('eq', 200);
-      ui.toast.assertMessage(
-        'Configuration My Debian 10 Disk Profile successfully deleted'
-      );
+      cy.wait(['@createLinodeConfig', '@getLinodeConfigs', '@getVPC']);
+
+      // Confirm that VPC has been assigned to eth0, and that "REBOOT NEEDED"
+      // status message is shown.
       cy.findByLabelText('List of Configurations').within(() => {
-        containsVisible('No data to display.');
+        cy.contains(`${mockConfig.label} – ${mockKernel.label}`).should(
+          'be.visible'
+        );
+        cy.contains(`eth0 – VPC: ${mockVPC.label}`).should('be.visible');
       });
+
+      cy.findByText('REBOOT NEEDED').should('be.visible');
+    });
+
+    /*
+     * - Tests Linode config edit and VPC interface assignment UI flows using mock API data.
+     * - Confirms that VPC can be assigned as eth2 in addition to existing interfaces.
+     * - Confirms that "REBOOT NEEDED" status indicator appears upon creating VPC config.
+     */
+    it('Edits an existing config and assigns a VPC as a network interface', () => {
+      const mockLinode = linodeFactory.build({
+        region: region.id,
+        type: dcPricingMockLinodeTypes[0].id,
+      });
+
+      // Mock config with public internet eth0, VLAN eth1, and VPC eth2.
+      const mockConfigWithVpc: Config = {
+        ...mockConfig,
+        interfaces: [
+          ...mockConfig.interfaces,
+          LinodeConfigInterfaceFactoryWithVPC.build({
+            label: undefined,
+            vpc_id: mockVPC.id,
+            active: false,
+          }),
+        ],
+      };
+
+      mockGetLinodeKernel(mockKernel.id, mockKernel);
+      mockGetLinodeKernels([mockKernel]);
+      mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
+
+      mockGetLinodeDisks(mockLinode.id, []).as('getDisks');
+      mockGetLinodeConfigs(mockLinode.id, [mockConfig]).as('getConfig');
+      mockGetVPC(mockVPC).as('getVPC');
+      mockGetLinodeVolumes(mockLinode.id, []).as('getVolumes');
+
+      cy.visitWithLogin(`/linodes/${mockLinode.id}/configurations`);
+      cy.wait(['@getLinode', '@getConfig', '@getDisks', '@getVolumes']);
+
+      // Find configuration in list and click its "Edit" button.
+      cy.findByLabelText('List of Configurations').within(() => {
+        cy.findByText(`${mockConfig.label} – ${mockKernel.label}`)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            ui.button.findByTitle('Edit').click();
+          });
+      });
+
+      // Set up mocks for config update.
+      mockGetVLANs(mockVLANs);
+      mockGetVPC(mockVPC).as('getVPC');
+      mockUpdateLinodeConfigs(mockLinode.id, mockConfigWithVpc).as(
+        'updateLinodeConfigs'
+      );
+      mockGetLinodeConfigs(mockLinode.id, [mockConfigWithVpc]).as(
+        'getLinodeConfigs'
+      );
+
+      ui.dialog
+        .findByTitle('Edit Configuration')
+        .should('be.visible')
+        .within(() => {
+          // Set eth2 to VPC and submit.
+          cy.get('[data-qa-textfield-label="eth2"]')
+            .scrollIntoView()
+            .click()
+            .type('VPC{enter}');
+
+          ui.button
+            .findByTitle('Save Changes')
+            .scrollIntoView()
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait(['@updateLinodeConfigs', '@getLinodeConfigs', '@getVPC']);
+
+      // Confirm that VLAN and VPC have been assigned.
+      cy.findByLabelText('List of Configurations').within(() => {
+        cy.contains(`${mockConfig.label} – ${mockKernel.label}`).should(
+          'be.visible'
+        );
+        cy.contains('eth0 – Public Internet').should('be.visible');
+        cy.contains(`eth2 – VPC: ${mockVPC.label}`).should('be.visible');
+      });
+
+      cy.findByText('REBOOT NEEDED').should('be.visible');
     });
   });
 });

@@ -1,3 +1,7 @@
+/**
+ * ONLY USED IN LONGVIEW
+ * Delete when Lonview is sunsetted, along with AccessibleGraphData
+ */
 import { Theme, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
@@ -11,6 +15,7 @@ import {
 import { curry } from 'ramda';
 import * as React from 'react';
 
+import { humanizeLargeData } from 'src/components/AreaChart/utils';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
@@ -115,16 +120,6 @@ const lineOptions: ChartDataSets = {
   pointRadius: 0,
 };
 
-const humanizeLargeData = (value: number) => {
-  if (value >= 1000000) {
-    return value / 1000000 + 'M';
-  }
-  if (value >= 1000) {
-    return value / 1000 + 'K';
-  }
-  return value;
-};
-
 /**
  * **Chart.js** is the charting tool we use for analytics shown on the Linode detail page
  * - Keep charts compact
@@ -186,6 +181,11 @@ export const LineGraph = (props: LineGraphProps) => {
   ) => {
     const finalChartOptions: ChartOptions = {
       animation: { duration: 0 },
+      layout: {
+        padding: {
+          left: 8,
+        },
+      },
       legend: {
         display: _nativeLegend,
         position: _nativeLegend ? 'bottom' : undefined,

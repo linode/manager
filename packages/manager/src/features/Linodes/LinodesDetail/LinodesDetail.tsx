@@ -3,6 +3,7 @@ import {
   Redirect,
   Route,
   Switch,
+  useLocation,
   useParams,
   useRouteMatch,
 } from 'react-router-dom';
@@ -11,18 +12,34 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-const LinodesDetailHeader = React.lazy(
-  () => import('./LinodesDetailHeader/LinodeDetailHeader')
+import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
+
+const LinodesDetailHeader = React.lazy(() =>
+  import(
+    'src/features/Linodes/LinodesDetail/LinodesDetailHeader/LinodeDetailHeader'
+  ).then((module) => ({
+    default: module.LinodeDetailHeader,
+  }))
 );
 const LinodesDetailNavigation = React.lazy(
   () => import('./LinodesDetailNavigation')
 );
-const CloneLanding = React.lazy(() => import('../CloneLanding/CloneLanding'));
+const CloneLanding = React.lazy(() =>
+  import('src/features/Linodes/CloneLanding/CloneLanding').then((module) => ({
+    default: module.CloneLanding,
+  }))
+);
 
-const LinodeDetail = () => {
+export const LinodeDetail = () => {
   const { path, url } = useRouteMatch();
   const { linodeId } = useParams<{ linodeId: string }>();
+  const location = useLocation();
+
+  const queryParams = getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
+    location.search
+  );
 
   const id = Number(linodeId);
 
@@ -46,11 +63,19 @@ const LinodeDetail = () => {
           have to reload all the configs, disks, etc. once we get to the CloneLanding page.
           */}
         <Route component={CloneLanding} path={`${path}/clone`} />
-        <Redirect from={`${url}/resize`} to={`${url}?resize=true`} />
-        <Redirect from={`${url}/rebuild`} to={`${url}?rebuild=true`} />
-        <Redirect from={`${url}/rescue`} to={`${url}?rescue=true`} />
-        <Redirect from={`${url}/migrate`} to={`${url}?migrate=true`} />
-        <Redirect from={`${url}/upgrade`} to={`${url}?upgrade=true`} />
+        {['resize', 'rescue', 'migrate', 'upgrade', 'rebuild'].map((path) => (
+          <Redirect
+            to={{
+              pathname: url,
+              search: new URLSearchParams({
+                ...queryParams,
+                [path]: 'true',
+              }).toString(),
+            }}
+            from={`${url}/${path}`}
+            key={path}
+          />
+        ))}
         <Route
           render={() => (
             <React.Fragment>
@@ -63,5 +88,3 @@ const LinodeDetail = () => {
     </React.Suspense>
   );
 };
-
-export default LinodeDetail;

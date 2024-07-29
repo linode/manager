@@ -13,10 +13,9 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { Paper } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { QueryClient } from '@tanstack/react-query';
-import { WithSnackbarProps, withSnackbar } from 'notistack';
+import { enqueueSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
-import { compose as recompose } from 'recompose';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
@@ -46,7 +45,7 @@ import { PARENT_USER, grantTypeMap } from 'src/features/Account/constants';
 import { accountQueries } from 'src/queries/account/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import {
   StyledCircleProgress,
@@ -89,10 +88,7 @@ interface State {
   userType: null | string;
 }
 
-type CombinedProps = Props &
-  WithSnackbarProps &
-  WithQueryClientProps &
-  WithFeatureFlagProps;
+type CombinedProps = Props & WithQueryClientProps & WithFeatureFlagProps;
 
 class UserPermissions extends React.Component<CombinedProps, State> {
   componentDidMount() {
@@ -112,10 +108,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { currentUsername } = this.props;
 
     return (
-      <React.Fragment>
+      <div ref={this.formContainerRef}>
         <DocumentTitleSegment segment={`${currentUsername} - Permissions`} />
         {loading ? <CircleProgress /> : this.renderBody()}
-      </React.Fragment>
+      </div>
     );
   }
 
@@ -187,6 +183,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
   };
 
+  formContainerRef = React.createRef<HTMLDivElement>();
+
   getTabInformation = (grants: Grants) =>
     this.entityPerms.reduce(
       (acc: TabInfo, entity: GrantType) => {
@@ -235,7 +233,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               'Unknown error occurred while fetching user permissions. Try again later.'
             ),
           });
-          scrollErrorIntoView();
+          scrollErrorIntoViewV2(this.formContainerRef);
         });
     }
   };
@@ -258,7 +256,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             'Unknown error occurred while fetching user permissions. Try again later.'
           ),
         });
-        scrollErrorIntoView();
+        scrollErrorIntoViewV2(this.formContainerRef);
       }
     }
   };
@@ -308,7 +306,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           );
           // unconditionally sets this.state.loadingGrants to false
           this.getUserGrants();
-          this.props.enqueueSnackbar('User permissions successfully saved.', {
+          enqueueSnackbar('User permissions successfully saved.', {
             variant: 'success',
           });
         })
@@ -720,12 +718,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           const { tabs } = this.getTabInformation(grantsResponse);
           this.setState({ isSavingGlobal: false, tabs });
 
-          this.props.enqueueSnackbar(
-            'General user permissions successfully saved.',
-            {
-              variant: 'success',
-            }
-          );
+          enqueueSnackbar('General user permissions successfully saved.', {
+            variant: 'success',
+          });
 
           // Update the user's grants directly in the cache
           this.props.queryClient.setQueriesData<Grants>(
@@ -742,7 +737,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             ),
             isSavingGlobal: false,
           });
-          scrollErrorIntoView();
+          scrollErrorIntoViewV2(this.formContainerRef);
         });
     }
 
@@ -782,7 +777,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         if (updateFns.length) {
           this.setState((compose as any)(...updateFns));
         }
-        this.props.enqueueSnackbar(
+        enqueueSnackbar(
           'Entity-specific user permissions successfully saved.',
           {
             variant: 'success',
@@ -800,7 +795,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           ),
           isSavingEntity: false,
         });
-        scrollErrorIntoView();
+        scrollErrorIntoViewV2(this.formContainerRef);
       });
   };
 
@@ -832,8 +827,4 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 }
 
-export default recompose<CombinedProps, Props>(
-  withSnackbar,
-  withQueryClient,
-  withFeatureFlags
-)(UserPermissions);
+export default withQueryClient(withFeatureFlags(UserPermissions));

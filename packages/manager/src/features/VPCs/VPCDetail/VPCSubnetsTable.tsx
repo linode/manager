@@ -4,10 +4,7 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
-import {
-  CollapsibleTable,
-  TableItem,
-} from 'src/components/CollapsibleTable/CollapsibleTable';
+import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
@@ -23,7 +20,7 @@ import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDra
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useSubnetsQuery } from 'src/queries/vpcs';
+import { useSubnetsQuery } from 'src/queries/vpcs/vpcs';
 
 import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
 import { SubnetCreateDrawer } from './SubnetCreateDrawer';
@@ -34,6 +31,7 @@ import { SubnetUnassignLinodesDrawer } from './SubnetUnassignLinodesDrawer';
 
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
+import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
 interface Props {
@@ -361,7 +359,7 @@ export const VPCSubnetsTable = (props: Props) => {
           action={linodePowerAction ?? 'Reboot'}
           isOpen={powerActionDialogOpen}
           linodeId={selectedLinode?.id}
-          manuallyUpdateConfigs={true}
+          linodeLabel={selectedLinode?.label}
           onClose={() => setPowerActionDialogOpen(false)}
         />
       )}

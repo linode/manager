@@ -42,7 +42,6 @@ import {
   WithQueryClientProps,
   withQueryClient,
 } from 'src/containers/withQueryClient.container';
-import { queryKey } from 'src/queries/nodebalancers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
@@ -63,6 +62,7 @@ import type {
   NodeBalancerConfigNodeFields,
 } from '../types';
 import type { Grants } from '@linode/api-v4';
+import { nodebalancerQueries } from 'src/queries/nodebalancers';
 
 const StyledPortsSpan = styled('span', {
   label: 'StyledPortsSpan',
@@ -125,7 +125,15 @@ interface State {
   panelNodeMessages: string[];
 }
 
-type CombinedProps = Props & RouteProps & PreloadedProps & WithQueryClientProps;
+interface NodeBalancerConfigWithNodes extends NodeBalancerConfig {
+  nodes: NodeBalancerConfigNode[];
+}
+
+interface NodeBalancerConfigurationsProps
+  extends Props,
+    RouteProps,
+    PreloadedProps,
+    WithQueryClientProps {}
 
 const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
@@ -159,7 +167,10 @@ const formatNodesStatus = (nodes: NodeBalancerConfigNodeFields[]) => {
     statuses.unknown ? `, ${statuses.unknown} unknown` : ''
   }`;
 };
-class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
+class NodeBalancerConfigurations extends React.Component<
+  NodeBalancerConfigurationsProps,
+  State
+> {
   render() {
     const { nodeBalancerLabel } = this.props;
     const {
@@ -400,12 +411,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     // actually delete a real config
     deleteNodeBalancerConfig(Number(nodeBalancerId), config.id)
       .then((_) => {
-        this.props.queryClient.invalidateQueries([
-          queryKey,
-          'nodebalancer',
-          Number(nodeBalancerId),
-          'configs',
-        ]);
+        this.props.queryClient.invalidateQueries({
+          queryKey: nodebalancerQueries.nodebalancer(Number(nodeBalancerId))
+            ._ctx.configurations.queryKey,
+        });
         // update config data
         const newConfigs = clone(this.state.configs);
         newConfigs.splice(idxToDelete, 1);
@@ -627,12 +636,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     panelMessages: string[],
     configErrors: any[],
     configSubmitting: any[]
-  ) => (
-    config: NodeBalancerConfig & {
-      nodes: NodeBalancerConfigNode[];
-    },
-    idx: number
-  ) => {
+  ) => (config: NodeBalancerConfigWithNodes, idx: number) => {
     const isNewConfig =
       this.state.hasUnsavedConfig && idx === this.state.configs.length - 1;
     const { panelNodeMessages } = this.state;
@@ -821,12 +825,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
     createNodeBalancerConfig(Number(nodeBalancerId), configPayload)
       .then((nodeBalancerConfig) => {
-        this.props.queryClient.invalidateQueries([
-          queryKey,
-          'nodebalancer',
-          Number(nodeBalancerId),
-          'configs',
-        ]);
+        this.props.queryClient.invalidateQueries({
+          queryKey: nodebalancerQueries.nodebalancer(Number(nodeBalancerId))
+            ._ctx.configurations.queryKey,
+        });
         // update config data
         const newConfigs = clone(this.state.configs);
         newConfigs[idx] = { ...nodeBalancerConfig, nodes: [] };
@@ -935,12 +937,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       configPayload
     )
       .then((nodeBalancerConfig) => {
-        this.props.queryClient.invalidateQueries([
-          queryKey,
-          'nodebalancer',
-          Number(nodeBalancerId),
-          'configs',
-        ]);
+        this.props.queryClient.invalidateQueries({
+          queryKey: nodebalancerQueries.nodebalancer(Number(nodeBalancerId))
+            ._ctx.configurations.queryKey,
+        });
         // update config data
         const newConfigs = clone(this.state.configs);
         newConfigs[idx] = { ...nodeBalancerConfig, nodes: [] };
@@ -1166,7 +1166,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   };
 }
 
-const preloaded = PromiseLoader<CombinedProps>({
+const preloaded = PromiseLoader<NodeBalancerConfigurationsProps>({
   configs: (props) => {
     const {
       match: {
@@ -1177,7 +1177,7 @@ const preloaded = PromiseLoader<CombinedProps>({
   },
 });
 
-const enhanced = composeC<CombinedProps, Props>(
+const enhanced = composeC<NodeBalancerConfigurationsProps, Props>(
   withRouter,
   preloaded,
   withQueryClient

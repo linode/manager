@@ -1,47 +1,46 @@
-import { Theme } from '@mui/material/styles';
-import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
+import { styled } from '@mui/material/styles';
+import { MaterialDesignContent } from 'notistack';
+import { SnackbarProvider } from 'notistack';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { CloseSnackbar } from './CloseSnackbar';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  error: {
-    borderLeft: `6px solid ${theme.palette.error.dark}`,
-  },
-  info: {
-    borderLeft: `6px solid ${theme.palette.primary.main}`,
-  },
-  root: {
-    '& div': {
-      backgroundColor: `${theme.bg.white} !important`,
-      color: theme.palette.text.primary,
-      fontSize: '0.875rem',
-    },
-    [theme.breakpoints.down('md')]: {
-      '& .SnackbarItem-contentRoot': {
-        flexWrap: 'nowrap',
-      },
-      '& .SnackbarItem-message': {
-        display: 'unset',
+import type { Theme } from '@mui/material/styles';
+import type { SnackbarProviderProps } from 'notistack';
+
+const StyledMaterialDesignContent = styled(MaterialDesignContent)(
+  ({ theme }: { theme: Theme }) => ({
+    '&.notistack-MuiContent': {
+      color: theme.notificationToast.default.color,
+      flexWrap: 'unset',
+      [theme.breakpoints.up('md')]: {
+        maxWidth: '400px',
       },
     },
-    [theme.breakpoints.down('sm')]: {
-      '& .SnackbarItem-action': {
-        paddingLeft: 0,
-      },
+    '&.notistack-MuiContent-default': {
+      backgroundColor: theme.notificationToast.default.backgroundColor,
+      borderLeft: theme.notificationToast.default.borderLeft,
     },
-  },
-  success: {
-    borderLeft: `6px solid ${theme.color.green}`,
-  },
-  warning: {
-    borderLeft: `6px solid ${theme.palette.warning.dark}`,
-  },
-}));
+    '&.notistack-MuiContent-error': {
+      backgroundColor: theme.notificationToast.error.backgroundColor,
+      borderLeft: theme.notificationToast.error.borderLeft,
+    },
+    '&.notistack-MuiContent-info': {
+      backgroundColor: theme.notificationToast.info.backgroundColor,
+      borderLeft: theme.notificationToast.info.borderLeft,
+    },
+    '&.notistack-MuiContent-success': {
+      backgroundColor: theme.notificationToast.success.backgroundColor,
+      borderLeft: theme.notificationToast.success.borderLeft,
+    },
+    '&.notistack-MuiContent-warning': {
+      backgroundColor: theme.notificationToast.warning.backgroundColor,
+      borderLeft: theme.notificationToast.warning.borderLeft,
+    },
+  })
+);
 
 export const Snackbar = (props: SnackbarProviderProps) => {
-  const { classes } = useStyles();
   /**
    * This pattern is taken from the Notistack docs:
    * https://iamhosseindhv.com/notistack/demos#action-for-all-snackbars
@@ -59,19 +58,19 @@ export const Snackbar = (props: SnackbarProviderProps) => {
     <SnackbarProvider
       ref={notistackRef}
       {...rest}
+      Components={{
+        default: StyledMaterialDesignContent,
+        error: StyledMaterialDesignContent,
+        info: StyledMaterialDesignContent,
+        success: StyledMaterialDesignContent,
+        warning: StyledMaterialDesignContent,
+      }}
       action={(key) => (
         <CloseSnackbar
           onClick={onClickDismiss(key)}
           text="Dismiss Notification"
         />
       )}
-      classes={{
-        root: classes.root,
-        variantError: classes.error,
-        variantInfo: classes.info,
-        variantSuccess: classes.success,
-        variantWarning: classes.warning,
-      }}
     >
       {children}
     </SnackbarProvider>

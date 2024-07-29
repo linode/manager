@@ -10,7 +10,7 @@ import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageClusters } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 import { readableBytes } from 'src/utilities/unitConversions';
 
@@ -42,16 +42,19 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
     size,
   } = props;
 
-  const { data: clusters } = useObjectStorageClusters();
   const { data: regions } = useRegionsQuery();
 
   const flags = useFlags();
   const { account } = useAccountManagement();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
+  );
+
+  const { data: clusters } = useObjectStorageClusters(
+    !isObjMultiClusterEnabled
   );
 
   const actualCluster = clusters?.find((c) => c.id === cluster);
@@ -60,7 +63,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
   const regionsLookup = regions && getRegionsByRegionId(regions);
 
   return (
-    <StyledBucketRow ariaLabel={label} data-qa-bucket-cell={label} key={label}>
+    <StyledBucketRow data-qa-bucket-cell={label} key={label}>
       <TableCell>
         <Grid alignItems="center" container spacing={2} wrap="nowrap">
           <Grid>

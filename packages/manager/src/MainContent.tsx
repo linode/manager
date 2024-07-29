@@ -1,6 +1,4 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
@@ -10,6 +8,7 @@ import { Box } from 'src/components/Box';
 import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import { NotFound } from 'src/components/NotFound';
+import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
@@ -20,19 +19,23 @@ import {
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationContext';
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useDatabaseEnginesQuery } from 'src/queries/databases';
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
-import { ManagerPreferences } from 'src/types/ManagerPreferences';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
+import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
-import { FlagSet } from './featureFlags';
-import { useIsACLBEnabled } from './features/LoadBalancers/utils';
+import { useIsDatabasesEnabled } from './features/Databases/utilities';
+import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
+import { useAccountSettings } from './queries/account/settings';
+import { useProfile } from './queries/profile/profile';
+
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {
@@ -75,7 +78,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   content: {
     flex: 1,
     [theme.breakpoints.up('md')]: {
-      marginLeft: 190,
+      marginLeft: SIDEBAR_WIDTH,
     },
     transition: 'margin-left .1s linear',
   },
@@ -119,7 +122,11 @@ const Account = React.lazy(() =>
     default: module.Account,
   }))
 );
-const LinodesRoutes = React.lazy(() => import('src/features/Linodes'));
+const LinodesRoutes = React.lazy(() =>
+  import('src/features/Linodes').then((module) => ({
+    default: module.LinodesRoutes,
+  }))
+);
 const Volumes = React.lazy(() => import('src/features/Volumes'));
 const Domains = React.lazy(() =>
   import('src/features/Domains').then((module) => ({
@@ -127,14 +134,13 @@ const Domains = React.lazy(() =>
   }))
 );
 const Images = React.lazy(() => import('src/features/Images'));
-const Kubernetes = React.lazy(() => import('src/features/Kubernetes'));
-const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
-const Profile = React.lazy(() => import('src/features/Profile/Profile'));
-const LoadBalancers = React.lazy(() =>
-  import('src/features/LoadBalancers').then((module) => ({
-    default: module.LoadBalancers,
+const Kubernetes = React.lazy(() =>
+  import('src/features/Kubernetes').then((module) => ({
+    default: module.Kubernetes,
   }))
 );
+const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
+const Profile = React.lazy(() => import('src/features/Profile/Profile'));
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
 );
@@ -179,6 +185,12 @@ const PlacementGroups = React.lazy(() =>
   }))
 );
 
+const CloudPulse = React.lazy(() =>
+  import('src/features/CloudPulse/CloudPulseLanding').then((module) => ({
+    default: module.CloudPulseLanding,
+  }))
+);
+
 export const MainContent = () => {
   const { classes, cx } = useStyles();
   const flags = useFlags();
@@ -198,49 +210,25 @@ export const MainContent = () => {
     isOpen: false,
   });
 
-  const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
-  const {
-    _isManagedAccount,
-    account,
-    accountError,
-    profile,
-  } = useAccountManagement();
+  const SessionExpirationProvider = sessionExpirationContext.Provider;
+  const sessionExpirationContextValue = useDialogContext({
+    isOpen: false,
+  });
 
+  const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
+
+  const { data: profile } = useProfile();
   const username = profile?.username || '';
 
-  const [bannerDismissed, setBannerDismissed] = React.useState<boolean>(false);
+  const { isDatabasesEnabled } = useIsDatabasesEnabled();
+  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
-  const checkRestrictedUser = !Boolean(flags.databases) && !!accountError;
-  const {
-    error: enginesError,
-    isLoading: enginesLoading,
-  } = useDatabaseEnginesQuery(checkRestrictedUser);
+  const { data: accountSettings } = useAccountSettings();
+  const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
 
-  const showDatabases =
-    isFeatureEnabled(
-      'Managed Databases',
-      Boolean(flags.databases),
-      account?.capabilities ?? []
-    ) ||
-    (checkRestrictedUser && !enginesLoading && !enginesError);
-
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
-
-  const { isACLBEnabled } = useIsACLBEnabled();
-
-  const defaultRoot = _isManagedAccount ? '/managed' : '/linodes';
-
-  const shouldDisplayMainContentBanner =
-    !bannerDismissed &&
-    checkFlagsForMainContentBanner(flags) &&
-    !checkPreferencesForBannerDismissal(
-      preferences ?? {},
-      flags?.mainContentBanner?.key
-    );
+  const showCloudPulse = Boolean(flags.aclp?.enabled);
+  // the followed comment is for later use, the showCloudPulse will be removed and isACLPEnabled will be used
+  // const { isACLPEnabled } = useIsACLPEnabled();
 
   /**
    * this is the case where the user has successfully completed signup
@@ -295,24 +283,12 @@ export const MainContent = () => {
     });
   };
 
-  /**
-   * otherwise just show the rest of the app.
-   */
   return (
     <div className={classes.appFrame}>
-      <SwitchAccountSessionProvider value={switchAccountSessionContextValue}>
-        <ComplianceUpdateProvider value={complianceUpdateContextValue}>
-          <NotificationProvider value={contextValue}>
-            <>
-              {shouldDisplayMainContentBanner ? (
-                <MainContentBanner
-                  bannerKey={flags.mainContentBanner?.key ?? ''}
-                  bannerText={flags.mainContentBanner?.text ?? ''}
-                  linkText={flags.mainContentBanner?.link?.text ?? ''}
-                  onClose={() => setBannerDismissed(true)}
-                  url={flags.mainContentBanner?.link?.url ?? ''}
-                />
-              ) : null}
+      <SessionExpirationProvider value={sessionExpirationContextValue}>
+        <SwitchAccountSessionProvider value={switchAccountSessionContextValue}>
+          <ComplianceUpdateProvider value={complianceUpdateContextValue}>
+            <NotificationProvider value={contextValue}>
               <SideMenu
                 closeMenu={() => toggleMenu(false)}
                 collapse={desktopMenuIsOpen || false}
@@ -325,6 +301,7 @@ export const MainContent = () => {
                     (desktopMenuIsOpen && desktopMenuIsOpen === true),
                 })}
               >
+                <MainContentBanner />
                 <TopMenu
                   desktopMenuToggle={desktopMenuToggle}
                   isSideMenuOpen={!desktopMenuIsOpen}
@@ -342,18 +319,14 @@ export const MainContent = () => {
                       <React.Suspense fallback={<SuspenseLoader />}>
                         <Switch>
                           <Route component={LinodesRoutes} path="/linodes" />
-                          <Route
-                            component={PlacementGroups}
-                            path="/placement-groups"
-                          />
-                          <Route component={Volumes} path="/volumes" />
-                          <Redirect path="/volumes*" to="/volumes" />
-                          {isACLBEnabled && (
+                          {isPlacementGroupsEnabled && (
                             <Route
-                              component={LoadBalancers}
-                              path="/loadbalancer*"
+                              component={PlacementGroups}
+                              path="/placement-groups"
                             />
                           )}
+                          <Route component={Volumes} path="/volumes" />
+                          <Redirect path="/volumes*" to="/volumes" />
                           <Route
                             component={NodeBalancers}
                             path="/nodebalancers"
@@ -377,13 +350,19 @@ export const MainContent = () => {
                           <Route component={SearchLanding} path="/search" />
                           <Route component={EventsLanding} path="/events" />
                           <Route component={Firewalls} path="/firewalls" />
-                          {showDatabases && (
+                          {isDatabasesEnabled && (
                             <Route component={Databases} path="/databases" />
                           )}
                           {flags.selfServeBetas && (
                             <Route component={BetaRoutes} path="/betas" />
                           )}
-                          {showVPCs && <Route component={VPC} path="/vpcs" />}
+                          <Route component={VPC} path="/vpcs" />
+                          {showCloudPulse && (
+                            <Route
+                              component={CloudPulse}
+                              path="/monitor/cloudpulse"
+                            />
+                          )}
                           <Redirect exact from="/" to={defaultRoot} />
                           {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                           <Redirect from="/dashboard" to={defaultRoot} />
@@ -394,29 +373,11 @@ export const MainContent = () => {
                   </Grid>
                 </main>
               </div>
-            </>
-          </NotificationProvider>
-          <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
-        </ComplianceUpdateProvider>
-      </SwitchAccountSessionProvider>
+            </NotificationProvider>
+            <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
+          </ComplianceUpdateProvider>
+        </SwitchAccountSessionProvider>
+      </SessionExpirationProvider>
     </div>
   );
-};
-
-// =============================================================================
-// Utilities
-// =============================================================================
-export const checkFlagsForMainContentBanner = (flags: FlagSet) => {
-  return Boolean(
-    flags.mainContentBanner &&
-      !isEmpty(flags.mainContentBanner) &&
-      flags.mainContentBanner.key
-  );
-};
-
-export const checkPreferencesForBannerDismissal = (
-  preferences: ManagerPreferences,
-  key = 'defaultKey'
-) => {
-  return Boolean(preferences?.main_content_banner_dismissal?.[key]);
 };

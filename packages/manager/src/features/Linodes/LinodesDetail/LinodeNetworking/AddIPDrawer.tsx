@@ -1,4 +1,3 @@
-import { IPv6Prefix } from '@linode/api-v4/lib/networking';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -6,7 +5,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
-import { Item } from 'src/components/EnhancedSelect/Select';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -17,9 +15,12 @@ import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import {
   useAllocateIPMutation,
-  useCreateIPv6RangeMutation,
   useLinodeIPsQuery,
 } from 'src/queries/linodes/networking';
+import { useCreateIPv6RangeMutation } from 'src/queries/networking/networking';
+
+import type { IPv6Prefix } from '@linode/api-v4/lib/networking';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 type IPType = 'v4Private' | 'v4Public';
 
@@ -76,14 +77,20 @@ const tooltipCopy: Record<IPType, string | null> = {
 
 interface Props {
   linodeId: number;
-  linodeIsInEdgeRegion?: boolean;
+  linodeIsInDistributedRegion?: boolean;
   onClose: () => void;
   open: boolean;
   readOnly: boolean;
 }
 
 export const AddIPDrawer = (props: Props) => {
-  const { linodeId, linodeIsInEdgeRegion, onClose, open, readOnly } = props;
+  const {
+    linodeId,
+    linodeIsInDistributedRegion,
+    onClose,
+    open,
+    readOnly,
+  } = props;
 
   const {
     error: ipv4Error,
@@ -179,10 +186,10 @@ export const AddIPDrawer = (props: Props) => {
           onChange={handleIPv4Change}
           value={selectedIPv4}
         >
-          {linodeIsInEdgeRegion && (
+          {linodeIsInDistributedRegion && (
             <Notice
               sx={{ fontSize: 15 }}
-              text="Private IP is currently not available for Edge regions."
+              text="Private IP is currently not available for distributed regions."
               variant="warning"
             />
           )}
@@ -192,7 +199,9 @@ export const AddIPDrawer = (props: Props) => {
               <FormControlLabel
                 control={<Radio />}
                 data-qa-radio={option.label}
-                disabled={option.value === 'v4Private' && linodeIsInEdgeRegion}
+                disabled={
+                  option.value === 'v4Private' && linodeIsInDistributedRegion
+                }
                 key={idx}
                 label={option.label}
                 value={option.value}

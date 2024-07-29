@@ -48,10 +48,14 @@ import { DomainRecordActionMenu } from './DomainRecordActionMenu';
 import { DomainRecordDrawer } from './DomainRecordDrawer';
 import { StyledDiv, StyledGrid, StyledTableCell } from './DomainRecords.styles';
 
+interface UpdateDomainDataProps extends UpdateDomainPayload {
+  id: number;
+}
+
 interface Props {
   domain: Domain;
   domainRecords: DomainRecord[];
-  updateDomain: (data: { id: number } & UpdateDomainPayload) => Promise<Domain>;
+  updateDomain: (data: UpdateDomainDataProps) => Promise<Domain>;
   updateRecords: () => void;
 }
 
@@ -580,10 +584,10 @@ class DomainRecords extends React.Component<Props, State> {
     /** SRV Record */
     {
       columns: [
-        { render: (r: DomainRecord) => r.name, title: 'Name' },
+        { render: (r: DomainRecord) => r.name, title: 'Service/Protocol' },
         {
           render: () => this.props.domain.domain,
-          title: 'Domain',
+          title: 'Name',
         },
         {
           render: (r: DomainRecord) => String(r.priority),

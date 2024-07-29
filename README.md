@@ -1,5 +1,5 @@
 <h3 align="center">
-  <img src="https://github.com/linode/manager/blob/develop/packages/manager/src/assets/logo/akamai-logo.svg" width="200" />
+  <img src="https://github.com/linode/manager/blob/develop/packages/manager/src/assets/logo/akamai-logo-color.svg" width="200" />
   <br />
   <br />
   Akamai Connected Cloud Manager
@@ -45,11 +45,11 @@ This repository is home to the Akamai Connected **[Cloud Manager](https://cloud.
 
 ## Developing Locally
 
-To get started running Cloud Manager locally, please see the [_Getting Started_ guide](docs/GETTING_STARTED.md).
+To get started running Cloud Manager locally, please see the [Getting Started guide](https://linode.github.io/manager/GETTING_STARTED.html).
 
 ## Contributing
 
-If you already have your development environment set up, please read the [contributing guidelines](docs/CONTRIBUTING.md) to get help in creating your first Pull Request.
+If you already have your development environment set up, please read the [Contributing Guidelines](https://linode.github.io/manager/CONTRIBUTING.html) to get help in creating your first Pull Request.
 
 To report a bug or request a feature in Cloud Manager, please [open a GitHub Issue](https://github.com/linode/manager/issues/new). For general feedback, use [linode.com/feedback](https://www.linode.com/feedback/).
 

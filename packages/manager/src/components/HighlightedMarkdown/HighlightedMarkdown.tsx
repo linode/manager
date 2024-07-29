@@ -1,4 +1,4 @@
-import * as hljs from 'highlight.js/lib/core';
+import * as hljs from 'highlight.js';
 import apache from 'highlight.js/lib/languages/apache';
 import bash from 'highlight.js/lib/languages/bash';
 import javascript from 'highlight.js/lib/languages/javascript';
@@ -10,12 +10,12 @@ import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
 import 'src/formatted-text.css';
-import { ThemeName } from 'src/foundations/themes';
 import { unsafe_MarkdownIt } from 'src/utilities/markdown';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 import { useColorMode } from 'src/utilities/theme';
 
-import type { IOptions } from 'sanitize-html';
+import type { ThemeName } from 'src/foundations/themes';
+import type { SanitizeOptions } from 'src/utilities/sanitizeHTML';
 
 hljs.registerLanguage('apache', apache);
 hljs.registerLanguage('bash', bash);
@@ -35,7 +35,7 @@ export type SupportedLanguage =
 export interface HighlightedMarkdownProps {
   className?: string;
   language?: SupportedLanguage;
-  sanitizeOptions?: IOptions;
+  sanitizeOptions?: SanitizeOptions;
   textOrMarkdown: string;
 }
 
@@ -88,8 +88,7 @@ export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
   const unsafe_parsedMarkdown = unsafe_MarkdownIt.render(textOrMarkdown);
 
   const sanitizedHtml = sanitizeHTML({
-    // eslint-disable-next-line xss/no-mixed-html
-    options: sanitizeOptions,
+    sanitizeOptions,
     sanitizingTier: 'flexible',
     text: unsafe_parsedMarkdown,
   });
@@ -99,7 +98,8 @@ export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
   React.useEffect(() => {
     try {
       if (rootRef.current) {
-        const blocks = rootRef.current.querySelectorAll('pre code') ?? [];
+        const blocks: NodeListOf<HTMLElement> =
+          rootRef.current.querySelectorAll('pre code') ?? [];
         const len = blocks.length ?? 0;
         let i = 0;
         for (i; i < len; i++) {

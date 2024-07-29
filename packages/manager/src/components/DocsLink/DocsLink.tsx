@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import DocsIcon from 'src/assets/icons/docs.svg';
 import { Link } from 'src/components/Link';
-import { sendHelpButtonClickEvent } from 'src/utilities/analytics';
+import { sendHelpButtonClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 export interface DocsLinkProps {
   /** The label to use for analytics purposes */
@@ -50,12 +50,9 @@ export const DocsLink = (props: DocsLinkProps) => {
 const StyledDocsLink = styled(Link, {
   label: 'StyledDocsLink',
 })(({ theme }) => ({
+  ...theme.applyLinkStyles,
   '& svg': {
     marginRight: theme.spacing(),
-  },
-  '&:hover': {
-    color: theme.textColors.linkActiveLight,
-    textDecoration: 'underline',
   },
   alignItems: 'center',
   display: 'flex',

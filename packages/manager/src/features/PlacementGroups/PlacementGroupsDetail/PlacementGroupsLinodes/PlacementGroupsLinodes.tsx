@@ -1,16 +1,12 @@
-import { useMediaQuery } from '@mui/material';
-import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Stack } from 'src/components/Stack';
-import { Typography } from 'src/components/Typography';
-import { usePlacementGroupData } from 'src/hooks/usePlacementGroupsData';
+import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 
 import {
   MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
@@ -20,27 +16,29 @@ import { PlacementGroupsAssignLinodesDrawer } from '../../PlacementGroupsAssignL
 import { PlacementGroupsUnassignModal } from '../../PlacementGroupsUnassignModal';
 import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 
-import type { Linode, PlacementGroup } from '@linode/api-v4';
+import type { Linode, PlacementGroup, Region } from '@linode/api-v4';
 
 interface Props {
+  assignedLinodes: Linode[] | undefined;
+  isFetchingLinodes: boolean;
+  isLinodeReadOnly: boolean;
   placementGroup: PlacementGroup | undefined;
+  region: Region | undefined;
 }
 
 export const PlacementGroupsLinodes = (props: Props) => {
-  const { placementGroup } = props;
-  const history = useHistory();
   const {
     assignedLinodes,
-    hasReachedCapacity,
-    isLoading,
-    linodesError,
-    region,
-  } = usePlacementGroupData({
+    isFetchingLinodes,
+    isLinodeReadOnly,
     placementGroup,
-  });
-  const theme = useTheme();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+    region,
+  } = props;
+  const history = useHistory();
   const [searchText, setSearchText] = React.useState('');
+  const [selectedLinode, setSelectedLinode] = React.useState<
+    Linode | undefined
+  >();
 
   if (!placementGroup) {
     return <ErrorState errorText={PLACEMENT_GROUP_LINODES_ERROR_MESSAGE} />;
@@ -60,8 +58,22 @@ export const PlacementGroupsLinodes = (props: Props) => {
     return assignedLinodes;
   };
 
-  const handleOpenAssignLinodesDrawer = () => {
+  const hasReachedCapacity = hasPlacementGroupReachedCapacity({
+    placementGroup,
+    region,
+  });
+
+  const handleAssignLinodesDrawer = () => {
     history.replace(`/placement-groups/${placementGroup.id}/linodes/assign`);
+  };
+  const handleUnassignLinodeModal = (linode: Linode) => {
+    setSelectedLinode(linode);
+    history.replace(
+      `/placement-groups/${placementGroup.id}/linodes/unassign/${linode.id}`
+    );
+  };
+  const handleExitedUnassignModal = () => {
+    setSelectedLinode(undefined);
   };
   const handleCloseDrawer = () => {
     history.replace(`/placement-groups/${placementGroup.id}/linodes`);
@@ -75,17 +87,6 @@ export const PlacementGroupsLinodes = (props: Props) => {
 
   return (
     <Stack spacing={2}>
-      <Box sx={{ px: matchesSmDown ? 2 : 0, py: 2 }}>
-        <Typography>
-          The following Linodes have been assigned to this Placement Group. A
-          Linode can only be assigned to a single Placement Group.
-        </Typography>
-        <Typography sx={{ mt: 1 }}>
-          Limit of Linodes for this Placement Group:{' '}
-          {region?.maximum_vms_per_pg}
-        </Typography>
-      </Box>
-
       <Grid container justifyContent="space-between">
         <Grid flexGrow={1} sm={6} sx={{ mb: 1 }} xs={12}>
           <DebouncedSearchTextField
@@ -101,28 +102,36 @@ export const PlacementGroupsLinodes = (props: Props) => {
         </Grid>
         <Grid>
           <Button
+            tooltipText={
+              isLinodeReadOnly
+                ? ''
+                : MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE
+            }
             buttonType="primary"
-            disabled={hasReachedCapacity}
-            onClick={handleOpenAssignLinodesDrawer}
-            tooltipText={MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE}
+            data-testid="add-linode-to-placement-group-button"
+            disabled={hasReachedCapacity || isLinodeReadOnly}
+            onClick={handleAssignLinodesDrawer}
           >
             Assign Linode to Placement Group
           </Button>
         </Grid>
       </Grid>
       <PlacementGroupsLinodesTable
-        error={linodesError ?? []}
+        handleUnassignLinodeModal={handleUnassignLinodeModal}
+        isFetchingLinodes={isFetchingLinodes}
         linodes={getLinodesList() ?? []}
-        loading={isLoading}
       />
       <PlacementGroupsAssignLinodesDrawer
         onClose={handleCloseDrawer}
         open={isAssignLinodesDrawerOpen}
+        region={region}
         selectedPlacementGroup={placementGroup}
       />
       <PlacementGroupsUnassignModal
         onClose={handleCloseDrawer}
+        onExited={handleExitedUnassignModal}
         open={isUnassignLinodesDrawerOpen}
+        selectedLinode={selectedLinode}
       />
     </Stack>
   );

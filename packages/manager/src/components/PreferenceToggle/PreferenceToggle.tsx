@@ -1,4 +1,7 @@
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 
 export interface PreferenceToggleProps<T> {
   preference: T;

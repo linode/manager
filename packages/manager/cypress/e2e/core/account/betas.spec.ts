@@ -2,12 +2,9 @@
  * @file Integration tests for Betas landing page.
  */
 
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
+import { mockGetUserPreferences } from 'support/intercepts/profile';
 
 // TODO Delete feature flag mocks when feature flag is removed.
 describe('Betas landing page', () => {
@@ -18,12 +15,16 @@ describe('Betas landing page', () => {
    */
   it('can navigate to Betas landing page', () => {
     mockAppendFeatureFlags({
-      selfServeBetas: makeFeatureFlagData(true),
+      selfServeBetas: true,
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
+
+    // Ensure that the Primary Nav is open
+    mockGetUserPreferences({ desktop_sidebar_open: false }).as(
+      'getPreferences'
+    );
 
     cy.visitWithLogin('/linodes');
-    cy.wait(['@getFeatureFlags', '@getClientStream']);
+    cy.wait('@getFeatureFlags');
 
     ui.nav.findItemByTitle('Betas').should('be.visible').click();
 
@@ -41,12 +42,11 @@ describe('Betas landing page', () => {
   it('cannot access Betas landing page when feature is disabled', () => {
     // TODO Delete this test when betas feature flag is removed from codebase.
     mockAppendFeatureFlags({
-      selfServeBetas: makeFeatureFlagData(false),
+      selfServeBetas: false,
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     cy.visitWithLogin('/betas');
-    cy.wait(['@getFeatureFlags', '@getClientStream']);
+    cy.wait('@getFeatureFlags');
 
     cy.findByText('Not Found').should('be.visible');
 

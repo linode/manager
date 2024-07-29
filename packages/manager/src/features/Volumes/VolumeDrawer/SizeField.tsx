@@ -1,15 +1,17 @@
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { Box } from 'src/components/Box';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
+import { useVolumeTypesQuery } from 'src/queries/volumes/volumes';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
-import { getDynamicVolumePrice } from 'src/utilities/pricing/dynamicVolumePrice';
+import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 
 import { SIZE_FIELD_WIDTH } from '../VolumeCreate';
 
@@ -61,13 +63,16 @@ export const SizeField = (props: Props) => {
     ...rest
   } = props;
 
+  const { data: types, isLoading } = useVolumeTypesQuery();
+
   const helperText = resize
     ? `This volume can range from ${resize} GB to ${MAX_VOLUME_SIZE} GB in size.`
     : undefined;
 
-  const price = getDynamicVolumePrice({
+  const price = getDCSpecificPriceByType({
     regionId,
     size: value,
+    type: types?.[0],
   });
 
   const priceDisplayText = (
@@ -80,7 +85,12 @@ export const SizeField = (props: Props) => {
     </FormHelperText>
   );
 
-  const dynamicPricingHelperText = !resize && !isFromLinode && (
+  // The price display is only visible next to the size field on the Volumes Create page.
+  const shouldShowPrice = !resize && !isFromLinode;
+  const shouldShowPriceLoadingSpinner =
+    regionId && isLoading && shouldShowPrice;
+
+  const dynamicPricingHelperText = shouldShowPrice && (
     <Box marginLeft={'10px'} marginTop={'4px'}>
       <Typography>Select a region to see cost per month.</Typography>
     </Box>
@@ -106,7 +116,13 @@ export const SizeField = (props: Props) => {
         {...rest}
       />
       <div className={classes.priceDisplay}>
-        {hasSelectedRegion ? priceDisplayText : dynamicPricingHelperText}
+        {shouldShowPriceLoadingSpinner ? (
+          <CircleProgress noPadding size="sm" />
+        ) : hasSelectedRegion ? (
+          priceDisplayText
+        ) : (
+          dynamicPricingHelperText
+        )}
       </div>
     </>
   );

@@ -11,7 +11,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       },
       '&:hover': {
         backgroundColor: theme.color.grey7,
-        color: theme.palette.primary.main,
+        color: theme.textColors.linkHover,
       },
       alignItems: 'center',
       borderBottom: '2px solid transparent',
@@ -29,7 +29,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     '&[data-reach-tab][data-selected]': {
       '&:hover': {
-        color: theme.palette.primary.main,
+        color: theme.textColors.linkHover,
       },
       borderBottom: `3px solid ${theme.textColors.linkActiveLight}`,
       color: theme.textColors.headlineStatic,
@@ -38,11 +38,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-const Tab = ({
-  children,
-  className,
-  ...rest
-}: TabProps & { className?: string }) => {
+interface TabPropsWithClassName extends TabProps {
+  className?: string;
+}
+
+const Tab = ({ children, className, ...rest }: TabPropsWithClassName) => {
   const { classes, cx } = useStyles();
 
   return (

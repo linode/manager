@@ -1,4 +1,3 @@
-import { SupportTicket } from '@linode/api-v4/lib/support';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -17,7 +16,9 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useSupportTicketsQuery } from 'src/queries/support';
 
 import { TicketRow } from './TicketRow';
-import { getStatusFilter } from './ticketUtils';
+import { getStatusFilter, useTicketSeverityCapability } from './ticketUtils';
+
+import type { SupportTicket } from '@linode/api-v4/lib/support';
 
 export interface Props {
   filterStatus: 'closed' | 'open';
@@ -28,6 +29,8 @@ const preferenceKey = 'support-tickets';
 
 export const TicketList = (props: Props) => {
   const { filterStatus, newTicket } = props;
+
+  const hasSeverityCapability = useTicketSeverityCapability();
 
   const pagination = usePagination(1, preferenceKey);
 
@@ -61,11 +64,14 @@ export const TicketList = (props: Props) => {
       return (
         <TableRowLoading
           responsive={{
-            1: { smDown: true },
-            3: { xsDown: true },
-            5: { smDown: true },
+            1: { mdDown: true },
+            2: { mdDown: true },
+            3: !hasSeverityCapability ? { smDown: true } : { smDown: false },
+            4: hasSeverityCapability ? { smDown: true } : { smDown: false },
+            5: !hasSeverityCapability ? { mdDown: true } : { mdDown: false },
+            6: hasSeverityCapability ? { mdDown: true } : { mdDown: false },
           }}
-          columns={6}
+          columns={hasSeverityCapability ? 7 : 6}
         />
       );
     }
@@ -117,7 +123,21 @@ export const TicketList = (props: Props) => {
                 Ticket ID
               </TableSortCell>
             </Hidden>
-            <TableCell data-qa-support-regarding-header>Regarding</TableCell>
+            <Hidden mdDown>
+              <TableCell data-qa-support-regarding-header>Regarding</TableCell>
+            </Hidden>
+            {hasSeverityCapability && (
+              <TableSortCell
+                active={isActive('severity')}
+                data-qa-support-severity-header
+                direction={order}
+                handleClick={handleOrderChange}
+                label="severity"
+                noWrap
+              >
+                Severity
+              </TableSortCell>
+            )}
             <Hidden smDown>
               <TableSortCell
                 active={isActive('opened')}

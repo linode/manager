@@ -7,19 +7,9 @@ import { mockMatchMedia } from 'src/utilities/testHelpers';
 
 import { PlanContainer } from './PlanContainer';
 
-import type { TypeWithAvailability } from './types';
+import type { PlanWithAvailability } from './types';
 
-const mockPlan1: TypeWithAvailability = {
-  ...planSelectionTypeFactory.build(),
-  isLimitedAvailabilityPlan: false,
-};
-
-const mockPlan2: TypeWithAvailability = {
-  ...planSelectionTypeFactory.build(),
-  isLimitedAvailabilityPlan: true,
-};
-
-const mockPlans = [mockPlan1, mockPlan2];
+const mockPlans: PlanWithAvailability[] = planSelectionTypeFactory.buildList(2);
 
 beforeAll(() => mockMatchMedia());
 
@@ -27,6 +17,8 @@ describe('PlanContainer', () => {
   it('shows the no region selected message when no region is selected', () => {
     const { getByText } = renderWithTheme(
       <PlanContainer
+        allDisabledPlans={[]}
+        hasMajorityOfPlansDisabled={false}
         onSelect={() => {}}
         plans={mockPlans}
         selectedRegionId={undefined}

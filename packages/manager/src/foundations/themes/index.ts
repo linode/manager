@@ -1,18 +1,23 @@
 import { createTheme } from '@mui/material/styles';
-import _merge from 'lodash/merge';
 
-import { latoWeb } from 'src/foundations/fonts';
-// Types & Interfaces
-import { customDarkModeOptions } from 'src/foundations/themes/dark';
 // Themes & Brands
 import { darkTheme } from 'src/foundations/themes/dark';
-import {
+import { lightTheme } from 'src/foundations/themes/light';
+import { deepMerge } from 'src/utilities/deepMerge';
+
+import type { latoWeb } from 'src/foundations/fonts';
+// Types & Interfaces
+import type {
+  customDarkModeOptions,
+  notificationToast as notificationToastDark,
+} from 'src/foundations/themes/dark';
+import type {
   bg,
   borderColors,
   color,
+  notificationToast,
   textColors,
 } from 'src/foundations/themes/light';
-import { lightTheme } from 'src/foundations/themes/light';
 
 export type ThemeName = 'dark' | 'light';
 
@@ -38,8 +43,14 @@ type TextColors = MergeTypes<LightModeTextColors, DarkModeTextColors>;
 
 type LightModeBorderColors = typeof borderColors;
 type DarkModeBorderColors = typeof customDarkModeOptions.borderColors;
-
 type BorderColors = MergeTypes<LightModeBorderColors, DarkModeBorderColors>;
+
+type LightNotificationToast = typeof notificationToast;
+type DarkNotificationToast = typeof notificationToastDark;
+type NotificationToast = MergeTypes<
+  LightNotificationToast,
+  DarkNotificationToast
+>;
 
 /**
  * Augmenting the Theme and ThemeOptions.
@@ -58,7 +69,9 @@ declare module '@mui/material/styles/createTheme' {
     color: Colors;
     font: Fonts;
     graphs: any;
+    inputStyles: any;
     name: ThemeName;
+    notificationToast: NotificationToast;
     textColors: TextColors;
     visually: any;
   }
@@ -74,11 +87,13 @@ declare module '@mui/material/styles/createTheme' {
     color?: DarkModeColors | LightModeColors;
     font?: Fonts;
     graphs?: any;
+    inputStyles?: any;
     name: ThemeName;
+    notificationToast?: NotificationToast;
     textColors?: DarkModeTextColors | LightModeTextColors;
     visually?: any;
   }
 }
 
 export const light = createTheme(lightTheme);
-export const dark = createTheme(_merge(lightTheme, darkTheme));
+export const dark = createTheme(deepMerge(lightTheme, darkTheme));

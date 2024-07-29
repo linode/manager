@@ -10,16 +10,20 @@ import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useGrants, useProfile } from 'src/queries/profile';
-import { useCreateVolumeMutation } from 'src/queries/volumes';
-import { sendCreateVolumeEvent } from 'src/utilities/analytics';
+import {
+  useCreateVolumeMutation,
+  useVolumeTypesQuery,
+} from 'src/queries/volumes/volumes';
+import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
 import { ConfigSelect } from './ConfigSelect';
 import { PricePanel } from './PricePanel';
@@ -53,13 +57,16 @@ export const LinodeVolumeCreateForm = (props: Props) => {
   const { linode, onClose, openDetails } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
   const { mutateAsync: createVolume } = useCreateVolumeMutation();
+  const { data: types, isError, isLoading } = useVolumeTypesQuery();
 
   const { checkForNewEvents } = useEventsPollingActions();
 
-  const disabled = profile?.restricted && !grants?.global.add_volumes;
+  const isVolumesGrantReadOnly = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_volumes',
+  });
+
+  const isInvalidPrice = !types || isError;
 
   const {
     errors,
@@ -112,12 +119,12 @@ export const LinodeVolumeCreateForm = (props: Props) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {disabled && (
+      {isVolumesGrantReadOnly && (
         <Notice
           text={
             "You don't have permissions to create a new Volume. Please contact an account administrator for details."
           }
-          important
+          variant="error"
         />
       )}
       {error && <Notice text={error} variant="error" />}
@@ -145,7 +152,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
       </Typography>
       <TextField
         data-qa-volume-label
-        disabled={disabled}
+        disabled={isVolumesGrantReadOnly}
         errorText={touched.label ? errors.label : undefined}
         label="Label"
         name="label"
@@ -155,7 +162,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
         value={values.label}
       />
       <SizeField
-        disabled={disabled}
+        disabled={isVolumesGrantReadOnly}
         error={touched.size ? errors.size : undefined}
         isFromLinode
         name="size"
@@ -165,7 +172,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
         value={values.size}
       />
       <ConfigSelect
-        disabled={disabled}
+        disabled={isVolumesGrantReadOnly}
         error={touched.config_id ? errors.config_id : undefined}
         key={linode.id}
         linodeId={linode.id}
@@ -191,7 +198,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
               : undefined
             : undefined
         }
-        disabled={disabled}
+        disabled={isVolumesGrantReadOnly}
         label="Tags"
         name="tags"
         value={values.tags.map((tag) => ({ label: tag, value: tag }))}
@@ -203,9 +210,11 @@ export const LinodeVolumeCreateForm = (props: Props) => {
       />
       <ActionsPanel
         primaryButtonProps={{
-          disabled,
+          disabled: isVolumesGrantReadOnly || isInvalidPrice,
           label: 'Create Volume',
           loading: isSubmitting,
+          tooltipText:
+            !isLoading && isInvalidPrice ? PRICES_RELOAD_ERROR_NOTICE_TEXT : '',
           type: 'submit',
         }}
         secondaryButtonProps={{

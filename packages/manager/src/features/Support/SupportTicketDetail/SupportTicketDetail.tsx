@@ -1,4 +1,5 @@
 import { SupportReply } from '@linode/api-v4/lib/support';
+import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -9,7 +10,8 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { useProfile } from 'src/queries/profile';
+import { Stack } from 'src/components/Stack';
+import { useProfile } from 'src/queries/profile/profile';
 import {
   useInfiniteSupportTicketRepliesQuery,
   useSupportTicketQuery,
@@ -67,7 +69,7 @@ export const SupportTicketDetail = () => {
   }).toString();
 
   return (
-    <React.Fragment>
+    <StyledStack spacing={2}>
       <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
       <LandingHeader
         breadcrumbProps={{
@@ -104,7 +106,7 @@ export const SupportTicketDetail = () => {
         ))}
 
       <Grid container spacing={2}>
-        <Grid xs={12}>
+        <Grid style={{ padding: 0 }} xs={12}>
           {/* If the ticket isn't blank, display it, followed by replies (if any). */}
           {ticket.description && (
             <ExpandableTicketPanel
@@ -123,7 +125,7 @@ export const SupportTicketDetail = () => {
               ticketUpdated={ticket ? ticket.updated : ''}
             />
           ))}
-          {repliesLoading && <CircleProgress mini />}
+          {repliesLoading && <CircleProgress size="sm" />}
           {repliesError ? (
             <ErrorState errorText={repliesError?.[0].reason} />
           ) : null}
@@ -140,6 +142,13 @@ export const SupportTicketDetail = () => {
           )}
         </Grid>
       </Grid>
-    </React.Fragment>
+    </StyledStack>
   );
 };
+
+const StyledStack = styled(Stack, {
+  label: 'StyledStack',
+})(({ theme }) => ({
+  marginLeft: theme.spacing(),
+  marginRight: theme.spacing(),
+}));

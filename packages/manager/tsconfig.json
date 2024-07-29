@@ -2,7 +2,7 @@
   "compilerOptions": {
     /* Language and Environment */
     "jsx": "react",
-    "lib": ["dom", "es2020"],
+    "lib": ["dom", "dom.iterable", "es2020"],
     "target": "es5",
 
     /* Modules */
@@ -33,8 +33,11 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
     "types": ["vitest/globals", "@testing-library/jest-dom"],
+
+    /* Goodluck... */
+    "ignoreDeprecations": "5.0",
+    "suppressImplicitAnyIndexErrors": true,
 
     /* Completeness */
     "skipLibCheck": true,

@@ -2,9 +2,9 @@ import { StackScript } from '@linode/api-v4';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { baseApps } from 'src/features/StackScripts/stackScriptUtils';
+import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
 import { useFlags } from 'src/hooks/useFlags';
-import { useStackScriptsOCA } from 'src/queries/stackscripts';
+import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
 const trimOneClickFromLabel = (script: StackScript) => {
@@ -31,10 +31,10 @@ export const withMarketplaceApps = <Props>(
   // Only enable the query when the user is on the Marketplace page
   const enabled = type === 'One-Click';
 
-  const { data, error, isLoading } = useStackScriptsOCA(enabled);
+  const { data, error, isLoading } = useMarketplaceAppsQuery(enabled);
 
   const newApps = flags.oneClickApps || [];
-  const allowedApps = Object.keys({ ...baseApps, ...newApps });
+  const allowedApps = Object.keys({ ...oneClickApps, ...newApps });
 
   const filteredApps = (data ?? []).filter((script) => {
     return (

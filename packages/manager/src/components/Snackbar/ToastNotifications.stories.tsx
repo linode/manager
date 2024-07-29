@@ -3,8 +3,12 @@ import React from 'react';
 
 import { Button } from 'src/components/Button/Button';
 import { Snackbar } from 'src/components/Snackbar/Snackbar';
+import { getEventMessage } from 'src/features/Events/utils';
+
+import { Stack } from '../Stack';
 
 import type { Meta, StoryObj } from '@storybook/react';
+import type { VariantType } from 'notistack';
 
 /**
  * #### Timing
@@ -54,23 +58,10 @@ function Template(args: any) {
   );
 }
 
-function MyButton(args: any) {
-  const { onClick, sx, variant } = args;
-  const handleClick = () => {
-    // just call the onClick with the provided variant
-    onClick(variant);
-  };
-  return (
-    <Button buttonType="primary" onClick={handleClick} sx={sx}>
-      {variant}
-    </Button>
-  );
-}
-
 function Example() {
   const { enqueueSnackbar } = useSnackbar();
-  const variants = ['default', 'success', 'warning', 'error', 'info'];
-  const showToast = (variant: any) =>
+  const variants = ['default', 'success', 'warning', 'error', 'info'] as const;
+  const showToast = (variant: VariantType) =>
     enqueueSnackbar(
       'Toast message. This will auto destruct after five seconds.',
       {
@@ -78,21 +69,89 @@ function Example() {
       }
     );
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
-      {variants.map((eachVariant) => {
-        // map over each variant and show a button for each
-        return (
-          <MyButton
-            sx={{
-              margin: '0 5px',
-            }}
-            key={eachVariant}
-            onClick={showToast}
-            variant={eachVariant}
-          />
-        );
-      })}
-    </>
+    <Stack direction="row" flexWrap="wrap" gap={1}>
+      {variants.map((variant) => (
+        <Button
+          buttonType="primary"
+          key={variant}
+          onClick={() => showToast(variant)}
+        >
+          {variant}
+        </Button>
+      ))}
+    </Stack>
   );
 }
+
+export const WithEventMessage: Story = {
+  args: {
+    anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
+    hideIconVariant: true,
+    maxSnack: 5,
+  },
+  render: (args) => {
+    const WithEventMessage = () => {
+      const { enqueueSnackbar } = useSnackbar();
+      const message = getEventMessage({
+        action: 'placement_group_assign',
+        entity: {
+          label: 'Entity',
+          url: 'https://google.com',
+        },
+        secondary_entity: {
+          label: 'Secondary Entity',
+          url: 'https://google.com',
+        },
+        status: 'notification',
+      });
+
+      return (
+        <Button
+          buttonType="primary"
+          onClick={() => enqueueSnackbar(message, { variant: 'success' })}
+        >
+          Toast with Event
+        </Button>
+      );
+    };
+
+    return (
+      <Snackbar {...args}>
+        <WithEventMessage />
+      </Snackbar>
+    );
+  },
+};
+
+export const WithLongMessage: Story = {
+  args: {
+    anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
+    hideIconVariant: true,
+    maxSnack: 5,
+  },
+  render: (args) => {
+    const WithLongMessage = () => {
+      const { enqueueSnackbar } = useSnackbar();
+
+      return (
+        <Button
+          onClick={() =>
+            enqueueSnackbar(
+              'Tax Identification Number could not be verified. Please check your Tax ID for accuracy or contact customer support for assistance.',
+              { variant: 'error' }
+            )
+          }
+          buttonType="primary"
+        >
+          Toast with Long Message
+        </Button>
+      );
+    };
+
+    return (
+      <Snackbar {...args}>
+        <WithLongMessage />
+      </Snackbar>
+    );
+  },
+};

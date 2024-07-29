@@ -1,17 +1,20 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
+import { placementGroupFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsCreateDrawer } from './PlacementGroupsCreateDrawer';
 
 const commonProps = {
   allPlacementGroups: [],
+  disabledPlacementGroupCreateButton: false,
   onClose: vi.fn(),
   open: true,
 };
 
 const queryMocks = vi.hoisted(() => ({
+  useAllPlacementGroupsQuery: vi.fn().mockReturnValue({}),
   useCreatePlacementGroup: vi.fn().mockReturnValue({
     mutateAsync: vi.fn().mockResolvedValue({}),
     reset: vi.fn(),
@@ -22,6 +25,7 @@ vi.mock('src/queries/placementGroups', async () => {
   const actual = await vi.importActual('src/queries/placementGroups');
   return {
     ...actual,
+    useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
     useCreatePlacementGroup: queryMocks.useCreatePlacementGroup,
   };
 });
@@ -34,20 +38,20 @@ describe('PlacementGroupsCreateDrawer', () => {
 
     expect(getByLabelText('Label')).toBeEnabled();
     expect(getByLabelText('Region')).toBeEnabled();
-    expect(getByLabelText('Affinity Type')).toBeEnabled();
-    expect(getByText('Affinity Enforcement')).toBeInTheDocument();
+    expect(getByLabelText('Placement Group Type')).toBeEnabled();
+    expect(getByText('Placement Group Policy')).toBeInTheDocument();
 
     const radioInputs = getAllByRole('radio');
     expect(radioInputs).toHaveLength(2);
     expect(radioInputs[0]).toBeChecked();
   });
 
-  it('Affinity Type select should have the correct options', async () => {
+  it('Placement Group Type select should have the correct options', async () => {
     const { getByPlaceholderText, getByText } = renderWithTheme(
       <PlacementGroupsCreateDrawer {...commonProps} />
     );
 
-    const inputElement = getByPlaceholderText('Select an Affinity Type');
+    const inputElement = getByPlaceholderText('Select an Placement Group Type');
     fireEvent.focus(inputElement);
 
     fireEvent.change(inputElement, { target: { value: 'Affinity' } });
@@ -58,17 +62,20 @@ describe('PlacementGroupsCreateDrawer', () => {
   });
 
   it('should populate the region select with the selected region prop', async () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <PlacementGroupsCreateDrawer
         selectedRegionId="us-east"
         {...commonProps}
-      />
+      />,
+      {
+        MemoryRouter: {
+          initialEntries: ['/linodes/create'],
+        },
+      }
     );
 
     await waitFor(() => {
-      expect(getByTestId('selected-region')).toHaveTextContent(
-        'Newark, NJ (us-east)'
-      );
+      expect(getByText('Newark, NJ (us-east)')).toBeInTheDocument();
     });
   });
 
@@ -100,8 +107,8 @@ describe('PlacementGroupsCreateDrawer', () => {
       expect(
         queryMocks.useCreatePlacementGroup().mutateAsync
       ).toHaveBeenCalledWith({
-        affinity_type: 'anti_affinity:local',
-        is_strict: true,
+        placement_group_type: 'anti_affinity:local',
+        placement_group_policy: 'strict',
         label: 'my-label',
         region: 'us-east',
       });
@@ -109,22 +116,12 @@ describe('PlacementGroupsCreateDrawer', () => {
   });
 
   it('should display an error message if the region has reached capacity', async () => {
+    queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
+      data: [placementGroupFactory.build({ region: 'us-west' })],
+    });
     const regionWithoutCapacity = 'Fremont, CA (us-west)';
     const { getByPlaceholderText, getByText } = renderWithTheme(
-      <PlacementGroupsCreateDrawer
-        {...commonProps}
-        allPlacementGroups={[
-          {
-            affinity_type: 'affinity:local',
-            id: 1,
-            is_compliant: true,
-            is_strict: true,
-            label: 'my-placement-group',
-            members: [],
-            region: 'us-west',
-          },
-        ]}
-      />
+      <PlacementGroupsCreateDrawer {...commonProps} />
     );
 
     const regionSelect = getByPlaceholderText('Select a Region');
@@ -133,12 +130,15 @@ describe('PlacementGroupsCreateDrawer', () => {
       target: { value: regionWithoutCapacity },
     });
     await waitFor(() => {
-      const selectedRegionOption = getByText(regionWithoutCapacity);
-      fireEvent.click(selectedRegionOption);
+      expect(getByText(regionWithoutCapacity)).toBeInTheDocument();
     });
 
     await waitFor(() => {
-      expect(getByText('This region has reached capacity')).toBeInTheDocument();
+      expect(
+        getByText(
+          'You’ve reached the limit of placement groups you can create in this region.'
+        )
+      ).toBeInTheDocument();
     });
   });
 });

@@ -2,12 +2,12 @@
  * @file Cypress intercepts and mocks for Image API requests.
  */
 
-import { imageFactory } from '@src/factories';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { getFilters } from 'support/util/request';
 
-import type { Image, ImageStatus } from '@linode/api-v4';
+import type { Image } from '@linode/api-v4';
+import { makeResponse } from 'support/util/response';
 
 /**
  * Intercepts POST request to create a machine image and mocks the response.
@@ -54,9 +54,7 @@ export const mockGetCustomImages = (
     const filters = getFilters(req);
     if (filters?.type === 'manual') {
       req.reply(paginateResponse(images));
-      return;
     }
-    req.continue();
   });
 };
 
@@ -74,9 +72,7 @@ export const mockGetRecoveryImages = (
     const filters = getFilters(req);
     if (filters?.type === 'automatic') {
       req.reply(paginateResponse(images));
-      return;
     }
-    req.continue();
   });
 };
 
@@ -92,20 +88,15 @@ export const mockGetRecoveryImages = (
  * @returns Cypress chainable.
  */
 export const mockGetImage = (
-  label: string,
-  id: string,
-  status: ImageStatus
+  imageId: string,
+  image: Image
 ): Cypress.Chainable<null> => {
-  const encodedId = encodeURIComponent(id);
-  return cy.intercept('GET', apiMatcher(`images/${encodedId}*`), (req) => {
-    return req.reply(
-      imageFactory.build({
-        id,
-        label,
-        status,
-      })
-    );
-  });
+  const encodedId = encodeURIComponent(imageId);
+  return cy.intercept(
+    'GET',
+    apiMatcher(`images/${encodedId}*`),
+    makeResponse(image)
+  );
 };
 
 /**
@@ -134,4 +125,24 @@ export const mockUpdateImage = (
 export const mockDeleteImage = (id: string): Cypress.Chainable<null> => {
   const encodedId = encodeURIComponent(id);
   return cy.intercept('DELETE', apiMatcher(`images/${encodedId}`), {});
+};
+
+/**
+ * Intercepts POST request to update an image's regions and mocks the response.
+ *
+ * @param id - ID of image
+ * @param updatedImage - Updated image with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateImageRegions = (
+  id: string,
+  updatedImage: Image
+): Cypress.Chainable<null> => {
+  const encodedId = encodeURIComponent(id);
+  return cy.intercept(
+    'POST',
+    apiMatcher(`images/${encodedId}/regions`),
+    updatedImage
+  );
 };

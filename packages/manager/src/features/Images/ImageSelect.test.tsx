@@ -49,6 +49,7 @@ describe('ImageSelect', () => {
       expect(items[0]).toHaveProperty('label', groupNameMap.recommended);
       expect(items[0].options).toHaveLength(2);
     });
+
     it('should handle multiple groups', () => {
       const items = getImagesOptions([
         recommendedImage1,
@@ -60,12 +61,14 @@ describe('ImageSelect', () => {
       const deleted = items.find((item) => item.label === groupNameMap.deleted);
       expect(deleted!.options).toHaveLength(1);
     });
+
     it('should properly format GroupType options as RS Item type', () => {
       const category = getImagesOptions([recommendedImage1])[0];
       const option = category.options[0];
       expect(option).toHaveProperty('label', recommendedImage1.label);
       expect(option).toHaveProperty('value', recommendedImage1.id);
     });
+
     it('should handle empty input', () => {
       expect(getImagesOptions([])).toEqual([]);
     });
@@ -74,8 +77,9 @@ describe('ImageSelect', () => {
   describe('ImageSelect component', () => {
     it('should render', () => {
       const { getByText } = renderWithTheme(<ImageSelect {...props} />);
-      getByText(/image-0/i);
+      getByText(/image-1(?!\d)/i);
     });
+
     it('should display an error', () => {
       const imageError = 'An error';
       const { getByText } = renderWithTheme(

@@ -3,7 +3,6 @@ import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { CircularProgress } from 'src/components/CircularProgress';
 import { IconButton } from 'src/components/IconButton';
 import { MenuItem, MenuItemProps } from 'src/components/MenuItem';
 
@@ -70,9 +69,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = MenuItemProps & WrapperMenuItemProps;
+interface WrapperMenuItemCombinedProps
+  extends Omit<MenuItemProps, 'ref'>,
+    WrapperMenuItemProps {}
 
-export const WrapperMenuItem = (props: CombinedProps) => {
+export const WrapperMenuItem = (props: WrapperMenuItemCombinedProps) => {
   const { classes } = useStyles();
   const { className, isLoading, tooltip, ...rest } = props;
   const shouldWrapLabel = isLoading || tooltip;
@@ -86,9 +87,6 @@ export const WrapperMenuItem = (props: CombinedProps) => {
       {...rest}
       className={`${classes.root} ${className} ${tooltip && 'hasTooltip'}`}
     >
-      {isLoading && (
-        <CircularProgress className={classes.circleProgress} size={20} />
-      )}
       <span className={shouldWrapLabel && classes.labelWrapper}>
         <span className={shouldWrapLabel && classes.label}>
           {props.children}

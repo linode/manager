@@ -16,8 +16,8 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useGrants } from 'src/queries/profile';
-import { sendLinodeConfigurationDocsEvent } from 'src/utilities/analytics';
+import { useGrants } from 'src/queries/profile/profile';
+import { sendLinodeConfigurationDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { BootConfigDialog } from './BootConfigDialog';
 import { ConfigRow } from './ConfigRow';

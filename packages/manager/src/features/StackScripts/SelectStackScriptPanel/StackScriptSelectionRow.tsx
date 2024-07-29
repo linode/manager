@@ -37,10 +37,13 @@ interface DispatchProps {
   openStackScriptDialog: (stackScriptId: number) => void;
 }
 
-export type CombinedProps = Props & DispatchProps & RenderGuardProps;
+export interface StackScriptSelectionRowProps
+  extends Props,
+    DispatchProps,
+    RenderGuardProps {}
 
 export class StackScriptSelectionRow extends React.Component<
-  CombinedProps,
+  StackScriptSelectionRowProps,
   {}
 > {
   render() {
@@ -90,7 +93,7 @@ export class StackScriptSelectionRow extends React.Component<
     };
 
     return (
-      <TableRow ariaLabel={label} data-qa-table-row={label}>
+      <TableRow data-qa-table-row={label}>
         <TableCell>
           <Radio
             checked={!disabled && checked}
@@ -116,7 +119,9 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
   };
 };
 
-export default recompose<CombinedProps, Props & RenderGuardProps>(
+interface ExportProps extends Props, RenderGuardProps {}
+
+export default recompose<StackScriptSelectionRowProps, ExportProps>(
   connect(undefined, mapDispatchToProps),
   RenderGuard
 )(StackScriptSelectionRow);

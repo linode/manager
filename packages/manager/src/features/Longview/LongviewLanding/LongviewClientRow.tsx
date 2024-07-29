@@ -10,7 +10,7 @@ import withLongviewClients, {
 import withClientStats, {
   Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
-import { useGrants } from 'src/queries/profile';
+import { useGrants } from 'src/queries/profile/profile';
 
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import { CPUGauge } from './Gauges/CPU';
@@ -31,9 +31,13 @@ interface Props extends ActionHandlers {
   openPackageDrawer: () => void;
 }
 
-type CombinedProps = Props & LVDataProps & DispatchProps & GrantProps;
+interface LongviewClientRowProps
+  extends Props,
+    LVDataProps,
+    DispatchProps,
+    GrantProps {}
 
-const LongviewClientRow = (props: CombinedProps) => {
+const LongviewClientRow = (props: LongviewClientRowProps) => {
   const {
     clientAPIKey,
     clientID,
@@ -177,7 +181,7 @@ interface GrantProps {
   userCanModifyClient: boolean;
 }
 
-export default compose<CombinedProps, Props>(
+export default compose<LongviewClientRowProps, Props>(
   React.memo,
   withClientStats<Props>((ownProps) => ownProps.clientID),
   /** We only need the update action here, easier than prop drilling through 4 components */

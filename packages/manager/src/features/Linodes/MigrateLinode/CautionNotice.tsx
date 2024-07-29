@@ -7,10 +7,10 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
-import { useLinodeVolumesQuery } from 'src/queries/volumes';
+import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
 
 interface Props {
-  edgeRegionWarning?: string;
+  distributedRegionWarning?: string;
   error?: string;
   hasConfirmed: boolean;
   linodeId: number | undefined;
@@ -21,7 +21,7 @@ interface Props {
 
 export const CautionNotice = React.memo((props: Props) => {
   const {
-    edgeRegionWarning,
+    distributedRegionWarning,
     error,
     hasConfirmed,
     linodeId,
@@ -105,7 +105,7 @@ export const CautionNotice = React.memo((props: Props) => {
           to complete.
         </li>
         {metadataWarning && <li>{metadataWarning}</li>}
-        {edgeRegionWarning && <li>{edgeRegionWarning}</li>}
+        {distributedRegionWarning && <li>{distributedRegionWarning}</li>}
       </ul>
       {error && <Notice text={error} variant="error" />}
       <Checkbox

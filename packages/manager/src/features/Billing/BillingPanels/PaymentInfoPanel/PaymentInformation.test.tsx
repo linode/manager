@@ -25,8 +25,8 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/profile', async () => {
-  const actual = await vi.importActual<any>('src/queries/profile');
+vi.mock('src/queries/profile/profile', async () => {
+  const actual = await vi.importActual<any>('src/queries/profile/profile');
   return {
     ...actual,
     useGrants: queryMocks.useGrants,
@@ -145,10 +145,7 @@ describe('Payment Info Panel', () => {
             {...props}
             profile={queryMocks.useProfile().data}
           />
-        </PayPalScriptProvider>,
-        {
-          flags: { parentChildAccountAccess: true },
-        }
+        </PayPalScriptProvider>
       );
 
       expect(getByTestId(ADD_PAYMENT_METHOD_BUTTON_ID)).toHaveAttribute(

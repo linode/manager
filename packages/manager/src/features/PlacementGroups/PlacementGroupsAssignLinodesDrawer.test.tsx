@@ -12,9 +12,8 @@ import { PlacementGroupsAssignLinodesDrawer } from './PlacementGroupsAssignLinod
 
 const queryMocks = vi.hoisted(() => ({
   useAllLinodesQuery: vi.fn().mockReturnValue({}),
+  useAllPlacementGroupsQuery: vi.fn().mockReturnValue({}),
   useAssignLinodesToPlacementGroup: vi.fn().mockReturnValue({}),
-  useRegionsQuery: vi.fn().mockReturnValue({}),
-  useUnpaginatedPlacementGroupsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/linodes/linodes', async () => {
@@ -29,16 +28,7 @@ vi.mock('src/queries/placementGroups', async () => {
   const actual = await vi.importActual('src/queries/placementGroups');
   return {
     ...actual,
-    useUnpaginatedPlacementGroupsQuery:
-      queryMocks.useUnpaginatedPlacementGroupsQuery,
-  };
-});
-
-vi.mock('src/queries/regions/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions/regions');
-  return {
-    ...actual,
-    useRegionsQuery: queryMocks.useRegionsQuery,
+    useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
   };
 });
 
@@ -61,6 +51,7 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
       <PlacementGroupsAssignLinodesDrawer
         onClose={vi.fn()}
         open={true}
+        region={regionFactory.build()}
         selectedPlacementGroup={placementGroupFactory.build()}
       />
     );
@@ -76,8 +67,7 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
         linodeFactory.build({ id: 11, label: 'Linode-11', region: 'us-east' }),
       ],
     });
-    queryMocks.useRegionsQuery.mockReturnValue(regionFactory.buildList(5));
-    queryMocks.useUnpaginatedPlacementGroupsQuery.mockReturnValue({
+    queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: placementGroupFactory.build(),
     });
     queryMocks.useAssignLinodesToPlacementGroup.mockReturnValue(
@@ -130,12 +120,13 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
     const { getByPlaceholderText, getByRole, getByText } = renderWithTheme(
       <PlacementGroupsAssignLinodesDrawer
         selectedPlacementGroup={placementGroupFactory.build({
-          affinity_type: 'anti_affinity:local',
+          placement_group_type: 'anti_affinity:local',
           label: 'PG-1',
           region: 'us-east',
         })}
         onClose={vi.fn()}
         open={true}
+        region={regionFactory.build()}
       />
     );
 

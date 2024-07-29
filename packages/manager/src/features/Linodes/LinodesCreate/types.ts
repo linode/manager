@@ -1,15 +1,17 @@
-import { Image } from '@linode/api-v4/lib/images';
-import {
+import type { Image } from '@linode/api-v4/lib/images';
+import type {
   CreateLinodeRequest,
   Linode,
   LinodeTypeClass,
 } from '@linode/api-v4/lib/linodes';
-import { Region } from '@linode/api-v4/lib/regions';
-import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
-
-import { Tag } from 'src/components/TagsInput/TagsInput';
-import { ExtendedType } from 'src/utilities/extendType';
+import type { Region } from '@linode/api-v4/lib/regions';
+import type {
+  StackScript,
+  UserDefinedField,
+} from '@linode/api-v4/lib/stackscripts';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Tag } from 'src/components/TagsInput/TagsInput';
+import type { ExtendedType } from 'src/utilities/extendType';
 
 export type TypeInfo =
   | {
@@ -91,18 +93,12 @@ export interface BaseFormStateAndHandlers {
   selectedImageID?: string;
   selectedRegionID?: string;
   selectedTypeID?: string;
-  selectedVlanIDs: number[];
   setAuthorizedUsers: (usernames: string[]) => void;
-  setVlanID: (ids: number[]) => void;
   tags?: Tag[];
   toggleBackupsEnabled: () => void;
   togglePrivateIPEnabled: () => void;
   updateImageID: (id: string) => void;
-  updateLabel: (
-    event: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => void;
+  updateLabel: (label: string) => void;
   updatePassword: (password: string) => void;
   updateRegionID: (id: string) => void;
   updateTags: (tags: Tag[]) => void;
@@ -166,7 +162,7 @@ export type AllFormStateAndHandlers = BaseFormStateAndHandlers &
 export type LinodeCreateType =
   | 'Backups'
   | 'Clone Linode'
-  | 'Distributions'
   | 'Images'
+  | 'OS'
   | 'One-Click'
   | 'StackScripts';

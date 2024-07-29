@@ -9,7 +9,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 
 interface Props {
   closeDialog: () => void;
@@ -94,7 +94,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       onClose={closeDialog}
       open={open}
       textFieldStyle={{ maxWidth: '415px' }}
-      title="Are you sure you want to close your Linode account?"
+      title="Are you sure you want to close your cloud computing services account?"
     >
       {errors ? (
         <Notice text={errors ? errors[0].reason : ''} variant="error" />

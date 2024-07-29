@@ -19,9 +19,8 @@ import {
 } from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { mapStackScriptLabelToOCA } from 'src/features/OneClickApps/utils';
-import { baseApps } from 'src/features/StackScripts/stackScriptUtils';
 import { stackScriptFactory } from 'src/factories/stackscripts';
-import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
+import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
 
 import type { StackScript } from '@linode/api-v4';
 import type { OCA } from '@src/features/OneClickApps/types';
@@ -42,7 +41,7 @@ describe('OneClick Apps (OCA)', () => {
       const stackScripts: StackScript[] = xhr.response?.body.data ?? [];
 
       const trimmedApps: StackScript[] = filterOneClickApps({
-        baseApps,
+        baseAppIds: Object.keys(oneClickApps).map(Number),
         newApps: {},
         queryResults: stackScripts,
       });
@@ -50,14 +49,16 @@ describe('OneClick Apps (OCA)', () => {
       // Check the content of the OCA listing
       cy.findByTestId('one-click-apps-container').within(() => {
         // Check that all sections are present (note: New apps can be empty so not asserting its presence)
-        cy.findByTestId('Popular apps').should('exist');
-        cy.findByTestId('All apps').should('exist');
+        cy.findByText('Popular apps').should('be.visible');
+        cy.findByText('All apps').should('be.visible');
 
         trimmedApps.forEach((stackScript) => {
           const { decodedLabel, label } = handleAppLabel(stackScript);
 
           // Check that every OCA is listed with the correct label
-          cy.get(`[data-qa-select-card-heading="${label}"]`).should('exist');
+          cy.get(`[data-qa-select-card-heading="${label.trim()}"]`).should(
+            'exist'
+          );
 
           // Check that every OCA has a drawer match
           // This validates the regex in `mapStackScriptLabelToOCA`
@@ -65,33 +66,35 @@ describe('OneClick Apps (OCA)', () => {
           // This is only true for the apps defined in `oneClickApps.ts`
           expect(
             mapStackScriptLabelToOCA({
-              oneClickApps,
+              oneClickApps: Object.values(oneClickApps),
               stackScriptLabel: decodedLabel,
             })
           ).to.not.be.undefined;
         });
       });
 
-      // Check drawer content for one OCA candidate
-      const candidate = trimmedApps[0].label;
+      // Check drawer content for one OCA candidate.
+      const candidateApp = trimmedApps[0];
+      const candidateLabel = handleAppLabel(trimmedApps[0]).label;
+
       const stackScriptCandidate = cy
-        .get(`[data-qa-selection-card-info="${candidate}"]`)
+        .get(`[data-qa-selection-card-info="${candidateLabel.trim()}"]`)
         .first();
       stackScriptCandidate.should('exist').click();
 
       const app: OCA | undefined = mapStackScriptLabelToOCA({
-        oneClickApps,
-        stackScriptLabel: candidate,
+        oneClickApps: Object.values(oneClickApps),
+        stackScriptLabel: candidateApp.label,
       });
 
       if (!app) {
         throw new Error(
-          `Failed to map StackScript label '${candidate}' to a One-Click App`
+          `Failed to map StackScript label '${candidateLabel}' to a One-Click App`
         );
       }
 
       ui.drawer
-        .findByTitle(trimmedApps[0].label)
+        .findByTitle(trimmedApps[0].label.trim())
         .should('be.visible')
         .within(() => {
           containsVisible(app.description);
@@ -106,15 +109,15 @@ describe('OneClick Apps (OCA)', () => {
       const initialNumberOfApps = trimmedApps.length;
       cy.findByPlaceholderText('Search for app name')
         .should('exist')
-        .type(candidate);
+        .type(candidateLabel);
       cy.findByTestId('one-click-apps-container').within(() => {
         cy.get('[data-qa-selection-card="true"]').should(
           'have.length.below',
           initialNumberOfApps
         );
-        cy.get(`[data-qa-selection-card-info="${candidate}"]`).should(
-          'be.visible'
-        );
+        cy.get(
+          `[data-qa-selection-card-info="${candidateLabel.trim()}"]`
+        ).should('be.visible');
       });
     });
   });
@@ -129,7 +132,7 @@ describe('OneClick Apps (OCA)', () => {
       description: 'Minecraft OCA',
       ordinal: 10,
       logo_url: 'assets/Minecraft.svg',
-      images: ['linode/debian11', 'linode/ubuntu20.04'],
+      images: ['linode/debian11', 'linode/ubuntu22.04'],
       deployments_total: 18854,
       deployments_active: 412,
       is_public: true,
@@ -159,14 +162,15 @@ describe('OneClick Apps (OCA)', () => {
 
     const firstName = randomLabel();
     const password = randomString(16);
-    const image = 'linode/ubuntu20.04';
+    const image = 'linode/ubuntu22.04';
     const rootPassword = randomString(16);
-    const region = chooseRegion();
+    const region = chooseRegion({ capabilities: ['Vlans'] });
     const linodeLabel = randomLabel();
     const levelName = 'Get the enderman!';
 
     mockGetStackScripts([stackScripts]).as('getStackScripts');
     mockAppendFeatureFlags({
+      linodeCreateRefactor: makeFeatureFlagData(false),
       oneClickApps: makeFeatureFlagData({
         401709: 'E2E Test App',
       }),
@@ -180,7 +184,7 @@ describe('OneClick Apps (OCA)', () => {
 
     cy.findByTestId('one-click-apps-container').within(() => {
       // Since it is mock data we can assert the New App section is present
-      cy.findByTestId('New apps').should('exist');
+      cy.findByText('New apps').should('be.visible');
 
       // Check that the app is listed and select it
       cy.get('[data-qa-selection-card="true"]').should('have.length', 3);

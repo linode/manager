@@ -1,4 +1,3 @@
-import { SupportTicket } from '@linode/api-v4/lib/support';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -9,6 +8,11 @@ import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
+
+import { SEVERITY_LABEL_MAP } from './constants';
+import { useTicketSeverityCapability } from './ticketUtils';
+
+import type { SupportTicket } from '@linode/api-v4/lib/support';
 
 interface Props {
   ticket: SupportTicket;
@@ -33,6 +37,8 @@ const renderEntityLink = (ticket: SupportTicket) => {
 };
 
 export const TicketRow = ({ ticket }: Props) => {
+  const hasSeverityCapability = useTicketSeverityCapability();
+
   const ticketSummary = sanitizeHTML({
     disallowedTagsMode: 'discard',
     sanitizingTier: 'none',
@@ -41,7 +47,6 @@ export const TicketRow = ({ ticket }: Props) => {
 
   return (
     <TableRow
-      ariaLabel={`Ticket subject ${ticketSummary}`}
       data-qa-support-ticket={ticket.id}
       data-testid="ticket-row"
       key={`ticket-${ticket.id}`}
@@ -52,14 +57,21 @@ export const TicketRow = ({ ticket }: Props) => {
       <Hidden mdDown>
         <TableCell data-qa-support-id>{ticket.id}</TableCell>
       </Hidden>
-      <TableCell
-        sx={{
-          lineHeight: 1.1,
-        }}
-        data-qa-support-entity
-      >
-        {renderEntityLink(ticket)}
-      </TableCell>
+      <Hidden mdDown>
+        <TableCell
+          sx={{
+            lineHeight: 1.1,
+          }}
+          data-qa-support-entity
+        >
+          {renderEntityLink(ticket)}
+        </TableCell>
+      </Hidden>
+      {hasSeverityCapability && (
+        <TableCell data-qa-support-severity>
+          {ticket.severity ? SEVERITY_LABEL_MAP.get(ticket.severity) : ''}
+        </TableCell>
+      )}
       <Hidden smDown>
         <TableCell data-qa-support-date>
           <DateTimeDisplay value={ticket.opened} />

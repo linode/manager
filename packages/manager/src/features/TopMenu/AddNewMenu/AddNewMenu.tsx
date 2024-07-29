@@ -18,18 +18,14 @@ import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
-import LoadBalancerIcon from 'src/assets/icons/entityIcons/loadbalancer.svg';
 import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
+import PlacementGroupsIcon from 'src/assets/icons/entityIcons/placement-groups.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import VPCIcon from 'src/assets/icons/entityIcons/vpc.svg';
 import { Button } from 'src/components/Button/Button';
-import { Divider } from 'src/components/Divider';
-import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
-import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
-import { useDatabaseEnginesQuery } from 'src/queries/databases';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
+import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 
 interface LinkProps {
   attr?: { [key: string]: boolean };
@@ -42,32 +38,11 @@ interface LinkProps {
 
 export const AddNewMenu = () => {
   const theme = useTheme();
-  const { data: account, error: accountError } = useAccount();
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
-  const flags = useFlags();
   const open = Boolean(anchorEl);
 
-  const checkRestrictedUser = !Boolean(flags.databases) && !!accountError;
-  const {
-    error: enginesError,
-    isLoading: enginesLoading,
-  } = useDatabaseEnginesQuery(checkRestrictedUser);
-
-  const showDatabases =
-    isFeatureEnabled(
-      'Managed Databases',
-      Boolean(flags.databases),
-      account?.capabilities ?? []
-    ) ||
-    (checkRestrictedUser && !enginesLoading && !enginesError);
-
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
-
-  const { isACLBEnabled } = useIsACLBEnabled();
+  const { isDatabasesEnabled } = useIsDatabasesEnabled();
+  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -91,14 +66,6 @@ export const AddNewMenu = () => {
       link: '/volumes/create',
     },
     {
-      // TODO ACLB: Replace with ACLB copy when available
-      description: 'Ensure your services are highly available',
-      entity: 'Cloud Load Balancer',
-      hide: !isACLBEnabled,
-      icon: LoadBalancerIcon,
-      link: '/loadbalancers/create',
-    },
-    {
       description: 'Ensure your services are highly available',
       entity: 'NodeBalancer',
       icon: NodebalancerIcon,
@@ -107,7 +74,6 @@ export const AddNewMenu = () => {
     {
       description: 'Create a private and isolated network',
       entity: 'VPC',
-      hide: !showVPCs,
       icon: VPCIcon,
       link: '/vpcs/create',
     },
@@ -118,6 +84,13 @@ export const AddNewMenu = () => {
       link: '/firewalls/create',
     },
     {
+      description: "Control your Linodes' physical placement",
+      entity: 'Placement Groups',
+      hide: !isPlacementGroupsEnabled,
+      icon: PlacementGroupsIcon,
+      link: '/placement-groups/create',
+    },
+    {
       description: 'Manage your DNS records',
       entity: 'Domain',
       icon: DomainIcon,
@@ -126,7 +99,7 @@ export const AddNewMenu = () => {
     {
       description: 'High-performance managed database clusters',
       entity: 'Database',
-      hide: !showDatabases,
+      hide: !isDatabasesEnabled,
       icon: DatabaseIcon,
       link: '/databases/create',
     },
@@ -196,16 +169,7 @@ export const AddNewMenu = () => {
         {links.map(
           (link, i) =>
             !link.hide && [
-              i !== 0 && <Divider spacingBottom={0} spacingTop={0} />,
               <MenuItem
-                sx={{
-                  '&:hover': {
-                    // This MUI Menu gets special colors compared
-                    // to a standard menu such as the NodeBalancer Config Node Mode select menu
-                    backgroundColor: theme.bg.app,
-                  },
-                  paddingY: 1.5,
-                }}
                 component={Link}
                 key={link.entity}
                 onClick={handleClose}
@@ -217,19 +181,10 @@ export const AddNewMenu = () => {
                 }}
               >
                 <ListItemIcon>
-                  <link.icon
-                    color={theme.palette.text.primary}
-                    height={20}
-                    width={20}
-                  />
+                  <link.icon height={20} width={20} />
                 </ListItemIcon>
                 <Stack>
-                  <Typography
-                    color={theme.textColors.linkActiveLight}
-                    variant="h3"
-                  >
-                    {link.entity}
-                  </Typography>
+                  <Typography variant="h3">{link.entity}</Typography>
                   <Typography>{link.description}</Typography>
                 </Stack>
               </MenuItem>,

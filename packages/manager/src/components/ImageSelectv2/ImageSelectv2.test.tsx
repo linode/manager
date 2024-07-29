@@ -65,12 +65,7 @@ describe('ImageSelectv2', () => {
 
     await userEvent.click(imageOption);
 
-    expect(onChange).toHaveBeenCalledWith(
-      expect.anything(),
-      image,
-      'selectOption',
-      expect.anything()
-    );
+    expect(onChange).toHaveBeenCalledWith(image);
   });
 
   it('should correctly initialize with a default value', async () => {
@@ -87,5 +82,21 @@ describe('ImageSelectv2', () => {
     );
 
     await findByDisplayValue(image.label);
+  });
+
+  it('should render an OS icon for the selected Image', async () => {
+    const image = imageFactory.build();
+
+    server.use(
+      http.get('*/v4/images', () => {
+        return HttpResponse.json(makeResourcePage([image]));
+      })
+    );
+
+    const { findByTestId } = renderWithTheme(
+      <ImageSelectv2 value={image.id} />
+    );
+
+    await findByTestId('os-icon');
   });
 });

@@ -1,3 +1,4 @@
+// TODO eventMessagesV2: delete when flag is removed
 import { Event } from '@linode/api-v4/lib/account/types';
 import * as React from 'react';
 
@@ -35,7 +36,7 @@ export const RenderEvent = React.memo((props: RenderEventProps) => {
     <div className={unseenEventClass}>
       <HighlightedMarkdown
         sanitizeOptions={{
-          allowedTags: getAllowedHTMLTags('strict'),
+          ALLOWED_TAGS: getAllowedHTMLTags('strict'),
           disallowedTagsMode: 'discard',
         }}
         textOrMarkdown={message}

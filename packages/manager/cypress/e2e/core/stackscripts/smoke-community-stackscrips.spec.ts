@@ -5,15 +5,17 @@ import {
   mockGetStackScripts,
   mockGetStackScript,
 } from 'support/intercepts/stackscripts';
-import { containsClick } from 'support/helpers';
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { cleanUp } from 'support/util/cleanup';
 import { interceptCreateLinode } from 'support/intercepts/linodes';
-import { getProfile } from '@linode/api-v4/lib';
-import { Profile, StackScript } from '@linode/api-v4';
+import { getProfile } from '@linode/api-v4';
+import { Profile } from '@linode/api-v4';
 import { formatDate } from '@src/utilities/formatDate';
+
+import type { StackScript } from '@linode/api-v4';
+import { mockGetUserPreferences } from 'support/intercepts/profile';
 
 const mockStackScripts: StackScript[] = [
   stackScriptFactory.build({
@@ -103,7 +105,7 @@ describe('Community Stackscripts integration tests', () => {
     cy.get('[data-qa-stackscript-empty-msg="true"]').should('not.exist');
     cy.findByText('Automate deployment scripts').should('not.exist');
 
-    cy.defer(getProfile(), 'getting profile').then((profile: Profile) => {
+    cy.defer(getProfile, 'getting profile').then((profile: Profile) => {
       const dateFormatOptionsLanding = {
         timezone: profile.timezone,
         displayTime: false,
@@ -188,30 +190,34 @@ describe('Community Stackscripts integration tests', () => {
     cy.visitWithLogin('/stackscripts/community');
     cy.wait('@getStackScripts');
 
+    // Confirm that empty state is not shown.
     cy.get('[data-qa-stackscript-empty-msg="true"]').should('not.exist');
     cy.findByText('Automate deployment scripts').should('not.exist');
 
-    cy.get('tr').then((value) => {
-      const rowCount = Cypress.$(value).length - 1; // Remove the table title row
-
-      interceptGetStackScripts().as('getStackScripts1');
-      cy.scrollTo(0, 500);
-      cy.wait('@getStackScripts1');
-
-      cy.get('tr').its('length').should('be.gt', rowCount);
-
-      cy.get('tr').then((value) => {
-        const rowCount = Cypress.$(value).length - 1;
-
-        interceptGetStackScripts().as('getStackScripts2');
-        cy.get('tr')
-          .eq(rowCount)
-          .scrollIntoView({ offset: { top: 150, left: 0 } });
-        cy.wait('@getStackScripts2');
-
-        cy.get('tr').its('length').should('be.gt', rowCount);
-      });
-    });
+    // Confirm that scrolling to the bottom of the StackScripts list causes
+    // pagination to occur automatically. Perform this check 3 times.
+    for (let i = 0; i < 3; i += 1) {
+      cy.findByLabelText('List of StackScripts')
+        .should('be.visible')
+        .within(() => {
+          // Scroll to the bottom of the StackScripts list, confirm Cloud fetches StackScripts,
+          // then confirm that list updates with the new StackScripts shown.
+          cy.get('tr').last().scrollIntoView();
+          cy.wait('@getStackScripts').then((xhr) => {
+            const stackScripts = xhr.response?.body['data'] as
+              | StackScript[]
+              | undefined;
+            if (!stackScripts) {
+              throw new Error(
+                'Unexpected response received when fetching StackScripts'
+              );
+            }
+            cy.contains(
+              `${stackScripts[0].username} / ${stackScripts[0].label}`
+            ).should('be.visible');
+          });
+        });
+    }
   });
 
   /*
@@ -254,12 +260,16 @@ describe('Community Stackscripts integration tests', () => {
     const fairPassword = 'Akamai123';
     const rootPassword = randomString(16);
     const image = 'AlmaLinux 9';
-    const region = chooseRegion();
+    const region = chooseRegion({ capabilities: ['Vlans'] });
     const linodeLabel = randomLabel();
 
+    // Ensure that the Primary Nav is open
+    mockGetUserPreferences({ desktop_sidebar_open: false }).as(
+      'getPreferences'
+    );
     interceptGetStackScripts().as('getStackScripts');
     cy.visitWithLogin('/stackscripts/community');
-    cy.wait('@getStackScripts');
+    cy.wait(['@getStackScripts', '@getPreferences']);
 
     cy.get('[id="search-by-label,-username,-or-description"]')
       .click()
@@ -320,9 +330,9 @@ describe('Community Stackscripts integration tests', () => {
     cy.get('[id="vpn-password"]').should('have.value', vpnPassword);
 
     // Choose an image
-    cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
-      containsClick('Choose an image').type(`${image}{enter}`);
-    });
+    cy.findByPlaceholderText('Choose an image').should('be.visible').click();
+
+    cy.findByText(image).should('be.visible').click();
 
     // Choose a region
     ui.button
@@ -364,7 +374,10 @@ describe('Community Stackscripts integration tests', () => {
       .should('be.visible')
       .should('be.enabled')
       .click();
-    cy.contains('Password does not meet complexity requirements.');
+
+    cy.findByText('Password does not meet', { exact: false }).should(
+      'be.visible'
+    );
 
     cy.get('[id="root-password"]').clear().type(fairPassword);
     ui.button
@@ -372,7 +385,10 @@ describe('Community Stackscripts integration tests', () => {
       .should('be.visible')
       .should('be.enabled')
       .click();
-    cy.contains('Password does not meet complexity requirements.');
+
+    cy.findByText('Password does not meet', { exact: false }).should(
+      'be.visible'
+    );
 
     // Only strong password is allowed to rebuild the linode
     cy.get('[id="root-password"]').type(rootPassword);

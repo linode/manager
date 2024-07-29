@@ -1,14 +1,19 @@
-import { Region } from '@linode/api-v4';
-import { FormikErrors } from 'formik';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
-import { CreateVPCFieldState } from 'src/hooks/useCreateVPC';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { VPC_CREATE_FORM_VPC_HELPER_TEXT } from '../../constants';
 import { StyledBodyTypography } from './VPCCreateForm.styles';
+
+import type { Region } from '@linode/api-v4';
+import type { FormikErrors } from 'formik';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
+import type { CreateVPCFieldState } from 'src/hooks/useCreateVPC';
 
 interface Props {
   disabled?: boolean;
@@ -21,11 +26,30 @@ interface Props {
 
 export const VPCTopSectionContent = (props: Props) => {
   const { disabled, errors, isDrawer, onChangeField, regions, values } = props;
+  const location = useLocation();
+  const isFromLinodeCreate = location.pathname.includes('/linodes/create');
+  const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+    location.search
+  );
+
   return (
     <>
       <StyledBodyTypography isDrawer={isDrawer} variant="body1">
         {VPC_CREATE_FORM_VPC_HELPER_TEXT}{' '}
-        <Link to="https://www.linode.com/docs/products/networking/vpc/">
+        <Link
+          onClick={() =>
+            isFromLinodeCreate &&
+            sendLinodeCreateFormStepEvent({
+              action: 'click',
+              category: 'link',
+              createType: queryParams.type ?? 'OS',
+              formStepName: 'Create VPC Drawer',
+              label: 'Learn more',
+              version: 'v1',
+            })
+          }
+          to="https://www.linode.com/docs/products/networking/vpc/"
+        >
           Learn more
         </Link>
         .
@@ -35,10 +59,9 @@ export const VPCTopSectionContent = (props: Props) => {
         currentCapability="VPCs"
         disabled={isDrawer ? true : disabled}
         errorText={errors.region}
-        handleSelection={(region: string) => onChangeField('region', region)}
-        isClearable
+        onChange={(e, region) => onChangeField('region', region?.id ?? '')}
         regions={regions}
-        selectedId={values.region}
+        value={values.region}
       />
       <TextField
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

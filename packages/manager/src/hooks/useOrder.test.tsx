@@ -1,9 +1,7 @@
-import { QueryClient } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
-
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
-import { usePreferences } from 'src/queries/preferences';
+import { usePreferences } from 'src/queries/profile/preferences';
 import { OrderSet } from 'src/types/ManagerPreferences';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
@@ -77,8 +75,7 @@ describe('useOrder hook', () => {
   });
 
   it('use preferences are used when there are no query params', async () => {
-    const queryClient = new QueryClient();
-
+    const queryClient = queryClientFactory();
     server.use(
       http.get('*/profile/preferences', () => {
         return HttpResponse.json({

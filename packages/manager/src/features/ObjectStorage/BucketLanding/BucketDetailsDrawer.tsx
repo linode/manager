@@ -1,6 +1,4 @@
-import { Region } from '@linode/api-v4';
 import {
-  ACLType,
   getBucketAccess,
   updateBucketAccess,
 } from '@linode/api-v4/lib/object-storage';
@@ -15,15 +13,18 @@ import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageClusters } from 'src/queries/objectStorage';
-import { useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { formatDate } from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { AccessSelect } from '../BucketDetail/AccessSelect';
+
+import type { Region } from '@linode/api-v4';
+import type { ACLType } from '@linode/api-v4/lib/object-storage';
 export interface BucketDetailsDrawerProps {
   bucketLabel?: string;
   bucketRegion?: Region;
@@ -53,14 +54,16 @@ export const BucketDetailsDrawer = React.memo(
     const flags = useFlags();
     const { account } = useAccountManagement();
 
-    const isObjMultiClusterEnabled = isFeatureEnabled(
+    const isObjMultiClusterEnabled = isFeatureEnabledV2(
       'Object Storage Access Key Regions',
       Boolean(flags.objMultiCluster),
       account?.capabilities ?? []
     );
 
     // @TODO OBJ Multicluster: Once the feature is rolled out to production, we can clean this up by removing the useObjectStorageClusters and useRegionsQuery, which will not be required at that time.
-    const { data: clusters } = useObjectStorageClusters();
+    const { data: clusters } = useObjectStorageClusters(
+      !isObjMultiClusterEnabled
+    );
     const { data: regions } = useRegionsQuery();
     const { data: profile } = useProfile();
     const actualCluster = clusters?.find((c) => c.id === cluster);

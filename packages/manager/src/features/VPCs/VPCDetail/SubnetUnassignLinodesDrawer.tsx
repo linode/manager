@@ -1,8 +1,7 @@
-import { Subnet } from '@linode/api-v4/lib/vpcs/types';
 import { Stack, Typography } from '@mui/material';
+import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -14,12 +13,8 @@ import { RemovableSelectionsListTable } from 'src/components/RemovableSelections
 import { SUBNET_UNASSIGN_LINODES_WARNING } from 'src/features/VPCs/constants';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
-import {
-  queryKey as linodesQueryKey,
-  useAllLinodesQuery,
-} from 'src/queries/linodes/linodes';
-import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
-import { useGrants, useProfile } from 'src/queries/profile';
+import { linodeQueries, useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import type {
@@ -27,6 +22,7 @@ import type {
   DeleteLinodeConfigInterfacePayload,
   Interface,
   Linode,
+  Subnet,
   UpdateConfigInterfacePayload,
 } from '@linode/api-v4';
 
@@ -115,8 +111,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           const updatedConfigInterfaces = await Promise.all(
             selectedLinodes.map(async (linode) => {
               const response = await queryClient.fetchQuery(
-                [linodesQueryKey, 'linode', linode.id, 'configs'],
-                () => getAllLinodeConfigs(linode.id)
+                linodeQueries.linode(linode.id)._ctx.configs
               );
 
               if (response) {
@@ -225,7 +220,6 @@ export const SubnetUnassignLinodesDrawer = React.memo(
               configId: _interface.configId,
               interfaceId: _interface.interfaceId,
               linodeId: _interface.linodeId,
-              subnetId: subnetId ?? -1,
               vpcId,
             });
           } catch (error) {

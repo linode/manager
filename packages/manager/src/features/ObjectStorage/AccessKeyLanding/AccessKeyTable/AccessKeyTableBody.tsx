@@ -1,6 +1,6 @@
 import {
   ObjectStorageKey,
-  RegionS3EndpointAndID,
+  ObjectStorageKeyRegions,
 } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
 import React from 'react';
@@ -19,7 +19,7 @@ type Props = {
   isRestrictedUser: boolean;
   openDrawer: OpenAccessDrawer;
   openRevokeDialog: (objectStorageKey: ObjectStorageKey) => void;
-  setHostNames: (hostNames: RegionS3EndpointAndID[]) => void;
+  setHostNames: (hostNames: ObjectStorageKeyRegions[]) => void;
   setShowHostNamesDrawers: (show: boolean) => void;
 };
 

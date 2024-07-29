@@ -1,4 +1,7 @@
-import { AccessType, Scope } from '@linode/api-v4/lib/object-storage/types';
+import {
+  ObjectStorageKeyBucketAccessPermissions,
+  ObjectStorageKeyBucketAccess,
+} from '@linode/api-v4/lib/object-storage/types';
 import { update } from 'ramda';
 import * as React from 'react';
 
@@ -17,15 +20,16 @@ import {
   StyledClusterCell,
   StyledRadioCell,
   StyledRadioRow,
+  StyledSelectAllRadioRow,
   StyledTableRoot,
 } from './AccessTable.styles';
 
 import type { MODE } from './types';
 
 export const getUpdatedScopes = (
-  oldScopes: Scope[],
-  newScope: Scope
-): Scope[] => {
+  oldScopes: ObjectStorageKeyBucketAccess[],
+  newScope: ObjectStorageKeyBucketAccess
+): ObjectStorageKeyBucketAccess[] => {
   // Region and bucket together form a primary key
   const scopeToUpdate = oldScopes.findIndex(
     (thisScope) =>
@@ -38,18 +42,18 @@ export const getUpdatedScopes = (
   return update(scopeToUpdate, newScope, oldScopes);
 };
 
-export const SCOPES: Record<string, AccessType> = {
+export const SCOPES: Record<string, ObjectStorageKeyBucketAccessPermissions> = {
   none: 'none',
   read: 'read_only',
   write: 'read_write',
 };
 
 interface Props {
-  bucket_access: Scope[] | null;
+  bucket_access: ObjectStorageKeyBucketAccess[] | null;
   checked: boolean;
   mode: MODE;
   selectedRegions?: string[];
-  updateScopes: (newScopes: Scope[]) => void;
+  updateScopes: (newScopes: ObjectStorageKeyBucketAccess[]) => void;
 }
 
 export const BucketPermissionsTable = React.memo((props: Props) => {
@@ -62,12 +66,14 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
     return null;
   }
 
-  const updateSingleScope = (newScope: Scope) => {
+  const updateSingleScope = (newScope: ObjectStorageKeyBucketAccess) => {
     const newScopes = getUpdatedScopes(bucket_access, newScope);
     updateScopes(newScopes);
   };
 
-  const updateAllScopes = (accessType: AccessType) => {
+  const updateAllScopes = (
+    accessType: ObjectStorageKeyBucketAccessPermissions
+  ) => {
     const newScopes = bucket_access.map((thisScope) => ({
       ...thisScope,
       permissions: accessType,
@@ -75,9 +81,12 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
     updateScopes(newScopes);
   };
 
-  const allScopesEqual = (accessType: AccessType) => {
-    return bucket_access.every(
-      (thisScope) => thisScope.permissions === accessType
+  const allScopesEqual = (
+    accessType: ObjectStorageKeyBucketAccessPermissions
+  ) => {
+    return (
+      bucket_access.length > 0 &&
+      bucket_access.every((thisScope) => thisScope.permissions === accessType)
     );
   };
 
@@ -105,7 +114,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
       </TableHead>
       <TableBody>
         {mode === 'creating' && (
-          <StyledRadioRow data-qa-row="Select All" disabled={disabled}>
+          <StyledSelectAllRadioRow data-qa-row="Select All" disabled={disabled}>
             <TableCell colSpan={2} padding="checkbox" parentColumn="Region">
               <strong>Select All</strong>
             </TableCell>
@@ -151,7 +160,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
                 value="read-write"
               />
             </TableCell>
-          </StyledRadioRow>
+          </StyledSelectAllRadioRow>
         )}
         {bucket_access.length === 0 ? (
           <TableRowEmpty

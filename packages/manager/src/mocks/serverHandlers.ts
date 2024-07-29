@@ -1,11 +1,3 @@
-import {
-  NotificationType,
-  ObjectStorageKeyRequest,
-  SecurityQuestionsPayload,
-  TokenRequest,
-  User,
-  VolumeStatus,
-} from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { HttpResponse, http } from 'msw';
 
@@ -21,12 +13,7 @@ import {
   accountTransferFactory,
   appTokenFactory,
   betaFactory,
-  certificateFactory,
-  configurationFactory,
-  configurationsEndpointHealthFactory,
   contactFactory,
-  createRouteFactory,
-  createServiceTargetFactory,
   credentialFactory,
   creditPaymentResponseFactory,
   databaseBackupFactory,
@@ -55,8 +42,8 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
-  loadbalancerEndpointHealthFactory,
-  loadbalancerFactory,
+  lkeHighAvailabilityTypeFactory,
+  lkeStandardAvailabilityTypeFactory,
   longviewActivePlanFactory,
   longviewClientFactory,
   longviewSubscriptionFactory,
@@ -70,11 +57,14 @@ import {
   nodeBalancerConfigFactory,
   nodeBalancerConfigNodeFactory,
   nodeBalancerFactory,
+  nodeBalancerTypeFactory,
   nodePoolFactory,
   notificationFactory,
   objectStorageBucketFactory,
   objectStorageClusterFactory,
   objectStorageKeyFactory,
+  objectStorageOverageTypeFactory,
+  objectStorageTypeFactory,
   paymentFactory,
   paymentMethodFactory,
   placementGroupFactory,
@@ -84,10 +74,7 @@ import {
   profileFactory,
   promoFactory,
   regionAvailabilityFactory,
-  routeFactory,
   securityQuestionsFactory,
-  serviceTargetFactory,
-  serviceTargetsEndpointHealthFactory,
   stackScriptFactory,
   staticObjects,
   subnetFactory,
@@ -95,6 +82,7 @@ import {
   supportTicketFactory,
   tagFactory,
   volumeFactory,
+  volumeTypeFactory,
   vpcFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
@@ -103,6 +91,16 @@ import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
 import { getStorage } from 'src/utilities/storage';
+
+import type {
+  CreateObjectStorageKeyPayload,
+  NotificationType,
+  SecurityQuestionsPayload,
+  TokenRequest,
+  UpdateImageRegionsPayload,
+  User,
+  VolumeStatus,
+} from '@linode/api-v4';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -301,165 +299,6 @@ const databases = [
   }),
 ];
 
-const aclb = [
-  // Configurations
-  http.get('*/v4beta/aclb/:id/configurations', () => {
-    const configurations = configurationFactory.buildList(3);
-    return HttpResponse.json(makeResourcePage(configurations));
-  }),
-  http.get('*/v4beta/aclb/:id/endpoints-health', ({ params }) => {
-    const health = loadbalancerEndpointHealthFactory.build({
-      id: Number(params.id),
-    });
-    return HttpResponse.json(health);
-  }),
-  http.get(
-    '*/v4beta/aclb/:id/configurations/endpoints-health',
-    ({ params }) => {
-      const health = configurationsEndpointHealthFactory.build({
-        id: Number(params.id),
-      });
-      return HttpResponse.json(health);
-    }
-  ),
-  http.get(
-    '*/v4beta/aclb/:id/service-targets/endpoints-health',
-    ({ params }) => {
-      const health = serviceTargetsEndpointHealthFactory.build({
-        id: Number(params.id),
-      });
-      return HttpResponse.json(health);
-    }
-  ),
-  http.get('*/v4beta/aclb/:id/configurations/:configId', () => {
-    return HttpResponse.json(configurationFactory.build());
-  }),
-  http.post('*/v4beta/aclb/:id/configurations', () => {
-    return HttpResponse.json(configurationFactory.build());
-  }),
-  http.put(
-    '*/v4beta/aclb/:id/configurations/:configId',
-    async ({ params, request }) => {
-      const reqBody = await request.json();
-      const id = Number(params.configId);
-      const body = reqBody as any;
-      return HttpResponse.json(configurationFactory.build({ id, ...body }));
-    }
-  ),
-  http.delete('*/v4beta/aclb/:id/configurations/:configId', () => {
-    return HttpResponse.json({});
-  }),
-  // Load Balancers
-  http.get('*/v4beta/aclb', () => {
-    return HttpResponse.json(
-      makeResourcePage(loadbalancerFactory.buildList(3))
-    );
-  }),
-  http.get('*/v4beta/aclb/:loadbalancerId', ({ params }) => {
-    return HttpResponse.json(
-      loadbalancerFactory.build({
-        id: Number(params.loadbalancerId),
-        label: `aclb-${params.loadbalancerId}`,
-      })
-    );
-  }),
-  http.post('*/v4beta/aclb', () => {
-    return HttpResponse.json(loadbalancerFactory.build());
-  }),
-  http.put('*/v4beta/aclb/:id', async ({ params, request }) => {
-    const reqBody = await request.json();
-    const id = Number(params.id);
-    const body = reqBody as any;
-    // The payload to update a loadbalancer is not the same as the payload to create a loadbalancer
-    // In one instance we have a list of entrypoints objects, in the other we have a list of entrypoints ids
-    // TODO: ACLB - figure out if this is still accurate
-    return HttpResponse.json(loadbalancerFactory.build({ id, ...body }));
-  }),
-  http.delete('*/v4beta/aclb/:id', () => {
-    return HttpResponse.json({});
-  }),
-  // Routes
-  http.get('*/v4beta/aclb/:id/routes', ({ request }) => {
-    const headers = JSON.parse(request.headers.get('x-filter') || '{}');
-    if (headers['+or']) {
-      return HttpResponse.json(
-        makeResourcePage(routeFactory.buildList(headers['+or'].length))
-      );
-    }
-    return HttpResponse.json(makeResourcePage(routeFactory.buildList(5)));
-  }),
-  http.post('*/v4beta/aclb/:id/routes', () => {
-    return HttpResponse.json(createRouteFactory.buildList(4));
-  }),
-  http.put('*/v4beta/aclb/:id/routes/:routeId', async ({ params, request }) => {
-    const reqBody = await request.json();
-    const id = Number(params.routeId);
-    const body = reqBody as any;
-    return HttpResponse.json(createRouteFactory.build({ id, ...body }));
-  }),
-  http.delete('*/v4beta/aclb/:id/routes/:routeId', () => {
-    return HttpResponse.json({});
-  }),
-  // Service Targets
-  http.get('*/v4beta/aclb/:id/service-targets', () => {
-    return HttpResponse.json(
-      makeResourcePage(serviceTargetFactory.buildList(5))
-    );
-  }),
-  http.post('*/v4beta/aclb/:id/service-targets', () => {
-    return HttpResponse.json(createServiceTargetFactory.build());
-  }),
-  http.put(
-    '*/v4beta/aclb/:id/service-targets/:serviceTargetId',
-    async ({ params, request }) => {
-      const reqBody = await request.json();
-      const id = Number(params.serviceTargetId);
-      const body = reqBody as any;
-      return HttpResponse.json(
-        createServiceTargetFactory.build({ id, ...body })
-      );
-    }
-  ),
-  http.delete('*/v4beta/aclb/:id/service-targets/:serviceTargetId', () => {
-    return HttpResponse.json({});
-  }),
-  // Certificates
-  http.get('*/v4beta/aclb/:id/certificates', () => {
-    const tlsCertificate = certificateFactory.build({
-      label: 'tls-certificate',
-      type: 'downstream',
-    });
-    const certificates = certificateFactory.buildList(3);
-    return HttpResponse.json(
-      makeResourcePage([tlsCertificate, ...certificates])
-    );
-  }),
-  http.get(
-    '*/v4beta/aclb/:id/certificates/:certId',
-    async ({ params, request }) => {
-      const reqBody = await request.json();
-      const id = Number(params.certId);
-      const body = reqBody as any;
-      return HttpResponse.json(certificateFactory.build({ id, ...body }));
-    }
-  ),
-  http.post('*/v4beta/aclb/:id/certificates', () => {
-    return HttpResponse.json(certificateFactory.build());
-  }),
-  http.put(
-    '*/v4beta/aclb/:id/certificates/:certId',
-    async ({ params, request }) => {
-      const reqBody = await request.json();
-      const id = Number(params.certId);
-      const body = reqBody as any;
-      return HttpResponse.json(certificateFactory.build({ id, ...body }));
-    }
-  ),
-  http.delete('*/v4beta/aclb/:id/certificates/:certId', () => {
-    return HttpResponse.json({});
-  }),
-];
-
 const vpc = [
   http.get('*/v4beta/vpcs', () => {
     const vpcsWithSubnet1 = vpcFactory.buildList(5, {
@@ -552,6 +391,10 @@ export const handlers = [
       restricted: false,
       // Parent/Child: switch the `user_type` depending on what account view you need to mock.
       user_type: 'parent',
+      // PLACEMENT GROUPS TESTING - Permissions and Grants:
+      // Uncomment the two lines below: This is important! The grants endpoint is only called for restricted users.
+      // restricted: true,
+      // user_type: 'default',
     });
     return HttpResponse.json(profile);
   }),
@@ -562,7 +405,10 @@ export const handlers = [
     return HttpResponse.json({ ...profileFactory.build(), ...(body as any) });
   }),
   http.get('*/profile/grants', () => {
-    return HttpResponse.json(grantsFactory.build());
+    // PLACEMENT GROUPS TESTING - Permissions and Grants
+    return HttpResponse.json(
+      grantsFactory.build({ global: { add_linodes: false } })
+    );
   }),
   http.get('*/profile/apps', () => {
     const tokens = appTokenFactory.buildList(5);
@@ -593,7 +439,21 @@ export const handlers = [
   http.get('*/regions', async () => {
     return HttpResponse.json(makeResourcePage(regions));
   }),
-  http.get('*/images', async () => {
+  http.get<{ id: string }>('*/v4/images/:id', ({ params }) => {
+    const distributedImage = imageFactory.build({
+      capabilities: ['cloud-init', 'distributed-images'],
+      id: 'private/distributed-image',
+      label: 'distributed-image',
+      regions: [{ region: 'us-east', status: 'available' }],
+    });
+
+    if (params.id === distributedImage.id) {
+      return HttpResponse.json(distributedImage);
+    }
+
+    return HttpResponse.json(imageFactory.build());
+  }),
+  http.get('*/images', async ({ request }) => {
     const privateImages = imageFactory.buildList(5, {
       status: 'available',
       type: 'manual',
@@ -613,6 +473,16 @@ export const handlers = [
       status: 'available',
       type: 'manual',
     });
+    const multiRegionsImage = imageFactory.build({
+      id: 'multi-regions-test-image',
+      label: 'multi-regions-test-image',
+      regions: [
+        { region: 'us-southeast', status: 'available' },
+        { region: 'us-east', status: 'pending' },
+      ],
+      status: 'available',
+      type: 'manual',
+    });
     const creatingImages = imageFactory.buildList(2, {
       status: 'creating',
       type: 'manual',
@@ -626,17 +496,54 @@ export const handlers = [
       type: 'automatic',
     });
     const publicImages = imageFactory.buildList(4, { is_public: true });
+    const distributedImage = imageFactory.build({
+      capabilities: ['cloud-init', 'distributed-images'],
+      id: 'private/distributed-image',
+      label: 'distributed-image',
+      regions: [{ region: 'us-east', status: 'available' }],
+    });
     const images = [
       cloudinitCompatableDistro,
       cloudinitCompatableImage,
+      multiRegionsImage,
+      distributedImage,
       ...automaticImages,
       ...privateImages,
       ...publicImages,
       ...pendingImages,
       ...creatingImages,
     ];
+    const filter = request.headers.get('x-filter');
+
+    if (filter?.includes('manual')) {
+      return HttpResponse.json(
+        makeResourcePage(images.filter((image) => image.type === 'manual'))
+      );
+    }
+
+    if (filter?.includes('automatic')) {
+      return HttpResponse.json(
+        makeResourcePage(images.filter((image) => image.type === 'automatic'))
+      );
+    }
+
     return HttpResponse.json(makeResourcePage(images));
   }),
+  http.post<any, UpdateImageRegionsPayload>(
+    '*/v4/images/:id/regions',
+    async ({ request }) => {
+      const data = await request.json();
+
+      const image = imageFactory.build();
+
+      image.regions = data.regions.map((regionId) => ({
+        region: regionId,
+        status: 'pending replication',
+      }));
+
+      return HttpResponse.json(image);
+    }
+  ),
 
   http.get('*/linode/types', () => {
     return HttpResponse.json(
@@ -668,10 +575,10 @@ export const handlers = [
       label: 'metadata-test-region',
       region: 'eu-west',
     });
-    const linodeInEdgeRegion = linodeFactory.build({
-      image: 'edge-test-image',
-      label: 'Gecko Edge Test',
-      region: 'us-edge-1',
+    const linodeInDistributedRegion = linodeFactory.build({
+      image: 'distributed-region-test-image',
+      label: 'Gecko Distributed Region Test',
+      region: 'us-den-10',
     });
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
@@ -703,7 +610,7 @@ export const handlers = [
     const linodes = [
       metadataLinodeWithCompatibleImage,
       metadataLinodeWithCompatibleImageAndRegion,
-      linodeInEdgeRegion,
+      linodeInDistributedRegion,
       ...onlineLinodes,
       linodeWithEligibleVolumes,
       ...offlineLinodes,
@@ -760,8 +667,8 @@ export const handlers = [
       linodeFactory.build({
         backups: { enabled: false },
         id,
-        label: 'Gecko Edge Test',
-        region: 'us-edge-1',
+        label: 'Gecko Distributed Region Test',
+        region: 'us-den-10',
       })
     );
   }),
@@ -821,6 +728,13 @@ export const handlers = [
     const clusters = kubernetesAPIResponse.buildList(10);
     return HttpResponse.json(makeResourcePage(clusters));
   }),
+  http.get('*/lke/types', async () => {
+    const lkeTypes = [
+      lkeStandardAvailabilityTypeFactory.build(),
+      lkeHighAvailabilityTypeFactory.build(),
+    ];
+    return HttpResponse.json(makeResourcePage(lkeTypes));
+  }),
   http.get('*/lke/versions', async () => {
     const versions = kubernetesVersionFactory.buildList(1);
     return HttpResponse.json(makeResourcePage(versions));
@@ -840,9 +754,14 @@ export const handlers = [
     return HttpResponse.json(cluster);
   }),
   http.get('*/lke/clusters/:clusterId/pools', async () => {
-    const pools = nodePoolFactory.buildList(10);
+    const encryptedPools = nodePoolFactory.buildList(5);
+    const unencryptedPools = nodePoolFactory.buildList(5, {
+      disk_encryption: 'disabled',
+    });
     nodePoolFactory.resetSequenceNumber();
-    return HttpResponse.json(makeResourcePage(pools));
+    return HttpResponse.json(
+      makeResourcePage([...encryptedPools, ...unencryptedPools])
+    );
   }),
   http.get('*/lke/clusters/*/api-endpoints', async () => {
     const endpoints = kubeEndpointFactory.buildList(2);
@@ -886,6 +805,10 @@ export const handlers = [
     const nodeBalancers = nodeBalancerFactory.buildList(1);
     return HttpResponse.json(makeResourcePage(nodeBalancers));
   }),
+  http.get('*/v4/nodebalancers/types', () => {
+    const nodeBalancerTypes = nodeBalancerTypeFactory.buildList(1);
+    return HttpResponse.json(makeResourcePage(nodeBalancerTypes));
+  }),
   http.get('*/v4/nodebalancers/:nodeBalancerID', ({ params }) => {
     const nodeBalancer = nodeBalancerFactory.build({
       id: Number(params.nodeBalancerID),
@@ -905,6 +828,13 @@ export const handlers = [
       nodeBalancerConfigNodeFactory.build({ status: 'unknown' }),
     ];
     return HttpResponse.json(makeResourcePage(configs));
+  }),
+  http.get('*/v4/object-storage/types', () => {
+    const objectStorageTypes = [
+      objectStorageTypeFactory.build(),
+      objectStorageOverageTypeFactory.build(),
+    ];
+    return HttpResponse.json(makeResourcePage(objectStorageTypes));
   }),
   http.get('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);
@@ -1081,7 +1011,7 @@ export const handlers = [
       ])
     );
   }),
-  http.post<any, ObjectStorageKeyRequest>(
+  http.post<any, CreateObjectStorageKeyPayload>(
     '*object-storage/keys',
     async ({ request }) => {
       const body = await request.json();
@@ -1100,7 +1030,7 @@ export const handlers = [
       );
     }
   ),
-  http.put<any, ObjectStorageKeyRequest>(
+  http.put<any, CreateObjectStorageKeyPayload>(
     '*object-storage/keys/:id',
     async ({ request }) => {
       const body = await request.json();
@@ -1149,6 +1079,10 @@ export const handlers = [
     ];
     const volumes = statuses.map((status) => volumeFactory.build({ status }));
     return HttpResponse.json(makeResourcePage(volumes));
+  }),
+  http.get('*/volumes/types', () => {
+    const volumeTypes = volumeTypeFactory.buildList(1);
+    return HttpResponse.json(makeResourcePage(volumeTypes));
   }),
   http.post('*/volumes', () => {
     const volume = volumeFactory.build();
@@ -1592,14 +1526,14 @@ export const handlers = [
         status: 'notification',
       });
       const placementGroupCreateEvent = eventFactory.buildList(1, {
-        action: 'placement_group_created',
+        action: 'placement_group_create',
         entity: { id: 999, label: 'PG-1', type: 'placement_group' },
         message: 'Placement Group successfully created.',
         percent_complete: 100,
         status: 'notification',
       });
       const placementGroupAssignedEvent = eventFactory.buildList(1, {
-        action: 'placement_group_assigned',
+        action: 'placement_group_assign',
         entity: { id: 990, label: 'PG-2', type: 'placement_group' },
         message: 'Placement Group successfully assigned.',
         percent_complete: 100,
@@ -1627,9 +1561,12 @@ export const handlers = [
       once: true,
     }
   ),
-  // // HERE
+
   http.get('*/support/tickets', () => {
-    const tickets = supportTicketFactory.buildList(15, { status: 'open' });
+    const tickets = supportTicketFactory.buildList(15, {
+      severity: 1,
+      status: 'open',
+    });
     return HttpResponse.json(makeResourcePage(tickets));
   }),
   http.get('*/support/tickets/999', () => {
@@ -1642,6 +1579,7 @@ export const handlers = [
   http.get('*/support/tickets/:ticketId', ({ params }) => {
     const ticket = supportTicketFactory.build({
       id: Number(params.ticketId),
+      severity: 1,
     });
     return HttpResponse.json(ticket);
   }),
@@ -2064,21 +2002,19 @@ export const handlers = [
     return HttpResponse.json(
       makeResourcePage([
         placementGroupFactory.build({
-          affinity_type: 'anti_affinity:local',
           id: 1,
           is_compliant: true,
-          is_strict: true,
           members: [1, 2, 3, 4, 5, 6, 7, 8, 43].map((linode) => ({
             is_compliant: true,
             linode_id: linode,
           })),
+          placement_group_policy: 'strict',
+          placement_group_type: 'anti_affinity:local',
           region: 'us-east',
         }),
         placementGroupFactory.build({
-          affinity_type: 'affinity:local',
           id: 2,
           is_compliant: true,
-          is_strict: true,
           members: [
             {
               is_compliant: true,
@@ -2093,19 +2029,21 @@ export const handlers = [
               linode_id: 11,
             },
           ],
+          placement_group_policy: 'strict',
+          placement_group_type: 'affinity:local',
           region: 'us-west',
         }),
         placementGroupFactory.build({
-          affinity_type: 'affinity:local',
           id: 3,
           is_compliant: true,
-          is_strict: true,
           members: [
             {
               is_compliant: true,
               linode_id: 12,
             },
           ],
+          placement_group_policy: 'strict',
+          placement_group_type: 'affinity:local',
           region: 'ca-central',
         }),
       ])
@@ -2164,7 +2102,6 @@ export const handlers = [
       }
 
       const response = placementGroupFactory.build({
-        affinity_type: 'anti_affinity:local',
         id: Number(params.placementGroupId) ?? -1,
         label: 'pg-1',
         members: [
@@ -2209,6 +2146,7 @@ export const handlers = [
             linode_id: (body as any).linodes[0],
           },
         ],
+        placement_group_type: 'anti_affinity:local',
       });
 
       return HttpResponse.json(response);
@@ -2220,7 +2158,6 @@ export const handlers = [
     }
 
     const response = placementGroupFactory.build({
-      affinity_type: 'anti_affinity:local',
       id: Number(params.placementGroupId) ?? -1,
       label: 'pg-1',
       members: [
@@ -2262,13 +2199,250 @@ export const handlers = [
           linode_id: 43,
         },
       ],
+      placement_group_type: 'anti_affinity:local',
     });
 
+    return HttpResponse.json(response);
+  }),
+  http.get('*/v4/monitor/services/linode/dashboards', () => {
+    const response = {
+      data: [
+        {
+          created: '2024-04-29T17:09:29',
+          id: 1,
+          label: 'Linode Service I/O Statistics',
+          service_type: 'linode',
+          type: 'standard',
+          updated: null,
+          widgets: [
+            {
+              aggregate_function: 'avg',
+              chart_type: 'area',
+              color: 'blue',
+              label: 'CPU utilization',
+              metric: 'system_cpu_utilization_percent',
+              size: 12,
+              unit: '%',
+              y_label: 'system_cpu_utilization_ratio',
+            },
+            {
+              aggregate_function: 'avg',
+              chart_type: 'area',
+              color: 'red',
+              label: 'Memory Usage',
+              metric: 'system_memory_usage_by_resource',
+              size: 12,
+              unit: 'Bytes',
+              y_label: 'system_memory_usage_bytes',
+            },
+            {
+              aggregate_function: 'avg',
+              chart_type: 'area',
+              color: 'green',
+              label: 'Network Traffic',
+              metric: 'system_network_io_by_resource',
+              size: 6,
+              unit: 'Bytes',
+              y_label: 'system_network_io_bytes_total',
+            },
+            {
+              aggregate_function: 'avg',
+              chart_type: 'area',
+              color: 'yellow',
+              label: 'Disk I/O',
+              metric: 'system_disk_OPS_total',
+              size: 6,
+              unit: 'OPS',
+              y_label: 'system_disk_operations_total',
+            },
+          ],
+        },
+      ],
+    };
+
+    return HttpResponse.json(response);
+  }),
+  http.get('*/v4/monitor/services/:serviceType/metric-definitions', () => {
+    const response = {
+      data: [
+        {
+          available_aggregate_functions: ['min', 'max', 'avg'],
+          dimensions: [
+            {
+              dim_label: 'cpu',
+              label: 'CPU name',
+              values: null,
+            },
+            {
+              dim_label: 'state',
+              label: 'State of CPU',
+              values: [
+                'user',
+                'system',
+                'idle',
+                'interrupt',
+                'nice',
+                'softirq',
+                'steal',
+                'wait',
+              ],
+            },
+            {
+              dim_label: 'LINODE_ID',
+              label: 'Linode ID',
+              values: null,
+            },
+          ],
+          label: 'CPU utilization',
+          metric: 'system_cpu_utilization_percent',
+          metric_type: 'gauge',
+          scrape_interval: '2m',
+          unit: 'percent',
+        },
+        {
+          available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
+          dimensions: [
+            {
+              dim_label: 'state',
+              label: 'State of memory',
+              values: [
+                'used',
+                'free',
+                'buffered',
+                'cached',
+                'slab_reclaimable',
+                'slab_unreclaimable',
+              ],
+            },
+            {
+              dim_label: 'LINODE_ID',
+              label: 'Linode ID',
+              values: null,
+            },
+          ],
+          label: 'Memory Usage',
+          metric: 'system_memory_usage_by_resource',
+          metric_type: 'gauge',
+          scrape_interval: '30s',
+          unit: 'byte',
+        },
+        {
+          available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
+          dimensions: [
+            {
+              dim_label: 'device',
+              label: 'Device name',
+              values: ['lo', 'eth0'],
+            },
+            {
+              dim_label: 'direction',
+              label: 'Direction of network transfer',
+              values: ['transmit', 'receive'],
+            },
+            {
+              dim_label: 'LINODE_ID',
+              label: 'Linode ID',
+              values: null,
+            },
+          ],
+          label: 'Network Traffic',
+          metric: 'system_network_io_by_resource',
+          metric_type: 'counter',
+          scrape_interval: '30s',
+          unit: 'byte',
+        },
+        {
+          available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
+          dimensions: [
+            {
+              dim_label: 'device',
+              label: 'Device name',
+              values: ['loop0', 'sda', 'sdb'],
+            },
+            {
+              dim_label: 'direction',
+              label: 'Operation direction',
+              values: ['read', 'write'],
+            },
+            {
+              dim_label: 'LINODE_ID',
+              label: 'Linode ID',
+              values: null,
+            },
+          ],
+          label: 'Disk I/O',
+          metric: 'system_disk_OPS_total',
+          metric_type: 'counter',
+          scrape_interval: '30s',
+          unit: 'ops_per_second',
+        },
+      ],
+    };
+
+    return HttpResponse.json(response);
+  }),
+  http.post('*/v4/monitor/services/:serviceType/token', () => {
+    const response = {
+      token: 'eyJhbGciOiAiZGlyIiwgImVuYyI6ICJBMTI4Q0JDLUhTMjU2IiwgImtpZCI6ID',
+    };
+    return HttpResponse.json(response);
+  }),
+
+  http.get('*/v4/monitor/dashboards/:id', () => {
+    const response = {
+      created: '2024-04-29T17:09:29',
+      id: 1,
+      label: 'Linode Service I/O Statistics',
+      service_type: 'linode',
+      type: 'standard',
+      updated: null,
+      widgets: [
+        {
+          aggregate_function: 'avg',
+          chart_type: 'area',
+          color: 'blue',
+          label: 'CPU utilization',
+          metric: 'system_cpu_utilization_percent',
+          size: 12,
+          unit: '%',
+          y_label: 'system_cpu_utilization_ratio',
+        },
+        {
+          aggregate_function: 'avg',
+          chart_type: 'area',
+          color: 'red',
+          label: 'Memory Usage',
+          metric: 'system_memory_usage_by_resource',
+          size: 12,
+          unit: 'Bytes',
+          y_label: 'system_memory_usage_bytes',
+        },
+        {
+          aggregate_function: 'avg',
+          chart_type: 'area',
+          color: 'green',
+          label: 'Network Traffic',
+          metric: 'system_network_io_by_resource',
+          size: 6,
+          unit: 'Bytes',
+          y_label: 'system_network_io_bytes_total',
+        },
+        {
+          aggregate_function: 'avg',
+          chart_type: 'area',
+          color: 'yellow',
+          label: 'Disk I/O',
+          metric: 'system_disk_OPS_total',
+          size: 6,
+          unit: 'OPS',
+          y_label: 'system_disk_operations_total',
+        },
+      ],
+    };
     return HttpResponse.json(response);
   }),
   ...entityTransfers,
   ...statusPage,
   ...databases,
-  ...aclb,
   ...vpc,
 ];
