@@ -6,7 +6,8 @@ import 'cypress-file-upload';
 import { createBucket } from '@linode/api-v4/lib/object-storage';
 import {
   accountFactory,
-  createObjectStorageBucketFactory,
+  createObjectStorageBucketFactoryLegacy,
+  createObjectStorageBucketFactoryGen1,
 } from 'src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
@@ -68,7 +69,7 @@ const setUpBucket = (
   cors_enabled: boolean = true
 ) => {
   return createBucket(
-    createObjectStorageBucketFactory.build({
+    createObjectStorageBucketFactoryLegacy.build({
       label,
       cluster,
       cors_enabled,
@@ -99,7 +100,7 @@ const setUpBucketMulticluster = (
   cors_enabled: boolean = true
 ) => {
   return createBucket(
-    createObjectStorageBucketFactory.build({
+    createObjectStorageBucketFactoryGen1.build({
       label,
       region: regionId,
       cors_enabled,

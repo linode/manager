@@ -28,7 +28,7 @@ import {
   eventFactory,
   firewallDeviceFactory,
   firewallFactory,
-  getObjectStorageEndpointsFactory,
+  objectStorageEndpointsFactory,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -61,7 +61,7 @@ import {
   nodeBalancerTypeFactory,
   nodePoolFactory,
   notificationFactory,
-  objectStorageBucketFactory,
+  objectStorageBucketFactoryGen2,
   objectStorageClusterFactory,
   objectStorageKeyFactory,
   objectStorageOverageTypeFactory,
@@ -838,7 +838,7 @@ export const handlers = [
     return HttpResponse.json(makeResourcePage(objectStorageTypes));
   }),
   http.get('*/v4/object-storage/endpoints', ({}) => {
-    const endpoint = getObjectStorageEndpointsFactory.build();
+    const endpoint = objectStorageEndpointsFactory.build();
     return HttpResponse.json(endpoint);
   }),
   http.get('*object-storage/buckets/*/*/access', async () => {
@@ -916,11 +916,11 @@ export const handlers = [
 
     const region = params.region as string;
 
-    objectStorageBucketFactory.resetSequenceNumber();
+    objectStorageBucketFactoryGen2.resetSequenceNumber();
     const page = Number(url.searchParams.get('page') || 1);
     const pageSize = Number(url.searchParams.get('page_size') || 25);
 
-    const buckets = objectStorageBucketFactory.buildList(1, {
+    const buckets = objectStorageBucketFactoryGen2.buildList(1, {
       cluster: `${region}-1`,
       hostname: `obj-bucket-1.${region}.linodeobjects.com`,
       label: `obj-bucket-1`,
@@ -938,11 +938,11 @@ export const handlers = [
     });
   }),
   http.get('*/object-storage/buckets', () => {
-    const buckets = objectStorageBucketFactory.buildList(10);
+    const buckets = objectStorageBucketFactoryGen2.buildList(10);
     return HttpResponse.json(makeResourcePage(buckets));
   }),
   http.post('*/object-storage/buckets', () => {
-    return HttpResponse.json(objectStorageBucketFactory.build());
+    return HttpResponse.json(objectStorageBucketFactoryGen2.build());
   }),
   http.get('*object-storage/clusters', () => {
     const jakartaCluster = objectStorageClusterFactory.build({
