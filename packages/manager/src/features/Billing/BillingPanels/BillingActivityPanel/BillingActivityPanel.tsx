@@ -14,7 +14,6 @@ import { Link } from 'src/components/Link';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -177,8 +176,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   const { accountActiveSince } = props;
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery(isGeckoGAEnabled);
+  const { data: regions } = useRegionsQuery();
   const isAkamaiCustomer = account?.billing_source === 'akamai';
   const { classes } = useStyles();
   const flags = useFlags();
