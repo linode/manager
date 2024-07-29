@@ -10,8 +10,16 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { groupImages } from 'src/utilities/images';
 
 import type { Image } from '@linode/api-v4/lib/images';
-import type { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 
+export interface SelectImageOptions {
+  label: string;
+  value: string;
+}
+
+export interface ImagesGroupType {
+  label: string;
+  options: SelectImageOptions[];
+}
 interface BaseProps {
   anyAllOption?: boolean;
   disabled?: boolean;
@@ -25,14 +33,14 @@ interface BaseProps {
 
 interface Props extends BaseProps {
   isMulti?: false;
-  onSelect: (selected: Item) => void;
-  value?: Item;
+  onSelect: (selected: SelectImageOptions) => void;
+  value?: SelectImageOptions;
 }
 
 interface MultiProps extends BaseProps {
   isMulti: true;
-  onSelect: (selected: Item[]) => void;
-  value?: Item[];
+  onSelect: (selected: SelectImageOptions[]) => void;
+  value?: SelectImageOptions[];
 }
 
 export const ImageSelect = (props: MultiProps | Props) => {
@@ -142,7 +150,7 @@ export const ImageSelect = (props: MultiProps | Props) => {
 export const getImagesOptions = (images: Image[]) => {
   const groupedImages = groupImages(images);
   return ['recommended', 'older', 'images', 'deleted'].reduce(
-    (accumulator: GroupType<string>[], category: string) => {
+    (accumulator: ImagesGroupType[], category: string) => {
       if (groupedImages[category]) {
         return [
           ...accumulator,

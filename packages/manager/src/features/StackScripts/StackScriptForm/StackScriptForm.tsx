@@ -7,7 +7,6 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import ImageSelect from 'src/features/Images/ImageSelect';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { imageToItem } from 'src/utilities/imageToItem';
 
 import {
   StyledActionsPanel,
@@ -15,10 +14,11 @@ import {
   StyledNotice,
   StyledTextField,
 } from './StackScriptForm.styles';
+import { imageToImageOptions } from './utils';
 
 import type { Image } from '@linode/api-v4/lib/images';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { SelectImageOptions } from 'src/features/Images/ImageSelect';
 
 interface TextFieldHandler {
   handler: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -43,7 +43,7 @@ interface Props {
   label: TextFieldHandler;
   mode: 'create' | 'edit';
   onCancel: () => void;
-  onSelectChange: (image: Item<string>[]) => void;
+  onSelectChange: (image: SelectImageOptions[]) => void;
   onSubmit: () => void;
   revision: TextFieldHandler;
   script: TextFieldHandler;
@@ -74,7 +74,7 @@ export const StackScriptForm = React.memo((props: Props) => {
   } = props;
 
   const hasErrorFor = getAPIErrorFor(errorResources, errors);
-  const selectedImages = imageToItem(images.selected);
+  const selectedImages = imageToImageOptions(images.selected);
 
   return (
     <Paper sx={(theme) => ({ padding: theme.spacing(2) })}>

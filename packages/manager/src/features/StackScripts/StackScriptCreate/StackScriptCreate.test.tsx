@@ -1,7 +1,4 @@
-import { Grants, Profile } from '@linode/api-v4/lib';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { UseQueryResult } from '@tanstack/react-query';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { imageFactory, normalizeEntities, profileFactory } from 'src/factories';
@@ -9,6 +6,10 @@ import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { StackScriptCreate } from './StackScriptCreate';
+
+import type { Grants, Profile } from '@linode/api-v4/lib';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { UseQueryResult } from '@tanstack/react-query';
 
 const images = normalizeEntities(imageFactory.buildList(10));
 const queryClient = queryClientFactory();
