@@ -12,6 +12,7 @@ export const splitCypressRun: CypressPlugin = (_on, config) => {
   const splitRunEnabled = config?.env?.['CY_TEST_SPLIT_RUN'];
   const splitRunTotalRunners = config?.env?.['CY_TEST_SPLIT_RUN_TOTAL'];
   const splitRunRunnerIndex = config?.env?.['CY_TEST_SPLIT_RUN_INDEX'];
+  const splitRunWeightsPath = config?.env?.['CY_TEST_SPLIT_RUN_WEIGHTS'];
 
   // If split running is enabled, total and index must be defined.
   if (splitRunEnabled) {
@@ -26,7 +27,6 @@ export const splitCypressRun: CypressPlugin = (_on, config) => {
       );
     }
 
-    const suiteName = config.env['cypress_test_suite'] || 'core';
     const totalRunners = parseInt(splitRunTotalRunners, 10);
     const runner = parseInt(splitRunRunnerIndex, 10);
 
@@ -34,7 +34,7 @@ export const splitCypressRun: CypressPlugin = (_on, config) => {
     const specs = globSync(config.specPattern);
 
     // Attempt to locate a weights file for the test suite being run.
-    const weightsPath = `cypress/weights/${suiteName}-weights.json`;
+    // const weightsPath = `cypress/weights/${suiteName}-weights.json`;
 
     // Information about test weights to be included in the info table, if applicable.
     // TODO type.
@@ -46,57 +46,64 @@ export const splitCypressRun: CypressPlugin = (_on, config) => {
     let unweighedSpecs: string[] = [...specs];
 
     // Read spec weights file, if it's available, and identify weighed and unweighed specs.
-    try {
-      const weightsContents = readFileSync(resolve(weightsPath), 'utf-8');
-      const weightsData = JSON.parse(weightsContents) as SpecWeights;
-      specWeightsSchema.validateSync(weightsData);
-      const specWeights = weightsData.weights.sort(
-        (a, b) => b.weight - a.weight
-      );
+    if (splitRunWeightsPath) {
+      try {
+        const weightsContents = readFileSync(
+          resolve(splitRunWeightsPath),
+          'utf-8'
+        );
+        const weightsData = JSON.parse(weightsContents) as SpecWeights;
+        specWeightsSchema.validateSync(weightsData);
+        const specWeights = weightsData.weights.sort(
+          (a, b) => b.weight - a.weight
+        );
 
-      // Get an array of `SpecWeight`s for each actual spec that has a corresponding weight entry.
-      weighedSpecs = specs
-        .map((specPath: string): SpecWeight | undefined => {
-          return specWeights.find(
+        // Get an array of `SpecWeight`s for each actual spec that has a corresponding weight entry.
+        weighedSpecs = specs
+          .map((specPath: string): SpecWeight | undefined => {
+            return specWeights.find(
+              (specWeight) => specWeight.filepath === specPath
+            );
+          })
+          .filter((specWeight): specWeight is SpecWeight => !!specWeight);
+
+        // Get an array of relative paths to specs that do not have weight data available.
+        unweighedSpecs = specs.filter((specPath: string) => {
+          return !specWeights.find(
             (specWeight) => specWeight.filepath === specPath
           );
-        })
-        .filter((specWeight): specWeight is SpecWeight => !!specWeight);
+        });
 
-      // Get an array of relative paths to specs that do not have weight data available.
-      unweighedSpecs = specs.filter((specPath: string) => {
-        return !specWeights.find(
-          (specWeight) => specWeight.filepath === specPath
-        );
-      });
+        const totalWeight = weightsData.meta.totalWeight;
 
-      const totalWeight = weightsData.meta.totalWeight;
-
-      // Reassign the weights info object to later output to the console.
-      weightsInfo = {
-        'Test Weights': weightsPath,
-        'Total Test Weight': totalWeight,
-        'Runner Test Weight': 0,
-        'Weighed Specs': weighedSpecs.length,
-        'Unweighed Specs': unweighedSpecs.length,
-      };
-    } catch (err) {
-      // Swallow error here; it's OK if test weights file doesn't exist / can't be read.
-      // Wrap messages in IIFEs to avoid issue where info messages get printed first.
-      (() => {
-        console.warn(`Failed to read weights file at '${weightsPath}'`);
-        if ('message' in err) {
-          console.warn(`Error message: ${err.message}`);
-        }
-      })();
-      (() => {
-        console.info(
-          'You can optimize your CI run performance by generating a valid weights file'
-        );
-        console.info(
-          `Example: CY_TEST_GENWEIGHTS='${weightsPath}' yarn cy:run`
-        );
-      })();
+        // Reassign the weights info object to later output to the console.
+        weightsInfo = {
+          'Test Weights': splitRunWeightsPath,
+          'Total Test Weight': totalWeight,
+          'Runner Test Weight': 0,
+          'Weighed Specs': weighedSpecs.length,
+          'Unweighed Specs': unweighedSpecs.length,
+        };
+      } catch (err) {
+        // Swallow error here; it's OK if test weights file doesn't exist / can't be read.
+        // Wrap messages in IIFEs to avoid issue where info messages get printed first.
+        (() => {
+          console.warn(
+            `Failed to read weights file at '${splitRunWeightsPath}'`
+          );
+          if ('message' in err) {
+            console.warn(`Error message: ${err.message}`);
+          }
+        })();
+        (() => {
+          console.info(
+            'You can optimize your CI run performance by generating a valid weights file'
+          );
+          console.info(
+            `Example: CY_TEST_GENWEIGHTS='${splitRunWeightsPath}' yarn cy:run`
+          );
+        })();
+      }
     }
 
     // Create an array containing objects to track specs and weight for each runner.
