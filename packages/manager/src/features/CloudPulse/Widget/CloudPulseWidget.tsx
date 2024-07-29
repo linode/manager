@@ -234,17 +234,19 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   } = useCloudPulseMetricsQuery(
     serviceType,
     getCloudPulseMetricRequest(widget, duration, resources, resourceIds),
-    authToken,
-    [
-      widget.aggregate_function,
-      widget.group_by,
-      widget.time_granularity,
-      widget.metric,
-      widget.label,
-      timeStamp,
-    ].join('-'),
-    Boolean(flags),
-    flags.aclpReadEndpoint!
+    {
+      authToken,
+      isFlags: Boolean(flags),
+      key: [
+        widget.aggregate_function,
+        widget.group_by,
+        widget.time_granularity,
+        widget.metric,
+        widget.label,
+        timeStamp,
+      ].join('-'),
+      url: flags.aclpReadEndpoint!,
+    }
   );
 
   React.useEffect(() => {
@@ -317,9 +319,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             <CloudPulseLineGraph
               error={
                 status === 'error'
-                  ? error && error.length > 0
-                    ? error[0].reason
-                    : 'Error while rendering widget'
+                  ? error?.[0]?.reason || 'Erorr while rendering widget'
                   : undefined
               }
               legendRows={

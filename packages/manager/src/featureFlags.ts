@@ -63,7 +63,7 @@ interface AclpFlag {
   enabled: boolean;
 }
 
-export interface CloudPulseResourceTypeMap {
+interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
   serviceType: string;
 }
@@ -82,7 +82,7 @@ interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
 export interface Flags {
   aclp: AclpFlag;
   aclpReadEndpoint: string;
-  aclpResourceTypeMap: CloudPulseResourceTypeMap[];
+  aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   apiMaintenance: APIMaintenance;
   apicliDxToolsAdditions: boolean;
   blockStorageEncryption: boolean;

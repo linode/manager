@@ -143,25 +143,7 @@ export const generateStartTime = (modifier: Labels, nowInSeconds: number) => {
  * @returns time duration object for the label
  */
 export const getTimeDurationFromTimeRange = (label: string): TimeDuration => {
-  if (label === PAST_30_MINUTES) {
-    return { unit: 'min', value: 30 };
-  }
+  const options = generateSelectOptions();
 
-  if (label === PAST_24_HOURS) {
-    return { unit: 'hr', value: 24 };
-  }
-
-  if (label === PAST_12_HOURS) {
-    return { unit: 'hr', value: 12 };
-  }
-
-  if (label === PAST_7_DAYS) {
-    return { unit: 'day', value: 7 };
-  }
-
-  if (label === PAST_30_DAYS) {
-    return { unit: 'day', value: 30 };
-  }
-
-  return { unit: 'min', value: 30 };
+  return options[label] || { unit: 'min', vlaue: 30 };
 };

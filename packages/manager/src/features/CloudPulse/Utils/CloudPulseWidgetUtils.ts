@@ -30,50 +30,43 @@ export const generateGraphData = (
   const legendRowsData: LegendRow[] = [];
 
   // for now we will use this, but once we decide how to work with coloring, it should be dynamic
-  let colors: string[] = COLOR_MAP.get('default')!; // choose default theme by default
-  if (widgetColor) {
-    colors = COLOR_MAP.get(widgetColor)!;
-  }
-
+  const colors = COLOR_MAP.get(widgetColor ?? 'default')!;
   let today = false;
 
   if (status === 'success' && Boolean(metricsList?.data.result.length)) {
-    let colorPalatteInfoIndex = 0;
-    metricsList!.data.result.forEach((graphData: CloudPulseMetricsList) => {
-      // todo, move it to utils at a widget level
-      if (!graphData) {
-        return;
-      }
-      const color = colors[colorPalatteInfoIndex];
-      const startEnd = convertTimeDurationToStartAndEndTimeRange({
-        unit: 'min',
-        value: 30,
-      });
+    metricsList!.data.result.forEach(
+      (graphData: CloudPulseMetricsList, index) => {
+        // todo, move it to utils at a widget level
+        if (!graphData) {
+          return;
+        }
+        const color = colors[index];
+        const { end, start } = convertTimeDurationToStartAndEndTimeRange({
+          unit: 'min',
+          value: 30,
+        }) || {
+          end: graphData.values[graphData.values.length - 1][0],
+          start: graphData.values[0][0],
+        };
 
-      const dimension = {
-        backgroundColor: color,
-        borderColor: '',
-        data: seriesDataFormatter(
-          graphData.values,
-          startEnd ? startEnd.start : graphData.values[0][0],
-          startEnd
-            ? startEnd.end
-            : graphData.values[graphData.values.length - 1][0]
-        ),
-        label: `${label} (${unit})`,
-      };
-      // construct a legend row with the dimension
-      const legendRow = {
-        data: getMetrics(dimension.data as number[][]),
-        format: (value: number) => tooltipValueFormatter(value, unit),
-        legendColor: color,
-        legendTitle: dimension.label,
-      };
-      legendRowsData.push(legendRow);
-      dimensions.push(dimension);
-      colorPalatteInfoIndex = colorPalatteInfoIndex + 1;
-      today = today || isToday(startEnd.start, startEnd.end);
-    });
+        const dimension = {
+          backgroundColor: color,
+          borderColor: '',
+          data: seriesDataFormatter(graphData.values, start, end),
+          label: `${label} (${unit})`,
+        };
+        // construct a legend row with the dimension
+        const legendRow = {
+          data: getMetrics(dimension.data as number[][]),
+          format: (value: number) => tooltipValueFormatter(value, unit),
+          legendColor: color,
+          legendTitle: dimension.label,
+        };
+        legendRowsData.push(legendRow);
+        dimensions.push(dimension);
+        today ||= isToday(start, end);
+      }
+    );
   }
 
   return { dimensions, legendRowsData, today };
@@ -92,13 +85,15 @@ export const getCloudPulseMetricRequest = (
   resources: CloudPulseResources[],
   resourceIds: string[]
 ): CloudPulseMetricsRequest => {
-  const request: CloudPulseMetricsRequest = {
+  return {
     aggregate_function: widget.aggregate_function,
     filters: undefined,
     group_by: widget.group_by,
     metric: widget.metric,
     relative_time_duration: duration ?? widget.time_duration,
-    resource_id: [],
+    resource_id: resources
+      ? resourceIds.map((obj) => parseInt(obj, 10))
+      : widget.resource_id.map((obj) => parseInt(obj, 10)),
     time_granularity:
       widget.time_granularity.unit === 'Auto'
         ? undefined
@@ -107,12 +102,4 @@ export const getCloudPulseMetricRequest = (
             value: widget.time_granularity.value,
           },
   };
-
-  if (resources) {
-    request.resource_id = resourceIds.map((obj) => parseInt(obj, 10));
-  } else {
-    request.resource_id = widget.resource_id.map((obj) => parseInt(obj, 10));
-  }
-
-  return request;
 };

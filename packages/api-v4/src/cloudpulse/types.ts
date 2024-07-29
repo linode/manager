@@ -89,12 +89,12 @@ export interface JWEToken {
 }
 
 export interface CloudPulseMetricsRequest {
-  metric: string; // done
-  filters?: Filters[]; // widget level
-  aggregate_function: string; // come from widget
-  group_by: string; // come from widget
-  relative_time_duration: TimeDuration; // come from dashboard
-  time_granularity: TimeGranularity | undefined; // comes from dashboard
+  metric: string;
+  filters?: Filters[];
+  aggregate_function: string;
+  group_by: string;
+  relative_time_duration: TimeDuration;
+  time_granularity: TimeGranularity | undefined;
   resource_id: number[];
 }
 

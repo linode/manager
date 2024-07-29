@@ -63,22 +63,21 @@ export const createObjectCopy = <T>(object: T): T | null => {
 export const convertTimeDurationToStartAndEndTimeRange = (
   timeDuration: TimeDuration
 ): WithStartAndEnd => {
-  const startEnd: WithStartAndEnd = { end: 0, start: 0 };
   const nowInSeconds = Date.now() / 1000;
-  startEnd.end = nowInSeconds;
-  if (timeDuration.unit === 'hr') {
-    startEnd.start = nowInSeconds - timeDuration.value * 60 * 60;
-  }
 
-  if (timeDuration.unit === 'min') {
-    startEnd.start = nowInSeconds - timeDuration.value * 60;
-  }
+  const unitToSecondsMap: { [unit: string]: number } = {
+    days: 86400,
+    hr: 3600,
+    min: 60,
+  };
 
-  if (timeDuration.unit === 'days') {
-    startEnd.start = nowInSeconds - timeDuration.value * 24 * 60 * 60;
-  }
+  const durationInSeconds =
+    (unitToSecondsMap[timeDuration.unit] || 0) * timeDuration.value;
 
-  return startEnd;
+  return {
+    end: nowInSeconds,
+    start: nowInSeconds - durationInSeconds,
+  };
 };
 
 /**
@@ -93,17 +92,14 @@ export const seriesDataFormatter = (
   startTime: number,
   endTime: number
 ): [number, null | number][] => {
-  const formattedArray: StatWithDummyPoint[] = [];
-  if (data && data.length > 0) {
-    data?.forEach((element: [number, string]) => {
-      const formattedPoint: StatWithDummyPoint = {
-        x: Number(element[0]),
-        y: element[1] ? Number(element[1]) : null,
-      };
-      formattedArray.push(formattedPoint);
-    });
-    return convertData(formattedArray, startTime, endTime);
+  if (!data || data.length === 0) {
+    return [];
   }
 
-  return [];
+  const formattedArray: StatWithDummyPoint[] = data.map(([x, y]) => ({
+    x: Number(x),
+    y: y ? Number(y) : null,
+  }));
+
+  return convertData(formattedArray, startTime, endTime);
 };
