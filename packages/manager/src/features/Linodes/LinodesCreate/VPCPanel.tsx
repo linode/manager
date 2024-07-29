@@ -27,10 +27,10 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { REGION_CAVEAT_HELPER_TEXT } from './constants';
 import { VPCCreateDrawer } from './VPCCreateDrawer';
 
+import type { LinodeCreateType } from './types';
 import type { Item } from 'src/components/EnhancedSelect';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import { LinodeCreateType } from './types';
 
 export interface VPCPanelProps {
   additionalIPv4RangesForVPC: ExtendedIP[];
@@ -200,7 +200,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                 sendLinodeCreateFormInputEvent({
                   createType: (params.type as LinodeCreateType) ?? 'OS',
                   headerName: 'VPC',
-                  interaction: 'click',
+                  interaction: 'change',
                   label: 'Assign VPC',
                   version: 'v1',
                 });

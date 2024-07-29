@@ -92,7 +92,7 @@ export const waitForAdobeAnalyticsToBeLoaded = () =>
  *
  * @returns a formatted string
  */
-export const getFormattedFormEventName = ({
+export const getFormattedFormEventString = ({
   headerName,
   interaction,
   label,

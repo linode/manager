@@ -1,4 +1,4 @@
-import { getFormattedFormEventName, sendFormEvent } from './utils';
+import { getFormattedFormEventString, sendFormEvent } from './utils';
 
 import type {
   BasicFormEvent,
@@ -25,14 +25,14 @@ import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types'
 export const sendLinodeCreateFormInputEvent = ({
   createType,
   headerName,
-  interaction = 'click',
+  interaction,
   label,
   subheaderName,
   version,
 }: LinodeCreateFormEventOptions) => {
   const formPayload: FormInputEvent = {
     formName: `Linode Create from ${createType} ${version}`,
-    inputValue: getFormattedFormEventName({
+    inputValue: getFormattedFormEventString({
       headerName,
       interaction,
       label,
@@ -54,7 +54,7 @@ export const sendLinodeCreateFormStepEvent = ({
 }: LinodeCreateFormEventOptions) => {
   const formPayload: FormStepEvent = {
     formName: `Linode Create from ${createType} ${version}`,
-    stepName: getFormattedFormEventName({
+    stepName: getFormattedFormEventString({
       headerName,
       interaction,
       label,

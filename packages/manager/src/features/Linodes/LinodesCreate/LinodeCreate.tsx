@@ -433,6 +433,13 @@ export class LinodeCreate extends React.PureComponent<
       type: this.props.selectedTypeID ?? '',
     };
     sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
+    sendLinodeCreateFormInputEvent({
+      createType: 'OS',
+      headerName: undefined,
+      interaction: 'click',
+      label: 'Create Using Command Line',
+      version: 'v1',
+    });
     this.props.checkValidation(payload);
   };
 

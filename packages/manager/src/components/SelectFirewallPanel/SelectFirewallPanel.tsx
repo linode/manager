@@ -48,7 +48,7 @@ export const SelectFirewallPanel = (props: Props) => {
       sendLinodeCreateFormInputEvent({
         createType: (queryParams.type as LinodeCreateType) ?? 'OS',
         headerName: 'Firewall',
-        interaction: 'click',
+        interaction: 'change',
         label: 'Create Firewall',
         subheaderName: 'Assign Firewall',
         version: 'v1',
