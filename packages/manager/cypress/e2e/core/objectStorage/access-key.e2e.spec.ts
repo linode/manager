@@ -2,7 +2,7 @@
  * @file End-to-end tests for Object Storage Access Key operations.
  */
 
-import { createObjectStorageBucketFactory } from 'src/factories/objectStorage';
+import { createObjectStorageBucketFactoryLegacy } from 'src/factories/objectStorage';
 import { authenticate } from 'support/api/authentication';
 import { createBucket } from '@linode/api-v4/lib/object-storage';
 import {
@@ -120,7 +120,7 @@ describe('object storage access key end-to-end tests', () => {
   it('can create an access key with limited access - e2e', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-east-1';
-    const bucketRequest = createObjectStorageBucketFactory.build({
+    const bucketRequest = createObjectStorageBucketFactoryLegacy.build({
       label: bucketLabel,
       cluster: bucketCluster,
       // Default factory sets `cluster` and `region`, but API does not accept `region` yet.
