@@ -8,7 +8,7 @@ import { TwoStepRegion } from './TwoStepRegion';
 describe('TwoStepRegion', () => {
   it('should render a heading', () => {
     const { getAllByText } = renderWithThemeAndHookFormContext({
-      component: <TwoStepRegion />,
+      component: <TwoStepRegion onChange={vi.fn()} />,
     });
 
     const heading = getAllByText('Region')[0];
@@ -19,7 +19,7 @@ describe('TwoStepRegion', () => {
 
   it('should render two tabs, Core and Distributed', () => {
     const { getAllByRole } = renderWithThemeAndHookFormContext({
-      component: <TwoStepRegion />,
+      component: <TwoStepRegion onChange={vi.fn()} />,
     });
 
     const tabs = getAllByRole('tab');
@@ -29,7 +29,7 @@ describe('TwoStepRegion', () => {
 
   it('should render a Region Select for the Core tab', () => {
     const { getByPlaceholderText } = renderWithThemeAndHookFormContext({
-      component: <TwoStepRegion />,
+      component: <TwoStepRegion onChange={vi.fn()} />,
     });
 
     const select = getByPlaceholderText('Select a Region');
@@ -40,7 +40,7 @@ describe('TwoStepRegion', () => {
 
   it('should render a Geographical Area select with All pre-selected and a Region Select for the Distributed tab', async () => {
     const { getAllByRole } = renderWithThemeAndHookFormContext({
-      component: <TwoStepRegion />,
+      component: <TwoStepRegion onChange={vi.fn()} />,
     });
 
     const tabs = getAllByRole('tab');

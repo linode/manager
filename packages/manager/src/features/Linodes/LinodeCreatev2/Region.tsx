@@ -184,7 +184,25 @@ export const Region = () => {
   });
 
   if (showTwoStepRegion) {
-    return <TwoStepRegion />;
+    return (
+      <TwoStepRegion
+        regionFilter={
+          // We don't want the Image Service Gen2 work to abide by Gecko feature flags
+          hideDistributedRegions && params.type !== 'Images'
+            ? 'core'
+            : undefined
+        }
+        showDistributedRegionIconHelperText={
+          showDistributedRegionIconHelperText
+        }
+        disabled={isLinodeCreateRestricted}
+        disabledRegions={disabledRegions}
+        errorText={fieldState.error?.message}
+        onChange={onChange}
+        textFieldProps={{ onBlur: field.onBlur }}
+        value={field.value}
+      />
+    );
   }
 
   return (
