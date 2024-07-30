@@ -159,7 +159,7 @@ const MaintenanceTable = ({ type }: Props) => {
           />
         </Box>
       </Box>
-      <Table>
+      <Table aria-label={`List of ${type} maintenance`}>
         <TableHead>
           <TableRow>
             <TableCell className={classes.cell}>Entity</TableCell>
