@@ -1,6 +1,6 @@
-import { getJWEToken, getMetricDefinitionsByServiceType } from '@linode/api-v4';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQuery } from '@tanstack/react-query';
+
+import { queryFactory } from './aclpQueryFacotry';
 
 import type {
   APIError,
@@ -9,26 +9,12 @@ import type {
   MetricDefinitions,
 } from '@linode/api-v4';
 
-export const queryKey = 'cloudpulse-services';
-export const serviceTypeKey = 'service-types';
-
-const serviceQueries = createQueryKeys(queryKey, {
-  metricsDefinitons: (serviceType: string | undefined) => ({
-    queryFn: () => getMetricDefinitionsByServiceType(serviceType!),
-    queryKey: [serviceType],
-  }),
-  token: (serviceType: string | undefined, request: JWETokenPayLoad) => ({
-    queryFn: () => getJWEToken(request, serviceType!),
-    queryKey: [serviceType],
-  }),
-});
-
 export const useGetCloudPulseMetricDefinitionsByServiceType = (
   serviceType: string | undefined,
   enabled: boolean
 ) => {
   return useQuery<MetricDefinitions, APIError[]>({
-    ...serviceQueries.metricsDefinitons(serviceType),
+    ...queryFactory.metricsDefinitons(serviceType),
     enabled,
   });
 };
@@ -39,7 +25,7 @@ export const useCloudPulseJWEtokenQuery = (
   runQuery: boolean
 ) => {
   return useQuery<JWEToken, APIError[]>({
-    ...serviceQueries.token(serviceType, request),
+    ...queryFactory.token(serviceType, request),
     enabled: runQuery,
     keepPreviousData: true,
     refetchOnWindowFocus: false,

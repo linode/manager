@@ -237,14 +237,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     {
       authToken,
       isFlags: Boolean(flags),
-      key: [
-        widget.aggregate_function,
-        widget.group_by,
-        widget.time_granularity,
-        widget.metric,
-        widget.label,
-        timeStamp,
-      ].join('-'),
+      label: widget.label,
+      timeStamp,
       url: flags.aclpReadEndpoint!,
     }
   );
