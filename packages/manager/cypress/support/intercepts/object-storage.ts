@@ -9,6 +9,7 @@ import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 
 import type {
+  CreateObjectStorageBucketPayload,
   ObjectStorageBucket,
   ObjectStorageCluster,
   ObjectStorageKey,
@@ -86,7 +87,7 @@ export const interceptCreateBucket = (): Cypress.Chainable<null> => {
  * @returns Cypress chainable.
  */
 export const mockCreateBucket = (
-  bucket: ObjectStorageBucket
+  bucket: CreateObjectStorageBucketPayload
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
@@ -477,4 +478,13 @@ export const interceptUpdateBucketAccess = (
     'PUT',
     apiMatcher(`object-storage/buckets/${cluster}/${label}/access`)
   );
+};
+
+/**
+ * Intercepts GET request to get object storage endpoints.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetObjectStorageEndpoints = (): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher(`object-storage/endpoints`));
 };
