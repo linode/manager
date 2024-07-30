@@ -3,13 +3,8 @@ import {
   deleteBucket,
   deleteBucketWithRegion,
   deleteSSLCert,
-  getBuckets,
-  getBucketsInCluster,
-  getBucketsInRegion,
-  getClusters,
   getObjectList,
   getObjectStorageKeys,
-  getObjectStorageTypes,
   getObjectURL,
   getSSLCert,
   uploadSSLCert,
@@ -25,14 +20,22 @@ import {
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
-import { getAll } from 'src/utilities/getAll';
 
-import { useAccount } from './account/account';
-import { accountQueries } from './account/queries';
-import { queryPresets } from './base';
-import { useRegionsQuery } from './regions/regions';
+import { useAccount } from '../account/account';
+import { accountQueries } from '../account/queries';
+import { queryPresets } from '../base';
+import { useRegionsQuery } from '../regions/regions';
+import {
+  getAllBucketsFromClusters,
+  getAllBucketsFromRegions,
+  getAllObjectStorageClusters,
+  getAllObjectStorageTypes,
+} from './requests';
+import { prefixToQueryKey } from './utilities';
 
+import type { BucketsResponse } from './requests';
 import type {
+  APIError,
   CreateObjectStorageBucketPayload,
   CreateObjectStorageBucketSSLPayload,
   CreateObjectStorageObjectURLPayload,
@@ -42,47 +45,10 @@ import type {
   ObjectStorageKey,
   ObjectStorageObjectList,
   ObjectStorageObjectURL,
-  Region,
-} from '@linode/api-v4';
-import type {
-  APIError,
   Params,
   PriceType,
   ResourcePage,
-} from '@linode/api-v4/lib/types';
-
-export interface BucketError {
-  /*
-   @TODO OBJ Multicluster:'region' will become required, and the
-   'cluster' field will be deprecated once the feature is fully rolled out in production.
-   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
-   remove 'cluster' and retain 'regions'.
-  */
-  cluster: ObjectStorageCluster;
-  error: APIError[];
-  region?: Region;
-}
-
-interface BucketsResponse {
-  buckets: ObjectStorageBucket[];
-  errors: BucketError[];
-}
-
-/**
- * This getAll is probably overkill for getting all
- * Object Storage clusters (currently there are only 4),
- * but lets use it to be safe.
- */
-export const getAllObjectStorageClusters = () =>
-  getAll<ObjectStorageCluster>(() => getClusters())().then((data) => data.data);
-
-export const getAllObjectStorageBuckets = () =>
-  getAll<ObjectStorageBucket>(() => getBuckets())().then((data) => data.data);
-
-const getAllObjectStorageTypes = () =>
-  getAll<PriceType>((params) => getObjectStorageTypes(params))().then(
-    (data) => data.data
-  );
+} from '@linode/api-v4';
 
 export const objectStorageQueries = createQueryKeys('object-storage', {
   accessKeys: (params: Params) => ({
@@ -92,6 +58,7 @@ export const objectStorageQueries = createQueryKeys('object-storage', {
   bucket: (clusterOrRegion: string, bucketName: string) => ({
     contextQueries: {
       objects: {
+        // This is a placeholder queryFn and QueryKey. View the `useObjectBucketObjectsInfiniteQuery` implementation for details.
         queryFn: null,
         queryKey: null,
       },
@@ -103,11 +70,11 @@ export const objectStorageQueries = createQueryKeys('object-storage', {
     queryKey: [clusterOrRegion, bucketName],
   }),
   buckets: {
-    queryFn: () => null, // This is a fake queryFn. Look at `useObjectStorageBuckets` for the actual logic.
+    queryFn: () => null, // This is a placeholder queryFn. Look at `useObjectStorageBuckets` for the actual logic.
     queryKey: null,
   },
   clusters: {
-    queryFn: () => getAllObjectStorageClusters(),
+    queryFn: getAllObjectStorageClusters,
     queryKey: null,
   },
   types: {
@@ -221,11 +188,10 @@ export const useDeleteBucketMutation = () => {
 };
 
 /*
-   @TODO OBJ Multicluster: useDeleteBucketWithRegionMutation is a temporary hook,
-   once feature is rolled out we replace it with existing useDeleteBucketMutation
-   by updating it with region instead of cluster.
-  */
-
+ @TODO OBJ Multicluster: useDeleteBucketWithRegionMutation is a temporary hook,
+ once feature is rolled out we replace it with existing useDeleteBucketMutation
+ by updating it with region instead of cluster.
+*/
 export const useDeleteBucketWithRegionMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { label: string; region: string }>({
@@ -249,7 +215,7 @@ export const useDeleteBucketWithRegionMutation = () => {
   });
 };
 
-export const useObjectBucketDetailsInfiniteQuery = (
+export const useObjectBucketObjectsInfiniteQuery = (
   clusterId: string,
   bucket: string,
   prefix: string
@@ -267,90 +233,6 @@ export const useObjectBucketDetailsInfiniteQuery = (
       ...prefixToQueryKey(prefix),
     ],
   });
-
-export const getAllBucketsFromClusters = async (
-  clusters: ObjectStorageCluster[] | undefined
-) => {
-  if (clusters === undefined) {
-    return { buckets: [], errors: [] } as BucketsResponse;
-  }
-
-  const promises = clusters.map((cluster) =>
-    getAll<ObjectStorageBucket>((params) =>
-      getBucketsInCluster(cluster.id, params)
-    )()
-      .then((data) => data.data)
-      .catch((error) => ({
-        cluster,
-        error,
-      }))
-  );
-
-  const data = await Promise.all(promises);
-
-  const bucketsPerCluster = data.filter((item) =>
-    Array.isArray(item)
-  ) as ObjectStorageBucket[][];
-
-  const buckets = bucketsPerCluster.reduce((acc, val) => acc.concat(val), []);
-
-  const errors = data.filter((item) => !Array.isArray(item)) as BucketError[];
-
-  if (errors.length === clusters.length) {
-    throw new Error('Unable to get Object Storage buckets.');
-  }
-
-  return { buckets, errors } as BucketsResponse;
-};
-
-export const getAllBucketsFromRegions = async (
-  regions: Region[] | undefined
-) => {
-  if (regions === undefined) {
-    return { buckets: [], errors: [] } as BucketsResponse;
-  }
-
-  const promises = regions.map((region) =>
-    getAll<ObjectStorageBucket>((params) =>
-      getBucketsInRegion(region.id, params)
-    )()
-      .then((data) => data.data)
-      .catch((error) => ({
-        error,
-        region,
-      }))
-  );
-
-  const data = await Promise.all(promises);
-
-  const bucketsPerRegion = data.filter((item) =>
-    Array.isArray(item)
-  ) as ObjectStorageBucket[][];
-
-  const buckets = bucketsPerRegion.reduce((acc, val) => acc.concat(val), []);
-
-  const errors = data.filter((item) => !Array.isArray(item)) as BucketError[];
-
-  if (errors.length === regions.length) {
-    throw new Error('Unable to get Object Storage buckets.');
-  }
-
-  return { buckets, errors } as BucketsResponse;
-};
-
-/**
- * Used to make a nice React Query queryKey by splitting the prefix
- * by the '/' character.
- *
- * By spreading the result, you can achieve a queryKey that is in the form of:
- * ["object-storage","us-southeast-1","test","testfolder"]
- *
- * @param {string} prefix The Object Stoage prefix path
- * @returns {string[]} a list of paths
- */
-export const prefixToQueryKey = (prefix: string) => {
-  return prefix.split('/', prefix.split('/').length - 1);
-};
 
 export const useCreateObjectUrlMutation = (
   clusterId: string,

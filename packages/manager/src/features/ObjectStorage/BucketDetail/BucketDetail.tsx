@@ -22,10 +22,10 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 import {
   objectStorageQueries,
-  prefixToQueryKey,
-  useObjectBucketDetailsInfiniteQuery,
+  useObjectBucketObjectsInfiniteQuery,
   useObjectStorageBuckets,
-} from 'src/queries/objectStorage';
+} from 'src/queries/object-storage/queries';
+import { prefixToQueryKey } from 'src/queries/object-storage/utilities';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { sendDownloadObjectEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
@@ -55,7 +55,7 @@ import type {
   ObjectStorageClusterID,
   ObjectStorageObject,
   ObjectStorageObjectList,
-} from '@linode/api-v4/lib/object-storage';
+} from '@linode/api-v4';
 
 interface MatchParams {
   bucketName: string;
@@ -104,7 +104,7 @@ export const BucketDetail = () => {
     isFetching,
     isFetchingNextPage,
     isLoading,
-  } = useObjectBucketDetailsInfiniteQuery(clusterId, bucketName, prefix);
+  } = useObjectBucketObjectsInfiniteQuery(clusterId, bucketName, prefix);
   const [
     isCreateFolderDrawerOpen,
     setIsCreateFolderDrawerOpen,

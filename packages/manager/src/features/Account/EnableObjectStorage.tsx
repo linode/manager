@@ -10,7 +10,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
 import { updateAccountSettingsData } from 'src/queries/account/settings';
-import { objectStorageQueries } from 'src/queries/objectStorage';
+import { objectStorageQueries } from 'src/queries/object-storage/queries';
 import { useProfile } from 'src/queries/profile/profile';
 
 import type { APIError, AccountSettings } from '@linode/api-v4';

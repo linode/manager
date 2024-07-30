@@ -18,7 +18,7 @@ import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
-import { useObjectStorageBuckets } from 'src/queries/objectStorage';
+import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';

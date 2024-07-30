@@ -6,7 +6,7 @@ import { useDropzone } from 'react-dropzone';
 import { debounce } from 'throttle-debounce';
 
 import { Button } from 'src/components/Button/Button';
-import { objectStorageQueries } from 'src/queries/objectStorage';
+import { objectStorageQueries } from 'src/queries/object-storage/queries';
 import { sendObjectsQueuedForUploadEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { readableBytes } from 'src/utilities/unitConversions';
 
