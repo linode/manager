@@ -117,6 +117,7 @@ export const useObjectStorageBuckets = (enabled = true) => {
       ? () => getAllBucketsFromRegions(regions)
       : () => getAllBucketsFromClusters(clusters),
     queryKey: objectStorageQueries.buckets.queryKey,
+    retry: false,
   });
 };
 
