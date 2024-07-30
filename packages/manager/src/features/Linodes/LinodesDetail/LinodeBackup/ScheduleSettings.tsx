@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import Select from 'src/components/EnhancedSelect/Select';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormControl } from 'src/components/FormControl';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { Notice } from 'src/components/Notice/Notice';
@@ -94,7 +94,7 @@ export const ScheduleSettings = (props: Props) => {
           </Notice>
         )}
         <StyledFormControl>
-          <Select
+          <Autocomplete
             textFieldProps={{
               dataAttrs: {
                 'data-qa-weekday-select': true,
@@ -103,20 +103,22 @@ export const ScheduleSettings = (props: Props) => {
             value={dayOptions.find(
               (item) => item.value === settingsForm.values.day
             )}
+            autoHighlight
             disabled={isReadOnly}
-            isClearable={false}
+            disableClearable
             label="Day of Week"
-            name="Day of Week"
             noMarginTop
-            onChange={(item) => settingsForm.setFieldValue('day', item.value)}
+            onChange={(_, selected) =>
+              settingsForm.setFieldValue('day', selected?.value)
+            }
             options={dayOptions}
             placeholder="Choose a day"
           />
         </StyledFormControl>
         <FormControl>
-          <Select
-            onChange={(item) =>
-              settingsForm.setFieldValue('window', item.value)
+          <Autocomplete
+            onChange={(_, selected) =>
+              settingsForm.setFieldValue('window', selected?.value)
             }
             textFieldProps={{
               dataAttrs: {
@@ -126,10 +128,10 @@ export const ScheduleSettings = (props: Props) => {
             value={windowOptions.find(
               (item) => item.value === settingsForm.values.window
             )}
+            autoHighlight
             disabled={isReadOnly}
-            isClearable={false}
+            disableClearable
             label="Time of Day"
-            name="Time of Day"
             noMarginTop
             options={windowOptions}
             placeholder="Choose a time"

@@ -1,17 +1,20 @@
 import { Kernel } from '@linode/api-v4/lib/linodes/types';
 import { groupBy } from 'ramda';
 import * as React from 'react';
-
-import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 export interface KernelSelectProps {
   errorText?: string;
   kernels: Kernel[];
-  onChange: (selected: Item<string>) => void;
+  onChange: (selected_value: string) => void;
   readOnly?: boolean;
   selectedKernel?: string;
 }
-
+interface KernelOption {
+  kernelType: string;
+  label: string;
+  value: string;
+}
 /**
  * This component's main purpose is to take an
  * API /kernels response, which returns a sorted but
@@ -21,17 +24,27 @@ export interface KernelSelectProps {
 
 export const KernelSelect = React.memo((props: KernelSelectProps) => {
   const { errorText, kernels, onChange, readOnly, selectedKernel } = props;
-
   const options = kernelsToGroupedItems(kernels);
-
   return (
-    <Select
-      disabled={Boolean(readOnly)}
-      errorGroup="linode-config-drawer"
+    <Autocomplete
+      textFieldProps={{
+        errorGroup: 'linode-config-drawer',
+      }}
+      renderOption={(props, kernel) => {
+        return (
+          <li {...props} data-testid="kernel-option">
+            {kernel.label}
+          </li>
+        );
+      }}
+      autoHighlight
+      disableClearable
+      disabled={readOnly}
       errorText={errorText}
-      isClearable={false}
+      groupBy={(option) => option.kernelType}
       label="Select a Kernel"
-      onChange={onChange}
+      placeholder="Select a Kernel"
+      onChange={(_, selected) => onChange(selected.value)}
       options={options}
       value={getSelectedKernelId(selectedKernel, options)}
     />
@@ -40,16 +53,12 @@ export const KernelSelect = React.memo((props: KernelSelectProps) => {
 
 export const getSelectedKernelId = (
   kernelID: string | undefined,
-  options: GroupType<string>[]
+  options: KernelOption[]
 ) => {
   if (!kernelID) {
-    return null;
+    return;
   }
-  const kernels = options.reduce(
-    (accum, thisGroup) => [...accum, ...thisGroup.options],
-    []
-  );
-  return kernels.find((thisKernel) => kernelID === thisKernel.value);
+  return options.find((option) => kernelID === option.value);
 };
 
 export const groupKernels = (kernel: Kernel) => {
@@ -76,23 +85,21 @@ export const groupKernels = (kernel: Kernel) => {
 
 export const kernelsToGroupedItems = (kernels: Kernel[]) => {
   const groupedKernels = groupBy(groupKernels, kernels);
-  groupedKernels.Current = sortCurrentKernels(groupedKernels.Current);
 
+  groupedKernels.Current = sortCurrentKernels(groupedKernels.Current);
   return Object.keys(groupedKernels)
-    .reduce((accum: GroupType<string>[], thisGroup) => {
+    .reduce((accum: KernelOption[], thisGroup) => {
       const group = groupedKernels[thisGroup];
       if (!group || group.length === 0) {
         return accum;
       }
       return [
         ...accum,
-        {
-          label: thisGroup,
-          options: groupedKernels[thisGroup].map((thisKernel) => ({
-            label: thisKernel.label,
-            value: thisKernel.id,
-          })),
-        },
+        ...group.map((thisKernel) => ({
+          kernelType: thisGroup,
+          label: thisKernel.label,
+          value: thisKernel.id,
+        })),
       ];
     }, [])
     .sort(sortKernelGroups);
@@ -105,11 +112,11 @@ const PRIORITY = {
   Deprecated: 1,
 };
 
-const sortKernelGroups = (a: GroupType, b: GroupType) => {
-  if (PRIORITY[a.label] > PRIORITY[b.label]) {
+const sortKernelGroups = (a: KernelOption, b: KernelOption) => {
+  if (PRIORITY[a.kernelType] > PRIORITY[b.kernelType]) {
     return -1;
   }
-  if (PRIORITY[a.label] < PRIORITY[b.label]) {
+  if (PRIORITY[a.kernelType] < PRIORITY[b.kernelType]) {
     return 1;
   }
   return 0;

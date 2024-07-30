@@ -3,8 +3,8 @@ import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Divider } from 'src/components/Divider';
-import Select from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
@@ -136,8 +136,8 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
     (ip_range) => ip_range.address
   );
 
-  const handlePurposeChange = (selected: Item<InterfacePurpose>) => {
-    const purpose = selected.value;
+  const handlePurposeChange = (selectedValue: ExtendedPurpose) => {
+    const purpose = selectedValue;
     handleChange({
       ipam_address: purpose === 'vlan' ? ipamAddress : '',
       label: purpose === 'vlan' ? label : '',
@@ -148,10 +148,10 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     handleChange({ ipam_address: e.target.value, label, purpose });
 
-  const handleLabelChange = (selected: Item<string>) =>
+  const handleLabelChange = (selectedValue: string) =>
     handleChange({
       ipam_address: ipamAddress,
-      label: selected?.value ?? '',
+      label: selectedValue,
       purpose,
     });
 
@@ -290,22 +290,51 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
     });
   };
 
+  const filterVLANOptions = (
+    options: { label: string; value: string }[],
+    { inputValue }: { inputValue: string }
+  ) => {
+    const filtered = options.filter((o) =>
+      o.label.toLowerCase().includes(inputValue.toLowerCase())
+    );
+
+    const isExistingVLAN = options.some(
+      (o) => o.label.toLowerCase() === inputValue.toLowerCase()
+    );
+
+    if (inputValue !== '' && !isExistingVLAN) {
+      filtered.push({
+        label: `Create "${inputValue}"`,
+        value: inputValue,
+      });
+    }
+
+    return filtered;
+  };
   const jsxSelectVLAN = (
-    <Select
-      noOptionsMessage={() =>
+    <Autocomplete
+      noOptionsText={
         isLoading
           ? 'Loading...'
           : 'You have no VLANs in this region. Type to create one.'
       }
-      creatable
-      createOptionPosition="first"
+      textFieldProps={{
+        disabled: readOnly,
+      }}
+      autoHighlight
+      disableClearable={false}
       errorText={errors.labelError}
-      inputId={`vlan-label-${slotNumber}`}
-      isClearable
-      isDisabled={readOnly}
+      filterOptions={filterVLANOptions}
+      freeSolo
+      id={`vlan-label-${slotNumber}`}
       label="VLAN"
-      onChange={handleLabelChange}
-      onCreateOption={handleCreateOption}
+      onChange={(_, selected) => {
+        if (typeof selected === 'string') {
+          handleCreateOption(selected);
+        } else {
+          handleLabelChange(selected?.value ?? '');
+        }
+      }}
       options={vlanOptions}
       placeholder="Create or select a VLAN"
       value={vlanOptions.find((thisVlan) => thisVlan.value === label) ?? null}
@@ -392,7 +421,7 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
             )}
           </Grid>
           <Grid xs={isSmallBp ? 12 : 6}>
-            <Select
+            <Autocomplete
               options={
                 // Do not display "None" as an option for eth0 (must be Public Internet, VLAN, or VPC).
                 slotNumber > 0
@@ -404,10 +433,13 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
               value={purposeOptions.find(
                 (thisOption) => thisOption.value === purpose
               )}
-              disabled={readOnly}
-              isClearable={false}
+              autoHighlight
+              textFieldProps={{
+                disabled: readOnly,
+              }}
+              disableClearable
               label={`eth${slotNumber}`}
-              onChange={handlePurposeChange}
+              onChange={(_, selected) => handlePurposeChange(selected?.value)}
             />
             {unavailableInRegionHelperTextJSX}
           </Grid>

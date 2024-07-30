@@ -13,12 +13,12 @@ import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Divider } from 'src/components/Divider';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -60,7 +60,6 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
@@ -76,6 +75,7 @@ import {
   StyledFormGroup,
   StyledRadioGroup,
 } from './LinodeConfigDialog.styles';
+import { getSelectedDeviceOption } from '../utilities';
 
 interface Helpers {
   devtmpfs_automount: boolean;
@@ -578,29 +578,25 @@ export const LinodeConfigDialog = (props: Props) => {
     disks: initrdDisks,
   };
 
-  const categorizedInitrdOptions = Object.entries(initrdDisksObject).map(
-    ([category, items]) => {
+  const categorizedInitrdOptions = Object.entries(initrdDisksObject).reduce(
+    (acc, [category, items]) => {
       const categoryTitle = titlecase(category);
-      return {
-        label: categoryTitle,
-        options: [
-          ...items.map(({ id, label }) => {
-            return {
-              label,
-              value: String(id) as null | number | string,
-            };
-          }),
-          { label: 'Recovery – Finnix (initrd)', value: String(finnixDiskID) },
-        ],
-        value: category,
-      };
-    }
+      const options = items.map(({ id, label }) => {
+        return {
+          deviceType: categoryTitle,
+          label,
+          value: String(id) as null | number | string,
+        };
+      });
+      return [...acc, ...options];
+    },
+    []
   );
 
   categorizedInitrdOptions.unshift({
-    label: '',
-    options: [{ label: 'None', value: null }],
-    value: '',
+    deviceType: '',
+    label: 'None',
+    value: null,
   });
 
   const getPrimaryInterfaceOptions = (interfaces: ExtendedInterface[]) => {
@@ -614,8 +610,8 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const primaryInterfaceOptions = getPrimaryInterfaceOptions(values.interfaces);
 
-  const handlePrimaryInterfaceChange = (selected: Item<number>) => {
-    setPrimaryInterfaceIndex(selected.value);
+  const handlePrimaryInterfaceChange = (selectedValue: number) => {
+    setPrimaryInterfaceIndex(selectedValue);
   };
 
   /**
@@ -624,8 +620,8 @@ export const LinodeConfigDialog = (props: Props) => {
    */
 
   const handleChangeKernel = React.useCallback(
-    (selected: Item<string>) => {
-      setFieldValue('kernel', selected?.value ?? '');
+    (selected_value: string) => {
+      setFieldValue('kernel', selected_value);
     },
     [setFieldValue]
   );
@@ -657,15 +653,15 @@ export const LinodeConfigDialog = (props: Props) => {
   );
 
   const handleRootDeviceChange = React.useCallback(
-    (selected: Item<string>) => {
-      setFieldValue('root_device', selected.value);
+    (selectedValue: string) => {
+      setFieldValue('root_device', selectedValue);
     },
     [setFieldValue]
   );
 
   const handleInitrdChange = React.useCallback(
-    (selectedDisk: Item<string>) => {
-      setFieldValue('initrd', selectedDisk.value);
+    (selectedDiskValue: string) => {
+      setFieldValue('initrd', selectedDiskValue);
     },
     [setFieldValue]
   );
@@ -876,19 +872,26 @@ export const LinodeConfigDialog = (props: Props) => {
                 slots={deviceSlots}
               />
               <FormControl fullWidth>
-                <Select
-                  defaultValue={getSelectedOptionFromGroupedOptions(
+                <Autocomplete
+                  defaultValue={getSelectedDeviceOption(
                     initrdFromConfig,
                     categorizedInitrdOptions
                   )}
-                  value={getSelectedOptionFromGroupedOptions(
+                  value={getSelectedDeviceOption(
                     values.initrd,
                     categorizedInitrdOptions
                   )}
-                  isClearable={false}
+                  autoHighlight
+                  clearIcon={null}
+                  groupBy={(option) => option.deviceType}
                   label="initrd"
                   noMarginTop
-                  onChange={handleInitrdChange}
+                  onChange={(_, selected) =>
+                    handleInitrdChange(selected?.value)
+                  }
+                  isOptionEqualToValue={(option, value) =>
+                    option.label === value.label
+                  }
                   options={categorizedInitrdOptions}
                   placeholder="None"
                 />
@@ -919,17 +922,19 @@ export const LinodeConfigDialog = (props: Props) => {
                   name="useCustomRoot"
                 />
                 {!useCustomRoot ? (
-                  <Select
+                  <Autocomplete
                     value={pathsOptions.find(
                       (device) => device.value === values.root_device
                     )}
+                    autoHighlight
                     disabled={isReadOnly}
                     errorText={formik.errors.root_device}
                     id="root_device"
-                    isClearable={false}
+                    disableClearable
                     label="Root Device"
-                    name="root_device"
-                    onChange={handleRootDeviceChange}
+                    onChange={(_, selected) =>
+                      handleRootDeviceChange(selected?.value)
+                    }
                     options={pathsOptions}
                     placeholder="None"
                   />
@@ -971,16 +976,20 @@ export const LinodeConfigDialog = (props: Props) => {
                 />
               )}
               <>
-                <Select
-                  defaultValue={
-                    primaryInterfaceOptions[primaryInterfaceIndex ?? 0]
-                  }
+                <Autocomplete
+                  autoHighlight
                   data-testid="primary-interface-dropdown"
                   disabled={isReadOnly}
-                  isClearable={false}
+                  disableClearable
                   label="Primary Interface (Default Route)"
-                  onChange={handlePrimaryInterfaceChange}
+                  isOptionEqualToValue={(option, value) =>
+                    option.value === value.value
+                  }
+                  onChange={(_, selected) =>
+                    handlePrimaryInterfaceChange(selected?.value)
+                  }
                   options={getPrimaryInterfaceOptions(values.interfaces)}
+                  value={primaryInterfaceOptions[primaryInterfaceIndex ?? 0]}
                 />
                 <Divider
                   sx={{

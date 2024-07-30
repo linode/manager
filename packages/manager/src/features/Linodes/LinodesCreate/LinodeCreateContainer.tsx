@@ -375,7 +375,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }));
   };
 
-  handleSubnetChange = (subnetID: number) => {
+  handleSubnetChange = (subnetID: number | undefined) => {
     this.setState((prevState) => ({
       errors: prevState.errors?.filter(
         (error) => error.field !== 'interfaces[0].subnet_id'

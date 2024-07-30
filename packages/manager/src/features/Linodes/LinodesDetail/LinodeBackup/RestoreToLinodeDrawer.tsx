@@ -4,9 +4,9 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Checkbox } from 'src/components/Checkbox';
 import { Drawer } from 'src/components/Drawer';
-import Select from 'src/components/EnhancedSelect/Select';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormHelperText } from 'src/components/FormHelperText';
@@ -102,17 +102,20 @@ export const RestoreToLinodeDrawer = (props: Props) => {
         {Boolean(errorMap.none) && (
           <Notice variant="error">{errorMap.none}</Notice>
         )}
-        <Select
+        <Autocomplete
           textFieldProps={{
             dataAttrs: {
               'data-qa-select-linode': true,
             },
           }}
+          autoHighlight
+          disableClearable
           errorText={linodeError?.[0].reason ?? errorMap.linode_id}
-          isClearable={false}
-          isLoading={linodesLoading}
+          loading={linodesLoading}
           label="Linode"
-          onChange={(item) => formik.setFieldValue('linode_id', item.value)}
+          onChange={(_, selected) =>
+            formik.setFieldValue('linode_id', selected?.value)
+          }
           options={linodeOptions}
           placeholder="Select a Linode"
           value={selectedLinodeOption}
