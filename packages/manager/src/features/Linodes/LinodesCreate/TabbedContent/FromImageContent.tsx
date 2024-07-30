@@ -73,7 +73,7 @@ export const FromImageContent = (props: CombinedProps) => {
     // Clear the region field if the currently selected region is a distributed site and the Image is only core compatible.
     if (
       image &&
-      !image.capabilities.includes('distributed-images') &&
+      !image.capabilities.includes('distributed-sites') &&
       selectedRegion?.site_type === 'distributed'
     ) {
       props.updateRegionID('');

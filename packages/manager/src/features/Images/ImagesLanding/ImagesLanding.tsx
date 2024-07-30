@@ -141,6 +141,13 @@ export const ImagesLanding = () => {
       ...manualImagesFilter,
       is_public: false,
       type: 'manual',
+    },
+    {
+      // Refetch custom images every 30 seconds.
+      // We do this because we have no /v4/account/events we can use
+      // to update Image region statuses. We should make the API
+      // team and Images team implement events for this.
+      refetchInterval: 30_000,
     }
   );
 

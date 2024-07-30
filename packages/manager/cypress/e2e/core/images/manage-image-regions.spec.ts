@@ -22,7 +22,7 @@ describe('Manage Image Regions', () => {
     const image = imageFactory.build({
       size: 50,
       total_size: 100,
-      capabilities: ['distributed-images'],
+      capabilities: ['distributed-sites'],
       regions: [
         { region: region1.id, status: 'available' },
         { region: region2.id, status: 'available' },

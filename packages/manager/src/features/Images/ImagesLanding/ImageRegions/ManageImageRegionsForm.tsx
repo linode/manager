@@ -113,25 +113,34 @@ export const ManageImageRegionsForm = (props: Props) => {
               No Regions Selected
             </Typography>
           )}
-          {values.regions.map((regionId) => (
-            <ImageRegionRow
-              onRemove={() =>
-                setValue(
-                  'regions',
-                  values.regions.filter((r) => r !== regionId),
-                  { shouldDirty: true, shouldValidate: true }
-                )
-              }
-              status={
-                image?.regions.find(
-                  (regionItem) => regionItem.region === regionId
-                )?.status ?? 'unsaved'
-              }
-              disableRemoveButton={values.regions.length <= 1}
-              key={regionId}
-              region={regionId}
-            />
-          ))}
+          {values.regions.map((regionId) => {
+            const status =
+              image?.regions.find(
+                (regionItem) => regionItem.region === regionId
+              )?.status ?? 'unsaved';
+
+            const isLastAvailableRegion =
+              status === 'available' &&
+              image?.regions
+                .filter((r) => values.regions.includes(r.region))
+                .filter((r) => r.status === 'available').length === 1;
+
+            return (
+              <ImageRegionRow
+                onRemove={() =>
+                  setValue(
+                    'regions',
+                    values.regions.filter((r) => r !== regionId),
+                    { shouldDirty: true, shouldValidate: true }
+                  )
+                }
+                disableRemoveButton={isLastAvailableRegion}
+                key={regionId}
+                region={regionId}
+                status={status}
+              />
+            );
+          })}
         </Stack>
       </Paper>
       <ActionsPanel

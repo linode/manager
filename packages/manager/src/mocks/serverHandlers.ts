@@ -443,7 +443,7 @@ export const handlers = [
   }),
   http.get<{ id: string }>('*/v4/images/:id', ({ params }) => {
     const distributedImage = imageFactory.build({
-      capabilities: ['cloud-init', 'distributed-images'],
+      capabilities: ['cloud-init', 'distributed-sites'],
       id: 'private/distributed-image',
       label: 'distributed-image',
       regions: [{ region: 'us-east', status: 'available' }],
@@ -499,7 +499,7 @@ export const handlers = [
     });
     const publicImages = imageFactory.buildList(4, { is_public: true });
     const distributedImage = imageFactory.build({
-      capabilities: ['cloud-init', 'distributed-images'],
+      capabilities: ['cloud-init', 'distributed-sites'],
       id: 'private/distributed-image',
       label: 'distributed-image',
       regions: [{ region: 'us-east', status: 'available' }],

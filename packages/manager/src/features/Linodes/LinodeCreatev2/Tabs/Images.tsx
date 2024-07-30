@@ -54,7 +54,7 @@ export const Images = () => {
     // @todo: delete this logic when all Images are "distributed compatible"
     if (
       image &&
-      !image.capabilities.includes('distributed-images') &&
+      !image.capabilities.includes('distributed-sites') &&
       selectedRegion?.site_type === 'distributed'
     ) {
       setValue('region', '');
@@ -77,7 +77,7 @@ export const Images = () => {
 
   // @todo: delete this logic when all Images are "distributed compatible"
   const showDistributedCapabilityNotice = images?.some((image) =>
-    image.capabilities.includes('distributed-images')
+    image.capabilities.includes('distributed-sites')
   );
 
   if (images?.length === 0) {
