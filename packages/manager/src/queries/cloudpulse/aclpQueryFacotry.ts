@@ -6,7 +6,6 @@ import {
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
-import { getAllLoadbalancers } from '../aclb/requests';
 import { getAllLinodesRequest } from '../linodes/requests';
 import { volumeQueries } from '../volumes/volumes';
 import { fetchCloudPulseMetrics } from './metrics';
@@ -64,11 +63,7 @@ export const queryFactory = createQueryKeys(key, {
         };
       case 'volumes':
         return volumeQueries.lists._ctx.all(params, filters); // in this we don't need to define our own query factory, we will reuse existing implementation in volumes.ts
-      case 'aclb':
-        return {
-          queryFn: () => getAllLoadbalancers(params, filters), // since we don't have query factory implementation, in loadbalancer.ts, once it is ready we will reuse that, untill then we will use same query keys
-          queryKey: ['loadbalancers', params, filters],
-        };
+
       default:
         return volumeQueries.lists._ctx.all(params, filters); // default to volumes
     }
