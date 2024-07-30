@@ -109,7 +109,7 @@ export const TwoStepRegion = () => {
     'distributed'
   );
 
-  const { data: regions } = useRegionsQuery();
+  const { data: regions } = useRegionsQuery(true);
 
   const onChange = async (region: RegionType) => {
     const values = getValues();
