@@ -3,6 +3,7 @@ import { uploadAttachment } from '@linode/api-v4/lib/support';
 import { update } from 'ramda';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
@@ -41,6 +42,7 @@ import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail
 import type { AccountLimitCustomFields } from './SupportTicketAccountLimitFields';
 import type { SMTPCustomFields } from './SupportTicketSMTPFields';
 import type { TicketSeverity } from '@linode/api-v4/lib/support';
+import type { CreateLinodeRequest } from '@linode/api-v4/src/linodes/types';
 import type { Theme } from '@mui/material/styles';
 import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 
@@ -91,6 +93,8 @@ export type TicketType = 'accountLimit' | 'general' | 'smtp';
 export type AllSupportTicketFormFields = SupportTicketFormFields &
   SMTPCustomFields &
   AccountLimitCustomFields;
+
+export type FormPayloadValues = Partial<CreateLinodeRequest>; // Can be extended in the future.
 
 export interface TicketTypeData {
   dialogTitle: string;
@@ -146,6 +150,18 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTitle,
   } = props;
 
+  const location = useLocation<any>();
+  const stateParams = location.state;
+
+  const _prefilledDescription: string =
+    prefilledDescription ?? stateParams?.description ?? undefined;
+  const _prefilledEntity: EntityForTicketDetails =
+    prefilledEntity ?? stateParams?.entity ?? undefined;
+  const _prefilledTitle: string =
+    prefilledTitle ?? stateParams?.title ?? undefined;
+  const prefilledFormPayloadValues: FormPayloadValues =
+    stateParams?.formValues ?? undefined;
+
   const formContainerRef = React.useRef<HTMLFormElement>(null);
 
   const hasSeverityCapability = useTicketSeverityCapability();
@@ -153,8 +169,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const valuesFromStorage = storage.supportTicket.get();
 
   // Use a prefilled title if one is given, otherwise, use any default prefill titles by ticket type, if extant.
-  const _prefilledTitle = prefilledTitle
-    ? prefilledTitle
+  const newPrefilledTitle = _prefilledTitle
+    ? _prefilledTitle
     : prefilledTicketType && TICKET_TYPE_MAP[prefilledTicketType]
     ? TICKET_TYPE_MAP[prefilledTicketType].ticketTitle
     : undefined;
@@ -163,14 +179,14 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const form = useForm<SupportTicketFormFields>({
     defaultValues: {
       description: getInitialValue(
-        prefilledDescription,
+        _prefilledDescription,
         valuesFromStorage.description
       ),
-      entityId: prefilledEntity?.id ? String(prefilledEntity.id) : '',
+      entityId: _prefilledEntity?.id ? String(_prefilledEntity.id) : '',
       entityInputValue: '',
-      entityType: prefilledEntity?.type ?? 'general',
-      summary: getInitialValue(_prefilledTitle, valuesFromStorage.summary),
-      ticketType: prefilledTicketType ?? 'general',
+      entityType: _prefilledEntity?.type ?? 'general',
+      summary: getInitialValue(newPrefilledTitle, valuesFromStorage.summary),
+      ticketType: prefilledTicketType ?? stateParams?.ticketType ?? 'general',
     },
     resolver: yupResolver(SCHEMA_MAP[prefilledTicketType ?? 'general']),
   });
@@ -458,7 +474,11 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
             </>
           )}
           {ticketType === 'smtp' && <SupportTicketSMTPFields />}
-          {ticketType === 'accountLimit' && <SupportTicketAccountLimitFields />}
+          {ticketType === 'accountLimit' && (
+            <SupportTicketAccountLimitFields
+              prefilledFormPayloadValues={prefilledFormPayloadValues}
+            />
+          )}
           {(!ticketType || ticketType === 'general') && (
             <>
               {props.hideProductSelection ? null : (

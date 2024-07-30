@@ -9,14 +9,22 @@ import { ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP } from './constants';
 import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
 
 import type { CustomFields } from './constants';
-import type { SupportTicketFormFields } from './SupportTicketDialog';
+import type {
+  FormPayloadValues,
+  SupportTicketFormFields,
+} from './SupportTicketDialog';
 
 export interface AccountLimitCustomFields extends CustomFields {
   linodePlan: string;
   numberOfEntities: string;
 }
 
-export const SupportTicketAccountLimitFields = () => {
+interface Props {
+  prefilledFormPayloadValues?: FormPayloadValues;
+}
+
+export const SupportTicketAccountLimitFields = (props: Props) => {
+  const { prefilledFormPayloadValues } = props;
   const { control, formState, reset, watch } = useFormContext<
     AccountLimitCustomFields & SupportTicketFormFields
   >();
@@ -28,6 +36,7 @@ export const SupportTicketAccountLimitFields = () => {
   const defaultValues = {
     companyName: account?.company,
     customerName: `${account?.first_name} ${account?.last_name}`,
+    linodePlan: prefilledFormPayloadValues?.type ?? '',
     ...formState.defaultValues,
   };
 
