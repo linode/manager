@@ -62,7 +62,7 @@ export const createObjectStorageBucketFactoryGen1 = Factory.Sync.makeFactory<Cre
 export const createObjectStorageBucketFactoryGen2 = Factory.Sync.makeFactory<CreateObjectStorageBucketPayload>(
   {
     acl: 'private',
-    cors_enabled: true,
+    cors_enabled: false,
     endpoint_type: 'E1',
     label: Factory.each((i) => `obj-bucket-${i}`),
     region: 'us-east',
