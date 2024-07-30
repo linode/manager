@@ -140,61 +140,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       [emitFilterChangeByFilterKey]
     );
 
-    const handleCustomSelectChange = React.useCallback(
-      (filterType: string, value: number[] | string[]) => {
-        emitFilterChangeByFilterKey(filterType, value);
-      },
-      [emitFilterChangeByFilterKey]
-    );
-
-    const getDependantConfig = React.useCallback(
-      (filterKey: string): string[] => {
-        const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type!);
-
-        if (!serviceTypeConfig) {
-          return [];
-        }
-
-        return serviceTypeConfig.filters
-          .filter((filter) =>
-            filter.configuration?.dependency?.includes(filterKey)
-          )
-          .map((filter) =>
-            filter.configuration.filterKey === RESOURCE_ID
-              ? RESOURCES
-              : filter.configuration.filterKey
-          );
-      },
-      [dashboard]
-    );
-
-    const getCustomSelectProperties = React.useCallback(
-      (config: CloudPulseServiceTypeFilters) => {
-        return {
-          apiResponseIdField: config.configuration.apiIdField,
-          apiResponseLabelField: config.configuration.apiLabelField,
-          clearSelections: getDependantConfig(config.configuration.filterKey),
-          componentKey: 'customDropDown', // needed for renderer to choose the component
-          dataApiUrl: config.configuration.apiUrl,
-          filterKey: config.configuration.filterKey,
-          filterType: config.configuration.filterType,
-          handleSelectionChange: handleCustomSelectChange,
-          isMultiSelect: config.configuration.isMultiSelect,
-          key: config.configuration.filterKey,
-          maxSelections: config.configuration.maxSelections,
-          options: config.configuration.options,
-          placeholder: config.configuration.placeholder,
-          savePreferences: !isServiceAnalyticsIntegration,
-          type: config.configuration.type,
-        };
-      },
-      [
-        getDependantConfig,
-        handleCustomSelectChange,
-        isServiceAnalyticsIntegration,
-      ]
-    );
-
     const getProps = React.useCallback(
       (config: CloudPulseServiceTypeFilters) => {
         if (config.configuration.filterKey == REGION) {
@@ -219,12 +164,11 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             isServiceAnalyticsIntegration
           );
         } else {
-          return getCustomSelectProperties(config); // if the above doesn't match use out custom select for rendering filters, the equivalent component for this will be implemented in upcoming PR's
+          return {}; // if the above doesn't match use out custom select for rendering filters, the equivalent component for this will be implemented in upcoming PR's
         }
       },
       [
         dashboard,
-        getCustomSelectProperties,
         handleRegionChange,
         handleResourceChange,
         handleTimeRangeChange,
@@ -258,7 +202,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             ? config.configuration.neededInServicePage
             : !config.configuration.neededInServicePage
         )
-        .map((filter, index) => (
+        .map((filter) => (
           <Grid
             item
             key={filter.configuration.filterKey}
@@ -266,8 +210,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             xs
           >
             {RenderComponent({
-              ...getProps(filter),
-              key: index + filter.configuration.filterKey,
+              componentKey: filter.configuration.filterKey,
+              componentProps: { ...getProps(filter) },
             })}
           </Grid>
         ));

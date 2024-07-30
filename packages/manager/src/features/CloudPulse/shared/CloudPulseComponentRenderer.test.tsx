@@ -32,8 +32,10 @@ describe('ComponentRenderer component tests', () => {
     const { getByPlaceholderText } = renderWithTheme(
       <Grid item key={'region'} sx={{ marginLeft: 2 }} xs>
         {RenderComponent({
-          ...getRegionProperties(regionProps!, vi.fn(), mockDashboard, false),
-          key: 1,
+          componentKey: 'region',
+          componentProps: {
+            ...getRegionProperties(regionProps!, vi.fn(), mockDashboard, false),
+          },
         })}
       </Grid>
     );
@@ -56,16 +58,18 @@ describe('ComponentRenderer component tests', () => {
       };
 
       const { getByPlaceholderText } = renderWithTheme(
-        <Grid item key={'region'} sx={{ marginLeft: 2 }} xs>
+        <Grid item key={'resources'} sx={{ marginLeft: 2 }} xs>
           {RenderComponent({
-            ...getResourcesProperties(
-              resourceProps!,
-              vi.fn(),
-              mockDashboard,
-              false,
-              { region: 'us-east' }
-            ),
-            key: 1,
+            componentKey: 'resource_id',
+            componentProps: {
+              ...getResourcesProperties(
+                resourceProps!,
+                vi.fn(),
+                mockDashboard,
+                false,
+                { region: 'us-east' }
+              ),
+            },
           })}
         </Grid>
       );
