@@ -1,4 +1,4 @@
-import type { Region } from '../regions';
+import type { Region, RegionSite } from '../regions';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { SSHKey } from '../profile/types';
 import type { PlacementGroupPayload } from '../placement-groups/types';
@@ -36,6 +36,7 @@ export interface Linode {
   specs: LinodeSpecs;
   watchdog_enabled: boolean;
   tags: string[];
+  site_type: RegionSite;
 }
 
 export interface LinodeAlerts {
@@ -157,12 +158,12 @@ export type LinodeStatus =
 export type InterfacePurpose = 'public' | 'vlan' | 'vpc';
 
 export interface ConfigInterfaceIPv4 {
-  vpc?: string;
-  nat_1_1?: string;
+  vpc?: string | null;
+  nat_1_1?: string | null;
 }
 
 export interface ConfigInterfaceIPv6 {
-  vpc?: string;
+  vpc?: string | null;
 }
 
 export interface Interface {

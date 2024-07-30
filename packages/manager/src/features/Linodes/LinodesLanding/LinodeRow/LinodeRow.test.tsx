@@ -45,6 +45,7 @@ describe('LinodeRow', () => {
         lke_cluster_id={linode.lke_cluster_id}
         placement_group={linode.placement_group}
         region={linode.region}
+        site_type={linode.site_type}
         specs={linode.specs}
         status={linode.status}
         tags={linode.tags}

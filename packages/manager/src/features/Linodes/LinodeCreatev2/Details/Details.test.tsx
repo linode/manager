@@ -28,12 +28,17 @@ describe('Linode Create Details', () => {
   });
 
   it('renders an "Add Tags" field', () => {
-    const { getByLabelText, getByText } = renderWithThemeAndHookFormContext({
+    const {
+      getByLabelText,
+      getByPlaceholderText,
+    } = renderWithThemeAndHookFormContext({
       component: <Details />,
     });
 
     expect(getByLabelText('Add Tags')).toBeVisible();
-    expect(getByText('Type to choose or create a tag.')).toBeVisible();
+    expect(
+      getByPlaceholderText('Type to choose or create a tag.')
+    ).toBeVisible();
   });
 
   it('renders an placement group details if the flag is on', async () => {

@@ -257,11 +257,6 @@ describe('Create Linode', () => {
     mockGetLinodeType(dcPricingMockLinodeTypes[1]);
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
     mockGetVLANs(mockVLANs);
@@ -274,12 +269,7 @@ describe('Create Linode', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait([
-      '@getLinodeTypes',
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getVPCs',
-    ]);
+    cy.wait(['@getLinodeTypes', '@getVPCs']);
 
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
 
@@ -301,7 +291,7 @@ describe('Create Linode', () => {
       // select subnet
       cy.findByPlaceholderText('Select Subnet')
         .should('be.visible')
-        .type(`${mockSubnet.label}{downArrow}{enter}`)
+        .type(`${mockSubnet.label}{downArrow}{enter}`);
     });
 
     // The drawer opens when clicking "Add an SSH Key" button
@@ -345,7 +335,7 @@ describe('Create Linode', () => {
     getClick('#linode-label').clear().type(linodeLabel);
     cy.get('#root-password').type(rootpass);
 
-    ui.button.findByTitle("Create Linode").click();
+    ui.button.findByTitle('Create Linode').click();
 
     cy.wait('@linodeCreated').its('response.statusCode').should('eq', 200);
     fbtVisible(linodeLabel);

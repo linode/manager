@@ -56,7 +56,9 @@ describe('OneClick Apps (OCA)', () => {
           const { decodedLabel, label } = handleAppLabel(stackScript);
 
           // Check that every OCA is listed with the correct label
-          cy.get(`[data-qa-select-card-heading="${label.trim()}"]`).should('exist');
+          cy.get(`[data-qa-select-card-heading="${label.trim()}"]`).should(
+            'exist'
+          );
 
           // Check that every OCA has a drawer match
           // This validates the regex in `mapStackScriptLabelToOCA`
@@ -113,9 +115,9 @@ describe('OneClick Apps (OCA)', () => {
           'have.length.below',
           initialNumberOfApps
         );
-        cy.get(`[data-qa-selection-card-info="${candidateLabel.trim()}"]`).should(
-          'be.visible'
-        );
+        cy.get(
+          `[data-qa-selection-card-info="${candidateLabel.trim()}"]`
+        ).should('be.visible');
       });
     });
   });

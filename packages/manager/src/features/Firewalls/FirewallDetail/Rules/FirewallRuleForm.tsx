@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import Select from 'src/components/EnhancedSelect';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
@@ -11,6 +11,7 @@ import { RadioGroup } from 'src/components/RadioGroup';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import {
+  FirewallOptionItem,
   addressOptions,
   firewallOptionItemsShort,
   portPresets,
@@ -23,7 +24,6 @@ import { enforceIPMasks } from './FirewallRuleDrawer.utils';
 import { PORT_PRESETS, PORT_PRESETS_ITEMS } from './shared';
 
 import type { FirewallRuleFormProps } from './FirewallRuleDrawer.types';
-import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const ipNetmaskTooltipText =
@@ -83,7 +83,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
 
   // These handlers are all memoized because the form was laggy when I tried them inline.
   const handleTypeChange = React.useCallback(
-    (item: Item | null) => {
+    (item: FirewallOptionItem | null) => {
       const selectedType = item?.value;
 
       // If the user re-selects the same preset or selectedType is undefined, don't do anything
@@ -128,9 +128,9 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
   );
 
   const handleProtocolChange = React.useCallback(
-    (item: Item | null) => {
-      setFieldValue('protocol', item?.value);
-      if (item?.value === 'ICMP' || item?.value === 'IPENCAP') {
+    (item: string) => {
+      setFieldValue('protocol', item);
+      if (item === 'ICMP' || item === 'IPENCAP') {
         // Submitting the form with ICMP or IPENCAP and defined ports causes an error
         setFieldValue('ports', '');
         setPresetPorts([]);
@@ -140,8 +140,8 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
   );
 
   const handleAddressesChange = React.useCallback(
-    (item: Item | null) => {
-      setFieldValue('addresses', item?.value);
+    (item: string) => {
+      setFieldValue('addresses', item);
       // Reset custom IPs
       setIPs([{ address: '' }]);
     },
@@ -169,7 +169,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
   };
 
   const handlePortPresetChange = React.useCallback(
-    (items: Item<string>[]) => {
+    (items: FirewallOptionItem<string>[]) => {
       // If the user is selecting "ALL", it doesn't make sense
       // to show additional selections.
       if (
@@ -191,7 +191,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
     return (
       addressOptions.find(
         (thisOption) => thisOption.value === values.addresses
-      ) || null
+      ) || undefined
     );
   }, [values]);
 
@@ -205,13 +205,18 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
           variant="error"
         />
       )}
-      <Select
+      <Autocomplete
+        autoHighlight
+        textFieldProps={{
+          dataAttrs: {
+            'data-qa-rule-select': true,
+          },
+        }}
         aria-label="Preset for firewall rule"
-        isClearable={false}
+        disableClearable
         label="Preset"
-        name="type"
         onBlur={handleBlur}
-        onChange={handleTypeChange}
+        onChange={(_, selected) => handleTypeChange(selected)}
         options={firewallOptionItemsShort}
         placeholder="Select a rule preset..."
       />
@@ -236,32 +241,48 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
         placeholder="Enter a description..."
         value={values.description}
       />
-      <Select
+      <Autocomplete
+        textFieldProps={{
+          InputProps: {
+            required: true,
+          },
+          dataAttrs: {
+            'data-qa-protocol-select': true,
+          },
+        }}
+        autoHighlight
         aria-label="Select rule protocol."
         errorText={errors.protocol}
-        isClearable={false}
+        disableClearable
         label="Protocol"
-        name="protocol"
         onBlur={handleBlur}
-        onChange={handleProtocolChange}
+        onChange={(_, selected) => handleProtocolChange(selected.value)}
         options={protocolOptions}
         placeholder="Select a protocol..."
-        required
         value={protocolOptions.find((p) => p.value === values.protocol)}
       />
-      <Select
+      <Autocomplete
         textFieldProps={{
           helperText: ['ICMP', 'IPENCAP'].includes(values.protocol)
             ? `Ports are not allowed for ${values.protocol} protocols.`
             : undefined,
+          InputProps: {
+            required: true,
+          },
+          dataAttrs: {
+            'data-qa-port-select': true,
+          },
         }}
+        autoHighlight
         disabled={['ICMP', 'IPENCAP'].includes(values.protocol)}
+        disableSelectAll
         errorText={generalPortError}
-        isMulti
+        multiple
         label="Ports"
-        onChange={handlePortPresetChange}
+        // If options are selected, hide the placeholder
+        placeholder={presetPorts.length > 0 ? ' ' : 'Select a port...'}
+        onChange={(_, selected) => handlePortPresetChange(selected)}
         options={portOptions}
-        required
         value={presetPorts}
       />
       {hasCustomInput ? (
@@ -276,17 +297,26 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
           value={values.ports}
         />
       ) : null}
-      <Select
+      <Autocomplete
+        textFieldProps={{
+          InputProps: {
+            required: true,
+          },
+          dataAttrs: {
+            'data-qa-address-source-select': true,
+          },
+        }}
+        autoHighlight
         aria-label={`Select rule ${addressesLabel}s.`}
         errorText={errors.addresses}
-        isClearable={false}
+        disableClearable
         label={`${capitalize(addressesLabel)}s`}
-        name="addresses"
         onBlur={handleBlur}
-        onChange={handleAddressesChange}
+        onChange={(_, selected) => {
+          handleAddressesChange(selected.value);
+        }}
         options={addressOptions}
         placeholder={`Select ${addressesLabel}s...`}
-        required
         value={addressesValue}
       />
       {/* Show this field only if "IP / Netmask has been selected." */}

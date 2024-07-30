@@ -176,25 +176,33 @@ export const LinodeInterfaceSchema = object().shape({
     then: number()
       .transform((value) => (isNaN(value) ? undefined : value))
       .required('Subnet is required.'),
-    otherwise: number().test({
-      name: testnameDisallowedBasedOnPurpose('VPC'),
-      message: testmessageDisallowedBasedOnPurpose('vpc', 'subnet_id'),
-      test: (value) => typeof value === 'undefined',
-    }),
+    otherwise: number()
+      .notRequired()
+      .nullable()
+      .test({
+        name: testnameDisallowedBasedOnPurpose('VPC'),
+        message: testmessageDisallowedBasedOnPurpose('vpc', 'subnet_id'),
+        test: (value) => typeof value === 'undefined' || value === null,
+      }),
   }),
   vpc_id: number().when('purpose', {
     is: 'vpc',
     then: number().required('VPC is required.'),
-    otherwise: number().test({
-      name: testnameDisallowedBasedOnPurpose('VPC'),
-      message: testmessageDisallowedBasedOnPurpose('vpc', 'vpc_id'),
-      test: (value) => typeof value === 'undefined',
-    }),
+    otherwise: number()
+      .notRequired()
+      .nullable()
+      .test({
+        name: testnameDisallowedBasedOnPurpose('VPC'),
+        message: testmessageDisallowedBasedOnPurpose('vpc', 'vpc_id'),
+        test: (value) => typeof value === 'undefined' || value === null,
+      }),
   }),
   ipv4: ipv4ConfigInterface,
   ipv6: ipv6ConfigInterface,
   ip_ranges: array()
     .of(string())
+    .notRequired()
+    .nullable()
     .when('purpose', {
       is: 'vpc',
       then: array()
@@ -205,12 +213,16 @@ export const LinodeInterfaceSchema = object().shape({
             validateIP
           )
         )
-        .notRequired(),
-      otherwise: array().test({
-        name: testnameDisallowedBasedOnPurpose('VPC'),
-        message: testmessageDisallowedBasedOnPurpose('vpc', 'ip_ranges'),
-        test: (value) => typeof value === 'undefined',
-      }),
+        .notRequired()
+        .nullable(),
+      otherwise: array()
+        .test({
+          name: testnameDisallowedBasedOnPurpose('VPC'),
+          message: testmessageDisallowedBasedOnPurpose('vpc', 'ip_ranges'),
+          test: (value) => typeof value === 'undefined' || value === null,
+        })
+        .notRequired()
+        .nullable(),
     }),
 });
 
