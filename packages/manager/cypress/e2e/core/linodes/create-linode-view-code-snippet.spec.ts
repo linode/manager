@@ -129,7 +129,7 @@ describe('Create Linode', () => {
           cy.contains('a', 'Go client for Linode REST v4 API').should(
             'be.visible'
           );
-          cy.contains('a', 'Linodgo Documentation').should('be.visible');
+          cy.contains('a', 'Linodego Documentation').should('be.visible');
 
           ui.autocomplete.find().click();
 
