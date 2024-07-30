@@ -16,7 +16,7 @@ export const gettingStartedGuides: ResourcesLinks['links'] = [
     to: 'https://github.com/linode/linodego',
   },
   {
-    text: 'Linodgo Documentation',
+    text: 'Linodego Documentation',
     to: 'https://pkg.go.dev/github.com/linode/linodego',
   },
 ];
