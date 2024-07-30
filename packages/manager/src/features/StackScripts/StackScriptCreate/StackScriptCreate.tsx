@@ -35,10 +35,10 @@ import type {
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { QueryClient } from '@tanstack/react-query';
 import type { RouteComponentProps } from 'react-router-dom';
-import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { WithImagesProps } from 'src/containers/images.container';
 import type { WithProfileProps } from 'src/containers/profile.container';
 import type { WithQueryClientProps } from 'src/containers/withQueryClient.container';
+import type { SelectImageOption } from 'src/features/Images/ImageSelect';
 
 interface State {
   apiResponse?: StackScript;
@@ -129,7 +129,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     );
   };
 
-  handleChooseImage = (images: Item<string>[]) => {
+  handleChooseImage = (images: SelectImageOption[]) => {
     const imageList = images.map((image) => image.value);
 
     const anyAllOptionChosen = imageList.includes('any/all');

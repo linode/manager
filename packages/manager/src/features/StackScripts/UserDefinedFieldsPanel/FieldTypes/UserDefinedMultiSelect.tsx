@@ -1,11 +1,12 @@
 import * as React from 'react';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
 
 import type { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { SelectImageOption } from 'src/features/Images/ImageSelect';
 
 interface Props {
   error?: string;
@@ -27,11 +28,11 @@ interface State {
 }
 
 class UserDefinedMultiSelect extends React.Component<Props, State> {
-  handleSelectManyOf = (selectedOptions: Item[]) => {
+  handleSelectManyOf = (selectedOptions: SelectImageOption[]) => {
     const { field, updateFormState } = this.props;
 
     const arrayToString = Array.prototype.map
-      .call(selectedOptions, (opt: Item) => opt.value)
+      .call(selectedOptions, (opt: SelectImageOption) => opt.value)
       .toString();
 
     updateFormState(field.name, arrayToString);
@@ -73,6 +74,17 @@ class UserDefinedMultiSelect extends React.Component<Props, State> {
           options={manyOfOptions}
           value={value}
           // small={isOptional}
+        />
+        <Autocomplete
+          onChange={(_, selected) => {
+            if (selected) {
+              this.handleSelectManyOf(selected);
+            }
+          }}
+          label={field.label}
+          multiple
+          options={manyOfOptions ?? []}
+          value={value}
         />
       </div>
     );
