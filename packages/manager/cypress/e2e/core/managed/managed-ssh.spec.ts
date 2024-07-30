@@ -142,7 +142,7 @@ describe('Managed SSH Access tab', () => {
           .type(newUser);
 
         // Set IP address to 'Any'.
-        cy.get('label[for="ip-address"]')
+        cy.findByLabelText('IP Address')
           .should('be.visible')
           .click()
           .type('Any{enter}');
