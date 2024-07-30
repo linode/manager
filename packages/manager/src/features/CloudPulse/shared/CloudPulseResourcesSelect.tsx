@@ -24,7 +24,7 @@ export interface CloudPulseResourcesSelectProps {
   placeholder?: string;
   region: string | undefined;
   resourceType: string | undefined;
-  xFilter: Filter;
+  xFilter?: Filter;
 }
 
 export const CloudPulseResourcesSelect = React.memo(
