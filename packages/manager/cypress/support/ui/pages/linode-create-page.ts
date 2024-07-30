@@ -91,4 +91,39 @@ export const linodeCreatePage = {
 
     cy.get('@rootPasswordField').type(linodePassword, { log: false });
   },
+
+  /**
+   * Checks the Linode's backups.
+   */
+  checkBackups: () => {
+    cy.get('[data-testid="backups"]').should('be.visible').click();
+  },
+
+  /**
+   * Checks the Linode's private IPs.
+   */
+  checkPrivateIPs: () => {
+    cy.findByText('Private IP').should('be.visible').closest('label').click();
+  },
+
+  /**
+   * Checks the EU agreements.
+   */
+  checkEUAgreements: () => {
+    cy.get('body').then(($body) => {
+      if ($body.find('div[data-testid="eu-agreement-checkbox"]').length > 0) {
+        // eslint-disable-next-line cypress/unsafe-to-chain-command
+        cy.findAllByText('EU Standard Contractual Clauses', {
+          exact: false,
+        }).should('be.visible');
+        // eslint-disable-next-line cypress/unsafe-to-chain-command
+        cy.get('[data-testid="eu-agreement-checkbox"]')
+          .within(() => {
+            // eslint-disable-next-line cypress/unsafe-to-chain-command
+            cy.get('[id="gdpr-checkbox"]').click();
+          })
+          .click();
+      }
+    });
+  },
 };
