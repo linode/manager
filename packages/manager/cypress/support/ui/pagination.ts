@@ -20,7 +20,7 @@ export const pagination = {
     return pagination
       .find()
       .find('[data-qa-pagination-page-size]')
-      .find('[data-qa-enhanced-select]');
+      .find('[data-qa-autocomplete]');
   },
 
   /**

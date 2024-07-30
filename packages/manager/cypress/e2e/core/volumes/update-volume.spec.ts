@@ -51,7 +51,7 @@ describe('volume update flow', () => {
             .click()
             .type(`{selectall}{backspace}${newLabel}`);
 
-          cy.findByText('Type to choose or create a tag.')
+          cy.findByPlaceholderText('Type to choose or create a tag.')
             .should('be.visible')
             .click()
             .type(`${newTags.join('{enter}')}{enter}`);
@@ -72,8 +72,11 @@ describe('volume update flow', () => {
           cy.findByText('Edit Volume').should('be.visible');
           cy.findByDisplayValue(newLabel).should('be.visible');
 
+          // Click the tags input field to see all the selected tags
+          cy.findByRole('combobox').should('be.visible').click();
+
           newTags.forEach((newTag) => {
-            cy.findByText(newTag).should('be.visible');
+            cy.findAllByText(newTag).should('be.visible');
           });
         });
       }
