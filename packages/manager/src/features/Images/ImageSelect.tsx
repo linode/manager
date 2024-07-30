@@ -11,14 +11,14 @@ import { groupImages } from 'src/utilities/images';
 
 import type { Image } from '@linode/api-v4/lib/images';
 
-export interface SelectImageOptions {
+export interface SelectImageOption {
   label: string;
   value: string;
 }
 
 export interface ImagesGroupType {
   label: string;
-  options: SelectImageOptions[];
+  options: SelectImageOption[];
 }
 interface BaseProps {
   anyAllOption?: boolean;
@@ -33,14 +33,14 @@ interface BaseProps {
 
 interface Props extends BaseProps {
   isMulti?: false;
-  onSelect: (selected: SelectImageOptions) => void;
-  value?: SelectImageOptions;
+  onSelect: (selected: SelectImageOption) => void;
+  value?: SelectImageOption;
 }
 
 interface MultiProps extends BaseProps {
   isMulti: true;
-  onSelect: (selected: SelectImageOptions[]) => void;
-  value?: SelectImageOptions[];
+  onSelect: (selected: SelectImageOption[]) => void;
+  value?: SelectImageOption[];
 }
 
 export const ImageSelect = (props: MultiProps | Props) => {
@@ -118,9 +118,9 @@ export const ImageSelect = (props: MultiProps | Props) => {
               helperText={
                 helperText || 'Choosing a 64-bit distro is recommended.'
               }
+              aria-label={label || 'Image'}
               errorText={imageError || imageFieldError || rqError}
               label={label || 'Image'}
-              // onBlur={onBlur}
               placeholder="Select an Image"
               required={required}
               {...params}

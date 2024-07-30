@@ -18,7 +18,7 @@ import { imageToImageOptions } from './utils';
 
 import type { Image } from '@linode/api-v4/lib/images';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { SelectImageOptions } from 'src/features/Images/ImageSelect';
+import type { SelectImageOption } from 'src/features/Images/ImageSelect';
 
 interface TextFieldHandler {
   handler: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -43,7 +43,7 @@ interface Props {
   label: TextFieldHandler;
   mode: 'create' | 'edit';
   onCancel: () => void;
-  onSelectChange: (image: SelectImageOptions[]) => void;
+  onSelectChange: (image: SelectImageOption[]) => void;
   onSubmit: () => void;
   revision: TextFieldHandler;
   script: TextFieldHandler;
