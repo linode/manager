@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import Select from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
 
@@ -67,14 +66,7 @@ class UserDefinedMultiSelect extends React.Component<Props, State> {
     return (
       <div>
         {error && <Notice spacingTop={8} text={error} variant="error" />}
-        <Select
-          isMulti={true}
-          label={field.label}
-          onChange={this.handleSelectManyOf}
-          options={manyOfOptions}
-          value={value}
-          // small={isOptional}
-        />
+
         <Autocomplete
           onChange={(_, selected) => {
             if (selected) {
