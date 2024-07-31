@@ -1,5 +1,3 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { updateImageRegionsSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -16,7 +14,12 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { ImageRegionRow } from './ImageRegionRow';
 
-import type { Image, UpdateImageRegionsPayload } from '@linode/api-v4';
+import type {
+  Image,
+  ImageRegion,
+  UpdateImageRegionsPayload,
+} from '@linode/api-v4';
+import type { Resolver } from 'react-hook-form';
 
 interface Props {
   image: Image | undefined;
@@ -38,9 +41,10 @@ export const ManageImageRegionsForm = (props: Props) => {
     setError,
     setValue,
     watch,
-  } = useForm<UpdateImageRegionsPayload>({
+  } = useForm<UpdateImageRegionsPayload, ImageRegion[]>({
+    context: image?.regions,
     defaultValues: { regions: imageRegionIds },
-    resolver: yupResolver(updateImageRegionsSchema),
+    resolver,
     values: { regions: imageRegionIds },
   });
 
@@ -157,4 +161,26 @@ export const ManageImageRegionsForm = (props: Props) => {
       />
     </form>
   );
+};
+
+const resolver: Resolver<UpdateImageRegionsPayload, ImageRegion[]> = async (
+  values,
+  context
+) => {
+  const availableRegionIds = context
+    ?.filter((r) => r.status === 'available')
+    .map((r) => r.region);
+
+  const isMissingAvailableRegion = !values.regions.some((regionId) =>
+    availableRegionIds?.includes(regionId)
+  );
+
+  if (isMissingAvailableRegion) {
+    const message = `You must specify at least one available region (${availableRegionIds?.join(
+      ', '
+    )}).`;
+    return { errors: { regions: { message, type: 'validate' } }, values };
+  }
+
+  return { errors: {}, values };
 };
