@@ -20,6 +20,7 @@ import type {
   UpdateImageRegionsPayload,
 } from '@linode/api-v4';
 import type { Resolver } from 'react-hook-form';
+import type { DisableRegionOption } from 'src/components/RegionSelect/RegionSelect.types';
 
 interface Props {
   image: Image | undefined;
@@ -73,6 +74,23 @@ export const ManageImageRegionsForm = (props: Props) => {
 
   const values = watch();
 
+  const disabledRegions: Record<string, DisableRegionOption> = {};
+
+  const availableRegions = image?.regions.filter(
+    (regionItem) => regionItem.status === 'available'
+  );
+  const availableRegionIds = availableRegions?.map((r) => r.region);
+
+  const currentlySelectedAvailableRegions = values.regions.filter((r) =>
+    availableRegionIds?.includes(r)
+  );
+
+  if (currentlySelectedAvailableRegions.length === 1) {
+    disabledRegions[currentlySelectedAvailableRegions[0]] = {
+      reason: 'Your image must be available in at least one region.',
+    };
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {errors.root?.message && (
@@ -93,6 +111,7 @@ export const ManageImageRegionsForm = (props: Props) => {
           })
         }
         currentCapability={undefined}
+        disabledRegions={disabledRegions}
         errorText={errors.regions?.message}
         label="Add Regions"
         placeholder="Select regions or type to search"
