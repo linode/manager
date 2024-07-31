@@ -44,7 +44,7 @@ interface Props {
 
 interface SortOption {
   label: string;
-  value: string;
+  value: SortKey;
 }
 
 export type LongviewClientsCombinedProps = Props &
@@ -177,7 +177,7 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
   };
 
   const handleSortKeyChange = (selected: SortOption) => {
-    setSortKey(selected.value as SortKey);
+    setSortKey(selected.value);
   };
 
   // If this value is defined they're not on the free plan
