@@ -9,6 +9,7 @@ import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
 import { useIsGeckoEnabled } from '../RegionSelect/RegionSelect.utils';
+import { NETWORK_TRANSFER_USAGE_AND_COST_LINK } from './constants';
 import { TransferDisplayDialogHeader } from './TransferDisplayDialogHeader';
 import { TransferDisplayUsage } from './TransferDisplayUsage';
 import { formatRegionList, getDaysRemaining } from './utils';
@@ -80,7 +81,7 @@ export const TransferDisplayDialog = React.memo(
           starts at $0.005/GB (or $5/TB) depending on the service’s region.
           Additional transfer usage is charged at the end of the billing period.
           For more information refer to the{' '}
-          <Link to="https://www.linode.com/docs/products/platform/get-started/guides/network-transfer/">
+          <Link to={NETWORK_TRANSFER_USAGE_AND_COST_LINK}>
             Network Transfer Usage and Costs
           </Link>
           .
