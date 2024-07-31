@@ -1,24 +1,21 @@
 /**
- * @file Linode Create end-to-end tests.
+ * @file Linode Create view code snippets tests.
  */
 
 import { ui } from 'support/ui';
 
 import { randomLabel, randomString } from 'support/util/random';
 import { linodeCreatePage } from 'support/ui/pages';
-import { authenticate } from 'support/api/authentication';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
-import { interceptCreateLinode } from 'support/intercepts/linodes';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { interceptGetProfile } from 'support/intercepts/profile';
 
-authenticate();
+import { makeFeatureFlagData } from 'support/util/feature-flags';
+
 describe('Create Linode', () => {
   /*
-   * End-to-end tests for create Linode flow and validate code snippet modal.
+   * tests for create Linode flow to validate code snippet modal.
    */
   describe('Create Linode flow with apicliDxToolsAdditions enabled', () => {
     // Enable the `apicliDxToolsAdditions` feature flag.
@@ -34,9 +31,6 @@ describe('Create Linode', () => {
       const linodeLabel = randomLabel();
       const rootPass = randomString(32);
 
-      interceptGetProfile().as('getProfile');
-
-      interceptCreateLinode().as('createLinode');
       cy.visitWithLogin('/linodes/create');
 
       // Set Linode label, distribution, plan type, password, etc.
@@ -169,9 +163,6 @@ describe('Create Linode', () => {
       const linodeLabel = randomLabel();
       const rootPass = randomString(32);
 
-      interceptGetProfile().as('getProfile');
-
-      interceptCreateLinode().as('createLinode');
       cy.visitWithLogin('/linodes/create');
 
       // Set Linode label, distribution, plan type, password, etc.
