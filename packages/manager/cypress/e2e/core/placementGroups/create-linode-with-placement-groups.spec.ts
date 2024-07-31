@@ -218,7 +218,7 @@ describe('Linode create flow with Placement Group', () => {
    * - Confirms that Placement Group is reflected in create summary section.
    * - Confirms that outgoing Linode Create API request specifies the selected Placement Group to be attached.
    */
-  it('can assign existing Placement group during Linode Create flow', () => {
+  it('can assign existing Placement Group during Linode Create flow', () => {
     const mockPlacementGroup = placementGroupFactory.build({
       label: 'pg-1-us-east',
       region: mockRegions[0].id,
