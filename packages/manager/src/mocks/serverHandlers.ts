@@ -28,6 +28,7 @@ import {
   eventFactory,
   firewallDeviceFactory,
   firewallFactory,
+  objectStorageEndpointsFactory,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -60,7 +61,7 @@ import {
   nodeBalancerTypeFactory,
   nodePoolFactory,
   notificationFactory,
-  objectStorageBucketFactory,
+  objectStorageBucketFactoryGen2,
   objectStorageClusterFactory,
   objectStorageKeyFactory,
   objectStorageOverageTypeFactory,
@@ -89,6 +90,7 @@ import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
+import { LinodeKernelFactory } from 'src/factories/linodeKernel';
 import { pickRandom } from 'src/utilities/random';
 import { getStorage } from 'src/utilities/storage';
 
@@ -441,7 +443,7 @@ export const handlers = [
   }),
   http.get<{ id: string }>('*/v4/images/:id', ({ params }) => {
     const distributedImage = imageFactory.build({
-      capabilities: ['cloud-init', 'distributed-images'],
+      capabilities: ['cloud-init', 'distributed-sites'],
       id: 'private/distributed-image',
       label: 'distributed-image',
       regions: [{ region: 'us-east', status: 'available' }],
@@ -497,7 +499,7 @@ export const handlers = [
     });
     const publicImages = imageFactory.buildList(4, { is_public: true });
     const distributedImage = imageFactory.build({
-      capabilities: ['cloud-init', 'distributed-images'],
+      capabilities: ['cloud-init', 'distributed-sites'],
       id: 'private/distributed-image',
       label: 'distributed-image',
       regions: [{ region: 'us-east', status: 'available' }],
@@ -677,6 +679,10 @@ export const handlers = [
     firewallFactory.resetSequenceNumber();
     return HttpResponse.json(makeResourcePage(firewalls));
   }),
+  http.get('*/linode/kernels', async () => {
+    const kernels = LinodeKernelFactory.buildList(10);
+    return HttpResponse.json(makeResourcePage(kernels));
+  }),
   http.delete('*/instances/*', async () => {
     return HttpResponse.json({});
   }),
@@ -836,6 +842,10 @@ export const handlers = [
     ];
     return HttpResponse.json(makeResourcePage(objectStorageTypes));
   }),
+  http.get('*/v4/object-storage/endpoints', ({}) => {
+    const endpoint = objectStorageEndpointsFactory.build();
+    return HttpResponse.json(endpoint);
+  }),
   http.get('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);
     return HttpResponse.json({
@@ -911,11 +921,11 @@ export const handlers = [
 
     const region = params.region as string;
 
-    objectStorageBucketFactory.resetSequenceNumber();
+    objectStorageBucketFactoryGen2.resetSequenceNumber();
     const page = Number(url.searchParams.get('page') || 1);
     const pageSize = Number(url.searchParams.get('page_size') || 25);
 
-    const buckets = objectStorageBucketFactory.buildList(1, {
+    const buckets = objectStorageBucketFactoryGen2.buildList(1, {
       cluster: `${region}-1`,
       hostname: `obj-bucket-1.${region}.linodeobjects.com`,
       label: `obj-bucket-1`,
@@ -933,11 +943,11 @@ export const handlers = [
     });
   }),
   http.get('*/object-storage/buckets', () => {
-    const buckets = objectStorageBucketFactory.buildList(10);
+    const buckets = objectStorageBucketFactoryGen2.buildList(10);
     return HttpResponse.json(makeResourcePage(buckets));
   }),
   http.post('*/object-storage/buckets', () => {
-    return HttpResponse.json(objectStorageBucketFactory.build());
+    return HttpResponse.json(objectStorageBucketFactoryGen2.build());
   }),
   http.get('*object-storage/clusters', () => {
     const jakartaCluster = objectStorageClusterFactory.build({
