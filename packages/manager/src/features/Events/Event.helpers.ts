@@ -17,6 +17,7 @@ const ACTIONS_WITHOUT_USERNAMES = [
   'entity_transfer_fail',
   'entity_transfer_stale',
   'lassie_reboot',
+  'community_like',
 ];
 
 export const formatEventWithUsername = (
