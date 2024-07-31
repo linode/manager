@@ -1,4 +1,5 @@
 import { fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { imageFactory } from 'src/factories';
@@ -32,7 +33,7 @@ describe('EditImageDrawer', () => {
   });
 
   it('should allow editing image details', async () => {
-    const { getByLabelText, getByText } = renderWithTheme(
+    const { getByLabelText, getByRole, getByText } = renderWithTheme(
       <EditImageDrawer {...props} />
     );
 
@@ -44,9 +45,12 @@ describe('EditImageDrawer', () => {
       target: { value: 'test description' },
     });
 
-    fireEvent.change(getByLabelText('Tags'), {
-      target: { value: 'new-tag' },
-    });
+    const tagsInput = getByRole('combobox');
+
+    userEvent.type(tagsInput, 'new-tag');
+
+    await waitFor(() => expect(tagsInput).toHaveValue('new-tag'));
+
     fireEvent.click(getByText('Create "new-tag"'));
 
     fireEvent.click(getByText('Save Changes'));
