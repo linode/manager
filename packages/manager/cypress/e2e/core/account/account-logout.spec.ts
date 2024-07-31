@@ -1,5 +1,6 @@
 import { LOGIN_ROOT } from 'src/constants';
 import { interceptGetAccount } from 'support/intercepts/account';
+import { ui } from 'support/ui';
 
 describe('Logout Test', () => {
   beforeEach(() => {
@@ -17,15 +18,17 @@ describe('Logout Test', () => {
     cy.wait('@getAccount');
 
     // User can click Logout via user menu.
-    cy.findByTestId('nav-group-profile').click();
-    cy.findByTestId('menu-item-Log Out')
+    ui.userMenuButton.find().click();
+    ui.userMenu
+      .find()
       .should('be.visible')
-      .should('be.enabled')
-      .click();
+      .within(() => {
+        cy.findByText('Log Out').should('be.visible').click();
+      });
     // Upon clicking "Log Out", the user is redirected to the login endpoint at <REACT_APP_LOGIN_ROOT>/login
     cy.url().should('equal', `${LOGIN_ROOT}/login`);
     // Using cy.visit to navigate back to Cloud results in another redirect to the login page
-    cy.visit('/login');
-    cy.url().should('endWith', `/login`);
+    cy.visit('/');
+    cy.url().should('startWith', `${LOGIN_ROOT}/login`);
   });
 });
