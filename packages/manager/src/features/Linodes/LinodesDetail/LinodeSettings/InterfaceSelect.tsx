@@ -365,11 +365,12 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
               value={purposeOptions.find(
                 (thisOption) => thisOption.value === purpose
               )}
-              autoHighlight
               textFieldProps={{
                 disabled: readOnly,
               }}
+              autoHighlight
               disableClearable
+              placeholder="Select an Interface"
               label={`eth${slotNumber}`}
               onChange={(_, selected) => handlePurposeChange(selected?.value)}
             />
