@@ -1,10 +1,10 @@
-import { Grants, Profile } from '@linode/api-v4';
-import {
+import { truncateAndJoinList } from 'src/utilities/stringUtils';
+
+import type { Grants, Profile } from '@linode/api-v4';
+import type {
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls/types';
-
-import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
 export type FirewallPreset = 'dns' | 'http' | 'https' | 'mysql' | 'ssh';
 
@@ -197,6 +197,12 @@ export const allowAllIPv4 = (addresses: FirewallRuleType['addresses']) =>
 
 export const allowAllIPv6 = (addresses: FirewallRuleType['addresses']) =>
   addresses?.ipv6?.includes(allIPv6);
+
+export const allowNoneIPv4 = (addresses: FirewallRuleType['addresses']) =>
+  !addresses?.ipv4?.length;
+
+export const allowNoneIPv6 = (addresses: FirewallRuleType['addresses']) =>
+  !addresses?.ipv6?.length;
 
 export const generateRuleLabel = (ruleType?: FirewallPreset) =>
   ruleType ? predefinedFirewalls[ruleType].label : 'Custom';
