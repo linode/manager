@@ -149,7 +149,7 @@ describe('Create Linode', () => {
         });
     });
   });
-  describe('Create Linode flow with apicliDxToolsAdditions enabled', () => {
+  describe('Create Linode flow with apicliDxToolsAdditions disabled', () => {
     // Enable the `apicliDxToolsAdditions` feature flag.
     // TODO Delete these mocks and test once `apicliDxToolsAdditions` feature flag is retired.
     beforeEach(() => {
