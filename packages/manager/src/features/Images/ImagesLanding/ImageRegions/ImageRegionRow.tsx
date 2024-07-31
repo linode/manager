@@ -43,7 +43,7 @@ export const ImageRegionRow = (props: Props) => {
         <Tooltip
           title={
             disableRemoveButton
-              ? 'Your image must be available in at least one region.'
+              ? 'You cannot remove this region because at least one available region must be present.'
               : ''
           }
         >

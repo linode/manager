@@ -146,7 +146,9 @@ describe('ManageImageRegionsDrawer', () => {
 
     // Verify tooltip shows
     expect(
-      getByLabelText('Your image must be available in at least one region.')
+      getByLabelText(
+        'You cannot remove this region because at least one available region must be present.'
+      )
     ).toBeInTheDocument();
   });
 });

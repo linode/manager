@@ -17,6 +17,7 @@ import { ImageRegionRow } from './ImageRegionRow';
 import type {
   Image,
   ImageRegion,
+  Region,
   UpdateImageRegionsPayload,
 } from '@linode/api-v4';
 import type { Resolver } from 'react-hook-form';
@@ -25,6 +26,10 @@ import type { DisableRegionOption } from 'src/components/RegionSelect/RegionSele
 interface Props {
   image: Image | undefined;
   onClose: () => void;
+}
+interface Context {
+  imageRegions: ImageRegion[] | undefined;
+  regions: Region[] | undefined;
 }
 
 export const ManageImageRegionsForm = (props: Props) => {
@@ -42,8 +47,8 @@ export const ManageImageRegionsForm = (props: Props) => {
     setError,
     setValue,
     watch,
-  } = useForm<UpdateImageRegionsPayload, ImageRegion[]>({
-    context: image?.regions,
+  } = useForm<UpdateImageRegionsPayload, Context>({
+    context: { imageRegions: image?.regions, regions },
     defaultValues: { regions: imageRegionIds },
     resolver,
     values: { regions: imageRegionIds },
@@ -87,7 +92,8 @@ export const ManageImageRegionsForm = (props: Props) => {
 
   if (currentlySelectedAvailableRegions.length === 1) {
     disabledRegions[currentlySelectedAvailableRegions[0]] = {
-      reason: 'Your image must be available in at least one region.',
+      reason:
+        'You cannot remove this region because at least one available region must be present.',
     };
   }
 
@@ -182,11 +188,11 @@ export const ManageImageRegionsForm = (props: Props) => {
   );
 };
 
-const resolver: Resolver<UpdateImageRegionsPayload, ImageRegion[]> = async (
+const resolver: Resolver<UpdateImageRegionsPayload, Context> = async (
   values,
   context
 ) => {
-  const availableRegionIds = context
+  const availableRegionIds = context?.imageRegions
     ?.filter((r) => r.status === 'available')
     .map((r) => r.region);
 
@@ -194,8 +200,12 @@ const resolver: Resolver<UpdateImageRegionsPayload, ImageRegion[]> = async (
     availableRegionIds?.includes(regionId)
   );
 
+  const availableRegionLabels = context?.regions
+    ?.filter((r) => availableRegionIds?.includes(r.id))
+    .map((r) => r.label);
+
   if (isMissingAvailableRegion) {
-    const message = `You must specify at least one available region (${availableRegionIds?.join(
+    const message = `At least one available region must be present (${availableRegionLabels?.join(
       ', '
     )}).`;
     return { errors: { regions: { message, type: 'validate' } }, values };
