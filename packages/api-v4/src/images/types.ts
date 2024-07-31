@@ -4,7 +4,7 @@ export type ImageStatus =
   | 'deleted'
   | 'pending_upload';
 
-export type ImageCapabilities = 'cloud-init' | 'distributed-images';
+export type ImageCapabilities = 'cloud-init' | 'distributed-sites';
 
 type ImageType = 'manual' | 'automatic';
 

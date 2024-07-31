@@ -92,7 +92,7 @@ export const ImagesActionMenu = (props: Props) => {
               ? 'Image is not yet available for use.'
               : undefined,
           },
-          ...(onManageRegions
+          ...(onManageRegions && image.regions && image.regions.length > 0
             ? [
                 {
                   disabled: isImageReadOnly || isDisabled,

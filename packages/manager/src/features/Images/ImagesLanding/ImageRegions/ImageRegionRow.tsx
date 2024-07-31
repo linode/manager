@@ -6,6 +6,7 @@ import { Flag } from 'src/components/Flag';
 import { IconButton } from 'src/components/IconButton';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
@@ -39,14 +40,24 @@ export const ImageRegionRow = (props: Props) => {
         <StatusIcon
           status={IMAGE_REGION_STATUS_TO_STATUS_ICON_STATUS[status]}
         />
-        <IconButton
-          aria-label={`Remove ${region}`}
-          disabled={disableRemoveButton}
-          onClick={onRemove}
-          sx={{ p: 0.5 }}
+        <Tooltip
+          title={
+            disableRemoveButton
+              ? 'You cannot remove this region because at least one available region must be present.'
+              : ''
+          }
         >
-          <Close />
-        </IconButton>
+          <span>
+            <IconButton
+              aria-label={`Remove ${region}`}
+              disabled={disableRemoveButton}
+              onClick={onRemove}
+              sx={{ p: 0.5 }}
+            >
+              <Close />
+            </IconButton>
+          </span>
+        </Tooltip>
       </Stack>
     </Box>
   );
