@@ -4,7 +4,9 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ApiAwarenessModal, ApiAwarenessModalProps } from './ApiAwarenessModal';
+import { ApiAwarenessModal } from './ApiAwarenessModal';
+
+import type { ApiAwarenessModalProps } from './ApiAwarenessModal';
 
 const defaultProps: ApiAwarenessModalProps = {
   isOpen: false,

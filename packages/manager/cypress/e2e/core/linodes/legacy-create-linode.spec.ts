@@ -47,7 +47,10 @@ import {
 } from 'support/intercepts/linodes';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   checkboxTestId,
@@ -90,6 +93,7 @@ describe('create linode', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       linodeCreateRefactor: makeFeatureFlagData(false),
+      apicliDxToolsAdditions: makeFeatureFlagData(false),
     });
   });
 
@@ -458,6 +462,11 @@ describe('create linode', () => {
     mockGetLinodeType(dcPricingMockLinodeTypes[1]);
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
 
+    mockAppendFeatureFlags({
+      apicliDxToolsAdditions: makeFeatureFlagData(false),
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
     mockGetVLANs(mockVLANs);
@@ -520,6 +529,7 @@ describe('create linode', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
       linodeDiskEncryption: makeFeatureFlagData(false),
+      apicliDxToolsAdditions: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
 
     // Mock account response
@@ -541,6 +551,7 @@ describe('create linode', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
       linodeDiskEncryption: makeFeatureFlagData(true),
+      apicliDxToolsAdditions: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
 
     // Mock account response
