@@ -52,7 +52,7 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   checkboxTestId,
   headerTestId,
-} from 'src/components/DiskEncryption/DiskEncryption';
+} from 'src/components/Encryption/Encryption';
 
 import type { Config, VLAN, Disk, Region } from '@linode/api-v4';
 

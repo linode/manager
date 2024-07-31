@@ -2,15 +2,15 @@ import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import UserSSHKeyPanel from 'src/components/AccessPanel/UserSSHKeyPanel';
+import { Divider } from 'src/components/Divider';
 import {
   DISK_ENCRYPTION_DEFAULT_DISTRIBUTED_INSTANCES,
   DISK_ENCRYPTION_DISTRIBUTED_DESCRIPTION,
   DISK_ENCRYPTION_GENERAL_DESCRIPTION,
   DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY,
-} from 'src/components/DiskEncryption/constants';
-import { DiskEncryption } from 'src/components/DiskEncryption/DiskEncryption';
-import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
-import { Divider } from 'src/components/Divider';
+} from 'src/components/Encryption/constants';
+import { Encryption } from 'src/components/Encryption/Encryption';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Paper } from 'src/components/Paper';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Skeleton } from 'src/components/Skeleton';
@@ -64,10 +64,10 @@ export const Security = () => {
               autoComplete="off"
               disabled={isLinodeCreateRestricted}
               errorText={fieldState.error?.message}
+              id="linode-password"
               label="Root Password"
               name="password"
               noMarginTop
-              id="linode-password"
               onBlur={field.onBlur}
               onChange={field.onChange}
               placeholder="Enter a password."
@@ -95,7 +95,7 @@ export const Security = () => {
           <Divider spacingBottom={20} spacingTop={24} />
           <Controller
             render={({ field, fieldState }) => (
-              <DiskEncryption
+              <Encryption
                 descriptionCopy={
                   isDistributedRegion
                     ? DISK_ENCRYPTION_DISTRIBUTED_DESCRIPTION
@@ -111,7 +111,7 @@ export const Security = () => {
                 }
                 disabled={!regionSupportsDiskEncryption}
                 error={fieldState.error?.message}
-                isEncryptDiskChecked={field.value === 'enabled'}
+                isEncryptEntityChecked={field.value === 'enabled'}
               />
             )}
             control={control}
