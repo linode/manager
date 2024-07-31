@@ -80,7 +80,7 @@ export const TransferDisplayDialog = React.memo(
           Any additional transfer usage that exceeds this monthly allotment
           starts at $0.005/GB (or $5/TB) depending on the service’s region.
           Additional transfer usage is charged at the end of the billing period.
-          For more information refer to the{' '}
+          For more information, refer to{' '}
           <Link to={NETWORK_TRANSFER_USAGE_AND_COST_LINK}>
             Network Transfer Usage and Costs
           </Link>
