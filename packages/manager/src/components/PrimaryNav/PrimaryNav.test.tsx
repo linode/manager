@@ -54,7 +54,7 @@ describe('PrimaryNav', () => {
     expect(getByTestId(queryString).getAttribute('aria-current')).toBe('false');
   });
 
-  it('should show Databases menu item if the user has the account capability', async () => {
+  it('should show Databases menu item if the user has the account capability V1', async () => {
     const account = accountFactory.build({
       capabilities: ['Managed Databases'],
     });
@@ -66,6 +66,33 @@ describe('PrimaryNav', () => {
     );
 
     const { findByText } = renderWithTheme(<PrimaryNav {...props} />);
+
+    const databaseNavItem = await findByText('Databases');
+
+    expect(databaseNavItem).toBeVisible();
+  });
+
+  it('should show Databases menu item if the user has the account capability V2', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Managed Databases V2'],
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const flags = {
+      dbaasV2: {
+        beta: true,
+        enabled: true,
+      },
+    };
+
+    const { findByText } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
 
     const databaseNavItem = await findByText('Databases');
 

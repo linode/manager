@@ -28,15 +28,15 @@ export interface DatabaseEngine {
 }
 
 export type DatabaseStatus =
+  | 'active'
+  | 'degraded'
+  | 'failed'
   | 'provisioning'
   | 'resizing'
-  | 'active'
-  | 'suspending'
-  | 'suspended'
-  | 'resuming'
   | 'restoring'
-  | 'failed'
-  | 'degraded';
+  | 'resuming'
+  | 'suspended'
+  | 'suspending';
 
 export type DatabaseBackupType = 'snapshot' | 'auto';
 
