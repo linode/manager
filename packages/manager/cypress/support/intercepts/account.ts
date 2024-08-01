@@ -37,6 +37,15 @@ export const mockGetAccount = (account: Account): Cypress.Chainable<null> => {
 };
 
 /**
+ * Intercepts GET request to fetch account.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetAccount = (): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('account'));
+};
+
+/**
  * Intercepts PUT request to update account and mocks response.
  *
  * @param updatedAccount - Updated account data with which to mock response.

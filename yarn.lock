@@ -2304,10 +2304,10 @@
   resolved "https://registry.yarnpkg.com/@kwsites/promise-deferred/-/promise-deferred-1.1.1.tgz#8ace5259254426ccef57f3175bc64ed7095ed919"
   integrity sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==
 
-"@linode/design-language-system@^2.6.0":
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/@linode/design-language-system/-/design-language-system-2.6.0.tgz#be3083c07bfa6ede803357a31dcf7b812d9b4ef0"
-  integrity sha512-SOhTXpUlgqYIvsUD9CqL+R4duM/04vpksYPPxK5wVRL6RLa4GEXiN3l0QwHRRTHHZry7zQu8eMWYGFQwm3vbLw==
+"@linode/design-language-system@^2.6.1":
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/@linode/design-language-system/-/design-language-system-2.6.1.tgz#dac21f50d5087eaa273f76a3b3542f6160ee6076"
+  integrity sha512-cnj8X8s5ykxCCrHOwkEkroz/b1od5NTvidDDuyy5147Hqo7V5BWtdS+gLDqdvTKtYO0ybrORXRCD4y9qHf88HA==
   dependencies:
     "@tokens-studio/sd-transforms" "1.2.0"
     react "^17.0.2"
