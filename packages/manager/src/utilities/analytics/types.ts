@@ -70,7 +70,7 @@ export interface FormEventOptions {
 }
 export interface LinodeCreateFormEventOptions extends FormEventOptions {
   createType: LinodeCreateType;
-  interaction: 'change' | 'click';
+  interaction: 'change' | 'clear' | 'click';
   // Used to distinguish between the Linode Create flow pre and post-refactor.
   version: LinodeCreateFlowVersion;
 }

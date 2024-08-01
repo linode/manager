@@ -155,7 +155,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
               createType: (params.type as LinodeCreateType) ?? 'OS',
               headerName: 'Region',
               interaction: 'click',
-              label: 'How Data Center Pricing Works',
+              label: DOCS_LINK_LABEL_DC_PRICING,
               version: 'v1',
             })
           }

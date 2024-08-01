@@ -1,15 +1,22 @@
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { TagsInput, TagsInputProps } from 'src/components/TagsInput/TagsInput';
-import { TextField, TextFieldProps } from 'src/components/TextField';
+import { TagsInput } from 'src/components/TagsInput/TagsInput';
+import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { PlacementGroupsDetailPanel } from 'src/features/PlacementGroups/PlacementGroupsDetailPanel';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import type { PlacementGroup } from '@linode/api-v4';
+import type { TagsInputProps } from 'src/components/TagsInput/TagsInput';
+import type { TextFieldProps } from 'src/components/TextField';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
 interface DetailsPanelProps {
   error?: string;
@@ -31,6 +38,17 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
   } = props;
   const theme = useTheme();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
+  const location = useLocation();
+  const queryParams = getQueryParamsFromQueryString(location.search);
+
+  const placementGroupFormEventOptions: LinodeCreateFormEventOptions = {
+    createType: (queryParams.type as LinodeCreateType) ?? 'OS',
+    headerName: 'Details',
+    interaction: 'change',
+    label: 'Placement Group',
+    subheaderName: 'Placement Groups in Region',
+    version: 'v1',
+  };
 
   return (
     <Paper
@@ -63,7 +81,19 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
 
       {isPlacementGroupsEnabled && (
         <PlacementGroupsDetailPanel
-          handlePlacementGroupChange={handlePlacementGroupChange}
+          handlePlacementGroupChange={(selected) => {
+            handlePlacementGroupChange(selected);
+            if (selected === null) {
+              sendLinodeCreateFormInputEvent({
+                ...placementGroupFormEventOptions,
+                interaction: 'clear',
+              });
+            } else {
+              sendLinodeCreateFormInputEvent({
+                ...placementGroupFormEventOptions,
+              });
+            }
+          }}
           selectedPlacementGroupId={selectedPlacementGroupId}
           selectedRegionId={selectedRegionId}
         />

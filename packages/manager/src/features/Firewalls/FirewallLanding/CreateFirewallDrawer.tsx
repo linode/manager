@@ -144,7 +144,7 @@ export const CreateFirewallDrawer = React.memo(
             if (isFromLinodeCreate) {
               sendLinodeCreateFormStepEvent({
                 createType: (queryParams.type as LinodeCreateType) ?? 'OS',
-                headerName: 'VPC Branch',
+                headerName: 'Firewall',
                 interaction: 'click',
                 label: 'Create VPC',
                 version: 'v1',

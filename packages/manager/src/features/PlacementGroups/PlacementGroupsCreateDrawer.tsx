@@ -12,8 +12,8 @@ import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
+import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
@@ -24,6 +24,7 @@ import {
   useCreatePlacementGroup,
 } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
@@ -43,6 +44,8 @@ import type {
 } from '@linode/api-v4';
 import type { FormikHelpers } from 'formik';
 import type { DisableRegionOption } from 'src/components/RegionSelect/RegionSelect.types';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
+import { LinodeCreateType } from '../Linodes/LinodesCreate/types';
 
 export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps
@@ -69,7 +72,8 @@ export const PlacementGroupsCreateDrawer = (
   } = useFormValidateOnChange();
 
   const location = useLocation();
-  const displayRegionHeaderText = location.pathname.includes('/linodes/create');
+  const isFromLinodeCreate = location.pathname.includes('/linodes/create');
+  const queryParams = getQueryParamsFromQueryString(location.search);
 
   const handleRegionSelect = (region: Region['id']) => {
     setFieldValue('region', region);
@@ -102,6 +106,15 @@ export const PlacementGroupsCreateDrawer = (
 
       if (onPlacementGroupCreate) {
         onPlacementGroupCreate(response);
+        if (isFromLinodeCreate) {
+          sendLinodeCreateFormStepEvent({
+            createType: (queryParams.type as LinodeCreateType) ?? 'OS',
+            headerName: 'Create Placement Group',
+            interaction: 'click',
+            label: 'Create Placement Group',
+            version: 'v1',
+          });
+        }
       }
       handleResetForm();
       onClose();
@@ -208,7 +221,7 @@ export const PlacementGroupsCreateDrawer = (
               </List>
             </Notice>
           )}
-          {selectedRegion && displayRegionHeaderText && (
+          {selectedRegion && isFromLinodeCreate && (
             <DescriptionList
               items={[
                 {
