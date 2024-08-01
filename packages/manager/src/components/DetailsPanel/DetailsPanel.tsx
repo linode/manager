@@ -83,7 +83,8 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
         <PlacementGroupsDetailPanel
           handlePlacementGroupChange={(selected) => {
             handlePlacementGroupChange(selected);
-            if (selected === null) {
+            // Track clearing and changing the value once per form - this is configured on backend by inputValue.
+            if (!selected) {
               sendLinodeCreateFormInputEvent({
                 ...placementGroupFormEventOptions,
                 interaction: 'clear',

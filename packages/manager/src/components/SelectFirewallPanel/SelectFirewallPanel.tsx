@@ -17,6 +17,7 @@ import { LinkButton } from '../LinkButton';
 import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
+import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
 interface Props {
   disabled?: boolean;
@@ -42,16 +43,20 @@ export const SelectFirewallPanel = (props: Props) => {
     location.search
   );
 
+  const firewallFormEventOptions: LinodeCreateFormEventOptions = {
+    createType: (queryParams.type as LinodeCreateType) ?? 'OS',
+    headerName: 'Firewall',
+    interaction: 'click',
+    label: 'Firewall',
+    version: 'v1',
+  };
+
   const handleCreateFirewallClick = () => {
     setIsDrawerOpen(true);
     if (isFromLinodeCreate) {
       sendLinodeCreateFormInputEvent({
-        createType: (queryParams.type as LinodeCreateType) ?? 'OS',
-        headerName: 'Firewall',
-        interaction: 'change',
+        ...firewallFormEventOptions,
         label: 'Create Firewall',
-        subheaderName: 'Assign Firewall',
-        version: 'v1',
       });
     }
   };
@@ -91,14 +96,18 @@ export const SelectFirewallPanel = (props: Props) => {
         <Autocomplete
           onChange={(_, selection) => {
             handleFirewallChange(selection?.value ?? -1);
-            // Track clearing the value once per form - this is configured on backend by inputValue.
+            // Track clearing and changing the value once per form - this is configured on backend by inputValue.
             if (!selection) {
               sendLinodeCreateFormInputEvent({
-                createType: (queryParams.type as LinodeCreateType) ?? 'OS',
-                headerName: 'Firewall',
-                interaction: 'click',
-                label: 'Assign Firewall',
-                version: 'v1',
+                ...firewallFormEventOptions,
+                interaction: 'clear',
+                subheaderName: 'Assign Firewall',
+              });
+            } else {
+              sendLinodeCreateFormInputEvent({
+                ...firewallFormEventOptions,
+                interaction: 'change',
+                subheaderName: 'Assign Firewall',
               });
             }
           }}

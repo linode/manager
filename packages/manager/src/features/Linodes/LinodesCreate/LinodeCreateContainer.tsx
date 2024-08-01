@@ -31,7 +31,7 @@ import {
   sendLinodeCreateFlowDocsClickEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
 import {
-  sendLinodeCreateFormStepEvent,
+  sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormSubmitEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
 import { capitalize } from 'src/utilities/capitalize';
@@ -889,7 +889,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           <LandingHeader
             onDocsClick={() => {
               sendLinodeCreateFlowDocsClickEvent('Getting Started');
-              sendLinodeCreateFormStepEvent({
+              sendLinodeCreateFormInputEvent({
                 createType: (this.params.type as LinodeCreateType) ?? 'OS',
                 interaction: 'click',
                 label: 'Getting Started',

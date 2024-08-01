@@ -1098,7 +1098,7 @@ export class LinodeCreate extends React.PureComponent<
                         createType:
                           (this.tabs[selectedTab].title as LinodeCreateType) ??
                           'OS',
-                        headerName: 'Firewall Panel',
+                        headerName: 'Firewall',
                         label: 'Learn more',
                         version: 'v1',
                         interaction: 'click',

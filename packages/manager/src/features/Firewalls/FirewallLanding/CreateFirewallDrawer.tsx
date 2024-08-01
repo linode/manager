@@ -48,6 +48,7 @@ import type {
 } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
+import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
@@ -88,6 +89,14 @@ export const CreateFirewallDrawer = React.memo(
     const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
       location.search
     );
+
+    const firewallFormEventOptions: LinodeCreateFormEventOptions = {
+      createType: (queryParams.type as LinodeCreateType) ?? 'OS',
+      headerName: 'Create Firewall',
+      interaction: 'click',
+      label: '',
+      version: 'v1',
+    };
 
     const {
       errors,
@@ -140,14 +149,11 @@ export const CreateFirewallDrawer = React.memo(
             }
             onClose();
 
-            // Fire analytics form submit upon successful creation from Linode Create flow.
+            // Fire analytics form submit upon successful firewall creation from Linode Create flow.
             if (isFromLinodeCreate) {
               sendLinodeCreateFormStepEvent({
-                createType: (queryParams.type as LinodeCreateType) ?? 'OS',
-                headerName: 'Firewall',
-                interaction: 'click',
-                label: 'Create VPC',
-                version: 'v1',
+                ...firewallFormEventOptions,
+                label: 'Create Firewall',
               });
             }
           })
@@ -240,11 +246,9 @@ export const CreateFirewallDrawer = React.memo(
         onClick={() =>
           isFromLinodeCreate &&
           sendLinodeCreateFormInputEvent({
-            createType: (queryParams.type as LinodeCreateType) ?? 'OS',
-            headerName: 'Firewall',
-            interaction: 'click',
+            ...firewallFormEventOptions,
             label: 'Learn more',
-            version: 'v1',
+            subheaderName: 'Assign services to the Firewall',
           })
         }
         to={FIREWALL_LIMITS_CONSIDERATIONS_LINK}

@@ -26,6 +26,7 @@ import {
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION } from './constants';
@@ -36,6 +37,7 @@ import {
   hasRegionReachedPlacementGroupCapacity,
 } from './utils';
 
+import type { LinodeCreateType } from '../Linodes/LinodesCreate/types';
 import type { PlacementGroupsCreateDrawerProps } from './types';
 import type {
   CreatePlacementGroupPayload,
@@ -44,8 +46,6 @@ import type {
 } from '@linode/api-v4';
 import type { FormikHelpers } from 'formik';
 import type { DisableRegionOption } from 'src/components/RegionSelect/RegionSelect.types';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
-import { LinodeCreateType } from '../Linodes/LinodesCreate/types';
 
 export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps
@@ -106,6 +106,7 @@ export const PlacementGroupsCreateDrawer = (
 
       if (onPlacementGroupCreate) {
         onPlacementGroupCreate(response);
+        // Fire analytics form submit upon successful PG creation from Linode Create flow.
         if (isFromLinodeCreate) {
           sendLinodeCreateFormStepEvent({
             createType: (queryParams.type as LinodeCreateType) ?? 'OS',
