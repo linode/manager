@@ -5,7 +5,6 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import type {
-  GetRegionLabel,
   GetRegionOptionAvailability,
   RegionFilterValue,
 } from './RegionSelect.types';
@@ -154,10 +153,11 @@ export const getIsDistributedRegion = (
   return region?.site_type === 'distributed' || region?.site_type === 'edge';
 };
 
-export const getNewRegionLabel = ({ includeSlug, region }: GetRegionLabel) => {
+export const getNewRegionLabel = (region: Region) => {
   const [city] = region.label.split(', ');
-  if (includeSlug) {
-    return `${region.country.toUpperCase()}, ${city} ${`(${region.id})`}`;
+  // Include state for the US
+  if (region.country === 'us') {
+    return `${region.country.toUpperCase()}, ${region.label}`;
   }
   return `${region.country.toUpperCase()}, ${city}`;
 };
@@ -166,7 +166,7 @@ export const useIsGeckoEnabled = () => {
   const flags = useFlags();
   const isGeckoGA = flags?.gecko2?.enabled && flags.gecko2.ga;
   const isGeckoBeta = flags.gecko2?.enabled && !flags.gecko2?.ga;
-  const { data: regions } = useRegionsQuery(isGeckoGA);
+  const { data: regions } = useRegionsQuery();
 
   const hasDistributedRegionCapability = regions?.some((region: Region) =>
     region.capabilities.includes('Distributed Plans')
