@@ -13,7 +13,7 @@ import type {
   Item,
 } from 'src/components/EnhancedSelect/Select';
 
-interface Props
+export interface Props
   extends Omit<
     BaseSelectProps<Item<Labels, Labels>, false>,
     'defaultValue' | 'onChange'
