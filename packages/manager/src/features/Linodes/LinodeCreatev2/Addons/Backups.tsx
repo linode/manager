@@ -3,7 +3,7 @@ import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { Checkbox } from 'src/components/Checkbox';
 import { Currency } from 'src/components/Currency';
-import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/DiskEncryption/constants';
+import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/Encryption/constants';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';

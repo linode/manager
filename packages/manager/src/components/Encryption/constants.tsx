@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Link } from 'src/components/Link';
 
+/* Disk Encryption constants */
 const DISK_ENCRYPTION_GUIDE_LINK =
   'https://www.linode.com/docs/products/compute/compute-instances/guides/local-disk-encryption';
 
