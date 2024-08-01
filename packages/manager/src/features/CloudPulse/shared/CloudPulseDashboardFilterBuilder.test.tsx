@@ -35,7 +35,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
           created: new Date().toDateString(),
           id: 1,
           label: DASHBOARD,
-          service_type: 'dbass',
+          service_type: 'dbaas',
           time_duration: { unit: 'min', value: 30 },
           updated: new Date().toDateString(),
           widgets: [],

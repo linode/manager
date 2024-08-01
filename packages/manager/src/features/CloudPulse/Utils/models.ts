@@ -1,6 +1,6 @@
 export interface CloudPulseServiceTypeFilterMap {
   filters: CloudPulseServiceTypeFilters[];
-  serviceType: string;
+  serviceType: 'dbaas' | 'linode';
 }
 
 export interface CloudPulseServiceTypeFilters {

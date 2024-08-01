@@ -13,7 +13,6 @@ import {
   REGION,
   RELATIVE_TIME_DURATION,
   RESOURCE_ID,
-  RESOURCES,
 } from '../Utils/constants';
 import {
   getRegionProperties,
