@@ -30,7 +30,7 @@ describe('ComponentRenderer component tests', () => {
     };
 
     const { getByPlaceholderText } = renderWithTheme(
-      <Grid item key={'region'} sx={{ marginLeft: 2 }} xs>
+      <Grid item sx={{ marginLeft: 2 }} xs>
         {RenderComponent({
           componentKey: 'region',
           componentProps: {
@@ -46,7 +46,6 @@ describe('ComponentRenderer component tests', () => {
       const resourceProps = linodeFilterConfig?.filters.find(
         (filter) => filter.configuration.filterKey == 'resource_id'
       );
-
       const mockDashboard = {
         created: new Date().toDateString(),
         id: 1,
@@ -56,7 +55,6 @@ describe('ComponentRenderer component tests', () => {
         updated: new Date().toDateString(),
         widgets: [],
       };
-
       const { getByPlaceholderText } = renderWithTheme(
         <Grid item key={'resources'} sx={{ marginLeft: 2 }} xs>
           {RenderComponent({
@@ -73,7 +71,6 @@ describe('ComponentRenderer component tests', () => {
           })}
         </Grid>
       );
-
       expect(getByPlaceholderText('Select Resources')).toBeDefined();
     });
 });

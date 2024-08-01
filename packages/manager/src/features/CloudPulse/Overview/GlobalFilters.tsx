@@ -128,7 +128,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
         dashboard={selectedDashboard!}
         emitFilterChange={() => {}}
         isServiceAnalyticsIntegration={false}
-      ></CloudPulseDashboardFilterBuilder>
+      />
     </Grid>
   );
 });

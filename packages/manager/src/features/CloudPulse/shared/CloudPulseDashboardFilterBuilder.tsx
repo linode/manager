@@ -227,7 +227,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           CustomIcon={InfoIcon}
           CustomIconStyles={{ height: '10%', width: '10%' }}
           errorText={'Please pass valid dashboard to render the filters'}
-        ></ErrorState>
+        />
       );
     }
 

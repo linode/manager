@@ -2,6 +2,8 @@ import { CloudPulseSelectTypes } from './models';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
 
+const TIME_DURATION = 'Time Duration';
+
 export const LINODE_CONFIG: CloudPulseServiceTypeFilterMap = {
   filters: [
     {
@@ -38,18 +40,18 @@ export const LINODE_CONFIG: CloudPulseServiceTypeFilterMap = {
         isFilterable: true,
         isMetricsFilter: true,
         isMultiSelect: false,
-        name: 'Time Duration',
+        name: TIME_DURATION,
         neededInServicePage: true,
         placeholder: 'Select Duration',
         priority: 3,
       },
-      name: 'Time Duration',
+      name: TIME_DURATION,
     },
   ],
   serviceType: 'linode',
 };
 
-export const DBASS_CONFIG: CloudPulseServiceTypeFilterMap = {
+export const DBAAS_CONFIG: CloudPulseServiceTypeFilterMap = {
   filters: [
     {
       configuration: {
@@ -110,21 +112,21 @@ export const DBASS_CONFIG: CloudPulseServiceTypeFilterMap = {
         isFilterable: true,
         isMetricsFilter: true,
         isMultiSelect: false,
-        name: 'Time Duration',
+        name: TIME_DURATION,
         neededInServicePage: true,
         placeholder: 'Select Duration',
         priority: 4,
       },
-      name: 'Time Duration',
+      name: TIME_DURATION,
     },
   ],
-  serviceType: 'dbass',
+  serviceType: 'dbaas',
 };
 
 export const FILTER_CONFIG: Map<
   string,
   CloudPulseServiceTypeFilterMap
 > = new Map([
-  ['dbass', DBASS_CONFIG],
+  ['dbaas', DBAAS_CONFIG],
   ['linode', LINODE_CONFIG],
 ]);
