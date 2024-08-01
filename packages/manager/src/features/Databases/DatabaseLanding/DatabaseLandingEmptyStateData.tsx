@@ -1,3 +1,6 @@
+import React from 'react';
+
+import ABranding from 'src/features/Databases/ABranding';
 import {
   docsLink,
   guidesMoreLinkText,
@@ -12,6 +15,7 @@ import type {
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
+  branding: <ABranding style={{ marginBottom: '20px', marginTop: '-10px' }} />,
   description:
     "Deploy popular database engines such as MySQL and PostgreSQL using Linode's performant, reliable, and fully managed database solution.",
   subtitle: 'Fully managed cloud database clusters',

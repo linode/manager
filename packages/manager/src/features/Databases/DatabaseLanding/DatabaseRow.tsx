@@ -1,9 +1,3 @@
-import { Event } from '@linode/api-v4';
-import {
-  Database,
-  DatabaseInstance,
-  Engine,
-} from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -15,8 +9,17 @@ import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 import { DatabaseStatusDisplay } from '../DatabaseDetail/DatabaseStatusDisplay';
+
+import type { Event } from '@linode/api-v4';
+import type {
+  Database,
+  DatabaseInstance,
+  DatabaseType,
+  Engine,
+} from '@linode/api-v4/lib/databases/types';
 
 export const databaseEngineMap: Record<Engine, string> = {
   mongodb: 'MongoDB',
@@ -28,9 +31,16 @@ export const databaseEngineMap: Record<Engine, string> = {
 interface Props {
   database: Database | DatabaseInstance;
   events?: Event[];
+  isADatabases?: boolean;
+  types?: DatabaseType[] | undefined;
 }
 
-export const DatabaseRow = ({ database, events }: Props) => {
+export const DatabaseRow = ({
+  database,
+  events,
+  isADatabases,
+  types,
+}: Props) => {
   const {
     cluster_size,
     created,
@@ -38,12 +48,15 @@ export const DatabaseRow = ({ database, events }: Props) => {
     id,
     label,
     region,
+    type,
     version,
   } = database;
 
   const { data: regions } = useRegionsQuery();
   const { data: profile } = useProfile();
 
+  const plan = types?.find((t: DatabaseType) => t.id === type);
+  const formattedPlan = plan && formatStorageUnits(plan.label);
   const actualRegion = regions?.find((r) => r.id === region);
 
   const configuration =
@@ -69,6 +82,7 @@ export const DatabaseRow = ({ database, events }: Props) => {
       <TableCell statusCell>
         <DatabaseStatusDisplay database={database} events={events} />
       </TableCell>
+      {isADatabases && <TableCell>{formattedPlan}</TableCell>}
       <Hidden smDown>
         <TableCell>{configuration}</TableCell>
       </Hidden>

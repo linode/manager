@@ -1,22 +1,24 @@
+import { Box } from '@mui/material';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableSortCell } from 'src/components/TableSortCell';
+import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
+import { Tab } from 'src/components/Tabs/Tab';
+import { TabList } from 'src/components/Tabs/TabList';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
+import DatabaseLandingTable from 'src/features/Databases/DatabaseLanding/DatabaseLandingTable';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useDatabasesQuery } from 'src/queries/databases/databases';
-import { useInProgressEvents } from 'src/queries/events/events';
+import { useAccount } from 'src/queries/account/account';
+import {
+  useDatabaseTypesQuery,
+  useDatabasesQuery,
+} from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { DatabaseEmptyState } from './DatabaseEmptyState';
@@ -33,10 +35,27 @@ const DatabaseLanding = () => {
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_databases',
   });
+  const account = useAccount();
 
-  const { data: events } = useInProgressEvents();
+  const { data: types, isLoading: isTypeLoading } = useDatabaseTypesQuery();
 
-  const { handleOrderChange, order, orderBy } = useOrder(
+  const {
+    handleOrderChange: aDatabaseHandleOrderChange,
+    order: aDatabaseOrder,
+    orderBy: aDatabaseOrderBy,
+  } = useOrder(
+    {
+      order: 'desc',
+      orderBy: 'label',
+    },
+    `${preferenceKey}-order`
+  );
+
+  const {
+    handleOrderChange: bDatabaseHandleOrderChange,
+    order: bDatabaseOrder,
+    orderBy: bDatabaseOrderBy,
+  } = useOrder(
     {
       order: 'desc',
       orderBy: 'label',
@@ -45,8 +64,8 @@ const DatabaseLanding = () => {
   );
 
   const filter = {
-    ['+order']: order,
-    ['+order_by']: orderBy,
+    ['+order']: aDatabaseOrder,
+    ['+order_by']: aDatabaseOrderBy,
   };
 
   const { data, error, isLoading } = useDatabasesQuery(
@@ -56,6 +75,15 @@ const DatabaseLanding = () => {
     },
     filter
   );
+
+  // TODO change platform value when it's ready
+  const aDatabases: DatabaseInstance[] = [];
+  const bDatabases: DatabaseInstance[] = [];
+  data?.data.forEach((database: DatabaseInstance) => {
+    return database.platform === 'adb'
+      ? aDatabases?.push(database)
+      : bDatabases?.push(database);
+  });
 
   if (error) {
     return (
@@ -67,11 +95,16 @@ const DatabaseLanding = () => {
     );
   }
 
-  if (isLoading) {
+  if (isLoading || isTypeLoading) {
     return <CircleProgress />;
   }
 
-  if (data?.results === 0) {
+  // TODO Update if necessary after agreement
+  const isDisplayFlowA = account.data?.capabilities.includes(
+    'Managed Databases Beta'
+  );
+
+  if (isDisplayFlowA && aDatabases.length === 0) {
     return <DatabaseEmptyState />;
   }
 
@@ -91,77 +124,46 @@ const DatabaseLanding = () => {
         onButtonClick={() => history.push('/databases/create')}
         title="Database Clusters"
       />
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableSortCell
-              active={orderBy === 'label'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="label"
-            >
-              Cluster Label
-            </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'status'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="status"
-            >
-              Status
-            </TableSortCell>
-            <Hidden smDown>
-              <TableSortCell
-                active={orderBy === 'cluster_size'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="cluster_size"
-              >
-                Configuration
-              </TableSortCell>
-            </Hidden>
-            <TableSortCell
-              active={orderBy === 'engine'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="engine"
-            >
-              Engine
-            </TableSortCell>
-            <Hidden mdDown>
-              {/* TODO add back TableSortCell once API is updated to support sort by Region */}
-              <TableCell>Region</TableCell>
-            </Hidden>
-            <Hidden lgDown>
-              <TableSortCell
-                active={orderBy === 'created'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="created"
-              >
-                Created
-              </TableSortCell>
-            </Hidden>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data?.data.map((database: DatabaseInstance) => (
-            <DatabaseRow
-              database={database}
-              key={database.id}
-              events={events}
-            />
-          ))}
-        </TableBody>
-      </Table>
-      <PaginationFooter
-        count={data?.results || 0}
-        eventCategory="Databases Table"
-        handlePageChange={pagination.handlePageChange}
-        handleSizeChange={pagination.handlePageSizeChange}
-        page={pagination.page}
-        pageSize={pagination.pageSize}
-      />
+      <Box sx={{ marginTop: '15px' }}>
+        {!isDisplayFlowA ? (
+          <Tabs>
+            <TabList>
+              <Tab>Legacy Database Clusters</Tab>
+              <Tab>Aiven Database Clusters</Tab>
+            </TabList>
+            <TabPanels>
+              <SafeTabPanel index={0}>
+                <DatabaseLandingTable
+                  data={bDatabases}
+                  handleOrderChange={bDatabaseHandleOrderChange}
+                  order={bDatabaseOrder}
+                  orderBy={bDatabaseOrderBy}
+                  types={types}
+                />
+              </SafeTabPanel>
+              <SafeTabPanel index={1}>
+                <DatabaseLandingTable
+                  data={aDatabases}
+                  handleOrderChange={aDatabaseHandleOrderChange}
+                  isADatabases={true}
+                  order={aDatabaseOrder}
+                  orderBy={aDatabaseOrderBy}
+                  types={types}
+                />
+              </SafeTabPanel>
+            </TabPanels>
+          </Tabs>
+        ) : (
+          <DatabaseLandingTable
+            data={aDatabases}
+            handleOrderChange={aDatabaseHandleOrderChange}
+            isADatabases={true}
+            order={aDatabaseOrder}
+            orderBy={aDatabaseOrderBy}
+            types={types}
+          />
+        )}
+      </Box>
     </React.Fragment>
   );
 };
