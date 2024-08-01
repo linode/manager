@@ -297,6 +297,9 @@ export const IPTransfer = (props: Props) => {
         </Grid>
         <StyledAutoGrid md={3} xs={12}>
           <Autocomplete
+            isOptionEqualToValue={(option, value) =>
+              option.value === value.value
+            }
             textFieldProps={{
               dataAttrs: {
                 'data-qa-ip-transfer-action-menu': state.mode,
@@ -311,16 +314,13 @@ export const IPTransfer = (props: Props) => {
                     (eachAction) => eachAction.value === state.mode
                   )
             }
-            isOptionEqualToValue={(option, value) =>
-              option.value === value.value
-            }
             autoHighlight
             clearIcon={null}
+            disablePortal={false}
             label="Select Action"
             noMarginTop
             onChange={onModeChange(state.sourceIP)}
             options={actionsList}
-            disablePortal={false}
             placeholder="Select Action"
           />
         </StyledAutoGrid>
@@ -349,16 +349,15 @@ export const IPTransfer = (props: Props) => {
             hideLabel: true,
           }}
           autoHighlight
+          disableClearable
           disabled={readOnly || linodes.length === 1}
           errorText={linodesError?.[0].reason}
-          disableClearable
-          loading={isLoading || ipv6RangesLoading}
           label="Select Linode"
-          placeholder="Select Linode"
+          loading={isLoading || ipv6RangesLoading}
           noMarginTop
           onChange={onSelectedLinodeChange(sourceIP)}
           options={linodeList}
-          disablePortal={false}
+          placeholder="Select Linode"
           value={defaultLinode}
         />
       </StyledAutoGrid>
@@ -384,13 +383,13 @@ export const IPTransfer = (props: Props) => {
             hideLabel: true,
           }}
           autoHighlight
-          disabled={readOnly}
           disableClearable
+          disablePortal={false}
+          disabled={readOnly}
           label="Select IP Address"
           noMarginTop
           onChange={onSelectedIPChange(sourceIP)}
           options={IPList}
-          disablePortal={false}
           value={defaultIP}
         />
       </StyledAutoGrid>

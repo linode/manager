@@ -178,8 +178,8 @@ export const PowerActionsDialog = (props: Props) => {
             autoHighlight
             disablePortal={false}
             errorText={configsError?.[0].reason}
-            loading={configsLoading}
             label="Config"
+            loading={configsLoading}
             onChange={(_, option) => setSelectConfigID(option?.value ?? null)}
             options={configOptions}
           />

@@ -1,13 +1,14 @@
-import { Disk } from '@linode/api-v4/lib/linodes';
-import { Volume } from '@linode/api-v4/lib/volumes';
 import { defaultTo } from 'ramda';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormControl } from 'src/components/FormControl';
 import { titlecase } from 'src/features/Linodes/presentation';
+
 import { getSelectedDeviceOption } from '../utilities';
 
+import type { Disk } from '@linode/api-v4/lib/linodes';
+import type { Volume } from '@linode/api-v4/lib/volumes';
 export interface ExtendedDisk extends Disk {
   _id: string;
 }
@@ -80,15 +81,15 @@ export const DeviceSelection = (props: Props) => {
                   ? adjustedErrorText(errorText, selectedDevice.label)
                   : undefined
               }
+              isOptionEqualToValue={(option, value) =>
+                option.label === value.label
+              }
               autoHighlight
               clearIcon={null}
               disabled={disabled}
               groupBy={(option) => option.deviceType}
               label={`/dev/${slot}`}
               noMarginTop
-              isOptionEqualToValue={(option, value) =>
-                option.label === value.label
-              }
               onChange={(_, selected) => onChange(slot, selected?.value)}
               options={deviceList}
               placeholder={'None'}
@@ -104,8 +105,8 @@ export const DeviceSelection = (props: Props) => {
             id="rescueDevice_sdh"
             label="/dev/sdh"
             noMarginTop
-            options={[]}
             onChange={() => null}
+            options={[]}
             value={{ label: 'finnix' }}
           />
         </FormControl>

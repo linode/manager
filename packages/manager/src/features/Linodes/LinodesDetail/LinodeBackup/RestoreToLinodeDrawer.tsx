@@ -1,4 +1,3 @@
-import { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -19,6 +18,7 @@ import {
 } from 'src/queries/linodes/linodes';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
+import type { LinodeBackup } from '@linode/api-v4/lib/linodes';
 interface Props {
   backup: LinodeBackup | undefined;
   linodeId: number;
@@ -103,6 +103,9 @@ export const RestoreToLinodeDrawer = (props: Props) => {
           <Notice variant="error">{errorMap.none}</Notice>
         )}
         <Autocomplete
+          onChange={(_, selected) =>
+            formik.setFieldValue('linode_id', selected?.value)
+          }
           textFieldProps={{
             dataAttrs: {
               'data-qa-select-linode': true,
@@ -111,11 +114,8 @@ export const RestoreToLinodeDrawer = (props: Props) => {
           autoHighlight
           disableClearable
           errorText={linodeError?.[0].reason ?? errorMap.linode_id}
-          loading={linodesLoading}
           label="Linode"
-          onChange={(_, selected) =>
-            formik.setFieldValue('linode_id', selected?.value)
-          }
+          loading={linodesLoading}
           options={linodeOptions}
           placeholder="Select a Linode"
           value={selectedLinodeOption}

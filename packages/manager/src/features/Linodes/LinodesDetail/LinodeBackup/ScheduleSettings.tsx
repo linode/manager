@@ -95,6 +95,9 @@ export const ScheduleSettings = (props: Props) => {
         )}
         <StyledFormControl>
           <Autocomplete
+            onChange={(_, selected) =>
+              settingsForm.setFieldValue('day', selected?.value)
+            }
             textFieldProps={{
               dataAttrs: {
                 'data-qa-weekday-select': true,
@@ -104,13 +107,10 @@ export const ScheduleSettings = (props: Props) => {
               (item) => item.value === settingsForm.values.day
             )}
             autoHighlight
-            disabled={isReadOnly}
             disableClearable
+            disabled={isReadOnly}
             label="Day of Week"
             noMarginTop
-            onChange={(_, selected) =>
-              settingsForm.setFieldValue('day', selected?.value)
-            }
             options={dayOptions}
             placeholder="Choose a day"
           />
@@ -129,8 +129,8 @@ export const ScheduleSettings = (props: Props) => {
               (item) => item.value === settingsForm.values.window
             )}
             autoHighlight
-            disabled={isReadOnly}
             disableClearable
+            disabled={isReadOnly}
             label="Time of Day"
             noMarginTop
             options={windowOptions}

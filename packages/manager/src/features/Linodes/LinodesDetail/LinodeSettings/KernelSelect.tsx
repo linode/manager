@@ -1,8 +1,9 @@
-import { Kernel } from '@linode/api-v4/lib/linodes/types';
 import { groupBy } from 'ramda';
 import * as React from 'react';
+
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
+import type { Kernel } from '@linode/api-v4/lib/linodes/types';
 export interface KernelSelectProps {
   errorText?: string;
   kernels: Kernel[];
@@ -27,9 +28,6 @@ export const KernelSelect = React.memo((props: KernelSelectProps) => {
   const options = kernelsToGroupedItems(kernels);
   return (
     <Autocomplete
-      textFieldProps={{
-        errorGroup: 'linode-config-drawer',
-      }}
       renderOption={(props, kernel) => {
         return (
           <li {...props} data-testid="kernel-option">
@@ -37,15 +35,18 @@ export const KernelSelect = React.memo((props: KernelSelectProps) => {
           </li>
         );
       }}
+      textFieldProps={{
+        errorGroup: 'linode-config-drawer',
+      }}
       autoHighlight
       disableClearable
       disabled={readOnly}
       errorText={errorText}
       groupBy={(option) => option.kernelType}
       label="Select a Kernel"
-      placeholder="Select a Kernel"
       onChange={(_, selected) => onChange(selected.value)}
       options={options}
+      placeholder="Select a Kernel"
       value={getSelectedKernelId(selectedKernel, options)}
     />
   );

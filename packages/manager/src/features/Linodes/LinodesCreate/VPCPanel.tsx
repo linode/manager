@@ -106,12 +106,12 @@ export const VPCPanel = (props: VPCPanelProps) => {
 
   const vpcs = vpcsData ?? [];
 
-  interface dropdownOption {
-    value: number;
+  interface DropdownOption {
     label: string;
+    value: number;
   }
 
-  const vpcDropdownOptions: dropdownOption[] = vpcs.reduce(
+  const vpcDropdownOptions: DropdownOption[] = vpcs.reduce(
     (accumulator, vpc) => {
       return vpc.region === region
         ? [...accumulator, { label: vpc.label, value: vpc.id }]
@@ -130,7 +130,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
     });
   }
 
-  const subnetDropdownOptions: dropdownOption[] =
+  const subnetDropdownOptions: DropdownOption[] =
     vpcs
       .find((vpc) => vpc.id === selectedVPCId)
       ?.subnets.map((subnet) => ({
@@ -200,6 +200,9 @@ export const VPCPanel = (props: VPCPanelProps) => {
         <Stack>
           <Typography>{getMainCopyVPC()}</Typography>
           <Autocomplete
+            isOptionEqualToValue={(option, value) => {
+              return option.label === value.label;
+            }}
             onChange={(_, selectedVPC) => {
               handleSelectVPC(selectedVPC?.value || -1);
               sendLinodeCreateFormStepEvent({
@@ -214,7 +217,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
             textFieldProps={{
               tooltipText: REGION_CAVEAT_HELPER_TEXT,
             }}
-            defaultValue={fromLinodeConfig ? null : vpcDropdownOptions[0]} // If we're in the Config dialog, there is no "None" option at index 0
             value={
               selectedVPCId
                 ? vpcDropdownOptions.find(
@@ -222,16 +224,14 @@ export const VPCPanel = (props: VPCPanelProps) => {
                   )
                 : null
             }
-            isOptionEqualToValue={(option, value) => {
-              return option.label === value.label;
-            }}
             autoHighlight
             clearIcon={null}
+            defaultValue={fromLinodeConfig ? null : vpcDropdownOptions[0]} // If we're in the Config dialog, there is no "None" option at index 0
             disabled={!regionSupportsVPCs}
             errorText={vpcIdError ?? vpcError}
-            loading={isLoading}
             label={from === 'linodeCreate' ? 'Assign VPC' : 'VPC'}
-            noOptionsText={`No VPCs exist in this Linode's region.`}
+            loading={isLoading}
+            noOptionsText="No VPCs exist in this Linode's region."
             options={vpcDropdownOptions}
             placeholder={'Select a VPC'}
           />
@@ -278,14 +278,14 @@ export const VPCPanel = (props: VPCPanelProps) => {
                 onChange={(_, selectedSubnet) => {
                   handleSubnetChange(selectedSubnet?.value);
                 }}
+                textFieldProps={{
+                  errorGroup: ERROR_GROUP_STRING,
+                }}
                 value={
                   subnetDropdownOptions.find(
                     (option) => option.value === selectedSubnetId
                   ) ?? null
                 }
-                textFieldProps={{
-                  errorGroup: ERROR_GROUP_STRING,
-                }}
                 autoHighlight
                 clearIcon={null}
                 errorText={subnetError}

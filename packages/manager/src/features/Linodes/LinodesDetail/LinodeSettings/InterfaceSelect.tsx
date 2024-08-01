@@ -250,23 +250,23 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
           ? 'Loading...'
           : 'You have no VLANs in this region. Type to create one.'
       }
-      textFieldProps={{
-        disabled: readOnly,
-      }}
-      autoHighlight
-      disableClearable={false}
-      errorText={errors.labelError}
-      filterOptions={filterVLANOptions}
-      freeSolo
-      id={`vlan-label-${slotNumber}`}
-      label="VLAN"
-      onChange={(_, selected) => {
-        if (typeof selected === 'string') {
-          handleCreateOption(selected);
+      onChange={(_, selected, reason, details) => {
+        const detailsOption = details?.option;
+        if (
+          reason === 'selectOption' &&
+          detailsOption?.label.includes(`Create "${detailsOption?.value}"`)
+        ) {
+          handleCreateOption(detailsOption.value);
         } else {
           handleLabelChange(selected?.value ?? '');
         }
       }}
+      autoHighlight
+      disabled={readOnly}
+      errorText={errors.labelError}
+      filterOptions={filterVLANOptions}
+      id={`vlan-label-${slotNumber}`}
+      label="VLAN"
       options={vlanOptions}
       placeholder="Create or select a VLAN"
       value={vlanOptions.find((thisVlan) => thisVlan.value === label) ?? null}
@@ -362,17 +362,17 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
                       (thisPurposeOption) => thisPurposeOption.value !== 'none'
                     )
               }
-              value={purposeOptions.find(
-                (thisOption) => thisOption.value === purpose
-              )}
               textFieldProps={{
                 disabled: readOnly,
               }}
+              value={purposeOptions.find(
+                (thisOption) => thisOption.value === purpose
+              )}
               autoHighlight
               disableClearable
-              placeholder="Select an Interface"
               label={`eth${slotNumber}`}
               onChange={(_, selected) => handlePurposeChange(selected?.value)}
+              placeholder="Select an Interface"
             />
             {unavailableInRegionHelperTextJSX}
           </Grid>
