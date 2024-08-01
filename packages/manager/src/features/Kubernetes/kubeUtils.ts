@@ -112,6 +112,17 @@ export const getKubeHighAvailability = (
   };
 };
 
+export const getAPLAvailability = (account: Account | undefined) => {
+  // const showAPL = account?.capabilities.includes('LKE APL');
+  const showAPL = true;
+  // return {
+  //   showAPL,
+  // };
+  return {
+    showAPL,
+  };
+};
+
 /**
  * Retrieves the latest version from an array of version objects.
  *

@@ -17,9 +17,11 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import {
+  getAPLAvailability,
   getKubeHighAvailability,
   getLatestVersion,
 } from 'src/features/Kubernetes/kubeUtils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 import {
   reportAgreementSigningError,
@@ -36,12 +38,13 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
-import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
+import { ApplicationPlatform } from './ApplicationPlatform';
 import {
   StyledDocsLinkContainer,
   StyledRegionSelectStack,
@@ -71,11 +74,14 @@ export const CreateCluster = () => {
   const [hasAgreed, setAgreed] = React.useState<boolean>(false);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const [highAvailability, setHighAvailability] = React.useState<boolean>();
+  const [APL, setAPL] = React.useState<boolean>();
 
+  const flags = useFlags();
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
   const history = useHistory();
   const { data: account } = useAccount();
+  const { showAPL } = getAPLAvailability(account);
   const { showHighAvailability } = getKubeHighAvailability(account);
 
   const {
@@ -255,6 +261,17 @@ export const CreateCluster = () => {
             placeholder={' '}
             value={version || null}
           />
+          {showAPL && flags.apl ? (
+            <>
+              <Divider sx={{ marginTop: 4 }} />
+              <Box>
+                <ApplicationPlatform
+                  setAPL={setAPL}
+                  setHighAvailability={setHighAvailability}
+                />
+              </Box>
+            </>
+          ) : null}
           <Divider sx={{ marginTop: 4 }} />
           {showHighAvailability ? (
             <Box data-testid="ha-control-plane">
@@ -264,6 +281,7 @@ export const CreateCluster = () => {
                     ? UNKNOWN_PRICE
                     : highAvailabilityPrice
                 }
+                isAPLEnabled={APL}
                 isErrorKubernetesTypes={isErrorKubernetesTypes}
                 isLoadingKubernetesTypes={isLoadingKubernetesTypes}
                 selectedRegionId={selectedRegionId}
@@ -284,6 +302,7 @@ export const CreateCluster = () => {
             addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
             apiError={errorMap.node_pools}
             hasSelectedRegion={hasSelectedRegion}
+            isAPLEnabled={APL}
             isPlanPanelDisabled={isPlanPanelDisabled}
             isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
             regionsData={regionsData}

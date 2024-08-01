@@ -29,6 +29,7 @@ export interface PlanSelectionAvailabilityTypes {
   planHasLimitedAvailability: boolean;
   planIsDisabled512Gb: boolean;
   planIsTooSmall: boolean;
+  planIsTooSmallForAPL: boolean;
 }
 
 export interface DisabledTooltipReasons extends PlanSelectionAvailabilityTypes {

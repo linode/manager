@@ -15,6 +15,7 @@ import {
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { APLSummaryPanel } from './APLSummaryPanel';
 import { KubeSummaryPanel } from './KubeSummaryPanel';
 import { NodePoolsDisplay } from './NodePoolsDisplay/NodePoolsDisplay';
 import { UpgradeKubernetesClusterToHADialog } from './UpgradeClusterDialog';
@@ -81,6 +82,15 @@ export const KubernetesClusterDetail = () => {
           clusterLabel={cluster?.label}
           currentVersion={cluster?.k8s_version}
         />
+      </Grid>
+      <LandingHeader
+        docsLabel="Docs"
+        docsLink="https://otomi.io/docs/get-started/overview"
+        removeCrumbX={[1, 2, 3]}
+        title="Application platform for LKE"
+      />
+      <Grid>
+        <APLSummaryPanel cluster={cluster} />
       </Grid>
       <LandingHeader
         breadcrumbProps={{

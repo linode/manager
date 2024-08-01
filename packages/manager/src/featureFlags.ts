@@ -79,6 +79,7 @@ export interface Flags {
   aclbFullCreateFlow: boolean;
   aclp: AclpFlag;
   apiMaintenance: APIMaintenance;
+  apl: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   databaseBeta: boolean;
   databaseResize: boolean;

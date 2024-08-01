@@ -22,6 +22,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclb', label: 'ACLB' },
   { flag: 'aclbFullCreateFlow', label: 'ACLB Full Create Flow' },
   { flag: 'aclp', label: 'CloudPulse' },
+  { flag: 'apl', label: 'Application platform for LKE' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
   { flag: 'eventMessagesV2', label: 'Event Messages V2' },
   { flag: 'gecko2', label: 'Gecko' },
