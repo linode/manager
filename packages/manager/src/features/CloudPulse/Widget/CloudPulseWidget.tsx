@@ -330,7 +330,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               unit={unit}
             />
           )}
-          {isLoading && !Boolean(error) && <CircleProgress />}
+          {isLoading && <CircleProgress />}
           {Boolean(error?.length) && (
             <ErrorState errorText={error![0].reason} />
           )}
