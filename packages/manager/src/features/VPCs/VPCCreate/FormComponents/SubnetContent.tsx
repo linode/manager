@@ -47,9 +47,10 @@ export const SubnetContent = (props: Props) => {
             isFromLinodeCreate &&
             sendLinodeCreateFormInputEvent({
               createType: (queryParams.type as LinodeCreateType) ?? 'OS',
-              label: 'Learn more',
-              headerName: 'VPC',
+              headerName: 'Create VPC',
               interaction: 'click',
+              label: 'Learn more',
+              subheaderName: 'Subnets',
               version: 'v1',
             })
           }

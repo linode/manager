@@ -42,7 +42,7 @@ export const VPCTopSectionContent = (props: Props) => {
             isFromLinodeCreate &&
             sendLinodeCreateFormInputEvent({
               createType: (queryParams.type as LinodeCreateType) ?? 'OS',
-              headerName: 'VPC',
+              headerName: 'Create VPC',
               interaction: 'click',
               label: 'Learn more',
               version: 'v1',

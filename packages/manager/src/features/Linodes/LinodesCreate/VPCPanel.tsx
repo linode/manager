@@ -31,6 +31,7 @@ import type { LinodeCreateType } from './types';
 import type { Item } from 'src/components/EnhancedSelect';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
 export interface VPCPanelProps {
   additionalIPv4RangesForVPC: ExtendedIP[];
@@ -96,15 +97,23 @@ export const VPCPanel = (props: VPCPanelProps) => {
   );
 
   const { data: vpcsData, error, isLoading } = useAllVPCsQuery();
-  const params = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
-    location.search
-  );
 
   React.useEffect(() => {
     if (subnetError || vpcIPv4Error) {
       scrollErrorIntoView(ERROR_GROUP_STRING);
     }
   }, [subnetError, vpcIPv4Error]);
+
+  const params = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+    location.search
+  );
+  const vpcFormEventOptions: LinodeCreateFormEventOptions = {
+    createType: (params.type as LinodeCreateType) ?? 'OS',
+    headerName: 'VPC',
+    interaction: 'click',
+    label: 'VPC',
+    version: 'v1',
+  };
 
   const vpcs = vpcsData ?? [];
 
@@ -153,11 +162,8 @@ export const VPCPanel = (props: VPCPanelProps) => {
           onClick={() =>
             fromLinodeCreate &&
             sendLinodeCreateFormInputEvent({
-              createType: (params.type as LinodeCreateType) ?? 'OS',
-              headerName: 'VPC',
-              interaction: 'click',
+              ...vpcFormEventOptions,
               label: 'Learn more',
-              version: 'v1',
             })
           }
           to="https://www.linode.com/docs/products/networking/vpc/guides/assign-services/"
@@ -195,14 +201,18 @@ export const VPCPanel = (props: VPCPanelProps) => {
           <Select
             onChange={(selectedVPC: Item<number, string>) => {
               handleSelectVPC(selectedVPC.value);
-              // Track clearing the value once per form - this is configured on backend by inputValue.
+              // Track clearing and changing the value once per form - this is configured on backend by inputValue.
               if (selectedVPC.label === 'None') {
                 sendLinodeCreateFormInputEvent({
-                  createType: (params.type as LinodeCreateType) ?? 'OS',
-                  headerName: 'VPC',
+                  ...vpcFormEventOptions,
+                  interaction: 'clear',
+                  subheaderName: 'Assign VPC',
+                });
+              } else {
+                sendLinodeCreateFormInputEvent({
+                  ...vpcFormEventOptions,
                   interaction: 'change',
-                  label: 'Assign VPC',
-                  version: 'v1',
+                  subheaderName: 'Assign VPC',
                 });
               }
             }}
@@ -237,11 +247,8 @@ export const VPCPanel = (props: VPCPanelProps) => {
                   onClick={() => {
                     setIsVPCCreateDrawerOpen(true);
                     sendLinodeCreateFormInputEvent({
-                      createType: (params.type as LinodeCreateType) ?? 'OS',
-                      headerName: 'VPC',
-                      interaction: 'click',
+                      ...vpcFormEventOptions,
                       label: 'Create VPC',
-                      version: 'v1',
                     });
                   }}
                 >
