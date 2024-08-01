@@ -1,14 +1,25 @@
-import { Image } from '@linode/api-v4/lib/images';
-import { Box } from 'src/components/Box';
+import Autocomplete from '@mui/material/Autocomplete';
 import { clone, propOr } from 'ramda';
 import * as React from 'react';
 
-import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
+import { Box } from 'src/components/Box';
+import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useAllImagesQuery } from 'src/queries/images';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { groupImages } from 'src/utilities/images';
 
+import type { Image } from '@linode/api-v4/lib/images';
+
+export interface SelectImageOption {
+  label: string;
+  value: string;
+}
+
+export interface ImagesGroupType {
+  label: string;
+  options: SelectImageOption[];
+}
 interface BaseProps {
   anyAllOption?: boolean;
   disabled?: boolean;
@@ -22,14 +33,14 @@ interface BaseProps {
 
 interface Props extends BaseProps {
   isMulti?: false;
-  onSelect: (selected: Item) => void;
-  value?: Item;
+  onSelect: (selected: SelectImageOption) => void;
+  value?: SelectImageOption;
 }
 
 interface MultiProps extends BaseProps {
   isMulti: true;
-  onSelect: (selected: Item[]) => void;
-  value?: Item[];
+  onSelect: (selected: SelectImageOption[]) => void;
+  value?: SelectImageOption[];
 }
 
 export const ImageSelect = (props: MultiProps | Props) => {
@@ -75,6 +86,10 @@ export const ImageSelect = (props: MultiProps | Props) => {
     });
   }
 
+  const formattedOptions = imageSelectOptions.flatMap(
+    (option) => option.options
+  );
+
   return (
     <Box
       sx={{
@@ -88,19 +103,34 @@ export const ImageSelect = (props: MultiProps | Props) => {
           width: '415px',
         }}
       >
-        <Select
-          textFieldProps={{
-            required,
+        <Autocomplete
+          groupBy={(option) => {
+            const group = imageSelectOptions.find((group) =>
+              group.options.includes(option)
+            );
+            return group ? String(group.label) : '';
           }}
+          onChange={(event, value) => {
+            onSelect(value ?? []);
+          }}
+          renderInput={(params) => (
+            <TextField
+              helperText={
+                helperText || 'Choosing a 64-bit distro is recommended.'
+              }
+              aria-label={label || 'Image'}
+              errorText={imageError || imageFieldError || rqError}
+              label={label || 'Image'}
+              placeholder="Select an Image"
+              required={required}
+              {...params}
+            />
+          )}
           disabled={disabled || Boolean(imageError)}
-          errorText={imageError || imageFieldError || rqError}
           id={'image-select'}
-          isLoading={imagesLoading}
-          isMulti={Boolean(isMulti)}
-          label={label || 'Image'}
-          onChange={onSelect}
-          options={imageSelectOptions as any}
-          placeholder="Select an Image"
+          loading={imagesLoading}
+          multiple={Boolean(isMulti)}
+          options={formattedOptions}
           value={value}
         />
       </Box>
@@ -120,7 +150,7 @@ export const ImageSelect = (props: MultiProps | Props) => {
 export const getImagesOptions = (images: Image[]) => {
   const groupedImages = groupImages(images);
   return ['recommended', 'older', 'images', 'deleted'].reduce(
-    (accumulator: GroupType<string>[], category: string) => {
+    (accumulator: ImagesGroupType[], category: string) => {
       if (groupedImages[category]) {
         return [
           ...accumulator,
