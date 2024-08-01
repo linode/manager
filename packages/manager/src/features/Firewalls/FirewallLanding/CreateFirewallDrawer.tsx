@@ -23,7 +23,6 @@ import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useAllFirewallsQuery, useCreateFirewall } from 'src/queries/firewalls';
 import { useGrants } from 'src/queries/profile/profile';
 import {
-  sendLinodeCreateFormErrorEvent,
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormStepEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
@@ -178,24 +177,6 @@ export const CreateFirewallDrawer = React.memo(
         resetForm();
       }
     }, [open, resetForm]);
-
-    // Fire analytics form errors from Linode Create flow. Validation is performed before form submission.
-    React.useEffect(() => {
-      if (isFromLinodeCreate) {
-        let errorString = '';
-        Object.values(errors).forEach((error: string, index: number) => {
-          errorString += `${index > 0 ? '| ' : ''}${error}`;
-        });
-
-        if (errorString.length > 0) {
-          sendLinodeCreateFormErrorEvent(
-            errorString,
-            (queryParams.type as LinodeCreateType) ?? 'OS',
-            'v1'
-          );
-        }
-      }
-    }, [errors]);
 
     const handleInboundPolicyChange = React.useCallback(
       (e: React.ChangeEvent<HTMLInputElement>, value: 'ACCEPT' | 'DROP') => {

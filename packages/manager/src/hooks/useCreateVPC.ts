@@ -6,10 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useCreateVPCMutation } from 'src/queries/vpcs/vpcs';
-import {
-  sendLinodeCreateFormErrorEvent,
-  sendLinodeCreateFormStepEvent,
-} from 'src/utilities/analytics/formEventAnalytics';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { handleVPCAndSubnetErrors } from 'src/utilities/formikErrorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -193,21 +190,6 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
       formik.setFieldValue('subnets', subnetsAndErrors);
 
       scrollErrorIntoView();
-
-      // Fire analytics form errors from Linode Create flow.
-      if (isFromLinodeCreate) {
-        let errorString = '';
-        errors.forEach((error: APIError, index: number) => {
-          errorString += `${index > 0 ? '| ' : ''} ${error.reason}`;
-        });
-        if (errorString.length > 0) {
-          sendLinodeCreateFormErrorEvent(
-            errorString,
-            (queryParams.type as LinodeCreateType) ?? 'OS',
-            'v1'
-          );
-        }
-      }
     }
 
     formik.setSubmitting(false);
