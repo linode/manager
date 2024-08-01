@@ -11,7 +11,7 @@ interface Props {
   onBlur: (e: any) => void;
   onChange: (value: string) => void;
   required?: boolean;
-  selectedCluster: string;
+  selectedCluster: string | undefined;
 }
 
 export const ClusterSelect: React.FC<Props> = (props) => {
@@ -55,7 +55,7 @@ export const ClusterSelect: React.FC<Props> = (props) => {
       placeholder="Select a Region"
       regions={regionOptions ?? []}
       required={required}
-      value={selectedCluster}
+      value={selectedCluster ?? undefined}
     />
   );
 };

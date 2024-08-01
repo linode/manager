@@ -170,11 +170,6 @@ describe('Billing Activity Feed', () => {
         .scrollIntoView()
         .should('be.visible');
 
-      cy.contains('[data-qa-enhanced-select]', 'All Transaction Types').should(
-        'be.visible'
-      );
-      cy.contains('[data-qa-enhanced-select]', '6 Months').should('be.visible');
-
       // Confirm that payments and invoices from the past 6 months are displayed,
       // and that payments and invoices beyond 6 months are not displayed.
       invoiceMocks6Months.forEach((invoice) =>
@@ -201,11 +196,12 @@ describe('Billing Activity Feed', () => {
       mockGetInvoices(invoiceMocks).as('getInvoices');
       mockGetPayments(paymentMocks).as('getPayments');
 
-      cy.contains('[data-qa-enhanced-select]', '6 Months')
+      cy.findByText('Transaction Dates').click().type(`All Time`);
+      ui.autocompletePopper
+        .findByTitle(`All Time`)
         .should('be.visible')
         .click();
 
-      ui.select.findItemByText('All Time').should('be.visible').click();
       cy.wait(['@getInvoices', '@getPayments']);
 
       // Confirm that all invoices and payments are displayed.
@@ -218,11 +214,11 @@ describe('Billing Activity Feed', () => {
       });
 
       // Change transaction type drop-down to "Payments" only.
-      cy.contains('[data-qa-enhanced-select]', 'All Transaction Types')
+      cy.findByText('Transaction Types').click().type(`Payments`);
+      ui.autocompletePopper
+        .findByTitle(`Payments`)
         .should('be.visible')
         .click();
-
-      ui.select.findItemByText('Payments').should('be.visible').click();
 
       // Confirm that all payments are shown and that all invoices are hidden.
       paymentMocks.forEach((payment) =>
@@ -233,11 +229,11 @@ describe('Billing Activity Feed', () => {
       );
 
       // Change transaction type drop-down to "Invoices" only.
-      cy.contains('[data-qa-enhanced-select]', 'Payments')
+      cy.findByText('Transaction Types').should('be.visible').focused().click();
+      ui.autocompletePopper
+        .findByTitle('Invoices')
         .should('be.visible')
         .click();
-
-      ui.select.findItemByText('Invoices').should('be.visible').click();
 
       // Confirm that all invoices are shown and that all payments are hidden.
       invoiceMocks6Months.forEach((invoice) => {
@@ -272,11 +268,8 @@ describe('Billing Activity Feed', () => {
     cy.wait(['@getInvoices', '@getPayments', '@getPaymentMethods']);
 
     // Change invoice date selection from "6 Months" to "All Time".
-    cy.contains('[data-qa-enhanced-select]', '6 Months')
-      .should('be.visible')
-      .click();
-
-    ui.select.findItemByText('All Time').should('be.visible').click();
+    cy.findByText('Transaction Dates').click().type('All Time');
+    ui.autocompletePopper.findByTitle('All Time').should('be.visible').click();
 
     cy.get('[data-qa-billing-activity-panel]')
       .should('be.visible')

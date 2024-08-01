@@ -11,17 +11,21 @@ import {
 } from 'src/factories';
 import { regionFactory } from 'src/factories';
 import { ui } from 'support/ui/';
-import { mockCreateLinode } from 'support/intercepts/linodes';
+import {
+  mockCreateLinode,
+  mockGetLinodeDetails,
+} from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
 import {
   mockCreatePlacementGroup,
   mockGetPlacementGroups,
 } from 'support/intercepts/placement-groups';
-import { randomString } from 'support/util/random';
+import { randomNumber, randomString } from 'support/util/random';
 import { CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE } from 'src/features/PlacementGroups/constants';
 
 import type { Region } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
+import { linodeCreatePage } from 'support/ui/pages';
 
 const mockAccount = accountFactory.build();
 const mockRegions: Region[] = [
@@ -207,5 +211,77 @@ describe('Linode create flow with Placement Group', () => {
         mockPlacementGroup.id
       );
     });
+  });
+
+  /*
+   * - Confirms UI flow to create a Linode with an existing Placement Group using mock API data.
+   * - Confirms that Placement Group is reflected in create summary section.
+   * - Confirms that outgoing Linode Create API request specifies the selected Placement Group to be attached.
+   */
+  it('can assign existing Placement Group during Linode Create flow', () => {
+    const mockPlacementGroup = placementGroupFactory.build({
+      label: 'pg-1-us-east',
+      region: mockRegions[0].id,
+      placement_group_type: 'anti_affinity:local',
+      placement_group_policy: 'strict',
+      is_compliant: true,
+    });
+
+    const linodeLabel = 'linode-with-placement-group';
+    const mockLinode = linodeFactory.build({
+      id: randomNumber(),
+      label: linodeLabel,
+      region: mockRegions[0].id,
+      placement_group: {
+        id: mockPlacementGroup.id,
+      },
+    });
+
+    mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
+    mockCreateLinode(mockLinode).as('createLinode');
+    mockGetLinodeDetails(mockLinode.id, mockLinode);
+
+    cy.visitWithLogin('/linodes/create');
+
+    linodeCreatePage.selectRegionById(mockRegions[0].id);
+    cy.wait('@getPlacementGroups');
+    linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
+    linodeCreatePage.setRootPassword(randomString(32));
+    linodeCreatePage.setLabel(mockLinode.label);
+
+    // Confirm that mocked Placement Group is shown in the Autocomplete, and then select it.
+    cy.findByText('Placement Groups in Newark, NJ (us-east)')
+      .click()
+      .type(`${mockPlacementGroup.label}`);
+    ui.autocompletePopper
+      .findByTitle(mockPlacementGroup.label)
+      .should('be.visible')
+      .click();
+
+    // Confirm the Placement group assignment is accounted for in the summary.
+    cy.get('[data-qa-summary="true"]').within(() => {
+      cy.findByText('Assigned to Placement Group').should('be.visible');
+    });
+
+    // Create Linode and confirm contents of outgoing API request payload.
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.wait('@createLinode').then((xhr) => {
+      const requestPayload = xhr.request.body;
+      expect(requestPayload['region']).to.equal(mockRegions[0].id);
+      expect(requestPayload['label']).to.equal(linodeLabel);
+      expect(requestPayload['placement_group'].id).to.equal(
+        mockPlacementGroup.id
+      );
+    });
+
+    // Confirm redirect to new Linode.
+    cy.url().should('endWith', `/linodes/${mockLinode.id}`);
+    // Confirm toast notification should appear on Linode create.
+    ui.toast.assertMessage(`Your Linode ${mockLinode.label} is being created.`);
   });
 });

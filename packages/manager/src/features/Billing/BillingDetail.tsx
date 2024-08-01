@@ -1,6 +1,6 @@
 import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import * as React from 'react';
 
@@ -14,7 +14,7 @@ import { useAllPaymentMethodsQuery } from 'src/queries/account/payment';
 import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import BillingActivityPanel from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
+import { BillingActivityPanel } from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
 import BillingSummary from './BillingPanels/BillingSummary';
 import ContactInfo from './BillingPanels/ContactInfoPanel';
 import PaymentInformation from './BillingPanels/PaymentInfoPanel';
@@ -120,5 +120,3 @@ export const BillingActionButton = styled(Button)(({ theme, ...props }) => ({
   minWidth: 'auto',
   padding: 0,
 }));
-
-export default BillingDetail;

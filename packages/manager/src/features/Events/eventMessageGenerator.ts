@@ -75,7 +75,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   community_like: {
     notification: (e) =>
       e.entity?.label
-        ? `A post on "${e.entity.label}" has been liked.`
+        ? `${e.entity.label}`
         : `There has been a like on your community post.`,
   },
   community_mention: {
