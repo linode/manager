@@ -8,8 +8,6 @@ import { interceptCreateVolume } from 'support/intercepts/volumes';
 import { randomNumber, randomString, randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { ui } from 'support/ui';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -29,10 +27,6 @@ describe('volume create flow', () => {
    * - Confirms that volume is listed correctly on volumes landing page.
    */
   it('creates an unattached volume', () => {
-    mockAppendFeatureFlags({
-      gecko2: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-
     cy.tag('purpose:syntheticTesting');
 
     const region = chooseRegion();
@@ -78,10 +72,6 @@ describe('volume create flow', () => {
    * - Confirms that volume is listed correctly on Linode 'Storage' details page.
    */
   it('creates an attached volume', () => {
-    mockAppendFeatureFlags({
-      gecko2: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-
     const region = chooseRegion();
 
     const linodeRequest = createLinodeRequestFactory.build({
@@ -162,10 +152,6 @@ describe('volume create flow', () => {
       region: chooseRegion().id,
       booted: false,
     });
-
-    mockAppendFeatureFlags({
-      gecko2: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
 
     cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
       (linode: Linode) => {

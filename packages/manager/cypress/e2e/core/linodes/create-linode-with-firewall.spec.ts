@@ -32,10 +32,6 @@ describe('Create Linode with Firewall', () => {
    * - Confirms that outgoing Linode Create API request specifies the selected Firewall to be attached.
    */
   it('can assign existing Firewall during Linode Create flow', () => {
-    mockAppendFeatureFlags({
-      gecko2: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-
     const linodeRegion = chooseRegion({ capabilities: ['Cloud Firewall'] });
 
     const mockFirewall = firewallFactory.build({
@@ -114,9 +110,6 @@ describe('Create Linode with Firewall', () => {
       region: linodeRegion.id,
     });
 
-    mockAppendFeatureFlags({
-      gecko2: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
     mockCreateFirewall(mockFirewall).as('createFirewall');
     mockGetFirewalls([mockFirewall]).as('getFirewall');
     mockCreateLinode(mockLinode).as('createLinode');
