@@ -48,16 +48,14 @@ export const sendFormEvent = (
 
   // Send a Direct Call Rule if our environment is configured with an Adobe Launch script.
   if (window._satellite) {
-    // Depending on the type of form event, send the correct payload for a form focus, input, step, or error.
-    if (eventType === 'formInput' && 'inputValue' in eventPayload) {
-      formEventPayload['inputValue'] = eventPayload.inputValue;
-    } else if (
-      eventType === 'formStepInteraction' &&
-      'stepName' in eventPayload
-    ) {
+    // Depending on the type of form event, send the correct payload for a form start, input, step, submit, or error.
+    if (eventType === 'formStepInteraction' && 'stepName' in eventPayload) {
       formEventPayload['stepName'] = eventPayload.stepName;
     } else if (eventType === 'formError' && 'formError' in eventPayload) {
       formEventPayload['formError'] = eventPayload;
+    } else if ('inputValue' in eventPayload) {
+      // Handles form start, input, and submit events.
+      formEventPayload['inputValue'] = eventPayload.inputValue;
     }
     window._satellite.track(eventType, formEventPayload);
   }

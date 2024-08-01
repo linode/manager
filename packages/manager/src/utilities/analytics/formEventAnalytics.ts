@@ -64,6 +64,26 @@ export const sendLinodeCreateFormStepEvent = ({
   sendFormEvent(formPayload, 'formStepInteraction');
 };
 
+// SelectRegionPanel.tsx
+export const sendLinodeCreateFormStartEvent = ({
+  createType,
+  headerName,
+  interaction,
+  label,
+  subheaderName,
+}: LinodeCreateFormEventOptions) => {
+  const formPayload: FormInputEvent = {
+    formName: `Linode Create from ${createType}`,
+    inputValue: getFormattedFormEventString({
+      headerName,
+      interaction,
+      label,
+      subheaderName,
+    }),
+  };
+  sendFormEvent(formPayload, 'formStart');
+};
+
 // LinodeCreate.tsx
 export const sendLinodeCreateFormSubmitEvent = (
   createType: LinodeCreateType,

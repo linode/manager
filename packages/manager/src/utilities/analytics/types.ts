@@ -33,6 +33,7 @@ export interface AnalyticsEvent {
 export type FormEventType =
   | 'formError'
   | 'formInput'
+  | 'formStart'
   | 'formStepInteraction'
   | 'formSubmit';
 
