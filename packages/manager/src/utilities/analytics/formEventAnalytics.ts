@@ -1,4 +1,4 @@
-import { getFormattedFormEventString, sendFormEvent } from './utils';
+import { getFormattedStringFromFormEventOptions, sendFormEvent } from './utils';
 
 import type {
   FormErrorEvent,
@@ -31,7 +31,7 @@ export const sendLinodeCreateFormInputEvent = ({
 }: LinodeCreateFormEventOptions) => {
   const formPayload: FormInputEvent = {
     formName: `Linode Create from ${createType} ${version}`,
-    inputValue: getFormattedFormEventString({
+    inputValue: getFormattedStringFromFormEventOptions({
       headerName,
       interaction,
       label,
@@ -53,7 +53,7 @@ export const sendLinodeCreateFormStepEvent = ({
 }: LinodeCreateFormEventOptions) => {
   const formPayload: FormStepEvent = {
     formName: `Linode Create from ${createType} ${version}`,
-    stepName: getFormattedFormEventString({
+    stepName: getFormattedStringFromFormEventOptions({
       headerName,
       interaction,
       label,
@@ -73,7 +73,7 @@ export const sendLinodeCreateFormStartEvent = ({
 }: LinodeCreateFormEventOptions) => {
   const formPayload: FormInputEvent = {
     formName: `Linode Create from ${createType}`,
-    inputValue: getFormattedFormEventString({
+    inputValue: getFormattedStringFromFormEventOptions({
       headerName,
       interaction,
       label,
@@ -94,7 +94,7 @@ export const sendLinodeCreateFormSubmitEvent = ({
 }: LinodeCreateFormEventOptions) => {
   const formPayload: FormInputEvent = {
     formName: `Linode Create from ${createType} ${version}`,
-    inputValue: getFormattedFormEventString({
+    inputValue: getFormattedStringFromFormEventOptions({
       headerName,
       interaction,
       label,

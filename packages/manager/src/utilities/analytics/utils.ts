@@ -90,7 +90,7 @@ export const waitForAdobeAnalyticsToBeLoaded = () =>
  *
  * @returns a string of the format: Name:Subheader|Interaction:Component label
  */
-export const getFormattedFormEventString = ({
+export const getFormattedStringFromFormEventOptions = ({
   headerName,
   interaction,
   label,
