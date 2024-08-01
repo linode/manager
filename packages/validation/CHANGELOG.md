@@ -1,3 +1,22 @@
+## [2024-08-05] - v0.51.0
+
+
+### Added:
+
+- Unique label validation for Object Storage label ([#10699](https://github.com/linode/manager/pull/10699))
+
+### Changed:
+
+- Include optional 'encryption' field in CreateVolumeSchema ([#10716](https://github.com/linode/manager/pull/10716))
+
+### Fixed:
+
+- Allow null values in Linode configuration ([#10690](https://github.com/linode/manager/pull/10690))
+
+### Upcoming Features:
+
+- Update create bucket schema validation for `endpoint_type` and `cors_enabled` ([#10677](https://github.com/linode/manager/pull/10677))
+
 ## [2024-07-22] - v0.50.0
 
 ### Added:
