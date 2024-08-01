@@ -4,6 +4,7 @@ import * as React from 'react';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
 
+import type { LegendRow } from '../CloudPulseWidget';
 import type {
   DataSet,
   LineGraphProps,
@@ -13,7 +14,7 @@ export interface CloudPulseLineGraph extends LineGraphProps {
   ariaLabel?: string;
   error?: string;
   gridSize: number;
-  legendRows?: any[];
+  legendRows?: LegendRow[];
   loading?: boolean;
   subtitle?: string;
   title: string;

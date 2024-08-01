@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { queryFactory } from './aclpQueryFacotry';
+import { queryFactory } from './queries';
 
 import type { Filter, Params } from '@linode/api-v4';
 import type { CloudPulseResources } from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';

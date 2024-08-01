@@ -115,10 +115,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
 
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
 
-  const [data, setData] = React.useState<DataSet[]>([]);
-
-  const [legendRows, setLegendRows] = React.useState<LegendRow[]>([]);
-
   const {
     authToken,
     availableMetrics,
@@ -132,7 +128,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   } = props;
 
   const flags = useFlags();
-  const [today, setToday] = React.useState<boolean>(false);
 
   /**
    *
@@ -243,8 +238,13 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     }
   );
 
-  React.useEffect(() => {
-    const { dimensions, legendRowsData, today: isToday } = generateGraphData(
+  let data: DataSet[] = [];
+
+  let legendRows: LegendRow[] = [];
+  let today: boolean = false;
+
+  if (!isLoading && metricsList) {
+    const generatedData = generateGraphData(
       widget.color,
       metricsList,
       status,
@@ -252,11 +252,10 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       unit
     );
 
-    setData(dimensions);
-    setLegendRows(legendRowsData);
-    setToday(isToday);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, metricsList]);
+    data = generatedData.dimensions;
+    legendRows = generatedData.legendRowsData;
+    today = generatedData.today;
+  }
   return (
     <Grid item lg={widget.size} xs={12}>
       <Paper>

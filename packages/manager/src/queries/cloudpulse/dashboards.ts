@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { queryFactory } from './aclpQueryFacotry';
+import { queryFactory } from './queries';
 
 import type { Dashboard } from '@linode/api-v4';
 import type { APIError, ResourcePage } from '@linode/api-v4/lib/types';

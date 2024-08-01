@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Axios from 'axios';
 
-import { queryFactory } from './aclpQueryFacotry';
+import { queryFactory } from './queries';
 
 import type {
   APIError,
@@ -40,10 +40,12 @@ export const useCloudPulseMetricsQuery = (
       if (err && err.length > 0 && err[0].reason == 'Token expired') {
         const currentJWEtokenCache:
           | JWEToken
-          | undefined = queryClient.getQueryData(['jwe-token', serviceType]);
+          | undefined = queryClient.getQueryData(
+          queryFactory.token(serviceType, { resource_id: [] }).queryKey
+        );
         if (currentJWEtokenCache?.token === obj.authToken) {
           queryClient.invalidateQueries(
-            ['jwe-token', serviceType],
+            queryFactory.token(serviceType, { resource_id: [] }).queryKey,
             {},
             {
               cancelRefetch: true,

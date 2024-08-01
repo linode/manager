@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { queryFactory } from './aclpQueryFacotry';
+import { queryFactory } from './queries';
 
 import type {
   APIError,
