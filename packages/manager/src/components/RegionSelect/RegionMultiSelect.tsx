@@ -67,6 +67,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     selectedIds,
     sortRegionOptions,
     width,
+    disabledRegions: disabledRegionsFromProps,
     ...rest
   } = props;
 
@@ -88,6 +89,9 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
   const disabledRegions = regionOptions.reduce<
     Record<string, DisableRegionOption>
   >((acc, region) => {
+    if (disabledRegionsFromProps?.[region.id]) {
+      acc[region.id] = disabledRegionsFromProps[region.id];
+    }
     if (
       isRegionOptionUnavailable({
         accountAvailabilityData: accountAvailability,

@@ -76,6 +76,7 @@ export interface RegionMultiSelectProps
     selectedRegions: Region[];
   }>;
   currentCapability: Capabilities | undefined;
+  disabledRegions?: Record<string, DisableRegionOption>;
   helperText?: string;
   isClearable?: boolean;
   label?: string;
