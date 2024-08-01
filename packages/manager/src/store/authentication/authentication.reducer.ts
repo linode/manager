@@ -9,7 +9,7 @@ import {
   handleRefreshTokens,
   handleStartSession,
 } from './authentication.actions';
-import { clearLocalStorage } from './authentication.helpers';
+import { clearTokenDataFromLocalStorage } from './authentication.helpers';
 import { State } from './index';
 
 const {
@@ -99,7 +99,7 @@ const reducer = reducerWithInitialState(defaultState)
   })
   .case(handleLogout, (state) => {
     /** clear local storage and redux state */
-    clearLocalStorage();
+    clearTokenDataFromLocalStorage();
 
     return {
       ...state,

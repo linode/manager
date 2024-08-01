@@ -12,6 +12,7 @@ const store = storeFactory();
 describe('Authentication', () => {
   authentication.expire.set('hello world');
   authentication.nonce.set('hello world');
+  authentication.codeVerifier.set('hello world');
   authentication.scopes.set('hello world');
   authentication.token.set('hello world');
 
@@ -41,7 +42,8 @@ describe('Authentication', () => {
     );
     store.dispatch(handleLogout());
     expect(authentication.expire.get()).toBe('');
-    expect(authentication.nonce.get()).toBe('');
+    expect(authentication.nonce.get()).toBe('hello world');
+    expect(authentication.codeVerifier.get()).toBe('hello world');
     expect(authentication.scopes.get()).toBe('');
     expect(authentication.token.get()).toBe('');
     expect(store.getState().authentication).toEqual({

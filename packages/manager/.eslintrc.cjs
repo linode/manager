@@ -244,7 +244,6 @@ module.exports = {
     'scanjs-rules/call_addEventListener': 'warn',
     'scanjs-rules/call_parseFromString': 'error',
     'scanjs-rules/new_Function': 'error',
-    'scanjs-rules/property_crypto': 'error',
     'scanjs-rules/property_geolocation': 'error',
     // sonar
     'sonarjs/cognitive-complexity': 'off',
