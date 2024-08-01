@@ -15,14 +15,12 @@ const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
 interface RegionSelectOptionsOptions {
   currentCapability: Capabilities | undefined;
-  isGeckoGAEnabled?: boolean;
   regionFilter?: RegionFilterValue;
   regions: Region[];
 }
 
 export const getRegionOptions = ({
   currentCapability,
-  isGeckoGAEnabled,
   regionFilter,
   regions,
 }: RegionSelectOptionsOptions) => {
@@ -72,9 +70,8 @@ export const getRegionOptions = ({
         return 1;
       }
 
-      // We want to group by label for Gecko GA
-      if (!isGeckoGAEnabled) {
-        // Then we group by country
+      // Group US first
+      if (region1.country === 'us' || region2.country === 'us') {
         if (region1.country < region2.country) {
           return 1;
         }
