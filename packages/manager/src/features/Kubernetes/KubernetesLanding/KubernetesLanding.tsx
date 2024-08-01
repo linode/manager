@@ -1,15 +1,14 @@
-import { KubeNodePoolResponse } from '@linode/api-v4';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import {
   DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_BANNER_KEY,
   DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_COPY,
-} from 'src/components/DiskEncryption/constants';
-import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
-import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+} from 'src/components/Encryption/constants';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -31,6 +30,8 @@ import { KubernetesClusterRow } from '../ClusterList/KubernetesClusterRow';
 import { DeleteKubernetesClusterDialog } from '../KubernetesClusterDetail/DeleteKubernetesClusterDialog';
 import UpgradeVersionModal from '../UpgradeVersionModal';
 import { KubernetesEmptyState } from './KubernetesLandingEmptyState';
+
+import type { KubeNodePoolResponse } from '@linode/api-v4';
 
 interface ClusterDialogState {
   loading: boolean;

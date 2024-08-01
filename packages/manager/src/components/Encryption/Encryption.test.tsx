@@ -3,18 +3,18 @@ import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
-  DiskEncryption,
+  Encryption,
   checkboxTestId,
   descriptionTestId,
   headerTestId,
-} from './DiskEncryption';
+} from './Encryption';
 
 describe('DiskEncryption', () => {
   it('should render a header', () => {
     const { getByTestId } = renderWithTheme(
-      <DiskEncryption
+      <Encryption
         descriptionCopy="Description for unit test"
-        isEncryptDiskChecked={true}
+        isEncryptEntityChecked={true}
         onChange={vi.fn()}
       />
     );
@@ -27,9 +27,9 @@ describe('DiskEncryption', () => {
 
   it('should render a description', () => {
     const { getByTestId } = renderWithTheme(
-      <DiskEncryption
+      <Encryption
         descriptionCopy="Description for unit test"
-        isEncryptDiskChecked={true}
+        isEncryptEntityChecked={true}
         onChange={vi.fn()}
       />
     );
@@ -41,9 +41,9 @@ describe('DiskEncryption', () => {
 
   it('should render a checkbox', () => {
     const { getByTestId } = renderWithTheme(
-      <DiskEncryption
+      <Encryption
         descriptionCopy="Description for unit test"
-        isEncryptDiskChecked={true}
+        isEncryptEntityChecked={true}
         onChange={vi.fn()}
       />
     );
