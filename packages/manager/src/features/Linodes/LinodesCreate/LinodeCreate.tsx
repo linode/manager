@@ -436,7 +436,6 @@ export class LinodeCreate extends React.PureComponent<
     };
     sendLinodeCreateFormInputEvent({
       createType: 'OS',
-      headerName: undefined,
       interaction: 'click',
       label: 'Create Using Command Line',
       version: 'v1',
@@ -471,7 +470,6 @@ export class LinodeCreate extends React.PureComponent<
       sendLinodeCreateFormStepEvent({
         createType: (this.tabs[prevTabIndex].title as LinodeCreateType) ?? 'OS',
         label: `${this.tabs[index].title} Tab`,
-        headerName: undefined,
         version: 'v1',
         interaction: 'click',
       });

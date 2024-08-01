@@ -63,7 +63,7 @@ export interface FormErrorEvent extends BasicFormEvent {
 
 // To be used with form input and step events for consistent event formatting.
 export interface FormEventOptions {
-  headerName: string | undefined; // Paper, modal, or drawer name.
+  headerName?: string; // Paper, modal, or drawer name.
   interaction: string;
   label: string;
   subheaderName?: string;

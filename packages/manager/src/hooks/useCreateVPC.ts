@@ -149,9 +149,9 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
       if (isFromLinodeCreate) {
         sendLinodeCreateFormStepEvent({
           createType: (queryParams.type as LinodeCreateType) ?? 'OS',
-          label: 'Create VPC',
           headerName: 'VPC Branch',
           interaction: 'click',
+          label: 'Create VPC',
           version: 'v1',
         });
       }

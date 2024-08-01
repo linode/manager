@@ -144,9 +144,9 @@ export const CreateFirewallDrawer = React.memo(
             if (isFromLinodeCreate) {
               sendLinodeCreateFormStepEvent({
                 createType: (queryParams.type as LinodeCreateType) ?? 'OS',
-                label: 'Create VPC',
                 headerName: 'VPC Branch',
                 interaction: 'click',
+                label: 'Create VPC',
                 version: 'v1',
               });
             }
@@ -241,9 +241,9 @@ export const CreateFirewallDrawer = React.memo(
           isFromLinodeCreate &&
           sendLinodeCreateFormInputEvent({
             createType: (queryParams.type as LinodeCreateType) ?? 'OS',
-            label: 'Learn more',
             headerName: 'Firewall',
             interaction: 'click',
+            label: 'Learn more',
             version: 'v1',
           })
         }
