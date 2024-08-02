@@ -43,6 +43,10 @@ interface Props {
   onClose: () => void;
 }
 
+interface EndpointCount {
+  [key: string]: number;
+}
+
 export const OMC_CreateBucketDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const { isOpen, onClose } = props;
@@ -142,19 +146,25 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     ? regions?.find((region) => watchRegion.includes(region.id))
     : undefined;
 
+  /**
+   * In rare cases, the dropdown must display a specific endpoint hostname (s3_endpoint) along with
+   * the endpoint type to distinguish between two assigned endpoints of the same type.
+   * This is necessary for multiple gen1 (E1) assignments in the same region.
+   */
+  const endpointCounts = endpoints?.reduce((acc: EndpointCount, endpoint) => {
+    acc[endpoint.endpoint_type] = (acc[endpoint.endpoint_type] || 0) + 1;
+    return acc;
+  }, {});
+
   const filteredEndpointOptions = endpoints
     ?.filter((endpoint) => selectedRegion?.id === endpoint.region)
     ?.map((endpoint) => {
       const { endpoint_type, s3_endpoint } = endpoint;
       const isLegacy = endpoint_type === 'E0';
       const typeLabel = isLegacy ? 'Legacy' : 'Standard';
-
-      /**
-       * In rare cases, the dropdown must display a specific endpoint hostname (s3_endpoint) along with
-       * the endpoint type to distinguish between two assigned endpoints of the same type.
-       * This is necessary for multiple gen1 (E1) assignments in the same region.
-       */
-      const label = s3_endpoint
+      const shouldShowHostname =
+        endpointCounts && endpointCounts[endpoint_type] > 1;
+      const label = shouldShowHostname
         ? `${typeLabel} (${endpoint_type}) ${s3_endpoint}`
         : `${typeLabel} (${endpoint_type})`;
 
