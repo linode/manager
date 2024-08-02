@@ -155,6 +155,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     (endpoint) => selectedRegion?.id === endpoint.region
   );
 
+  // Count the frequency of endpoint types for the selected region used to show the hostname.
   const endpointCounts = filteredEndpoints?.reduce(
     (acc: EndpointCount, endpoint) => {
       acc[endpoint.endpoint_type] = (acc[endpoint.endpoint_type] || 0) + 1;
