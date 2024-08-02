@@ -1,8 +1,8 @@
 // ====================
 // Components constants
 // ====================
-export const NETWORK_TRANSFER_QUOTA_DOCS_LINKS =
-  'https://www.linode.com/docs/guides/network-transfer-quota/';
+export const NETWORK_TRANSFER_USAGE_AND_COST_LINK =
+  'https://www.linode.com/docs/products/platform/get-started/guides/network-transfer/';
 
 // ====================
 // Test constants

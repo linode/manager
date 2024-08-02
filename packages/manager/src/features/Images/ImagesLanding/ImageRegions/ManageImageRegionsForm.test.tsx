@@ -102,4 +102,53 @@ describe('ManageImageRegionsDrawer', () => {
     // Verify the save button is enabled because changes have been made
     expect(saveButton).toBeEnabled();
   });
+
+  it("should enforce that the image is 'available' in at least one region", async () => {
+    const region1 = regionFactory.build({ id: 'us-east' });
+    const region2 = regionFactory.build({ id: 'us-west' });
+
+    const image = imageFactory.build({
+      regions: [
+        {
+          region: 'us-east',
+          status: 'available',
+        },
+        {
+          region: 'us-west',
+          status: 'available',
+        },
+      ],
+    });
+
+    server.use(
+      http.get('*/v4/regions', () => {
+        return HttpResponse.json(makeResourcePage([region1, region2]));
+      })
+    );
+
+    const { findByText, getByLabelText } = renderWithTheme(
+      <ManageImageRegionsForm image={image} onClose={vi.fn()} />
+    );
+
+    // Verify both region labels have been loaded by the API
+    await findByText(region1.label);
+    await findByText(region2.label);
+
+    // Both remove buttons should be enabled
+    expect(getByLabelText('Remove us-east')).toBeEnabled();
+    expect(getByLabelText('Remove us-west')).toBeEnabled();
+
+    // Remove us-west
+    await userEvent.click(getByLabelText('Remove us-west'));
+
+    // The "Remove us-east" button should become disabled because it is the last 'available' region
+    expect(getByLabelText('Remove us-east')).toBeDisabled();
+
+    // Verify tooltip shows
+    expect(
+      getByLabelText(
+        'You cannot remove this region because at least one available region must be present.'
+      )
+    ).toBeInTheDocument();
+  });
 });

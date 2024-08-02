@@ -1,3 +1,5 @@
+export type VolumeEncryption = 'enabled' | 'disabled';
+
 export interface Volume {
   id: number;
   label: string;
@@ -11,16 +13,18 @@ export interface Volume {
   filesystem_path: string;
   tags: string[];
   hardware_type: VolumeHardwareType;
+  encryption?: VolumeEncryption; // @TODO BSE: Remove optionality once BSE is fully rolled out
 }
 
 type VolumeHardwareType = 'hdd' | 'nvme';
 
 export type VolumeStatus =
-  | 'creating'
   | 'active'
-  | 'resizing'
+  | 'creating'
+  | 'key_rotating'
   | 'migrating'
-  | 'offline';
+  | 'offline'
+  | 'resizing';
 
 export interface VolumeRequestPayload {
   label: string;
@@ -29,6 +33,7 @@ export interface VolumeRequestPayload {
   linode_id?: number;
   config_id?: number;
   tags?: string[];
+  encryption?: VolumeEncryption;
 }
 
 export interface AttachVolumePayload {
