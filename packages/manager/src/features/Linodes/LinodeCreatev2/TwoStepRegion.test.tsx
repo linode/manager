@@ -38,7 +38,7 @@ describe('TwoStepRegion', () => {
     expect(select).toBeEnabled();
   });
 
-  it('should display core regions in the Core tab region select', async () => {
+  it('should only display core regions in the Core tab region select', async () => {
     const {
       getByPlaceholderText,
       getByRole,
