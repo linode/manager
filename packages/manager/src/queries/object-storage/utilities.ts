@@ -35,23 +35,22 @@ export const fetchBucketAndUpdateCache = async (
   queryClient.setQueryData<BucketsResponse>(
     objectStorageQueries.buckets.queryKey,
     (previousData) => {
-      const indexOfBucket = previousData?.buckets?.findIndex(
+      if (!previousData) {
+        return undefined;
+      }
+
+      const indexOfBucket = previousData.buckets.findIndex(
         (b) =>
           (b.region === regionOrCluster || b.cluster === regionOrCluster) &&
           b.label === bucketName
       );
 
-      if (
-        indexOfBucket === undefined ||
-        indexOfBucket === -1 ||
-        previousData?.buckets === undefined
-      ) {
-        // If the bucket does not exist in the cache or the list of buckets has not been fecthed yet,
-        // don't update the cache.
+      if (indexOfBucket === -1) {
+        // If the bucket does not exist in the cache don't try to update it.
         return undefined;
       }
 
-      const newBuckets = [...(previousData?.buckets ?? [])];
+      const newBuckets = [...previousData.buckets];
 
       newBuckets[indexOfBucket] = bucket;
 
