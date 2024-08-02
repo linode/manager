@@ -1,21 +1,12 @@
 import { API_ROOT } from '../constants';
-import Request, {
-  setData,
-  setMethod,
-  setParams,
-  setURL,
-  setXFilter,
-} from '../request';
+import Request, { setData, setMethod, setURL } from '../request';
 import {
   ACLType,
-  ObjectStorageEndpoint,
   ObjectStorageObjectACL,
   ObjectStorageObjectURL,
   GetObjectStorageACLPayload,
   CreateObjectStorageObjectURLPayload,
 } from './types';
-
-import type { ResourcePage, RequestOptions } from '../types';
 
 /**
  * Creates a pre-signed URL to access a single object in a bucket.
@@ -81,12 +72,4 @@ export const updateObjectACL = (
       )}/${encodeURIComponent(bucketName)}/object-acl`
     ),
     setData({ acl, name })
-  );
-
-export const getObjectStorageEndpoints = ({ filter, params }: RequestOptions) =>
-  Request<ResourcePage<ObjectStorageEndpoint>>(
-    setMethod('GET'),
-    setURL(`${API_ROOT}/object-storage/endpoints`),
-    setParams(params),
-    setXFilter(filter)
   );
