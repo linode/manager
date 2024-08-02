@@ -41,6 +41,7 @@ import type { FileAttachment } from '../index';
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import type { AccountLimitCustomFields } from './SupportTicketAccountLimitFields';
 import type { SMTPCustomFields } from './SupportTicketSMTPFields';
+import type { CreateKubeClusterPayload } from '@linode/api-v4';
 import type { TicketSeverity } from '@linode/api-v4/lib/support';
 import type { CreateLinodeRequest } from '@linode/api-v4/src/linodes/types';
 import type { Theme } from '@mui/material/styles';
@@ -94,7 +95,9 @@ export type AllSupportTicketFormFields = SupportTicketFormFields &
   SMTPCustomFields &
   AccountLimitCustomFields;
 
-export type FormPayloadValues = Partial<CreateLinodeRequest>; // Can be extended in the future.
+export type FormPayloadValues =
+  | Partial<CreateKubeClusterPayload>
+  | Partial<CreateLinodeRequest>;
 
 export interface TicketTypeData {
   dialogTitle: string;
