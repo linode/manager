@@ -2,6 +2,7 @@ import {
   Action,
   Badge,
   Button,
+  Chart,
   Color,
   Dropdown,
   Interaction,
@@ -57,6 +58,7 @@ export const customDarkModeOptions = {
     borderTypography: Color.Neutrals[80],
     divider: Color.Neutrals[80],
   },
+  charts: { ...Chart },
   color: {
     black: Color.Neutrals.White,
     blueDTwhite: Color.Neutrals.White,
@@ -197,6 +199,7 @@ export const darkTheme: ThemeOptions = {
   bg: customDarkModeOptions.bg,
   borderColors: customDarkModeOptions.borderColors,
   breakpoints,
+  charts: customDarkModeOptions.charts,
   color: customDarkModeOptions.color,
   components: {
     MuiAppBar: {
