@@ -218,7 +218,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
               tooltipText: REGION_CAVEAT_HELPER_TEXT,
             }}
             value={
-              selectedVPCId
+              selectedVPCId && selectedVPCId !== -1
                 ? vpcDropdownOptions.find(
                     (option) => option.value === selectedVPCId
                   )
