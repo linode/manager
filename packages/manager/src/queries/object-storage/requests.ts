@@ -3,6 +3,7 @@ import {
   getBucketsInCluster,
   getBucketsInRegion,
   getClusters,
+  getObjectStorageEndpoints,
   getObjectStorageTypes,
 } from '@linode/api-v4';
 
@@ -12,6 +13,7 @@ import type {
   APIError,
   ObjectStorageBucket,
   ObjectStorageCluster,
+  ObjectStorageEndpoint,
   PriceType,
   Region,
 } from '@linode/api-v4';
@@ -26,6 +28,11 @@ export const getAllObjectStorageTypes = () =>
   getAll<PriceType>((params) => getObjectStorageTypes(params))().then(
     (data) => data.data
   );
+
+export const getAllObjectStorageEndpoints = () =>
+  getAll<ObjectStorageEndpoint>((params, filter) =>
+    getObjectStorageEndpoints({ filter, params })
+  )().then((data) => data.data);
 
 export interface BucketError {
   /*
