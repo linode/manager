@@ -12,8 +12,6 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { BucketRateLimitTable } from 'src/features/ObjectStorage/BucketLanding/BucketRateLimitTable';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -29,7 +27,6 @@ import {
 } from 'src/queries/object-storage/queries';
 import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { sendCreateBucketEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
@@ -50,18 +47,10 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const { isOpen, onClose } = props;
   const isRestrictedUser = profile?.restricted;
-  const { account } = useAccountManagement();
-  const flags = useFlags();
   const {
     data: endpoints,
     isFetching: isEndpointLoading,
   } = useObjectStorageEndpoints();
-
-  const isObjectStorageGen2Enabled = isFeatureEnabledV2(
-    'Object Storage Endpoint Types',
-    Boolean(flags.objectStorageGen2?.enabled),
-    account?.capabilities ?? []
-  );
 
   const { data: regions } = useRegionsQuery();
 
@@ -259,7 +248,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
           rules={{ required: 'Region is required' }}
         />
         {selectedRegion?.id && <OveragePricing regionId={selectedRegion.id} />}
-        {isObjectStorageGen2Enabled && (
+        {Boolean(endpoints) && (
           <>
             <Controller
               render={({ field, fieldState }) => (
