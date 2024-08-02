@@ -11,7 +11,7 @@ import type {
 interface SupportLinkProps {
   description?: string;
   entity?: EntityForTicketDetails;
-  formValues?: FormPayloadValues;
+  formPayloadValues?: FormPayloadValues;
   onClick?: LinkProps['onClick'];
   text: string;
   ticketType?: TicketType;
@@ -27,7 +27,7 @@ const SupportLink = (props: SupportLinkProps) => {
   const {
     description,
     entity,
-    formValues,
+    formPayloadValues,
     onClick,
     text,
     ticketType,
@@ -41,7 +41,7 @@ const SupportLink = (props: SupportLinkProps) => {
         state: {
           description,
           entity,
-          formValues,
+          formPayloadValues,
           open: true,
           ticketType,
           title,

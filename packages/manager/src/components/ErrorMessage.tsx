@@ -10,21 +10,21 @@ import type {
 
 interface Props {
   entityType: EntityType;
-  formValues?: FormPayloadValues;
+  formPayloadValues?: FormPayloadValues;
   message: string;
 }
 
 export const supportTextRegex = /(open a support ticket|contact Support)/i;
 
 export const ErrorMessage = (props: Props) => {
-  const { entityType, formValues, message } = props;
+  const { entityType, formPayloadValues, message } = props;
   const isSupportTicketError = supportTextRegex.test(message);
 
   if (isSupportTicketError) {
     return (
       <SupportTicketGeneralError
         entityType={entityType}
-        formValues={formValues}
+        formPayloadValues={formPayloadValues}
         generalError={message}
       />
     );

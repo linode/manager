@@ -153,6 +153,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const location = useLocation<any>();
   const stateParams = location.state;
 
+  // Collect prefilled data from props or Link parameters.
   const _prefilledDescription: string =
     prefilledDescription ?? stateParams?.description ?? undefined;
   const _prefilledEntity: EntityForTicketDetails =
@@ -160,20 +161,22 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const _prefilledTitle: string =
     prefilledTitle ?? stateParams?.title ?? undefined;
   const prefilledFormPayloadValues: FormPayloadValues =
-    stateParams?.formValues ?? undefined;
+    stateParams?.formPayloadValues ?? undefined;
+  const _prefilledTicketType: TicketType =
+    prefilledTicketType ?? stateParams?.ticketType ?? undefined;
+
+  // Use the prefilled title if one is given, otherwise, use any default prefill titles by ticket type, if extant.
+  const newPrefilledTitle = _prefilledTitle
+    ? _prefilledTitle
+    : _prefilledTicketType && TICKET_TYPE_MAP[_prefilledTicketType]
+    ? TICKET_TYPE_MAP[_prefilledTicketType].ticketTitle
+    : undefined;
 
   const formContainerRef = React.useRef<HTMLFormElement>(null);
 
   const hasSeverityCapability = useTicketSeverityCapability();
 
   const valuesFromStorage = storage.supportTicket.get();
-
-  // Use a prefilled title if one is given, otherwise, use any default prefill titles by ticket type, if extant.
-  const newPrefilledTitle = _prefilledTitle
-    ? _prefilledTitle
-    : prefilledTicketType && TICKET_TYPE_MAP[prefilledTicketType]
-    ? TICKET_TYPE_MAP[prefilledTicketType].ticketTitle
-    : undefined;
 
   // Ticket information
   const form = useForm<SupportTicketFormFields>({
@@ -186,7 +189,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       entityInputValue: '',
       entityType: _prefilledEntity?.type ?? 'general',
       summary: getInitialValue(newPrefilledTitle, valuesFromStorage.summary),
-      ticketType: prefilledTicketType ?? stateParams?.ticketType ?? 'general',
+      ticketType: _prefilledTicketType ?? 'general',
     },
     resolver: yupResolver(SCHEMA_MAP[prefilledTicketType ?? 'general']),
   });
