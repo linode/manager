@@ -6,7 +6,7 @@ import { useDropzone } from 'react-dropzone';
 import { debounce } from 'throttle-debounce';
 
 import { Button } from 'src/components/Button/Button';
-import { objectStorageQueries } from 'src/queries/object-storage/queries';
+import { fetchBucketAndUpdateCache } from 'src/queries/object-storage/utilities';
 import { sendObjectsQueuedForUploadEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { readableBytes } from 'src/utilities/unitConversions';
 
@@ -117,7 +117,7 @@ export const ObjectUploader = React.memo((props: Props) => {
   // We debounce this request to prevent unnecessary fetches.
   const debouncedGetBucket = React.useRef(
     debounce(3000, false, () =>
-      queryClient.invalidateQueries(objectStorageQueries.buckets)
+      fetchBucketAndUpdateCache(clusterId, bucketName, queryClient)
     )
   ).current;
 

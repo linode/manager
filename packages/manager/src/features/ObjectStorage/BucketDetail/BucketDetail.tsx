@@ -25,7 +25,10 @@ import {
   useObjectBucketObjectsInfiniteQuery,
   useObjectStorageBuckets,
 } from 'src/queries/object-storage/queries';
-import { prefixToQueryKey } from 'src/queries/object-storage/utilities';
+import {
+  fetchBucketAndUpdateCache,
+  prefixToQueryKey,
+} from 'src/queries/object-storage/utilities';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { sendDownloadObjectEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
@@ -163,7 +166,7 @@ export const BucketDetail = () => {
   // we don't want to fetch for every delete action. Debounce
   // the updateBucket call by 3 seconds.
   const debouncedUpdateBucket = debounce(3000, false, () => {
-    queryClient.invalidateQueries(objectStorageQueries.buckets);
+    fetchBucketAndUpdateCache(clusterId, bucketName, queryClient);
   });
 
   const deleteObject = async () => {
