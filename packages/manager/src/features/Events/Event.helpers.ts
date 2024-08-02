@@ -9,7 +9,7 @@ export const maybeRemoveTrailingPeriod = (string: string) => {
   return string;
 };
 
-export const ACTIONS_WITHOUT_USERNAMES = [
+export const ACTIONS_WITHOUT_USERNAMES: EventAction[] = [
   'entity_transfer_accept',
   'entity_transfer_accept_recipient',
   'entity_transfer_cancel',
