@@ -88,7 +88,7 @@ export const waitForAdobeAnalyticsToBeLoaded = () =>
 /**
  * A utility function to consistently format the formInput 'inputValue' and formStep 'stepName' string.
  *
- * @returns a string of the format: Name:Subheader|Interaction:Component label
+ * @returns a string of the format: Header:Subheader|Interaction:Component label
  */
 export const getFormattedStringFromFormEventOptions = ({
   headerName,
