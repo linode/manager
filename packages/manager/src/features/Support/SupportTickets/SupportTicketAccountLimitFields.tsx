@@ -4,6 +4,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { TextField } from 'src/components/TextField';
 import { useAccount } from 'src/queries/account/account';
+import { useTypeQuery } from 'src/queries/types';
 
 import { ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP } from './constants';
 import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
@@ -23,20 +24,25 @@ interface Props {
   prefilledFormPayloadValues?: FormPayloadValues;
 }
 
-export const SupportTicketAccountLimitFields = (props: Props) => {
-  const { prefilledFormPayloadValues } = props;
+export const SupportTicketAccountLimitFields = ({
+  prefilledFormPayloadValues,
+}: Props) => {
   const { control, formState, reset, watch } = useFormContext<
     AccountLimitCustomFields & SupportTicketFormFields
   >();
 
   const { data: account } = useAccount();
+  const { data: type } = useTypeQuery(
+    prefilledFormPayloadValues?.type ?? '',
+    Boolean(prefilledFormPayloadValues?.type)
+  );
 
   const { entityType } = watch();
 
   const defaultValues = {
     companyName: account?.company,
     customerName: `${account?.first_name} ${account?.last_name}`,
-    linodePlan: prefilledFormPayloadValues?.type ?? '',
+    linodePlan: type?.label ?? '',
     ...formState.defaultValues,
   };
 

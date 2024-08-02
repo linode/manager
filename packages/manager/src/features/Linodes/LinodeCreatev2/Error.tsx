@@ -25,7 +25,7 @@ export const Error = () => {
       <Notice spacingBottom={0} spacingTop={0} variant="error">
         <ErrorMessage
           entityType="linode_id"
-          formValues={{ type: values.type }}
+          formPayloadValues={{ type: values.type }}
           message={generalError}
         />
       </Notice>

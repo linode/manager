@@ -14,7 +14,7 @@ import type {
 
 interface SupportTicketGeneralErrorProps {
   entityType: EntityType;
-  formValues?: FormPayloadValues;
+  formPayloadValues?: FormPayloadValues;
   generalError: string;
 }
 
@@ -23,7 +23,7 @@ const accountLimitRegex = /(limit|limit for the number of active services) on yo
 export const SupportTicketGeneralError = (
   props: SupportTicketGeneralErrorProps
 ) => {
-  const { entityType, formValues, generalError } = props;
+  const { entityType, formPayloadValues, generalError } = props;
   const theme = useTheme();
 
   const limitError = generalError.split(supportTextRegex);
@@ -54,7 +54,7 @@ export const SupportTicketGeneralError = (
                 isAccountLimitSupportTicket ? 'accountLimit' : 'general'
               }
               entity={{ id: undefined, type: entityType }}
-              formValues={formValues}
+              formPayloadValues={formPayloadValues}
               key={`${substring}-${idx}`}
             />
           );
