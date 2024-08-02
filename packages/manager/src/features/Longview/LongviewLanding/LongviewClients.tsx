@@ -1,25 +1,16 @@
-import {
-  ActiveLongviewPlan,
-  LongviewClient,
-  LongviewSubscription,
-} from '@linode/api-v4/lib/longview/types';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Typography } from 'src/components/Typography';
-import withLongviewClients, {
-  Props as LongviewProps,
-} from 'src/containers/longview.container';
+import withLongviewClients from 'src/containers/longview.container';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
-import { MapState } from 'src/store/types';
 
 import { LongviewPackageDrawer } from '../LongviewPackageDrawer';
 import { sumUsedMemory } from '../shared/utilities';
@@ -35,6 +26,16 @@ import {
 import { LongviewDeleteDialog } from './LongviewDeleteDialog';
 import { LongviewList } from './LongviewList';
 import { SubscriptionDialog } from './SubscriptionDialog';
+
+import type {
+  ActiveLongviewPlan,
+  LongviewClient,
+  LongviewSubscription,
+} from '@linode/api-v4/lib/longview/types';
+import type { RouteComponentProps } from 'react-router-dom';
+import type { Props as LongviewProps } from 'src/containers/longview.container';
+import type { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
+import type { MapState } from 'src/store/types';
 
 interface Props {
   activeSubscription: ActiveLongviewPlan;
@@ -172,9 +173,11 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
     newClientLoading,
   } = props;
 
-  const handleSearch = (newQuery: string) => {
-    setQuery(newQuery);
-  };
+  const handleSearch = React.useCallback((newQuery: string) => {
+    if (query !== newQuery) {
+      setQuery(newQuery);
+    }
+  }, []);
 
   const handleSortKeyChange = (selected: SortOption) => {
     setSortKey(selected.value);
@@ -208,25 +211,26 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
             label="Filter by client label or hostname"
             onSearch={handleSearch}
             placeholder="Filter by client label or hostname"
+            value={query}
           />
         </StyledSearchbarGrid>
         <StyledSortSelectGrid>
           <Typography sx={{ minWidth: '65px' }}>Sort by: </Typography>
           <Autocomplete
-            disableClearable
-            fullWidth
-            label="Sort by"
-            options={sortOptions}
             onChange={(_, value) => {
               handleSortKeyChange(value);
             }}
-            size="small"
             textFieldProps={{
               hideLabel: true,
             }}
             value={sortOptions.find(
               (thisOption) => thisOption.value === sortKey
             )}
+            disableClearable
+            fullWidth
+            label="Sort by"
+            options={sortOptions}
+            size="small"
           />
         </StyledSortSelectGrid>
       </StyledHeadingGrid>

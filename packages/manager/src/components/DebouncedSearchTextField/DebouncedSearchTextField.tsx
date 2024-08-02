@@ -5,9 +5,11 @@ import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { InputAdornment } from 'src/components/InputAdornment';
-import { TextField, TextFieldProps } from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 
 import { IconButton } from '../IconButton';
+
+import type { TextFieldProps } from 'src/components/TextField';
 
 export interface DebouncedSearchProps extends TextFieldProps {
   className?: string;
