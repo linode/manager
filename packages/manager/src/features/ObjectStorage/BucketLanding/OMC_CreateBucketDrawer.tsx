@@ -165,6 +165,10 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
       };
     });
 
+  // Automatically select the endpoint type if only one is available in the chosen region.
+  const autoSelectEndpointType =
+    filteredEndpointOptions?.length === 1 && filteredEndpointOptions?.[0];
+
   const selectedEndpointType =
     filteredEndpointOptions?.find(
       (endpoint) => endpoint.value === watchEndpointType
@@ -272,7 +276,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
                   onBlur={field.onBlur}
                   options={filteredEndpointOptions ?? []}
                   placeholder="Object Storage Endpoint Type"
-                  value={selectedEndpointType}
+                  value={autoSelectEndpointType || selectedEndpointType}
                 />
               )}
               control={control}
