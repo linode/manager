@@ -1,9 +1,8 @@
+import { fireEvent, screen } from '@testing-library/react';
 import * as React from 'react';
 
 import { imageFactory } from 'src/factories/images';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-
-vi.mock('src/components/EnhancedSelect/Select');
 
 import { ImageSelect, getImagesOptions, groupNameMap } from './ImageSelect';
 
@@ -62,7 +61,7 @@ describe('ImageSelect', () => {
       expect(deleted!.options).toHaveLength(1);
     });
 
-    it('should properly format GroupType options as RS Item type', () => {
+    it('should properly format GroupType options', () => {
       const category = getImagesOptions([recommendedImage1])[0];
       const option = category.options[0];
       expect(option).toHaveProperty('label', recommendedImage1.label);
@@ -76,17 +75,56 @@ describe('ImageSelect', () => {
 
   describe('ImageSelect component', () => {
     it('should render', () => {
-      const { getByText } = renderWithTheme(<ImageSelect {...props} />);
-      getByText(/image-1(?!\d)/i);
+      renderWithTheme(<ImageSelect {...props} />);
+      screen.getByRole('combobox');
     });
 
     it('should display an error', () => {
       const imageError = 'An error';
-      const { getByText } = renderWithTheme(
-        <ImageSelect {...props} imageError={imageError} />
+      renderWithTheme(<ImageSelect {...props} imageError={imageError} />);
+      expect(screen.getByText(imageError)).toBeInTheDocument();
+    });
+
+    it('should call onSelect with the selected value', () => {
+      const onSelectMock = vi.fn();
+      renderWithTheme(
+        <ImageSelect {...props} images={images} onSelect={onSelectMock} />
       );
 
-      getByText(imageError);
+      const inputElement = screen.getByRole('combobox');
+
+      fireEvent.change(inputElement, { target: { value: 'image-1' } });
+      fireEvent.keyDown(inputElement, { key: 'ArrowDown' });
+      fireEvent.keyDown(inputElement, { key: 'Enter' });
+
+      expect(onSelectMock).toHaveBeenCalledWith({
+        label: 'image-1',
+        value: 'private/1',
+      });
+    });
+
+    it('should handle multiple selections', () => {
+      const onSelectMock = vi.fn();
+      renderWithTheme(
+        <ImageSelect {...props} isMulti onSelect={onSelectMock} />
+      );
+
+      const inputElement = screen.getByRole('combobox');
+
+      // Select first option
+      fireEvent.change(inputElement, { target: { value: 'image-1' } });
+      fireEvent.keyDown(inputElement, { key: 'ArrowDown' });
+      fireEvent.keyDown(inputElement, { key: 'Enter' });
+
+      // Select second option
+      fireEvent.change(inputElement, { target: { value: 'image-2' } });
+      fireEvent.keyDown(inputElement, { key: 'ArrowDown' });
+      fireEvent.keyDown(inputElement, { key: 'Enter' });
+
+      expect(onSelectMock).toHaveBeenCalledWith([
+        { label: 'image-1', value: 'private/1' },
+        { label: 'image-2', value: 'private/2' },
+      ]);
     });
   });
 });
