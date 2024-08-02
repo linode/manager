@@ -29,6 +29,7 @@ import {
   getAllBucketsFromClusters,
   getAllBucketsFromRegions,
   getAllObjectStorageClusters,
+  getAllObjectStorageEndpoints,
   getAllObjectStorageTypes,
 } from './requests';
 import { prefixToQueryKey } from './utilities';
@@ -42,6 +43,7 @@ import type {
   ObjectStorageBucket,
   ObjectStorageBucketSSL,
   ObjectStorageCluster,
+  ObjectStorageEndpoint,
   ObjectStorageKey,
   ObjectStorageObjectList,
   ObjectStorageObjectURL,
@@ -77,11 +79,32 @@ export const objectStorageQueries = createQueryKeys('object-storage', {
     queryFn: getAllObjectStorageClusters,
     queryKey: null,
   },
+  endpoints: {
+    queryFn: getAllObjectStorageEndpoints,
+    queryKey: null,
+  },
   types: {
     queryFn: getAllObjectStorageTypes,
     queryKey: null,
   },
 });
+
+export const useObjectStorageEndpoints = (enabled = true) => {
+  const flags = useFlags();
+  const { data: account } = useAccount();
+
+  const isObjectStorageGen2Enabled = isFeatureEnabledV2(
+    'Object Storage Endpoint Types',
+    Boolean(flags.objectStorageGen2?.enabled),
+    account?.capabilities ?? []
+  );
+
+  return useQuery<ObjectStorageEndpoint[], APIError[]>({
+    ...objectStorageQueries.endpoints,
+    ...queryPresets.oneTimeFetch,
+    enabled: isObjectStorageGen2Enabled && enabled,
+  });
+};
 
 export const useObjectStorageClusters = (enabled: boolean = true) =>
   useQuery<ObjectStorageCluster[], APIError[]>({
