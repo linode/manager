@@ -2,6 +2,7 @@ import {
   Action,
   Border,
   Button,
+  Chart,
   Color,
   Dropdown,
   Interaction,
@@ -15,6 +16,8 @@ import { latoWeb } from 'src/foundations/fonts';
 import type { ThemeOptions } from '@mui/material/styles';
 
 export const inputMaxWidth = 416;
+
+export const charts = { ...Chart } as const;
 
 export const bg = {
   app: Color.Neutrals[5],
@@ -239,6 +242,7 @@ export const lightTheme: ThemeOptions = {
   bg,
   borderColors,
   breakpoints,
+  charts,
   color,
   components: {
     MuiAccordion: {
