@@ -155,19 +155,17 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     (endpoint) => selectedRegion?.id === endpoint.region
   );
 
-  // Count the frequency of endpoint types for the selected region used to show the hostname.
+  // Create a histogram (frequency distribution) of endpoint types for the selected region
   const endpointCounts = filteredEndpoints?.reduce(
-    (acc: EndpointCount, endpoint) => {
-      acc[endpoint.endpoint_type] = (acc[endpoint.endpoint_type] || 0) + 1;
+    (acc: EndpointCount, { endpoint_type }) => {
+      acc[endpoint_type] = (acc[endpoint_type] || 0) + 1;
       return acc;
     },
     {}
   );
 
-  const filteredEndpointOptions = endpoints
-    ?.filter((endpoint) => selectedRegion?.id === endpoint.region)
-    ?.map((endpoint) => {
-      const { endpoint_type, s3_endpoint } = endpoint;
+  const filteredEndpointOptions = filteredEndpoints?.map(
+    ({ endpoint_type, s3_endpoint }) => {
       const isLegacy = endpoint_type === 'E0';
       const typeLabel = isLegacy ? 'Legacy' : 'Standard';
       const shouldShowHostname =
@@ -181,7 +179,8 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
         s3_endpoint: s3_endpoint ?? undefined,
         value: endpoint_type,
       };
-    });
+    }
+  );
 
   // Automatically select the endpoint type if only one is available in the chosen region.
   const autoSelectEndpointType =
