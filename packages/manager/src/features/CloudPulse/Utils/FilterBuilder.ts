@@ -3,6 +3,14 @@ import { FILTER_CONFIG } from './FilterConfig';
 import type { CloudPulseServiceTypeFilters } from './models';
 import type { Dashboard, Filter, TimeDuration } from '@linode/api-v4';
 
+/**
+ * This function helps in building the properties needed for region selection component
+ *
+ * @param config - accepts a CloudPulseServiceTypeFilters of region key
+ * @param handleRegionChange - the callback when we select new region
+ * @param dashboard - the actual selected dashboard
+ * @param isServiceAnalyticsIntegration - only if this is false, we need to save preferences , else no need
+ */
 export const getRegionProperties = (
   config: CloudPulseServiceTypeFilters,
   handleRegionChange: (region: string | undefined) => void,
@@ -20,6 +28,15 @@ export const getRegionProperties = (
   };
 };
 
+/**
+ * This function helps in building the properties needed for resources selection component
+ *
+ * @param config - accepts a CloudPulseServiceTypeFilters of resource_id key
+ * @param handleResourceChange - the callback when we select new resource
+ * @param dashboard - the actual selected dashboard
+ * @param isServiceAnalyticsIntegration - only if this is false, we need to save preferences , else no need
+ * @param dependentFilters - since resources are dependent on some other filters, we need this as for disabling the resources selection component
+ */
 export const getResourcesProperties = (
   config: CloudPulseServiceTypeFilters,
   handleResourceChange: (resourceId: number[]) => void,
@@ -52,6 +69,13 @@ export const getResourcesProperties = (
   };
 };
 
+/**
+ * This function helps in building the properties needed for time duration filter
+ *
+ * @param config - accepts a CloudPulseServiceTypeFilters of time duration key
+ * @param handleTimeRangeChange - callback whenever a time duration selection changes
+ * @param isServiceAnalyticsIntegration - only if this is false, we need to save preferences , else no need
+ */
 export const getTimeDurationProperties = (
   config: CloudPulseServiceTypeFilters,
   handleTimeRangeChange: (timeDuration: TimeDuration) => void,
@@ -67,6 +91,12 @@ export const getTimeDurationProperties = (
   };
 };
 
+/**
+ * This function helps in builder the xFilter needed to passed in a apiV4 call
+ *
+ * @param config - any cloudpulse service type filter config
+ * @param dependentFilters - the filters that are selected so far
+ */
 export const buildXFilter = (
   config: CloudPulseServiceTypeFilters,
   dependentFilters: {
@@ -99,6 +129,13 @@ export const buildXFilter = (
   return { '+and': filters };
 };
 
+/**
+ * This function checks whether we need to disable or enable a filter component based on filterKey and filters selected so far
+ *
+ * @param filterKey - the filterKey for which we need to check whether to disable or enable the filter component
+ * @param dependentFilters - the filters selected so far
+ * @param dashboard - the actual selected dashboard
+ */
 export const checkIfWeNeedToDisableFilterByFilterKey = (
   filterKey: string,
   dependentFilters: {
