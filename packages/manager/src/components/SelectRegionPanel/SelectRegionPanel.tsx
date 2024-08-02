@@ -138,6 +138,11 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     if (updateTypeID) {
       updateTypeID('');
     }
+    // Begin tracking the Linode Create form - fires once per page view, configured by inputValue in AA backend.
+    sendLinodeCreateFormStartEvent({
+      ...regionFormEventOptions,
+      label: 'Select a Region',
+    });
   };
 
   return (
@@ -203,11 +208,11 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       ) : (
         <RegionSelect
           onChange={(e, region) => {
+            handleSelection(region.id);
             sendLinodeCreateFormStartEvent({
               ...regionFormEventOptions,
               label: 'Select a Region',
             });
-            handleSelection(region.id);
           }}
           regionFilter={
             // We don't want the Image Service Gen2 work to abide by Gecko feature flags

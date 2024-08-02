@@ -94,7 +94,7 @@ export const SelectFirewallPanel = (props: Props) => {
         <Autocomplete
           onChange={(_, selection) => {
             handleFirewallChange(selection?.value ?? -1);
-            // Track clearing and changing the value once per form - this is configured on backend by inputValue.
+            // Track clearing and changing the value once per page view, configured by inputValue in AA backend.
             if (!selection) {
               sendLinodeCreateFormInputEvent({
                 ...firewallFormEventOptions,
