@@ -6,6 +6,7 @@ import { Typography } from 'src/components/Typography';
 import {
   formatProgressEvent,
   getEventMessage,
+  getEventUsername,
 } from 'src/features/Events/utils';
 
 import {
@@ -26,6 +27,7 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
   const { classes, cx } = useRenderEventStyles();
   const unseenEventClass = cx({ [classes.unseenEventV2]: !event.seen });
   const message = getEventMessage(event);
+  const username = getEventUsername(event);
 
   /**
    * Some event types may not be handled by our system (or new types or new ones may be added that we haven't caught yet).
@@ -56,7 +58,7 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
           />
         )}
         <Typography sx={{ fontSize: '0.8rem' }}>
-          {progressEventDisplay} | {event.username ?? 'Linode'}
+          {progressEventDisplay + ' | ' + username}
         </Typography>
       </Box>
     </RenderEventStyledBox>
