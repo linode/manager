@@ -6,7 +6,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { useObjectStorageTypesQuery } from 'src/queries/objectStorage';
+import { useObjectStorageTypesQuery } from 'src/queries/object-storage/queries';
 import {
   PRICES_RELOAD_ERROR_NOTICE_TEXT,
   UNKNOWN_PRICE,

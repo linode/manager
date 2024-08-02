@@ -1,7 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { equals } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { debounce } from 'throttle-debounce';
 
@@ -9,23 +8,17 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useAPISearch } from 'src/features/Search/useAPISearch';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
 import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
-import {
-  useObjectStorageBuckets,
-  useObjectStorageClusters,
-} from 'src/queries/objectStorage';
+import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
@@ -43,7 +36,10 @@ import {
   StyledStack,
 } from './SearchLanding.styles';
 import { emptyResults } from './utils';
-import withStoreSearch, { SearchProps } from './withStoreSearch';
+import withStoreSearch from './withStoreSearch';
+
+import type { SearchProps } from './withStoreSearch';
+import type { RouteComponentProps } from 'react-router-dom';
 
 const displayMap = {
   buckets: 'Buckets',
@@ -71,32 +67,12 @@ export const SearchLanding = (props: SearchLandingProps) => {
   const { entities, search, searchResultsByEntity } = props;
   const { data: regions } = useRegionsQuery();
 
-  const regionsSupportingObjectStorage = regions?.filter((region) =>
-    region.capabilities.includes('Object Storage')
-  );
-
   const isLargeAccount = useIsLargeAccount();
 
-  const { account } = useAccountManagement();
-  const flags = useFlags();
-
-  const isObjMultiClusterEnabled = isFeatureEnabledV2(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
   // We only want to fetch all entities if we know they
   // are not a large account. We do this rather than `!isLargeAccount`
   // because we don't want to fetch all entities if isLargeAccount is loading (undefined).
   const shouldFetchAllEntities = isLargeAccount === false;
-
-  const {
-    data: objectStorageClusters,
-    error: objectStorageClustersError,
-    isLoading: areClustersLoading,
-  } = useObjectStorageClusters(
-    shouldFetchAllEntities && !isObjMultiClusterEnabled
-  );
 
   /*
    @TODO OBJ Multicluster:'region' will become required, and the
@@ -108,14 +84,7 @@ export const SearchLanding = (props: SearchLandingProps) => {
     data: objectStorageBuckets,
     error: bucketsError,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets({
-    clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
-    enabled: shouldFetchAllEntities,
-    isObjMultiClusterEnabled,
-    regions: isObjMultiClusterEnabled
-      ? regionsSupportingObjectStorage
-      : undefined,
-  });
+  } = useObjectStorageBuckets(shouldFetchAllEntities);
 
   const {
     data: domains,
@@ -243,11 +212,8 @@ export const SearchLanding = (props: SearchLandingProps) => {
       [imagesError, 'Images'],
       [nodebalancersError, 'NodeBalancers'],
       [kubernetesClustersError, 'Kubernetes'],
-      [objectStorageClustersError, 'Object Storage'],
       [
-        objectStorageBuckets &&
-          objectStorageBuckets.errors.length > 0 &&
-          !objectStorageClustersError,
+        objectStorageBuckets && objectStorageBuckets.errors.length > 0,
         `Object Storage in ${objectStorageBuckets?.errors
           .map((e) => e.cluster.region)
           .join(', ')}`,
@@ -274,8 +240,7 @@ export const SearchLanding = (props: SearchLandingProps) => {
   const loading = isLargeAccount
     ? apiSearchLoading
     : areLinodesLoading ||
-      (areBucketsLoading && !isObjMultiClusterEnabled) ||
-      (areClustersLoading && !isObjMultiClusterEnabled) ||
+      areBucketsLoading ||
       areDomainsLoading ||
       areVolumesLoading ||
       areKubernetesClustersLoading ||

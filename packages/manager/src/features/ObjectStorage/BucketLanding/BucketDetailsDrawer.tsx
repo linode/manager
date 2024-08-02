@@ -12,7 +12,7 @@ import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useObjectStorageClusters } from 'src/queries/objectStorage';
+import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
 import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';

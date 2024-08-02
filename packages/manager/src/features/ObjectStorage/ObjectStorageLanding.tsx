@@ -18,17 +18,14 @@ import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
-import {
-  useObjectStorageBuckets,
-  useObjectStorageClusters,
-} from 'src/queries/objectStorage';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
-import { MODE } from './AccessKeyLanding/types';
 import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
 import { OMC_BucketLanding } from './BucketLanding/OMC_BucketLanding';
 import { OMC_CreateBucketDrawer } from './BucketLanding/OMC_CreateBucketDrawer';
+
+import type { MODE } from './AccessKeyLanding/types';
 
 const BucketLanding = React.lazy(() =>
   import('./BucketLanding/BucketLanding').then((module) => ({
@@ -63,33 +60,11 @@ export const ObjectStorageLanding = () => {
     account?.capabilities ?? []
   );
 
-  const { data: objectStorageClusters } = useObjectStorageClusters(
-    !isObjMultiClusterEnabled
-  );
-
-  const { data: regionsData } = useRegionsQuery();
-
-  const regionsSupportingObjectStorage = regionsData?.filter((region) =>
-    region.capabilities.includes('Object Storage')
-  );
-
-  /*
-   @TODO OBJ Multicluster:'region' will become required, and the
-   'cluster' field will be deprecated once the feature is fully rolled out in production.
-   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
-   remove 'cluster' and retain 'regions'.
-  */
   const {
     data: objectStorageBucketsResponse,
     error: bucketsErrors,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets({
-    clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
-    isObjMultiClusterEnabled,
-    regions: isObjMultiClusterEnabled
-      ? regionsSupportingObjectStorage
-      : undefined,
-  });
+  } = useObjectStorageBuckets();
 
   const userHasNoBucketCreated =
     objectStorageBucketsResponse?.buckets.length === 0;
