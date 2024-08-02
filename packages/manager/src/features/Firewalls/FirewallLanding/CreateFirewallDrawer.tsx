@@ -46,7 +46,6 @@ import type {
   Linode,
   NodeBalancer,
 } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
@@ -91,11 +90,10 @@ export const CreateFirewallDrawer = React.memo(
     );
 
     const firewallFormEventOptions: LinodeCreateFormEventOptions = {
-      createType: (queryParams.type as LinodeCreateType) ?? 'OS',
+      createType: queryParams.type ?? 'OS',
       headerName: 'Create Firewall',
       interaction: 'click',
       label: '',
-      version: 'v1',
     };
 
     const {

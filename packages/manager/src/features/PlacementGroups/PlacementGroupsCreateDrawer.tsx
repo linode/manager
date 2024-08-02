@@ -113,7 +113,6 @@ export const PlacementGroupsCreateDrawer = (
             headerName: 'Create Placement Group',
             interaction: 'click',
             label: 'Create Placement Group',
-            version: 'v1',
           });
         }
       }

@@ -32,8 +32,8 @@ import { Link } from '../Link';
 
 import type { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 import type { Capabilities } from '@linode/api-v4/lib/regions';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
+import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
 export interface SelectRegionPanelProps {
   RegionSelectProps?: Partial<RegionSelectProps<true>>;
@@ -121,6 +121,13 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     selectedImage: image,
   });
 
+  const regionFormEventOptions: LinodeCreateFormEventOptions = {
+    createType: params.type ?? 'OS',
+    headerName: 'Region',
+    interaction: 'click',
+    label: '',
+  };
+
   if (regions?.length === 0) {
     return null;
   }
@@ -152,11 +159,8 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           onClick={() =>
             isFromLinodeCreate &&
             sendLinodeCreateFormInputEvent({
-              createType: (params.type as LinodeCreateType) ?? 'OS',
-              headerName: 'Region',
-              interaction: 'click',
+              ...regionFormEventOptions,
               label: DOCS_LINK_LABEL_DC_PRICING,
-              version: 'v1',
             })
           }
           href="https://www.linode.com/pricing"
@@ -200,11 +204,8 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         <RegionSelect
           onChange={(e, region) => {
             sendLinodeCreateFormStartEvent({
-              createType: params.type ?? 'OS',
-              headerName: 'Region',
-              interaction: 'click',
+              ...regionFormEventOptions,
               label: 'Select a Region',
-              version: 'v1',
             });
             handleSelection(region.id);
           }}

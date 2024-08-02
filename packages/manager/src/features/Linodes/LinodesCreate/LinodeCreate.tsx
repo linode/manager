@@ -409,7 +409,7 @@ export class LinodeCreate extends React.PureComponent<
       errorString += `|${errorMap.root_pass}`;
     }
 
-    sendLinodeCreateFormErrorEvent(errorString, selectedTabName ?? 'OS', 'v1');
+    sendLinodeCreateFormErrorEvent(errorString, selectedTabName ?? 'OS');
   };
 
   handleClickCreateUsingCommandLine = (
@@ -438,7 +438,6 @@ export class LinodeCreate extends React.PureComponent<
       createType: 'OS',
       interaction: 'click',
       label: 'Create Using Command Line',
-      version: 'v1',
     });
     sendApiAwarenessClickEvent(
       'Button',
@@ -470,7 +469,6 @@ export class LinodeCreate extends React.PureComponent<
       sendLinodeCreateFormStepEvent({
         createType: (this.tabs[prevTabIndex].title as LinodeCreateType) ?? 'OS',
         label: `${this.tabs[index].title} Tab`,
-        version: 'v1',
         interaction: 'click',
       });
     }
@@ -996,7 +994,6 @@ export class LinodeCreate extends React.PureComponent<
                         (this.tabs[selectedTab].title as LinodeCreateType) ??
                         'OS',
                       label: 'Choosing a Plan',
-                      version: 'v1',
                       headerName: 'Linode Plan',
                       interaction: 'click',
                     });
@@ -1100,7 +1097,6 @@ export class LinodeCreate extends React.PureComponent<
                           'OS',
                         headerName: 'Firewall',
                         label: 'Learn more',
-                        version: 'v1',
                         interaction: 'click',
                       })
                     }

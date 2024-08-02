@@ -167,7 +167,6 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
                 headerName: 'Details',
                 interaction: 'click',
                 label: 'Create Placement Group',
-                version: 'v1',
               });
             }}
             sx={(theme) => ({

@@ -51,7 +51,6 @@ export const SubnetContent = (props: Props) => {
               interaction: 'click',
               label: 'Learn more',
               subheaderName: 'Subnets',
-              version: 'v1',
             })
           }
           to="https://www.linode.com/docs/products/networking/vpc/guides/subnets/"

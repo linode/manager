@@ -893,7 +893,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
                 createType: (this.params.type as LinodeCreateType) ?? 'OS',
                 interaction: 'click',
                 label: 'Getting Started',
-                version: 'v1',
               });
             }}
             docsLabel="Getting Started"
@@ -1045,6 +1044,5 @@ const handleAnalytics = (details: {
     createType: eventCreateType as LinodeCreateType,
     interaction: 'click',
     label: 'Create Linode',
-    version: 'v1',
   });
 };

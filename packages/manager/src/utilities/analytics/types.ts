@@ -43,8 +43,6 @@ export type FormPayload =
   | FormInputEvent
   | FormStepEvent;
 
-export type LinodeCreateFlowVersion = 'v1' | 'v2';
-
 export interface BasicFormEvent {
   formName: string;
 }
@@ -71,8 +69,6 @@ export interface FormEventOptions {
 export interface LinodeCreateFormEventOptions extends FormEventOptions {
   createType: LinodeCreateType;
   interaction: 'change' | 'clear' | 'click';
-  // Used to distinguish between the Linode Create flow pre and post-refactor.
-  version: LinodeCreateFlowVersion;
 }
 
 export interface AnalyticsPayload extends Omit<AnalyticsEvent, 'data'> {

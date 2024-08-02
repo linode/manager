@@ -45,7 +45,6 @@ export const VPCTopSectionContent = (props: Props) => {
               headerName: 'Create VPC',
               interaction: 'click',
               label: 'Learn more',
-              version: 'v1',
             })
           }
           to="https://www.linode.com/docs/products/networking/vpc/"

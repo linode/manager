@@ -47,7 +47,6 @@ export const DetailsPanel = (props: DetailsPanelProps) => {
     interaction: 'change',
     label: 'Placement Group',
     subheaderName: 'Placement Groups in Region',
-    version: 'v1',
   };
 
   return (

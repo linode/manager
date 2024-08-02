@@ -152,7 +152,6 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
           headerName: 'Create VPC',
           interaction: 'click',
           label: 'Create VPC',
-          version: 'v1',
         });
       }
     } catch (errors) {

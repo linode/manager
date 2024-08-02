@@ -27,7 +27,6 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { REGION_CAVEAT_HELPER_TEXT } from './constants';
 import { VPCCreateDrawer } from './VPCCreateDrawer';
 
-import type { LinodeCreateType } from './types';
 import type { Item } from 'src/components/EnhancedSelect';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
@@ -108,11 +107,10 @@ export const VPCPanel = (props: VPCPanelProps) => {
     location.search
   );
   const vpcFormEventOptions: LinodeCreateFormEventOptions = {
-    createType: (params.type as LinodeCreateType) ?? 'OS',
+    createType: params.type ?? 'OS',
     headerName: 'VPC',
     interaction: 'click',
     label: 'VPC',
-    version: 'v1',
   };
 
   const vpcs = vpcsData ?? [];

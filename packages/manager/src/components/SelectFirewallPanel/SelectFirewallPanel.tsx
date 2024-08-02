@@ -15,7 +15,6 @@ import { Autocomplete } from '../Autocomplete/Autocomplete';
 import { LinkButton } from '../LinkButton';
 
 import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
@@ -44,11 +43,10 @@ export const SelectFirewallPanel = (props: Props) => {
   );
 
   const firewallFormEventOptions: LinodeCreateFormEventOptions = {
-    createType: (queryParams.type as LinodeCreateType) ?? 'OS',
+    createType: queryParams.type ?? 'OS',
     headerName: 'Firewall',
     interaction: 'click',
     label: 'Firewall',
-    version: 'v1',
   };
 
   const handleCreateFirewallClick = () => {
