@@ -869,6 +869,11 @@ export const handlers = [
         region: 'us-sea',
         s3_endpoint: null,
       }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'us-east',
+        s3_endpoint: null,
+      }),
     ];
     return HttpResponse.json(makeResourcePage(endpoints));
   }),

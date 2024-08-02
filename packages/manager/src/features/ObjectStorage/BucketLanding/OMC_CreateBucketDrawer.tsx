@@ -151,10 +151,17 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
    * the endpoint type to distinguish between two assigned endpoints of the same type.
    * This is necessary for multiple gen1 (E1) assignments in the same region.
    */
-  const endpointCounts = endpoints?.reduce((acc: EndpointCount, endpoint) => {
-    acc[endpoint.endpoint_type] = (acc[endpoint.endpoint_type] || 0) + 1;
-    return acc;
-  }, {});
+  const filteredEndpoints = endpoints?.filter(
+    (endpoint) => selectedRegion?.id === endpoint.region
+  );
+
+  const endpointCounts = filteredEndpoints?.reduce(
+    (acc: EndpointCount, endpoint) => {
+      acc[endpoint.endpoint_type] = (acc[endpoint.endpoint_type] || 0) + 1;
+      return acc;
+    },
+    {}
+  );
 
   const filteredEndpointOptions = endpoints
     ?.filter((endpoint) => selectedRegion?.id === endpoint.region)
