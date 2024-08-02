@@ -2451,6 +2451,41 @@ export const handlers = [
     };
     return HttpResponse.json(response);
   }),
+  http.post('*/monitor/services/:serviceType/metrics', () => {
+    const response = {
+      data: {
+        result: [
+          {
+            metric: {},
+            values: [
+              [1721854379, '0.2744841110560275'],
+              [1721857979, '0.2980357104166823'],
+              [1721861579, '0.3290476561287732'],
+              [1721865179, '0.32148793964961897'],
+              [1721868779, '0.3269247326830727'],
+              [1721872379, '0.3393055885526987'],
+              [1721875979, '0.3237102833940027'],
+              [1721879579, '0.3153372503472701'],
+              [1721883179, '0.26811506053820466'],
+              [1721886779, '0.25839295774934357'],
+              [1721890379, '0.26863082415681144'],
+              [1721893979, '0.26126998689934394'],
+              [1721897579, '0.26164641539434685'],
+            ],
+          },
+        ],
+        resultType: 'matrix',
+      },
+      isPartial: false,
+      stats: {
+        executionTimeMsec: 23,
+        seriesFetched: '14',
+      },
+      status: 'success',
+    };
+
+    return HttpResponse.json(response);
+  }),
   ...entityTransfers,
   ...statusPage,
   ...databases,

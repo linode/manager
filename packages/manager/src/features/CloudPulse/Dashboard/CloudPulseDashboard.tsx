@@ -73,7 +73,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
 
   const getJweTokenPayload = (): JWETokenPayLoad => {
     return {
-      resource_id: resourceList?.map((resource) => String(resource.id)) ?? [],
+      resource_id: resourceList?.map((resource) => Number(resource.id)) ?? [],
     };
   };
 
@@ -167,7 +167,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   }
 
   const RenderWidgets = () => {
-    if (!dashboard || Boolean(dashboard.widgets?.length)) {
+    if (!dashboard || !Boolean(dashboard?.widgets?.length)) {
       return renderPlaceHolder(
         'No visualizations are available at this moment. Create Dashboards to list here.'
       );
