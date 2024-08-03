@@ -58,7 +58,7 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
           />
         )}
         <Typography sx={{ fontSize: '0.8rem' }}>
-          {progressEventDisplay + ' | ' + username}
+          {progressEventDisplay} | {username}
         </Typography>
       </Box>
     </RenderEventStyledBox>
