@@ -9,7 +9,7 @@ import {
   extraMockPresets,
 } from 'src/mocks/presets';
 import { allStateSeeders } from 'src/mocks/seeds';
-import { removeSeeds } from 'src/mocks/utilities/removeSeeds';
+import { removeSeeds } from 'src/mocks/utilities/seedUtils';
 
 import { DevToolSelect } from './components/DevToolSelect';
 
