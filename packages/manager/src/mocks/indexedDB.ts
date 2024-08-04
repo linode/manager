@@ -1,3 +1,5 @@
+import { hasId } from './utilities/seedUtils';
+
 import type { MockState } from './types';
 
 type ObjectStore = 'mockState' | 'seedState';
@@ -23,6 +25,7 @@ export const mswDB = {
 
         if (!mockState?.[entity]) {
           reject();
+
           return;
         }
 
@@ -36,7 +39,7 @@ export const mswDB = {
               (item: { id: number }) => item.id === newId
             )
           ) {
-            newId = (newId as number) + 1;
+            newId = newId + 1;
           }
           payload.id = newId;
         }
@@ -74,15 +77,29 @@ export const mswDB = {
 
       request.onsuccess = () => {
         const mockState = request.result;
-        if (!mockState) {
+        if (!mockState?.entity) {
           reject();
+
           return;
         }
 
-        if (!mockState[entity]) {
-          reject();
-          return;
-        }
+        // Generate unique ID if necessary
+        payload.forEach((item) => {
+          if (!hasId(item)) {
+            return;
+          }
+          let newId = item.id;
+
+          while (
+            mockState[entity].some(
+              // eslint-disable-next-line no-loop-func
+              (item: { id: number }) => item.id === newId
+            )
+          ) {
+            newId = newId + 1;
+          }
+          item.id = newId;
+        });
 
         mockState[entity].push(...payload);
         if (state) {
@@ -507,13 +524,4 @@ export const mswDB = {
       storeRequest.onerror = (event) => reject(event);
     });
   },
-};
-
-type WithId = {
-  id: unknown;
-};
-
-// Type guard to check if an object has an 'id' property
-const hasId = (obj: any): obj is WithId => {
-  return 'id' in obj;
 };
