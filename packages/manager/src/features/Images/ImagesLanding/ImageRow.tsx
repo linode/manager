@@ -16,7 +16,7 @@ import type { Event, Image, ImageCapabilities } from '@linode/api-v4';
 
 const capabilityMap: Record<ImageCapabilities, string> = {
   'cloud-init': 'Cloud-init',
-  'distributed-images': 'Distributed',
+  'distributed-sites': 'Distributed',
 };
 
 interface Props {

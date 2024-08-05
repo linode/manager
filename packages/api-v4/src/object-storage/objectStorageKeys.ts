@@ -13,8 +13,8 @@ import Request, {
 import { Filter, Params, ResourcePage as Page } from '../types';
 import {
   ObjectStorageKey,
-  ObjectStorageKeyRequest,
-  UpdateObjectStorageKeyRequest,
+  CreateObjectStorageKeyPayload,
+  UpdateObjectStorageKeyPayload,
 } from './types';
 
 /**
@@ -35,7 +35,7 @@ export const getObjectStorageKeys = (params?: Params, filters?: Filter) =>
  *
  * Creates an Object Storage key
  */
-export const createObjectStorageKeys = (data: ObjectStorageKeyRequest) =>
+export const createObjectStorageKeys = (data: CreateObjectStorageKeyPayload) =>
   Request<ObjectStorageKey>(
     setMethod('POST'),
     setURL(`${API_ROOT}/object-storage/keys`),
@@ -49,7 +49,7 @@ export const createObjectStorageKeys = (data: ObjectStorageKeyRequest) =>
  */
 export const updateObjectStorageKey = (
   id: number,
-  data: UpdateObjectStorageKeyRequest
+  data: UpdateObjectStorageKeyPayload
 ) =>
   Request<ObjectStorageKey>(
     setMethod('PUT'),

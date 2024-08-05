@@ -22,8 +22,8 @@ import {
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
@@ -153,7 +153,7 @@ export class DomainRecordDrawer extends React.Component<
       >
         {otherErrors.length > 0 &&
           otherErrors.map((err, index) => {
-            return <Notice key={index} variant="error" text={err} />;
+            return <Notice key={index} text={err} variant="error" />;
           })}
         {!hasARecords && type === 'NS' && (
           <Notice
@@ -226,17 +226,17 @@ export class DomainRecordDrawer extends React.Component<
     });
 
     return (
-      <Select
+      <Autocomplete
         textFieldProps={{
           dataAttrs: {
             'data-qa-domain-select': 'Expire Rate',
           },
         }}
-        defaultValue={defaultRate}
-        isClearable={false}
+        disableClearable
         label="Expire Rate"
-        onChange={(e) => this.setExpireSec(e.value)}
+        onChange={(_, selected) => this.setExpireSec(selected?.value)}
         options={rateOptions}
+        value={defaultRate}
       />
     );
   };
@@ -278,17 +278,17 @@ export class DomainRecordDrawer extends React.Component<
     });
 
     return (
-      <Select
+      <Autocomplete
         textFieldProps={{
           dataAttrs: {
             'data-qa-domain-select': label,
           },
         }}
-        defaultValue={defaultOption}
-        isClearable={false}
+        disableClearable
         label={label}
-        onChange={(e) => fn(e.value)}
+        onChange={(_, selected) => fn(selected.value)}
         options={MSSelectOptions}
+        value={defaultOption}
       />
     );
   };
@@ -364,17 +364,17 @@ export class DomainRecordDrawer extends React.Component<
     });
 
     return (
-      <Select
+      <Autocomplete
         textFieldProps={{
           dataAttrs: {
             'data-qa-domain-select': 'Protocol',
           },
         }}
-        defaultValue={defaultProtocol}
-        isClearable={false}
+        disableClearable
         label="Protocol"
-        onChange={(e) => this.setProtocol(e.value)}
+        onChange={(_, selected) => this.setProtocol(selected.value)}
         options={protocolOptions}
+        value={defaultProtocol}
       />
     );
   };
@@ -414,17 +414,17 @@ export class DomainRecordDrawer extends React.Component<
       );
     });
     return (
-      <Select
+      <Autocomplete
         textFieldProps={{
           dataAttrs: {
             'data-qa-domain-select': 'caa tag',
           },
         }}
-        defaultValue={defaultTag || tagOptions[0]}
-        isClearable={false}
+        disableClearable
         label="Tag"
-        onChange={(e: Item) => this.setTag(e.value)}
+        onChange={(_, selected) => this.setTag(selected.value)}
         options={tagOptions}
+        value={defaultTag}
       />
     );
   };

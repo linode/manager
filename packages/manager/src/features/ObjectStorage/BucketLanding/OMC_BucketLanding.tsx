@@ -25,7 +25,7 @@ import {
 } from 'src/queries/objectStorage';
 import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
@@ -52,7 +52,7 @@ export const OMC_BucketLanding = () => {
   const { account } = useAccountManagement();
   const flags = useFlags();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []

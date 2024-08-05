@@ -1,5 +1,4 @@
-import { ACLType } from '@linode/api-v4/lib/object-storage';
-import { Theme, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -18,16 +17,24 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { bucketACLOptions, objectACLOptions } from '../utilities';
 import { copy } from './AccessSelect.data';
 
-interface AccessPayload {
-  acl: ACLType;
-  cors_enabled?: boolean;
-}
+import type {
+  ACLType,
+  ObjectStorageBucketAccess,
+  ObjectStorageObjectACL,
+} from '@linode/api-v4/lib/object-storage';
+import type { Theme } from '@mui/material/styles';
 
 export interface Props {
-  getAccess: () => Promise<AccessPayload>;
+  getAccess: () => Promise<ObjectStorageBucketAccess | ObjectStorageObjectACL>;
   name: string;
   updateAccess: (acl: ACLType, cors_enabled?: boolean) => Promise<{}>;
   variant: 'bucket' | 'object';
+}
+
+function isUpdateObjectStorageBucketAccessPayload(
+  response: ObjectStorageBucketAccess | ObjectStorageObjectACL
+): response is ObjectStorageBucketAccess {
+  return 'cors_enabled' in response;
 }
 
 export const AccessSelect = React.memo((props: Props) => {
@@ -40,7 +47,7 @@ export const AccessSelect = React.memo((props: Props) => {
   // The ACL Option currently selected in the <EnhancedSelect /> component.
   const [selectedACL, setSelectedACL] = React.useState<ACLType | null>(null);
   // The CORS Option currently selected in the <Toggle /> component.
-  const [selectedCORSOption, setSelectedCORSOption] = React.useState(true);
+  const [selectedCORSOption, setSelectedCORSOption] = React.useState(true); // TODO: OBJGen2 - We need to handle this in upcoming PR
   // State for submitting access options.
   const [updateAccessLoading, setUpdateAccessLoading] = React.useState(false);
   const [updateAccessError, setUpdateAccessError] = React.useState('');
@@ -55,17 +62,21 @@ export const AccessSelect = React.memo((props: Props) => {
     setUpdateAccessSuccess(false);
     setAccessLoading(true);
     getAccess()
-      .then(({ acl, cors_enabled }) => {
+      .then((response) => {
         setAccessLoading(false);
+        const { acl } = response;
         // Don't show "public-read-write" for Objects here; use "custom" instead
         // since "public-read-write" Objects are basically the same as "public-read".
         const _acl =
           variant === 'object' && acl === 'public-read-write' ? 'custom' : acl;
         setACLData(_acl);
         setSelectedACL(_acl);
-        if (typeof cors_enabled !== 'undefined') {
-          setCORSData(cors_enabled);
-          setSelectedCORSOption(cors_enabled);
+        if (isUpdateObjectStorageBucketAccessPayload(response)) {
+          const { cors_enabled } = response;
+          if (typeof cors_enabled === 'boolean') {
+            setCORSData(cors_enabled);
+            setSelectedCORSOption(cors_enabled);
+          }
         }
       })
       .catch((err) => {

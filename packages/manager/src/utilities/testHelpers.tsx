@@ -1,34 +1,30 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MatcherFunction, render } from '@testing-library/react';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render } from '@testing-library/react';
 import mediaQuery from 'css-mediaquery';
-import { Formik, FormikConfig, FormikValues } from 'formik';
+import { Formik } from 'formik';
 import { LDProvider } from 'launchdarkly-react-client-sdk';
 import { SnackbarProvider } from 'notistack';
 import { mergeDeepRight } from 'ramda';
 import * as React from 'react';
-import {
-  FieldValues,
-  FormProvider,
-  UseFormProps,
-  useForm,
-} from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { Provider } from 'react-redux';
-import { MemoryRouterProps } from 'react-router';
 import { MemoryRouter } from 'react-router-dom';
-import { DeepPartial } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { FlagSet } from 'src/featureFlags';
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { queryClientFactory } from 'src/queries/base';
 import { setupInterceptors } from 'src/request';
-import {
-  ApplicationState,
-  ApplicationStore,
-  defaultState,
-  storeFactory,
-} from 'src/store';
+import { defaultState, storeFactory } from 'src/store';
+
+import type { QueryClient } from '@tanstack/react-query';
+import type { MatcherFunction, RenderResult } from '@testing-library/react';
+import type { FormikConfig, FormikValues } from 'formik';
+import type { FieldValues, UseFormProps } from 'react-hook-form';
+import type { MemoryRouterProps } from 'react-router';
+import type { DeepPartial } from 'redux';
+import type { FlagSet } from 'src/featureFlags';
+import type { ApplicationState, ApplicationStore } from 'src/store';
 
 export const mockMatchMedia = (matches: boolean = true) => {
   window.matchMedia = vi.fn().mockImplementation((query) => {
@@ -146,8 +142,15 @@ export const wrapWithTableBody = (ui: any, options: Options = {}) =>
     options
   );
 
-export const renderWithTheme = (ui: any, options: Options = {}) => {
-  return render(wrapWithTheme(ui, options));
+export const renderWithTheme = (
+  ui: React.ReactNode,
+  options: Options = {}
+): RenderResult => {
+  const renderResult = render(wrapWithTheme(ui, options));
+  return {
+    ...renderResult,
+    rerender: (ui) => renderResult.rerender(wrapWithTheme(ui, options)),
+  };
 };
 
 /**

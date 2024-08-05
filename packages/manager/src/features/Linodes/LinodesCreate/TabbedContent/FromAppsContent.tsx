@@ -289,7 +289,7 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
         <AppDetailDrawer
           onClose={this.closeDrawer}
           open={this.state.detailDrawerOpen}
-          stackScriptLabel={this.state.selectedScriptForDrawer}
+          stackScriptLabel={this.state.selectedScriptForDrawer.trim()}
         />
       </React.Fragment>
     );

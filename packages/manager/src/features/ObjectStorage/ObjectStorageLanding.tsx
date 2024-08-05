@@ -23,7 +23,7 @@ import {
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { MODE } from './AccessKeyLanding/types';
 import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
@@ -57,7 +57,7 @@ export const ObjectStorageLanding = () => {
 
   const flags = useFlags();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []

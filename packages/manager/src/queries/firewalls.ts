@@ -12,7 +12,6 @@ import {
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { getAll } from 'src/utilities/getAll';
 
 import { nodebalancerQueries } from './nodebalancers';
@@ -30,6 +29,7 @@ import type {
   ResourcePage,
 } from '@linode/api-v4';
 import type { EventHandlerData } from 'src/hooks/useEventHandlers';
+import { linodeQueries } from './linodes/linodes';
 
 const getAllFirewallDevices = (
   id: number,
@@ -172,12 +172,8 @@ export const useAddFirewallDeviceMutation = (id: number) => {
       // Refresh the cached result of the linode-specific firewalls query
       if (firewallDevice.entity.type === 'linode') {
         queryClient.invalidateQueries({
-          queryKey: [
-            linodesQueryKey,
-            'linode',
-            firewallDevice.entity.id,
-            'firewalls',
-          ],
+          queryKey: linodeQueries.linode(firewallDevice.entity.id)._ctx
+            .firewalls.queryKey,
         });
       }
 
@@ -286,7 +282,7 @@ export const useCreateFirewall = () => {
       for (const entity of firewall.entities) {
         if (entity.type === 'linode') {
           queryClient.invalidateQueries({
-            queryKey: [linodesQueryKey, 'linode', entity.id, 'firewalls'],
+            queryKey: linodeQueries.linode(entity.id)._ctx.firewalls.queryKey,
           });
         }
         if (entity.type === 'nodebalancer') {

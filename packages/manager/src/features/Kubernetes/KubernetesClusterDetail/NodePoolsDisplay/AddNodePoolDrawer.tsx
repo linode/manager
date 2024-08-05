@@ -1,10 +1,10 @@
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
@@ -24,6 +24,7 @@ import { nodeWarning } from '../../kubeUtils';
 import { hasInvalidNodePoolPrice } from './utils';
 
 import type { Region } from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   boxOuter: {
@@ -162,11 +163,12 @@ export const AddNodePoolDrawer = (props: Props) => {
       wide
     >
       {error && (
-        <Notice
-          className={classes.error}
-          text={error?.[0].reason}
-          variant="error"
-        />
+        <Notice spacingBottom={0} spacingTop={12} variant="error">
+          <ErrorMessage
+            entityType="lkecluster_id"
+            message={error?.[0].reason}
+          />
+        </Notice>
       )}
       <form className={classes.plans}>
         <KubernetesPlansPanel
