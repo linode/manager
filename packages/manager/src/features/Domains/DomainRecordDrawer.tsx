@@ -468,6 +468,7 @@ export class DomainRecordDrawer extends React.Component<
    * editable data or defaults.
    */
   static defaultFieldsState = (props: Partial<DomainRecordDrawerProps>) => ({
+    description: '',
     axfr_ips: getInitialIPs(props.axfr_ips),
     domain: props.domain,
     expire_sec: props.expire_sec ?? 0,
@@ -715,7 +716,6 @@ export class DomainRecordDrawer extends React.Component<
   };
 
   types = {
-    // },
     AAAA: {
       fields: [
         (idx: number) => (
@@ -733,6 +733,7 @@ export class DomainRecordDrawer extends React.Component<
     //     (idx: number) => <this.TargetField label="IP Address" key={idx} />,
     //     (idx: number) => <this.TTLField label="TTL" key={idx} />,
     //   ],
+    // },
     CAA: {
       fields: [
         (idx: number) => (
