@@ -7,7 +7,7 @@ export const productionRegionsSeeder: MockSeeder = {
   desc: 'Production-like region seeds',
   group: 'Regions',
   id: 'prod-regions',
-  label: 'Production Regions',
+  label: 'Production Regions (default)',
 
   seeder: async (mockState: MockState) => {
     const updatedMockState = {
