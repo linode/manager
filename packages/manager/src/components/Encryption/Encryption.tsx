@@ -1,3 +1,4 @@
+import { List, ListItem } from '@mui/material';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -13,6 +14,7 @@ export interface EncryptionProps {
   entityType?: string;
   error?: string;
   isEncryptEntityChecked: boolean;
+  notices?: string[];
   onChange: (checked: boolean) => void;
 }
 
@@ -28,6 +30,7 @@ export const Encryption = (props: EncryptionProps) => {
     entityType,
     error,
     isEncryptEntityChecked,
+    notices,
     onChange,
   } = props;
 
@@ -45,6 +48,28 @@ export const Encryption = (props: EncryptionProps) => {
       >
         {descriptionCopy}
       </Typography>
+      {notices && notices.length > 0 && (
+        <Notice marginTop="0.875rem" variant="warning">
+          <List
+            sx={(theme) => ({
+              '& > li': {
+                display: notices.length > 1 ? 'list-item' : 'inline',
+                fontSize: '0.875rem',
+                lineHeight: theme.spacing(2),
+                padding: 0,
+                pl: 0,
+                py: 0.5,
+              },
+              listStyle: 'disc',
+              ml: notices.length > 1 ? theme.spacing(2) : 0,
+            })}
+          >
+            {notices.map((notice, i) => (
+              <ListItem key={i}>{notice}</ListItem>
+            ))}
+          </List>
+        </Notice>
+      )}
       <Box
         sx={{
           marginLeft: '4px',

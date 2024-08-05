@@ -11,7 +11,9 @@ import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import {
   BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION,
+  BLOCK_STORAGE_ENCRYPTION_OVERHEAD_CAVEAT,
   BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY,
+  BLOCK_STORAGE_USER_SIDE_ENCRYPTION_CAVEAT,
 } from 'src/components/Encryption/constants';
 import { Encryption } from 'src/components/Encryption/Encryption';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
@@ -444,6 +446,14 @@ export const VolumeCreate = () => {
                 <Encryption
                   disabledReason={
                     BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY
+                  }
+                  notices={
+                    encryptVolume
+                      ? [
+                          BLOCK_STORAGE_ENCRYPTION_OVERHEAD_CAVEAT,
+                          BLOCK_STORAGE_USER_SIDE_ENCRYPTION_CAVEAT,
+                        ]
+                      : []
                   }
                   descriptionCopy={BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION}
                   disabled={!regionSupportsBlockStorageEncryption}

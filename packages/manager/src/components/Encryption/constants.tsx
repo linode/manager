@@ -86,3 +86,10 @@ export const BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION = (
 
 export const BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY =
   'Volume encryption is not available in the selected region. Select another region to use Volume encryption.';
+
+// Caveats
+export const BLOCK_STORAGE_ENCRYPTION_OVERHEAD_CAVEAT =
+  'Please note encryption overhead may impact your volume IOPS performance negatively. This may compound when multiple encryption enabled volumes are attached to the same Linode.';
+
+export const BLOCK_STORAGE_USER_SIDE_ENCRYPTION_CAVEAT =
+  'User-side encryption on top of encryption enabled volumes is discouraged at this time, as it could severely impact your volume performance.';
