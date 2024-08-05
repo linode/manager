@@ -38,6 +38,44 @@ describe('TwoStepRegion', () => {
     expect(select).toBeEnabled();
   });
 
+  it('should only display core regions in the Core tab region select', async () => {
+    const {
+      getByPlaceholderText,
+      getByRole,
+    } = renderWithThemeAndHookFormContext({
+      component: <TwoStepRegion onChange={vi.fn()} />,
+    });
+
+    const select = getByPlaceholderText('Select a Region');
+    await userEvent.click(select);
+
+    const dropdown = getByRole('listbox');
+    expect(dropdown.innerHTML).toContain('US, Newark');
+    expect(dropdown.innerHTML).not.toContain(
+      'US, Gecko Distributed Region Test'
+    );
+  });
+
+  it('should only display distributed regions in the Distributed tab region select', async () => {
+    const {
+      getAllByRole,
+      getByPlaceholderText,
+      getByRole,
+    } = renderWithThemeAndHookFormContext({
+      component: <TwoStepRegion onChange={vi.fn()} />,
+    });
+
+    const tabs = getAllByRole('tab');
+    await userEvent.click(tabs[1]);
+
+    const select = getByPlaceholderText('Select a Region');
+    await userEvent.click(select);
+
+    const dropdown = getByRole('listbox');
+    expect(dropdown.innerHTML).toContain('US, Gecko Distributed Region Test');
+    expect(dropdown.innerHTML).not.toContain('US, Newark');
+  });
+
   it('should render a Geographical Area select with All pre-selected and a Region Select for the Distributed tab', async () => {
     const { getAllByRole } = renderWithThemeAndHookFormContext({
       component: <TwoStepRegion onChange={vi.fn()} />,
