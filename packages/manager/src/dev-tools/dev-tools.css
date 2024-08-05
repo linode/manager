@@ -73,6 +73,21 @@
   font-weight: bold;
   font-size: 10.5pt;
   font-family: inherit;
+  transition: background-color 0.2s;
+
+  &.small {
+    padding: 2px 8px 4px 8px;
+    border-width: 1px;
+    font-size: 10pt;
+  }
+
+  &.right-align {
+    float: right;
+  }
+}
+
+.dev-tools__body button:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .dev-tools__body button:disabled,
@@ -119,7 +134,6 @@
   justify-content: end;
 }
 
-.dev-tools__body button.toggle-button { }
 .dev-tools__body button.toggle-button.toggle-button--on {
   background: rgba(255, 255, 255, 0.2);
   border: 2px solid white;
@@ -193,6 +207,13 @@
 .dev-tools.dev-tools--open .dev-tools__toggle,
 .dev-tools.dev-tools--open .dev-tools__body {
   background-color: var(--background-color-opened);
+}
+
+.dev-tools__body input[type="number"] {
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  font-family: inherit;
+  font-size: 10.5pt;
 }
 
 /*

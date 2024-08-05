@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { Tooltip } from 'src/components/Tooltip';
+import { mswDB } from 'src/mocks/indexedDB';
 import { getMockPresetGroups } from 'src/mocks/mockPreset';
 import { getStateSeederGroups } from 'src/mocks/mockState';
 import {
@@ -142,7 +143,7 @@ const renderBaselinePresetOptions = () =>
     );
   });
 
-const renderContentPopulatorOptions = (
+const renderSeedOptions = (
   seeders: string[],
   onChange: (e: React.ChangeEvent, populatorId: string) => void,
   onCountChange: (e: React.ChangeEvent, populatorId: string) => void,
@@ -153,7 +154,6 @@ const renderContentPopulatorOptions = (
     <ul>
       {getStateSeederGroups(allStateSeeders).map((group) => (
         <div key={group}>
-          <li className="dev-tools__list-box__separator">{group}</li>
           {allStateSeeders
             .filter((stateSeeder) => stateSeeder.group === group)
             .map((stateSeeder) => (
@@ -221,6 +221,7 @@ const renderExtraPresetOptions = (
 interface ServiceWorkerSaveState {
   hasSaved: boolean;
   hasUnsavedChanges: boolean;
+  mocksCleared?: boolean;
 }
 
 export const ServiceWorkerTool = () => {
@@ -241,6 +242,7 @@ export const ServiceWorkerTool = () => {
   const [saveState, setSaveState] = React.useState<ServiceWorkerSaveState>({
     hasSaved: false,
     hasUnsavedChanges: false,
+    mocksCleared: false,
   });
 
   const handleChangeBasePreset = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -256,7 +258,7 @@ export const ServiceWorkerTool = () => {
     window.location.reload();
   };
 
-  const handleChangePopulator = async (
+  const handleChangeSeeder = async (
     e: React.ChangeEvent<HTMLInputElement>,
     seederId: MockSeederIds
   ) => {
@@ -307,11 +309,11 @@ export const ServiceWorkerTool = () => {
 
   const handleCountChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    populatorId: string
+    seederId: MockSeederIds
   ) => {
     const updatedCountMap = {
       ...countMap,
-      [populatorId]: parseInt(e.target.value, 10),
+      [seederId]: parseInt(e.target.value, 10),
     };
 
     setCountMap(updatedCountMap);
@@ -319,6 +321,14 @@ export const ServiceWorkerTool = () => {
       hasSaved: false,
       hasUnsavedChanges: true,
     });
+    // When updating the count and the checkbox is not checked, check it for convenience
+    if (parseInt(e.target.value, 10) > 0 && !MSWSeeders.includes(seederId)) {
+      setMSWSeeders([...MSWSeeders, seederId]);
+    }
+    // if value is 0, uncheck the checkbox
+    if (parseInt(e.target.value, 10) === 0 && MSWSeeders.includes(seederId)) {
+      setMSWSeeders(MSWSeeders.filter((seeder) => seeder !== seederId));
+    }
   };
 
   const handleApplyChanges = () => {
@@ -349,6 +359,30 @@ export const ServiceWorkerTool = () => {
     if (isMSWEnabled) {
       window.location.reload();
     }
+  };
+
+  const handleRemoveAllSeeds = () => {
+    // remove all seeds
+    setMSWSeeders([]);
+    setSaveState({
+      hasSaved: false,
+      hasUnsavedChanges: true,
+    });
+    // reset all seed fields to 0
+    setCountMap(
+      Object.fromEntries(Object.keys(countMap).map((key) => [key, 0]))
+    );
+  };
+
+  const handleClearAllMockData = () => {
+    handleRemoveAllSeeds();
+    mswDB.clear('mockState');
+    mswDB.clear('seedState');
+    setSaveState({
+      hasSaved: false,
+      hasUnsavedChanges: true,
+      mocksCleared: true,
+    });
   };
 
   const discardChanges = () => {
@@ -411,12 +445,20 @@ export const ServiceWorkerTool = () => {
             }`}
           >
             <div className="dev-tools__msw__column">
-              <div className="dev-tools__msw__column__heading">Content</div>
+              <div className="dev-tools__msw__column__heading">
+                Seeds{' '}
+                <button
+                  className="small right-align"
+                  onClick={() => handleRemoveAllSeeds()}
+                >
+                  Remove all seeds
+                </button>
+              </div>
               <div className="dev-tools__msw__column__body">
                 <div className="dev-tools__list-box">
-                  {renderContentPopulatorOptions(
+                  {renderSeedOptions(
                     MSWSeeders,
-                    handleChangePopulator,
+                    handleChangeSeeder,
                     handleCountChange,
                     countMap,
                     !isMSWEnabled
@@ -441,6 +483,12 @@ export const ServiceWorkerTool = () => {
       </div>
       <div className="dev-tools__tool__footer">
         <div className="dev-tools__button-list">
+          <button
+            disabled={saveState.mocksCleared}
+            onClick={handleClearAllMockData}
+          >
+            Clear All Mock Data
+          </button>
           <button
             disabled={saveState.hasUnsavedChanges ? false : true}
             onClick={discardChanges}
