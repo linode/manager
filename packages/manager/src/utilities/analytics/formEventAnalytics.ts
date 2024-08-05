@@ -28,6 +28,7 @@ export const sendLinodeCreateFormInputEvent = ({
   interaction,
   label,
   subheaderName,
+  trackOnce,
 }: LinodeCreateFormEventOptions) => {
   const formPayload: FormInputEvent = {
     formName: `Linode Create from ${createType}`,
@@ -36,6 +37,7 @@ export const sendLinodeCreateFormInputEvent = ({
       interaction,
       label,
       subheaderName,
+      trackOnce,
     }),
   };
   sendFormEvent(formPayload, 'formInput');
@@ -79,6 +81,7 @@ export const sendLinodeCreateFormStartEvent = ({
       interaction,
       label,
       subheaderName,
+      trackOnce: true,
     }),
   };
   sendFormEvent(formPayload, 'formStart');

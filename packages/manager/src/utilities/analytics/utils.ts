@@ -95,8 +95,9 @@ export const getFormattedStringFromFormEventOptions = ({
   interaction,
   label,
   subheaderName,
+  trackOnce = false,
 }: FormEventOptions) => {
   return `${headerName ?? 'No header'}${
     subheaderName ? `:${subheaderName}` : ''
-  }|${interaction}:${label}`;
+  }|${interaction}:${label}${trackOnce ? ':once' : ''}`;
 };

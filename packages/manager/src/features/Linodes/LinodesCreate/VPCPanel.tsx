@@ -29,8 +29,8 @@ import { VPCCreateDrawer } from './VPCCreateDrawer';
 
 import type { Item } from 'src/components/EnhancedSelect';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
+import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
 export interface VPCPanelProps {
   additionalIPv4RangesForVPC: ExtendedIP[];
@@ -205,12 +205,14 @@ export const VPCPanel = (props: VPCPanelProps) => {
                   ...vpcFormEventOptions,
                   interaction: 'clear',
                   subheaderName: 'Assign VPC',
+                  trackOnce: true,
                 });
               } else {
                 sendLinodeCreateFormInputEvent({
                   ...vpcFormEventOptions,
                   interaction: 'change',
                   subheaderName: 'Assign VPC',
+                  trackOnce: true,
                 });
               }
             }}

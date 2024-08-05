@@ -57,13 +57,14 @@ describe('waitForAdobeAnalyticsToBeLoaded', () => {
 });
 
 describe('getFormattedStringFromFormEventOptions', () => {
+  const formEventOptionsWithHeaders: FormEventOptions = {
+    headerName: 'Header',
+    interaction: 'click',
+    label: 'Component label',
+    subheaderName: 'Subheader',
+  };
+
   it('should return a string in format "Header:Subheader|Interaction:Component label"', () => {
-    const formEventOptionsWithHeaders: FormEventOptions = {
-      headerName: 'Header',
-      interaction: 'click',
-      label: 'Component label',
-      subheaderName: 'Subheader',
-    };
     expect(
       getFormattedStringFromFormEventOptions(formEventOptionsWithHeaders)
     ).toEqual('Header:Subheader|click:Component label');
@@ -78,5 +79,15 @@ describe('getFormattedStringFromFormEventOptions', () => {
     expect(
       getFormattedStringFromFormEventOptions(formEventOptionsWithoutHeaders)
     ).toEqual('No header|click:Component label');
+  });
+
+  it("should append ':once' to the label's end to identify events to track once per page view", () => {
+    const formEventOptionsTrackOnce = {
+      ...formEventOptionsWithHeaders,
+      trackOnce: true,
+    };
+    expect(
+      getFormattedStringFromFormEventOptions(formEventOptionsTrackOnce)
+    ).toEqual('Header:Subheader|click:Component label:once');
   });
 });

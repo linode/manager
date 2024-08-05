@@ -100,12 +100,14 @@ export const SelectFirewallPanel = (props: Props) => {
                 ...firewallFormEventOptions,
                 interaction: 'clear',
                 subheaderName: 'Assign Firewall',
+                trackOnce: true,
               });
             } else {
               sendLinodeCreateFormInputEvent({
                 ...firewallFormEventOptions,
                 interaction: 'change',
                 subheaderName: 'Assign Firewall',
+                trackOnce: true,
               });
             }
           }}

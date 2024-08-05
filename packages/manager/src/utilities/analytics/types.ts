@@ -61,10 +61,28 @@ export interface FormErrorEvent extends BasicFormEvent {
 
 // To be used with form input and step events for consistent event formatting.
 export interface FormEventOptions {
-  headerName?: string; // Paper, modal, or drawer name.
+  /**
+   * Paper, modal, or drawer name. If undefined, will be formatted as "No header".
+   */
+  headerName?: string;
+  /**
+   * The type of UI interaction (e.g. click) the user takes to trigger the event.
+   */
   interaction: string;
+  /**
+   * The label of the button, form field, or other UI element the interaction is performed on.
+   */
   label: string;
+  /**
+   * Optional; e.g. an input field label visible in UI. If undefined, only the header will be sent.
+   */
   subheaderName?: string;
+  /**
+   * If true, `label` will be modified to include an identifier that tells the Adobe backend
+   * to only track this event once per page view.
+   * @default false
+   */
+  trackOnce?: boolean;
 }
 export interface LinodeCreateFormEventOptions extends FormEventOptions {
   createType: LinodeCreateType;
