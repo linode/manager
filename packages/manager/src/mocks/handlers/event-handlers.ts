@@ -2,7 +2,6 @@ import { DateTime } from 'luxon';
 import { http } from 'msw';
 
 import { mswDB } from '../indexedDB';
-import { getPaginatedSlice } from '../utilities/pagination';
 import {
   makeNotFoundResponse,
   makePaginatedResponse,
@@ -42,22 +41,17 @@ export const getEvents = () => [
     }): Promise<
       StrictResponse<APIErrorResponse | APIPaginatedResponse<Event>>
     > => {
-      const url = new URL(request.url);
       const eventQueue = await mswDB.getAll('eventQueue');
 
       if (!eventQueue) {
         return makeNotFoundResponse();
       }
-
-      const pageNumber = Number(url.searchParams.get('page')) || 1;
-      const pageSize = Number(url.searchParams.get('page_size')) || 25;
-      const totalPages = Math.max(Math.ceil(eventQueue.length / pageSize), 1);
-
       const events = eventQueue.filter(filterEventsByCreatedTime);
 
-      const pageSlice = getPaginatedSlice(events, pageNumber, pageSize);
-
-      return makePaginatedResponse(pageSlice, pageNumber, totalPages);
+      return makePaginatedResponse({
+        data: events,
+        request,
+      });
     }
   ),
 

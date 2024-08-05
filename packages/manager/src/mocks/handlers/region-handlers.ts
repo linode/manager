@@ -7,7 +7,6 @@ import {
 } from 'src/mocks/utilities/response';
 
 import { mswDB } from '../indexedDB';
-import { getPaginatedSlice } from '../utilities/pagination';
 
 import type { Region, RegionAvailability } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
@@ -25,20 +24,16 @@ export const getRegions = (mockState: MockState) => [
     }): Promise<
       StrictResponse<APIErrorResponse | APIPaginatedResponse<Region>>
     > => {
-      const url = new URL(request.url);
       const regions = await mswDB.getAll('regions');
 
       if (!regions) {
         return makeNotFoundResponse();
       }
 
-      const pageNumber = Number(url.searchParams.get('page')) || 1;
-      const pageSize = Number(url.searchParams.get('page_size')) || 25;
-      const totalPages = Math.max(Math.ceil(regions.length / pageSize), 1);
-
-      const pageSlice = getPaginatedSlice(regions, pageNumber, pageSize);
-
-      return makePaginatedResponse(pageSlice, pageNumber, totalPages);
+      return makePaginatedResponse({
+        data: regions,
+        request,
+      });
     }
   ),
 
@@ -58,22 +53,10 @@ export const getRegions = (mockState: MockState) => [
 
   // TODO: integrate with DB
   http.get('*/v4*/regions/availability', ({ request }) => {
-    const url = new URL(request.url);
-
-    const pageNumber = Number(url.searchParams.get('page')) || 1;
-    const pageSize = Number(url.searchParams.get('page_size')) || 25;
-    const totalPages = Math.max(
-      Math.ceil(mockState.regions.length / pageSize),
-      1
-    );
-
-    const pageSlice = getPaginatedSlice(
-      mockState.regions,
-      pageNumber,
-      pageSize
-    );
-
-    return makePaginatedResponse(pageSlice, pageNumber, totalPages);
+    return makePaginatedResponse({
+      data: mockState.regions,
+      request,
+    });
   }),
 
   // TODO: integrate with DB

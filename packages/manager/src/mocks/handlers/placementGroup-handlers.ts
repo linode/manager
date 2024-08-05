@@ -9,7 +9,6 @@ import {
 } from 'src/mocks/utilities/response';
 
 import { queueEvents } from '../utilities/events';
-import { getPaginatedSlice } from '../utilities/pagination';
 
 import type {
   AssignLinodesToPlacementGroupPayload,
@@ -25,7 +24,7 @@ import type {
   APIPaginatedResponse,
 } from 'src/mocks/utilities/response';
 
-export const getPlacementGroups = (mockState: MockState) => [
+export const getPlacementGroups = () => [
   http.get(
     '*/v4/placement/groups',
     async ({
@@ -33,23 +32,16 @@ export const getPlacementGroups = (mockState: MockState) => [
     }): Promise<
       StrictResponse<APIErrorResponse | APIPaginatedResponse<PlacementGroup>>
     > => {
-      const url = new URL(request.url);
       const placementGroups = await mswDB.getAll('placementGroups');
 
       if (!placementGroups) {
         return makeNotFoundResponse();
       }
 
-      const pageNumber = Number(url.searchParams.get('page')) || 1;
-      const pageSize = Number(url.searchParams.get('page_size')) || 25;
-      const totalPages = Math.ceil(placementGroups?.length / pageSize);
-      const pageSlice = getPaginatedSlice(
-        mockState.placementGroups,
-        pageNumber,
-        pageSize
-      );
-
-      return makePaginatedResponse(pageSlice, pageNumber, totalPages);
+      return makePaginatedResponse({
+        data: placementGroups,
+        request,
+      });
     }
   ),
 

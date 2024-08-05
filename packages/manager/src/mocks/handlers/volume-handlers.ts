@@ -3,7 +3,6 @@ import { http } from 'msw';
 
 import { volumeFactory, volumeTypeFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
-import { getPaginatedSlice } from 'src/mocks/utilities/pagination';
 import {
   makeNotFoundResponse,
   makePaginatedResponse,
@@ -22,12 +21,17 @@ export const getVolumes = (mockState: MockState) => [
   // Keeping things static for types/prices.
   http.get(
     '*/v4/volumes/types',
-    async (): Promise<
+    async ({
+      request,
+    }): Promise<
       StrictResponse<APIErrorResponse | APIPaginatedResponse<PriceType>>
     > => {
       const volumeTypes = volumeTypeFactory.buildList(3);
 
-      return makePaginatedResponse(volumeTypes);
+      return makePaginatedResponse({
+        data: volumeTypes,
+        request,
+      });
     }
   ),
 
@@ -38,20 +42,15 @@ export const getVolumes = (mockState: MockState) => [
     }): Promise<
       StrictResponse<APIErrorResponse | APIPaginatedResponse<Volume>>
     > => {
-      const url = new URL(request.url);
       const volumes = await mswDB.getAll('volumes');
 
       if (!volumes) {
         return makeNotFoundResponse();
       }
-
-      const pageNumber = Number(url.searchParams.get('page')) || 1;
-      const pageSize = Number(url.searchParams.get('page_size')) || 25;
-      const totalPages = Math.max(Math.ceil(volumes.length / pageSize), 1);
-
-      const pageSlice = getPaginatedSlice(volumes, pageNumber, pageSize);
-
-      return makePaginatedResponse(pageSlice, pageNumber, totalPages);
+      return makePaginatedResponse({
+        data: volumes,
+        request,
+      });
     }
   ),
 
@@ -73,6 +72,7 @@ export const getVolumes = (mockState: MockState) => [
     '*/v4/linode/instances/:linodeId/volumes',
     async ({
       params,
+      request,
     }): Promise<
       StrictResponse<APIErrorResponse | APIPaginatedResponse<Volume>>
     > => {
@@ -87,7 +87,10 @@ export const getVolumes = (mockState: MockState) => [
         (stateVolume) => stateVolume.linode_id === linodeId
       );
 
-      return makePaginatedResponse(volumesForLinode);
+      return makePaginatedResponse({
+        data: volumesForLinode,
+        request,
+      });
     }
   ),
 ];
@@ -180,7 +183,7 @@ export const updateVolumes = (mockState: MockState) => [
 export const deleteVolumes = (mockState: MockState) => [
   http.delete(
     '*/v4/volumes/:id',
-    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
+    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
       const id = Number(params.id);
       const volume = await mswDB.get('volumes', id);
 

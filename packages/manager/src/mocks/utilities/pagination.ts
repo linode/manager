@@ -2,7 +2,7 @@
  * Returns a slice of `allData` corresponding to a page of paginated data.
  *
  * @param allData - Data from which to get paginated slice.
- * @param page - Number of page to retrieve.
+ * @param page - Page to retrieve.
  * @param pageSize - Number of results in one page.
  */
 export const getPaginatedSlice = <T>(
