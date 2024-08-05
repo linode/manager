@@ -93,7 +93,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
               disabledRegions={disabledRegions}
               errorText={errorText}
               onChange={(e, region) => onChange(region)}
-              regionFilter={regionFilter}
+              regionFilter="core"
               regions={regions ?? []}
               showDistributedRegionIconHelperText={false}
               value={value}
