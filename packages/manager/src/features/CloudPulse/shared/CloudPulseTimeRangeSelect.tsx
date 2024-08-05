@@ -8,12 +8,10 @@ import {
   updateGlobalFilterPreference,
 } from '../Utils/UserPreference';
 
-import type { TimeDuration } from '@linode/api-v4';
 import type {
   BaseSelectProps,
   Item,
 } from 'src/components/EnhancedSelect/Select';
-import R from 'ramda';
 
 interface Props
   extends Omit<

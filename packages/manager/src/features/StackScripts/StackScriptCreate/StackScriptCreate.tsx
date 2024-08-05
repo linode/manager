@@ -133,7 +133,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     const imageList = images.map((image) => image.id);
 
     const anyAllOptionChosen = imageList.includes('any/all');
-    console.log(anyAllOptionChosen)
+    console.log(anyAllOptionChosen);
 
     this.setState(
       {
@@ -436,8 +436,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     const hasUnsavedChanges = this.hasUnsavedChanges();
 
     const availableImages = Object.values(_imagesData).filter(
-      (thisImage) =>
-        !thisImage.label.match(/kube/i)
+      (thisImage) => !thisImage.label.match(/kube/i)
     );
 
     const stackScriptGrants = grants.data?.stackscript;
