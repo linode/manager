@@ -111,14 +111,13 @@ export const VPCPanel = (props: VPCPanelProps) => {
     value: number;
   }
 
-  const vpcDropdownOptions: DropdownOption[] = vpcs.reduce(
-    (accumulator, vpc) => {
+  const vpcDropdownOptions: DropdownOption[] = React.useMemo(() => {
+    return vpcs.reduce((accumulator, vpc) => {
       return vpc.region === region
         ? [...accumulator, { label: vpc.label, value: vpc.id }]
         : accumulator;
-    },
-    []
-  );
+    }, []);
+  }, [vpcs, region]);
 
   const fromLinodeCreate = from === 'linodeCreate';
   const fromLinodeConfig = from === 'linodeConfig';
