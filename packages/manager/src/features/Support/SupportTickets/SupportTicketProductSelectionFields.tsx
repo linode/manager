@@ -96,6 +96,10 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
       volume_id: volumes,
     };
 
+    if (entityType === 'none' || entityType === 'general') {
+      return [];
+    }
+
     if (!reactQueryEntityDataMap[entityType]) {
       return [];
     }
