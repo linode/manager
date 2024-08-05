@@ -30,6 +30,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Incorrect Linode network interface configuration being displayed ([#10690](https://github.com/linode/manager/pull/10690))
 - Sources not displaying correctly in Firewall Rule drawer ([#10724](https://github.com/linode/manager/pull/10724))
 - Liked answer/question notifications from Community Questions Site ([#10732](https://github.com/linode/manager/pull/10732))
+- Filtering for Linode Create v2 Core region selection ([#10743](https://github.com/linode/manager/pull/10743))
 
 ### Removed:
 
