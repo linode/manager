@@ -32,7 +32,7 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
     : undefined;
 
   return (
-    <Box p={2}>
+    <Box p={2} position={'relative'}>
       {error ? (
         <Box sx={{ height: '100%' }}>
           <ErrorState errorText={error} />
@@ -48,9 +48,9 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
       {message && (
         <Box
           sx={{
-            left: '40%',
+            bottom: '50%',
+            left: '50%',
             position: 'absolute',
-            top: '30%',
           }}
         >
           <Typography variant="body2">{message}</Typography>
