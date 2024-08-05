@@ -18,6 +18,8 @@ export const ACTIONS_WITHOUT_USERNAMES: EventAction[] = [
   'entity_transfer_stale',
   'lassie_reboot',
   'community_like',
+  'community_mention',
+  'community_question_reply',
 ];
 
 export const formatEventWithUsername = (
