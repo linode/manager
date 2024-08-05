@@ -31,3 +31,10 @@ export const CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE =
 // Links
 export const PLACEMENT_GROUPS_DOCS_LINK =
   'https://www.linode.com/docs/products/compute/compute-instances/guides/placement-groups/';
+
+// Text Copy
+export const PLACEMENT_GROUP_POLICY_STRICT =
+  'Allows the addition of more compute instances to the group as long as the placement group remains compliant.';
+
+export const PLACEMENT_GROUP_POLICY_FLEXIBLE =
+  "Allows the addition of more compute instances to the group even if it breaks the placement group's compliance.";

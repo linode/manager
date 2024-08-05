@@ -1,4 +1,3 @@
-import { VPC } from '@linode/api-v4/lib';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -9,10 +8,10 @@ import { Box } from 'src/components/Box';
 import {
   DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY as UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY,
   UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY,
-} from 'src/components/DiskEncryption/constants';
-import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
+} from 'src/components/Encryption/constants';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
-import { Typography, TypographyProps } from 'src/components/Typography';
+import { Typography } from 'src/components/Typography';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { useProfile } from 'src/queries/profile/profile';
 import { pluralize } from 'src/utilities/pluralize';
@@ -30,14 +29,16 @@ import {
 } from './LinodeEntityDetail.styles';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 
+import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
+import type { VPC } from '@linode/api-v4/lib';
 import type {
   EncryptionStatus,
   Interface,
   Linode,
 } from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs';
+import type { TypographyProps } from 'src/components/Typography';
 
 interface LinodeEntityDetailProps {
   id: number;

@@ -2,7 +2,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
-import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';

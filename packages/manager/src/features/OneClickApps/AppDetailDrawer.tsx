@@ -156,7 +156,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                 }),
               }}
               className={classes.appName}
-              data-qa-drawer-title={stackScriptLabel}
+              data-qa-drawer-title={stackScriptLabel.trim()}
               data-testid="app-name"
               variant="h2"
             />

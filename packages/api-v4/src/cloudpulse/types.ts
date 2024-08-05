@@ -59,3 +59,31 @@ export interface AclpWidget {
   label: string;
   size: number;
 }
+
+export interface MetricDefinitions {
+  data: AvailableMetrics[];
+}
+
+export interface AvailableMetrics {
+  label: string;
+  metric: string;
+  metric_type: string;
+  unit: string;
+  scrape_interval: string;
+  available_aggregate_functions: string[];
+  dimensions: Dimension[];
+}
+
+export interface Dimension {
+  label: string;
+  dimension_label: string;
+  values: string[];
+}
+
+export interface JWETokenPayLoad {
+  resource_id: string[];
+}
+
+export interface JWEToken {
+  token: string;
+}

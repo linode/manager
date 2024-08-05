@@ -122,7 +122,7 @@ export const imagesToGroupedItems = (images: Image[]) => {
                   created,
                   isCloudInitCompatible: capabilities?.includes('cloud-init'),
                   isDistributedCompatible: capabilities?.includes(
-                    'distributed-images'
+                    'distributed-sites'
                   ),
                   // Add suffix 'deprecated' to the image at end of life.
                   label:
@@ -214,7 +214,7 @@ export const ImageSelect = React.memo((props: ImageSelectProps) => {
   const showDistributedCapabilityNotice =
     variant === 'private' &&
     filteredImages.some((image) =>
-      image.capabilities.includes('distributed-images')
+      image.capabilities.includes('distributed-sites')
     );
 
   return (

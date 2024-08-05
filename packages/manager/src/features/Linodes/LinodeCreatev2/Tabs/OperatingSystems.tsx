@@ -1,21 +1,48 @@
+import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
-import { useController } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 
 import { ImageSelectv2 } from 'src/components/ImageSelectv2/ImageSelectv2';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
-import type { CreateLinodeRequest } from '@linode/api-v4';
+import { getGeneratedLinodeLabel } from '../utilities';
+
+import type { LinodeCreateFormValues } from '../utilities';
+import type { Image } from '@linode/api-v4';
 
 export const OperatingSystems = () => {
-  const { field, fieldState } = useController<CreateLinodeRequest>({
+  const {
+    formState: {
+      dirtyFields: { label: isLabelFieldDirty },
+    },
+    getValues,
+    setValue,
+  } = useFormContext<LinodeCreateFormValues>();
+
+  const queryClient = useQueryClient();
+
+  const { field, fieldState } = useController<LinodeCreateFormValues>({
     name: 'image',
   });
 
   const isCreateLinodeRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
   });
+
+  const onChange = async (image: Image | null) => {
+    field.onChange(image?.id ?? null);
+
+    if (!isLabelFieldDirty) {
+      const label = await getGeneratedLinodeLabel({
+        queryClient,
+        tab: 'OS',
+        values: getValues(),
+      });
+      setValue('label', label);
+    }
+  };
 
   return (
     <Paper>
@@ -25,7 +52,7 @@ export const OperatingSystems = () => {
         errorText={fieldState.error?.message}
         label="Linux Distribution"
         onBlur={field.onBlur}
-        onChange={(image) => field.onChange(image?.id ?? null)}
+        onChange={onChange}
         placeholder="Choose a Linux distribution"
         value={field.value}
         variant="public"

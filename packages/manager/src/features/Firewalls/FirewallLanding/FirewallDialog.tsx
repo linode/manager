@@ -5,7 +5,7 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useDeleteFirewall, useMutateFirewall } from 'src/queries/firewalls';
-import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
+import { linodeQueries } from 'src/queries/linodes/linodes';
 import { nodebalancerQueries } from 'src/queries/nodebalancers';
 import { capitalize } from 'src/utilities/capitalize';
 
@@ -69,7 +69,7 @@ export const FirewallDialog = React.memo((props: Props) => {
 
       if (entity.type === 'linode') {
         queryClient.invalidateQueries({
-          queryKey: [linodesQueryKey, 'linode', entity.id, 'firewalls'],
+          queryKey: linodeQueries.linode(entity.id)._ctx.firewalls.queryKey,
         });
       }
     }

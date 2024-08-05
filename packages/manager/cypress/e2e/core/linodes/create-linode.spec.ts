@@ -257,11 +257,6 @@ describe('Create Linode', () => {
     mockGetLinodeType(dcPricingMockLinodeTypes[1]);
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
     mockGetVLANs(mockVLANs);
@@ -274,12 +269,7 @@ describe('Create Linode', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait([
-      '@getLinodeTypes',
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getVPCs',
-    ]);
+    cy.wait(['@getLinodeTypes', '@getVPCs']);
 
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
 
@@ -294,15 +284,14 @@ describe('Create Linode', () => {
     getVisible('[data-testid="vpc-panel"]').within(() => {
       containsVisible('Assign this Linode to an existing VPC.');
       // select VPC
-      cy.get('[data-qa-enhanced-select="None"]')
+      cy.findByLabelText('Assign VPC')
         .should('be.visible')
-        .click()
-        .type(`${mockVPC.label}{enter}`);
+        .focus()
+        .type(`${mockVPC.label}{downArrow}{enter}`);
       // select subnet
-      cy.findByText('Select Subnet')
+      cy.findByPlaceholderText('Select Subnet')
         .should('be.visible')
-        .click()
-        .type(`${mockSubnet.label}{enter}`);
+        .type(`${mockSubnet.label}{downArrow}{enter}`);
     });
 
     // The drawer opens when clicking "Add an SSH Key" button
@@ -341,11 +330,13 @@ describe('Create Linode', () => {
     ui.toast.assertMessage('Successfully created SSH key.');
 
     // When a user creates an SSH key, the list of SSH keys for each user updates to show the new key for the signed in user
-    cy.findAllByText(sshPublicKeyLabel).should('be.visible');
+    cy.findByText(sshPublicKeyLabel, { exact: false }).should('be.visible');
 
     getClick('#linode-label').clear().type(linodeLabel);
     cy.get('#root-password').type(rootpass);
-    getClick('[data-qa-deploy-linode]');
+
+    ui.button.findByTitle('Create Linode').click();
+
     cy.wait('@linodeCreated').its('response.statusCode').should('eq', 200);
     fbtVisible(linodeLabel);
     cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');

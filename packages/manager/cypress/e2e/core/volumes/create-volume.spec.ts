@@ -27,6 +27,8 @@ describe('volume create flow', () => {
    * - Confirms that volume is listed correctly on volumes landing page.
    */
   it('creates an unattached volume', () => {
+    cy.tag('purpose:syntheticTesting');
+
     const region = chooseRegion();
     const volume = {
       label: randomLabel(),

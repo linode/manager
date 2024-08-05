@@ -4,14 +4,17 @@ import React from 'react';
 import { SupportLink } from 'src/components/SupportLink';
 import { capitalize } from 'src/utilities/capitalize';
 
+import { supportTextRegex } from './ErrorMessage';
 import { Typography } from './Typography';
 
 import type { EntityType } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
 interface SupportTicketGeneralErrorProps {
   entityType: EntityType;
-  generalError: JSX.Element;
+  generalError: string;
 }
+
+const accountLimitRegex = /(limit|limit for the number of active services) on your account/i;
 
 export const SupportTicketGeneralError = (
   props: SupportTicketGeneralErrorProps
@@ -19,13 +22,10 @@ export const SupportTicketGeneralError = (
   const { entityType, generalError } = props;
   const theme = useTheme();
 
-  const supportTextRegex = /(open a support ticket|contact Support)/i;
-  const reason: string = generalError.props.errors[0].reason;
-  const limitError = reason.split(supportTextRegex);
+  const limitError = generalError.split(supportTextRegex);
 
   // Determine whether we'll need to link to a specific support ticket form based on ticketType.
-  const accountLimitRegex = /(limit|limit for the number of active services) on your account/i;
-  const isAccountLimitSupportTicket = accountLimitRegex.test(reason);
+  const isAccountLimitSupportTicket = accountLimitRegex.test(generalError);
 
   return (
     <Typography

@@ -1,7 +1,8 @@
-import { getLinode, getStackScript } from '@linode/api-v4';
 import { omit } from 'lodash';
 import { useHistory } from 'react-router-dom';
 
+import { imageQueries } from 'src/queries/images';
+import { linodeQueries } from 'src/queries/linodes/linodes';
 import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { privateIPRegex } from 'src/utilities/ipUtils';
@@ -142,7 +143,7 @@ export const tabs: LinodeCreateType[] = [
 export const getLinodeCreatePayload = (
   formValues: LinodeCreateFormValues
 ): CreateLinodeRequest => {
-  const values = omit(formValues, ['linode']);
+  const values = omit(formValues, ['linode', 'hasSignedEUAgreement']);
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
   }
@@ -151,7 +152,7 @@ export const getLinodeCreatePayload = (
     values.metadata = undefined;
   }
 
-  if (values.placement_group?.id === undefined) {
+  if (!values.placement_group?.id) {
     values.placement_group = undefined;
   }
 
@@ -212,7 +213,7 @@ export const getInterfacesPayload = (
   return undefined;
 };
 
-export const defaultInterfaces: InterfacePayload[] = [
+const defaultInterfaces: InterfacePayload[] = [
   {
     ipam_address: '',
     label: '',
@@ -242,6 +243,10 @@ export const defaultInterfaces: InterfacePayload[] = [
  */
 export interface LinodeCreateFormValues extends CreateLinodeRequest {
   /**
+   * Whether or not the user has signed the EU agreement
+   */
+  hasSignedEUAgreement?: boolean;
+  /**
    * The currently selected Linode
    */
   linode?: Linode | null;
@@ -253,22 +258,26 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
  *
  * The default values are dependent on the query params present.
  */
-export const defaultValues = async (): Promise<LinodeCreateFormValues> => {
-  const queryParams = getQueryParamsFromQueryString(window.location.search);
-  const params = getParsedLinodeCreateQueryParams(queryParams);
-
+export const defaultValues = async (
+  params: ParsedLinodeCreateQueryParams,
+  queryClient: QueryClient
+): Promise<LinodeCreateFormValues> => {
   const stackscriptId = params.stackScriptID ?? params.appID;
 
   const stackscript = stackscriptId
-    ? await getStackScript(stackscriptId)
+    ? await queryClient.ensureQueryData(
+        stackscriptQueries.stackscript(stackscriptId)
+      )
     : null;
 
-  const linode = params.linodeID ? await getLinode(params.linodeID) : null;
+  const linode = params.linodeID
+    ? await queryClient.ensureQueryData(linodeQueries.linode(params.linodeID))
+    : null;
 
   const privateIp =
     linode?.ipv4.some((ipv4) => privateIPRegex.test(ipv4)) ?? false;
 
-  return {
+  const values: LinodeCreateFormValues = {
     backup_id: params.backupID,
     image: getDefaultImageId(params),
     interfaces: defaultInterfaces,
@@ -281,6 +290,14 @@ export const defaultValues = async (): Promise<LinodeCreateFormValues> => {
     stackscript_id: stackscriptId,
     type: linode?.type ? linode.type : '',
   };
+
+  values.label = await getGeneratedLinodeLabel({
+    queryClient,
+    tab: params.type,
+    values,
+  });
+
+  return values;
 };
 
 const getDefaultImageId = (params: ParsedLinodeCreateQueryParams) => {
@@ -303,37 +320,119 @@ const getDefaultImageId = (params: ParsedLinodeCreateQueryParams) => {
   return null;
 };
 
-const defaultValuesForImages = {
-  interfaces: defaultInterfaces,
-  region: '',
-  type: '',
+interface GeneratedLinodeLabelOptions {
+  queryClient: QueryClient;
+  tab: LinodeCreateType | undefined;
+  values: LinodeCreateFormValues;
+}
+
+export const getGeneratedLinodeLabel = async (
+  options: GeneratedLinodeLabelOptions
+) => {
+  const { queryClient, tab, values } = options;
+
+  if (tab === 'OS') {
+    const generatedLabelParts: string[] = [];
+    if (values.image) {
+      const image = await queryClient.ensureQueryData(
+        imageQueries.image(values.image)
+      );
+      if (image.vendor) {
+        generatedLabelParts.push(image.vendor.toLowerCase());
+      }
+    }
+    if (values.region) {
+      generatedLabelParts.push(values.region);
+    }
+    return getLinodeLabelFromLabelParts(generatedLabelParts);
+  }
+
+  if (tab === 'Images') {
+    const generatedLabelParts: string[] = [];
+    if (values.image) {
+      const image = await queryClient.ensureQueryData(
+        imageQueries.image(values.image)
+      );
+      generatedLabelParts.push(image.label);
+    }
+    if (values.region) {
+      generatedLabelParts.push(values.region);
+    }
+    return getLinodeLabelFromLabelParts(generatedLabelParts);
+  }
+
+  if (tab === 'StackScripts' || tab === 'One-Click') {
+    const generatedLabelParts: string[] = [];
+    if (values.stackscript_id) {
+      const stackscript = await queryClient.ensureQueryData(
+        stackscriptQueries.stackscript(values.stackscript_id)
+      );
+      generatedLabelParts.push(stackscript.label.toLowerCase());
+    }
+    if (values.region) {
+      generatedLabelParts.push(values.region);
+    }
+    return getLinodeLabelFromLabelParts(generatedLabelParts);
+  }
+
+  if (tab === 'Backups') {
+    const generatedLabelParts: string[] = [];
+    if (values.linode) {
+      generatedLabelParts.push(values.linode.label);
+    }
+    generatedLabelParts.push('backup');
+    return getLinodeLabelFromLabelParts(generatedLabelParts);
+  }
+
+  if (tab === 'Clone Linode') {
+    const generatedLabelParts: string[] = [];
+    if (values.linode) {
+      generatedLabelParts.push(values.linode.label);
+    }
+    generatedLabelParts.push('clone');
+    return getLinodeLabelFromLabelParts(generatedLabelParts);
+  }
+
+  return '';
 };
 
-const defaultValuesForOS = {
-  image: DEFAULT_OS,
-  interfaces: defaultInterfaces,
-  region: '',
-  type: '',
-};
-
-const defaultValuesForStackScripts = {
-  image: undefined,
-  interfaces: defaultInterfaces,
-  region: '',
-  stackscript_id: undefined,
-  type: '',
+export const getIsValidLinodeLabelCharacter = (char: string) => {
+  return /^[0-9a-zA-Z]$/.test(char);
 };
 
 /**
- * A map that conatins default values for each Tab of the Linode Create flow.
+ * Given an array of strings, this function joins them together by
+ * "-" and ensures that the generated label is <= 64 characters.
+ *
+ * @param parts an array of strings that will be joined together by a "-"
+ * @returns a generated Linode label that is <= 64 characters
  */
-export const defaultValuesMap: Record<LinodeCreateType, CreateLinodeRequest> = {
-  Backups: defaultValuesForImages,
-  'Clone Linode': defaultValuesForImages,
-  Images: defaultValuesForImages,
-  OS: defaultValuesForOS,
-  'One-Click': defaultValuesForStackScripts,
-  StackScripts: defaultValuesForStackScripts,
+export const getLinodeLabelFromLabelParts = (parts: string[]) => {
+  const numberOfSeperaterDashes = parts.length - 1;
+  const maxSizeOfEachPart = Math.floor(
+    (64 - numberOfSeperaterDashes) / parts.length
+  );
+  let label = '';
+
+  for (const part of parts) {
+    for (let i = 0; i < Math.min(part.length, maxSizeOfEachPart); i++) {
+      if (
+        getIsValidLinodeLabelCharacter(part[i]) ||
+        (part[i] === '-' && label[label.length - 1] !== '-') ||
+        (part[i] === '.' && label[label.length - 1] !== '.') ||
+        (part[i] === '_' && label[label.length - 1] !== '_')
+      ) {
+        label += part[i];
+      } else if (part[i] === ' ' && label[label.length - 1] !== '-') {
+        label += '-';
+      }
+    }
+    if (part !== parts[parts.length - 1]) {
+      label += '-';
+    }
+  }
+
+  return label;
 };
 
 interface LinodeCreateAnalyticsEventOptions {
@@ -356,11 +455,10 @@ export const captureLinodeCreateAnalyticsEvent = async (
 
   if (type === 'Clone Linode' && values.linode) {
     const linodeId = values.linode.id;
-    // @todo use Linode query key factory when it is implemented
-    const linode = await queryClient.ensureQueryData({
-      queryFn: () => getLinode(linodeId),
-      queryKey: ['linodes', 'linode', linodeId, 'details'],
-    });
+
+    const linode = await queryClient.ensureQueryData(
+      linodeQueries.linode(linodeId)
+    );
 
     sendCreateLinodeEvent('clone', values.type, {
       isLinodePoweredOff: linode.status === 'offline',

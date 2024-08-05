@@ -13,7 +13,7 @@ const props: CloudPulseRegionSelectProps = {
   selectedDashboard: undefined,
 };
 
-describe('CloudViewRegionSelect', () => {
+describe('CloudPulseRegionSelect', () => {
   vi.spyOn(regions, 'useRegionsQuery').mockReturnValue({
     data: Array<Region>(),
   } as ReturnType<typeof regions.useRegionsQuery>);

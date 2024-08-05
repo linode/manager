@@ -7,16 +7,16 @@ import {
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useFormik } from 'formik';
 import { path } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -47,7 +47,10 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { generateDefaultDomainRecords } from '../domainUtils';
 
-type DefaultRecordsType = 'linode' | 'nodebalancer' | 'none';
+interface DefaultRecordsSetting {
+  label: string;
+  value: 'linode' | 'nodebalancer' | 'none';
+}
 
 export const CreateDomain = () => {
   const { data: profile } = useProfile();
@@ -63,12 +66,25 @@ export const CreateDomain = () => {
 
   const history = useHistory();
 
-  const [defaultRecordsSetting, setDefaultRecordsSetting] = React.useState<
-    Item<DefaultRecordsType>
-  >({
-    label: 'Do not insert default records for me.',
-    value: 'none',
-  });
+  const defaultRecords: DefaultRecordsSetting[] = [
+    {
+      label: 'Do not insert default records for me.',
+      value: 'none',
+    },
+    {
+      label: 'Insert default records from one of my Linodes.',
+      value: 'linode',
+    },
+    {
+      label: 'Insert default records from one of my NodeBalancers.',
+      value: 'nodebalancer',
+    },
+  ];
+
+  const [
+    defaultRecordsSetting,
+    setDefaultRecordsSetting,
+  ] = React.useState<DefaultRecordsSetting>(defaultRecords[0]);
 
   const [selectedDefaultLinode, setSelectedDefaultLinode] = React.useState<
     Linode | undefined
@@ -358,29 +374,15 @@ export const CreateDomain = () => {
             )}
             {isCreatingPrimaryDomain && (
               <React.Fragment>
-                <Select
-                  onChange={(value: Item<DefaultRecordsType>) =>
-                    setDefaultRecordsSetting(value)
-                  }
-                  options={[
-                    {
-                      label: 'Do not insert default records for me.',
-                      value: 'none',
-                    },
-                    {
-                      label: 'Insert default records from one of my Linodes.',
-                      value: 'linode',
-                    },
-                    {
-                      label:
-                        'Insert default records from one of my NodeBalancers.',
-                      value: 'nodebalancer',
-                    },
-                  ]}
+                <Autocomplete
+                  value={defaultRecords.find(
+                    (dr) => dr.value === defaultRecordsSetting.value
+                  )}
+                  disableClearable
                   disabled={disabled}
-                  isClearable={false}
                   label="Insert Default Records"
-                  value={defaultRecordsSetting}
+                  onChange={(_, selected) => setDefaultRecordsSetting(selected)}
+                  options={defaultRecords}
                 />
                 <StyledFormHelperText>
                   If specified, we can automatically create some domain records

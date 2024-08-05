@@ -18,7 +18,10 @@ export const deleteAllTestVolumes = async (): Promise<void> => {
   );
 
   const detachDeletePromises = volumes
-    .filter((volume: Volume) => isTestLabel(volume.label))
+    .filter(
+      (volume: Volume) =>
+        isTestLabel(volume.label) && volume.status === 'active'
+    )
     .map(async (volume: Volume) => {
       if (volume.linode_id) {
         await detachVolume(volume.id);

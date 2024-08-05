@@ -32,7 +32,9 @@ const createNodeBalancerWithUI = (
     .click()
     .clear()
     .type(nodeBal.label);
-  cy.contains('create a tag').click().type(entityTag);
+  cy.findByPlaceholderText(/create a tag/i)
+    .click()
+    .type(entityTag);
 
   if (isDcPricingTest) {
     const newRegion = getRegionById('br-gru');

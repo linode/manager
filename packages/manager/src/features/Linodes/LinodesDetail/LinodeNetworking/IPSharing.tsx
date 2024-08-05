@@ -23,10 +23,10 @@ import {
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 import {
-  useAllDetailedIPv6RangesQuery,
   useLinodeIPsQuery,
   useLinodeShareIPMutation,
 } from 'src/queries/linodes/networking';
+import { useAllDetailedIPv6RangesQuery } from 'src/queries/networking/networking';
 import { areArraysEqual } from 'src/utilities/areArraysEqual';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 

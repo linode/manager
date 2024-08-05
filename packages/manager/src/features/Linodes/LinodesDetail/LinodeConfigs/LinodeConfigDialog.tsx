@@ -1,9 +1,3 @@
-import {
-  Config,
-  Interface,
-  LinodeConfigCreationData,
-} from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
@@ -18,7 +12,7 @@ import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Divider } from 'src/components/Divider';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -51,23 +45,16 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { vlanQueries } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { vpcQueries } from 'src/queries/vpcs/vpcs';
-import {
-  DevicesAsStrings,
-  createDevicesFromStrings,
-} from 'src/utilities/createDevicesFromStrings';
+import { createDevicesFromStrings } from 'src/utilities/createDevicesFromStrings';
 import { createStringsFromDevices } from 'src/utilities/createStringsFromDevices';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
-import { ExtendedIP } from 'src/utilities/ipUtils';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
-import {
-  ExtendedInterface,
-  InterfaceSelect,
-} from '../LinodeSettings/InterfaceSelect';
+import { InterfaceSelect } from '../LinodeSettings/InterfaceSelect';
 import { KernelSelect } from '../LinodeSettings/KernelSelect';
 import {
   StyledDivider,
@@ -76,6 +63,17 @@ import {
   StyledFormGroup,
   StyledRadioGroup,
 } from './LinodeConfigDialog.styles';
+
+import type { ExtendedInterface } from '../LinodeSettings/InterfaceSelect';
+import type {
+  Config,
+  Interface,
+  LinodeConfigCreationData,
+} from '@linode/api-v4/lib/linodes';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface Helpers {
   devtmpfs_automount: boolean;
@@ -232,7 +230,9 @@ const interfacesToPayload = (
   }
 
   if (primaryInterfaceIndex !== undefined) {
-    interfaces[primaryInterfaceIndex].primary = true;
+    interfaces.forEach(
+      (iface, i) => (iface.primary = i === primaryInterfaceIndex)
+    );
   }
 
   return filteredInterfaces as Interface[];
@@ -639,7 +639,7 @@ export const LinodeConfigDialog = (props: Props) => {
   );
 
   const handleInterfaceChange = React.useCallback(
-    (slot: number, updatedInterface: Interface) => {
+    (slot: number, updatedInterface: ExtendedInterface) => {
       setFieldValue(`interfaces[${slot}]`, updatedInterface);
     },
     [setFieldValue]
@@ -1033,14 +1033,16 @@ export const LinodeConfigDialog = (props: Props) => {
                         vpcIPv4Error:
                           formik.errors[`interfaces[${idx}].ipv4.vpc`],
                       }}
-                      handleChange={(newInterface: Interface) =>
-                        handleInterfaceChange(idx, newInterface)
+                      handleChange={(newInterface: ExtendedInterface) => {
+                        handleInterfaceChange(idx, newInterface);
+                      }}
+                      nattedIPv4Address={
+                        thisInterface.ipv4?.nat_1_1 ?? undefined
                       }
                       additionalIPv4RangesForVPC={thisInterfaceIPRanges}
                       ipamAddress={thisInterface.ipam_address}
                       key={`eth${idx}-interface`}
                       label={thisInterface.label}
-                      nattedIPv4Address={thisInterface.ipv4?.nat_1_1}
                       purpose={thisInterface.purpose}
                       readOnly={isReadOnly}
                       region={linode?.region}
@@ -1048,7 +1050,7 @@ export const LinodeConfigDialog = (props: Props) => {
                       regionHasVPCs={regionHasVPCs}
                       slotNumber={idx}
                       subnetId={thisInterface.subnet_id}
-                      vpcIPv4={thisInterface.ipv4?.vpc}
+                      vpcIPv4={thisInterface.ipv4?.vpc ?? undefined}
                       vpcId={thisInterface.vpc_id}
                     />
                   </React.Fragment>

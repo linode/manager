@@ -12,12 +12,12 @@ import { ObjectTableRow } from './ObjectTableRow';
 
 import type {
   ObjectStorageObject,
-  ObjectStorageObjectListResponse,
+  ObjectStorageObjectList,
 } from '@linode/api-v4';
 import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
-  data: ObjectStorageObjectListResponse[];
+  data: ObjectStorageObjectList[];
   error?: APIError[];
   handleClickDelete: (objectName: string) => void;
   handleClickDetails: (object: ObjectStorageObject) => void;
