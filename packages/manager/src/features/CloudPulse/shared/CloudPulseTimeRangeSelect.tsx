@@ -13,6 +13,7 @@ import type {
   BaseSelectProps,
   Item,
 } from 'src/components/EnhancedSelect/Select';
+import R from 'ramda';
 
 interface Props
   extends Omit<
@@ -135,15 +136,4 @@ export const generateStartTime = (modifier: Labels, nowInSeconds: number) => {
     default:
       return nowInSeconds - 30 * 24 * 60 * 60;
   }
-};
-
-/**
- *
- * @param label label for time duration to get the corresponding time duration object
- * @returns time duration object for the label
- */
-export const getTimeDurationFromTimeRange = (label: string): TimeDuration => {
-  const options = generateSelectOptions();
-
-  return options[label] || { unit: 'min', vlaue: 30 };
 };
