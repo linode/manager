@@ -1,7 +1,5 @@
-import { IPRange } from '@linode/api-v4/lib/networking';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled, useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import {
   both,
   compose,
@@ -21,7 +19,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Divider } from 'src/components/Divider';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { usePrevious } from 'src/hooks/usePrevious';
@@ -30,11 +28,14 @@ import {
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 import {
-  useAllIPv6RangesQuery,
   useAssignAdressesMutation,
   useLinodeIPsQuery,
 } from 'src/queries/linodes/networking';
+import { useAllIPv6RangesQuery } from 'src/queries/networking/networking';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { APIError, IPRange } from '@linode/api-v4';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 interface Props {
   linodeId: number;

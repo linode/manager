@@ -8,6 +8,7 @@ type Props = ControlProps<any, any>;
 const SelectControl: React.FC<Props> = (props) => {
   return (
     <TextField
+      placeholder={props.selectProps.placeholder}
       InputProps={{
         inputComponent: 'div',
         inputProps: {

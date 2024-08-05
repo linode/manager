@@ -12,7 +12,6 @@ import Firewall from 'src/assets/icons/entityIcons/firewall.svg';
 import Image from 'src/assets/icons/entityIcons/image.svg';
 import Kubernetes from 'src/assets/icons/entityIcons/kubernetes.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
-import LoadBalancer from 'src/assets/icons/entityIcons/loadbalancer.svg';
 import Managed from 'src/assets/icons/entityIcons/managed.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
@@ -27,7 +26,6 @@ import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
-import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
@@ -38,7 +36,7 @@ import {
 } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import useStyles from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
@@ -104,7 +102,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const { _isManagedAccount, account } = useAccountManagement();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
@@ -164,7 +162,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   // the followed comment is for later use, the showCloudPulse will be removed and isACLPEnabled will be used
   // const { isACLPEnabled } = useIsACLPEnabled();
 
-  const { isACLBEnabled } = useIsACLBEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
 
@@ -201,14 +198,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           display: 'Volumes',
           href: '/volumes',
           icon: <Volume />,
-        },
-        {
-          betaChipClassName: 'beta-chip-aclb',
-          display: 'Cloud Load Balancers',
-          hide: !isACLBEnabled,
-          href: '/loadbalancers',
-          icon: <LoadBalancer />,
-          isBeta: true,
         },
         {
           display: 'NodeBalancers',
@@ -325,7 +314,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       allowObjPrefetch,
       allowMarketplacePrefetch,
       flags.databaseBeta,
-      isACLBEnabled,
       isPlacementGroupsEnabled,
       flags.placementGroups,
       showCloudPulse,

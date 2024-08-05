@@ -28,7 +28,7 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
@@ -92,7 +92,7 @@ const SearchBar = (props: SearchProps) => {
   const isLargeAccount = useIsLargeAccount(searchActive);
   const { account } = useAccountManagement();
   const flags = useFlags();
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []

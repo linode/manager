@@ -1,11 +1,11 @@
 import { Region } from '@linode/api-v4';
 import {
-  AccessType,
+  ObjectStorageKeyBucketAccessPermissions,
   ObjectStorageBucket,
   ObjectStorageKey,
-  ObjectStorageKeyRequest,
-  Scope,
-  UpdateObjectStorageKeyRequest,
+  CreateObjectStorageKeyPayload,
+  ObjectStorageKeyBucketAccess,
+  UpdateObjectStorageKeyPayload,
 } from '@linode/api-v4/lib/object-storage';
 import {
   createObjectStorageKeysSchema,
@@ -26,7 +26,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { useObjectStorageBuckets } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 import { sortByString } from 'src/utilities/sort-by';
 
@@ -48,21 +48,22 @@ export interface AccessKeyDrawerProps {
   objectStorageKey?: ObjectStorageKey;
   onClose: () => void;
   onSubmit: (
-    values: ObjectStorageKeyRequest | UpdateObjectStorageKeyRequest,
+    values: CreateObjectStorageKeyPayload | UpdateObjectStorageKeyPayload,
     formikProps: FormikProps<
-      ObjectStorageKeyRequest | UpdateObjectStorageKeyRequest
+      CreateObjectStorageKeyPayload | UpdateObjectStorageKeyPayload
     >
   ) => void;
   open: boolean;
 }
 
 // Access key scopes displayed in the drawer can have no permission or "No Access" selected, which are not valid API permissions.
-export interface DisplayedAccessKeyScope extends Omit<Scope, 'permissions'> {
-  permissions: AccessType | null;
+export interface DisplayedAccessKeyScope
+  extends Omit<ObjectStorageKeyBucketAccess, 'permissions'> {
+  permissions: ObjectStorageKeyBucketAccessPermissions | null;
 }
 
 export interface FormState {
-  bucket_access: Scope[] | null;
+  bucket_access: ObjectStorageKeyBucketAccess[] | null;
   label: string;
   regions: string[];
 }
@@ -114,7 +115,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   const { account } = useAccountManagement();
   const flags = useFlags();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
@@ -216,7 +217,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     );
   };
 
-  const handleScopeUpdate = (newScopes: Scope[]) => {
+  const handleScopeUpdate = (newScopes: ObjectStorageKeyBucketAccess[]) => {
     formik.setFieldValue('bucket_access', newScopes);
   };
 

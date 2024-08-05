@@ -1,45 +1,36 @@
 import {
-  APIError,
-  CreateIPv6RangePayload,
-  Filter,
-  IPAddress,
-  IPAllocationRequest,
-  IPAssignmentPayload,
-  IPRange,
-  IPRangeInformation,
-  IPSharingPayload,
-  Linode,
-  LinodeIPsResponse,
-  Params,
   allocateIPAddress,
   assignAddresses,
-  createIPv6Range,
-  getIPv6RangeInfo,
-  getLinodeIPs,
   removeIPAddress,
   removeIPv6Range,
   shareAddresses,
   updateIP,
 } from '@linode/api-v4';
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { queryKey } from './linodes';
-import { getAllIPv6Ranges, getAllIps } from './requests';
+import { networkingQueries } from '../networking/networking';
+import { linodeQueries } from './linodes';
+
+import type {
+  APIError,
+  IPAddress,
+  IPAllocationRequest,
+  IPAssignmentPayload,
+  IPRangeInformation,
+  IPSharingPayload,
+  Linode,
+  LinodeIPsResponse,
+} from '@linode/api-v4';
+import type { QueryClient } from '@tanstack/react-query';
 
 export const useLinodeIPsQuery = (
   linodeId: number,
   enabled: boolean = true
 ) => {
-  return useQuery<LinodeIPsResponse, APIError[]>(
-    [queryKey, 'linode', linodeId, 'ips'],
-    () => getLinodeIPs(linodeId),
-    { enabled }
-  );
+  return useQuery<LinodeIPsResponse, APIError[]>({
+    ...linodeQueries.linode(linodeId)._ctx.ips,
+    enabled,
+  });
 };
 
 export const useLinodeIPMutation = () => {
@@ -48,9 +39,10 @@ export const useLinodeIPMutation = () => {
     IPAddress,
     APIError[],
     { address: string; rdns?: null | string }
-  >(({ address, rdns }) => updateIP(address, rdns), {
+  >({
+    mutationFn: ({ address, rdns }) => updateIP(address, rdns),
     onSuccess() {
-      invalidateAllIPsQueries(queryClient);
+      invalidateIPsForAllLinodes(queryClient);
     },
   });
 };
@@ -60,48 +52,80 @@ export const useLinodeIPDeleteMutation = (
   address: string
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(
-    () => removeIPAddress({ address, linodeID: linodeId }),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries([
-          queryKey,
-          'linode',
-          linodeId,
-          'details',
-        ]);
-        queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'ips']);
-        queryClient.invalidateQueries([queryKey, 'paginated']);
-        queryClient.invalidateQueries([queryKey, 'all']);
-        queryClient.invalidateQueries([queryKey, 'infinite']);
-        queryClient.invalidateQueries([queryKey, 'ips']);
-      },
-    }
-  );
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => removeIPAddress({ address, linodeID: linodeId }),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: linodeQueries.linode(linodeId).queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linodes.queryKey,
+      });
+
+      queryClient.invalidateQueries({ queryKey: networkingQueries.ips._def });
+    },
+  });
 };
 
 export const useLinodeRemoveRangeMutation = (range: string) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => removeIPv6Range({ range }), {
-    onSuccess() {
-      invalidateAllIPsQueries(queryClient);
-      queryClient.invalidateQueries([queryKey, 'paginated']);
-      queryClient.invalidateQueries([queryKey, 'all']);
-      queryClient.invalidateQueries([queryKey, 'infinite']);
-      queryClient.invalidateQueries([queryKey, 'ips']);
-      queryClient.invalidateQueries([queryKey, 'ipv6']);
+  return useMutation<IPRangeInformation, APIError[]>({
+    mutationFn: async () => {
+      const rangeDetails = await queryClient.ensureQueryData(
+        networkingQueries.ipv6._ctx.range(range)
+      );
+      await removeIPv6Range({ range });
+      return rangeDetails;
+    },
+    onSuccess(deletedRange) {
+      // Update networking queries
+      queryClient.removeQueries({
+        queryKey: networkingQueries.ipv6._ctx.range(range).queryKey,
+      });
+      queryClient.invalidateQueries({ queryKey: networkingQueries.ips._def });
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.ipv6._ctx.ranges._def,
+      });
+
+      // Update Linode queries
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linodes.queryKey,
+      });
+
+      for (const linode of deletedRange.linodes) {
+        queryClient.invalidateQueries({
+          exact: true,
+          queryKey: linodeQueries.linode(linode).queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linode)._ctx.ips.queryKey,
+        });
+      }
     },
   });
 };
 
 export const useLinodeShareIPMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], IPSharingPayload>(shareAddresses, {
-    onSuccess() {
-      invalidateAllIPsQueries(queryClient);
-      queryClient.invalidateQueries([queryKey, 'paginated']);
-      queryClient.invalidateQueries([queryKey, 'all']);
-      queryClient.invalidateQueries([queryKey, 'infinite']);
+  return useMutation<{}, APIError[], IPSharingPayload>({
+    mutationFn: shareAddresses,
+    onSuccess(response, variables) {
+      invalidateIPsForAllLinodes(queryClient);
+
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: linodeQueries.linode(variables.linode_id).queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linodes.queryKey,
+      });
+
+      queryClient.invalidateQueries({ queryKey: networkingQueries._def });
     },
   });
 };
@@ -112,128 +136,68 @@ export const useAssignAdressesMutation = ({
   currentLinodeId: Linode['id'];
 }) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], IPAssignmentPayload>(assignAddresses, {
+  return useMutation<{}, APIError[], IPAssignmentPayload>({
+    mutationFn: assignAddresses,
     onSuccess(_, variables) {
       for (const { linode_id } of variables.assignments) {
-        queryClient.invalidateQueries([
-          queryKey,
-          'linode',
-          linode_id,
-          'details',
-        ]);
-        queryClient.invalidateQueries([queryKey, 'linode', linode_id, 'ips']);
+        queryClient.invalidateQueries({
+          exact: true,
+          queryKey: linodeQueries.linode(linode_id).queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linode_id)._ctx.ips.queryKey,
+        });
       }
-      queryClient.invalidateQueries([
-        queryKey,
-        'linode',
-        currentLinodeId,
-        'ips',
-      ]);
-      queryClient.invalidateQueries([queryKey, 'ipv6']);
-      queryClient.invalidateQueries([queryKey, 'paginated']);
-      queryClient.invalidateQueries([queryKey, 'all']);
-      queryClient.invalidateQueries([queryKey, 'infinite']);
+
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: linodeQueries.linode(currentLinodeId).queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(currentLinodeId)._ctx.ips.queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linodes.queryKey,
+      });
+
+      queryClient.invalidateQueries({ queryKey: networkingQueries._def });
     },
   });
 };
 
 export const useAllocateIPMutation = (linodeId: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], IPAllocationRequest>(
-    (data) => allocateIPAddress(linodeId, data),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries([
-          queryKey,
-          'linode',
-          linodeId,
-          'details',
-        ]);
-        queryClient.invalidateQueries([queryKey, 'linode', linodeId, 'ips']);
-        queryClient.invalidateQueries([queryKey, 'paginated']);
-        queryClient.invalidateQueries([queryKey, 'all']);
-        queryClient.invalidateQueries([queryKey, 'infinite']);
-        queryClient.invalidateQueries([queryKey, 'ips']);
-      },
-    }
-  );
-};
+  return useMutation<{}, APIError[], IPAllocationRequest>({
+    mutationFn: (data) => allocateIPAddress(linodeId, data),
+    onSuccess() {
+      // Update Linode queries
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: linodeQueries.linode(linodeId).queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linodes.queryKey,
+      });
 
-export const useCreateIPv6RangeMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], CreateIPv6RangePayload>(createIPv6Range, {
-    onSuccess(_, variables) {
-      queryClient.invalidateQueries([queryKey, 'ips']);
-      queryClient.invalidateQueries([queryKey, 'ipv6']);
-      if (variables.linode_id) {
-        queryClient.invalidateQueries([
-          queryKey,
-          'linode',
-          variables.linode_id,
-          'details',
-        ]);
-        queryClient.invalidateQueries([
-          queryKey,
-          'linode',
-          variables.linode_id,
-          'ips',
-        ]);
-        queryClient.invalidateQueries([queryKey, 'paginated']);
-        queryClient.invalidateQueries([queryKey, 'all']);
-        queryClient.invalidateQueries([queryKey, 'infinite']);
-      }
+      // Update networking queries
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.ips._def,
+      });
     },
   });
 };
 
-export const useAllIPsQuery = (
-  params?: Params,
-  filter?: Filter,
-  enabled: boolean = true
-) => {
-  return useQuery<IPAddress[], APIError[]>(
-    [queryKey, 'ips', params, filter],
-    () => getAllIps(params, filter),
-    { enabled }
-  );
-};
-
-export const useAllIPv6RangesQuery = (
-  params?: Params,
-  filter?: Filter,
-  enabled: boolean = true
-) => {
-  return useQuery<IPRange[], APIError[]>(
-    [queryKey, 'ipv6', 'ranges', params, filter],
-    () => getAllIPv6Ranges(params, filter),
-    { enabled }
-  );
-};
-
-export const useAllDetailedIPv6RangesQuery = (
-  params?: Params,
-  filter?: Filter,
-  enabled: boolean = true
-) => {
-  const { data: ranges } = useAllIPv6RangesQuery(params, filter, enabled);
-  return useQuery<IPRangeInformation[], APIError[]>(
-    [queryKey, 'ipv6', 'ranges', 'details', params, filter],
-    async () => {
-      return await Promise.all(
-        (ranges ?? []).map((range) => getIPv6RangeInfo(range.range))
-      );
-    },
-    { enabled: ranges !== undefined && enabled }
-  );
-};
-
-const invalidateAllIPsQueries = (queryClient: QueryClient) => {
+const invalidateIPsForAllLinodes = (queryClient: QueryClient) => {
   // Because IPs may be shared between Linodes, we can't simpily invalidate one store.
   // Here, we look at all of our active query keys, and invalidate any queryKey that contains 'ips'.
   queryClient.invalidateQueries({
     predicate: (query) => {
       if (Array.isArray(query.queryKey)) {
-        return query.queryKey[0] === queryKey && query.queryKey[3] === 'ips';
+        return query.queryKey[0] === 'linodes' && query.queryKey[3] === 'ips';
       }
       return false;
     },

@@ -3,11 +3,6 @@
  */
 
 import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import {
   mockGetSubnets,
   mockCreateSubnet,
   mockGetVPC,
@@ -82,17 +77,13 @@ describe('VPC assign/unassign flows', () => {
       subnets: [mockSubnetAfterLinodeAssignment],
     });
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetVPCs(mockVPCs).as('getVPCs');
     mockGetVPC(mockVPC).as('getVPC');
     mockGetSubnets(mockVPC.id, []).as('getSubnets');
     mockCreateSubnet(mockVPC.id).as('createSubnet');
 
     cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPC', '@getSubnets']);
+    cy.wait(['@getVPC', '@getSubnets']);
 
     // confirm that vpc and subnet details get displayed
     cy.findByText(mockVPC.label).should('be.visible');
@@ -230,16 +221,12 @@ describe('VPC assign/unassign flows', () => {
       ],
     });
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetVPCs(mockVPCs).as('getVPCs');
     mockGetVPC(mockVPC).as('getVPC');
     mockGetSubnets(mockVPC.id, [mockSubnet]).as('getSubnets');
 
     cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPC', '@getSubnets']);
+    cy.wait(['@getVPC', '@getSubnets']);
 
     // confirm that subnet should get displayed on VPC's detail page
     cy.findByText(mockVPC.label).should('be.visible');

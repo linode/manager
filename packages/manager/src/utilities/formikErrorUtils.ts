@@ -1,10 +1,10 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import set from 'lodash.set';
 import { reverse } from 'ramda';
 
 import { getAPIErrorOrDefault } from './errorUtils';
 import { isNilOrEmpty } from './isNilOrEmpty';
 
+import type { APIError } from '@linode/api-v4/lib/types';
 import type { FormikErrors } from 'formik';
 
 export const getFormikErrorsFromAPIErrors = <T>(
@@ -49,12 +49,16 @@ export const handleGeneralErrors = (
 
   const _apiErrors = getAPIErrorOrDefault(apiErrors, defaultMessage);
 
-  const generalError = _apiErrors
-    .reduce(
-      (result, { field, reason }) => (field ? result : [...result, reason]),
-      []
-    )
-    .join(',');
+  const generalError =
+    typeof _apiErrors[0].reason !== 'string'
+      ? _apiErrors[0].reason
+      : _apiErrors
+          .reduce(
+            (result, { field, reason }) =>
+              field ? result : [...result, reason],
+            []
+          )
+          .join(',');
 
   if (!isNilOrEmpty(generalError)) {
     return callback(generalError);

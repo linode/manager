@@ -9,8 +9,8 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
-import { DISK_ENCRYPTION_IMAGES_CAVEAT_COPY } from 'src/components/DiskEncryption/constants';
-import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
+import { DISK_ENCRYPTION_IMAGES_CAVEAT_COPY } from 'src/components/Encryption/constants';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
@@ -21,6 +21,7 @@ import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -167,13 +168,18 @@ export const CreateImageTab = () => {
   return (
     <form onSubmit={onSubmit}>
       <Stack spacing={2}>
+        {isImageCreateRestricted && (
+          <Notice
+            text={getRestrictedResourceText({
+              action: 'create',
+              isSingular: false,
+              resourceType: 'Images',
+            })}
+            important
+            variant="error"
+          />
+        )}
         <Paper>
-          {isImageCreateRestricted && (
-            <Notice
-              text="You don't have permissions to create a new Image. Please contact an account administrator for details."
-              variant="error"
-            />
-          )}
           {formState.errors.root?.message && (
             <Notice
               spacingBottom={8}

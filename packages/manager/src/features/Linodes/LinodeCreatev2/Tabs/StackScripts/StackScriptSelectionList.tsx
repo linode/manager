@@ -1,5 +1,6 @@
 import { getAPIFilterFromQuery } from '@linode/search';
 import CloseIcon from '@mui/icons-material/Close';
+import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { Waypoint } from 'react-waypoint';
@@ -28,7 +29,10 @@ import {
   useStackScriptsInfiniteQuery,
 } from 'src/queries/stackscripts';
 
-import { useLinodeCreateQueryParams } from '../../utilities';
+import {
+  getGeneratedLinodeLabel,
+  useLinodeCreateQueryParams,
+} from '../../utilities';
 import { StackScriptDetailsDialog } from './StackScriptDetailsDialog';
 import { StackScriptSelectionRow } from './StackScriptSelectionRow';
 import { getDefaultUDFData } from './UserDefinedFields/utilities';
@@ -47,12 +51,21 @@ interface Props {
 export const StackScriptSelectionList = ({ type }: Props) => {
   const [query, setQuery] = useState<string>();
 
+  const queryClient = useQueryClient();
+
   const { handleOrderChange, order, orderBy } = useOrder({
     order: 'desc',
     orderBy: 'deployments_total',
   });
 
-  const { control, setValue } = useFormContext<CreateLinodeRequest>();
+  const {
+    control,
+    formState: {
+      dirtyFields: { label: isLabelFieldDirty },
+    },
+    getValues,
+    setValue,
+  } = useFormContext<CreateLinodeRequest>();
 
   const { field } = useController({
     control,
@@ -189,13 +202,24 @@ export const StackScriptSelectionList = ({ type }: Props) => {
         <TableBody>
           {stackscripts?.map((stackscript) => (
             <StackScriptSelectionRow
-              onSelect={() => {
+              onSelect={async () => {
                 setValue('image', null);
                 setValue(
                   'stackscript_data',
                   getDefaultUDFData(stackscript.user_defined_fields)
                 );
                 field.onChange(stackscript.id);
+
+                if (!isLabelFieldDirty) {
+                  setValue(
+                    'label',
+                    await getGeneratedLinodeLabel({
+                      queryClient,
+                      tab: 'StackScripts',
+                      values: getValues(),
+                    })
+                  );
+                }
               }}
               isSelected={field.value === stackscript.id}
               key={stackscript.id}

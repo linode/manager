@@ -1,7 +1,6 @@
 import {
-  getIPs,
-  getIPv6Ranges,
   getLinodeConfigs,
+  getLinodeDisks,
   getLinodeFirewalls,
   getLinodeKernels,
   getLinodes,
@@ -11,10 +10,9 @@ import { getAll } from 'src/utilities/getAll';
 
 import type {
   Config,
+  Disk,
   Filter,
   Firewall,
-  IPAddress,
-  IPRange,
   Kernel,
   Linode,
   Params,
@@ -57,21 +55,7 @@ export const getAllLinodeFirewalls = (
     )
   )().then((data) => data.data);
 
-export const getAllIps = (
-  passedParams: Params = {},
-  passedFilter: Filter = {}
-) =>
-  getAll<IPAddress>((params, filter) =>
-    getIPs({ ...params, ...passedParams }, { ...filter, ...passedFilter })
-  )().then((data) => data.data);
-
-export const getAllIPv6Ranges = (
-  passedParams: Params = {},
-  passedFilter: Filter = {}
-) =>
-  getAll<IPRange>((params, filter) =>
-    getIPv6Ranges(
-      { ...params, ...passedParams },
-      { ...filter, ...passedFilter }
-    )
-  )().then((data) => data.data);
+export const getAllLinodeDisks = (id: number) =>
+  getAll<Disk>((params, filter) => getLinodeDisks(id, params, filter))().then(
+    (data) => data.data
+  );

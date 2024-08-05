@@ -1,5 +1,4 @@
 import {
-  ACLType,
   getBucketAccess,
   updateBucketAccess,
 } from '@linode/api-v4/lib/object-storage';
@@ -10,6 +9,8 @@ import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
 import { AccessSelect } from './AccessSelect';
+
+import type { ACLType } from '@linode/api-v4/lib/object-storage';
 
 export const StyledRootContainer = styled(Paper, {
   label: 'StyledRootContainer',

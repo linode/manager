@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -254,12 +255,12 @@ export const CreateFirewallDrawer = React.memo(
             />
           ) : null}
           {generalError && (
-            <Notice
-              data-qa-error
-              key={status}
-              text={status?.generalError ?? 'An unexpected error occurred'}
-              variant="error"
-            />
+            <Notice data-qa-error key={status} variant="error">
+              <ErrorMessage
+                entityType="firewall_id"
+                message={generalError ?? 'An unexpected error occurred'}
+              />
+            </Notice>
           )}
           <TextField
             inputProps={{

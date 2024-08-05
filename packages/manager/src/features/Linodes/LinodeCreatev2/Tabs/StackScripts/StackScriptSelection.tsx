@@ -27,6 +27,7 @@ export const StackScriptSelection = () => {
     reset((prev) => ({
       ...prev,
       image: undefined,
+      label: '', // @todo use generate here to retain region in label?
       stackscript_data: undefined,
       stackscript_id: undefined,
     }));
