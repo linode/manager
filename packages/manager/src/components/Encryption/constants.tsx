@@ -71,3 +71,18 @@ export const ENCRYPT_DISK_REBUILD_LKE_COPY =
 
 export const ENCRYPT_DISK_REBUILD_DISTRIBUTED_COPY =
   'Distributed Compute Instances are secured using disk encryption.';
+
+/* Block Storage Encryption constants */
+const BLOCK_STORAGE_ENCRYPTION_GUIDE_LINK = ''; // @TODO BSE: Update with guide link
+
+export const BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION = (
+  <>
+    Secure this volume using data at rest encryption. Data center systems take
+    care of encrypting and decrypting for you. Once a volume is encrypted it
+    cannot be undone.{' '}
+    <Link to={BLOCK_STORAGE_ENCRYPTION_GUIDE_LINK}>Learn more</Link>.
+  </>
+);
+
+export const BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY =
+  'Volume encryption is not available in the selected region. Select another region to use Volume encryption.';
