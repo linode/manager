@@ -69,12 +69,12 @@ export type ItemsByID<T> = Record<string, T>;
  *
  */
 
-export const listToItemsByID = <E extends Record<string, any>>(
+export const listToItemsByID = <E extends { [id: number | string]: any }>(
   entityList: E[],
   indexer: string = 'id'
 ) => {
-  return entityList.reduce(
-    (map, item) => ({ ...map, [item[indexer as keyof E]]: item }),
+  return entityList.reduce<Record<string, E>>(
+    (map, item) => ({ ...map, [item[indexer]]: item }),
     {}
   );
 };

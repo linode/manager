@@ -38,10 +38,13 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
     name: `stackscript_data.${userDefinedField.name}`,
   });
 
+  // @ts-expect-error UDFs don't abide by the form's error type.
   const error = formState.errors?.[userDefinedField.name]?.message?.replace(
     'the UDF',
     ''
   );
+  // We might be able to fix this by checking the message for "UDF" and fixing the key
+  // when we put the error message in the react hook form state.
 
   if (getIsUDFHeader(userDefinedField)) {
     return (

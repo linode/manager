@@ -10,7 +10,7 @@ import { useInProgressEvents } from 'src/queries/events/events';
 
 import { LinodeDiskActionMenu } from './LinodeDiskActionMenu';
 
-import type { Disk, Linode } from '@linode/api-v4';
+import type { Disk, EventAction, Linode } from '@linode/api-v4';
 
 interface Props {
   disk: Disk;
@@ -35,7 +35,7 @@ export const LinodeDiskRow = React.memo((props: Props) => {
     readOnly,
   } = props;
 
-  const diskEventLabelMap = {
+  const diskEventLabelMap: Partial<Record<EventAction, string>> = {
     disk_create: 'Creating',
     disk_delete: 'Deleting',
     disk_resize: 'Resizing',
