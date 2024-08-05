@@ -9,6 +9,13 @@ const ObjectStorageLanding = React.lazy(() =>
     default: module.ObjectStorageLanding,
   }))
 );
+
+const ObjectStorageKeysCreate = React.lazy(() =>
+  import('./AccessKeyLanding/OMC_AccessKeyDrawer').then((module) => ({
+    default: module.OMC_AccessKeyDrawer,
+  }))
+);
+
 const BucketDetail = React.lazy(() => import('./BucketDetail'));
 
 type CombinedProps = RouteComponentProps;
@@ -26,7 +33,11 @@ export const ObjectStorage: React.FC<CombinedProps> = (props) => {
         />
         <Route
           component={ObjectStorageLanding}
-          path={'/object-storage/:tab?/:action?'}
+          path={`${path}/:tab?/:action?`}
+        />
+        <Route
+          component={ObjectStorageKeysCreate}
+          path={`${path}/access-keys/create`}
         />
       </Switch>
     </React.Suspense>

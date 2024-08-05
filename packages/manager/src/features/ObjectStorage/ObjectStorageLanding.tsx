@@ -17,7 +17,6 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useOpenClose } from 'src/hooks/useOpenClose';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
@@ -42,16 +41,15 @@ export const ObjectStorageLanding = () => {
   const history = useHistory();
   const [mode, setMode] = React.useState<MODE>('creating');
   const { action, tab } = useParams<{
-    action?: 'create';
+    action?: 'create' | 'edit' | 'view';
     tab?: 'access-keys' | 'buckets';
   }>();
-  const isCreateBucketOpen = tab === 'buckets' && action === 'create';
+
   const {
     _isRestrictedUser,
     account,
     accountSettings,
   } = useAccountManagement();
-
   const flags = useFlags();
 
   const isObjMultiClusterEnabled = isFeatureEnabledV2(
@@ -68,61 +66,52 @@ export const ObjectStorageLanding = () => {
 
   const userHasNoBucketCreated =
     objectStorageBucketsResponse?.buckets.length === 0;
-  const createOrEditDrawer = useOpenClose();
 
   const tabs = [
-    {
-      routeName: `/object-storage/buckets`,
-      title: 'Buckets',
-    },
-    {
-      routeName: `/object-storage/access-keys`,
-      title: 'Access Keys',
-    },
+    { routeName: `/object-storage/buckets`, title: 'Buckets' },
+    { routeName: `/object-storage/access-keys`, title: 'Access Keys' },
   ];
-
-  const realTabs = ['buckets', 'access-keys'];
 
   const openDrawer = (mode: MODE) => {
     setMode(mode);
-    createOrEditDrawer.open();
+    history.replace(
+      `/object-storage/access-keys/${mode === 'viewing' ? 'view' : 'edit'}`
+    );
   };
 
-  const navToURL = (index: number) => {
-    history.push(tabs[index].routeName);
-  };
+  const navToURL = (index: number) => history.push(tabs[index].routeName);
 
-  const objPromotionalOffers = (
-    flags.promotionalOffers ?? []
-  ).filter((promotionalOffer) =>
-    promotionalOffer.features.includes('Object Storage')
-  );
+  const objPromotionalOffers =
+    flags.promotionalOffers?.filter((offer) =>
+      offer.features.includes('Object Storage')
+    ) ?? [];
 
-  // A user needs to explicitly cancel Object Storage in their Account Settings in order to stop
-  // being billed. If they have the service enabled but do not have any buckets, show a warning.
   const shouldDisplayBillingNotice =
     !areBucketsLoading &&
     !bucketsErrors &&
     userHasNoBucketCreated &&
     accountSettings?.object_storage === 'active';
 
-  // No need to display header since the it is redundant with the docs and CTA of the empty state
-  // Meanwhile it will still display the header for the access keys tab at all times
   const shouldHideDocsAndCreateButtons =
     !areBucketsLoading && tab === 'buckets' && userHasNoBucketCreated;
 
-  const createButtonText =
-    tab === 'access-keys' ? 'Create Access Key' : 'Create Bucket';
+  const isAccessKeysTab = tab === 'access-keys';
+  const createButtonText = isAccessKeysTab
+    ? 'Create Access Key'
+    : 'Create Bucket';
 
   const createButtonAction = () => {
-    if (tab === 'access-keys') {
+    if (isAccessKeysTab) {
       setMode('creating');
-
-      return createOrEditDrawer.open();
+      history.replace('/object-storage/access-keys/create');
+    } else {
+      history.replace('/object-storage/buckets/create');
     }
-
-    history.replace('/object-storage/buckets/create');
   };
+
+  const tabIndex = tab === 'access-keys' ? 1 : 0;
+  const isCreateBucketOpen = tab === 'buckets' && action === 'create';
+  const isCreateAccessKeyOpen = isAccessKeysTab && action !== undefined;
 
   return (
     <React.Fragment>
@@ -137,14 +126,7 @@ export const ObjectStorageLanding = () => {
         shouldHideDocsAndCreateButtons={shouldHideDocsAndCreateButtons}
         title="Object Storage"
       />
-      <Tabs
-        index={
-          realTabs.findIndex((t) => t === tab) !== -1
-            ? realTabs.findIndex((t) => t === tab)
-            : 0
-        }
-        onChange={navToURL}
-      >
+      <Tabs index={tabIndex} onChange={navToURL}>
         <TabLinkList tabs={tabs} />
 
         {objPromotionalOffers.map((promotionalOffer) => (
@@ -166,8 +148,10 @@ export const ObjectStorageLanding = () => {
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <AccessKeyLanding
-                accessDrawerOpen={createOrEditDrawer.isOpen}
-                closeAccessDrawer={createOrEditDrawer.close}
+                closeAccessDrawer={() =>
+                  history.replace('/object-storage/access-keys')
+                }
+                accessDrawerOpen={isCreateAccessKeyOpen}
                 isRestrictedUser={_isRestrictedUser}
                 mode={mode}
                 openAccessDrawer={openDrawer}
