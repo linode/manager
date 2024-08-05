@@ -15,7 +15,6 @@ import { handleLogout } from 'src/store/authentication/authentication.actions';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 import { interceptErrors } from 'src/utilities/interceptAPIError';
 
-import { SupportError } from './components/SupportError';
 import { ApplicationStore } from './store';
 import { getEnvLocalStorageOverrides } from './utilities/storage';
 
@@ -102,16 +101,6 @@ export const handleError = (
         );
       },
       replacementText: <MigrateError />,
-    },
-    {
-      condition: (e) => {
-        return (
-          (!!e.reason.match(/.*open a support ticket/i) ||
-            !!e.reason.match(/contact Support/i)) &&
-          !e.field
-        );
-      },
-      replacementText: <SupportError errors={errors} />,
     },
   ]);
 

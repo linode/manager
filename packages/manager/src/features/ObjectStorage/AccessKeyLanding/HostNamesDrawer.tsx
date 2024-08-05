@@ -1,4 +1,4 @@
-import { RegionS3EndpointAndID } from '@linode/api-v4';
+import { ObjectStorageKeyRegions } from '@linode/api-v4';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -12,7 +12,7 @@ import { CopyAllHostnames } from './CopyAllHostnames';
 interface Props {
   onClose: () => void;
   open: boolean;
-  regions: RegionS3EndpointAndID[];
+  regions: ObjectStorageKeyRegions[];
 }
 
 export const HostNamesDrawer = (props: Props) => {

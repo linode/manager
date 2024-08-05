@@ -4,7 +4,7 @@ import React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Typography } from 'src/components/Typography';
-import { useCloudViewDashboardsQuery } from 'src/queries/cloudpulse/dashboards';
+import { useCloudPulseDashboardsQuery } from 'src/queries/cloudpulse/dashboards';
 
 import { DASHBOARD_ID, REGION, RESOURCES } from '../Utils/constants';
 import {
@@ -25,7 +25,7 @@ export const CloudPulseDashboardSelect = React.memo(
       data: dashboardsList,
       error,
       isLoading,
-    } = useCloudViewDashboardsQuery(true); // Fetch the list of dashboards
+    } = useCloudPulseDashboardsQuery(true); // Fetch the list of dashboards
 
     const [
       selectedDashboard,
@@ -85,7 +85,7 @@ export const CloudPulseDashboardSelect = React.memo(
         )}
         autoHighlight
         clearOnBlur
-        data-testid="cloudview-dashboard-select"
+        data-testid="cloudpulse-dashboard-select"
         disabled={!dashboardsList}
         errorText={errorText}
         fullWidth

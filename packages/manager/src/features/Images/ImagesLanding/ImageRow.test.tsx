@@ -16,7 +16,7 @@ beforeAll(() => mockMatchMedia());
 
 describe('Image Table Row', () => {
   const image = imageFactory.build({
-    capabilities: ['cloud-init', 'distributed-images'],
+    capabilities: ['cloud-init', 'distributed-sites'],
     regions: [
       { region: 'us-east', status: 'available' },
       { region: 'us-southeast', status: 'pending' },

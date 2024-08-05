@@ -1,26 +1,40 @@
+import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import DistributedRegionIcon from 'src/assets/icons/entityIcons/distributed-region.svg';
+import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import { Box } from 'src/components/Box';
 import { ImageSelectv2 } from 'src/components/ImageSelectv2/ImageSelectv2';
 import { getAPIFilterForImageSelect } from 'src/components/ImageSelectv2/utilities';
+import { Link } from 'src/components/Link';
 import { Paper } from 'src/components/Paper';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
+import { getGeneratedLinodeLabel } from '../utilities';
+
 import type { LinodeCreateFormValues } from '../utilities';
 import type { Image } from '@linode/api-v4';
 
 export const Images = () => {
-  const { control, setValue } = useFormContext<LinodeCreateFormValues>();
+  const {
+    control,
+    formState: {
+      dirtyFields: { label: isLabelFieldDirty },
+    },
+    getValues,
+    setValue,
+  } = useFormContext<LinodeCreateFormValues>();
   const { field, fieldState } = useController({
     control,
     name: 'image',
   });
+  const queryClient = useQueryClient();
 
   const isCreateLinodeRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
@@ -30,7 +44,7 @@ export const Images = () => {
 
   const { data: regions } = useRegionsQuery();
 
-  const onChange = (image: Image | null) => {
+  const onChange = async (image: Image | null) => {
     field.onChange(image?.id ?? null);
 
     const selectedRegion = regions?.find((r) => r.id === regionId);
@@ -40,10 +54,19 @@ export const Images = () => {
     // @todo: delete this logic when all Images are "distributed compatible"
     if (
       image &&
-      !image.capabilities.includes('distributed-images') &&
+      !image.capabilities.includes('distributed-sites') &&
       selectedRegion?.site_type === 'distributed'
     ) {
       setValue('region', '');
+    }
+
+    if (!isLabelFieldDirty) {
+      const label = await getGeneratedLinodeLabel({
+        queryClient,
+        tab: 'Images',
+        values: getValues(),
+      });
+      setValue('label', label);
     }
   };
 
@@ -54,8 +77,22 @@ export const Images = () => {
 
   // @todo: delete this logic when all Images are "distributed compatible"
   const showDistributedCapabilityNotice = images?.some((image) =>
-    image.capabilities.includes('distributed-images')
+    image.capabilities.includes('distributed-sites')
   );
+
+  if (images?.length === 0) {
+    return (
+      <Paper>
+        <Placeholder icon={ImageIcon} isEntity title="My Images">
+          <Typography variant="subtitle1">
+            You don&rsquo;t have any private Images. Visit the{' '}
+            <Link to="/images">Images section</Link> to create an Image from one
+            of your Linode&rsquo;s disks.
+          </Typography>
+        </Placeholder>
+      </Paper>
+    );
+  }
 
   return (
     <Paper>

@@ -82,12 +82,6 @@ describe('object storage smoke tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        // Submit button is disabled when fields are empty.
-        ui.buttonGroup
-          .findButtonByTitle('Create Bucket')
-          .should('be.visible')
-          .should('be.disabled');
-
         // Enter label.
         cy.contains('Label').click().type(mockBucket.label);
 
@@ -169,6 +163,7 @@ describe('object storage smoke tests', () => {
     mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
       objMultiCluster: makeFeatureFlagData(false),
+      gecko2: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 

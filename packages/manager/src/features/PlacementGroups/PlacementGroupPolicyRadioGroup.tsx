@@ -8,7 +8,11 @@ import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
 
-import { CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE } from './constants';
+import {
+  CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE,
+  PLACEMENT_GROUP_POLICY_FLEXIBLE,
+  PLACEMENT_GROUP_POLICY_STRICT,
+} from './constants';
 
 import type { PlacementGroup } from '@linode/api-v4';
 import type { FormikHelpers } from 'formik';
@@ -48,9 +52,7 @@ export const PlacementGroupPolicyRadioGroup = (props: Props) => {
         <FormControlLabel
           label={
             <Typography>
-              <strong>Strict.</strong> You can’t assign Linodes if the preferred
-              container defined by your Placement Group Type lacks capacity or
-              is unavailable (best practice).
+              <strong>Strict.</strong> {PLACEMENT_GROUP_POLICY_STRICT}
             </Typography>
           }
           control={<Radio />}
@@ -60,9 +62,7 @@ export const PlacementGroupPolicyRadioGroup = (props: Props) => {
         <FormControlLabel
           label={
             <Typography>
-              <strong>Flexible.</strong> You can assign Linodes, even if they’re
-              not in the preferred container defined by your Placement Group
-              Type, but your placement group will be non-compliant.
+              <strong>Flexible.</strong> {PLACEMENT_GROUP_POLICY_FLEXIBLE}
             </Typography>
           }
           control={<Radio />}

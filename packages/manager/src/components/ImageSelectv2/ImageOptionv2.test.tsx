@@ -36,8 +36,8 @@ describe('ImageOptionv2', () => {
       getByLabelText('This image is compatible with cloud-init.')
     ).toBeVisible();
   });
-  it('renders a distributed icon if image has the "distributed-images" capability', () => {
-    const image = imageFactory.build({ capabilities: ['distributed-images'] });
+  it('renders a distributed icon if image has the "distributed-sites" capability', () => {
+    const image = imageFactory.build({ capabilities: ['distributed-sites'] });
 
     const { getByLabelText } = renderWithTheme(
       <ImageOptionv2 image={image} isSelected={false} listItemProps={{}} />

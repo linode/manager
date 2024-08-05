@@ -27,7 +27,7 @@ describe('getDisabledRegions', () => {
     const distributedRegion = regionFactory.build({ site_type: 'distributed' });
     const coreRegion = regionFactory.build({ site_type: 'core' });
 
-    const image = imageFactory.build({ capabilities: ['distributed-images'] });
+    const image = imageFactory.build({ capabilities: ['distributed-sites'] });
 
     const result = getDisabledRegions({
       linodeCreateTab: 'Images',

@@ -3,6 +3,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Paper } from 'src/components/Paper';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 import { DNSResolvers } from './DNSResolvers';
@@ -16,23 +17,29 @@ interface Props {
 export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
   // @todo maybe move this query closer to the consuming component
   const { data: linode } = useLinodeQuery(props.linodeId);
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
   const theme = useTheme();
 
   if (!linode) {
     return null;
   }
 
+  const hideNetworkTransfer =
+    isGeckoGAEnabled && linode.site_type === 'distributed';
+
   return (
     <Paper>
       <Grid container spacing={4} sx={{ flexGrow: 1 }}>
-        <Grid md={2.5} sm={6} xs={12}>
-          <NetworkTransfer
-            linodeId={linode.id}
-            linodeLabel={linode.label}
-            linodeRegionId={linode.region}
-            linodeType={linode.type}
-          />
-        </Grid>
+        {hideNetworkTransfer ? null : ( // Distributed compute instances have no transfer pool
+          <Grid md={2.5} sm={6} xs={12}>
+            <NetworkTransfer
+              linodeId={linode.id}
+              linodeLabel={linode.label}
+              linodeRegionId={linode.region}
+              linodeType={linode.type}
+            />
+          </Grid>
+        )}
         <Grid
           sx={{
             [theme.breakpoints.down('md')]: {
@@ -53,7 +60,7 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
             paddingBottom: 0,
           }}
           md={3.5}
-          sm={6}
+          sm={hideNetworkTransfer ? 12 : 6}
           xs={12}
         >
           <DNSResolvers region={linode.region} />

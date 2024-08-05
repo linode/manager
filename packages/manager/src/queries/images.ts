@@ -1,9 +1,4 @@
 import {
-  CreateImagePayload,
-  Image,
-  ImageUploadPayload,
-  UpdateImageRegionsPayload,
-  UploadImageResponse,
   createImage,
   deleteImage,
   getImage,
@@ -12,19 +7,26 @@ import {
   updateImageRegions,
   uploadImage,
 } from '@linode/api-v4';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
 
 import { profileQueries } from './profile/profile';
+
+import type {
+  APIError,
+  CreateImagePayload,
+  Filter,
+  Image,
+  ImageUploadPayload,
+  Params,
+  ResourcePage,
+  UpdateImageRegionsPayload,
+  UploadImageResponse,
+} from '@linode/api-v4';
+import type { UseQueryOptions } from '@tanstack/react-query';
+import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 export const getAllImages = (
   passedParams: Params = {},
@@ -49,10 +51,15 @@ export const imageQueries = createQueryKeys('images', {
   }),
 });
 
-export const useImagesQuery = (params: Params, filters: Filter) =>
+export const useImagesQuery = (
+  params: Params,
+  filters: Filter,
+  options?: UseQueryOptions<ResourcePage<Image>, APIError[]>
+) =>
   useQuery<ResourcePage<Image>, APIError[]>({
     ...imageQueries.paginated(params, filters),
     keepPreviousData: true,
+    ...options,
   });
 
 export const useImageQuery = (imageId: string, enabled = true) =>

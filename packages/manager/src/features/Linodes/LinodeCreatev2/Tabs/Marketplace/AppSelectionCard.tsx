@@ -48,6 +48,13 @@ export const AppSelectionCard = (props: Props) => {
     }
   };
 
+  const displayLabel = decode(
+    label
+      .replace(' Null One-Click', '')
+      .replace(' One-Click', '')
+      .replace(' Cluster', '')
+  ).trim();
+
   const renderIcon =
     iconUrl === ''
       ? () => <span className="fl-tux" />
@@ -55,7 +62,8 @@ export const AppSelectionCard = (props: Props) => {
 
   const renderVariant = () => (
     <IconButton
-      aria-label={`Info for "${label}"`}
+      aria-label={`Info for "${displayLabel}"`}
+      data-qa-selection-card-info={displayLabel}
       onClick={handleInfoClick}
       onKeyDown={handleKeyPress}
     >
@@ -66,13 +74,6 @@ export const AppSelectionCard = (props: Props) => {
   const headingDecoration = label.includes('Cluster') ? (
     <Chip label="CLUSTER" size="small" />
   ) : undefined;
-
-  const displayLabel = decode(
-    label
-      .replace('Null One-Click', '')
-      .replace('One-Click', '')
-      .replace('Cluster', '')
-  );
 
   return (
     <SelectionCard

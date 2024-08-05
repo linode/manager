@@ -4,6 +4,10 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
 import type { Event, Image, ImageStatus } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useImageAndLinodeGrantCheck } from '../utils';
 
 export interface Handlers {
   onCancelFailed?: (imageID: string) => void;
@@ -40,6 +44,24 @@ export const ImagesActionMenu = (props: Props) => {
     onRetry,
   } = handlers;
 
+  const isImageReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'image',
+    id: Number(id.split('/')[1]),
+  });
+
+  const isAddLinodeRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_linodes',
+  });
+
+  const {
+    permissionedLinodes: availableLinodes,
+  } = useImageAndLinodeGrantCheck();
+
+  const isAvailableLinodesPresent = availableLinodes
+    ? availableLinodes.length > 0
+    : true;
+
   const actions: Action[] = React.useMemo(() => {
     const isDisabled = status && status !== 'available';
     const isAvailable = !isDisabled;
@@ -57,41 +79,74 @@ export const ImagesActionMenu = (props: Props) => {
         ]
       : [
           {
-            disabled: isDisabled,
+            disabled: isImageReadOnly || isDisabled,
             onClick: () => onEdit?.(image),
             title: 'Edit',
-            tooltip: isDisabled
+            tooltip: isImageReadOnly
+              ? getRestrictedResourceText({
+                  action: 'edit',
+                  isSingular: true,
+                  resourceType: 'Images',
+                })
+              : isDisabled
               ? 'Image is not yet available for use.'
               : undefined,
           },
-          ...(onManageRegions
+          ...(onManageRegions && image.regions && image.regions.length > 0
             ? [
                 {
-                  disabled: isDisabled,
+                  disabled: isImageReadOnly || isDisabled,
                   onClick: () => onManageRegions(image),
                   title: 'Manage Regions',
+                  tooltip: isImageReadOnly
+                    ? getRestrictedResourceText({
+                        action: 'edit',
+                        isSingular: true,
+                        resourceType: 'Images',
+                      })
+                    : undefined,
                 },
               ]
             : []),
           {
-            disabled: isDisabled,
+            disabled: isAddLinodeRestricted || isDisabled,
             onClick: () => onDeploy?.(id),
             title: 'Deploy to New Linode',
-            tooltip: isDisabled
+            tooltip: isAddLinodeRestricted
+              ? getRestrictedResourceText({
+                  action: 'create',
+                  isSingular: false,
+                  resourceType: 'Linodes',
+                })
+              : isDisabled
               ? 'Image is not yet available for use.'
               : undefined,
           },
           {
-            disabled: isDisabled,
+            disabled: !isAvailableLinodesPresent || isDisabled,
             onClick: () => onRestore?.(image),
             title: 'Rebuild an Existing Linode',
-            tooltip: isDisabled
+            tooltip: !isAvailableLinodesPresent
+              ? getRestrictedResourceText({
+                  action: 'rebuild',
+                  isSingular: false,
+                  resourceType: 'Linodes',
+                })
+              : isDisabled
               ? 'Image is not yet available for use.'
               : undefined,
           },
           {
+            disabled: isImageReadOnly,
             onClick: () => onDelete?.(label, id, status),
             title: isAvailable ? 'Delete' : 'Cancel',
+            tooltip: isImageReadOnly
+              ? getRestrictedResourceText({
+                  action: 'delete',
+                  isSingular: true,
+                  resourceType: 'Images',
+                })
+              : undefined,
           },
         ];
   }, [

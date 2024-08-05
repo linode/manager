@@ -13,6 +13,7 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { useMutateAccountAgreements } from 'src/queries/account/agreements';
 import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
@@ -23,11 +24,13 @@ import { Actions } from './Actions';
 import { Addons } from './Addons/Addons';
 import { Details } from './Details/Details';
 import { Error } from './Error';
+import { EUAgreement } from './EUAgreement';
 import { Firewall } from './Firewall';
 import { Plan } from './Plan';
 import { Region } from './Region';
-import { linodeCreateResolvers } from './resolvers';
+import { getLinodeCreateResolver } from './resolvers';
 import { Security } from './Security';
+import { SMTP } from './SMTP';
 import { Summary } from './Summary/Summary';
 import { Backups } from './Tabs/Backups/Backups';
 import { Clone } from './Tabs/Clone/Clone';
@@ -39,7 +42,6 @@ import { UserData } from './UserData/UserData';
 import {
   captureLinodeCreateAnalyticsEvent,
   defaultValues,
-  defaultValuesMap,
   getLinodeCreatePayload,
   getTabIndex,
   tabs,
@@ -54,27 +56,34 @@ import type { SubmitHandler } from 'react-hook-form';
 export const LinodeCreatev2 = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
 
+  const queryClient = useQueryClient();
+
   const form = useForm<LinodeCreateFormValues>({
-    defaultValues,
+    defaultValues: () => defaultValues(params, queryClient),
     mode: 'onBlur',
-    resolver: linodeCreateResolvers[params.type ?? 'OS'],
+    resolver: getLinodeCreateResolver(params.type, queryClient),
     shouldFocusError: false, // We handle this ourselves with `scrollErrorIntoView`
   });
 
   const history = useHistory();
-  const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
+
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
-  const { enqueueSnackbar } = useSnackbar();
+  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
   const currentTabIndex = getTabIndex(params.type);
 
   const onTabChange = (index: number) => {
-    const newTab = tabs[index];
-    // Update tab "type" query param. (This changes the selected tab)
-    setParams({ type: newTab });
-    // Reset the form values
-    form.reset(defaultValuesMap[newTab]);
+    if (index !== currentTabIndex) {
+      const newTab = tabs[index];
+      defaultValues({ ...params, type: newTab }, queryClient).then((values) => {
+        // Reset the form values
+        form.reset(values);
+        // Update tab "type" query param. (This changes the selected tab)
+        setParams({ type: newTab });
+      });
+    }
   };
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
@@ -100,6 +109,13 @@ export const LinodeCreatev2 = () => {
         type: params.type ?? 'OS',
         values,
       });
+
+      if (values.hasSignedEUAgreement) {
+        updateAccountAgreements({
+          eu_model: true,
+          privacy_policy: true,
+        });
+      }
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
@@ -173,7 +189,9 @@ export const LinodeCreatev2 = () => {
           {params.type !== 'Clone Linode' && <VLAN />}
           <UserData />
           <Addons />
+          <EUAgreement />
           <Summary />
+          <SMTP />
           <Actions />
         </Stack>
       </form>

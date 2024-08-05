@@ -1,6 +1,5 @@
-import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
-import { Theme, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -10,6 +9,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
@@ -44,6 +44,9 @@ import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants
 
 import { ConfigSelect } from './VolumeDrawer/ConfigSelect';
 import { SizeField } from './VolumeDrawer/SizeField';
+
+import type { Linode } from '@linode/api-v4/lib/linodes/types';
+import type { Theme } from '@mui/material/styles';
 
 export const SIZE_FIELD_WIDTH = 160;
 
@@ -281,12 +284,9 @@ export const VolumeCreate = () => {
               </span>
             </Typography>
             {error && (
-              <Notice
-                spacingBottom={0}
-                spacingTop={12}
-                text={error}
-                variant="error"
-              />
+              <Notice spacingBottom={0} spacingTop={12} variant="error">
+                <ErrorMessage entityType="volume_id" message={error} />
+              </Notice>
             )}
             <TextField
               tooltipText="Use only ASCII letters, numbers,

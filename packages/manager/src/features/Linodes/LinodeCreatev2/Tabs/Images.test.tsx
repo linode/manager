@@ -36,7 +36,7 @@ describe('Images', () => {
       http.get('*/v4/images', () => {
         const images = [
           imageFactory.build({ capabilities: [] }),
-          imageFactory.build({ capabilities: ['distributed-images'] }),
+          imageFactory.build({ capabilities: ['distributed-sites'] }),
           imageFactory.build({ capabilities: [] }),
         ];
         return HttpResponse.json(makeResourcePage(images));

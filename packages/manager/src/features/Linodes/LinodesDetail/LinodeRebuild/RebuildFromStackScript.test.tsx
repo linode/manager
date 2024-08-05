@@ -27,9 +27,9 @@ const diskEncryptionEnabledMock = vi.hoisted(() => {
 });
 
 describe('RebuildFromStackScript', () => {
-  vi.mock('src/components/DiskEncryption/utils.ts', async () => {
+  vi.mock('src/components/Encryption/utils.ts', async () => {
     const actual = await vi.importActual<any>(
-      'src/components/DiskEncryption/utils.ts'
+      'src/components/Encryption/utils.ts'
     );
     return {
       ...actual,

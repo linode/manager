@@ -302,7 +302,7 @@ describe('Account invoices', () => {
     cy.findByLabelText('Invoice Details').within(() => {
       // Confirm that page size selection is set to "Show 25".
       ui.pagination.findPageSizeSelect().click();
-      ui.select.findItemByText('Show 25').should('be.visible').click();
+      ui.autocompletePopper.findByTitle('Show 25').should('be.visible').click();
 
       // Confirm that pagination controls list exactly 4 pages.
       ui.pagination
@@ -337,7 +337,10 @@ describe('Account invoices', () => {
 
       // Change pagination size selection from "Show 25" to "Show 100".
       ui.pagination.findPageSizeSelect().click();
-      ui.select.findItemByText('Show 100').should('be.visible').click();
+      ui.autocompletePopper
+        .findByTitle('Show 100')
+        .should('be.visible')
+        .click();
 
       // Confirm that all invoice items are listed.
       cy.get('tr').should('have.length', 102);
