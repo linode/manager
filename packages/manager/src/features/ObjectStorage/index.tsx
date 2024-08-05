@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
+
+import type { RouteComponentProps } from 'react-router-dom';
 
 const ObjectStorageLanding = React.lazy(() =>
   import('./ObjectStorageLanding').then((module) => ({
