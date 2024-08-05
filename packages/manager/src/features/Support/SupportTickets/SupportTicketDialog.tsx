@@ -83,7 +83,8 @@ export type EntityType =
   | 'lkecluster_id'
   | 'nodebalancer_id'
   | 'none'
-  | 'volume_id';
+  | 'volume_id'
+  | 'vpc_id';
 
 export type TicketType = 'accountLimit' | 'general' | 'smtp';
 
