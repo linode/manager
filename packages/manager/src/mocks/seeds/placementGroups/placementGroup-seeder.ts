@@ -18,6 +18,7 @@ export const placementGroupSeeder: MockSeeder = {
     const placementGroupSeeds = seedWithUniqueIds<'placementGroups'>({
       dbEntities: await mswDB.getAll('placementGroups'),
       seedEntities: placementGroupFactory.buildList(count, {
+        is_compliant: true,
         members: [],
       }),
     });

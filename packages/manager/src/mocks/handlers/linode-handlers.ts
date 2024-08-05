@@ -18,7 +18,6 @@ import {
 } from 'src/mocks/utilities/response';
 
 import { mswDB } from '../indexedDB';
-import { getPaginatedSlice } from '../utilities/pagination';
 
 import type {
   Config,
@@ -45,20 +44,16 @@ export const getLinodes = () => [
     }): Promise<
       StrictResponse<APIErrorResponse | APIPaginatedResponse<Linode>>
     > => {
-      const url = new URL(request.url);
       const linodes = await mswDB.getAll('linodes');
 
       if (!linodes) {
         return makeNotFoundResponse();
       }
 
-      const pageNumber = Number(url.searchParams.get('page')) || 1;
-      const pageSize = Number(url.searchParams.get('page_size')) || 25;
-      const totalPages = Math.ceil(linodes.length / pageSize);
-
-      const pageSlice = getPaginatedSlice(linodes, pageNumber, pageSize);
-
-      return makePaginatedResponse(pageSlice, pageNumber, totalPages);
+      return makePaginatedResponse({
+        data: linodes,
+        request,
+      });
     }
   ),
 
@@ -87,7 +82,6 @@ export const getLinodes = () => [
       const id = Number(params.id);
       const linode = await mswDB.get('linodes', id);
       const linodeConfigs = await mswDB.getAll('linodeConfigs');
-      const url = new URL(request.url);
 
       if (!linode || !linodeConfigs) {
         return makeNotFoundResponse();
@@ -97,13 +91,10 @@ export const getLinodes = () => [
         .filter((configTuple) => configTuple[0] === id)
         .map((configTuple) => configTuple[1]);
 
-      const pageNumber = Number(url.searchParams.get('page')) || 1;
-      const pageSize = Number(url.searchParams.get('page_size')) || 25;
-      const totalPages = Math.max(Math.ceil(configs.length / pageSize), 1);
-
-      const pageSlice = getPaginatedSlice(configs, pageNumber, pageSize);
-
-      return makePaginatedResponse(pageSlice, pageNumber, totalPages);
+      return makePaginatedResponse({
+        data: configs,
+        request,
+      });
     }
   ),
 ];
@@ -275,6 +266,7 @@ export const getLinodeDisks = (mockState: MockState) => [
     '*/v4/linode/instances/:id/disks',
     ({
       params,
+      request,
     }): StrictResponse<APIErrorResponse | APIPaginatedResponse<Disk>> => {
       const id = Number(params.id);
       const linode = mockState.linodes.find(
@@ -287,7 +279,10 @@ export const getLinodeDisks = (mockState: MockState) => [
 
       const mockDisks = linodeDiskFactory.buildList(3);
 
-      return makePaginatedResponse(mockDisks);
+      return makePaginatedResponse({
+        data: mockDisks,
+        request,
+      });
     }
   ),
 ];
@@ -320,6 +315,7 @@ export const getLinodeFirewalls = (mockState: MockState) => [
     '*/v4/linode/instances/:id/firewalls',
     async ({
       params,
+      request,
     }): Promise<
       StrictResponse<APIErrorResponse | APIPaginatedResponse<Firewall>>
     > => {
@@ -337,7 +333,10 @@ export const getLinodeFirewalls = (mockState: MockState) => [
         firewall.entities.some((entity) => entity.id === id)
       );
 
-      return makePaginatedResponse(linodeFirewalls);
+      return makePaginatedResponse({
+        data: linodeFirewalls,
+        request,
+      });
     }
   ),
 ];
