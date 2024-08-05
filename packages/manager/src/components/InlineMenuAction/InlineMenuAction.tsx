@@ -37,7 +37,6 @@ export const InlineMenuAction = (props: InlineMenuActionProps) => {
     onClick,
     tooltip,
     tooltipAnalyticsEvent,
-    ...rest
   } = props;
 
   if (href) {
@@ -51,7 +50,6 @@ export const InlineMenuAction = (props: InlineMenuActionProps) => {
   return (
     <StyledActionButton
       // TODO: We need to define what buttonType this will be in the future for now 'secondary' works...
-      aria-label={rest['aria-label']}
       buttonType="primary"
       disabled={disabled}
       loading={loading}
@@ -59,7 +57,6 @@ export const InlineMenuAction = (props: InlineMenuActionProps) => {
       sx={buttonHeight !== undefined ? { height: buttonHeight } : {}}
       tooltipAnalyticsEvent={tooltipAnalyticsEvent}
       tooltipText={tooltip}
-      {...rest}
     >
       {actionText}
     </StyledActionButton>
