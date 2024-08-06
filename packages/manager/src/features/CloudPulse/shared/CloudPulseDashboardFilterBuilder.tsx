@@ -53,7 +53,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       isServiceAnalyticsIntegration,
     } = props;
 
-    const [, setDependentFilters] = React.useState<{
+    const [dependentFilters, setDependentFilters] = React.useState<{
       [key: string]:
         | TimeDuration
         | number
@@ -143,24 +143,23 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       (config: CloudPulseServiceTypeFilters) => {
         if (config.configuration.filterKey === REGION) {
           return getRegionProperties(
-            config,
-            handleRegionChange,
-            dashboard,
-            isServiceAnalyticsIntegration
+            { config, dashboard, isServiceAnalyticsIntegration },
+            handleRegionChange
           );
         } else if (config.configuration.filterKey === RESOURCE_ID) {
           return getResourcesProperties(
-            config,
-            handleResourceChange,
-            dashboard,
-            isServiceAnalyticsIntegration,
-            dependentFilterReference.current
+            {
+              config,
+              dashboard,
+              dependentFilters,
+              isServiceAnalyticsIntegration,
+            },
+            handleResourceChange
           );
         } else if (config.configuration.filterKey === RELATIVE_TIME_DURATION) {
           return getTimeDurationProperties(
-            config,
-            handleTimeRangeChange,
-            isServiceAnalyticsIntegration
+            { config, dashboard, isServiceAnalyticsIntegration },
+            handleTimeRangeChange
           );
         } else {
           return {}; // if the above doesn't match use out custom select for rendering filters, the equivalent component for this will be implemented in upcoming PR's
@@ -172,6 +171,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         handleResourceChange,
         handleTimeRangeChange,
         isServiceAnalyticsIntegration,
+        dependentFilters,
       ]
     );
 

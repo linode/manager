@@ -3,6 +3,21 @@ import { FILTER_CONFIG } from './FilterConfig';
 import type { CloudPulseServiceTypeFilters } from './models';
 import type { Dashboard, Filter, TimeDuration } from '@linode/api-v4';
 
+export interface CloudPulseFilterProperties {
+  config: CloudPulseServiceTypeFilters;
+  dashboard: Dashboard;
+  dependentFilters?: {
+    [key: string]:
+      | TimeDuration
+      | number
+      | number[]
+      | string
+      | string[]
+      | undefined;
+  };
+  isServiceAnalyticsIntegration: boolean;
+}
+
 /**
  * This function helps in building the properties needed for region selection component
  *
@@ -12,12 +27,11 @@ import type { Dashboard, Filter, TimeDuration } from '@linode/api-v4';
  * @param isServiceAnalyticsIntegration - only if this is false, we need to save preferences , else no need
  */
 export const getRegionProperties = (
-  config: CloudPulseServiceTypeFilters,
-  handleRegionChange: (region: string | undefined) => void,
-  dashboard: Dashboard,
-  isServiceAnalyticsIntegration: boolean
+  props: CloudPulseFilterProperties,
+  handleRegionChange: (region: string | undefined) => void
 ) => {
-  const { filterKey, placeholder } = config.configuration;
+  const { filterKey, placeholder } = props.config.configuration;
+  const { dashboard, isServiceAnalyticsIntegration } = props;
   return {
     componentKey: filterKey,
     filterKey,
@@ -39,26 +53,21 @@ export const getRegionProperties = (
  * @param dependentFilters - since resources are dependent on some other filters, we need this as for disabling the resources selection component
  */
 export const getResourcesProperties = (
-  config: CloudPulseServiceTypeFilters,
-  handleResourceChange: (resourceId: number[]) => void,
-  dashboard: Dashboard,
-  isServiceAnalyticsIntegration: boolean,
-  dependentFilters: {
-    [key: string]:
-      | TimeDuration
-      | number
-      | number[]
-      | string
-      | string[]
-      | undefined;
-  }
+  props: CloudPulseFilterProperties,
+  handleResourceChange: (resourceId: number[]) => void
 ) => {
-  const { filterKey, placeholder } = config.configuration;
+  const { filterKey, placeholder } = props.config.configuration;
+  const {
+    config,
+    dashboard,
+    dependentFilters,
+    isServiceAnalyticsIntegration,
+  } = props;
   return {
     componentKey: filterKey,
     disabled: checkIfWeNeedToDisableFilterByFilterKey(
       filterKey,
-      dependentFilters,
+      dependentFilters ?? {},
       dashboard
     ),
     filterKey,
@@ -67,7 +76,7 @@ export const getResourcesProperties = (
     placeholder,
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
-    xFilter: buildXFilter(config, dependentFilters),
+    xFilter: buildXFilter(config, dependentFilters ?? {}),
   };
 };
 
@@ -79,11 +88,11 @@ export const getResourcesProperties = (
  * @param isServiceAnalyticsIntegration - only if this is false, we need to save preferences , else no need
  */
 export const getTimeDurationProperties = (
-  config: CloudPulseServiceTypeFilters,
-  handleTimeRangeChange: (timeDuration: TimeDuration) => void,
-  isServiceAnalyticsIntegration: boolean
+  props: CloudPulseFilterProperties,
+  handleTimeRangeChange: (timeDuration: TimeDuration) => void
 ) => {
-  const { filterKey, placeholder } = config.configuration;
+  const { filterKey, placeholder } = props.config.configuration;
+  const { isServiceAnalyticsIntegration } = props;
   return {
     componentKey: filterKey,
     filterKey,

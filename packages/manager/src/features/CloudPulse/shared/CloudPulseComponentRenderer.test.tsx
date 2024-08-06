@@ -34,7 +34,14 @@ describe('ComponentRenderer component tests', () => {
         {RenderComponent({
           componentKey: 'region',
           componentProps: {
-            ...getRegionProperties(regionProps!, vi.fn(), mockDashboard, false),
+            ...getRegionProperties(
+              {
+                config: regionProps!,
+                dashboard: mockDashboard,
+                isServiceAnalyticsIntegration: false,
+              },
+              vi.fn()
+            ),
           },
         })}
       </Grid>
@@ -61,11 +68,13 @@ describe('ComponentRenderer component tests', () => {
             componentKey: 'resource_id',
             componentProps: {
               ...getResourcesProperties(
-                resourceProps!,
-                vi.fn(),
-                mockDashboard,
-                false,
-                { region: 'us-east' }
+                {
+                  config: resourceProps!,
+                  dashboard: mockDashboard,
+                  dependentFilters: { region: 'us-east' },
+                  isServiceAnalyticsIntegration: false,
+                },
+                vi.fn()
               ),
             },
           })}

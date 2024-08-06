@@ -27,10 +27,12 @@ it('test getRegionProperties method', () => {
   expect(regionConfig).toBeDefined();
 
   const result = getRegionProperties(
-    regionConfig!,
-    vi.fn(),
-    mockDashboard,
-    false
+    {
+      config: regionConfig!,
+      dashboard: mockDashboard,
+      isServiceAnalyticsIntegration: false,
+    },
+    vi.fn()
   );
 
   expect(result['componentKey']).toEqual(regionConfig?.configuration.filterKey);
@@ -45,7 +47,14 @@ it('test getTimeDuratonProperties method', () => {
 
   expect(timeDurationConfig).toBeDefined();
 
-  const result = getTimeDurationProperties(timeDurationConfig!, vi.fn(), false);
+  const result = getTimeDurationProperties(
+    {
+      config: timeDurationConfig!,
+      dashboard: mockDashboard,
+      isServiceAnalyticsIntegration: false,
+    },
+    vi.fn()
+  );
 
   expect(result['componentKey']).toEqual(
     timeDurationConfig?.configuration.filterKey
@@ -62,11 +71,13 @@ it('test getResourceSelectionProperties method', () => {
   expect(resourceSelectionConfig).toBeDefined();
 
   const result = getResourcesProperties(
-    resourceSelectionConfig!,
-    vi.fn(),
-    mockDashboard,
-    true,
-    { region: 'us-east' }
+    {
+      config: resourceSelectionConfig!,
+      dashboard: mockDashboard,
+      dependentFilters: { region: 'us-east' },
+      isServiceAnalyticsIntegration: true,
+    },
+    vi.fn()
   );
 
   expect(result['componentKey']).toEqual(
@@ -88,11 +99,13 @@ it('test getResourceSelectionProperties method with disabled true', () => {
   expect(resourceSelectionConfig).toBeDefined();
 
   const result = getResourcesProperties(
-    resourceSelectionConfig!,
-    vi.fn(),
-    mockDashboard,
-    true,
-    {}
+    {
+      config: resourceSelectionConfig!,
+      dashboard: mockDashboard,
+      dependentFilters: {},
+      isServiceAnalyticsIntegration: true,
+    },
+    vi.fn()
   );
 
   expect(result['componentKey']).toEqual(
