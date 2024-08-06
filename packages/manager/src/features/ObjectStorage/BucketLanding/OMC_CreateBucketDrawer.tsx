@@ -310,7 +310,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
                 <Typography marginBottom={isGen2EndpointType ? 2 : 3}>
                   {isGen2EndpointType
                     ? 'Specifies the maximum Requests Per Second (RPS) for a bucket. To increase it to High, open a support ticket. '
-                    : 'This endpoint type supports up to 750 Requests Per Second (RPS).'}
+                    : 'This endpoint type supports up to 750 Requests Per Second (RPS). '}
                   Understand <Link to="#">bucket rate limits</Link>.
                 </Typography>
               </>
