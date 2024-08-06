@@ -24,6 +24,7 @@ import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
+import { useProfile } from 'src/queries/profile/profile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { KubernetesClusterRow } from '../ClusterList/KubernetesClusterRow';
@@ -92,13 +93,20 @@ export const KubernetesLanding = () => {
     ['+order_by']: orderBy,
   };
 
-  const { data, error, isLoading } = useKubernetesClustersQuery(
+  const { data: profile } = useProfile();
+
+  const isRestricted = profile?.restricted ?? false;
+
+  const { data, error, fetchStatus, isLoading } = useKubernetesClustersQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    filter
+    filter,
+    !isRestricted
   );
+
+  const showLoader = isLoading && fetchStatus !== 'idle';
 
   const {
     isDiskEncryptionFeatureEnabled,
@@ -150,11 +158,11 @@ export const KubernetesLanding = () => {
     );
   }
 
-  if (isLoading) {
+  if (showLoader) {
     return <CircleProgress />;
   }
 
-  if (data?.results === 0) {
+  if (isRestricted || data?.results === 0) {
     return <KubernetesEmptyState />;
   }
 

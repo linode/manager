@@ -177,6 +177,7 @@ export interface Grant {
 }
 export type GlobalGrantTypes =
   | 'account_access'
+  | 'add_lke_clusters'
   | 'add_domains'
   | 'add_firewalls'
   | 'add_images'
@@ -204,7 +205,8 @@ export type GrantType =
   | 'volume'
   | 'database'
   | 'firewall'
-  | 'vpc';
+  | 'vpc'
+  | 'lkeCluster';
 
 export type Grants = GlobalGrants & Record<GrantType, Grant[]>;
 

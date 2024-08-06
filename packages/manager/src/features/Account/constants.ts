@@ -9,6 +9,7 @@ export const grantTypeMap = {
   firewall: 'Firewalls',
   image: 'Images',
   linode: 'Linodes',
+  lkeCluster: 'Clusters',
   longview: 'Longview Clients',
   nodebalancer: 'NodeBalancers',
   placementGroups: 'Placement Groups',
