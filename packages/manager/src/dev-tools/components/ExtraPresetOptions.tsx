@@ -3,12 +3,14 @@ import * as React from 'react';
 import { getMockPresetGroups } from 'src/mocks/mockPreset';
 import { extraMockPresets } from 'src/mocks/presets';
 
+import { getMSWPreset } from '../utils';
+
 interface ExtraPresetOptionsProps {
   disabled: boolean;
   handlers: string[];
-  onTogglePreset: (e: React.ChangeEvent, presetId: string) => void;
   onPresetCountChange: (e: React.ChangeEvent, presetId: string) => void;
-  presetsMap: { [key: string]: number };
+  onTogglePreset: (e: React.ChangeEvent, presetId: string) => void;
+  presetsCountMap: { [key: string]: number };
 }
 
 /**
@@ -17,10 +19,12 @@ interface ExtraPresetOptionsProps {
 export const ExtraPresetOptions = ({
   disabled,
   handlers,
-  onTogglePreset,
   onPresetCountChange,
-  presetsMap,
+  onTogglePreset,
+  presetsCountMap,
 }: ExtraPresetOptionsProps) => {
+  const isCrudPreset = getMSWPreset() === 'baseline-crud';
+
   return (
     <ul>
       {getMockPresetGroups(extraMockPresets).map((group) => (
@@ -43,28 +47,33 @@ export const ExtraPresetOptions = ({
             .map((extraMockPreset) => (
               <li key={extraMockPreset.id}>
                 <input
-                  checked={
-                    handlers.includes(extraMockPreset.id) ||
-                    extraMockPreset.alwaysEnabled
+                  disabled={
+                    disabled ||
+                    (!isCrudPreset &&
+                      extraMockPreset.id === 'api-response-time')
                   }
                   style={{
-                    display: extraMockPreset.alwaysEnabled ? 'none' : 'initial',
                     marginRight: 12,
                   }}
-                  disabled={disabled}
+                  checked={handlers.includes(extraMockPreset.id)}
                   onChange={(e) => onTogglePreset(e, extraMockPreset.id)}
                   type="checkbox"
                 />
                 <span title={extraMockPreset.desc || extraMockPreset.label}>
                   {extraMockPreset.label}
                 </span>
-                {extraMockPreset.alwaysEnabled && (
+                {extraMockPreset.canUpdateCount && (
                   <input
+                    disabled={
+                      disabled ||
+                      (!isCrudPreset &&
+                        extraMockPreset.id === 'api-response-time')
+                    }
                     aria-label={`Value for ${extraMockPreset.label}`}
                     min={0}
                     onChange={(e) => onPresetCountChange(e, extraMockPreset.id)}
                     type="number"
-                    value={presetsMap[extraMockPreset.id] || 0}
+                    value={presetsCountMap[extraMockPreset.id] || 0}
                   />
                 )}
               </li>
