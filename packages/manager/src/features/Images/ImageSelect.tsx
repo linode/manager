@@ -83,6 +83,7 @@ export const ImageSelect = (props: MultiProps | Props) => {
             ? options.filter((o) => value?.includes(o.id)) ?? []
             : options.find((o) => o.id === value) ?? null
         }
+        disableCloseOnSelect={false}
         disableSelectAll
         disabled={disabled}
         errorText={errorText}
