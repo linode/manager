@@ -1,10 +1,6 @@
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 
-import { FILTER_CONFIG } from './FilterConfig';
-
-import type { Dashboard } from '@linode/api-v4';
-
 export const useIsACLPEnabled = (): {
   isACLPEnabled: boolean;
 } => {

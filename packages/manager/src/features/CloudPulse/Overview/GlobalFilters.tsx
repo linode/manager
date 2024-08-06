@@ -8,7 +8,6 @@ import Reload from 'src/assets/icons/reload.svg';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
-import { RELATIVE_TIME_DURATION } from '../Utils/constants';
 
 import type { Dashboard, TimeDuration } from '@linode/api-v4';
 import type { WithStartAndEnd } from 'src/features/Longview/request.types';

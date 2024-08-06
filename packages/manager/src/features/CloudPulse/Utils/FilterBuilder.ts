@@ -1,8 +1,14 @@
 import { RELATIVE_TIME_DURATION } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 
+import type {
+  CloudPulseResources,
+  CloudPulseResourcesSelectProps,
+} from '../shared/CloudPulseResourcesSelect';
 import type { CloudPulseServiceTypeFilters } from './models';
 import type { Dashboard, Filter, TimeDuration } from '@linode/api-v4';
+import { CloudPulseTimeRangeSelectProps } from '../shared/CloudPulseTimeRangeSelect';
+import { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 
 export interface CloudPulseFilterProperties {
   config: CloudPulseServiceTypeFilters;
@@ -30,14 +36,11 @@ export interface CloudPulseFilterProperties {
 export const getRegionProperties = (
   props: CloudPulseFilterProperties,
   handleRegionChange: (region: string | undefined) => void
-) => {
-  const { filterKey, placeholder } = props.config.configuration;
+): CloudPulseRegionSelectProps => {
+  const { placeholder } = props.config.configuration;
   const { dashboard, isServiceAnalyticsIntegration } = props;
   return {
-    componentKey: filterKey,
-    filterKey,
     handleRegionChange,
-    key: filterKey,
     placeholder,
     savePreferences: !isServiceAnalyticsIntegration,
     selectedDashboard: dashboard,
@@ -55,8 +58,8 @@ export const getRegionProperties = (
  */
 export const getResourcesProperties = (
   props: CloudPulseFilterProperties,
-  handleResourceChange: (resourceId: number[]) => void
-) => {
+  handleResourceChange: (resourceId: CloudPulseResources[]) => void
+): CloudPulseResourcesSelectProps => {
   const { filterKey, placeholder } = props.config.configuration;
   const {
     config,
@@ -65,15 +68,12 @@ export const getResourcesProperties = (
     isServiceAnalyticsIntegration,
   } = props;
   return {
-    componentKey: filterKey,
     disabled: checkIfWeNeedToDisableFilterByFilterKey(
       filterKey,
       dependentFilters ?? {},
       dashboard
     ),
-    filterKey,
     handleResourcesSelection: handleResourceChange,
-    key: filterKey,
     placeholder,
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
@@ -91,14 +91,11 @@ export const getResourcesProperties = (
 export const getTimeDurationProperties = (
   props: CloudPulseFilterProperties,
   handleTimeRangeChange: (timeDuration: TimeDuration) => void
-) => {
-  const { filterKey, placeholder } = props.config.configuration;
+): CloudPulseTimeRangeSelectProps => {
+  const { placeholder } = props.config.configuration;
   const { isServiceAnalyticsIntegration } = props;
   return {
-    componentKey: filterKey,
-    filterKey,
     handleStatsChange: handleTimeRangeChange,
-    key: filterKey,
     placeholder,
     savePreferences: !isServiceAnalyticsIntegration,
   };

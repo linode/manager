@@ -22,6 +22,7 @@ import {
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 import type { CloudPulseServiceTypeFilters } from '../Utils/models';
+import type { CloudPulseResources } from './CloudPulseResourcesSelect';
 import type { Dashboard, TimeDuration } from '@linode/api-v4';
 
 export interface CloudPulseDashboardFilterBuilderProps {
@@ -120,8 +121,11 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     );
 
     const handleResourceChange = React.useCallback(
-      (resourceId: number[]) => {
-        emitFilterChangeByFilterKey(RESOURCE_ID, resourceId);
+      (resourceId: CloudPulseResources[]) => {
+        emitFilterChangeByFilterKey(
+          RESOURCE_ID,
+          resourceId.map((resource) => resource.id)
+        );
       },
       [emitFilterChangeByFilterKey]
     );
@@ -245,14 +249,9 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
                   <KeyboardArrowRightIcon />
                 )
               }
-              onClick={toggleShowFilter}
               buttonType={'outlined'}
+              onClick={toggleShowFilter}
             >
-              {/* {showFilter ? (
-                <KeyboardArrowDownIcon />
-              ) : (
-                <KeyboardArrowRightIcon />
-              )} */}
               <Typography>Filters</Typography>
             </Button>
           </Box>

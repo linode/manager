@@ -14,6 +14,7 @@ import type { Filter } from '@linode/api-v4';
 export interface CloudPulseResources {
   id: string;
   label: string;
+  placeholder?: string;
   region?: string; // usually linodes are associated with only one region
   regions?: string[]; // aclb are associated with multiple regions
 }
@@ -22,8 +23,9 @@ export interface CloudPulseResourcesSelectProps {
   disabled?: boolean;
   handleResourcesSelection: (resources: CloudPulseResources[]) => void;
   placeholder?: string;
-  region: string | undefined;
+  region?: string | undefined;
   resourceType: string | undefined;
+  savePreferences?: boolean;
   xFilter?: Filter;
 }
 

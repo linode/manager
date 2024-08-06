@@ -34,8 +34,6 @@ it('test getRegionProperties method', () => {
     },
     vi.fn()
   );
-
-  expect(result['componentKey']).toEqual(regionConfig?.configuration.filterKey);
   expect(result['handleRegionChange']).toBeDefined();
   expect(result['selectedDashboard']).toEqual(mockDashboard);
 });
@@ -54,10 +52,6 @@ it('test getTimeDuratonProperties method', () => {
       isServiceAnalyticsIntegration: false,
     },
     vi.fn()
-  );
-
-  expect(result['componentKey']).toEqual(
-    timeDurationConfig?.configuration.filterKey
   );
   expect(result['handleStatsChange']).toBeDefined();
   expect(result['savePreferences']).toEqual(true);
@@ -78,10 +72,6 @@ it('test getResourceSelectionProperties method', () => {
       isServiceAnalyticsIntegration: true,
     },
     vi.fn()
-  );
-
-  expect(result['componentKey']).toEqual(
-    resourceSelectionConfig?.configuration.filterKey
   );
   expect(result['handleResourcesSelection']).toBeDefined();
   expect(result['savePreferences']).toEqual(false);
@@ -106,10 +96,6 @@ it('test getResourceSelectionProperties method with disabled true', () => {
       isServiceAnalyticsIntegration: true,
     },
     vi.fn()
-  );
-
-  expect(result['componentKey']).toEqual(
-    resourceSelectionConfig?.configuration.filterKey
   );
   expect(result['handleResourcesSelection']).toBeDefined();
   expect(result['savePreferences']).toEqual(false);

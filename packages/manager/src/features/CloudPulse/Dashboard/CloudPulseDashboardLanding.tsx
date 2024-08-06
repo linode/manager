@@ -22,7 +22,7 @@ export const CloudPulseDashboardLanding = () => {
   const [timeDuration, setTimeDuration] = React.useState<TimeDuration>();
 
   const [dashboard, setDashboard] = React.useState<Dashboard>();
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   const onFilterChange = React.useCallback(
     (
       filterKey: string,
@@ -51,6 +51,74 @@ export const CloudPulseDashboardLanding = () => {
     [key: string]: number | number[] | string | string[] | undefined;
   }> = React.useRef({});
 
+  /**
+   * Takes an error message as input and renders a placeholder with the error message
+   * @param errorMessage {string} - Error message which will be displayed
+   *
+   */
+  const renderErrorPlaceholder = (errorMessage: string) => {
+    return (
+      <Grid item xs={12}>
+        <Paper>
+          <StyledPlaceholder
+            icon={CloudViewIcon}
+            isEntity
+            subtitle={errorMessage}
+            title=""
+          />
+        </Paper>
+      </Grid>
+    );
+  };
+
+  /**
+   * Incase of errors and filter criteria not met, this renders the required error message placeholder and in case of success checks, renders a dashboard
+   * @returns Placeholder | Dashboard
+   */
+  const RenderDashboard = () => {
+    if (!dashboard) {
+      return renderErrorPlaceholder(
+        'Select Dashboard and filters to visualize metrics.'
+      );
+    }
+
+    if (!FILTER_CONFIG.get(dashboard.service_type)) {
+      return renderErrorPlaceholder(
+        "No Filters Configured for selected dashboard's service type"
+      );
+    }
+
+    if (
+      !checkIfAllMandatoryFiltersAreSelected(
+        dashboard,
+        filterValue,
+        timeDuration
+      )
+    ) {
+      return renderErrorPlaceholder(
+        'Select Dashboard and filters to visualize metrics.'
+      );
+    }
+
+    return (
+      <CloudPulseDashboard
+        region={
+          typeof filterValue[REGION] === 'string'
+            ? (filterValue[REGION] as string)
+            : undefined
+        }
+        resources={
+          filterValue[RESOURCE_ID] && Array.isArray(filterValue[RESOURCE_ID])
+            ? (filterValue[RESOURCE_ID] as string[])
+            : []
+        }
+        dashboardId={dashboard!.id!}
+        duration={timeDuration!}
+        savePref={true}
+      />
+    );
+  };
+
   if (isLoading) {
     return <CircleProgress />;
   }
@@ -66,53 +134,7 @@ export const CloudPulseDashboardLanding = () => {
           />
         </Paper>
       </Grid>
-      {dashboard && !FILTER_CONFIG.get(dashboard.service_type) && (
-        <Paper>
-          <StyledPlaceholder
-            icon={CloudViewIcon}
-            isEntity
-            subtitle="No Filters Configured for selected dashboard's service type"
-            title=""
-          />
-        </Paper>
-      )}
-      {(!dashboard ||
-        !checkIfAllMandatoryFiltersAreSelected(
-          dashboard,
-          filterValue,
-          timeDuration
-        )) && (
-        <Paper>
-          <StyledPlaceholder
-            icon={CloudViewIcon}
-            isEntity
-            subtitle="Select Dashboard and filters  to visualize metrics."
-            title=""
-          />
-        </Paper>
-      )}
-      {dashboard &&
-        checkIfAllMandatoryFiltersAreSelected(
-          dashboard,
-          filterValue,
-          timeDuration
-        ) && (
-          <CloudPulseDashboard
-            region={
-              typeof filterValue[REGION] === 'string'
-                ? (filterValue[REGION] as string)
-                : undefined
-            }
-            resources={
-              filterValue[RESOURCE_ID]
-                ? (filterValue[RESOURCE_ID] as string[])
-                : []
-            }
-            dashboardId={dashboard!.id!}
-            duration={timeDuration!}
-            savePref={true}
-          />
-        )}
+      <RenderDashboard />
     </Grid>
   );
 };

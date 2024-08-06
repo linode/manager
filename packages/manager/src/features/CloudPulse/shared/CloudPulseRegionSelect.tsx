@@ -15,6 +15,8 @@ import type { Dashboard } from '@linode/api-v4';
 
 export interface CloudPulseRegionSelectProps {
   handleRegionChange: (region: string | undefined) => void;
+  placeholder?: string;
+  savePreferences?: boolean;
   selectedDashboard: Dashboard | undefined;
 }
 

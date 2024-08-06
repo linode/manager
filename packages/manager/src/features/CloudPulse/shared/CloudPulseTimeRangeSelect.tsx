@@ -20,6 +20,8 @@ export interface CloudPulseTimeRangeSelectProps
     'defaultValue' | 'onChange'
   > {
   handleStatsChange?: (timeDuration: TimeDuration) => void;
+  placeholder?: string;
+  savePreferences?: boolean;
 }
 
 const PAST_7_DAYS = 'Past 7 Days';
@@ -51,15 +53,6 @@ export const CloudPulseTimeRangeSelect = React.memo(
       updateGlobalFilterPreference({
         [TIME_DURATION]: item.value,
       });
-
-      /*
-      Why division by 1000?
-
-      Because the LongView API doesn't expect the start and date time
-      to the nearest millisecond - if you send anything more than 10 digits
-      you won't get any data back
-    */
-      const nowInSeconds = Date.now() / 1000;
 
       if (handleStatsChange) {
         handleStatsChange(getTimeDurationFromTimeRange(item.value));
@@ -136,7 +129,7 @@ export const generateStartTime = (modifier: Labels, nowInSeconds: number) => {
   }
 };
 
-const getTimeDurationFromTimeRange = (label: string) : TimeDuration => {
+const getTimeDurationFromTimeRange = (label: string): TimeDuration => {
   if (label === PAST_30_MINUTES) {
     return { unit: 'min', value: 30 };
   }
