@@ -133,7 +133,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     const imageList = images.map((image) => image.id);
 
     const anyAllOptionChosen = imageList.includes('any/all');
-    console.log(anyAllOptionChosen);
 
     this.setState(
       {
