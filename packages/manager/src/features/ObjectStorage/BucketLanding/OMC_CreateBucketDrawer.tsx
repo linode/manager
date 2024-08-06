@@ -170,11 +170,13 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
       const typeLabel = isLegacy ? 'Legacy' : 'Standard';
       const shouldShowHostname =
         endpointCounts && endpointCounts[endpoint_type] > 1;
-      const label = shouldShowHostname
-        ? `${typeLabel} (${endpoint_type}) ${s3_endpoint}`
-        : `${typeLabel} (${endpoint_type})`;
+      const label =
+        shouldShowHostname && s3_endpoint !== null
+          ? `${typeLabel} (${endpoint_type}) ${s3_endpoint}`
+          : `${typeLabel} (${endpoint_type})`;
 
       return {
+        endpoint_type,
         label,
         s3_endpoint: s3_endpoint ?? undefined,
         value: endpoint_type,
@@ -183,8 +185,16 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   );
 
   // Automatically select the endpoint type if only one is available in the chosen region.
-  const autoSelectEndpointType =
-    filteredEndpointOptions?.length === 1 && filteredEndpointOptions?.[0];
+  const autoSelectEndpointType = React.useMemo(() => {
+    if (filteredEndpointOptions?.length === 1) {
+      const option = filteredEndpointOptions[0];
+      return {
+        ...option,
+        s3_endpoint: option.s3_endpoint ?? undefined,
+      };
+    }
+    return null;
+  }, [filteredEndpointOptions]);
 
   const selectedEndpointType =
     filteredEndpointOptions?.find(
@@ -204,20 +214,21 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     selectedEndpointType.value !== 'E1';
 
   React.useEffect(() => {
-    if (selectedEndpointType) {
-      const { s3_endpoint, value } = selectedEndpointType;
+    const { endpoint_type, s3_endpoint, value } =
+      autoSelectEndpointType || selectedEndpointType || {};
 
-      // For endpoints with multiple assignments, add s3_endpoint to the payload.
-      if (s3_endpoint) {
-        setValue('s3_endpoint', s3_endpoint);
-      }
-
-      // CORS is not supported for E2 and E3 endpoint types
-      if (['E2', 'E3'].includes(value)) {
-        setValue('cors_enabled', false);
-      }
+    if (s3_endpoint) {
+      setValue('s3_endpoint', s3_endpoint);
     }
-  }, [selectedEndpointType, setValue]);
+
+    if (endpoint_type) {
+      setValue('endpoint_type', endpoint_type);
+    }
+
+    if (value && ['E2', 'E3'].includes(value)) {
+      setValue('cors_enabled', false);
+    }
+  }, [autoSelectEndpointType, selectedEndpointType, setValue]);
 
   return (
     <Drawer
