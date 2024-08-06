@@ -15,6 +15,7 @@ import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
+import { isBucketError } from 'src/queries/object-storage/requests';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
@@ -215,7 +216,7 @@ export const SearchLanding = (props: SearchLandingProps) => {
       [
         objectStorageBuckets && objectStorageBuckets.errors.length > 0,
         `Object Storage in ${objectStorageBuckets?.errors
-          .map((e) => e.cluster.region)
+          .map((e) => (isBucketError(e) ? e.cluster.region : e.endpoint.region))
           .join(', ')}`,
       ],
     ];
