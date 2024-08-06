@@ -36,8 +36,7 @@ Feel free to open an issue to report a bug or request a feature.
     You can either have it committed automatically or do it manually if you need to edit it.
     - A changeset is optional, but should be included if the PR falls in one of the following categories:<br>
     `Added`, `Fixed`, `Changed`, `Removed`, `Tech Stories`, `Tests`, `Upcoming Features`
-      - Select the changeset category that matches the commit type in your PR title. (Where this isn't a 1:1 match: generally, a `feat` commit type falls under an `Added` change and `refactor` falls under `Tech Stories`.)
-      - Confirm your changeset follows our [best practices](https://github.com/linode/manager/blob/develop/packages/manager/.changeset/README.md).
+      - Confirm your changeset follows our [best practices](https://github.com/linode/manager/blob/develop/packages/manager/.changeset/README.md#best-practices).
 
 Two reviews from members of the Cloud Manager team are required before merge. After approval, all pull requests are squash merged.
 
