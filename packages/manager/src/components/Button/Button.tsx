@@ -31,6 +31,10 @@ export interface ButtonProps extends _ButtonProps {
    */
   compactY?: boolean;
   /**
+   * Optional test ID
+   */
+  'data-testid'?: string;
+  /**
    * Show a loading indicator
    * @default false
    */
@@ -151,7 +155,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         color={color}
         compactX={compactX}
         compactY={compactY}
-        data-testid="Button"
+        data-testid={rest['data-testid'] || 'Button'}
         disableRipple={disabled}
         disabled={loading}
         loading={loading}
