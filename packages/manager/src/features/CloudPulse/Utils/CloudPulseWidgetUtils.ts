@@ -96,19 +96,15 @@ export const generateGraphData = (
     dimensions,
     legendRowsData,
     today,
-    unit: generateMaxUnit(dimensions, legendRowsData, widgetObject.unit),
+    unit: generateMaxUnit(legendRowsData, widgetObject.unit),
   };
 };
 
-const generateMaxUnit = (
-  dimensions: DataSet[],
-  legendRowsData: LegendRow[],
-  unit: string
-) => {
-  let maxValue = 0;
-  dimensions?.forEach((_: DataSet, index: number) => {
-    maxValue = Math.max(maxValue, legendRowsData[index]?.data.max ?? 0);
-  });
+const generateMaxUnit = (legendRowsData: LegendRow[], unit: string) => {
+  const maxValue = Math.max(
+    0,
+    ...legendRowsData?.map((row) => row?.data.max ?? 0)
+  );
 
   return generateUnitByBaseUnit(maxValue, unit);
 };
@@ -154,16 +150,13 @@ const getLabelName = (
   // aggregated metric, where metric keys will be 0
   if (!Object.keys(metric).length) {
     // in this case return widget label and unit
-    return labelObject.label + ' (' + labelObject.unit + ')';
+    return `${labelObject.label} (${labelObject.unit})`;
   }
 
-  const results =
-    labelObject.flags?.aclpResourceTypeMap?.filter(
-      (obj: CloudPulseResourceTypeMapFlag) =>
-        obj.serviceType === labelObject.serviceType
-    ) ?? [];
-
-  const flag = results?.length ? results[0] : undefined;
+  const flag = labelObject.flags?.aclpResourceTypeMap?.find(
+    (obj: CloudPulseResourceTypeMapFlag) =>
+      obj.serviceType === labelObject.serviceType
+  );
 
   return getDimensionName(metric, flag, resources);
 };
@@ -173,42 +166,28 @@ export const getDimensionName = (
   flag: CloudPulseResourceTypeMapFlag | undefined,
   resources: CloudPulseResources[]
 ): string => {
-  let labelName = '';
-  Object.keys(metric).forEach((key) => {
-    if (key === flag?.dimensionKey) {
-      const mappedName = mapResourceIdToName(
-        metric[flag.dimensionKey],
-        resources
-      );
-
-      if (mappedName?.length) {
-        labelName +=
-          mapResourceIdToName(metric[flag.dimensionKey], resources) + '_';
+  return Object.entries(metric)
+    .map(([key, value]) => {
+      if (key === flag?.dimensionKey) {
+        return mapResourceIdToName(value, resources);
       }
-    } else if (metric[key]) {
-      labelName += metric[key] + '_';
-    }
-  });
 
-  return labelName.slice(0, -1);
+      return value ?? '';
+    })
+    .filter(Boolean)
+    .join('_');
 };
 
 export const mapResourceIdToName = (
-  id: string,
+  id: string | undefined,
   resources: CloudPulseResources[]
 ): string => {
-  if (!resources?.length) {
-    return id;
-  }
-
-  if (!id) {
-    return '';
-  }
-
-  const index = resources.findIndex(
-    (resourceObj) => resourceObj.id && resourceObj.id === id
+  /**
+   * if @id found in @resources list then return its label
+   * and if not found then return the @id
+   * and if @id is also undefined then return empty string
+   */
+  return (
+    resources.find((resourceObj) => resourceObj?.id === id)?.label ?? id ?? ''
   );
-
-  // if we are able to find a match, then return the label, else return id
-  return index != -1 ? resources[index].label : id;
 };
