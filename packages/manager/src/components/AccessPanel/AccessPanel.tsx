@@ -11,9 +11,9 @@ import {
   ENCRYPT_DISK_REBUILD_DISTRIBUTED_COPY,
   ENCRYPT_DISK_REBUILD_LKE_COPY,
   ENCRYPT_DISK_REBUILD_STANDARD_COPY,
-} from 'src/components/DiskEncryption/constants';
-import { DiskEncryption } from 'src/components/DiskEncryption/DiskEncryption';
-import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
+} from 'src/components/Encryption/constants';
+import { Encryption } from 'src/components/Encryption/Encryption';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Paper } from 'src/components/Paper';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
@@ -201,7 +201,7 @@ export const AccessPanel = (props: Props) => {
     toggleDiskEncryptionEnabled !== undefined ? (
       <>
         <Divider spacingBottom={20} spacingTop={24} />
-        <DiskEncryption
+        <Encryption
           descriptionCopy={determineDiskEncryptionDescription({
             isDistributedRegion,
             isInRebuildFlow,
@@ -220,7 +220,7 @@ export const AccessPanel = (props: Props) => {
             linodeIsInDistributedRegion,
             regionSupportsDiskEncryption,
           })}
-          isEncryptDiskChecked={diskEncryptionEnabled ?? false}
+          isEncryptEntityChecked={diskEncryptionEnabled ?? false}
           onChange={() => toggleDiskEncryptionEnabled()}
         />
       </>

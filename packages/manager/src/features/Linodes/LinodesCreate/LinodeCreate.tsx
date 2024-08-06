@@ -434,7 +434,9 @@ export class LinodeCreate extends React.PureComponent<
     }
   };
 
-  handleClickCreateUsingCommandLine = () => {
+  handleClickCreateUsingCommandLine = (
+    isDxToolsAdditionsEnabled: boolean | undefined
+  ) => {
     const payload = {
       authorized_users: this.props.authorized_users,
       backup_id: this.props.selectedBackupID,
@@ -454,7 +456,12 @@ export class LinodeCreate extends React.PureComponent<
         : [],
       type: this.props.selectedTypeID ?? '',
     };
-    sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
+    sendApiAwarenessClickEvent(
+      'Button',
+      isDxToolsAdditionsEnabled
+        ? 'View Code Snippets'
+        : 'Create Using Command Line'
+    );
     this.props.checkValidation(payload);
   };
 
@@ -656,6 +663,7 @@ export class LinodeCreate extends React.PureComponent<
 
     const hasErrorFor = getErrorMap(errorMap, errors);
     const generalError = getErrorMap(errorMap, errors).none;
+    const isDxToolsAdditionsEnabled = this.props.flags?.apicliDxToolsAdditions;
 
     if (regionsLoading || imagesLoading || linodesLoading || typesLoading) {
       return <CircleProgress />;
@@ -1219,11 +1227,17 @@ export class LinodeCreate extends React.PureComponent<
                   !checkedFirewallAuthorizaton &&
                   this.props.firewallId === undefined)
               }
+              onClick={() =>
+                this.handleClickCreateUsingCommandLine(
+                  isDxToolsAdditionsEnabled
+                )
+              }
               buttonType="outlined"
               data-qa-api-cli-linode
-              onClick={this.handleClickCreateUsingCommandLine}
             >
-              Create using command line
+              {isDxToolsAdditionsEnabled
+                ? 'View Code Snippets'
+                : 'Create using command line'}
             </StyledCreateButton>
             <StyledCreateButton
               disabled={
