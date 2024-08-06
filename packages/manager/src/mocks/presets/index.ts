@@ -5,10 +5,12 @@ import { baselineApiUnstablePreset } from './baseline/baseline-api-unstable';
 import { baselineCrudPreset } from './baseline/baseline-crud';
 import { baselineLegacyPreset } from './baseline/baseline-legacy';
 import { baselineNoMocksPreset } from './baseline/baseline-no-mocks';
-import { childAccountPreset } from './extra/account/child-account';
-import { managedDisabledPreset } from './extra/account/managed-disabled';
-import { managedEnabledPreset } from './extra/account/managed-enabled';
-import { parentAccountPreset } from './extra/account/parent-account';
+import { childAccountPreset } from './extra/account/child-account-preset';
+import { managedDisabledPreset } from './extra/account/managed-disabled-preset';
+import { managedEnabledPreset } from './extra/account/managed-enabled-preset';
+import { parentAccountPreset } from './extra/account/parent-account-preset';
+import { legacyRegionsPreset } from './extra/regions/legacy-regions';
+import { regionsPreset } from './extra/regions/regions';
 
 import type { MockPreset } from '../types';
 
@@ -32,6 +34,8 @@ export const extraMockPresets: MockPreset[] = [
   managedDisabledPreset,
   parentAccountPreset,
   childAccountPreset,
+  regionsPreset,
+  legacyRegionsPreset,
 ];
 
 /** An array of all mock presets. */
