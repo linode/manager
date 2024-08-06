@@ -1,14 +1,14 @@
 import { RELATIVE_TIME_DURATION } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 
+import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 import type {
   CloudPulseResources,
   CloudPulseResourcesSelectProps,
 } from '../shared/CloudPulseResourcesSelect';
+import type { CloudPulseTimeRangeSelectProps } from '../shared/CloudPulseTimeRangeSelect';
 import type { CloudPulseServiceTypeFilters } from './models';
 import type { Dashboard, Filter, TimeDuration } from '@linode/api-v4';
-import { CloudPulseTimeRangeSelectProps } from '../shared/CloudPulseTimeRangeSelect';
-import { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 
 export interface CloudPulseFilterProperties {
   config: CloudPulseServiceTypeFilters;
@@ -32,6 +32,7 @@ export interface CloudPulseFilterProperties {
  * @param handleRegionChange - the callback when we select new region
  * @param dashboard - the actual selected dashboard
  * @param isServiceAnalyticsIntegration - only if this is false, we need to save preferences , else no need
+ * @returns CloudPulseRegionSelectProps
  */
 export const getRegionProperties = (
   props: CloudPulseFilterProperties,
@@ -55,6 +56,7 @@ export const getRegionProperties = (
  * @param dashboard - the actual selected dashboard
  * @param isServiceAnalyticsIntegration - only if this is false, we need to save preferences , else no need
  * @param dependentFilters - since resources are dependent on some other filters, we need this as for disabling the resources selection component
+ * @returns CloudPulseResourcesSelectProps
  */
 export const getResourcesProperties = (
   props: CloudPulseFilterProperties,
@@ -87,6 +89,7 @@ export const getResourcesProperties = (
  * @param config - accepts a CloudPulseServiceTypeFilters of time duration key
  * @param handleTimeRangeChange - callback whenever a time duration selection changes
  * @param isServiceAnalyticsIntegration - only if this is false, we need to save preferences , else no need
+ * @returns CloudPulseTimeRangeSelectProps
  */
 export const getTimeDurationProperties = (
   props: CloudPulseFilterProperties,
@@ -145,6 +148,7 @@ export const buildXFilter = (
  * @param filterKey - the filterKey for which we need to check whether to disable or enable the filter component
  * @param dependentFilters - the filters selected so far
  * @param dashboard - the actual selected dashboard
+ * @returns boolean | undefined
  */
 export const checkIfWeNeedToDisableFilterByFilterKey = (
   filterKey: string,
@@ -158,7 +162,7 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
       | undefined;
   },
   dashboard: Dashboard
-) => {
+): boolean | undefined => {
   if (dashboard && dashboard.service_type) {
     const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type!);
     const filters = serviceTypeConfig?.filters ?? [];
@@ -182,39 +186,34 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
   return false;
 };
 
+/**
+ *
+ * @param dashboard - The actual selected dashboard
+ * @param filterValue - The filter value selected from various filter components
+ * @param timeDuration - The time duration selected
+ * @returns boolean if all the mandatory filters listed in the service config are selected else false
+ */
 export const checkIfAllMandatoryFiltersAreSelected = (
   dashboard: Dashboard,
-  filterValue: { [key: string]: any },
+  filterValue: {
+    [key: string]: number | number[] | string | string[] | undefined;
+  },
   timeDuration: TimeDuration | undefined
-) => {
-  if (FILTER_CONFIG && FILTER_CONFIG.get(dashboard!.service_type!)) {
-    const serviceTypeConfig = FILTER_CONFIG.get(dashboard!.service_type!);
+): boolean => {
+  const serviceTypeConfig = FILTER_CONFIG?.get(dashboard.service_type);
 
-    for (let i = 0; i < serviceTypeConfig!.filters.length; i++) {
-      if (
-        serviceTypeConfig!.filters[i].configuration.filterKey ==
-          RELATIVE_TIME_DURATION &&
-        !timeDuration
-      ) {
-        return false;
-      }
-      if (
-        (serviceTypeConfig!.filters[i].configuration.filterKey !==
-          RELATIVE_TIME_DURATION &&
-          filterValue[serviceTypeConfig!.filters[i].configuration.filterKey] ==
-            undefined) ||
-        (Array.isArray(
-          filterValue[serviceTypeConfig!.filters[i].configuration.filterKey]
-        ) &&
-          filterValue[serviceTypeConfig!.filters[i].configuration.filterKey]
-            .length == 0)
-      ) {
-        return false;
-      }
-    }
-
-    return true;
+  if (!serviceTypeConfig) {
+    return false;
   }
 
-  return false;
+  return serviceTypeConfig.filters.every((filter) => {
+    const filterKey = filter.configuration.filterKey;
+
+    if (filterKey === RELATIVE_TIME_DURATION) {
+      return !!timeDuration;
+    }
+
+    const value = filterValue[filterKey];
+    return value !== undefined && (!Array.isArray(value) || value.length > 0);
+  });
 };
