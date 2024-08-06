@@ -31,13 +31,13 @@ export const baselineMockPresets: MockPreset[] = [
 
 /** Extra mock presets can be used to conditionally apply extra functionality via mocks. */
 export const extraMockPresets: MockPreset[] = [
+  apiResponseTimePreset,
   managedEnabledPreset,
   managedDisabledPreset,
   parentAccountPreset,
   childAccountPreset,
   regionsPreset,
   legacyRegionsPreset,
-  apiResponseTimePreset,
 ];
 
 /** An array of all mock presets. */

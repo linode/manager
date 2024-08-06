@@ -4,7 +4,7 @@ import { getMSWPresetsMap } from 'src/dev-tools/utils';
 
 import type { MockPreset } from 'src/mocks/types';
 
-const setAPIResponseTime = () => {
+const APIResponseTime = () => {
   const responseTime = getMSWPresetsMap()['api-response-time'] || 0;
 
   return [
@@ -25,7 +25,7 @@ export const apiResponseTimePreset: MockPreset = {
   canUpdateCount: true,
   desc: 'Allows to customize API response time',
   group: 'API State',
-  handlers: [setAPIResponseTime],
+  handlers: [APIResponseTime],
   id: 'api-response-time',
-  label: 'API Response Time',
+  label: 'API Response Time (ms)',
 };
