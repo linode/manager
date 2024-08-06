@@ -48,6 +48,22 @@ const config: StorybookConfig = {
       define: {
         'process.env': {},
       },
+      optimizeDeps: {
+        include: [
+          '@storybook/addon-viewport',
+          '@storybook/blocks',
+          '@storybook/theming',
+          'storybook-dark-mode',
+          'react-hook-form',
+          'typescript-fsa-reducers',
+          'css-mediaquery',
+          'redux-mock-store',
+          'redux-thunk',
+          'redux',
+          '@testing-library/react',
+          'react-dom/test-utils',
+        ],
+      },
     });
   },
 };
