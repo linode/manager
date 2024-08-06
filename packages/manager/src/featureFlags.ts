@@ -194,12 +194,12 @@ interface BannerContent {
 }
 
 interface SecureVMCopy {
-  bannerLabel: string;
-  firewallAuthorizationLabel: string;
-  firewallAuthorizationWarning: string;
-  firewallDetails: BannerContent;
-  generateActionText: string;
-  linodeCreate: BannerContent;
+  bannerLabel?: string;
+  firewallAuthorizationLabel?: string;
+  firewallAuthorizationWarning?: string;
+  firewallDetails?: BannerContent;
+  generateActionText?: string;
+  linodeCreate?: BannerContent;
 }
 
 export type ProductInformationBannerLocation =

@@ -1193,7 +1193,7 @@ export class LinodeCreate extends React.PureComponent<
               ) : null}
               {showFirewallAuthorization &&
               this.props.firewallId === undefined &&
-              flags.secureVmCopy ? (
+              flags.secureVmCopy?.firewallAuthorizationWarning ? (
                 <AkamaiBanner
                   action={
                     <Typography color="inherit">

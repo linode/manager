@@ -52,19 +52,20 @@ export const Firewall = () => {
           outbound network traffic.{' '}
           <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
         </Typography>
-        {secureVMFirewallBanner && (
-          <AkamaiBanner
-            action={
-              secureVMFirewallBanner.generateActionText ? (
-                <LinkButton onClick={() => setIsGenerateDialogOpen(true)}>
-                  {secureVMFirewallBanner.generateActionText}
-                </LinkButton>
-              ) : undefined
-            }
-            margin={2}
-            {...secureVMFirewallBanner.linodeCreate}
-          />
-        )}
+        {secureVMFirewallBanner !== false &&
+          secureVMFirewallBanner.linodeCreate && (
+            <AkamaiBanner
+              action={
+                secureVMFirewallBanner.generateActionText ? (
+                  <LinkButton onClick={() => setIsGenerateDialogOpen(true)}>
+                    {secureVMFirewallBanner.generateActionText}
+                  </LinkButton>
+                ) : undefined
+              }
+              margin={2}
+              {...secureVMFirewallBanner.linodeCreate}
+            />
+          )}
         <Stack spacing={1.5}>
           <Autocomplete
             disabled={isLinodeCreateRestricted}

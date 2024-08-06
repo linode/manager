@@ -98,19 +98,20 @@ export const SelectFirewallPanel = (props: Props) => {
       </Typography>
       <Stack>
         {helperText}
-        {secureVMFirewallBanner && (
-          <AkamaiBanner
-            action={
-              secureVMFirewallBanner.generateActionText ? (
-                <LinkButton onClick={() => setIsFirewallDialogOpen(true)}>
-                  {secureVMFirewallBanner.generateActionText}
-                </LinkButton>
-              ) : undefined
-            }
-            margin={2}
-            {...secureVMFirewallBanner.linodeCreate}
-          />
-        )}
+        {secureVMFirewallBanner !== false &&
+          secureVMFirewallBanner.linodeCreate && (
+            <AkamaiBanner
+              action={
+                secureVMFirewallBanner.generateActionText ? (
+                  <LinkButton onClick={() => setIsFirewallDialogOpen(true)}>
+                    {secureVMFirewallBanner.generateActionText}
+                  </LinkButton>
+                ) : undefined
+              }
+              margin={2}
+              {...secureVMFirewallBanner.linodeCreate}
+            />
+          )}
         <Autocomplete
           onChange={(_, selection) => {
             handleFirewallChange(selection?.value ?? -1);
