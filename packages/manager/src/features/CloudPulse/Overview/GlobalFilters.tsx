@@ -124,7 +124,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           </Tooltip>
         </Grid>
       </StyledGrid>
-      <CloudPulseDashboardFilterBuilder // this simple integration is for test purpose, the functionality integration will be done in upcoming PR by driving all filters through filterbuilder
+      <CloudPulseDashboardFilterBuilder // moving forward, every filter will be driven through filter builder component
         dashboard={selectedDashboard!}
         emitFilterChange={() => {}}
         isServiceAnalyticsIntegration={false}

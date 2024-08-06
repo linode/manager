@@ -17,12 +17,13 @@ export const getRegionProperties = (
   dashboard: Dashboard,
   isServiceAnalyticsIntegration: boolean
 ) => {
+  const { filterKey, placeholder } = config.configuration;
   return {
-    componentKey: config.configuration.filterKey,
-    filterKey: config.configuration.filterKey,
+    componentKey: filterKey,
+    filterKey,
     handleRegionChange,
-    key: config.configuration.filterKey,
-    placeholder: config.configuration.placeholder,
+    key: filterKey,
+    placeholder,
     savePreferences: !isServiceAnalyticsIntegration,
     selectedDashboard: dashboard,
   };
@@ -52,17 +53,18 @@ export const getResourcesProperties = (
       | undefined;
   }
 ) => {
+  const { filterKey, placeholder } = config.configuration;
   return {
-    componentKey: config.configuration.filterKey,
+    componentKey: filterKey,
     disabled: checkIfWeNeedToDisableFilterByFilterKey(
-      config.configuration.filterKey,
+      filterKey,
       dependentFilters,
       dashboard
     ),
-    filterKey: config.configuration.filterKey,
+    filterKey,
     handleResourcesSelection: handleResourceChange,
-    key: config.configuration.filterKey,
-    placeholder: config.configuration.placeholder,
+    key: filterKey,
+    placeholder,
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
     xFilter: buildXFilter(config, dependentFilters),
@@ -81,12 +83,13 @@ export const getTimeDurationProperties = (
   handleTimeRangeChange: (timeDuration: TimeDuration) => void,
   isServiceAnalyticsIntegration: boolean
 ) => {
+  const { filterKey, placeholder } = config.configuration;
   return {
-    componentKey: config.configuration.filterKey,
-    filterKey: config.configuration.filterKey,
+    componentKey: filterKey,
+    filterKey,
     handleStatsChange: handleTimeRangeChange,
-    key: config.configuration.filterKey,
-    placeholder: config.configuration.placeholder,
+    key: filterKey,
+    placeholder,
     savePreferences: !isServiceAnalyticsIntegration,
   };
 };

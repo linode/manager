@@ -141,14 +141,14 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     const getProps = React.useCallback(
       (config: CloudPulseServiceTypeFilters) => {
-        if (config.configuration.filterKey == REGION) {
+        if (config.configuration.filterKey === REGION) {
           return getRegionProperties(
             config,
             handleRegionChange,
             dashboard,
             isServiceAnalyticsIntegration
           );
-        } else if (config.configuration.filterKey == RESOURCE_ID) {
+        } else if (config.configuration.filterKey === RESOURCE_ID) {
           return getResourcesProperties(
             config,
             handleResourceChange,
@@ -156,7 +156,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             isServiceAnalyticsIntegration,
             dependentFilterReference.current
           );
-        } else if (config.configuration.filterKey == RELATIVE_TIME_DURATION) {
+        } else if (config.configuration.filterKey === RELATIVE_TIME_DURATION) {
           return getTimeDurationProperties(
             config,
             handleTimeRangeChange,
@@ -182,7 +182,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     const RenderFilters = React.useCallback(() => {
       const filters = FILTER_CONFIG.get(dashboard.service_type)?.filters || [];
 
-      if (!filters || filters.length == 0) {
+      if (!filters || filters.length === 0) {
         // if the filters are not defined , print an error state
         return (
           <Grid item key={'filtererror'} xs={12}>
@@ -202,12 +202,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             : !config.configuration.neededInServicePage
         )
         .map((filter) => (
-          <Grid
-            item
-            key={filter.configuration.filterKey}
-            sx={{ marginLeft: 2 }}
-            xs
-          >
+          <Grid item key={filter.configuration.filterKey} xs>
             {RenderComponent({
               componentKey: filter.configuration.filterKey,
               componentProps: { ...getProps(filter) },
@@ -232,7 +227,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     return (
       <Grid container>
-        <Grid item key={'toggleFilter'} sx={{ marginLeft: 2 }} xs={12}>
+        <Grid item key={'toggleFilter'} xs={12}>
           <Box>
             <Button onClick={toggleShowFilter} sx={{ marginTop: 2 }}>
               {showFilter ? (

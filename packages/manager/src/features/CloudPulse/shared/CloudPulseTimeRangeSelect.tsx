@@ -13,7 +13,7 @@ import type {
   Item,
 } from 'src/components/EnhancedSelect/Select';
 
-export interface Props
+export interface CloudPulseTimeRangeSelectProps
   extends Omit<
     BaseSelectProps<Item<Labels, Labels>, false>,
     'defaultValue' | 'onChange'
@@ -33,52 +33,54 @@ export type Labels =
   | 'Past 30 Days'
   | 'Past 30 Minutes';
 
-export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
-  const { handleStatsChange, ...restOfSelectProps } = props;
+export const CloudPulseTimeRangeSelect = React.memo(
+  (props: CloudPulseTimeRangeSelectProps) => {
+    const { handleStatsChange, ...restOfSelectProps } = props;
 
-  // To set the default value fetched from preferences.
-  const getPreferredValue = () => {
-    const defaultValue = getUserPreferenceObject().timeDuration;
+    // To set the default value fetched from preferences.
+    const getPreferredValue = () => {
+      const defaultValue = getUserPreferenceObject().timeDuration;
 
-    return options.find((o) => o.label === defaultValue) || options[0];
-  };
+      return options.find((o) => o.label === defaultValue) || options[0];
+    };
 
-  const options = generateSelectOptions();
+    const options = generateSelectOptions();
 
-  const handleChange = (item: Item<Labels, Labels>) => {
-    updateGlobalFilterPreference({
-      [TIME_DURATION]: item.value,
-    });
+    const handleChange = (item: Item<Labels, Labels>) => {
+      updateGlobalFilterPreference({
+        [TIME_DURATION]: item.value,
+      });
 
-    /*
+      /*
       Why division by 1000?
 
       Because the LongView API doesn't expect the start and date time
       to the nearest millisecond - if you send anything more than 10 digits
       you won't get any data back
     */
-    const nowInSeconds = Date.now() / 1000;
+      const nowInSeconds = Date.now() / 1000;
 
-    if (handleStatsChange) {
-      handleStatsChange(
-        Math.round(generateStartTime(item.value, nowInSeconds)),
-        Math.round(nowInSeconds)
-      );
-    }
-  };
+      if (handleStatsChange) {
+        handleStatsChange(
+          Math.round(generateStartTime(item.value, nowInSeconds)),
+          Math.round(nowInSeconds)
+        );
+      }
+    };
 
-  return (
-    <Select
-      {...restOfSelectProps}
-      defaultValue={getPreferredValue()}
-      isClearable={false}
-      isSearchable={false}
-      onChange={handleChange}
-      options={options}
-      small
-    />
-  );
-});
+    return (
+      <Select
+        {...restOfSelectProps}
+        defaultValue={getPreferredValue()}
+        isClearable={false}
+        isSearchable={false}
+        onChange={handleChange}
+        options={options}
+        small
+      />
+    );
+  }
+);
 
 /**
  * react-select option generator that aims to remain a pure function

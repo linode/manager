@@ -29,13 +29,20 @@ export interface CloudPulseResourcesSelectProps {
 
 export const CloudPulseResourcesSelect = React.memo(
   (props: CloudPulseResourcesSelectProps) => {
+    const {
+      disabled,
+      handleResourcesSelection,
+      placeholder,
+      region,
+      resourceType,
+      xFilter,
+    } = props;
+
     const { data: resources, isLoading } = useResourcesQuery(
-      props.disabled != undefined
-        ? !props.disabled
-        : Boolean(props.region && props.resourceType),
-      props.resourceType,
+      disabled != undefined ? !disabled : Boolean(region && resourceType),
+      resourceType,
       {},
-      props.xFilter ? props.xFilter : { region: props.region }
+      xFilter ? xFilter : { region }
     );
 
     const [selectedResources, setSelectedResources] = React.useState<
@@ -55,17 +62,17 @@ export const CloudPulseResourcesSelect = React.memo(
             defaultResources.includes(String(resource.id))
           );
 
-          props.handleResourcesSelection(resource);
+          handleResourcesSelection(resource);
           setSelectedResources(resource);
         } else {
           setSelectedResources([]);
-          props.handleResourcesSelection([]);
+          handleResourcesSelection([]);
         }
       } else {
         setSelectedResources([]);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resources, props.region, props.resourceType, props.xFilter]);
+    }, [resources, region, resourceType, xFilter]);
 
     return (
       <Autocomplete
@@ -76,18 +83,18 @@ export const CloudPulseResourcesSelect = React.memo(
             ),
           });
           setSelectedResources(resourceSelections);
-          props.handleResourcesSelection(resourceSelections);
+          handleResourcesSelection(resourceSelections);
         }}
         autoHighlight
         clearOnBlur
         data-testid="resource-select"
-        disabled={props.disabled || isLoading}
+        disabled={disabled || isLoading}
         isOptionEqualToValue={(option, value) => option.id === value.id}
         label=""
         limitTags={2}
         multiple
         options={getResourcesList()}
-        placeholder={props.placeholder ? props.placeholder : 'Select Resources'}
+        placeholder={placeholder ? placeholder : 'Select Resources'}
         value={selectedResources}
       />
     );
