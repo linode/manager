@@ -33,7 +33,6 @@ import { Link } from '../Link';
 import type { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 import type { Capabilities } from '@linode/api-v4/lib/regions';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
-import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
 export interface SelectRegionPanelProps {
   RegionSelectProps?: Partial<RegionSelectProps<true>>;
@@ -121,13 +120,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     selectedImage: image,
   });
 
-  const regionFormEventOptions: LinodeCreateFormEventOptions = {
-    createType: params.type ?? 'OS',
-    headerName: 'Region',
-    interaction: 'click',
-    label: '',
-  };
-
   if (regions?.length === 0) {
     return null;
   }
@@ -138,10 +130,9 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     if (updateTypeID) {
       updateTypeID('');
     }
-    // Begin tracking the Linode Create form - fires once per page view, configured by inputValue in AA backend.
+    // Begin tracking the Linode Create form - fires once per page view, configured in AA backend.
     sendLinodeCreateFormStartEvent({
-      ...regionFormEventOptions,
-      label: 'Select a Region',
+      createType: params.type ?? 'OS',
     });
   };
 
@@ -164,7 +155,9 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           onClick={() =>
             isFromLinodeCreate &&
             sendLinodeCreateFormInputEvent({
-              ...regionFormEventOptions,
+              createType: params.type ?? 'OS',
+              headerName: 'Region',
+              interaction: 'click',
               label: DOCS_LINK_LABEL_DC_PRICING,
             })
           }
@@ -210,8 +203,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           onChange={(e, region) => {
             handleSelection(region.id);
             sendLinodeCreateFormStartEvent({
-              ...regionFormEventOptions,
-              label: 'Select a Region',
+              createType: params.type ?? 'OS',
             });
           }}
           regionFilter={

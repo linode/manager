@@ -1,6 +1,7 @@
 import { getFormattedStringFromFormEventOptions, sendFormEvent } from './utils';
 
 import type {
+  BasicFormEvent,
   FormErrorEvent,
   FormInputEvent,
   FormStepEvent,
@@ -69,20 +70,9 @@ export const sendLinodeCreateFormStepEvent = ({
 // SelectRegionPanel.tsx
 export const sendLinodeCreateFormStartEvent = ({
   createType,
-  headerName,
-  interaction,
-  label,
-  subheaderName,
-}: LinodeCreateFormEventOptions) => {
-  const formPayload: FormInputEvent = {
+}: Partial<LinodeCreateFormEventOptions>) => {
+  const formPayload: BasicFormEvent = {
     formName: `Linode Create from ${createType}`,
-    inputValue: getFormattedStringFromFormEventOptions({
-      headerName,
-      interaction,
-      label,
-      subheaderName,
-      trackOnce: true,
-    }),
   };
   sendFormEvent(formPayload, 'formStart');
 };
@@ -90,19 +80,9 @@ export const sendLinodeCreateFormStartEvent = ({
 // LinodeCreate.tsx
 export const sendLinodeCreateFormSubmitEvent = ({
   createType,
-  headerName,
-  interaction,
-  label,
-  subheaderName,
-}: LinodeCreateFormEventOptions) => {
-  const formPayload: FormInputEvent = {
+}: Partial<LinodeCreateFormEventOptions>) => {
+  const formPayload: BasicFormEvent = {
     formName: `Linode Create from ${createType}`,
-    inputValue: getFormattedStringFromFormEventOptions({
-      headerName,
-      interaction,
-      label,
-      subheaderName,
-    }),
   };
   sendFormEvent(formPayload, 'formSubmit');
 };
