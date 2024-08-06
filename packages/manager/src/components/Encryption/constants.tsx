@@ -84,8 +84,10 @@ export const BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION = (
   </>
 );
 
-export const BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY =
-  'Volume encryption is not available in the selected region. Select another region to use Volume encryption.';
+export const BLOCK_STORAGE_CHOOSE_REGION_COPY =
+  'Select a region to use Volume encryption.';
+
+export const BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY = `Volume encryption is not available in the selected region. ${BLOCK_STORAGE_CHOOSE_REGION_COPY}`;
 
 // Caveats
 export const BLOCK_STORAGE_ENCRYPTION_OVERHEAD_CAVEAT =
