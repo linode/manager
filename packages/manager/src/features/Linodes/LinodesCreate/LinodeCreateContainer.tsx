@@ -1013,7 +1013,11 @@ const handleAnalytics = (details: {
 }) => {
   const { label, linode: linode, payload, type } = details;
   const eventInfo = actionsAndLabels[type];
-  const eventCreateType = capitalize(eventInfo?.action) ?? 'OS';
+  // Distinguish the form event create type by tab, which separates 'OS' from 'Image'.
+  const eventCreateType =
+    eventInfo?.action && payload?.image?.includes('linode/')
+      ? 'OS'
+      : capitalize(eventInfo?.action);
   let eventAction = 'unknown';
   let eventLabel = '';
 
