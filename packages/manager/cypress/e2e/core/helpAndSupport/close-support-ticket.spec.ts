@@ -19,20 +19,12 @@ import {
   mockCloseSupportTicket,
 } from 'support/intercepts/support';
 import { SEVERITY_LABEL_MAP } from 'src/features/Support/SupportTickets/constants';
-import { cleanUp } from 'support/util/cleanup';
-import { authenticate } from 'support/api/authentication';
 import {
   closableMessage,
   closeButtonText,
 } from 'support/constants/help-and-support';
 
 describe('close support tickets', () => {
-  after(() => {
-    cleanUp(['linodes']);
-  });
-
-  authenticate();
-
   /*
    * - Opens a Help & Support ticket with mocked ticket data.
    * - Confirms that there is no "close ticket" button showing up for the default support ticket.
@@ -82,7 +74,7 @@ describe('close support tickets', () => {
     cy.findByText(severityLabel).should('be.visible');
 
     // Confirm that the support ticket is not closable by default.
-    cy.findByText(closableMessage).should('not.exist');
+    cy.findByText(closableMessage, { exact: false }).should('not.exist');
   });
 
   /*
@@ -101,9 +93,9 @@ describe('close support tickets', () => {
 
     const mockClosedTicket = supportTicketFactory.build({
       ...mockTicket,
+      status: 'closed',
+      closed: 'close by customers',
     });
-    mockClosedTicket.status = 'closed';
-    mockClosedTicket.closed = 'close by customers';
 
     // Get severity label for numeric severity level.
     // Bail out if we're unable to get a valid label -- this indicates a mismatch between the test and source.
