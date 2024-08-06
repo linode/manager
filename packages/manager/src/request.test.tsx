@@ -113,7 +113,7 @@ describe('getURL', () => {
   });
 });
 
-describe('injectInternalAccountHeader', () => {
+describe('injectAkamaiAccountHeader', () => {
   const profile = profileFactory.build();
   const response: Partial<AxiosResponse> = {
     config: { headers: new AxiosHeaders(), method: 'get', url: '/profile' },
@@ -122,20 +122,20 @@ describe('injectInternalAccountHeader', () => {
     status: 200,
   };
 
-  it('injects internal account header on successful GET profile response ', () => {
+  it('injects akamai account header on successful GET profile response ', () => {
     const results = injectAkamaiAccountHeader(response as any);
-    expect(results.data).toHaveProperty('_internalAccount', true);
+    expect(results.data).toHaveProperty('_akamaiAccount', true);
     // eslint-disable-next-line
-    const { _internalAccount, ...originalData } = results.data;
+    const { _akamaiAccount, ...originalData } = results.data;
     expect(originalData).toEqual(profile);
   });
 
   it('returns the original profile data if no header is present', () => {
     const responseWithNoHeaders = { ...response, headers: {} };
     const results = injectAkamaiAccountHeader(responseWithNoHeaders as any);
-    expect(results.data).toHaveProperty('_internalAccount', false);
+    expect(results.data).toHaveProperty('_akamaiAccount', false);
     // eslint-disable-next-line
-    const { _internalAccount, ...originalData } = results.data;
+    const { _akamaiAccount, ...originalData } = results.data;
     expect(originalData).toEqual(profile);
   });
 
