@@ -135,12 +135,12 @@ const FirewallLanding = () => {
     <React.Fragment>
       <LandingHeader
         extraActions={
-          secureVMNoticesEnabled ? (
+          secureVMNoticesEnabled && flags.secureVmCopy?.generateActionText ? (
             <Button
               buttonType="secondary"
               onClick={() => setIsGenerateDialogOpen(true)}
             >
-              {flags.secureVmCopy?.generateActionText}
+              {flags.secureVmCopy.generateActionText}
             </Button>
           ) : undefined
         }

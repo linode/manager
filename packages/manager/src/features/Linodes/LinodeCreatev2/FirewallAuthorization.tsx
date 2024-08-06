@@ -36,16 +36,22 @@ export const FirewallAuthorization = () => {
         action={
           <Typography color="inherit">
             <FormControlLabel
+              label={
+                flags.secureVmCopy?.firewallAuthorizationLabel ??
+                'I am authorized to create a Linode without a firewall'
+              }
               checked={field.value ?? false}
               className="error-for-scroll"
               control={<Checkbox />}
               disableTypography
-              label={flags.secureVmCopy?.firewallAuthorizationLabel}
               onChange={field.onChange}
             />
           </Typography>
         }
-        text={flags.secureVmCopy?.firewallAuthorizationWarning ?? ''}
+        text={
+          flags.secureVmCopy?.firewallAuthorizationWarning ??
+          'Linodes must have a firewall enabled.'
+        }
         warning
       />
     )
