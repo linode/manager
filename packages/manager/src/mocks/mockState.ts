@@ -1,6 +1,6 @@
 import { mswDB } from './indexedDB';
 
-import type { MockState, MockSeeder } from './types';
+import type { MockSeeder, MockState } from './types';
 
 /**
  * Describes a function that executes on each request to the events endpoint.
