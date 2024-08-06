@@ -188,7 +188,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           <Grid item key={'filtererror'} xs={12}>
             <ErrorState
               CustomIcon={InfoIcon}
-              CustomIconStyles={{ height: '10%', width: '10%' }}
+              CustomIconStyles={{ height: '10', width: '10' }}
               errorText={'Please configure filters to continue'}
             ></ErrorState>
           </Grid>
