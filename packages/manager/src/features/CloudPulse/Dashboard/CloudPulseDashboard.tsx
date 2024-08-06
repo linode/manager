@@ -167,7 +167,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   }
 
   const RenderWidgets = () => {
-    if (!dashboard || Boolean(dashboard.widgets?.length)) {
+    if (dashboard === undefined || Boolean(dashboard.widgets?.length == 0)) {
       return renderPlaceHolder(
         'No visualizations are available at this moment. Create Dashboards to list here.'
       );

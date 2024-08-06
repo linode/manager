@@ -43,6 +43,7 @@ describe('ComponentRenderer component tests', () => {
               vi.fn()
             ),
           },
+          key: 'region',
         })}
       </Grid>
     );
@@ -77,6 +78,7 @@ describe('ComponentRenderer component tests', () => {
                 vi.fn()
               ),
             },
+            key: 'resource_id',
           })}
         </Grid>
       );

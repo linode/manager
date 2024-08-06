@@ -7,16 +7,25 @@ import Reload from 'src/assets/icons/reload.svg';
 
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
-import { CloudPulseRegionSelect } from '../shared/CloudPulseRegionSelect';
-import { CloudPulseResourcesSelect } from '../shared/CloudPulseResourcesSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
+import { RELATIVE_TIME_DURATION } from '../Utils/constants';
 
-import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
-import type { Dashboard } from '@linode/api-v4';
+import type { Dashboard, TimeDuration } from '@linode/api-v4';
 import type { WithStartAndEnd } from 'src/features/Longview/request.types';
 
 export interface GlobalFilterProperties {
-  handleAnyFilterChange(filters: FiltersObject): undefined | void;
+  handleAnyFilterChange(
+    filterKey: string,
+    filterValue:
+      | TimeDuration
+      | number
+      | number[]
+      | string
+      | string[]
+      | undefined
+  ): undefined | void;
+  handleDashboardChange(dashboard: Dashboard | undefined): undefined | void;
+  handleTimeDurationChange(timeDuration: TimeDuration): undefined | void;
 }
 
 export interface FiltersObject {
@@ -28,61 +37,33 @@ export interface FiltersObject {
 }
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
-  const [time, setTimeBox] = React.useState<WithStartAndEnd>({
-    end: 0,
-    start: 0,
-  });
-
   const [selectedDashboard, setSelectedDashboard] = React.useState<
     Dashboard | undefined
   >();
-  const [selectedRegion, setRegion] = React.useState<string>(); // fetch the default region from preference
-  const [, setResources] = React.useState<CloudPulseResources[]>(); // removed the unused variable, this will be used later point of time
-
-  React.useEffect(() => {
-    const triggerGlobalFilterChange = () => {
-      const globalFilters: FiltersObject = {
-        interval: '',
-        region: '',
-        resource: [],
-        timeRange: time,
-      };
-      if (selectedRegion) {
-        globalFilters.region = selectedRegion;
-      }
-      props.handleAnyFilterChange(globalFilters);
-    };
-    triggerGlobalFilterChange();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [time, selectedRegion]); // if anything changes, emit an event to parent component
 
   const handleTimeRangeChange = React.useCallback(
-    (start: number, end: number) => {
-      setTimeBox({ end, start });
+    (timerDuration: TimeDuration) => {
+      props.handleTimeDurationChange(timerDuration);
     },
-    []
-  );
-
-  const handleRegionChange = React.useCallback((region: string | undefined) => {
-    setRegion(region);
-  }, []);
-
-  const handleResourcesSelection = React.useCallback(
-    (resources: CloudPulseResources[]) => {
-      setResources(resources);
-    },
-    []
+    [props]
   );
 
   const handleDashboardChange = React.useCallback(
     (dashboard: Dashboard | undefined, isDefault: boolean = false) => {
       setSelectedDashboard(dashboard);
-      if (!isDefault) {
-        // only update the region state when it is not a preference (default) call
-        setRegion(undefined);
-      }
+      props.handleDashboardChange(dashboard);
     },
     []
+  );
+
+  const emitFilterChange = React.useCallback(
+    (
+      filterKey: string,
+      value: TimeDuration | number | number[] | string | string[] | undefined
+    ) => {
+      props.handleAnyFilterChange(filterKey, value);
+    },
+    [props]
   );
 
   const handleGlobalRefresh = React.useCallback(() => {}, []);
@@ -93,20 +74,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
         <Grid sx={{ width: 300 }}>
           <CloudPulseDashboardSelect
             handleDashboardChange={handleDashboardChange}
-          />
-        </Grid>
-        <Grid sx={{ marginLeft: 2, width: 250 }}>
-          <StyledCloudPulseRegionSelect
-            handleRegionChange={handleRegionChange}
-            selectedDashboard={selectedDashboard}
-          />
-        </Grid>
-
-        <Grid sx={{ marginLeft: 2, width: 350 }}>
-          <StyledCloudPulseResourcesSelect
-            handleResourcesSelection={handleResourcesSelection}
-            region={selectedRegion}
-            resourceType={selectedDashboard?.service_type}
           />
         </Grid>
         <Grid sx={{ marginLeft: 2, width: 250 }}>
@@ -126,29 +93,17 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       </StyledGrid>
       <CloudPulseDashboardFilterBuilder // moving forward, every filter will be driven through filter builder component
         dashboard={selectedDashboard!}
-        emitFilterChange={() => {}}
+        emitFilterChange={emitFilterChange}
         isServiceAnalyticsIntegration={false}
       />
     </Grid>
   );
 });
 
-const StyledCloudPulseRegionSelect = styled(CloudPulseRegionSelect, {
-  label: 'StyledCloudPulseRegionSelect',
-})({
-  width: 150,
-});
-
 const StyledCloudPulseTimeRangeSelect = styled(CloudPulseTimeRangeSelect, {
   label: 'StyledCloudPulseTimeRangeSelect',
 })({
   width: 150,
-});
-
-const StyledCloudPulseResourcesSelect = styled(CloudPulseResourcesSelect, {
-  label: 'StyledCloudPulseResourcesSelect',
-})({
-  width: 250,
 });
 
 const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({

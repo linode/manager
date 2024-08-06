@@ -1,3 +1,4 @@
+import { RELATIVE_TIME_DURATION } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 
 import type { CloudPulseServiceTypeFilters } from './models';
@@ -181,5 +182,42 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
       });
     }
   }
+  return false;
+};
+
+export const checkIfAllMandatoryFiltersAreSelected = (
+  dashboard: Dashboard,
+  filterValue: { [key: string]: any },
+  timeDuration: TimeDuration | undefined
+) => {
+  if (FILTER_CONFIG && FILTER_CONFIG.get(dashboard!.service_type!)) {
+    const serviceTypeConfig = FILTER_CONFIG.get(dashboard!.service_type!);
+
+    for (let i = 0; i < serviceTypeConfig!.filters.length; i++) {
+      if (
+        serviceTypeConfig!.filters[i].configuration.filterKey ==
+          RELATIVE_TIME_DURATION &&
+        !timeDuration
+      ) {
+        return false;
+      }
+      if (
+        (serviceTypeConfig!.filters[i].configuration.filterKey !==
+          RELATIVE_TIME_DURATION &&
+          filterValue[serviceTypeConfig!.filters[i].configuration.filterKey] ==
+            undefined) ||
+        (Array.isArray(
+          filterValue[serviceTypeConfig!.filters[i].configuration.filterKey]
+        ) &&
+          filterValue[serviceTypeConfig!.filters[i].configuration.filterKey]
+            .length == 0)
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   return false;
 };

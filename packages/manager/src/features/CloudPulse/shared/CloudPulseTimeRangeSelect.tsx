@@ -8,6 +8,7 @@ import {
   updateGlobalFilterPreference,
 } from '../Utils/UserPreference';
 
+import type { TimeDuration } from '@linode/api-v4';
 import type {
   BaseSelectProps,
   Item,
@@ -18,7 +19,7 @@ export interface CloudPulseTimeRangeSelectProps
     BaseSelectProps<Item<Labels, Labels>, false>,
     'defaultValue' | 'onChange'
   > {
-  handleStatsChange?: (start: number, end: number) => void;
+  handleStatsChange?: (timeDuration: TimeDuration) => void;
 }
 
 const PAST_7_DAYS = 'Past 7 Days';
@@ -61,10 +62,7 @@ export const CloudPulseTimeRangeSelect = React.memo(
       const nowInSeconds = Date.now() / 1000;
 
       if (handleStatsChange) {
-        handleStatsChange(
-          Math.round(generateStartTime(item.value, nowInSeconds)),
-          Math.round(nowInSeconds)
-        );
+        handleStatsChange(getTimeDurationFromTimeRange(item.value));
       }
     };
 
@@ -136,4 +134,28 @@ export const generateStartTime = (modifier: Labels, nowInSeconds: number) => {
     default:
       return nowInSeconds - 30 * 24 * 60 * 60;
   }
+};
+
+const getTimeDurationFromTimeRange = (label: string) : TimeDuration => {
+  if (label === PAST_30_MINUTES) {
+    return { unit: 'min', value: 30 };
+  }
+
+  if (label === PAST_24_HOURS) {
+    return { unit: 'hr', value: 24 };
+  }
+
+  if (label === PAST_12_HOURS) {
+    return { unit: 'hr', value: 12 };
+  }
+
+  if (label === PAST_7_DAYS) {
+    return { unit: 'day', value: 7 };
+  }
+
+  if (label === PAST_30_DAYS) {
+    return { unit: 'day', value: 30 };
+  }
+
+  return { unit: 'min', value: 30 };
 };

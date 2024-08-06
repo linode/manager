@@ -17,6 +17,7 @@ export interface CloudPulseComponentRendererProps {
     | CloudPulseRegionSelectProps
     | CloudPulseResourcesSelectProps
     | CloudPulseTimeRangeSelectProps;
+  key: string;
 }
 
 const Components: {

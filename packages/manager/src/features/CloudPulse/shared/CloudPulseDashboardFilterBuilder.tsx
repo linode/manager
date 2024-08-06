@@ -53,7 +53,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       isServiceAnalyticsIntegration,
     } = props;
 
-    const [dependentFilters, setDependentFilters] = React.useState<{
+    const [, setDependentFilters] = React.useState<{
       [key: string]:
         | TimeDuration
         | number
@@ -87,7 +87,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           for (const filter of filters) {
             if (
               Boolean(filter?.configuration.dependency?.length) &&
-              filter?.configuration.dependency?.includes(filterKey)
+              filter?.configuration.dependency?.includes(filterKey) &&
+              dependentFilterReference.current[filterKey] !== value
             ) {
               dependentFilterReference.current[filterKey] = value;
               setDependentFilters(() => ({
@@ -151,7 +152,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             {
               config,
               dashboard,
-              dependentFilters,
+              dependentFilters: dependentFilterReference.current,
               isServiceAnalyticsIntegration,
             },
             handleResourceChange
@@ -171,7 +172,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         handleResourceChange,
         handleTimeRangeChange,
         isServiceAnalyticsIntegration,
-        dependentFilters,
       ]
     );
 
@@ -201,11 +201,19 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             ? config.configuration.neededInServicePage
             : !config.configuration.neededInServicePage
         )
-        .map((filter) => (
-          <Grid item key={filter.configuration.filterKey} xs>
+        .map((filter, index) => (
+          <Grid
+            item
+            key={filter.configuration.filterKey}
+            lg={4}
+            md={6}
+            sm={12}
+            xs={12}
+          >
             {RenderComponent({
               componentKey: filter.configuration.filterKey,
               componentProps: { ...getProps(filter) },
+              key: index + filter.configuration.filterKey,
             })}
           </Grid>
         ));
@@ -227,14 +235,24 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     return (
       <Grid container>
-        <Grid item key={'toggleFilter'} xs={12}>
+        <Grid item key={'toggleFilter'} lg={12} xs={12}>
           <Box>
-            <Button onClick={toggleShowFilter} sx={{ marginTop: 2 }}>
-              {showFilter ? (
+            <Button
+              startIcon={
+                showFilter ? (
+                  <KeyboardArrowDownIcon />
+                ) : (
+                  <KeyboardArrowRightIcon />
+                )
+              }
+              onClick={toggleShowFilter}
+              buttonType={'outlined'}
+            >
+              {/* {showFilter ? (
                 <KeyboardArrowDownIcon />
               ) : (
                 <KeyboardArrowRightIcon />
-              )}
+              )} */}
               <Typography>Filters</Typography>
             </Button>
           </Box>
@@ -250,8 +268,5 @@ function compareProps(
   oldProps: CloudPulseDashboardFilterBuilderProps,
   newProps: CloudPulseDashboardFilterBuilderProps
 ) {
-  return (
-    oldProps.dashboard?.id === newProps.dashboard?.id &&
-    !newProps.isServiceAnalyticsIntegration
-  );
+  return oldProps.dashboard?.id === newProps.dashboard?.id;
 }
