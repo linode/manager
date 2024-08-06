@@ -72,20 +72,21 @@ export const isPartialFeatureFlagData = <T>(
  * @returns Feature flag response data that can be used for mocking purposes.
  */
 export const getResponseDataFromMockData = <T>(data: FeatureFlagMockData) => {
-  const output = { ...data };
-  return Object.keys(output).reduce((acc: FeatureFlagMockData, cur: string) => {
-    const mockData = output[cur];
+  return Object.keys(data).reduce<
+    Partial<Record<keyof FeatureFlagMockData, FeatureFlagData<any>>>
+  >((acc, cur: keyof FeatureFlagMockData) => {
+    const mockData = acc[cur];
     if (isPartialFeatureFlagData<T>(mockData)) {
-      output[cur] = {
+      acc[cur] = {
         ...defaultFeatureFlagData,
         ...mockData,
       };
-      return output;
+      return acc;
     } else {
-      output[cur] = makeFeatureFlagData<T>(mockData);
+      acc[cur] = makeFeatureFlagData(mockData);
     }
-    return output;
-  }, output);
+    return acc;
+  }, {});
 };
 
 /**
