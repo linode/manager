@@ -22,7 +22,7 @@ const setAPIResponseTime = () => {
 };
 
 export const apiResponseTimePreset: MockPreset = {
-  alwaysEnabled: true,
+  canUpdateCount: true,
   desc: 'Allows to customize API response time',
   group: 'API State',
   handlers: [setAPIResponseTime],

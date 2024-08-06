@@ -24,13 +24,30 @@ export type MockPresetGroup =
 
 export type MockHandler = (mockState: MockState) => HttpHandler[];
 
+export type MockPresetId =
+  | 'account-managed-disabled'
+  | 'account-managed-enabled'
+  | 'api-response-time'
+  | 'baseline-account-activation'
+  | 'baseline-api-maintenance'
+  | 'baseline-api-offline'
+  | 'baseline-api-unstable'
+  | 'baseline-crud'
+  | 'baseline-legacy'
+  | 'baseline-no-mocks'
+  | 'legacy-test-regions'
+  | 'linodes-crud'
+  | 'parent-child-child-account-proxy-user'
+  | 'parent-child-parent-account-user'
+  | 'placementGroups-crud'
+  | 'prod-regions'
+  | 'volumes-crud';
+
 export type MockPreset = {
   /**
-   * Whether the preset is always enabled.
-   * If true, it means the preset can be disabled via a custom value provided in a number input.
-   * This is currently used to simulate API response times.
+   * If true, it means the preset can set a value via a number input.
    */
-  alwaysEnabled?: boolean;
+  canUpdateCount?: boolean;
 
   /** Description of mock preset and its purpose. */
   desc?: string;
@@ -42,7 +59,7 @@ export type MockPreset = {
   handlers: MockHandler[];
 
   /** Unique ID of mock preset, used to keep track of user preset selections. */
-  id: string;
+  id: MockPresetId;
 
   /** Human-readable label for mock preset. */
   label: string;
@@ -63,7 +80,7 @@ export interface MockState {
   volumes: Volume[];
 }
 
-export type MockSeederIds =
+export type MockSeederId =
   | 'edge-regions'
   | 'legacy-test-regions'
   | 'many-linodes'
@@ -79,10 +96,23 @@ type MockSeederGroup =
   | 'Volumes';
 
 export interface MockSeeder {
+  /**
+   * If true, it means the seeder can set a value via a number input.
+   */
   canUpdateCount?: boolean;
+
+  /** Description of mock seeder and its purpose. */
   desc?: string;
+
+  /** Group to which seeder belongs. Used to sort seeders in dev tool UI. */
   group?: MockSeederGroup;
-  id: MockSeederIds;
+
+  /** Unique ID of mock seeder, used to keep track of user seeder selections. */
+  id: MockSeederId;
+
+  /** Human-readable label for mock seeder. */
   label: string;
+
+  /** Function that updates the mock state. */
   seeder: (mockState: MockState) => MockState | Promise<MockState>;
 }

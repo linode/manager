@@ -17,7 +17,7 @@ const mockLegacyRegions = () => {
 };
 
 export const legacyRegionsPreset: MockPreset = {
-  desc: 'Legacy region data seeds',
+  desc: 'Legacy regions',
   group: 'Regions',
   handlers: [mockLegacyRegions],
   id: 'legacy-test-regions',

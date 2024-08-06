@@ -9,7 +9,7 @@ import {
   LOCAL_STORAGE_SEEDS_COUNT_MAP_KEY,
 } from './constants';
 
-import type { MockSeeder } from 'src/mocks/types';
+import type { MockPresetId, MockSeeder } from 'src/mocks/types';
 
 /**
  * Whether MSW is enabled via local storage setting.
@@ -24,7 +24,7 @@ export const isMSWEnabled =
  *
  * @param enabled - Whether or not to enable MSW.
  */
-export const saveMSWEnabled = (enabled: boolean) => {
+export const saveMSWEnabled = (enabled: boolean): void => {
   localStorage.setItem(LOCAL_STORAGE_KEY, enabled ? 'enabled' : 'disabled');
 };
 
@@ -33,9 +33,9 @@ export const saveMSWEnabled = (enabled: boolean) => {
  *
  * @returns ID of selected MSW preset, or `null` if no preset is saved.
  */
-export const getMSWPreset = () => {
+export const getMSWPreset = (): MockPresetId => {
   return (
-    localStorage.getItem(LOCAL_STORAGE_PRESET_KEY) ??
+    (localStorage.getItem(LOCAL_STORAGE_PRESET_KEY) as MockPresetId) ??
     defaultBaselineMockPreset.id
   );
 };
@@ -43,7 +43,7 @@ export const getMSWPreset = () => {
 /**
  * Saves ID of selected MSW preset in local storage.
  */
-export const saveMSWPreset = (presetId: string) => {
+export const saveMSWPreset = (presetId: MockPresetId): void => {
   localStorage.setItem(LOCAL_STORAGE_PRESET_KEY, presetId);
 };
 
