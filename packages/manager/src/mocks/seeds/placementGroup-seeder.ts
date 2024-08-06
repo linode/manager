@@ -1,4 +1,4 @@
-import { getMSWSeedsCountMap } from 'src/dev-tools/ServiceWorkerTool';
+import { getMSWSeedsCountMap } from 'src/dev-tools/utils';
 import { placementGroupFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 import { seedWithUniqueIds } from 'src/mocks/utilities/seedUtils';

@@ -2,265 +2,29 @@ import * as React from 'react';
 
 import { Tooltip } from 'src/components/Tooltip';
 import { mswDB } from 'src/mocks/indexedDB';
-import { getMockPresetGroups } from 'src/mocks/mockPreset';
-import { getStateSeederGroups } from 'src/mocks/mockState';
-import {
-  baselineMockPresets,
-  defaultBaselineMockPreset,
-  extraMockPresets,
-} from 'src/mocks/presets';
 import { dbSeeders } from 'src/mocks/seeds';
 import { removeSeeds } from 'src/mocks/utilities/seedUtils';
 
+import { BaselinePresetOptions } from './components/BaselinePresetOptions';
 import { DevToolSelect } from './components/DevToolSelect';
+import { ExtraPresetOptions } from './components/ExtraPresetOptions';
+import { SeedOptions } from './components/SeedOptions';
+import {
+  getMSWContextSeeders,
+  getMSWExtraPresets,
+  getMSWPreset,
+  getMSWPresetsMap,
+  getMSWSeedsCountMap,
+  isMSWEnabled,
+  saveMSWContextPopulators,
+  saveMSWEnabled,
+  saveMSWExtraPresets,
+  saveMSWPreset,
+  saveMSWPresetsMap,
+  saveMSWSeedsCountMap,
+} from './utils';
 
 import type { MockSeederIds, MockState } from 'src/mocks/types';
-
-const LOCAL_STORAGE_KEY = 'msw';
-const LOCAL_STORAGE_POPULATORS_KEY = 'msw-populators';
-const LOCAL_STORAGE_PRESET_KEY = 'msw-preset';
-const LOCAL_STORAGE_PRESET_EXTRAS_KEY = 'msw-preset-extras';
-export const LOCAL_STORAGE_SEEDS_COUNT_MAP_KEY = 'msw-seeds-count-map';
-export const LOCAL_STORAGE_PRESETS_MAP_KEY = 'msw-preset-map';
-
-/**
- * Whether MSW is enabled via local storage setting.
- *
- * `true` if MSW is enabled, `false` otherwise.
- */
-export const isMSWEnabled =
-  localStorage.getItem(LOCAL_STORAGE_KEY) === 'enabled';
-
-/**
- * Saves MSW enabled or disabled state to local storage.
- *
- * @param enabled - Whether or not to enable MSW.
- */
-export const saveMSWEnabled = (enabled: boolean) => {
-  localStorage.setItem(LOCAL_STORAGE_KEY, enabled ? 'enabled' : 'disabled');
-};
-
-/**
- * Returns the ID of the selected MSW preset that is stored in local storage.
- *
- * @returns ID of selected MSW preset, or `null` if no preset is saved.
- */
-export const getMSWPreset = () => {
-  return (
-    localStorage.getItem(LOCAL_STORAGE_PRESET_KEY) ??
-    defaultBaselineMockPreset.id
-  );
-};
-
-/**
- * Saves ID of selected MSW preset in local storage.
- */
-export const saveMSWPreset = (presetId: string) => {
-  localStorage.setItem(LOCAL_STORAGE_PRESET_KEY, presetId);
-};
-
-/**
- * Retrieves the seeding count map from local storage.
- */
-export const getMSWSeedsCountMap = (): { [key: string]: number } => {
-  const encodedCountMap = localStorage.getItem(
-    LOCAL_STORAGE_SEEDS_COUNT_MAP_KEY
-  );
-
-  return encodedCountMap ? JSON.parse(encodedCountMap) : {};
-};
-
-/**
- * Saves the seeding count map to local storage.
- */
-export const saveMSWSeedsCountMap = (countMap: { [key: string]: number }) => {
-  localStorage.setItem(
-    LOCAL_STORAGE_SEEDS_COUNT_MAP_KEY,
-    JSON.stringify(countMap)
-  );
-};
-
-/**
- * Retrieves the presets map from local storage.
- */
-export const getMSWPresetsMap = (): { [key: string]: number } => {
-  const encodedPresetsMap = localStorage.getItem(LOCAL_STORAGE_PRESETS_MAP_KEY);
-
-  return encodedPresetsMap ? JSON.parse(encodedPresetsMap) : {};
-};
-
-/**
- * Saves the presets map to local storage.
- */
-export const saveMSWPresetsMap = (presetsMap: { [key: string]: number }) => {
-  localStorage.setItem(
-    LOCAL_STORAGE_PRESETS_MAP_KEY,
-    JSON.stringify(presetsMap)
-  );
-};
-
-/**
- * Returns an array of enabled extra MSW presets that are stored in local storage.
- *
- * An empty array is returned when the expected data does not exist in local
- * storage.
- */
-export const getMSWExtraPresets = (): string[] => {
-  const encodedPresets = localStorage.getItem(LOCAL_STORAGE_PRESET_EXTRAS_KEY);
-  if (!encodedPresets) {
-    return [];
-  }
-  const storedPresets = encodedPresets.split(',');
-
-  // Filter out any stored presets that no longer exist in the code base.
-  return storedPresets.filter((storedPreset) =>
-    extraMockPresets.find(
-      (extraMockPreset) => extraMockPreset.id === storedPreset
-    )
-  );
-};
-
-export const saveMSWExtraPresets = (presets: string[]) => {
-  localStorage.setItem(LOCAL_STORAGE_PRESET_EXTRAS_KEY, presets.join(','));
-};
-
-export const getMSWContextSeeders = (): string[] => {
-  const encodedPopulators = localStorage.getItem(LOCAL_STORAGE_POPULATORS_KEY);
-  if (!encodedPopulators) {
-    return [];
-  }
-  const storedSeeders = encodedPopulators.split(',');
-
-  // Filter out any stored populators that no longer exist in the code base.
-  return storedSeeders.filter((storedSeeder) =>
-    dbSeeders.find((dbSeeder) => dbSeeder.id === storedSeeder)
-  );
-};
-
-export const saveMSWContextPopulators = (populators: string[]) => {
-  localStorage.setItem(LOCAL_STORAGE_POPULATORS_KEY, populators.join(','));
-};
-
-const renderBaselinePresetOptions = () =>
-  getMockPresetGroups(baselineMockPresets).map((group) => {
-    return (
-      <optgroup key={group} label={group}>
-        {baselineMockPresets
-          .filter((mockPreset) => mockPreset.group === group)
-          .map((mockPreset) => {
-            return (
-              <option key={mockPreset.id} value={mockPreset.id}>
-                {mockPreset.label}
-              </option>
-            );
-          })}
-      </optgroup>
-    );
-  });
-
-const renderSeedOptions = (
-  seeders: string[],
-  onChange: (e: React.ChangeEvent, populatorId: string) => void,
-  onCountChange: (e: React.ChangeEvent, populatorId: string) => void,
-  seedsCountMap: { [key: string]: number },
-  disabled: boolean
-) => {
-  return (
-    <ul>
-      {getStateSeederGroups(dbSeeders).map((group) => (
-        <div key={group}>
-          {dbSeeders
-            .filter((dbSeeder) => dbSeeder.group === group)
-            .map((dbSeeder) => (
-              <li key={dbSeeder.id}>
-                <input
-                  checked={seeders.includes(dbSeeder.id)}
-                  disabled={disabled}
-                  onChange={(e) => onChange(e, dbSeeder.id)}
-                  style={{ marginRight: 12 }}
-                  type="checkbox"
-                />
-                <span title={dbSeeder.desc || dbSeeder.label}>
-                  {dbSeeder.label}
-                </span>
-                {dbSeeder.canUpdateCount && (
-                  <input
-                    aria-label={`Value for ${dbSeeder.label}`}
-                    min={0}
-                    onChange={(e) => onCountChange(e, dbSeeder.id)}
-                    style={{ marginLeft: 8, width: 60 }}
-                    type="number"
-                    value={seedsCountMap[dbSeeder.id] || 0}
-                  />
-                )}
-              </li>
-            ))}
-        </div>
-      ))}
-    </ul>
-  );
-};
-
-const renderExtraPresetOptions = (
-  handlers: string[],
-  onChange: (e: React.ChangeEvent, presetId: string) => void,
-  onPresetChange: (e: React.ChangeEvent, presetId: string) => void,
-  presetsMap: { [key: string]: number },
-  disabled: boolean
-) => {
-  return (
-    <ul>
-      {getMockPresetGroups(extraMockPresets).map((group) => (
-        <div
-          style={{
-            // if last  group, add bottom padding
-            paddingBottom:
-              group ===
-              getMockPresetGroups(extraMockPresets)[
-                getMockPresetGroups(extraMockPresets).length - 1
-              ]
-                ? 4
-                : 0,
-          }}
-          key={group}
-        >
-          <li className="dev-tools__list-box__separator">{group}</li>
-          {extraMockPresets
-            .filter((extraMockPreset) => extraMockPreset.group === group)
-            .map((extraMockPreset) => (
-              <li key={extraMockPreset.id}>
-                <input
-                  checked={
-                    handlers.includes(extraMockPreset.id) ||
-                    extraMockPreset.alwaysEnabled
-                  }
-                  style={{
-                    display: extraMockPreset.alwaysEnabled ? 'none' : 'initial',
-                    marginRight: 12,
-                  }}
-                  disabled={disabled}
-                  onChange={(e) => onChange(e, extraMockPreset.id)}
-                  type="checkbox"
-                />
-                <span title={extraMockPreset.desc || extraMockPreset.label}>
-                  {extraMockPreset.label}
-                </span>
-                {extraMockPreset.alwaysEnabled && (
-                  <input
-                    aria-label={`Value for ${extraMockPreset.label}`}
-                    min={0}
-                    onChange={(e) => onPresetChange(e, extraMockPreset.id)}
-                    type="number"
-                    value={presetsMap[extraMockPreset.id] || 0}
-                  />
-                )}
-              </li>
-            ))}
-        </div>
-      ))}
-    </ul>
-  );
-};
 
 interface ServiceWorkerSaveState {
   hasSaved: boolean;
@@ -268,10 +32,13 @@ interface ServiceWorkerSaveState {
   mocksCleared?: boolean;
 }
 
+/**
+ * Renders the service worker tool.
+ */
 export const ServiceWorkerTool = () => {
   const loadedBasePreset = getMSWPreset();
   const loadedPresets = getMSWExtraPresets();
-  const loadedSeeders = getMSWContextSeeders();
+  const loadedSeeders = getMSWContextSeeders(dbSeeders);
   const loadedSeedsCountMap = getMSWSeedsCountMap();
   const loadedPresetsMap = getMSWPresetsMap();
   const [MSWBasePreset, setMSWBasePreset] = React.useState<string>(
@@ -296,170 +63,179 @@ export const ServiceWorkerTool = () => {
     mocksCleared: false,
   });
 
-  const handleChangeBasePreset = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setMSWBasePreset(e.target.value);
-    setSaveState({
-      hasSaved: false,
-      hasUnsavedChanges: true,
-    });
-  };
+  const globalHandlers = {
+    applyChanges: () => {
+      // Save base preset, extra presets, and content populators to local storage.
+      saveMSWPreset(MSWBasePreset);
+      saveMSWExtraPresets(MSWHandlers);
+      saveMSWContextPopulators(MSWSeeders);
+      saveMSWSeedsCountMap(seedsCountMap);
+      saveMSWPresetsMap(presetsMap);
 
-  const handleToggleMSW = (e: React.ChangeEvent<HTMLInputElement>) => {
-    saveMSWEnabled(e.target.checked);
-    window.location.reload();
-  };
+      const promises = MSWSeeders.map((seederId) => {
+        const populator = dbSeeders.find(
+          (dbSeeder) => dbSeeder.id === seederId
+        );
 
-  const handleChangeSeeder = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-    seederId: MockSeederIds
-  ) => {
-    const willEnable = e.target.checked;
-    if (willEnable && !MSWSeeders.includes(seederId)) {
-      setMSWSeeders([...MSWSeeders, seederId]);
+        return populator?.seeder({} as MockState);
+      });
+
+      Promise.all(promises).then(() => {
+        setSaveState((prevSaveState) => ({
+          ...prevSaveState,
+          hasSaved: true,
+          hasUnsavedChanges: false,
+        }));
+      });
+
+      // We only have to reload the window if MSW is already enabled. Otherwise,
+      // the changes will automatically be picked up next time MSW is enabled.
+      if (isMSWEnabled) {
+        window.location.reload();
+      }
+    },
+
+    discardChanges: () => {
+      setMSWBasePreset(getMSWPreset());
+      setMSWHandlers(getMSWExtraPresets());
+      setMSWSeeders(getMSWContextSeeders(dbSeeders));
+      setSeedsCountMap(getMSWSeedsCountMap());
+      setPresetsMap(getMSWPresetsMap());
       setSaveState({
         hasSaved: false,
-        hasUnsavedChanges: true,
-      });
-    } else if (!willEnable && MSWSeeders.includes(seederId)) {
-      setMSWSeeders(
-        MSWSeeders.filter((seeder) => {
-          return seeder !== seederId;
-        })
-      );
-      setSaveState({
-        hasSaved: false,
-        hasUnsavedChanges: true,
-      });
-      await removeSeeds(seederId);
-    }
-  };
-
-  const handleChangePreset = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    handlerPresetId: string
-  ) => {
-    const willEnable = e.target.checked;
-    if (willEnable && !MSWHandlers.includes(handlerPresetId)) {
-      setMSWHandlers([...MSWHandlers, handlerPresetId]);
-      setSaveState({
-        hasSaved: false,
-        hasUnsavedChanges: true,
-      });
-    } else if (!willEnable && MSWHandlers.includes(handlerPresetId)) {
-      setMSWHandlers(
-        MSWHandlers.filter((handler) => {
-          return handler !== handlerPresetId;
-        })
-      );
-      setSaveState({
-        hasSaved: false,
-        hasUnsavedChanges: true,
-      });
-    }
-  };
-
-  const handleSeedCountChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    seederId: MockSeederIds
-  ) => {
-    const updatedCountMap = {
-      ...seedsCountMap,
-      [seederId]: parseInt(e.target.value, 10),
-    };
-
-    setSeedsCountMap(updatedCountMap);
-    setSaveState({
-      hasSaved: false,
-      hasUnsavedChanges: true,
-    });
-    // When updating the count and the checkbox is not checked, check it for convenience
-    if (parseInt(e.target.value, 10) > 0 && !MSWSeeders.includes(seederId)) {
-      setMSWSeeders([...MSWSeeders, seederId]);
-    }
-    // if value is 0, uncheck the checkbox
-    if (parseInt(e.target.value, 10) === 0 && MSWSeeders.includes(seederId)) {
-      setMSWSeeders(MSWSeeders.filter((seeder) => seeder !== seederId));
-    }
-  };
-
-  const handlePresetMapChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    presetId: string
-  ) => {
-    setPresetsMap({ ...presetsMap, [presetId]: parseInt(e.target.value, 10) });
-    setSaveState({
-      hasSaved: false,
-      hasUnsavedChanges: true,
-    });
-  };
-
-  const handleApplyChanges = () => {
-    // Save base preset, extra presets, and content populators to local storage.
-    saveMSWPreset(MSWBasePreset);
-    saveMSWExtraPresets(MSWHandlers);
-    saveMSWContextPopulators(MSWSeeders);
-    saveMSWSeedsCountMap(seedsCountMap);
-    saveMSWPresetsMap(presetsMap);
-
-    const promises = MSWSeeders.map((seederId) => {
-      const populator = dbSeeders.find((dbSeeder) => dbSeeder.id === seederId);
-
-      return populator?.seeder({} as MockState);
-    });
-
-    Promise.all(promises).then(() => {
-      setSaveState((prevSaveState) => ({
-        ...prevSaveState,
-        hasSaved: true,
         hasUnsavedChanges: false,
-      }));
-    });
+      });
+    },
 
-    // We only have to reload the window if MSW is already enabled. Otherwise,
-    // the changes will automatically be picked up next time MSW is enabled.
-    if (isMSWEnabled) {
+    resetAll: () => {
+      mswDB.clear('mockState');
+      mswDB.clear('seedState');
+      seederHandlers.removeAll();
+      setMSWBasePreset(getMSWPreset());
+      setMSWHandlers(getMSWExtraPresets());
+      setPresetsMap({
+        ...loadedPresetsMap,
+        'api-response-time': 400,
+      });
+      setSaveState({
+        hasSaved: false,
+        hasUnsavedChanges: true,
+        mocksCleared: true,
+      });
+    },
+
+    toggleMSW: (e: React.ChangeEvent<HTMLInputElement>) => {
+      saveMSWEnabled(e.target.checked);
       window.location.reload();
-    }
+    },
   };
 
-  const handleRemoveAllSeeds = () => {
-    // remove all seeds
-    setMSWSeeders([]);
-    setSaveState({
-      hasSaved: false,
-      hasUnsavedChanges: true,
-    });
-    // reset all seed fields to 0
-    setSeedsCountMap(
-      Object.fromEntries(Object.keys(seedsCountMap).map((key) => [key, 0]))
-    );
+  const seederHandlers = {
+    handleCountChange: (
+      e: React.ChangeEvent<HTMLInputElement>,
+      seederId: MockSeederIds
+    ) => {
+      const updatedCountMap = {
+        ...seedsCountMap,
+        [seederId]: parseInt(e.target.value, 10),
+      };
+
+      setSeedsCountMap(updatedCountMap);
+      setSaveState({
+        hasSaved: false,
+        hasUnsavedChanges: true,
+      });
+      // When updating the count and the checkbox is not checked, check it for convenience
+      if (parseInt(e.target.value, 10) > 0 && !MSWSeeders.includes(seederId)) {
+        setMSWSeeders([...MSWSeeders, seederId]);
+      }
+      // if value is 0, uncheck the checkbox
+      if (parseInt(e.target.value, 10) === 0 && MSWSeeders.includes(seederId)) {
+        setMSWSeeders(MSWSeeders.filter((seeder) => seeder !== seederId));
+      }
+    },
+
+    handleToggle: async (
+      e: React.ChangeEvent<HTMLInputElement>,
+      seederId: MockSeederIds
+    ) => {
+      const willEnable = e.target.checked;
+      if (willEnable && !MSWSeeders.includes(seederId)) {
+        setMSWSeeders([...MSWSeeders, seederId]);
+        setSaveState({
+          hasSaved: false,
+          hasUnsavedChanges: true,
+        });
+      } else if (!willEnable && MSWSeeders.includes(seederId)) {
+        setMSWSeeders(
+          MSWSeeders.filter((seeder) => {
+            return seeder !== seederId;
+          })
+        );
+        setSaveState({
+          hasSaved: false,
+          hasUnsavedChanges: true,
+        });
+        await removeSeeds(seederId);
+      }
+    },
+
+    removeAll: () => {
+      // remove all seeds & reset all seed fields to 0
+      setMSWSeeders([]);
+      setSeedsCountMap(
+        Object.fromEntries(Object.keys(seedsCountMap).map((key) => [key, 0]))
+      );
+      setSaveState({
+        hasSaved: false,
+        hasUnsavedChanges: true,
+      });
+    },
   };
 
-  const handleResetAll = () => {
-    mswDB.clear('mockState');
-    mswDB.clear('seedState');
-    handleRemoveAllSeeds();
-    setMSWBasePreset(getMSWPreset());
-    setMSWHandlers(getMSWExtraPresets());
-    setPresetsMap({
-      ...loadedPresetsMap,
-      'api-response-time': 400,
-    });
-    setSaveState({
-      hasSaved: false,
-      hasUnsavedChanges: true,
-      mocksCleared: true,
-    });
-  };
+  const presetHandlers = {
+    changeBase: (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setMSWBasePreset(e.target.value);
+      setSaveState({
+        hasSaved: false,
+        hasUnsavedChanges: true,
+      });
+    },
 
-  const discardChanges = () => {
-    setMSWBasePreset(getMSWPreset());
-    setMSWHandlers(getMSWExtraPresets());
-    setMSWSeeders(getMSWContextSeeders());
-    setSaveState({
-      hasSaved: false,
-      hasUnsavedChanges: false,
-    });
+    changeCount: (e: React.ChangeEvent<HTMLInputElement>, presetId: string) => {
+      setPresetsMap({
+        ...presetsMap,
+        [presetId]: parseInt(e.target.value, 10),
+      });
+      setSaveState({
+        hasSaved: false,
+        hasUnsavedChanges: true,
+      });
+    },
+
+    toggle: (
+      e: React.ChangeEvent<HTMLInputElement>,
+      handlerPresetId: string
+    ) => {
+      const willEnable = e.target.checked;
+      if (willEnable && !MSWHandlers.includes(handlerPresetId)) {
+        setMSWHandlers([...MSWHandlers, handlerPresetId]);
+        setSaveState({
+          hasSaved: false,
+          hasUnsavedChanges: true,
+        });
+      } else if (!willEnable && MSWHandlers.includes(handlerPresetId)) {
+        setMSWHandlers(
+          MSWHandlers.filter((handler) => {
+            return handler !== handlerPresetId;
+          })
+        );
+        setSaveState({
+          hasSaved: false,
+          hasUnsavedChanges: true,
+        });
+      }
+    },
   };
 
   return (
@@ -472,7 +248,7 @@ export const ServiceWorkerTool = () => {
           <div>
             <input
               checked={isMSWEnabled}
-              onChange={(e) => handleToggleMSW(e)}
+              onChange={(e) => globalHandlers.toggleMSW(e)}
               style={{ margin: 0 }}
               type="checkbox"
             />
@@ -493,10 +269,10 @@ export const ServiceWorkerTool = () => {
                 </span>
                 <DevToolSelect
                   disabled={!isMSWEnabled}
-                  onChange={(e) => handleChangeBasePreset(e)}
+                  onChange={(e) => presetHandlers.changeBase(e)}
                   value={MSWBasePreset}
                 >
-                  {renderBaselinePresetOptions()}
+                  <BaselinePresetOptions />
                 </DevToolSelect>
               </div>
             </Tooltip>
@@ -516,20 +292,20 @@ export const ServiceWorkerTool = () => {
                 Seeds{' '}
                 <button
                   className="small right-align"
-                  onClick={() => handleRemoveAllSeeds()}
+                  onClick={() => seederHandlers.removeAll()}
                 >
                   Remove all seeds
                 </button>
               </div>
               <div className="dev-tools__msw__column__body">
                 <div className="dev-tools__list-box">
-                  {renderSeedOptions(
-                    MSWSeeders,
-                    handleChangeSeeder,
-                    handleSeedCountChange,
-                    seedsCountMap,
-                    !isMSWEnabled
-                  )}
+                  <SeedOptions
+                    disabled={!isMSWEnabled}
+                    onCountChange={seederHandlers.handleCountChange}
+                    onToggleSeeder={seederHandlers.handleToggle}
+                    seeders={MSWSeeders}
+                    seedsCountMap={seedsCountMap}
+                  />
                 </div>
               </div>
             </div>
@@ -537,13 +313,13 @@ export const ServiceWorkerTool = () => {
               <div className="dev-tools__msw__column__heading">Presets</div>
               <div className="dev-tools__msw__column__body">
                 <div className="dev-tools__list-box">
-                  {renderExtraPresetOptions(
-                    MSWHandlers,
-                    handleChangePreset,
-                    handlePresetMapChange,
-                    presetsMap,
-                    !isMSWEnabled
-                  )}
+                  <ExtraPresetOptions
+                    disabled={!isMSWEnabled}
+                    handlers={MSWHandlers}
+                    onPresetCountChange={presetHandlers.changeCount}
+                    onTogglePreset={presetHandlers.toggle}
+                    presetsMap={presetsMap}
+                  />
                 </div>
               </div>
             </div>
@@ -552,18 +328,21 @@ export const ServiceWorkerTool = () => {
       </div>
       <div className="dev-tools__tool__footer">
         <div className="dev-tools__button-list">
-          <button disabled={saveState.mocksCleared} onClick={handleResetAll}>
+          <button
+            disabled={saveState.mocksCleared}
+            onClick={globalHandlers.resetAll}
+          >
             Reset to Defaults
           </button>
           <button
             disabled={saveState.hasUnsavedChanges ? false : true}
-            onClick={discardChanges}
+            onClick={globalHandlers.discardChanges}
           >
             Discard Changes
           </button>
           <button
             disabled={saveState.hasUnsavedChanges ? false : true}
-            onClick={handleApplyChanges}
+            onClick={globalHandlers.applyChanges}
           >
             Apply
           </button>

@@ -1,6 +1,6 @@
 import { http } from 'msw';
 
-import { getMSWPresetsMap } from 'src/dev-tools/ServiceWorkerTool';
+import { getMSWPresetsMap } from 'src/dev-tools/utils';
 
 import type { MockPreset } from 'src/mocks/types';
 

@@ -10,7 +10,7 @@ import './dev-tools.css';
 import { EnvironmentToggleTool } from './EnvironmentToggleTool';
 import { FeatureFlagTool } from './FeatureFlagTool';
 import { ServiceWorkerTool } from './ServiceWorkerTool';
-import { isMSWEnabled } from './ServiceWorkerTool';
+import { isMSWEnabled } from './utils';
 
 import type { QueryClient } from '@tanstack/react-query';
 import type { ApplicationStore } from 'src/store';

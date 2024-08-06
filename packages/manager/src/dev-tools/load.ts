@@ -10,7 +10,7 @@ import {
   getMSWExtraPresets,
   getMSWPreset,
   isMSWEnabled,
-} from './ServiceWorkerTool';
+} from './utils';
 
 import type { QueryClient } from '@tanstack/react-query';
 import type { MockPreset, MockSeeder, MockState } from 'src/mocks/types';
@@ -44,7 +44,7 @@ export async function loadDevTools(
       )
       .filter((preset) => !!preset);
 
-    const mswContentSeederIds = getMSWContextSeeders();
+    const mswContentSeederIds = getMSWContextSeeders(dbSeeders);
     const mswContentSeeders = mswContentSeederIds
       .map((seederId) => dbSeeders.find((dbSeeder) => dbSeeder.id === seederId))
       .filter((seeder) => !!seeder);
