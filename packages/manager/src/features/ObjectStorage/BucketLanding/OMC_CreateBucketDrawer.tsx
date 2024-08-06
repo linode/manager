@@ -287,6 +287,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
                     ),
                     helperTextPosition: 'top',
                   }}
+                  disableClearable={Boolean(autoSelectEndpointType)}
                   errorText={fieldState.error?.message}
                   label="Object Storage Endpoint Type"
                   loading={isEndpointLoading}
