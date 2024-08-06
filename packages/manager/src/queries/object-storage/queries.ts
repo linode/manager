@@ -135,7 +135,6 @@ export const useObjectStorageBuckets = (enabled = true) => {
   const clustersQueryEnabled = enabled && !isObjMultiClusterEnabled;
 
   // Endpoints contain all the regions that support Object Storage.
-  // This operation is much faster (O(n)) compared to filtering regions by capabilities O(n*k).
   const { data: endpoints } = useObjectStorageEndpoints(endpointsQueryEnabled);
   const { data: clusters } = useObjectStorageClusters(clustersQueryEnabled);
 
