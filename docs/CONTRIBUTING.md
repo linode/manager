@@ -27,7 +27,7 @@ Feel free to open an issue to report a bug or request a feature.
     **Example:** `feat: [M3-1234] - Allow user to view their login history`
 
 6. Open a pull request against `develop` and make sure the title follows the same format as the commit message.
-7. If needed, create a changeset to populate our changelog
+7. If needed, create a changeset to populate our changelog.
     - If you don't have the Github CLI installed or need to update it (you need GH CLI 2.21.0 or greater),
         - install it via `brew`: https://github.com/cli/cli#installation or upgrade with `brew upgrade gh`
         - Once installed, run `gh repo set-default` and pick `linode/manager` (only > 2.21.0)
@@ -37,6 +37,7 @@ Feel free to open an issue to report a bug or request a feature.
     - A changeset is optional, but should be included if the PR falls in one of the following categories:<br>
     `Added`, `Fixed`, `Changed`, `Removed`, `Tech Stories`, `Tests`, `Upcoming Features`
       - Select the changeset category that matches the commit type in your PR title. (Where this isn't a 1:1 match: generally, a `feat` commit type falls under an `Added` change and `refactor` falls under `Tech Stories`.)
+      - Confirm your changeset follows our [best practices](https://github.com/linode/manager/blob/develop/packages/manager/.changeset/README.md).
 
 Two reviews from members of the Cloud Manager team are required before merge. After approval, all pull requests are squash merged.
 
