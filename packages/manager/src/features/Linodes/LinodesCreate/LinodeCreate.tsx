@@ -437,7 +437,9 @@ export class LinodeCreate extends React.PureComponent<
     sendLinodeCreateFormInputEvent({
       createType: 'OS',
       interaction: 'click',
-      label: 'Create Using Command Line',
+      label: isDxToolsAdditionsEnabled
+        ? 'View Code Snippets'
+        : 'Create Using Command Line',
     });
     sendApiAwarenessClickEvent(
       'Button',
