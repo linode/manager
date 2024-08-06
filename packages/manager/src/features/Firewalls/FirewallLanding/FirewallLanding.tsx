@@ -140,7 +140,7 @@ const FirewallLanding = () => {
               buttonType="secondary"
               onClick={() => setIsGenerateDialogOpen(true)}
             >
-              {flags.secureVmCopy.generateActionText}
+              {flags.secureVmCopy?.generateActionText}
             </Button>
           ) : undefined
         }

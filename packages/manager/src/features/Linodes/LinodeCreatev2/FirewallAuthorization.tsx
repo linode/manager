@@ -40,12 +40,12 @@ export const FirewallAuthorization = () => {
               className="error-for-scroll"
               control={<Checkbox />}
               disableTypography
-              label={flags.secureVmCopy.firewallAuthorizationLabel}
+              label={flags.secureVmCopy?.firewallAuthorizationLabel}
               onChange={field.onChange}
             />
           </Typography>
         }
-        text={flags.secureVmCopy.firewallAuthorizationWarning}
+        text={flags.secureVmCopy?.firewallAuthorizationWarning ?? ''}
         warning
       />
     )

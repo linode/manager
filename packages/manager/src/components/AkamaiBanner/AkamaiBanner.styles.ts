@@ -30,17 +30,17 @@ export const StyledBanner = styled(Stack, {
   margin: `${theme.spacing(margin ?? 0)} 0`,
 }));
 
-export const StyledBannerLabel = styled(Stack)(({ theme }) => ({
+export const StyledBannerLabel = styled(Box)(({ theme }) => ({
   backgroundColor: theme.color.black,
   padding: theme.spacing(2),
   textWrap: 'nowrap',
   userSelect: 'none',
 }));
 
-export const StyledBannerContent = styled(Box, {
+export const StyledBannerAction = styled(Box, {
   shouldForwardProp: omittedProps(['warning']),
 })<{ warning?: boolean }>(({ theme, warning }) => ({
   color: warning ? theme.bg.mainContentBanner : theme.color.black,
-  padding: theme.spacing(2),
+  paddingRight: theme.spacing(2),
   textWrap: 'nowrap',
 }));

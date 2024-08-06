@@ -50,7 +50,7 @@ export const SelectFirewallPanel = (props: Props) => {
 
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
   const secureVMFirewallBanner =
-    (secureVMNoticesEnabled && flags.secureVmCopy?.linodeCreate) ?? false;
+    (secureVMNoticesEnabled && flags.secureVmCopy) ?? false;
 
   const handleCreateFirewallClick = () => {
     setIsDrawerOpen(true);
@@ -101,14 +101,14 @@ export const SelectFirewallPanel = (props: Props) => {
         {secureVMFirewallBanner && (
           <AkamaiBanner
             action={
-              flags.secureVmCopy.generateActionText ? (
+              secureVMFirewallBanner.generateActionText ? (
                 <LinkButton onClick={() => setIsFirewallDialogOpen(true)}>
-                  {flags.secureVmCopy.generateActionText}
+                  {secureVMFirewallBanner.generateActionText}
                 </LinkButton>
               ) : undefined
             }
             margin={2}
-            {...secureVMFirewallBanner}
+            {...secureVMFirewallBanner.linodeCreate}
           />
         )}
         <Autocomplete

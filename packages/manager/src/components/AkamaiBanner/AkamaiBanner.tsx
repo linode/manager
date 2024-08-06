@@ -5,10 +5,11 @@ import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { Box } from '../Box';
+import { Stack } from '../Stack';
 import {
   StyledAkamaiLogo,
   StyledBanner,
-  StyledBannerContent,
+  StyledBannerAction,
   StyledBannerLabel,
   StyledWarningIcon,
 } from './AkamaiBanner.styles';
@@ -48,17 +49,19 @@ export const AkamaiBanner = React.memo((props: AkamaiBannerProps) => {
       margin={margin}
       warning={warning}
     >
-      <StyledBannerLabel alignItems="center" direction="row">
-        <Box sx={{ height: 25, width: 30 }}>
-          {warning ? (
-            <StyledWarningIcon height={25} />
-          ) : (
-            <StyledAkamaiLogo height={25} />
-          )}
-        </Box>
-        <Typography sx={(theme: Theme) => ({ color: theme.color.white })}>
-          {flags.secureVmCopy?.bannerLabel}
-        </Typography>
+      <StyledBannerLabel>
+        <Stack alignItems="center" direction="row">
+          <Box sx={{ height: 25, width: 30 }}>
+            {warning ? (
+              <StyledWarningIcon height={25} />
+            ) : (
+              <StyledAkamaiLogo height={25} />
+            )}
+          </Box>
+          <Typography sx={(theme: Theme) => ({ color: theme.color.white })}>
+            {flags.secureVmCopy?.bannerLabel}
+          </Typography>
+        </Stack>
       </StyledBannerLabel>
       <Box
         alignItems="center"
@@ -80,11 +83,11 @@ export const AkamaiBanner = React.memo((props: AkamaiBannerProps) => {
           )}
         </Typography>
       </Box>
-      <StyledBannerContent alignItems="center" display="flex" warning={warning}>
+      <StyledBannerAction alignItems="center" display="flex" warning={warning}>
         <Typography color="inherit" variant="body2">
           {action}
         </Typography>
-      </StyledBannerContent>
+      </StyledBannerAction>
     </StyledBanner>
   );
 });

@@ -34,7 +34,7 @@ export const Firewall = () => {
 
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
   const secureVMFirewallBanner =
-    (secureVMNoticesEnabled && flags.secureVmCopy?.linodeCreate) ?? false;
+    (secureVMNoticesEnabled && flags.secureVmCopy) ?? false;
 
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
@@ -55,14 +55,14 @@ export const Firewall = () => {
         {secureVMFirewallBanner && (
           <AkamaiBanner
             action={
-              flags.secureVmCopy.generateActionText ? (
+              secureVMFirewallBanner.generateActionText ? (
                 <LinkButton onClick={() => setIsGenerateDialogOpen(true)}>
-                  {flags.secureVmCopy.generateActionText}
+                  {secureVMFirewallBanner.generateActionText}
                 </LinkButton>
               ) : undefined
             }
             margin={2}
-            {...secureVMFirewallBanner}
+            {...secureVMFirewallBanner.linodeCreate}
           />
         )}
         <Stack spacing={1.5}>
