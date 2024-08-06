@@ -1,6 +1,6 @@
-import { Entity, EventAction } from '@linode/api-v4/lib/account';
-
 import { nonClickEvents } from 'src/constants';
+
+import type { Entity, EventAction } from '@linode/api-v4/lib/account';
 
 export const getEngineFromDatabaseEntityURL = (url: string) => {
   return url.match(/databases\/(\w*)\/instances/i)?.[1];
@@ -147,6 +147,8 @@ export const getLinkTargets = (entity: Entity | null) => {
       return '/volumes';
     case 'placement_group':
       return `/placement-groups/${entity.id}`;
+    case 'vpc':
+      return `/vpcs/${entity.id}`;
     default:
       return null;
   }
