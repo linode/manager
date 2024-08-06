@@ -1,9 +1,5 @@
-import { linodesSeeder } from './linodes/linodes-seeder';
-import { placementGroupSeeder } from './placementGroups/placementGroup-seeder';
-import { volumesSeeder } from './volumes/volumes-seeder';
+import { linodesSeeder } from './linodes-seeder';
+import { placementGroupSeeder } from './placementGroup-seeder';
+import { volumesSeeder } from './volumes-seeder';
 
-export const allStateSeeders = [
-  linodesSeeder,
-  placementGroupSeeder,
-  volumesSeeder,
-];
+export const dbSeeders = [linodesSeeder, placementGroupSeeder, volumesSeeder];

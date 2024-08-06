@@ -9,6 +9,7 @@ import { childAccountPreset } from './extra/account/child-account-preset';
 import { managedDisabledPreset } from './extra/account/managed-disabled-preset';
 import { managedEnabledPreset } from './extra/account/managed-enabled-preset';
 import { parentAccountPreset } from './extra/account/parent-account-preset';
+import { apiResponseTimePreset } from './extra/api/api';
 import { legacyRegionsPreset } from './extra/regions/legacy-regions';
 import { regionsPreset } from './extra/regions/regions';
 
@@ -36,6 +37,7 @@ export const extraMockPresets: MockPreset[] = [
   childAccountPreset,
   regionsPreset,
   legacyRegionsPreset,
+  apiResponseTimePreset,
 ];
 
 /** An array of all mock presets. */

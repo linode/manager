@@ -3,7 +3,7 @@ import { mswDB } from 'src/mocks/indexedDB';
 import { resolveMockPreset } from 'src/mocks/mockPreset';
 import { createInitialMockStore, emptyStore } from 'src/mocks/mockState';
 import { allMockPresets, defaultBaselineMockPreset } from 'src/mocks/presets';
-import { allStateSeeders } from 'src/mocks/seeds';
+import { dbSeeders } from 'src/mocks/seeds';
 
 import {
   getMSWContextSeeders,
@@ -46,9 +46,7 @@ export async function loadDevTools(
 
     const mswContentSeederIds = getMSWContextSeeders();
     const mswContentSeeders = mswContentSeederIds
-      .map((seederId) =>
-        allStateSeeders.find((seeder) => seeder.id === seederId)
-      )
+      .map((seederId) => dbSeeders.find((dbSeeder) => dbSeeder.id === seederId))
       .filter((seeder) => !!seeder);
 
     // Apply MSW context populators.

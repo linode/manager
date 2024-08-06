@@ -157,6 +157,10 @@
   width: 70px;
   height: 60px;
   border-top-right-radius: 12px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
 }
 
 .dev-tools__toggle button {
@@ -204,7 +208,12 @@
   transition: var(--open-close-transition);
 }
 
-.dev-tools.dev-tools--open .dev-tools__toggle,
+.dev-tools.dev-tools--open .dev-tools__toggle {
+  background-color: transparent;
+  backdrop-filter: none;
+}
+
+
 .dev-tools.dev-tools--open .dev-tools__body {
   background-color: var(--background-color-opened);
 }
