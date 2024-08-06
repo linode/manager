@@ -25,6 +25,13 @@ export type MockPresetGroup =
 export type MockHandler = (mockState: MockState) => HttpHandler[];
 
 export type MockPreset = {
+  /**
+   * Whether the preset is always enabled.
+   * If true, it means the preset can be disabled via a custom value provided in a number input.
+   * This is currently used to simulate API response times.
+   */
+  alwaysEnabled?: boolean;
+
   /** Description of mock preset and its purpose. */
   desc?: string;
 

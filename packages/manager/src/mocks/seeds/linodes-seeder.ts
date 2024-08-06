@@ -1,4 +1,4 @@
-import { getMSWCountMap } from 'src/dev-tools/ServiceWorkerTool';
+import { getMSWSeedsCountMap } from 'src/dev-tools/ServiceWorkerTool';
 import { configFactory, linodeFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 import { seedWithUniqueIds } from 'src/mocks/utilities/seedUtils';
@@ -14,8 +14,8 @@ export const linodesSeeder: MockSeeder = {
   label: 'Linodes',
 
   seeder: async (mockState: MockState) => {
-    const countMap = getMSWCountMap();
-    const count = countMap[linodesSeeder.id] ?? 0;
+    const seedsCountMap = getMSWSeedsCountMap();
+    const count = seedsCountMap[linodesSeeder.id] ?? 0;
     const linodeSeeds = seedWithUniqueIds<'linodes'>({
       dbEntities: await mswDB.getAll('linodes'),
       seedEntities: linodeFactory.buildList(count),

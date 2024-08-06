@@ -1,4 +1,4 @@
-import { getMSWCountMap } from 'src/dev-tools/ServiceWorkerTool';
+import { getMSWSeedsCountMap } from 'src/dev-tools/ServiceWorkerTool';
 import { placementGroupFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 import { seedWithUniqueIds } from 'src/mocks/utilities/seedUtils';
@@ -13,8 +13,8 @@ export const placementGroupSeeder: MockSeeder = {
   label: 'Placement Groups',
 
   seeder: async (mockState: MockState) => {
-    const countMap = getMSWCountMap();
-    const count = countMap[placementGroupSeeder.id] ?? 0;
+    const seedsCountMap = getMSWSeedsCountMap();
+    const count = seedsCountMap[placementGroupSeeder.id] ?? 0;
     const placementGroupSeeds = seedWithUniqueIds<'placementGroups'>({
       dbEntities: await mswDB.getAll('placementGroups'),
       seedEntities: placementGroupFactory.buildList(count, {

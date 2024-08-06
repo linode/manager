@@ -1,8 +1,8 @@
-import { getMSWCountMap } from 'src/dev-tools/ServiceWorkerTool';
+import { getMSWSeedsCountMap } from 'src/dev-tools/ServiceWorkerTool';
 import { volumeFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 
-import type { MockState, MockSeeder } from 'src/mocks/types';
+import type { MockSeeder, MockState } from 'src/mocks/types';
 
 export const volumesSeeder: MockSeeder = {
   canUpdateCount: true,
@@ -12,8 +12,8 @@ export const volumesSeeder: MockSeeder = {
   label: 'Volumes',
 
   seeder: async (mockState: MockState) => {
-    const countMap = getMSWCountMap();
-    const count = countMap[volumesSeeder.id] ?? 0;
+    const seedsCountMap = getMSWSeedsCountMap();
+    const count = seedsCountMap[volumesSeeder.id] ?? 0;
     const volumes = volumeFactory.buildList(count);
 
     const updatedMockState = {
