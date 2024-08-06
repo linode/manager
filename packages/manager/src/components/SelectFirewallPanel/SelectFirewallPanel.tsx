@@ -7,10 +7,13 @@ import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
+import { useFlags } from 'src/hooks/useFlags';
+import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useFirewallsQuery } from 'src/queries/firewalls';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
+import { AkamaiBanner } from '../AkamaiBanner/AkamaiBanner';
 import { Autocomplete } from '../Autocomplete/Autocomplete';
 import { LinkButton } from '../LinkButton';
 
@@ -35,11 +38,19 @@ export const SelectFirewallPanel = (props: Props) => {
   } = props;
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  // @ts-expect-error TODO Secure VMs: wire up firewall generation dialog
+  const [isFirewallDialogOpen, setIsFirewallDialogOpen] = React.useState(false);
   const location = useLocation();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
   const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
     location.search
   );
+
+  const flags = useFlags();
+
+  const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
+  const secureVMFirewallBanner =
+    (secureVMNoticesEnabled && flags.secureVmCopy?.linodeCreate) ?? false;
 
   const handleCreateFirewallClick = () => {
     setIsDrawerOpen(true);
@@ -87,6 +98,19 @@ export const SelectFirewallPanel = (props: Props) => {
       </Typography>
       <Stack>
         {helperText}
+        {secureVMFirewallBanner && (
+          <AkamaiBanner
+            action={
+              flags.secureVmCopy.generateActionText ? (
+                <LinkButton onClick={() => setIsFirewallDialogOpen(true)}>
+                  {flags.secureVmCopy.generateActionText}
+                </LinkButton>
+              ) : undefined
+            }
+            margin={2}
+            {...secureVMFirewallBanner}
+          />
+        )}
         <Autocomplete
           onChange={(_, selection) => {
             handleFirewallChange(selection?.value ?? -1);

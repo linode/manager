@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useController } from 'react-hook-form';
 
+import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Link } from 'src/components/Link';
@@ -10,7 +11,9 @@ import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
@@ -24,6 +27,14 @@ export const Firewall = () => {
   const { data: firewalls, error, isLoading } = useAllFirewallsQuery();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  // @ts-expect-error TODO Secure VMs: wire up firewall generation dialog
+  const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
+
+  const flags = useFlags();
+
+  const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
+  const secureVMFirewallBanner =
+    (secureVMNoticesEnabled && flags.secureVmCopy?.linodeCreate) ?? false;
 
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
@@ -41,6 +52,19 @@ export const Firewall = () => {
           outbound network traffic.{' '}
           <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
         </Typography>
+        {secureVMFirewallBanner && (
+          <AkamaiBanner
+            action={
+              flags.secureVmCopy.generateActionText ? (
+                <LinkButton onClick={() => setIsGenerateDialogOpen(true)}>
+                  {flags.secureVmCopy.generateActionText}
+                </LinkButton>
+              ) : undefined
+            }
+            margin={2}
+            {...secureVMFirewallBanner}
+          />
+        )}
         <Stack spacing={1.5}>
           <Autocomplete
             disabled={isLinodeCreateRestricted}

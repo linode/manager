@@ -20,6 +20,7 @@ interface PageViewPayload {
 
 export interface CustomAnalyticsData {
   isLinodePoweredOff?: boolean;
+  secureVMCompliant?: boolean;
 }
 
 export interface AnalyticsEvent {
