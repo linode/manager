@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { Tooltip } from 'src/components/Tooltip';
 import { getStateSeederGroups } from 'src/mocks/mockState';
 import { dbSeeders } from 'src/mocks/seeds';
 
@@ -23,42 +22,38 @@ export const SeedOptions = ({
   seedsCountMap,
 }: SeedOptionsProps) => {
   return (
-    <Tooltip
-      title={disabled ? 'MSW must be in CRUD mode to change seeders' : ''}
-    >
-      <ul>
-        {getStateSeederGroups(dbSeeders).map((group) => (
-          <div key={group}>
-            {dbSeeders
-              .filter((dbSeeder) => dbSeeder.group === group)
-              .map((dbSeeder) => (
-                <li key={dbSeeder.id}>
+    <ul>
+      {getStateSeederGroups(dbSeeders).map((group) => (
+        <div key={group}>
+          {dbSeeders
+            .filter((dbSeeder) => dbSeeder.group === group)
+            .map((dbSeeder) => (
+              <li key={dbSeeder.id}>
+                <input
+                  checked={seeders.includes(dbSeeder.id)}
+                  disabled={disabled}
+                  onChange={(e) => onToggleSeeder(e, dbSeeder.id)}
+                  style={{ marginRight: 12 }}
+                  type="checkbox"
+                />
+                <span title={dbSeeder.desc || dbSeeder.label}>
+                  {dbSeeder.label}
+                </span>
+                {dbSeeder.canUpdateCount && (
                   <input
-                    checked={seeders.includes(dbSeeder.id)}
+                    aria-label={`Value for ${dbSeeder.label}`}
                     disabled={disabled}
-                    onChange={(e) => onToggleSeeder(e, dbSeeder.id)}
-                    style={{ marginRight: 12 }}
-                    type="checkbox"
+                    min={0}
+                    onChange={(e) => onCountChange(e, dbSeeder.id)}
+                    style={{ marginLeft: 8, width: 60 }}
+                    type="number"
+                    value={seedsCountMap[dbSeeder.id] || 0}
                   />
-                  <span title={dbSeeder.desc || dbSeeder.label}>
-                    {dbSeeder.label}
-                  </span>
-                  {dbSeeder.canUpdateCount && (
-                    <input
-                      aria-label={`Value for ${dbSeeder.label}`}
-                      disabled={disabled}
-                      min={0}
-                      onChange={(e) => onCountChange(e, dbSeeder.id)}
-                      style={{ marginLeft: 8, width: 60 }}
-                      type="number"
-                      value={seedsCountMap[dbSeeder.id] || 0}
-                    />
-                  )}
-                </li>
-              ))}
-          </div>
-        ))}
-      </ul>
-    </Tooltip>
+                )}
+              </li>
+            ))}
+        </div>
+      ))}
+    </ul>
   );
 };

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Tooltip } from 'src/components/Tooltip';
 import { mswDB } from 'src/mocks/indexedDB';
 import { dbSeeders } from 'src/mocks/seeds';
-import { removeSeeds } from 'src/mocks/utilities/seedUtils';
+import { removeSeeds } from 'src/mocks/seeds/utils';
 
 import { BaselinePresetOptions } from './components/BaselinePresetOptions';
 import { DevToolSelect } from './components/DevToolSelect';
@@ -45,11 +45,9 @@ export const ServiceWorkerTool = () => {
   const [MSWBasePreset, setMSWBasePreset] = React.useState<MockPresetId>(
     loadedBasePreset
   );
-  const [MSWExtraPresets, setMSWExtraPresets] = React.useState<string[]>([
-    ...loadedExtraPresets,
-    // enable setAPIResponseTime by default
-    'api-response-time',
-  ]);
+  const [MSWExtraPresets, setMSWExtraPresets] = React.useState<string[]>(
+    loadedExtraPresets
+  );
   const [presetsCountMap, setPresetsCountMap] = React.useState<{
     [key: string]: number;
   }>({

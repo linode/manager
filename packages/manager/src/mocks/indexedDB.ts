@@ -1,4 +1,4 @@
-import { hasId } from './utilities/seedUtils';
+import { hasId } from './seeds/utils';
 
 import type { MockState } from './types';
 
