@@ -26,6 +26,7 @@ import {
   mockDatabaseNodeTypes,
 } from 'support/constants/databases';
 import { accountFactory } from '@src/factories';
+import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 
 /**
  * Updates a database cluster's label.
@@ -185,7 +186,9 @@ describe('Update database clusters', () => {
           cy.wait(['@getAccount', '@getDatabase', '@getDatabaseTypes']);
 
           cy.get('[data-qa-cluster-config]').within(() => {
-            cy.findByText(configuration.region.label).should('be.visible');
+            cy.findByText(getNewRegionLabel(configuration.region)).should(
+              'be.visible'
+            );
             cy.findByText(database.used_disk_size_gb + ' GB').should(
               'be.visible'
             );
