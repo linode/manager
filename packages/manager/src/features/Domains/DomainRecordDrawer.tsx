@@ -272,7 +272,9 @@ export class DomainRecordDrawer extends React.Component<
         eachOption.value ===
         defaultTo(
           DomainRecordDrawer.defaultFieldsState(this.props)[field],
-          this.state.fields[field]
+          (this.state.fields as EditableDomainFields & EditableRecordFields)[
+            field
+          ]
         )
       );
     });
@@ -302,9 +304,10 @@ export class DomainRecordDrawer extends React.Component<
     multiline?: boolean;
   }) => {
     const { domain, type } = this.props;
-    const value = this.state.fields[field];
+    const value = (this.state.fields as EditableDomainFields &
+      EditableRecordFields)[field];
     const hasAliasToResolve =
-      value.indexOf('@') >= 0 && shouldResolve(type, field);
+      value && value.indexOf('@') >= 0 && shouldResolve(type, field);
     return (
       <this.TextField
         placeholder={
@@ -330,10 +333,14 @@ export class DomainRecordDrawer extends React.Component<
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           this.updateField(field)(e.target.value)
         }
+        value={
+          (this.state.fields as EditableDomainFields & EditableRecordFields)[
+            field
+          ] as number
+        }
         data-qa-target={label}
         label={label}
         type="number"
-        value={this.state.fields[field]}
         {...rest}
       />
     );
@@ -449,8 +456,12 @@ export class DomainRecordDrawer extends React.Component<
         this.updateField(field)(e.target.value)
       }
       value={defaultTo(
-        DomainRecordDrawer.defaultFieldsState(this.props)[field],
-        this.state.fields[field]
+        DomainRecordDrawer.defaultFieldsState(this.props)[field] as
+          | number
+          | string,
+        (this.state.fields as EditableDomainFields & EditableRecordFields)[
+          field
+        ] as number | string
       )}
       data-qa-target={label}
       helperText={helperText}
@@ -468,8 +479,8 @@ export class DomainRecordDrawer extends React.Component<
    * editable data or defaults.
    */
   static defaultFieldsState = (props: Partial<DomainRecordDrawerProps>) => ({
-    description: '',
     axfr_ips: getInitialIPs(props.axfr_ips),
+    description: '',
     domain: props.domain,
     expire_sec: props.expire_sec ?? 0,
     id: props.id,
@@ -716,6 +727,12 @@ export class DomainRecordDrawer extends React.Component<
   };
 
   types = {
+    A: {
+      fields: [],
+    },
+    PTR: {
+      fields: [],
+    },
     AAAA: {
       fields: [
         (idx: number) => (
@@ -727,13 +744,6 @@ export class DomainRecordDrawer extends React.Component<
         (idx: number) => <this.TTLField key={idx} />,
       ],
     },
-    // slave: {
-    //   fields: [
-    //     (idx: number) => <this.NameField label="Hostname" key={idx} />,
-    //     (idx: number) => <this.TargetField label="IP Address" key={idx} />,
-    //     (idx: number) => <this.TTLField label="TTL" key={idx} />,
-    //   ],
-    // },
     CAA: {
       fields: [
         (idx: number) => (
@@ -842,6 +852,9 @@ export class DomainRecordDrawer extends React.Component<
         (idx: number) => <this.RetryRateField key={idx} />,
         (idx: number) => <this.ExpireField key={idx} />,
       ],
+    },
+    slave: {
+      fields: [],
     },
   };
 }

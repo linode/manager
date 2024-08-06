@@ -177,16 +177,18 @@ export const extendData = (
     // with a string as the value. Here, we separate these keys.
     const { longname, ...users } = processesData.Processes![processName];
 
-    Object.keys(users).forEach((user: keyof typeof users) => {
+    Object.keys(users).forEach((user) => {
+      // @ts-expect-error The types are completely wrong. They don't account for "user"
       const userProcess = processesData.Processes![processName][user];
 
       extendedData.push({
-        averageCPU: statAverage(users.cpu),
+        averageCPU: statAverage(userProcess.cpu),
         averageIO:
-          statAverage(users.ioreadkbytes) + statAverage(users.iowritekbytes),
-        averageMem: statAverage(users.mem),
+          statAverage(userProcess.ioreadkbytes) +
+          statAverage(userProcess.iowritekbytes),
+        averageMem: statAverage(userProcess.mem),
         id: `${processName}-${user}`,
-        maxCount: statMax(users.count),
+        maxCount: statMax(userProcess.count),
         name: processName,
         user,
       });
