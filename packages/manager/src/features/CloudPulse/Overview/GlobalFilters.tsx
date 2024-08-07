@@ -15,12 +15,9 @@ import type { Dashboard, TimeDuration } from '@linode/api-v4';
 import type { WithStartAndEnd } from 'src/features/Longview/request.types';
 
 export interface GlobalFilterProperties {
-  handleAnyFilterChange(
-    filterKey: string,
-    filterValue: FilterValueType
-  ): undefined | void;
-  handleDashboardChange(dashboard: Dashboard | undefined): undefined | void;
-  handleTimeDurationChange(timeDuration: TimeDuration): undefined | void;
+  handleAnyFilterChange(filterKey: string, filterValue: FilterValueType): void;
+  handleDashboardChange(dashboard: Dashboard | undefined): void;
+  handleTimeDurationChange(timeDuration: TimeDuration): void;
 }
 
 export interface FiltersObject {
