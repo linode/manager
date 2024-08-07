@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import Select from 'src/components/EnhancedSelect/Select';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 import { TIME_DURATION } from '../Utils/constants';
 import {
@@ -38,12 +38,11 @@ export type Labels =
 
 export const CloudPulseTimeRangeSelect = React.memo(
   (props: CloudPulseTimeRangeSelectProps) => {
-    const { handleStatsChange, ...restOfSelectProps } = props;
+    const { handleStatsChange, label } = props;
 
     // To set the default value fetched from preferences.
     const getPreferredValue = () => {
       const defaultValue = getUserPreferenceObject().timeDuration;
-
       return options.find((o) => o.label === defaultValue) || options[0];
     };
 
@@ -60,14 +59,20 @@ export const CloudPulseTimeRangeSelect = React.memo(
     };
 
     return (
-      <Select
-        {...restOfSelectProps}
+      <Autocomplete
+        onChange={(_: any, value: Item<Labels, Labels>) => {
+          handleChange(value);
+        }}
+        autoHighlight
+        data-testid="cloudpulse-time-duration"
         defaultValue={getPreferredValue()}
-        isClearable={false}
-        isSearchable={false}
-        onChange={handleChange}
+        disableClearable
+        fullWidth
+        isOptionEqualToValue={(option, value) => option.value === value.value}
+        label=""
+        noMarginTop
         options={options}
-        small
+        placeholder={label}
       />
     );
   }

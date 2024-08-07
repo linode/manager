@@ -6,6 +6,7 @@ import * as React from 'react';
 import InfoIcon from 'src/assets/icons/info.svg';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
+import { Divider } from 'src/components/Divider';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 import RenderComponent from '../shared/CloudPulseComponentRenderer';
@@ -189,13 +190,11 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       if (!filters || filters.length === 0) {
         // if the filters are not defined , print an error state
         return (
-          <Grid item key={'filtererror'} xs={12}>
-            <ErrorState
-              CustomIcon={InfoIcon}
-              CustomIconStyles={{ height: '10', width: '10' }}
-              errorText={'Please configure filters to continue'}
-            ></ErrorState>
-          </Grid>
+          <ErrorState
+            CustomIcon={InfoIcon}
+            CustomIconStyles={{ height: '40px', width: '40px' }}
+            errorText={'Please configure filters to continue'}
+          ></ErrorState>
         );
       }
 
@@ -206,14 +205,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             : !config.configuration.neededInServicePage
         )
         .map((filter, index) => (
-          <Grid
-            item
-            key={filter.configuration.filterKey}
-            lg={4}
-            md={6}
-            sm={12}
-            xs={12}
-          >
+          <Grid item key={filter.configuration.filterKey} md={4} sm={6} xs={12}>
             {RenderComponent({
               componentKey: filter.configuration.filterKey,
               componentProps: { ...getProps(filter) },
@@ -238,8 +230,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     }
 
     return (
-      <Grid container>
-        <Grid item lg={12} xs={12}>
+      <Grid container item xs={12}>
+        <Grid item key={'toggleFilter'} px={2} xs={12}>
           <Box>
             <Button
               startIcon={
@@ -251,12 +243,31 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               }
               buttonType={'outlined'}
               onClick={toggleShowFilter}
+              sx={{ justifyContent: 'start', mb: showFilter ? 0 : 2, p: 0 }}
             >
               <Typography>Filters</Typography>
             </Button>
           </Box>
         </Grid>
-        {showFilter && <RenderFilters />}
+        {showFilter && (
+          <>
+            <Grid item xs={12}>
+              <Divider />
+            </Grid>
+            <Grid
+              columnSpacing={2}
+              container
+              item
+              maxHeight={'120px'}
+              mb={3}
+              overflow={'auto'}
+              px={2}
+              xs={12}
+            >
+              <RenderFilters />
+            </Grid>
+          </>
+        )}
       </Grid>
     );
   },

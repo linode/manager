@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -47,27 +46,25 @@ export const CloudPulseRegionSelect = React.memo(
     }, [regions, props.selectedDashboard]);
 
     return (
-      <Box sx={{ width: '95%' }}>
-        <RegionSelect
-          onChange={(_, region) => {
-            updateGlobalFilterPreference({
-              [REGION]: region?.id,
-              [RESOURCES]: undefined,
-            });
-            setSelectedRegion(region?.id);
-            props.handleRegionChange(region?.id);
-          }}
-          currentCapability={undefined}
-          data-testid="region-select"
-          disableClearable={false}
-          disabled={!props.selectedDashboard || !regions}
-          fullWidth
-          label=""
-          noMarginTop
-          regions={regions ? regions : []}
-          value={selectedRegion}
-        />
-      </Box>
+      <RegionSelect
+        onChange={(_, region) => {
+          updateGlobalFilterPreference({
+            [REGION]: region?.id,
+            [RESOURCES]: undefined,
+          });
+          setSelectedRegion(region?.id);
+          props.handleRegionChange(region?.id);
+        }}
+        currentCapability={undefined}
+        data-testid="region-select"
+        disableClearable={false}
+        disabled={!props.selectedDashboard || !regions}
+        fullWidth
+        label=""
+        noMarginTop
+        regions={regions ? regions : []}
+        value={selectedRegion}
+      />
     );
   }
 );

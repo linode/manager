@@ -1,9 +1,10 @@
+import { Grid } from '@mui/material';
 import { IconButton, Tooltip } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import Reload from 'src/assets/icons/reload.svg';
+import { Divider } from 'src/components/Divider';
 
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
@@ -74,28 +75,30 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const handleGlobalRefresh = React.useCallback(() => {}, []);
 
   return (
-    <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
-      <StyledGrid xs={12}>
-        <Grid sx={{ width: 300 }}>
+    <Grid container gap={1}>
+      <Grid columnSpacing={2} container item mt={2} px={2} rowGap={2} xs={12}>
+        <Grid display={'flex'} item md={4} sm={5} xs={12}>
           <CloudPulseDashboardSelect
             handleDashboardChange={onDashboardChange}
           />
         </Grid>
-        <Grid sx={{ marginLeft: 2, width: 250 }}>
-          <StyledCloudPulseTimeRangeSelect
+        <Grid item md={4} sm={2} xs={0} />
+        <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
+          <CloudPulseTimeRangeSelect
             handleStatsChange={handleTimeRangeChange}
             hideLabel
             label="Select Time Range"
           />
-        </Grid>
-        <Grid sx={{ marginLeft: -4, marginRight: 3 }}>
           <Tooltip arrow enterDelay={500} placement="top" title="Refresh">
             <IconButton onClick={handleGlobalRefresh} size="small">
               <StyledReload />
             </IconButton>
           </Tooltip>
         </Grid>
-      </StyledGrid>
+      </Grid>
+      <Grid item xs={12}>
+        <Divider />
+      </Grid>
       <CloudPulseDashboardFilterBuilder
         dashboard={selectedDashboard!}
         emitFilterChange={emitFilterChange}
@@ -104,26 +107,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     </Grid>
   );
 });
-
-const StyledCloudPulseTimeRangeSelect = styled(CloudPulseTimeRangeSelect, {
-  label: 'StyledCloudPulseTimeRangeSelect',
-})({
-  width: 150,
-});
-
-const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
-  alignItems: 'end',
-  boxSizing: 'border-box',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'start',
-  marginBottom: theme.spacing(1.25),
-}));
-
-const itemSpacing = {
-  boxSizing: 'border-box',
-  margin: '0',
-};
 
 const StyledReload = styled(Reload, { label: 'StyledReload' })(({ theme }) => ({
   '&:active': {
