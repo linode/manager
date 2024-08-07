@@ -7,14 +7,14 @@ import { omittedProps } from 'src/utilities/omittedProps';
 import { Box } from '../Box';
 import { Stack } from '../Stack';
 
-export const StyledAkamaiLogo = styled(AkamaiLogo)(({ theme }) => ({
+export const StyledAkamaiLogo = styled(AkamaiLogo)({
   '& .akamai-logo-icon': {
-    fill: theme.color.white,
+    fill: 'white',
   },
   '& .akamai-logo-name': {
     display: 'none',
   },
-}));
+});
 
 export const StyledWarningIcon = styled(Warning)(({ theme }) => ({
   color: theme.palette.warning.dark,
@@ -31,8 +31,9 @@ export const StyledBanner = styled(Stack, {
 }));
 
 export const StyledBannerLabel = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.color.black,
-  padding: theme.spacing(2),
+  backgroundColor: 'black',
+  color: 'white',
+  padding: theme.spacing(2.3),
   textWrap: 'nowrap',
   userSelect: 'none',
 }));

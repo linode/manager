@@ -51,14 +51,21 @@ export const AkamaiBanner = React.memo((props: AkamaiBannerProps) => {
     >
       <StyledBannerLabel>
         <Stack alignItems="center" direction="row">
-          <Box sx={{ height: 25, width: 30 }}>
+          <Box sx={{ height: 18, width: 25 }}>
             {warning ? (
-              <StyledWarningIcon height={25} />
+              <StyledWarningIcon height={18} />
             ) : (
-              <StyledAkamaiLogo height={25} />
+              <StyledAkamaiLogo height={18} />
             )}
           </Box>
-          <Typography sx={(theme: Theme) => ({ color: theme.color.white })}>
+          <Typography
+            sx={(theme: Theme) => ({
+              color: 'inherit',
+              fontFamily: theme.font.bold,
+              fontSize: 11,
+              letterSpacing: 0.44,
+            })}
+          >
             {flags.secureVmCopy?.bannerLabel}
           </Typography>
         </Stack>
