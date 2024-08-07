@@ -8,6 +8,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import NullComponent from 'src/components/NullComponent';
 
 import RenderComponent from '../shared/CloudPulseComponentRenderer';
 import {
@@ -181,13 +182,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       !dashboard.service_type ||
       !FILTER_CONFIG.has(dashboard.service_type)
     ) {
-      return (
-        <ErrorState
-          CustomIcon={InfoIcon}
-          CustomIconStyles={{ height: '30px', width: '30px' }}
-          errorText={'Please pass valid dashboard to render the filters'}
-        />
-      );
+      return <NullComponent />; // in this we don't want to show the filters at all
     }
 
     return (
