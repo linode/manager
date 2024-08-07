@@ -116,10 +116,10 @@ export const ServiceWorkerTool = () => {
       mswDB.clear('mockState');
       mswDB.clear('seedState');
       seederHandlers.removeAll();
-      setBaselinePreset('baseline:no-mocks');
+      setBaselinePreset('baseline:preset-mocking');
       setExtraPresets([]);
       setPresetsCountMap({});
-      saveBaselinePreset('baseline:no-mocks');
+      saveBaselinePreset('baseline:preset-mocking');
       saveExtraPresets([]);
       saveSeeders([]);
       saveSeedsCountMap({});
@@ -352,7 +352,7 @@ export const ServiceWorkerTool = () => {
             disabled={saveState.mocksCleared}
             onClick={globalHandlers.resetAll}
           >
-            Reset all Mocks
+            Reset all (Store, Seeds & Presets)
           </button>
           <button
             disabled={saveState.hasUnsavedChanges ? false : true}

@@ -11,6 +11,6 @@ import type { MockPresetBaseline } from 'src/mocks/types';
 export const baselineNoMocksPreset: MockPresetBaseline = {
   group: { id: 'General' },
   handlers: [],
-  id: 'baseline:no-mocks',
-  label: 'No Mocks',
+  id: 'baseline:preset-mocking',
+  label: 'Preset Mocking',
 };
