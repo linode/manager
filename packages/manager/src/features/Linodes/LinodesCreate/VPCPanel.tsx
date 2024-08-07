@@ -106,28 +106,24 @@ export const VPCPanel = (props: VPCPanelProps) => {
 
   const vpcs = vpcsData ?? [];
 
+  const fromLinodeCreate = from === 'linodeCreate';
+  const fromLinodeConfig = from === 'linodeConfig';
+
   interface DropdownOption {
     label: string;
     value: number;
   }
 
   const vpcDropdownOptions: DropdownOption[] = React.useMemo(() => {
-    return vpcs.reduce((accumulator, vpc) => {
-      return vpc.region === region
-        ? [...accumulator, { label: vpc.label, value: vpc.id }]
-        : accumulator;
-    }, []);
-  }, [vpcs, region]);
-
-  const fromLinodeCreate = from === 'linodeCreate';
-  const fromLinodeConfig = from === 'linodeConfig';
-
-  if (fromLinodeCreate) {
-    vpcDropdownOptions.unshift({
-      label: 'None',
-      value: -1,
-    });
-  }
+    return vpcs.reduce(
+      (accumulator, vpc) => {
+        return vpc.region === region
+          ? [...accumulator, { label: vpc.label, value: vpc.id }]
+          : accumulator;
+      },
+      fromLinodeCreate ? [{ label: 'None', value: -1 }] : []
+    );
+  }, [vpcs, region, fromLinodeCreate]);
 
   const subnetDropdownOptions: DropdownOption[] =
     vpcs
@@ -145,7 +141,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
     if (fromLinodeConfig) {
       return null;
     }
-
     const copy =
       vpcDropdownOptions.length <= 1
         ? 'Allow Linode to communicate in an isolated environment.'
