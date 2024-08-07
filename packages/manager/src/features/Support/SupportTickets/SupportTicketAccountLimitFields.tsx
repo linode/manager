@@ -54,7 +54,7 @@ export const SupportTicketAccountLimitFields = ({
   const kubeTypes = extendTypesQueryResult(kubeTypesQuery);
 
   const defaultValues = {
-    companyName: account?.company,
+    companyName: account?.company ?? '',
     customerName: `${account?.first_name} ${account?.last_name}`,
     linodePlan:
       linodeType?.label ??
