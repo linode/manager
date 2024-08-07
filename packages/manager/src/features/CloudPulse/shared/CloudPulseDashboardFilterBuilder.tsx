@@ -18,14 +18,13 @@ import {
 import {
   getRegionProperties,
   getResourcesProperties,
-  getTimeDurationProperties,
 } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseServiceTypeFilters } from '../Utils/models';
 import type { CloudPulseResources } from './CloudPulseResourcesSelect';
-import type { Dashboard, TimeDuration } from '@linode/api-v4';
+import type { Dashboard } from '@linode/api-v4';
 
 export interface CloudPulseDashboardFilterBuilderProps {
   /**
@@ -160,10 +159,11 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       }
 
       return filters
-        .filter((config) =>
-          isServiceAnalyticsIntegration
-            ? config.configuration.neededInServicePage
-            : !config.configuration.neededInServicePage
+        .filter(
+          (config) =>
+            isServiceAnalyticsIntegration
+              ? config.configuration.neededInServicePage
+              : config.configuration.filterKey != RELATIVE_TIME_DURATION // time duration is always defined explicitly
         )
         .map((filter, index) => (
           <Grid item key={filter.configuration.filterKey} md={4} sm={6} xs={12}>
