@@ -167,7 +167,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             handleTimeRangeChange
           );
         } else {
-          return {}; // if the above doesn't match use out custom select for rendering filters, the equivalent component for this will be implemented in upcoming PR's
+          return {};
         }
       },
       [
@@ -239,7 +239,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     return (
       <Grid container>
-        <Grid item key={'toggleFilter'} lg={12} xs={12}>
+        <Grid item lg={12} xs={12}>
           <Box>
             <Button
               startIcon={

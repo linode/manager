@@ -96,7 +96,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           </Tooltip>
         </Grid>
       </StyledGrid>
-      <CloudPulseDashboardFilterBuilder // moving forward, every filter will be driven through filter builder component
+      <CloudPulseDashboardFilterBuilder
         dashboard={selectedDashboard!}
         emitFilterChange={emitFilterChange}
         isServiceAnalyticsIntegration={false}

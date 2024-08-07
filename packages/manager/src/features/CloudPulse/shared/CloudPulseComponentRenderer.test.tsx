@@ -16,7 +16,7 @@ const DASHBOARD = 'Test Metrics Dashboard';
 describe('ComponentRenderer component tests', () => {
   it('it should render provided region filter in props', () => {
     const regionProps = linodeFilterConfig?.filters.find(
-      (filter) => filter.configuration.filterKey == 'region'
+      (filter) => filter.configuration.filterKey === 'region'
     );
 
     const mockDashboard = {
@@ -52,7 +52,7 @@ describe('ComponentRenderer component tests', () => {
   }),
     it('it should render provided resource filter in props', () => {
       const resourceProps = linodeFilterConfig?.filters.find(
-        (filter) => filter.configuration.filterKey == 'resource_id'
+        (filter) => filter.configuration.filterKey === 'resource_id'
       );
       const mockDashboard = {
         created: new Date().toDateString(),

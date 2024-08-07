@@ -1,5 +1,7 @@
+import { REGION, RESOURCE_ID } from './constants';
 import {
   buildXFilter,
+  checkIfAllMandatoryFiltersAreSelected,
   checkIfWeNeedToDisableFilterByFilterKey,
   getRegionProperties,
   getResourcesProperties,
@@ -145,4 +147,36 @@ it('test buildXfilter method', () => {
   result = buildXFilter(resourceSelectionConfig!, {});
 
   expect(JSON.stringify(result)).toEqual('{"+and":[]}');
+});
+
+it('test checkIfAllMandatoryFiltersAreSelected method', () => {
+  const resourceSelectionConfig = linodeConfig?.filters.find(
+    (filterObj) => filterObj.name == 'Resources'
+  );
+
+  expect(resourceSelectionConfig).toBeDefined();
+
+  let result = checkIfAllMandatoryFiltersAreSelected(
+    mockDashboard,
+    { region: 'us-east', resource_id: ['1', '2'] },
+    { unit: 'min', value: 30 }
+  );
+
+  expect(result).toEqual(true);
+
+  result = checkIfAllMandatoryFiltersAreSelected(
+    mockDashboard,
+    { region: 'us-east' },
+    { unit: 'min', value: 30 }
+  );
+
+  expect(result).toEqual(false);
+
+  result = checkIfAllMandatoryFiltersAreSelected(
+    mockDashboard,
+    { region: 'us-east', resource_id: ['1', '2'] },
+    undefined
+  );
+
+  expect(result).toEqual(false);
 });

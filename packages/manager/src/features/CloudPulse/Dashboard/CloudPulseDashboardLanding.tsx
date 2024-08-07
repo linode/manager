@@ -29,7 +29,7 @@ export const CloudPulseDashboardLanding = () => {
       filterValue: number | number[] | string | string[] | undefined
     ) => {
       filterReference.current[filterKey] = filterValue;
-      setFilterValue((prev) => ({ ...prev, ...filterReference.current }));
+      setFilterValue(() => ({ ...filterReference.current }));
     },
     []
   );

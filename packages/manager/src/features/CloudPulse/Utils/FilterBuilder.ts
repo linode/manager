@@ -109,6 +109,7 @@ export const getTimeDurationProperties = (
  *
  * @param config - any cloudpulse service type filter config
  * @param dependentFilters - the filters that are selected so far
+ * @returns - a xFilter type of apiV4
  */
 export const buildXFilter = (
   config: CloudPulseServiceTypeFilters,
@@ -121,7 +122,7 @@ export const buildXFilter = (
       | string[]
       | undefined;
   }
-) => {
+): Filter => {
   const filters: Filter[] = [];
 
   const { dependency } = config.configuration;
