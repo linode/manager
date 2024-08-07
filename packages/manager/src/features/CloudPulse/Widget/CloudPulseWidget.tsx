@@ -2,9 +2,7 @@ import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 import { useProfile } from 'src/queries/profile/profile';
