@@ -177,7 +177,6 @@ export interface Grant {
 }
 export type GlobalGrantTypes =
   | 'account_access'
-  | 'add_lke_clusters'
   | 'add_domains'
   | 'add_firewalls'
   | 'add_images'

@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom';
 import KubernetesSvg from 'src/assets/icons/entityIcons/kubernetes.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
@@ -14,12 +13,14 @@ import {
   youtubeLinkData,
 } from './KubernetesLandingEmptyStateData';
 
-export const KubernetesEmptyState = () => {
-  const { push } = useHistory();
+interface Props {
+  isRestricted: boolean;
+}
 
-  const isRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_lke_clusters',
-  });
+export const KubernetesEmptyState = (props: Props) => {
+  const { isRestricted = false } = props;
+
+  const { push } = useHistory();
 
   return (
     <ResourcesSection

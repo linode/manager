@@ -290,7 +290,6 @@ describe('User permission management', () => {
         add_volumes: true,
         add_vpcs: true,
         longview_subscription: true,
-        add_lke_clusters: true,
       },
     };
 

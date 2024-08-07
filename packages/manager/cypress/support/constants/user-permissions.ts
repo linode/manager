@@ -1,13 +1,26 @@
 import { randomLabel } from 'support/util/random';
-
 import { grantFactory, grantsFactory } from 'src/factories/grants';
-
 import type { Grants } from '@linode/api-v4';
 
 /**
  * User permission grants with all permissions restricted.
  */
 export const userPermissionsGrants: Grants = grantsFactory.build({
+  global: {
+    account_access: null,
+    cancel_account: false,
+    child_account_access: false,
+    add_domains: false,
+    add_firewalls: false,
+    add_images: false,
+    add_linodes: false,
+    add_longview: false,
+    add_nodebalancers: false,
+    add_stackscripts: false,
+    add_volumes: false,
+    add_vpcs: false,
+    longview_subscription: false,
+  },
   database: grantFactory.buildList(1, {
     label: randomLabel(),
     permissions: null,
@@ -20,22 +33,6 @@ export const userPermissionsGrants: Grants = grantsFactory.build({
     label: randomLabel(),
     permissions: null,
   }),
-  global: {
-    account_access: null,
-    add_domains: false,
-    add_firewalls: false,
-    add_images: false,
-    add_linodes: false,
-    add_lke_clusters: false,
-    add_longview: false,
-    add_nodebalancers: false,
-    add_stackscripts: false,
-    add_volumes: false,
-    add_vpcs: false,
-    cancel_account: false,
-    child_account_access: false,
-    longview_subscription: false,
-  },
   image: grantFactory.buildList(1, { label: randomLabel(), permissions: null }),
   linode: grantFactory.buildList(1, {
     label: randomLabel(),
