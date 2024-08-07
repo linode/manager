@@ -161,6 +161,35 @@ export const updateVolumes = (mockState: MockState) => [
   ),
 
   http.post(
+    '*/v4/volumes/:id/attach',
+    async ({
+      params,
+      request,
+    }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+      const id = Number(params.id);
+      const volume = await mswDB.get('volumes', id);
+      const payload = await request.clone().json();
+      const linodeId = payload.linode_id;
+      const linode = await mswDB.get('linodes', linodeId);
+
+      if (!volume) {
+        return makeNotFoundResponse();
+      }
+
+      const updatedVolume: Volume = {
+        ...volume,
+        ...payload,
+        linode_label: linode?.label,
+      };
+
+      await mswDB.update('volumes', id, updatedVolume, mockState);
+
+      // TODO queue event.
+      return makeResponse(updatedVolume);
+    }
+  ),
+
+  http.post(
     '*/v4/volumes/:id/detach',
     async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
       const id = Number(params.id);

@@ -8,6 +8,7 @@ import {
   getLinodeStats,
   getLinodeTransfer,
   getLinodes,
+  shutDownLinode,
   updateLinode,
 } from 'src/mocks/handlers/linode-handlers';
 
@@ -26,6 +27,7 @@ export const linodeCrudPreset: MockPresetCrud = {
     getLinodeTransfer,
     getLinodeIps,
     getLinodeBackups,
+    shutDownLinode,
   ],
   id: 'linodes:crud',
   label: 'Linode CRUD',

@@ -352,7 +352,7 @@ export const ServiceWorkerTool = () => {
             disabled={saveState.mocksCleared}
             onClick={globalHandlers.resetAll}
           >
-            Reset to Defaults
+            Reset all Mocks
           </button>
           <button
             disabled={saveState.hasUnsavedChanges ? false : true}
