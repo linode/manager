@@ -19,7 +19,7 @@ const mockManagedEnabledAccount = () => {
 
 export const managedEnabledPreset: MockPresetExtra = {
   desc: 'Mock account settings to enable Linode Managed',
-  group: { id: 'Managed', type: 'single' },
+  group: { id: 'Managed', type: 'select' },
   handlers: [mockManagedEnabledAccount],
   id: 'account:managed-enabled',
   label: 'Managed Enabled',

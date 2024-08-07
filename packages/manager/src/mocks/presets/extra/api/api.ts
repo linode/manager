@@ -5,7 +5,8 @@ import { getExtraPresetsMap } from 'src/dev-tools/utils';
 import type { MockPresetExtra } from 'src/mocks/types';
 
 const APIResponseTime = () => {
-  const responseTime = getExtraPresetsMap()['api:response-time'] || 0;
+  const extraPresetsMap = getExtraPresetsMap();
+  const responseTime = extraPresetsMap[apiResponseTimePreset.id] || 0;
 
   return [
     http.all('*/v4*/*', async () => {
@@ -26,9 +27,9 @@ export const apiResponseTimePreset: MockPresetExtra = {
   desc: 'Allows to customize API response time',
   group: {
     id: 'API',
-    type: 'single',
+    type: 'checkbox',
   },
   handlers: [APIResponseTime],
   id: 'api:response-time',
-  label: 'API Response Time (ms)',
+  label: 'Response Time (ms)',
 };

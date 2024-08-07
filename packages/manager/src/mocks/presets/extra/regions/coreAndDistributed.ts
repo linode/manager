@@ -19,7 +19,7 @@ const mockCoreAndDistributedRegions = () => {
 
 export const coreAndDistributedRegionsPreset: MockPresetExtra = {
   desc: 'Core and Distributed Regions',
-  group: { id: 'Regions', type: 'single' },
+  group: { id: 'Regions', type: 'select' },
   handlers: [mockCoreAndDistributedRegions],
   id: 'regions:core-and-distributed',
   label: 'Core + Distributed',
