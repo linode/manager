@@ -11,6 +11,7 @@ import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
+import { useAllVPCsQuery } from 'src/queries/vpcs/vpcs';
 
 import {
   ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP,
@@ -85,6 +86,12 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     isLoading: volumesLoading,
   } = useAllVolumesQuery({}, {}, entityType === 'volume_id');
 
+  const {
+    data: vpcs,
+    error: vpcsError,
+    isLoading: vpcsLoading,
+  } = useAllVPCsQuery(entityType === 'vpc_id');
+
   const getEntityOptions = (): { label: string; value: number }[] => {
     const reactQueryEntityDataMap = {
       database_id: databases,
@@ -94,6 +101,7 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
       lkecluster_id: clusters,
       nodebalancer_id: nodebalancers,
       volume_id: volumes,
+      vpc_id: vpcs,
     };
 
     if (entityType === 'none' || entityType === 'general') {
@@ -134,6 +142,7 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     nodebalancer_id: nodebalancersLoading,
     none: false,
     volume_id: volumesLoading,
+    vpc_id: vpcsLoading,
   };
 
   const errorMap: Record<EntityType, APIError[] | null> = {
@@ -146,6 +155,7 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     nodebalancer_id: nodebalancersError,
     none: null,
     volume_id: volumesError,
+    vpc_id: vpcsError,
   };
 
   const entityOptions = getEntityOptions();
