@@ -1,7 +1,7 @@
 import { Grid, Paper } from '@mui/material';
 import * as React from 'react';
 
-import CloudViewIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
+import CloudPulseIcon from 'src/assets/icons/entityIcons/monitor.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { StyledPlaceholder } from 'src/features/StackScripts/StackScriptBase/StackScriptBase.styles';
 
@@ -14,9 +14,11 @@ import { CloudPulseDashboard } from './CloudPulseDashboard';
 
 import type { Dashboard, TimeDuration } from '@linode/api-v4';
 
+export type FilterValueType = number | number[] | string | string[] | undefined;
+
 export const CloudPulseDashboardLanding = () => {
   const [filterValue, setFilterValue] = React.useState<{
-    [key: string]: number | number[] | string | string[] | undefined;
+    [key: string]: FilterValueType;
   }>({});
 
   const [timeDuration, setTimeDuration] = React.useState<TimeDuration>();
@@ -28,14 +30,14 @@ export const CloudPulseDashboardLanding = () => {
       filterKey: string,
       filterValue: number | number[] | string | string[] | undefined
     ) => {
-      filterReference.current[filterKey] = filterValue;
-      setFilterValue(() => ({ ...filterReference.current }));
+      setFilterValue((prev) => ({ ...prev, [filterKey]: filterValue }));
     },
     []
   );
 
   const onDashboardChange = React.useCallback((dashboardObj: Dashboard) => {
     setDashboard(dashboardObj);
+    setFilterValue({}); // clear the filter values on dashboard change
   }, []);
 
   const onTimeDurationChange = React.useCallback(
@@ -47,10 +49,6 @@ export const CloudPulseDashboardLanding = () => {
 
   const { isLoading } = useLoadUserPreferences();
 
-  const filterReference: React.MutableRefObject<{
-    [key: string]: number | number[] | string | string[] | undefined;
-  }> = React.useRef({});
-
   /**
    * Takes an error message as input and renders a placeholder with the error message
    * @param errorMessage {string} - Error message which will be displayed
@@ -61,7 +59,7 @@ export const CloudPulseDashboardLanding = () => {
       <Grid item xs={12}>
         <Paper>
           <StyledPlaceholder
-            icon={CloudViewIcon}
+            icon={CloudPulseIcon}
             isEntity
             subtitle={errorMessage}
             title=""

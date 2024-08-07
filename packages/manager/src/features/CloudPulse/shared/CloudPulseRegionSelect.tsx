@@ -62,6 +62,7 @@ export const CloudPulseRegionSelect = React.memo(
         fullWidth
         label=""
         noMarginTop
+        placeholder={props.placeholder ?? undefined}
         regions={regions ? regions : []}
         value={selectedRegion}
       />

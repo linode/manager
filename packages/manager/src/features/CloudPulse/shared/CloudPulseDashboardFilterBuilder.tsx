@@ -22,6 +22,7 @@ import {
 } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
+import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseServiceTypeFilters } from '../Utils/models';
 import type { CloudPulseResources } from './CloudPulseResourcesSelect';
 import type { Dashboard, TimeDuration } from '@linode/api-v4';
@@ -36,10 +37,7 @@ export interface CloudPulseDashboardFilterBuilderProps {
   /**
    * all the selection changes in the filter goes through this method
    */
-  emitFilterChange: (
-    filterKey: string,
-    value: TimeDuration | number | number[] | string | string[] | undefined
-  ) => void;
+  emitFilterChange: (filterKey: string, value: FilterValueType) => void;
 
   /**
    * this will handle the restrictions, if the parent of the component is going to be integrated in service analytics page
@@ -56,32 +54,17 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     } = props;
 
     const [, setDependentFilters] = React.useState<{
-      [key: string]:
-        | TimeDuration
-        | number
-        | number[]
-        | string
-        | string[]
-        | undefined;
+      [key: string]: FilterValueType;
     }>({});
 
     const [showFilter, setShowFilter] = React.useState<boolean>(true);
 
     const dependentFilterReference: React.MutableRefObject<{
-      [key: string]:
-        | TimeDuration
-        | number
-        | number[]
-        | string
-        | string[]
-        | undefined;
+      [key: string]: FilterValueType;
     }> = React.useRef({});
 
     const checkAndUpdateDependentFilters = React.useCallback(
-      (
-        filterKey: string,
-        value: TimeDuration | number | number[] | string | string[] | undefined
-      ) => {
+      (filterKey: string, value: FilterValueType) => {
         if (dashboard && dashboard.service_type) {
           const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type!);
           const filters = serviceTypeConfig?.filters ?? [];
@@ -105,16 +88,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     );
 
     const emitFilterChangeByFilterKey = React.useCallback(
-      (
-        filterKey: string,
-        filterValue:
-          | TimeDuration
-          | number
-          | number[]
-          | string
-          | string[]
-          | undefined
-      ) => {
+      (filterKey: string, filterValue: FilterValueType) => {
         emitFilterChange(filterKey, filterValue);
         checkAndUpdateDependentFilters(filterKey, filterValue);
       },
@@ -127,13 +101,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           RESOURCE_ID,
           resourceId.map((resource) => resource.id)
         );
-      },
-      [emitFilterChangeByFilterKey]
-    );
-
-    const handleTimeRangeChange = React.useCallback(
-      (timeDuration: TimeDuration) => {
-        emitFilterChangeByFilterKey(RELATIVE_TIME_DURATION, timeDuration);
       },
       [emitFilterChangeByFilterKey]
     );
@@ -162,11 +129,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             },
             handleResourceChange
           );
-        } else if (config.configuration.filterKey === RELATIVE_TIME_DURATION) {
-          return getTimeDurationProperties(
-            { config, dashboard, isServiceAnalyticsIntegration },
-            handleTimeRangeChange
-          );
         } else {
           return {};
         }
@@ -175,7 +137,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         dashboard,
         handleRegionChange,
         handleResourceChange,
-        handleTimeRangeChange,
         isServiceAnalyticsIntegration,
       ]
     );

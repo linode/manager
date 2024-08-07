@@ -10,19 +10,14 @@ import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardF
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
 
+import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { Dashboard, TimeDuration } from '@linode/api-v4';
 import type { WithStartAndEnd } from 'src/features/Longview/request.types';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(
     filterKey: string,
-    filterValue:
-      | TimeDuration
-      | number
-      | number[]
-      | string
-      | string[]
-      | undefined
+    filterValue: FilterValueType
   ): undefined | void;
   handleDashboardChange(dashboard: Dashboard | undefined): undefined | void;
   handleTimeDurationChange(timeDuration: TimeDuration): undefined | void;
@@ -63,10 +58,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   );
 
   const emitFilterChange = React.useCallback(
-    (
-      filterKey: string,
-      value: TimeDuration | number | number[] | string | string[] | undefined
-    ) => {
+    (filterKey: string, value: FilterValueType) => {
       handleAnyFilterChange(filterKey, value);
     },
     [handleAnyFilterChange]
@@ -82,7 +74,8 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             handleDashboardChange={onDashboardChange}
           />
         </Grid>
-        <Grid item md={4} sm={2} xs={0} /> {/** This dummy grid is added to match the width of the components */}
+        <Grid item md={4} sm={2} xs={0} />{' '}
+        {/** This dummy grid is added to match the width of the components */}
         <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
           <CloudPulseTimeRangeSelect
             handleStatsChange={handleTimeRangeChange}

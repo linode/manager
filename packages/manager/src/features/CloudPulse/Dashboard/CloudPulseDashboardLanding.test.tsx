@@ -36,7 +36,7 @@ queryMocks.useCloudPulseDashboardsQuery.mockReturnValue({
         created: '2024-04-29T17:09:29',
         id: 1,
         label: dashboardLabel,
-        service_type: 'linodes',
+        service_type: 'test',
         type: 'standard',
         updated: null,
         widgets: {},

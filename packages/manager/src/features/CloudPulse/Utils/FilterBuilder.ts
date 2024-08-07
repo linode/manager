@@ -1,6 +1,7 @@
 import { RELATIVE_TIME_DURATION } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 
+import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 import type {
   CloudPulseResources,
@@ -14,13 +15,7 @@ export interface CloudPulseFilterProperties {
   config: CloudPulseServiceTypeFilters;
   dashboard: Dashboard;
   dependentFilters?: {
-    [key: string]:
-      | TimeDuration
-      | number
-      | number[]
-      | string
-      | string[]
-      | undefined;
+    [key: string]: FilterValueType;
   };
   isServiceAnalyticsIntegration: boolean;
 }
