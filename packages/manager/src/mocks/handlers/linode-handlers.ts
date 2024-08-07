@@ -219,11 +219,9 @@ export const deleteLinode = (mockState: MockState) => [
       return makeNotFoundResponse();
     }
 
-    await mswDB.delete('linodes', id, mockState);
-
     queueEvents({
       event: {
-        action: 'linode_delete',
+        action: 'linode_shutdown',
         entity: {
           id: linode.id,
           label: linode.label,
@@ -232,7 +230,29 @@ export const deleteLinode = (mockState: MockState) => [
         },
       },
       mockState,
-      sequence: [{ status: 'finished' }],
+      sequence: [
+        { status: 'scheduled' },
+        { isProgressEvent: true, status: 'started' },
+        { status: 'finished' },
+      ],
+    }).then(async () => {
+      await mswDB.update('linodes', id, { status: 'shutting_down' }, mockState);
+
+      return queueEvents({
+        event: {
+          action: 'linode_delete',
+          entity: {
+            id: linode.id,
+            label: linode.label,
+            type: 'linode',
+            url: `/v4/linode/instances/${linode.id}`,
+          },
+        },
+        mockState,
+        sequence: [{ status: 'finished' }],
+      }).then(async () => {
+        await mswDB.delete('linodes', id, mockState);
+      });
     });
 
     return makeResponse({});
@@ -388,3 +408,46 @@ export const getLinodeBackups = (mockState: MockState) => [
     }
   ),
 ];
+
+export const shutDownLinode = (mockState: MockState) => [
+  http.post(
+    '*/v4/linode/instances/:id/shutdown',
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | Linode>> => {
+      const id = Number(params.id);
+      const linode = await mswDB.get('linodes', id);
+
+      if (!linode) {
+        return makeNotFoundResponse();
+      }
+
+      const updatedLinode: Linode = {
+        ...linode,
+        status: 'offline',
+      };
+
+      queueEvents({
+        event: {
+          action: 'linode_shutdown',
+          entity: {
+            id: linode.id,
+            label: linode.label,
+            type: 'linode',
+            url: `/v4/linode/instances/${linode.id}`,
+          },
+        },
+        mockState,
+        sequence: [
+          { status: 'scheduled' },
+          { isProgressEvent: true, status: 'started' },
+          { status: 'finished' },
+        ],
+      }).then(async () => {
+        await mswDB.update('linodes', id, updatedLinode, mockState);
+      });
+
+      return makeResponse(updatedLinode);
+    }
+  ),
+];
+
+// TODO: ad more handlers (reboot, clone, resize, rebuild, rescue, migrate...) as needed
