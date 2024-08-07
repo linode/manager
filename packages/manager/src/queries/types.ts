@@ -40,18 +40,5 @@ export const useSpecificTypes = (types: string[], enabled = true) => {
 };
 
 export const useTypeQuery = (type: string, enabled = true) => {
-  const queryClient = useQueryClient();
-
-  return useQuery<LinodeType, APIError[]>({
-    ...linodeQueries.types._ctx.type(type),
-    ...queryPresets.oneTimeFetch,
-    enabled,
-    initialData() {
-      const allTypesFromCache = queryClient.getQueryData<LinodeType[]>(
-        linodeQueries.types._ctx.all.queryKey
-      );
-
-      return allTypesFromCache?.find((t) => t.id === type);
-    },
-  });
+  return useSpecificTypes([type], enabled)[0];
 };
