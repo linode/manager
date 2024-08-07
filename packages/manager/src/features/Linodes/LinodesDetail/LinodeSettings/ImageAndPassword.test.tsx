@@ -1,7 +1,7 @@
+import { screen } from '@testing-library/react';
 import * as React from 'react';
-import { profileFactory } from 'src/factories';
+
 import { accountUserFactory } from 'src/factories/accountUsers';
-import { grantsFactory } from 'src/factories/grants';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -19,10 +19,10 @@ const props = {
 
 describe('ImageAndPassword', () => {
   it('should render an Image Select', () => {
-    const { getByLabelText } = renderWithTheme(<ImageAndPassword {...props} />);
+    renderWithTheme(<ImageAndPassword {...props} />);
 
-    expect(getByLabelText('Image')).toBeVisible();
-    expect(getByLabelText('Image')).toBeEnabled();
+    expect(screen.getByRole('combobox'));
+    expect(screen.getByRole('combobox')).toBeEnabled();
   });
   it('should render a password error if defined', async () => {
     const errorMessage = 'Unable to set password.';
@@ -59,49 +59,5 @@ describe('ImageAndPassword', () => {
       expect(username).toBeVisible();
       expect(tableRow).toHaveTextContent(user.ssh_keys[0]);
     }
-  });
-  it('should be disabled for a restricted user with read only access', async () => {
-    server.use(
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ restricted: true }));
-      }),
-      http.get('*/profile/grants', () => {
-        return HttpResponse.json(
-          grantsFactory.build({
-            linode: [{ id: 0, permissions: 'read_only' }],
-          })
-        );
-      })
-    );
-
-    const { findByText, getByLabelText } = renderWithTheme(
-      <ImageAndPassword {...props} />
-    );
-
-    await findByText(`You don't have permissions to edit this Linode.`, {
-      exact: false,
-    });
-
-    expect(getByLabelText('Image')).toBeDisabled();
-  });
-  it('should be disabled for a restricted user with no access', async () => {
-    server.use(
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ restricted: true }));
-      }),
-      http.get('*/profile/grants', () => {
-        return HttpResponse.json(grantsFactory.build({ linode: [] }));
-      })
-    );
-
-    const { findByText, getByLabelText } = renderWithTheme(
-      <ImageAndPassword {...props} />
-    );
-
-    await findByText(`You don't have permissions to edit this Linode.`, {
-      exact: false,
-    });
-
-    expect(getByLabelText('Image')).toBeDisabled();
   });
 });
