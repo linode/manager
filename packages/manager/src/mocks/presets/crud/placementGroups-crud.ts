@@ -6,10 +6,10 @@ import {
   updatePlacementGroup,
 } from 'src/mocks/handlers/placementGroup-handlers';
 
-import type { MockPreset } from 'src/mocks/types';
+import type { MockPresetCrud } from 'src/mocks/types';
 
-export const placementGroupsCrudPreset: MockPreset = {
-  group: 'Placement Groups',
+export const placementGroupsCrudPreset: MockPresetCrud = {
+  group: { id: 'Placement Groups' },
   handlers: [
     createPlacementGroup,
     getPlacementGroups,
@@ -17,6 +17,6 @@ export const placementGroupsCrudPreset: MockPreset = {
     deletePlacementGroup,
     placementGroupLinodeAssignment,
   ],
-  id: 'placementGroups-crud',
+  id: 'placement-groups:crud',
   label: 'Placement Groups CRUD',
 };

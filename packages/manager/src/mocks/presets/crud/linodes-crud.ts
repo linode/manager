@@ -11,10 +11,10 @@ import {
   updateLinode,
 } from 'src/mocks/handlers/linode-handlers';
 
-import type { MockPreset } from 'src/mocks/types';
+import type { MockPresetCrud } from 'src/mocks/types';
 
-export const linodeCrudPreset: MockPreset = {
-  group: 'Linodes',
+export const linodeCrudPreset: MockPresetCrud = {
+  group: { id: 'Linodes' },
   handlers: [
     getLinodes,
     createLinode,
@@ -27,6 +27,6 @@ export const linodeCrudPreset: MockPreset = {
     getLinodeIps,
     getLinodeBackups,
   ],
-  id: 'linodes-crud',
+  id: 'linodes:crud',
   label: 'Linode CRUD',
 };

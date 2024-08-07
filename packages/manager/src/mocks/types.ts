@@ -11,62 +11,78 @@ import type {
 } from '@linode/api-v4';
 import type { HttpHandler } from 'msw';
 
-export type MockPresetGroup =
-  | 'API State'
-  | 'Account State'
-  | 'Account'
-  | 'Firewalls'
-  | 'General'
-  | 'Linodes'
-  | 'Placement Groups'
-  | 'Regions'
-  | 'Volumes';
-
-export type MockHandler = (mockState: MockState) => HttpHandler[];
-
-export type MockPresetId =
-  | 'account-managed-disabled'
-  | 'account-managed-enabled'
-  | 'api-response-time'
-  | 'baseline-account-activation'
-  | 'baseline-api-maintenance'
-  | 'baseline-api-offline'
-  | 'baseline-api-unstable'
-  | 'baseline-crud'
-  | 'baseline-legacy'
-  | 'baseline-no-mocks'
-  | 'legacy-test-regions'
-  | 'linodes-crud'
-  | 'parent-child-child-account-proxy-user'
-  | 'parent-child-parent-account-user'
-  | 'placementGroups-crud'
-  | 'prod-regions'
-  | 'volumes-crud';
-
-export type MockPreset = {
-  /**
-   * If true, it means the preset can set a value via a number input.
-   */
-  canUpdateCount?: boolean;
-
+export type MockPresetBase = {
   /** Description of mock preset and its purpose. */
   desc?: string;
 
-  /** Group to which preset belongs. Used to sort presets in dev tool UI. */
-  group: MockPresetGroup;
-
   /** Array of MSW handler generator functions. */
   handlers: MockHandler[];
-
-  /** Unique ID of mock preset, used to keep track of user preset selections. */
-  id: MockPresetId;
 
   /** Human-readable label for mock preset. */
   label: string;
 };
 
 /**
- * Stateual data shared among mocks.
+ * Mock Preset Baseline
+ */
+export type MockPresetBaselineGroup = {
+  id: 'API State' | 'Account State' | 'General';
+};
+export type MockPresetBaselineGroupId =
+  | 'baseline:account-activation'
+  | 'baseline:api-maintenance'
+  | 'baseline:api-offline'
+  | 'baseline:api-unstable'
+  | 'baseline:crud'
+  | 'baseline:legacy'
+  | 'baseline:no-mocks';
+export interface MockPresetBaseline extends MockPresetBase {
+  group: MockPresetBaselineGroup;
+  id: MockPresetBaselineGroupId;
+}
+
+/**
+ * Mock Preset Extra
+ */
+export type MockPresetExtraGroup = {
+  id: 'API' | 'Account' | 'Managed' | 'Regions';
+  type: 'multiple' | 'single';
+};
+export type MockPresetExtraGroupId =
+  | 'account:managed-disabled'
+  | 'account:managed-enabled'
+  | 'api:response-time'
+  | 'parent-child-account:child-proxy'
+  | 'parent-child-account:parent'
+  | 'regions:core-and-distributed'
+  | 'regions:core-only'
+  | 'regions:legacy';
+export interface MockPresetExtra extends MockPresetBase {
+  canUpdateCount?: boolean;
+  group: MockPresetExtraGroup;
+  id: MockPresetExtraGroupId;
+}
+
+/**
+ * Mock Preset Crud
+ */
+export type MockPresetCrudGroup = {
+  id: 'Linodes' | 'Placement Groups' | 'Volumes';
+};
+export type MockPresetCrudGroupId =
+  | 'linodes:crud'
+  | 'placement-groups:crud'
+  | 'volumes:crud';
+export interface MockPresetCrud extends MockPresetBase {
+  canUpdateCount?: boolean;
+  group: MockPresetCrudGroup;
+  id: MockPresetCrudGroupId;
+}
+
+export type MockHandler = (mockState: MockState) => HttpHandler[];
+
+/**
+ * Stateful data shared among mocks.
  */
 export interface MockState {
   eventQueue: Event[];
@@ -80,39 +96,7 @@ export interface MockState {
   volumes: Volume[];
 }
 
-export type MockSeederId =
-  | 'edge-regions'
-  | 'legacy-test-regions'
-  | 'many-linodes'
-  | 'many-placement-groups'
-  | 'many-volumes'
-  | 'prod-regions';
-
-type MockSeederGroup =
-  | 'Account'
-  | 'Linodes'
-  | 'Placement Groups'
-  | 'Regions'
-  | 'Volumes';
-
-export interface MockSeeder {
-  /**
-   * If true, it means the seeder can set a value via a number input.
-   */
-  canUpdateCount?: boolean;
-
-  /** Description of mock seeder and its purpose. */
-  desc?: string;
-
-  /** Group to which seeder belongs. Used to sort seeders in dev tool UI. */
-  group?: MockSeederGroup;
-
-  /** Unique ID of mock seeder, used to keep track of user seeder selections. */
-  id: MockSeederId;
-
-  /** Human-readable label for mock seeder. */
-  label: string;
-
+export interface MockSeeder extends Omit<MockPresetCrud, 'handlers'> {
   /** Function that updates the mock state. */
   seeder: (mockState: MockState) => MockState | Promise<MockState>;
 }

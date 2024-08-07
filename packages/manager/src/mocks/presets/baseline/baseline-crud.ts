@@ -4,10 +4,10 @@ import { linodeCrudPreset } from 'src/mocks/presets/crud/linodes-crud';
 import { placementGroupsCrudPreset } from '../crud/placementGroups-crud';
 import { volumeCrudPreset } from '../crud/volumes-crud';
 
-import type { MockPreset } from 'src/mocks/types';
+import type { MockPresetBaseline } from 'src/mocks/types';
 
-export const baselineCrudPreset: MockPreset = {
-  group: 'General',
+export const baselineCrudPreset: MockPresetBaseline = {
+  group: { id: 'General' },
   handlers: [
     ...linodeCrudPreset.handlers,
     ...placementGroupsCrudPreset.handlers,
@@ -17,6 +17,6 @@ export const baselineCrudPreset: MockPreset = {
     getEvents,
     updateEvents,
   ],
-  id: 'baseline-crud',
+  id: 'baseline:crud',
   label: 'CRUD',
 };

@@ -1,4 +1,4 @@
-import { getMSWSeedsCountMap } from 'src/dev-tools/utils';
+import { getSeedsCountMap } from 'src/dev-tools/utils';
 import { placementGroupFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 import { seedWithUniqueIds } from 'src/mocks/seeds/utils';
@@ -8,12 +8,12 @@ import type { MockSeeder, MockState } from 'src/mocks/types';
 export const placementGroupSeeder: MockSeeder = {
   canUpdateCount: true,
   desc: 'Placement Groups Seeds',
-  group: 'Placement Groups',
-  id: 'many-placement-groups',
+  group: { id: 'Placement Groups' },
+  id: 'placement-groups:crud',
   label: 'Placement Groups',
 
   seeder: async (mockState: MockState) => {
-    const seedsCountMap = getMSWSeedsCountMap();
+    const seedsCountMap = getSeedsCountMap();
     const count = seedsCountMap[placementGroupSeeder.id] ?? 0;
     const placementGroupSeeds = seedWithUniqueIds<'placementGroups'>({
       dbEntities: await mswDB.getAll('placementGroups'),

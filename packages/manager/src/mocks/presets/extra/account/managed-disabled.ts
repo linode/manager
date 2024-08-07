@@ -3,7 +3,7 @@ import { http } from 'msw';
 import { accountSettingsFactory } from 'src/factories';
 import { makeResponse } from 'src/mocks/utilities/response';
 
-import type { MockPreset } from 'src/mocks/types';
+import type { MockPresetExtra } from 'src/mocks/types';
 
 const mockManagedDisabledAccount = () => {
   return [
@@ -17,10 +17,10 @@ const mockManagedDisabledAccount = () => {
   ];
 };
 
-export const managedDisabledPreset: MockPreset = {
+export const managedDisabledPreset: MockPresetExtra = {
   desc: 'Mock account settings to disable Linode Managed',
-  group: 'Account',
+  group: { id: 'Managed', type: 'single' },
   handlers: [mockManagedDisabledAccount],
-  id: 'account-managed-disabled',
+  id: 'account:managed-disabled',
   label: 'Managed Disabled',
 };

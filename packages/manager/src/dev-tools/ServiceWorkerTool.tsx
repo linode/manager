@@ -10,21 +10,26 @@ import { DevToolSelect } from './components/DevToolSelect';
 import { ExtraPresetOptions } from './components/ExtraPresetOptions';
 import { SeedOptions } from './components/SeedOptions';
 import {
-  getMSWContextSeeders,
-  getMSWExtraPresets,
-  getMSWPreset,
-  getMSWPresetsMap,
-  getMSWSeedsCountMap,
+  getBaselinePreset,
+  getExtraPresets,
+  getExtraPresetsMap,
+  getSeeders,
+  getSeedsCountMap,
   isMSWEnabled,
-  saveMSWContextPopulators,
+  saveBaselinePreset,
+  saveExtraPresets,
+  saveExtraPresetsMap,
   saveMSWEnabled,
-  saveMSWExtraPresets,
-  saveMSWPreset,
-  saveMSWPresetsMap,
-  saveMSWSeedsCountMap,
+  saveSeeders,
+  saveSeedsCountMap,
 } from './utils';
 
-import type { MockPresetId, MockSeederId, MockState } from 'src/mocks/types';
+import type {
+  MockPresetBaselineGroupId,
+  MockPresetCrudGroupId,
+  MockPresetExtraGroupId,
+  MockState,
+} from 'src/mocks/types';
 
 interface ServiceWorkerSaveState {
   hasSaved: boolean;
@@ -36,26 +41,23 @@ interface ServiceWorkerSaveState {
  * Renders the service worker tool.
  */
 export const ServiceWorkerTool = () => {
-  const loadedBasePreset = getMSWPreset();
-  const loadedExtraPresets = getMSWExtraPresets();
-  const loadedSeeders = getMSWContextSeeders(dbSeeders);
-  const loadedSeedsCountMap = getMSWSeedsCountMap();
-  const loadedPresetsMap = getMSWPresetsMap();
-  const isCrudPreset = loadedBasePreset === 'baseline-crud';
-  const [MSWBasePreset, setMSWBasePreset] = React.useState<MockPresetId>(
-    loadedBasePreset
-  );
-  const [MSWExtraPresets, setMSWExtraPresets] = React.useState<string[]>(
+  const loadedBaselinePreset = getBaselinePreset();
+  const loadedExtraPresets = getExtraPresets();
+  const loadedSeeders = getSeeders(dbSeeders);
+  const loadedSeedsCountMap = getSeedsCountMap();
+  const loadedPresetsMap = getExtraPresetsMap();
+  const isCrudPreset = loadedBaselinePreset === 'baseline:crud';
+  const [
+    baselinePreset,
+    setBaselinePreset,
+  ] = React.useState<MockPresetBaselineGroupId>(loadedBaselinePreset);
+  const [extraPreset, setExtraPreset] = React.useState<string[]>(
     loadedExtraPresets
   );
   const [presetsCountMap, setPresetsCountMap] = React.useState<{
     [key: string]: number;
-  }>({
-    ...loadedPresetsMap,
-    // set api-response-time to 400ms by default
-    'api-response-time': loadedPresetsMap['api-response-time'] ?? 400,
-  });
-  const [MSWSeeders, setMSWSeeders] = React.useState<string[]>(loadedSeeders);
+  }>(loadedPresetsMap);
+  const [seeders, setSeeders] = React.useState<string[]>(loadedSeeders);
   const [seedsCountMap, setSeedsCountMap] = React.useState<{
     [key: string]: number;
   }>(loadedSeedsCountMap);
@@ -68,19 +70,17 @@ export const ServiceWorkerTool = () => {
 
   const globalHandlers = {
     applyChanges: () => {
-      // Save base preset, extra presets, and content populators to local storage.
-      saveMSWPreset(MSWBasePreset);
-      saveMSWExtraPresets(MSWExtraPresets);
-      saveMSWContextPopulators(MSWSeeders);
-      saveMSWSeedsCountMap(seedsCountMap);
-      saveMSWPresetsMap(presetsCountMap);
+      // Save base preset, extra presets, and content seeders to local storage.
+      saveBaselinePreset(baselinePreset);
+      saveExtraPresets(extraPreset);
+      saveSeeders(seeders);
+      saveSeedsCountMap(seedsCountMap);
+      saveExtraPresetsMap(presetsCountMap);
 
-      const promises = MSWSeeders.map((seederId) => {
-        const populator = dbSeeders.find(
-          (dbSeeder) => dbSeeder.id === seederId
-        );
+      const promises = seeders.map((seederId) => {
+        const seeder = dbSeeders.find((dbSeeder) => dbSeeder.id === seederId);
 
-        return populator?.seeder({} as MockState);
+        return seeder?.seeder({} as MockState);
       });
 
       Promise.all(promises).then(() => {
@@ -99,11 +99,11 @@ export const ServiceWorkerTool = () => {
     },
 
     discardChanges: () => {
-      setMSWBasePreset(getMSWPreset());
-      setMSWExtraPresets(getMSWExtraPresets());
-      setMSWSeeders(getMSWContextSeeders(dbSeeders));
-      setSeedsCountMap(getMSWSeedsCountMap());
-      setPresetsCountMap(getMSWPresetsMap());
+      setBaselinePreset(getBaselinePreset());
+      setExtraPreset(getExtraPresets());
+      setSeeders(getSeeders(dbSeeders));
+      setSeedsCountMap(getSeedsCountMap());
+      setPresetsCountMap(getExtraPresetsMap());
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: false,
@@ -114,12 +114,9 @@ export const ServiceWorkerTool = () => {
       mswDB.clear('mockState');
       mswDB.clear('seedState');
       seederHandlers.removeAll();
-      setMSWBasePreset(getMSWPreset());
-      setMSWExtraPresets(getMSWExtraPresets());
-      setPresetsCountMap({
-        ...loadedPresetsMap,
-        'api-response-time': 400,
-      });
+      setBaselinePreset(getBaselinePreset());
+      setExtraPreset(getExtraPresets());
+      setPresetsCountMap(loadedPresetsMap);
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: true,
@@ -136,7 +133,7 @@ export const ServiceWorkerTool = () => {
   const seederHandlers = {
     handleCountChange: (
       e: React.ChangeEvent<HTMLInputElement>,
-      seederId: MockSeederId
+      seederId: MockPresetCrudGroupId
     ) => {
       const updatedCountMap = {
         ...seedsCountMap,
@@ -149,29 +146,29 @@ export const ServiceWorkerTool = () => {
         hasUnsavedChanges: true,
       });
       // When updating the count and the checkbox is not checked, check it for convenience
-      if (parseInt(e.target.value, 10) > 0 && !MSWSeeders.includes(seederId)) {
-        setMSWSeeders([...MSWSeeders, seederId]);
+      if (parseInt(e.target.value, 10) > 0 && !seeders.includes(seederId)) {
+        setSeeders([...seeders, seederId]);
       }
       // if value is 0, uncheck the checkbox
-      if (parseInt(e.target.value, 10) === 0 && MSWSeeders.includes(seederId)) {
-        setMSWSeeders(MSWSeeders.filter((seeder) => seeder !== seederId));
+      if (parseInt(e.target.value, 10) === 0 && seeders.includes(seederId)) {
+        setSeeders(seeders.filter((seeder) => seeder !== seederId));
       }
     },
 
     handleToggle: async (
       e: React.ChangeEvent<HTMLInputElement>,
-      seederId: MockSeederId
+      seederId: MockPresetCrudGroupId
     ) => {
       const willEnable = e.target.checked;
-      if (willEnable && !MSWSeeders.includes(seederId)) {
-        setMSWSeeders([...MSWSeeders, seederId]);
+      if (willEnable && !seeders.includes(seederId)) {
+        setSeeders([...seeders, seederId]);
         setSaveState({
           hasSaved: false,
           hasUnsavedChanges: true,
         });
-      } else if (!willEnable && MSWSeeders.includes(seederId)) {
-        setMSWSeeders(
-          MSWSeeders.filter((seeder) => {
+      } else if (!willEnable && seeders.includes(seederId)) {
+        setSeeders(
+          seeders.filter((seeder) => {
             return seeder !== seederId;
           })
         );
@@ -185,7 +182,7 @@ export const ServiceWorkerTool = () => {
 
     removeAll: () => {
       // remove all seeds & reset all seed fields to 0
-      setMSWSeeders([]);
+      setSeeders([]);
       setSeedsCountMap(
         Object.fromEntries(Object.keys(seedsCountMap).map((key) => [key, 0]))
       );
@@ -198,8 +195,8 @@ export const ServiceWorkerTool = () => {
 
   const presetHandlers = {
     changeBase: (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setMSWBasePreset(e.target.value as MockPresetId);
-      saveMSWPreset(e.target.value as MockPresetId);
+      setBaselinePreset(e.target.value as MockPresetBaselineGroupId);
+      saveBaselinePreset(e.target.value as MockPresetBaselineGroupId);
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: true,
@@ -208,7 +205,7 @@ export const ServiceWorkerTool = () => {
 
     changeCount: (
       e: React.ChangeEvent<HTMLInputElement>,
-      presetId: MockPresetId
+      presetId: MockPresetBaselineGroupId
     ) => {
       setPresetsCountMap({
         ...presetsCountMap,
@@ -222,18 +219,18 @@ export const ServiceWorkerTool = () => {
 
     toggle: (
       e: React.ChangeEvent<HTMLInputElement>,
-      handlerPresetId: MockPresetId
+      handlerPresetId: MockPresetExtraGroupId
     ) => {
       const willEnable = e.target.checked;
-      if (willEnable && !MSWExtraPresets.includes(handlerPresetId)) {
-        setMSWExtraPresets([...MSWExtraPresets, handlerPresetId]);
+      if (willEnable && !extraPreset.includes(handlerPresetId)) {
+        setExtraPreset([...extraPreset, handlerPresetId]);
         setSaveState({
           hasSaved: false,
           hasUnsavedChanges: true,
         });
-      } else if (!willEnable && MSWExtraPresets.includes(handlerPresetId)) {
-        setMSWExtraPresets(
-          MSWExtraPresets.filter((handler) => {
+      } else if (!willEnable && extraPreset.includes(handlerPresetId)) {
+        setExtraPreset(
+          extraPreset.filter((handler) => {
             return handler !== handlerPresetId;
           })
         );
@@ -250,45 +247,38 @@ export const ServiceWorkerTool = () => {
       <div className="dev-tools__tool__header">
         <span title="Configure API mocking rules">API Mocks</span>
       </div>
-      <div className="dev-tools__tool__body dev-tools__msw">
-        <div className="dev-tools__msw__presets">
-          <div>
-            <input
-              checked={isMSWEnabled}
-              onChange={(e) => globalHandlers.toggleMSW(e)}
-              style={{ margin: 0 }}
-              type="checkbox"
-            />
-            <span style={{ marginLeft: 8 }}>
-              <span>Enable MSW</span>
-            </span>
+      <Tooltip
+        placement="top"
+        title={!isMSWEnabled ? '⚠️ Enable MSW to select a preset' : ''}
+      >
+        <div className="dev-tools__tool__body dev-tools__msw">
+          <div className="dev-tools__msw__presets">
+            <div>
+              <input
+                checked={isMSWEnabled}
+                onChange={(e) => globalHandlers.toggleMSW(e)}
+                style={{ margin: 0 }}
+                type="checkbox"
+              />
+              <span style={{ marginLeft: 8 }}>
+                <span>Enable MSW</span>
+              </span>
+            </div>
+            <div>
+              <span
+                style={{ marginRight: 8, opacity: !isMSWEnabled ? 0.5 : 1 }}
+              >
+                Base Preset
+              </span>
+              <DevToolSelect
+                disabled={!isMSWEnabled}
+                onChange={(e) => presetHandlers.changeBase(e)}
+                value={baselinePreset}
+              >
+                <BaselinePresetOptions />
+              </DevToolSelect>
+            </div>
           </div>
-          <div>
-            <Tooltip
-              placement="top"
-              title={!isMSWEnabled ? 'Enable MSW to select a preset' : ''}
-            >
-              <div>
-                <span
-                  style={{ marginRight: 8, opacity: !isMSWEnabled ? 0.5 : 1 }}
-                >
-                  Base Preset
-                </span>
-                <DevToolSelect
-                  disabled={!isMSWEnabled}
-                  onChange={(e) => presetHandlers.changeBase(e)}
-                  value={MSWBasePreset}
-                >
-                  <BaselinePresetOptions />
-                </DevToolSelect>
-              </div>
-            </Tooltip>
-          </div>
-        </div>
-        <Tooltip
-          placement="top"
-          title={!isMSWEnabled ? 'Enable MSW to select a preset' : ''}
-        >
           <div
             className={`dev-tools__msw__extras ${
               !isMSWEnabled ? 'disabled' : ''
@@ -296,7 +286,7 @@ export const ServiceWorkerTool = () => {
           >
             <div className="dev-tools__msw__column">
               <div className="dev-tools__msw__column__heading">
-                Seeds{' '}
+                Seeds <span style={{ fontSize: 12 }}>(CRUD preset only)</span>
                 <button
                   className="small right-align"
                   onClick={() => seederHandlers.removeAll()}
@@ -310,7 +300,7 @@ export const ServiceWorkerTool = () => {
                     disabled={!isMSWEnabled || !isCrudPreset}
                     onCountChange={seederHandlers.handleCountChange}
                     onToggleSeeder={seederHandlers.handleToggle}
-                    seeders={MSWSeeders}
+                    seeders={seeders}
                     seedsCountMap={seedsCountMap}
                   />
                 </div>
@@ -322,7 +312,7 @@ export const ServiceWorkerTool = () => {
                 <div className="dev-tools__list-box">
                   <ExtraPresetOptions
                     disabled={!isMSWEnabled}
-                    handlers={MSWExtraPresets}
+                    handlers={extraPreset}
                     onPresetCountChange={presetHandlers.changeCount}
                     onTogglePreset={presetHandlers.toggle}
                     presetsCountMap={presetsCountMap}
@@ -331,8 +321,8 @@ export const ServiceWorkerTool = () => {
               </div>
             </div>
           </div>
-        </Tooltip>
-      </div>
+        </div>
+      </Tooltip>
       <div className="dev-tools__tool__footer">
         <div className="dev-tools__button-list">
           <button

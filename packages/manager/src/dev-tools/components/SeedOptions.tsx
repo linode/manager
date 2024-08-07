@@ -26,7 +26,7 @@ export const SeedOptions = ({
       {getStateSeederGroups(dbSeeders).map((group) => (
         <div key={group}>
           {dbSeeders
-            .filter((dbSeeder) => dbSeeder.group === group)
+            .filter((dbSeeder) => dbSeeder.group.id === group)
             .map((dbSeeder) => (
               <li key={dbSeeder.id}>
                 <input

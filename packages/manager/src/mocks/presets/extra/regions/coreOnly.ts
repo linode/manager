@@ -1,25 +1,25 @@
 import { http } from 'msw';
 
-import { regions } from 'src/__data__/regionsData';
+import { productionRegions } from 'src/__data__/productionRegionsData';
 import { makePaginatedResponse } from 'src/mocks/utilities/response';
 
 import type { MockPresetExtra } from 'src/mocks/types';
 
-const mockLegacyRegions = () => {
+const mockCoreOnlyRegions = () => {
   return [
     http.get('*/v4/regions', ({ request }) => {
       return makePaginatedResponse({
-        data: regions,
+        data: productionRegions,
         request,
       });
     }),
   ];
 };
 
-export const legacyRegionsPreset: MockPresetExtra = {
-  desc: 'Legacy regions',
+export const coreOnlyRegionsPreset: MockPresetExtra = {
+  desc: 'Core Only Regions',
   group: { id: 'Regions', type: 'single' },
-  handlers: [mockLegacyRegions],
-  id: 'regions:legacy',
-  label: 'Legacy',
+  handlers: [mockCoreOnlyRegions],
+  id: 'regions:core-only',
+  label: 'Core Only',
 };
