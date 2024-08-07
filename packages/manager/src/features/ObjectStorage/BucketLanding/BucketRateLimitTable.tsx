@@ -16,14 +16,11 @@ import type { ObjectStorageEndpointTypes } from '@linode/api-v4';
  */
 
 interface BucketRateLimitTableProps {
-  selectedEndpointType: {
-    label: string;
-    value: ObjectStorageEndpointTypes;
-  } | null;
+  endpointType: ObjectStorageEndpointTypes | undefined;
 }
 
 const tableHeaders = ['Limits', 'GET', 'PUT', 'LIST', 'DELETE', 'OTHER'];
-const tableData = ({ selectedEndpointType }: BucketRateLimitTableProps) => [
+const tableData = ({ endpointType }: BucketRateLimitTableProps) => [
   {
     checked: true,
     values: ['1000', '000', '000', '000', '000'],
@@ -31,7 +28,7 @@ const tableData = ({ selectedEndpointType }: BucketRateLimitTableProps) => [
   {
     checked: false,
     values: [
-      selectedEndpointType?.value === 'E3' ? '20000' : '5000',
+      endpointType === 'E3' ? '20000' : '5000',
       '000',
       '000',
       '000',
@@ -41,7 +38,7 @@ const tableData = ({ selectedEndpointType }: BucketRateLimitTableProps) => [
 ];
 
 export const BucketRateLimitTable = ({
-  selectedEndpointType,
+  endpointType,
 }: BucketRateLimitTableProps) => (
   <Table
     sx={{
@@ -67,7 +64,7 @@ export const BucketRateLimitTable = ({
       </TableRow>
     </TableHead>
     <TableBody>
-      {tableData({ selectedEndpointType }).map((row, rowIndex) => (
+      {tableData({ endpointType }).map((row, rowIndex) => (
         <TableRow key={rowIndex}>
           <TableCell>
             <Radio
