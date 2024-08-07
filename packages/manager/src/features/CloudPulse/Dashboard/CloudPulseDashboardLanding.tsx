@@ -25,6 +25,9 @@ export const CloudPulseDashboardLanding = () => {
 
   const [dashboard, setDashboard] = React.useState<Dashboard>();
 
+  const selectDashboardAndFilterMessage =
+    'Select Dashboard and filters to visualize metrics.';
+
   const onFilterChange = React.useCallback(
     (
       filterKey: string,
@@ -75,9 +78,7 @@ export const CloudPulseDashboardLanding = () => {
    */
   const RenderDashboard = () => {
     if (!dashboard) {
-      return renderErrorPlaceholder(
-        'Select Dashboard and filters to visualize metrics.'
-      );
+      return renderErrorPlaceholder(selectDashboardAndFilterMessage);
     }
 
     if (!FILTER_CONFIG.get(dashboard.service_type)) {
@@ -93,9 +94,7 @@ export const CloudPulseDashboardLanding = () => {
         timeDuration
       )
     ) {
-      return renderErrorPlaceholder(
-        'Select Dashboard and filters to visualize metrics.'
-      );
+      return renderErrorPlaceholder(selectDashboardAndFilterMessage);
     }
 
     return (
