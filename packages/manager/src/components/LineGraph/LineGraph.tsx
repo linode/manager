@@ -2,16 +2,9 @@
  * ONLY USED IN LONGVIEW
  * Delete when Lonview is sunsetted, along with AccessibleGraphData
  */
-import { Theme, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import {
-  Chart,
-  ChartData,
-  ChartDataSets,
-  ChartOptions,
-  ChartTooltipItem,
-  ChartXAxe,
-} from 'chart.js';
+import { Chart } from 'chart.js';
 import { curry } from 'ramda';
 import * as React from 'react';
 
@@ -21,7 +14,6 @@ import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { setUpCharts } from 'src/utilities/charts';
 import { roundTo } from 'src/utilities/roundTo';
-import { Metrics } from 'src/utilities/statMetrics';
 
 import AccessibleGraphData from './AccessibleGraphData';
 import {
@@ -35,6 +27,16 @@ import {
   StyledTableHead,
   StyledWrapper,
 } from './LineGraph.styles';
+
+import type { Theme } from '@mui/material/styles';
+import type {
+  ChartData,
+  ChartDataSets,
+  ChartOptions,
+  ChartTooltipItem,
+  ChartXAxe,
+} from 'chart.js';
+import type { Metrics } from 'src/utilities/statMetrics';
 
 setUpCharts();
 
@@ -78,6 +80,11 @@ export interface LineGraphProps {
    * The function that formats the tooltip text.
    */
   formatTooltip?: (value: number) => string;
+
+  /**
+   * To check whether legends should be shown in full size or predefined size
+   */
+  isLegendsFullSize?: boolean;
   /**
    * Legend row labels that are used in the legend.
    */
@@ -106,6 +113,7 @@ export interface LineGraphProps {
    * The timezone the graph should use for interpreting the UNIX date-times in the data set.
    */
   timezone: string;
+
   /**
    * The unit to add to the mouse-over tooltip in the chart.
    */
@@ -142,6 +150,7 @@ export const LineGraph = (props: LineGraphProps) => {
     data,
     formatData,
     formatTooltip,
+    isLegendsFullSize,
     legendRows,
     nativeLegend,
     rowHeaders,
@@ -358,6 +367,10 @@ export const LineGraph = (props: LineGraphProps) => {
       {legendRendered && legendRows && (
         <StyledContainer>
           <StyledTable
+            sx={{
+              maxWidth: isLegendsFullSize ? '100%' : '600px',
+              width: isLegendsFullSize ? '100%' : '85%',
+            }} // this sx is added because styled table forcing the legends to be 85% width & 600px max width
             aria-label={`Controls for ${ariaLabel || 'Stats and metrics'}`}
             noBorder
           >
