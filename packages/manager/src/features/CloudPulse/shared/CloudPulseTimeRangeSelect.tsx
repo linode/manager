@@ -43,6 +43,7 @@ export const CloudPulseTimeRangeSelect = React.memo(
     // To set the default value fetched from preferences.
     const getPreferredValue = () => {
       const defaultValue = getUserPreferenceObject().timeDuration;
+      handleChange(options.find((o) => o.label === defaultValue) || options[0]);
       return options.find((o) => o.label === defaultValue) || options[0];
     };
 

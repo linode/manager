@@ -64,7 +64,9 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
   it('should render error placeholder if some dashboard is selected and filter config is not present', () => {
     const screen = renderWithTheme(<CloudPulseDashboardLanding />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+    fireEvent.change(screen.getByPlaceholderText('Select a Dashboard'), {
+      target: { value: 'a' },
+    });
 
     expect(
       screen.getByRole('option', { name: dashboardLabel })
