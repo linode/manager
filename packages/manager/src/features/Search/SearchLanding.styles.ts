@@ -30,9 +30,6 @@ const blink = keyframes`
   0%, 50%, 100% {
     transform: scaleY(0.1);
   }
-  25%, 75% {
-    transform: scaleY(0.1);
-  }
 `;
 
 const rotate = keyframes`
