@@ -88,7 +88,7 @@ export const convertTimeDurationToStartAndEndTimeRange = (
  * @returns formatted data based on the time range between @startTime & @endTime
  */
 export const seriesDataFormatter = (
-  data: [string, number][],
+  data: [number, number][],
   startTime: number,
   endTime: number
 ): [number, null | number][] => {

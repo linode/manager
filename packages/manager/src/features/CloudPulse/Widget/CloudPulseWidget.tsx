@@ -254,7 +254,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         unit,
         widgetColor: widget.color,
       },
-
       metricsList,
       flags,
       resources
@@ -318,34 +317,27 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             </Stack>
           </Stack>
           <Divider />
-          {!isLoading && !Boolean(error) && (
-            <CloudPulseLineGraph
-              error={
-                status === 'error'
-                  ? error?.[0]?.reason || 'Erorr while rendering widget'
-                  : undefined
-              }
-              formatData={(data: number) =>
-                convertValueToUnit(data, currentUnit)
-              }
-              legendRows={
-                legendRows && legendRows.length > 0 ? legendRows : undefined
-              }
-              ariaLabel={props.ariaLabel ? props.ariaLabel : ''}
-              data={data}
-              formatTooltip={(value: number) => formatToolTip(value, unit)}
-              gridSize={widget.size}
-              loading={isLoading}
-              nativeLegend={true}
-              showToday={today}
-              timezone={timezone}
-              title={widget.label}
-            />
-          )}
-          {isLoading && <CircleProgress sx={{ minHeight: '380px' }} />}
-          {Boolean(error?.length) && (
-            <ErrorState errorText={error![0].reason} />
-          )}
+
+          <CloudPulseLineGraph
+            error={
+              status === 'error'
+                ? error?.[0]?.reason ?? 'Error while rendering graph'
+                : undefined
+            }
+            legendRows={
+              legendRows && legendRows.length > 0 ? legendRows : undefined
+            }
+            ariaLabel={props.ariaLabel ? props.ariaLabel : ''}
+            data={data}
+            formatData={(data: number) => convertValueToUnit(data, currentUnit)}
+            formatTooltip={(value: number) => formatToolTip(value, unit)}
+            gridSize={widget.size}
+            loading={isLoading}
+            nativeLegend={true}
+            showToday={today}
+            timezone={timezone}
+            title={widget.label}
+          />
         </Stack>
       </Paper>
     </Grid>

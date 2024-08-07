@@ -81,7 +81,6 @@ const multiplier: { [label: string]: number } = {
  * @param value : bit value based on which maximum possible unit will be generated
  * @returns : maximum possible rolled up unit for the input bit value
  */
-
 export const generateUnitByBitValue = (value: number): string => {
   if (value < multiplier.Kb) {
     return 'b';
@@ -125,6 +124,11 @@ export const generateUnitByByteValue = (value: number): string => {
   return 'PB';
 };
 
+/**
+ *
+ * @param value time value based on which maximum possible unit will be generated
+ * @returns maximum possible rolled up unit for the input time value
+ */
 export const generateUnitByTimeValue = (value: number): string => {
   if (value < multiplier.s) {
     return 'ms';
@@ -149,6 +153,7 @@ export const generateUnitByTimeValue = (value: number): string => {
   }
   return 'y';
 };
+
 /**
  *
  * @param value : bit value to be rolled up based on maxUnit
@@ -209,6 +214,11 @@ export const generateUnitByBaseUnit = (
   return generatedUnit;
 };
 
+/**
+ *
+ * @param baseUnit unit received from configuration
+ * @returns current unit based on the supported units mapping
+ */
 export const generateCurrentUnit = (baseUnit: string): string => {
   let unit: string = baseUnit;
 
@@ -222,10 +232,16 @@ export const generateCurrentUnit = (baseUnit: string): string => {
   return unit;
 };
 
+/**
+ *
+ * @param data data that is to be transformed based on baseUnit
+ * @param baseUnit baseUnit for the data
+ * @returns transformed data based on the base unit
+ */
 export const transformData = (
-  data: any[],
+  data: [number, string][],
   baseUnit: string
-): [string, number][] => {
+): [number, number][] => {
   const unit: string = generateCurrentUnit(baseUnit);
 
   return data.map((d) => [d[0], Number(d[1]) * (multiplier[unit] ?? 1)]);

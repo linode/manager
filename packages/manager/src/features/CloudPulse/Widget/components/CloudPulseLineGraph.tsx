@@ -1,6 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import * as React from 'react';
 
+import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
 
@@ -23,16 +24,18 @@ export interface CloudPulseLineGraph extends LineGraphProps {
 export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
   const { ariaLabel, error, loading, ...rest } = props;
 
-  const message = error // Error state is separate, don't want to put text on top of it
-    ? undefined
-    : loading // Loading takes precedence over empty data
-    ? 'Loading data...'
-    : isDataEmpty(props.data)
-    ? 'No data to display'
-    : undefined;
+  if (loading) {
+    return <CircleProgress sx={{ minHeight: '380px' }} />;
+  }
+
+  if (error) {
+    return <ErrorState errorText={error} />;
+  }
+
+  const noDataMessage = 'No data to display';
 
   return (
-    <Box p={2} position={'relative'}>
+    <Box p={2} position="relative">
       {error ? (
         <Box sx={{ height: '100%' }}>
           <ErrorState errorText={error} />
@@ -45,15 +48,15 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
           legendRows={props.legendRows}
         />
       )}
-      {message && (
+      {isDataEmpty(props.data) && (
         <Box
           sx={{
-            bottom: '50%',
+            bottom: '60%',
             left: '50%',
             position: 'absolute',
           }}
         >
-          <Typography variant="body2">{message}</Typography>
+          <Typography variant="body2">{noDataMessage}</Typography>
         </Box>
       )}
     </Box>

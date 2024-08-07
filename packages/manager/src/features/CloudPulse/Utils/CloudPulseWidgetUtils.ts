@@ -24,15 +24,31 @@ import type {
 import type { DataSet } from 'src/components/LineGraph/LineGraph';
 import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';
 
-export const generateGraphData = (
-  widgetObject: {
-    label: string;
-    serviceType: string;
-    status: string | undefined;
-    unit: string;
-    widgetColor: string | undefined;
-  },
+interface LabelObject {
+  flags: FlagSet;
+  label: string;
+  serviceType: string;
+  unit: string;
+}
 
+interface WidgetObject {
+  label: string;
+  serviceType: string;
+  status: string | undefined;
+  unit: string;
+  widgetColor: string | undefined;
+}
+
+/**
+ *
+ * @param widgetObject widget properties to generate the graph data
+ * @param metricsList data that will be displayed on graph
+ * @param flags flags associated with metriclist
+ * @param resources list of cloud pulse resources
+ * @returns parameters which will be necessary to populate graph & legends
+ */
+export const generateGraphData = (
+  widgetObject: WidgetObject,
   metricsList: CloudPulseMetricsResponse | undefined,
   flags: FlagSet,
   resources: CloudPulseResources[]
@@ -100,6 +116,12 @@ export const generateGraphData = (
   };
 };
 
+/**
+ *
+ * @param legendRowsData list of legend rows available for the metric
+ * @param unit base unit of the values
+ * @returns maximum possible rolled up unit based on the unit
+ */
 const generateMaxUnit = (legendRowsData: LegendRow[], unit: string) => {
   const maxValue = Math.max(
     0,
@@ -108,6 +130,7 @@ const generateMaxUnit = (legendRowsData: LegendRow[], unit: string) => {
 
   return generateUnitByBaseUnit(maxValue, unit);
 };
+
 /**
  *
  * @returns a CloudPulseMetricRequest object to be passed as data to metric api call
@@ -137,14 +160,16 @@ export const getCloudPulseMetricRequest = (
   };
 };
 
+/**
+ *
+ * @param labelObject properties required to generate label
+ * @param metric key-value to generate dimension name
+ * @param resources list of CloudPulseResources available
+ * @returns generated label name for graph dimension
+ */
 const getLabelName = (
-  labelObject: {
-    flags: FlagSet;
-    label: string;
-    serviceType: string;
-    unit: string;
-  },
-  metric: { [lable: string]: string },
+  labelObject: LabelObject,
+  metric: { [label: string]: string },
   resources: CloudPulseResources[]
 ): string => {
   // aggregated metric, where metric keys will be 0
@@ -161,6 +186,13 @@ const getLabelName = (
   return getDimensionName(metric, flag, resources);
 };
 
+/**
+ *
+ * @param metric key-value to generate dimension name
+ * @param flag dimension key mapping for serivce type
+ * @param resources list of CloudPulseResources available
+ * @returns generated dimension name based on resources
+ */
 export const getDimensionName = (
   metric: { [label: string]: string },
   flag: CloudPulseResourceTypeMapFlag | undefined,
@@ -178,15 +210,16 @@ export const getDimensionName = (
     .join('_');
 };
 
+/**
+ *
+ * @param id resource id that should be search in resources list
+ * @param resources list of CloudPulseResources available
+ * @returns resource label if id is found, the id if label is not found, and fall back on an empty string with an undefined id
+ */
 export const mapResourceIdToName = (
   id: string | undefined,
   resources: CloudPulseResources[]
 ): string => {
-  /**
-   * if @id found in @resources list then return its label
-   * and if not found then return the @id
-   * and if @id is also undefined then return empty string
-   */
   return (
     resources.find((resourceObj) => resourceObj?.id === id)?.label ?? id ?? ''
   );
