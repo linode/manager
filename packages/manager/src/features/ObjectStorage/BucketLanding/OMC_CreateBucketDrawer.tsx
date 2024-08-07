@@ -308,13 +308,15 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
         <Controller
           render={({ field }) => (
             <TextField
-              {...field}
               data-qa-cluster-label
               data-testid="label"
               disabled={isRestrictedUser}
               errorText={errors.label?.message}
               label="Label"
+              onBlur={field.onBlur}
+              onChange={field.onChange}
               required
+              value={field.value ?? ''}
             />
           )}
           control={control}
@@ -353,7 +355,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
                   }
                   textFieldProps={{
                     helperText: (
-                      <Typography marginBottom={2} marginTop={1}>
+                      <Typography component="span">
                         Endpoint types impact the performance, capacity, and
                         rate limits for your bucket. Understand{' '}
                         <Link to="#">endpoint types</Link>.
