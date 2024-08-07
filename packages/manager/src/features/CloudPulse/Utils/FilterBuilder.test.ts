@@ -1,4 +1,3 @@
-import { REGION, RESOURCE_ID } from './constants';
 import {
   buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
