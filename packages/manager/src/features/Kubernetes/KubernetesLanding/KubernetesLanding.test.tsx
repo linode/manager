@@ -21,7 +21,7 @@ describe('Kubernetes Landing', () => {
   afterEach(() => {
     vi.resetAllMocks();
   });
-  it('should have the "Create Cluster" button disabled for restricted users', async () => {
+  it('should have the "Create Cluster" button disabled for restricted users', () => {
     queryMocks.useProfile.mockReturnValue({ data: { restricted: true } });
 
     const { container } = render(wrapWithTheme(<KubernetesLanding />));

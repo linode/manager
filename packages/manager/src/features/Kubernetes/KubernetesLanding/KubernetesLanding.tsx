@@ -97,7 +97,7 @@ export const KubernetesLanding = () => {
 
   const isRestricted = profile?.restricted ?? false;
 
-  const { data, error, fetchStatus, isLoading } = useKubernetesClustersQuery(
+  const { data, error, isFetching } = useKubernetesClustersQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -105,8 +105,6 @@ export const KubernetesLanding = () => {
     filter,
     !isRestricted
   );
-
-  const showLoader = isLoading && fetchStatus !== 'idle';
 
   const {
     isDiskEncryptionFeatureEnabled,
@@ -158,7 +156,7 @@ export const KubernetesLanding = () => {
     );
   }
 
-  if (showLoader) {
+  if (isFetching) {
     return <CircleProgress />;
   }
 
