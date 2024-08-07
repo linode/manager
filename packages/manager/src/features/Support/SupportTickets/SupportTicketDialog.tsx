@@ -194,7 +194,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       summary: getInitialValue(newPrefilledTitle, valuesFromStorage.summary),
       ticketType: _prefilledTicketType ?? 'general',
     },
-    resolver: yupResolver(SCHEMA_MAP[prefilledTicketType ?? 'general']),
+    resolver: yupResolver(SCHEMA_MAP[_prefilledTicketType ?? 'general']),
   });
 
   const {
