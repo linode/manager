@@ -204,8 +204,7 @@ export type GrantType =
   | 'volume'
   | 'database'
   | 'firewall'
-  | 'vpc'
-  | 'lkeCluster';
+  | 'vpc';
 
 export type Grants = GlobalGrants & Record<GrantType, Grant[]>;
 
