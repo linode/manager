@@ -1,3 +1,4 @@
+import deepEqual from 'fast-deep-equal';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -100,5 +101,17 @@ export const CloudPulseResourcesSelect = React.memo(
         value={selectedResources}
       />
     );
-  }
+  },
+  compareProps
 );
+
+function compareProps(
+  oldProps: CloudPulseResourcesSelectProps,
+  newProps: CloudPulseResourcesSelectProps
+) {
+  return (
+    oldProps.region === newProps.region &&
+    oldProps.resourceType === newProps.resourceType &&
+    deepEqual(oldProps.xFilter, newProps.xFilter)
+  );
+}
