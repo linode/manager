@@ -31,6 +31,8 @@ export const SupportTicketAccountLimitFields = ({
   const { control, formState, reset, watch } = useFormContext<
     AccountLimitCustomFields & SupportTicketFormFields
   >();
+  const { entityType } = watch();
+
   const prefilledLinodeType =
     prefilledFormPayloadValues && 'type' in prefilledFormPayloadValues
       ? prefilledFormPayloadValues.type
@@ -39,8 +41,6 @@ export const SupportTicketAccountLimitFields = ({
     prefilledFormPayloadValues && 'node_pools' in prefilledFormPayloadValues
       ? prefilledFormPayloadValues.node_pools?.map((pool) => pool.type)
       : [];
-
-  const { entityType } = watch();
 
   const { data: account } = useAccount();
   const { data: linodeType } = useTypeQuery(
