@@ -1,6 +1,6 @@
 export const LOCAL_STORAGE_KEY = 'msw';
 
-export const LOCAL_STORAGE_POPULATORS_KEY = 'msw-populators';
+export const LOCAL_STORAGE_SEEDERS_KEY = 'msw-seeders';
 
 export const LOCAL_STORAGE_PRESET_KEY = 'msw-preset';
 

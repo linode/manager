@@ -6,14 +6,14 @@ import { allMockPresets, defaultBaselineMockPreset } from 'src/mocks/presets';
 import { dbSeeders } from 'src/mocks/seeds';
 
 import {
-  getMSWContextSeeders,
-  getMSWExtraPresets,
-  getMSWPreset,
+  getBaselinePreset,
+  getExtraPresets,
+  getSeeders,
   isMSWEnabled,
 } from './utils';
 
 import type { QueryClient } from '@tanstack/react-query';
-import type { MockPreset, MockSeeder, MockState } from 'src/mocks/types';
+import type { MockPresetExtra, MockSeeder, MockState } from 'src/mocks/types';
 import type { ApplicationStore } from 'src/store';
 
 export let mockState: MockState;
@@ -32,19 +32,19 @@ export async function loadDevTools(
 
   if (isMSWEnabled) {
     const { worker: mswWorker } = await import('../mocks/mswWorkers');
-    const mswPresetId = getMSWPreset() ?? defaultBaselineMockPreset.id;
+    const mswPresetId = getBaselinePreset() ?? defaultBaselineMockPreset.id;
     const mswPreset =
       allMockPresets.find((preset) => preset.id === mswPresetId) ??
       defaultBaselineMockPreset;
 
-    const extraMswPresetIds = getMSWExtraPresets();
+    const extraMswPresetIds = getExtraPresets();
     const extraMswPresets = extraMswPresetIds
       .map((presetId) =>
         allMockPresets.find((extraPreset) => extraPreset.id === presetId)
       )
       .filter((preset) => !!preset);
 
-    const mswContentSeederIds = getMSWContextSeeders(dbSeeders);
+    const mswContentSeederIds = getSeeders(dbSeeders);
     const mswContentSeeders = mswContentSeederIds
       .map((seederId) => dbSeeders.find((dbSeeder) => dbSeeder.id === seederId))
       .filter((seeder) => !!seeder);
@@ -116,9 +116,12 @@ export async function loadDevTools(
       volumes: [...initialContext.volumes, ...(seedContext?.volumes || [])],
     };
 
-    const extraHandlers = extraMswPresets.reduce((acc, cur: MockPreset) => {
-      return [...resolveMockPreset(cur, mergedContext), ...acc];
-    }, []);
+    const extraHandlers = extraMswPresets.reduce(
+      (acc, cur: MockPresetExtra) => {
+        return [...resolveMockPreset(cur, mergedContext), ...acc];
+      },
+      []
+    );
 
     const baseHandlers = resolveMockPreset(mswPreset, mergedContext);
 

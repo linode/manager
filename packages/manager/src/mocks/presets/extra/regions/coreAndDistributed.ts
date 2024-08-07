@@ -4,10 +4,9 @@ import { distributedRegions } from 'src/__data__/distributedRegionsData';
 import { productionRegions } from 'src/__data__/productionRegionsData';
 import { makePaginatedResponse } from 'src/mocks/utilities/response';
 
-import type { MockPreset } from 'src/mocks/types';
+import type { MockPresetExtra } from 'src/mocks/types';
 
-// We include both production and distributed regions in this preset for convenience.
-const mockProductionRegions = () => {
+const mockCoreAndDistributedRegions = () => {
   return [
     http.get('*/v4/regions', ({ request }) => {
       return makePaginatedResponse({
@@ -18,10 +17,10 @@ const mockProductionRegions = () => {
   ];
 };
 
-export const regionsPreset: MockPreset = {
-  desc: 'Production-like Regions',
-  group: 'Regions',
-  handlers: [mockProductionRegions],
-  id: 'prod-regions',
+export const coreAndDistributedRegionsPreset: MockPresetExtra = {
+  desc: 'Core and Distributed Regions',
+  group: { id: 'Regions', type: 'single' },
+  handlers: [mockCoreAndDistributedRegions],
+  id: 'regions:core-and-distributed',
   label: 'Core + Distributed',
 };

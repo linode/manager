@@ -13,8 +13,8 @@ export const getStateSeederGroups = (
   seeders: MockSeeder[]
 ): Array<string | undefined> => {
   return seeders.reduce((acc: Array<string | undefined>, cur) => {
-    if (!acc.includes(cur.group)) {
-      acc.push(cur.group);
+    if (!acc.includes(cur.group.id)) {
+      acc.push(cur.group.id);
     }
 
     return acc;

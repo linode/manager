@@ -2,7 +2,7 @@ import { http, passthrough } from 'msw';
 
 import { makeErrorResponse } from 'src/mocks/utilities/response';
 
-import type { MockPreset } from 'src/mocks/types';
+import type { MockPresetBaseline } from 'src/mocks/types';
 
 /**
  * The rate at which API responses will randomly fail.
@@ -27,9 +27,9 @@ const respondWithFailure = () => {
   ];
 };
 
-export const baselineApiUnstablePreset: MockPreset = {
-  group: 'API State',
+export const baselineApiUnstablePreset: MockPresetBaseline = {
+  group: { id: 'API State' },
   handlers: [respondWithFailure],
-  id: 'baseline-api-unstable',
+  id: 'baseline:api-unstable',
   label: 'API Unstable',
 };

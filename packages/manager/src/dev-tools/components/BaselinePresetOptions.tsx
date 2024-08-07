@@ -10,7 +10,7 @@ export const BaselinePresetOptions = () => {
   return getMockPresetGroups(baselineMockPresets).map((group) => (
     <optgroup key={group} label={group}>
       {baselineMockPresets
-        .filter((mockPreset) => mockPreset.group === group)
+        .filter((mockPreset) => mockPreset.group.id === group)
         .map((mockPreset) => {
           return (
             <option key={mockPreset.id} value={mockPreset.id}>

@@ -7,7 +7,7 @@ import {
 } from 'src/factories';
 import { makeResponse } from 'src/mocks/utilities/response';
 
-import type { MockPreset } from 'src/mocks/types';
+import type { MockPresetExtra } from 'src/mocks/types';
 
 /**
  * Mocks account, profile, and user requests to simulate a Parent/Child child account user.
@@ -40,10 +40,10 @@ const mockChildAccount = () => {
   ];
 };
 
-export const childAccountPreset: MockPreset = {
+export const childAccountPreset: MockPresetExtra = {
   desc: 'Mock a Parent/Child child account proxy user',
-  group: 'Account',
+  group: { id: 'Account', type: 'single' },
   handlers: [mockChildAccount],
-  id: 'parent-child-child-account-proxy-user',
+  id: 'parent-child-account:child-proxy',
   label: 'Child Account Proxy User',
 };

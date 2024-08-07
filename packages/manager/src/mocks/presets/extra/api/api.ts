@@ -1,11 +1,11 @@
 import { http } from 'msw';
 
-import { getMSWPresetsMap } from 'src/dev-tools/utils';
+import { getExtraPresetsMap } from 'src/dev-tools/utils';
 
-import type { MockPreset } from 'src/mocks/types';
+import type { MockPresetExtra } from 'src/mocks/types';
 
 const APIResponseTime = () => {
-  const responseTime = getMSWPresetsMap()['api-response-time'] || 0;
+  const responseTime = getExtraPresetsMap()['api:response-time'] || 0;
 
   return [
     http.all('*/v4*/*', async () => {
@@ -21,11 +21,14 @@ const APIResponseTime = () => {
   ];
 };
 
-export const apiResponseTimePreset: MockPreset = {
+export const apiResponseTimePreset: MockPresetExtra = {
   canUpdateCount: true,
   desc: 'Allows to customize API response time',
-  group: 'API State',
+  group: {
+    id: 'API',
+    type: 'single',
+  },
   handlers: [APIResponseTime],
-  id: 'api-response-time',
+  id: 'api:response-time',
   label: 'API Response Time (ms)',
 };

@@ -2,14 +2,14 @@ import { defaultBaselineMockPreset, extraMockPresets } from 'src/mocks/presets';
 
 import {
   LOCAL_STORAGE_KEY,
-  LOCAL_STORAGE_POPULATORS_KEY,
   LOCAL_STORAGE_PRESET_EXTRAS_KEY,
   LOCAL_STORAGE_PRESET_KEY,
   LOCAL_STORAGE_PRESETS_MAP_KEY,
+  LOCAL_STORAGE_SEEDERS_KEY,
   LOCAL_STORAGE_SEEDS_COUNT_MAP_KEY,
 } from './constants';
 
-import type { MockPresetId, MockSeeder } from 'src/mocks/types';
+import type { MockPresetBaselineGroupId, MockSeeder } from 'src/mocks/types';
 
 /**
  * Whether MSW is enabled via local storage setting.
@@ -33,24 +33,27 @@ export const saveMSWEnabled = (enabled: boolean): void => {
  *
  * @returns ID of selected MSW preset, or `null` if no preset is saved.
  */
-export const getMSWPreset = (): MockPresetId => {
+export const getBaselinePreset = (): MockPresetBaselineGroupId => {
   return (
-    (localStorage.getItem(LOCAL_STORAGE_PRESET_KEY) as MockPresetId) ??
-    defaultBaselineMockPreset.id
+    (localStorage.getItem(
+      LOCAL_STORAGE_PRESET_KEY
+    ) as MockPresetBaselineGroupId) ?? defaultBaselineMockPreset.id
   );
 };
 
 /**
  * Saves ID of selected MSW preset in local storage.
  */
-export const saveMSWPreset = (presetId: MockPresetId): void => {
+export const saveBaselinePreset = (
+  presetId: MockPresetBaselineGroupId
+): void => {
   localStorage.setItem(LOCAL_STORAGE_PRESET_KEY, presetId);
 };
 
 /**
  * Retrieves the seeding count map from local storage.
  */
-export const getMSWSeedsCountMap = (): { [key: string]: number } => {
+export const getSeedsCountMap = (): { [key: string]: number } => {
   const encodedCountMap = localStorage.getItem(
     LOCAL_STORAGE_SEEDS_COUNT_MAP_KEY
   );
@@ -61,7 +64,7 @@ export const getMSWSeedsCountMap = (): { [key: string]: number } => {
 /**
  * Saves the seeding count map to local storage.
  */
-export const saveMSWSeedsCountMap = (countMap: { [key: string]: number }) => {
+export const saveSeedsCountMap = (countMap: { [key: string]: number }) => {
   localStorage.setItem(
     LOCAL_STORAGE_SEEDS_COUNT_MAP_KEY,
     JSON.stringify(countMap)
@@ -71,7 +74,7 @@ export const saveMSWSeedsCountMap = (countMap: { [key: string]: number }) => {
 /**
  * Retrieves the presets map from local storage.
  */
-export const getMSWPresetsMap = (): { [key: string]: number } => {
+export const getExtraPresetsMap = (): { [key: string]: number } => {
   const encodedPresetsMap = localStorage.getItem(LOCAL_STORAGE_PRESETS_MAP_KEY);
 
   return encodedPresetsMap ? JSON.parse(encodedPresetsMap) : {};
@@ -80,7 +83,7 @@ export const getMSWPresetsMap = (): { [key: string]: number } => {
 /**
  * Saves the presets map to local storage.
  */
-export const saveMSWPresetsMap = (presetsMap: { [key: string]: number }) => {
+export const saveExtraPresetsMap = (presetsMap: { [key: string]: number }) => {
   localStorage.setItem(
     LOCAL_STORAGE_PRESETS_MAP_KEY,
     JSON.stringify(presetsMap)
@@ -93,7 +96,7 @@ export const saveMSWPresetsMap = (presetsMap: { [key: string]: number }) => {
  * An empty array is returned when the expected data does not exist in local
  * storage.
  */
-export const getMSWExtraPresets = (): string[] => {
+export const getExtraPresets = (): string[] => {
   const encodedPresets = localStorage.getItem(LOCAL_STORAGE_PRESET_EXTRAS_KEY);
   if (!encodedPresets) {
     return [];
@@ -111,7 +114,7 @@ export const getMSWExtraPresets = (): string[] => {
 /**
  * Saves the extra MSW presets to local storage.
  */
-export const saveMSWExtraPresets = (presets: string[]) => {
+export const saveExtraPresets = (presets: string[]) => {
   localStorage.setItem(LOCAL_STORAGE_PRESET_EXTRAS_KEY, presets.join(','));
 };
 
@@ -121,8 +124,8 @@ export const saveMSWExtraPresets = (presets: string[]) => {
  * An empty array is returned when the expected data does not exist in local
  * storage.
  */
-export const getMSWContextSeeders = (dbSeeders: MockSeeder[]): string[] => {
-  const encodedPopulators = localStorage.getItem(LOCAL_STORAGE_POPULATORS_KEY);
+export const getSeeders = (dbSeeders: MockSeeder[]): string[] => {
+  const encodedPopulators = localStorage.getItem(LOCAL_STORAGE_SEEDERS_KEY);
   if (!encodedPopulators) {
     return [];
   }
@@ -137,6 +140,6 @@ export const getMSWContextSeeders = (dbSeeders: MockSeeder[]): string[] => {
 /**
  * Saves the context seeders to local storage.
  */
-export const saveMSWContextPopulators = (populators: string[]) => {
-  localStorage.setItem(LOCAL_STORAGE_POPULATORS_KEY, populators.join(','));
+export const saveSeeders = (populators: string[]) => {
+  localStorage.setItem(LOCAL_STORAGE_SEEDERS_KEY, populators.join(','));
 };

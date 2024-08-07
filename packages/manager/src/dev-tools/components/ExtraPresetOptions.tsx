@@ -39,60 +39,63 @@ export const ExtraPresetOptions = ({
         >
           <li className="dev-tools__list-box__separator">{group}</li>
           {extraMockPresets
-            .filter((extraMockPreset) => extraMockPreset.group === group)
-            .map((extraMockPreset) => (
-              <li
-                key={extraMockPreset.id}
-                style={{ display: 'flex', justifyContent: 'space-between' }}
-              >
-                <div>
-                  <input
-                    style={{
-                      marginRight: 12,
-                    }}
-                    checked={handlers.includes(extraMockPreset.id)}
-                    disabled={disabled}
-                    onChange={(e) => onTogglePreset(e, extraMockPreset.id)}
-                    type="checkbox"
-                  />
-                  <span title={extraMockPreset.desc || extraMockPreset.label}>
-                    {extraMockPreset.label}
-                  </span>
-                </div>
-                {extraMockPreset.canUpdateCount && (
-                  <div
-                    style={{
-                      display: 'flex',
-                      position: 'relative',
-                      width: 85,
-                    }}
+            .filter((extraMockPreset) => extraMockPreset.group.id === group)
+            .map(
+              (extraMockPreset) =>
+                extraMockPreset.canUpdateCount && (
+                  <li
+                    key={extraMockPreset.id}
+                    style={{ display: 'flex', justifyContent: 'space-between' }}
                   >
-                    <span
+                    <div>
+                      <input
+                        style={{
+                          marginRight: 12,
+                        }}
+                        checked={handlers.includes(extraMockPreset.id)}
+                        disabled={disabled}
+                        onChange={(e) => onTogglePreset(e, extraMockPreset.id)}
+                        type="checkbox"
+                      />
+                      <span
+                        title={extraMockPreset.desc || extraMockPreset.label}
+                      >
+                        {extraMockPreset.label}
+                      </span>
+                    </div>
+                    <div
                       style={{
-                        color: '#000',
-                        left: '5px',
-                        position: 'absolute',
-                        top: '50%',
-                        transform: 'translateY(-50%)',
+                        display: 'flex',
+                        position: 'relative',
+                        width: 85,
                       }}
                     >
-                      +
-                    </span>
-                    <input
-                      onChange={(e) =>
-                        onPresetCountChange(e, extraMockPreset.id)
-                      }
-                      aria-label={`Value for ${extraMockPreset.label}`}
-                      disabled={disabled}
-                      min={0}
-                      style={{ paddingLeft: '20px', width: '100%' }}
-                      type="number"
-                      value={presetsCountMap[extraMockPreset.id] || 0}
-                    />
-                  </div>
-                )}
-              </li>
-            ))}
+                      <span
+                        style={{
+                          color: '#000',
+                          left: '5px',
+                          position: 'absolute',
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                        }}
+                      >
+                        +
+                      </span>
+                      <input
+                        onChange={(e) =>
+                          onPresetCountChange(e, extraMockPreset.id)
+                        }
+                        aria-label={`Value for ${extraMockPreset.label}`}
+                        disabled={disabled}
+                        min={0}
+                        style={{ paddingLeft: '20px', width: '100%' }}
+                        type="number"
+                        value={presetsCountMap[extraMockPreset.id] || 0}
+                      />
+                    </div>
+                  </li>
+                )
+            )}
         </div>
       ))}
     </ul>
