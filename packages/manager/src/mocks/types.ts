@@ -35,7 +35,7 @@ export type MockPresetBaselineId =
   | 'baseline:api-unstable'
   | 'baseline:crud'
   | 'baseline:legacy'
-  | 'baseline:no-mocks';
+  | 'baseline:preset-mocking';
 export interface MockPresetBaseline extends MockPresetBase {
   group: MockPresetBaselineGroup;
   id: MockPresetBaselineId;
