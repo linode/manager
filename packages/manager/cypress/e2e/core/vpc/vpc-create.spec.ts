@@ -9,17 +9,12 @@ import {
   linodeFactory,
   regionFactory,
 } from '@src/factories';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { mockGetRegions } from 'support/intercepts/regions';
 import {
   mockCreateVPCError,
   mockCreateVPC,
   mockGetSubnets,
 } from 'support/intercepts/vpc';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   randomLabel,
   randomPhrase,
@@ -77,15 +72,10 @@ describe('VPC create flow', () => {
     const vpcCreationErrorMessage = 'An unknown error has occurred.';
     const totalSubnetUniqueLinodes = getUniqueLinodesFromSubnets(mockSubnets);
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientstream');
-
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
     cy.visitWithLogin('/vpcs/create');
-    cy.wait(['@getFeatureFlags', '@getClientstream', '@getRegions']);
+    cy.wait('@getRegions');
 
     ui.regionSelect.find().click().type(`${mockVPCRegion.label}{enter}`);
 
@@ -292,15 +282,10 @@ describe('VPC create flow', () => {
 
     const totalSubnetUniqueLinodes = getUniqueLinodesFromSubnets([]);
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientstream');
-
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
     cy.visitWithLogin('/vpcs/create');
-    cy.wait(['@getFeatureFlags', '@getClientstream', '@getRegions']);
+    cy.wait('@getRegions');
 
     ui.regionSelect.find().click().type(`${mockVPCRegion.label}{enter}`);
 

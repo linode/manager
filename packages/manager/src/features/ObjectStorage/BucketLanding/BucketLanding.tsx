@@ -8,21 +8,16 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import OrderBy from 'src/components/OrderBy';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
   useDeleteBucketMutation,
   useObjectStorageBuckets,
-  useObjectStorageClusters,
-} from 'src/queries/objectStorage';
+} from 'src/queries/object-storage/queries';
 import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
@@ -35,12 +30,12 @@ import { BucketLandingEmptyState } from './BucketLandingEmptyState';
 import { BucketTable } from './BucketTable';
 
 import type {
+  APIError,
   ObjectStorageBucket,
   ObjectStorageCluster,
-} from '@linode/api-v4/lib/object-storage';
-import type { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import type { BucketError } from 'src/queries/objectStorage';
+import type { BucketError } from 'src/queries/object-storage/requests';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
@@ -53,44 +48,11 @@ export const BucketLanding = () => {
 
   const isRestrictedUser = profile?.restricted;
 
-  const { account } = useAccountManagement();
-  const flags = useFlags();
-
-  const isObjMultiClusterEnabled = isFeatureEnabled(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
-
-  const { data: regions } = useRegionsQuery();
-
-  const regionsSupportingObjectStorage = regions?.filter((region) =>
-    region.capabilities.includes('Object Storage')
-  );
-
-  const {
-    data: objectStorageClusters,
-    error: clustersErrors,
-    isLoading: areClustersLoading,
-  } = useObjectStorageClusters(!isObjMultiClusterEnabled);
-
-  /*
-   @TODO OBJ Multicluster:'region' will become required, and the
-   'cluster' field will be deprecated once the feature is fully rolled out in production.
-   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
-   remove 'cluster' and retain 'regions'.
-  */
   const {
     data: objectStorageBucketsResponse,
     error: bucketsErrors,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets({
-    clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
-    isObjMultiClusterEnabled,
-    regions: isObjMultiClusterEnabled
-      ? regionsSupportingObjectStorage
-      : undefined,
-  });
+  } = useObjectStorageBuckets();
 
   const { mutateAsync: deleteBucket } = useDeleteBucketMutation();
 
@@ -166,7 +128,7 @@ export const BucketLanding = () => {
     return <RenderEmpty />;
   }
 
-  if (clustersErrors || bucketsErrors) {
+  if (bucketsErrors) {
     return (
       <ErrorState
         data-qa-error-state
@@ -175,11 +137,7 @@ export const BucketLanding = () => {
     );
   }
 
-  if (
-    areClustersLoading ||
-    areBucketsLoading ||
-    objectStorageBucketsResponse === undefined
-  ) {
+  if (areBucketsLoading || objectStorageBucketsResponse === undefined) {
     return <CircleProgress />;
   }
 
@@ -300,10 +258,7 @@ interface UnavailableClustersDisplayProps {
 
 const UnavailableClustersDisplay = React.memo(
   ({ unavailableClusters }: UnavailableClustersDisplayProps) => {
-    const { isGeckoGAEnabled } = useIsGeckoEnabled();
-    const { data: regions } = useRegionsQuery({
-      transformRegionLabel: isGeckoGAEnabled,
-    });
+    const { data: regions } = useRegionsQuery();
 
     const regionsAffected = unavailableClusters.map(
       (cluster) =>

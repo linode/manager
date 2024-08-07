@@ -8,20 +8,16 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import OrderBy from 'src/components/OrderBy';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
   useDeleteBucketWithRegionMutation,
   useObjectStorageBuckets,
-} from 'src/queries/objectStorage';
+} from 'src/queries/object-storage/queries';
 import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
@@ -34,11 +30,9 @@ import { BucketDetailsDrawer } from './BucketDetailsDrawer';
 import { BucketLandingEmptyState } from './BucketLandingEmptyState';
 import { BucketTable } from './BucketTable';
 
-import type { Region } from '@linode/api-v4';
-import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
-import type { APIError } from '@linode/api-v4/lib/types';
+import type { APIError, ObjectStorageBucket, Region } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import type { BucketError } from 'src/queries/objectStorage';
+import type { BucketError } from 'src/queries/object-storage/requests';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
@@ -51,37 +45,19 @@ export const OMC_BucketLanding = () => {
 
   const isRestrictedUser = profile?.restricted;
 
-  const { account } = useAccountManagement();
-  const flags = useFlags();
-
-  const isObjMultiClusterEnabled = isFeatureEnabled(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
   const {
     data: regions,
     error: regionErrors,
     isLoading: areRegionsLoading,
-  } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  } = useRegionsQuery();
 
   const regionsLookup = regions && getRegionsByRegionId(regions);
-
-  const regionsSupportingObjectStorage = regions?.filter((region) =>
-    region.capabilities.includes('Object Storage')
-  );
 
   const {
     data: objectStorageBucketsResponse,
     error: bucketsErrors,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets({
-    isObjMultiClusterEnabled,
-    regions: regionsSupportingObjectStorage,
-  });
+  } = useObjectStorageBuckets();
 
   const { mutateAsync: deleteBucket } = useDeleteBucketWithRegionMutation();
 

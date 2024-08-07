@@ -14,7 +14,6 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
@@ -72,10 +71,8 @@ export const CreateCluster = () => {
   const [hasAgreed, setAgreed] = React.useState<boolean>(false);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const [highAvailability, setHighAvailability] = React.useState<boolean>();
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data, error: regionsError } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+
+  const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
   const history = useHistory();
   const { data: account } = useAccount();

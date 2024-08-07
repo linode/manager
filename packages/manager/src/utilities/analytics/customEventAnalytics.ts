@@ -1,5 +1,6 @@
-import { CustomAnalyticsData } from './types';
 import { sendEvent } from './utils';
+
+import type { CustomAnalyticsData } from './types';
 
 /**
  * Custom Events
@@ -459,5 +460,14 @@ export const sendLinodePowerOffEvent = (category: string) => {
     action: 'Click:button',
     category,
     label: 'Power Off',
+  });
+};
+
+// SupportTicketDialog.tsx
+export const sendSupportTicketExitEvent = (label: 'Cancel' | 'Close') => {
+  sendEvent({
+    action: 'Open a Support Ticket',
+    category: 'Support Ticket',
+    label: `Click:${label}`,
   });
 };

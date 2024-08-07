@@ -57,9 +57,7 @@ export const Summary = () => {
   });
 
   const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery(isGeckoGAEnabled);
   const { data: type } = useTypeQuery(typeId ?? '', Boolean(typeId));
   const { data: image } = useImageQuery(imageId ?? '', Boolean(imageId));
 

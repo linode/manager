@@ -29,7 +29,6 @@ import type {
   TimeDuration,
   Widgets,
 } from '@linode/api-v4';
-import { FilterValueType } from './CloudPulseDashboardLanding';
 
 export interface DashboardProperties {
   /**
@@ -74,7 +73,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
 
   const getJweTokenPayload = (): JWETokenPayLoad => {
     return {
-      resource_id: resourceList?.map((resource) => String(resource.id)) ?? [],
+      resource_id: resourceList?.map((resource) => Number(resource.id)) ?? [],
     };
   };
 

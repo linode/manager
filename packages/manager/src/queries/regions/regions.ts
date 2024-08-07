@@ -13,11 +13,6 @@ import {
 import type { Region, RegionAvailability } from '@linode/api-v4/lib/regions';
 import type { APIError } from '@linode/api-v4/lib/types';
 
-interface TransformRegionLabelOptions {
-  includeSlug?: boolean;
-  transformRegionLabel?: boolean;
-}
-
 export const regionQueries = createQueryKeys('regions', {
   availability: {
     contextQueries: {
@@ -38,21 +33,16 @@ export const regionQueries = createQueryKeys('regions', {
   },
 });
 
-export const useRegionsQuery = (
-  options: Partial<TransformRegionLabelOptions> = {}
-) =>
+export const useRegionsQuery = (transformRegionLabel: boolean = false) =>
   useQuery<Region[], APIError[]>({
     ...regionQueries.regions,
     ...queryPresets.longLived,
     select: (regions: Region[]) => {
       // Display Country, City instead of City, State
-      if (options.transformRegionLabel) {
+      if (transformRegionLabel) {
         return regions.map((region) => ({
           ...region,
-          label: getNewRegionLabel({
-            includeSlug: options.includeSlug,
-            region,
-          }),
+          label: getNewRegionLabel({ region }),
         }));
       }
       return regions;

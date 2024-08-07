@@ -55,7 +55,7 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   checkboxTestId,
   headerTestId,
-} from 'src/components/DiskEncryption/DiskEncryption';
+} from 'src/components/Encryption/Encryption';
 
 import type { Config, VLAN, Disk, Region } from '@linode/api-v4';
 
@@ -93,8 +93,8 @@ describe('create linode', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       linodeCreateRefactor: makeFeatureFlagData(false),
+      apicliDxToolsAdditions: makeFeatureFlagData(false),
     });
-    mockGetFeatureFlagClientstream();
   });
 
   /*
@@ -368,17 +368,11 @@ describe('create linode', () => {
     mockGetLinodeType(dcPricingMockLinodeTypes[0]);
     mockGetLinodeType(dcPricingMockLinodeTypes[1]);
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
-
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     mockGetRegions([mockNoVPCRegion]).as('getRegions');
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getLinodeTypes', '@getClientStream', '@getFeatureFlags']);
+    cy.wait('@getLinodeTypes');
 
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
 
@@ -469,7 +463,7 @@ describe('create linode', () => {
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
 
     mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
+      apicliDxToolsAdditions: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
@@ -485,12 +479,7 @@ describe('create linode', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait([
-      '@getLinodeTypes',
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getVPCs',
-    ]);
+    cy.wait(['@getLinodeTypes', '@getVPCs']);
 
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
 
@@ -540,8 +529,8 @@ describe('create linode', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
       linodeDiskEncryption: makeFeatureFlagData(false),
+      apicliDxToolsAdditions: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock account response
     const mockAccount = accountFactory.build({
@@ -552,7 +541,7 @@ describe('create linode', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getAccount']);
+    cy.wait(['@getFeatureFlags', '@getAccount']);
 
     // Check if section is visible
     cy.get(`[data-testid=${headerTestId}]`).should('not.exist');
@@ -562,8 +551,8 @@ describe('create linode', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
       linodeDiskEncryption: makeFeatureFlagData(true),
+      apicliDxToolsAdditions: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock account response
     const mockAccount = accountFactory.build({
@@ -585,7 +574,7 @@ describe('create linode', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getAccount']);
+    cy.wait(['@getFeatureFlags', '@getAccount']);
 
     // Check if section is visible
     cy.get(`[data-testid="${headerTestId}"]`).should('exist');

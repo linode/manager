@@ -18,6 +18,7 @@ export type TestTag =
   // DC testing purposes even if that is not the primary purpose of the test.
   | 'purpose:dcTesting'
   | 'purpose:smokeTesting'
+  | 'purpose:syntheticTesting'
 
   // Method-related tags.
   // Describe the way the tests operate -- either end-to-end using real API requests,

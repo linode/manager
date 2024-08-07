@@ -1,6 +1,6 @@
+import { Linode, PriceObject } from '@linode/api-v4';
 import * as React from 'react';
 
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
@@ -12,8 +12,6 @@ import {
   UNKNOWN_PRICE,
 } from 'src/utilities/pricing/constants';
 
-import type { Linode, PriceObject } from '@linode/api-v4';
-
 interface Props {
   error?: string;
   linode: Linode;
@@ -22,10 +20,7 @@ interface Props {
 export const BackupLinodeRow = (props: Props) => {
   const { error, linode } = props;
   const { data: type } = useTypeQuery(linode.type ?? '', Boolean(linode.type));
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
 
   const backupsMonthlyPrice:
     | PriceObject['monthly']

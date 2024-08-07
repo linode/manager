@@ -8,13 +8,8 @@ import {
   mockEditSubnet,
   mockGetSubnets,
 } from 'support/intercepts/vpc';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { subnetFactory, vpcFactory } from '@src/factories';
 import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import type { VPC } from '@linode/api-v4';
 import { getRegionById } from 'support/util/regions';
 import { ui } from 'support/ui';
@@ -40,16 +35,12 @@ describe('VPC details page', () => {
 
     const vpcRegion = getRegionById(mockVPC.region);
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetVPC(mockVPC).as('getVPC');
     mockUpdateVPC(mockVPC.id, mockVPCUpdated).as('updateVPC');
     mockDeleteVPC(mockVPC.id).as('deleteVPC');
 
     cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPC']);
+    cy.wait('@getVPC');
 
     // Confirm that VPC details are displayed.
     cy.findByText(mockVPC.label).should('be.visible');
@@ -144,17 +135,12 @@ describe('VPC details page', () => {
       subnets: [mockSubnet],
     });
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-
     mockGetVPC(mockVPC).as('getVPC');
-    mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetSubnets(mockVPC.id, []).as('getSubnets');
     mockCreateSubnet(mockVPC.id).as('createSubnet');
 
     cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPC', '@getSubnets']);
+    cy.wait(['@getVPC', '@getSubnets']);
 
     // confirm that vpc and subnet details get displayed
     cy.findByText(mockVPC.label).should('be.visible');

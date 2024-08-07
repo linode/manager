@@ -3,8 +3,8 @@ import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { Box } from 'src/components/Box';
-import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
@@ -28,8 +28,8 @@ import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricin
 
 import { CROSS_DATA_CENTER_CLONE_WARNING } from '../LinodesCreate/constants';
 import { getDisabledRegions } from './Region.utils';
+import { TwoStepRegion } from './TwoStepRegion';
 import {
-  defaultInterfaces,
   getGeneratedLinodeLabel,
   useLinodeCreateQueryParams,
 } from './utilities';
@@ -53,9 +53,9 @@ export const Region = () => {
       dirtyFields: { label: isLabelFieldDirty },
     },
     getValues,
-    reset,
     setValue,
   } = useFormContext<LinodeCreateFormValues>();
+
   const { field, fieldState } = useController({
     control,
     name: 'region',
@@ -80,59 +80,74 @@ export const Region = () => {
     globalGrantType: 'add_linodes',
   });
 
+  const { data: regions } = useRegionsQuery();
+
   const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const showTwoStepRegion =
+    isGeckoGAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
 
   const onChange = async (region: RegionType) => {
-    const isDistributedRegion =
-      region.site_type === 'distributed' || region.site_type === 'edge';
+    const values = getValues();
 
-    const defaultDiskEncryptionValue = region.capabilities.includes(
-      'Disk Encryption'
-    )
-      ? 'enabled'
-      : undefined;
+    field.onChange(region.id);
 
-    reset(
-      (prev) => ({
-        ...prev,
-        // reset EU agreement
-        hasSignedEUAgreement: undefined,
-        // Reset interfaces because VPC and VLANs are region-sepecific
-        interfaces: defaultInterfaces,
-        // Reset Cloud-init metadata because not all regions support it
-        metadata: undefined,
-        // Reset the placement group because they are region-specific
-        placement_group: undefined,
-        // Set the region
-        region: region.id,
-        // Backups and Private IP are not supported in distributed compute regions
-        ...(isDistributedRegion && {
-          backups_enabled: false,
-          private_ip: false,
-        }),
-        // If disk encryption is enabled, set the default value to "enabled" if the region supports it
-        ...(isDiskEncryptionFeatureEnabled && {
-          disk_encryption: defaultDiskEncryptionValue,
-        }),
-      }),
-      {
-        keepDirty: true,
-        keepDirtyValues: true,
-        keepErrors: true,
-        keepSubmitCount: true,
-        keepTouched: true,
-      }
-    );
+    if (values.hasSignedEUAgreement) {
+      // Reset the EU agreement checkbox if they checked it so they have to re-agree when they change regions
+      setValue('hasSignedEUAgreement', false);
+    }
+
+    if (values.interfaces?.[0].vpc_id) {
+      // If a VPC is selected, clear it because VPCs are region specific
+      setValue('interfaces.0.vpc_id', null);
+      setValue('interfaces.0.subnet_id', null);
+    }
+
+    if (values.interfaces?.[1].label) {
+      // If a VLAN is selected, clear it because VLANs are region specific
+      setValue('interfaces.1.label', null);
+      setValue('interfaces.1.ipam_address', null);
+    }
+
+    if (
+      values.metadata?.user_data &&
+      !region.capabilities.includes('Metadata')
+    ) {
+      // Clear metadata only if the new region does not support it
+      setValue('metadata.user_data', null);
+    }
+
+    if (values.placement_group?.id) {
+      // If a placement group is selected, clear it because they are region specific
+      setValue('placement_group.id', 0);
+    }
+
+    // Because distributed regions do not support some features,
+    // we must disable those features here. Keep in mind, we should
+    // prevent the user from enabling these features in their respective components.
+    if (region.site_type === 'distributed') {
+      setValue('backups_enabled', false);
+      setValue('private_ip', false);
+    }
+
+    if (isDiskEncryptionFeatureEnabled) {
+      // Enable disk encryption by default if the region supports it
+      const defaultDiskEncryptionValue = region.capabilities.includes(
+        'Disk Encryption'
+      )
+        ? 'enabled'
+        : undefined;
+
+      setValue('disk_encryption', defaultDiskEncryptionValue);
+    }
 
     if (!isLabelFieldDirty) {
+      // Auto-generate the Linode label because the region is included in the generated label
       const label = await getGeneratedLinodeLabel({
         queryClient,
         tab: params.type ?? 'OS',
-        values: getValues(),
+        values: { ...values, region: region.id },
       });
+
       setValue('label', label);
     }
   };
@@ -167,6 +182,28 @@ export const Region = () => {
     regions: regions ?? [],
     selectedImage: image,
   });
+
+  if (showTwoStepRegion) {
+    return (
+      <TwoStepRegion
+        regionFilter={
+          // We don't want the Image Service Gen2 work to abide by Gecko feature flags
+          hideDistributedRegions && params.type !== 'Images'
+            ? 'core'
+            : undefined
+        }
+        showDistributedRegionIconHelperText={
+          showDistributedRegionIconHelperText
+        }
+        disabled={isLinodeCreateRestricted}
+        disabledRegions={disabledRegions}
+        errorText={fieldState.error?.message}
+        onChange={onChange}
+        textFieldProps={{ onBlur: field.onBlur }}
+        value={field.value}
+      />
+    );
+  }
 
   return (
     <Paper>

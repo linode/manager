@@ -12,11 +12,12 @@ import {
 } from 'react-beautiful-dnd';
 
 import Undo from 'src/assets/icons/undo.svg';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Hidden } from 'src/components/Hidden';
 import { Typography } from 'src/components/Typography';
 import {
+  FirewallOptionItem,
   generateAddressesLabel,
   generateRuleLabel,
   predefinedFirewallFromRule as ruleToPredefinedFirewall,
@@ -369,7 +370,7 @@ interface PolicyRowProps {
   policy: FirewallPolicyType;
 }
 
-const policyOptions: Item<FirewallPolicyType>[] = [
+const policyOptions: FirewallOptionItem<FirewallPolicyType>[] = [
   { label: 'Accept', value: 'ACCEPT' },
   { label: 'Drop', value: 'DROP' },
 ];
@@ -439,18 +440,18 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
     <Box sx={sxBoxGrid}>
       <Box sx={sxBoxPolicyText}>{helperText}</Box>
       <Box sx={sxBoxPolicySelect}>
-        <Select
-          onChange={(selected: Item<FirewallPolicyType>) =>
-            handlePolicyChange(selected.value)
-          }
+        <Autocomplete
+          textFieldProps={{
+            hideLabel: true,
+          }}
+          autoHighlight
+          onChange={(_, selected) => handlePolicyChange(selected?.value)}
           value={policyOptions.find(
             (thisOption) => thisOption.value === policy
           )}
           disabled={disabled}
-          hideLabel
-          isClearable={false}
+          disableClearable
           label={`${category} policy`}
-          menuPlacement="top"
           options={policyOptions}
         />
       </Box>
