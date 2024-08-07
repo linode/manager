@@ -42,7 +42,7 @@ Please specify a release date to guarantee timely review of this PR. If exact da
 - [ ] 👀 Doing a self review
 - [ ] ❔ Our [contribution guidelines](https://github.com/linode/manager/blob/develop/docs/CONTRIBUTING.md)
 - [ ] 🤏 Splitting feature into small PRs
-- [ ] ➕ Adding a [changeset](https://github.com/linode/manager/blob/develop/packages/manager/.changeset/README.md#best-practices)
+- [ ] ➕ Adding a [changeset](https://github.com/linode/manager/blob/develop/docs/CONTRIBUTING.md#writing-a-changeset)
 - [ ] 🧪 Providing/Improving test coverage
 - [ ] 🔐 Removing all sensitive information from the code and PR description
 - [ ] 🚩 Using a feature flag to protect the release
