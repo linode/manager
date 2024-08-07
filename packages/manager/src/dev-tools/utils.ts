@@ -9,7 +9,11 @@ import {
   LOCAL_STORAGE_SEEDS_COUNT_MAP_KEY,
 } from './constants';
 
-import type { MockPresetBaselineGroupId, MockSeeder } from 'src/mocks/types';
+import type {
+  MockPresetBaselineId,
+  MockPresetExtraId,
+  MockSeeder,
+} from 'src/mocks/types';
 
 /**
  * Whether MSW is enabled via local storage setting.
@@ -33,20 +37,17 @@ export const saveMSWEnabled = (enabled: boolean): void => {
  *
  * @returns ID of selected MSW preset, or `null` if no preset is saved.
  */
-export const getBaselinePreset = (): MockPresetBaselineGroupId => {
+export const getBaselinePreset = (): MockPresetBaselineId => {
   return (
-    (localStorage.getItem(
-      LOCAL_STORAGE_PRESET_KEY
-    ) as MockPresetBaselineGroupId) ?? defaultBaselineMockPreset.id
+    (localStorage.getItem(LOCAL_STORAGE_PRESET_KEY) as MockPresetBaselineId) ??
+    defaultBaselineMockPreset.id
   );
 };
 
 /**
  * Saves ID of selected MSW preset in local storage.
  */
-export const saveBaselinePreset = (
-  presetId: MockPresetBaselineGroupId
-): void => {
+export const saveBaselinePreset = (presetId: MockPresetBaselineId): void => {
   localStorage.setItem(LOCAL_STORAGE_PRESET_KEY, presetId);
 };
 
@@ -74,7 +75,9 @@ export const saveSeedsCountMap = (countMap: { [key: string]: number }) => {
 /**
  * Retrieves the presets map from local storage.
  */
-export const getExtraPresetsMap = (): { [key: string]: number } => {
+export const getExtraPresetsMap = (): {
+  [K in MockPresetExtraId]: number;
+} => {
   const encodedPresetsMap = localStorage.getItem(LOCAL_STORAGE_PRESETS_MAP_KEY);
 
   return encodedPresetsMap ? JSON.parse(encodedPresetsMap) : {};

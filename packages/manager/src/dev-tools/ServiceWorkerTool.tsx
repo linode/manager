@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { Tooltip } from 'src/components/Tooltip';
 import { mswDB } from 'src/mocks/indexedDB';
+import { extraMockPresets } from 'src/mocks/presets';
 import { dbSeeders } from 'src/mocks/seeds';
 import { removeSeeds } from 'src/mocks/seeds/utils';
 
@@ -25,9 +26,10 @@ import {
 } from './utils';
 
 import type {
-  MockPresetBaselineGroupId,
-  MockPresetCrudGroupId,
-  MockPresetExtraGroupId,
+  MockPresetBaselineId,
+  MockPresetCrudId,
+  MockPresetExtraGroup,
+  MockPresetExtraId,
   MockState,
 } from 'src/mocks/types';
 
@@ -50,8 +52,8 @@ export const ServiceWorkerTool = () => {
   const [
     baselinePreset,
     setBaselinePreset,
-  ] = React.useState<MockPresetBaselineGroupId>(loadedBaselinePreset);
-  const [extraPreset, setExtraPreset] = React.useState<string[]>(
+  ] = React.useState<MockPresetBaselineId>(loadedBaselinePreset);
+  const [extraPresets, setExtraPresets] = React.useState<string[]>(
     loadedExtraPresets
   );
   const [presetsCountMap, setPresetsCountMap] = React.useState<{
@@ -72,7 +74,7 @@ export const ServiceWorkerTool = () => {
     applyChanges: () => {
       // Save base preset, extra presets, and content seeders to local storage.
       saveBaselinePreset(baselinePreset);
-      saveExtraPresets(extraPreset);
+      saveExtraPresets(extraPresets);
       saveSeeders(seeders);
       saveSeedsCountMap(seedsCountMap);
       saveExtraPresetsMap(presetsCountMap);
@@ -100,7 +102,7 @@ export const ServiceWorkerTool = () => {
 
     discardChanges: () => {
       setBaselinePreset(getBaselinePreset());
-      setExtraPreset(getExtraPresets());
+      setExtraPresets(getExtraPresets());
       setSeeders(getSeeders(dbSeeders));
       setSeedsCountMap(getSeedsCountMap());
       setPresetsCountMap(getExtraPresetsMap());
@@ -114,9 +116,15 @@ export const ServiceWorkerTool = () => {
       mswDB.clear('mockState');
       mswDB.clear('seedState');
       seederHandlers.removeAll();
-      setBaselinePreset(getBaselinePreset());
-      setExtraPreset(getExtraPresets());
-      setPresetsCountMap(loadedPresetsMap);
+      setBaselinePreset('baseline:no-mocks');
+      setExtraPresets([]);
+      setPresetsCountMap({});
+      saveBaselinePreset('baseline:no-mocks');
+      saveExtraPresets([]);
+      saveSeeders([]);
+      saveSeedsCountMap({});
+      saveExtraPresetsMap({});
+
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: true,
@@ -131,33 +139,35 @@ export const ServiceWorkerTool = () => {
   };
 
   const seederHandlers = {
-    handleCountChange: (
+    changeCount: (
       e: React.ChangeEvent<HTMLInputElement>,
-      seederId: MockPresetCrudGroupId
+      seederId: MockPresetCrudId
     ) => {
-      const updatedCountMap = {
+      setSeedsCountMap({
         ...seedsCountMap,
         [seederId]: parseInt(e.target.value, 10),
-      };
-
-      setSeedsCountMap(updatedCountMap);
+      });
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: true,
       });
-      // When updating the count and the checkbox is not checked, check it for convenience
-      if (parseInt(e.target.value, 10) > 0 && !seeders.includes(seederId)) {
-        setSeeders([...seeders, seederId]);
-      }
-      // if value is 0, uncheck the checkbox
-      if (parseInt(e.target.value, 10) === 0 && seeders.includes(seederId)) {
-        setSeeders(seeders.filter((seeder) => seeder !== seederId));
-      }
     },
 
-    handleToggle: async (
+    removeAll: () => {
+      // remove all seeds & reset all seed fields to 0
+      setSeeders([]);
+      setSeedsCountMap(
+        Object.fromEntries(Object.keys(seedsCountMap).map((key) => [key, 0]))
+      );
+      setSaveState({
+        hasSaved: false,
+        hasUnsavedChanges: true,
+      });
+    },
+
+    toggle: async (
       e: React.ChangeEvent<HTMLInputElement>,
-      seederId: MockPresetCrudGroupId
+      seederId: MockPresetCrudId
     ) => {
       const willEnable = e.target.checked;
       if (willEnable && !seeders.includes(seederId)) {
@@ -179,24 +189,12 @@ export const ServiceWorkerTool = () => {
         await removeSeeds(seederId);
       }
     },
-
-    removeAll: () => {
-      // remove all seeds & reset all seed fields to 0
-      setSeeders([]);
-      setSeedsCountMap(
-        Object.fromEntries(Object.keys(seedsCountMap).map((key) => [key, 0]))
-      );
-      setSaveState({
-        hasSaved: false,
-        hasUnsavedChanges: true,
-      });
-    },
   };
 
   const presetHandlers = {
     changeBase: (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setBaselinePreset(e.target.value as MockPresetBaselineGroupId);
-      saveBaselinePreset(e.target.value as MockPresetBaselineGroupId);
+      setBaselinePreset(e.target.value as MockPresetBaselineId);
+      saveBaselinePreset(e.target.value as MockPresetBaselineId);
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: true,
@@ -205,7 +203,7 @@ export const ServiceWorkerTool = () => {
 
     changeCount: (
       e: React.ChangeEvent<HTMLInputElement>,
-      presetId: MockPresetBaselineGroupId
+      presetId: MockPresetBaselineId
     ) => {
       setPresetsCountMap({
         ...presetsCountMap,
@@ -217,21 +215,45 @@ export const ServiceWorkerTool = () => {
       });
     },
 
+    changeSelect: (
+      e: React.ChangeEvent<HTMLSelectElement>,
+      groupId: MockPresetExtraGroup['id']
+    ) => {
+      const newPresetId = e.target.value;
+
+      const updatedExtraPresets = extraPresets.filter((presetId) => {
+        const preset = extraMockPresets.find((p) => p.id === presetId);
+
+        return preset?.group.id !== groupId;
+      });
+
+      // Add the new preset if one was selected
+      if (newPresetId) {
+        updatedExtraPresets.push(newPresetId);
+      }
+
+      setExtraPresets(updatedExtraPresets);
+      setSaveState({
+        hasSaved: false,
+        hasUnsavedChanges: true,
+      });
+    },
+
     toggle: (
       e: React.ChangeEvent<HTMLInputElement>,
-      handlerPresetId: MockPresetExtraGroupId
+      presetId: MockPresetExtraId
     ) => {
       const willEnable = e.target.checked;
-      if (willEnable && !extraPreset.includes(handlerPresetId)) {
-        setExtraPreset([...extraPreset, handlerPresetId]);
+      if (willEnable && !extraPresets.includes(presetId)) {
+        setExtraPresets([...extraPresets, presetId]);
         setSaveState({
           hasSaved: false,
           hasUnsavedChanges: true,
         });
-      } else if (!willEnable && extraPreset.includes(handlerPresetId)) {
-        setExtraPreset(
-          extraPreset.filter((handler) => {
-            return handler !== handlerPresetId;
+      } else if (!willEnable && extraPresets.includes(presetId)) {
+        setExtraPresets(
+          extraPresets.filter((handler) => {
+            return handler !== presetId;
           })
         );
         setSaveState({
@@ -298,8 +320,8 @@ export const ServiceWorkerTool = () => {
                 <div className="dev-tools__list-box">
                   <SeedOptions
                     disabled={!isMSWEnabled || !isCrudPreset}
-                    onCountChange={seederHandlers.handleCountChange}
-                    onToggleSeeder={seederHandlers.handleToggle}
+                    onCountChange={seederHandlers.changeCount}
+                    onToggleSeeder={seederHandlers.toggle}
                     seeders={seeders}
                     seedsCountMap={seedsCountMap}
                   />
@@ -312,8 +334,9 @@ export const ServiceWorkerTool = () => {
                 <div className="dev-tools__list-box">
                   <ExtraPresetOptions
                     disabled={!isMSWEnabled}
-                    handlers={extraPreset}
+                    handlers={extraPresets}
                     onPresetCountChange={presetHandlers.changeCount}
+                    onSelectChange={presetHandlers.changeSelect}
                     onTogglePreset={presetHandlers.toggle}
                     presetsCountMap={presetsCountMap}
                   />

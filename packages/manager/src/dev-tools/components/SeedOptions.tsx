@@ -21,6 +21,18 @@ export const SeedOptions = ({
   seeders,
   seedsCountMap,
 }: SeedOptionsProps) => {
+  const [localValues, setLocalValues] = React.useState<{
+    [key: string]: string;
+  }>(
+    Object.entries(seedsCountMap).reduce(
+      (acc, [key, value]) => ({
+        ...acc,
+        [key]: String(value),
+      }),
+      {}
+    )
+  );
+
   return (
     <ul>
       {getStateSeederGroups(dbSeeders).map((group) => (
@@ -41,13 +53,37 @@ export const SeedOptions = ({
                 </span>
                 {dbSeeder.canUpdateCount && (
                   <input
+                    onBlur={(e) => {
+                      const value =
+                        e.target.value === '' ? '0' : e.target.value;
+                      setLocalValues((prev) => ({
+                        ...prev,
+                        [dbSeeder.id]: value,
+                      }));
+                      onCountChange(
+                        {
+                          target: { value },
+                        } as React.ChangeEvent<HTMLInputElement>,
+                        dbSeeder.id
+                      );
+                    }}
+                    onChange={(e) => {
+                      setLocalValues((prev) => ({
+                        ...prev,
+                        [dbSeeder.id]: e.target.value,
+                      }));
+                    }}
+                    onFocus={(e) => {
+                      if (e.target.value === '0') {
+                        e.target.value = '';
+                      }
+                    }}
                     aria-label={`Value for ${dbSeeder.label}`}
-                    disabled={disabled}
+                    disabled={disabled || !seeders.includes(dbSeeder.id)}
                     min={0}
-                    onChange={(e) => onCountChange(e, dbSeeder.id)}
                     style={{ marginLeft: 8, width: 60 }}
                     type="number"
-                    value={seedsCountMap[dbSeeder.id] || 0}
+                    value={localValues[dbSeeder.id] || '0'}
                   />
                 )}
               </li>

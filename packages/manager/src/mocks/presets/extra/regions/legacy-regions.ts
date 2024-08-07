@@ -18,7 +18,7 @@ const mockLegacyRegions = () => {
 
 export const legacyRegionsPreset: MockPresetExtra = {
   desc: 'Legacy regions',
-  group: { id: 'Regions', type: 'single' },
+  group: { id: 'Regions', type: 'select' },
   handlers: [mockLegacyRegions],
   id: 'regions:legacy',
   label: 'Legacy',

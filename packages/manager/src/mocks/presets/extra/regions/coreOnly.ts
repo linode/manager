@@ -18,7 +18,7 @@ const mockCoreOnlyRegions = () => {
 
 export const coreOnlyRegionsPreset: MockPresetExtra = {
   desc: 'Core Only Regions',
-  group: { id: 'Regions', type: 'single' },
+  group: { id: 'Regions', type: 'select' },
   handlers: [mockCoreOnlyRegions],
   id: 'regions:core-only',
   label: 'Core Only',

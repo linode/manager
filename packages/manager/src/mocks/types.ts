@@ -28,7 +28,7 @@ export type MockPresetBase = {
 export type MockPresetBaselineGroup = {
   id: 'API State' | 'Account State' | 'General';
 };
-export type MockPresetBaselineGroupId =
+export type MockPresetBaselineId =
   | 'baseline:account-activation'
   | 'baseline:api-maintenance'
   | 'baseline:api-offline'
@@ -38,7 +38,7 @@ export type MockPresetBaselineGroupId =
   | 'baseline:no-mocks';
 export interface MockPresetBaseline extends MockPresetBase {
   group: MockPresetBaselineGroup;
-  id: MockPresetBaselineGroupId;
+  id: MockPresetBaselineId;
 }
 
 /**
@@ -46,9 +46,9 @@ export interface MockPresetBaseline extends MockPresetBase {
  */
 export type MockPresetExtraGroup = {
   id: 'API' | 'Account' | 'Managed' | 'Regions';
-  type: 'multiple' | 'single';
+  type: 'checkbox' | 'select';
 };
-export type MockPresetExtraGroupId =
+export type MockPresetExtraId =
   | 'account:managed-disabled'
   | 'account:managed-enabled'
   | 'api:response-time'
@@ -60,7 +60,7 @@ export type MockPresetExtraGroupId =
 export interface MockPresetExtra extends MockPresetBase {
   canUpdateCount?: boolean;
   group: MockPresetExtraGroup;
-  id: MockPresetExtraGroupId;
+  id: MockPresetExtraId;
 }
 
 /**
@@ -69,14 +69,14 @@ export interface MockPresetExtra extends MockPresetBase {
 export type MockPresetCrudGroup = {
   id: 'Linodes' | 'Placement Groups' | 'Volumes';
 };
-export type MockPresetCrudGroupId =
+export type MockPresetCrudId =
   | 'linodes:crud'
   | 'placement-groups:crud'
   | 'volumes:crud';
 export interface MockPresetCrud extends MockPresetBase {
   canUpdateCount?: boolean;
   group: MockPresetCrudGroup;
-  id: MockPresetCrudGroupId;
+  id: MockPresetCrudId;
 }
 
 export type MockHandler = (mockState: MockState) => HttpHandler[];

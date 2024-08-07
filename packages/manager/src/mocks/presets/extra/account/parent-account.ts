@@ -44,7 +44,7 @@ export const parentAccountPreset: MockPresetExtra = {
   desc: 'Mock a Parent/Child parent account user',
   group: {
     id: 'Account',
-    type: 'single',
+    type: 'select',
   },
   handlers: [mockParentAccount],
   id: 'parent-child-account:parent',
