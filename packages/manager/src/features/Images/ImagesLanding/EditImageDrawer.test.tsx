@@ -49,7 +49,7 @@ describe('EditImageDrawer', () => {
 
     await userEvent.type(tagsInput, 'new-tag');
 
-    await waitFor(() => expect(tagsInput).toHaveValue('new-tag'));
+    expect(tagsInput).toHaveValue('new-tag');
 
     fireEvent.click(getByText('Create "new-tag"'));
 
