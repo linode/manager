@@ -19,6 +19,7 @@ export interface Linode {
   id: number;
   alerts: LinodeAlerts;
   backups: LinodeBackups;
+  bs_encryption_supported?: boolean; // @TODO BSE: Remove optionality once BSE is fully rolled out
   created: string;
   disk_encryption?: EncryptionStatus; // @TODO LDE: Remove optionality once LDE is fully rolled out
   region: string;
@@ -158,12 +159,12 @@ export type LinodeStatus =
 export type InterfacePurpose = 'public' | 'vlan' | 'vpc';
 
 export interface ConfigInterfaceIPv4 {
-  vpc?: string;
-  nat_1_1?: string;
+  vpc?: string | null;
+  nat_1_1?: string | null;
 }
 
 export interface ConfigInterfaceIPv6 {
-  vpc?: string;
+  vpc?: string | null;
 }
 
 export interface Interface {
