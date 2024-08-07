@@ -11,7 +11,7 @@ import type { CloudPulseTimeRangeSelectProps } from '../shared/CloudPulseTimeRan
 import type { CloudPulseServiceTypeFilters } from './models';
 import type { Dashboard, Filter, TimeDuration } from '@linode/api-v4';
 
-export interface CloudPulseFilterProperties {
+interface CloudPulseFilterProperties {
   config: CloudPulseServiceTypeFilters;
   dashboard: Dashboard;
   dependentFilters?: {
@@ -109,13 +109,7 @@ export const getTimeDurationProperties = (
 export const buildXFilter = (
   config: CloudPulseServiceTypeFilters,
   dependentFilters: {
-    [key: string]:
-      | TimeDuration
-      | number
-      | number[]
-      | string
-      | string[]
-      | undefined;
+    [key: string]: FilterValueType | TimeDuration;
   }
 ): Filter => {
   const filters: Filter[] = [];
@@ -149,13 +143,7 @@ export const buildXFilter = (
 export const checkIfWeNeedToDisableFilterByFilterKey = (
   filterKey: string,
   dependentFilters: {
-    [key: string]:
-      | TimeDuration
-      | number
-      | number[]
-      | string
-      | string[]
-      | undefined;
+    [key: string]: FilterValueType | TimeDuration;
   },
   dashboard: Dashboard
 ): boolean | undefined => {
@@ -192,7 +180,7 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
 export const checkIfAllMandatoryFiltersAreSelected = (
   dashboard: Dashboard,
   filterValue: {
-    [key: string]: number | number[] | string | string[] | undefined;
+    [key: string]: FilterValueType;
   },
   timeDuration: TimeDuration | undefined
 ): boolean => {
@@ -206,7 +194,7 @@ export const checkIfAllMandatoryFiltersAreSelected = (
     const filterKey = filter.configuration.filterKey;
 
     if (filterKey === RELATIVE_TIME_DURATION) {
-      return !!timeDuration;
+      return Boolean(timeDuration);
     }
 
     const value = filterValue[filterKey];

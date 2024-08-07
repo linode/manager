@@ -26,6 +26,8 @@ export const CloudPulseRegionSelect = React.memo(
       transformRegionLabel: isGeckoGAEnabled,
     });
 
+    const { handleRegionChange, placeholder, selectedDashboard } = props;
+
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
 
     // Once the data is loaded, set the state variable with value stored in preferences
@@ -35,15 +37,15 @@ export const CloudPulseRegionSelect = React.memo(
       if (regions) {
         if (defaultRegion) {
           const region = regions.find((obj) => obj.id === defaultRegion)?.id;
-          props.handleRegionChange(region);
+          handleRegionChange(region);
           setSelectedRegion(region);
         } else {
           setSelectedRegion(undefined);
-          props.handleRegionChange(undefined);
+          handleRegionChange(undefined);
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [regions, props.selectedDashboard]);
+    }, [regions, selectedDashboard]);
 
     return (
       <RegionSelect
@@ -53,16 +55,16 @@ export const CloudPulseRegionSelect = React.memo(
             [RESOURCES]: undefined,
           });
           setSelectedRegion(region?.id);
-          props.handleRegionChange(region?.id);
+          handleRegionChange(region?.id);
         }}
         currentCapability={undefined}
         data-testid="region-select"
         disableClearable={false}
-        disabled={!props.selectedDashboard || !regions}
+        disabled={!selectedDashboard || !regions}
         fullWidth
         label=""
         noMarginTop
-        placeholder={props.placeholder ?? undefined}
+        placeholder={placeholder ?? 'Select Region'}
         regions={regions ? regions : []}
         value={selectedRegion}
       />

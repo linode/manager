@@ -38,7 +38,7 @@ export type Labels =
 
 export const CloudPulseTimeRangeSelect = React.memo(
   (props: CloudPulseTimeRangeSelectProps) => {
-    const { handleStatsChange, label } = props;
+    const { handleStatsChange, placeholder } = props;
 
     // To set the default value fetched from preferences.
     const getPreferredValue = () => {
@@ -72,7 +72,7 @@ export const CloudPulseTimeRangeSelect = React.memo(
         label=""
         noMarginTop
         options={options}
-        placeholder={label}
+        placeholder={placeholder ?? 'Select Time Duration'}
       />
     );
   }
