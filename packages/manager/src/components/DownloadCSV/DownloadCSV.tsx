@@ -86,7 +86,7 @@ export const cleanCSVData = (data: any): any => {
 
   /** if it's an object, recursively sanitize each key value pair */
   if (typeof data === 'object') {
-    return Object.keys(data).reduce<any>((acc, eachKey) => {
+    return Object.keys(data).reduce<{ [key: string]: any }>((acc, eachKey) => {
       acc[eachKey] = cleanCSVData(data[eachKey]);
       return acc;
     }, {});
