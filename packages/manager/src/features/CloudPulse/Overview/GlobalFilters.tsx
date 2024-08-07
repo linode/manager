@@ -82,7 +82,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             handleDashboardChange={onDashboardChange}
           />
         </Grid>
-        <Grid item md={4} sm={2} xs={0} />
+        <Grid item md={4} sm={2} xs={0} /> {/** This dummy grid is added to match the width of the components */}
         <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
           <CloudPulseTimeRangeSelect
             handleStatsChange={handleTimeRangeChange}
@@ -115,6 +115,6 @@ const StyledReload = styled(Reload, { label: 'StyledReload' })(({ theme }) => ({
   '&:hover': {
     cursor: 'pointer',
   },
-  height: '27px',
-  width: '27px',
+  height: '24px',
+  width: '24px',
 }));

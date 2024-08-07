@@ -1,5 +1,5 @@
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowDownIcon from '@mui/icons-material/ArrowDropDown';
+import KeyboardArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Grid, Typography } from '@mui/material';
 import * as React from 'react';
 
@@ -223,7 +223,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       return (
         <ErrorState
           CustomIcon={InfoIcon}
-          CustomIconStyles={{ height: '10%', width: '10%' }}
+          CustomIconStyles={{ height: '30px', width: '30px' }}
           errorText={'Please pass valid dashboard to render the filters'}
         />
       );
@@ -236,12 +236,15 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             <Button
               startIcon={
                 showFilter ? (
-                  <KeyboardArrowDownIcon />
+                  <KeyboardArrowDownIcon
+                    sx={{ color: 'grey', height: '30px', width: '30px' }}
+                  />
                 ) : (
-                  <KeyboardArrowRightIcon />
+                  <KeyboardArrowRightIcon
+                    sx={{ color: 'grey', height: '30px', width: '30px' }}
+                  />
                 )
               }
-              buttonType={'outlined'}
               onClick={toggleShowFilter}
               sx={{ justifyContent: 'start', mb: showFilter ? 0 : 2, p: 0 }}
             >
