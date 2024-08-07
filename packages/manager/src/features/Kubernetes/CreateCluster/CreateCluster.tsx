@@ -135,6 +135,7 @@ export const CreateCluster = () => {
     ) as CreateNodePoolData[];
 
     const payload: CreateKubeClusterPayload = {
+      apl_enabled: APL,
       control_plane: { high_availability: highAvailability ?? false },
       k8s_version,
       label,
