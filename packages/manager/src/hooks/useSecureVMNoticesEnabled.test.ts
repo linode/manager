@@ -3,7 +3,6 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { useIsAkamaiAccount } from './useIsAkamaiAccount';
 import { useSecureVMNoticesEnabled } from './useSecureVMNoticesEnabled';
 
 describe('useSecureVMNoticesEnabled', () => {
@@ -17,7 +16,10 @@ describe('useSecureVMNoticesEnabled', () => {
     );
 
     const { result } = renderHook(() => useSecureVMNoticesEnabled(), {
-      wrapper: (ui) => wrapWithTheme(ui),
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: { secureVmCopy: { bannerLabel: 'Test' } },
+        }),
     });
 
     await waitFor(() => {
@@ -35,7 +37,10 @@ describe('useSecureVMNoticesEnabled', () => {
     );
 
     const { result } = renderHook(() => useSecureVMNoticesEnabled(), {
-      wrapper: (ui) => wrapWithTheme(ui),
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: { secureVmCopy: { bannerLabel: 'Test' } },
+        }),
     });
 
     await waitFor(() => {
@@ -43,13 +48,37 @@ describe('useSecureVMNoticesEnabled', () => {
     });
   });
 
-  it('returns false otherwise', async () => {
-    const { result } = renderHook(() => useIsAkamaiAccount(), {
-      wrapper: (ui) => wrapWithTheme(ui),
+  it('returns false when the feature flag is turned off', async () => {
+    server.use(
+      http.get('*/profile/preferences', () => {
+        return HttpResponse.json({
+          secure_vm_notices: 'always',
+        });
+      })
+    );
+
+    const { result } = renderHook(() => useSecureVMNoticesEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: { secureVmCopy: {} },
+        }),
     });
 
     await waitFor(() => {
-      expect(result.current.isAkamaiAccount).toBe(false);
+      expect(result.current.secureVMNoticesEnabled).toBe(false);
+    });
+  });
+
+  it('returns false otherwise', async () => {
+    const { result } = renderHook(() => useSecureVMNoticesEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: { secureVmCopy: {} },
+        }),
+    });
+
+    await waitFor(() => {
+      expect(result.current.secureVMNoticesEnabled).toBe(false);
     });
   });
 });

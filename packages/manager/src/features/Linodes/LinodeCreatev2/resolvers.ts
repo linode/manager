@@ -22,8 +22,6 @@ export const getLinodeCreateResolver = (
   queryClient: QueryClient
 ): Resolver<LinodeCreateFormValues, { secureVMNoticesEnabled: boolean }> => {
   const schema = linodeCreateResolvers[tab ?? 'OS'];
-
-  // eslint-disable-next-line sonarjs/prefer-immediate-return
   return async (values, context, options) => {
     const transformedValues = getLinodeCreatePayload(structuredClone(values));
 
@@ -72,7 +70,7 @@ export const getLinodeCreateResolver = (
       !values.firewall_id;
 
     if (secureVMViolation) {
-      errors['firewallOverride'] = {
+      (errors as FieldErrors<LinodeCreateFormValues>)['firewallOverride'] = {
         type: 'validate',
       };
     }
