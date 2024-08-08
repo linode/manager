@@ -9,6 +9,42 @@ import { ui } from 'support/ui';
  */
 export const linodeCreatePage = {
   /**
+   * Checks the Linode's backups.
+   */
+  checkBackups: () => {
+    // eslint-disable-next-line sonarjs/no-duplicate-string
+    cy.get('[data-testid="backups"]').should('be.visible').click();
+  },
+
+  /**
+   * Checks the EU agreements.
+   */
+  checkEUAgreements: () => {
+    cy.get('body').then(($body) => {
+      if ($body.find('div[data-testid="eu-agreement-checkbox"]').length > 0) {
+        // eslint-disable-next-line cypress/unsafe-to-chain-command
+        cy.findAllByText('EU Standard Contractual Clauses', {
+          exact: false,
+        }).should('be.visible');
+        // eslint-disable-next-line cypress/unsafe-to-chain-command
+        cy.get('[data-testid="eu-agreement-checkbox"]')
+          .within(() => {
+            // eslint-disable-next-line cypress/unsafe-to-chain-command
+            cy.get('[id="gdpr-checkbox"]').click();
+          })
+          .click();
+      }
+    });
+  },
+
+  /**
+   * Checks the Linode's private IPs.
+   */
+  checkPrivateIPs: () => {
+    cy.findByText('Private IP').should('be.visible').closest('label').click();
+  },
+
+  /**
    * Selects the Image with the given name.
    *
    * @param imageName - Name of Image to select.
