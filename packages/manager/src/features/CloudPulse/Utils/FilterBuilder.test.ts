@@ -1,3 +1,5 @@
+import { dashboardFactory } from 'src/factories';
+
 import {
   buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
@@ -8,15 +10,7 @@ import {
 } from './FilterBuilder';
 import { FILTER_CONFIG } from './FilterConfig';
 
-const mockDashboard = {
-  created: '2024-07-01',
-  id: 1,
-  label: 'Linod I/O dashboard',
-  service_type: 'linode',
-  time_duration: { unit: 'min', value: 30 },
-  updated: '2024-07-01',
-  widgets: [],
-};
+const mockDashboard = dashboardFactory.build();
 
 const linodeConfig = FILTER_CONFIG.get('linode');
 
