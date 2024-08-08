@@ -156,7 +156,7 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
   dashboard: Dashboard
 ): boolean | undefined => {
   if (dashboard?.service_type) {
-    const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type!);
+    const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type);
     const filters = serviceTypeConfig?.filters ?? [];
 
     const filter = filters.find(

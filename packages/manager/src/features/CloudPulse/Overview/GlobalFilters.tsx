@@ -96,11 +96,13 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       <Grid item xs={12}>
         <Divider />
       </Grid>
-      <CloudPulseDashboardFilterBuilder
-        dashboard={selectedDashboard!}
-        emitFilterChange={emitFilterChange}
-        isServiceAnalyticsIntegration={false}
-      />
+      {selectedDashboard && (
+        <CloudPulseDashboardFilterBuilder
+          dashboard={selectedDashboard}
+          emitFilterChange={emitFilterChange}
+          isServiceAnalyticsIntegration={false}
+        />
+      )}
     </Grid>
   );
 });

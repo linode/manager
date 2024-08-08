@@ -66,7 +66,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     const checkAndUpdateDependentFilters = React.useCallback(
       (filterKey: string, value: FilterValueType) => {
         if (dashboard && dashboard.service_type) {
-          const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type!);
+          const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type);
           const filters = serviceTypeConfig?.filters ?? [];
 
           for (const filter of filters) {
@@ -164,7 +164,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           (config) =>
             isServiceAnalyticsIntegration
               ? config.configuration.neededInServicePage
-              : config.configuration.filterKey != RELATIVE_TIME_DURATION // time duration is always defined explicitly
+              : config.configuration.filterKey !== RELATIVE_TIME_DURATION // time duration is always defined explicitly
         )
         .map((filter, index) => (
           <Grid item key={filter.configuration.filterKey} md={4} sm={6} xs={12}>
