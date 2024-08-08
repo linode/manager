@@ -5,6 +5,7 @@ import type {
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls/types';
+import { PORT_PRESETS } from './FirewallDetail/Rules/shared';
 
 export type FirewallPreset = 'dns' | 'http' | 'https' | 'mysql' | 'ssh';
 
@@ -58,7 +59,7 @@ export const firewallOptionItemsShort = [
     label: 'DNS',
     value: 'dns',
   },
-];
+] as const;
 
 export const protocolOptions: FirewallOptionItem<FirewallRuleProtocol>[] = [
   { label: 'TCP', value: 'TCP' },
@@ -74,7 +75,7 @@ export const addressOptions = [
   { label: 'IP / Netmask', value: 'ip/netmask' },
 ];
 
-export const portPresets: Record<FirewallPreset, string> = {
+export const portPresets: Record<FirewallPreset, keyof typeof PORT_PRESETS> = {
   dns: '53',
   http: '80',
   https: '443',

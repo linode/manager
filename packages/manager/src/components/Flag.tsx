@@ -18,11 +18,16 @@ interface Props {
 export const Flag = (props: Props) => {
   const country = props.country.toLowerCase();
 
-  return (
-    <StyledFlag
-      className={`fi fi-${COUNTRY_FLAG_OVERRIDES[country] ?? country} fi-xx`}
-    />
-  );
+  return <StyledFlag className={`fi fi-${getFlagClass(country)} fi-xx`} />;
+};
+
+const getFlagClass = (country: Country | string) => {
+  if (country in COUNTRY_FLAG_OVERRIDES) {
+    return COUNTRY_FLAG_OVERRIDES[
+      country as keyof typeof COUNTRY_FLAG_OVERRIDES
+    ];
+  }
+  return country;
 };
 
 const StyledFlag = styled('div', { label: 'StyledFlag' })(({ theme }) => ({

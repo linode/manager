@@ -1,4 +1,4 @@
-import { Region } from '@linode/api-v4/lib/regions';
+import type { Region } from '@linode/api-v4';
 
 /**
  * This utility function takes an array of regions data and transforms it into a lookup object.
@@ -7,11 +7,11 @@ import { Region } from '@linode/api-v4/lib/regions';
  *
  * @returns {Object} A lookup object where each key is a region ID and its value is the corresponding region object.
  */
-export const getRegionsByRegionId = (regionsData: Region[] | undefined) => {
-  if (!Array.isArray(regionsData)) {
+export const getRegionsByRegionId = (regions: Region[] | undefined) => {
+  if (!regions) {
     return {};
   }
-  return regionsData.reduce((lookup, region) => {
+  return regions.reduce<Record<string, Region>>((lookup, region) => {
     lookup[region.id] = region;
     return lookup;
   }, {});

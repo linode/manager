@@ -1,6 +1,5 @@
-import { PaymentMethod, PaymentType } from '@linode/api-v4';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Chip } from 'src/components/Chip';
@@ -11,6 +10,8 @@ import {
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { getIcon as getCreditCardIcon } from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import { formatExpiry, isCreditCardExpired } from 'src/utilities/creditCard';
+
+import type { PaymentMethod } from '@linode/api-v4';
 
 interface Props {
   disabled?: boolean;
@@ -38,12 +39,12 @@ const getIcon = (paymentMethod: PaymentMethod) => {
   }
 };
 
-const getHeading = (paymentMethod: PaymentMethod, type: PaymentType) => {
+const getHeading = (paymentMethod: PaymentMethod) => {
   switch (paymentMethod.type) {
     case 'paypal':
-      return thirdPartyPaymentMap[type].label;
+      return thirdPartyPaymentMap[paymentMethod.type].label;
     case 'google_pay':
-      return `${thirdPartyPaymentMap[type].label} ${paymentMethod.data.card_type} ****${paymentMethod.data.last_four}`;
+      return `${thirdPartyPaymentMap[paymentMethod.type].label} ${paymentMethod.data.card_type} ****${paymentMethod.data.last_four}`;
     default:
       return `${paymentMethod.data.card_type} ****${paymentMethod.data.last_four}`;
   }
@@ -69,9 +70,9 @@ export const PaymentMethodCard = (props: Props) => {
     paymentMethod,
     paymentMethodId,
   } = props;
-  const { id, is_default, type } = paymentMethod;
+  const { id, is_default } = paymentMethod;
 
-  const heading = getHeading(paymentMethod, type);
+  const heading = getHeading(paymentMethod);
   const cardIsExpired = getIsCardExpired(paymentMethod);
   const subHeading = getSubHeading(paymentMethod, cardIsExpired);
 

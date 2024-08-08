@@ -110,7 +110,7 @@ const getCompatibleImages = (
 };
 
 const getDefaultUDFData = (userDefinedFields: UserDefinedField[]) => {
-  const defaultUDFData = {};
+  const defaultUDFData: Record<string, string> = {};
   userDefinedFields.forEach((eachField) => {
     if (!!eachField.default) {
       defaultUDFData[eachField.name] = eachField.default;

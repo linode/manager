@@ -138,8 +138,14 @@ export const confirmObjectStorage = async <T extends {}>(
     // on fields that have been touched (handleSubmit() does this
     // implicitly).
     Object.keys(validationErrors).forEach((key) => {
-      formikProps.setFieldTouched(key, validationErrors[key]);
-      formikProps.setFieldError(key, validationErrors[key]);
+      formikProps.setFieldTouched(
+        key,
+        Boolean(validationErrors[key as keyof T])
+      );
+      formikProps.setFieldError(
+        key,
+        validationErrors[key as keyof T] as string
+      );
     });
   } else {
     openConfirmationDialog();

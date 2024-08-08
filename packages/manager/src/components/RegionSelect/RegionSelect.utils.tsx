@@ -43,7 +43,9 @@ export const getRegionOptions = ({
           return (
             region.site_type === 'edge' ||
             (region.site_type === 'distributed' &&
-              CONTINENT_CODE_TO_CONTINENT[distributedContinentCode] === group)
+              CONTINENT_CODE_TO_CONTINENT[
+                distributedContinentCode as keyof typeof CONTINENT_CODE_TO_CONTINENT
+              ] === group)
           );
         }
         return regionFilter.includes(region.site_type);

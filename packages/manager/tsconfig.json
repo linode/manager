@@ -35,10 +35,6 @@
     "strictNullChecks": true,
     "types": ["vitest/globals", "@testing-library/jest-dom"],
 
-    /* Goodluck... */
-    "ignoreDeprecations": "5.0",
-    "suppressImplicitAnyIndexErrors": true,
-
     /* Completeness */
     "skipLibCheck": true,
 

@@ -296,14 +296,16 @@ export const SearchLanding = (props: SearchLandingProps) => {
       )}
       {!loading && (
         <Grid sx={{ padding: 0 }}>
-          {Object.keys(finalResults).map((entityType, idx: number) => (
-            <ResultGroup
-              entity={displayMap[entityType]}
-              groupSize={100}
-              key={idx}
-              results={finalResults[entityType]}
-            />
-          ))}
+          {Object.keys(finalResults).map(
+            (entityType: keyof typeof displayMap, idx: number) => (
+              <ResultGroup
+                entity={displayMap[entityType]}
+                groupSize={100}
+                key={idx}
+                results={finalResults[entityType]}
+              />
+            )
+          )}
         </Grid>
       )}
     </StyledRootGrid>

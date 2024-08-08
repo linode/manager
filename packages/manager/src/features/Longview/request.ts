@@ -91,7 +91,7 @@ export const baseRequest = Axios.create({
 });
 
 export const handleLongviewResponse = (
-  response: AxiosResponse<LongviewResponse<any>>
+  response: AxiosResponse<LongviewResponse<any>[]>
 ) => {
   const notifications = response.data[0].NOTIFICATIONS;
   /**
@@ -108,7 +108,7 @@ export const handleLongviewResponse = (
   }
 };
 
-export const get: Get = (
+export const get: Get = async (
   token: string,
   action: LongviewAction,
   options: Partial<Options> = {}
@@ -131,9 +131,10 @@ export const get: Get = (
   if (end) {
     data.set('end', `${end}`);
   }
-  return request({
+  const response = await request({
     data,
-  }).then(handleLongviewResponse);
+  });
+  return handleLongviewResponse(response);
 };
 
 export const getLastUpdated = (token: string) => {

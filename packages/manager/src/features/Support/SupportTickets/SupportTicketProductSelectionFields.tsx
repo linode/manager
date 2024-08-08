@@ -104,6 +104,10 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
       vpc_id: vpcs,
     };
 
+    if (entityType === 'none' || entityType === 'general') {
+      return [];
+    }
+
     if (!reactQueryEntityDataMap[entityType]) {
       return [];
     }

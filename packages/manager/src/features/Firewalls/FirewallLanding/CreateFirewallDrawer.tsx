@@ -241,7 +241,9 @@ export const CreateFirewallDrawer = React.memo(
 
     const generalError =
       status?.generalError ||
+      // @ts-expect-error this form intentionally breaks Formik's error type
       errors['rules.inbound'] ||
+      // @ts-expect-error this form intentionally breaks Formik's error type
       errors['rules.outbound'] ||
       errors.rules;
 
@@ -346,6 +348,7 @@ export const CreateFirewallDrawer = React.memo(
                 linodes.map((linode) => linode.id)
               );
             }}
+            // @ts-expect-error this form intentionally breaks Formik's error type
             errorText={errors['devices.linodes']}
             helperText={deviceSelectGuidance}
             multiple
@@ -364,6 +367,7 @@ export const CreateFirewallDrawer = React.memo(
                 nodebalancers.map((nodebalancer) => nodebalancer.id)
               );
             }}
+            // @ts-expect-error this form intentionally breaks Formik's error type
             errorText={errors['devices.nodebalancers']}
             helperText={deviceSelectGuidance}
             multiple

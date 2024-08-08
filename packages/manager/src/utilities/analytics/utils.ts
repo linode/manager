@@ -1,6 +1,6 @@
 import { ADOBE_ANALYTICS_URL } from 'src/constants';
 
-import { AnalyticsEvent, FormEventType, FormPayload } from './types';
+import { AnalyticsEvent, BasicFormEvent, FormErrorEvent, FormEventType, FormInputEvent, FormPayload, FormStepEvent } from './types';
 
 /**
  * Sends a direct call rule events to Adobe for a Component Click (and optionally, with `data`, Component Details).
@@ -34,7 +34,9 @@ export const sendFormEvent = (
   eventPayload: FormPayload,
   eventType: FormEventType
 ): void => {
-  const formEventPayload = {
+  const formEventPayload: Partial<
+    BasicFormEvent & FormErrorEvent & FormInputEvent & FormStepEvent
+  > = {
     formName: eventPayload.formName.replace(/\|/g, ''),
   };
   if (!ADOBE_ANALYTICS_URL) {

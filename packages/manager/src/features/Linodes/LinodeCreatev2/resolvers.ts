@@ -15,7 +15,7 @@ import { getLinodeCreatePayload } from './utilities';
 import type { LinodeCreateType } from '../LinodesCreate/types';
 import type { LinodeCreateFormValues } from './utilities';
 import type { QueryClient } from '@tanstack/react-query';
-import type { Resolver } from 'react-hook-form';
+import type { FieldErrors, Resolver } from 'react-hook-form';
 
 export const getLinodeCreateResolver = (
   tab: LinodeCreateType | undefined,
@@ -38,7 +38,7 @@ export const getLinodeCreateResolver = (
     )(transformedValues, context, options);
 
     if (tab === 'Clone Linode' && !values.linode) {
-      errors['linode'] = {
+      (errors as FieldErrors<LinodeCreateFormValues>)['linode'] = {
         message: 'You must select a Linode to clone from.',
         type: 'validate',
       };
@@ -60,7 +60,9 @@ export const getLinodeCreateResolver = (
       const hasSignedEUAgreement = agreements.eu_model;
 
       if (!hasSignedEUAgreement && !values.hasSignedEUAgreement) {
-        errors['hasSignedEUAgreement'] = {
+        (errors as FieldErrors<LinodeCreateFormValues>)[
+          'hasSignedEUAgreement'
+        ] = {
           message:
             'You must agree to the EU agreement to deploy to this region.',
           type: 'validate',
