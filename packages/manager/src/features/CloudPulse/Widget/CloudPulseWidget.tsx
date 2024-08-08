@@ -2,9 +2,7 @@ import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 import { useProfile } from 'src/queries/profile/profile';
@@ -14,6 +12,7 @@ import {
   getCloudPulseMetricRequest,
 } from '../Utils/CloudPulseWidgetUtils';
 import { AGGREGATE_FUNCTION, SIZE, TIME_GRANULARITY } from '../Utils/constants';
+import { convertValueToUnit, formatToolTip } from '../Utils/unitConversion';
 import {
   getUserPreferenceObject,
   updateWidgetPreference,
@@ -116,6 +115,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
 
   const {
+    ariaLabel,
     authToken,
     availableMetrics,
     duration,
@@ -182,7 +182,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       if (
         !widget.time_granularity ||
         intervalValue.unit !== widget.time_granularity.unit ||
-        intervalValue.value !== widget.time_duration.value
+        intervalValue.value !== widget.time_granularity.value
       ) {
         if (savePref) {
           updateWidgetPreference(widget.label, {
@@ -228,7 +228,12 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     status,
   } = useCloudPulseMetricsQuery(
     serviceType,
-    getCloudPulseMetricRequest(widget, duration, resources, resourceIds),
+    getCloudPulseMetricRequest({
+      duration,
+      resourceIds,
+      resources,
+      widget,
+    }),
     {
       authToken,
       isFlags: Boolean(flags),
@@ -243,18 +248,23 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   let legendRows: LegendRow[] = [];
   let today: boolean = false;
 
+  let currentUnit = unit;
   if (!isLoading && metricsList) {
-    const generatedData = generateGraphData(
-      widget.color,
+    const generatedData = generateGraphData({
+      flags,
+      label: widget.label,
       metricsList,
+      resources,
+      serviceType,
       status,
-      widget.label,
-      unit
-    );
+      unit,
+      widgetColor: widget.color,
+    });
 
     data = generatedData.dimensions;
     legendRows = generatedData.legendRowsData;
     today = generatedData.today;
+    currentUnit = generatedData.unit;
   }
   return (
     <Grid item lg={widget.size} xs={12}>
@@ -272,8 +282,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               marginLeft={1}
               variant="h1"
             >
-              {convertStringToCamelCasesWithSpaces(widget.label)}
-              {` (${unit})`}
+              {convertStringToCamelCasesWithSpaces(widget.label)}{' '}
+              {!isLoading &&
+                `(${currentUnit}${unit.endsWith('ps') ? '/s' : ''})`}
             </Typography>
             <Stack
               alignItems={'center'}
@@ -308,31 +319,27 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             </Stack>
           </Stack>
           <Divider />
-          {!isLoading && !Boolean(error) && (
-            <CloudPulseLineGraph
-              error={
-                status === 'error'
-                  ? error?.[0]?.reason || 'Erorr while rendering widget'
-                  : undefined
-              }
-              legendRows={
-                legendRows && legendRows.length > 0 ? legendRows : undefined
-              }
-              ariaLabel={props.ariaLabel ? props.ariaLabel : ''}
-              data={data}
-              gridSize={widget.size}
-              loading={isLoading}
-              nativeLegend={true}
-              showToday={today}
-              timezone={timezone}
-              title={''}
-              unit={unit}
-            />
-          )}
-          {isLoading && <CircleProgress />}
-          {Boolean(error?.length) && (
-            <ErrorState errorText={error![0].reason} />
-          )}
+
+          <CloudPulseLineGraph
+            error={
+              status === 'error'
+                ? error?.[0]?.reason ?? 'Error while rendering graph'
+                : undefined
+            }
+            legendRows={
+              legendRows && legendRows.length > 0 ? legendRows : undefined
+            }
+            ariaLabel={ariaLabel ? ariaLabel : ''}
+            data={data}
+            formatData={(data: number) => convertValueToUnit(data, currentUnit)}
+            formatTooltip={(value: number) => formatToolTip(value, unit)}
+            gridSize={widget.size}
+            loading={isLoading}
+            nativeLegend
+            showToday={today}
+            timezone={timezone}
+            title={widget.label}
+          />
         </Stack>
       </Paper>
     </Grid>

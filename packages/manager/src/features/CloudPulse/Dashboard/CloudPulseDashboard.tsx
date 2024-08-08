@@ -73,7 +73,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
 
   const getJweTokenPayload = (): JWETokenPayLoad => {
     return {
-      resource_id: resourceList?.map((resource) => Number(resource.id)) ?? [],
+      resource_ids: resourceList?.map((resource) => Number(resource.id)) ?? [],
     };
   };
 

@@ -81,7 +81,7 @@ export interface Dimension {
 }
 
 export interface JWETokenPayLoad {
-  resource_id: number[];
+  resource_ids: number[];
 }
 
 export interface JWEToken {
