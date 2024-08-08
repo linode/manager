@@ -87,12 +87,15 @@ export const CloudPulseResourcesSelect = React.memo(
           setSelectedResources(resourceSelections);
           handleResourcesSelection(resourceSelections);
         }}
+        textFieldProps={{
+          hideLabel: true,
+        }}
         autoHighlight
         clearOnBlur
         data-testid="resource-select"
         disabled={disabled || isLoading}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        label=""
+        label="Select Resources"
         limitTags={2}
         multiple
         options={getResourcesList()}

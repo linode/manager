@@ -4,7 +4,6 @@ import { Grid, Typography } from '@mui/material';
 import * as React from 'react';
 
 import InfoIcon from 'src/assets/icons/info.svg';
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -188,25 +187,23 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     return (
       <Grid container item xs={12}>
         <Grid item key={'toggleFilter'} px={2} xs={12}>
-          <Box>
-            <Button
-              startIcon={
-                showFilter ? (
-                  <KeyboardArrowDownIcon
-                    sx={{ color: 'grey', height: '30px', width: '30px' }}
-                  />
-                ) : (
-                  <KeyboardArrowRightIcon
-                    sx={{ color: 'grey', height: '30px', width: '30px' }}
-                  />
-                )
-              }
-              onClick={toggleShowFilter}
-              sx={{ justifyContent: 'start', mb: showFilter ? 0 : 2, p: 0 }}
-            >
-              <Typography>Filters</Typography>
-            </Button>
-          </Box>
+          <Button
+            startIcon={
+              showFilter ? (
+                <KeyboardArrowDownIcon
+                  sx={{ color: 'grey', height: '30px', width: '30px' }}
+                />
+              ) : (
+                <KeyboardArrowRightIcon
+                  sx={{ color: 'grey', height: '30px', width: '30px' }}
+                />
+              )
+            }
+            onClick={toggleShowFilter}
+            sx={{ justifyContent: 'start', mb: showFilter ? 0 : 2, p: 0 }}
+          >
+            <Typography>Filters</Typography>
+          </Button>
         </Grid>
         <Grid display={showFilter ? 'block' : 'none'} item xs={12}>
           <Divider />
@@ -217,9 +214,11 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           display={showFilter ? 'flex' : 'none'}
           item
           maxHeight={'120px'}
-          mb={3}
+          mb={1}
           overflow={'auto'}
           px={2}
+          py={1}
+          rowGap={2}
           xs={12}
         >
           <RenderFilters />

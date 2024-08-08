@@ -65,14 +65,21 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
 
   return (
     <Grid container gap={1}>
-      <Grid columnSpacing={2} container item mt={2} px={2} rowGap={2} xs={12}>
+      <Grid
+        columnSpacing={2}
+        container
+        item
+        justifyContent="space-between"
+        mt={2}
+        px={2}
+        rowGap={2}
+        xs={12}
+      >
         <Grid display={'flex'} item md={4} sm={5} xs={12}>
           <CloudPulseDashboardSelect
             handleDashboardChange={onDashboardChange}
           />
         </Grid>
-        <Grid item md={4} sm={2} xs={0} />{' '}
-        {/** This dummy grid is added to match the width of the components */}
         <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
           <CloudPulseTimeRangeSelect
             handleStatsChange={handleTimeRangeChange}
@@ -83,7 +90,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             <IconButton
               sx={{
                 marginBlockEnd: 'auto',
-                marginTop: '7px',
               }}
               onClick={handleGlobalRefresh}
               size="small"

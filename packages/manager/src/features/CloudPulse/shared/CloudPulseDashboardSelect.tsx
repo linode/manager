@@ -84,6 +84,9 @@ export const CloudPulseDashboardSelect = React.memo(
             {params.children}
           </Box>
         )}
+        textFieldProps={{
+          hideLabel: true,
+        }}
         autoHighlight
         clearOnBlur
         data-testid="cloudpulse-dashboard-select"
@@ -92,9 +95,8 @@ export const CloudPulseDashboardSelect = React.memo(
         fullWidth
         groupBy={(option: Dashboard) => option.service_type}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        label=""
+        label="Select a Dashboard"
         loading={isLoading}
-        noMarginTop
         options={getSortedDashboardsList(dashboardsList?.data ?? [])}
         placeholder={placeHolder}
         value={selectedDashboard ?? null} // Undefined is not allowed for uncontrolled component

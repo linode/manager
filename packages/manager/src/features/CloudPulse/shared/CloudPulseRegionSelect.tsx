@@ -53,13 +53,15 @@ export const CloudPulseRegionSelect = React.memo(
           setSelectedRegion(region?.id);
           handleRegionChange(region?.id);
         }}
+        textFieldProps={{
+          hideLabel: true,
+        }}
         currentCapability={undefined}
         data-testid="region-select"
         disableClearable={false}
         disabled={!selectedDashboard || !regions}
         fullWidth
-        label=""
-        noMarginTop
+        label="Select a Region"
         placeholder={placeholder ?? 'Select Region'}
         regions={regions ? regions : []}
         value={selectedRegion}
