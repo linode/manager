@@ -88,11 +88,12 @@ export const CloudPulseDashboardLanding = () => {
     }
 
     if (
-      !checkIfAllMandatoryFiltersAreSelected(
+      !checkIfAllMandatoryFiltersAreSelected({
         dashboard,
         filterValue,
-        timeDuration
-      )
+        timeDuration,
+      }) ||
+      !timeDuration
     ) {
       return renderErrorPlaceholder(selectDashboardAndFilterMessage);
     }
@@ -109,8 +110,8 @@ export const CloudPulseDashboardLanding = () => {
             ? (filterValue[RESOURCE_ID] as string[])
             : []
         }
-        dashboardId={dashboard!.id!}
-        duration={timeDuration!}
+        dashboardId={dashboard.id}
+        duration={timeDuration}
         savePref={true}
       />
     );
@@ -123,7 +124,7 @@ export const CloudPulseDashboardLanding = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Paper sx={{ border: '1px solid #e3e5e8' }}>
+        <Paper>
           <GlobalFilters
             handleAnyFilterChange={onFilterChange}
             handleDashboardChange={onDashboardChange}

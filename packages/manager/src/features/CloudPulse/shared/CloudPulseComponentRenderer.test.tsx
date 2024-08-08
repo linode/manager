@@ -29,6 +29,11 @@ describe('ComponentRenderer component tests', () => {
       widgets: [],
     };
 
+    if (regionProps === undefined) {
+      expect(true).toEqual(false); // fail test
+      return;
+    }
+
     const { getByPlaceholderText } = renderWithTheme(
       <Grid item sx={{ marginLeft: 2 }} xs>
         {RenderComponent({
@@ -36,7 +41,7 @@ describe('ComponentRenderer component tests', () => {
           componentProps: {
             ...getRegionProperties(
               {
-                config: regionProps!,
+                config: regionProps,
                 dashboard: mockDashboard,
                 isServiceAnalyticsIntegration: false,
               },
@@ -63,6 +68,12 @@ describe('ComponentRenderer component tests', () => {
         updated: new Date().toDateString(),
         widgets: [],
       };
+
+      if (resourceProps === undefined) {
+        expect(true, 'resourceProps to be defined').toEqual(false); // fail test
+        return;
+      }
+
       const { getByPlaceholderText } = renderWithTheme(
         <Grid item key={'resources'} sx={{ marginLeft: 2 }} xs>
           {RenderComponent({
@@ -70,7 +81,7 @@ describe('ComponentRenderer component tests', () => {
             componentProps: {
               ...getResourcesProperties(
                 {
-                  config: resourceProps!,
+                  config: resourceProps,
                   dashboard: mockDashboard,
                   dependentFilters: { region: 'us-east' },
                   isServiceAnalyticsIntegration: false,

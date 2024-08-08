@@ -15,7 +15,6 @@ import type { Filter } from '@linode/api-v4';
 export interface CloudPulseResources {
   id: string;
   label: string;
-  placeholder?: string;
   region?: string; // usually linodes are associated with only one region
   regions?: string[]; // aclb are associated with multiple regions
 }
@@ -24,7 +23,7 @@ export interface CloudPulseResourcesSelectProps {
   disabled?: boolean;
   handleResourcesSelection: (resources: CloudPulseResources[]) => void;
   placeholder?: string;
-  region?: string | undefined;
+  region?: string;
   resourceType: string | undefined;
   savePreferences?: boolean;
   xFilter?: Filter;
@@ -42,7 +41,7 @@ export const CloudPulseResourcesSelect = React.memo(
     } = props;
 
     const { data: resources, isLoading } = useResourcesQuery(
-      disabled != undefined ? !disabled : Boolean(region && resourceType),
+      disabled !== undefined ? !disabled : Boolean(region && resourceType),
       resourceType,
       {},
       xFilter ? xFilter : { region }
@@ -106,12 +105,26 @@ export const CloudPulseResourcesSelect = React.memo(
 );
 
 function compareProps(
-  oldProps: CloudPulseResourcesSelectProps,
-  newProps: CloudPulseResourcesSelectProps
-) {
-  return (
-    oldProps.region === newProps.region &&
-    oldProps.resourceType === newProps.resourceType &&
-    deepEqual(oldProps.xFilter, newProps.xFilter)
-  );
+  prevProps: CloudPulseResourcesSelectProps,
+  nextProps: CloudPulseResourcesSelectProps
+): boolean {
+  // these properties can be extended going forward
+  const keysToCompare: (keyof CloudPulseResourcesSelectProps)[] = [
+    'region',
+    'resourceType',
+  ];
+
+  for (const key of keysToCompare) {
+    if (prevProps[key] !== nextProps[key]) {
+      return false;
+    }
+  }
+
+  // Deep comparison for xFilter
+  if (!deepEqual(prevProps.xFilter, nextProps.xFilter)) {
+    return false;
+  }
+
+  // Ignore function props in comparison
+  return true;
 }

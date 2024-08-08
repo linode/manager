@@ -39,15 +39,24 @@ export type Labels =
 export const CloudPulseTimeRangeSelect = React.memo(
   (props: CloudPulseTimeRangeSelectProps) => {
     const { handleStatsChange, placeholder } = props;
-
-    // To set the default value fetched from preferences.
-    const getPreferredValue = () => {
-      const defaultValue = getUserPreferenceObject().timeDuration;
-      handleChange(options.find((o) => o.label === defaultValue) || options[0]);
-      return options.find((o) => o.label === defaultValue) || options[0];
-    };
-
     const options = generateSelectOptions();
+    const getDefaultValue = React.useCallback((): Item<Labels, Labels> => {
+      const defaultValue = getUserPreferenceObject().timeDuration;
+
+      return options.find((o) => o.label === defaultValue) || options[0];
+    }, [options]);
+    const [selectedTimeRange, setSelectedTimeRange] = React.useState<
+      Item<Labels, Labels>
+    >(getDefaultValue());
+
+    React.useEffect(() => {
+      const item = getDefaultValue();
+
+      if (handleStatsChange) {
+        handleStatsChange(getTimeDurationFromTimeRange(item.value));
+      }
+      setSelectedTimeRange(item);
+    }, [handleStatsChange, getDefaultValue]);
 
     const handleChange = (item: Item<Labels, Labels>) => {
       updateGlobalFilterPreference({
@@ -66,7 +75,6 @@ export const CloudPulseTimeRangeSelect = React.memo(
         }}
         autoHighlight
         data-testid="cloudpulse-time-duration"
-        defaultValue={getPreferredValue()}
         disableClearable
         fullWidth
         isOptionEqualToValue={(option, value) => option.value === value.value}
@@ -74,6 +82,7 @@ export const CloudPulseTimeRangeSelect = React.memo(
         noMarginTop
         options={options}
         placeholder={placeholder ?? 'Select Time Duration'}
+        value={selectedTimeRange}
       />
     );
   }

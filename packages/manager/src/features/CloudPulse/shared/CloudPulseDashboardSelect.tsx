@@ -88,7 +88,7 @@ export const CloudPulseDashboardSelect = React.memo(
         clearOnBlur
         data-testid="cloudpulse-dashboard-select"
         disabled={!dashboardsList}
-        errorText={errorText}
+        errorText={dashboardsList ? '' : errorText}
         fullWidth
         groupBy={(option: Dashboard) => option.service_type}
         isOptionEqualToValue={(option, value) => option.id === value.id}

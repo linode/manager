@@ -60,7 +60,7 @@ it('test getTimeDuratonProperties method', () => {
 
 it('test getResourceSelectionProperties method', () => {
   const resourceSelectionConfig = linodeConfig?.filters.find(
-    (filterObj) => filterObj.name == 'Resources'
+    (filterObj) => filterObj.name === 'Resources'
   );
 
   expect(resourceSelectionConfig).toBeDefined();
@@ -132,10 +132,10 @@ it('test checkIfWeNeedToDisableFilterByFilterKey method all cases', () => {
 
 it('test buildXfilter method', () => {
   const resourceSelectionConfig = linodeConfig?.filters.find(
-    (filterObj) => filterObj.name == 'Resources'
+    (filterObj) => filterObj.name === 'Resources'
   );
 
-  expect(resourceSelectionConfig).toBeDefined();
+  expect(resourceSelectionConfig).toBeDefined(); // fails if resources selection in not defined
 
   let result = buildXFilter(resourceSelectionConfig!, {
     region: 'us-east',
@@ -150,32 +150,32 @@ it('test buildXfilter method', () => {
 
 it('test checkIfAllMandatoryFiltersAreSelected method', () => {
   const resourceSelectionConfig = linodeConfig?.filters.find(
-    (filterObj) => filterObj.name == 'Resources'
+    (filterObj) => filterObj.name === 'Resources'
   );
 
   expect(resourceSelectionConfig).toBeDefined();
 
-  let result = checkIfAllMandatoryFiltersAreSelected(
-    mockDashboard,
-    { region: 'us-east', resource_id: ['1', '2'] },
-    { unit: 'min', value: 30 }
-  );
+  let result = checkIfAllMandatoryFiltersAreSelected({
+    dashboard: mockDashboard,
+    filterValue: { region: 'us-east', resource_id: ['1', '2'] },
+    timeDuration: { unit: 'min', value: 30 },
+  });
 
   expect(result).toEqual(true);
 
-  result = checkIfAllMandatoryFiltersAreSelected(
-    mockDashboard,
-    { region: 'us-east' },
-    { unit: 'min', value: 30 }
-  );
+  result = checkIfAllMandatoryFiltersAreSelected({
+    dashboard: mockDashboard,
+    filterValue: { region: 'us-east' },
+    timeDuration: { unit: 'min', value: 30 },
+  });
 
   expect(result).toEqual(false);
 
-  result = checkIfAllMandatoryFiltersAreSelected(
-    mockDashboard,
-    { region: 'us-east', resource_id: ['1', '2'] },
-    undefined
-  );
+  result = checkIfAllMandatoryFiltersAreSelected({
+    dashboard: mockDashboard,
+    filterValue: { region: 'us-east', resource_id: ['1', '2'] },
+    timeDuration: undefined,
+  });
 
   expect(result).toEqual(false);
 });

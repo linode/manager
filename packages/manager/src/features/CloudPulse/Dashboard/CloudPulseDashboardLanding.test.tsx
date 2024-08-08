@@ -6,6 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { CloudPulseDashboardLanding } from './CloudPulseDashboardLanding';
 
 const dashboardLabel = 'Dashboard 1';
+const selectDashboardLabel = 'Select a Dashboard';
 const queryMocks = vi.hoisted(() => ({
   useCloudPulseDashboardsQuery: vi.fn().mockReturnValue({}),
   useLoadUserPreferences: vi.fn().mockReturnValue({}),
@@ -51,7 +52,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
   it('should render error placeholder if dashboard not selected', () => {
     const screen = renderWithTheme(<CloudPulseDashboardLanding />);
 
-    expect(screen.getByPlaceholderText('Select a Dashboard')).toHaveAttribute(
+    expect(screen.getByPlaceholderText(selectDashboardLabel)).toHaveAttribute(
       'value',
       ''
     );
@@ -64,7 +65,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
   it('should render error placeholder if some dashboard is selected and filter config is not present', () => {
     const screen = renderWithTheme(<CloudPulseDashboardLanding />);
 
-    fireEvent.change(screen.getByPlaceholderText('Select a Dashboard'), {
+    fireEvent.change(screen.getByPlaceholderText(selectDashboardLabel), {
       target: { value: 'a' },
     });
 
@@ -102,7 +103,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
 
     const screen = renderWithTheme(<CloudPulseDashboardLanding />);
 
-    expect(screen.getByPlaceholderText('Select a Dashboard')).toHaveAttribute(
+    expect(screen.getByPlaceholderText(selectDashboardLabel)).toHaveAttribute(
       // check if dashboard is selected already
       'value',
       dashboardLabel

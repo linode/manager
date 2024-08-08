@@ -80,7 +80,11 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             label="Select Time Range"
           />
           <Tooltip arrow enterDelay={500} placement="top" title="Refresh">
-            <IconButton onClick={handleGlobalRefresh} size="small">
+            <IconButton
+              onClick={handleGlobalRefresh}
+              size="small"
+              sx={{ marginBlockEnd: 'auto', marginTop: '3px' }}
+            >
               <StyledReload />
             </IconButton>
           </Tooltip>

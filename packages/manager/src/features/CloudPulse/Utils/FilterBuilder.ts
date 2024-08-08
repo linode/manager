@@ -20,6 +20,14 @@ interface CloudPulseFilterProperties {
   isServiceAnalyticsIntegration: boolean;
 }
 
+interface CloudPulseMandatoryFilterCheckProps {
+  dashboard: Dashboard;
+  filterValue: {
+    [key: string]: FilterValueType;
+  };
+  timeDuration: TimeDuration | undefined;
+}
+
 /**
  * This function helps in building the properties needed for region selection component
  *
@@ -178,12 +186,9 @@ export const checkIfWeNeedToDisableFilterByFilterKey = (
  * @returns boolean if all the mandatory filters listed in the service config are selected else false
  */
 export const checkIfAllMandatoryFiltersAreSelected = (
-  dashboard: Dashboard,
-  filterValue: {
-    [key: string]: FilterValueType;
-  },
-  timeDuration: TimeDuration | undefined
+  mandatoryFilterObj: CloudPulseMandatoryFilterCheckProps
 ): boolean => {
+  const { dashboard, filterValue, timeDuration } = mandatoryFilterObj;
   const serviceTypeConfig = FILTER_CONFIG?.get(dashboard.service_type);
 
   if (!serviceTypeConfig) {
