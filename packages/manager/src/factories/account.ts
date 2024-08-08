@@ -1,9 +1,10 @@
-import {
+import Factory from 'src/factories/factoryProxy';
+
+import type {
   Account,
   ActivePromotion,
   RegionalNetworkUtilization,
 } from '@linode/api-v4/lib/account/types';
-import Factory from 'src/factories/factoryProxy';
 
 export const promoFactory = Factory.Sync.makeFactory<ActivePromotion>({
   credit_monthly_cap: '20.00',
@@ -45,6 +46,8 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
     'Machine Images',
     'Managed Databases',
     'NodeBalancers',
+    'Object Storage Access Key Regions',
+    'Object Storage Endpoint Types',
     'Object Storage',
     'Placement Group',
     'Vlans',
