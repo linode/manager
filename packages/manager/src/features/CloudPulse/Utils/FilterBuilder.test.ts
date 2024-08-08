@@ -21,16 +21,18 @@ it('test getRegionProperties method', () => {
 
   expect(regionConfig).toBeDefined();
 
-  const result = getRegionProperties(
-    {
-      config: regionConfig!,
-      dashboard: mockDashboard,
-      isServiceAnalyticsIntegration: false,
-    },
-    vi.fn()
-  );
-  expect(result['handleRegionChange']).toBeDefined();
-  expect(result['selectedDashboard']).toEqual(mockDashboard);
+  if (regionConfig) {
+    const result = getRegionProperties(
+      {
+        config: regionConfig,
+        dashboard: mockDashboard,
+        isServiceAnalyticsIntegration: false,
+      },
+      vi.fn()
+    );
+    expect(result['handleRegionChange']).toBeDefined();
+    expect(result['selectedDashboard']).toEqual(mockDashboard);
+  }
 });
 
 it('test getTimeDuratonProperties method', () => {
@@ -40,16 +42,18 @@ it('test getTimeDuratonProperties method', () => {
 
   expect(timeDurationConfig).toBeDefined();
 
-  const result = getTimeDurationProperties(
-    {
-      config: timeDurationConfig!,
-      dashboard: mockDashboard,
-      isServiceAnalyticsIntegration: false,
-    },
-    vi.fn()
-  );
-  expect(result['handleStatsChange']).toBeDefined();
-  expect(result['savePreferences']).toEqual(true);
+  if (timeDurationConfig) {
+    const result = getTimeDurationProperties(
+      {
+        config: timeDurationConfig,
+        dashboard: mockDashboard,
+        isServiceAnalyticsIntegration: false,
+      },
+      vi.fn()
+    );
+    expect(result['handleStatsChange']).toBeDefined();
+    expect(result['savePreferences']).toEqual(true);
+  }
 });
 
 it('test getResourceSelectionProperties method', () => {
@@ -59,21 +63,23 @@ it('test getResourceSelectionProperties method', () => {
 
   expect(resourceSelectionConfig).toBeDefined();
 
-  const result = getResourcesProperties(
-    {
-      config: resourceSelectionConfig!,
-      dashboard: mockDashboard,
-      dependentFilters: { region: 'us-east' },
-      isServiceAnalyticsIntegration: true,
-    },
-    vi.fn()
-  );
-  expect(result['handleResourcesSelection']).toBeDefined();
-  expect(result['savePreferences']).toEqual(false);
-  expect(result['disabled']).toEqual(false);
-  expect(JSON.stringify(result['xFilter'])).toEqual(
-    '{"+and":[{"region":"us-east"}]}'
-  );
+  if (resourceSelectionConfig) {
+    const result = getResourcesProperties(
+      {
+        config: resourceSelectionConfig,
+        dashboard: mockDashboard,
+        dependentFilters: { region: 'us-east' },
+        isServiceAnalyticsIntegration: true,
+      },
+      vi.fn()
+    );
+    expect(result['handleResourcesSelection']).toBeDefined();
+    expect(result['savePreferences']).toEqual(false);
+    expect(result['disabled']).toEqual(false);
+    expect(JSON.stringify(result['xFilter'])).toEqual(
+      '{"+and":[{"region":"us-east"}]}'
+    );
+  }
 });
 
 it('test getResourceSelectionProperties method with disabled true', () => {
@@ -83,19 +89,21 @@ it('test getResourceSelectionProperties method with disabled true', () => {
 
   expect(resourceSelectionConfig).toBeDefined();
 
-  const result = getResourcesProperties(
-    {
-      config: resourceSelectionConfig!,
-      dashboard: mockDashboard,
-      dependentFilters: {},
-      isServiceAnalyticsIntegration: true,
-    },
-    vi.fn()
-  );
-  expect(result['handleResourcesSelection']).toBeDefined();
-  expect(result['savePreferences']).toEqual(false);
-  expect(result['disabled']).toEqual(true);
-  expect(JSON.stringify(result['xFilter'])).toEqual('{"+and":[]}');
+  if (resourceSelectionConfig) {
+    const result = getResourcesProperties(
+      {
+        config: resourceSelectionConfig,
+        dashboard: mockDashboard,
+        dependentFilters: {},
+        isServiceAnalyticsIntegration: true,
+      },
+      vi.fn()
+    );
+    expect(result['handleResourcesSelection']).toBeDefined();
+    expect(result['savePreferences']).toEqual(false);
+    expect(result['disabled']).toEqual(true);
+    expect(JSON.stringify(result['xFilter'])).toEqual('{"+and":[]}');
+  }
 });
 
 it('test checkIfWeNeedToDisableFilterByFilterKey method all cases', () => {
@@ -131,15 +139,17 @@ it('test buildXfilter method', () => {
 
   expect(resourceSelectionConfig).toBeDefined(); // fails if resources selection in not defined
 
-  let result = buildXFilter(resourceSelectionConfig!, {
-    region: 'us-east',
-  });
+  if (resourceSelectionConfig) {
+    let result = buildXFilter(resourceSelectionConfig, {
+      region: 'us-east',
+    });
 
-  expect(JSON.stringify(result)).toEqual('{"+and":[{"region":"us-east"}]}');
+    expect(JSON.stringify(result)).toEqual('{"+and":[{"region":"us-east"}]}');
 
-  result = buildXFilter(resourceSelectionConfig!, {});
+    result = buildXFilter(resourceSelectionConfig, {});
 
-  expect(JSON.stringify(result)).toEqual('{"+and":[]}');
+    expect(JSON.stringify(result)).toEqual('{"+and":[]}');
+  }
 });
 
 it('test checkIfAllMandatoryFiltersAreSelected method', () => {

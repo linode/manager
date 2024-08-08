@@ -29,10 +29,7 @@ export const CloudPulseDashboardLanding = () => {
     'Select Dashboard and filters to visualize metrics.';
 
   const onFilterChange = React.useCallback(
-    (
-      filterKey: string,
-      filterValue: number | number[] | string | string[] | undefined
-    ) => {
+    (filterKey: string, filterValue: FilterValueType) => {
       setFilterValue((prev) => ({ ...prev, [filterKey]: filterValue }));
     },
     []
