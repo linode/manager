@@ -16,7 +16,7 @@ const linodeConfig = FILTER_CONFIG.get('linode');
 
 it('test getRegionProperties method', () => {
   const regionConfig = linodeConfig?.filters.find(
-    (filterObj) => filterObj.name == 'Region'
+    (filterObj) => filterObj.name === 'Region'
   );
 
   expect(regionConfig).toBeDefined();
@@ -35,7 +35,7 @@ it('test getRegionProperties method', () => {
 
 it('test getTimeDuratonProperties method', () => {
   const timeDurationConfig = linodeConfig?.filters.find(
-    (filterObj) => filterObj.name == 'Time Duration'
+    (filterObj) => filterObj.name === 'Time Duration'
   );
 
   expect(timeDurationConfig).toBeDefined();
@@ -78,7 +78,7 @@ it('test getResourceSelectionProperties method', () => {
 
 it('test getResourceSelectionProperties method with disabled true', () => {
   const resourceSelectionConfig = linodeConfig?.filters.find(
-    (filterObj) => filterObj.name == 'Resources'
+    (filterObj) => filterObj.name === 'Resources'
   );
 
   expect(resourceSelectionConfig).toBeDefined();
