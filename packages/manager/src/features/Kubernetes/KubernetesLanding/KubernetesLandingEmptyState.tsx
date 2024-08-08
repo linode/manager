@@ -39,7 +39,7 @@ export const KubernetesEmptyState = (props: Props) => {
           tooltipText: getRestrictedResourceText({
             action: 'create',
             isSingular: false,
-            resourceType: 'Clusters',
+            resourceType: 'LKE Clusters',
           }),
         },
       ]}

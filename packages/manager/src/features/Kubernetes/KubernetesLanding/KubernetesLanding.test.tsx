@@ -1,7 +1,7 @@
-import { render, waitForElementToBeRemoved } from '@testing-library/react';
+import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { KubernetesLanding } from './KubernetesLanding';
 
@@ -24,7 +24,7 @@ describe('Kubernetes Landing', () => {
   it('should have the "Create Cluster" button disabled for restricted users', () => {
     queryMocks.useProfile.mockReturnValue({ data: { restricted: true } });
 
-    const { container } = render(wrapWithTheme(<KubernetesLanding />));
+    const { container } = renderWithTheme(<KubernetesLanding />);
 
     const createClusterButton = container.querySelector('button');
 
@@ -38,9 +38,7 @@ describe('Kubernetes Landing', () => {
 
     const loadingTestId = 'circle-progress';
 
-    const { container, getByTestId } = render(
-      wrapWithTheme(<KubernetesLanding />)
-    );
+    const { container, getByTestId } = renderWithTheme(<KubernetesLanding />);
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
