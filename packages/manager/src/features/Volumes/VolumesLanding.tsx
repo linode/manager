@@ -36,7 +36,7 @@ import { VolumeDetailsDrawer } from './VolumeDetailsDrawer';
 import { VolumesLandingEmptyState } from './VolumesLandingEmptyState';
 import { VolumeTableRow } from './VolumeTableRow';
 
-import type { Volume } from '@linode/api-v4';
+import type { Filter, Volume } from '@linode/api-v4';
 
 const preferenceKey = 'volumes';
 const searchQueryKey = 'query';
@@ -59,14 +59,13 @@ export const VolumesLanding = () => {
     `${preferenceKey}-order`
   );
 
-  const filter = {
+  const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
+    ...(volumeLabelFromParam && {
+      label: { '+contains': volumeLabelFromParam },
+    }),
   };
-
-  if (volumeLabelFromParam) {
-    filter['label'] = { '+contains': volumeLabelFromParam };
-  }
 
   const { data: volumes, error, isFetching, isLoading } = useVolumesQuery(
     {

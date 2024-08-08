@@ -35,10 +35,10 @@ export const getOptions = (env: Partial<ImportMetaEnv>) => {
     return [
       ...acc,
       {
-        apiRoot: env[`${base}_API_ROOT`] ?? '',
-        clientID: env[`${base}_CLIENT_ID`] ?? '',
-        label: env[thisEnvVariable] ?? '',
-        loginRoot: env[`${base}_LOGIN_ROOT`] ?? '',
+        apiRoot: (env as any)[`${base}_API_ROOT`] ?? '',
+        clientID: (env as any)[`${base}_CLIENT_ID`] ?? '',
+        label: (env as any)[thisEnvVariable] ?? '',
+        loginRoot: (env as any)[`${base}_LOGIN_ROOT`] ?? '',
       },
     ];
   }, []);

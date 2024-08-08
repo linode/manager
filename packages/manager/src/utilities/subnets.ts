@@ -35,7 +35,7 @@ export type SubnetIPType = 'ipv4' | 'ipv6';
  * - To get available IPs for our VPCs, subtract 4 (the number of reserved IPs)
  *  from the given number
  */
-export const SubnetMaskToAvailIPv4s = {
+export const SubnetMaskToAvailIPv4s: Record<number, number> = {
   0: 4294967296,
   1: 2147483648,
   2: 1073741824,
@@ -107,7 +107,9 @@ export const calculateAvailableIPv4sRFC1918 = (
   const [, mask] = address.split('/');
 
   // if the IP is not in the RFC1918 ranges, hold off on displaying number of available IPs
-  return isValidRFC1918IPv4(address) ? SubnetMaskToAvailIPv4s[mask] : undefined;
+  return isValidRFC1918IPv4(address)
+    ? SubnetMaskToAvailIPv4s[Number(mask)]
+    : undefined;
 };
 
 /**

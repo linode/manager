@@ -297,7 +297,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => {
       if (e.secondary_entity?.type) {
         const secondaryEntityName =
-          secondaryFirewallEntityNameMap[e.secondary_entity.type];
+          secondaryFirewallEntityNameMap[
+            e.secondary_entity.type as FirewallDeviceEntityType
+          ];
         return `${secondaryEntityName} ${
           e.secondary_entity?.label
         } has been added to Firewall ${e.entity?.label ?? ''}.`;
@@ -309,7 +311,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => {
       if (e.secondary_entity?.type) {
         const secondaryEntityName =
-          secondaryFirewallEntityNameMap[e.secondary_entity.type];
+          secondaryFirewallEntityNameMap[
+            e.secondary_entity.type as FirewallDeviceEntityType
+          ];
         return `${secondaryEntityName} ${
           e.secondary_entity?.label
         } has been removed from Firewall ${e.entity?.label ?? ''}.`;
