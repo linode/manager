@@ -138,8 +138,6 @@ export const VolumeCreate = () => {
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState(false);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
-  const [encryptVolume, setEncryptVolume] = React.useState(false);
-
   const {
     isBlockStorageEncryptionFeatureEnabled,
   } = useIsBlockStorageEncryptionFeatureEnabled();
@@ -185,7 +183,7 @@ export const VolumeCreate = () => {
   } = useFormik({
     initialValues,
     onSubmit: (values, { resetForm, setErrors, setStatus, setSubmitting }) => {
-      const { config_id, label, linode_id, region, size } = values;
+      const { config_id, encryption, label, linode_id, region, size } = values;
 
       setSubmitting(true);
 
@@ -198,9 +196,7 @@ export const VolumeCreate = () => {
         !isBlockStorageEncryptionFeatureEnabled ||
         !regionSupportsBlockStorageEncryption
           ? undefined
-          : encryptVolume
-          ? 'enabled'
-          : 'disabled';
+          : encryption;
 
       createVolume({
         config_id:
@@ -277,8 +273,14 @@ export const VolumeCreate = () => {
     'Block Storage Encryption'
   );
 
-  const toggleVolumeEncryptionEnabled = () => {
-    setEncryptVolume(!encryptVolume);
+  const toggleVolumeEncryptionEnabled = (
+    encryption: VolumeEncryption | undefined
+  ) => {
+    if (encryption === 'enabled') {
+      setFieldValue('encryption', 'disabled');
+    } else {
+      setFieldValue('encryption', 'enabled');
+    }
   };
 
   return (
@@ -451,18 +453,20 @@ export const VolumeCreate = () => {
                       : BLOCK_STORAGE_CHOOSE_REGION_COPY
                   }
                   notices={
-                    encryptVolume
+                    values.encryption === 'enabled'
                       ? [
                           BLOCK_STORAGE_ENCRYPTION_OVERHEAD_CAVEAT,
                           BLOCK_STORAGE_USER_SIDE_ENCRYPTION_CAVEAT,
                         ]
                       : []
                   }
+                  onChange={() =>
+                    toggleVolumeEncryptionEnabled(values.encryption)
+                  }
                   descriptionCopy={BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION}
                   disabled={!regionSupportsBlockStorageEncryption}
                   entityType="Volume"
-                  isEncryptEntityChecked={encryptVolume}
-                  onChange={toggleVolumeEncryptionEnabled}
+                  isEncryptEntityChecked={values.encryption === 'enabled'}
                 />
               </Box>
             )}
