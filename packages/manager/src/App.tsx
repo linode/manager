@@ -17,6 +17,7 @@ import { useInitialRequests } from './hooks/useInitialRequests';
 import { useNewRelic } from './hooks/useNewRelic';
 import { useEventsPoller } from './queries/events/events';
 import { useSetupFeatureFlags } from './useSetupFeatureFlags';
+import { useAuthentication } from './hooks/useAuthentication';
 
 // Ensure component's display name is 'App'
 export const App = () => <BaseApp />;
@@ -24,8 +25,15 @@ export const App = () => <BaseApp />;
 const BaseApp = withDocumentTitleProvider(
   withFeatureFlagProvider(() => {
     const { isLoading } = useInitialRequests();
+    const { token } = useAuthentication();
+    const isAuthenticated = Boolean(token);
 
-    const { areFeatureFlagsLoading } = useSetupFeatureFlags();
+    let areFeatureFlagsLoading: boolean | undefined;
+
+    if (isAuthenticated) {
+      const featureFlags = useSetupFeatureFlags();
+      areFeatureFlagsLoading = featureFlags.areFeatureFlagsLoading;
+    }
 
     if (isLoading || areFeatureFlagsLoading) {
       return <SplashScreen />;
