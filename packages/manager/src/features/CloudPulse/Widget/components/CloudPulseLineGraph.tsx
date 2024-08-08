@@ -42,7 +42,7 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
       ) : (
         <LineGraph
           {...rest}
-          ariaLabel={ariaLabel!}
+          ariaLabel={ariaLabel}
           data={data}
           isLegendsFullSize={true}
           legendRows={legendRows}
