@@ -38,6 +38,7 @@ import { OveragePricing } from './OveragePricing';
 
 import type {
   CreateObjectStorageBucketPayload,
+  ObjectStorageEndpoint,
   ObjectStorageEndpointTypes,
 } from '@linode/api-v4';
 
@@ -107,12 +108,14 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     hasSignedAgreement: false,
     isEnableObjDialogOpen: false,
   });
+
   const {
     control,
     formState: { errors },
     getValues,
     handleSubmit,
     reset,
+    resetField,
     setError,
     setValue,
     watch,
@@ -123,6 +126,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
       endpoint_type: undefined,
       label: '',
       region: '',
+      s3_endpoint: undefined,
     },
     mode: 'onChange',
     resolver: yupResolver(CreateBucketSchema),
@@ -161,7 +165,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
 
     const formValues = getValues();
 
-    // Adding custom validation in the handleBucketFormSubmit function
+    // Custom validation in the handleBucketFormSubmit function
     // to catch missing endpoint_type values before form submission
     // since this is optional in the schema.
     if (Boolean(endpoints) && !formValues.endpoint_type) {
@@ -183,16 +187,13 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     ? regions?.find((region) => watchRegion.includes(region.id))
     : undefined;
 
-  /**
-   * In rare cases, the dropdown must display a specific endpoint hostname (s3_endpoint) along with
-   * the endpoint type to distinguish between two assigned endpoints of the same type.
-   * This is necessary for multiple gen1 (E1) assignments in the same region.
-   */
   const filteredEndpoints = endpoints?.filter(
     (endpoint) => selectedRegion?.id === endpoint.region
   );
 
-  // Create a histogram (frequency distribution) of endpoint types for the selected region
+  // In rare cases, the dropdown must display a specific endpoint hostname (s3_endpoint) along with
+  // the endpoint type to distinguish between two assigned endpoints of the same type.
+  // This is necessary for multiple gen1 (E1) assignments in the same region.
   const endpointCounts = filteredEndpoints?.reduce(
     (acc: EndpointCount, { endpoint_type }) => {
       acc[endpoint_type] = (acc[endpoint_type] || 0) + 1;
@@ -201,39 +202,33 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     {}
   );
 
+  const createEndpointOption = (
+    endpoint: ObjectStorageEndpoint,
+    index: number
+  ): EndpointOption => {
+    const { endpoint_type, s3_endpoint } = endpoint;
+    const isLegacy = endpoint_type === 'E0';
+    const typeLabel = isLegacy ? 'Legacy' : 'Standard';
+    const shouldShowHostname =
+      endpointCounts && endpointCounts[endpoint_type] > 1;
+    const label =
+      shouldShowHostname && s3_endpoint !== null
+        ? `${typeLabel} (${endpoint_type}) ${s3_endpoint}`
+        : `${typeLabel} (${endpoint_type})`;
+
+    return {
+      endpoint_type,
+      label,
+      s3_endpoint: s3_endpoint ?? undefined,
+      value: `${typeLabel}-${endpoint_type}-${index}`,
+    };
+  };
+
   const filteredEndpointOptions:
     | EndpointOption[]
-    | undefined = filteredEndpoints?.map(
-    ({ endpoint_type, s3_endpoint }, index) => {
-      const isLegacy = endpoint_type === 'E0';
-      const typeLabel = isLegacy ? 'Legacy' : 'Standard';
-      const shouldShowHostname =
-        endpointCounts && endpointCounts[endpoint_type] > 1;
-      const label =
-        shouldShowHostname && s3_endpoint !== null
-          ? `${typeLabel} (${endpoint_type}) ${s3_endpoint}`
-          : `${typeLabel} (${endpoint_type})`;
+    | undefined = filteredEndpoints?.map(createEndpointOption);
 
-      return {
-        endpoint_type,
-        label,
-        s3_endpoint: s3_endpoint ?? undefined,
-        value: `${typeLabel}-${endpoint_type}-${index}`,
-      };
-    }
-  );
-
-  // Automatically select the endpoint type if only one is available in the chosen region.
-  const autoSelectEndpointType = React.useMemo(() => {
-    if (filteredEndpointOptions?.length === 1) {
-      const option = filteredEndpointOptions[0];
-      return {
-        ...option,
-        s3_endpoint: option.s3_endpoint ?? undefined,
-      };
-    }
-    return undefined;
-  }, [filteredEndpointOptions]);
+  const hasSingleEndpointType = filteredEndpointOptions?.length === 1;
 
   const selectedEndpointOption = React.useMemo(() => {
     const currentEndpointType = watch('endpoint_type');
@@ -247,6 +242,11 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     );
   }, [filteredEndpointOptions, watch]);
 
+  const isGen2EndpointType =
+    selectedEndpointOption &&
+    selectedEndpointOption.endpoint_type !== 'E0' &&
+    selectedEndpointOption.endpoint_type !== 'E1';
+
   const { showGDPRCheckbox } = getGDPRDetails({
     agreements,
     profile,
@@ -254,38 +254,39 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     selectedRegionId: selectedRegion?.id ?? '',
   });
 
-  const isGen2EndpointType =
-    selectedEndpointOption &&
-    selectedEndpointOption.endpoint_type !== 'E0' &&
-    selectedEndpointOption.endpoint_type !== 'E1';
+  const resetSpecificFormFields = () => {
+    resetField('endpoint_type');
+    setValue('s3_endpoint', undefined);
+    setValue('cors_enabled', true);
+  };
 
-  const handleEndpointChange = (
-    _: React.SyntheticEvent<Element, Event>,
-    endpointOption: EndpointOption | null
-  ) => {
+  const updateEndpointType = (endpointOption: EndpointOption | null) => {
     if (endpointOption) {
-      // CORS is not supported for E2 and E3 endpoint types
-      if (
-        endpointOption.endpoint_type === 'E2' ||
-        endpointOption.endpoint_type === 'E3'
-      ) {
+      const { endpoint_type, s3_endpoint } = endpointOption;
+      const isGen2Endpoint = endpoint_type === 'E2' || endpoint_type === 'E3';
+
+      if (isGen2Endpoint) {
         setValue('cors_enabled', false);
       }
 
-      setValue('endpoint_type', endpointOption.endpoint_type, {
-        shouldValidate: true,
-      });
-
-      if (endpointOption.s3_endpoint) {
-        setValue('s3_endpoint', endpointOption.s3_endpoint);
-      } else {
-        setValue('s3_endpoint', undefined);
-      }
+      setValue('endpoint_type', endpoint_type, { shouldValidate: true });
+      setValue('s3_endpoint', s3_endpoint);
     } else {
-      setValue('endpoint_type', undefined, { shouldValidate: true });
-      setValue('s3_endpoint', undefined);
+      resetSpecificFormFields();
     }
   };
+
+  // Both of these are side effects that should only run when the region changes
+  React.useEffect(() => {
+    // Auto-select an endpoint option if there's only one
+    if (filteredEndpointOptions && filteredEndpointOptions.length === 1) {
+      updateEndpointType(filteredEndpointOptions[0]);
+    } else {
+      // When region changes, reset values
+      resetSpecificFormFields();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchRegion]);
 
   return (
     <Drawer
@@ -351,7 +352,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
                     return option.value === value.value;
                   }}
                   onChange={(_, endpointOption) =>
-                    handleEndpointChange(_, endpointOption)
+                    updateEndpointType(endpointOption)
                   }
                   textFieldProps={{
                     helperText: (
@@ -363,7 +364,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
                     ),
                     helperTextPosition: 'top',
                   }}
-                  disableClearable={Boolean(autoSelectEndpointType)}
+                  disableClearable={hasSingleEndpointType}
                   errorText={errors.endpoint_type?.message}
                   label="Object Storage Endpoint Type"
                   loading={isEndpointLoading}
