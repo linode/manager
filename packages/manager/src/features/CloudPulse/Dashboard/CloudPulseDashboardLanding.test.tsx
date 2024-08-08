@@ -1,11 +1,12 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
+import { dashboardFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseDashboardLanding } from './CloudPulseDashboardLanding';
 
-const dashboardLabel = 'Dashboard 1';
+const dashboardLabel = 'Factory Dashboard-1';
 const selectDashboardLabel = 'Select a Dashboard';
 const queryMocks = vi.hoisted(() => ({
   useCloudPulseDashboardsQuery: vi.fn().mockReturnValue({}),
@@ -32,17 +33,10 @@ vi.mock('src/queries/cloudpulse/dashboards', async () => {
 
 queryMocks.useCloudPulseDashboardsQuery.mockReturnValue({
   data: {
-    data: [
-      {
-        created: '2024-04-29T17:09:29',
-        id: 1,
-        label: dashboardLabel,
-        service_type: 'test',
-        type: 'standard',
-        updated: null,
-        widgets: {},
-      },
-    ],
+    data: dashboardFactory.buildList(1, {
+      label: dashboardLabel,
+      service_type: 'test',
+    }),
   },
   error: false,
   isLoading: false,
@@ -85,23 +79,26 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
   it('should render error placeholder if some dashboard is select and filters are not selected', () => {
     queryMocks.useCloudPulseDashboardsQuery.mockReturnValue({
       data: {
-        data: [
-          {
-            created: '2024-04-29T17:09:29',
-            id: 1,
-            label: dashboardLabel,
-            service_type: 'linode',
-            type: 'standard',
-            updated: null,
-            widgets: {},
-          },
-        ],
+        data: dashboardFactory.buildList(1, {
+          label: dashboardLabel,
+          service_type: 'linode',
+        }),
       },
       error: false,
       isLoading: false,
     });
 
     const screen = renderWithTheme(<CloudPulseDashboardLanding />);
+
+    fireEvent.change(screen.getByPlaceholderText(selectDashboardLabel), {
+      target: { value: 'a' },
+    });
+
+    expect(
+      screen.getByRole('option', { name: dashboardLabel })
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('option', { name: dashboardLabel }));
 
     expect(screen.getByPlaceholderText(selectDashboardLabel)).toHaveAttribute(
       // check if dashboard is selected already

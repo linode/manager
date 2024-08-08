@@ -81,9 +81,12 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           />
           <Tooltip arrow enterDelay={500} placement="top" title="Refresh">
             <IconButton
+              sx={{
+                marginBlockEnd: 'auto',
+                marginTop: '7px',
+              }}
               onClick={handleGlobalRefresh}
               size="small"
-              sx={{ marginBlockEnd: 'auto', marginTop: '3px' }}
             >
               <StyledReload />
             </IconButton>

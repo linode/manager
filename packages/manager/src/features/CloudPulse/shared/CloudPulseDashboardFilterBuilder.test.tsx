@@ -1,24 +1,17 @@
 import React from 'react';
 
+import { dashboardFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseDashboardFilterBuilder } from './CloudPulseDashboardFilterBuilder';
-
-const DASHBOARD = 'Test Metrics Dashboard';
 
 describe('CloudPulseDashboardFilterBuilder component tests', () => {
   it('it should render successfully when the required props are passed for service type linode', () => {
     const { getByTestId } = renderWithTheme(
       <CloudPulseDashboardFilterBuilder
-        dashboard={{
-          created: new Date().toDateString(),
-          id: 1,
-          label: DASHBOARD,
+        dashboard={dashboardFactory.build({
           service_type: 'linode',
-          time_duration: { unit: 'min', value: 30 },
-          updated: new Date().toDateString(),
-          widgets: [],
-        }}
+        })}
         emitFilterChange={vi.fn()}
         isServiceAnalyticsIntegration={false}
       />
@@ -31,15 +24,9 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
   it('it should render successfully when the required props are passed for service type dbass', async () => {
     const { getByPlaceholderText } = renderWithTheme(
       <CloudPulseDashboardFilterBuilder
-        dashboard={{
-          created: new Date().toDateString(),
-          id: 1,
-          label: DASHBOARD,
+        dashboard={dashboardFactory.build({
           service_type: 'dbaas',
-          time_duration: { unit: 'min', value: 30 },
-          updated: new Date().toDateString(),
-          widgets: [],
-        }}
+        })}
         emitFilterChange={vi.fn()}
         isServiceAnalyticsIntegration={false}
       />
