@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useController } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 
 import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -16,9 +16,11 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
 
+import type { LinodeCreateFormValues } from './utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const Firewall = () => {
+  const { clearErrors } = useFormContext<LinodeCreateFormValues>();
   const { field, fieldState } = useController<
     CreateLinodeRequest,
     'firewall_id'
@@ -42,6 +44,13 @@ export const Firewall = () => {
 
   const selectedFirewall =
     firewalls?.find((firewall) => firewall.id === field.value) ?? null;
+
+  const onChange = (firewallId: number | undefined) => {
+    if (firewallId !== undefined) {
+      clearErrors('firewallOverride');
+    }
+    field.onChange(firewallId ?? null);
+  };
 
   return (
     <Paper>
@@ -74,7 +83,7 @@ export const Firewall = () => {
             loading={isLoading}
             noMarginTop
             onBlur={field.onBlur}
-            onChange={(e, firewall) => field.onChange(firewall?.id ?? null)}
+            onChange={(e, firewall) => onChange(firewall?.id)}
             options={firewalls ?? []}
             placeholder="None"
             value={selectedFirewall}

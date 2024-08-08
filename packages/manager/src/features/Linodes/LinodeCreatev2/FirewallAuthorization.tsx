@@ -29,31 +29,35 @@ export const FirewallAuthorization = () => {
     }
   }, [clearErrors, watchFirewall]);
 
+  if (
+    watchFirewall !== undefined ||
+    !(fieldState.isDirty || fieldState.error)
+  ) {
+    return;
+  }
+
   return (
-    watchFirewall == undefined &&
-    (fieldState.isDirty || fieldState.error) && (
-      <AkamaiBanner
-        action={
-          <Typography color="inherit">
-            <FormControlLabel
-              label={
-                flags.secureVmCopy?.firewallAuthorizationLabel ??
-                'I am authorized to create a Linode without a firewall'
-              }
-              checked={field.value ?? false}
-              className="error-for-scroll"
-              control={<Checkbox />}
-              disableTypography
-              onChange={field.onChange}
-            />
-          </Typography>
-        }
-        text={
-          flags.secureVmCopy?.firewallAuthorizationWarning ??
-          'Linodes must have a firewall enabled.'
-        }
-        warning
-      />
-    )
+    <AkamaiBanner
+      action={
+        <Typography color="inherit">
+          <FormControlLabel
+            label={
+              flags.secureVmCopy?.firewallAuthorizationLabel ??
+              'I am authorized to create a Linode without a firewall'
+            }
+            checked={field.value ?? false}
+            className="error-for-scroll"
+            control={<Checkbox />}
+            disableTypography
+            onChange={field.onChange}
+          />
+        </Typography>
+      }
+      text={
+        flags.secureVmCopy?.firewallAuthorizationWarning ??
+        'Linodes must have a firewall enabled.'
+      }
+      warning
+    />
   );
 };

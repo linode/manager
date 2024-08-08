@@ -19,7 +19,17 @@ interface PageViewPayload {
 }
 
 export interface CustomAnalyticsData {
+  /**
+   * Whether the Linode was powered before before being cloned.
+   */
   isLinodePoweredOff?: boolean;
+
+  /**
+   * Whether a newly created Linode is Secure VM compliant:
+   * - Undefined for users the policy doesn't apply
+   * - True for compliant Linodes
+   * - False when choosing to override the policy
+   */
   secureVMCompliant?: boolean;
 }
 

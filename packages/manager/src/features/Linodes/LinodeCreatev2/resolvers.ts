@@ -64,11 +64,12 @@ export const getLinodeCreateResolver = (
       }
     }
 
-    if (
+    const secureVMViolation =
       context?.secureVMNoticesEnabled &&
       !values.firewallOverride &&
-      !values.firewall_id
-    ) {
+      !values.firewall_id;
+
+    if (secureVMViolation) {
       errors['firewallOverride'] = {
         type: 'validate',
       };

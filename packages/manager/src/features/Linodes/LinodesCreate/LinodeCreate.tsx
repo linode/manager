@@ -854,6 +854,11 @@ export class LinodeCreate extends React.PureComponent<
         getIsDistributedRegion(regionsData, this.props.selectedRegionID ?? '')
     );
 
+    const secureVMViolation =
+      showFirewallAuthorization &&
+      !checkedFirewallAuthorizaton &&
+      this.props.firewallId === undefined;
+
     return (
       <StyledForm ref={this.createLinodeFormRef}>
         <Grid className="py0">
@@ -1223,9 +1228,7 @@ export class LinodeCreate extends React.PureComponent<
                 formIsSubmitting ||
                 userCannotCreateLinode ||
                 (showGDPRCheckbox && !signedAgreement) ||
-                (showFirewallAuthorization &&
-                  !checkedFirewallAuthorizaton &&
-                  this.props.firewallId === undefined)
+                secureVMViolation
               }
               onClick={() =>
                 this.handleClickCreateUsingCommandLine(
@@ -1243,9 +1246,8 @@ export class LinodeCreate extends React.PureComponent<
               disabled={
                 formIsSubmitting ||
                 userCannotCreateLinode ||
-                (showFirewallAuthorization &&
-                  !checkedFirewallAuthorizaton &&
-                  this.props.firewallId === undefined)
+                (showGDPRCheckbox && !signedAgreement) ||
+                secureVMViolation
               }
               buttonType="primary"
               data-qa-deploy-linode
