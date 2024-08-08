@@ -4,30 +4,62 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { TextField } from 'src/components/TextField';
 import { useAccount } from 'src/queries/account/account';
+import { useSpecificTypes, useTypeQuery } from 'src/queries/types';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 import { ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP } from './constants';
 import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
 
 import type { CustomFields } from './constants';
-import type { SupportTicketFormFields } from './SupportTicketDialog';
+import type {
+  FormPayloadValues,
+  SupportTicketFormFields,
+} from './SupportTicketDialog';
 
 export interface AccountLimitCustomFields extends CustomFields {
   linodePlan: string;
   numberOfEntities: string;
 }
 
-export const SupportTicketAccountLimitFields = () => {
+interface Props {
+  prefilledFormPayloadValues?: FormPayloadValues;
+}
+
+export const SupportTicketAccountLimitFields = ({
+  prefilledFormPayloadValues,
+}: Props) => {
   const { control, formState, reset, watch } = useFormContext<
     AccountLimitCustomFields & SupportTicketFormFields
   >();
-
-  const { data: account } = useAccount();
-
   const { entityType } = watch();
 
+  const prefilledLinodeType =
+    prefilledFormPayloadValues && 'type' in prefilledFormPayloadValues
+      ? prefilledFormPayloadValues.type
+      : '';
+  const prefilledKubeTypes =
+    prefilledFormPayloadValues && 'node_pools' in prefilledFormPayloadValues
+      ? prefilledFormPayloadValues.node_pools?.map((pool) => pool.type)
+      : [];
+
+  const { data: account } = useAccount();
+  const { data: linodeType } = useTypeQuery(
+    prefilledLinodeType ?? '',
+    Boolean(prefilledLinodeType)
+  );
+  const kubeTypesQuery = useSpecificTypes(
+    prefilledKubeTypes ?? [],
+    Boolean(prefilledKubeTypes)
+  );
+  const kubeTypes = extendTypesQueryResult(kubeTypesQuery);
+
   const defaultValues = {
-    companyName: account?.company,
+    companyName: account?.company ?? '',
     customerName: `${account?.first_name} ${account?.last_name}`,
+    linodePlan:
+      linodeType?.label ??
+      kubeTypes.map((type) => type.formattedLabel).join(', ') ??
+      '',
     ...formState.defaultValues,
   };
 

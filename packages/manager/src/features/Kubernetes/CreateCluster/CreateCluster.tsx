@@ -212,7 +212,11 @@ export const CreateCluster = () => {
       <Grid className={`mlMain py0`}>
         {generalError && (
           <Notice variant="error">
-            <ErrorMessage entityType="lkecluster_id" message={generalError} />
+            <ErrorMessage
+              entityType="lkecluster_id"
+              formPayloadValues={{ node_pools: nodePools }}
+              message={generalError}
+            />
           </Notice>
         )}
         <Paper data-qa-label-header>

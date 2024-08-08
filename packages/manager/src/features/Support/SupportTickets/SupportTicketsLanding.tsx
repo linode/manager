@@ -38,21 +38,6 @@ const SupportTicketsLanding = () => {
     stateParams ? stateParams.open : parsedParams.drawerOpen === 'true'
   );
 
-  // @todo this should be handled in the support ticket component
-  // and probably does not need to use state
-  const [prefilledDescription] = React.useState(
-    stateParams ? stateParams.description : undefined
-  );
-  const [prefilledTitle] = React.useState(
-    stateParams ? stateParams.title : undefined
-  );
-  const [prefilledEntity] = React.useState(
-    stateParams ? stateParams.entity : undefined
-  );
-  const [prefilledTicketType] = React.useState(
-    stateParams ? stateParams.ticketType : undefined
-  );
-
   const handleAddTicketSuccess = (
     ticketId: number,
     attachmentErrors: AttachmentError[] = []
@@ -106,10 +91,6 @@ const SupportTicketsLanding = () => {
         onClose={() => setDrawerOpen(false)}
         onSuccess={handleAddTicketSuccess}
         open={drawerOpen}
-        prefilledDescription={prefilledDescription}
-        prefilledEntity={prefilledEntity}
-        prefilledTicketType={prefilledTicketType}
-        prefilledTitle={prefilledTitle}
       />
     </React.Fragment>
   );
