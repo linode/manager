@@ -94,5 +94,3 @@ export const BucketRateLimitTable = ({
     </TableBody>
   </Table>
 );
-
-export default BucketRateLimitTable;

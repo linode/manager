@@ -64,10 +64,6 @@ interface EndpointOption {
    * The hostname of the endpoint. This is only necessary when multiple endpoints of the same type are assigned to a region.
    */
   s3_endpoint?: string;
-  /**
-   * The unique identifier for the endpoint type. Same as the `label`.
-   */
-  value: string;
 }
 
 export const OMC_CreateBucketDrawer = (props: Props) => {
@@ -203,8 +199,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   );
 
   const createEndpointOption = (
-    endpoint: ObjectStorageEndpoint,
-    index: number
+    endpoint: ObjectStorageEndpoint
   ): EndpointOption => {
     const { endpoint_type, s3_endpoint } = endpoint;
     const isLegacy = endpoint_type === 'E0';
@@ -220,7 +215,6 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
       endpoint_type,
       label,
       s3_endpoint: s3_endpoint ?? undefined,
-      value: `${typeLabel}-${endpoint_type}-${index}`,
     };
   };
 
@@ -345,12 +339,6 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
             <Controller
               render={({ field }) => (
                 <Autocomplete
-                  isOptionEqualToValue={(option, value) => {
-                    if (!option || !value) {
-                      return option === value;
-                    }
-                    return option.value === value.value;
-                  }}
                   onChange={(_, endpointOption) =>
                     updateEndpointType(endpointOption)
                   }
