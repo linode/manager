@@ -84,11 +84,14 @@ export const ThirdPartyPayment = (props: Props) => {
         <Icon />
       </Box>
       <Box className={classes.paymentTextContainer}>
-        {!matchesSmDown ? (
+        {!matchesSmDown && (
           <Typography className={classes.paymentMethodLabel}>
-            {thirdPartyPaymentMap[paymentMethod.type].label}
+            {
+              thirdPartyPaymentMap[paymentMethod.type as _ThirdPartyPayment]
+                .label
+            }
           </Typography>
-        ) : null}
+        )}
         {renderThirdPartyPaymentBody(paymentMethod)}
       </Box>
     </>

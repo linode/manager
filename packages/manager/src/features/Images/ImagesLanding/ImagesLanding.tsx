@@ -53,7 +53,7 @@ import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
 
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
-import type { ImageStatus } from '@linode/api-v4';
+import type { Filter, ImageStatus } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 
 const searchQueryKey = 'query';
@@ -118,14 +118,11 @@ export const ImagesLanding = () => {
     'manual'
   );
 
-  const manualImagesFilter = {
+  const manualImagesFilter: Filter = {
     ['+order']: manualImagesOrder,
     ['+order_by']: manualImagesOrderBy,
+    ...(imageLabelFromParam && { label: { '+contains': imageLabelFromParam } }),
   };
-
-  if (imageLabelFromParam) {
-    manualImagesFilter['label'] = { '+contains': imageLabelFromParam };
-  }
 
   const {
     data: manualImages,
@@ -170,14 +167,11 @@ export const ImagesLanding = () => {
     'automatic'
   );
 
-  const automaticImagesFilter = {
+  const automaticImagesFilter: Filter = {
     ['+order']: automaticImagesOrder,
     ['+order_by']: automaticImagesOrderBy,
+    ...(imageLabelFromParam && { label: { '+contains': imageLabelFromParam } }),
   };
-
-  if (imageLabelFromParam) {
-    automaticImagesFilter['label'] = { '+contains': imageLabelFromParam };
-  }
 
   const {
     data: automaticImages,

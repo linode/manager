@@ -95,10 +95,11 @@ import type {
 import type { PlacementGroup } from '@linode/api-v4';
 import type {
   CreateLinodePlacementGroupPayload,
+  CreateLinodeRequest,
   EncryptionStatus,
   InterfacePayload,
   PriceObject,
-} from '@linode/api-v4/lib/linodes';
+} from '@linode/api-v4';
 import type { Tag } from '@linode/api-v4/lib/tags/types';
 import type { MapDispatchToProps } from 'react-redux';
 import type { RouteComponentProps } from 'react-router-dom';
@@ -295,7 +296,7 @@ export class LinodeCreate extends React.PureComponent<
     // eslint-disable-next-line sonarjs/no-unused-collection
     const interfaces: InterfacePayload[] = [];
 
-    const payload = {
+    const payload: CreateLinodeRequest = {
       authorized_users: this.props.authorized_users,
       backup_id: this.props.selectedBackupID,
       backups_enabled: this.props.backupsEnabled,

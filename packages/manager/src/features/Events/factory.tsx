@@ -40,7 +40,7 @@ export const withTypography = (eventMap: EventMap): OptionalEventMap => {
 export const eventMessages: EventMap = Object.keys(factories).reduce(
   (acc, factoryName) => ({
     ...acc,
-    ...withTypography(factories[factoryName]),
+    ...withTypography((factories as any)[factoryName]),
   }),
   {} as EventMap
 );
